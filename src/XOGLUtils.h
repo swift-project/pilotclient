@@ -28,7 +28,7 @@
 	#include <windows.h>
 	#include <GL/gl.h>
 	#include <GL/glu.h>
-	#include <GL/glext.h>
+	#include <gl/glext.h>
 #elif LIN
 	#define GLX_GLXEXT_PROTOTYPES
 	#define GL_GLEXT_PROTOTYPES
@@ -37,14 +37,15 @@
 	#include <GL/glext.h>
 	#include <GL/glx.h>
 #elif APL
+
 	#include <OpenGL/gl.h>
 	#include <OpenGL/glu.h>
 	#include <OpenGL/glext.h>
-#endif
+     #endif
 
-#if LIN
+	#if LIN
 	#define GLX_GLXEXT_PROTOTYPES
-#endif
+	#endif
 
 // Open GL Extension Defintion
 #if APL
@@ -61,6 +62,9 @@ typedef void (APIENTRY * PFNGLCLIENTACTIVETEXTUREARBPROC )	(GLenum);
 typedef void (APIENTRY * PFNGLMULTITEXCOORD2FARBPROC )		(GLenum, GLfloat, GLfloat);
 typedef void (APIENTRY * PFNGLMULTITEXCOORD2FVARBPROC)		(GLenum, const GLfloat *);
 
+#if APL
+//extern PFNGLBINDBUFFERARBPROC			glBindBufferARB;
+#endif
 #if IBM
 extern PFNGLBINDBUFFERARBPROC			glBindBufferARB;
 extern PFNGLMULTITEXCOORD2FARBPROC		glMultiTexCoord2fARB;

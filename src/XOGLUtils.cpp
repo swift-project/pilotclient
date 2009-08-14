@@ -125,7 +125,7 @@ bool	OGL_UtilsInit()
 	{
 		// Initialize all OGL Function Pointers
 #if APL
-		//glBindBufferARB 		 = (PFNGLBINDBUFFERARBPROC)			 wglGetProcAddress("glBindBufferARB"		 );
+//		glBindBufferARB 		 = (PFNGLBINDBUFFERARBPROC)			 wglGetProcAddress("glBindBufferARB"		 );
 #endif		
 #if IBM		
 		glBindBufferARB			 = (PFNGLBINDBUFFERARBPROC)			 wglGetProcAddress("glBindBufferARB"		);

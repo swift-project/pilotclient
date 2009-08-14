@@ -29,6 +29,8 @@
 #include <algorithm>
 #include "PlatformUtils.h"
 
+#include <string.h>
+
 using std::max;
 
 #if APL

@@ -24,6 +24,7 @@
 #include "XObjDefs.h"
 #include "XUtils.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 #if APL
 	#define CRLF	"\r"

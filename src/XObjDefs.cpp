@@ -21,6 +21,7 @@
  *
  */
 #include "XObjDefs.h"
+#include <string.h>
 
 cmd_info	gCmds[] = {
 

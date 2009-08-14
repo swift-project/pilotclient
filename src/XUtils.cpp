@@ -22,6 +22,7 @@
  */
 #include "XUtils.h"
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 #include "XObjDefs.h"
 #include <stdlib.h>
