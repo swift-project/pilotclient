@@ -104,6 +104,7 @@ public:
 	void NormalizeNormals(void);
 	void DebugDrawNormals();
 	void Purge() { mPointPool.clear(); }
+	 int Size() { return mPointPool.size(); }
 private:
 	vector<float>	mPointPool;
 };
@@ -512,6 +513,9 @@ void	OBJ_PlotModel(int model, int texID, int litTexID, float inDistance, double 
 	if(lodIdx == -1)
 		return;
 
+	// pointPool is and always was empty! returning early
+	if(sObjects[model].lods[lodIdx].pointPool.Size()==0 && sObjects[model].lods[lodIdx].dl == 0)
+		return;
 
 	static XPLMDataRef	night_lighting_ref = XPLMFindDataRef("sim/graphics/scenery/percent_lights_on");
 	bool	use_night = XPLMGetDataf(night_lighting_ref) > 0.25;
