@@ -49,7 +49,7 @@ CFBundleRef	gBundleRefOpenGL = NULL;
 OSStatus aglInitEntryPoints (void)
 {
     OSStatus err = noErr;
-    const Str255 frameworkName = "\\pOpenGL.framework";
+    const Str255 frameworkName = "\pOpenGL.framework";
     FSRefParam fileRefParam;
     FSRef fileRef;
     CFURLRef bundleURLOpenGL;
