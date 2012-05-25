@@ -82,6 +82,7 @@ typedef	struct {
 	float	pitch;
 	float	roll;
 	float	heading;
+	char label[32];
 } XPMPPlanePosition_t;
 
 

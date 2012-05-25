@@ -9,6 +9,14 @@ See README.MULTIPLAYER for more information.
 To clone this repository to your local drive, use:
 git clone https://github.com/wadesworld2112/libxplanemp
 
+###Compilation Note
+
+The files CSLLoaderThread.h and CSLLoaderThread.cpp are incomplete and will generate
+errors.  They are not currently used.  The library will compile if these 
+files are not included.  
+
+Fixes to these files are welcome.
+
 ## Note to X-Plane and X-IvAp Developers
 
 This is now the authoratative repository for the mulitplayer code.  If you 
