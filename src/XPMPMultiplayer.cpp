@@ -480,11 +480,7 @@ int	XPMPRenderMultiplayerPlanes(
 		gRenderer(gRendererRef);
 	else
 		XPMPDefaultPlaneRenderer();
-#if XTWR	// We don't want to see our own plane!
-	return 0;
-#else
 	return 1;
-#endif
 }
 
 bool			XPMPIsICAOValid(

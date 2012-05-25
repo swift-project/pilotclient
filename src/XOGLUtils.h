@@ -28,7 +28,7 @@
 	#include <windows.h>
 	#include <GL/gl.h>
 	#include <GL/glu.h>
-	#include <gl/glext.h>
+	#include <GL/glext.h>
 #elif LIN
 	#define GLX_GLXEXT_PROTOTYPES
 	#define GL_GLEXT_PROTOTYPES

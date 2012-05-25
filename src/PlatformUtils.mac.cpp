@@ -23,7 +23,7 @@
 #include "PlatformUtils.h"
 
 //#define _STDINT_H_
-#include <Endian.h>
+//#include <Endian.h>
 //#include <Dialogs.h>
 //#include <Navigation.h>
 //#include <string.h>
@@ -39,16 +39,12 @@ static	OSErr		FSSpecToPathName(const FSSpec * inFileSpec, char * outPathname);
 
 void	EndianFlipShort(short * ioShort)
 {
-#if defined(__POWERPC__)
 	*ioShort = Endian16_Swap(*ioShort);
-#endif
 }
 
 void	EndianFlipLong(long * ioLong)
 {
-#if defined(__POWERPC__)
 	*ioLong = Endian32_Swap(*ioLong);
-#endif
 }
 
 /* Get FilePathFromUser puts up a nav services dialog box and converts the results
@@ -68,6 +64,8 @@ struct CFSmartPtr {
 
 int HFS2PosixPath(const char *path, char *result, int resultLen)
 {
+	bool is_dir = (path[strlen(path)-1] == ':');
+
 	CFSmartPtr<CFStringRef>		inStr(CFStringCreateWithCString(kCFAllocatorDefault, path ,kCFStringEncodingMacRoman));
 	if (inStr == NULL) return -1;
 	
@@ -79,6 +77,8 @@ int HFS2PosixPath(const char *path, char *result, int resultLen)
 	
 	if (!CFStringGetCString(outStr, result, resultLen, kCFStringEncodingMacRoman))
 		return -1;
+		
+	if(is_dir) strcat(result, "/");
 
 	return 0;
 }

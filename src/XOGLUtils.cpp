@@ -60,12 +60,9 @@ OSStatus aglInitEntryPoints (void)
     fileRefParam.ioNamePtr  = frameworkName;
     fileRefParam.newRef = &fileRef;
 
-    // For some reason an explicit cast satisfies gcc TDG
-    SInt32 fileRefParamIO_DirID = static_cast<SInt32>(fileRefParam.ioDirID);
-
     // Frameworks directory/folder
     err = FindFolder (kSystemDomain, kFrameworksFolderType, false,
-                      &fileRefParam.ioVRefNum, &fileRefParamIO_DirID);
+                      &fileRefParam.ioVRefNum, (SInt32 *) &fileRefParam.ioDirID);
     if (noErr != err) {
         return err;
     }

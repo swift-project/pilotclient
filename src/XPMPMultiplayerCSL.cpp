@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <algorithm>
 #include "PlatformUtils.h"
-
+#include <errno.h>
 #include <string.h>
 
 using std::max;
@@ -220,9 +220,16 @@ bool	LoadOnePackage(const string& inPath, int pass)
 		int						sim, xplm;
 		XPLMHostApplicationID 	host;	
 
+#ifdef DEBUG_CSL_LOADING
+	XPLMDump() << "LoadOnePackage was passed inPath of: " << inPath << ".\n";
+#endif
 	// First locate and attempt to load the xsb_aircraft.txt file from th is package.
 	string	path(inPath);
 	path += (DIR_STR "xsb_aircraft.txt");
+#ifdef DEBUG_CSL_LOADING
+	XPLMDump() << "LoadOnePackage attempting to open: " << path << ".\n";
+#endif
+	
 	FILE * fi = fopen(path.c_str(), "r");
 
 	XPLMGetVersions(&sim, &xplm, &host);
@@ -524,7 +531,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 		}
 		fclose(fi);
 	} else {
-		XPLMDump() << "XSB WARNING: package '" << inPath << "' could not be opened.\n";
+		XPLMDump() << "XSB WARNING: package '" << inPath << "' could not be opened.  Error was: "  << strerror(errno) << ".\n";
 	}
 	return parse_err;		
 }

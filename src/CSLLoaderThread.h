@@ -1,7 +1,7 @@
 #include "ptypes.h"
 #include "pasync.h"
 
-#include "XPLMMultiplayerCSL.h"
+#include "XPMPMultiplayerCSL.h"
 
 const int MSG_LOADJOB_OBJ = 1;
 const int MSG_LOADJOB_TEX = 2;

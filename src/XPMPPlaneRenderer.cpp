@@ -58,39 +58,110 @@
 // Maximum altitude difference in feet for TCAS blips
 #define		MAX_TCAS_ALTDIFF		5000
 
+// Even in good weather we don't want labels on things
+// that we can barely see.  Cut labels at 5 km.
+#define		MAX_LABEL_DIST			5000.0
+
+
 std::vector<XPLMDataRef>			gMultiRef_X;
 std::vector<XPLMDataRef>			gMultiRef_Y;
 std::vector<XPLMDataRef>			gMultiRef_Z;
 
-/* UTILITY FUNCTIONS */
+bool gDrawLabels = true;
 
-static	inline double sqr(double a) { return a * a; }
-static	inline double CalcDist3D(double x1, double y1, double z1, double x2, double y2, double z2)
+struct cull_info_t {					// This struct has everything we need to cull fast!
+	float	model_view[16];				// The model view matrix, to get from local OpenGL to eye coordinates.
+	float	proj[16];					// Proj matrix - this is just a hack to use for gluProject.
+	float	nea_clip[4];				// Four clip planes in the form of Ax + By + Cz + D = 0 (ABCD are in the array.)
+	float	far_clip[4];				// They are oriented so the positive side of the clip plane is INSIDE the view volume.
+	float	lft_clip[4];
+	float	rgt_clip[4];
+	float	bot_clip[4];
+	float	top_clip[4];
+};
+
+static void setup_cull_info(cull_info_t * i)
 {
-	return sqrt(sqr(x2-x1) + sqr(y2-y1) + sqr(z2-z1));
+	// First, just read out the current OpenGL matrices...do this once at setup because it's not the fastest thing to do.
+	glGetFloatv(GL_MODELVIEW_MATRIX ,i->model_view);
+	glGetFloatv(GL_PROJECTION_MATRIX,i->proj);
+	
+	// Now...what the heck is this?  Here's the deal: the clip planes have values in "clip" coordinates of: Left = (1,0,0,1)
+	// Right = (-1,0,0,1), Bottom = (0,1,0,1), etc.  (Clip coordinates are coordinates from -1 to 1 in XYZ that the driver
+	// uses.  The projection matrix converts from eye to clip coordinates.)
+	//
+	// How do we convert a plane backward from clip to eye coordinates?  Well, we need the transpose of the inverse of the
+	// inverse of the projection matrix.  (Transpose of the inverse is needed to transform a plane, and the inverse of the
+	// projection is the matrix that goes clip -> eye.)  Well, that cancels out to the transpose of the projection matrix,
+	// which is nice because it means we don't need a matrix inversion in this bit of sample code.
+	
+	// So this nightmare down here is simply:
+	// clip plane * transpose (proj_matrix)
+	// worked out for all six clip planes.  If you squint you can see the patterns:
+	// L:  1  0 0 1
+	// R: -1  0 0 1
+	// B:  0  1 0 1
+	// T:  0 -1 0 1
+	// etc.
+	
+	i->lft_clip[0] = i->proj[0]+i->proj[3];	i->lft_clip[1] = i->proj[4]+i->proj[7];	i->lft_clip[2] = i->proj[8]+i->proj[11];	i->lft_clip[3] = i->proj[12]+i->proj[15];
+	i->rgt_clip[0] =-i->proj[0]+i->proj[3];	i->rgt_clip[1] =-i->proj[4]+i->proj[7];	i->rgt_clip[2] =-i->proj[8]+i->proj[11];	i->rgt_clip[3] =-i->proj[12]+i->proj[15];
+	
+	i->bot_clip[0] = i->proj[1]+i->proj[3];	i->bot_clip[1] = i->proj[5]+i->proj[7];	i->bot_clip[2] = i->proj[9]+i->proj[11];	i->bot_clip[3] = i->proj[13]+i->proj[15];
+	i->top_clip[0] =-i->proj[1]+i->proj[3];	i->top_clip[1] =-i->proj[5]+i->proj[7];	i->top_clip[2] =-i->proj[9]+i->proj[11];	i->top_clip[3] =-i->proj[13]+i->proj[15];
+
+	i->nea_clip[0] = i->proj[2]+i->proj[3];	i->nea_clip[1] = i->proj[6]+i->proj[7];	i->nea_clip[2] = i->proj[10]+i->proj[11];	i->nea_clip[3] = i->proj[14]+i->proj[15];
+	i->far_clip[0] =-i->proj[2]+i->proj[3];	i->far_clip[1] =-i->proj[6]+i->proj[7];	i->far_clip[2] =-i->proj[10]+i->proj[11];	i->far_clip[3] =-i->proj[14]+i->proj[15];
 }
 
-
-static	inline double	CalcAngle(double dy, double dx)
+static int sphere_is_visible(const cull_info_t * i, float x, float y, float z, float r)
 {
-	double angle;
-	if (dx == 0.0)
-		angle = (dy > 0.0) ? 0.0 : 180.0;
-	else 
-		angle = 90.0 - (atan(dy/dx) * 180.0 / 3.14159265);
-	if (dx < 0.0)
-		angle += 180.0;
-	return angle;
+	// First: we transform our coordinate into eye coordinates from model-view.
+	float xp = x * i->model_view[0] + y * i->model_view[4] + z * i->model_view[ 8] + i->model_view[12];
+	float yp = x * i->model_view[1] + y * i->model_view[5] + z * i->model_view[ 9] + i->model_view[13];
+	float zp = x * i->model_view[2] + y * i->model_view[6] + z * i->model_view[10] + i->model_view[14];
+
+	// Now - we apply the "plane equation" of each clip plane to see how far from the clip plane our point is.  
+	// The clip planes are directed: positive number distances mean we are INSIDE our viewing area by some distance;
+	// negative means outside.  So ... if we are outside by less than -r, the ENTIRE sphere is out of bounds.
+	// We are not visible!  We do the near clip plane, then sides, then far, in an attempt to try the planes
+	// that will eliminate the most geometry first...half the world is behind the near clip plane, but not much is
+	// behind the far clip plane on sunny day.
+	if ((xp * i->nea_clip[0] + yp * i->nea_clip[1] + zp * i->nea_clip[2] + i->nea_clip[3] + r) < 0)	return false;
+	if ((xp * i->bot_clip[0] + yp * i->bot_clip[1] + zp * i->bot_clip[2] + i->bot_clip[3] + r) < 0)	return false;
+	if ((xp * i->top_clip[0] + yp * i->top_clip[1] + zp * i->top_clip[2] + i->top_clip[3] + r) < 0)	return false;
+	if ((xp * i->lft_clip[0] + yp * i->lft_clip[1] + zp * i->lft_clip[2] + i->lft_clip[3] + r) < 0)	return false;
+	if ((xp * i->rgt_clip[0] + yp * i->rgt_clip[1] + zp * i->rgt_clip[2] + i->rgt_clip[3] + r) < 0)	return false;
+	if ((xp * i->far_clip[0] + yp * i->far_clip[1] + zp * i->far_clip[2] + i->far_clip[3] + r) < 0)	return false;
+	return true;	
 }
 
-static	inline double	DiffAngle(double a1, double a2)
+static float sphere_distance_sqr(const cull_info_t * i, float x, float y, float z)
 {
-	double diff = (a2 - a1);
-	if (diff >= 180.0)
-		diff -= 360.0;
-	if (diff <= -180.0)
-		diff += 360.0;
-	return fabs(diff);
+	float xp = x * i->model_view[0] + y * i->model_view[4] + z * i->model_view[ 8] + i->model_view[12];
+	float yp = x * i->model_view[1] + y * i->model_view[5] + z * i->model_view[ 9] + i->model_view[13];
+	float zp = x * i->model_view[2] + y * i->model_view[6] + z * i->model_view[10] + i->model_view[14];
+	return xp*xp+yp*yp+zp*zp;
+}
+
+static void convert_to_2d(const cull_info_t * i, const float * vp, float x, float y, float z, float w, float * out_x, float * out_y)
+{
+	float xe = x * i->model_view[0] + y * i->model_view[4] + z * i->model_view[ 8] + w * i->model_view[12];
+	float ye = x * i->model_view[1] + y * i->model_view[5] + z * i->model_view[ 9] + w * i->model_view[13];
+	float ze = x * i->model_view[2] + y * i->model_view[6] + z * i->model_view[10] + w * i->model_view[14];
+	float we = x * i->model_view[3] + y * i->model_view[7] + z * i->model_view[11] + w * i->model_view[15];
+
+	float xc = xe * i->proj[0] + ye * i->proj[4] + ze * i->proj[ 8] + we * i->proj[12];
+	float yc = xe * i->proj[1] + ye * i->proj[5] + ze * i->proj[ 9] + we * i->proj[13];
+//	float zc = xe * i->proj[2] + ye * i->proj[6] + ze * i->proj[10] + we * i->proj[14];
+	float wc = xe * i->proj[3] + ye * i->proj[7] + ze * i->proj[11] + we * i->proj[15];
+	
+	xc /= wc;
+	yc /= wc;	
+//	zc /= wc;
+
+	*out_x = vp[0] + (1.0f + xc) * vp[2] / 2.0f;
+	*out_y = vp[1] + (1.0f + yc) * vp[3] / 2.0f;
 }
 
 
@@ -107,24 +178,15 @@ static	int		gTotPlanes = 0;			// Counters
 static	int		gACFPlanes = 0;			// Number of Austin's planes we drew in full
 static	int		gNavPlanes = 0;			// Number of Austin's planes we drew with lights only
 static	int		gOBJPlanes = 0;			// Number of our OBJ planes we drew in full
-static	int		gHackFOVLast = 0;
 
-static	XPLMDataRef		gFOVDataRef = NULL;		// Current FOV for culling.
 static	XPLMDataRef		gVisDataRef = NULL;		// Current air visiblity for culling.
 static	XPLMDataRef		gAltitudeRef = NULL;	// Current aircraft altitude (for TCAS)
-static	float			gOverRes = 1.0;			// Wide-screen support.  (May be messed up.)
 
 
 void			XPMPInitDefaultPlaneRenderer(void)
 {
 	// SETUP - mostly just fetch datarefs.
-	int	width;
-	XPLMGetScreenSize(&width, NULL);
-	gOverRes = ((double) width) / 1024.0;
 
-	gFOVDataRef = XPLMFindDataRef("sim/graphics/view/field_of_view_deg");
-	if (gFOVDataRef == NULL)
-		XPLMDebugString("WARNING: Default renderer could not find FOV data in the sim.\n");
 	gVisDataRef = XPLMFindDataRef("sim/graphics/view/visibility_effective_m");
 	if (gVisDataRef == NULL) gVisDataRef = XPLMFindDataRef("sim/weather/visibility_effective_m");
 	if (gVisDataRef == NULL)
@@ -145,9 +207,6 @@ void			XPMPInitDefaultPlaneRenderer(void)
 	XPLMRegisterDataAccessor("hack/renderer/acfs", xplmType_Int, 0, GetRendererStat, NULL, 
 				NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,	
 				&gACFPlanes, NULL);
-	XPLMRegisterDataAccessor("hack/renderer/fov", xplmType_Int, 0, GetRendererStat, NULL, 
-				NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,	
-				&gHackFOVLast, NULL);
 #endif		
 
 	// We don't know how many multiplayer planes there are - fetch as many as we can.
@@ -191,6 +250,8 @@ struct	PlaneToRender_t {
 	XPLMPlaneDrawState_t	state;		// Flaps, gear, etc.
 	float					dist;
 	xpmp_LightStatus		lights;		// lights status
+	string					label;
+	
 };
 typedef	std::map<float, PlaneToRender_t>	RenderMap;
 
@@ -213,30 +274,18 @@ void			XPMPDefaultPlaneRenderer(void)
 		return;
 	}
 	
-	if (gFOVDataRef == NULL)	// No FOV - we're probably totally screwed up.
-		return;
+	cull_info_t			gl_camera;
+	setup_cull_info(&gl_camera);
+	XPLMCameraPosition_t x_camera;	
+		
+	XPLMReadCameraPosition(&x_camera);	// only for zoom!
 
 	// Culling - read the camera pos«and figure out what's visible.
 
-	XPLMCameraPosition_t		cameraPos;
-	double							fov;
-	
-	XPLMReadCameraPosition(&cameraPos);
-	fov = XPLMGetDataf(gFOVDataRef);
-	double maxDist = XPLMGetDataf(gVisDataRef);
-	
-	double	kFullPlaneDist = gOverRes * (5280.0 / 3.2) * (gFloatPrefsFunc ? gFloatPrefsFunc("planes","full_distance", 3.0) : 3.0);	// Only draw planes fully within 3 miles.
-	int		kMaxFullPlanes = gIntPrefsFunc ? gIntPrefsFunc("planes","max_full_count", 100) : 100;						// Draw no more than 100 full planes!
-	
-	// Field of view modification.  We don't yet handle camera roll because I'm too stupid
-	// to do the math.  (I took linear algebra but came out of the course knowing less than
-	// when I went in.  So instead we...assume that our field of view is vertical, apply
-	// a 5:3 aspect ratio to widen it and a 10% fudge factor to account for airplanes
-	// not being point objects.  The 5:3 is based on allowing for the worst case, that
-	// we're rolled to make a perfect diagonal making our monitor as wide as possible.d
-	// We divide by camera zoom so that when we're zoomed in we're not taking people
-	// that have been zoomed out of our peripheral vision.
-	fov = fov * 5.0 / 4.0 / cameraPos.zoom;
+	double	maxDist = XPLMGetDataf(gVisDataRef);	
+	double  labelDist = min(maxDist, MAX_LABEL_DIST) * x_camera.zoom;		// Labels get easier to see when users zooms.
+	double	fullPlaneDist = x_camera.zoom * (5280.0 / 3.2) * (gFloatPrefsFunc ? gFloatPrefsFunc("planes","full_distance", 3.0) : 3.0);	// Only draw planes fully within 3 miles.
+	int		maxFullPlanes = gIntPrefsFunc ? gIntPrefsFunc("planes","max_full_count", 100) : 100;						// Draw no more than 100 full planes!	
 
 	gTotPlanes = planeCount;	
 	gNavPlanes = gACFPlanes = gOBJPlanes = 0;
@@ -245,7 +294,7 @@ void			XPMPDefaultPlaneRenderer(void)
 	XPLMCountAircraft(&modelCount, &active, &plugin);
 	tcas = modelCount - 1;	// This is how many tcas blips we can have!
 		
-	RenderMap	myPlanes;
+	RenderMap						myPlanes;		// Planes - sorted by distance so we can do the closest N and bail
 	
 	/************************************************************************************
 	 * CULLING AND STATE CALCULATION LOOP
@@ -274,6 +323,7 @@ void			XPMPDefaultPlaneRenderer(void)
 		
 		XPMPPlanePosition_t	pos;
 		pos.size = sizeof(pos);
+		pos.label[0] = 0;
 
 		if (XPMPGetPlaneData(id, xpmpDataType_Position, &pos) != xpmpData_Unavailable)
 		{
@@ -282,9 +332,7 @@ void			XPMPDefaultPlaneRenderer(void)
 			double	x,y,z;
 			XPLMWorldToLocal(pos.lat, pos.lon, pos.elevation * kFtToMeters, &x, &y, &z);
 			
-			double	distMeters = CalcDist3D(x,y,z,cameraPos.x, cameraPos.y, cameraPos.z);
-			if (cameraPos.zoom != 0.0)
-				distMeters /= cameraPos.zoom;	// If we're 2x zoomed, pretend the AC is half as far away.
+			float distMeters = sqrt(sphere_distance_sqr(&gl_camera,x,y,z));
 			
 			// If the plane is farther than our TCAS range, it's just not visible.  Drop it!
 			if (distMeters > kMaxDistTCAS)
@@ -310,36 +358,11 @@ void			XPMPDefaultPlaneRenderer(void)
 			// Calculate the angles between the camera angles and the real angles.
 			// Cull if we exceed half the FOV.
 			
-			double	headingToTarget = CalcAngle(cameraPos.z - z, x - cameraPos.x);
-			double	pitchToTarget = CalcAngle(sqrt(sqr(x - cameraPos.x) + sqr(cameraPos.z - z)), y - cameraPos.y);
-			
-			double	headOff = DiffAngle(headingToTarget, cameraPos.heading);
-			double	pitchOff = DiffAngle(pitchToTarget,cameraPos.pitch);
-
-#if DEBUG_RENDERER
-			char	cullBuf[1024];
-			sprintf(cullBuf, "Target Pos = %f,%f,%f, Camera Pos = %f,%f,%f.\n",
-				x,y,z,cameraPos.x,cameraPos.y,cameraPos.z);				
-			XPLMDebugString(cullBuf);
-			sprintf(cullBuf, "Camera p=%f,h=%f, object p=%f,h=%f,diff p=%f,h=%f.\n",
-				cameraPos.pitch, cameraPos.heading, pitchToTarget, headingToTarget, pitchOff, headOff);
-			XPLMDebugString(cullBuf);
-#endif			
-			
-			
-			float fov_fudged = fov + atan(200.0 / distMeters) * 180.0 / 3.141592565;
-#if RENDERER_STATS			
-			gHackFOVLast = fov_fudged;
-#endif			
-			// View frustum check - if we're off screen, we don't draw.  But remember us - we may be visible on TCAS.
-			if ((headOff > (fov_fudged / 2.0)) ||
-				(pitchOff > (fov_fudged / 2.0)))
-			{
+			if(!cull && !sphere_is_visible(&gl_camera, x, y, z, 50.0))
 				cull = true;
-			}
 			
 			// Full plane or lites based on distance.
-			bool	drawFullPlane = (distMeters < kFullPlaneDist);
+			bool	drawFullPlane = (distMeters < fullPlaneDist);
 			
 #if DEBUG_RENDERER
 
@@ -378,9 +401,9 @@ void			XPMPDefaultPlaneRenderer(void)
 					renderRecord.state.slatRatio 		= surfaces.slatRatio 		;
 					renderRecord.state.wingSweep 		= surfaces.wingSweep 		;
 					renderRecord.state.thrust 			= surfaces.thrust 			;
-					renderRecord.state.yolkPitch 		= surfaces.yolkPitch 		;
-					renderRecord.state.yolkHeading 		= surfaces.yolkHeading 		;
-					renderRecord.state.yolkRoll 		= surfaces.yolkRoll 		;
+					renderRecord.state.yokePitch 		= surfaces.yokePitch 		;
+					renderRecord.state.yokeHeading 		= surfaces.yokeHeading 		;
+					renderRecord.state.yokeRoll 		= surfaces.yokeRoll 		;
 
 					renderRecord.lights.lightFlags		= surfaces.lights.lightFlags;
 				
@@ -390,9 +413,9 @@ void			XPMPDefaultPlaneRenderer(void)
 					renderRecord.state.flapRatio = (pos.elevation < 70) ? 1.0 : 0.0;
 					renderRecord.state.spoilerRatio = renderRecord.state.speedBrakeRatio = renderRecord.state.slatRatio = renderRecord.state.wingSweep = 0.0;
 					renderRecord.state.thrust = (pos.pitch > 30) ? 1.0 : 0.6;
-					renderRecord.state.yolkPitch = pos.pitch / 90.0;
-					renderRecord.state.yolkHeading = pos.heading / 180.0;
-					renderRecord.state.yolkRoll = pos.roll / 90.0;	
+					renderRecord.state.yokePitch = pos.pitch / 90.0;
+					renderRecord.state.yokeHeading = pos.heading / 180.0;
+					renderRecord.state.yokeRoll = pos.roll / 90.0;	
 
 					// use some smart defaults
 					renderRecord.lights.bcnLights = 1;
@@ -403,8 +426,9 @@ void			XPMPDefaultPlaneRenderer(void)
 					renderRecord.state.gearPosition = 1.0;
 				renderRecord.full = drawFullPlane;	
 				renderRecord.dist = distMeters;
+				renderRecord.label = pos.label;
 				
-				myPlanes.insert(RenderMap::value_type(distMeters, renderRecord));
+				myPlanes.insert(RenderMap::value_type(distMeters, renderRecord));				
 
 			} // State calculation
 			
@@ -444,7 +468,7 @@ void			XPMPDefaultPlaneRenderer(void)
 		{	
 			// Max plane enforcement - once we run out of the max number of full planes the 
 			// user allows, force only lites for framerate
-			if (gACFPlanes >= kMaxFullPlanes)
+			if (gACFPlanes >= maxFullPlanes)
 				iter->second.full = false;
 
 #if DEBUG_RENDERER	
@@ -567,6 +591,46 @@ void			XPMPDefaultPlaneRenderer(void)
 		}
 	}
 	
+	// PASS 4 - Labels
+	if ( gDrawLabels )
+	{
+		GLfloat	vp[4];
+		glGetFloatv(GL_VIEWPORT,vp);
+		
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		glOrtho(0, vp[2], 0, vp[3], -1, 1);
+		
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+		
+		float c[4] = { 1, 1, 0, 1 };
+		
+		
+		for (RenderMap::iterator iter = myPlanes.begin(); iter != myPlanes.end(); ++iter)
+			if(iter->first < labelDist)
+				if(!iter->second.cull)		// IMPORTANT - airplane BEHIND us still maps XY onto screen...so we get 180 degree reflections.  But behind us acf are culled, so that's good.
+				{
+					float x, y;
+					convert_to_2d(&gl_camera, vp, iter->second.x, iter->second.y, iter->second.z, 1.0, &x, &y);
+					
+					float rat = 1.0 - (iter->first / labelDist);
+					c[0] = c[1] = 0.5 + 0.5 * rat;
+					c[2] = 0.5 - 0.5 * rat;		// gray -> yellow - no alpha in the SDK - foo!
+					
+					XPLMDrawString(c, x, y+10, (char *) iter->second.label.c_str(), NULL, xplmFont_Basic);
+				}
+		
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();	
+		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
+		
+	}
+
+	
 	// Final hack - leave a note to ourselves for how many of Austin's planes we relocated to do TCAS.
 	if (tcas > renderedCounter)	
 		tcas = renderedCounter;
@@ -574,3 +638,19 @@ void			XPMPDefaultPlaneRenderer(void)
 	
 	gDumpOneRenderCycle = 0;
 }
+
+void XPMPEnableAircraftLabels()
+{
+	gDrawLabels = true;
+}
+
+void XPMPDisableAircraftLabels()
+{
+	gDrawLabels = false;
+}
+
+bool XPMPDrawingAircraftLabels()
+{
+	return gDrawLabels;
+}
+

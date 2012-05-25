@@ -2,8 +2,8 @@
 #include "ptypes.h"
 #include "pasync.h"
 
-#include "XPLMMultiplayerCSL.h"
-#include "XPLMMultiplayerObj.h"
+#include "XPMPMultiplayerCSL.h"
+#include "XPMPMultiplayerObj.h"
 
 USING_PTYPES
 

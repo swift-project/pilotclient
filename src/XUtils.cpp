@@ -22,7 +22,6 @@
  */
 #include "XUtils.h"
 #include <stdio.h>
-#include <string.h>
 #include <ctype.h>
 #include "XObjDefs.h"
 #include <stdlib.h>
@@ -30,6 +29,7 @@
 //#include <time.h>
 #include <map>
 #include <math.h>
+#include <string.h>
 
 #if !defined(XUTILS_EXCLUDE_MAC_CRAP) && defined(__MACH__)
 #define XUTILS_EXCLUDE_MAC_CRAP 1
