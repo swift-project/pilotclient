@@ -39,10 +39,10 @@ repository merge.
 To do so, after cloning the repository, run either of the following commands:
 
 Multiplayer as it existed on X-IvAp SourceForge:
-git checkout -b <new branch name> last_xivap_subversion
+git checkout -b &lt;new branch name&gt; last_xivap_subversion
 
 Multiplayer as it existed on XSB/VATSIM git repository:
-git checkout -b <new branch name> last_xivap_xsb
+git checkout -b &lt;<new branch name&gt; last_xivap_xsb
 
 ##License
 
