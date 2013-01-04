@@ -25,7 +25,7 @@
 #include <ctype.h>
 #include "XObjDefs.h"
 #include <stdlib.h>
-#include "PlatformUtils.h"
+//#include "PlatformUtils.h"
 //#include <time.h>
 #include <map>
 #include <math.h>
@@ -256,7 +256,7 @@ double	RandRangeBias(double mmin, double mmax, double biasRatio, double randomAm
 	return RandRange(mmin + span * lower_rat,mmin + span * upper_rat);
 }
 
-
+#if 0
 void		StripPath(string& ioPath)
 {
 	string::size_type sep = ioPath.rfind(DIR_CHAR);
@@ -281,7 +281,7 @@ void		ExtractPath(string& ioPath)
 	if (sep != ioPath.npos)
 		ioPath = ioPath.substr(0, sep);
 }
-
+#endif
 #if APL
 
 #if !defined(XUTILS_EXCLUDE_MAC_CRAP)

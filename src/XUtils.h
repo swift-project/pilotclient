@@ -66,9 +66,9 @@ bool	GetNextNoComments(StTextFileScanner& f, string& s);
 // unit is also rather questionable.
 double	GetObjRadius(const XObj& inObj);
 
-void	StripPath(string& ioPath);
-void	StripPathCP(string& ioPath);
-void	ExtractPath(string& ioPath);
+//void	StripPath(string& ioPath);
+//void	StripPathCP(string& ioPath);
+//void	ExtractPath(string& ioPath);
 
 int		PickRandom(vector<double>& chances);
 bool	RollDice(double inProb);

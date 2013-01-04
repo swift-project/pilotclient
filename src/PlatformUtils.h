@@ -23,6 +23,8 @@
 #ifndef _PlatformUtils_h_
 #define _PlatformUtils_h_
 
+#error who uses this?
+
 /*
  * PlatformUtils
  *

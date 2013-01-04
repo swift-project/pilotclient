@@ -104,4 +104,9 @@ void			CSL_DrawObject(
 							XPLMPlaneDrawState_t *	state);
 							
 
+#if APL
+int Posix2HFSPath(const char *path, char *result, int resultLen);
+int HFS2PosixPath(const char *path, char *result, int resultLen);
+#endif
+
 #endif /* XPLMMULTIPLAYERCSL_H */

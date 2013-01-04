@@ -46,48 +46,62 @@ Nasty Mac Specific Stuff to Load OGL DLL Extensions
 
 CFBundleRef	gBundleRefOpenGL = NULL;
 
+
+// Utility routine to get a bundle from the system folder by file name....typically used to find OpenGL to get extension functions.
+int load_bundle_by_filename (const char * in_filename, CFBundleRef * io_bundle_ref)
+{
+    OSStatus		err = noErr;
+	FSRef			framework_fs;
+    CFURLRef		framework_url = NULL;
+	CFURLRef		bundle_url = NULL;
+	CFStringRef		bundle_name = NULL;
+	CFBundleRef		bundle_ref = NULL;
+	
+	bundle_name = CFStringCreateWithCString(kCFAllocatorDefault, in_filename, kCFStringEncodingUTF8);
+    if (bundle_name == NULL) {
+		err = paramErr;
+    	goto bail; }
+	
+	err = FSFindFolder(kSystemDomain, kFrameworksFolderType, false, &framework_fs);
+    if (noErr != err) {
+		err = dirNFErr;
+    	goto bail; }
+	
+    // create URL to folder
+    framework_url = CFURLCreateFromFSRef (kCFAllocatorDefault, &framework_fs);
+	if(framework_url == NULL) {
+		err = ioErr;
+		goto bail; }
+	
+	bundle_url = CFURLCreateWithFileSystemPathRelativeToBase(kCFAllocatorDefault, bundle_name, kCFURLPOSIXPathStyle, false, framework_url);
+	if(bundle_url == NULL) {
+		err = fnfErr;
+		goto bail; }
+	
+    bundle_ref = CFBundleCreate (kCFAllocatorDefault, bundle_url);
+	if(bundle_ref == NULL) {
+		err = permErr;
+		goto bail; }
+	
+    if (!CFBundleLoadExecutable (bundle_ref)) {
+        err = bdNamErr;
+		goto bail;
+    }
+	
+	if (io_bundle_ref) { *io_bundle_ref = bundle_ref; bundle_ref = NULL; }
+bail:
+		if(bundle_ref)		CFRelease(bundle_ref);
+	if(bundle_name)		CFRelease(bundle_name);
+	if(bundle_url)		CFRelease(bundle_url);
+	if(framework_url)	CFRelease(framework_url);
+	
+    return err;
+}
+
+
 OSStatus aglInitEntryPoints (void)
 {
-    OSStatus err = noErr;
-    const Str255 frameworkName = "\pOpenGL.framework";
-    FSRefParam fileRefParam;
-    FSRef fileRef;
-    CFURLRef bundleURLOpenGL;
-
-    memset(&fileRefParam, 0, sizeof(fileRefParam));
-    memset(&fileRef, 0, sizeof(fileRef));
-
-    fileRefParam.ioNamePtr  = frameworkName;
-    fileRefParam.newRef = &fileRef;
-
-    // Frameworks directory/folder
-    err = FindFolder (kSystemDomain, kFrameworksFolderType, false,
-                      &fileRefParam.ioVRefNum, (SInt32 *) &fileRefParam.ioDirID);
-    if (noErr != err) {
-        return err;
-    }
-    err = PBMakeFSRefSync (&fileRefParam); // make FSRef for folder
-    if (noErr != err) {
-        return err;
-    }
-    // create URL to folder
-    bundleURLOpenGL = CFURLCreateFromFSRef (kCFAllocatorDefault,
-                                            &fileRef);
-    if (!bundleURLOpenGL) {
-        return paramErr;
-    }
-    // create ref to GL's bundle
-    gBundleRefOpenGL = CFBundleCreate (kCFAllocatorDefault,
-                                       bundleURLOpenGL);
-    if (!gBundleRefOpenGL) {
-        return paramErr;
-    }
-    CFRelease (bundleURLOpenGL); // release created bundle
-    // if the code was successfully loaded, look for our function.
-    if (!CFBundleLoadExecutable (gBundleRefOpenGL)) {
-        return paramErr;
-    }
-    return err;
+	return load_bundle_by_filename ("OpenGL.framework", &gBundleRefOpenGL);
 }
 
 void * aglGetProcAddress (char * pszProc)

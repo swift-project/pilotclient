@@ -24,7 +24,7 @@
 #include "XPMPMultiplayerObj.h"
 #include "XPMPMultiplayerVars.h"
 
-#include "PlatformUtils.h"
+//#include "PlatformUtils.h"
 #include "XObjReadWrite.h"
 #include "TexUtils.h"
 #include "XOGLUtils.h"
@@ -59,9 +59,10 @@ static	int sLightTexture = -1;
 
 static void MakePartialPathNativeObj(string& io_str)
 {
-	vector<char> chars(io_str.begin(),io_str.end());
-	MakePartialPathNative(&*chars.begin(),&*chars.begin()+chars.size());
-	io_str=string(chars.begin(),chars.end());
+//	char sep = *XPLMGetDirectorySeparator();
+	for(int i = 0; i < io_str.size(); ++i)
+	if(io_str[i] == '/' || io_str[i] == ':' || io_str[i] == '\\')
+		io_str[i] = '/';
 }
 
 static	XPLMDataRef sFOVRef = XPLMFindDataRef("sim/graphics/view/field_of_view_deg");
@@ -339,14 +340,14 @@ int		OBJ_LoadModel(const char * inFilePath)
 	
 	sObjects.back().path = path;
 	string tex_path(path);
-	string::size_type p = tex_path.find_last_of(DIR_STR);
+	string::size_type p = tex_path.find_last_of("\\:/");//XPLMGetDirectorySeparator());
 	tex_path.erase(p+1);
 	tex_path += sObjects.back().obj.texture;
 	tex_path += ".png";
 	sObjects.back().texnum = OBJ_LoadTexture(tex_path.c_str(), false);
 
 	tex_path = path;
-	p = tex_path.find_last_of(DIR_STR);
+	p = tex_path.find_last_of("\\:/");//XPLMGetDirectorySeparator());
 	tex_path.erase(p+1);
 	tex_path += sObjects.back().obj.texture;
 	tex_path += "_LIT.png";

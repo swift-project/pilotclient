@@ -38,7 +38,7 @@
 #include "XPLMUtilities.h"
 
 #include "XOGLUtils.h"
-#include "PlatformUtils.h"
+//#include "PlatformUtils.h"
 
 #include <stdlib.h>
 #include <stdio.h>

@@ -27,7 +27,7 @@
 #include "XOGLUtils.h"
 #include <stdio.h>
 #include <algorithm>
-#include "PlatformUtils.h"
+//#include "PlatformUtils.h"
 #include <errno.h>
 #include <string.h>
 
@@ -38,7 +38,7 @@ using std::max;
 #endif
 
 // Set this to 1 to get TONS of diagnostics on what the lib is doing.
-#define 	DEBUG_CSL_LOADING 0
+#define 	DEBUG_CSL_LOADING 1
 
 // Set this to 1 to cause AIRLINE and LIVERY to create ICAO codes automatically
 #define USE_DEFAULTING 0
@@ -53,11 +53,62 @@ enum {
  * UTILITY ROUTINES
  ************************************************************************/
 
+#if APL
+
+template <typename T>
+struct CFSmartPtr {
+	 CFSmartPtr(T p) : p_(p) {						  }
+	~CFSmartPtr()			 { if (p_) CFRelease(p_); }
+	operator T ()			 { return p_; }
+	T p_;
+};
+
+int Posix2HFSPath(const char *path, char *result, int resultLen)
+{
+	CFSmartPtr<CFStringRef>		inStr(CFStringCreateWithCString(kCFAllocatorDefault, path ,kCFStringEncodingMacRoman));
+	if (inStr == NULL) return -1;
+	
+	CFSmartPtr<CFURLRef>		url(CFURLCreateWithFileSystemPath(kCFAllocatorDefault, inStr, kCFURLPOSIXPathStyle,0));
+	if (url == NULL) return -1;
+	
+	CFSmartPtr<CFStringRef>		outStr(CFURLCopyFileSystemPath(url, kCFURLHFSPathStyle));
+	if (outStr == NULL) return -1;
+	
+	if (!CFStringGetCString(outStr, result, resultLen, kCFStringEncodingMacRoman))
+		return -1;
+
+	return 0;
+}
+
+int HFS2PosixPath(const char *path, char *result, int resultLen)
+{
+	bool is_dir = (path[strlen(path)-1] == ':');
+
+	CFSmartPtr<CFStringRef>		inStr(CFStringCreateWithCString(kCFAllocatorDefault, path ,kCFStringEncodingMacRoman));
+	if (inStr == NULL) return -1;
+	
+	CFSmartPtr<CFURLRef>		url(CFURLCreateWithFileSystemPath(kCFAllocatorDefault, inStr, kCFURLHFSPathStyle,0));
+	if (url == NULL) return -1;
+	
+	CFSmartPtr<CFStringRef>		outStr(CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle));
+	if (outStr == NULL) return -1;
+	
+	if (!CFStringGetCString(outStr, result, resultLen, kCFStringEncodingMacRoman))
+		return -1;
+		
+	if(is_dir) strcat(result, "/");
+
+	return 0;
+}
+
+#endif
+
 static void MakePartialPathNativeObj(string& io_str)
 {
-	vector<char> chars(io_str.begin(),io_str.end());
-	MakePartialPathNative(&*chars.begin(),&*chars.begin()+chars.size());
-	io_str=string(chars.begin(),chars.end());
+//	char sep = *XPLMGetDirectorySeparator();
+	for(int i = 0; i < io_str.size(); ++i)
+	if(io_str[i] == '/' || io_str[i] == ':' || io_str[i] == '\\')
+		io_str[i] = '/';
 }
 
 struct XPLMDump { 
@@ -220,13 +271,14 @@ bool	LoadOnePackage(const string& inPath, int pass)
 		int						sim, xplm;
 		XPLMHostApplicationID 	host;	
 
-#ifdef DEBUG_CSL_LOADING
+#if DEBUG_CSL_LOADING
 	XPLMDump() << "LoadOnePackage was passed inPath of: " << inPath << ".\n";
 #endif
 	// First locate and attempt to load the xsb_aircraft.txt file from th is package.
 	string	path(inPath);
-	path += (DIR_STR "xsb_aircraft.txt");
-#ifdef DEBUG_CSL_LOADING
+	path += "/"; //XPLMGetDirectorySeparator();
+	path += "xsb_aircraft.txt";
+#if DEBUG_CSL_LOADING
 	XPLMDump() << "LoadOnePackage attempting to open: " << path << ".\n";
 #endif
 	
@@ -632,7 +684,7 @@ bool CSL_LoadCSL(const char * inFolderPath, const char * inRelatedFile, const ch
 
 	char *	name_buf = (char *) malloc(16384);
 	char ** index_buf = (char **) malloc(65536);
-	long	total, ret;
+	int	total, ret;
 	
 	char folder[1024];
 
@@ -653,7 +705,7 @@ bool CSL_LoadCSL(const char * inFolderPath, const char * inRelatedFile, const ch
 #endif	
 		char * foo = index_buf[r];
 		string	path(inFolderPath);
-		path += DIR_STR;
+		path += "/";//XPLMGetDirectorySeparator();
 		path += foo;
 		pckgs.push_back(path);		
 	}
