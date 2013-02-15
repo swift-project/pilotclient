@@ -1,0 +1,84 @@
+# In repository we don't need to have:
+# Compiled object files
+*.o
+
+# Generated MOC, resource and UI files
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# QtCreator project files
+*.pro.user
+
+# Debug and Release directories (created under Windows, not Linux)
+# Additional the CMake build folder
+bin/
+obj/
+Debug/
+Release/
+ReleaseDebug/
+DebugFast/
+ReleaseDebugStatic/
+DebugFastStatic/
+build/
+
+# .log files (usually created by QtTest - thanks to VestniK)
+*.log
+
+# Windows compile
+*.exe
+*.dll
+*.lib
+*.obj
+
+# Linux compile
+*.a
+*.la
+*.lo
+*.Po
+*.Plo
+*.o
+*.so
+*.so.*
+*_debug
+core
+*.pc
+*.gch
+
+# Mac OS X compile
+*.dylib
+
+# CMake stuff
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+CPackConfig.cmake
+CPackSourceConfig.cmake
+.libs
+
+# Visual Studio stuff
+*.opensdf
+UpgradeLog*.XML
+_UpgradeReport_Files
+BuildLog.htm
+mt.dep
+ipch
+*.suo
+*.ncb
+*.user
+*.ilk
+*.pdb
+*.aps
+*.exp
+*.idb
+*.sdf
+
+# Mac OS X stuff
+.DS_Store
+
+# Windows-specific files
+Thumbs.db
+desktop.ini
+
+# Editors temporary files 
+*~

@@ -1,0 +1,2 @@
+ADD_SUBDIRECTORY(blackmisc)
+ADD_SUBDIRECTORY(blackcore)
