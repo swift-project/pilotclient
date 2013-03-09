@@ -34,7 +34,7 @@ namespace BlackCore
 		const double KnotsToMeterPerSecond = 0.5144444444;
 		
 		//! Equatorial radius of WGS84 ellipsoid (6378137 m)
-		const double EarthRadius = 6378137.0;
+		const double EarthRadiusMeters = 6378137.0;
 		
 		//! Flattening of WGS84 ellipsoid (1/298.257223563).
 		const double Flattening = 1/298.257223563;

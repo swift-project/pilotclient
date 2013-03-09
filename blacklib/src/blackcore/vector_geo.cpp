@@ -9,48 +9,41 @@ namespace BlackCore
 {
 
     CVectorGeo::CVectorGeo()
-    {
-        zeros();
-    }
+        : m_latitudeDegrees(0), m_longitudeDegrees(0), m_altitudeMeters(0)
+    {}
 
-    CVectorGeo::CVectorGeo(double lat, double lon, double alt)
-    {
-        zeros();
-        m_latitude = lat;
-        m_longitude = lon;
-        m_altitude = alt;
-    }
+    CVectorGeo::CVectorGeo(double latitudeDegrees, double longitudeDegrees, double altitudeMeters)
+        : m_latitudeDegrees(latitudeDegrees), m_longitudeDegrees(longitudeDegrees),
+        m_altitudeMeters(altitudeMeters)
+    {}
 
     CVectorGeo::CVectorGeo(const CVectorGeo &other)
-    {
-        zeros();
-        m_latitude = other.latitude();
-        m_longitude = other.longitude();
-        m_altitude = other.altitude();
-    }
+        : m_latitudeDegrees(other.m_latitudeDegrees), m_longitudeDegrees(other.m_longitudeDegrees),
+        m_altitudeMeters(other.m_altitudeMeters)
+    {}
 
     CEcef CVectorGeo::toCartesian()
     {
         CEcef result;
 		
-		double phi = m_latitude * Constants::DegToRad;
-        double lambda = m_longitude * Constants::DegToRad;
+		double phi = m_latitudeDegrees * Constants::DegToRad;
+        double lambda = m_longitudeDegrees * Constants::DegToRad;
 		double sphi = sin(phi);
 		double cphi = 0;
-		if (std::abs(m_latitude) != 90)
+		if (std::abs(m_latitudeDegrees) != 90)
 			cphi = cos(phi);
 			
-		double n = Constants::EarthRadius/sqrt(1-Constants::e2 * CMath::square(sphi));
+		double n = Constants::EarthRadiusMeters/sqrt(1-Constants::e2 * CMath::square(sphi));
 		
 		double slambda = 0;
-		if (m_longitude != -180)
+		if (m_longitudeDegrees != -180)
 			slambda = sin(lambda);
 		
 		double clambda = 0;
-		if (std::abs(m_longitude) != 90)
+		if (std::abs(m_longitudeDegrees) != 90)
 			clambda = cos(lambda);
         
-		double h = m_altitude * Constants::FeetToMeter;
+		double h = m_altitudeMeters;
 		
 		double X = (n + h) * cphi;
 		double Y = X * slambda;
@@ -65,27 +58,27 @@ namespace BlackCore
 
     void CVectorGeo::zeros()
     {
-        m_latitude = 0;
-        m_longitude = 0;
-        m_altitude = 0;
+        m_latitudeDegrees = 0;
+        m_longitudeDegrees = 0;
+        m_altitudeMeters = 0;
     }
 	
-	void CVectorGeo::print()
-{
-    std::cout << "v = " << std::endl;
-	std::cout << std::fixed;
-    std::cout << "[" << m_latitude << "]" << std::endl;
-	std::cout << "[" << m_longitude << "]" << std::endl;
-	std::cout << "[" << m_altitude << "]" << std::endl;
-}
+	void CVectorGeo::print(std::ostream &stream)
+    {
+        stream << "v = " << std::endl;
+	    stream << std::fixed;
+        stream << "[" << m_latitudeDegrees << "]" << std::endl;
+	    stream << "[" << m_longitudeDegrees << "]" << std::endl;
+	    stream << "[" << m_altitudeMeters << "]" << std::endl;
+    }
 
     CVectorGeo &CVectorGeo::operator =(const CVectorGeo &rhs)
     {
         if (this != &rhs)
         {
-            m_latitude = rhs.latitude();
-            m_longitude = rhs.longitude();
-            m_altitude = rhs.altitude();
+            m_latitudeDegrees = rhs.latitudeDegrees();
+            m_longitudeDegrees = rhs.longitudeDegrees();
+            m_altitudeMeters = rhs.altitudeMeters();
         }
         return *this;
     }

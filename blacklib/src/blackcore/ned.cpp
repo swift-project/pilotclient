@@ -24,7 +24,7 @@ namespace BlackCore
 
 	CEcef CNed::toECEF()
 	{
-		double angle = - ( m_position.latitude() * Constants::DegToRad ) - Constants::PI/2;
+		double angle = - ( m_position.latitudeDegrees() * Constants::DegToRad ) - Constants::PI/2;
 
 		CMatrix3D dcm1;
 		CMatrix3D dcm2;
@@ -47,7 +47,7 @@ namespace BlackCore
 		dcm2(2,0) = sin( angle );
 		dcm2(2,2) = cos( angle );
 
-		angle = m_position.longitude() * Constants::DegToRad;
+		angle = m_position.longitudeDegrees() * Constants::DegToRad;
 
 		dcm3(0,0) = cos(angle );
 		dcm3(0,1) = sin(angle );

@@ -32,6 +32,11 @@ namespace BlackCore {
 	typedef quint32 (*getDriverVersionMinor)(void);
 	const char *DRIVER_VERSION_MINOR = "BB_InterfaceVersionMinor";
 
+    void ISimulator::setLibraryContext(BlackMisc::IContext *context)
+    {
+        m_libraryContext = context;
+    }
+
 	ISimulator *ISimulator::createDriver(ESimulator sim)
 	{
 		QLibrary myLib;
@@ -108,55 +113,24 @@ namespace BlackCore {
 		return result;
 	}
 
-	////////////////////////////////
-	// Global section
-	////////////////////////////////
-
-	// Callback when the Simulation starts
-	void ISimulator::setcbSimStarted(cbSimStarted func, void *context)
+	void ISimulator::setcbSimStarted(const cbSimStarted &func)
 	{
-		mSimStarted = func;
+		m_cbSimStarted = func;
 	}
 
-	////////////////////////////////
-	// User plane section
-	////////////////////////////////
-	// Callback frequency tuner
-	void ISimulator::setChangedRadioFreq(cbChangedRadioFreq func, void * context)
+    void ISimulator::setcbChangedAvionicsState(const cbChangedAvionicsState &func)
 	{
-		mChangedRadioFreq = func;
-		m_CallbackContext = context;
+		m_cbChangedAvionicsState = func;
 	}
 
-	// Callback when the gear is moving
-	void ISimulator::setcbChangedGearPosition(cbChangedGearPosition func, void *context)
+	void ISimulator::setcbChangedAnimationState(const cbChangedAnimationState &func)
 	{
-		mChangedGearPosition = func;
-		m_CallbackContext = context;
+		m_cbChangedAnimationState = func;
 	}
 
-	// Callback if the user switched on/off a light
-	void ISimulator::setcbChangedLights(cbChangedLights func, void *context)
+	void ISimulator::setcbChangedModel(const cbChangedModel &func)
 	{
-		mChangedLights = func;
-		m_CallbackContext = context;
+		m_cbChangedModel = func;
 	}
 
-	// Callback, when the Aircraft is set or gets changed
-	void ISimulator::setcbChangedAircraftType(cbChangedAircraftType func, void *context)
-	{
-		mChangedAircraftType = func;
-		m_CallbackContext = context;
-	}
-
-	// Callback, when the Flaps are moving
-	void ISimulator::setcbChangedFlaps(cbChangedFlaps func, void *context)
-	{
-		mChangedFlaps = func;
-		m_CallbackContext = context;
-	}
-
-} //! namespace BlackCore {
-
-
-
+} //! namespace BlackCore

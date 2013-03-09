@@ -8,22 +8,75 @@
 
 #include <QString>
 
-#include <blackcore/sim_callbacks.h>
-
+#include "blackcore/sim_callbacks.h"
 #include "blackcore/vector_geo.h"
-class CLibraryContext;
 
 #define SHARED_LIBRARY_NAME_FS9 "bb_driver_fs9"
 #define SHARED_LIBRARY_NAME_FSX "bb_driver_fsx"
 #define SHARED_LIBRARY_NAME_XPLANE "bb_driver_xplane"
 
+namespace BlackMisc {
+
+    	class IContext;
+
+}
+
 namespace BlackCore {
 
-	class CVector3D;
-	class CVectorGEO;
-	class IContext;
+    class CPlaneModel
+    {
+    public:
+        QString name;
+        QString typeCode;
+        QString airlineCode;
+    };
 
-	class ISimulator
+    class CPhysicalState
+    {
+    public:
+        CPhysicalState() : headingDegrees(0), pitchDegrees(0), bankDegrees(0), groundSpeedKnots(0)
+        {}
+        CVectorGeo position;
+        float headingDegrees;
+        float pitchDegrees;
+        float bankDegrees;
+        float groundSpeedKnots;
+    };
+
+    class CAvionicsState
+    {
+        CAvionicsState() : squawkCode(0), squawkModeC(false), squawkIdent(false),
+            com1FreqHz(0), com2FreqHz(0)
+        {}
+        qint16 squawkCode;
+        bool squawkModeC;
+        bool squawkIdent;
+        qint32 com1FreqHz;
+        qint32 com2FreqHz;
+    };
+
+    class CAnimationState
+    {
+    public:
+        CAnimationState() : gearPercent(0), flapsPercent(0), landingLights(false),
+            taxiLights(false), navLights(false), strobeLights(false), beaconLights(false)
+        {}
+        qint8 gearPercent;
+        qint8 flapsPercent;
+        bool landingLights;
+        bool taxiLights;
+        bool navLights;
+        bool strobeLights;
+        bool beaconLights;
+    };
+
+    typedef std::tr1::function<void(const bool status)> cbSimStarted;
+    typedef std::tr1::function<void(const CAvionicsState &state)> cbChangedAvionicsState;
+    typedef std::tr1::function<void(const CAnimationState &state)> cbChangedAnimationState;
+    typedef std::tr1::function<void(const CPlaneModel &model)> cbChangedModel;
+    typedef std::tr1::function<void(const QString &message)> cbSendTextMessage;
+
+    class ISimulator
 	{
 	public:
 
@@ -31,103 +84,82 @@ namespace BlackCore {
 		static const quint32         InterfaceVersionMajor;
 		static const quint32         InterfaceVersionMinor;
 
+		enum ESimulator {
+            FS9 = 0,
+			FSX,
+			XPLANE,
+        };
 
-		enum ESimulator {   FS9 = 0,
-							FSX,
-							XPLANE};
-
-		ISimulator(void) {}
+		ISimulator() {}
 		virtual ~ISimulator() {}
 
-		virtual void setLibraryContext(IContext *context) = 0;
+		virtual void setLibraryContext(BlackMisc::IContext *context);
 
+		static ISimulator *createDriver(ESimulator sim);
+	
 		////////////////////////////////
 		// Global section
 		////////////////////////////////
 
 		virtual int init() = 0;
 
-		virtual int connectTo() = 0;
+		virtual int connect() = 0;
 
 		// Callback when the Simulation starts
-		virtual void setcbSimStarted(cbSimStarted func, void *context);
+		virtual void setcbSimStarted(const cbSimStarted &func);
 
-		virtual bool isRunning() = 0;
+		virtual bool isConnected() = 0;
 
 		virtual QString getLastErrorMessage() = 0;
-
-		virtual qint32 sendTextMessage(const QString &text) = 0;
-
-		////////////////////////////////
-		// Remote plane section
-		////////////////////////////////
-
-		virtual qint32 addPlane(const QString& callsign, const QString &type, const CVectorGEO * const pos, const double groundSpeed) = 0;
-
-		virtual bool removePlane(const qint32 id) = 0;
-
-		virtual bool updatePositionAndSpeed(const qint32 id, const CVectorGEO * const pos, const double groundSpeed) = 0;
-
-		virtual bool setGear(const qint32 id, const qint32 percentage) = 0;
-
-		virtual bool setFlaps(const qint32 id, const qint32 percentage) = 0;
-
-		virtual bool setLights(const qint32 id, const qint32 map) = 0;
 
 		////////////////////////////////
 		// User plane section
 		////////////////////////////////
 
-		// Callback frequency tuner
-		virtual void setChangedRadioFreq(cbChangedRadioFreq func, void * context);
+		// Callback avionics state
+		virtual void setcbChangedAvionicsState(const cbChangedAvionicsState &func);
 
-		// Callback when the gear is moving
-		virtual void setcbChangedGearPosition(cbChangedGearPosition func, void *context);
-
-		// Callback if the user switched on/off a light
-		virtual void setcbChangedLights(cbChangedLights func, void *context);
+		// Callback animation state
+		virtual void setcbChangedAnimationState(const cbChangedAnimationState &func);
 
 		// Callback, when the Aircraft is set or gets changed
-		virtual void setcbChangedAircraftType(cbChangedAircraftType func, void *context);
+		virtual void setcbChangedModel(const cbChangedModel &func);
 
-		// Callback, when the Flaps are moving
-		virtual void setcbChangedFlaps(cbChangedFlaps func, void *context);
+        // Not const because it may need to mutate state in order to communicate with the sim
+		virtual bool isOnGround() = 0;
 
-		// This one is called regular and when we actually need it, therefor not a callback
-		virtual double getUserSpeed() const = 0;
+        // This might block - use QtConcurrent::run if that is a problem
+        virtual CPhysicalState getPhysicalState() = 0;
 
-		// This one is called regular and when we actually need it, therefor not a callback
-		virtual CVectorGEO getUserPosition() const = 0;
-	
-		// This one is called regular and when we actually need it, therefor not a callback
-		virtual qint32 getUserPitch() const = 0;
-	
-		// This one is called regular and when we actually need it, therefor not a callback
-		virtual qint32 getUserBank() const = 0;
-	
-		// This one is called regular and when we actually need it, therefor not a callback
-		virtual qint32 getUserHeading() const = 0;
-	
-		// This one is called regular and when we actually need it, therefor not a callback
-		virtual qint32 getUserPitchBankHeading() const = 0;
+		////////////////////////////////
+		// Remote plane section
+		////////////////////////////////
 
-		virtual bool isOnGround() const = 0;
+        // This might block - use QtConcurrent::run if that is a problem
+		virtual qint32 addPlane(const QString &callsign) = 0;
 
-		static ISimulator *createDriver(ESimulator sim);
-	
+		virtual bool removePlane(const qint32 planeID) = 0;
+
+        virtual void setModel(const qint32 planeID, const CPlaneModel &model) = 0;
+
+		virtual bool setPhysicalState(const qint32 planeID, const CPhysicalState &state) = 0;
+
+		virtual bool setAnimationState(const qint32 planeID, const CAnimationState &state) = 0;
+
+        // Calls the supplied visitor function once for every model available in the simulator.
+        virtual void visitAllModels(const std::tr1::function<void(const CPlaneModel &)> &visitor) = 0;
+
+        // Fills container with all models. Works for any container that supports push_back.
+        template <class T>
+        void getAllModels(T &container) { visitAllModels(std::tr1::bind(T::push_back, container)); }
+
 	protected:
-
-		CLibraryContext * mLibraryContext;
+        BlackMisc::IContext *m_libraryContext;
 	
-		cbSimStarted mSimStarted;
-		cbChangedRadioFreq mChangedRadioFreq;
-		cbChangedGearPosition mChangedGearPosition;
-		cbChangedLights mChangedLights;
-		cbChangedAircraftType mChangedAircraftType;
-		cbChangedFlaps mChangedFlaps;
-	
-		void *m_CallbackContext;
-	
+		cbSimStarted m_cbSimStarted;
+		cbChangedAvionicsState m_cbChangedAvionicsState;
+		cbChangedAnimationState m_cbChangedAnimationState;
+		cbChangedModel m_cbChangedModel;
 	};
 
 } //! namespace BlackCore

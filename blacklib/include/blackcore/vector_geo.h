@@ -6,6 +6,8 @@
 #ifndef VECTOR_GEO_H
 #define VECTOR_GEO_H
 
+#include <iostream>
+
 namespace BlackCore
 {
 
@@ -15,40 +17,40 @@ class CVectorGeo
 {
     public:
         CVectorGeo();
-        CVectorGeo(double lat, double lon, double alt);
-        CVectorGeo( const CVectorGeo &other );
+        CVectorGeo(double latitudeDegrees, double longintudeDegrees, double altitudeMeters);
+        CVectorGeo(const CVectorGeo &other);
 
-        void setLatitude( double latitude)
+        void setLatitudeDegrees(double latitudeDegrees)
         {
-            m_latitude = latitude;
+            m_latitudeDegrees = latitudeDegrees;
         }
 
-        void setLongitude( double longitude)
+        void setLongitudeDegrees(double longitudeDegrees)
         {
-            m_longitude = longitude;
+            m_longitudeDegrees = longitudeDegrees;
         }
 
-        void setAltitude( double altitude)
+        void setAltitude(double altitudeMeters)
         {
-            m_altitude = altitude;
+            m_altitudeMeters = altitudeMeters;
         }
 
-        double latitude() const {return m_latitude;}
-        double longitude() const {return m_longitude;}
-        double altitude() const {return m_altitude;}
+        double latitudeDegrees() const { return m_latitudeDegrees; }
+        double longitudeDegrees() const { return m_longitudeDegrees; }
+        double altitudeMeters() const { return m_altitudeMeters; }
 
         CEcef toCartesian();
 
         void zeros();
 		
-		void print();
+		void print(std::ostream &stream = std::cout);
 
-        CVectorGeo & operator = (const CVectorGeo &rhs);
+        CVectorGeo &operator=(const CVectorGeo &rhs);
 
     private:
-        double m_latitude;
-        double m_longitude;
-        double m_altitude;
+        double m_latitudeDegrees;
+        double m_longitudeDegrees;
+        double m_altitudeMeters;
     };
 
 } // namespace BlackCore

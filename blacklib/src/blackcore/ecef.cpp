@@ -32,7 +32,7 @@ CNed CEcef::toNED(const CVectorGeo &pos)
 {
     CNed result;
 	
-	double angle = - ( pos.latitude() * Constants::DegToRad ) - Constants::PI/2;
+	double angle = - ( pos.latitudeDegrees() * Constants::DegToRad ) - Constants::PI/2;
 	
 	CMatrix3D dcm1;
 	CMatrix3D dcm2;
@@ -55,7 +55,7 @@ CNed CEcef::toNED(const CVectorGeo &pos)
 	dcm2(2,0) = sin( angle );
 	dcm2(2,2) = cos( angle );
 
-	angle = pos.longitude() * Constants::DegToRad;
+	angle = pos.longitudeDegrees() * Constants::DegToRad;
 
 	dcm3(0,0) = cos(angle );
 	dcm3(0,1) = sin(angle );
@@ -103,8 +103,8 @@ CVectorGeo CEcef::toGeodetic()
 	double sphi = 0;
 	double cphi = 0;
 	
-	double p = CMath::square(R / Constants::EarthRadius);
-	double q = Constants::e2m * CMath::square(v[2] / Constants::EarthRadius);
+	double p = CMath::square(R / Constants::EarthRadiusMeters);
+	double q = Constants::e2m * CMath::square(v[2] / Constants::EarthRadiusMeters);
 	double r = (p + q - Constants::e4) / 6.0;
 	
 	if ( !(Constants::e4 * q == 0 && r <= 0) )
@@ -188,7 +188,7 @@ CVectorGeo CEcef::toGeodetic()
 		sphi = zz / H;
 		cphi = xx / H;
 		if (v[2] < 0) sphi = -sphi; // for tiny negative Z (not for prolate)
-		h = - Constants::EarthRadius * (Constants::e2m) * H / Constants::e2absolute;
+		h = - Constants::EarthRadiusMeters * (Constants::e2m) * H / Constants::e2absolute;
 	}
 	
 	double lat = atan2(sphi, cphi) * Constants::RadToDeg;
@@ -196,8 +196,8 @@ CVectorGeo CEcef::toGeodetic()
 	//! Negative signs return lon in [-180, 180).
 	double lon = -atan2(-slam, clam) * Constants::RadToDeg;
 	
-	result.setLongitude(lon);
-    result.setLatitude(lat);
+	result.setLongitudeDegrees(lon);
+    result.setLatitudeDegrees(lat);
     result.setAltitude(h);
 	
 	return result;
