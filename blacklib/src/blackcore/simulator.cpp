@@ -12,11 +12,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "blackcore/simulator.h"
+#include "blackmisc/debug.h"
+
 #include <QtGlobal>
 #include <QLibrary>
-
-#include <blackmisc/debug.h>
-#include "blackcore/simulator.h"
 
 namespace BlackCore {
 

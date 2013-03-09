@@ -7,6 +7,7 @@
 #define SIMULATOR_H
 
 #include <QString>
+#include <functional>
 
 #include "blackcore/sim_callbacks.h"
 #include "blackcore/vector_geo.h"
