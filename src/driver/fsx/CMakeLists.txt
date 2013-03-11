@@ -1,0 +1,20 @@
+FILE(GLOB driver_fsx_SOURCES *.cpp)
+FILE(GLOB driver_fsx_HEADERS *.h)
+SET(driver_fsx_HEADERS_QOBJECT )
+		
+QT4_WRAP_CPP(driver_fsx_HEADERS_MOC ${driver_fsx_HEADERS_QOBJECT})
+
+SOURCE_GROUP(QtGeneratedMocSrc FILES ${driver_fsx_HEADERS_MOC})
+SOURCE_GROUP (Headers FILES ${driver_fsx_HEADERS})
+
+INCLUDE_DIRECTORIES(${SIMCONNECT_INCLUDE_DIR})
+LINK_DIRECTORIES(${SIMCONNECT_LIBRARY_DIR})
+
+IF(WITH_STATIC_DRIVERS)
+    ADD_LIBRARY(bb_driver_fsx STATIC ${driver_fsx_SOURCES} ${driver_fsx_HEADERS_MOC} )
+ELSE(WITH_STATIC_DRIVERS)
+    ADD_LIBRARY(bb_driver_fsx SHARED ${driver_fsx_SOURCES} ${driver_fsx_HEADERS_MOC} )
+ENDIF(WITH_STATIC_DRIVERS)
+
+TARGET_LINK_LIBRARIES(bb_driver_fsx blackmisc blackcore SimConnect.lib ${QT_LIBRARIES})
+SET_TARGET_PROPERTIES(bb_driver_fsx PROPERTIES PROJECT_LABEL "Driver - FSX")

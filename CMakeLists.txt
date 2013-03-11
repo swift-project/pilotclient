@@ -184,7 +184,7 @@ ENDIF()
 ############### Includes ###############
 
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/blacklib/include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 ############### Doxygen ###############
 
@@ -202,7 +202,7 @@ ENDIF(DOXYGEN_FOUND)
 
 ############### build targets ###############
 
-ADD_SUBDIRECTORY(blackd)
-ADD_SUBDIRECTORY(blackbox)
-ADD_SUBDIRECTORY(blacklib)
-ADD_SUBDIRECTORY(blackx)
+ADD_SUBDIRECTORY(src)
+IF(WITH_BLACK_SAMPLES)
+	ADD_SUBDIRECTORY(samples)
+ENDIF(WITH_BLACK_SAMPLES)

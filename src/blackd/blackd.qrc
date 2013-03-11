@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/blackbox_icon.svg</file>
+    </qresource>
+</RCC>
