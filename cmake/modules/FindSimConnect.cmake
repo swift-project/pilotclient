@@ -18,7 +18,7 @@ FIND_PATH(SIMCONNECT_INCLUDE_DIR
 	"$ENV{ProgramFiles(x86)}/Microsoft Games/Microsoft Flight Simulator X SDK/SDK/Core Utilities Kit/SimConnect SDK"
 	PATH_SUFFIXES inc)
 	
-FIND_PATH(SIMCONNECT_LIBRARY 
+FIND_PATH(SIMCONNECT_LIBRARY_DIR
 	NAMES SimConnect.lib
 	PATHS
 	"$ENV{ProgramFiles(x86)}/Microsoft Games/Microsoft Flight Simulator X SDK/SDK/Core Utilities Kit/SimConnect SDK"
@@ -27,4 +27,4 @@ FIND_PATH(SIMCONNECT_LIBRARY
 # handle the QUIETLY and REQUIRED arguments and set SIMCONNECT_FOUND to TRUE
 # if all listed variables are TRUE
 find_package_handle_standard_args(SimConnect  DEFAULT_MSG
-                                  SIMCONNECT_LIBRARY SIMCONNECT_INCLUDE_DIR)
+                                  SIMCONNECT_LIBRARY_DIR SIMCONNECT_INCLUDE_DIR)

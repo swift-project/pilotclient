@@ -41,12 +41,13 @@ OPTION(WITH_BLACK_XPLANE              "Build BlackBox as a X-Plane Plugin"      
 
 OPTION(WITH_SIMULATOR_DRIVER		"Build Simulator Drivers." 						ON)
 IF(WITH_SIMULATOR_DRIVER)
+	OPTION(WITH_STATIC_DRIVERS				"Build static simulator drivers"                    OFF )
 	############### Drivers ###############
 	IF(WIN32)
-		OPTION(WITH_DRIVER_FSX			"Build FSX Simulator Driver"                            ON )
+		OPTION(WITH_DRIVER_FSX			"Build FSX Simulator Driver"                            OFF )
 		OPTION(WITH_DRIVER_FS9			"Build FS2004 Simulator Driver"							OFF )
 	ENDIF(WIN32)
-	OPTION(WITH_DRIVER_XPLANE				"Build X-Plane Simulator Driver"                    ON )
+	OPTION(WITH_DRIVER_XPLANE				"Build X-Plane Simulator Driver"                    OFF )
 ENDIF(WITH_SIMULATOR_DRIVER)
  
 # By default, force release configuration
@@ -119,12 +120,12 @@ endIF()
 #### SimConnect ####
 IF(WITH_DRIVER_FSX)
 	find_package(SimConnect REQUIRED)
-ENDIF()
+ENDIF(WITH_DRIVER_FSX)
 
 #### DirectPlay ####
 IF(WITH_DRIVER_FS9)
 	find_package(DirectPlay REQUIRED)
-ENDIF()
+ENDIF(WITH_DRIVER_FS9)
 
 ############### Compilers flags ###############
 

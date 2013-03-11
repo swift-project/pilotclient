@@ -83,7 +83,6 @@ namespace FSD
     QTextStream& FSD_MSG_Plane_Position::operator<< ( QTextStream& in)
     {
         QString message = in.readAll();
-        m_message_tokens.resize(10);
         qint32 size = unpack(message, m_message_tokens);
         bAssert ( size == 10 );
 
