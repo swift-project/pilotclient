@@ -1,1 +1,0 @@
-FILE(GLOB HEADERS *.h)
