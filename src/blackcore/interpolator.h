@@ -45,6 +45,7 @@ class CInterpolator
 {
 public:
     CInterpolator();
+	virtual ~CInterpolator();
 
     void initialize();
 

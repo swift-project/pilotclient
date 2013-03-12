@@ -30,6 +30,9 @@ void CQtDisplayer::setParam (QPlainTextEdit *debugWindow)
 
 void CQtDisplayer::doPrint ( const BlackMisc::CLog::SLogInformation &logInformation, const QString &message)
 {
+	if (!m_DebugWindow)
+		return;
+
     bool needSpace = false;
     QString line;
 

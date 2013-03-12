@@ -6,7 +6,7 @@
 #ifndef TYPE_INFO_H
 #define TYPE_INFO_H
 
-#include <typeinfo.h>
+#include <typeinfo>
 
 namespace BlackMisc
 {

@@ -117,6 +117,7 @@ namespace FSD
 
         FSD_MSG_Plane_Position() :  FSD_MSG(QString("@"))
         {
+			m_message_tokens.resize(10);
         }
 
         inline QString SquawkMode() const   { return m_message_tokens.at(0); }
@@ -125,7 +126,7 @@ namespace FSD
         inline quint16 Rating() const       { return m_message_tokens.at(3).toUInt(); }
         inline double Latitude() const      { return m_message_tokens.at(4).toDouble(); }
         inline double Longitude() const     { return m_message_tokens.at(5).toDouble(); }
-        inline qint32 Altitude() const      { return m_message_tokens.at(6).toInt(); }
+        inline double Altitude() const      { return m_message_tokens.at(6).toDouble(); }
         inline qint32 Speed() const         { return m_message_tokens.at(7).toInt(); }
         inline quint32 PBH() const          { return m_message_tokens.at(8).toUInt(); }
         inline qint32 AltDiff() const       { return m_message_tokens.at(9).toInt(); }
@@ -136,7 +137,7 @@ namespace FSD
         inline void setRating    ( const quint16 rating)          { m_message_tokens.replace(3, QString("%1").arg(rating)); }
         inline void setLatitude  ( const double latitude)         { m_message_tokens.replace(4, QString("%1").arg(latitude)); }
         inline void setLongitude ( const double longitude)        { m_message_tokens.replace(5, QString("%1").arg(longitude)); }
-        inline void setAltitude  ( const qint32 altitude)         { m_message_tokens.replace(6, QString("%1").arg(altitude)); }
+        inline void setAltitude  ( const double altitude)         { m_message_tokens.replace(6, QString("%1").arg(altitude)); }
         inline void setSpeed     ( const qint32 speed)            { m_message_tokens.replace(7, QString("%1").arg(speed)); }
         inline void setPBH       ( const quint32 pbh)             { m_message_tokens.replace(8, QString("%1").arg(pbh)); }
         inline void setAltDiff   ( const qint32 altdiff)          { m_message_tokens.replace(9, QString("%1").arg(altdiff)); }

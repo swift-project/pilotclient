@@ -80,10 +80,10 @@ namespace BlackMisc
 		QMessageBox::critical(0, "ASSERT FAILED",
 					  QString("%1 %2 %3 () - failed assert: %4").
 							  arg(QString(file)).arg(line).arg(QString(function)).arg(QString(exp)));
-
+	#endif
+	
 		qApp->quit();
 		exit(1);
-	#endif
 
 	}
 

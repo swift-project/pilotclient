@@ -16,14 +16,14 @@
 #define DRIVER_FSX_H
 
 #include <blackmisc/context.h>
-#include <simulator.h>
+#include <blackcore/simulator.h>
 
-class CDriverFSX : public ISimulator
+class CDriverFSX : public BlackCore::ISimulator
 {
 public:
     CDriverFSX();
 
-    virtual void setLibraryContext(BlackLib::IContext *context);
+    virtual void setLibraryContext(BlackMisc::IContext *context);
 
     virtual int init() { return 0; }
 

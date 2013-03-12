@@ -1,4 +1,5 @@
-FILE(GLOB blackmisc_SOURCES *.cpp)
+FILE(GLOB blackd_SOURCES *.cpp)
+FILE(GLOB blackd_HEADERS *.h)
 SET(blackd_HEADERS_QOBJECT
 		blackd.h)
 		
@@ -15,7 +16,7 @@ SOURCE_GROUP(QtGeneratedMocSrc FILES ${blackd_HEADERS_MOC})
 SOURCE_GROUP (QtResources FILES ${blackd_RESOURCES_RCC})
 SOURCE_GROUP (QtForms FILES ${blackd_FORMS_HEADERS})
 
-ADD_EXECUTABLE(blackd WIN32 MACOSX_BUNDLE ${blackmisc_SOURCES}
+ADD_EXECUTABLE(blackd WIN32 MACOSX_BUNDLE ${blackd_SOURCES}
 			${blackd_HEADERS_MOC}
 			${blackd_FORMS_HEADERS}
 			${blackd_RESOURCES_RCC})

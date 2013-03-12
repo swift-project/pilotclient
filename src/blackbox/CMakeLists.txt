@@ -1,4 +1,5 @@
 FILE(GLOB blackbox_SOURCES *.cpp)
+FILE(GLOB blackbox_HEADERS *.h)
 SET(blackbox_HEADERS_QOBJECT
 		blackbox.h
 		dialog_connect.h

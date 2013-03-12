@@ -14,6 +14,12 @@ CInterpolator::CInterpolator()
     m_time.start();
 }
 
+CInterpolator::~CInterpolator()
+{
+	delete m_state_begin;
+	delete m_state_end;
+}
+
 void CInterpolator::initialize()
 {
 

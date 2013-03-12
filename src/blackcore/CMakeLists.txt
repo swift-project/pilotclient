@@ -1,7 +1,7 @@
 FILE(GLOB blackcore_SOURCES *.cpp)
-FILE(GLOB blackcore_HEADERS ../../include/blackcore/*.h)
+FILE(GLOB blackcore_HEADERS *.h)
 SET(blackcore_HEADERS_QOBJECT 
-			../../include/blackcore/fsd_client.h)
+			fsd_client.h)
 		
 QT4_WRAP_CPP(blackcore_HEADERS_MOC ${blackcore_HEADERS_QOBJECT})
 

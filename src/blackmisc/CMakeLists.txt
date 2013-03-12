@@ -1,10 +1,10 @@
 FILE(GLOB blackmisc_SOURCES *.cpp)
-FILE(GLOB blackmisc_HEADERS ../../include/blackmisc/*.h)
+FILE(GLOB blackmisc_HEADERS *.h)
 SET(blackmisc_HEADERS_QOBJECT
-		../../include/blackmisc/com_client.h
-		../../include/blackmisc/com_client_buffer.h
-		../../include/blackmisc/com_handler.h
-		../../include/blackmisc/com_server.h)
+		com_client.h
+		com_client_buffer.h
+		com_handler.h
+		com_server.h)
 		
 QT4_WRAP_CPP(blackmisc_HEADERS_MOC ${blackmisc_HEADERS_QOBJECT})
 
