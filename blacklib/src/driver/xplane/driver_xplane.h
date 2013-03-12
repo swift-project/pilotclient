@@ -7,11 +7,9 @@ class CDriverXPlane : public ISimulator
 {
 public:
     CDriverXPlane();
-    virtual int init() {return 1;}
-	
-protected:
-
-    BlackMisc::CLibraryContext *m_libraryContext;
+    virtual ~CDriverXPlane();
+    
+    virtual int init();
 };
 
 #endif // DRIVER_XPLANE_H
