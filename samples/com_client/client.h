@@ -1,5 +1,5 @@
-#include <blackmisc/message_system.h>
-#include <blackmisc/com_client.h>
+#include "blackmisc/message_system.h"
+#include "blackmisc/com_client.h"
 
 class Client : public QObject
 {

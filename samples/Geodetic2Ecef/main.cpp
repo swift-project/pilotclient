@@ -1,12 +1,12 @@
 #include <QCoreApplication>
 #include <QElapsedTimer>
-#include <blackmisc/debug.h>
+#include "blackmisc/debug.h"
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
 
-#include <blackcore/ecef.h>
-#include <blackcore/vector_geo.h>
+#include "blackcore/ecef.h"
+#include "blackcore/vector_geo.h"
 
 using namespace std;
 

@@ -9,8 +9,8 @@
 #include <QHash>
 #include <QString>
 #include <qglobal.h>
-#include <blackmisc/message_system.h>
-#include <blackcore/fsd_messages.h>
+#include "blackmisc/message_system.h"
+#include "blackcore/fsd_messages.h"
 
 namespace BlackCore {
 

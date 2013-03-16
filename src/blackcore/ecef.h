@@ -34,7 +34,7 @@ public:
 	CVectorGeo toGeodetic();
 
 	//! Assignment operator 
-	void operator= (const CVector3D &rhs);
+    void operator= (const CVector3D &rhs);
 };
 
 } // namespace BlackCore

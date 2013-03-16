@@ -116,6 +116,7 @@ namespace BlackMisc
     {
         m_configfile = filename;
         m_separator = separator;
+        Q_UNUSED(isRelative);
     }
 
     bool CConfig::load()
@@ -224,7 +225,7 @@ namespace BlackMisc
 
     void CConfig::update(const QString &key, const CValue &value)
     {
-
+        m_value_map[key] = value;
     }
 
     void CConfig::display()

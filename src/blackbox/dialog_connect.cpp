@@ -6,9 +6,9 @@
 #include "dialog_connect.h"
 #include "ui_dialog_connect.h"
 
-#include <blackmisc/debug.h>
-#include <blackmisc/message.h>
-#include <blackmisc/gui_messages.h>
+#include "blackmisc/debug.h"
+#include "blackmisc/message.h"
+#include "blackmisc/gui_messages.h"
 
 using namespace BlackMisc;
 

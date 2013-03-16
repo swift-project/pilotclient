@@ -6,7 +6,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "math.h"
+#include "mathematics.h"
 
 namespace BlackCore
 {

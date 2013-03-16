@@ -6,7 +6,7 @@
 #ifndef QT_DISPLAYER_H
 #define QT_DISPLAYER_H
 
-#include <blackmisc/display.h>
+#include "blackmisc/display.h"
 
 // Qt includes
 #include <QPlainTextEdit>

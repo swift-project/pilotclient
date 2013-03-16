@@ -5,10 +5,10 @@
 
 #include <QtGui>
 
-#include <blackmisc/context.h>
-#include <blackmisc/debug.h>
-#include <blackmisc/message_factory.h>
-#include <blackcore/fsd_client.h>
+#include "blackmisc/context.h"
+#include "blackmisc/debug.h"
+#include "blackmisc/message_factory.h"
+#include "blackcore/fsd_client.h"
 
 #include "qt_displayer.h"
 

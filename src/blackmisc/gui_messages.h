@@ -6,7 +6,7 @@
 #ifndef GUI_MESSAGES_H
 #define GUI_MESSAGES_H
 
-#include <blackmisc/message.h>
+#include "blackmisc/message.h"
 
 namespace BlackMisc
 {

@@ -13,7 +13,7 @@
 #include "blackcore/matrix_3d.h"
 #include "blackcore/ned.h"
 #include "blackcore/ecef.h"
-#include "blackcore/math.h"
+#include "blackcore/mathematics.h"
 #include "blackcore/constants.h"
 
 namespace BlackCore

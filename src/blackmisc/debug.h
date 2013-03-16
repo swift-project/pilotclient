@@ -37,7 +37,7 @@ namespace BlackMisc
 		/// Do not call this, unless you know what you're trying to do (it kills debug)!
 		void destroy() {}
 
-		void changeLogDirectory(const QString &dir) {}
+        void changeLogDirectory(const QString &dir) { Q_UNUSED(dir); }
 
 		QString getLogDirectory();
 
