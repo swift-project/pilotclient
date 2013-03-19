@@ -1,6 +1,6 @@
-#include <QApplication>
+#include <QCoreApplication>
 
-#include <blackmisc/context.h>
+#include "blackmisc/context.h"
 #include "client.h"
 
 using namespace BlackMisc;
@@ -8,7 +8,7 @@ using namespace BlackMisc;
 int main(int argc, char *argv[])
 {
     BlackMisc::CApplicationContext myApplicationContext;
-    QApplication a(argc, argv);
+    QCoreApplication a(argc, argv);
 
 	Client client;
     

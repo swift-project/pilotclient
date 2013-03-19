@@ -1,6 +1,6 @@
 #include <QCoreApplication>
-#include <blackmisc/debug.h>
-#include <blackcore/constants.h>
+#include "blackmisc/debug.h"
+#include "blackcore/constants.h"
 #include <limits>
 #include <iostream>
 

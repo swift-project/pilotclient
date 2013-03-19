@@ -1,5 +1,5 @@
-#include <blackmisc/message_system.h>
-#include <blackmisc/com_server.h>
+#include "blackmisc/message_system.h"
+#include "blackmisc/com_server.h"
 
 class TestMessageHandler : public BlackMisc::CMessageHandler
 {

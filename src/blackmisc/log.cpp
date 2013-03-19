@@ -3,6 +3,10 @@
 //! License, v. 2.0. If a copy of the MPL was not distributed with this
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
+#ifndef UNICODE
+#define UNICODE
+#endif
+
 #include <QTextStream>
 #include <QFileInfo>
 #include <QtGlobal>
@@ -48,9 +52,9 @@ namespace BlackMisc
 		//! By default, we use the executables name.
         if ((*m_applicationName).isEmpty())
         {
-            char name[1024];
+            WCHAR name[1024];
             int size = GetModuleFileName (NULL, name, 1023);
-            QString applicationPath = QString::fromUtf8(name,size);
+            QString applicationPath = QString::fromWCharArray(name,size);
             (*m_applicationName) = QFileInfo ( applicationPath ).fileName();
         }
 #else

@@ -1,7 +1,7 @@
 #include <QCoreApplication>
-#include <blackmisc/debug.h>
-#include <blackmisc/config_manager.h>
-#include <blackmisc/config.h>
+#include "blackmisc/debug.h"
+#include "blackmisc/config_manager.h"
+#include "blackmisc/config.h"
 #include <limits>
 #include <iostream>
 

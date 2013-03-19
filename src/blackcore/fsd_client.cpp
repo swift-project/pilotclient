@@ -4,8 +4,8 @@
 #include <QStringList>
 #include <QTextStream>
 
-#include <blackcore/fsd_client.h>
-#include <blackcore/fsd_messages.h>
+#include "blackcore/fsd_client.h"
+#include "blackcore/fsd_messages.h"
 
 namespace FSD
 {

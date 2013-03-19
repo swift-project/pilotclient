@@ -7,7 +7,7 @@
 #define DIALOG_CONNECT_H
 
 #include <QDialog>
-#include <blackmisc/com_client.h>
+#include "blackmisc/com_client.h"
 
 namespace Ui {
 class CDialogConnect;

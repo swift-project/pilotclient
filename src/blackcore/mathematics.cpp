@@ -5,7 +5,7 @@
 
 #include <algorithm>    // std::max
 
-#include "blackcore/math.h"
+#include "blackcore/mathematics.h"
 
 namespace BlackCore {
 

@@ -5,8 +5,8 @@
 
 #include "blackbox.h"
 #include <QApplication>
-#include <blackmisc/context.h>
-#include <blackmisc/debug.h>
+#include "blackmisc/context.h"
+#include "blackmisc/debug.h"
 
 int main(int argc, char *argv[])
 {

@@ -8,10 +8,10 @@
 
 #include <QSystemTrayIcon>
 #include <QDialog>
-#include <blackmisc/com_server.h>
-#include <blackmisc/gui_messages.h>
+#include "blackmisc/com_server.h"
+#include "blackmisc/gui_messages.h"
 
-#include <blackmisc/message_system.h>
+#include "blackmisc/message_system.h"
 
 namespace Ui {
 class BlackD;

@@ -1,7 +1,7 @@
 #include <iostream>
 #include "blackcore/matrix_3d.h"
 #include "blackcore/vector_geo.h"
-#include "blackcore/math.h"
+#include "blackcore/mathematics.h"
 #include "blackcore/interpolator.h"
 #include "blackcore/constants.h"
 
@@ -139,7 +139,7 @@ bool CInterpolator::stateNow(TPlaneState *state)
 	double vNorth = state->velNED.North();
 	double fraction = vNorth / vEast;
 	
-	double heading = atan2 (vNorth, vEast);
+    double heading = atan2 (vNorth, vEast);
 
 	state->orientation.heading = heading * Constants::RadToDeg;
 
