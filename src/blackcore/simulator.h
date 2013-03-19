@@ -11,6 +11,7 @@
 
 #include "blackcore/sim_callbacks.h"
 #include "blackcore/vector_geo.h"
+#include "blackcore/vector_3d.h"
 
 #define SHARED_LIBRARY_NAME_FS9 "bb_driver_fs9"
 #define SHARED_LIBRARY_NAME_FSX "bb_driver_fsx"
@@ -18,7 +19,7 @@
 
 namespace BlackMisc {
 
-    	class IContext;
+    class IContext;
 
 }
 
@@ -42,6 +43,7 @@ namespace BlackCore {
         float pitchDegrees;
         float bankDegrees;
         float groundSpeedKnots;
+        CVector3D trueSpeedMetersPerSec;
     };
 
     class CAvionicsState
