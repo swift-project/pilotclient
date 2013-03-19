@@ -18,6 +18,8 @@ WITH_SAMPLES = ON
 
 #WITH_DRIVER_XPLANE = ON
 
+#WITH_UNITTESTS = ON
+
 
 equals(WITH_BLACKMISC, ON) {
     SUBDIRS += src/blackmisc
@@ -36,27 +38,29 @@ equals(WITH_BLACKBOX, ON) {
 }
 
 equals(WITH_DRIVER_FSX, ON) {
-    SUBDIRS += src/driver/fsx
+    SUBDIRS += src/driver/fsx/driver_fsx.pro
 }
 
 equals(WITH_DRIVER_FS9, ON) {
-    SUBDIRS += src/driver/fs9
+    SUBDIRS += src/driver/fs9/driver_fs9.pro
 }
 
 equals(WITH_DRIVER_XPLANE, ON) {
-    SUBDIRS += src/driver/xplane
+    SUBDIRS += src/driver/xplane/driver_xplane.pro
 }
 
 equals(WITH_SAMPLES, ON) {
-    SUBDIRS += samples/com_client
-	SUBDIRS += samples/com_server
-	SUBDIRS += samples/config
-	SUBDIRS += samples/Geodetic2Ecef
-	SUBDIRS += samples/interpolator
-	SUBDIRS += samples/Logging
+    SUBDIRS += samples/com_client/sample_com_client.pro
+    SUBDIRS += samples/com_server/sample_com_server.pro
+    SUBDIRS += samples/config/sample_config.pro
+    SUBDIRS += samples/geodetic2ecef/sample_geodetic2ecef.pro
+    SUBDIRS += samples/interpolator/sample_interpolator.pro
+    SUBDIRS += samples/logging/sample_logging.pro
 }
 
-SUBDIRS +=
+equals(WITH_UNITTESTS, ON) {
+    SUBDIRS +=
+}
 
 
 
