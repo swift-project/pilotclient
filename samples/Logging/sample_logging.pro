@@ -8,7 +8,6 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 DEPENDPATH += . ../../src
-
 INCLUDEPATH += . ../../src
 
 SOURCES += main.cpp\

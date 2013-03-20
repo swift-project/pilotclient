@@ -29,6 +29,15 @@ HEADERS += \
     multiplayer.h \
     ned.h \
     plane.h \
+    pqdistance.h \
+    pqphysicalquantity.h \
+    pqfrequency.h \
+    pqbase.h \
+    pqspeed.h \
+    pqangle.h \
+    pqmass.h \
+    pqpressure.h \
+    pqtemperature.h \
     simulator.h \
     vector_3d.h \
     vector_geo.h
@@ -43,9 +52,18 @@ SOURCES += \
     multiplayer.cpp \
     ned.cpp \
     plane.cpp \
+    pqdistance.cpp \
+    pqphysicalquantity.cpp \
+    pqfrequency.cpp \
+    pqbase.cpp \
+    pqspeed.cpp \
+    pqangle.cpp \
+    pqmass.cpp \
+    pqpressure.cpp \
+    pqtemperature.cpp \
     simulator.cpp \
     vector_3d.cpp \
-    vector_geo.cpp
+    vector_geo.cpp \
 
 DESTDIR = ../../lib
 
