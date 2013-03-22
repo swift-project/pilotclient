@@ -2,7 +2,7 @@
 #define CSPEED_H
 #include "pqphysicalquantity.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /*!
  * Specialized class for speed units (m/s, ft/s, NM/h).

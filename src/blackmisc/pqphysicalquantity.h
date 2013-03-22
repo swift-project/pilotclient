@@ -4,9 +4,10 @@
 #include <QtGlobal>
 #include <QString>
 #include <QLocale>
-#include "pqbase.h"
+#include "blackmisc/pqbase.h"
+#include "blackmisc/debug.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /*!
  * \brief A physical quantity such as "5m", "20s", "1500ft/s"
@@ -22,6 +23,14 @@ class CPhysicalQuantity
      * \return
      */
     friend QDebug operator<<(QDebug debug, const CPhysicalQuantity &quantity);
+    /*!
+     * Stream operator for log messages
+     * \brief operator <<
+     * \param log
+     * \param quantity
+     * \return
+     */
+    friend CLogMessage operator<<(CLogMessage log, const CPhysicalQuantity &quantity);
 
 private:
     qint32 _unitValueI; //!< value backed by integer, allows sole integer arithmetic

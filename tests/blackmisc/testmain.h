@@ -4,11 +4,7 @@
 #include <QtTest/QtTest>
 #include "testphysicalquantitiesbase.h"
 
-using namespace BlackCore;
-using namespace BlackCoreTest;
-
-
-namespace BlackCoreTest{
+namespace BlackMiscTest{
 
 /*!
  * Class firing of all unit tests in this namespace.

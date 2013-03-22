@@ -2,15 +2,10 @@
 #define TESTPHYSICALQUANTITIESBASE_H
 
 #include <QtTest/QtTest>
-#include "../../src/blackcore/pqdistance.h"
-#include "../../src/blackcore/pqfrequency.h"
-#include "../../src/blackcore/pqspeed.h"
-#include "../../src/blackcore/pqangle.h"
-#include "../../src/blackcore/pqmass.h"
-#include "../../src/blackcore/pqpressure.h"
-using namespace BlackCore;
+#include "blackmisc/pqconstants.h"
+using namespace BlackMisc;
 
-namespace BlackCoreTest {
+namespace BlackMiscTest {
 
 /*!
  * \brief Physical quantities,basic tests
@@ -53,12 +48,10 @@ private slots:
      * \brief Testing pressure
      */
     void pressureTests();
-
     /*!
      * \brief testing construction / destruction in memory
      */
     void memoryTests();
-
 };
 
 }

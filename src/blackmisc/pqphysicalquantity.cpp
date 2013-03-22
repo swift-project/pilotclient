@@ -1,6 +1,6 @@
-#include "pqPhysicalQuantity.h"
+#include "blackmisc/pqphysicalquantity.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /**
  * Constructor by integer
@@ -34,6 +34,16 @@ CPhysicalQuantity::CPhysicalQuantity(const CPhysicalQuantity &otherQuantity) :
  * Stream operator
  */
 QDebug operator <<(QDebug d, const CPhysicalQuantity &quantity)
+{
+    QString v = quantity.unitValueRoundedWithUnit(-1);
+    d << v;
+    return d;
+}
+
+/**
+ * Stream operator
+ */
+CLogMessage operator <<(CLogMessage d, const CPhysicalQuantity &quantity)
 {
     QString v = quantity.unitValueRoundedWithUnit(-1);
     d << v;
@@ -234,7 +244,7 @@ bool CPhysicalQuantity::operator <=(const CPhysicalQuantity &otherQuantity) cons
 /**
  * Switch to another unit
  */
-bool CPhysicalQuantity::switchUnit(const BlackCore::CMeasurementUnit &unit)
+bool CPhysicalQuantity::switchUnit(const CMeasurementUnit &unit)
 {
     if (this->_unit == unit) return true;
     if (this->_unit.getType() != unit.getType()) return false; // not possible

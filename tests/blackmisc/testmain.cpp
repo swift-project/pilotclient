@@ -1,6 +1,6 @@
 #include "testmain.h"
 
-namespace BlackCoreTest {
+namespace BlackMiscTest {
 
 //! Starting main, equivalent to QTEST_APPLESS_MAIN for multiple test classes.
 /*! \param argc

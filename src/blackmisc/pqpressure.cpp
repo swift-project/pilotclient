@@ -1,6 +1,6 @@
-#include "pqpressure.h"
+#include "blackmisc/pqpressure.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /**
  * Default constructor

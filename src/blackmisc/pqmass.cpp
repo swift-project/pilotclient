@@ -1,6 +1,6 @@
-#include "pqmass.h"
+#include "blackmisc/pqmass.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /**
  * Default Constructor

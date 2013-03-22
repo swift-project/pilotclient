@@ -2,7 +2,7 @@
 #define PQMASS_H
 #include "pqphysicalquantity.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /*!
  * Specialized class for mass units (kg, lbs).

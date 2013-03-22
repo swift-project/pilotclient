@@ -2,7 +2,7 @@
 #define CTEMPERATURE_H
 #include "pqphysicalquantity.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /*!
  * Specialized class for temperatur units (kelvin, centidegree).
@@ -23,7 +23,7 @@ public:
      * \param epsilon
      */
     CTemperatureUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "distance", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+        CMeasurementUnit(name, unitName, "temperature", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
     /*!
      * Downcast copy constructor, allows to implement methods in base class
      * \param otherUnit
@@ -42,7 +42,7 @@ public:
 };
 
 /*!
- * \brief Physical unit distance
+ * \brief Physical unit temperature
  * \author KWB
  */
 class CTemperature : public CPhysicalQuantity
@@ -55,7 +55,7 @@ public:
     /**
      *\brief downcast copy constructor
      */
-    CTemperature(const CPhysicalQuantity &distance);
+    CTemperature(const CPhysicalQuantity &temperature);
     /*!
      * \brief Init by int value
      * \param value
@@ -69,7 +69,7 @@ public:
      */
     CTemperature(double value, const CTemperatureUnit &unit = CTemperatureUnit::K());
     /*!
-     * \brief Unit of the distance
+     * \brief Unit of the temperature
      * \return
      */
     CTemperatureUnit getUnit() const { return this->_unit; }
@@ -79,6 +79,6 @@ public:
      */
     CTemperatureUnit getConversionSiUnit() const { return this->_conversionSiUnit; }
 };
-} // namespace blackCore
+} // namespace
 
 #endif // CTEMPERATURE_H

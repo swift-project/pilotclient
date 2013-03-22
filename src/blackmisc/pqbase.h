@@ -8,8 +8,9 @@
 #include <QString>
 #include <QtGlobal>
 #include <QDebug>
+#include "blackmisc/debug.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /*!
  * Typical prefixes (multipliers) such as kilo, mega, hecto.
@@ -25,6 +26,14 @@ class CMeasurementPrefix {
      * \return
      */
     friend QDebug operator<<(QDebug d, const CMeasurementPrefix &multiplier);
+    /*!
+     * Stream operator for log messages
+     * \brief operator <<
+     * \param log
+     * \param multiplier
+     * \return
+     */
+    friend CLogMessage operator<<(CLogMessage log, const CMeasurementPrefix &multiplier);
 
 private:
     QString _name; //!< name, e.g. "kilo"
@@ -155,6 +164,15 @@ class CMeasurementUnit {
      */
     friend QDebug operator<<(QDebug d, const CMeasurementUnit &unit);
 
+    /*!
+     * Stream operator for log messages
+     * \brief operator <<
+     * \param log
+     * \param unit
+     * \return
+     */
+    friend CLogMessage operator<<(CLogMessage log, const CMeasurementUnit &unit);
+
 private:
     QString _name; //!< name, e.g. "meter"
     QString _unitName; //!< unit name, e.g. "m"
@@ -275,6 +293,6 @@ public:
     static CMeasurementUnit& None() { static CMeasurementUnit none("none", "", "", false, false, 0.0, CMeasurementPrefix::None(), 0, 0); return none;}
 };
 
-} // namespace BlackCore
+} // namespace BlackMisc
 
 #endif // PQBASE_H

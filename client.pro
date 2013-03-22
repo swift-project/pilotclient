@@ -6,11 +6,11 @@ WITH_BLACKCORE = ON
 WITH_BLACKD = ON
 WITH_BLACKBOX = ON
 WITH_SAMPLES = ON
+WITH_UNITTESTS = ON
 
 #WITH_DRIVER_FSX = ON
 #WITH_DRIVER_FS9 = ON
 #WITH_DRIVER_XPLANE = ON
-#WITH_UNITTESTS = ON
 
 equals(WITH_BLACKMISC, ON) {
     SUBDIRS += src/blackmisc
@@ -51,5 +51,5 @@ equals(WITH_SAMPLES, ON) {
 }
 
 equals(WITH_UNITTESTS, ON) {
-    SUBDIRS += tests/blackcore/test_blackcore.pro
+    SUBDIRS += tests/blackmisc/test_blackmisc.pro
 }

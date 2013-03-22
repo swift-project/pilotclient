@@ -1,6 +1,6 @@
 #include "testphysicalquantitiesbase.h"
 
-namespace BlackCoreTest {
+namespace BlackMiscTest {
 
 /*!
  * \brief Constructor

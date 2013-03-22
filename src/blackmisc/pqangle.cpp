@@ -1,6 +1,6 @@
-#include "pqangle.h"
+#include "blackmisc/pqangle.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /**
  * Default constructor

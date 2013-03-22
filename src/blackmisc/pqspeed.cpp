@@ -1,6 +1,6 @@
-#include "pqspeed.h"
+#include "blackmisc/pqspeed.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /**
  * Default constructor

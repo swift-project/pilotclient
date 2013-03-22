@@ -2,7 +2,7 @@
 #define PQFREQUENCY_H
 #include "pqphysicalquantity.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /*!
  * Specialized class for frequency (hertz, mega hertz, kilo hertz).

@@ -1,6 +1,6 @@
-#include "pqbase.h"
+#include "blackmisc/pqbase.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 // -----------------------------------------------------------------------
 // --- Mulitplier --------------------------------------------------------
@@ -78,6 +78,15 @@ QDebug operator<<(QDebug d, const CMeasurementPrefix &multiplier)
     return d;
 }
 
+/**
+ * Log to debug
+ */
+CLogMessage operator<<(CLogMessage log, const CMeasurementPrefix &multiplier)
+{
+    log << multiplier._name;
+    return log;
+}
+
 // -----------------------------------------------------------------------
 // --- Measurement unit --------------------------------------------------
 // -----------------------------------------------------------------------
@@ -133,20 +142,29 @@ bool CMeasurementUnit::operator ==(const CMeasurementUnit &otherUnit) const
 }
 
 /**
- * Unequal operator
- */
-bool CMeasurementUnit::operator !=(const CMeasurementUnit &otherUnit) const
-{
-    return !(otherUnit == *this);
-}
-
-/**
  * Stream to debug
  */
 QDebug operator <<(QDebug d, const CMeasurementUnit &unit)
 {
     d << unit._name;
     return d;
+}
+
+/**
+ * Stream to log
+ */
+CLogMessage operator<<(CLogMessage log, const CMeasurementUnit &unit)
+{
+    log << unit._name;
+    return log;
+}
+
+/**
+ * Unequal operator
+ */
+bool CMeasurementUnit::operator !=(const CMeasurementUnit &otherUnit) const
+{
+    return !(otherUnit == *this);
 }
 
 /**

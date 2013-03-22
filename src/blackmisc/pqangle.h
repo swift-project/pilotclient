@@ -3,7 +3,7 @@
 #include "pqphysicalquantity.h"
 #include "math.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /*!
  * Specialized class for angles (degrees, radian).

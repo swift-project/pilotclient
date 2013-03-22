@@ -2,7 +2,7 @@
 #define PQDISTANCE_H
 #include "pqphysicalquantity.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /*!
  * Specialized class for distance units (meter, foot, nautical miles).

@@ -1,18 +1,20 @@
 #include <QCoreApplication>
 #include <QDebug>
-#include "blackcore/pqdistance.h"
-#include "blackcore/pqfrequency.h"
-#include "blackcore/pqspeed.h"
-#include "blackcore/pqangle.h"
-#include "blackcore/pqmass.h"
-#include "blackcore/pqpressure.h"
+#include "blackmisc/pqconstants.h"
+#include "blackmisc/debug.h"
 
-using namespace BlackCore;
+using namespace BlackMisc;
 
+/*!
+ * Sample tests
+ * \brief main
+ * \param argc
+ * \param argv
+ * \return
+ */
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-
     const CDistance d1(5.0, CDistanceUnit::ft()); // 5 ft
     CDistance d2(1, CDistanceUnit::NM()); // 1NM
     CDistance d3(1, CDistanceUnit::km());
@@ -49,6 +51,14 @@ int main(int argc, char *argv[])
 
     CPressure p1(1013.25, CPressureUnit::hPa());
     qDebug() << p1 << p1.valueRoundedWithUnit(CPressureUnit::psi()) << p1.valueRoundedWithUnit(CPressureUnit::inHg());
+
+    CTemperature t1;
+    CTemperature t2(20, CTemperatureUnit::C());
+    qDebug() << t1 << t2;
+
+    // some logging wit CLogMessage
+    bDebug << p1;
+    bDebug << p1.getUnit() << p1.getUnit().getMultiplier();
 
     // bye
     return a.exec();

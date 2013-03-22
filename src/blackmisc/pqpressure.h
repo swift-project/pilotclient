@@ -3,7 +3,7 @@
 
 #include "pqphysicalquantity.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /*!
  * Specialized class for pressure (psi, hPa, bar).

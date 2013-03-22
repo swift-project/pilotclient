@@ -1,6 +1,6 @@
-#include "pqdistance.h"
+#include "blackmisc/pqdistance.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /**
  * Default Constructor

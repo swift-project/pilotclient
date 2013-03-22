@@ -1,6 +1,6 @@
-#include "pqtemperature.h"
+#include "blackmisc/pqtemperature.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /**
  * Default Constructor

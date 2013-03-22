@@ -1,6 +1,6 @@
-#include "pqfrequency.h"
+#include "blackmisc/pqfrequency.h"
 
-namespace BlackCore {
+namespace BlackMisc {
 
 /**
  * Default constructor
