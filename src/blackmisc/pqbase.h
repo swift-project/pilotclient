@@ -179,7 +179,7 @@ private:
     QString _type; //!< type,such as distance. Somehow redundant, but simplifies unit comparisons
     bool _isSIUnit; //!< is this a SI unit?
     bool _isSIBaseUnit; //!< SI base unit?
-    double _conversionFactorToSIConversionUnit; //!< factor to convert to SI
+    double _conversionFactorToSIConversionUnit; //!< factor to convert to SI, set to 0 if not applicable (rare cases, e.g. temperature)
     double _epsilon; //!< values with differences below epsilon are the equal
     qint32 _displayDigits; //!< standard rounding dor string conversions
     CMeasurementPrefix _multiplier; //!< multiplier
@@ -278,7 +278,7 @@ public:
      * \param to
      * \return
      */
-    virtual double conversionFactor(const CMeasurementUnit &to) const;
+    double conversionFactor(const CMeasurementUnit &to) const;
     /*!
      * \brief Factor to convert between given units
      * \param from

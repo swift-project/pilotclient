@@ -70,6 +70,14 @@ protected:
      * \brief Set the SI value
      */
     void setConversionSiUnitValue();
+    /*!
+     * Convert value in another unit, normally just by a factor, but in some cases
+     * (e.g. CTemperature)overridden because arbitrary conversion is required
+     * \sa CMeasurementUnit::conversionFactor(CMeasurementUnit)
+     * \param otherUnit
+     * \return
+     */
+    virtual double calculateValueInOtherUnit(const CMeasurementUnit &otherUnit) const;
 
 public:
     /*!
@@ -79,10 +87,10 @@ public:
     CPhysicalQuantity(const CPhysicalQuantity &otherQuantity);
     /*!
      * \brief Switch unit, e.g. feet meter
-     * \param unit
+     * \param newUnit
      * \return
      */
-    bool switchUnit(const CMeasurementUnit &unit);
+    bool switchUnit(const CMeasurementUnit &newUnit);
     /*!
      * \brief Value in SI base unit? Meter is an SI base unit, hertz not!
      * \return
@@ -116,7 +124,7 @@ public:
      * \param digits
      * @return
      */
-    double valueRounded(const CMeasurementUnit &unit, int digits) const;
+    double valueRounded(const CMeasurementUnit &unit, int digits = -1) const;
     /*!
      * \brief Value to QString with unit, e.g. "5.00m"
      * \param unit
@@ -143,7 +151,7 @@ public:
      * \brief SI value to double
      * @return
      */
-    qint32 siBaseUnitValueToDouble() const { return this->_convertedSiUnitValueD;}
+    double siBaseUnitValueToDouble() const { return this->_convertedSiUnitValueD;}
     /*!
      * \brief Rounded value by n digits
      * \param digits

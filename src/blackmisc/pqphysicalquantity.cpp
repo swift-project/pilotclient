@@ -244,14 +244,13 @@ bool CPhysicalQuantity::operator <=(const CPhysicalQuantity &otherQuantity) cons
 /**
  * Switch to another unit
  */
-bool CPhysicalQuantity::switchUnit(const CMeasurementUnit &unit)
+bool CPhysicalQuantity::switchUnit(const CMeasurementUnit &newUnit)
 {
-    if (this->_unit == unit) return true;
-    if (this->_unit.getType() != unit.getType()) return false; // not possible
-
-    double cf = this->_unit.conversionFactor(unit);
-    this->_unit =unit;
-    this->setUnitValue(cf * this->_unitValueD);
+    if (this->_unit == newUnit) return true;
+    if (this->_unit.getType() != newUnit.getType()) return false; // not possible
+    double cf = this->calculateValueInOtherUnit(newUnit);
+    this->_unit = newUnit;
+    this->setUnitValue(cf);
     return true;
 }
 
@@ -275,19 +274,23 @@ void CPhysicalQuantity::setUnitValue(double baseValue)
     this->_unitValueI = qRound(baseValue);
     this->_isIntegerBaseValue = false;
     this->setConversionSiUnitValue();
-
 }
 
 /**
- * @brief set SI value
+ * Set SI value
  */
 void CPhysicalQuantity::setConversionSiUnitValue() {
-    if (this->_unit == CMeasurementUnit::None()) {
-        this->_convertedSiUnitValueD=0.0;
-    } else {
-        double f = this->_unit.conversionFactor(this->_conversionSiUnit);
-        this->_convertedSiUnitValueD =f * this->_unitValueD;
-    }
+    this->_convertedSiUnitValueD = this->calculateValueInOtherUnit(this->_conversionSiUnit);
+}
+
+/**
+ * Standard conversion by factor, used in most cases,in some cases overridden (e.g.CTemperature)
+ */
+double CPhysicalQuantity::calculateValueInOtherUnit(const CMeasurementUnit &otherUnit) const {
+    if (this->_unit == CMeasurementUnit::None() || this->_unitValueD == 0.0) return 0.0;
+    if (this->_unit == otherUnit) return this->_unitValueD;
+    double f = this->_unit.conversionFactor(otherUnit);
+    return f * this->_unitValueD;
 }
 
 /**
@@ -368,13 +371,8 @@ double CPhysicalQuantity::valueRounded(const CMeasurementUnit &unit, int digits)
  */
 double CPhysicalQuantity::value(const CMeasurementUnit &unit) const
 {
-    double v;
-    if (unit == this->_unit)
-        v = this->_unitValueD;
-    else if (unit == this->_conversionSiUnit)
-        v = this->_convertedSiUnitValueD;
-    else
-        v = (this->_unit.conversionFactor(unit)) * (this->_unitValueD);
+    if (unit == this->_conversionSiUnit) return this->_convertedSiUnitValueD;
+    double v =  this->calculateValueInOtherUnit(unit);
     return v;
 }
 

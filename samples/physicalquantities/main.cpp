@@ -54,7 +54,9 @@ int main(int argc, char *argv[])
 
     CTemperature t1;
     CTemperature t2(20, CTemperatureUnit::C());
-    qDebug() << t1 << t2;
+    CTemperature t3(1, CTemperatureUnit::F());
+    qDebug() << t1 << t2 << t2.convertedSiValueRoundedWithUnit();
+    qDebug() << t3 << t3.valueRoundedWithUnit(CTemperatureUnit::C());
 
     // some logging wit CLogMessage
     bDebug << p1;

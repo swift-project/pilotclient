@@ -49,6 +49,10 @@ private slots:
      */
     void pressureTests();
     /*!
+     * \brief Testing temperature
+     */
+    void temperatureTests();
+    /*!
      * \brief testing construction / destruction in memory
      */
     void memoryTests();

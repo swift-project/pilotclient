@@ -70,8 +70,8 @@ void TestPhysicalQuantitiesBase::speedBasics()
 {
     CSpeed s1(100, CSpeedUnit::km_h());
     CSpeed s2(1000, CSpeedUnit::ft_min());
-    QVERIFY2(s1.valueRounded(CSpeedUnit::NM_h(),0) == 54, "100km/h is 54NM/h");
-    QVERIFY2(s2.valueRounded(CSpeedUnit::m_s(),1) == 5.1, "1000ft/min is 5.1m/s");
+    QVERIFY2(s1.valueRounded(CSpeedUnit::NM_h(),0) == 54, qPrintable(QString("100km/h is not %1 NM/h").arg(s1.valueRounded(CSpeedUnit::NM_h(),0))));
+    QVERIFY2(s2.valueRounded(CSpeedUnit::m_s(),1) == 5.1, qPrintable(QString("1000ft/min is not %1 m/s").arg(s2.valueRounded(CSpeedUnit::m_s(),1))));
 }
 
 /**
@@ -94,8 +94,8 @@ void TestPhysicalQuantitiesBase::angleTests()
     CAngle a1(180, CAngleUnit::deg());
     CAngle a2(1.5 * CAngle::pi());
     a2.switchUnit(CAngleUnit::deg());
-    QVERIFY2(a2.unitValueToInteger() == 270, "1.5Pi should be 270deg");
-    QVERIFY2(a1.piFactor() == 1, "Pi should be 180deg");
+    QVERIFY2(a2.unitValueToInteger() == 270, qPrintable(QString("1.5Pi should be 270deg, not %1 deg").arg(a2.unitValueToInteger())));
+    QVERIFY2(a1.piFactor() == 1, qPrintable(QString("Pi should be 1PI,not %1").arg(a1.piFactor())));
 }
 
 /**
@@ -127,6 +127,20 @@ void TestPhysicalQuantitiesBase::pressureTests()
     QVERIFY2(p1 != p2, "Standard pressure test little difference");
     QVERIFY2(p1 == p3, "Standard pressure test matching");
     QVERIFY2(p1.unitValueToDouble() == p4.unitValueToDouble(), "mbar/hPa test");
+}
+
+/**
+ * Temperature tests
+ */
+void TestPhysicalQuantitiesBase::temperatureTests()
+{
+    CTemperature t1(0, CTemperatureUnit::C()); // 0C
+    CTemperature t2(1, CTemperatureUnit::F()); // 1F
+    CTemperature t3(220.15, CTemperatureUnit::F());
+    QVERIFY2(t1.convertedSiValueToDoubleRounded() == 273.15, qPrintable(QString("0C shall be 273.15K, not %1 K").arg(t1.convertedSiValueToDoubleRounded())));
+    QVERIFY2(t2.valueRounded(CTemperatureUnit::C()) == -17.22, qPrintable(QString("1F shall be -17.22C, not %1 C").arg(t2.valueRounded(CTemperatureUnit::C()))));
+    QVERIFY2(t3.valueRounded(CTemperatureUnit::C()) == 104.53, qPrintable(QString("220.15F shall be 104.53C, not %1 C").arg(t3.valueRounded(CTemperatureUnit::C()))));
+
 }
 
 /**

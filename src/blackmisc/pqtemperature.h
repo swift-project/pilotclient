@@ -30,15 +30,20 @@ public:
      */
     CTemperatureUnit(const CMeasurementUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
     /*!
-     * \brief Meter m
+     * \brief Kelvin
      * \return
      */
     static CTemperatureUnit& K() { static CTemperatureUnit K("Kelvin", "K", true, true); return K;}
     /*!
-     * \brief Nautical miles NM
+     * \brief Centigrade C
      * \return
      */
     static CTemperatureUnit& C() { static CTemperatureUnit C("centigrade", "°C", false, false);return C;}
+    /*!
+     * \brief Fahrenheit F
+     * \return
+     */
+    static CTemperatureUnit& F() { static CTemperatureUnit F("Fahrenheit", "°F", false, false, 5.0/9.0);return F;}
 };
 
 /*!
@@ -47,6 +52,14 @@ public:
  */
 class CTemperature : public CPhysicalQuantity
 {
+protected:
+    /*!
+     * Specific method for temperature, a normal factor conversion is not sufficient.
+     * \param otherUnit
+     * \return
+     */
+    virtual double calculateValueInOtherUnit(const CMeasurementUnit &otherUnit) const;
+
 public:
     /*!
      * \brief Default constructor

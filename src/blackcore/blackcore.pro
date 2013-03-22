@@ -31,7 +31,8 @@ HEADERS += \
     plane.h \
     simulator.h \
     vector_3d.h \
-    vector_geo.h
+    vector_geo.h \
+    blackcore.h
 
 SOURCES += \
     ecef.cpp \
