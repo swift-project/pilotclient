@@ -34,4 +34,12 @@ CAngle::CAngle(double value, const CAngleUnit &unit) : CPhysicalQuantity(value, 
     // void
 }
 
+/**
+ * Destructor
+ */
+CAngle::~CAngle()
+{
+    // void
+}
+
 } // namespace

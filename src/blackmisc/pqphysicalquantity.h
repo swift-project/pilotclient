@@ -9,6 +9,14 @@
 
 namespace BlackMisc {
 
+class CPhysicalQuantity;
+
+/*!
+ * Our converter function, should be implemented as static method of the quantity
+ * classes for clarity
+ */
+typedef double (*CPhysicalQuantityUnitConverter)(const CPhysicalQuantity *quantity, const CMeasurementUnit &unit);
+
 /*!
  * \brief A physical quantity such as "5m", "20s", "1500ft/s"
  * \author KWB
@@ -37,28 +45,43 @@ private:
     double _unitValueD; //!< value backed by double
     double _convertedSiUnitValueD; //!< SI unit value
     bool _isIntegerBaseValue; //!< flag integer? / double?
+    CPhysicalQuantityUnitConverter _unitConverter; //! <! converts values between units
+
+    /*!
+     * Convert value in another unit, normally just by a factor, but in some cases
+     * (e.g. CTemperature)overridden because arbitrary conversion is required
+     * \sa CMeasurementUnit::conversionFactor(CMeasurementUnit)
+     * \param quantity quanity
+     * \param otherUnit
+     * \return
+     */
+    static double standardUnitFactorValueConverter(const CPhysicalQuantity *quantity, const CMeasurementUnit &otherUnit);
 
 protected:
-    CMeasurementUnit _unit; //!< unit
-    CMeasurementUnit _conversionSiUnit; //!< corresponding SI base unit
+    CMeasurementUnit _pUnit; //!< unit
+    CMeasurementUnit _pConversionSiUnit; //!< corresponding SI base unit
 
     /*!
      * \brief Constructor with int
      * \param baseValue
      * \param unit
      * \param siBaseUnit
+     * \param unitConverter
      */
-    CPhysicalQuantity(qint32 baseValue, const CMeasurementUnit &unit, const CMeasurementUnit &siConversionUnit);
+    CPhysicalQuantity(qint32 baseValue, const CMeasurementUnit &unit, const CMeasurementUnit &siConversionUnit,
+                      const CPhysicalQuantityUnitConverter unitConverter = CPhysicalQuantity::standardUnitFactorValueConverter);
     /*!
      * \brief Constructor with double
      * \param baseValue
      * \param unit
      * \param siBaseUnit
      */
-    CPhysicalQuantity(double baseValue, const CMeasurementUnit &unit, const CMeasurementUnit &siConversionUnit);
+    CPhysicalQuantity(double baseValue, const CMeasurementUnit &unit, const CMeasurementUnit &siConversionUnit,
+                      const CPhysicalQuantityUnitConverter unitConverter = CPhysicalQuantity::standardUnitFactorValueConverter);
     /*!
      * \brief Init by integer
      * \param baseValue
+     * \param unitConverter
      */
     void setUnitValue(qint32 baseValue);
     /*!
@@ -70,14 +93,6 @@ protected:
      * \brief Set the SI value
      */
     void setConversionSiUnitValue();
-    /*!
-     * Convert value in another unit, normally just by a factor, but in some cases
-     * (e.g. CTemperature)overridden because arbitrary conversion is required
-     * \sa CMeasurementUnit::conversionFactor(CMeasurementUnit)
-     * \param otherUnit
-     * \return
-     */
-    virtual double calculateValueInOtherUnit(const CMeasurementUnit &otherUnit) const;
 
 public:
     /*!
@@ -85,6 +100,11 @@ public:
      * \param otherQuantity
      */
     CPhysicalQuantity(const CPhysicalQuantity &otherQuantity);
+    /*!
+     * \brief Virtual destructor
+     */
+    virtual ~CPhysicalQuantity();
+
     /*!
      * \brief Switch unit, e.g. feet meter
      * \param newUnit
@@ -95,17 +115,17 @@ public:
      * \brief Value in SI base unit? Meter is an SI base unit, hertz not!
      * \return
      */
-    bool isSiBaseUnit() const { return this->_unit.isSiBaseUnit(); }
+    bool isSiBaseUnit() const { return this->_pUnit.isSiBaseUnit(); }
     /*!
      * \brief Value in SI unit? Hertz is an derived SI unit, NM not!
      * \return
      */
-    bool isSiUnit() const { return this->_unit.isSiUnit(); }
+    bool isSiUnit() const { return this->_pUnit.isSiUnit(); }
     /*!
      * \brief Value in unprefixed SI unit? Meter is a unprefixed, kilometer a prefixed SI Unit
      * \return
      */
-    bool isUnprefixedSiUnit() const { return this->_unit.isUnprefixedSiUnit(); }
+    bool isUnprefixedSiUnit() const { return this->_pUnit.isUnprefixedSiUnit(); }
     /*!
      * \brief Value to QString with unit, e.g. "5.00m"
      * \param digits
@@ -235,13 +255,13 @@ public:
      * \param otherQuantity
      * @return
      */
-    const CPhysicalQuantity operator +(const CPhysicalQuantity &otherQuantity) const;
+    CPhysicalQuantity operator +(const CPhysicalQuantity &otherQuantity) const;
     /*!
      * \brief Minus operator -
      * \param otherQuantity
      * @return
      */
-    const CPhysicalQuantity operator -(const CPhysicalQuantity &otherQuantity) const;
+    CPhysicalQuantity operator -(const CPhysicalQuantity &otherQuantity) const;
     /*!
      * \brief Multiply operator *=
      * \param multiply
@@ -259,13 +279,13 @@ public:
      * \param multiply
      * @return
      */
-    const CPhysicalQuantity operator *(double multiply) const;
+    CPhysicalQuantity operator *(double multiply) const;
     /*!
      * \brief Operator /
      * \param divide
      * @return
      */
-    const CPhysicalQuantity operator /(double divide) const;
+    CPhysicalQuantity operator /(double divide) const;
     /*!
      * \brief Equal operator ==
      * \param otherQuantity

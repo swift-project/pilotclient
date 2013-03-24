@@ -58,9 +58,17 @@ int main(int argc, char *argv[])
     qDebug() << t1 << t2 << t2.convertedSiValueRoundedWithUnit();
     qDebug() << t3 << t3.valueRoundedWithUnit(CTemperatureUnit::C());
 
-    // some logging wit CLogMessage
+    // some logging with CLogMessage
     bDebug << p1;
     bDebug << p1.getUnit() << p1.getUnit().getMultiplier();
+
+    // some of the faults Mathew has pointed out,not longer possible
+    // CAngleUnit::rad() = CAngleUnit::deg();
+    // qDebug() << CAngleUnit::rad(); // wrong
+    (t1 - t2).switchUnit(CTemperatureUnit::F()); // was not working since wrong return type const
+    // CDistanceUnit duA(CSpeedUnit::ft_min()); // no longer possible
+    CDistanceUnit duB(CDistanceUnit::cm());
+    qDebug() << duB;
 
     // bye
     return a.exec();

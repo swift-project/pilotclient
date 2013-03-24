@@ -33,27 +33,27 @@ public:
      * \brief Meter/second m/s
      * \return
      */
-    static CSpeedUnit& m_s() { static CSpeedUnit ms("meter/second", "m/s", true, false); return ms;}
+    static const CSpeedUnit& m_s() { static CSpeedUnit ms("meter/second", "m/s", true, false); return ms;}
     /*!
      * \brief Nautical miles per hour NM/h
      * \return
      */
-    static CSpeedUnit& NM_h() { static CSpeedUnit NMh("nautical miles/hour", "NM/h", false, false, 1852.0/3600.0, CMeasurementPrefix::One(), 1);return NMh;}
+    static const CSpeedUnit& NM_h() { static CSpeedUnit NMh("nautical miles/hour", "NM/h", false, false, 1852.0/3600.0, CMeasurementPrefix::One(), 1);return NMh;}
     /*!
      * \brief Feet/second ft/s
      * \return
      */
-    static CSpeedUnit& ft_s() { static CSpeedUnit fts("feet/seconds", "ft/s", false, false, 0.3048, CMeasurementPrefix::One(), 0); return fts;}
+    static const CSpeedUnit& ft_s() { static CSpeedUnit fts("feet/seconds", "ft/s", false, false, 0.3048, CMeasurementPrefix::One(), 0); return fts;}
     /*!
      * \brief Feet/min ft/min
      * \return
      */
-    static CSpeedUnit& ft_min() { static CSpeedUnit ftmin("feet/minute", "ft/min", false, false, 0.3048 / 60.0, CMeasurementPrefix::One(), 0); return ftmin;}
+    static const CSpeedUnit& ft_min() { static CSpeedUnit ftmin("feet/minute", "ft/min", false, false, 0.3048 / 60.0, CMeasurementPrefix::One(), 0); return ftmin;}
     /*!
      * \brief Kilometer/hour km/h
      * \return
      */
-    static CSpeedUnit& km_h() { static CSpeedUnit kmh("kilometer/hour", "km/h", false, false, 1.0/3.6, CMeasurementPrefix::One(), 1);return kmh;}
+    static const CSpeedUnit& km_h() { static CSpeedUnit kmh("kilometer/hour", "km/h", false, false, 1.0/3.6, CMeasurementPrefix::One(), 1);return kmh;}
 };
 
 /*!
@@ -62,15 +62,17 @@ public:
  */
 class CSpeed : public CPhysicalQuantity
 {
+    friend class CSpeedUnit;
+private:
+    /**
+     *\brief Downcast copy constructor, allows casting units
+     */
+    CSpeed(const CPhysicalQuantity &speed);
 public:
     /*!
      * \brief Default constructor
      */
     CSpeed();
-    /**
-     *\brief downcast copy constructor
-     */
-    CSpeed(const CPhysicalQuantity &speed);
     /*!
      * \brief Init by int value
      * \param value
@@ -84,15 +86,19 @@ public:
      */
     CSpeed(double value, const CSpeedUnit &unit = CSpeedUnit::m_s());
     /*!
+     * \brief Destructor
+     */
+    virtual ~CSpeed();
+    /*!
      * \brief Unit of the distance
      * \return
      */
-    CSpeedUnit getUnit() const { return this->_unit; }
+    CSpeedUnit getUnit() const { return this->_pUnit; }
     /*!
      * \brief Conversion SI unit
      * \return
      */
-    CSpeedUnit getConversionSiUnit() const { return this->_conversionSiUnit; }
+    CSpeedUnit getConversionSiUnit() const { return this->_pConversionSiUnit; }
 };
 } // namespace
 

@@ -10,6 +10,13 @@ namespace BlackMisc {
  * \author KWB
  */
 class CAngleUnit : public CMeasurementUnit {
+    friend class CAngle;
+private:
+    /*!
+     * Downcast copy constructor, allows to implement methods in base class
+     * \param otherUnit
+     */
+    CAngleUnit(const CMeasurementUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
 public:
     /*!
      * Constructor
@@ -25,20 +32,15 @@ public:
     CAngleUnit(const QString &name, const QString &unitName, bool isSIUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "angle", isSIUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
     /*!
-     * Downcast copy constructor, allows to implement methods in base class
-     * \param otherUnit
-     */
-    CAngleUnit(const CMeasurementUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
-    /*!
      * \brief Meter m
      * \return
      */
-    static CAngleUnit& rad() { static CAngleUnit rad("radian", "rad", true); return rad;}
+    static const CAngleUnit& rad() { static CAngleUnit rad("radian", "rad", true); return rad;}
     /*!
      * \brief Nautical miles NM
      * \return
      */
-    static CAngleUnit& deg() { static CAngleUnit deg("degree", "°", false, M_PI/180); return deg;}
+    static const CAngleUnit& deg() { static CAngleUnit deg("degree", "°", false, M_PI/180); return deg;}
 };
 
 /*!
@@ -69,15 +71,19 @@ public:
      */
     CAngle(double value, const CAngleUnit &unit = CAngleUnit::rad());
     /*!
+     * \brief Virtual destructor
+     */
+    virtual ~CAngle();
+    /*!
      * \brief Unit of the distance
      * \return
      */
-    CAngleUnit getUnit() const { return this->_unit; }
+    CAngleUnit getUnit() const { return this->_pUnit; }
     /*!
      * \brief Conversion SI unit
      * \return
      */
-    CAngleUnit getConversionSiUnit() const { return this->_conversionSiUnit; }
+    CAngleUnit getConversionSiUnit() const { return this->_pConversionSiUnit; }
     /*!
      * \brief Convenience method PI
      * \return

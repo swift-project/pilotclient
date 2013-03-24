@@ -19,22 +19,22 @@ public:
      * \brief Temperature absolute Zero in °C
      * \return
      */
-    static CTemperature& TemperatureAbsoluteZero() { static CTemperature t(-273.15, CTemperatureUnit::C()); return t;}
+    static const CTemperature& TemperatureAbsoluteZero() { static CTemperature t(-273.15, CTemperatureUnit::C()); return t;}
     /*!
      * \brief Tripe point of purified water, 0.01°C
      * \return
      */
-    static CTemperature& TemperatureTriplePointOfVSMOW() { static CTemperature t(-273.16, CTemperatureUnit::K()); return t;}
+    static const CTemperature& TemperatureTriplePointOfVSMOW() { static CTemperature t(-273.16, CTemperatureUnit::K()); return t;}
     /*!
      * \brief Temperature absolute Zero in °C
      * \return
      */
-    static CTemperature& TemperatureAbsoluteZeroC() { static CTemperature t(-273.15, CTemperatureUnit::C()); return t;}
+    static const CTemperature& TemperatureAbsoluteZeroC() { static CTemperature t(-273.15, CTemperatureUnit::C()); return t;}
     /*!
      * \brief Standard pressure 1013,25mbar / 29.92inHg
      * \return
      */
-    static CPressure& InternationalStandardSeaLevelPressure() { static CPressure p(1013.25, CPressureUnit::hPa()); return p;}
+    static const CPressure& InternationalStandardSeaLevelPressure() { static CPressure p(1013.25, CPressureUnit::hPa()); return p;}
 };
 } // namespace
 #endif // PQCONSTANTS_H

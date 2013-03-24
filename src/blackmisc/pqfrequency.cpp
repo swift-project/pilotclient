@@ -34,5 +34,13 @@ CFrequency::CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuan
     // void
 }
 
+/**
+ * Destructor
+ */
+CFrequency::~CFrequency()
+{
+    // void
+}
+
 
 } // namespace

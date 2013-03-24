@@ -9,6 +9,13 @@ namespace BlackMisc {
  * \author KWB
  */
 class CTemperatureUnit : public CMeasurementUnit {
+    friend class CTemperature;
+private:
+    /*!
+     * Downcast copy constructor, allows to implement methods in base class
+     * \param otherUnit
+     */
+    CTemperatureUnit(const CMeasurementUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
 public:
     /*!
      * Constructor
@@ -25,25 +32,20 @@ public:
     CTemperatureUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "temperature", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
     /*!
-     * Downcast copy constructor, allows to implement methods in base class
-     * \param otherUnit
-     */
-    CTemperatureUnit(const CMeasurementUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
-    /*!
      * \brief Kelvin
      * \return
      */
-    static CTemperatureUnit& K() { static CTemperatureUnit K("Kelvin", "K", true, true); return K;}
+    static const CTemperatureUnit& K() { static CTemperatureUnit K("Kelvin", "K", true, true); return K;}
     /*!
      * \brief Centigrade C
      * \return
      */
-    static CTemperatureUnit& C() { static CTemperatureUnit C("centigrade", "°C", false, false);return C;}
+    static const CTemperatureUnit& C() { static CTemperatureUnit C("centigrade", "°C", false, false);return C;}
     /*!
      * \brief Fahrenheit F
      * \return
      */
-    static CTemperatureUnit& F() { static CTemperatureUnit F("Fahrenheit", "°F", false, false, 5.0/9.0);return F;}
+    static const CTemperatureUnit& F() { static CTemperatureUnit F("Fahrenheit", "°F", false, false, 5.0/9.0);return F;}
 };
 
 /*!
@@ -52,14 +54,14 @@ public:
  */
 class CTemperature : public CPhysicalQuantity
 {
-protected:
+private:
     /*!
-     * Specific method for temperature, a normal factor conversion is not sufficient.
+     * \brief Convert into another temperature unit
+     * \param quantity
      * \param otherUnit
      * \return
      */
-    virtual double calculateValueInOtherUnit(const CMeasurementUnit &otherUnit) const;
-
+    static double temperaturUnitConverter(const CPhysicalQuantity *quantity, const CMeasurementUnit &otherUnit);
 public:
     /*!
      * \brief Default constructor
@@ -82,15 +84,19 @@ public:
      */
     CTemperature(double value, const CTemperatureUnit &unit = CTemperatureUnit::K());
     /*!
+     * \brief Destructor
+     */
+    virtual ~CTemperature();
+    /*!
      * \brief Unit of the temperature
      * \return
      */
-    CTemperatureUnit getUnit() const { return this->_unit; }
+    CTemperatureUnit getUnit() const { return this->_pUnit; }
     /*!
      * \brief Conversion SI unit
      * \return
      */
-    CTemperatureUnit getConversionSiUnit() const { return this->_conversionSiUnit; }
+    CTemperatureUnit getConversionSiUnit() const { return this->_pConversionSiUnit; }
 };
 } // namespace
 

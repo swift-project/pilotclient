@@ -34,5 +34,13 @@ CPressure::CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantit
     // void
 }
 
+/**
+ * Destructor
+ */
+CPressure::~CPressure()
+{
+    // void
+}
+
 
 } // namespace

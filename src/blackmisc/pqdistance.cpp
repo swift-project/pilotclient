@@ -34,4 +34,12 @@ CDistance::CDistance(double value, const CDistanceUnit &unit) : CPhysicalQuantit
     // void
 }
 
+/**
+ * Destructor
+ */
+CDistance::~CDistance()
+{
+    // void
+}
+
 } // namespace BlackCore

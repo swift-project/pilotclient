@@ -10,13 +10,13 @@ CSpeed::CSpeed() : CPhysicalQuantity(0, CSpeedUnit::m_s(), CSpeedUnit::m_s())
     // void
 }
 
-/**
- * Constructor
- */
-CSpeed::CSpeed(const CPhysicalQuantity &speed): CPhysicalQuantity(speed)
-{
-    //void
-}
+///**
+// * Constructor
+// */
+//CSpeed::CSpeed(const CPhysicalQuantity &speed): CPhysicalQuantity(speed)
+//{
+//    //void
+//}
 
 /**
  * Constructor
@@ -34,5 +34,12 @@ CSpeed::CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, 
     // void
 }
 
+/*!
+ * \brief Destructor
+ */
+CSpeed::~CSpeed()
+{
+    // void
+}
 
 } // namespace

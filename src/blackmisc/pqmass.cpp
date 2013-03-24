@@ -7,13 +7,13 @@ namespace BlackMisc {
  */
 CMass::CMass(): CPhysicalQuantity(0, CMassUnit::kg(),CMassUnit::kg())
 {
-    //void
+    // void
 }
 
 /**
  * Constructor
  */
-CMass::CMass(const CPhysicalQuantity &weight): CPhysicalQuantity(weight)
+CMass::CMass(const CPhysicalQuantity &mass): CPhysicalQuantity(mass)
 {
     // void
 }
@@ -34,4 +34,12 @@ CMass::CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, uni
     // void
 }
 
-} // namespace BlackCore
+/**
+ * Destructor
+ */
+CMass::~CMass()
+{
+    // void
+}
+
+} // namespace BlackMisc
