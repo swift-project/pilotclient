@@ -43,7 +43,7 @@ namespace BlackCore {
 		ISimulator *result = NULL;
 
 		getDriverVersionMajor driverVersionMajor;
-		getDriverVersionMinor driverVersionMinor;
+		//getDriverVersionMinor driverVersionMinor;
 		createISimulatorInstance createDriver;
 
 		switch (sim)
