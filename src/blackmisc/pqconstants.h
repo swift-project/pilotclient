@@ -1,19 +1,13 @@
 #ifndef PQCONSTANTS_H
 #define PQCONSTANTS_H
 
-#include "blackmisc/blackmisc.h"
-#include "blackmisc/pqdistance.h"
-#include "blackmisc/pqfrequency.h"
-#include "blackmisc/pqspeed.h"
-#include "blackmisc/pqangle.h"
-#include "blackmisc/pqmass.h"
-#include "blackmisc/pqpressure.h"
-#include "blackmisc/pqtemperature.h"
+#include "blackmisc/pqallquantities.h"
 
 namespace BlackMisc{
 
 class CPhysicalQuantitiesConstants
 {
+
 public:
     /*!
      * \brief Temperature absolute Zero in °C

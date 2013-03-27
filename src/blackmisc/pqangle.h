@@ -1,89 +1,41 @@
 #ifndef PQANGLE_H
 #define PQANGLE_H
-#include "pqphysicalquantity.h"
-#include "math.h"
+#include "blackmisc/pqphysicalquantity.h"
 
 namespace BlackMisc {
-
-/*!
- * Specialized class for angles (degrees, radian).
- * \author KWB
- */
-class CAngleUnit : public CMeasurementUnit {
-    friend class CAngle;
-private:
-    /*!
-     * Downcast copy constructor, allows to implement methods in base class
-     * \param otherUnit
-     */
-    CAngleUnit(const CMeasurementUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
-public:
-    /*!
-     * Constructor
-     * \brief Angle units: Radian, degree
-     * \param name
-     * \param unitName
-     * \param isSIUnit
-     * \param conversionFactorToSI
-     * \param mulitplier
-     * \param displayDigits
-     * \param epsilon
-     */
-    CAngleUnit(const QString &name, const QString &unitName, bool isSIUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "angle", isSIUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
-    /*!
-     * \brief Meter m
-     * \return
-     */
-    static const CAngleUnit& rad() { static CAngleUnit rad("radian", "rad", true); return rad;}
-    /*!
-     * \brief Nautical miles NM
-     * \return
-     */
-    static const CAngleUnit& deg() { static CAngleUnit deg("degree", "°", false, M_PI/180); return deg;}
-};
 
 /*!
  * \brief Physical unit degree
  * \author KWB
  */
-class CAngle : public CPhysicalQuantity
+class CAngle : public CPhysicalQuantity<CAngleUnit, CAngle>
 {
+
 public:
     /*!
      * \brief Default constructor
      */
-    CAngle();
+    CAngle() : CPhysicalQuantity(0, CAngleUnit::rad(), CAngleUnit::rad()) {}
     /**
-     *\brief downcast copy constructor
-     */
-    CAngle(const CPhysicalQuantity &angle);
+       * \brief Copy constructor
+       */
+    CAngle(const CAngle &angle) : CPhysicalQuantity(angle) {}
     /*!
      * \brief Init by int value
      * \param value
      * \param unit
      */
-    CAngle(qint32 value, const CAngleUnit &unit = CAngleUnit::rad());
+    CAngle(qint32 value, const CAngleUnit &unit): CPhysicalQuantity(value, unit, CAngleUnit::rad()) {}
     /*!
-     *\brief Init by double value
+     * \brief Init by double value
      * \param value
      * \param unit
      */
-    CAngle(double value, const CAngleUnit &unit = CAngleUnit::rad());
+    CAngle(double value, const CAngleUnit &unit): CPhysicalQuantity(value, unit, CAngleUnit::rad()) {}
     /*!
      * \brief Virtual destructor
      */
-    virtual ~CAngle();
-    /*!
-     * \brief Unit of the distance
-     * \return
-     */
-    CAngleUnit getUnit() const { return this->_pUnit; }
-    /*!
-     * \brief Conversion SI unit
-     * \return
-     */
-    CAngleUnit getConversionSiUnit() const { return this->_pConversionSiUnit; }
+    virtual ~CAngle() {}
     /*!
      * \brief Convenience method PI
      * \return
@@ -94,8 +46,8 @@ public:
      * \return
      */
     double piFactor() const { return CPhysicalQuantity::round(this->convertedSiValueToDouble() / M_PI,6);}
-
 };
-} // namespace blackCore
+
+} // namespace
 
 #endif // PQANGLE_H

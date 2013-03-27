@@ -45,7 +45,10 @@ HEADERS += \
     pqmass.h \
     pqpressure.h \
     pqtemperature.h \
-    pqconstants.h
+    pqconstants.h \
+    avverticalposition.h \
+    pqunits.h \
+    pqallquantities.h
 
 SOURCES += \
     logmessage.cpp \
@@ -66,15 +69,9 @@ SOURCES += \
     type_info.cpp \
     message_dispatcher.cpp \
     message_system.cpp \
-    pqdistance.cpp \
     pqphysicalquantity.cpp \
-    pqfrequency.cpp \
     pqbase.cpp \
-    pqspeed.cpp \
-    pqangle.cpp \
-    pqmass.cpp \
-    pqpressure.cpp \
     pqtemperature.cpp \
-    pqconstants.cpp
+    avverticalposition.cpp
 
 DESTDIR = ../../lib

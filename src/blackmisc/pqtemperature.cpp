@@ -3,60 +3,20 @@
 namespace BlackMisc {
 
 /**
- * Default Constructor
- */
-CTemperature::CTemperature(): CPhysicalQuantity(0, CTemperatureUnit::K(),CTemperatureUnit::K(), CTemperature::temperaturUnitConverter)
-{
-    // void
-}
-
-/**
- * Constructor
- */
-CTemperature::CTemperature(const CPhysicalQuantity &temperature): CPhysicalQuantity(temperature)
-{
-    // void
-}
-
-/**
- * Constructor
- */
-CTemperature::CTemperature(qint32 value, const CTemperatureUnit &unit) : CPhysicalQuantity(value, unit, CTemperatureUnit::K(), CTemperature::temperaturUnitConverter)
-{
-    // void
-}
-
-/**
- * Constructor
- */
-CTemperature::CTemperature(double value, const CTemperatureUnit &unit) : CPhysicalQuantity(value, unit, CTemperatureUnit::K(), CTemperature::temperaturUnitConverter)
-{
-    // void
-}
-
-/**
- * Destructor
- */
-CTemperature::~CTemperature()
-{
-    // void
-}
-
-/**
  * Specialized method for temperture
  */
-double CTemperature::temperaturUnitConverter(const CPhysicalQuantity *quantity, const CMeasurementUnit &otherUnit)
+double CTemperature::temperaturUnitConverter(const CPhysicalQuantity<CTemperatureUnit, CTemperature> *quantity, const CTemperatureUnit &otherUnit)
 {
     CTemperature *me = (CTemperature*) quantity; // allow me access to protected
-    if (me->_pUnit  == otherUnit) return me->siBaseUnitValueToDouble();
+    if (me->m_unit  == otherUnit) return me->siBaseUnitValueToDouble();
 
     double siValue;
     // I always convert via SI Unit, other I would need too many conversions
-    if(otherUnit == me->_pConversionSiUnit) {
+    if(otherUnit == me->m_conversionSiUnit) {
         // here I expect a conversion to SI is required and not done yet
-        if(me->_pUnit == CTemperatureUnit::C()) {
+        if(me->m_unit == CTemperatureUnit::C()) {
             siValue = quantity->unitValueToDouble() + 273.15;
-        } else if(me->_pUnit == CTemperatureUnit::F()) {
+        } else if(me->m_unit == CTemperatureUnit::F()) {
             siValue = (me->unitValueToDouble() + 459.67) *5.0 / 9.0;
         } else{
             // TODO: EXCEPTION
@@ -67,14 +27,14 @@ double CTemperature::temperaturUnitConverter(const CPhysicalQuantity *quantity, 
     }
 
     // from SI
-    if (otherUnit == me->_pConversionSiUnit) return siValue;
+    if (otherUnit == me->m_conversionSiUnit) return siValue;
     if(otherUnit == CTemperatureUnit::C()) {
         return siValue - 273.15;
-    } else if(me->_pUnit == CTemperatureUnit::F()) {
+    } else if(me->m_unit == CTemperatureUnit::F()) {
         return (siValue * 9.0 / 5.0) - 459.67;
     }
     // TODO: Exception
     return 0;
 }
 
-} // namespace BlackCore
+} // namespace

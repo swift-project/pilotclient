@@ -53,9 +53,14 @@ private slots:
      */
     void temperatureTests();
     /*!
-     * \brief testing construction / destruction in memory
+     * \brief Testing construction / destruction in memory
      */
     void memoryTests();
+    /*!
+     * \brief Basic arithmetic such as +/-
+     */
+    void basicArithmetic();
+
 };
 
 }

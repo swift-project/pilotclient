@@ -15,20 +15,30 @@ using namespace BlackMisc;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+
+    // cases which must not work
+    // CMeasurementUnit mu; //must not work
+    // CDistanceUnit du1(CAngleUnit::rad());
+    CDistanceUnit du2(CDistanceUnit::cm());
+    CDistanceUnit du3(CDistanceUnit::ft());
     const CDistance d1(5.0, CDistanceUnit::ft()); // 5 ft
     CDistance d2(1, CDistanceUnit::NM()); // 1NM
     CDistance d3(1, CDistanceUnit::km());
-    qDebug() << d1 << d2 << d3;
+    CDistance d4(d3);
+
+    qDebug() << CDistanceUnit::ft();
+    qDebug() << d1 << d2 << d3 << d4;
     qDebug() << d1.valueRoundedWithUnit(CDistanceUnit::ft(),5)
              << d2.valueRoundedWithUnit(CDistanceUnit::km());
     qDebug() << d3.getUnit();
+
 
     d2.switchUnit(CDistanceUnit::ft()); // now in ft
     d3 += d3; // 2km now
     d3 *= 1.5;// 3km now
     qDebug() << d2 << d3;
 
-    CFrequency f1(1E6); // 1MHz
+    CFrequency f1(1E6, CFrequencyUnit::Hz()); // 1MHz
     qDebug() << f1 << f1.valueRoundedWithUnit(CFrequencyUnit::MHz()) << f1.valueRoundedWithUnit(CFrequencyUnit::GHz(), 3);
 
     CSpeed s1 = CSpeed(100, CSpeedUnit::km_h());
@@ -39,7 +49,14 @@ int main(int argc, char *argv[])
     qDebug() << s2 << s3;
 
     CAngle a1(180, CAngleUnit::deg());
-    CAngle a2(1.5 * CAngle::pi());
+    CAngle a2(1.5 * CAngle::pi(), CAngleUnit::rad());
+    a1 += a2;
+    // a1 = d2; // must not work
+    qDebug() << a1;
+    a1.switchUnit(CAngleUnit::deg());
+    // a2 += d1; // must not work
+    a2 = a1 + a1;
+
     a2.switchUnit(CAngleUnit::deg());
     qDebug() << a1.unitValueRoundedWithUnit() << a1.piFactor();
     qDebug() << a2;
@@ -65,6 +82,7 @@ int main(int argc, char *argv[])
     // some of the faults Mathew has pointed out,not longer possible
     // CAngleUnit::rad() = CAngleUnit::deg();
     // qDebug() << CAngleUnit::rad(); // wrong
+
     (t1 - t2).switchUnit(CTemperatureUnit::F()); // was not working since wrong return type const
     // CDistanceUnit duA(CSpeedUnit::ft_min()); // no longer possible
     CDistanceUnit duB(CDistanceUnit::cm());

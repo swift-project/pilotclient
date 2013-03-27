@@ -1,104 +1,40 @@
 #ifndef PQDISTANCE_H
 #define PQDISTANCE_H
-#include "pqphysicalquantity.h"
+#include "blackmisc/pqphysicalquantity.h"
 
 namespace BlackMisc {
-
-/*!
- * Specialized class for distance units (meter, foot, nautical miles).
- * \author KWB
- */
-class CDistanceUnit : public CMeasurementUnit {
-    friend class CDistance;
-private:
-    /*!
-     * Downcast copy constructor, allows to implement methods in base class
-     * \param otherUnit
-     */
-    CDistanceUnit(const CMeasurementUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
-public:
-    /*!
-     * Constructor
-     * \brief Distance unit
-     * \param name
-     * \param unitName
-     * \param isSIUnit
-     * \param isSIBaseUnit
-     * \param conversionFactorToSI
-     * \param mulitplier
-     * \param displayDigits
-     * \param epsilon
-     */
-    CDistanceUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "distance", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
-    /*!
-     * \brief Meter m
-     * \return
-     */
-    static const CDistanceUnit& m() { static CDistanceUnit m("meter", "m", true, true); return m;}
-    /*!
-     * \brief Nautical miles NM
-     * \return
-     */
-    static const CDistanceUnit& NM() { static CDistanceUnit NM("nautical miles", "NM", false, false, 1000.0*1.85200, CMeasurementPrefix::One(), 3);return NM;}
-    /*!
-     * \brief Foot ft
-     * \return
-     */
-    static const CDistanceUnit& ft() { static CDistanceUnit ft("foot", "ft", false, false, 0.3048, CMeasurementPrefix::One(), 0); return ft;}
-    /*!
-     * \brief Kilometer km
-     * \return
-     */
-    static const CDistanceUnit& km() { static CDistanceUnit km("kilometer", "km", true, false, CMeasurementPrefix::k().getFactor(), CMeasurementPrefix::k(), 3);return km;}
-    /*!
-     * \brief Centimeter cm
-     * \return
-     */
-    static const CDistanceUnit& cm() { static CDistanceUnit cm("centimeter", "cm", true, false, CMeasurementPrefix::c().getFactor(), CMeasurementPrefix::c(), 1);return cm;}
-};
 
 /*!
  * \brief Physical unit distance
  * \author KWB
  */
-class CDistance : public CPhysicalQuantity
+class CDistance : public CPhysicalQuantity<CDistanceUnit,CDistance>
 {
 public:
     /*!
      * \brief Default constructor
      */
-    CDistance();
+    CDistance() : CPhysicalQuantity (0, CDistanceUnit::m(), CDistanceUnit::m()) {}
     /**
-     *\brief downcast copy constructor
+     *\brief Copy constructor
      */
-    CDistance(const CPhysicalQuantity &distance);
+    CDistance(const CDistance &distance) : CPhysicalQuantity(distance) {}
     /*!
      * \brief Init by int value
      * \param value
      * \param unit
      */
-    CDistance(qint32 value, const CDistanceUnit &unit = CDistanceUnit::m());
+    CDistance(qint32 value, const CDistanceUnit &unit) : CPhysicalQuantity(value, unit, CDistanceUnit::m()) {}
     /*!
      *\brief Init by double value
      * \param value
      * \param unit
      */
-    CDistance(double value, const CDistanceUnit &unit = CDistanceUnit::m());
+    CDistance(double value, const CDistanceUnit &unit) : CPhysicalQuantity(value, unit, CDistanceUnit::m()) {}
     /*!
      * \brief Virtual destructor
      */
-    virtual ~CDistance();
-    /*!
-     * \brief Unit of the distance
-     * \return
-     */
-    CDistanceUnit getUnit() const { return this->_pUnit; }
-    /*!
-     * \brief Conversion SI unit
-     * \return
-     */
-    CDistanceUnit getConversionSiUnit() const { return this->_pConversionSiUnit; }
+    virtual ~CDistance() {}
 };
-} // namespace blackCore
+} // namespace
 #endif // PQDISTANCE_H
