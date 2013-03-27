@@ -25,9 +25,9 @@ private slots:
      */
     void unitsBasics();
     /*!
-     * \brief Basic tests around distance
+     * \brief Basic tests around length
      */
-    void distanceBasics();
+    void lengthBasics();
     /*!
      * \brief Basic tests about speed
      */

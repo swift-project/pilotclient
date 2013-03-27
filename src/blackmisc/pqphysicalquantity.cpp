@@ -399,7 +399,7 @@ template <class MU, class PQ> double CPhysicalQuantity<MU,PQ>::round(double valu
 
 // see here for the reason of this forward initialization
 // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
-template class CPhysicalQuantity<CDistanceUnit, CDistance>;
+template class CPhysicalQuantity<CLengthUnit, CLength>;
 template class CPhysicalQuantity<CPressureUnit, CPressure>;
 template class CPhysicalQuantity<CFrequencyUnit, CFrequency>;
 template class CPhysicalQuantity<CMassUnit, CMass>;

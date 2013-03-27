@@ -18,22 +18,22 @@ int main(int argc, char *argv[])
 
     // cases which must not work
     // CMeasurementUnit mu; //must not work
-    // CDistanceUnit du1(CAngleUnit::rad());
-    CDistanceUnit du2(CDistanceUnit::cm());
-    CDistanceUnit du3(CDistanceUnit::ft());
-    const CDistance d1(5.0, CDistanceUnit::ft()); // 5 ft
-    CDistance d2(1, CDistanceUnit::NM()); // 1NM
-    CDistance d3(1, CDistanceUnit::km());
-    CDistance d4(d3);
+    // CLengthUnit du1(CAngleUnit::rad());
+    CLengthUnit du2(CLengthUnit::cm());
+    CLengthUnit du3(CLengthUnit::ft());
+    const CLength d1(5.0, CLengthUnit::ft()); // 5 ft
+    CLength d2(1, CLengthUnit::NM()); // 1NM
+    CLength d3(1, CLengthUnit::km());
+    CLength d4(d3);
 
-    qDebug() << CDistanceUnit::ft();
+    qDebug() << CLengthUnit::ft();
     qDebug() << d1 << d2 << d3 << d4;
-    qDebug() << d1.valueRoundedWithUnit(CDistanceUnit::ft(),5)
-             << d2.valueRoundedWithUnit(CDistanceUnit::km());
+    qDebug() << d1.valueRoundedWithUnit(CLengthUnit::ft(),5)
+             << d2.valueRoundedWithUnit(CLengthUnit::km());
     qDebug() << d3.getUnit();
 
 
-    d2.switchUnit(CDistanceUnit::ft()); // now in ft
+    d2.switchUnit(CLengthUnit::ft()); // now in ft
     d3 += d3; // 2km now
     d3 *= 1.5;// 3km now
     qDebug() << d2 << d3;
@@ -84,8 +84,8 @@ int main(int argc, char *argv[])
     // qDebug() << CAngleUnit::rad(); // wrong
 
     (t1 - t2).switchUnit(CTemperatureUnit::F()); // was not working since wrong return type const
-    // CDistanceUnit duA(CSpeedUnit::ft_min()); // no longer possible
-    CDistanceUnit duB(CDistanceUnit::cm());
+    // CLengthUnit duA(CSpeedUnit::ft_min()); // no longer possible
+    CLengthUnit duB(CLengthUnit::cm());
     qDebug() << duB;
 
     // bye

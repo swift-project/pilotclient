@@ -36,7 +36,6 @@ HEADERS += \
     message_dispatcher.h \
     message_system.h \
     gui_messages.h \
-    pqdistance.h \
     pqphysicalquantity.h \
     pqfrequency.h \
     pqbase.h \
@@ -48,7 +47,8 @@ HEADERS += \
     pqconstants.h \
     avverticalposition.h \
     pqunits.h \
-    pqallquantities.h
+    pqallquantities.h \
+    pqlength.h
 
 SOURCES += \
     logmessage.cpp \

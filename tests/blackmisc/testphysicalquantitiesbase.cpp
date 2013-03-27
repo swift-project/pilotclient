@@ -19,13 +19,13 @@ void TestPhysicalQuantitiesBase::unitsBasics()
     QVERIFY(CMeasurementPrefix::k() > CMeasurementPrefix::h());
 
     // some tests on units
-    CDistanceUnit du1 = CDistanceUnit::m(); // Copy
-    CDistanceUnit du2 = CDistanceUnit::m(); // Copy
+    CLengthUnit du1 = CLengthUnit::m(); // Copy
+    CLengthUnit du2 = CLengthUnit::m(); // Copy
     QVERIFY2(du1 == du2, "Compare by value 1");
-    du1 = CDistanceUnit::m(); // Copy
-    du2 = CDistanceUnit::m(); // Copy
+    du1 = CLengthUnit::m(); // Copy
+    du2 = CLengthUnit::m(); // Copy
     QVERIFY2(du1 == du2, "Compare by value 2");
-    QVERIFY2(CDistanceUnit::m() == CDistanceUnit::m(), "Compare by value");
+    QVERIFY2(CLengthUnit::m() == CLengthUnit::m(), "Compare by value");
     QVERIFY2(CMeasurementPrefix::h() < CMeasurementPrefix::M(), "hecto < mega");
 
     CFrequencyUnit fu1 = CFrequencyUnit::Hz();
@@ -35,12 +35,12 @@ void TestPhysicalQuantitiesBase::unitsBasics()
 /*!
  * Distance tests
  */
-void TestPhysicalQuantitiesBase::distanceBasics()
+void TestPhysicalQuantitiesBase::lengthBasics()
 {
-    CDistance d1(1,CDistanceUnit::m()); // 1m
-    CDistance d2(100, CDistanceUnit::cm());
-    CDistance d3(1.852 * 1000,CDistanceUnit::m()); // 1852m
-    CDistance d4(1,CDistanceUnit::NM());
+    CLength d1(1,CLengthUnit::m()); // 1m
+    CLength d2(100, CLengthUnit::cm());
+    CLength d3(1.852 * 1000,CLengthUnit::m()); // 1852m
+    CLength d4(1,CLengthUnit::NM());
 
     QVERIFY2(d1 == d2, "1meter shall be 100cm");
     QVERIFY2(d3 == d4, "1852meters shall be 1NM");
@@ -147,9 +147,9 @@ void TestPhysicalQuantitiesBase::temperatureTests()
  */
 void TestPhysicalQuantitiesBase::memoryTests()
 {
-    CDistance* c = new CDistance(100, CDistanceUnit::m());
-    c->switchUnit(CDistanceUnit::NM());
-    QVERIFY2(c->getUnit() == CDistanceUnit::NM() && c->getConversionSiUnit() == CDistanceUnit::m(),
+    CLength* c = new CLength(100, CLengthUnit::m());
+    c->switchUnit(CLengthUnit::NM());
+    QVERIFY2(c->getUnit() == CLengthUnit::NM() && c->getConversionSiUnit() == CLengthUnit::m(),
              "Testing distance units failed");
     delete c;
 
