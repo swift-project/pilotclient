@@ -13,6 +13,6 @@
 #include "blackmisc/pqspeed.h"
 #include "blackmisc/pqtemperature.h"
 #include "blackmisc/pqangle.h"
-
+#include "blackmisc/pqtime.h"
 
 #endif // PQUNITSALL_H

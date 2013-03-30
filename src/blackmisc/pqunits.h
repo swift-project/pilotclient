@@ -1,18 +1,22 @@
 #ifndef PQUNITS_H
 #define PQUNITS_H
 #include "blackmisc/pqbase.h"
+#include <math.h>
 
+//
+// Used with the template for quantities. This is the reason for
+// having all units in one file, since template requires concrete instantiations
+//
 namespace BlackMisc {
 
 /*!
  * Specialized class for distance units (meter, foot, nautical miles).
- * \author KWB
+ * \author KWB, MS
  */
 class CLengthUnit : public CMeasurementUnit {
 private:
     /*!
-     * Constructor
-     * \brief Distance unit
+     * \brief Constructor Distance unit
      * \param name
      * \param unitName
      * \param isSIUnit
@@ -66,8 +70,7 @@ public:
 class CAngleUnit : public CMeasurementUnit {
 private:
     /*!
-     * Constructor
-     * \brief Angle units: Radian, degree
+     * \brief Constructor angle units: Radian, degree
      * \param name
      * \param unitName
      * \param isSIUnit
@@ -82,20 +85,45 @@ private:
         // void
     }
 public:
-    CAngleUnit(const CAngleUnit &otherUnit) : CMeasurementUnit(otherUnit)
-    {
-        // void
-    }
     /*!
-     * \brief Meter m
+     * \brief Copy constructor
+     * \param otherUnit
+     */
+    CAngleUnit(const CAngleUnit &otherUnit) : CMeasurementUnit(otherUnit) { }
+    /*!
+     * \brief Convert to SI conversion unit, specific for angle
+     * \param value
+     * \return
+     */
+    virtual double CAngleUnit::convertToSiConversionUnit(double value) const;
+    /*!
+     * \brief Convert from SI conversion unit, specific for angle
+     * \param value
+     * \return
+     */
+    virtual double CAngleUnit::convertFromSiConversionUnit(double value) const;
+    /*!
+     * \brief Special conversion to QString for sexagesimal degrees.
+     * \param value
+     * \param digits
+     * \return
+     */
+    virtual QString toQStringRounded(double value, int digits) const;
+    /*!
+     * \brief Radians
      * \return
      */
     static const CAngleUnit& rad() { static CAngleUnit rad("radian", "rad", true); return rad;}
     /*!
-     * \brief Nautical miles NM
+     * \brief Degrees
      * \return
      */
     static const CAngleUnit& deg() { static CAngleUnit deg("degree", "°", false, M_PI/180); return deg;}
+    /*!
+     * \brief Sexagesimal degree (degree, minute, seconds)
+     * \return
+     */
+    static const CAngleUnit& sexagesimalDeg() { static CAngleUnit deg("segadecimal degree", "°", false, M_PI/180); return deg;}
 };
 
 /*!
@@ -151,8 +179,7 @@ public:
 class CMassUnit : public CMeasurementUnit {
 private:
     /*!
-     * Constructor
-     * \brief Mass units
+     * \brief Constructor mass units
      * \param name
      * \param unitName
      * \param isSIUnit
@@ -183,7 +210,7 @@ public:
      * \brief Tonne, aka metric tonne (1000kg)
      * \return
      */
-    static const CMassUnit& t() { static CMassUnit t("tonne", "t", true, false, 1000.0, CMeasurementPrefix::One(), 3); return t;}
+    static const CMassUnit& t() { static CMassUnit t("tonne", "t", false, false, 1000.0, CMeasurementPrefix::One(), 3); return t;}
     /*!
      * \brief Pound, aka mass pound
      * \return
@@ -258,29 +285,50 @@ public:
  */
 class CTemperatureUnit : public CMeasurementUnit {
 private:
+    double m_conversionOffsetToSi;
+private:
     /*!
-     * Constructor
-     * \brief Temperature unit
+     * Constructor temperature unit
      * \param name
      * \param unitName
      * \param isSIUnit
      * \param isSIBaseUnit
      * \param conversionFactorToSI
+     * \param temperatureOffsetToSI
      * \param mulitplier
      * \param displayDigits
      * \param epsilon
      */
-    CTemperatureUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "temperature", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CTemperatureUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, double temperatureOffsetToSI=0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, unitName, "temperature", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon), m_conversionOffsetToSi(temperatureOffsetToSI) {}
 public:
     /*!
      * \brief Copy constructor
      * \param otherUnit
      */
-    CTemperatureUnit(const CTemperatureUnit &otherUnit) : CMeasurementUnit(otherUnit)
+    CTemperatureUnit(const CTemperatureUnit &otherUnit) : CMeasurementUnit(otherUnit), m_conversionOffsetToSi(otherUnit.m_conversionOffsetToSi) {}
+    /*!
+     * Assigment operator
+     */
+    CTemperatureUnit &CTemperatureUnit::operator =(const CTemperatureUnit &otherUnit)
     {
-        // void
+        if (this == &otherUnit) return *this; // Same object? Yes, so skip assignment, and just return *this
+        CMeasurementUnit::operator = (otherUnit);
+        this->m_conversionOffsetToSi = otherUnit.m_conversionOffsetToSi;
+        return (*this);
     }
+    /*!
+     * \brief Convert to SI conversion unit, specific for temperature
+     * \param value
+     * \return
+     */
+    virtual double CTemperatureUnit::convertToSiConversionUnit(double value) const;
+    /*!
+     * \brief Convert from SI conversion unit, specific for temperature
+     * \param value
+     * \return
+     */
+    virtual double CTemperatureUnit::convertFromSiConversionUnit(double value) const;
     /*!
      * \brief Kelvin
      * \return
@@ -290,12 +338,13 @@ public:
      * \brief Centigrade C
      * \return
      */
-    static const CTemperatureUnit& C() { static CTemperatureUnit C("centigrade", "°C", false, false);return C;}
+    static const CTemperatureUnit& C() { static CTemperatureUnit C("centigrade", "°C", false, false, 1.0, 273.15);return C;}
     /*!
      * \brief Fahrenheit F
      * \return
      */
-    static const CTemperatureUnit& F() { static CTemperatureUnit F("Fahrenheit", "°F", false, false, 5.0/9.0);return F;}
+    static const CTemperatureUnit& F() { static CTemperatureUnit F("Fahrenheit", "°F", false, false, 5.0/9.0, 459.67);return F;}
+
 };
 
 /*!
@@ -306,7 +355,7 @@ class CSpeedUnit : public CMeasurementUnit {
 private:
     /*!
      * Constructor
-     * \brief CSpeedUnit
+     * \brief Speed unit constructor
      * \param name
      * \param unitName
      * \param isSIUnit
@@ -320,7 +369,7 @@ private:
         CMeasurementUnit(name, unitName, "speed", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
     /*!
-     * Downcast copy constructor, allows to implement methods in base class
+     * Constructor, allows to implement methods in base class
      * \param otherUnit
      */
     CSpeedUnit(const CSpeedUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
@@ -351,6 +400,59 @@ public:
     static const CSpeedUnit& km_h() { static CSpeedUnit kmh("kilometer/hour", "km/h", false, false, 1.0/3.6, CMeasurementPrefix::One(), 1);return kmh;}
 };
 
+/*!
+ * Specialized class for time units (ms, hour, min).
+ * \author KWB
+ */
+class CTimeUnit : public CMeasurementUnit {
+private:
+    /*!
+     * Constructor
+     * \brief Time unit constructor
+     * \param name
+     * \param unitName
+     * \param isSIUnit
+     * \param isSIBaseUnit
+     * \param conversionFactorToSI
+     * \param mulitplier
+     * \param displayDigits
+     * \param epsilon
+     */
+    CTimeUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, unitName, "time", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+public:
+    /*!
+     * Constructor, allows to implement methods in base class
+     * \param otherUnit
+     */
+    CTimeUnit(const CTimeUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
+    /*!
+     * \brief Second s
+     * \return
+     */
+    static const CTimeUnit& s() { static CTimeUnit s("second", "s", true, true, 1, CMeasurementPrefix::None(), 1); return s;}
+    /*!
+     * \brief Millisecond ms
+     * \return
+     */
+    static const CTimeUnit& ms() { static CTimeUnit ms("millisecond", "ms", true, false, 1E-03, CMeasurementPrefix::m(), 0); return ms;}
+    /*!
+     * \brief Hour
+     * \return
+     */
+    static const CTimeUnit& h() { static CTimeUnit h("hour", "h", false, false, 3600, CMeasurementPrefix::None(), 1); return h;}
+    /*!
+     * \brief Minute
+     * \return
+     */
+    static const CTimeUnit& min() { static CTimeUnit min("minute", "min", false, false, 60, CMeasurementPrefix::None(), 2); return min;}
+    /*!
+     * \brief Day
+     * \return
+     */
+    static const CTimeUnit& d() { static CTimeUnit day("day", "d", false, false, 3600*24, CMeasurementPrefix::None(), 1); return day;}
+
+};
 
 } // namespace
 #endif // PQUNITS_H

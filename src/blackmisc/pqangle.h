@@ -45,7 +45,7 @@ public:
      * \brief Value as factor of PI (e.g.0.5PI)
      * \return
      */
-    double piFactor() const { return CPhysicalQuantity::round(this->convertedSiValueToDouble() / M_PI,6);}
+    double piFactor() const { return CMeasurementUnit::round(this->convertedSiValueToDouble() / M_PI,6);}
 };
 
 } // namespace

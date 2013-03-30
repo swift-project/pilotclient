@@ -19,24 +19,25 @@ int main(int argc, char *argv[])
     // cases which must not work
     // CMeasurementUnit mu; //must not work
     // CLengthUnit du1(CAngleUnit::rad());
-    CLengthUnit du2(CLengthUnit::cm());
-    CLengthUnit du3(CLengthUnit::ft());
-    const CLength d1(5.0, CLengthUnit::ft()); // 5 ft
-    CLength d2(1, CLengthUnit::NM()); // 1NM
-    CLength d3(1, CLengthUnit::km());
-    CLength d4(d3);
+    CLengthUnit lu1(CLengthUnit::cm());
+    CLengthUnit lu2(CLengthUnit::ft());
+    qDebug() << lu1 << lu2;
+    const CLength l1(5.0, CLengthUnit::ft()); // 5 ft
+    CLength l2(1, CLengthUnit::NM()); // 1NM
+    CLength l3(1, CLengthUnit::km());
+    CLength l4(l3);
 
     qDebug() << CLengthUnit::ft();
-    qDebug() << d1 << d2 << d3 << d4;
-    qDebug() << d1.valueRoundedWithUnit(CLengthUnit::ft(),5)
-             << d2.valueRoundedWithUnit(CLengthUnit::km());
-    qDebug() << d3.getUnit();
+    qDebug() << l1 << l2 << l3 << l4;
+    qDebug() << l1.valueRoundedWithUnit(CLengthUnit::ft(),5)
+             << l2.valueRoundedWithUnit(CLengthUnit::km());
+    qDebug() << l3.getUnit();
 
 
-    d2.switchUnit(CLengthUnit::ft()); // now in ft
-    d3 += d3; // 2km now
-    d3 *= 1.5;// 3km now
-    qDebug() << d2 << d3;
+    l2.switchUnit(CLengthUnit::ft()); // now in ft
+    l3 += l3; // 2km now
+    l3 *= 1.5;// 3km now
+    qDebug() << l2 << l3;
 
     CFrequency f1(1E6, CFrequencyUnit::Hz()); // 1MHz
     qDebug() << f1 << f1.valueRoundedWithUnit(CFrequencyUnit::MHz()) << f1.valueRoundedWithUnit(CFrequencyUnit::GHz(), 3);
@@ -50,6 +51,8 @@ int main(int argc, char *argv[])
 
     CAngle a1(180, CAngleUnit::deg());
     CAngle a2(1.5 * CAngle::pi(), CAngleUnit::rad());
+    CAngle a3(180.5, CAngleUnit::deg());
+    CAngle a4(35.4336,CAngleUnit::sexagesimalDeg()); // 35.72666
     a1 += a2;
     // a1 = d2; // must not work
     qDebug() << a1;
@@ -60,6 +63,9 @@ int main(int argc, char *argv[])
     a2.switchUnit(CAngleUnit::deg());
     qDebug() << a1.unitValueRoundedWithUnit() << a1.piFactor();
     qDebug() << a2;
+    a3.switchUnit(CAngleUnit::sexagesimalDeg());
+    a4.switchUnit(CAngleUnit::deg());
+    qDebug() << a3 << a4;
 
     CMass w1(1,CMassUnit::t());
     CMass w2(w1);
@@ -87,6 +93,11 @@ int main(int argc, char *argv[])
     // CLengthUnit duA(CSpeedUnit::ft_min()); // no longer possible
     CLengthUnit duB(CLengthUnit::cm());
     qDebug() << duB;
+
+    CTime ti1(1, CTimeUnit::h());
+    CTime ti2(ti1);
+    ti2.switchUnit(CTimeUnit::ms());
+    qDebug() << ti1 << ti2;
 
     // bye
     return a.exec();

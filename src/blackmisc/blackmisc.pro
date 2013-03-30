@@ -48,7 +48,8 @@ HEADERS += \
     avverticalposition.h \
     pqunits.h \
     pqallquantities.h \
-    pqlength.h
+    pqlength.h \
+    pqtime.h
 
 SOURCES += \
     logmessage.cpp \
@@ -71,7 +72,7 @@ SOURCES += \
     message_system.cpp \
     pqphysicalquantity.cpp \
     pqbase.cpp \
-    pqtemperature.cpp \
+    pqunits.cpp \
     avverticalposition.cpp
 
 DESTDIR = ../../lib

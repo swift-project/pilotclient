@@ -20,7 +20,10 @@ public:
      */
     CAviationVerticalPosition();
     /*!
-     * \brief Default constructor
+     * \brief Constructor
+     * \param height
+     * \param elevation
+     * \param altitude
      */
     CAviationVerticalPosition(const CLength &height, const CLength &elevation, const CLength &altitude);
     /*!
@@ -34,6 +37,18 @@ public:
      * \return
      */
     static CAviationVerticalPosition getHeight(const CLength &initValue) { return CAviationVerticalPosition(initValue, CAviationVerticalPosition::valueNotSet(), CAviationVerticalPosition::valueNotSet());}
+    /*!
+     * \brief Factory method for convenience if only one component is available
+     * \param initValue
+     * \return
+     */
+    static CAviationVerticalPosition getElevation(const CLength &initValue) { return CAviationVerticalPosition(CAviationVerticalPosition::valueNotSet(), initValue, CAviationVerticalPosition::valueNotSet());}
+    /*!
+     * \brief Factory method for convenience if only one component is available
+     * \param initValue
+     * \return
+     */
+    static CAviationVerticalPosition getAltitude(const CLength &initValue) { return CAviationVerticalPosition(CAviationVerticalPosition::valueNotSet(), CAviationVerticalPosition::valueNotSet(), initValue);}
 
 };
 } // namespace

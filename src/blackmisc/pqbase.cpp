@@ -10,7 +10,7 @@ namespace BlackMisc {
  * Constructor
  */
 CMeasurementPrefix::CMeasurementPrefix(const QString &name, const QString &unitName, double factor):
-    _name(name),_prefix(unitName),_factor(factor)
+    m_name(name),m_prefix(unitName),m_factor(factor)
 {
     // void
 }
@@ -19,7 +19,7 @@ CMeasurementPrefix::CMeasurementPrefix(const QString &name, const QString &unitN
  * Constructor
  */
 CMeasurementPrefix::CMeasurementPrefix(const CMeasurementPrefix &otherMultiplier) :
-    _name(otherMultiplier._name), _prefix(otherMultiplier._prefix), _factor(otherMultiplier._factor)
+    m_name(otherMultiplier.m_name), m_prefix(otherMultiplier.m_prefix), m_factor(otherMultiplier.m_factor)
 {
     // void
 }
@@ -30,9 +30,9 @@ CMeasurementPrefix::CMeasurementPrefix(const CMeasurementPrefix &otherMultiplier
 CMeasurementPrefix& CMeasurementPrefix::operator=(const CMeasurementPrefix &otherMultiplier) {
 
     if (this == &otherMultiplier) return *this; // Same object? Yes, so skip assignment, and just return *this
-    this->_name = otherMultiplier._name;
-    this->_prefix=otherMultiplier._prefix;
-    this->_factor=otherMultiplier._factor;
+    this->m_name = otherMultiplier.m_name;
+    this->m_prefix=otherMultiplier.m_prefix;
+    this->m_factor=otherMultiplier.m_factor;
     return *this;
 }
 
@@ -42,7 +42,7 @@ CMeasurementPrefix& CMeasurementPrefix::operator=(const CMeasurementPrefix &othe
 bool CMeasurementPrefix::operator ==(const CMeasurementPrefix &otherMultiplier) const
 {
     if ( this == &otherMultiplier ) return true;
-    return this->_factor == otherMultiplier._factor && this->_name == otherMultiplier._name;
+    return this->m_factor == otherMultiplier.m_factor && this->m_name == otherMultiplier.m_name;
 }
 
 /**
@@ -58,7 +58,7 @@ bool CMeasurementPrefix::operator !=(const CMeasurementPrefix &otherMultiplier) 
  */
 bool CMeasurementPrefix::operator >(const CMeasurementPrefix &otherMultiplier) const
 {
-    return this->_factor > otherMultiplier._factor;
+    return this->m_factor > otherMultiplier.m_factor;
 }
 
 /**
@@ -66,7 +66,7 @@ bool CMeasurementPrefix::operator >(const CMeasurementPrefix &otherMultiplier) c
  */
 bool CMeasurementPrefix::operator <(const CMeasurementPrefix &otherMultiplier) const
 {
-    return this->_factor < otherMultiplier._factor;
+    return this->m_factor < otherMultiplier.m_factor;
 }
 
 /**
@@ -74,7 +74,7 @@ bool CMeasurementPrefix::operator <(const CMeasurementPrefix &otherMultiplier) c
  */
 QDebug operator<<(QDebug d, const CMeasurementPrefix &multiplier)
 {
-    d << multiplier._name;
+    d << multiplier.m_name;
     return d;
 }
 
@@ -83,7 +83,7 @@ QDebug operator<<(QDebug d, const CMeasurementPrefix &multiplier)
  */
 CLogMessage operator<<(CLogMessage log, const CMeasurementPrefix &multiplier)
 {
-    log << multiplier._name;
+    log << multiplier.m_name;
     return log;
 }
 
@@ -95,8 +95,8 @@ CLogMessage operator<<(CLogMessage log, const CMeasurementPrefix &multiplier)
  * Constructor
  */
 CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI, const CMeasurementPrefix &multiplier, qint32 displayDigits, double epsilon):
-    _name(name), _unitName(unitName), _type(type), _isSIUnit(isSIUnit), _isSIBaseUnit(isSIBaseUnit),_displayDigits(displayDigits),_conversionFactorToSIConversionUnit(conversionFactorToSI),
-    _epsilon(epsilon), _multiplier(multiplier)
+    m_name(name), m_unitName(unitName), m_type(type), m_isSIUnit(isSIUnit), m_isSIBaseUnit(isSIBaseUnit),m_displayDigits(displayDigits),m_conversionFactorToSIConversionUnit(conversionFactorToSI),
+    m_epsilon(epsilon), m_multiplier(multiplier)
 {
     // void
 }
@@ -105,9 +105,9 @@ CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &unitName,
  * Copy constructor
  */
 CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &otherUnit):
-    _name(otherUnit._name), _unitName(otherUnit._unitName), _type(otherUnit._type), _isSIUnit(otherUnit._isSIUnit),
-    _isSIBaseUnit(otherUnit._isSIBaseUnit), _displayDigits(otherUnit._displayDigits),_conversionFactorToSIConversionUnit(otherUnit._conversionFactorToSIConversionUnit),
-    _epsilon(otherUnit._epsilon), _multiplier(otherUnit._multiplier)
+    m_name(otherUnit.m_name), m_unitName(otherUnit.m_unitName), m_type(otherUnit.m_type), m_isSIUnit(otherUnit.m_isSIUnit),
+    m_isSIBaseUnit(otherUnit.m_isSIBaseUnit), m_displayDigits(otherUnit.m_displayDigits),m_conversionFactorToSIConversionUnit(otherUnit.m_conversionFactorToSIConversionUnit),
+    m_epsilon(otherUnit.m_epsilon), m_multiplier(otherUnit.m_multiplier)
 {
     // void
 }
@@ -118,15 +118,15 @@ CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &otherUnit):
 CMeasurementUnit &CMeasurementUnit::operator =(const CMeasurementUnit &otherUnit)
 {
     if (this == &otherUnit) return *this; // Same object? Yes, so skip assignment, and just return *this
-    this->_name = otherUnit._name;
-    this->_unitName =otherUnit._unitName;
-    this->_type=otherUnit._type;
-    this->_isSIUnit =otherUnit._isSIUnit;
-    this->_isSIBaseUnit =otherUnit._isSIBaseUnit;
-    this->_conversionFactorToSIConversionUnit=otherUnit._conversionFactorToSIConversionUnit;
-    this->_multiplier = otherUnit._multiplier;
-    this->_displayDigits=otherUnit._displayDigits;
-    this->_epsilon= otherUnit._epsilon;
+    this->m_name = otherUnit.m_name;
+    this->m_unitName =otherUnit.m_unitName;
+    this->m_type=otherUnit.m_type;
+    this->m_isSIUnit =otherUnit.m_isSIUnit;
+    this->m_isSIBaseUnit =otherUnit.m_isSIBaseUnit;
+    this->m_conversionFactorToSIConversionUnit=otherUnit.m_conversionFactorToSIConversionUnit;
+    this->m_multiplier = otherUnit.m_multiplier;
+    this->m_displayDigits=otherUnit.m_displayDigits;
+    this->m_epsilon= otherUnit.m_epsilon;
     return *this;
 }
 
@@ -136,9 +136,9 @@ CMeasurementUnit &CMeasurementUnit::operator =(const CMeasurementUnit &otherUnit
 bool CMeasurementUnit::operator ==(const CMeasurementUnit &otherUnit) const
 {
     if ( this == &otherUnit ) return true;
-    if ( this->_type != otherUnit._type) return false;
-    return this->_multiplier == otherUnit._multiplier && this->_name == otherUnit._name
-            && this->_isSIUnit==otherUnit._isSIUnit;
+    if ( this->m_type != otherUnit.m_type) return false;
+    return this->m_multiplier == otherUnit.m_multiplier && this->m_name == otherUnit.m_name
+            && this->m_isSIUnit==otherUnit.m_isSIUnit;
 }
 
 /**
@@ -146,7 +146,7 @@ bool CMeasurementUnit::operator ==(const CMeasurementUnit &otherUnit) const
  */
 QDebug operator <<(QDebug d, const CMeasurementUnit &unit)
 {
-    d << unit._name;
+    d << unit.m_name;
     return d;
 }
 
@@ -155,7 +155,7 @@ QDebug operator <<(QDebug d, const CMeasurementUnit &unit)
  */
 CLogMessage operator<<(CLogMessage log, const CMeasurementUnit &unit)
 {
-    log << unit._name;
+    log << unit.m_name;
     return log;
 }
 
@@ -170,19 +170,49 @@ bool CMeasurementUnit::operator !=(const CMeasurementUnit &otherUnit) const
 /**
  * Conversion factor from unit x to y
  */
-double CMeasurementUnit::conversionFactor(const CMeasurementUnit &to) const
+double CMeasurementUnit::conversionToUnit(double value, const CMeasurementUnit &to) const
 {
-    return CMeasurementUnit::conversionFactor(*this, to);
+    if (to == (*this)) return value;
+    double siValue = this->convertToSiConversionUnit(value);
+    return to.convertFromSiConversionUnit(siValue);
+}
+
+/*!
+ * Value to QString with unit, e.g. "5.00m"
+ * @return
+ */
+QString CMeasurementUnit::valueRoundedWithUnit(double value, int digits) const {
+    return this->toQStringRounded(value, digits).append(this->getUnitName());
+}
+
+/*!
+ * Value rounded
+ */
+double CMeasurementUnit::valueRounded(double value, int digits) const {
+    if (digits < 0) digits = this->m_displayDigits;
+    return CMeasurementUnit::round(value, digits);
 }
 
 /**
- * Conversion factor from unit x to y
+ * Rounded to QString
  */
-double CMeasurementUnit::conversionFactor(const CMeasurementUnit &from, const CMeasurementUnit &to)
+QString CMeasurementUnit::toQStringRounded(double value, int digits) const
 {
-    if (from == to) return 1.0;
-    double cf = from._conversionFactorToSIConversionUnit / to._conversionFactorToSIConversionUnit;
-    return cf;
+    if (digits < 0) digits = this->m_displayDigits;
+    double v = CMeasurementUnit::round(value, digits);
+    QString s = QLocale::system().toString(v, 'f', digits);
+    return s;
 }
 
-} // namespace BlackCore
+/**
+ * Round utility method
+ */
+double CMeasurementUnit::round(double value, int digits) {
+    // gosh, is there no Qt method for this???
+    // It's year 2013
+    double m = pow(10.0,digits);
+    double rv = double(qRound(value * m) / m);
+    return rv;
+}
+
+} // namespace

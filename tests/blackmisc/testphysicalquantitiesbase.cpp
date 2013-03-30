@@ -93,9 +93,11 @@ void TestPhysicalQuantitiesBase::angleTests()
 {
     CAngle a1(180, CAngleUnit::deg());
     CAngle a2(1.5 * CAngle::pi(), CAngleUnit::rad());
+    CAngle a3(35.4336,CAngleUnit::sexagesimalDeg()); // 35.72666
     a2.switchUnit(CAngleUnit::deg());
     QVERIFY2(a2.unitValueToInteger() == 270, qPrintable(QString("1.5Pi should be 270deg, not %1 deg").arg(a2.unitValueToInteger())));
-    QVERIFY2(a1.piFactor() == 1, qPrintable(QString("Pi should be 1PI,not %1").arg(a1.piFactor())));
+    QVERIFY2(a1.piFactor() == 1, qPrintable(QString("Pi should be 1PI, not %1").arg(a1.piFactor())));
+    QVERIFY2(a3.valueRounded(CAngleUnit::deg()) == 35.73, "Expecting 35.73");
 }
 
 /**
@@ -137,13 +139,24 @@ void TestPhysicalQuantitiesBase::temperatureTests()
     CTemperature t1(0, CTemperatureUnit::C()); // 0C
     CTemperature t2(1, CTemperatureUnit::F()); // 1F
     CTemperature t3(220.15, CTemperatureUnit::F());
+    CTemperature t4(10, CTemperatureUnit::F());
     QVERIFY2(t1.convertedSiValueToDoubleRounded() == 273.15, qPrintable(QString("0C shall be 273.15K, not %1 K").arg(t1.convertedSiValueToDoubleRounded())));
     QVERIFY2(t2.valueRounded(CTemperatureUnit::C()) == -17.22, qPrintable(QString("1F shall be -17.22C, not %1 C").arg(t2.valueRounded(CTemperatureUnit::C()))));
     QVERIFY2(t3.valueRounded(CTemperatureUnit::C()) == 104.53, qPrintable(QString("220.15F shall be 104.53C, not %1 C").arg(t3.valueRounded(CTemperatureUnit::C()))));
+    QVERIFY2(t4.valueRounded(CTemperatureUnit::K()) == 260.93, qPrintable(QString("10F shall be 260.93K, not %1 K").arg(t4.valueRounded(CTemperatureUnit::K()))));
 }
 
 /**
- * @brief Just testing obvious memory create / destruct flaws
+ * Temperature tests
+ */
+void TestPhysicalQuantitiesBase::timeTests()
+{
+    CTime t1(1, CTimeUnit::h());
+    QVERIFY2(t1.siBaseUnitValueToInteger() == 3600, "1hour shall be 3600s");
+}
+
+/**
+ * Just testing obvious memory create / destruct flaws
  */
 void TestPhysicalQuantitiesBase::memoryTests()
 {

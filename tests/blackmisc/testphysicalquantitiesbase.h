@@ -53,6 +53,10 @@ private slots:
      */
     void temperatureTests();
     /*!
+     * \brief Testing time
+     */
+    void timeTests();
+    /*!
      * \brief Testing construction / destruction in memory
      */
     void memoryTests();

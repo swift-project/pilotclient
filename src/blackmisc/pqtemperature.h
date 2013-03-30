@@ -10,20 +10,11 @@ namespace BlackMisc {
  */
 class CTemperature : public CPhysicalQuantity<CTemperatureUnit,CTemperature>
 {
-private:
-    /*!
-     * \brief Convert into another temperature unit
-     * \param quantity
-     * \param otherUnit
-     * \return
-     */
-    static double temperaturUnitConverter(const CPhysicalQuantity<CTemperatureUnit,CTemperature> *quantity, const CTemperatureUnit &otherUnit);
-
 public:
     /*!
      * \brief Default constructor
      */
-    CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::K(), CTemperatureUnit::K(), CTemperature::temperaturUnitConverter) {}
+    CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::K(), CTemperatureUnit::K()) {}
     /**
      *\brief Copy constructor
      */
@@ -33,13 +24,13 @@ public:
      * \param value
      * \param unit
      */
-    CTemperature(qint32 value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit, CTemperatureUnit::K(), CTemperature::temperaturUnitConverter) {}
+    CTemperature(qint32 value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit, CTemperatureUnit::K()) {}
     /*!
      *\brief Init by double value
      * \param value
      * \param unit
      */
-    CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit, CTemperatureUnit::K(), CTemperature::temperaturUnitConverter) {}
+    CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit, CTemperatureUnit::K()) {}
     /*!
      * \brief Destructor
      */

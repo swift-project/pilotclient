@@ -23,7 +23,7 @@ template <class MU, class PQ> class CPhysicalQuantity
      * Our converter function, should be implemented as static method of the quantity
      * classes for clarity
      */
-    typedef double (*CPhysicalQuantityUnitConverter)(const CPhysicalQuantity<MU,PQ> *quantity, const MU &unit);
+    typedef double (*CPhysicalQuantityUnitConverter)(const PQ *quantity, const MU &unit);
 
     /*!
      * Stream operator for debugging
@@ -31,9 +31,9 @@ template <class MU, class PQ> class CPhysicalQuantity
      * \param debug
      * \param quantity
      * \return
-     * \remarks has to be in the header files toavoid templatelink errors
+     * \remarks Has to be in the header files to avoid template link errors
      */
-    friend QDebug operator<<(QDebug debug, const CPhysicalQuantity<MU,PQ> &quantity) {
+    friend QDebug operator<<(QDebug debug, const CPhysicalQuantity &quantity) {
         QString v = quantity.unitValueRoundedWithUnit(-1);
         debug << v;
         return debug;
@@ -45,9 +45,9 @@ template <class MU, class PQ> class CPhysicalQuantity
      * \param log
      * \param quantity
      * \return
-     * \remarks has to be in the header files toavoid templatelink errors
+     * \remarks Has to be in the header files toavoid templatelink errors
      */
-    friend CLogMessage operator<<(CLogMessage log, const CPhysicalQuantity<MU,PQ> &quantity) {
+    friend CLogMessage operator<<(CLogMessage log, const CPhysicalQuantity &quantity) {
         QString v = quantity.unitValueRoundedWithUnit(-1);
         log << v;
         return log;
@@ -58,16 +58,6 @@ private:
     double m_unitValueD; //!< value backed by double
     double m_convertedSiUnitValueD; //!< SI unit value
     bool m_isIntegerBaseValue; //!< flag integer? / double?
-    CPhysicalQuantityUnitConverter m_unitConverter; //! <! converts values between units
-
-    /*!
-     * Convert value in another unit, normally just by a factor, but in some cases
-     * (e.g. CTemperature) overridden, because arbitrary conversion is required
-     * \param quantity quanity
-     * \param otherUnit
-     * \return
-     */
-    static double standardUnitFactorValueConverter(const CPhysicalQuantity<MU,PQ> *quantity, const MU &otherUnit);
 
 protected:
     MU m_unit; //!< unit
@@ -80,16 +70,14 @@ protected:
      * \param siBaseUnit
      * \param unitConverter
      */
-    CPhysicalQuantity(qint32 baseValue, const MU &unit, const MU &siConversionUnit,
-                      const CPhysicalQuantityUnitConverter unitConverter = CPhysicalQuantity::standardUnitFactorValueConverter);
+    CPhysicalQuantity(qint32 baseValue, const MU &unit, const MU &siConversionUnit);
     /*!
      * \brief Constructor with double
      * \param baseValue
      * \param unit
      * \param siBaseUnit
      */
-    CPhysicalQuantity(double baseValue, const MU &unit, const MU &siConversionUnit,
-                      const CPhysicalQuantityUnitConverter unitConverter = CPhysicalQuantity::standardUnitFactorValueConverter);
+    CPhysicalQuantity(double baseValue, const MU &unit, const MU &siConversionUnit);
     /*!
      * \brief Init by integer
      * \param baseValue
@@ -110,11 +98,11 @@ public:
      * \brief Copy constructor
      * \param otherQuantity
      */
-    CPhysicalQuantity<MU,PQ>(const CPhysicalQuantity<MU,PQ> &otherQuantity);
+    CPhysicalQuantity(const CPhysicalQuantity &otherQuantity);
     /*!
      * \brief Virtual destructor
      */
-    virtual ~CPhysicalQuantity<MU,PQ>();
+    virtual ~CPhysicalQuantity();
     /*!
      * \brief Unit of the distance
      * \return
@@ -147,12 +135,6 @@ public:
      */
     bool isUnprefixedSiUnit() const { return this->m_unit.isUnprefixedSiUnit(); }
     /*!
-     * \brief Value to QString with unit, e.g. "5.00m"
-     * \param digits
-     * @return
-     */
-    QString unitValueRoundedWithUnit(int digits = -1) const;
-    /*!
      * \brief Value in given unit
      * \param unit
      * @return
@@ -183,10 +165,16 @@ public:
      */
     double unitValueToDouble() const { return this->m_unitValueD;}
     /*!
+     * \brief Value to QString with unit, e.g. "5.00m"
+     * \param digits
+     * @return
+     */
+    QString unitValueRoundedWithUnit(int digits = -1) const;
+    /*!
      * \brief SI value to integer
      * @return
      */
-    qint32 siBaseUnitValueToInteger() const { return CPhysicalQuantity::round(this->m_convertedSiUnitValueD,0);}
+    qint32 siBaseUnitValueToInteger() const { return CMeasurementUnit::round(this->m_convertedSiUnitValueD,0);}
     /*!
      * \brief SI value to double
      * @return
@@ -213,7 +201,7 @@ public:
      * \brief SI value as integer
      * \return
      */
-    qint32 convertedSiValueToInteger() const { return (qint32)CPhysicalQuantity::round(this->m_convertedSiUnitValueD,0);}
+    qint32 convertedSiValueToInteger() const { return static_cast<qint32>(CMeasurementUnit::round(this->m_convertedSiUnitValueD,0));}
     /*!
      * \brief Rounded SI value by n digits
      * \param digits
@@ -258,13 +246,13 @@ public:
      * \param multiply
      * \return
      */
-    CPhysicalQuantity<MU,PQ> &operator *=(double multiply);
+    CPhysicalQuantity &operator *=(double multiply);
     /*!
      * \brief Divide operator /=
      * \param divide
      * @return
      */
-    CPhysicalQuantity<MU,PQ> &operator /=(double divide);
+    CPhysicalQuantity &operator /=(double divide);
     /*!
      * \brief Operator *
      * \param multiply
@@ -282,55 +270,55 @@ public:
      * \param otherQuantity
      * @return
      */
-    bool operator==(const CPhysicalQuantity<MU,PQ> &otherQuantity) const;
+    bool operator==(const CPhysicalQuantity &otherQuantity) const;
     /*!
      * \brief Not equal operator !=
      * \param otherQuantity
      * @return
      */
-    bool operator!=(const CPhysicalQuantity<MU,PQ> &otherQuantity) const;
+    bool operator!=(const CPhysicalQuantity &otherQuantity) const;
     /*!
      * \brief Plus operator +=
      * \param otherQuantity
      * @return
      */
-    CPhysicalQuantity<MU,PQ> &operator +=(const CPhysicalQuantity<MU,PQ> &otherQuantity);
+    CPhysicalQuantity &operator +=(const CPhysicalQuantity &otherQuantity);
     /*!
      * \brief Minus operator-=
      * \param otherQuantity
      * @return
      */
-    CPhysicalQuantity<MU,PQ> &operator -=(const CPhysicalQuantity<MU,PQ> &otherQuantity);
+    CPhysicalQuantity &operator -=(const CPhysicalQuantity &otherQuantity);
     /*!
      * \brief Greater operator >
      * \param otherQuantity
      * @return
      */
-    bool operator >(const CPhysicalQuantity<MU,PQ> &otherQuantity) const;
+    bool operator >(const CPhysicalQuantity &otherQuantity) const;
     /*!
      * \brief Less operator <
      * \param otherQuantity
      * @return
      */
-    bool operator <(const CPhysicalQuantity<MU,PQ> &otherQuantity) const;
+    bool operator <(const CPhysicalQuantity &otherQuantity) const;
     /*!
      * \brief Less equal operator <=
      * \param otherQuantity
      * @return
      */
-    bool operator <=(const CPhysicalQuantity<MU,PQ> &otherQuantity) const;
+    bool operator <=(const CPhysicalQuantity &otherQuantity) const;
     /*!
      * \brief Greater equal operator >=
      * \param otherQuantity
      * @return
      */
-    bool operator >=(const CPhysicalQuantity<MU,PQ> &otherQuantity) const;
+    bool operator >=(const CPhysicalQuantity &otherQuantity) const;
     /*!
      * \brief Assignment operator =
      * \param otherQuantity
      * @return
      */
-    CPhysicalQuantity<MU,PQ> &operator =(const CPhysicalQuantity<MU,PQ> &otherQuantity);
+    CPhysicalQuantity &operator =(const CPhysicalQuantity &otherQuantity);
     /*!
      * \brief Plus operator +
      * \param otherQuantity
@@ -344,26 +332,6 @@ public:
      */
     PQ operator -(const PQ &otherQuantity) const;
 
-
-    // --------------------------------------------------------------------
-    // -- static
-    // --------------------------------------------------------------------
-
-    /*!
-     * \brief Utility round method
-     * \param value
-     * \param digits
-     * \return
-     */
-    static double round(double value, int digits);
-
-    /*!
-     * \brief Rounded string utility method
-     * \param value
-     * \param digits
-     * \return
-     */
-    static QString toQStringRounded(double value, int digits);
 };
 
 } // namespace BlackCore
