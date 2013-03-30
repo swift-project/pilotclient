@@ -15,6 +15,7 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
  }
 
 DEFINES += LOG_IN_FILE
+DEFINES += Q_OS_LINUX
 
 HEADERS += \
     logmessage.h \
