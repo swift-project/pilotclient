@@ -2,7 +2,7 @@
 
 namespace BlackMisc
 {
-    IMessage::IMessage(QString& id)
+    IMessage::IMessage(QString id)
     {
         m_message_id = id;
     }

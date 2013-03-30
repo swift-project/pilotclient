@@ -92,6 +92,8 @@ namespace BlackCore {
         bool beaconLights;  //!< true if beacon lights on
     };
 
+#ifdef Q_OS_WIN
+
     //! A callback that is called when the simulator is started.
     typedef std::tr1::function<void(const bool status)> cbSimStarted;
 
@@ -103,6 +105,20 @@ namespace BlackCore {
 
     //! A callback that is called when the user's plane changes its model.
     typedef std::tr1::function<void(const CPlaneModel &model)> cbChangedModel;
+
+#else
+    //! A callback that is called when the simulator is started.
+    typedef std::function<void(const bool status)> cbSimStarted;
+
+    //! A callback that is called when the user's plane changes its avionics state.
+    typedef std::function<void(const CAvionicsState &state)> cbChangedAvionicsState;
+
+    //! A callback that is called when the user's plane changes its animation state.
+    typedef std::function<void(const CAnimationState &state)> cbChangedAnimationState;
+
+    //! A callback that is called when the user's plane changes its model.
+    typedef std::function<void(const CPlaneModel &model)> cbChangedModel;
+#endif
 
     /*!
      * The interface that is implemented by each simulator driver.
@@ -200,14 +216,25 @@ namespace BlackCore {
 		virtual bool setAnimationState(const qint32 planeID, const CAnimationState &state) = 0;
 
         //! Calls the supplied visitor function once for every model available in the simulator.
+
+#ifdef Q_OS_WIN
         virtual void visitAllModels(const std::tr1::function<void(const CPlaneModel &)> &visitor) = 0;
+#else
+        virtual void visitAllModels(const std::function<void(const CPlaneModel &)> &visitor) = 0;
+#endif
 
         /*!
          * Fills container with all models.
          * Class T must be a container of CPlaneModel objects and must support push_back.
          */
+#ifdef Q_OS_WIN
         template <class T>
         void getAllModels(T &container) { visitAllModels(std::tr1::bind(T::push_back, container)); }
+#else
+        template <class T>
+        void getAllModels(T &container) { visitAllModels(std::bind(T::push_back, container)); }
+#endif
+
 
 	protected:
         BlackMisc::IContext *m_libraryContext;              //!< The global context.

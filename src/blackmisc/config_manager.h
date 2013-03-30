@@ -36,7 +36,7 @@ namespace BlackMisc
         /*!
           \param path absolute pathname
         */
-		void setConfigPath(QString &path);
+        void setConfigPath(QString path);
 		
 		int readConfig(bool forceReload = false);
 		

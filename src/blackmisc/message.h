@@ -17,7 +17,7 @@ namespace BlackMisc
     class IMessage : public ISerialize
     {
     public:
-        IMessage(QString& id);
+        IMessage(QString id);
 
         QString getID() const;
 
@@ -36,7 +36,7 @@ namespace BlackMisc
     class TestMessage : public IMessage
     {
     public:
-        TestMessage() :  IMessage(QString("MSG_ID_TestMessage"))
+        TestMessage() :  IMessage("MSG_ID_TestMessage")
         {
             testString = "This is a test message!";
         }

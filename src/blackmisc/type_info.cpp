@@ -8,7 +8,7 @@
 namespace BlackMisc
 {
 
-    CTypeInfo::CTypeInfo(const type_info& info)
+    CTypeInfo::CTypeInfo(const std::type_info& info)
         :  m_typeinfo(info)
     {
     }
