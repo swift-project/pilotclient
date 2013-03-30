@@ -49,33 +49,33 @@ namespace BlackMisc
 		  \param singletonName a reference to the singletones name.
 		  \return Returns a pointer to the singleton object.
 		*/
-        virtual void *singletonPointer(const QString &singletonName) = NULL;
+        virtual void *singletonPointer(const QString &singletonName) = 0;
 		
 		//! Pure virtual method sets the singletone pointer, given by its name.
 		/*!
 		  \param singletonName a reference to the singletones name.
 		  \param object a pointer to the singletone object.
 		*/
-        virtual void setSingletonPointer(const QString &singletonName, void *object) = NULL;
+        virtual void setSingletonPointer(const QString &singletonName, void *object) = 0;
 		
 		//! Deallocates the object and removes the singletone pointer from the context map.
 		/*!
 		  \param singletonName a reference to the singletones name.
 		  \param object a pointer to the singletone object.
 		*/
-        virtual void releaseSingletonPointer(const QString &singletonName, void *object) = NULL;
+        virtual void releaseSingletonPointer(const QString &singletonName, void *object) = 0;
 		
 		//! Pure virtual method returns the pointer to debug object
 		/*!
 		  \return Pointer to CDebug object
 		*/
-        virtual CDebug *getDebug()						= NULL;
+        virtual CDebug *getDebug()						= 0;
 		
 		//! Pure virtual function to set the global error log object
 		/*!
 		  \param Pointer to CDebug object
 		*/
-        virtual void setDebug(CDebug *debug)		= NULL;
+        virtual void setDebug(CDebug *debug)		= 0;
 		
 	protected:
 		//! Method to register the context. 

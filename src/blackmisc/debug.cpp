@@ -14,7 +14,7 @@ namespace BlackMisc
 
     }
 
-	void CDebug::create (QString &logPath, bool logInFile, bool eraseLastLog)
+    void CDebug::create (const char *logPath, bool logInFile, bool eraseLastLog)
 	{
 		if (!m_isInitialized)
 		{
@@ -28,7 +28,7 @@ namespace BlackMisc
 
 			if (logInFile)
 			{
-				QDir fileinfo(m_logPath);
+                QDir fileinfo(m_logPath);
 				QString fn;
 				if ( !m_logPath.isEmpty() )
 				{
@@ -76,8 +76,8 @@ namespace BlackMisc
 		m_assertLog->setLogInformation (line, file, function);
 		BlackMisc::CLogMessage::getAssertMsgObj() << "ASSERT FAILED! STOP!";
 
-	#ifdef BB_GUI
-		QMessageBox::critical(0, "ASSERT FAILED",
+    #ifdef BB_GUI
+        QMessageBox::critical(0, "ASSERT FAILED",
 					  QString("%1 %2 %3 () - failed assert: %4").
 							  arg(QString(file)).arg(line).arg(QString(function)).arg(QString(exp)));
 	#endif

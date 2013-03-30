@@ -58,7 +58,7 @@ namespace BlackMisc
         do
         {
             qint32 sync = 0;
-            stream >> (qint32)sync;
+            stream >> sync;
             if (sync == Sync_Marker)
                 found_sync = true;
         }
@@ -78,7 +78,7 @@ namespace BlackMisc
         /////////////////////////////////////////////////
 
         qint32 message_length = 0;
-        stream >> (qint32)message_length;
+        stream >> message_length;
 
         total_length += (int)sizeof(qint32);    // Length
         total_length += message_length;         // Data
@@ -108,7 +108,7 @@ namespace BlackMisc
 
         quint16 crc_calc = qChecksum (data.constData(), data.size());
         quint16 crc_recv = 0;
-        stream >> (quint16)crc_recv;
+        stream >> crc_recv;
 
         total_length += (int)sizeof(quint16);
 

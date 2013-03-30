@@ -14,12 +14,12 @@ namespace BlackMisc
     class CTypeInfo
     {
     public:
-        explicit CTypeInfo(const type_info& info);
+        explicit CTypeInfo(const std::type_info& info);
 
         bool operator < (const CTypeInfo& rhs) const;
 
     private:
-        const type_info& m_typeinfo;
+        const std::type_info& m_typeinfo;
     };
 
 } // namespace BlackMisc

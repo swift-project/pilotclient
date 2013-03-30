@@ -2,10 +2,6 @@ QT       += core gui xml svg network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-
-PRE_TARGETDEPS += ../../lib/blackmisc.lib \
-                  ../../lib/blackcore.lib
-
 TARGET = blackd
 TEMPLATE = app
 
