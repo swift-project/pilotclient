@@ -9,9 +9,7 @@
 #include "blackmisc/context.h"
 #include "blackmisc/display.h"
 
-#ifdef Q_OS_LINUX
-    #include <errno.h>
-#endif
+#include <errno.h>
 
 namespace BlackMisc
 {

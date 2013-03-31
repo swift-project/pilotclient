@@ -25,8 +25,9 @@ win32-msvc* {
     PRE_TARGETDEPS += ../../lib/libblackmisc.a \
                       ../../lib/libblackcore.a
 
-    LIBS += ../../lib/libblackmisc.a \
-            ../../lib/libblackcore.a
+    LIBS += ../../lib/libblackcore.a \
+            ../../lib/libblackmisc.a
+
 }
 
 DESTDIR = ../../bin
