@@ -187,7 +187,7 @@ private:
     bool m_isSIBaseUnit; //!< SI base unit?
     double m_conversionFactorToSIConversionUnit; //!< factor to convert to SI, set to 0 if not applicable (rare cases, e.g. temperature)
     double m_epsilon; //!< values with differences below epsilon are the equal
-    qint32 m_displayDigits; //!< standard rounding dor string conversions
+    qint32 m_displayDigits; //!< standard rounding for string conversions
     CMeasurementPrefix m_multiplier; //!< multiplier (kilo, Mega)
 
 protected:
@@ -333,6 +333,15 @@ public:
      * \return
      */
     static double round(double value, int digits);
+
+    /*!
+     * Epsilon rounding. In some conversion rouding is required to avoid
+     * periodical numbers.
+     * \param value
+     * \return
+     */
+    double epsilonRounding(double value) const;
+
     /*!
      * \brief Unit is not specified
      * \return

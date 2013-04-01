@@ -3,10 +3,9 @@
 namespace BlackMiscTest {
 
 /*!
- * \brief Constructor
- * \param parent
+ * Constructor
  */
-TestPhysicalQuantitiesBase::TestPhysicalQuantitiesBase(QObject *parent) : QObject(parent)
+CTestPhysicalQuantitiesBase::CTestPhysicalQuantitiesBase(QObject *parent) : QObject(parent)
 {
     // void
 }
@@ -14,7 +13,7 @@ TestPhysicalQuantitiesBase::TestPhysicalQuantitiesBase(QObject *parent) : QObjec
 /*!
  * Basic unit tests for physical units
  */
-void TestPhysicalQuantitiesBase::unitsBasics()
+void CTestPhysicalQuantitiesBase::unitsBasics()
 {
     QVERIFY(CMeasurementPrefix::k() > CMeasurementPrefix::h());
 
@@ -35,7 +34,7 @@ void TestPhysicalQuantitiesBase::unitsBasics()
 /*!
  * Distance tests
  */
-void TestPhysicalQuantitiesBase::lengthBasics()
+void CTestPhysicalQuantitiesBase::lengthBasics()
 {
     CLength d1(1,CLengthUnit::m()); // 1m
     CLength d2(100, CLengthUnit::cm());
@@ -66,7 +65,7 @@ void TestPhysicalQuantitiesBase::lengthBasics()
 /**
  * Unit tests for speed
  */
-void TestPhysicalQuantitiesBase::speedBasics()
+void CTestPhysicalQuantitiesBase::speedBasics()
 {
     CSpeed s1(100, CSpeedUnit::km_h());
     CSpeed s2(1000, CSpeedUnit::ft_min());
@@ -77,11 +76,12 @@ void TestPhysicalQuantitiesBase::speedBasics()
 /**
  * Frequency unit tests
  */
-void TestPhysicalQuantitiesBase::frequencyTests()
+void CTestPhysicalQuantitiesBase::frequencyTests()
 {
     CFrequency f1(1, CFrequencyUnit::MHz());
     QVERIFY2(f1.valueRounded(CFrequencyUnit::kHz(),2) == 1000, "Mega is 1000kHz");
-    QVERIFY2(f1 == 1000000 , "MHz is 1E6 Hz");
+    QVERIFY2(f1.unitValueToDouble() == 1 , "1MHz");
+    QVERIFY2(f1.siBaseUnitValueToDouble() == 1000000 , "1E6 Hz");
     CFrequency f2(CMeasurementPrefix::M(),CFrequencyUnit::Hz()) ; // 1 Megahertz
     QVERIFY2(f1 == f2 , "MHz is 1E6 Hz");
 }
@@ -89,7 +89,7 @@ void TestPhysicalQuantitiesBase::frequencyTests()
 /**
  * Angle tests
  */
-void TestPhysicalQuantitiesBase::angleTests()
+void CTestPhysicalQuantitiesBase::angleTests()
 {
     CAngle a1(180, CAngleUnit::deg());
     CAngle a2(1.5 * CAngle::pi(), CAngleUnit::rad());
@@ -103,10 +103,10 @@ void TestPhysicalQuantitiesBase::angleTests()
 /**
  * Weight tests
  */
-void TestPhysicalQuantitiesBase::massTests()
+void CTestPhysicalQuantitiesBase::massTests()
 {
     CMass w1(1000, CMassUnit::kg());
-    CMass w2(w1, CMassUnit::kg());
+    CMass w2(w1.unitValueToInteger(), CMassUnit::kg());
     w2.switchUnit(CMassUnit::t());
     QVERIFY2(w2.unitValueToInteger() == 1, "1tonne shall be 1000kg");
     w2.switchUnit(CMassUnit::lb());
@@ -117,7 +117,7 @@ void TestPhysicalQuantitiesBase::massTests()
 /**
  * Pressure tests
  */
-void TestPhysicalQuantitiesBase::pressureTests()
+void CTestPhysicalQuantitiesBase::pressureTests()
 {
     CPressure p1(1013.25, CPressureUnit::hPa());
     CPressure p2(29.92,CPressureUnit::inHg());
@@ -134,7 +134,7 @@ void TestPhysicalQuantitiesBase::pressureTests()
 /**
  * Temperature tests
  */
-void TestPhysicalQuantitiesBase::temperatureTests()
+void CTestPhysicalQuantitiesBase::temperatureTests()
 {
     CTemperature t1(0, CTemperatureUnit::C()); // 0C
     CTemperature t2(1, CTemperatureUnit::F()); // 1F
@@ -149,7 +149,7 @@ void TestPhysicalQuantitiesBase::temperatureTests()
 /**
  * Temperature tests
  */
-void TestPhysicalQuantitiesBase::timeTests()
+void CTestPhysicalQuantitiesBase::timeTests()
 {
     CTime t1(1, CTimeUnit::h());
     QVERIFY2(t1.siBaseUnitValueToInteger() == 3600, "1hour shall be 3600s");
@@ -158,7 +158,7 @@ void TestPhysicalQuantitiesBase::timeTests()
 /**
  * Just testing obvious memory create / destruct flaws
  */
-void TestPhysicalQuantitiesBase::memoryTests()
+void CTestPhysicalQuantitiesBase::memoryTests()
 {
     CLength* c = new CLength(100, CLengthUnit::m());
     c->switchUnit(CLengthUnit::NM());
@@ -176,7 +176,7 @@ void TestPhysicalQuantitiesBase::memoryTests()
 /**
  * @brief Just testing obvious memory create / destruct flaws
  */
-void TestPhysicalQuantitiesBase::basicArithmetic()
+void CTestPhysicalQuantitiesBase::basicArithmetic()
 {
     CPressure p1 = CPhysicalQuantitiesConstants::InternationalStandardSeaLevelPressure();
     CPressure p2(p1);

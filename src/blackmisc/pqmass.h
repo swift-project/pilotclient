@@ -1,6 +1,6 @@
 #ifndef PQMASS_H
 #define PQMASS_H
-#include "pqphysicalquantity.h"
+#include "blackmisc/pqphysicalquantity.h"
 
 namespace BlackMisc {
 

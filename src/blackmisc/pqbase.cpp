@@ -215,4 +215,15 @@ double CMeasurementUnit::round(double value, int digits) {
     return rv;
 }
 
+/*!
+ * Epsilon rounding
+ */
+double CMeasurementUnit::epsilonRounding(double value) const
+{
+    // does notwork reliable with qRound for some reason
+    double v = floor((value + this->m_epsilon) / this->m_epsilon);
+    v *=this->m_epsilon;
+    return v;
+}
+
 } // namespace

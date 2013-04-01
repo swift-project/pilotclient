@@ -29,6 +29,16 @@ public:
      * \return
      */
     static const CPressure& InternationalStandardSeaLevelPressure() { static CPressure p(1013.25, CPressureUnit::hPa()); return p;}
+    /*!
+     * \brief 0m
+     * \return
+     */
+    static const CLength& Length0m() { static CLength l(0, CLengthUnit::m()); return l;}
+    /*!
+     * \brief 0ft
+     * \return
+     */
+    static const CLength& Length0ft() { static CLength l(0, CLengthUnit::ft()); return l;}
 };
 } // namespace
 #endif // PQCONSTANTS_H

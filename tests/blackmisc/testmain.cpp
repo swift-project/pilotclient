@@ -7,12 +7,14 @@ namespace BlackMiscTest {
     \param argv
     \sa http://stackoverflow.com/questions/12194256/qt-how-to-organize-unit-test-with-more-than-one-class
 */
-int TestMain::unitMain(int argc, char *argv[])
+int CTestMain::unitMain(int argc, char *argv[])
 {
     int status = 0;
     {
-        TestPhysicalQuantitiesBase pqBaseTests ;
+        CTestPhysicalQuantitiesBase pqBaseTests ;
+        CTestAviationBase avBaseTests;
         status |= QTest::qExec(&pqBaseTests, argc, argv);
+        status |= QTest::qExec(&avBaseTests, argc, argv);
     }
     return status;
 }

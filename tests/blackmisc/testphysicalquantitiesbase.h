@@ -10,7 +10,7 @@ namespace BlackMiscTest {
 /*!
  * \brief Physical quantities,basic tests
  */
-class TestPhysicalQuantitiesBase : public QObject
+class CTestPhysicalQuantitiesBase : public QObject
 {
     Q_OBJECT
 public:
@@ -18,7 +18,7 @@ public:
      * \brief Standard test case constructor
      * \param parent
      */
-    explicit TestPhysicalQuantitiesBase(QObject *parent = 0);
+    explicit CTestPhysicalQuantitiesBase(QObject *parent = 0);
 private slots:
     /*!
      * \brief Basic unit tests for physical units
@@ -67,6 +67,6 @@ private slots:
 
 };
 
-}
+} // namespace
 
 #endif // TESTPHYSICALQUANTITIESBASE_H

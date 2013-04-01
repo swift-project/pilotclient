@@ -377,9 +377,14 @@ public:
      * \brief Meter/second m/s
      * \return
      */
-    static const CSpeedUnit& m_s() { static CSpeedUnit ms("meter/second", "m/s", true, false); return ms;}
+    static const CSpeedUnit& m_s() { static CSpeedUnit ms("meters/second", "m/s", true, false); return ms;}
     /*!
-     * \brief Nautical miles per hour NM/h
+     * \brief Knots
+     * \return
+     */
+    static const CSpeedUnit& kts() { static CSpeedUnit kts("knot", "kts", false, false, 1852.0/3600.0, CMeasurementPrefix::One(), 1);return kts;}
+    /*!
+     * \brief Nautical miles per hour NM/h (same as kts)
      * \return
      */
     static const CSpeedUnit& NM_h() { static CSpeedUnit NMh("nautical miles/hour", "NM/h", false, false, 1852.0/3600.0, CMeasurementPrefix::One(), 1);return NMh;}
@@ -397,7 +402,7 @@ public:
      * \brief Kilometer/hour km/h
      * \return
      */
-    static const CSpeedUnit& km_h() { static CSpeedUnit kmh("kilometer/hour", "km/h", false, false, 1.0/3.6, CMeasurementPrefix::One(), 1);return kmh;}
+    static const CSpeedUnit& km_h() { static CSpeedUnit kmh("kilometers/hour", "km/h", false, false, 1.0/3.6, CMeasurementPrefix::One(), 1);return kmh;}
 };
 
 /*!

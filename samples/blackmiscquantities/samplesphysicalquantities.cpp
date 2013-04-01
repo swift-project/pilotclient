@@ -1,20 +1,11 @@
-#include <QCoreApplication>
-#include <QDebug>
-#include "blackmisc/pqconstants.h"
-#include "blackmisc/debug.h"
+#include "samplesphysicalquantities.h"
 
-using namespace BlackMisc;
+namespace BlackMiscTest {
 
-/*!
- * Sample tests
- * \brief main
- * \param argc
- * \param argv
- * \return
+/**
+ * Running the quantities
  */
-int main(int argc, char *argv[])
-{
-    QCoreApplication a(argc, argv);
+int CSamplesPhysicalQuantities::samples() {
 
     // cases which must not work
     // CMeasurementUnit mu; //must not work
@@ -100,5 +91,7 @@ int main(int argc, char *argv[])
     qDebug() << ti1 << ti2;
 
     // bye
-    return a.exec();
+    return 0;
 }
+
+} // namespace

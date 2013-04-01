@@ -1,7 +1,6 @@
 #ifndef PQPHYSICALQUANTITY_H
 #define PQPHYSICALQUANTITY_H
 
-
 #include <QtGlobal>
 #include <QString>
 #include <QLocale>
@@ -11,20 +10,12 @@
 
 namespace BlackMisc {
 
-class CAngle;
-
 /*!
  * \brief A physical quantity such as "5m", "20s", "1500ft/s"
  * \author KWB
  */
 template <class MU, class PQ> class CPhysicalQuantity
 {
-    /*!
-     * Our converter function, should be implemented as static method of the quantity
-     * classes for clarity
-     */
-    typedef double (*CPhysicalQuantityUnitConverter)(const PQ *quantity, const MU &unit);
-
     /*!
      * Stream operator for debugging
      * \brief operator <<
@@ -34,7 +25,7 @@ template <class MU, class PQ> class CPhysicalQuantity
      * \remarks Has to be in the header files to avoid template link errors
      */
     friend QDebug operator<<(QDebug debug, const CPhysicalQuantity &quantity) {
-        QString v = quantity.unitValueRoundedWithUnit(-1);
+        QString v = quantity.stringForStreamingOperator();
         debug << v;
         return debug;
     }
@@ -45,10 +36,10 @@ template <class MU, class PQ> class CPhysicalQuantity
      * \param log
      * \param quantity
      * \return
-     * \remarks Has to be in the header files toavoid templatelink errors
+     * \remarks Has to be in the header files to avoid template link errors
      */
     friend CLogMessage operator<<(CLogMessage log, const CPhysicalQuantity &quantity) {
-        QString v = quantity.unitValueRoundedWithUnit(-1);
+        QString v = quantity.stringForStreamingOperator();
         log << v;
         return log;
     }
@@ -62,6 +53,11 @@ private:
 protected:
     MU m_unit; //!< unit
     MU m_conversionSiUnit; //!< corresponding SI base unit
+    /*!
+     * \brief String for streaming operators
+     * \return
+     */
+    virtual QString stringForStreamingOperator() const { return this->unitValueRoundedWithUnit(-1); }
 
     /*!
      * \brief Constructor with int
@@ -233,10 +229,6 @@ public:
      */
     void substractUnitValue(double value);
     /*!
-     * \brief Cast as double
-     */
-    operator double() const { return this->m_convertedSiUnitValueD; }
-    /*!
      * \brief Cast as QString
      */
     operator QString() const { return this->unitValueRoundedWithUnit();}
@@ -334,6 +326,6 @@ public:
 
 };
 
-} // namespace BlackCore
+} // namespace
 
 #endif // PQPHYSICALQUANTITY_H

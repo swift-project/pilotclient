@@ -45,11 +45,14 @@ HEADERS += \
     pqpressure.h \
     pqtemperature.h \
     pqconstants.h \
-    avverticalposition.h \
     pqunits.h \
     pqallquantities.h \
     pqlength.h \
-    pqtime.h
+    pqtime.h \
+    avheading.h \
+    avtrack.h \
+    avaltitude.h \
+    avverticalpositions.h
 
 SOURCES += \
     logmessage.cpp \
@@ -73,6 +76,9 @@ SOURCES += \
     pqphysicalquantity.cpp \
     pqbase.cpp \
     pqunits.cpp \
-    avverticalposition.cpp
+    avheading.cpp \
+    avtrack.cpp \
+    avaltitude.cpp \
+    avverticalpositions.cpp
 
 DESTDIR = ../../lib

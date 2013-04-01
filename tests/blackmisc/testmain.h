@@ -3,6 +3,7 @@
 
 #include <QtTest/QtTest>
 #include "testphysicalquantitiesbase.h"
+#include "testaviationbase.h"
 
 namespace BlackMiscTest{
 
@@ -11,7 +12,7 @@ namespace BlackMiscTest{
  * Avoids clashes with other main(..) functions and allows to fire the test cases
  * simply from any other main.
  */
-class TestMain
+class CTestMain
 {
 public:
     static int unitMain(int argc, char *argv[]);

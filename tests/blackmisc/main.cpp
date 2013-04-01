@@ -14,7 +14,7 @@ using namespace BlackMiscTest;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    TestMain::unitMain(argc, argv);
+    CTestMain::unitMain(argc, argv);
 
     // bye
     return a.exec();

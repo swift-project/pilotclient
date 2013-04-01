@@ -79,7 +79,7 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::operator !=(const C
 template <class MU, class PQ> CPhysicalQuantity<MU,PQ>& CPhysicalQuantity<MU,PQ>::operator=(const CPhysicalQuantity<MU,PQ> &otherQuantity) {
 
     // Check for self-assignment!
-    if (this == &otherQuantity)  return *this; // Same object? Yes, so skip assignment, and just return *this
+    if (this == &otherQuantity)  return *this; // Same object?
 
     this->m_unitValueI = otherQuantity.m_unitValueI;
     this->m_unitValueD = otherQuantity.m_unitValueD;
@@ -280,7 +280,8 @@ template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::setUnitValue(double
  * Set SI value
  */
 template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::setConversionSiUnitValue() {
-    this->m_convertedSiUnitValueD = this->m_unit.convertToSiConversionUnit(this->m_unitValueD);
+    double si = this->m_unit.convertToSiConversionUnit(this->m_unitValueD);
+    this->m_convertedSiUnitValueD = si;
 }
 
 /**
