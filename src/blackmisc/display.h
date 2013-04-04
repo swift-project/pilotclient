@@ -30,7 +30,7 @@ namespace BlackMisc
 
     protected:
         /// Method to implement in the derived class
-        virtual void doPrint(const CLog::SLogInformation &logInformation, const QString &message) = NULL;
+        virtual void doPrint(const CLog::SLogInformation &logInformation, const QString &message) = 0;
 
         // Return the header string with date (for the first line of the log)
         static QString headLine ();

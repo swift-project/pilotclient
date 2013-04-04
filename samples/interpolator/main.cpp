@@ -1,8 +1,6 @@
 #include <QCoreApplication>
 #include <QElapsedTimer>
 
-#include <windows.h>
-
 #include <iostream>
 
 #include "blackcore/matrix_3d.h"

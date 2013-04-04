@@ -8,6 +8,8 @@
 
 #include "mathematics.h"
 
+#include <math.h>
+
 namespace BlackCore
 {
 	namespace Constants

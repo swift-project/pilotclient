@@ -29,7 +29,7 @@ namespace BlackMisc
 
 
 		// internal use only
-		void create (QString &logPath = QString(""), bool logInFile = true, bool eraseLastLog = false);
+        void create (const char *logPath = "", bool logInFile = true, bool eraseLastLog = false);
 
 		// init Debug
 		void init(bool logInFile);

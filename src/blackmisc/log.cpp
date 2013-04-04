@@ -60,7 +60,7 @@ namespace BlackMisc
 #else
 		//! Todo: Check if there a corresponding API in Linux and Mac
 		//! For the time being, set it to unknown.
-        if ((*m_applicationName).empty())
+        if ((*m_applicationName).isEmpty())
         {
             *m_applicationName = "<Unknown>";
         }

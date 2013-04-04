@@ -9,6 +9,8 @@
 #include "blackmisc/context.h"
 #include "blackmisc/display.h"
 
+#include <errno.h>
+
 namespace BlackMisc
 {
 
@@ -243,7 +245,7 @@ namespace BlackMisc
         if (m_file->handle() == -1)
         {
             if ( !m_file->open(QIODevice::WriteOnly) )
-                printf ("Can't open log file '%s': %s\n", m_fileName.toLatin1(), strerror (errno));
+                printf ("Can't open log file '%s': %s\n", m_fileName.toLatin1().constData(), strerror (errno));
         }
 
         if (m_file->handle() != -1)

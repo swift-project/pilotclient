@@ -25,11 +25,7 @@ OPTION(WITH_BLACK_LIB                 "Build BlackBox libraries"                
 IF(WITH_BLACK_LIB)
 	OPTION(WITH_BLACK_CORE                "Build Core library"                           ON )
 	OPTION(WITH_BLACK_MISC                "Build Misc library"                           ON )
-	IF(WIN32)
-		OPTION(WITH_STATIC            	"With static libraries."                        ON )
-	ELSE(WIN32)
-		OPTION(WITH_STATIC            	"With static libraries."                        OFF)
-	ENDIF()
+	OPTION(WITH_STATIC            	"With static libraries."                        ON )
 	OPTION(WITH_BLACK_SAMPLES			"With BlackLib Samples."						ON)
 ENDIF(WITH_BLACK_LIB)
 
@@ -169,6 +165,10 @@ IF(MSVC)
 	ENDIF(MSVC11)
 
 	ADD_COMPILER_FLAGS("/D_CRT_SECURE_NO_DEPRECATE /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /DWIN32 /D_WINDOWS /Zm1000 /wd4250")
+	
+	ADD_DEFINITIONS(
+      /Zc:wchar_t-                                # Treat wchar_t as built-in type
+	)
 ENDIF()
 
 ############### Configure checks ###############

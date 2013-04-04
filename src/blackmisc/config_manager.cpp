@@ -14,7 +14,7 @@ namespace BlackMisc
 	{
 	}
 	
-	void CConfigManager::setConfigPath(QString &path)
+    void CConfigManager::setConfigPath(QString path)
 	{
 		m_config_path = QDir(path).absolutePath();
 	
