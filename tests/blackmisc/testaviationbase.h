@@ -5,6 +5,8 @@
 #include "blackmisc/pqconstants.h"
 #include "blackmisc/avheading.h"
 #include "blackmisc/avverticalpositions.h"
+#include "blackmisc/aviocomsystem.h"
+
 using namespace BlackMisc;
 
 namespace BlackMiscTest {
@@ -33,6 +35,11 @@ private slots:
      * \brief Vertical positions
      */
     void verticalPosition();
+
+    /*!
+     * \brief COM and NAV units
+     */
+    void comAndNav();
 
 };
 

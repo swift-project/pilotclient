@@ -364,7 +364,7 @@ template <class MU, class PQ> double CPhysicalQuantity<MU,PQ>::convertedSiValueT
 }
 
 
-// see here for the reason of this forward instants
+// see here for the reason of thess forward instantiations
 // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
 template class CPhysicalQuantity<CLengthUnit, CLength>;
 template class CPhysicalQuantity<CPressureUnit, CPressure>;

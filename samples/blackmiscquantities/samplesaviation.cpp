@@ -16,6 +16,11 @@ int CSamplesAviation::samples()
     CAviationVerticalPositions vp2 = vp1;
     qDebug() << vp1 << (vp1 == vp2) << (vp1 != vp2);
 
+    CComSystem c1 = CComSystem::getCom1Unit(125.3);
+    qDebug() << c1;
+    c1.setActiveUnicom();
+    qDebug() << c1;
+
     // bye
     return 0;
 }

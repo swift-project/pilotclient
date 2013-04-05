@@ -94,9 +94,12 @@ CLogMessage operator<<(CLogMessage log, const CMeasurementPrefix &multiplier)
 /**
  * Constructor
  */
-CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI, const CMeasurementPrefix &multiplier, qint32 displayDigits, double epsilon):
-    m_name(name), m_unitName(unitName), m_type(type), m_isSIUnit(isSIUnit), m_isSIBaseUnit(isSIBaseUnit),m_displayDigits(displayDigits),m_conversionFactorToSIConversionUnit(conversionFactorToSI),
-    m_epsilon(epsilon), m_multiplier(multiplier)
+CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSIUnit, bool isSIBaseUnit,
+                                   double conversionFactorToSI, const CMeasurementPrefix &multiplier, qint32 displayDigits, double epsilon,
+                                   UnitConverter toSiConverter, UnitConverter fromSiConverter):
+    m_name(name), m_unitName(unitName), m_type(type), m_isSiUnit(isSIUnit), m_isSiBaseUnit(isSIBaseUnit), m_displayDigits(displayDigits),
+    m_conversionFactorToSIConversionUnit(conversionFactorToSI),
+    m_epsilon(epsilon), m_multiplier(multiplier), m_fromSiConverter(fromSiConverter), m_toSiConverter(toSiConverter)
 {
     // void
 }
@@ -105,9 +108,9 @@ CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &unitName,
  * Copy constructor
  */
 CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &otherUnit):
-    m_name(otherUnit.m_name), m_unitName(otherUnit.m_unitName), m_type(otherUnit.m_type), m_isSIUnit(otherUnit.m_isSIUnit),
-    m_isSIBaseUnit(otherUnit.m_isSIBaseUnit), m_displayDigits(otherUnit.m_displayDigits),m_conversionFactorToSIConversionUnit(otherUnit.m_conversionFactorToSIConversionUnit),
-    m_epsilon(otherUnit.m_epsilon), m_multiplier(otherUnit.m_multiplier)
+    m_name(otherUnit.m_name), m_unitName(otherUnit.m_unitName), m_type(otherUnit.m_type), m_isSiUnit(otherUnit.m_isSiUnit),
+    m_isSiBaseUnit(otherUnit.m_isSiBaseUnit), m_displayDigits(otherUnit.m_displayDigits),m_conversionFactorToSIConversionUnit(otherUnit.m_conversionFactorToSIConversionUnit),
+    m_epsilon(otherUnit.m_epsilon), m_multiplier(otherUnit.m_multiplier), m_fromSiConverter(otherUnit.m_fromSiConverter), m_toSiConverter(otherUnit.m_toSiConverter)
 {
     // void
 }
@@ -121,12 +124,14 @@ CMeasurementUnit &CMeasurementUnit::operator =(const CMeasurementUnit &otherUnit
     this->m_name = otherUnit.m_name;
     this->m_unitName =otherUnit.m_unitName;
     this->m_type=otherUnit.m_type;
-    this->m_isSIUnit =otherUnit.m_isSIUnit;
-    this->m_isSIBaseUnit =otherUnit.m_isSIBaseUnit;
+    this->m_isSiUnit =otherUnit.m_isSiUnit;
+    this->m_isSiBaseUnit =otherUnit.m_isSiBaseUnit;
     this->m_conversionFactorToSIConversionUnit=otherUnit.m_conversionFactorToSIConversionUnit;
     this->m_multiplier = otherUnit.m_multiplier;
     this->m_displayDigits=otherUnit.m_displayDigits;
     this->m_epsilon= otherUnit.m_epsilon;
+    this->m_fromSiConverter = otherUnit.m_fromSiConverter;
+    this->m_toSiConverter = otherUnit.m_toSiConverter;
     return *this;
 }
 
@@ -138,7 +143,7 @@ bool CMeasurementUnit::operator ==(const CMeasurementUnit &otherUnit) const
     if ( this == &otherUnit ) return true;
     if ( this->m_type != otherUnit.m_type) return false;
     return this->m_multiplier == otherUnit.m_multiplier && this->m_name == otherUnit.m_name
-            && this->m_isSIUnit==otherUnit.m_isSIUnit;
+            && this->m_isSiUnit==otherUnit.m_isSiUnit;
 }
 
 /**

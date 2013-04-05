@@ -65,7 +65,7 @@ public:
 
 /*!
  * Specialized class for angles (degrees, radian).
- * \author KWB
+ * \author KWB, MS
  */
 class CAngleUnit : public CMeasurementUnit {
 private:
@@ -79,29 +79,33 @@ private:
      * \param displayDigits
      * \param epsilon
      */
-    CAngleUnit(const QString &name, const QString &unitName, bool isSIUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "angle", isSIUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon)
+    CAngleUnit(const QString &name, const QString &unitName, bool isSIUnit, double conversionFactorToSI = 1.0,
+               const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2,
+               double epsilon = 1E-9, UnitConverter converterToSi = nullptr,  UnitConverter converterFromSi= nullptr) :
+        CMeasurementUnit(name, unitName, "angle", isSIUnit, false, conversionFactorToSI,
+                         mulitplier, displayDigits, epsilon, converterToSi, converterFromSi)
     {
         // void
     }
+    /*!
+     * \brief Special conversion for sexagesimal degrees
+     * \param value
+     * \return
+     */
+    static double conversionSexagesimalToSi(const CMeasurementUnit &angleUnit, double value);
+    /*!
+     * \brief Special conversion for sexagesimal degrees
+     * \param value
+     * \return
+     */
+    static double conversionSexagesimalFromSi(const CMeasurementUnit &angleUnit, double value);
+
 public:
     /*!
      * \brief Copy constructor
      * \param otherUnit
      */
     CAngleUnit(const CAngleUnit &otherUnit) : CMeasurementUnit(otherUnit) { }
-    /*!
-     * \brief Convert to SI conversion unit, specific for angle
-     * \param value
-     * \return
-     */
-    virtual double CAngleUnit::convertToSiConversionUnit(double value) const;
-    /*!
-     * \brief Convert from SI conversion unit, specific for angle
-     * \param value
-     * \return
-     */
-    virtual double CAngleUnit::convertFromSiConversionUnit(double value) const;
     /*!
      * \brief Special conversion to QString for sexagesimal degrees.
      * \param value
@@ -123,12 +127,13 @@ public:
      * \brief Sexagesimal degree (degree, minute, seconds)
      * \return
      */
-    static const CAngleUnit& sexagesimalDeg() { static CAngleUnit deg("segadecimal degree", "°", false, M_PI/180); return deg;}
+    static const CAngleUnit& sexagesimalDeg() { static CAngleUnit deg("segadecimal degree", "°", false, M_PI/180,
+                                                                      CMeasurementPrefix::One(),0, 1E-9, CAngleUnit::conversionSexagesimalToSi, CAngleUnit::conversionSexagesimalFromSi); return deg;}
 };
 
 /*!
  * Specialized class for frequency (hertz, mega hertz, kilo hertz).
- * \author KWB
+ * \author KWB, MS
  */
 class CFrequencyUnit : public CMeasurementUnit {
 private:
@@ -159,22 +164,22 @@ public:
      * \brief Kilohertz
      * \return
      */
-    static const CFrequencyUnit& kHz() { static CFrequencyUnit kHz("kilohertz", "kHz", true, CMeasurementPrefix::k().getFactor(), CMeasurementPrefix::k(), 0);return kHz;}
+    static const CFrequencyUnit& kHz() { static CFrequencyUnit kHz("kilohertz", "kHz", true, CMeasurementPrefix::k().getFactor(), CMeasurementPrefix::k(), 1);return kHz;}
     /*!
      * \brief Megahertz
      * \return
      */
-    static const CFrequencyUnit& MHz() { static CFrequencyUnit MHz("megahertz", "MHz", false, CMeasurementPrefix::M().getFactor(), CMeasurementPrefix::M(), 0); return MHz;}
+    static const CFrequencyUnit& MHz() { static CFrequencyUnit MHz("megahertz", "MHz", false, CMeasurementPrefix::M().getFactor(), CMeasurementPrefix::M(), 2); return MHz;}
     /*!
      * \brief Gigahertz
      * \return
      */
-    static const CFrequencyUnit& GHz() { static CFrequencyUnit GHz("gigahertz", "GHz", true, CMeasurementPrefix::G().getFactor(), CMeasurementPrefix::G(), 0);return GHz;}
+    static const CFrequencyUnit& GHz() { static CFrequencyUnit GHz("gigahertz", "GHz", true, CMeasurementPrefix::G().getFactor(), CMeasurementPrefix::G(), 2);return GHz;}
 };
 
 /*!
  * Specialized class for mass units (kg, lbs).
- * \author KWB
+ * \author KWB, MS
  */
 class CMassUnit : public CMeasurementUnit {
 private:
@@ -220,7 +225,7 @@ public:
 
 /*!
  * Specialized class for pressure (psi, hPa, bar).
- * \author KWB
+ * \author KWB, MS
  */
 class CPressureUnit : public CMeasurementUnit {
 private:
@@ -238,6 +243,10 @@ private:
     CPressureUnit(const QString &name, const QString &unitName, bool isSIUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "frequency", isSIUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
+    /*!
+     * \brief Copy constructor
+     * \param otherUnit
+     */
     CPressureUnit(const CPressureUnit &otherUnit) : CMeasurementUnit(otherUnit)
     {
         // void
@@ -301,6 +310,19 @@ private:
      */
     CTemperatureUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, double temperatureOffsetToSI=0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "temperature", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon), m_conversionOffsetToSi(temperatureOffsetToSI) {}
+protected:
+    /*!
+     * \brief Convert to SI conversion unit, specific for temperature
+     * \param value
+     * \return
+     */
+    virtual double CTemperatureUnit::conversionToSiConversionUnit(double value) const;
+    /*!
+     * \brief Convert from SI conversion unit, specific for temperature
+     * \param value
+     * \return
+     */
+    virtual double CTemperatureUnit::conversionFromSiConversionUnit(double value) const;
 public:
     /*!
      * \brief Copy constructor
@@ -318,18 +340,6 @@ public:
         return (*this);
     }
     /*!
-     * \brief Convert to SI conversion unit, specific for temperature
-     * \param value
-     * \return
-     */
-    virtual double CTemperatureUnit::convertToSiConversionUnit(double value) const;
-    /*!
-     * \brief Convert from SI conversion unit, specific for temperature
-     * \param value
-     * \return
-     */
-    virtual double CTemperatureUnit::convertFromSiConversionUnit(double value) const;
-    /*!
      * \brief Kelvin
      * \return
      */
@@ -344,7 +354,6 @@ public:
      * \return
      */
     static const CTemperatureUnit& F() { static CTemperatureUnit F("Fahrenheit", "°F", false, false, 5.0/9.0, 459.67);return F;}
-
 };
 
 /*!

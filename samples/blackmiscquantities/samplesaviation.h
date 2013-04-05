@@ -1,10 +1,10 @@
 #ifndef SAMPLESAVIATION_H
 #define SAMPLESAVIATION_H
 
-#include <QDebug>
 #include "blackmisc/avheading.h"
 #include "blackmisc/avverticalpositions.h"
 #include "blackmisc/pqconstants.h"
+#include "blackmisc/aviocomsystem.h"
 
 using namespace BlackMisc;
 

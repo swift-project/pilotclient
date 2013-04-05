@@ -162,6 +162,7 @@ public:
  * Base class for all units, such as meter, hertz.
  */
 class CMeasurementUnit {
+
     /*!
      * \brief Stream << overload to be used in debugging messages
      * \param d
@@ -179,18 +180,27 @@ class CMeasurementUnit {
      */
     friend CLogMessage operator<<(CLogMessage log, const CMeasurementUnit &unit);
 
+protected:
+    /*!
+     * Points to a individual converter method
+     */
+    typedef double(*UnitConverter)(const CMeasurementUnit&, double);
+
 private:
     QString m_name; //!< name, e.g. "meter"
     QString m_unitName; //!< unit name, e.g. "m"
     QString m_type; //!< type,such as distance. Somehow redundant, but simplifies unit comparisons
-    bool m_isSIUnit; //!< is this a SI unit?
-    bool m_isSIBaseUnit; //!< SI base unit?
+    bool m_isSiUnit; //!< is this a SI unit?
+    bool m_isSiBaseUnit; //!< SI base unit?
     double m_conversionFactorToSIConversionUnit; //!< factor to convert to SI, set to 0 if not applicable (rare cases, e.g. temperature)
     double m_epsilon; //!< values with differences below epsilon are the equal
     qint32 m_displayDigits; //!< standard rounding for string conversions
     CMeasurementPrefix m_multiplier; //!< multiplier (kilo, Mega)
+    UnitConverter m_toSiConverter;
+    UnitConverter m_fromSiConverter;
 
 protected:
+
     /*!
      * Constructor by parameter
      * \param name
@@ -202,7 +212,9 @@ protected:
      * \param displayDigits
      * \param epsilon
      */
-    CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSiUnit, bool isSiBaseUnit, double conversionFactorToSI = 1, const CMeasurementPrefix &multiplier = CMeasurementPrefix::None(), qint32 displayDigits = 2, double epsilon = 1E-10);
+    CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSiUnit, bool isSiBaseUnit, double conversionFactorToSI = 1,
+                     const CMeasurementPrefix &multiplier = CMeasurementPrefix::None(), qint32 displayDigits = 2,
+                     double epsilon = 1E-10, UnitConverter toSiConverter = nullptr, UnitConverter fromSiConverter = nullptr);
     /*!
      * \brief Copy constructor
      * \param otherUnit
@@ -220,6 +232,20 @@ protected:
      * \return
      */
     double getConversionFactorToSI() const { return this->m_conversionFactorToSIConversionUnit; }
+    /*!
+     * Given value to conversion SI conversion unit (e.g. meter, hertz).
+     * Standard implementaion is simply factor based.
+     * \param value
+     * \return
+     */
+    virtual double conversionToSiConversionUnit(double value) const { return value * this->m_conversionFactorToSIConversionUnit; }
+    /*!
+     * \brief Value from SI conversion unit to this unit.
+     * Standard implementaion is simply factor based.
+     * \param value
+     * \return
+     */
+    virtual double conversionFromSiConversionUnit(double value) const { return value / this->m_conversionFactorToSIConversionUnit; }
 
 public:
     /*!
@@ -238,17 +264,17 @@ public:
      * \brief Representing an SI unit? Examples: kilometer, meter, hertz
      * \return
      */
-    bool isSiUnit() const { return this->m_isSIUnit;}
+    bool isSiUnit() const { return this->m_isSiUnit;}
     /*!
      * \brief Representing an base SI unit? Examples: second, meter
      * \return
      */
-    bool isSiBaseUnit() const { return this->m_isSIUnit;}
+    bool isSiBaseUnit() const { return this->m_isSiUnit;}
     /*!
      * \brief Representing an SI base unit? Example: meter
      * \return
      */
-    bool isUnprefixedSiUnit() const { return this->m_isSIUnit && this->m_multiplier.getFactor() == 1; }
+    bool isUnprefixedSiUnit() const { return this->m_isSiUnit && this->m_multiplier.getFactor() == 1; }
     /*!
      * \brief Name such as "meter"
      * \return
@@ -264,20 +290,21 @@ public:
      * \return
      */
     QString getType() const { return this->m_type; }
+
     /*!
      * Given value to conversion SI conversion unit (e.g. meter, hertz).
-     * Standard implementaion is simply factor based.
+     * Standard implementation is simply factor based.
      * \param value
      * \return
      */
-    virtual double convertToSiConversionUnit(double value) const { return value * this->m_conversionFactorToSIConversionUnit; }
+    double convertToSiConversionUnit(double value) const { return (this->m_toSiConverter) ? this->m_toSiConverter((*this), value) : this->conversionToSiConversionUnit(value); }
     /*!
-     * \brief Value from SI conversion unit to this unit.
-     * Standard implementaion is simply factor based.
+     * Value from SI conversion unit to this unit.
+     * Standard implementation is simply factor based.
      * \param value
      * \return
      */
-    virtual double convertFromSiConversionUnit(double value) const { return value / this->m_conversionFactorToSIConversionUnit; }
+    double convertFromSiConversionUnit(double value) const { return (this->m_fromSiConverter) ? this->m_fromSiConverter((*this), value) : this->conversionFromSiConversionUnit(value); }
     /*!
      * Rounded string utility method, virtual so units can have
      * specialized formatting

@@ -44,4 +44,16 @@ void CTestAviationBase::verticalPosition()
     QVERIFY2(vp1== vp2, "Values shall be equal");
 }
 
+/**
+ * COM and NAV units
+ */
+void CTestAviationBase::comAndNav()
+{
+    CComSystem c1 = CComSystem::getCom1Unit(122.8);
+    CComSystem c2 = CComSystem::getCom2Unit(122.8);
+    QVERIFY2(c1 != c2, "COM units shall not be equal");
+    c1 = c2;
+    QVERIFY2(c1 == c2, "COM units shall be equal");
+}
+
 } // namespace

@@ -39,6 +39,21 @@ public:
      * \return
      */
     static const CLength& Length0ft() { static CLength l(0, CLengthUnit::ft()); return l;}
+    /*!
+     * \brief Unicom frequency
+     * \return
+     */
+    static const CFrequency& FrequencyUnicom() { static CFrequency f(122.8, CFrequencyUnit::MHz()); return f;}
+    /*!
+     * \brief Civil aircraft emergency frequency
+     * \return
+     */
+    static const CFrequency& FrequencyInternationalAirDistress() { static CFrequency f(121.5, CFrequencyUnit::MHz()); return f;}
+    /*!
+     * \brief Military aircraft emergency frequency
+     * \return
+     */
+    static const CFrequency& FrequencyMilitaryAirDistress() { static CFrequency f(243.0, CFrequencyUnit::MHz()); return f;}
 };
 } // namespace
 #endif // PQCONSTANTS_H

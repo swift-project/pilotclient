@@ -5,7 +5,7 @@ namespace BlackMisc {
 /**
  * Convert to SI
  */
-double CTemperatureUnit::convertToSiConversionUnit(double value) const
+double CTemperatureUnit::conversionToSiConversionUnit(double value) const
 {
     double v = value + this->m_conversionOffsetToSi;
     v *= this->getConversionFactorToSI();
@@ -15,7 +15,7 @@ double CTemperatureUnit::convertToSiConversionUnit(double value) const
 /**
  * Convert from SI
  */
-double CTemperatureUnit::convertFromSiConversionUnit(double value) const
+double CTemperatureUnit::conversionFromSiConversionUnit(double value) const
 {
     double v = value / this->getConversionFactorToSI();
     v -= this->m_conversionOffsetToSi;
@@ -25,49 +25,34 @@ double CTemperatureUnit::convertFromSiConversionUnit(double value) const
 /**
  * Convert from SI
  */
-double CAngleUnit::convertFromSiConversionUnit(double value) const
+double CAngleUnit::conversionSexagesimalFromSi(const CMeasurementUnit &angleUnit, double value)
 {
-    double v;
-    // still a design flaw since I have to distinguish as per type
-    // but an own converter per object was really too much
-    if ((*this) == CAngleUnit::sexagesimalDeg()) {
-        // using rounding here, since fractions can lead to ugly sexagesimal conversion
-        // e.g. 185.499999 gives 185 29' 59.9999"
-        value = this->epsilonRounding(value * 180 / M_PI); // degree
-        v = floor(value);
-        double c = value - v;
-        double mr = c * 60.0;
-        double m = floor(mr); // minutes
-        double s = (mr-m) * 60; // seconds + rest fraction
-        v = (v + (m/100) + (s/10000));
-    } else {
-        v = CMeasurementUnit::convertFromSiConversionUnit(value);
-    }
+    // using rounding here, since fractions can lead to ugly sexagesimal conversion
+    // e.g. 185.499999 gives 185 29' 59.9999"
+    value = angleUnit.epsilonRounding(value * 180 / M_PI); // degree
+    double v = floor(value);
+    double c = value - v;
+    double mr = c * 60.0;
+    double m = floor(mr); // minutes
+    double s = (mr-m) * 60; // seconds + rest fraction
+    v = (v + (m/100) + (s/10000));
     return v;
 }
 
 /**
  * Convert to SI
  */
-double CAngleUnit::convertToSiConversionUnit(double value) const
+double CAngleUnit::conversionSexagesimalToSi(const CMeasurementUnit &, double value)
 {
-    // still a design flaw since I have to distinguish as per type
-    // but an own converter per object was really too much
-    double v;
-    if ((*this) == CAngleUnit::sexagesimalDeg()) {
-        double v = floor(value); // degrees
-        double c = value - v;
-        c = c * 100.0;
-        double m = floor(c);
-        c = c - m;
-        m /= 60.0; // minutes back to decimals
-        double s = c / 36.0; // seconds back to decimals
-        v = v + m + s;
-        return v / 180.0 * M_PI;
-    } else {
-        v = CMeasurementUnit::convertToSiConversionUnit(value);
-    }
-    return v;
+    double v = floor(value); // degrees
+    double c = value - v;
+    c = c * 100.0;
+    double m = floor(c);
+    c = c - m;
+    m /= 60.0; // minutes back to decimals
+    double s = c / 36.0; // seconds back to decimals
+    v = v + m + s;
+    return v / 180.0 * M_PI;
 }
 
 /**
@@ -90,4 +75,4 @@ QString CAngleUnit::toQStringRounded(double value, int digits) const
     return s;
 }
 
-}
+} // namespace

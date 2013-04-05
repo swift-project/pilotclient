@@ -52,7 +52,10 @@ HEADERS += \
     avheading.h \
     avtrack.h \
     avaltitude.h \
-    avverticalpositions.h
+    avverticalpositions.h \
+    aviobase.h \
+    aviomodulator.h \
+    aviocomsystem.h
 
 SOURCES += \
     logmessage.cpp \
@@ -79,6 +82,7 @@ SOURCES += \
     avheading.cpp \
     avtrack.cpp \
     avaltitude.cpp \
-    avverticalpositions.cpp
+    avverticalpositions.cpp \
+    aviomodulator.cpp
 
 DESTDIR = ../../lib

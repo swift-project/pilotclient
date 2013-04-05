@@ -47,7 +47,7 @@ equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/geodetic2ecef/sample_geodetic2ecef.pro
     SUBDIRS += samples/interpolator/sample_interpolator.pro
     SUBDIRS += samples/logging/sample_logging.pro
-    SUBDIRS += samples/blackmiscquantities/sample_blackmisc_quantities.pro
+    SUBDIRS += samples/blackmiscquantities/sample_quantities_avionics.pro
 }
 
 equals(WITH_UNITTESTS, ON) {
