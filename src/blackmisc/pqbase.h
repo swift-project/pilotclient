@@ -3,17 +3,16 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef PQBASE_H
-#define PQBASE_H
+#ifndef BLACKMISC_PQBASE_H
+#define BLACKMISC_PQBASE_H
 
+#include "blackmisc/debug.h"
 #include <QString>
 #include <QtGlobal>
 #include <QDebug>
-#include "blackmisc/debug.h"
 
 namespace BlackMisc
 {
-
 namespace PhysicalQuantities
 {
 
@@ -131,7 +130,7 @@ public:
      * \brief Unit "None"
      * \return
      */
-    static const CMeasurementPrefix& None() {
+    static const CMeasurementPrefix &None() {
         static CMeasurementPrefix none("", "", 0.0);
         return none;
     }
@@ -139,7 +138,7 @@ public:
      * \brief Unit "One"
      * \return
      */
-    static const CMeasurementPrefix& One() {
+    static const CMeasurementPrefix &One() {
         static CMeasurementPrefix one("one", "", 1.0);
         return one;
     }
@@ -147,7 +146,7 @@ public:
      * \brief Unit "mega"
      * \return
      */
-    static const CMeasurementPrefix& M() {
+    static const CMeasurementPrefix &M() {
         static CMeasurementPrefix mega("mega", "M", 1E6);
         return mega;
     }
@@ -155,7 +154,7 @@ public:
      * \brief Unit "kilo"
      * \return
      */
-    static const CMeasurementPrefix& k() {
+    static const CMeasurementPrefix &k() {
         static CMeasurementPrefix kilo("kilo", "k", 1000.0);
         return kilo;
     }
@@ -163,7 +162,7 @@ public:
      * \brief Unit "giga"
      * \return
      */
-    static const CMeasurementPrefix& G() {
+    static const CMeasurementPrefix &G() {
         static CMeasurementPrefix giga("giga", "G", 1E9);
         return giga;
     }
@@ -171,7 +170,7 @@ public:
      * \brief Unit "hecto"
      * \return
      */
-    static const CMeasurementPrefix& h() {
+    static const CMeasurementPrefix &h() {
         static CMeasurementPrefix hecto("hecto", "h", 100.0);
         return hecto;
     }
@@ -179,7 +178,7 @@ public:
      * \brief Unit "centi"
      * \return
      */
-    static const CMeasurementPrefix& c() {
+    static const CMeasurementPrefix &c() {
         static CMeasurementPrefix centi("centi", "c", 0.01);
         return centi;
     }
@@ -187,7 +186,7 @@ public:
      * \brief Unit "milli"
      * \return
      */
-    static const CMeasurementPrefix& m() {
+    static const CMeasurementPrefix &m() {
         static CMeasurementPrefix milli("milli", "m", 1E-03);
         return milli;
     }
@@ -225,7 +224,7 @@ protected:
     /*!
      * Points to a individual converter method
      */
-    typedef double(*UnitConverter)(const CMeasurementUnit&, double);
+    typedef double(*UnitConverter)(const CMeasurementUnit &, double);
 
 private:
     QString m_name; //!< name, e.g. "meter"
@@ -442,7 +441,7 @@ public:
      * \brief Unit is not specified
      * \return
      */
-    static CMeasurementUnit& None() {
+    static CMeasurementUnit &None() {
         static CMeasurementUnit none("none", "", "", false, false, 0.0, CMeasurementPrefix::None(), 0, 0);
         return none;
     }
@@ -451,4 +450,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // PQBASE_H
+#endif // BLACKMISC_PQBASE_H

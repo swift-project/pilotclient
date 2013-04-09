@@ -5,6 +5,9 @@
 
 #include "avtrack.h"
 
+using BlackMisc::PhysicalQuantities::CAngle;
+using BlackMisc::PhysicalQuantities::CAngleUnit;
+
 namespace BlackMisc
 {
 namespace Aviation

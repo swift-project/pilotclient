@@ -3,12 +3,9 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef AVIOMODULATORUNIT_H
-#define AVIOMODULATORUNIT_H
+#ifndef BLACKMISC_AVIOMODULATORUNIT_H
+#define BLACKMISC_AVIOMODULATORUNIT_H
 #include "blackmisc/aviobase.h"
-
-using BlackMisc::PhysicalQuantities::CFrequency;
-using BlackMisc::PhysicalQuantities::CFrequencyUnit;
 
 namespace BlackMisc
 {
@@ -21,8 +18,8 @@ namespace Aviation
 template <class AVIO> class CModulator : public CAvionicsBase
 {
 private:
-    CFrequency m_frequencyActive; //!< active frequency
-    CFrequency m_frequencyStandby; //!< standby frequency
+    BlackMisc::PhysicalQuantities::CFrequency m_frequencyActive; //!< active frequency
+    BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
 
 protected:
     int m_digits; //!< digits used
@@ -44,7 +41,7 @@ protected:
      * \param activeFrequency
      * \param standbyFrequency
      */
-    CModulator(const QString &name, const CFrequency &activeFrequency, const CFrequency &standbyFrequency, int digits) :
+    CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits) :
         m_frequencyActive(activeFrequency),
         m_digits(digits), m_frequencyStandby(standbyFrequency), CAvionicsBase(name) { }
     /*!
@@ -71,14 +68,14 @@ protected:
      * \param frequencyMHz
      */
     void setFrequencyActiveMHz(double frequencyMHz) {
-        this->m_frequencyActive = CFrequency(frequencyMHz, CFrequencyUnit::MHz());
+        this->m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
     }
     /*!
      * \brief Set standby frequency
      * \param frequencyMHz
      */
     void setFrequencyStandbyMHz(double frequencyMHz) {
-        this->m_frequencyStandby = CFrequency(frequencyMHz, CFrequencyUnit::MHz());
+        this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
     }
     /*!
      * \brief Assigment operator =
@@ -166,8 +163,8 @@ protected:
      * \brief Frequency not set
      * \return
      */
-    static const CFrequency& FrequencyNotSet() {
-        static CFrequency f;
+    static const BlackMisc::PhysicalQuantities::CFrequency& FrequencyNotSet() {
+        static BlackMisc::PhysicalQuantities::CFrequency f;
         return f;
     }
 
@@ -191,28 +188,28 @@ public:
      * \brief Active frequency
      * \return
      */
-    CFrequency getFrequencyActive() const {
+    BlackMisc::PhysicalQuantities::CFrequency getFrequencyActive() const {
         return this->m_frequencyActive;
     }
     /*!
      * \brief Standby frequency
      * \return
      */
-    CFrequency getFrequencyStandby() const {
+    BlackMisc::PhysicalQuantities::CFrequency getFrequencyStandby() const {
         return this->m_frequencyActive;
     }
     /*!
      * \brief Set active frequency
      * \param frequency
      */
-    void setFrequencyActive(const CFrequency &frequency) {
+    void setFrequencyActive(const BlackMisc::PhysicalQuantities::CFrequency &frequency) {
         this->m_frequencyActive = frequency;
     }
     /*!
      * \brief Set standby frequency
      * \param frequency
      */
-    void setFrequencyStandby(const CFrequency &frequency) {
+    void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency) {
         this->m_frequencyStandby = frequency;
     }
 };
@@ -220,4 +217,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // AVIOMODULATORUNIT_H
+#endif // guard

@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef PQFREQUENCY_H
-#define PQFREQUENCY_H
+#ifndef BLACKMISC_PQFREQUENCY_H
+#define BLACKMISC_PQFREQUENCY_H
 #include "pqphysicalquantity.h"
 
 namespace BlackMisc
@@ -46,4 +46,4 @@ public:
 };
 } // namespace
 } // namespace
-#endif // PQFREQUENCY_H
+#endif // BLACKMISC_PQFREQUENCY_H

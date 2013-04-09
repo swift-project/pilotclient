@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef PQlength_H
-#define PQlength_H
+#ifndef BLACKMISC_PQLENGTH_H
+#define BLACKMISC_PQLENGTH_H
 #include "blackmisc/pqphysicalquantity.h"
 
 namespace BlackMisc
@@ -46,4 +46,4 @@ public:
 };
 } // namespace
 } // namespace
-#endif // PQlength_H
+#endif // BLACKMISC_PQLENGTH_H

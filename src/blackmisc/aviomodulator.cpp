@@ -1,6 +1,14 @@
+/*  Copyright (C) 2013 VATSIM Community / authors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #include "blackmisc/aviomodulator.h"
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
+
+using BlackMisc::PhysicalQuantities::CFrequency;
+using BlackMisc::PhysicalQuantities::CFrequencyUnit;
 
 namespace BlackMisc
 {
@@ -27,14 +35,6 @@ template <class AVIO> QString CModulator<AVIO>::stringForStreamingOperator() con
     s.append(" Standby: ").append(this->m_frequencyStandby.unitValueRoundedWithUnit(3));
     return s;
 }
-/*  Copyright (C) 2013 VATSIM Community
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-/*  Copyright (C) 2013 VATSIM Community
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /**
  * Assigment operator =

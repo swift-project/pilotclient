@@ -5,9 +5,12 @@
 
 #include "testaviationbase.h"
 
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
+
 namespace BlackMiscTest {
 
-/**
+/*
  * Constructor
  */
 CTestAviationBase::CTestAviationBase(QObject *parent): QObject(parent)
@@ -15,7 +18,7 @@ CTestAviationBase::CTestAviationBase(QObject *parent): QObject(parent)
     // void
 }
 
-/**
+/*
  * Basic tests
  */
 void CTestAviationBase::headingBasics()
@@ -39,7 +42,7 @@ void CTestAviationBase::headingBasics()
     QVERIFY2(h2.unitValueToDouble() == 360, "Value shall be 360");
 }
 
-/**
+/*
  * Vertical positions
  */
 void CTestAviationBase::verticalPosition()
@@ -49,7 +52,7 @@ void CTestAviationBase::verticalPosition()
     QVERIFY2(vp1== vp2, "Values shall be equal");
 }
 
-/**
+/*
  * COM and NAV units
  */
 void CTestAviationBase::comAndNav()
@@ -66,7 +69,7 @@ void CTestAviationBase::comAndNav()
     QVERIFY2(!CNavSystem::tryGetNav1System(nav1, 200.0), "Expect no NAV system");
 }
 
-/**
+/*
  * COM and NAV units
  */
 void CTestAviationBase::transponder()

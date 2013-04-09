@@ -1,11 +1,9 @@
-#ifndef SAMPLESPHYSICALQUANTITIES_H
-#define SAMPLESPHYSICALQUANTITIES_H
+#ifndef BLACKMISC_SAMPLESPHYSICALQUANTITIES_H
+#define BLACKMISC_SAMPLESPHYSICALQUANTITIES_H
 
-#include <QDebug>
 #include "blackmisc/pqconstants.h"
 #include "blackmisc/debug.h"
-
-using namespace BlackMisc::PhysicalQuantities;
+#include <QDebug>
 
 namespace BlackMiscTest {
 
@@ -22,4 +20,4 @@ public:
 };
 }
 
-#endif // SAMPLESPHYSICALQUANTITIES_H
+#endif // BLACKMISC_SAMPLESPHYSICALQUANTITIES_H

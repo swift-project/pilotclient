@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef PQPRESSURE_H
-#define PQPRESSURE_H
+#ifndef BLACKMISC_PQPRESSURE_H
+#define BLACKMISC_PQPRESSURE_H
 
 #include "pqphysicalquantity.h"
 
@@ -47,4 +47,4 @@ public:
 };
 } // namespace
 } // namespace
-#endif // PQPRESSURE_H
+#endif // BLACKMISC_PQPRESSURE_H

@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef PQCONSTANTS_H
-#define PQCONSTANTS_H
+#ifndef BLACKMISC_PQCONSTANTS_H
+#define BLACKMISC_PQCONSTANTS_H
 
 #include "blackmisc/pqallquantities.h"
 
@@ -12,7 +12,6 @@ namespace BlackMisc
 {
 namespace PhysicalQuantities
 {
-
 class CPhysicalQuantitiesConstants
 {
 
@@ -92,4 +91,4 @@ public:
 };
 } //namespace
 } // namespace
-#endif // PQCONSTANTS_H
+#endif // BLACKMISC_PQCONSTANTS_H

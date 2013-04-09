@@ -1,9 +1,14 @@
-#ifndef TESTMAIN_H
-#define TESTMAIN_H
+/*  Copyright (C) 2013 VATSIM Community / authors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include <QtTest/QtTest>
+#ifndef BLACKMISCTEST_TESTMAIN_H
+#define BLACKMISCTEST_TESTMAIN_H
+
 #include "testphysicalquantitiesbase.h"
 #include "testaviationbase.h"
+#include <QtTest/QtTest>
 
 namespace BlackMiscTest{
 
@@ -15,8 +20,14 @@ namespace BlackMiscTest{
 class CTestMain
 {
 public:
+    /*!
+     * \brief Starting all
+     * \param argc
+     * \param argv
+     * \return
+     */
     static int unitMain(int argc, char *argv[]);
 };
 }
 
-#endif // TESTMAIN_H
+#endif // BLACKMISCTEST_TESTMAIN_H

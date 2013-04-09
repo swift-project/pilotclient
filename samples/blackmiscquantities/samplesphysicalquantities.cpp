@@ -1,5 +1,7 @@
 #include "samplesphysicalquantities.h"
 
+using namespace BlackMisc::PhysicalQuantities;
+
 namespace BlackMiscTest {
 
 /**
@@ -91,6 +93,7 @@ int CSamplesPhysicalQuantities::samples() {
     qDebug() << ti1 << ti2;
 
     // bye
+    qDebug() << "-----------------------------------------------";
     return 0;
 }
 

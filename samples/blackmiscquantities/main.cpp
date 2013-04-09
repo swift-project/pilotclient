@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    // CSamplesPhysicalQuantities::samples();
+    CSamplesPhysicalQuantities::samples();
     CSamplesAviation::samples();
 
     return a.exec();

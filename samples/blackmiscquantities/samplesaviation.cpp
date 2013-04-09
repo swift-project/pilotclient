@@ -1,5 +1,8 @@
 #include "samplesaviation.h"
 
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
+
 namespace BlackMiscTest {
 
 /**
@@ -44,6 +47,7 @@ int CSamplesAviation::samples()
     qDebug() << tr1 << tr2;
 
     // bye
+    qDebug() << "-----------------------------------------------";
     return 0;
 }
 

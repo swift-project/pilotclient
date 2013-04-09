@@ -3,11 +3,9 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef AVIOCOMUNIT_H
-#define AVIOCOMUNIT_H
+#ifndef BLACKMISC_AVIOCOMUNIT_H
+#define BLACKMISC_AVIOCOMUNIT_H
 #include "blackmisc/aviomodulator.h"
-
-using BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants;
 
 namespace BlackMisc
 {
@@ -25,8 +23,8 @@ private:
      * \param f
      * \return
      */
-    bool isValidCivilAviationFrequency(CFrequency f) const {
-        double fr = f.valueRounded(CFrequencyUnit::MHz(), this->m_digits);
+    bool isValidCivilAviationFrequency(BlackMisc::PhysicalQuantities::CFrequency f) const {
+        double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), this->m_digits);
         return fr >= 118.0 && fr <= 136.975;
     }
     /*!
@@ -34,8 +32,8 @@ private:
      * \param f
      * \return
      */
-    bool isValidMilitaryFrequency(CFrequency f) const {
-        double fr = f.valueRounded(CFrequencyUnit::MHz(), this->m_digits);
+    bool isValidMilitaryFrequency(BlackMisc::PhysicalQuantities::CFrequency f) const {
+        double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), this->m_digits);
         return fr >= 220.0 && fr <= 399.95;
     }
     /*!
@@ -47,7 +45,7 @@ private:
      * \param digits
      *
      */
-    CComSystem(bool validate, const QString &name, const CFrequency &activeFrequency, const CFrequency &standbyFrequency, int digits = 3):
+    CComSystem(bool validate, const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits = 3):
         CModulator(name, activeFrequency, standbyFrequency, digits) {
         this->validate(validate);
     }
@@ -97,7 +95,7 @@ public:
      * \param standbyFrequency
      * \param digits
      */
-    CComSystem(const QString &name, const CFrequency &activeFrequency, const CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
+    CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
         CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits) {
         this->validate(true);
     }
@@ -122,14 +120,14 @@ public:
      */
     void setActiveUnicom() {
         this->toggleActiveStandby();
-        this->setFrequencyActive(CPhysicalQuantitiesConstants::FrequencyUnicom());
+        this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyUnicom());
     }
     /*!
      * \brief Set International Air Distress 121.5MHz
      */
     void setActiveInternationalAirDistress() {
         this->toggleActiveStandby();
-        this->setFrequencyActive(CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
+        this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
     }
     /*!
      * \brief Assigment operator =
@@ -167,7 +165,7 @@ public:
      * \return
      */
     static bool tryGetComSystem(CComSystem &comSystem, const QString &name, double activeFrequencyMHz, double standbyFrequencyMHz = -1) {
-        comSystem = CComSystem(false, name, CFrequency(activeFrequencyMHz, CFrequencyUnit::MHz()), CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, CFrequencyUnit::MHz()));
+        comSystem = CComSystem(false, name, BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
         bool s;
         if (!(s = comSystem.validate(false))) comSystem = CComSystem(); // reset to default
         return s;
@@ -182,7 +180,7 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static bool tryGetComSystem(CComSystem &comSystem, const QString &name, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static bool tryGetComSystem(CComSystem &comSystem, const QString &name, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
         comSystem = CComSystem(false, name, activeFrequency, standbyFrequency);
         bool s;
         if (!(s = comSystem.validate(false))) comSystem = CComSystem(); // reset to default
@@ -195,7 +193,7 @@ public:
      * \return
      */
     static CComSystem getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz = -1) {
-        return CComSystem(CModulator::NameCom1(), CFrequency(activeFrequencyMHz, CFrequencyUnit::MHz()), CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, CFrequencyUnit::MHz()));
+        return CComSystem(CModulator::NameCom1(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
     }
     /*!
      * \brief COM1 unit
@@ -203,7 +201,7 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static CComSystem getCom1System(CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static CComSystem getCom1System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
         return CComSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
     }
     /*!
@@ -223,7 +221,7 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static bool tryGetCom1Unit(CComSystem &comSystem, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static bool tryGetCom1Unit(CComSystem &comSystem, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
         return CComSystem::tryGetComSystem(comSystem, CModulator::NameCom1(), activeFrequency, standbyFrequency);
     }
     /*!
@@ -233,7 +231,7 @@ public:
      * \return
      */
     static CComSystem getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz = -1) {
-        return CComSystem(CModulator::NameCom2(), CFrequency(activeFrequencyMHz, CFrequencyUnit::MHz()), CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, CFrequencyUnit::MHz()));
+        return CComSystem(CModulator::NameCom2(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
     }
     /*!
      * \brief COM2 unit
@@ -241,7 +239,7 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static CComSystem getCom2System(CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static CComSystem getCom2System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
         return CComSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
     }
     /*!
@@ -261,7 +259,7 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static bool tryGetCom2System(CComSystem &comSystem, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static bool tryGetCom2System(CComSystem &comSystem, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
         return CComSystem::tryGetComSystem(comSystem, CModulator::NameCom2(), activeFrequency, standbyFrequency);
     }
 
@@ -272,7 +270,7 @@ public:
      * \return
      */
     static CComSystem getCom3System(double activeFrequencyMHz, double standbyFrequencyMHz = -1) {
-        return CComSystem(CModulator::NameCom3(), CFrequency(activeFrequencyMHz, CFrequencyUnit::MHz()), CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, CFrequencyUnit::MHz()));
+        return CComSystem(CModulator::NameCom3(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
     }
     /*!
      * \brief COM3 unit
@@ -280,7 +278,7 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static CComSystem getCom3System(CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static CComSystem getCom3System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
         return CComSystem(CModulator::NameCom3(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
     }
 
@@ -301,7 +299,7 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static bool tryGetCom3System(CComSystem &comSystem, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static bool tryGetCom3System(CComSystem &comSystem, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
         return CComSystem::tryGetComSystem(comSystem, CModulator::NameCom3(), activeFrequency, standbyFrequency);
     }
 };
@@ -310,4 +308,4 @@ public:
 
 } // namespace
 
-#endif // AVIOCOMUNIT_H
+#endif // include guard

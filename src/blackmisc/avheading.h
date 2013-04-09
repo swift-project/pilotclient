@@ -3,12 +3,9 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef AVHEADING_H
-#define AVHEADING_H
+#ifndef BLACKMISC_AVHEADING_H
+#define BLACKMISC_AVHEADING_H
 #include "blackmisc/pqangle.h"
-
-using BlackMisc::PhysicalQuantities::CAngle;
-using BlackMisc::PhysicalQuantities::CAngleUnit;
 
 namespace BlackMisc
 {
@@ -18,7 +15,7 @@ namespace Aviation
  * \brief Heading as used in aviation, can be true or magnetic heading
  * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
  */
-class CHeading : public CAngle
+class CHeading : public BlackMisc::PhysicalQuantities::CAngle
 {
 private:
     bool m_magnetic; //!< magnetic or true heading?
@@ -34,21 +31,21 @@ public:
     /*!
      * \brief Default constructor: 0 heading true
      */
-    CHeading() : CAngle(0, CAngleUnit::rad()), m_magnetic(true) {}
+    CHeading() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_magnetic(true) {}
     /*!
      * \brief Constructor
      * \param value
      * \param magnetic
      * \param unit
      */
-    CHeading(double value, bool magnetic, const CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
+    CHeading(double value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
     /*!
      * \brief Constructor
      * \param value
      * \param magnetic
      * \param unit
      */
-    CHeading(int value, bool magnetic, const CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
+    CHeading(int value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
     /*!
      * \brief Constructor by CAngle
      * \param heading
@@ -98,4 +95,4 @@ public:
 
 } // namespace
 } // namespace
-#endif // AVHEADING_H
+#endif // BLACKMISC_AVHEADING_H

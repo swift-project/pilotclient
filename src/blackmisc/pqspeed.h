@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef CSPEED_H
-#define CSPEED_H
+#ifndef BLACKMISC_CSPEED_H
+#define BLACKMISC_CSPEED_H
 #include "pqphysicalquantity.h"
 
 namespace BlackMisc
@@ -47,4 +47,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // CSPEED_H
+#endif // BLACKMISC_CSPEED_H

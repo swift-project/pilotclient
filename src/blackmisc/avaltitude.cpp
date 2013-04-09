@@ -5,6 +5,9 @@
 
 #include "avaltitude.h"
 
+using BlackMisc::PhysicalQuantities::CLength;
+using BlackMisc::PhysicalQuantities::CLengthUnit;
+
 namespace BlackMisc
 {
 namespace Aviation

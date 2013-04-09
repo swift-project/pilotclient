@@ -1,13 +1,15 @@
-/*  Copyright (C) 2013 VATSIM Community
+/*  Copyright (C) 2013 VATSIM Community / authors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "testphysicalquantitiesbase.h"
 
+using namespace BlackMisc::PhysicalQuantities;
+
 namespace BlackMiscTest {
 
-/*!
+/*
  * Constructor
  */
 CTestPhysicalQuantitiesBase::CTestPhysicalQuantitiesBase(QObject *parent) : QObject(parent)
@@ -15,7 +17,7 @@ CTestPhysicalQuantitiesBase::CTestPhysicalQuantitiesBase(QObject *parent) : QObj
     // void
 }
 
-/*!
+/*
  * Basic unit tests for physical units
  */
 void CTestPhysicalQuantitiesBase::unitsBasics()
@@ -36,7 +38,7 @@ void CTestPhysicalQuantitiesBase::unitsBasics()
     QVERIFY2(fu1 != du1, "Hz must not be meter");
 }
 
-/*!
+/*
  * Distance tests
  */
 void CTestPhysicalQuantitiesBase::lengthBasics()
@@ -67,7 +69,7 @@ void CTestPhysicalQuantitiesBase::lengthBasics()
     QVERIFY2(d1 > d2, "d1 shall be greater");
 }
 
-/**
+/*
  * Unit tests for speed
  */
 void CTestPhysicalQuantitiesBase::speedBasics()
@@ -78,7 +80,7 @@ void CTestPhysicalQuantitiesBase::speedBasics()
     QVERIFY2(s2.valueRounded(CSpeedUnit::m_s(),1) == 5.1, qPrintable(QString("1000ft/min is not %1 m/s").arg(s2.valueRounded(CSpeedUnit::m_s(),1))));
 }
 
-/**
+/*
  * Frequency unit tests
  */
 void CTestPhysicalQuantitiesBase::frequencyTests()
@@ -91,7 +93,7 @@ void CTestPhysicalQuantitiesBase::frequencyTests()
     QVERIFY2(f1 == f2 , "MHz is 1E6 Hz");
 }
 
-/**
+/*
  * Angle tests
  */
 void CTestPhysicalQuantitiesBase::angleTests()
@@ -105,7 +107,7 @@ void CTestPhysicalQuantitiesBase::angleTests()
     QVERIFY2(a3.valueRounded(CAngleUnit::deg()) == 35.73, "Expecting 35.73");
 }
 
-/**
+/*
  * Weight tests
  */
 void CTestPhysicalQuantitiesBase::massTests()
@@ -119,7 +121,7 @@ void CTestPhysicalQuantitiesBase::massTests()
     QVERIFY2(w1 == w2, "Masses shall be equal");
 }
 
-/**
+/*
  * Pressure tests
  */
 void CTestPhysicalQuantitiesBase::pressureTests()
@@ -136,7 +138,7 @@ void CTestPhysicalQuantitiesBase::pressureTests()
     QVERIFY2(p1.unitValueToDouble() == p4.unitValueToDouble(), "mbar/hPa test");
 }
 
-/**
+/*
  * Temperature tests
  */
 void CTestPhysicalQuantitiesBase::temperatureTests()
@@ -151,7 +153,7 @@ void CTestPhysicalQuantitiesBase::temperatureTests()
     QVERIFY2(t4.valueRounded(CTemperatureUnit::K()) == 260.93, qPrintable(QString("10F shall be 260.93K, not %1 K").arg(t4.valueRounded(CTemperatureUnit::K()))));
 }
 
-/**
+/*
  * Temperature tests
  */
 void CTestPhysicalQuantitiesBase::timeTests()
@@ -160,7 +162,7 @@ void CTestPhysicalQuantitiesBase::timeTests()
     QVERIFY2(t1.siBaseUnitValueToInteger() == 3600, "1hour shall be 3600s");
 }
 
-/**
+/*
  * Just testing obvious memory create / destruct flaws
  */
 void CTestPhysicalQuantitiesBase::memoryTests()
@@ -178,7 +180,7 @@ void CTestPhysicalQuantitiesBase::memoryTests()
     delete a;
 }
 
-/**
+/*
  * @brief Just testing obvious memory create / destruct flaws
  */
 void CTestPhysicalQuantitiesBase::basicArithmetic()
@@ -193,6 +195,4 @@ void CTestPhysicalQuantitiesBase::basicArithmetic()
     p3 = p3 - p3;
     QVERIFY2(p3.unitValueToDouble() == 0, "Value needs to be zero");
 }
-
-
 } // namespace

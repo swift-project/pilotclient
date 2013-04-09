@@ -1,5 +1,5 @@
-#ifndef SAMPLESAVIATION_H
-#define SAMPLESAVIATION_H
+#ifndef BLACKMISC_SAMPLESAVIATION_H
+#define BLACKMISC_SAMPLESAVIATION_H
 
 #include "blackmisc/avheading.h"
 #include "blackmisc/avverticalpositions.h"
@@ -7,9 +7,6 @@
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/aviotransponder.h"
-
-using namespace BlackMisc::Aviation;
-using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMiscTest {
 

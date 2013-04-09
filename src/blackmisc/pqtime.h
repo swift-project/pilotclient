@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef PQTIME_H
-#define PQTIME_H
+#ifndef BLACKMISC_PQTIME_H
+#define BLACKMISC_PQTIME_H
 
 #include "pqphysicalquantity.h"
 
@@ -48,4 +48,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // PQTIME_H
+#endif // BLACKMISC_PQTIME_H

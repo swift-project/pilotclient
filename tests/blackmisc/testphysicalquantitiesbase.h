@@ -1,10 +1,8 @@
-#ifndef TESTPHYSICALQUANTITIESBASE_H
-#define TESTPHYSICALQUANTITIESBASE_H
+#ifndef BLACKMISCTEST_TESTPHYSICALQUANTITIESBASE_H
+#define BLACKMISCTEST_TESTPHYSICALQUANTITIESBASE_H
 
 #include <QtTest/QtTest>
 #include "blackmisc/pqconstants.h"
-
-using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMiscTest
 {
@@ -72,4 +70,4 @@ private slots:
 
 } // namespace
 
-#endif // TESTPHYSICALQUANTITIESBASE_H
+#endif // BLACKMISCTEST_TESTPHYSICALQUANTITIESBASE_H

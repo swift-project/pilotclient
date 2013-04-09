@@ -3,21 +3,20 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef PQPHYSICALQUANTITY_H
-#define PQPHYSICALQUANTITY_H
+#ifndef BLACKMISC_PQPHYSICALQUANTITY_H
+#define BLACKMISC_PQPHYSICALQUANTITY_H
 
-#include <QtGlobal>
-#include <QString>
-#include <QLocale>
 #include "blackmisc/pqbase.h"
 #include "blackmisc/pqunits.h"
 #include "blackmisc/debug.h"
+#include <QtGlobal>
+#include <QString>
+#include <QLocale>
 
 namespace BlackMisc
 {
 namespace PhysicalQuantities
 {
-
 /*!
  * \brief A physical quantity such as "5m", "20s", "1500ft/s"
  * \author KWB
@@ -362,4 +361,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // PQPHYSICALQUANTITY_H
+#endif // BLACKMISC_PQPHYSICALQUANTITY_H

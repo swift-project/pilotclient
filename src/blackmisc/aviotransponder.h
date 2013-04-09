@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef AVIOTRANSPONDER_H
-#define AVIOTRANSPONDER_H
+#ifndef BLACKMISC_AVIOTRANSPONDER_H
+#define BLACKMISC_AVIOTRANSPONDER_H
 #include "blackmisc/aviobase.h"
 
 namespace BlackMisc
@@ -180,7 +180,7 @@ public:
      * \param otherTransponder
      * \return
      */
-    CTransponder& operator =(const CTransponder &otherTransponder) {
+    CTransponder &operator =(const CTransponder &otherTransponder) {
         CAvionicsBase::operator =(otherTransponder);
         this->m_transponderMode = otherTransponder.m_transponderMode;
         this->m_transponderCode = otherTransponder.m_transponderCode;
@@ -272,4 +272,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // AVIOTRANSPONDER_H
+#endif // BLACKMISC_AVIOTRANSPONDER_H

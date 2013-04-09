@@ -3,24 +3,21 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef AVTRACK_H
-#define AVTRACK_H
+#ifndef BLACKMISC_AVTRACK_H
+#define BLACKMISC_AVTRACK_H
 #include "blackmisc/pqangle.h"
 
-using BlackMisc::PhysicalQuantities::CAngle;
-using BlackMisc::PhysicalQuantities::CAngleUnit;
 
 namespace BlackMisc
 {
-
 namespace Aviation
 {
 
 /*!
  * \brief Track as used in aviation, can be true or magnetic Track
- * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
+ * \remarks Intentionally allowing +/- BlackMisc::PhysicalQuantities::CAngle , and >= / <= CAngle.
  */
-class CTrack : public CAngle
+class CTrack : public BlackMisc::PhysicalQuantities::CAngle
 {
 private:
     bool m_magnetic; //!< magnetic or true Track?
@@ -34,36 +31,36 @@ protected:
 
 public:
     /*!
-     * \brief Default constructor: 0 Track true
+     * \brief Default constructor: 0 Track magnetic
      */
-    CTrack() : CAngle(0, CAngleUnit::rad()), m_magnetic(true) {}
+    CTrack() : BlackMisc::PhysicalQuantities::CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_magnetic(true) {}
     /*!
      * \brief Constructor
      * \param value
      * \param magnetic
      * \param unit
      */
-    CTrack(double value, bool magnetic, const CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
+    CTrack(double value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_magnetic(magnetic) {}
     /*!
      * \brief Constructor
      * \param value
      * \param magnetic
      * \param unit
      */
-    CTrack(int value, bool magnetic, const CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
+    CTrack(int value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_magnetic(magnetic) {}
     /*!
      * \brief Constructor by CAngle
      * \param Track
      * \param magnetic
      */
-    CTrack(CAngle track, bool magnetic) : CAngle(), m_magnetic(magnetic) {
-        CAngle::operator =(track);
+    CTrack(BlackMisc::PhysicalQuantities::CAngle track, bool magnetic) : BlackMisc::PhysicalQuantities::CAngle(), m_magnetic(magnetic) {
+        BlackMisc::PhysicalQuantities::CAngle::operator =(track);
     }
     /*!
      * \brief Copy constructor
      * \param otherTrack
      */
-    CTrack(const CTrack &otherTrack) : CAngle(otherTrack), m_magnetic(otherTrack.m_magnetic) {}
+    CTrack(const CTrack &otherTrack) : BlackMisc::PhysicalQuantities::CAngle(otherTrack), m_magnetic(otherTrack.m_magnetic) {}
     /*!
      * \brief Assignment operator =
      * \param otherQuantity
@@ -102,4 +99,4 @@ public:
 
 } // namespace
 
-#endif // AVTRACK_H
+#endif // BLACKMISC_AVTRACK_H

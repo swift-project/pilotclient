@@ -1,15 +1,18 @@
-#ifndef TESTAVIATIONBASE_H
-#define TESTAVIATIONBASE_H
+/*  Copyright (C) 2013 VATSIM Community / authors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include <QtTest/QtTest>
+#ifndef BLACKMISCTEST_TESTAVIATIONBASE_H
+#define BLACKMISCTEST_TESTAVIATIONBASE_H
+
 #include "blackmisc/pqconstants.h"
 #include "blackmisc/avheading.h"
 #include "blackmisc/avverticalpositions.h"
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/aviotransponder.h"
-
-using namespace BlackMisc::Aviation;
+#include <QtTest/QtTest>
 
 namespace BlackMiscTest {
 
@@ -49,4 +52,4 @@ private slots:
 
 } // namespace
 
-#endif // TESTAVIATIONBASE_H
+#endif // BLACKMISCTEST_TESTAVIATIONBASE_H

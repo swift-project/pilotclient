@@ -5,9 +5,12 @@
 
 #include "avverticalpositions.h"
 
+using BlackMisc::PhysicalQuantities::CLength;
+using BlackMisc::PhysicalQuantities::CLengthUnit;
+using BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants;
+
 namespace BlackMisc
 {
-
 namespace Aviation
 {
 

@@ -1,14 +1,14 @@
-/*  Copyright (C) 2013 VATSIM Community
+/*  Copyright (C) 2013 VATSIM Community / authors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef AVIOBASE_H
-#define AVIOBASE_H
+#ifndef BLACKMISC_AVIOBASE_H
+#define BLACKMISC_AVIOBASE_H
 
 // QtGlobal is required for asserts
-#include <QtGlobal>
 #include "blackmisc/pqconstants.h"
+#include <QtGlobal>
 
 namespace BlackMisc
 {
@@ -105,4 +105,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // AVIOBASE_H
+#endif // BLACKMISC_AVIOBASE_H

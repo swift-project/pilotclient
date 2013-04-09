@@ -3,13 +3,11 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef AVLATERALPOSITION_H
-#define AVLATERALPOSITION_H
+#ifndef BLACKMISC_AVLATERALPOSITION_H
+#define BLACKMISC_AVLATERALPOSITION_H
+
 #include "blackmisc/avaltitude.h"
 #include "blackmisc/pqconstants.h"
-
-using BlackMisc::PhysicalQuantities::CLength;
-using BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants;
 
 namespace BlackMisc
 {
@@ -39,8 +37,8 @@ class CAviationVerticalPositions
     friend CLogMessage operator<<(CLogMessage log, const CAviationVerticalPositions &positions);
 
 private:
-    CLength m_height;  //!< height
-    CLength m_elevation;  //!< elevation
+    BlackMisc::PhysicalQuantities::CLength m_height;  //!< height
+    BlackMisc::PhysicalQuantities::CLength m_elevation;  //!< elevation
     CAltitude m_altitude;  //!< altitude
 
 protected:
@@ -61,7 +59,7 @@ public:
      * \param elevation
      * \param height
      */
-    CAviationVerticalPositions(const CAltitude &altitude, const CLength &elevation, const CLength &height);
+    CAviationVerticalPositions(const CAltitude &altitude, const BlackMisc::PhysicalQuantities::CLength &elevation, const BlackMisc::PhysicalQuantities::CLength &height);
     /*!
      * \brief Copy constructor
      * \param otherPosition
@@ -89,14 +87,14 @@ public:
      * \brief Height
      * \return
      */
-    CLength getHeight() const {
+    BlackMisc::PhysicalQuantities::CLength getHeight() const {
         return this->m_height;
     }
     /*!
      * \brief Elevation
      * \return
      */
-    CLength getElevation() const {
+    BlackMisc::PhysicalQuantities::CLength getElevation() const {
         return this->m_elevation;
     }
     /*!
@@ -125,4 +123,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // AVLATERALPOSITION_H
+#endif // BLACKMISC_AVLATERALPOSITION_H

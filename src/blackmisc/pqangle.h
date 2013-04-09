@@ -1,32 +1,30 @@
-/*  Copyright (C) 2013 VATSIM Community
+/*  Copyright (C) 2013 VATSIM Community / authors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef PQANGLE_H
-#define PQANGLE_H
+#ifndef BLACKMISC_PQANGLE_H
+#define BLACKMISC_PQANGLE_H
 #include "blackmisc/pqphysicalquantity.h"
 
 namespace BlackMisc
 {
 namespace PhysicalQuantities
 {
-
 /*!
  * \brief Physical unit degree
  * \author KWB
  */
 class CAngle : public CPhysicalQuantity<CAngleUnit, CAngle>
 {
-
 public:
     /*!
      * \brief Default constructor
      */
     CAngle() : CPhysicalQuantity(0, CAngleUnit::rad(), CAngleUnit::rad()) {}
-    /**
-       * \brief Copy constructor
-       */
+    /*!
+     * \brief Copy constructor
+     */
     CAngle(const CAngle &angle) : CPhysicalQuantity(angle) {}
     /*!
      * \brief Init by int value
@@ -63,4 +61,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // PQANGLE_H
+#endif // BLACKMISC_PQANGLE_H
