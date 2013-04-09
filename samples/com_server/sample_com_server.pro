@@ -11,10 +11,9 @@ DEPENDPATH += . ../../src
 
 INCLUDEPATH += . ../../src
 
-SOURCES += main.cpp \
-           server.cpp
+SOURCES += *.cpp
 
-HEADERS += server.h
+HEADERS += *.h
 
 LIBS    += -L../../lib -lblackmisc
 

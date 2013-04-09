@@ -8,11 +8,9 @@ DESTDIR = ../../../bin
 
 DEPENDPATH += .
 
-HEADERS += \
-    driver_fsx.h
+HEADERS += *.h
 
-SOURCES += \
-    driver_fsx.cpp
+SOURCES += *.cpp
 
 
 

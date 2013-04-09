@@ -7,14 +7,9 @@ INCLUDEPATH += . ..
 TARGET = BlackBox
 TEMPLATE = app
 
-SOURCES += main.cpp \
-        blackbox.cpp \
-        dialog_chat.cpp \
-        dialog_connect.cpp
+SOURCES += *.cpp
 
-HEADERS += blackbox.h \
-        dialog_chat.h \
-        dialog_connect.h
+HEADERS += *.h
 
 FORMS   += blackbox.ui dialog_connect.ui dialog_chat.ui
 

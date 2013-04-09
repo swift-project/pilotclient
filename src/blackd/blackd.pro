@@ -10,12 +10,9 @@ DEPENDPATH += . ..
 
 INCLUDEPATH += ..
 
-SOURCES += main.cpp \
-    blackd.cpp \
-    qt_displayer.cpp \
+SOURCES  += *.cpp
 
-HEADERS  += blackd.h \
-    qt_displayer.h \
+HEADERS  += *.h
 
 FORMS    += blackd.ui
 

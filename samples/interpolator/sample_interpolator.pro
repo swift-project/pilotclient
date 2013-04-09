@@ -11,7 +11,7 @@ DEPENDPATH += . ../../src
 
 INCLUDEPATH += . ../../src
 
-SOURCES += main.cpp
+SOURCES += *.cpp
 
 LIBS    += -L../../lib -lblackmisc -lblackcore
 
