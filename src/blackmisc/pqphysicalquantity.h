@@ -1,3 +1,8 @@
+/*  Copyright (C) 2013 VATSIM Community
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #ifndef PQPHYSICALQUANTITY_H
 #define PQPHYSICALQUANTITY_H
 
@@ -8,7 +13,10 @@
 #include "blackmisc/pqunits.h"
 #include "blackmisc/debug.h"
 
-namespace BlackMisc {
+namespace BlackMisc
+{
+namespace PhysicalQuantities
+{
 
 /*!
  * \brief A physical quantity such as "5m", "20s", "1500ft/s"
@@ -57,7 +65,9 @@ protected:
      * \brief String for streaming operators
      * \return
      */
-    virtual QString stringForStreamingOperator() const { return this->unitValueRoundedWithUnit(-1); }
+    virtual QString stringForStreamingOperator() const {
+        return this->unitValueRoundedWithUnit(-1);
+    }
 
     /*!
      * \brief Constructor with int
@@ -84,7 +94,7 @@ protected:
      * \brief Init by double
      * \param baseValue
      */
-    void setUnitValue (double baseValue);
+    void setUnitValue(double baseValue);
     /*!
      * \brief Set the SI value
      */
@@ -103,12 +113,16 @@ public:
      * \brief Unit of the distance
      * \return
      */
-    MU getUnit() const { return this->m_unit; }
+    MU getUnit() const {
+        return this->m_unit;
+    }
     /*!
      * \brief Conversion SI unit
      * \return
      */
-    MU getConversionSiUnit() const { return this->m_conversionSiUnit; }
+    MU getConversionSiUnit() const {
+        return this->m_conversionSiUnit;
+    }
     /*!
      * \brief Switch unit, e.g. feet meter
      * \param newUnit
@@ -119,17 +133,23 @@ public:
      * \brief Value in SI base unit? Meter is an SI base unit, hertz not!
      * \return
      */
-    bool isSiBaseUnit() const { return this->m_unit.isSiBaseUnit(); }
+    bool isSiBaseUnit() const {
+        return this->m_unit.isSiBaseUnit();
+    }
     /*!
      * \brief Value in SI unit? Hertz is an derived SI unit, NM not!
      * \return
      */
-    bool isSiUnit() const { return this->m_unit.isSiUnit(); }
+    bool isSiUnit() const {
+        return this->m_unit.isSiUnit();
+    }
     /*!
      * \brief Value in unprefixed SI unit? Meter is a unprefixed, kilometer a prefixed SI Unit
      * \return
      */
-    bool isUnprefixedSiUnit() const { return this->m_unit.isUnprefixedSiUnit(); }
+    bool isUnprefixedSiUnit() const {
+        return this->m_unit.isUnprefixedSiUnit();
+    }
     /*!
      * \brief Value in given unit
      * \param unit
@@ -154,12 +174,16 @@ public:
      * \brief Value a int
      * @return
      */
-    qint32 unitValueToInteger() const { return this->m_unitValueI;}
+    qint32 unitValueToInteger() const {
+        return this->m_unitValueI;
+    }
     /*!
      * \brief Value a double
      * @return
      */
-    double unitValueToDouble() const { return this->m_unitValueD;}
+    double unitValueToDouble() const {
+        return this->m_unitValueD;
+    }
     /*!
      * \brief Value to QString with unit, e.g. "5.00m"
      * \param digits
@@ -170,12 +194,16 @@ public:
      * \brief SI value to integer
      * @return
      */
-    qint32 siBaseUnitValueToInteger() const { return CMeasurementUnit::round(this->m_convertedSiUnitValueD,0);}
+    qint32 siBaseUnitValueToInteger() const {
+        return CMeasurementUnit::round(this->m_convertedSiUnitValueD, 0);
+    }
     /*!
      * \brief SI value to double
      * @return
      */
-    double siBaseUnitValueToDouble() const { return this->m_convertedSiUnitValueD;}
+    double siBaseUnitValueToDouble() const {
+        return this->m_convertedSiUnitValueD;
+    }
     /*!
      * \brief Rounded value by n digits
      * \param digits
@@ -192,12 +220,16 @@ public:
      * \brief SI value as double
      * \return
      */
-    double convertedSiValueToDouble() const { return this->m_convertedSiUnitValueD;}
+    double convertedSiValueToDouble() const {
+        return this->m_convertedSiUnitValueD;
+    }
     /*!
      * \brief SI value as integer
      * \return
      */
-    qint32 convertedSiValueToInteger() const { return static_cast<qint32>(CMeasurementUnit::round(this->m_convertedSiUnitValueD,0));}
+    qint32 convertedSiValueToInteger() const {
+        return static_cast<qint32>(CMeasurementUnit::round(this->m_convertedSiUnitValueD, 0));
+    }
     /*!
      * \brief Rounded SI value by n digits
      * \param digits
@@ -231,8 +263,9 @@ public:
     /*!
      * \brief Cast as QString
      */
-    operator QString() const { return this->unitValueRoundedWithUnit();}
-
+    operator QString() const {
+        return this->unitValueRoundedWithUnit();
+    }
     /*!
      * \brief Multiply operator *=
      * \param multiply
@@ -326,6 +359,7 @@ public:
 
 };
 
+} // namespace
 } // namespace
 
 #endif // PQPHYSICALQUANTITY_H

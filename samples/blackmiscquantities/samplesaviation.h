@@ -5,8 +5,11 @@
 #include "blackmisc/avverticalpositions.h"
 #include "blackmisc/pqconstants.h"
 #include "blackmisc/aviocomsystem.h"
+#include "blackmisc/avionavsystem.h"
+#include "blackmisc/aviotransponder.h"
 
-using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMiscTest {
 
@@ -21,6 +24,6 @@ public:
      */
     static int samples();
 };
-}
+} // namespace
 
 #endif

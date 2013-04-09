@@ -1,6 +1,15 @@
+/*  Copyright (C) 2013 VATSIM Community / authors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #include "avverticalpositions.h"
 
-namespace BlackMisc {
+namespace BlackMisc
+{
+
+namespace Aviation
+{
 
 /**
  * Constructor
@@ -39,7 +48,7 @@ CAviationVerticalPositions &CAviationVerticalPositions::operator =(const CAviati
     if (this == &otherPositions) return *this; // Same object?
     this->m_altitude = otherPositions.m_altitude;
     this->m_elevation = otherPositions.m_elevation;
-    this->m_height= otherPositions.m_height;
+    this->m_height = otherPositions.m_height;
     return *this;
 }
 
@@ -49,8 +58,8 @@ CAviationVerticalPositions &CAviationVerticalPositions::operator =(const CAviati
 bool CAviationVerticalPositions::operator ==(const CAviationVerticalPositions &otherPositions)
 {
     return this->m_altitude == otherPositions.m_altitude &&
-            this->m_elevation == otherPositions.m_elevation &&
-            this->m_height == otherPositions.m_height;
+           this->m_elevation == otherPositions.m_elevation &&
+           this->m_height == otherPositions.m_height;
 }
 
 /**
@@ -67,11 +76,11 @@ bool CAviationVerticalPositions::operator !=(const CAviationVerticalPositions &o
 QString CAviationVerticalPositions::stringForStreamingOperator() const
 {
     QString s = QString("Altitude: ").
-            append(this->m_altitude.unitValueRoundedWithUnit()).
-            append(" Elevation: ").
-            append(this->m_elevation.unitValueRoundedWithUnit()).
-            append(" Height: ").
-            append(this->m_height.unitValueRoundedWithUnit());
+                append(this->m_altitude.unitValueRoundedWithUnit()).
+                append(" Elevation: ").
+                append(this->m_elevation.unitValueRoundedWithUnit()).
+                append(" Height: ").
+                append(this->m_height.unitValueRoundedWithUnit());
     return s;
 }
 
@@ -82,7 +91,7 @@ CAviationVerticalPositions CAviationVerticalPositions::fromAltitudeAndElevationI
 {
     CAltitude a(altitudeMslFt, true, CLengthUnit::ft());
     CLength e(elevationFt, CLengthUnit::ft());
-    CLength h(altitudeMslFt-elevationFt,CLengthUnit::ft());
+    CLength h(altitudeMslFt - elevationFt, CLengthUnit::ft());
     return CAviationVerticalPositions(a, e, h);
 }
 
@@ -93,7 +102,7 @@ CAviationVerticalPositions CAviationVerticalPositions::fromAltitudeAndElevationI
 {
     CAltitude a(altitudeMslM, true, CLengthUnit::m());
     CLength e(elevationM, CLengthUnit::m());
-    CLength h(altitudeMslM-elevationM,CLengthUnit::m());
+    CLength h(altitudeMslM - elevationM, CLengthUnit::m());
     return CAviationVerticalPositions(a, e, h);
 }
 
@@ -114,5 +123,6 @@ QDebug operator <<(QDebug d, const CAviationVerticalPositions &positions)
     d <<  positions.stringForStreamingOperator();
     return d;
 }
-}
 
+} // namespace
+} // namespace

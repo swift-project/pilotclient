@@ -1,9 +1,17 @@
+/*  Copyright (C) 2013 VATSIM Community
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #ifndef PQTIME_H
 #define PQTIME_H
 
 #include "pqphysicalquantity.h"
 
-namespace BlackMisc {
+namespace BlackMisc
+{
+namespace PhysicalQuantities
+{
 
 /*!
  * Time class, e.g. "ms", "hour", "s", "day"
@@ -38,6 +46,6 @@ public:
     virtual ~CTime() {}
 };
 } // namespace
-
+} // namespace
 
 #endif // PQTIME_H

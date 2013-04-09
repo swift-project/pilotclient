@@ -1,6 +1,14 @@
+/*  Copyright (C) 2013 VATSIM Community
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #include "blackmisc/pqunits.h"
 
-namespace BlackMisc {
+namespace BlackMisc
+{
+namespace PhysicalQuantities
+{
 
 /**
  * Convert to SI
@@ -34,8 +42,8 @@ double CAngleUnit::conversionSexagesimalFromSi(const CMeasurementUnit &angleUnit
     double c = value - v;
     double mr = c * 60.0;
     double m = floor(mr); // minutes
-    double s = (mr-m) * 60; // seconds + rest fraction
-    v = (v + (m/100) + (s/10000));
+    double s = (mr - m) * 60; // seconds + rest fraction
+    v = (v + (m / 100) + (s / 10000));
     return v;
 }
 
@@ -64,15 +72,16 @@ QString CAngleUnit::toQStringRounded(double value, int digits) const
     if ((*this) == CAngleUnit::sexagesimalDeg()) {
         // special formatting for sexagesimal degrees
         double de = floor(value);
-        double mi = floor((value-de)*100.0);
-        double se = floor((value-de-mi/100.0)*1000000) / 100.0;
+        double mi = floor((value - de) * 100.0);
+        double se = floor((value - de - mi / 100.0) * 1000000) / 100.0;
         QString ses = QLocale::system().toString(se, 'f', 2);
         s = QString::number(de).append(this->getUnitName()).append(QString::number(mi))
-                .append("'").append(ses).append("\"");
+            .append("'").append(ses).append("\"");
     } else {
         s = CMeasurementUnit::toQStringRounded(value, digits);
     }
     return s;
 }
 
+} // namespace
 } // namespace

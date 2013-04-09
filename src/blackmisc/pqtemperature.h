@@ -1,14 +1,22 @@
+/*  Copyright (C) 2013 VATSIM Community
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #ifndef CTEMPERATURE_H
 #define CTEMPERATURE_H
 #include "pqphysicalquantity.h"
 
-namespace BlackMisc {
+namespace BlackMisc
+{
+namespace PhysicalQuantities
+{
 
 /*!
  * \brief Physical unit temperature
  * \author KWB
  */
-class CTemperature : public CPhysicalQuantity<CTemperatureUnit,CTemperature>
+class CTemperature : public CPhysicalQuantity<CTemperatureUnit, CTemperature>
 {
 public:
     /*!
@@ -18,7 +26,7 @@ public:
     /**
      *\brief Copy constructor
      */
-    CTemperature(const CTemperature &temperature) : CPhysicalQuantity(temperature){}
+    CTemperature(const CTemperature &temperature) : CPhysicalQuantity(temperature) {}
     /*!
      * \brief Init by int value
      * \param value
@@ -37,5 +45,5 @@ public:
     virtual ~CTemperature() {}
 };
 } // namespace
-
+} // namespace
 #endif // CTEMPERATURE_H

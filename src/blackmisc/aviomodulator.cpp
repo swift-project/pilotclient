@@ -1,7 +1,11 @@
 #include "blackmisc/aviomodulator.h"
 #include "blackmisc/aviocomsystem.h"
+#include "blackmisc/avionavsystem.h"
 
-namespace BlackMisc {
+namespace BlackMisc
+{
+namespace Aviation
+{
 
 /**
  * Toggle standby <-> active
@@ -18,22 +22,31 @@ template <class AVIO> void CModulator<AVIO>::toggleActiveStandby()
  */
 template <class AVIO> QString CModulator<AVIO>::stringForStreamingOperator() const
 {
-    QString s(this->m_name);
+    QString s(this->getName());
     s.append(" Active: ").append(this->m_frequencyActive.unitValueRoundedWithUnit(3));
     s.append(" Standby: ").append(this->m_frequencyStandby.unitValueRoundedWithUnit(3));
     return s;
 }
+/*  Copyright (C) 2013 VATSIM Community
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/*  Copyright (C) 2013 VATSIM Community
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /**
  * Assigment operator =
  */
-template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModulator<AVIO> &otherModulator) {
+template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModulator<AVIO> &otherModulator)
+{
 
     if (this == &otherModulator)  return *this; // Same object?
     this->m_frequencyActive = otherModulator.m_frequencyActive;
     this->m_frequencyStandby = otherModulator.m_frequencyStandby;
-    this->m_name = otherModulator.m_name;
     this->m_digits = otherModulator.m_digits;
+    this->setName(otherModulator.getName());
     return *this;
 }
 
@@ -42,8 +55,8 @@ template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModul
  */
 template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &otherModulator) const
 {
-    if(this == &otherModulator) return true;
-    return (this->m_name == otherModulator.m_name &&
+    if (this == &otherModulator) return true;
+    return (this->getName() == otherModulator.getName() &&
             this->m_frequencyActive == otherModulator.m_frequencyActive &&
             this->m_frequencyStandby == otherModulator.m_frequencyStandby);
 }
@@ -60,5 +73,7 @@ template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> 
 // see here for the reason of thess forward instantiations
 // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
 template class CModulator<CComSystem>;
+template class CModulator<CNavSystem>;
 
+} // namespace
 } // namespace

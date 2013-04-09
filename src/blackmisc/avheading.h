@@ -1,9 +1,19 @@
+/*  Copyright (C) 2013 VATSIM Community
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #ifndef AVHEADING_H
 #define AVHEADING_H
 #include "blackmisc/pqangle.h"
 
-namespace BlackMisc {
+using BlackMisc::PhysicalQuantities::CAngle;
+using BlackMisc::PhysicalQuantities::CAngleUnit;
 
+namespace BlackMisc
+{
+namespace Aviation
+{
 /*!
  * \brief Heading as used in aviation, can be true or magnetic heading
  * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
@@ -74,13 +84,18 @@ public:
      * \brief Magnetic heading?
      * \return
      */
-    bool isMagneticHeading() const { return this->m_magnetic; }
+    bool isMagneticHeading() const {
+        return this->m_magnetic;
+    }
     /*!
      * \brief True heading?
      * \return
      */
-    bool isTrueHeading() const { return !this->m_magnetic; }
+    bool isTrueHeading() const {
+        return !this->m_magnetic;
+    }
 };
 
+} // namespace
 } // namespace
 #endif // AVHEADING_H

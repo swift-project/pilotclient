@@ -3,9 +3,11 @@
 
 #include <QtTest/QtTest>
 #include "blackmisc/pqconstants.h"
-using namespace BlackMisc;
 
-namespace BlackMiscTest {
+using namespace BlackMisc::PhysicalQuantities;
+
+namespace BlackMiscTest
+{
 
 /*!
  * \brief Physical quantities,basic tests
@@ -13,6 +15,7 @@ namespace BlackMiscTest {
 class CTestPhysicalQuantitiesBase : public QObject
 {
     Q_OBJECT
+
 public:
     /*!
      * \brief Standard test case constructor

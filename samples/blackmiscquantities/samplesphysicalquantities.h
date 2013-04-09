@@ -5,7 +5,7 @@
 #include "blackmisc/pqconstants.h"
 #include "blackmisc/debug.h"
 
-using namespace BlackMisc;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMiscTest {
 

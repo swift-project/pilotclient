@@ -1,8 +1,16 @@
+/*  Copyright (C) 2013 VATSIM Community
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #ifndef PQANGLE_H
 #define PQANGLE_H
 #include "blackmisc/pqphysicalquantity.h"
 
-namespace BlackMisc {
+namespace BlackMisc
+{
+namespace PhysicalQuantities
+{
 
 /*!
  * \brief Physical unit degree
@@ -40,14 +48,19 @@ public:
      * \brief Convenience method PI
      * \return
      */
-    const static double pi() { return M_PI;}
+    const static double pi() {
+        return M_PI;
+    }
     /*!
      * \brief Value as factor of PI (e.g.0.5PI)
      * \return
      */
-    double piFactor() const { return CMeasurementUnit::round(this->convertedSiValueToDouble() / M_PI,6);}
+    double piFactor() const {
+        return CMeasurementUnit::round(this->convertedSiValueToDouble() / M_PI, 6);
+    }
 };
 
+} // namespace
 } // namespace
 
 #endif // PQANGLE_H

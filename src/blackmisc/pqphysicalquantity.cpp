@@ -1,11 +1,19 @@
+/*  Copyright (C) 2013 VATSIM Community
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #include "blackmisc/pqallquantities.h"
 
-namespace BlackMisc {
+namespace BlackMisc
+{
+namespace PhysicalQuantities
+{
 
 /**
  * Constructor by integer
  */
-template <class MU, class PQ> CPhysicalQuantity<MU,PQ>::CPhysicalQuantity(qint32 baseValue, const MU &unit, const MU &siConversionUnit) :
+template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(qint32 baseValue, const MU &unit, const MU &siConversionUnit) :
     m_unit(unit), m_conversionSiUnit(siConversionUnit)
 {
     this->setUnitValue(baseValue);
@@ -14,7 +22,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU,PQ>::CPhysicalQuantity(qint32
 /**
  * Constructor by double
  */
-template <class MU, class PQ> CPhysicalQuantity<MU,PQ>::CPhysicalQuantity(double baseValue, const MU &unit, const MU &siConversionUnit) :
+template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double baseValue, const MU &unit, const MU &siConversionUnit) :
     m_unit(unit), m_conversionSiUnit(siConversionUnit)
 {
     this->setUnitValue(baseValue);
@@ -23,7 +31,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU,PQ>::CPhysicalQuantity(double
 /**
  * Copy constructor
  */
-template <class MU, class PQ> CPhysicalQuantity<MU,PQ>::CPhysicalQuantity(const CPhysicalQuantity &otherQuantity) :
+template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(const CPhysicalQuantity &otherQuantity) :
     m_unitValueD(otherQuantity.m_unitValueD), m_unitValueI(otherQuantity.m_unitValueI), m_convertedSiUnitValueD(otherQuantity.m_convertedSiUnitValueD),
     m_isIntegerBaseValue(otherQuantity.m_isIntegerBaseValue), m_unit(otherQuantity.m_unit), m_conversionSiUnit(otherQuantity.m_conversionSiUnit)
 {
@@ -33,7 +41,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU,PQ>::CPhysicalQuantity(const 
 /*!
  * Destructor
  */
-template <class MU, class PQ> CPhysicalQuantity<MU,PQ>::~CPhysicalQuantity()
+template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::~CPhysicalQuantity()
 {
     // void
 }
@@ -41,10 +49,10 @@ template <class MU, class PQ> CPhysicalQuantity<MU,PQ>::~CPhysicalQuantity()
 /**
  * Equal operator ==
  */
-template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::operator ==(const CPhysicalQuantity<MU,PQ> &otherQuantity) const
+template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const CPhysicalQuantity<MU, PQ> &otherQuantity) const
 {
-    if(this == &otherQuantity) return true;
-    if(this->m_unit.getType()!= otherQuantity.m_unit.getType()) return false;
+    if (this == &otherQuantity) return true;
+    if (this->m_unit.getType() != otherQuantity.m_unit.getType()) return false;
 
     // some special cases for best quality
     double diff;
@@ -68,15 +76,17 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::operator ==(const C
 /**
  * Not equal
  */
-template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::operator !=(const CPhysicalQuantity<MU,PQ> &otherQuantity) const {
-    if(this == &otherQuantity) return false;
+template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator !=(const CPhysicalQuantity<MU, PQ> &otherQuantity) const
+{
+    if (this == &otherQuantity) return false;
     return !(*this == otherQuantity);
 }
 
 /**
  * Assigment operator =
  */
-template <class MU, class PQ> CPhysicalQuantity<MU,PQ>& CPhysicalQuantity<MU,PQ>::operator=(const CPhysicalQuantity<MU,PQ> &otherQuantity) {
+template <class MU, class PQ> CPhysicalQuantity<MU, PQ>& CPhysicalQuantity<MU, PQ>::operator=(const CPhysicalQuantity<MU, PQ> &otherQuantity)
+{
 
     // Check for self-assignment!
     if (this == &otherQuantity)  return *this; // Same object?
@@ -93,7 +103,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU,PQ>& CPhysicalQuantity<MU,PQ>
 /**
  * Plus operator
  */
-template <class MU, class PQ> CPhysicalQuantity<MU,PQ> &CPhysicalQuantity<MU,PQ>::operator +=(const CPhysicalQuantity<MU,PQ> &otherQuantity)
+template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator +=(const CPhysicalQuantity<MU, PQ> &otherQuantity)
 {
     if (this->m_unit == otherQuantity.m_unit) {
         // same unit
@@ -124,7 +134,7 @@ template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator +(const PQ 
 /**
  * Explicit plus
  */
-template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::addUnitValue(double value)
+template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::addUnitValue(double value)
 {
     this->setUnitValue(this->m_unitValueD + value);
 }
@@ -132,7 +142,7 @@ template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::addUnitValue(double
 /**
  * Explicit minus
  */
-template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::substractUnitValue(double value)
+template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::substractUnitValue(double value)
 {
     this->setUnitValue(this->m_unitValueD - value);
 }
@@ -140,7 +150,7 @@ template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::substractUnitValue(
 /**
  * Minus operator
  */
-template <class MU, class PQ> CPhysicalQuantity<MU,PQ> &CPhysicalQuantity<MU,PQ>::operator -=(const CPhysicalQuantity<MU,PQ> &otherQuantity)
+template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator -=(const CPhysicalQuantity<MU, PQ> &otherQuantity)
 {
     if (this->m_unit == otherQuantity.m_unit) {
         // same unit
@@ -171,9 +181,9 @@ template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator -(const PQ 
 /**
  * Multiply operator
  */
-template <class MU, class PQ> CPhysicalQuantity<MU,PQ> &CPhysicalQuantity<MU,PQ>::operator *=(double multiply)
+template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator *=(double multiply)
 {
-    this->setUnitValue(this->m_unitValueD *multiply);
+    this->setUnitValue(this->m_unitValueD * multiply);
     return *this;
 }
 
@@ -191,7 +201,7 @@ template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator *(double mu
 /**
  * Divide operator /=
  */
-template <class MU, class PQ> CPhysicalQuantity<MU,PQ> &CPhysicalQuantity<MU,PQ>::operator /=(double divide)
+template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator /=(double divide)
 {
     this->setUnitValue(this->m_unitValueD / divide);
     return *this;
@@ -200,7 +210,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU,PQ> &CPhysicalQuantity<MU,PQ>
 /**
  * Divide operator /
  */
-template <class MU, class PQ> PQ CPhysicalQuantity<MU,PQ>::operator /(double divide) const
+template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator /(double divide) const
 {
     PQ div;
     div += (*this);
@@ -211,8 +221,9 @@ template <class MU, class PQ> PQ CPhysicalQuantity<MU,PQ>::operator /(double div
 /**
  * Less operator <
  */
-template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::operator <(const CPhysicalQuantity<MU,PQ> &otherQuantity) const {
-    if(this == &otherQuantity) return false;
+template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator <(const CPhysicalQuantity<MU, PQ> &otherQuantity) const
+{
+    if (this == &otherQuantity) return false;
     double diff = this->m_convertedSiUnitValueD - otherQuantity.m_convertedSiUnitValueD;
     return (diff < 0 && abs(diff) >= this->m_unit.getEpsilon());
 }
@@ -220,31 +231,34 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::operator <(const CP
 /**
  * Greater than
  */
-template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::operator >(const CPhysicalQuantity<MU,PQ> &otherQuantity) const {
-    if(this == &otherQuantity) return false;
+template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator >(const CPhysicalQuantity<MU, PQ> &otherQuantity) const
+{
+    if (this == &otherQuantity) return false;
     return otherQuantity < *this;
 }
 
 /**
  * Greater / Equal
  */
-template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::operator >=(const CPhysicalQuantity<MU,PQ> &otherQuantity) const {
-    if(this == &otherQuantity) return true;
+template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator >=(const CPhysicalQuantity<MU, PQ> &otherQuantity) const
+{
+    if (this == &otherQuantity) return true;
     return !(*this < otherQuantity);
 }
 
 /**
  * Less equal
  */
-template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::operator <=(const CPhysicalQuantity<MU,PQ> &otherQuantity) const {
-    if(this == &otherQuantity) return true;
+template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator <=(const CPhysicalQuantity<MU, PQ> &otherQuantity) const
+{
+    if (this == &otherQuantity) return true;
     return !(*this > otherQuantity);
 }
 
 /**
  * Switch to another unit
  */
-template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::switchUnit(const MU &newUnit)
+template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::switchUnit(const MU &newUnit)
 {
     if (this->m_unit == newUnit) return true;
     if (this->m_unit.getType() != newUnit.getType()) return false; // not possible
@@ -257,10 +271,10 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU,PQ>::switchUnit(const MU
 /**
  * Init by integer
  */
-template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::setUnitValue(qint32 baseValue)
+template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::setUnitValue(qint32 baseValue)
 {
-    this->m_unitValueI= baseValue;
-    this->m_unitValueD= double(baseValue);
+    this->m_unitValueI = baseValue;
+    this->m_unitValueD = double(baseValue);
     this->m_isIntegerBaseValue = true;
     this->setConversionSiUnitValue();
 }
@@ -268,7 +282,7 @@ template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::setUnitValue(qint32
 /**
  * Init by double
  */
-template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::setUnitValue(double baseValue)
+template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::setUnitValue(double baseValue)
 {
     this->m_unitValueD = baseValue;
     this->m_unitValueI = qRound(baseValue);
@@ -279,7 +293,8 @@ template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::setUnitValue(double
 /**
  * Set SI value
  */
-template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::setConversionSiUnitValue() {
+template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::setConversionSiUnitValue()
+{
     double si = this->m_unit.convertToSiConversionUnit(this->m_unitValueD);
     this->m_convertedSiUnitValueD = si;
 }
@@ -287,7 +302,7 @@ template <class MU, class PQ> void CPhysicalQuantity<MU,PQ>::setConversionSiUnit
 /**
  * Round
  */
-template <class MU, class PQ> double CPhysicalQuantity<MU,PQ>::unitValueToDoubleRounded(int digits) const
+template <class MU, class PQ> double CPhysicalQuantity<MU, PQ>::unitValueToDoubleRounded(int digits) const
 {
     return this->m_unit.valueRounded(this->m_unitValueD, digits);
 }
@@ -295,7 +310,7 @@ template <class MU, class PQ> double CPhysicalQuantity<MU,PQ>::unitValueToDouble
 /**
  * Rounded value to QString
  */
-template <class MU, class PQ> QString CPhysicalQuantity<MU,PQ>::unitValueToQStringRounded(int digits) const
+template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::unitValueToQStringRounded(int digits) const
 {
     return this->m_unit.toQStringRounded(this->m_unitValueD, digits);
 }
@@ -303,7 +318,7 @@ template <class MU, class PQ> QString CPhysicalQuantity<MU,PQ>::unitValueToQStri
 /**
  * Rounded with unit
  */
-template <class MU, class PQ> QString CPhysicalQuantity<MU,PQ>::unitValueRoundedWithUnit(int digits) const
+template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::unitValueRoundedWithUnit(int digits) const
 {
     return this->m_unit.valueRoundedWithUnit(this->m_unitValueD, digits);
 }
@@ -311,7 +326,7 @@ template <class MU, class PQ> QString CPhysicalQuantity<MU,PQ>::unitValueRounded
 /**
  * Rounded SI value to QString
  */
-template <class MU, class PQ> QString CPhysicalQuantity<MU,PQ>::convertedSiValueToQStringRounded(int digits) const
+template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::convertedSiValueToQStringRounded(int digits) const
 {
     if (digits < 1) digits = this->m_conversionSiUnit.getDisplayDigits();
     return this->m_conversionSiUnit.toQStringRounded(this->m_convertedSiUnitValueD, digits);
@@ -320,7 +335,8 @@ template <class MU, class PQ> QString CPhysicalQuantity<MU,PQ>::convertedSiValue
 /**
  * SI base unit value with unit
  */
-template <class MU, class PQ> QString CPhysicalQuantity<MU,PQ>::convertedSiValueRoundedWithUnit(int digits) const {
+template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::convertedSiValueRoundedWithUnit(int digits) const
+{
     if (digits < 1) digits = this->m_conversionSiUnit.getDisplayDigits();
     return this->convertedSiValueToQStringRounded(digits).append(this->m_conversionSiUnit.getUnitName());
 }
@@ -328,25 +344,25 @@ template <class MU, class PQ> QString CPhysicalQuantity<MU,PQ>::convertedSiValue
 /**
  * Value rounded in unit
  */
-template <class MU, class PQ> QString CPhysicalQuantity<MU,PQ>::valueRoundedWithUnit(const MU &unit, int digits) const
+template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits) const
 {
     if (unit == this->m_unit) return this->unitValueRoundedWithUnit(digits);
     if (unit == this->m_conversionSiUnit) return this->convertedSiValueRoundedWithUnit(digits);
-    return unit.valueRoundedWithUnit(this->value(unit),digits);
+    return unit.valueRoundedWithUnit(this->value(unit), digits);
 }
 
 /**
  * Value rounded in unit
  */
-template <class MU, class PQ> double CPhysicalQuantity<MU,PQ>::valueRounded(const MU &unit, int digits) const
+template <class MU, class PQ> double CPhysicalQuantity<MU, PQ>::valueRounded(const MU &unit, int digits) const
 {
-    return unit.valueRounded(this->value(unit),digits);
+    return unit.valueRounded(this->value(unit), digits);
 }
 
 /**
  * Value in unit
  */
-template <class MU, class PQ> double CPhysicalQuantity<MU,PQ>::value(const MU &unit) const
+template <class MU, class PQ> double CPhysicalQuantity<MU, PQ>::value(const MU &unit) const
 {
     if (unit == this->m_unit) return this->m_unitValueD;
     if (unit == this->m_conversionSiUnit) return this->m_convertedSiUnitValueD;
@@ -357,7 +373,7 @@ template <class MU, class PQ> double CPhysicalQuantity<MU,PQ>::value(const MU &u
 /**
  * Round utility method
  */
-template <class MU, class PQ> double CPhysicalQuantity<MU,PQ>::convertedSiValueToDoubleRounded(int digits) const
+template <class MU, class PQ> double CPhysicalQuantity<MU, PQ>::convertedSiValueToDoubleRounded(int digits) const
 {
     if (digits < 1) digits = this->m_conversionSiUnit.getDisplayDigits();
     return this->m_conversionSiUnit.valueRounded(this->m_convertedSiUnitValueD, digits);
@@ -375,5 +391,5 @@ template class CPhysicalQuantity<CSpeedUnit, CSpeed>;
 template class CPhysicalQuantity<CAngleUnit, CAngle>;
 template class CPhysicalQuantity<CTimeUnit, CTime>;
 
-
+} // namespace
 } // namespace

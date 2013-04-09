@@ -1,9 +1,19 @@
+/*  Copyright (C) 2013 VATSIM Community
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #ifndef AVALTITUDE_H
 #define AVALTITUDE_H
-
 #include "blackmisc/pqlength.h"
 
-namespace BlackMisc {
+using BlackMisc::PhysicalQuantities::CLength;
+using BlackMisc::PhysicalQuantities::CLengthUnit;
+
+namespace BlackMisc
+{
+namespace Aviation
+{
 
 /*!
  * \brief Altitude as used in aviation, can be AGL or MSL Altitude
@@ -75,14 +85,19 @@ public:
      * \brief AGL Above ground level?
      * \return
      */
-    bool isAboveGroundLevel() const { return !this->m_msl; }
+    bool isAboveGroundLevel() const {
+        return !this->m_msl;
+    }
     /*!
      * \brief MSL Mean sea level?
      * \return
      */
-    bool isMeanSeaLevel() const { return this->m_msl; }
+    bool isMeanSeaLevel() const {
+        return this->m_msl;
+    }
 };
 
+} // namespace
 } // namespace
 
 #endif // AVALTITUDE_H

@@ -1,8 +1,20 @@
+/*  Copyright (C) 2013 VATSIM Community / authors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #ifndef AVTRACK_H
 #define AVTRACK_H
 #include "blackmisc/pqangle.h"
 
-namespace BlackMisc {
+using BlackMisc::PhysicalQuantities::CAngle;
+using BlackMisc::PhysicalQuantities::CAngleUnit;
+
+namespace BlackMisc
+{
+
+namespace Aviation
+{
 
 /*!
  * \brief Track as used in aviation, can be true or magnetic Track
@@ -74,13 +86,19 @@ public:
      * \brief Magnetic Track?
      * \return
      */
-    bool isMagneticTrack() const { return this->m_magnetic; }
+    bool isMagneticTrack() const {
+        return this->m_magnetic;
+    }
     /*!
      * \brief True Track?
      * \return
      */
-    bool isTrueTrack() const { return !this->m_magnetic; }
+    bool isTrueTrack() const {
+        return !this->m_magnetic;
+    }
 };
+
+} // namespace
 
 } // namespace
 

@@ -16,10 +16,32 @@ int CSamplesAviation::samples()
     CAviationVerticalPositions vp2 = vp1;
     qDebug() << vp1 << (vp1 == vp2) << (vp1 != vp2);
 
-    CComSystem c1 = CComSystem::getCom1Unit(125.3);
+    CComSystem c1 = CComSystem::getCom1System(125.3);
     qDebug() << c1;
     c1.setActiveUnicom();
     qDebug() << c1;
+
+    if(!CComSystem::tryGetComSystem(c1, "Test", -1.0))
+        qDebug() << c1 << "is reset to default as expected";
+    else
+        qDebug() << "Something is utterly wrong here";
+
+    try{
+        // uncomment to test assert
+        // CFrequency f1(-1.0, CFrequencyUnit::MHz());
+        // c1 = CComSystem("ups", f1, f1);
+        // qDebug() << "Why do I get here??";
+    } catch(std::range_error &ex) {
+        qDebug() << "As expected" << ex.what();
+    }
+
+    CNavSystem nav1;
+    CNavSystem::tryGetNav1System(nav1, 110.0);
+    qDebug() << nav1;
+
+    CTransponder tr1("T1", 7000, CTransponder::StateStandby);
+    CTransponder tr2("T2", "4532", CTransponder::ModeMil3);
+    qDebug() << tr1 << tr2;
 
     // bye
     return 0;

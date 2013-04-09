@@ -1,9 +1,20 @@
+/*  Copyright (C) 2013 VATSIM Community / authors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #ifndef AVLATERALPOSITION_H
 #define AVLATERALPOSITION_H
 #include "blackmisc/avaltitude.h"
 #include "blackmisc/pqconstants.h"
 
-namespace BlackMisc {
+using BlackMisc::PhysicalQuantities::CLength;
+using BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants;
+
+namespace BlackMisc
+{
+namespace Aviation
+{
 
 /*!
  * \brief Vertical (Z) positions of an aircraft
@@ -78,17 +89,23 @@ public:
      * \brief Height
      * \return
      */
-    CLength getHeight() const { return this->m_height;}
+    CLength getHeight() const {
+        return this->m_height;
+    }
     /*!
      * \brief Elevation
      * \return
      */
-    CLength getElevation() const { return this->m_elevation;}
+    CLength getElevation() const {
+        return this->m_elevation;
+    }
     /*!
      * \brief Altitude
      * \return
      */
-    CAltitude getAltitude()const { return this->m_altitude; }
+    CAltitude getAltitude()const {
+        return this->m_altitude;
+    }
     /*!
      * \brief Factory getting tupel frome levation and altitude values in ft
      * \param altitudeMslFt
@@ -105,6 +122,7 @@ public:
     static CAviationVerticalPositions fromAltitudeAndElevationInM(double altitudeMslM, double elevationM);
 };
 
+} // namespace
 } // namespace
 
 #endif // AVLATERALPOSITION_H
