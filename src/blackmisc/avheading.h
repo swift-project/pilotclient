@@ -61,19 +61,19 @@ public:
     CHeading(const CHeading &otherHeading) : CAngle(otherHeading), m_magnetic(otherHeading.m_magnetic) {}
     /*!
      * \brief Assignment operator =
-     * \param otherQuantity
+     * \param otherHeading
      * @return
      */
     CHeading &operator =(const CHeading &otherHeading);
     /*!
      * \brief Equal operator ==
-     * \param otherQuantity
+     * \param otherHeading
      * @return
      */
     bool operator ==(const CHeading &otherHeading);
     /*!
      * \brief Unequal operator ==
-     * \param otherQuantity
+     * \param otherHeading
      * @return
      */
     bool operator !=(const CHeading &otherHeading);

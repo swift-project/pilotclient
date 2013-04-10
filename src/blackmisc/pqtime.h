@@ -14,7 +14,7 @@ namespace PhysicalQuantities
 {
 
 /*!
- * Time class, e.g. "ms", "hour", "s", "day"
+ * \brief Time class, e.g. "ms", "hour", "s", "day"
  * \author KWB
  */
 class CTime : public CPhysicalQuantity<CTimeUnit, CTime>

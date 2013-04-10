@@ -13,7 +13,7 @@ namespace PhysicalQuantities
 {
 
 /*!
- * Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
+ * \brief Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
  * \author KWB
  */
 class CSpeed : public CPhysicalQuantity<CSpeedUnit, CSpeed>

@@ -17,7 +17,7 @@ namespace PhysicalQuantities
 {
 
 /*!
- * Typical prefixes (multipliers) such as kilo, mega, hecto.
+ * \brief Typical prefixes (multipliers) such as kilo, mega, hecto.
  * See <a href="http://www.poynton.com/notes/units/index.html">here</a> for an overview.
  * Use the static values such CMeasurementMultiplier::k() as to specify values.
  * \author KWB
@@ -32,8 +32,7 @@ class CMeasurementPrefix
      */
     friend QDebug operator<<(QDebug d, const CMeasurementPrefix &multiplier);
     /*!
-     * Stream operator for log messages
-     * \brief operator <<
+     * \brief Stream operator << for log messages
      * \param log
      * \param multiplier
      * \return
@@ -197,8 +196,8 @@ public:
 // --- Unit
 // ---------------------------------------------------------------------------------
 
-/**
- * Base class for all units, such as meter, hertz.
+/*!
+ * \brief Base class for all units, such as meter, hertz.
  */
 class CMeasurementUnit
 {
@@ -212,8 +211,7 @@ class CMeasurementUnit
     friend QDebug operator<<(QDebug d, const CMeasurementUnit &unit);
 
     /*!
-     * Stream operator for log messages
-     * \brief operator <<
+     * \brief Stream operator << for log messages
      * \param log
      * \param unit
      * \return
@@ -236,8 +234,8 @@ private:
     double m_epsilon; //!< values with differences below epsilon are the equal
     qint32 m_displayDigits; //!< standard rounding for string conversions
     CMeasurementPrefix m_multiplier; //!< multiplier (kilo, Mega)
-    UnitConverter m_toSiConverter;
-    UnitConverter m_fromSiConverter;
+    UnitConverter m_toSiConverter; //! allows an arbitrary conversion method as per object
+    UnitConverter m_fromSiConverter; //! allows an arbitrary conversion method as per object
 
 protected:
 
@@ -245,12 +243,15 @@ protected:
      * Constructor by parameter
      * \param name
      * \param unitName
-     * \param isSIUnit
-     * \param isSIBaseUnit
+     * \param type
+     * \param isSiUnit
+     * \param isSiBaseUnit
      * \param conversionFactorToSI
      * \param multiplier
      * \param displayDigits
      * \param epsilon
+     * \param toSiConverter
+     * \param fromSiConverter
      */
     CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSiUnit, bool isSiBaseUnit, double conversionFactorToSI = 1,
                      const CMeasurementPrefix &multiplier = CMeasurementPrefix::None(), qint32 displayDigits = 2,
@@ -285,7 +286,7 @@ protected:
     }
     /*!
      * \brief Value from SI conversion unit to this unit.
-     * Standard implementaion is simply factor based.
+     * Standard implementation is simply factor based.
      * \param value
      * \return
      */
@@ -348,7 +349,6 @@ public:
     QString getType() const {
         return this->m_type;
     }
-
     /*!
      * Given value to conversion SI conversion unit (e.g. meter, hertz).
      * Standard implementation is simply factor based.
@@ -412,6 +412,7 @@ public:
     }
     /*!
      * \brief Factor to convert to given unit
+     * \param value
      * \param to
      * \return
      */

@@ -40,6 +40,7 @@ protected:
      * \param name
      * \param activeFrequency
      * \param standbyFrequency
+     * \param digits
      */
     CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits) :
         m_frequencyActive(activeFrequency),

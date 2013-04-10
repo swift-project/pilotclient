@@ -13,7 +13,7 @@ namespace Aviation
 {
 
 /*!
- * \brief Altitude as used in aviation, can be AGL or MSL Altitude
+ * \brief Altitude as used in aviation, can be AGL or MSL altitude
  * \remarks Intentionally allowing +/- CLength , and >= / <= CLength.
  */
 class CAltitude : public BlackMisc::PhysicalQuantities::CLength
@@ -49,10 +49,11 @@ public:
     CAltitude(int value, bool msl, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_msl(msl) {}
     /*!
      * \brief Constructor by CLength
-     * \param Altitude
+     * \param altitude
      * \param msl
      */
-    CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, bool msl) : BlackMisc::PhysicalQuantities::CLength(), m_msl(msl) {
+    CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, bool msl) : BlackMisc::PhysicalQuantities::CLength(), m_msl(msl)
+    {
         BlackMisc::PhysicalQuantities::CLength::operator =(altitude);
     }
     /*!
@@ -62,19 +63,19 @@ public:
     CAltitude(const CAltitude &otherAltitude) : BlackMisc::PhysicalQuantities::CLength(otherAltitude), m_msl(otherAltitude.m_msl) {}
     /*!
      * \brief Assignment operator =
-     * \param otherQuantity
+     * \param otherAltitude
      * @return
      */
     CAltitude &operator =(const CAltitude &otherAltitude);
     /*!
      * \brief Equal operator ==
-     * \param otherQuantity
+     * \param otherAltitude
      * @return
      */
     bool operator ==(const CAltitude &otherAltitude);
     /*!
      * \brief Unequal operator ==
-     * \param otherQuantity
+     * \param otherAltitude
      * @return
      */
     bool operator !=(const CAltitude &otherAltitude);
@@ -82,14 +83,16 @@ public:
      * \brief AGL Above ground level?
      * \return
      */
-    bool isAboveGroundLevel() const {
+    bool isAboveGroundLevel() const
+    {
         return !this->m_msl;
     }
     /*!
      * \brief MSL Mean sea level?
      * \return
      */
-    bool isMeanSeaLevel() const {
+    bool isMeanSeaLevel() const
+    {
         return this->m_msl;
     }
 };

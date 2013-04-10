@@ -12,6 +12,9 @@ namespace BlackMisc
 {
 namespace PhysicalQuantities
 {
+/*!
+ * \brief Physical quantities constants
+ */
 class CPhysicalQuantitiesConstants
 {
 

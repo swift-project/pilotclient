@@ -13,7 +13,7 @@ namespace BlackMisc
 namespace Aviation
 {
 
-/**
+/*
  * Own implementation for streaming
  */
 QString CAltitude::stringForStreamingOperator() const
@@ -22,7 +22,7 @@ QString CAltitude::stringForStreamingOperator() const
     return s.append(this->m_msl ? " MSL" : " AGL");
 }
 
-/**
+/*
  * Assigment
  */
 CAltitude& CAltitude::operator =(const CAltitude &otherAltitude)
@@ -34,7 +34,7 @@ CAltitude& CAltitude::operator =(const CAltitude &otherAltitude)
     return (*this);
 }
 
-/**
+/*
  * Equal?
  */
 bool CAltitude::operator ==(const CAltitude &otherAltitude)
@@ -42,7 +42,7 @@ bool CAltitude::operator ==(const CAltitude &otherAltitude)
     return otherAltitude.m_msl == this->m_msl && CLength::operator ==(otherAltitude);
 }
 
-/**
+/*
  * Unequal?
  */
 bool CAltitude::operator !=(const CAltitude &otherAltitude)

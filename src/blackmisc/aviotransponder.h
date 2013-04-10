@@ -99,6 +99,7 @@ public:
      * \brief Constructor
      * \param name
      * \param transponderCode
+     * \param transponderMode
      */
     CTransponder(const QString &name, qint32 transponderCode, TransponderMode transponderMode) :
         CAvionicsBase(name), m_transponderCode(transponderCode), m_transponderMode(transponderMode) {
@@ -108,6 +109,7 @@ public:
      * \brief Constructor
      * \param name
      * \param transponderCode
+     * \param transponderMode
      */
     CTransponder(const QString &name, const QString &transponderCode, TransponderMode transponderMode) :
         CAvionicsBase(name), m_transponderCode(0), m_transponderMode(transponderMode) {
@@ -226,8 +228,8 @@ public:
      * has been sucessfully created, otherwise returns a default object.
      * \param transponder
      * \param name
-     * \param activeFrequency
-     * \param standbyFrequency
+     * \param transponderCode
+     * \param mode
      * \return
      */
     static bool tryGetTransponder(CTransponder &transponder, const QString &name, const QString &transponderCode, TransponderMode mode) {

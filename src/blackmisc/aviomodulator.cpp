@@ -15,7 +15,7 @@ namespace BlackMisc
 namespace Aviation
 {
 
-/**
+/*
  * Toggle standby <-> active
  */
 template <class AVIO> void CModulator<AVIO>::toggleActiveStandby()
@@ -25,7 +25,7 @@ template <class AVIO> void CModulator<AVIO>::toggleActiveStandby()
     this->m_frequencyStandby = a;
 }
 
-/**
+/*
  * String representation
  */
 template <class AVIO> QString CModulator<AVIO>::stringForStreamingOperator() const
@@ -36,7 +36,7 @@ template <class AVIO> QString CModulator<AVIO>::stringForStreamingOperator() con
     return s;
 }
 
-/**
+/*
  * Assigment operator =
  */
 template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModulator<AVIO> &otherModulator)
@@ -50,7 +50,7 @@ template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModul
     return *this;
 }
 
-/**
+/*
  * Equal operator ==
  */
 template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &otherModulator) const
@@ -61,7 +61,7 @@ template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> 
             this->m_frequencyStandby == otherModulator.m_frequencyStandby);
 }
 
-/**
+/*
  * Equal operator !=
  */
 template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> &otherModulator) const

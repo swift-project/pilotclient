@@ -13,7 +13,7 @@ namespace BlackMisc
 namespace Aviation
 {
 
-/**
+/*
  * Own implementation for streaming
  */
 QString CHeading::stringForStreamingOperator() const
@@ -22,7 +22,7 @@ QString CHeading::stringForStreamingOperator() const
     return s.append(this->m_magnetic ? " magnetic" : " true");
 }
 
-/**
+/*
  * Assigment
  */
 CHeading& CHeading::operator =(const CHeading &otherHeading)
@@ -34,7 +34,7 @@ CHeading& CHeading::operator =(const CHeading &otherHeading)
     return (*this);
 }
 
-/**
+/*
  * Equal?
  */
 bool CHeading::operator ==(const CHeading &otherHeading)
@@ -42,7 +42,7 @@ bool CHeading::operator ==(const CHeading &otherHeading)
     return otherHeading.m_magnetic == this->m_magnetic && CAngle::operator ==(otherHeading);
 }
 
-/**
+/*
  * Unequal?
  */
 bool CHeading::operator !=(const CHeading &otherHeading)

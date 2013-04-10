@@ -201,7 +201,7 @@ public:
     }
     /*!
      * \brief Try to get NAV unit
-     * \param comSystem
+     * \param navSystem
      * \param activeFrequency
      * \param standbyFrequency
      * \return
@@ -239,7 +239,7 @@ public:
     }
     /*!
      * \brief Try to get NAV unit
-     * \param comSystem
+     * \param navSystem
      * \param activeFrequency
      * \param standbyFrequency
      * \return

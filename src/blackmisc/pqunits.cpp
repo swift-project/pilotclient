@@ -10,7 +10,7 @@ namespace BlackMisc
 namespace PhysicalQuantities
 {
 
-/**
+/*
  * Convert to SI
  */
 double CTemperatureUnit::conversionToSiConversionUnit(double value) const
@@ -20,7 +20,7 @@ double CTemperatureUnit::conversionToSiConversionUnit(double value) const
     return v;
 }
 
-/**
+/*
  * Convert from SI
  */
 double CTemperatureUnit::conversionFromSiConversionUnit(double value) const
@@ -30,7 +30,7 @@ double CTemperatureUnit::conversionFromSiConversionUnit(double value) const
     return v;
 }
 
-/**
+/*
  * Convert from SI
  */
 double CAngleUnit::conversionSexagesimalFromSi(const CMeasurementUnit &angleUnit, double value)
@@ -47,7 +47,7 @@ double CAngleUnit::conversionSexagesimalFromSi(const CMeasurementUnit &angleUnit
     return v;
 }
 
-/**
+/*
  * Convert to SI
  */
 double CAngleUnit::conversionSexagesimalToSi(const CMeasurementUnit &, double value)
@@ -63,7 +63,7 @@ double CAngleUnit::conversionSexagesimalToSi(const CMeasurementUnit &, double va
     return v / 180.0 * M_PI;
 }
 
-/**
+/*
  * Rounded to QString
  */
 QString CAngleUnit::toQStringRounded(double value, int digits) const

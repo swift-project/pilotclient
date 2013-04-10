@@ -50,7 +50,7 @@ public:
     CTrack(int value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_magnetic(magnetic) {}
     /*!
      * \brief Constructor by CAngle
-     * \param Track
+     * \param track
      * \param magnetic
      */
     CTrack(BlackMisc::PhysicalQuantities::CAngle track, bool magnetic) : BlackMisc::PhysicalQuantities::CAngle(), m_magnetic(magnetic) {
@@ -63,19 +63,19 @@ public:
     CTrack(const CTrack &otherTrack) : BlackMisc::PhysicalQuantities::CAngle(otherTrack), m_magnetic(otherTrack.m_magnetic) {}
     /*!
      * \brief Assignment operator =
-     * \param otherQuantity
+     * \param otherTrack
      * @return
      */
     CTrack &operator =(const CTrack &otherTrack);
     /*!
      * \brief Equal operator ==
-     * \param otherQuantity
+     * \param otherTrack
      * @return
      */
     bool operator ==(const CTrack &otherTrack);
     /*!
      * \brief Unequal operator ==
-     * \param otherQuantity
+     * \param otherTrack
      * @return
      */
     bool operator !=(const CTrack &otherTrack);

@@ -12,7 +12,7 @@ namespace BlackMisc
 namespace PhysicalQuantities
 {
 /*!
- * \brief Physical unit degree
+ * \brief Physical unit angle (radians, degrees)
  * \author KWB
  */
 class CAngle : public CPhysicalQuantity<CAngleUnit, CAngle>

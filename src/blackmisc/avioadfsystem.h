@@ -24,7 +24,8 @@ private:
      * \param f
      * \return
      */
-    bool isValidFrequency(CFrequency f) const {
+    bool isValidFrequency(CFrequency f) const
+    {
         double fr = f.valueRounded(CFrequencyUnit::kHz(), this->m_digits);
         return fr >= 190.0 && fr <= 1750.0;
     }
@@ -38,7 +39,8 @@ private:
      *
      */
     CAdfSystem(bool validate, const QString &name, const CFrequency &activeFrequency, const CFrequency &standbyFrequency, int digits = 3):
-        CModulator(name, activeFrequency, standbyFrequency, digits) {
+        CModulator(name, activeFrequency, standbyFrequency, digits)
+    {
         this->validate(validate);
     }
 
@@ -47,20 +49,23 @@ protected:
      * \brief Are the set values valid / in range?
      * \return
      */
-    bool validValues() const {
+    bool validValues() const
+    {
         if (this->isDefaultValue()) return true; // special case
         return
             (this->isValidFrequency(this->getFrequencyActive()) &&
-             (this->isValidFrequency(this->getFrequencyStandby());
+             (this->isValidFrequency(this->getFrequencyStandby())));
     }
-          /*!
-           * \brief Validate values by assert and exception
-           * \param strict
-           * \throws std::range_error
-           * \remarks Cannot be virtualsince already used in constructor
-           * \return
-           */
-    bool validate(bool strict = true) const {
+
+    /*!
+     * \brief Validate values by assert and exception
+     * \param strict
+     * \throws std::range_error
+     * \remarks Cannot be virtualsince already used in constructor
+     * \return
+     */
+    bool validate(bool strict = true) const
+    {
         if (this->isDefaultValue()) return true;
         bool valid = this->validValues();
         if (!strict) return valid;
@@ -86,14 +91,16 @@ public:
      * \param digits
      */
     CAdfSystem(const QString &name, const CFrequency &activeFrequency, const CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
-        CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits) {
+        CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits)
+    {
         this->validate(true);
     }
     /*!
      * \brief Set active frequency
      * \param frequencyKHz
      */
-    void setFrequencyActiveKHz(double frequencyKHz) {
+    void setFrequencyActiveKHz(double frequencyKHz)
+    {
         CModulator::setFrequencyActiveKHz(frequencyKHz);
         this->validate(true);
     }
@@ -101,7 +108,8 @@ public:
      * \brief Set standby frequency
      * \param frequencyKHz
      */
-    void setFrequencyActiveKHz(double frequencyKHz) {
+    void setFrequencyActiveKHz(double frequencyKHz)
+    {
         CModulator::setFrequencyStandbyKHz(frequencyKHz);
         this->validate(true);
     }
@@ -110,7 +118,8 @@ public:
      * \param otherSystem
      * \return
      */
-    CAdfSystem& operator =(const CAdfSystem &otherSystem) {
+    CAdfSystem &operator =(const CAdfSystem &otherSystem)
+    {
         CModulator::operator =(otherSystem);
         return (*this);
     }
@@ -119,7 +128,8 @@ public:
      * \param otherSystem
      * \return
      */
-    bool operator ==(const CAdfSystem &otherSystem) const  {
+    bool operator ==(const CAdfSystem &otherSystem) const
+    {
         return CModulator::operator ==(otherSystem);
     }
     /*!
@@ -127,7 +137,8 @@ public:
      * \param otherSystem
      * \return
      */
-    bool operator !=(const CAdfSystem &otherSystem) const  {
+    bool operator !=(const CAdfSystem &otherSystem) const
+    {
         return CModulator::operator !=(otherSystem);
     }
 
@@ -140,7 +151,8 @@ public:
      * \param standbyFrequencyKHz
      * \return
      */
-    static bool tryGetAdfSystem(CAdfSystem &adfSystem, const QString &name, double activeFrequencyKHz, double standbyFrequencyKHz = -1) {
+    static bool tryGetAdfSystem(CAdfSystem &adfSystem, const QString &name, double activeFrequencyKHz, double standbyFrequencyKHz = -1)
+    {
         adfSystem = CAdfSystem(false, name, CFrequency(activeFrequencyKHz, CFrequencyUnit::MHz()), CFrequency(standbyFrequencyKHz < 0 ? activeFrequencyKHz : standbyFrequencyKHz, CFrequencyUnit::MHz()));
         bool s;
         if (!(s = adfSystem.validate(false))) adfSystem = CAdfSystem(); // reset to default
@@ -156,7 +168,8 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static bool tryGetAdfSystem(CAdfSystem &adfSystem, const QString &name, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static bool tryGetAdfSystem(CAdfSystem &adfSystem, const QString &name, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+    {
         adfSystem = CAdfSystem(false, name, activeFrequency, standbyFrequency);
         bool s;
         if (!(s = adfSystem.validate(false))) adfSystem = CAdfSystem(); // reset to default
@@ -168,7 +181,8 @@ public:
      * \param standbyFrequencyKHz
      * \return
      */
-    static CAdfSystem GetAdf1System(double activeFrequencyKHz, double standbyFrequencyKHz = -1) {
+    static CAdfSystem GetAdf1System(double activeFrequencyKHz, double standbyFrequencyKHz = -1)
+    {
         return CAdfSystem(CModulator::NameCom1(), CFrequency(activeFrequencyKHz, CFrequencyUnit::MHz()), CFrequency(standbyFrequencyKHz < 0 ? activeFrequencyKHz : standbyFrequencyKHz, CFrequencyUnit::MHz()));
     }
     /*!
@@ -177,7 +191,8 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static CAdfSystem GetAdf1System(CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static CAdfSystem GetAdf1System(CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+    {
         return CAdfSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
     }
     /*!
@@ -187,7 +202,8 @@ public:
      * \param standbyFrequencyKHz
      * \return
      */
-    static bool tryGetAdf1Unit(CAdfSystem &adfSystem, double activeFrequencyKHz, double standbyFrequencyKHz = -1) {
+    static bool tryGetAdf1Unit(CAdfSystem &adfSystem, double activeFrequencyKHz, double standbyFrequencyKHz = -1)
+    {
         return CAdfSystem::tryGetAdfSystem(adfSystem, CModulator::NameCom1(), activeFrequencyKHz, standbyFrequencyKHz);
     }
     /*!
@@ -197,7 +213,8 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static bool tryGetAdf1Unit(CAdfSystem &adfSystem, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static bool tryGetAdf1Unit(CAdfSystem &adfSystem, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+    {
         return CAdfSystem::tryGetAdfSystem(adfSystem, CModulator::NameCom1(), activeFrequency, standbyFrequency);
     }
     /*!
@@ -206,7 +223,8 @@ public:
      * \param standbyFrequencyKHz
      * \return
      */
-    static CAdfSystem GetAdf2System(double activeFrequencyKHz, double standbyFrequencyKHz = -1) {
+    static CAdfSystem GetAdf2System(double activeFrequencyKHz, double standbyFrequencyKHz = -1)
+    {
         return CAdfSystem(CModulator::NameCom2(), CFrequency(activeFrequencyKHz, CFrequencyUnit::MHz()), CFrequency(standbyFrequencyKHz < 0 ? activeFrequencyKHz : standbyFrequencyKHz, CFrequencyUnit::MHz()));
     }
     /*!
@@ -215,7 +233,8 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static CAdfSystem GetAdf2System(CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static CAdfSystem GetAdf2System(CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+    {
         return CAdfSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
     }
     /*!
@@ -225,7 +244,8 @@ public:
      * \param standbyFrequencyKHz
      * \return
      */
-    static bool tryGetAdf2System(CAdfSystem &adfSystem, double activeFrequencyKHz, double standbyFrequencyKHz = -1) {
+    static bool tryGetAdf2System(CAdfSystem &adfSystem, double activeFrequencyKHz, double standbyFrequencyKHz = -1)
+    {
         return CAdfSystem::tryGetAdfSystem(adfSystem, CModulator::NameCom2(), activeFrequencyKHz, standbyFrequencyKHz);
     }
     /*!
@@ -235,7 +255,8 @@ public:
      * \param standbyFrequency
      * \return
      */
-    static bool tryGetAdf2System(CAdfSystem &adfSystem, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
+    static bool tryGetAdf2System(CAdfSystem &adfSystem, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+    {
         return CAdfSystem::tryGetAdfSystem(adfSystem, CModulator::NameCom2(), activeFrequency, standbyFrequency);
     }
 };

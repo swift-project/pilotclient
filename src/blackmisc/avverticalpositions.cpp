@@ -14,7 +14,7 @@ namespace BlackMisc
 namespace Aviation
 {
 
-/**
+/*
  * Constructor
  */
 CAviationVerticalPositions::CAviationVerticalPositions() :
@@ -25,7 +25,7 @@ CAviationVerticalPositions::CAviationVerticalPositions() :
     // void
 }
 
-/**
+/*
  * Constructor
  */
 CAviationVerticalPositions::CAviationVerticalPositions(const CAltitude &altitude, const CLength &elevation, const CLength &height) :
@@ -34,7 +34,7 @@ CAviationVerticalPositions::CAviationVerticalPositions(const CAltitude &altitude
     // void
 }
 
-/**
+/*
  * Copy constructor
  */
 CAviationVerticalPositions::CAviationVerticalPositions(const CAviationVerticalPositions &otherPosition) :
@@ -43,7 +43,7 @@ CAviationVerticalPositions::CAviationVerticalPositions(const CAviationVerticalPo
     // void
 }
 
-/**
+/*
  * Assigment
  */
 CAviationVerticalPositions &CAviationVerticalPositions::operator =(const CAviationVerticalPositions &otherPositions)
@@ -55,7 +55,7 @@ CAviationVerticalPositions &CAviationVerticalPositions::operator =(const CAviati
     return *this;
 }
 
-/**
+/*
  * Equal operator
  */
 bool CAviationVerticalPositions::operator ==(const CAviationVerticalPositions &otherPositions)
@@ -65,7 +65,7 @@ bool CAviationVerticalPositions::operator ==(const CAviationVerticalPositions &o
            this->m_height == otherPositions.m_height;
 }
 
-/**
+/*
  * Unequal operator
  */
 bool CAviationVerticalPositions::operator !=(const CAviationVerticalPositions &otherPositions)
@@ -73,7 +73,7 @@ bool CAviationVerticalPositions::operator !=(const CAviationVerticalPositions &o
     return !(*this == otherPositions);
 }
 
-/**
+/*
  * String representation for streaming
  */
 QString CAviationVerticalPositions::stringForStreamingOperator() const
@@ -87,7 +87,7 @@ QString CAviationVerticalPositions::stringForStreamingOperator() const
     return s;
 }
 
-/**
+/*
  * Factory by elevation and altitude
  */
 CAviationVerticalPositions CAviationVerticalPositions::fromAltitudeAndElevationInFt(double altitudeMslFt, double elevationFt)
@@ -98,7 +98,7 @@ CAviationVerticalPositions CAviationVerticalPositions::fromAltitudeAndElevationI
     return CAviationVerticalPositions(a, e, h);
 }
 
-/**
+/*
  * Factory by elevation and altitude
  */
 CAviationVerticalPositions CAviationVerticalPositions::fromAltitudeAndElevationInM(double altitudeMslM, double elevationM)
@@ -109,7 +109,7 @@ CAviationVerticalPositions CAviationVerticalPositions::fromAltitudeAndElevationI
     return CAviationVerticalPositions(a, e, h);
 }
 
-/**
+/*
  * Stream for log message
  */
 CLogMessage operator <<(CLogMessage log, const CAviationVerticalPositions &positions)
@@ -118,7 +118,7 @@ CLogMessage operator <<(CLogMessage log, const CAviationVerticalPositions &posit
     return log;
 }
 
-/**
+/*
  * Stream for qDebug
  */
 QDebug operator <<(QDebug d, const CAviationVerticalPositions &positions)

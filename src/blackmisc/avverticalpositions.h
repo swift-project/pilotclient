@@ -22,7 +22,7 @@ class CAviationVerticalPositions
     /*!
      * \brief Stream << overload to be used in debugging messages
      * \param d
-     * \param unit
+     * \param positions
      * \return
      */
     friend QDebug operator<<(QDebug d, const CAviationVerticalPositions &positions);
@@ -31,7 +31,7 @@ class CAviationVerticalPositions
      * Stream operator for log messages
      * \brief operator <<
      * \param log
-     * \param unit
+     * \param positions
      * \return
      */
     friend CLogMessage operator<<(CLogMessage log, const CAviationVerticalPositions &positions);
@@ -67,19 +67,19 @@ public:
     CAviationVerticalPositions(const CAviationVerticalPositions &otherPosition);
     /*!
      * \brief Assignment operator =
-     * \param otherQuantity
+     * \param otherPositions
      * @return
      */
     CAviationVerticalPositions &operator =(const CAviationVerticalPositions &otherPositions);
     /*!
      * \brief Equal operator ==
-     * \param otherQuantity
+     * \param otherPositions
      * @return
      */
     bool operator ==(const CAviationVerticalPositions &otherPositions);
     /*!
      * \brief Unequal operator ==
-     * \param otherQuantity
+     * \param otherPositions
      * @return
      */
     bool operator !=(const CAviationVerticalPositions &otherPositions);
@@ -87,21 +87,24 @@ public:
      * \brief Height
      * \return
      */
-    BlackMisc::PhysicalQuantities::CLength getHeight() const {
+    BlackMisc::PhysicalQuantities::CLength getHeight() const
+    {
         return this->m_height;
     }
     /*!
      * \brief Elevation
      * \return
      */
-    BlackMisc::PhysicalQuantities::CLength getElevation() const {
+    BlackMisc::PhysicalQuantities::CLength getElevation() const
+    {
         return this->m_elevation;
     }
     /*!
      * \brief Altitude
      * \return
      */
-    CAltitude getAltitude()const {
+    CAltitude getAltitude()const
+    {
         return this->m_altitude;
     }
     /*!

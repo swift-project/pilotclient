@@ -72,21 +72,19 @@ protected:
      * \brief Constructor with int
      * \param baseValue
      * \param unit
-     * \param siBaseUnit
-     * \param unitConverter
+     * \param siConversionUnit
      */
     CPhysicalQuantity(qint32 baseValue, const MU &unit, const MU &siConversionUnit);
     /*!
      * \brief Constructor with double
      * \param baseValue
      * \param unit
-     * \param siBaseUnit
+     * \param siConversionUnit
      */
     CPhysicalQuantity(double baseValue, const MU &unit, const MU &siConversionUnit);
     /*!
      * \brief Init by integer
      * \param baseValue
-     * \param unitConverter
      */
     void setUnitValue(qint32 baseValue);
     /*!

@@ -14,7 +14,7 @@ namespace PhysicalQuantities
 // --- Mulitplier --------------------------------------------------------
 // -----------------------------------------------------------------------
 
-/**
+/*
  * Constructor
  */
 CMeasurementPrefix::CMeasurementPrefix(const QString &name, const QString &unitName, double factor):
@@ -23,7 +23,7 @@ CMeasurementPrefix::CMeasurementPrefix(const QString &name, const QString &unitN
     // void
 }
 
-/**
+/*
  * Constructor
  */
 CMeasurementPrefix::CMeasurementPrefix(const CMeasurementPrefix &otherMultiplier) :
@@ -32,7 +32,7 @@ CMeasurementPrefix::CMeasurementPrefix(const CMeasurementPrefix &otherMultiplier
     // void
 }
 
-/**
+/*
  * Assignment operator
  */
 CMeasurementPrefix& CMeasurementPrefix::operator=(const CMeasurementPrefix &otherMultiplier)
@@ -45,7 +45,7 @@ CMeasurementPrefix& CMeasurementPrefix::operator=(const CMeasurementPrefix &othe
     return *this;
 }
 
-/**
+/*
  * Equal?
  */
 bool CMeasurementPrefix::operator ==(const CMeasurementPrefix &otherMultiplier) const
@@ -54,7 +54,7 @@ bool CMeasurementPrefix::operator ==(const CMeasurementPrefix &otherMultiplier) 
     return this->m_factor == otherMultiplier.m_factor && this->m_name == otherMultiplier.m_name;
 }
 
-/**
+/*
  * Not equal
  */
 bool CMeasurementPrefix::operator !=(const CMeasurementPrefix &otherMultiplier) const
@@ -62,7 +62,7 @@ bool CMeasurementPrefix::operator !=(const CMeasurementPrefix &otherMultiplier) 
     return !(*this == otherMultiplier);
 }
 
-/**
+/*
  * Greater?
  */
 bool CMeasurementPrefix::operator >(const CMeasurementPrefix &otherMultiplier) const
@@ -70,7 +70,7 @@ bool CMeasurementPrefix::operator >(const CMeasurementPrefix &otherMultiplier) c
     return this->m_factor > otherMultiplier.m_factor;
 }
 
-/**
+/*
  * Less?
  */
 bool CMeasurementPrefix::operator <(const CMeasurementPrefix &otherMultiplier) const
@@ -78,7 +78,7 @@ bool CMeasurementPrefix::operator <(const CMeasurementPrefix &otherMultiplier) c
     return this->m_factor < otherMultiplier.m_factor;
 }
 
-/**
+/*
  * Stream to debug
  */
 QDebug operator<<(QDebug d, const CMeasurementPrefix &multiplier)
@@ -87,7 +87,7 @@ QDebug operator<<(QDebug d, const CMeasurementPrefix &multiplier)
     return d;
 }
 
-/**
+/*
  * Log to debug
  */
 CLogMessage operator<<(CLogMessage log, const CMeasurementPrefix &multiplier)
@@ -100,7 +100,7 @@ CLogMessage operator<<(CLogMessage log, const CMeasurementPrefix &multiplier)
 // --- Measurement unit --------------------------------------------------
 // -----------------------------------------------------------------------
 
-/**
+/*
  * Constructor
  */
 CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSIUnit, bool isSIBaseUnit,
@@ -124,7 +124,7 @@ CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &otherUnit):
     // void
 }
 
-/**
+/*
  * Assigment operator
  */
 CMeasurementUnit &CMeasurementUnit::operator =(const CMeasurementUnit &otherUnit)
@@ -144,7 +144,7 @@ CMeasurementUnit &CMeasurementUnit::operator =(const CMeasurementUnit &otherUnit
     return *this;
 }
 
-/**
+/*
  * Equal operator
  */
 bool CMeasurementUnit::operator ==(const CMeasurementUnit &otherUnit) const
@@ -155,7 +155,7 @@ bool CMeasurementUnit::operator ==(const CMeasurementUnit &otherUnit) const
            && this->m_isSiUnit == otherUnit.m_isSiUnit;
 }
 
-/**
+/*
  * Stream to debug
  */
 QDebug operator <<(QDebug d, const CMeasurementUnit &unit)
@@ -164,7 +164,7 @@ QDebug operator <<(QDebug d, const CMeasurementUnit &unit)
     return d;
 }
 
-/**
+/*
  * Stream to log
  */
 CLogMessage operator<<(CLogMessage log, const CMeasurementUnit &unit)
@@ -173,7 +173,7 @@ CLogMessage operator<<(CLogMessage log, const CMeasurementUnit &unit)
     return log;
 }
 
-/**
+/*
  * Unequal operator
  */
 bool CMeasurementUnit::operator !=(const CMeasurementUnit &otherUnit) const
@@ -181,7 +181,7 @@ bool CMeasurementUnit::operator !=(const CMeasurementUnit &otherUnit) const
     return !(otherUnit == *this);
 }
 
-/**
+/*
  * Conversion factor from unit x to y
  */
 double CMeasurementUnit::conversionToUnit(double value, const CMeasurementUnit &to) const
@@ -191,7 +191,7 @@ double CMeasurementUnit::conversionToUnit(double value, const CMeasurementUnit &
     return to.convertFromSiConversionUnit(siValue);
 }
 
-/*!
+/*
  * Value to QString with unit, e.g. "5.00m"
  * @return
  */
@@ -200,7 +200,7 @@ QString CMeasurementUnit::valueRoundedWithUnit(double value, int digits) const
     return this->toQStringRounded(value, digits).append(this->getUnitName());
 }
 
-/*!
+/*
  * Value rounded
  */
 double CMeasurementUnit::valueRounded(double value, int digits) const
@@ -209,7 +209,7 @@ double CMeasurementUnit::valueRounded(double value, int digits) const
     return CMeasurementUnit::round(value, digits);
 }
 
-/**
+/*
  * Rounded to QString
  */
 QString CMeasurementUnit::toQStringRounded(double value, int digits) const
@@ -220,7 +220,7 @@ QString CMeasurementUnit::toQStringRounded(double value, int digits) const
     return s;
 }
 
-/**
+/*
  * Round utility method
  */
 double CMeasurementUnit::round(double value, int digits)
@@ -232,7 +232,7 @@ double CMeasurementUnit::round(double value, int digits)
     return rv;
 }
 
-/*!
+/*
  * Epsilon rounding
  */
 double CMeasurementUnit::epsilonRounding(double value) const

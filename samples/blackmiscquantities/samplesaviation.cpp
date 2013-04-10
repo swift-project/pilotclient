@@ -3,7 +3,8 @@
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackMiscTest {
+namespace BlackMiscTest
+{
 
 /**
  * Samples
@@ -24,17 +25,18 @@ int CSamplesAviation::samples()
     c1.setActiveUnicom();
     qDebug() << c1;
 
-    if(!CComSystem::tryGetComSystem(c1, "Test", -1.0))
+    // CComSystem *c1p = new CComSystem("Test", CFrequency(125.3,CFrequencyUnit::MHz()));
+    if (!CComSystem::tryGetComSystem(c1, "Test", -1.0))
         qDebug() << c1 << "is reset to default as expected";
     else
-        qDebug() << "Something is utterly wrong here";
+        qDebug() << "Something is wrong here";
 
-    try{
+    try {
         // uncomment to test assert
         // CFrequency f1(-1.0, CFrequencyUnit::MHz());
         // c1 = CComSystem("ups", f1, f1);
         // qDebug() << "Why do I get here??";
-    } catch(std::range_error &ex) {
+    } catch (std::range_error &ex) {
         qDebug() << "As expected" << ex.what();
     }
 

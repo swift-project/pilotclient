@@ -13,7 +13,7 @@ namespace BlackMisc
 namespace Aviation
 {
 
-/**
+/*
  * Own implementation for streaming
  */
 QString CTrack::stringForStreamingOperator() const
@@ -22,7 +22,7 @@ QString CTrack::stringForStreamingOperator() const
     return s.append(this->m_magnetic ? " magnetic" : " true");
 }
 
-/**
+/*
  * Assigment
  */
 CTrack& CTrack::operator =(const CTrack &otherTrack)
@@ -34,7 +34,7 @@ CTrack& CTrack::operator =(const CTrack &otherTrack)
     return (*this);
 }
 
-/**
+/*
  * Equal?
  */
 bool CTrack::operator ==(const CTrack &otherTrack)
@@ -42,7 +42,7 @@ bool CTrack::operator ==(const CTrack &otherTrack)
     return otherTrack.m_magnetic == this->m_magnetic && CAngle::operator ==(otherTrack);
 }
 
-/**
+/*
  * Unequal?
  */
 bool CTrack::operator !=(const CTrack &otherTrack)
