@@ -18,7 +18,7 @@ FORMS    += blackd.ui
 
 RESOURCES += blackd.qrc
 
-LIBS += -L../../lib -lblackmisc -lblackcore
+LIBS += -L../../lib -lblackcore -lblackmisc
 
 win32:  PRE_TARGETDEPS += ../../lib/blackmisc.lib \
                           ../../lib/blackcore.lib
