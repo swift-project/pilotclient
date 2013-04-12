@@ -20,6 +20,8 @@ WITH_SAMPLES = ON
 
 #WITH_UNITTESTS = ON
 
+#WITH_DOXYGEN = ON
+
 
 equals(WITH_BLACKMISC, ON) {
     SUBDIRS += src/blackmisc
@@ -62,5 +64,6 @@ equals(WITH_UNITTESTS, ON) {
     SUBDIRS +=
 }
 
-
-
+equals(WITH_DOXYGEN, ON) {
+    SUBDIRS += docs/doxygen.pro
+}
