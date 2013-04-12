@@ -38,7 +38,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(const
     // void
 }
 
-/*!
+/*
  * Destructor
  */
 template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::~CPhysicalQuantity()

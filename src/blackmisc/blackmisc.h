@@ -5,6 +5,11 @@
 /*! \file */
 
 /*!
+ * \namespace BlackMisc
+ * \brief Base and utility classes available in all other projects.
+ */
+
+/*!
  * \namespace BlackMisc::Aviation
  * \brief Aviation and Avionics classes such as CHeading or CTransponder .
  */

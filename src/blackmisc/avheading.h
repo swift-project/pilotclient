@@ -25,7 +25,7 @@ protected:
      * \brief Specific stream operation for heading
      * \return
      */
-    virtual QString stringForStreamingOperator() const;
+    virtual QString stringForConverter() const;
 
 public:
     /*!

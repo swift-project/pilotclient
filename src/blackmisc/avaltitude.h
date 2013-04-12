@@ -26,7 +26,7 @@ protected:
      * \brief Specific stream operation for Altitude
      * \return
      */
-    virtual QString stringForStreamingOperator() const;
+    virtual QString stringForConverter() const;
 
 public:
     /*!

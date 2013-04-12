@@ -40,16 +40,16 @@ namespace BlackCore
 
 		CVector3D & operator +=(const CVector3D &rhs);
 		CVector3D & operator -=(const CVector3D &rhs);
+        CVector3D & operator = (const CVector3D &rhs);
 
-		CVector3D & operator = (const CVector3D &rhs);
+        CVector3D operator +(const CVector3D &rhs);
+        CVector3D operator -(const CVector3D &rhs);
 
-		CVector3D operator +(const CVector3D &rhs);
-		CVector3D operator -(const CVector3D &rhs);
+        bool operator ==(const CVector3D &rhs);
+        bool operator !=(const CVector3D &rhs);
 
-		bool operator ==(const CVector3D &rhs);
-		bool operator !=(const CVector3D &rhs);
+        //double crossProduct(qint32 );
 
-		//double crossProduct(qint32 );
 
 		CVector3D & operator *=(const CVector3D &rhs);
 		CVector3D operator *( const CVector3D &rhs);

@@ -10,10 +10,12 @@
 
 class QTcpSocket;
 
-const qint32 Sync_Marker = 0x1ACFFC1D;
-
 namespace BlackMisc
 {
+
+const qint32 Sync_Marker = 0x1ACFFC1D;
+
+
 //! IComHandler Interface.
 /*!
   This interface implements the basic class for every InterCommunikation

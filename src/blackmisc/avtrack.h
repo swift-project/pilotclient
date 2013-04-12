@@ -27,7 +27,7 @@ protected:
      * \brief Specific stream operation for Track
      * \return
      */
-    virtual QString stringForStreamingOperator() const;
+    virtual QString stringForConverter() const;
 
 public:
     /*!

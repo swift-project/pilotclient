@@ -59,7 +59,8 @@ HEADERS += \
     avionavsystem.h \
     aviotransponder.h \
     avioadfsystem.h \
-    aviation.h
+    aviation.h \
+    basestreamstringifier.h
 
 SOURCES += \
     logmessage.cpp \
@@ -70,7 +71,6 @@ SOURCES += \
     context.cpp \
     config.cpp \
     config_manager.cpp \
-    serialize.cpp \
     com_client.cpp \
     com_server.cpp \
     com_client_buffer.cpp \

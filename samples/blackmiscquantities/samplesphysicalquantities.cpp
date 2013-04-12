@@ -2,19 +2,28 @@
 
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackMiscTest {
+namespace BlackMiscTest
+{
 
 /**
  * Running the quantities
  */
-int CSamplesPhysicalQuantities::samples() {
+int CSamplesPhysicalQuantities::samples()
+{
 
     // cases which must not work
     // CMeasurementUnit mu; //must not work
     // CLengthUnit du1(CAngleUnit::rad());
+
+    CMeasurementPrefix pf1 = CMeasurementPrefix::h();
+    CMeasurementPrefix pf2 = CMeasurementPrefix::M();
+    qDebug() << pf1 << pf2 << 1.0 * pf1;
+
     CLengthUnit lu1(CLengthUnit::cm());
     CLengthUnit lu2(CLengthUnit::ft());
-    qDebug() << lu1 << lu2;
+    QString lu1s = lu1;
+    QString lu2s = lu2;
+    qDebug() << lu1 << lu2 << lu1s << lu2s;
     const CLength l1(5.0, CLengthUnit::ft()); // 5 ft
     CLength l2(1, CLengthUnit::NM()); // 1NM
     CLength l3(1, CLengthUnit::km());
@@ -22,7 +31,7 @@ int CSamplesPhysicalQuantities::samples() {
 
     qDebug() << CLengthUnit::ft();
     qDebug() << l1 << l2 << l3 << l4;
-    qDebug() << l1.valueRoundedWithUnit(CLengthUnit::ft(),5)
+    qDebug() << l1.valueRoundedWithUnit(CLengthUnit::ft(), 5)
              << l2.valueRoundedWithUnit(CLengthUnit::km());
     qDebug() << l3.getUnit();
 
@@ -36,7 +45,7 @@ int CSamplesPhysicalQuantities::samples() {
     qDebug() << f1 << f1.valueRoundedWithUnit(CFrequencyUnit::MHz()) << f1.valueRoundedWithUnit(CFrequencyUnit::GHz(), 3);
 
     CSpeed s1 = CSpeed(100, CSpeedUnit::km_h());
-    CSpeed s2 = CSpeed(1000,CSpeedUnit::ft_min());
+    CSpeed s2 = CSpeed(1000, CSpeedUnit::ft_min());
     CSpeed s3 = CSpeed(s2);
     s3.switchUnit(CSpeedUnit::m_s());
     qDebug() << s1 << s1.convertedSiValueRoundedWithUnit() << s1.valueRoundedWithUnit(CSpeedUnit::NM_h());
@@ -45,7 +54,7 @@ int CSamplesPhysicalQuantities::samples() {
     CAngle a1(180, CAngleUnit::deg());
     CAngle a2(1.5 * CAngle::pi(), CAngleUnit::rad());
     CAngle a3(180.5, CAngleUnit::deg());
-    CAngle a4(35.4336,CAngleUnit::sexagesimalDeg()); // 35.72666
+    CAngle a4(35.4336, CAngleUnit::sexagesimalDeg()); // 35.72666
     a1 += a2;
     // a1 = d2; // must not work
     qDebug() << a1;
@@ -60,7 +69,7 @@ int CSamplesPhysicalQuantities::samples() {
     a4.switchUnit(CAngleUnit::deg());
     qDebug() << a3 << a4;
 
-    CMass w1(1,CMassUnit::t());
+    CMass w1(1, CMassUnit::t());
     CMass w2(w1);
     w2.switchUnit(CMassUnit::lb());
     qDebug() << w1 << w1.valueRoundedWithUnit(CMassUnit::kg()) << w2;

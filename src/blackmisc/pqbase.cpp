@@ -78,24 +78,6 @@ bool CMeasurementPrefix::operator <(const CMeasurementPrefix &otherMultiplier) c
     return this->m_factor < otherMultiplier.m_factor;
 }
 
-/*
- * Stream to debug
- */
-QDebug operator<<(QDebug d, const CMeasurementPrefix &multiplier)
-{
-    d << multiplier.m_name;
-    return d;
-}
-
-/*
- * Log to debug
- */
-CLogMessage operator<<(CLogMessage log, const CMeasurementPrefix &multiplier)
-{
-    log << multiplier.m_name;
-    return log;
-}
-
 // -----------------------------------------------------------------------
 // --- Measurement unit --------------------------------------------------
 // -----------------------------------------------------------------------
@@ -153,24 +135,6 @@ bool CMeasurementUnit::operator ==(const CMeasurementUnit &otherUnit) const
     if (this->m_type != otherUnit.m_type) return false;
     return this->m_multiplier == otherUnit.m_multiplier && this->m_name == otherUnit.m_name
            && this->m_isSiUnit == otherUnit.m_isSiUnit;
-}
-
-/*
- * Stream to debug
- */
-QDebug operator <<(QDebug d, const CMeasurementUnit &unit)
-{
-    d << unit.m_name;
-    return d;
-}
-
-/*
- * Stream to log
- */
-CLogMessage operator<<(CLogMessage log, const CMeasurementUnit &unit)
-{
-    log << unit.m_name;
-    return log;
 }
 
 /*

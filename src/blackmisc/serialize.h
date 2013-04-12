@@ -5,17 +5,22 @@
 
 #ifndef SERIALIZE_H
 #define SERIALIZE_H
+#include <QDataStream>
 
-class QDataStream;
+namespace BlackMisc
+{
 
+/*!
+ * \brief Serialize interface
+ */
 class ISerialize
 {
 public:
-    ISerialize();
-    virtual ~ISerialize() {};
-
-    virtual QDataStream& operator<< (QDataStream& in) = 0;
-    virtual QDataStream& operator>> (QDataStream& out) const = 0;
+    ISerialize() {}
+    virtual ~ISerialize() {}
+    virtual QDataStream &operator<< (QDataStream &in) = 0;
+    virtual QDataStream &operator>> (QDataStream &out) const = 0;
 };
+}
 
 #endif // SERIALIZE_H

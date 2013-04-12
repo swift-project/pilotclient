@@ -16,9 +16,9 @@ namespace Aviation
 /*
  * Own implementation for streaming
  */
-QString CTrack::stringForStreamingOperator() const
+QString CTrack::stringForConverter() const
 {
-    QString s = CAngle::stringForStreamingOperator();
+    QString s = CAngle::stringForConverter();
     return s.append(this->m_magnetic ? " magnetic" : " true");
 }
 

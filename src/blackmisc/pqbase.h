@@ -6,6 +6,7 @@
 #ifndef BLACKMISC_PQBASE_H
 #define BLACKMISC_PQBASE_H
 
+#include "blackmisc/basestreamstringifier.h"
 #include "blackmisc/debug.h"
 #include <QString>
 #include <QtGlobal>
@@ -22,23 +23,8 @@ namespace PhysicalQuantities
  * Use the static values such CMeasurementMultiplier::k() as to specify values.
  * \author KWB
  */
-class CMeasurementPrefix
+class CMeasurementPrefix : public CBaseStreamStringifier<CMeasurementPrefix>
 {
-    /*!
-     * \brief Stream << overload to be used in debugging messages
-     * \param d
-     * \param multiplier
-     * \return
-     */
-    friend QDebug operator<<(QDebug d, const CMeasurementPrefix &multiplier);
-    /*!
-     * \brief Stream operator << for log messages
-     * \param log
-     * \param multiplier
-     * \return
-     */
-    friend CLogMessage operator<<(CLogMessage log, const CMeasurementPrefix &multiplier);
-
 private:
     QString m_name; //!< name, e.g. "kilo"
     QString m_prefix; //!< prefix, e.g. "k" for kilo
@@ -51,73 +37,89 @@ private:
      * \param factor
      */
     CMeasurementPrefix(const QString &name, const QString &prefixName, double factor);
+
+protected:
+    /*!
+     * \brief Name as stringification
+     * \return
+     */
+    virtual QString stringForConverter() const
+    {
+        return this->m_name;
+    }
+
 public:
     /*!
      * \brief Copy constructor
      * \param otherMultiplier
      */
     CMeasurementPrefix(const CMeasurementPrefix &otherMultiplier);
+
     /*!
      * \brief Assigmnet operator =
      * \param otherMultiplier
      * \return
      */
     CMeasurementPrefix &operator =(const CMeasurementPrefix &otherMultiplier);
+
     /*!
      * \brief Equal operator ==
      * \param otherMultiplier
      * \return
      */
     bool operator == (const CMeasurementPrefix &otherMultiplier) const;
+
     /*!
      * \brief Unequal operator !=
      * \param otherMultiplier
      * \return
      */
     bool operator != (const CMeasurementPrefix &otherMultiplier) const;
+
     /*!
      * \brief Greater operator >
      * \param otherMultiplier
      * \return
      */
     bool operator > (const CMeasurementPrefix &otherMultiplier) const;
+
     /*!
      * \brief Less operator <
      * \param otherMultiplier
      * \return
      */
     bool operator < (const CMeasurementPrefix &otherMultiplier) const;
+
     /*!
      * \brief Cast as double
      */
-    operator double() const {
+    operator double() const
+    {
         return this->m_factor;
     }
-    /*!
-     * \brief Cast as QString
-     */
-    operator QString() const {
-        return this->m_name;
-    }
+
     /*!
      * \brief Factor, e.g.1000 for "kilo"
      * \return
      */
-    double getFactor() const {
+    double getFactor() const
+    {
         return this->m_factor;
     }
     /*!
      * \brief Name, e.g. "kilo"
      * \return
      */
-    QString getName() const {
+    QString getName() const
+    {
         return this->m_name;
     }
     /*!
      * \brief Prefix, e.g. "k" for "kilo"
      * \return
      */
-    QString getPrefix() const {
+    QString getPrefix() const
+    {
         return this->m_prefix;
     }
 
@@ -129,7 +131,8 @@ public:
      * \brief Unit "None"
      * \return
      */
-    static const CMeasurementPrefix &None() {
+    static const CMeasurementPrefix &None()
+    {
         static CMeasurementPrefix none("", "", 0.0);
         return none;
     }
@@ -137,7 +140,8 @@ public:
      * \brief Unit "One"
      * \return
      */
-    static const CMeasurementPrefix &One() {
+    static const CMeasurementPrefix &One()
+    {
         static CMeasurementPrefix one("one", "", 1.0);
         return one;
     }
@@ -145,7 +149,8 @@ public:
      * \brief Unit "mega"
      * \return
      */
-    static const CMeasurementPrefix &M() {
+    static const CMeasurementPrefix &M()
+    {
         static CMeasurementPrefix mega("mega", "M", 1E6);
         return mega;
     }
@@ -153,7 +158,8 @@ public:
      * \brief Unit "kilo"
      * \return
      */
-    static const CMeasurementPrefix &k() {
+    static const CMeasurementPrefix &k()
+    {
         static CMeasurementPrefix kilo("kilo", "k", 1000.0);
         return kilo;
     }
@@ -161,7 +167,8 @@ public:
      * \brief Unit "giga"
      * \return
      */
-    static const CMeasurementPrefix &G() {
+    static const CMeasurementPrefix &G()
+    {
         static CMeasurementPrefix giga("giga", "G", 1E9);
         return giga;
     }
@@ -169,7 +176,8 @@ public:
      * \brief Unit "hecto"
      * \return
      */
-    static const CMeasurementPrefix &h() {
+    static const CMeasurementPrefix &h()
+    {
         static CMeasurementPrefix hecto("hecto", "h", 100.0);
         return hecto;
     }
@@ -177,7 +185,8 @@ public:
      * \brief Unit "centi"
      * \return
      */
-    static const CMeasurementPrefix &c() {
+    static const CMeasurementPrefix &c()
+    {
         static CMeasurementPrefix centi("centi", "c", 0.01);
         return centi;
     }
@@ -185,7 +194,8 @@ public:
      * \brief Unit "milli"
      * \return
      */
-    static const CMeasurementPrefix &m() {
+    static const CMeasurementPrefix &m()
+    {
         static CMeasurementPrefix milli("milli", "m", 1E-03);
         return milli;
     }
@@ -199,28 +209,12 @@ public:
 /*!
  * \brief Base class for all units, such as meter, hertz.
  */
-class CMeasurementUnit
+class CMeasurementUnit: public CBaseStreamStringifier<CMeasurementUnit>
 {
-
-    /*!
-     * \brief Stream << overload to be used in debugging messages
-     * \param d
-     * \param unit
-     * \return
-     */
-    friend QDebug operator<<(QDebug d, const CMeasurementUnit &unit);
-
-    /*!
-     * \brief Stream operator << for log messages
-     * \param log
-     * \param unit
-     * \return
-     */
-    friend CLogMessage operator<<(CLogMessage log, const CMeasurementUnit &unit);
-
 protected:
     /*!
-     * Points to a individual converter method
+     * \brief Points to an individual converter method
+     * Conversion as perobject, as required for CAnglewith sexagesimal conversion
      */
     typedef double(*UnitConverter)(const CMeasurementUnit &, double);
 
@@ -238,7 +232,6 @@ private:
     UnitConverter m_fromSiConverter; //! allows an arbitrary conversion method as per object
 
 protected:
-
     /*!
      * Constructor by parameter
      * \param name
@@ -256,41 +249,67 @@ protected:
     CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSiUnit, bool isSiBaseUnit, double conversionFactorToSI = 1,
                      const CMeasurementPrefix &multiplier = CMeasurementPrefix::None(), qint32 displayDigits = 2,
                      double epsilon = 1E-10, UnitConverter toSiConverter = nullptr, UnitConverter fromSiConverter = nullptr);
+
     /*!
      * \brief Copy constructor
      * \param otherUnit
      */
     CMeasurementUnit(const CMeasurementUnit &otherUnit);
+
     /*!
      * \brief Assignment operator =
      * \param otherUnit
      * \return
      */
     CMeasurementUnit &operator =(const CMeasurementUnit &otherUnit);
+
 protected:
+    /*!
+     * \brief String for streaming operators is full name
+     * \return
+     */
+    virtual QString stringForStreaming() const
+    {
+        return this->m_name;
+    }
+
+    /*!
+     * \brief String for converter is unit
+     * \return
+     */
+    virtual QString stringForConverter() const
+    {
+        return this->m_unitName;
+    }
+
     /*!
      * \brief Conversion factor to SI conversion unit
      * \return
      */
-    double getConversionFactorToSI() const {
+    double getConversionFactorToSI() const
+    {
         return this->m_conversionFactorToSIConversionUnit;
     }
+
     /*!
      * Given value to conversion SI conversion unit (e.g. meter, hertz).
      * Standard implementaion is simply factor based.
      * \param value
      * \return
      */
-    virtual double conversionToSiConversionUnit(double value) const {
+    virtual double conversionToSiConversionUnit(double value) const
+    {
         return value * this->m_conversionFactorToSIConversionUnit;
     }
+
     /*!
      * \brief Value from SI conversion unit to this unit.
      * Standard implementation is simply factor based.
      * \param value
      * \return
      */
-    virtual double conversionFromSiConversionUnit(double value) const {
+    virtual double conversionFromSiConversionUnit(double value) const
+    {
         return value / this->m_conversionFactorToSIConversionUnit;
     }
 
@@ -301,72 +320,90 @@ public:
      * \return
      */
     bool operator == (const CMeasurementUnit &otherUnit) const;
+
     /*!
      * \brief Unequal operator !=
      * \param otherUnit
      * \return
      */
     bool operator != (const CMeasurementUnit &otherUnit) const;
+
     /*!
      * \brief Representing an SI unit? Examples: kilometer, meter, hertz
      * \return
      */
-    bool isSiUnit() const {
+    bool isSiUnit() const
+    {
         return this->m_isSiUnit;
     }
+
     /*!
      * \brief Representing an base SI unit? Examples: second, meter
      * \return
      */
-    bool isSiBaseUnit() const {
+    bool isSiBaseUnit() const
+    {
         return this->m_isSiUnit;
     }
+
     /*!
      * \brief Representing an SI base unit? Example: meter
      * \return
      */
-    bool isUnprefixedSiUnit() const {
+    bool isUnprefixedSiUnit() const
+    {
         return this->m_isSiUnit && this->m_multiplier.getFactor() == 1;
     }
+
     /*!
      * \brief Name such as "meter"
      * \return
      */
-    QString getName() const {
+    QString getName() const
+    {
         return this->m_name;
     }
+
     /*!
      * \brief Unit name such as "m"
      * \return
      */
-    QString getUnitName() const {
+    QString getUnitName() const
+    {
         return this->m_unitName;
     }
+
     /*!
      * \brief Type such as "distance", "frequency"
      * \return
      */
-    QString getType() const {
+    QString getType() const
+    {
         return this->m_type;
     }
+
     /*!
      * Given value to conversion SI conversion unit (e.g. meter, hertz).
      * Standard implementation is simply factor based.
      * \param value
      * \return
      */
-    double convertToSiConversionUnit(double value) const {
+    double convertToSiConversionUnit(double value) const
+    {
         return (this->m_toSiConverter) ? this->m_toSiConverter((*this), value) : this->conversionToSiConversionUnit(value);
     }
+
     /*!
      * Value from SI conversion unit to this unit.
      * Standard implementation is simply factor based.
      * \param value
      * \return
      */
-    double convertFromSiConversionUnit(double value) const {
+    double convertFromSiConversionUnit(double value) const
+    {
         return (this->m_fromSiConverter) ? this->m_fromSiConverter((*this), value) : this->conversionFromSiConversionUnit(value);
     }
+
     /*!
      * Rounded string utility method, virtual so units can have
      * specialized formatting
@@ -375,6 +412,7 @@ public:
      * \return
      */
     virtual QString toQStringRounded(double value, int digits = -1) const;
+
     /*!
      * \brief Rounded value
      * \param value
@@ -382,6 +420,7 @@ public:
      * \return
      */
     double valueRounded(double value, int digits = -1) const;
+
     /*!
      * \brief Value rounded with unit, e.g. "5.00m", "30kHz"
      * \param value
@@ -389,27 +428,34 @@ public:
      * \return
      */
     virtual QString valueRoundedWithUnit(double value, int digits = -1) const;
+
     /*!
      * \brief Threshold for rounding
      * \return
      */
-    double getEpsilon() const {
+    double getEpsilon() const
+    {
         return this->m_epsilon;
     }
+
     /*!
      * \brief getDisplayDigits
      * \return
      */
-    qint32 getDisplayDigits() const {
+    qint32 getDisplayDigits() const
+    {
         return this->m_displayDigits;
     }
+
     /*!
      * \brief Multiplier such as "kilo"
      * \return
      */
-    CMeasurementPrefix getMultiplier() const {
+    CMeasurementPrefix getMultiplier() const
+    {
         return this->m_multiplier;
     }
+
     /*!
      * \brief Factor to convert to given unit
      * \param value
@@ -442,7 +488,8 @@ public:
      * \brief Unit is not specified
      * \return
      */
-    static CMeasurementUnit &None() {
+    static CMeasurementUnit &None()
+    {
         static CMeasurementUnit none("none", "", "", false, false, 0.0, CMeasurementPrefix::None(), 0, 0);
         return none;
     }
