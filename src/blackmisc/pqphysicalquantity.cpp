@@ -79,7 +79,7 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const 
 template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator !=(const CPhysicalQuantity<MU, PQ> &otherQuantity) const
 {
     if (this == &otherQuantity) return false;
-    return !(*this == otherQuantity);
+    return !((*this) == otherQuantity);
 }
 
 /*

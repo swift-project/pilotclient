@@ -28,6 +28,19 @@ template <class UsingClass> class CBaseStreamStringifier
     }
 
     /*!
+     * \brief Stream operator << for QDataStream
+     * \param stream
+     * \param uc
+     * \return
+     */
+    friend QDataStream operator<<(QDataStream stream, const UsingClass &uc)
+    {
+        const CBaseStreamStringifier &s = uc;
+        stream << s.stringForStreaming();
+        return stream;
+    }
+
+    /*!
      * \brief Stream operator << for log messages
      * \param log
      * \param uc

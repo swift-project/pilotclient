@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community
+/*  Copyright (C) 2013 VATSIM Community / authors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -143,7 +143,7 @@ public:
     /*!
      * \brief Value in given unit
      * \param unit
-     * @return
+     * \return
      */
     double value(const MU &unit) const;
 
@@ -151,7 +151,7 @@ public:
      * \brief Rounded value in unit
      * \param unit
      * \param digits
-     * @return
+     * \return
      */
     double valueRounded(const MU &unit, int digits = -1) const;
 
@@ -159,13 +159,13 @@ public:
      * \brief Value to QString with unit, e.g. "5.00m"
      * \param unit
      * \param digits
-     * @return
+     * \return
      */
     QString valueRoundedWithUnit(const MU &unit, int digits = -1) const;
 
     /*!
      * \brief Value a int
-     * @return
+     * \return
      */
     qint32 unitValueToInteger() const
     {
@@ -174,7 +174,7 @@ public:
 
     /*!
      * \brief Value a double
-     * @return
+     * \return
      */
     double unitValueToDouble() const
     {
@@ -184,13 +184,13 @@ public:
     /*!
      * \brief Value to QString with unit, e.g. "5.00m"
      * \param digits
-     * @return
+     * \return
      */
     QString unitValueRoundedWithUnit(int digits = -1) const;
 
     /*!
      * \brief SI value to integer
-     * @return
+     * \return
      */
     qint32 siBaseUnitValueToInteger() const
     {
@@ -199,7 +199,7 @@ public:
 
     /*!
      * \brief SI value to double
-     * @return
+     * \return
      */
     double siBaseUnitValueToDouble() const
     {
@@ -209,14 +209,14 @@ public:
     /*!
      * \brief Rounded value by n digits
      * \param digits
-     * @return
+     * \return
      */
     double unitValueToDoubleRounded(int digits = -1) const;
 
     /*!
      * \brief Rounded value by n digits
      * \param digits if no value is provided, unit rounding is taken
-     * @return
+     * \return
      */
     QString unitValueToQStringRounded(int digits = -1) const;
 
@@ -241,21 +241,21 @@ public:
     /*!
      * \brief Rounded SI value by n digits
      * \param digits
-     * @return
+     * \return
      */
     double convertedSiValueToDoubleRounded(int digits = -1) const;
 
     /*!
      * \brief Rounded value by n digits
      * \param digits if no value is provided, unit rounding is taken
-     * @return
+     * \return
      */
     QString convertedSiValueToQStringRounded(int digits = -1) const;
 
     /*!
      * \brief SI Base unit value rounded
      * \param digits
-     * @return
+     * \return
      */
     QString convertedSiValueRoundedWithUnit(int digits = -1) const;
 
@@ -291,98 +291,98 @@ public:
     /*!
      * \brief Divide operator /=
      * \param divide
-     * @return
+     * \return
      */
     CPhysicalQuantity &operator /=(double divide);
 
     /*!
      * \brief Operator *
      * \param multiply
-     * @return
+     * \return
      */
     PQ operator *(double multiply) const;
 
     /*!
      * \brief Operator /
      * \param divide
-     * @return
+     * \return
      */
     PQ operator /(double divide) const;
 
     /*!
      * \brief Equal operator ==
      * \param otherQuantity
-     * @return
+     * \return
      */
     bool operator==(const CPhysicalQuantity &otherQuantity) const;
 
     /*!
      * \brief Not equal operator !=
      * \param otherQuantity
-     * @return
+     * \return
      */
     bool operator!=(const CPhysicalQuantity &otherQuantity) const;
 
     /*!
      * \brief Plus operator +=
      * \param otherQuantity
-     * @return
+     * \return
      */
     CPhysicalQuantity &operator +=(const CPhysicalQuantity &otherQuantity);
 
     /*!
      * \brief Minus operator-=
      * \param otherQuantity
-     * @return
+     * \return
      */
     CPhysicalQuantity &operator -=(const CPhysicalQuantity &otherQuantity);
 
     /*!
      * \brief Greater operator >
      * \param otherQuantity
-     * @return
+     * \return
      */
     bool operator >(const CPhysicalQuantity &otherQuantity) const;
 
     /*!
      * \brief Less operator <
      * \param otherQuantity
-     * @return
+     * \return
      */
     bool operator <(const CPhysicalQuantity &otherQuantity) const;
 
     /*!
      * \brief Less equal operator <=
      * \param otherQuantity
-     * @return
+     * \return
      */
     bool operator <=(const CPhysicalQuantity &otherQuantity) const;
 
     /*!
      * \brief Greater equal operator >=
      * \param otherQuantity
-     * @return
+     * \return
      */
     bool operator >=(const CPhysicalQuantity &otherQuantity) const;
 
     /*!
      * \brief Assignment operator =
      * \param otherQuantity
-     * @return
+     * \return
      */
     CPhysicalQuantity &operator =(const CPhysicalQuantity &otherQuantity);
 
     /*!
      * \brief Plus operator +
      * \param otherQuantity
-     * @return
+     * \return
      */
     PQ operator +(const PQ &otherQuantity) const;
 
     /*!
      * \brief Minus operator -
      * \param otherQuantity
-     * @return
+     * \return
      */
     PQ operator -(const PQ &otherQuantity) const;
 

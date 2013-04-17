@@ -10,8 +10,8 @@ DEPENDPATH += . ..
 #PRECOMPILED_HEADER = stdpch.h
 
 precompile_header:!isEmpty(PRECOMPILED_HEADER) {
- DEFINES += USING_PCH
- }
+    DEFINES += USING_PCH
+}
 
 DEFINES += LOG_IN_FILE
 
@@ -60,7 +60,19 @@ HEADERS += \
     aviotransponder.h \
     avioadfsystem.h \
     aviation.h \
-    basestreamstringifier.h
+    basestreamstringifier.h \
+    mathvector3dbase.h \
+    mathvector3d.h \
+    mathmatrixbase.h \
+    mathmatrix3x3.h \
+    mathmatrix3x1.h \
+    mathematics.h \
+    geolatitude.h \
+    geolongitude.h \
+    coordinategeodetic.h \
+    coordinateecef.h \
+    coordinatened.h \
+    geoearthangle.h
 
 SOURCES += \
     logmessage.cpp \
@@ -88,6 +100,10 @@ SOURCES += \
     avaltitude.cpp \
     avverticalpositions.cpp \
     aviomodulator.cpp \
-    aviotransponder.cpp
+    aviotransponder.cpp \
+    mathvector3dbase.cpp \
+    mathmatrixbase.cpp \
+    mathmatrix3x3.cpp \
+    mathematics.cpp
 
 DESTDIR = ../../lib

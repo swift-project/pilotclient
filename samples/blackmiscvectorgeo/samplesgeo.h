@@ -3,26 +3,31 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISCTEST_SAMPLESPHYSICALQUANTITIES_H
-#define BLACKMISCTEST_SAMPLESPHYSICALQUANTITIES_H
+#ifndef BLACKMISCTEST_SAMPLESGEO_H
+#define BLACKMISCTEST_SAMPLESGEO_H
+#include "blackmisc/coordinategeodetic.h"
 
-#include "blackmisc/pqconstants.h"
-#include "blackmisc/debug.h"
-#include <QDebug>
-
-namespace BlackMiscTest {
+namespace BlackMiscTest
+{
 
 /*!
- * \brief Samples for physical quantities
+ * \brief Samples for vector / matrix
  */
-class CSamplesPhysicalQuantities
+class CSamplesGeo
 {
 public:
     /*!
      * \brief Run the samples
      */
     static int samples();
+
+private:
+    /*!
+     * \brief Avoid init
+     */
+    CSamplesGeo();
 };
-}
+} // namespace
+
 
 #endif // guard
