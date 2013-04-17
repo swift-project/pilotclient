@@ -6,10 +6,9 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include "blackmisc/log.h"
 #include <QFile>
 #include <QMutex>
-
-#include "blackmisc/log.h"
 
 namespace BlackMisc
 {

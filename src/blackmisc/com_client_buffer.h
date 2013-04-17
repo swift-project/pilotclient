@@ -6,21 +6,22 @@
 #ifndef COM_CLIENT_BUFFER_H
 #define COM_CLIENT_BUFFER_H
 
-#include <QObject>
-
 #include "blackmisc/com_handler.h"
+#include <QObject>
 
 class QTcpSocket;
 
 namespace BlackMisc
 {
 
+    class IContext;
+
     class CComClientBuffer : public IComHandler
     {
         Q_OBJECT
 
     public:
-        CComClientBuffer(uint clientID, QTcpSocket *socket, QObject *parent = 0);
+        CComClientBuffer(IContext &context, uint clientID, QTcpSocket *socket, QObject *parent = 0);
 
         virtual ~CComClientBuffer();
 
@@ -43,6 +44,7 @@ namespace BlackMisc
 
     protected:
 
+        IContext&       m_context;
         QTcpSocket*     m_tcp_socket;
         uint            m_client_id;
 

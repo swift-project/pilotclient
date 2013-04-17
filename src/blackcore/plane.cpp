@@ -1,7 +1,7 @@
+#include "blackcore/plane.h"
 #include "blackcore/interpolator.h"
 #include "blackcore/simulator.h"
 #include "blackmisc/debug.h"
-#include "blackcore/plane.h"
 
 namespace BlackCore {
 
@@ -15,13 +15,13 @@ namespace BlackCore {
 	{
 		m_interpolator = new CInterpolator();
 
-		bAssert(m_interpolator);
-		bAssert(driver);
+		Q_ASSERT(m_interpolator);
+		Q_ASSERT(driver);
 	}
 
 	void CPlane::addPosition(const CVectorGeo &position, double groundVelocity, double heading, double pitch, double bank)
 	{
-		bAssert(m_interpolator);
+		Q_ASSERT(m_interpolator);
 
 		m_interpolator->pushUpdate(position, groundVelocity, heading, pitch, bank);
 	}

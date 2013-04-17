@@ -12,10 +12,11 @@
 
 class QTcpServer;
 
-class CComClientBuffer;
-
 namespace BlackMisc
 {
+
+    class CComClientBuffer;
+    class IContext;
 
 	class CComServer : public QObject
 	{
@@ -25,9 +26,10 @@ namespace BlackMisc
 		
 		//! Constructor
 		/*!
+          \param context
 		  \param parent Pointer to the parent QObject
 		*/
-		CComServer(QObject *parent = 0);
+		CComServer(IContext &context, QObject *parent = 0);
 
 		//! Destructor
 		~CComServer();
@@ -89,6 +91,8 @@ namespace BlackMisc
 		void onClientMessageReceived(uint clientHash, QString &messageID, QByteArray &message);
 
 	protected:
+
+        IContext&       m_context;
 
 		QTcpServer*     m_tcp_server;
 

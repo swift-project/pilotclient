@@ -43,9 +43,9 @@ BlackD::BlackD(QWidget *parent) :
 
 	createComServer();
 
-	m_fsd_client = new CFSDClient();
+	m_fsd_client = new CFSDClient(IContext::getInstance());
 
-    bDebug << "BlackDaemon running...";
+    bAppDebug << "BlackDaemon running...";
 }
 
 BlackD::~BlackD()
@@ -115,18 +115,17 @@ void BlackD::createLogging()
 	BlackMisc::IContext::getInstance().getDebug()->create();
 
     m_displayer = new CQtDisplayer(ui->logginView);
-    bAssert(m_displayer);
+
     BlackMisc::IContext::getInstance().getDebug()->getDebugLog()->attachDisplay (m_displayer);
     BlackMisc::IContext::getInstance().getDebug()->getInfoLog()->attachDisplay (m_displayer);
     BlackMisc::IContext::getInstance().getDebug()->getWarningLog()->attachDisplay (m_displayer);
-    BlackMisc::IContext::getInstance().getDebug()->getAssertLog()->attachDisplay (m_displayer);
     BlackMisc::IContext::getInstance().getDebug()->getErrorLog()->attachDisplay (m_displayer);
 }
 
 void BlackD::createComServer()
 {
 	CMessageFactory::getInstance().registerMessages();
-	m_comserver = new CComServer(this);
+	m_comserver = new CComServer(IContext::getInstance(), this);
 
 	registerMessageFunction(this, &BlackD::onMSG_CONNECT_TO_VATSIM);
 
@@ -138,11 +137,11 @@ void BlackD::createComServer()
 
 void BlackD::onData(QString &messageID, QByteArray &message)
 {
-	bDebug << messageID;
+	bAppDebug << messageID;
     BlackMisc::IMessage* test = BlackMisc::CMessageFactory::getInstance().create(messageID);
     QDataStream stream(&message, QIODevice::ReadOnly);
 
-    bAssert (test);
+    Q_ASSERT(test);
     *test << stream;
 
     CMessageDispatcher::getInstance().append(test);
@@ -151,8 +150,8 @@ void BlackD::onData(QString &messageID, QByteArray &message)
 
 void BlackD::onMSG_CONNECT_TO_VATSIM(const BlackMisc::MSG_CONNECT_TO_VATSIM *connect)
 {
-		bDebug << "Connecting to FSD server:";
-		bDebug << connect->getHost() << ":" << connect->getPort();
+		bAppDebug << "Connecting to FSD server:";
+		bAppDebug << connect->getHost() << ":" << connect->getPort();
 
 		FSD::TClientInfo clientinfo;
 		clientinfo.m_callsign = connect->getCallsign();

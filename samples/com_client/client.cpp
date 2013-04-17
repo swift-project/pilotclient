@@ -4,7 +4,7 @@
 
 using namespace BlackMisc;
 
-Client::Client(QObject *parent) : QObject(parent)
+Client::Client(QObject *parent) : QObject(parent), comclient(IContext::getInstance())
 {
     connect(&comclient, SIGNAL(doError(QAbstractSocket::SocketError,QString)), this, SLOT(onError(QAbstractSocket::SocketError,QString)));
     connect(&comclient, SIGNAL(doConnected()), this, SLOT(onClientConnected()));
@@ -19,7 +19,7 @@ Client::~Client()
 
 void Client::onError(QAbstractSocket::SocketError error, QString message)
 {
-    bWarning << "Socket error!";
+    bAppWarning << "Socket error!";
 }
 
 void Client::onClientConnected()

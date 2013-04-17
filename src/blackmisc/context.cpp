@@ -5,109 +5,89 @@
 
 #include "blackmisc/debug.h"
 #include "blackmisc/context.h"
+#include <QFileInfo>
+#include <stdexcept>
+
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#endif
 
 namespace BlackMisc
 {
 
-    IContext *IContext::m_context = NULL;
-
     IContext &IContext::getInstance()
     {
-        if (m_context == NULL)
-        {
-            m_context = new CApplicationContext;
-        }
-        return *m_context;
+        static CApplicationContext context;
+        return context;
     }
-
-    bool IContext::isInitialised()
-    {
-        return m_context != NULL;
-    }
-
 
     IContext::~IContext()
     {
-        m_context = NULL;
-    }
-
-    void	IContext::registerContext()
-    {
-    #ifdef Q_OS_WIN
-        bAssert(m_context == NULL);
-    #endif // Q_OS_WIN
-        m_context = this;
-
-        m_debug = new CDebug;
     }
 
     CApplicationContext::CApplicationContext()
     {
-        registerContext();
     }
 
-    void *CApplicationContext::singletonPointer(const QString &singletonName)
+    QObject *CApplicationContext::singleton(const QString &singletonName)
     {
-        TSingletonMap::const_iterator it = m_singletonObjects.find(singletonName);
-        if (it != m_singletonObjects.end())
+        TSingletonMap::const_iterator it = m_singletons.find(singletonName);
+        if (it != m_singletons.end())
+        {
             return it.value();
-
-        return NULL;
+        }
+        throw std::logic_error("Requested singleton not present");
     }
 
-    void CApplicationContext::setSingletonPointer(const QString &singletonName, void *object)
+    bool CApplicationContext::hasSingleton(const QString &singletonName) const
     {
-        m_singletonObjects.insert(singletonName, object);
+        TSingletonMap::const_iterator it = m_singletons.find(singletonName);
+        if (it != m_singletons.end())
+        {
+            return true;
+        }
+        return false;
     }
 
-    void CApplicationContext::releaseSingletonPointer(const QString &singletonName, void *object)
+    void CApplicationContext::setSingleton(const QString &singletonName, QObject *object)
     {
-        bAssert (m_singletonObjects.find(singletonName).value() == object);
-        m_singletonObjects.remove(singletonName);
+        m_singletons.insert(singletonName, object);
+    }
+
+    void CApplicationContext::releaseSingleton(const QString &singletonName)
+    {
+        m_singletons.remove(singletonName);
     }
 
     CDebug *CApplicationContext::getDebug()
     {
-        return m_debug;
+        return qobject_cast<CDebug *>(singleton("CDebug"));
     }
 
     void CApplicationContext::setDebug(CDebug *debug)
     {
-        m_debug = debug;
+        setSingleton("CDebug", debug);
     }
 
-    CLibraryContext::CLibraryContext(IContext &applicationContext)
-    : m_applicationContext(&applicationContext)
+    void CApplicationContext::setDefaultApplicationName()
     {
-        registerContext();
-    }
-
-    void *CLibraryContext::singletonPointer(const QString &singletonName)
-    {
-        bAssert(m_applicationContext != NULL);
-        return m_applicationContext->singletonPointer(singletonName);
-    }
-
-    void CLibraryContext::setSingletonPointer(const QString &singletonName, void *object)
-    {
-        bAssert(m_applicationContext != NULL);
-        m_applicationContext->setSingletonPointer(singletonName, object);
-    }
-
-    void CLibraryContext::releaseSingletonPointer(const QString &singletonName, void *object)
-    {
-        bAssert(m_applicationContext != NULL);
-        m_applicationContext->releaseSingletonPointer(singletonName, object);
-    }
-
-    CDebug *CLibraryContext::getDebug()
-    {
-       return m_applicationContext->getDebug();
-    }
-
-    void CLibraryContext::setDebug(CDebug *debug)
-    {
-        m_debug = debug;
+#ifdef Q_OS_WIN
+        //! By default, we use the executables name.
+        if (getApplicationName().isEmpty())
+        {
+            WCHAR name[1024];
+            int size = GetModuleFileName(NULL, name, 1023);
+            QString applicationPath = QString::fromWCharArray(name, size);
+            setApplicationName(QFileInfo(applicationPath).fileName());
+        }
+#else
+        //! Todo: Check if there a corresponding API in Linux and Mac
+        //! For the time being, set it to unknown.
+        if (m_context.getApplicationName().isEmpty())
+        {
+            m_context.setApplicationName("<Unknown>");
+        }
+#endif
     }
 
 } // namespace BlackMisc

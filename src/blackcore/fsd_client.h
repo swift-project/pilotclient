@@ -6,13 +6,16 @@
 #ifndef FSD_CLIENT_H
 #define FSD_CLIENT_H
 
+#include <blackcore/fsd_protocol.h>
 #include <QObject>
 #include <QList>
 #include <QString>
 #include <QTcpSocket>
 
-#include <blackcore/fsd_protocol.h>
-
+namespace BlackMisc
+{
+    class IContext;
+}
 
 namespace FSD
 {
@@ -32,7 +35,7 @@ class CFSDClient  : public QObject
     Q_OBJECT
 
 public:
-	CFSDClient();
+	CFSDClient(BlackMisc::IContext &context);
 
     void connectTo(const QString &host, quint16 port);
     void disconnectFrom();
@@ -106,6 +109,8 @@ private:
     void registerMessages();
 
     void processLine(QString &line);
+
+    BlackMisc::IContext&    m_context;
 
     QTcpSocket*             m_tcp_socket;
 

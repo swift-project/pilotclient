@@ -14,6 +14,8 @@ const qint32 Sync_Marker = 0x1ACFFC1D;
 
 namespace BlackMisc
 {
+    class IContext;
+
 	//! IComHandler Interface.
 	/*!
 	  This interface implements the basic class for every InterCommunikation
@@ -30,7 +32,7 @@ namespace BlackMisc
 		/*!
 		  \param parent Pointer to the parent QObject
 		*/
-		explicit IComHandler(QObject *parent = 0);
+		IComHandler(IContext &context, QObject *parent = 0);
 
 		//! Virtual destructor
 		virtual ~IComHandler() {}
@@ -52,6 +54,9 @@ namespace BlackMisc
 		  \sa IMessage
 		*/
 		bool parseFrame(QString &messageID, QByteArray &data);
+
+        //! Context.
+        IContext       &m_context;
 
 		//! Receive Buffer
 		/*!

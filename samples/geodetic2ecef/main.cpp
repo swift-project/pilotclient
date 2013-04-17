@@ -13,7 +13,9 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     BlackMisc::CApplicationContext myApplicationContext;
 	
-	QElapsedTimer timer;
+    BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
+
+    QElapsedTimer timer;
 	qint64 duration;
 
     double lat = 27.999999, lon = 86.999999, h = 8820.999999; // Mt Everest

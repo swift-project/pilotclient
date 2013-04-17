@@ -58,6 +58,8 @@ equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/geodetic2ecef/sample_geodetic2ecef.pro
     SUBDIRS += samples/interpolator/sample_interpolator.pro
     SUBDIRS += samples/logging/sample_logging.pro
+    SUBDIRS += samples/plugin/sample_plugin.pro
+    SUBDIRS += samples/pluginmgr/sample_pluginmgr.pro
 }
 
 equals(WITH_UNITTESTS, ON) {

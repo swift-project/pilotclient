@@ -98,7 +98,7 @@ namespace FSD
 			QString m_textmessage;
 			for ( int ii = 2; ii < tokens.size(); ++ii)
 				m_textmessage += tokens.at(ii);
-            bInfo << m_textmessage;
+            bAppInfo << m_textmessage;
             return in;
         }
 

@@ -46,11 +46,11 @@ void CQtDisplayer::doPrint ( const BlackMisc::CLog::SLogInformation &logInformat
         needSpace = true;
     }
 
-    if (logInformation.m_logType != CLog::OFF)
+    if (logInformation.m_logType != CLog::eOff)
     {
         if (needSpace) { line += " "; needSpace = false; }
         line += logTypeToString(logInformation.m_logType);
-        if (logInformation.m_logType == BlackMisc::CLog::WARNING)
+        if (logInformation.m_logType == BlackMisc::CLog::eWarning)
             format.setForeground(QBrush(QColor("red")));
         else
             format.setForeground(QBrush(QColor("black")));

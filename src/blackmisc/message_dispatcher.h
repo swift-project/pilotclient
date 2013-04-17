@@ -3,23 +3,22 @@
 //! License, v. 2.0. If a copy of the MPL was not distributed with this
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
-#ifndef MESSAGE_DISPATCHER_H
-#define MESSAGE_DISPATCHER_H
-
-#include <QQueue>
-#include <QMultiMap>
+#ifndef BLACKMISC_MESSAGE_DISPATCHER_H
+#define BLACKMISC_MESSAGE_DISPATCHER_H
 
 #include "blackmisc/message.h"
-
 #include "blackmisc/context.h"
 #include "blackmisc/type_info.h"
+#include <QQueue>
+#include <QMultiMap>
 
 namespace BlackMisc
 {
     class CMessageHandler;
 
-    class CMessageDispatcher
+    class CMessageDispatcher : public QObject
     {
+        Q_OBJECT
 
         // safe singleton declaration
         SINGLETON_CLASS_DECLARATION(CMessageDispatcher)
@@ -38,7 +37,10 @@ namespace BlackMisc
         }
 
         template <class T>
-        void registerClass(T*, CTypeInfo);
+        void registerClass(T* object, CTypeInfo typeinfo)
+        {
+            m_messageHander.insert(typeinfo, object);
+        }
 
     private:
         typedef QQueue<IMessage*>   TMessageQueue;
@@ -48,12 +50,6 @@ namespace BlackMisc
         TMessageHandlerMap          m_messageHander;
     };
 
-    template <class T>
-    void CMessageDispatcher::registerClass( T* object, CTypeInfo typeinfo)
-    {
-        m_messageHander.insert(typeinfo, object);
-    }
-
 } // namespace BlackMisc
 
-#endif // MESSAGE_DISPATCHER_H
+#endif // BLACKMISC_MESSAGE_DISPATCHER_H
