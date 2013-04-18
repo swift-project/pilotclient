@@ -61,12 +61,12 @@ namespace BlackMisc
 
     CDebug *CApplicationContext::getDebug()
     {
-        return qobject_cast<CDebug *>(singleton("CDebug"));
+        return IContext::singleton<CDebug>();
     }
 
     void CApplicationContext::setDebug(CDebug *debug)
     {
-        setSingleton("CDebug", debug);
+        IContext::setSingleton(debug);
     }
 
     void CApplicationContext::setDefaultApplicationName()
