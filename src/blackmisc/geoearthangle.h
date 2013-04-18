@@ -14,33 +14,33 @@ namespace Geo
 /*!
  * \brief Base class for latitude / longitude
  */
-template <class LATorLON> class CGeoEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
+template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
 {
 protected:
     /*!
      * \brief Default constructor
      */
-    CGeoEarthAngle() : CAngle() {}
+    CEarthAngle() : CAngle() {}
 
     /*!
      * \brief Copy constructor
      * \param latOrLon
      */
-    CGeoEarthAngle(const LATorLON &latOrLon) : CAngle(latOrLon) { }
+    CEarthAngle(const LATorLON &latOrLon) : CAngle(latOrLon) { }
 
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
-    CGeoEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CAngle(value, unit) {}
+    CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CAngle(value, unit) {}
 
 public:
 
     /*!
      * \brief Virtual destructor
      */
-    virtual ~CGeoEarthAngle() {}
+    virtual ~CEarthAngle() {}
 
     /*!
      * \brief Equal operator ==
@@ -67,7 +67,7 @@ public:
      * \param latOrLon
      * \return
      */
-    CGeoEarthAngle &operator +=(const CGeoEarthAngle &latOrLon)
+    CEarthAngle &operator +=(const CEarthAngle &latOrLon)
     {
         CAngle::operator +=(latOrLon);
         return (*this);
@@ -78,7 +78,7 @@ public:
      * \param latOrLon
      * \return
      */
-    CGeoEarthAngle &operator -=(const CGeoEarthAngle &latOrLon)
+    CEarthAngle &operator -=(const CEarthAngle &latOrLon)
     {
         CAngle::operator -=(latOrLon);
         return (*this);
@@ -129,7 +129,7 @@ public:
      * \param latOrLon
      * \return
      */
-    CGeoEarthAngle &operator =(const LATorLON &latOrLon)
+    CEarthAngle &operator =(const LATorLON &latOrLon)
     {
         CAngle::operator =(latOrLon);
         return (*this);

@@ -46,6 +46,10 @@ int CSamplesPhysicalQuantities::samples()
     l3 *= 1.5;// 3km now
     qDebug() << l2 << l3;
 
+    l3 = l3 * 2;
+    qDebug() << "doubled l3:" << l3;
+
+
     CFrequency f1(1E6, CFrequencyUnit::Hz()); // 1MHz
     qDebug() << f1 << f1.valueRoundedWithUnit(CFrequencyUnit::MHz()) << f1.valueRoundedWithUnit(CFrequencyUnit::GHz(), 3);
 

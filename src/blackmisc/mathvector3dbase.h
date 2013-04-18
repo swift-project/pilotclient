@@ -14,6 +14,10 @@ namespace BlackMisc
 namespace Math
 {
 
+class CMatrix3x3; // forward declaration
+class CMatrix3x1; // forward declaration
+
+
 /*!
  * \brief 3D vector base (x, y, z)
  */
@@ -76,11 +80,26 @@ public:
     qreal getElement(size_t row) const;
 
     /*!
+     * \brief Set element
+     * \param row
+     * \param value
+     */
+    void setElement(size_t row, qreal value);
+
+    /*!
      * \brief Operator []
      * \param row
      * \return
      */
     qreal operator[](size_t row) const { return this->getElement(row); }
+
+
+    /*!
+     * \brief Get element by ()
+     * \param column
+     * \return
+     */
+    qreal operator()(size_t row) const { return this->getElement(row); }
 
     /*!
      * \brief Equal operator ==
@@ -106,7 +125,7 @@ public:
 
     /*!
      * \brief Assigment operator =
-     * \param multiply
+     * \param otherVector
      * \return
      */
     CVector3DBase &operator =(const CVector3DBase &otherVector)
@@ -165,7 +184,7 @@ public:
     }
 
     /*!
-     * \brief Operator *=, just x*x, y*y, z*z neither vector nor dot product
+     * \brief Operator *=, just x*x, y*y, z*z neither vector nor dot product (like a matrix produc)
      * \param otherVector
      * \return
      */
@@ -176,7 +195,7 @@ public:
     }
 
     /*!
-     * \brief Operator, just x*x, y*y, z*z neither vector nor dot product
+     * \brief Operator, just x*x, y*y, z*z neither vector nor dot product, (like a matrix produc)
      * \param otherVector
      * \return
      */
@@ -223,7 +242,7 @@ public:
     }
 
     /*!
-     * \brief Dot product
+     * \brief Cross product
      * \param otherVector
      * \return
      */
@@ -235,7 +254,14 @@ public:
     }
 
     /*!
-     * \brief Dot product
+     * \brief Matrix * this vector
+     * \param matrix
+     * \return
+     */
+    void matrixMultiplication(const CMatrix3x3 &matrix);
+
+    /*!
+     * \brief Reciporcal value
      * \param otherVector
      * \return
      */
@@ -265,6 +291,12 @@ public:
     {
         return this->m_vector.lengthSquared();
     }
+
+    /*!
+     * \brief Converted to matrix
+     * \return
+     */
+    CMatrix3x1 toMatrix3x1() const;
 
     /*!
      * \brief Magnitude

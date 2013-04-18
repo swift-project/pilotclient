@@ -10,7 +10,7 @@ namespace Geo
 /*!
  * \brief Longitude
  */
-class CGeoLongitude : public CGeoEarthAngle<CGeoLongitude>
+class CLongitude : public CEarthAngle<CLongitude>
 {
 protected:
     /*!
@@ -19,32 +19,32 @@ protected:
     virtual QString stringForConverter() const
     {
         QString s = "longitude ";
-        return s.append(CGeoEarthAngle::stringForConverter());
+        return s.append(CEarthAngle::stringForConverter());
     }
 
 public:
     /*!
      * \brief Default constructor
      */
-    CGeoLongitude() : CGeoEarthAngle() {}
+    CLongitude() : CEarthAngle() {}
 
     /*!
      * \brief Copy constructor
      * \param Longitude
      */
-    CGeoLongitude(const CGeoLongitude &Longitude) : CGeoEarthAngle(Longitude) {}
+    CLongitude(const CLongitude &Longitude) : CEarthAngle(Longitude) {}
 
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
-    CGeoLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CGeoEarthAngle(value, unit) {}
+    CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CEarthAngle(value, unit) {}
 
     /*!
      * \brief Virtual destructor
      */
-    virtual ~CGeoLongitude() {}
+    virtual ~CLongitude() {}
 };
 
 } // namespace

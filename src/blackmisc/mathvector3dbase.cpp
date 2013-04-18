@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "blackmisc/mathvector3dbase.h"
 #include "blackmisc/mathvector3d.h"
+#include "blackmisc/mathmatrix3x3.h"
 #include "blackmisc/coordinateecef.h"
 #include "blackmisc/coordinatened.h"
 
@@ -46,10 +46,7 @@ template <class ImplClass> void CVector3DBase<ImplClass>::fill(qreal value)
  */
 template <class ImplClass> qreal CVector3DBase<ImplClass>::getElement(size_t row) const
 {
-    bool validIndex = (row < 3 && row >= 0);
-    Q_ASSERT_X(validIndex, "getElement", "Wrong index");
-    if (!validIndex) throw std::range_error("Invalid index vor 3D vector");
-    double d;
+    qreal d;
     switch (row)
     {
     case 0:
@@ -67,6 +64,48 @@ template <class ImplClass> qreal CVector3DBase<ImplClass>::getElement(size_t row
         break;
     }
     return d;
+}
+
+/*
+ * Set given element
+ */
+template <class ImplClass> void CVector3DBase<ImplClass>::setElement(size_t row, qreal value)
+{
+    switch (row)
+    {
+    case 0:
+        this->m_vector.setX(value);
+        break;
+    case 1:
+        this->m_vector.setY(value);
+        break;
+    case 2:
+        this->m_vector.setZ(value);
+        break;
+    default:
+        Q_ASSERT_X(true, "setElement", "Detected invalid index in 3D vector");
+        throw std::range_error("Detected invalid index in 3D vector");
+        break;
+    }
+}
+
+/*
+ * Multiply with matrix
+ */
+template <class ImplClass> void CVector3DBase<ImplClass>::matrixMultiplication(const CMatrix3x3 &matrix)
+{
+    CMatrix3x1 m = matrix * (this->toMatrix3x1());
+    this->m_vector.setX(m(0,0));
+    this->m_vector.setY(m(1,0));
+    this->m_vector.setZ(m(2,0));
+}
+
+/*
+ * Convert to matrix
+ */
+template <class ImplClass> CMatrix3x1 CVector3DBase<ImplClass>::toMatrix3x1() const
+{
+    return CMatrix3x1(this->m_vector.x(), this->m_vector.y(), this->m_vector.z());
 }
 
 // see here for the reason of thess forward instantiations

@@ -7,6 +7,7 @@
 #define BLACKMISC_MATHMATRIXBASE_H
 
 #include "blackmisc/basestreamstringifier.h"
+#include "blackmisc/mathvector3dbase.h"
 #include <QGenericMatrix>
 
 namespace BlackMisc
@@ -17,11 +18,12 @@ namespace Math
 /*!
  * \brief Base functionality of a matrix
  */
-template<class ImplMatrix, int Rows, int Columns> class CMatrixBase :
-    public BlackMisc::CBaseStreamStringifier<ImplMatrix>
+template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public BlackMisc::CBaseStreamStringifier<ImplMatrix>
 {
+
 protected:
-    QGenericMatrix<Rows, Columns, qreal> m_matrix; //!< backing data
+    // no bug, Qt expects columns rows
+    QGenericMatrix<Columns, Rows, qreal> m_matrix; //!< backing data
 
     /*!
      * \brief Conversion to string
@@ -72,7 +74,6 @@ public:
     {
         if (this == &otherMatrix) return false;
         return !((*this) == otherMatrix);
-
     }
 
     /*!
@@ -85,30 +86,6 @@ public:
         if (this == &otherMatrix)  return *this; // Same object?
         this->m_matrix = otherMatrix.m_matrix;
         return (*this);
-    }
-
-    /*!
-     * \brief Operator *=
-     * \param multiply
-     * \return
-     */
-    CMatrixBase &operator *=(const CMatrixBase &otherMatrix)
-    {
-        this->m_matrix = this->m_matrix * otherMatrix.m_matrix;
-        return (*this);
-    }
-
-    /*!
-     * \brief Operator *
-     * \param multiply
-     * \return
-     */
-    ImplMatrix operator *(const ImplMatrix &otherMatrix) const
-    {
-        ImplMatrix m(0.0);
-        m += (*this);
-        m *= otherMatrix;
-        return m;
     }
 
     /*!
@@ -134,6 +111,13 @@ public:
         m *= factor;
         return m;
     }
+
+    /*!
+     * \brief Multiply with 3D vector operator *
+     * \param vector
+     * \return
+     */
+    template<class ImplVector> ImplVector operator*(const ImplVector vector) const;
 
     /*!
      * \brief Operator /=
@@ -208,17 +192,6 @@ public:
     }
 
     /*!
-     * \brief Transposed matrix
-     * \return
-     */
-    ImplMatrix transposed() const
-    {
-        ImplMatrix m(0.0);
-        m.m_matrix = this->m_matrix.transposed();
-        return m;
-    }
-
-    /*!
      * \brief Is identity matrix?
      * \return
      */
@@ -255,9 +228,49 @@ public:
     /*!
      * \brief Get element
      * \param row
+     * \param column
      * \return
      */
-    double getElement(size_t row, size_t column) const;
+    qreal getElement(size_t row, size_t column) const;
+
+    /*!
+     * \brief Get element
+     * \param row
+     * \param column
+     * \param value
+     */
+    void setElement(size_t row, size_t column, qreal value);
+
+    /*!
+     * \brief Get element by ()
+     * \param column
+     * \return
+     */
+    qreal &operator()(size_t row, size_t column)
+    {
+        this->checkRange(row, column);
+        return this->m_matrix(row, column);
+    }
+
+    /*!
+     * \brief Get element by ()
+     * \param column
+     * \return
+     */
+    qreal operator()(size_t row, size_t column) const
+    {
+        return this->getElement(row, column);
+    }
+
+private:
+    /*!
+     * \brief Check range of row / column
+     * \param row
+     * \param column
+     * \throws std::range_error if index out of bounds
+     */
+    void checkRange(size_t row, size_t column) const;
+
 };
 
 } // namespace

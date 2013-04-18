@@ -5,11 +5,20 @@
 
 #ifndef BLACKMISC_MATHEMATICS_H
 #define BLACKMISC_MATHEMATICS_H
+#include <QtCore/qmath.h>
 
 namespace BlackMisc
 {
 namespace Math
 {
+
+// Some namespace wide constant values
+
+//! Mathematical constant Pi
+const qreal PI = 4.0 * qAtan(1.0);
+
+//! 2 * Pi
+const qreal TwoPI  = 2.0 * PI;
 
 /*!
  * \brief Math utils
@@ -17,20 +26,21 @@ namespace Math
 class CMath
 {
 public:
+
     /*!
      * \brief Calculates the hypotenuse of x and y without overflow
      * \param x
      * \param y
      * \return
      */
-    static double hypot(double x, double y);
+    static qreal hypot(qreal x, qreal y);
 
     /*!
      * \brief Calculates the square of x
      * \param x
      * \return
      */
-    static inline double square(const double x)
+    static inline qreal square(qreal x)
     {
         return x * x;
     }
@@ -40,7 +50,7 @@ public:
      * \param x
      * \return
      */
-    static inline double cubic(const double x)
+    static inline qreal cubic(const qreal x)
     {
         return x * x * x;
     }
@@ -50,7 +60,7 @@ public:
      * \param x
      * \return
      */
-    static double cubicRootReal(const double x);
+    static qreal cubicRootReal(qreal x);
 
 private:
     /*!

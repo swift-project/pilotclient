@@ -52,6 +52,30 @@ CMatrix3x3 CMatrix3x3::inverse() const
     return inverse;
 }
 
+/*
+ * Get a row
+ */
+CMatrix1x3 CMatrix3x3::getRow(int row) const
+{
+    bool valid = row >= 0 && row <= 3;
+    Q_ASSERT_X(valid, "getRow", "invalid row");
+    if (!valid) throw new std::range_error("invalid row");
+    return CMatrix1x3(this->getElement(row, 0), this->getElement(row, 1), this->getElement(row, 2));
+}
+
+/*
+ * Get a column
+ */
+CMatrix3x1 CMatrix3x3::getColumn(int column) const
+{
+    bool valid = column >= 0 && column <= 3;
+    Q_ASSERT_X(valid, "getColumn", "invalid column");
+    if (!valid) throw new std::range_error("invalid column");
+    return CMatrix3x1(this->getElement(0, column), this->getElement(1, column), this->getElement(2, column));
+}
+
+
+
 } // namespace
 
 } // namespace

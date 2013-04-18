@@ -14,7 +14,7 @@ namespace Math
 /*
  * Hypotenuse
  */
-double CMath::hypot(double x, double y)
+qreal CMath::hypot(qreal x, qreal y)
 {
     x = abs(x);
     y = abs(y);
@@ -27,7 +27,7 @@ double CMath::hypot(double x, double y)
 /*
  * Real part of cubic root
  */
-double CMath::cubicRootReal(const double x)
+qreal CMath::cubicRootReal(qreal x)
 {
     double result;
     result = std::pow(std::abs(x), (double)1 / 3);

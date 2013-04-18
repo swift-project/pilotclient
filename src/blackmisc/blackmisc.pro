@@ -72,7 +72,9 @@ HEADERS += \
     coordinategeodetic.h \
     coordinateecef.h \
     coordinatened.h \
-    geoearthangle.h
+    geoearthangle.h \
+    coordinatetransformation.h \
+    mathmatrix1x3.h
 
 SOURCES += \
     logmessage.cpp \
@@ -104,6 +106,7 @@ SOURCES += \
     mathvector3dbase.cpp \
     mathmatrixbase.cpp \
     mathmatrix3x3.cpp \
-    mathematics.cpp
+    mathematics.cpp \
+    coordinatetransformation.cpp
 
 DESTDIR = ../../lib

@@ -15,15 +15,30 @@ namespace Math
 {
 
 /*!
- * \brief 3D matrix
+ * \brief Matrix 3x1
  */
 class CMatrix3x1 : public CMatrixBase<CMatrix3x1, 3, 1>
 {
+    friend class CMatrix3x3; // for matrix multiplicaion to access m_matrix
+
 public:
     /*!
-     * \brief CMatrix3D
+     * \brief CMatrix 3x1
      */
     CMatrix3x1() : CMatrixBase() {}
+
+    /*!
+     * \brief CMatrix 3x1
+     * \param r1
+     * \param r2
+     * \param r3
+     */
+    CMatrix3x1(qreal r1, qreal r2, qreal r3) : CMatrixBase()
+    {
+        this->m_matrix(0, 0) = r1;
+        this->m_matrix(1, 0) = r2;
+        this->m_matrix(2, 0) = r3;
+    }
 
     /*!
      * \brief init with value
@@ -52,9 +67,9 @@ public:
      */
     void fromVector3D(const CVector3D &vector)
     {
-        this->m_matrix[0][0] = vector.x();
-        this->m_matrix[1][0] = vector.y();
-        this->m_matrix[2][0] = vector.z();
+        this->m_matrix(0, 0) = vector.i();
+        this->m_matrix(1, 0) = vector.j();
+        this->m_matrix(2, 0) = vector.k();
     }
 };
 

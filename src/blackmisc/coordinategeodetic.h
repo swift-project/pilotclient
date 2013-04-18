@@ -21,8 +21,8 @@ class CCoordinateGeodetic : public CBaseStreamStringifier<CCoordinateGeodetic>
 {
 
 private:
-    CGeoLatitude m_latitude; //!< Latitude
-    CGeoLongitude m_longitude; //!< Longitude
+    CLatitude m_latitude; //!< Latitude
+    CLongitude m_longitude; //!< Longitude
     BlackMisc::PhysicalQuantities::CLength m_height; //!< height
 
 protected:
@@ -55,7 +55,7 @@ public:
      * \param longitude
      * \param height
      */
-    CCoordinateGeodetic(CGeoLatitude latitude, CGeoLongitude longitude, BlackMisc::PhysicalQuantities::CLength height) :
+    CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength height) :
         m_latitude(latitude), m_longitude(longitude), m_height(height) {}
 
     /*!
@@ -72,7 +72,7 @@ public:
      * \brief Latitude
      * \return
      */
-    CGeoLatitude latitude() const
+    CLatitude latitude() const
     {
         return this->m_latitude;
     }
@@ -81,7 +81,7 @@ public:
      * \brief Longitude
      * \return
      */
-    CGeoLongitude longitude() const
+    CLongitude longitude() const
     {
         return this->m_longitude;
     }
@@ -99,7 +99,7 @@ public:
      * \brief Set latitude
      * \param latitude
      */
-    void setLatitude(CGeoLatitude latitude)
+    void setLatitude(CLatitude latitude)
     {
         this->m_latitude = latitude;
     }
@@ -108,7 +108,7 @@ public:
      * \brief Set longitude
      * \param latitude
      */
-    void setLongitude(CGeoLongitude longitude)
+    void setLongitude(CLongitude longitude)
     {
         this->m_longitude = longitude;
     }

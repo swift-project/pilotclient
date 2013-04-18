@@ -57,16 +57,22 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const 
     // some special cases for best quality
     double diff;
     const double lenient = 1.001; // even diff already has a rounding issue to be avoided
-    if (this->m_unit == otherQuantity.m_unit) {
+    if (this->m_unit == otherQuantity.m_unit)
+    {
         // same unit
-        if (this->m_isIntegerBaseValue && otherQuantity.m_isIntegerBaseValue) {
+        if (this->m_isIntegerBaseValue && otherQuantity.m_isIntegerBaseValue)
+        {
             // pure integer comparison, no rounding issues
             return this->m_unitValueI == otherQuantity.m_unitValueI;
-        } else {
+        }
+        else
+        {
             diff = abs(this->m_unitValueD - otherQuantity.m_unitValueD);
             return diff <= (lenient * this->m_unit.getEpsilon());
         }
-    } else {
+    }
+    else
+    {
         // based on SI value
         diff = abs(this->m_convertedSiUnitValueD - otherQuantity.m_convertedSiUnitValueD);
         return diff <= (lenient * this->m_unit.getEpsilon());
@@ -105,15 +111,21 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ>& CPhysicalQuantity<MU, P
  */
 template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator +=(const CPhysicalQuantity<MU, PQ> &otherQuantity)
 {
-    if (this->m_unit == otherQuantity.m_unit) {
+    if (this->m_unit == otherQuantity.m_unit)
+    {
         // same unit
-        if (this->m_isIntegerBaseValue && otherQuantity.m_isIntegerBaseValue) {
+        if (this->m_isIntegerBaseValue && otherQuantity.m_isIntegerBaseValue)
+        {
             // pure integer, no rounding issues
             this->setUnitValue(otherQuantity.m_unitValueI + this->m_unitValueI);
-        } else {
+        }
+        else
+        {
             this->setUnitValue(otherQuantity.m_unitValueD + this->m_unitValueD);
         }
-    } else {
+    }
+    else
+    {
         double v = otherQuantity.value(this->m_unit);
         this->setUnitValue(v + this->m_unitValueD);
     }
@@ -152,15 +164,21 @@ template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::substractUnitValue
  */
 template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator -=(const CPhysicalQuantity<MU, PQ> &otherQuantity)
 {
-    if (this->m_unit == otherQuantity.m_unit) {
+    if (this->m_unit == otherQuantity.m_unit)
+    {
         // same unit
-        if (this->m_isIntegerBaseValue && otherQuantity.m_isIntegerBaseValue) {
+        if (this->m_isIntegerBaseValue && otherQuantity.m_isIntegerBaseValue)
+        {
             // pure integer, no rounding issues
             this->setUnitValue(otherQuantity.m_unitValueI - this->m_unitValueI);
-        } else {
+        }
+        else
+        {
             this->setUnitValue(otherQuantity.m_unitValueD - this->m_unitValueD);
         }
-    } else {
+    }
+    else
+    {
         double v = otherQuantity.value(this->m_unit);
         this->setUnitValue(v - this->m_unitValueD);
     }
@@ -258,14 +276,13 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator <=(const 
 /*
  * Switch to another unit
  */
-template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::switchUnit(const MU &newUnit)
+template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::switchUnit(const MU &newUnit)
 {
-    if (this->m_unit == newUnit) return true;
-    if (this->m_unit.getType() != newUnit.getType()) return false; // not possible
+    if (this->m_unit == newUnit) return *this;
     double cf = this->m_unit.conversionToUnit(this->m_unitValueD, newUnit);
     this->m_unit = newUnit;
     this->setUnitValue(cf);
-    return true;
+    return *this;
 }
 
 /*

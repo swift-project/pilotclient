@@ -111,7 +111,7 @@ public:
      * \param newUnit
      * \return
      */
-    bool switchUnit(const MU &newUnit);
+    CPhysicalQuantity &switchUnit(const MU &newUnit);
 
     /*!
      * \brief Value in SI base unit? Meter is an SI base unit, hertz not!

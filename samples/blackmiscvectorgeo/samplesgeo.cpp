@@ -11,15 +11,15 @@ namespace BlackMiscTest
  */
 int CSamplesGeo::samples()
 {
-    CGeoLatitude lat1(20.0, CAngleUnit::deg());
-    CGeoLatitude lat2 = lat1;
-    CGeoLatitude lat3 = lat1 - lat2;
+    CLatitude lat1(20.0, CAngleUnit::deg());
+    CLatitude lat2 = lat1;
+    CLatitude lat3 = lat1 - lat2;
 
     qDebug() << lat1 << lat2 << lat3;
     qDebug() << (lat1 + lat2) << (lat1 - lat2);
 
     lat3 += lat1;
-    CGeoLongitude lon1(33.0, CAngleUnit::deg());
+    CLongitude lon1(33.0, CAngleUnit::deg());
     qDebug() << lon1 << lat3;
 
 //    lat3 += lon1; // must not work

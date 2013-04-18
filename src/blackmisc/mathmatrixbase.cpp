@@ -14,12 +14,29 @@ namespace Math
 /*
  * Get element by column / row
  */
-template<class ImplMatrix, int Rows, int Columns> double CMatrixBase<ImplMatrix, Rows, Columns>::getElement(size_t row, size_t column) const
+template<class ImplMatrix, int Rows, int Columns> qreal CMatrixBase<ImplMatrix, Rows, Columns>::getElement(size_t row, size_t column) const
+{
+    this->checkRange(row, column);
+    return this->m_matrix(row, column);
+}
+
+/*
+ * Set element by column / row
+ */
+template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setElement(size_t row, size_t column, qreal value)
+{
+    this->checkRange(row, column);
+    this->m_matrix(row, column) = value;
+}
+
+/*
+ * Check range
+ */
+template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::checkRange(size_t row, size_t column) const
 {
     bool valid = (row >= 0 && column >= 0 && row < Rows && column < Columns);
     Q_ASSERT_X(valid, "getElement()", "Row or column invalid");
-    std::range_error("Row or column invalid");
-    return this->m_matrix(row, column);
+    if (!valid) throw std::range_error("Row or column invalid");
 }
 
 /*
@@ -57,11 +74,11 @@ template <class ImplMatrix, int Rows, int Columns> QString CMatrixBase<ImplMatri
     return s;
 }
 
-
 // see here for the reason of thess forward instantiations
 // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
 template class CMatrixBase<CMatrix3x3, 3, 3>;
 template class CMatrixBase<CMatrix3x1, 3, 1>;
+template class CMatrixBase<CMatrix1x3, 1, 3>;
 
 } // namespace
 

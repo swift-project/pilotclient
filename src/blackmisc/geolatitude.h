@@ -10,7 +10,7 @@ namespace Geo
 /*!
  * \brief Latitude
  */
-class CGeoLatitude : public CGeoEarthAngle<CGeoLatitude>
+class CLatitude : public CEarthAngle<CLatitude>
 {
 protected:
     /*!
@@ -19,32 +19,32 @@ protected:
     virtual QString stringForConverter() const
     {
         QString s = "latitude ";
-        return s.append(CGeoEarthAngle::stringForConverter());
+        return s.append(CEarthAngle::stringForConverter());
     }
 
 public:
     /*!
      * \brief Default constructor
      */
-    CGeoLatitude() : CGeoEarthAngle() {}
+    CLatitude() : CEarthAngle() {}
 
     /*!
      * \brief Copy constructor
      * \param latitude
      */
-    CGeoLatitude(const CGeoLatitude &latitude) : CGeoEarthAngle(latitude) {}
+    CLatitude(const CLatitude &latitude) : CEarthAngle(latitude) {}
 
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
-    CGeoLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CGeoEarthAngle(value, unit) {}
+    CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CEarthAngle(value, unit) {}
 
     /*!
      * \brief Virtual destructor
      */
-    virtual ~CGeoLatitude() {}
+    virtual ~CLatitude() {}
 };
 
 } // namespace
