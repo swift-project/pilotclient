@@ -48,6 +48,7 @@ public:
     {
         // void
     }
+
     /*!
      * \brief Meter m
      * \return
@@ -57,6 +58,7 @@ public:
         static CLengthUnit m("meter", "m", true, true);
         return m;
     }
+
     /*!
      * \brief Nautical miles NM
      * \return
@@ -66,6 +68,7 @@ public:
         static CLengthUnit NM("nautical miles", "NM", false, false, 1000.0 * 1.85200, CMeasurementPrefix::One(), 3);
         return NM;
     }
+
     /*!
      * \brief Foot ft
      * \return
@@ -75,6 +78,7 @@ public:
         static CLengthUnit ft("foot", "ft", false, false, 0.3048, CMeasurementPrefix::One(), 0);
         return ft;
     }
+
     /*!
      * \brief Kilometer km
      * \return
@@ -84,6 +88,7 @@ public:
         static CLengthUnit km("kilometer", "km", true, false, CMeasurementPrefix::k().getFactor(), CMeasurementPrefix::k(), 3);
         return km;
     }
+
     /*!
      * \brief Centimeter cm
      * \return

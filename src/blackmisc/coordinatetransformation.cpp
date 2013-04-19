@@ -62,7 +62,8 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateNed &ned)
 /*
  * Convert to NED
  */
-CCoordinateNed toNed(const CCoordinateEcef &ecef, const CCoordinateGeodetic &geo) {
+CCoordinateNed toNed(const CCoordinateEcef &ecef, const CCoordinateGeodetic &geo)
+{
 
     CLatitude lat = geo.latitude();
     CLongitude lon = geo.longitude();
@@ -74,23 +75,141 @@ CCoordinateNed toNed(const CCoordinateEcef &ecef, const CCoordinateGeodetic &geo
     CMatrix3x3 dcm(0.0);
     dcm1.setToIdentity();
 
-    dcm2(0,0) = cos( angleRad );
-    dcm2(0,2) = -sin( angleRad );
-    dcm2(1,1) = 1;
-    dcm2(2,0) = sin( angleRad );
-    dcm2(2,2) = cos( angleRad );
+    dcm2(0, 0) = cos(angleRad);
+    dcm2(0, 2) = -sin(angleRad);
+    dcm2(1, 1) = 1;
+    dcm2(2, 0) = sin(angleRad);
+    dcm2(2, 2) = cos(angleRad);
 
     angleRad = lon.value(CAngleUnit::rad());
-    dcm3(0,0) = cos(angleRad );
-    dcm3(0,1) = sin(angleRad );
-    dcm3(1,0) = -sin(angleRad );
-    dcm3(1,1) = cos(angleRad );
-    dcm3(2,2) = 1;
+    dcm3(0, 0) = cos(angleRad);
+    dcm3(0, 1) = sin(angleRad);
+    dcm3(1, 0) = -sin(angleRad);
+    dcm3(1, 1) = cos(angleRad);
+    dcm3(2, 2) = 1;
 
     dcm = dcm1 * dcm2 * dcm3;
 
     CVector3D tempResult = dcm * ecef.toMathVector(); // to generic vector
     CCoordinateNed result(geo, tempResult);
+    return result;
+}
+
+/*
+ * ECEF to geodetic
+ */
+CCoordinateGeodetic CCoordinateTransformation::toGeodetic(const CCoordinateEcef &ecef)
+{
+    double R = CMath::hypot(ecef.x(), ecef.y());
+    double slam = 0;
+    double clam = 1;
+
+    if (R != 0)
+    {
+        slam = ecef.y() / R;
+        clam = ecef.x() / R;
+    }
+
+    // Calculate the distance to the earth
+    double h = CMath::hypot(R, ecef.z());
+
+    double sphi = 0;
+    double cphi = 0;
+
+    double p = CMath::square(R / EarthRadiusMeters());
+    double q = e2m() * CMath::square(ecef.z() / EarthRadiusMeters());
+    double r = (p + q - e4()) / 6.0;
+
+    if (!(e4() *q == 0 && r <= 0))
+    {
+        // Avoid possible division by zero when r = 0 by multiplying
+        // equations for s and t by r^3 and r, resp.
+
+        double S = e4() * p * q / 4; //! S = r^3 * s
+        double r2 = CMath::square(r);
+        double r3 = r * r2;
+        double disc = S * (2 * r3 + S);
+        double u = r;
+
+        if (disc >= 0)
+        {
+            double T3 = S + r3;
+            /*
+              Pick the sign on the sqrt to maximize abs(T3). This minimizes
+              loss of precision due to cancellation. The result is unchanged
+              because of the way the T is used in definition of u.
+            */
+            T3 += T3 < 0 ? -sqrt(disc) : sqrt(disc); // T3 = (r * t)^3
+
+            //!N.B. cubicRootReal always returns the real root. cubicRootReal(-8) = -2.
+            double T = CMath::cubicRootReal(T3);
+
+            // T can be zero; but then r2 / T -> 0.
+            u += T + (T != 0 ? r2 / T : 0);
+        }
+        else
+        {
+            // T is complex, but the way u is defined the result is real.
+            double ang = atan2(sqrt(-disc), -(S + r3));
+            /*
+              There are three possible cube roots. We choose the root which
+              avoids cancellation. Note that disc < 0 implies that r < 0.
+            */
+            u += 2 * r * cos(ang / 3);
+        }
+
+        // This is garanteed positive
+        double V = sqrt(CMath::square(u) + e4() * q);
+
+        /*
+          Avoid loss of accuracy when u < 0. Underflow doesn't occur in
+          e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
+        */
+        double uv = u < 0 ? e4() * q / (V - u) : u + V; //! u+v, guaranteed positive
+
+        // Need to guard against w going negative due to roundoff in uv - q.
+        double w = std::max(double(0), e2abs() * (uv - q) / (2 * V));
+
+        /*
+          Rearrange expression for k to avoid loss of accuracy due to
+          subtraction. Division by 0 not possible because uv > 0, w >= 0.
+        */
+        double k = uv / (sqrt(uv + CMath::square(w)) + w);
+        double k1 = k;
+        double k2 = k + e2();
+        double d = k1 * R / k2;
+        double H = CMath::hypot((ecef.z()) / k1, R / k2);
+
+        sphi = (ecef.z() / k1) / H;
+        cphi = (R / k2) / H;
+
+        h = (1 - e2m() / k1) * CMath::hypot(d, ecef.z());
+    }
+    else // e4 * q == 0 && r <= 0
+    {
+        /*
+          This leads to k = 0 (oblate, equatorial plane) and k + e^2 = 0
+          (prolate, rotation axis) and the generation of 0/0 in the general
+          formulas for phi and h. using the general formula and division by 0
+          in formula for h. So handle this case by taking the limits:
+          f > 0: z -> 0, k -> e2 * sqrt(q)/sqrt(e4 - p)
+          f < 0: R -> 0, k + e2 -> - e2 * sqrt(q)/sqrt(e4 - p)
+        */
+        double zz = sqrt((e4() - p) / e2m());
+        double xx = sqrt(p);
+        double H = CMath::hypot(zz, xx);
+        sphi = zz / H;
+        cphi = xx / H;
+        if (ecef.z() < 0) sphi = -sphi; // for tiny negative Z (not for prolate)
+        h = - EarthRadiusMeters() * (e2m()) * H / e2abs();
+    }
+
+    double latRad = atan2(sphi, cphi);
+    double lonRad = -atan2(-slam, clam); // Negative signs return lon in [-180, 180)
+    CCoordinateGeodetic result(
+        CLatitude(latRad, CAngleUnit::rad()),
+        CLongitude(lonRad, CAngleUnit::rad()),
+        CLength(h, CLengthUnit::m()));
     return result;
 }
 
