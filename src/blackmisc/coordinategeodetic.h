@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -33,8 +33,8 @@ protected:
      */
     virtual QString stringForConverter() const
     {
-        QString s = "{%1, %2, %3}";
-        return s.arg(this->m_latitude).arg(this->m_longitude).arg(this->height());
+        QString s = "Geodetic: {%1, %2, %3}";
+        return s.arg(this->m_latitude.unitValueRoundedWithUnit()).arg(this->m_longitude.unitValueRoundedWithUnit()).arg(this->m_height.unitValueRoundedWithUnit());
     }
 
 public:
@@ -67,7 +67,6 @@ public:
     CCoordinateGeodetic(qreal latitudeDegrees, qreal longitudeDegrees, qreal heightMeters) :
         m_latitude(latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_longitude(longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_height(heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m()) {}
 
-
     /*!
      * \brief Latitude
      * \return
@@ -93,6 +92,25 @@ public:
     BlackMisc::PhysicalQuantities::CLength height() const
     {
         return this->m_height;
+    }
+
+    /*!
+     * \brief Switch unit of latitude / longitude
+     * \param unit
+     */
+    void switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit)
+    {
+        this->m_latitude.switchUnit(unit);
+        this->m_longitude.switchUnit(unit);
+    }
+
+    /*!
+     * \brief Switch unit of height
+     * \param unit
+     */
+    void switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit)
+    {
+        this->m_height.switchUnit(unit);
     }
 
     /*!

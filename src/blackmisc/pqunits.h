@@ -27,15 +27,15 @@ private:
      * \brief Constructor Distance unit
      * \param name
      * \param unitName
-     * \param isSIUnit
+     * \param isSiUnit
      * \param isSIBaseUnit
      * \param conversionFactorToSI
      * \param mulitplier
      * \param displayDigits
      * \param epsilon
      */
-    CLengthUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "distance", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon)
+    CLengthUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, unitName, "distance", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon)
     {
         // void
     }
@@ -111,17 +111,17 @@ private:
      * \brief Constructor angle units: Radian, degree
      * \param name
      * \param unitName
-     * \param isSIUnit
+     * \param isSiUnit
      * \param conversionFactorToSI
-     * \param mulitplier
+     * \param multiplier
      * \param displayDigits
      * \param epsilon
      */
-    CAngleUnit(const QString &name, const QString &unitName, bool isSIUnit, double conversionFactorToSI = 1.0,
-               const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2,
+    CAngleUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0,
+               const CMeasurementPrefix &multiplier = CMeasurementPrefix::One(), qint32 displayDigits = 2,
                double epsilon = 1E-9, UnitConverter converterToSi = nullptr,  UnitConverter converterFromSi = nullptr) :
-        CMeasurementUnit(name, unitName, "angle", isSIUnit, false, conversionFactorToSI,
-                         mulitplier, displayDigits, epsilon, converterToSi, converterFromSi)
+        CMeasurementUnit(name, unitName, "angle", isSiUnit, false, conversionFactorToSI,
+                         multiplier, displayDigits, epsilon, converterToSi, converterFromSi)
     {
         // void
     }
@@ -192,14 +192,14 @@ private:
      * \brief CFrequencyUnit
      * \param name
      * \param unitName
-     * \param isSIUnit
+     * \param isSiUnit
      * \param conversionFactorToSI
      * \param mulitplier
      * \param displayDigits
      * \param epsilon
      */
-    CFrequencyUnit(const QString &name, const QString &unitName, bool isSIUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "frequency", isSIUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CFrequencyUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, unitName, "frequency", isSiUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
     /*!
      * \brief Copy constructor
@@ -258,15 +258,15 @@ private:
      * \brief Constructor mass units
      * \param name
      * \param unitName
-     * \param isSIUnit
+     * \param isSiUnit
      * \param isSIBaseUnit
      * \param conversionFactorToSI
      * \param mulitplier
      * \param displayDigits
      * \param epsilon
      */
-    CMassUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "mass", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CMassUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, unitName, "mass", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
     /*!
      * \brief Copy constructor
@@ -326,14 +326,14 @@ private:
      * \brief Pressure unit
      * \param name
      * \param unitName
-     * \param isSIUnit
+     * \param isSiUnit
      * \param conversionFactorToSI
      * \param mulitplier
      * \param displayDigits
      * \param epsilon
      */
-    CPressureUnit(const QString &name, const QString &unitName, bool isSIUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "frequency", isSIUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CPressureUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, unitName, "frequency", isSiUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
     /*!
      * \brief Copy constructor
@@ -421,7 +421,7 @@ private:
      * Constructor temperature unit
      * \param name
      * \param unitName
-     * \param isSIUnit
+     * \param isSiUnit
      * \param isSIBaseUnit
      * \param conversionFactorToSI
      * \param temperatureOffsetToSI
@@ -429,8 +429,8 @@ private:
      * \param displayDigits
      * \param epsilon
      */
-    CTemperatureUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, double temperatureOffsetToSI = 0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "temperature", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon), m_conversionOffsetToSi(temperatureOffsetToSI) {}
+    CTemperatureUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, double temperatureOffsetToSI = 0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, unitName, "temperature", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon), m_conversionOffsetToSi(temperatureOffsetToSI) {}
 protected:
     /*!
      * \brief Convert to SI conversion unit, specific for temperature
@@ -501,15 +501,15 @@ private:
      * \brief Speed unit constructor
      * \param name
      * \param unitName
-     * \param isSIUnit
+     * \param isSiUnit
      * \param isSIBaseUnit
      * \param conversionFactorToSI
      * \param mulitplier
      * \param displayDigits
      * \param epsilon
      */
-    CSpeedUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "speed", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CSpeedUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, unitName, "speed", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
     /*!
      * Constructor, allows to implement methods in base class
@@ -584,15 +584,15 @@ private:
      * \brief Time unit constructor
      * \param name
      * \param unitName
-     * \param isSIUnit
+     * \param isSiUnit
      * \param isSIBaseUnit
      * \param conversionFactorToSI
      * \param mulitplier
      * \param displayDigits
      * \param epsilon
      */
-    CTimeUnit(const QString &name, const QString &unitName, bool isSIUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "time", isSIUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CTimeUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, unitName, "time", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
     /*!
      * Constructor, allows to implement methods in base class

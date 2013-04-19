@@ -96,8 +96,20 @@ public:
      */
     BlackMisc::Math::CVector3D toMathVector() const
     {
-        return BlackMisc::Math::CVector3D(this->z(), this->y(), this->x());
+        return BlackMisc::Math::CVector3D(this->x(), this->y(), this->z());
     }
+
+protected:
+    /*!
+     * \brief String for converter
+     * \return
+     */
+    virtual QString stringForConverter() const
+    {
+        QString s = "ECEF: {x %1, y %2, z %3}";
+        return s.arg(this->x()).arg(this->y()).arg(this->z());
+    }
+
 };
 
 } // namespace

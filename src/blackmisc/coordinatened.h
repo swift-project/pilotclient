@@ -23,6 +23,17 @@ private:
     CCoordinateGeodetic m_referencePosition; //!< geodetic reference position
     bool m_hasReferencePosition; //!< valid reference position?
 
+protected:
+    /*!
+     * \brief String for converter
+     * \return
+     */
+    virtual QString stringForConverter() const
+    {
+        QString s = "NED: {N %1, E %2, D %3}";
+        return s.arg(this->north()).arg(this->east()).arg(this->down());
+    }
+
 public:
     /*!
      * \brief Default constructor

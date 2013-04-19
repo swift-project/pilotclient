@@ -50,7 +50,7 @@ public:
         return M_PI;
     }
     /*!
-     * \brief Value as factor of PI (e.g.0.5PI)
+     * \brief Value as factor of PI (e.g. 0.5PI)
      * \return
      */
     double piFactor() const {

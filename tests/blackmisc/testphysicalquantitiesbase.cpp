@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -7,7 +7,8 @@
 
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackMiscTest {
+namespace BlackMiscTest
+{
 
 /*
  * Constructor
@@ -43,16 +44,16 @@ void CTestPhysicalQuantitiesBase::unitsBasics()
  */
 void CTestPhysicalQuantitiesBase::lengthBasics()
 {
-    CLength d1(1,CLengthUnit::m()); // 1m
+    CLength d1(1, CLengthUnit::m()); // 1m
     CLength d2(100, CLengthUnit::cm());
-    CLength d3(1.852 * 1000,CLengthUnit::m()); // 1852m
-    CLength d4(1,CLengthUnit::NM());
+    CLength d3(1.852 * 1000, CLengthUnit::m()); // 1852m
+    CLength d4(1, CLengthUnit::NM());
 
     QVERIFY2(d1 == d2, "1meter shall be 100cm");
     QVERIFY2(d3 == d4, "1852meters shall be 1NM");
 
-    d3 *=2; // SI value
-    d4 *=2.0; // SI value !
+    d3 *= 2; // SI value
+    d4 *= 2.0; // SI value !
     QVERIFY2(d3 == d4, "2*1852meters shall be 2NM");
 
     // less / greater
@@ -76,8 +77,8 @@ void CTestPhysicalQuantitiesBase::speedBasics()
 {
     CSpeed s1(100, CSpeedUnit::km_h());
     CSpeed s2(1000, CSpeedUnit::ft_min());
-    QVERIFY2(s1.valueRounded(CSpeedUnit::NM_h(),0) == 54, qPrintable(QString("100km/h is not %1 NM/h").arg(s1.valueRounded(CSpeedUnit::NM_h(),0))));
-    QVERIFY2(s2.valueRounded(CSpeedUnit::m_s(),1) == 5.1, qPrintable(QString("1000ft/min is not %1 m/s").arg(s2.valueRounded(CSpeedUnit::m_s(),1))));
+    QVERIFY2(s1.valueRounded(CSpeedUnit::NM_h(), 0) == 54, qPrintable(QString("100km/h is not %1 NM/h").arg(s1.valueRounded(CSpeedUnit::NM_h(), 0))));
+    QVERIFY2(s2.valueRounded(CSpeedUnit::m_s(), 1) == 5.1, qPrintable(QString("1000ft/min is not %1 m/s").arg(s2.valueRounded(CSpeedUnit::m_s(), 1))));
 }
 
 /*
@@ -86,10 +87,10 @@ void CTestPhysicalQuantitiesBase::speedBasics()
 void CTestPhysicalQuantitiesBase::frequencyTests()
 {
     CFrequency f1(1, CFrequencyUnit::MHz());
-    QVERIFY2(f1.valueRounded(CFrequencyUnit::kHz(),2) == 1000, "Mega is 1000kHz");
+    QVERIFY2(f1.valueRounded(CFrequencyUnit::kHz(), 2) == 1000, "Mega is 1000kHz");
     QVERIFY2(f1.unitValueToDouble() == 1 , "1MHz");
-    QVERIFY2(f1.siBaseUnitValueToDouble() == 1000000 , "1E6 Hz");
-    CFrequency f2(CMeasurementPrefix::M(),CFrequencyUnit::Hz()) ; // 1 Megahertz
+    QVERIFY2(f1.convertedSiValueToDouble() == 1000000 , "1E6 Hz");
+    CFrequency f2(CMeasurementPrefix::M(), CFrequencyUnit::Hz()) ; // 1 Megahertz
     QVERIFY2(f1 == f2 , "MHz is 1E6 Hz");
 }
 
@@ -100,7 +101,7 @@ void CTestPhysicalQuantitiesBase::angleTests()
 {
     CAngle a1(180, CAngleUnit::deg());
     CAngle a2(1.5 * CAngle::pi(), CAngleUnit::rad());
-    CAngle a3(35.4336,CAngleUnit::sexagesimalDeg()); // 35.72666
+    CAngle a3(35.4336, CAngleUnit::sexagesimalDeg()); // 35.72666
     a2.switchUnit(CAngleUnit::deg());
     QVERIFY2(a2.unitValueToInteger() == 270, qPrintable(QString("1.5Pi should be 270deg, not %1 deg").arg(a2.unitValueToInteger())));
     QVERIFY2(a1.piFactor() == 1, qPrintable(QString("Pi should be 1PI, not %1").arg(a1.piFactor())));
@@ -127,8 +128,8 @@ void CTestPhysicalQuantitiesBase::massTests()
 void CTestPhysicalQuantitiesBase::pressureTests()
 {
     CPressure p1(1013.25, CPressureUnit::hPa());
-    CPressure p2(29.92,CPressureUnit::inHg());
-    CPressure p3(29.92,CPressureUnit::inHgFL());
+    CPressure p2(29.92, CPressureUnit::inHg());
+    CPressure p3(29.92, CPressureUnit::inHgFL());
     CPressure p4(p1);
     p4.switchUnit(CPressureUnit::mbar());
 
@@ -159,7 +160,7 @@ void CTestPhysicalQuantitiesBase::temperatureTests()
 void CTestPhysicalQuantitiesBase::timeTests()
 {
     CTime t1(1, CTimeUnit::h());
-    QVERIFY2(t1.siBaseUnitValueToInteger() == 3600, "1hour shall be 3600s");
+    QVERIFY2(t1.convertedSiValueToInteger() == 3600, "1hour shall be 3600s");
 }
 
 /*
@@ -167,13 +168,13 @@ void CTestPhysicalQuantitiesBase::timeTests()
  */
 void CTestPhysicalQuantitiesBase::memoryTests()
 {
-    CLength* c = new CLength(100, CLengthUnit::m());
+    CLength *c = new CLength(100, CLengthUnit::m());
     c->switchUnit(CLengthUnit::NM());
     QVERIFY2(c->getUnit() == CLengthUnit::NM() && c->getConversionSiUnit() == CLengthUnit::m(),
              "Testing distance units failed");
     delete c;
 
-    CAngle* a = new CAngle(100, CAngleUnit::rad());
+    CAngle *a = new CAngle(100, CAngleUnit::rad());
     a->switchUnit(CAngleUnit::deg());
     QVERIFY2(a->getUnit() == CAngleUnit::deg() && c->getConversionSiUnit() == CAngleUnit::rad(),
              "Testing angle units failed");

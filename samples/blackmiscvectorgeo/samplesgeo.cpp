@@ -26,8 +26,18 @@ int CSamplesGeo::samples()
 //    lat3 = lon1; //must not work
 //    CGeoLongitude lonx(lat2); // must notwork
 
-    CCoordinateGeodetic gc(10.0, 20.0, 1000);
-    qDebug() << gc;
+    CCoordinateGeodetic cg(10.0, 20.0, 1000);
+    CCoordinateEcef ce = CCoordinateTransformation::toEcef(cg);
+    CCoordinateGeodetic cg2 = CCoordinateTransformation::toGeodetic(ce);
+    cg2.switchUnit(CAngleUnit::deg());
+    qDebug() << cg << ce << cg2;
+
+    CCoordinateNed cned = CCoordinateTransformation::toNed(ce, cg);
+    CCoordinateEcef ce2 = CCoordinateTransformation::toEcef(cned);
+    qDebug() << ce << cned << ce2;
+    qDebug() << (cned + cned) << (ce + ce);
+
+//    cned += ce2; // must not work
 
     // bye
     qDebug() << "-----------------------------------------------";

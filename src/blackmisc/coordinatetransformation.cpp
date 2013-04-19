@@ -60,13 +60,49 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateNed &ned)
 }
 
 /*
- * Convert to NED
+ * Geodetic to ECEF
  */
-CCoordinateNed toNed(const CCoordinateEcef &ecef, const CCoordinateGeodetic &geo)
+CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateGeodetic &geo)
 {
+    // TODO: Clarify the comparions with fixed angles (==90, ==180) -> what happens here
 
     CLatitude lat = geo.latitude();
     CLongitude lon = geo.longitude();
+    qreal latDeg = lat.value(CAngleUnit::deg());
+    qreal lonDeg = lon.value(CAngleUnit::deg());
+
+    double phi = lat.value(CAngleUnit::rad());
+    double lambdaRad = lon.value(CAngleUnit::rad());
+    double sphi = sin(phi);
+    double cphi = 0;
+    if (abs(latDeg) != 90) cphi = cos(phi);
+
+    double n = EarthRadiusMeters() / sqrt(1 - e2() * CMath::square(sphi));
+
+    double slambda = 0;
+    if (lonDeg != -180) slambda = sin(lambdaRad);
+
+    double clambda = 0;
+    if (abs(lonDeg) != 90) clambda = cos(lambdaRad);
+
+    double h = geo.height().convertedSiValueToDouble();
+    double X = (n + h) * cphi;
+    double Y = X * slambda;
+    X *= clambda;
+    double Z = (e2m() * n + h) * sphi;
+
+    CCoordinateEcef result(X, Y, Z);
+    return result;
+}
+
+/*
+ * Convert to NED
+ */
+CCoordinateNed CCoordinateTransformation::toNed(const CCoordinateEcef &ecef, const CCoordinateGeodetic &referencePosition)
+{
+
+    CLatitude lat = referencePosition.latitude();
+    CLongitude lon = referencePosition.longitude();
     double angleRad = - (lat.value(CAngleUnit::rad())) - BlackMisc::Math::PI / 2;
 
     CMatrix3x3 dcm1;
@@ -91,7 +127,7 @@ CCoordinateNed toNed(const CCoordinateEcef &ecef, const CCoordinateGeodetic &geo
     dcm = dcm1 * dcm2 * dcm3;
 
     CVector3D tempResult = dcm * ecef.toMathVector(); // to generic vector
-    CCoordinateNed result(geo, tempResult);
+    CCoordinateNed result(referencePosition, tempResult);
     return result;
 }
 

@@ -164,7 +164,7 @@ public:
     QString valueRoundedWithUnit(const MU &unit, int digits = -1) const;
 
     /*!
-     * \brief Value a int
+     * \brief Value as int
      * \return
      */
     qint32 unitValueToInteger() const
@@ -173,7 +173,7 @@ public:
     }
 
     /*!
-     * \brief Value a double
+     * \brief Value as double
      * \return
      */
     double unitValueToDouble() const
@@ -187,24 +187,6 @@ public:
      * \return
      */
     QString unitValueRoundedWithUnit(int digits = -1) const;
-
-    /*!
-     * \brief SI value to integer
-     * \return
-     */
-    qint32 siBaseUnitValueToInteger() const
-    {
-        return CMeasurementUnit::round(this->m_convertedSiUnitValueD, 0);
-    }
-
-    /*!
-     * \brief SI value to double
-     * \return
-     */
-    double siBaseUnitValueToDouble() const
-    {
-        return this->m_convertedSiUnitValueD;
-    }
 
     /*!
      * \brief Rounded value by n digits
@@ -221,7 +203,7 @@ public:
     QString unitValueToQStringRounded(int digits = -1) const;
 
     /*!
-     * \brief SI value as double
+     * \brief Conversion SI value as double
      * \return
      */
     double convertedSiValueToDouble() const
@@ -391,4 +373,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // BLACKMISC_PQPHYSICALQUANTITY_H
+#endif // guard

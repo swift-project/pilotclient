@@ -46,7 +46,7 @@ private:
      */
     static const qreal &Flattening()
     {
-        static qreal f = 1/298.257223563;
+        static qreal f = 1 / 298.257223563;
         return f;
     }
 
@@ -105,11 +105,19 @@ public:
     static CCoordinateEcef toEcef(const CCoordinateNed &ned);
 
     /*!
-     * \brief ECEF via Geodetic to NED
+     * \brief Geodetic to ECEF
      * \param geo
      * \return
      */
-    static CCoordinateNed toNed(const CCoordinateEcef &ecef, const CCoordinateGeodetic &geo);
+    static CCoordinateEcef toEcef(const CCoordinateGeodetic &geo);
+
+    /*!
+     * \brief ECEF via Geodetic to NED
+     * \param ecef
+     * \param referencePosition
+     * \return
+     */
+    static CCoordinateNed toNed(const CCoordinateEcef &ecef, const CCoordinateGeodetic &referencePosition);
 
     /*!
      * \brief ECEF to Geodetic
