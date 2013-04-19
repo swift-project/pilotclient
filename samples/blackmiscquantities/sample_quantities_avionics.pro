@@ -7,8 +7,9 @@ TEMPLATE = app
 CONFIG   += console
 CONFIG   -= app_bundle
 
-DEPENDPATH += . ../../src
+DEPENDPATH += . ../../src/blackmisc
 INCLUDEPATH += . ../../src
+
 SOURCES += main.cpp \
     samplesphysicalquantities.cpp \
     samplesaviation.cpp

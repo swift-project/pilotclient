@@ -5,7 +5,7 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 INCLUDEPATH += ..
-DEPENDPATH += . ..
+# DEPENDPATH += . ..
 
 #PRECOMPILED_HEADER = stdpch.h
 

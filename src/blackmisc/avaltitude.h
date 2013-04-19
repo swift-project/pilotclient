@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -29,10 +29,12 @@ protected:
     virtual QString stringForConverter() const;
 
 public:
+
     /*!
      * \brief Default constructor: 0 Altitude true
      */
     CAltitude() : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_msl(true) {}
+
     /*!
      * \brief Constructor
      * \param value
@@ -40,6 +42,7 @@ public:
      * \param unit
      */
     CAltitude(double value, bool msl, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : BlackMisc::PhysicalQuantities::CLength(value, unit), m_msl(msl) {}
+
     /*!
      * \brief Constructor
      * \param value
@@ -47,6 +50,7 @@ public:
      * \param unit
      */
     CAltitude(int value, bool msl, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : CLength(value, unit), m_msl(msl) {}
+
     /*!
      * \brief Constructor by CLength
      * \param altitude
@@ -56,29 +60,34 @@ public:
     {
         BlackMisc::PhysicalQuantities::CLength::operator =(altitude);
     }
+
     /*!
      * \brief Copy constructor
      * \param otherAltitude
      */
     CAltitude(const CAltitude &otherAltitude) : BlackMisc::PhysicalQuantities::CLength(otherAltitude), m_msl(otherAltitude.m_msl) {}
+
     /*!
      * \brief Assignment operator =
      * \param otherAltitude
      * @return
      */
     CAltitude &operator =(const CAltitude &otherAltitude);
+
     /*!
      * \brief Equal operator ==
      * \param otherAltitude
      * @return
      */
     bool operator ==(const CAltitude &otherAltitude);
+
     /*!
      * \brief Unequal operator ==
      * \param otherAltitude
      * @return
      */
     bool operator !=(const CAltitude &otherAltitude);
+
     /*!
      * \brief AGL Above ground level?
      * \return
@@ -87,6 +96,7 @@ public:
     {
         return !this->m_msl;
     }
+
     /*!
      * \brief MSL Mean sea level?
      * \return
@@ -100,4 +110,4 @@ public:
 } // namespace
 } // namespace
 
-#endif // BLACKMISC_AVALTITUDE_H
+#endif // guard

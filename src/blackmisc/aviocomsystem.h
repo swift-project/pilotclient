@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -27,6 +27,7 @@ private:
         double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), this->m_digits);
         return fr >= 118.0 && fr <= 136.975;
     }
+
     /*!
      * \brief Valid military aviation frequency?
      * \param f
@@ -36,6 +37,7 @@ private:
         double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), this->m_digits);
         return fr >= 220.0 && fr <= 399.95;
     }
+
     /*!
      * \brief Constructor
      * \param validate
@@ -63,6 +65,7 @@ protected:
             (this->isValidCivilAviationFrequency(this->getFrequencyStandby()) ||
              this->isValidMilitaryFrequency(this->getFrequencyStandby()));
     }
+
     /*!
      * \brief Validate values by assert and exception
      * \param strict
@@ -78,16 +81,19 @@ protected:
         if (!valid) throw std::range_error("Illegal values in CComSystem::validate");
         return true;
     }
+
 public:
     /*!
      * Default constructor
      */
     CComSystem() : CModulator() {}
+
     /*!
      * \brief Copy constructor
      * \param otherSystem
      */
     CComSystem(const CComSystem &otherSystem) : CModulator(otherSystem) {}
+
     /*!
      * \brief Constructor
      * \param name
@@ -99,6 +105,7 @@ public:
         CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits) {
         this->validate(true);
     }
+
     /*!
      * \brief Set active frequency
      * \param frequencyMHz
@@ -107,6 +114,7 @@ public:
         CModulator::setFrequencyActiveMHz(frequencyMHz);
         this->validate(true);
     }
+
     /*!
      * \brief Set standby frequency
      * \param frequencyMHz
@@ -115,6 +123,7 @@ public:
         CModulator::setFrequencyStandbyMHz(frequencyMHz);
         this->validate(true);
     }
+
     /*!
      * \brief Set UNICOM frequency as active
      */
@@ -122,6 +131,7 @@ public:
         this->toggleActiveStandby();
         this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyUnicom());
     }
+
     /*!
      * \brief Set International Air Distress 121.5MHz
      */
@@ -129,6 +139,7 @@ public:
         this->toggleActiveStandby();
         this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
     }
+
     /*!
      * \brief Assigment operator =
      * \param otherSystem
@@ -138,6 +149,7 @@ public:
         CModulator::operator =(otherSystem);
         return (*this);
     }
+
     /*!
      * \brief operator ==
      * \param otherSystem

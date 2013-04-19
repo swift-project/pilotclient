@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -45,7 +45,7 @@ bool CTransponder::validate(bool strict) const
 /**
  * String representation
  */
-QString CTransponder::stringForStreamingOperator() const
+QString CTransponder::stringForConverter() const
 {
     QString s = this->getName();
     s = s.append(" ").append(this->getTransponderCodeFormatted()).append(" ").append(this->getModeAsString());

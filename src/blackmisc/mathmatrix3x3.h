@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -81,6 +81,17 @@ public:
         CMatrix3x3 m(otherMatrix);
         m *= otherMatrix;
         return m;
+    }
+
+    /*!
+     * \brief Multiply vector with this 3x3 matrix
+     * \param vector
+     * \return
+     */
+    CVector3D operator *(const CVector3D &vector) const {
+        CVector3D v(vector);
+        v.matrixMultiplication(*this);
+        return v;
     }
 
     /*!

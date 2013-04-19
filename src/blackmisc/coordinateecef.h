@@ -5,7 +5,7 @@
 
 #ifndef BLACKMISC_COORDINATEECEF_H
 #define BLACKMISC_COORDINATEECEF_H
-#include "blackmisc/mathvector3dbase.h"
+#include "blackmisc/mathvector3d.h"
 
 namespace BlackMisc
 {
@@ -29,6 +29,12 @@ public:
      * \param z
      */
     CCoordinateEcef(qreal x, qreal y, qreal z) : CVector3DBase(x, y, z) {}
+
+    /*!
+     * \brief Constructor by math vector
+     * \param vector
+     */
+    CCoordinateEcef(const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()) {}
 
     /*!
      * \brief x
@@ -82,6 +88,15 @@ public:
     void setZ(qreal z)
     {
         this->m_vector.setZ(z);
+    }
+
+    /*!
+     * \brief Concrete implementation of a 3D vector
+     * \return
+     */
+    BlackMisc::Math::CVector3D toMathVector() const
+    {
+        return BlackMisc::Math::CVector3D(this->z(), this->y(), this->x());
     }
 };
 

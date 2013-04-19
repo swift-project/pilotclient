@@ -5,7 +5,7 @@
 
 #ifndef BLACKMISC_COORDINATENED_H
 #define BLACKMISC_COORDINATENED_H
-#include "blackmisc/mathvector3dbase.h"
+#include "blackmisc/mathvector3d.h"
 #include "blackmisc/mathmatrix3x3.h"
 #include "blackmisc/coordinategeodetic.h"
 
@@ -50,6 +50,19 @@ public:
      */
     CCoordinateNed(const CCoordinateNed &otherNed) :
         CVector3DBase(otherNed) , m_hasReferencePosition(otherNed.m_hasReferencePosition), m_referencePosition(otherNed.m_referencePosition) {}
+
+    /*!
+     * \brief Constructor by math vector
+     * \param vector
+     */
+    CCoordinateNed(const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(), m_hasReferencePosition(false) {}
+
+    /*!
+     * \brief Constructor by math vector and reference position
+     * \param referencePosition
+     * \param vector
+     */
+    CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
     /*!
      * \brief Equal operator ==
@@ -171,6 +184,14 @@ public:
         this->m_hasReferencePosition = true;
     }
 
+    /*!
+     * \brief Concrete implementation of a 3D vector
+     * \return
+     */
+    BlackMisc::Math::CVector3D toMathVector() const
+    {
+        return BlackMisc::Math::CVector3D(this->north(), this->east(), this->down());
+    }
 };
 
 } // namespace

@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -93,10 +93,10 @@ int CSamplesPhysicalQuantities::samples()
     qDebug() << t3 << t3.valueRoundedWithUnit(CTemperatureUnit::C());
 
     // some logging with CLogMessage
-    bDebug << p1;
-    bDebug << p1.getUnit() << p1.getUnit().getMultiplier();
+    // bDebug << p1;
+    // bDebug << p1.getUnit() << p1.getUnit().getMultiplier();
 
-    // some of the faults Mathew has pointed out,not longer possible
+    // some of the faults Mathew has pointed out, not longer possible
     // CAngleUnit::rad() = CAngleUnit::deg();
     // qDebug() << CAngleUnit::rad(); // wrong
 

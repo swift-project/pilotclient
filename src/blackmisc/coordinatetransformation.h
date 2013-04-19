@@ -1,7 +1,14 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * This file incorporates work covered by the following copyright and
+ * permission notice:
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License. For more information, see
+ * http://geographiclib.sourceforge.net/
+*/
 
 #ifndef BLACKMISC_COORDINATETRANSFORMATION_H
 #define BLACKMISC_COORDINATETRANSFORMATION_H
@@ -35,6 +42,13 @@ public:
      * \return
      */
     static CCoordinateEcef toEcef(const CCoordinateNed &ned);
+
+    /*!
+     * \brief ECEF via Geodetic to NED
+     * \param geo
+     * \return
+     */
+    static CCoordinateNed toNed(const CCoordinateEcef &ecef, const CCoordinateGeodetic &geo);
 
 };
 
