@@ -1,5 +1,4 @@
 QT       += core testlib
-QT       -= gui
 
 TARGET = test_blackmisc
 TEMPLATE = app
@@ -11,12 +10,14 @@ DEPENDPATH += . ../../src
 INCLUDEPATH += . ../../src
 SOURCES += main.cpp testmain.cpp \
     testphysicalquantitiesbase.cpp \
-    testaviationbase.cpp
+    testaviationbase.cpp \
+    testvectormatrix.cpp
 
 HEADERS += testmain.h \
     testphysicalquantitiesbase.h \
     blackmisctest.h \
-    testaviationbase.h
+    testaviationbase.h \
+    testvectormatrix.h
 
 win32-msvc* {
     PRE_TARGETDEPS +=  ../../lib/blackmisc.lib

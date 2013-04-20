@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -20,7 +20,7 @@ protected:
     /*!
      * \brief Default constructor
      */
-    CEarthAngle() : CAngle() {}
+    CEarthAngle() : CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
 
     /*!
      * \brief Copy constructor
@@ -34,6 +34,15 @@ protected:
      * \param unit
      */
     CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CAngle(value, unit) {}
+
+    /*!
+     * \brief String for converter and streaming
+     * \return
+     */
+    virtual QString stringForConverter() const
+    {
+        return this->unitValueRoundedWithUnit(6);
+    }
 
 public:
 

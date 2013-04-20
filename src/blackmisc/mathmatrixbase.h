@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -23,7 +23,7 @@ template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public Bla
 
 protected:
     // no bug, Qt expects columns rows
-    QGenericMatrix<Columns, Rows, qreal> m_matrix; //!< backing data
+    QGenericMatrix<Columns, Rows, double> m_matrix; //!< backing data
 
     /*!
      * \brief Conversion to string
@@ -41,7 +41,7 @@ public:
      * \brief Constructor with init value
      * \param fillValue
      */
-    CMatrixBase(qreal fillValue) : m_matrix() { this->m_matrix.fill(fillValue);}
+    CMatrixBase(double fillValue) : m_matrix() { this->m_matrix.fill(fillValue);}
 
     /*!
      * \brief Copy constructor
@@ -93,7 +93,7 @@ public:
      * \param factor
      * \return
      */
-    CMatrixBase &operator *=(qreal factor)
+    CMatrixBase &operator *=(double factor)
     {
         this->m_matrix *= factor;
         return (*this);
@@ -104,7 +104,7 @@ public:
      * \param factor
      * \return
      */
-    CMatrixBase &operator *(qreal factor)
+    CMatrixBase &operator *(double factor)
     {
         ImplMatrix m(0.0);
         m += (*this);
@@ -124,7 +124,7 @@ public:
      * \param factor
      * \return
      */
-    CMatrixBase &operator /=(qreal factor)
+    CMatrixBase &operator /=(double factor)
     {
         this->m_matrix /= factor;
         return (*this);
@@ -135,7 +135,7 @@ public:
      * \param factor
      * \return
      */
-    CMatrixBase &operator /(qreal factor)
+    CMatrixBase &operator /(double factor)
     {
         ImplMatrix m(0.0);
         m += (*this);
@@ -220,10 +220,16 @@ public:
     void setZero() { this->m_matrix.fill(0.0); }
 
     /*!
+     * \brief isZero
+     * \return
+     */
+    bool isZero() const;
+
+    /*!
      * \brief Set a dedicated value
      * \param value
      */
-    void fill(qreal value) { this->m_matrix.fill(value); }
+    void fill(double value) { this->m_matrix.fill(value); }
 
     /*!
      * \brief Get element
@@ -231,7 +237,7 @@ public:
      * \param column
      * \return
      */
-    qreal getElement(size_t row, size_t column) const;
+    double getElement(size_t row, size_t column) const;
 
     /*!
      * \brief Get element
@@ -239,14 +245,14 @@ public:
      * \param column
      * \param value
      */
-    void setElement(size_t row, size_t column, qreal value);
+    void setElement(size_t row, size_t column, double value);
 
     /*!
      * \brief Get element by ()
      * \param column
      * \return
      */
-    qreal &operator()(size_t row, size_t column)
+    double &operator()(size_t row, size_t column)
     {
         this->checkRange(row, column);
         return this->m_matrix(row, column);
@@ -257,7 +263,7 @@ public:
      * \param column
      * \return
      */
-    qreal operator()(size_t row, size_t column) const
+    double operator()(size_t row, size_t column) const
     {
         return this->getElement(row, column);
     }

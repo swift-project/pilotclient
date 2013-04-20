@@ -19,7 +19,9 @@ namespace Math
 template <class ImplClass> QString CVector3DBase<ImplClass>::stringForConverter() const
 {
     QString s = ("{%1, %2, %3}");
-    s = s.arg(this->m_vector.x()).arg(this->m_vector.y()).arg(this->m_vector.z());
+    s = s.arg(QString::number(this->m_i, 'f')).
+        arg(QString::number(this->m_j, 'f')).
+        arg(QString::number(this->m_k, 'f'));
     return s;
 }
 
@@ -34,29 +36,29 @@ template <class ImplClass> void CVector3DBase<ImplClass>::setZero()
 /*
  * Vector to zero
  */
-template <class ImplClass> void CVector3DBase<ImplClass>::fill(qreal value)
+template <class ImplClass> void CVector3DBase<ImplClass>::fill(double value)
 {
-    this->m_vector.setX(value);
-    this->m_vector.setY(value);
-    this->m_vector.setZ(value);
+    this->m_i = value;
+    this->m_j = value;
+    this->m_k = value;
 }
 
 /*
  * Element
  */
-template <class ImplClass> qreal CVector3DBase<ImplClass>::getElement(size_t row) const
+template <class ImplClass> double CVector3DBase<ImplClass>::getElement(size_t row) const
 {
-    qreal d;
+    double d;
     switch (row)
     {
     case 0:
-        d = this->m_vector.x();
+        d = this->m_i;
         break;
     case 1:
-        d = this->m_vector.y();
+        d = this->m_j;
         break;
     case 2:
-        d = this->m_vector.z();
+        d = this->m_k;
         break;
     default:
         Q_ASSERT_X(true, "getElement", "Detected invalid index in 3D vector");
@@ -69,18 +71,18 @@ template <class ImplClass> qreal CVector3DBase<ImplClass>::getElement(size_t row
 /*
  * Set given element
  */
-template <class ImplClass> void CVector3DBase<ImplClass>::setElement(size_t row, qreal value)
+template <class ImplClass> void CVector3DBase<ImplClass>::setElement(size_t row, double value)
 {
     switch (row)
     {
     case 0:
-        this->m_vector.setX(value);
+        this->m_i = value;
         break;
     case 1:
-        this->m_vector.setY(value);
+        this->m_j = value;
         break;
     case 2:
-        this->m_vector.setZ(value);
+        this->m_k = value;
         break;
     default:
         Q_ASSERT_X(true, "setElement", "Detected invalid index in 3D vector");
@@ -90,14 +92,35 @@ template <class ImplClass> void CVector3DBase<ImplClass>::setElement(size_t row,
 }
 
 /*
+ * Corss product
+ */
+template <class ImplClass> ImplClass CVector3DBase<ImplClass>::crossProduct(const ImplClass &otherVector) const
+{
+    ImplClass v(otherVector);
+    v.m_i = this->m_j * otherVector.m_k - this->m_k * otherVector.m_j;
+    v.m_j = this->m_k * otherVector.m_i - this->m_j * otherVector.m_k;
+    v.m_k = this->m_i * otherVector.m_j - this->m_j * otherVector.m_i;
+    return v;
+}
+
+/*
+ * Cross product
+ */
+template <class ImplClass> double CVector3DBase<ImplClass>::dotProduct(const ImplClass &otherVector) const
+{
+    return this->m_i * otherVector.m_i + this->m_j * otherVector.m_j + this->m_k * otherVector.m_k;
+}
+
+
+/*
  * Multiply with matrix
  */
 template <class ImplClass> void CVector3DBase<ImplClass>::matrixMultiplication(const CMatrix3x3 &matrix)
 {
     CMatrix3x1 m = matrix * (this->toMatrix3x1());
-    this->m_vector.setX(m(0,0));
-    this->m_vector.setY(m(1,0));
-    this->m_vector.setZ(m(2,0));
+    this->m_i = m(0, 0);
+    this->m_j = m(1, 0);
+    this->m_k = m(2, 0);
 }
 
 /*
@@ -105,7 +128,7 @@ template <class ImplClass> void CVector3DBase<ImplClass>::matrixMultiplication(c
  */
 template <class ImplClass> CMatrix3x1 CVector3DBase<ImplClass>::toMatrix3x1() const
 {
-    return CMatrix3x1(this->m_vector.x(), this->m_vector.y(), this->m_vector.z());
+    return CMatrix3x1(this->m_i, this->m_j, this->m_k);
 }
 
 // see here for the reason of thess forward instantiations

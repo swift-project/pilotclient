@@ -14,7 +14,7 @@ namespace Math
 /*
  * Get element by column / row
  */
-template<class ImplMatrix, int Rows, int Columns> qreal CMatrixBase<ImplMatrix, Rows, Columns>::getElement(size_t row, size_t column) const
+template<class ImplMatrix, int Rows, int Columns> double CMatrixBase<ImplMatrix, Rows, Columns>::getElement(size_t row, size_t column) const
 {
     this->checkRange(row, column);
     return this->m_matrix(row, column);
@@ -23,7 +23,7 @@ template<class ImplMatrix, int Rows, int Columns> qreal CMatrixBase<ImplMatrix, 
 /*
  * Set element by column / row
  */
-template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setElement(size_t row, size_t column, qreal value)
+template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setElement(size_t row, size_t column, double value)
 {
     this->checkRange(row, column);
     this->m_matrix(row, column) = value;
@@ -51,6 +51,21 @@ template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, R
             this->m_matrix(r, c) = (qrand() % 101);  // 0...100
         }
     }
+}
+
+/*
+ * All values zero?
+ */
+template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, Rows, Columns>::isZero() const
+{
+    for (int r = 0; r < Rows; r++)
+    {
+        for (int c = 0; c < Columns; c++)
+        {
+            if (this->m_matrix(r, c) != 0) return false;
+        }
+    }
+    return true;
 }
 
 /*

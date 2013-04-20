@@ -5,6 +5,7 @@
 #include <QString>
 #include <QtGlobal>
 #include <QDebug>
+#include <iostream>
 
 namespace BlackMisc
 {
@@ -20,7 +21,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QDebug operator<<(QDebug debug, const UsingClass &uc)
+    friend QDebug &operator<<(QDebug &debug, const UsingClass &uc)
     {
         const CBaseStreamStringifier &s = uc;
         debug << s.stringForStreaming();
@@ -33,7 +34,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QDataStream operator<<(QDataStream stream, const UsingClass &uc)
+    friend QDataStream &operator<<(QDataStream &stream, const UsingClass &uc)
     {
         const CBaseStreamStringifier &s = uc;
         stream << s.stringForStreaming();
@@ -46,11 +47,24 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend CLogMessage operator<<(CLogMessage log, const UsingClass &uc)
+    friend CLogMessage &operator<<(CLogMessage &log, const UsingClass &uc)
     {
         const CBaseStreamStringifier &s = uc;
         log << s.stringForStreaming();
         return log;
+    }
+
+    /*!
+     * \brief Stream operator << for std::cout
+     * \param ostr
+     * \param uc
+     * \return
+     */
+    friend std::ostream &operator<<(std::ostream &ostr, const UsingClass &uc)
+    {
+        const CBaseStreamStringifier &s = uc;
+        ostr << s.stringForStreaming().toStdString();
+        return ostr;
     }
 
 public:

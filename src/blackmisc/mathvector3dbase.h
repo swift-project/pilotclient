@@ -7,7 +7,6 @@
 #define BLACKMISC_MATHVECTOR3DBASE_H
 
 #include "blackmisc/basestreamstringifier.h"
-#include <QVector3D>
 
 namespace BlackMisc
 {
@@ -25,12 +24,15 @@ template <class ImplClass> class CVector3DBase : public CBaseStreamStringifier<I
 {
 protected:
 
-    QVector3D m_vector; //!< Vector data
+    // using own value since Qt QVector3D stores internally as float
+    double m_i; //!< Vector data i
+    double m_j; //!< Vector data j
+    double m_k; //!< Vector data k
 
     /*!
      * \brief Default constructor
      */
-    CVector3DBase() : m_vector() {}
+    CVector3DBase() {}
 
     /*!
      * \brief Constructor by values
@@ -38,13 +40,19 @@ protected:
      * \param j
      * \param k
      */
-    CVector3DBase(qreal i, qreal j, qreal k) : m_vector(i, j, k) {}
+    CVector3DBase(double i, double j, double k) : m_i(i), m_j(j), m_k(k) {}
 
     /*!
      * \brief Constructor by value
      * \param value
      */
-    CVector3DBase(qreal value) : m_vector(value, value, value) {}
+    CVector3DBase(double value) : m_i(value), m_j(value), m_k(value) {}
+
+    /*!
+     * \brief Copy constructor
+     * \param otherVector
+     */
+    CVector3DBase(const CVector3DBase &otherVector) : m_i(otherVector.m_i), m_j(otherVector.m_j), m_k(otherVector.m_k) {}
 
     /*!
      * \brief String for converter
@@ -70,28 +78,28 @@ public:
     /*!
      * \brief Set zeros
      */
-    void fill(qreal value);
+    void fill(double value);
 
     /*!
      * \brief Get element
      * \param row
      * \return
      */
-    qreal getElement(size_t row) const;
+    double getElement(size_t row) const;
 
     /*!
      * \brief Set element
      * \param row
      * \param value
      */
-    void setElement(size_t row, qreal value);
+    void setElement(size_t row, double value);
 
     /*!
      * \brief Operator []
      * \param row
      * \return
      */
-    qreal operator[](size_t row) const { return this->getElement(row); }
+    double operator[](size_t row) const { return this->getElement(row); }
 
 
     /*!
@@ -99,7 +107,7 @@ public:
      * \param column
      * \return
      */
-    qreal operator()(size_t row) const { return this->getElement(row); }
+    double operator()(size_t row) const { return this->getElement(row); }
 
     /*!
      * \brief Equal operator ==
@@ -109,7 +117,9 @@ public:
     bool operator ==(const CVector3DBase &otherVector) const
     {
         if (this == &otherVector) return true;
-        return this->m_vector == otherVector.m_vector;
+        return this->m_i == otherVector.m_i &&
+               this->m_j == otherVector.m_j &&
+               this->m_k == otherVector.m_k;
     }
 
     /*!
@@ -130,8 +140,10 @@ public:
      */
     CVector3DBase &operator =(const CVector3DBase &otherVector)
     {
-        if (this == &otherVector)  return *this; // Same object?
-        this->m_vector = otherVector.m_vector;
+        if (this == &otherVector) return *this; // Same object?
+        this->m_i = otherVector.m_i;
+        this->m_j = otherVector.m_j;
+        this->m_k = otherVector.m_k;
         return (*this);
     }
 
@@ -142,7 +154,9 @@ public:
      */
     CVector3DBase &operator +=(const CVector3DBase &otherVector)
     {
-        this->m_vector += otherVector.m_vector;
+        this->m_i += otherVector.m_i;
+        this->m_j += otherVector.m_j;
+        this->m_k += otherVector.m_k;
         return (*this);
     }
 
@@ -166,12 +180,14 @@ public:
      */
     CVector3DBase &operator -=(const CVector3DBase &otherVector)
     {
-        this->m_vector -= otherVector.m_vector;
+        this->m_i -= otherVector.m_i;
+        this->m_j -= otherVector.m_j;
+        this->m_k -= otherVector.m_k;
         return (*this);
     }
 
     /*!
-     * \brief Operator +
+     * \brief Operator -
      * \param otherVector
      * \return
      */
@@ -190,7 +206,9 @@ public:
      */
     CVector3DBase &operator *=(const CVector3DBase &otherVector)
     {
-        this->m_vector *= otherVector.m_vector;
+        this->m_i *= otherVector.m_i;
+        this->m_j *= otherVector.m_j;
+        this->m_k *= otherVector.m_k;
         return (*this);
     }
 
@@ -214,7 +232,9 @@ public:
      */
     CVector3DBase &operator /=(const CVector3DBase &otherVector)
     {
-        this->m_vector *= otherVector.reciprocalValues().m_vector;
+        this->m_i /= otherVector.m_i;
+        this->m_j /= otherVector.m_j;
+        this->m_k /= otherVector.m_k;
         return (*this);
     }
 
@@ -236,22 +256,14 @@ public:
      * \param otherVector
      * \return
      */
-    qreal dotProduct(const ImplClass &otherVector) const
-    {
-        return QVector3D::dotProduct(this->m_vector, otherVector.m_vector);
-    }
+    double dotProduct(const ImplClass &otherVector) const;
 
     /*!
      * \brief Cross product
      * \param otherVector
      * \return
      */
-    ImplClass crossProduct(const ImplClass &otherVector) const
-    {
-        ImplClass v;
-        v.m_vector = QVector3D::crossProduct(this->m_vector, otherVector.m_vector);
-        return v;
-    }
+    ImplClass crossProduct(const ImplClass &otherVector) const;
 
     /*!
      * \brief Matrix * this vector
@@ -268,9 +280,9 @@ public:
     ImplClass reciprocalValues() const
     {
         ImplClass v;
-        v.m_vector.setX(1 / this->m_vector.x());
-        v.m_vector.setY(1 / this->m_vector.y());
-        v.m_vector.setZ(1 / this->m_vector.z());
+        v.m_i = (1 / this->m_i);
+        v.m_j = (1 / this->m_j);
+        v.m_k = (1 / this->m_j);
         return v;
     }
 
@@ -278,18 +290,18 @@ public:
      * \brief Length
      * \return
      */
-    qreal length()const
+    double length()const
     {
-        return this->m_vector.length();
+        return this->m_i * this->m_j + this->m_k;
     }
 
     /*!
      * \brief Length squared
      * \return
      */
-    qreal lengthSquared()const
+    double lengthSquared()const
     {
-        return this->m_vector.lengthSquared();
+        return this->m_i * this->m_i + this->m_j * this->m_j + this->m_k * this->m_k;
     }
 
     /*!
@@ -302,7 +314,7 @@ public:
      * \brief Magnitude
      * \return
      */
-    qreal magnitude() const
+    double magnitude() const
     {
         return sqrt(this->lengthSquared());
     }

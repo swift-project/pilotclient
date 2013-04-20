@@ -28,7 +28,7 @@ public:
      * \brief init with value
      * \param fillValue
      */
-    CMatrix3x3(qreal fillValue) : CMatrixBase(fillValue) {}
+    CMatrix3x3(double fillValue) : CMatrixBase(fillValue) {}
 
     /*!
      * \brief Copy constructor
@@ -40,7 +40,7 @@ public:
      * \brief Calculates the determinant of the matrix
      * \return
      */
-    qreal determinant() const;
+    double determinant() const;
 
     /*!
      * \brief Calculate the inverse
@@ -88,7 +88,8 @@ public:
      * \param vector
      * \return
      */
-    CVector3D operator *(const CVector3D &vector) const {
+    CVector3D operator *(const CVector3D &vector) const
+    {
         CVector3D v(vector);
         v.matrixMultiplication(*this);
         return v;

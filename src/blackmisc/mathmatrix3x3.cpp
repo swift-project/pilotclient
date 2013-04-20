@@ -74,8 +74,6 @@ CMatrix3x1 CMatrix3x3::getColumn(int column) const
     return CMatrix3x1(this->getElement(0, column), this->getElement(1, column), this->getElement(2, column));
 }
 
-
-
 } // namespace
 
 } // namespace

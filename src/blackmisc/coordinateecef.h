@@ -28,7 +28,7 @@ public:
      * \param y
      * \param z
      */
-    CCoordinateEcef(qreal x, qreal y, qreal z) : CVector3DBase(x, y, z) {}
+    CCoordinateEcef(double x, double y, double z) : CVector3DBase(x, y, z) {}
 
     /*!
      * \brief Constructor by math vector
@@ -40,54 +40,54 @@ public:
      * \brief x
      * \return
      */
-    qreal x() const
+    double x() const
     {
-        return this->m_vector.x();
+        return this->m_i;
     }
 
     /*!
      * \brief y
      * \return
      */
-    qreal y() const
+    double y() const
     {
-        return this->m_vector.y();
+        return this->m_j;
     }
 
     /*!
      * \brief z
      * \return
      */
-    qreal z() const
+    double z() const
     {
-        return this->m_vector.z();
+        return this->m_k;
     }
 
     /*!
      * \brief Set x
      * \param x
      */
-    void setX(qreal x)
+    void setX(double x)
     {
-        this->m_vector.setX(x);
+        this->m_i = x;
     }
 
     /*!
      * \brief Set y
      * \param y
      */
-    void setY(qreal y)
+    void setY(double y)
     {
-        this->m_vector.setY(y);
+        this->m_j = y;
     }
 
     /*!
      * \brief Set z
      * \param z
      */
-    void setZ(qreal z)
+    void setZ(double z)
     {
-        this->m_vector.setZ(z);
+        this->m_k = z;
     }
 
     /*!
@@ -107,7 +107,10 @@ protected:
     virtual QString stringForConverter() const
     {
         QString s = "ECEF: {x %1, y %2, z %3}";
-        return s.arg(this->x()).arg(this->y()).arg(this->z());
+        s = s.arg(QString::number(this->x(), 'f', 6)).
+            arg(QString::number(this->y(), 'f', 6)).
+            arg(QString::number(this->z(), 'f', 6));
+        return s;
     }
 
 };

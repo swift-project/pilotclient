@@ -68,8 +68,8 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateGeodetic &geo
 
     CLatitude lat = geo.latitude();
     CLongitude lon = geo.longitude();
-    qreal latDeg = lat.value(CAngleUnit::deg());
-    qreal lonDeg = lon.value(CAngleUnit::deg());
+    double latDeg = lat.value(CAngleUnit::deg());
+    double lonDeg = lon.value(CAngleUnit::deg());
 
     double phi = lat.value(CAngleUnit::rad());
     double lambdaRad = lon.value(CAngleUnit::rad());
@@ -90,7 +90,6 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateGeodetic &geo
     double Y = X * slambda;
     X *= clambda;
     double Z = (e2m() * n + h) * sphi;
-
     CCoordinateEcef result(X, Y, Z);
     return result;
 }
@@ -246,6 +245,7 @@ CCoordinateGeodetic CCoordinateTransformation::toGeodetic(const CCoordinateEcef 
         CLatitude(latRad, CAngleUnit::rad()),
         CLongitude(lonRad, CAngleUnit::rad()),
         CLength(h, CLengthUnit::m()));
+    result.switchUnit(CAngleUnit::deg());
     return result;
 }
 

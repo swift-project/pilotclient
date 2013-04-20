@@ -29,7 +29,7 @@ public:
      * \brief init with value
      * \param fillValue
      */
-    CMatrix1x3(qreal fillValue) : CMatrixBase(fillValue) {}
+    CMatrix1x3(double fillValue) : CMatrixBase(fillValue) {}
 
     /*!
      * \brief Copy constructor
@@ -43,7 +43,7 @@ public:
      * \param c2
      * \param c3
      */
-    CMatrix1x3(qreal c1, qreal c2, qreal c3) : CMatrixBase()
+    CMatrix1x3(double c1, double c2, double c3) : CMatrixBase()
     {
         this->m_matrix(0, 0) = c1;
         this->m_matrix(0, 1) = c2;

@@ -25,66 +25,72 @@ public:
      * \param j
      * \param k
      */
-    CVector3D(qreal i, qreal j, qreal k) : CVector3DBase(i, j, k) {}
+    CVector3D(double i, double j, double k) : CVector3DBase(i, j, k) {}
 
     /*!
      * \brief Constructor by value
      * \param value
      */
-    CVector3D(qreal value) : CVector3DBase(value) {}
+    CVector3D(double value) : CVector3DBase(value) {}
+
+    /*!
+     * \brief Copy constructor
+     * \param otherVector
+     */
+    CVector3D(const CVector3D &otherVector) : CVector3DBase(otherVector) {}
 
     /*!
      * \brief i
      * \return
      */
-    qreal i() const
+    double i() const
     {
-        return this->m_vector.x();
+        return this->m_i;
     }
 
     /*!
      * \brief j
      * \return
      */
-    qreal j() const
+    double j() const
     {
-        return this->m_vector.y();
+        return this->m_j;
     }
 
     /*!
      * \brief k
      * \return
      */
-    qreal k() const
+    double k() const
     {
-        return this->m_vector.z();
+        return this->m_k;
     }
 
     /*!
      * \brief Set i
      * \param i
      */
-    void setI(qreal i)
+    void setI(double i)
     {
-        this->m_vector.setX(i);
+        this->m_i = i;
     }
 
     /*!
      * \brief Set j
      * \param j
      */
-    void setJ(qreal j)
+    void setJ(double j)
     {
-        this->m_vector.setY(j);
+        this->m_j = j;
     }
 
     /*!
      * \brief Set k
      * \param k
      */
-    void setK(qreal k)
+    void setK(double k)
     {
-        this->m_vector.setZ(k);
+        this->m_k = k;
     }
 
 };

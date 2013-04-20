@@ -31,7 +31,10 @@ protected:
     virtual QString stringForConverter() const
     {
         QString s = "NED: {N %1, E %2, D %3}";
-        return s.arg(this->north()).arg(this->east()).arg(this->down());
+        s = s.arg(QString::number(this->north(), 'f', 6)).
+            arg(QString::number(this->east(), 'f', 6)).
+            arg(QString::number(this->down(), 'f', 6));
+        return s;
     }
 
 public:
@@ -53,7 +56,7 @@ public:
      * \param east
      * \param down
      */
-    CCoordinateNed(const CCoordinateGeodetic &referencePosition, qreal north, qreal east, qreal down) : CVector3DBase(north, east, down), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
+    CCoordinateNed(const CCoordinateGeodetic &referencePosition, double north, double east, double down) : CVector3DBase(north, east, down), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
     /*!
      * \brief Copy constructor
@@ -135,54 +138,54 @@ public:
      * \brief North
      * \return
      */
-    qreal north() const
+    double north() const
     {
-        return this->m_vector.x();
+        return this->m_i;
     }
 
     /*!
      * \brief East
      * \return
      */
-    qreal east() const
+    double east() const
     {
-        return this->m_vector.y();
+        return this->m_j;
     }
 
     /*!
      * \brief Down
      * \return
      */
-    qreal down() const
+    double down() const
     {
-        return this->m_vector.z();
+        return this->m_k;
     }
 
     /*!
      * \brief Set north
      * \param north
      */
-    void setNorth(qreal north)
+    void setNorth(double north)
     {
-        this->m_vector.setX(north);
+        this->m_i = north;
     }
 
     /*!
      * \brief Set east
      * \param east
      */
-    void setEast(qreal east)
+    void setEast(double east)
     {
-        this->m_vector.setY(east);
+        this->m_j = east;
     }
 
     /*!
      * \brief Set down
      * \param down
      */
-    void setDown(qreal down)
+    void setDown(double down)
     {
-        this->m_vector.setZ(down);
+        this->m_k = down;
     }
 
     /*!

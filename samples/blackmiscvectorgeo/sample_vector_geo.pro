@@ -23,8 +23,10 @@ DESTDIR = ../../bin
 
 SOURCES += main.cpp \
     samplesvectormatrix.cpp \
-    samplesgeo.cpp
+    samplesgeo.cpp \
+    samplesgeodetictoecef.cpp
 
 HEADERS += \
     samplesvectormatrix.h \
-    samplesgeo.h
+    samplesgeo.h \
+    samplesgeodetictoecef.h

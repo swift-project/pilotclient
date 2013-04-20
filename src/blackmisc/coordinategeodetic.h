@@ -34,7 +34,7 @@ protected:
     virtual QString stringForConverter() const
     {
         QString s = "Geodetic: {%1, %2, %3}";
-        return s.arg(this->m_latitude.unitValueRoundedWithUnit()).arg(this->m_longitude.unitValueRoundedWithUnit()).arg(this->m_height.unitValueRoundedWithUnit());
+        return s.arg(this->m_latitude.unitValueRoundedWithUnit(6)).arg(this->m_longitude.unitValueRoundedWithUnit(6)).arg(this->m_height.unitValueRoundedWithUnit());
     }
 
 public:
@@ -64,7 +64,7 @@ public:
      * \param longitudeDegrees
      * \param heightMeters
      */
-    CCoordinateGeodetic(qreal latitudeDegrees, qreal longitudeDegrees, qreal heightMeters) :
+    CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters) :
         m_latitude(latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_longitude(longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_height(heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m()) {}
 
     /*!
