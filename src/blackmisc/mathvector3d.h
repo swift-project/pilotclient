@@ -31,7 +31,7 @@ public:
      * \brief Constructor by value
      * \param value
      */
-    CVector3D(double value) : CVector3DBase(value) {}
+    explicit CVector3D(double value) : CVector3DBase(value) {}
 
     /*!
      * \brief Copy constructor

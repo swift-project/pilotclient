@@ -11,13 +11,13 @@ INCLUDEPATH += . ../../src
 SOURCES += main.cpp testmain.cpp \
     testphysicalquantitiesbase.cpp \
     testaviationbase.cpp \
-    testvectormatrix.cpp
+    testvectormatrixbase.cpp
 
 HEADERS += testmain.h \
     testphysicalquantitiesbase.h \
     blackmisctest.h \
     testaviationbase.h \
-    testvectormatrix.h
+    testvectormatrixbase.h
 
 win32-msvc* {
     PRE_TARGETDEPS +=  ../../lib/blackmisc.lib

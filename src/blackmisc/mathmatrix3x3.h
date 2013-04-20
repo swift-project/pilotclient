@@ -25,16 +25,43 @@ public:
     CMatrix3x3() : CMatrixBase() {}
 
     /*!
-     * \brief init with value
-     * \param fillValue
-     */
-    CMatrix3x3(double fillValue) : CMatrixBase(fillValue) {}
-
-    /*!
      * \brief Copy constructor
      * \param other
      */
     CMatrix3x3(const CMatrix3x3 &otherMatrix) : CMatrixBase(otherMatrix) {}
+
+    /*!
+     * \brief Init by fill value
+     * \param fillValue
+     */
+    explicit CMatrix3x3(double fillValue) : CMatrixBase(fillValue) {}
+
+    /*!
+     * \brief Stupid but handy constructor
+     * \param r1c1
+     * \param r1c2
+     * \param r1c3
+     * \param r2c1
+     * \param r2c2
+     * \param r2c3
+     * \param r3c1
+     * \param r3c2
+     * \param r3c3
+     */
+    explicit CMatrix3x3(double r1c1, double r1c2, double r1c3,
+                        double r2c1, double r2c2, double r2c3,
+                        double r3c1, double r3c2, double r3c3) : CMatrixBase()
+    {
+        this->setElement(0, 0, r1c1);
+        this->setElement(0, 1, r1c2);
+        this->setElement(0, 2, r1c3);
+        this->setElement(1, 0, r2c1);
+        this->setElement(1, 1, r2c2);
+        this->setElement(1, 2, r2c3);
+        this->setElement(2, 0, r3c1);
+        this->setElement(2, 1, r3c2);
+        this->setElement(2, 2, r3c3);
+    }
 
     /*!
      * \brief Calculates the determinant of the matrix
@@ -44,9 +71,10 @@ public:
 
     /*!
      * \brief Calculate the inverse
+     * \param invertible
      * \return
      */
-    CMatrix3x3 inverse() const;
+    CMatrix3x3 inverse(bool &invertible) const;
 
     /*!
      * \brief Operator *=
@@ -78,7 +106,7 @@ public:
      */
     CMatrix3x3 operator *(const CMatrix3x3 &otherMatrix) const
     {
-        CMatrix3x3 m(otherMatrix);
+        CMatrix3x3 m(*this);
         m *= otherMatrix;
         return m;
     }
@@ -96,12 +124,35 @@ public:
     }
 
     /*!
+     * \brief Multiply with factor
+     * \param factor
+     * \return
+     */
+    CMatrix3x3 operator *(double factor) const
+    {
+        CMatrix3x3 m(*this);
+        m *= factor;
+        return m;
+    }
+
+    /*!
+     * \brief Multiply with factor
+     * \param factor
+     * \return
+     */
+    CMatrix3x3 &operator *=(double factor)
+    {
+        CMatrixBase::operator *=(factor);
+        return (*this);
+    }
+
+    /*!
      * \brief Transposed matrix
      * \return
      */
     CMatrix3x3 transposed() const
     {
-        CMatrix3x3 m(0.0);
+        CMatrix3x3 m(0);
         m.m_matrix = this->m_matrix.transposed();
         return m;
     }
@@ -126,4 +177,4 @@ public:
 
 } // namespace
 
-#endif // BLACKMISC_POSMATRIX3X3_H
+#endif // guard

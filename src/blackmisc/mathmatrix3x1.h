@@ -41,16 +41,16 @@ public:
     }
 
     /*!
-     * \brief init with value
-     * \param fillValue
-     */
-    CMatrix3x1(qreal fillValue) : CMatrixBase(fillValue) {}
-
-    /*!
      * \brief Copy constructor
      * \param other
      */
     CMatrix3x1(const CMatrix3x1 &otherMatrix) : CMatrixBase(otherMatrix) {}
+
+    /*!
+     * \brief Init by fill value
+     * \param fillValue
+     */
+    explicit CMatrix3x1(double fillValue) : CMatrixBase(fillValue) {}
 
     /*!
      * \brief Convert to vector

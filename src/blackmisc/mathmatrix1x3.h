@@ -26,16 +26,16 @@ public:
     CMatrix1x3() : CMatrixBase() {}
 
     /*!
-     * \brief init with value
-     * \param fillValue
-     */
-    CMatrix1x3(double fillValue) : CMatrixBase(fillValue) {}
-
-    /*!
      * \brief Copy constructor
      * \param other
      */
     CMatrix1x3(const CMatrix1x3 &otherMatrix) : CMatrixBase(otherMatrix) {}
+
+    /*!
+     * \brief Init by fill value
+     * \param fillValue
+     */
+    explicit CMatrix1x3(double fillValue) : CMatrixBase(fillValue) {}
 
     /*!
      * \brief CMatrix 3x1

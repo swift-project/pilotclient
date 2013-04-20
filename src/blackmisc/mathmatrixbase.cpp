@@ -69,6 +69,23 @@ template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, R
 }
 
 /*
+ * All values zero?
+ */
+template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, Rows, Columns>::allValuesEqual() const
+{
+    double v = this->getElement(0,0);
+    for (int r = 0; r < Rows; r++)
+    {
+        for (int c = 0; c < Columns; c++)
+        {
+            if (this->m_matrix(r, c) != v) return false;
+        }
+    }
+    return true;
+}
+
+
+/*
  * Convert to string
  */
 template <class ImplMatrix, int Rows, int Columns> QString CMatrixBase<ImplMatrix, Rows, Columns>::stringForConverter() const

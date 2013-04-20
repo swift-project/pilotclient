@@ -8,7 +8,7 @@
 
 #include "testphysicalquantitiesbase.h"
 #include "testaviationbase.h"
-#include "testvectormatrix.h"
+#include "testvectormatrixbase.h"
 #include <QtTest/QtTest>
 
 namespace BlackMiscTest

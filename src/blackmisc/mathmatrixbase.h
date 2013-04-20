@@ -38,16 +38,19 @@ public:
     CMatrixBase() : m_matrix() {}
 
     /*!
-     * \brief Constructor with init value
-     * \param fillValue
-     */
-    CMatrixBase(double fillValue) : m_matrix() { this->m_matrix.fill(fillValue);}
-
-    /*!
      * \brief Copy constructor
      * \param other
      */
     CMatrixBase(const CMatrixBase &otherMatrix) : m_matrix(otherMatrix.m_matrix) {}
+
+    /*!
+     * \brief Fill with value
+     * \param fillValue
+     */
+    explicit CMatrixBase(double fillValue) : m_matrix()
+    {
+        this->fill(fillValue);
+    }
 
     /*!
      * \brief Virtual destructor
@@ -104,9 +107,9 @@ public:
      * \param factor
      * \return
      */
-    CMatrixBase &operator *(double factor)
+    ImplMatrix operator *(double factor) const
     {
-        ImplMatrix m(0.0);
+        ImplMatrix m(0);
         m += (*this);
         m *= factor;
         return m;
@@ -135,9 +138,9 @@ public:
      * \param factor
      * \return
      */
-    CMatrixBase &operator /(double factor)
+    ImplMatrix operator /(double factor) const
     {
-        ImplMatrix m(0.0);
+        ImplMatrix m(0);
         m += (*this);
         m /= factor;
         return m;
@@ -161,7 +164,7 @@ public:
      */
     ImplMatrix operator +(const ImplMatrix &otherMatrix) const
     {
-        ImplMatrix m(0.0);
+        ImplMatrix m(0);
         m += (*this);
         m += otherMatrix;
         return m;
@@ -185,7 +188,7 @@ public:
      */
     ImplMatrix operator -(const ImplMatrix &otherMatrix) const
     {
-        ImplMatrix m(0.0);
+        ImplMatrix m(0);
         m += (*this);
         m -= otherMatrix;
         return m;
@@ -220,10 +223,16 @@ public:
     void setZero() { this->m_matrix.fill(0.0); }
 
     /*!
-     * \brief isZero
+     * \brief Is zero
      * \return
      */
     bool isZero() const;
+
+    /*!
+     * \brief All values equal, if so matirx is not invertible
+     * \return
+     */
+    bool allValuesEqual() const;
 
     /*!
      * \brief Set a dedicated value

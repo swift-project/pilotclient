@@ -46,7 +46,7 @@ protected:
      * \brief Constructor by value
      * \param value
      */
-    CVector3DBase(double value) : m_i(value), m_j(value), m_k(value) {}
+    explicit CVector3DBase(double value) : m_i(value), m_j(value), m_k(value) {}
 
     /*!
      * \brief Copy constructor
@@ -222,6 +222,58 @@ public:
         ImplClass v;
         v += (*this);
         v *= otherVector;
+        return v;
+    }
+
+    /*!
+     * \brief Multiply with scalar
+     * \param factor
+     * \return
+     */
+    CVector3DBase &operator *=(double factor)
+    {
+        this->m_i *= factor;
+        this->m_j *= factor;
+        this->m_k *= factor;
+        return (*this);
+    }
+
+    /*!
+     * \brief Multiply with scalar
+     * \param factor
+     * \return
+     */
+    ImplClass operator *(double factor) const
+    {
+        ImplClass v;
+        v += (*this);
+        v *= factor;
+        return v;
+    }
+
+    /*!
+     * \brief Divide by scalar
+     * \param divisor
+     * \return
+     */
+    CVector3DBase &operator /=(double divisor)
+    {
+        this->m_i /= divisor;
+        this->m_j /= divisor;
+        this->m_k /= divisor;
+        return (*this);
+    }
+
+    /*!
+     * \brief Divide by scalar
+     * \param divisor
+     * \return
+     */
+    ImplClass operator /(double divisor) const
+    {
+        ImplClass v;
+        v += (*this);
+        v /= divisor;
         return v;
     }
 

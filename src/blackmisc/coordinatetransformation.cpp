@@ -51,8 +51,10 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateNed &ned)
 
     dcm = dcm1 * dcm2 * dcm3;
 
+    bool inverse;
     invDcm.setZero();
-    invDcm = dcm.inverse();
+    invDcm = dcm.inverse(inverse);
+    Q_ASSERT_X(inverse, "toEcef", "Inverse matrix could not be calculated");
 
     CVector3D tempResult = invDcm * ned.toMathVector(); // to generic vector
     CCoordinateEcef result(tempResult);

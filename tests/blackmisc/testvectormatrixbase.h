@@ -15,7 +15,7 @@ namespace BlackMiscTest
 /*!
  * \brief Vector and Matrix classes basic tests
  */
-class CTestVectorMatrix : public QObject
+class CTestVectorMatrixBase : public QObject
 {
     Q_OBJECT
 
@@ -24,7 +24,7 @@ public:
      * \brief Standard test case constructor
      * \param parent
      */
-    explicit CTestVectorMatrix(QObject *parent = 0) : QObject(parent) {}
+    explicit CTestVectorMatrixBase(QObject *parent = 0) : QObject(parent) {}
 
 private slots:
     /*!

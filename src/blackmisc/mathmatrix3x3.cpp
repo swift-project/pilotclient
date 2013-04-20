@@ -13,9 +13,9 @@ namespace Math
 /*
  * Determinant
  */
-qreal CMatrix3x3::determinant() const
+double CMatrix3x3::determinant() const
 {
-    qreal determinant =
+    double determinant =
         this->m_matrix(0, 0) * this->m_matrix(1, 1) * this->m_matrix(2, 2) +
         this->m_matrix(0, 1) * this->m_matrix(1, 2) * this->m_matrix(2, 0) +
         this->m_matrix(0, 2) * this->m_matrix(1, 0) * this->m_matrix(2, 1) -
@@ -27,17 +27,19 @@ qreal CMatrix3x3::determinant() const
 }
 
 /*
- * Determinant
+ * Inverse
  */
-CMatrix3x3 CMatrix3x3::inverse() const
+CMatrix3x3 CMatrix3x3::inverse(bool &invertible) const
 {
     CMatrix3x3 inverse;
-    qreal det = determinant();
-
-    // should we throw an assert / error here?
-    if (det == 0) return inverse;
-
-    qreal invdet = 1.0 / det;
+    double det;
+    if (this->allValuesEqual() || (det = determinant()) == 0)
+    {
+        invertible = false;
+        inverse.setZero();
+        return inverse;
+    }
+    double invdet = 1.0 / det;
 
     inverse.m_matrix(0, 0) = (this->m_matrix(1, 1) * this->m_matrix(2, 2) - this->m_matrix(1, 2) * this->m_matrix(2, 1)) * invdet;
     inverse.m_matrix(0, 1) = (- this->m_matrix(0, 1) * this->m_matrix(2, 2) + this->m_matrix(0, 2) * this->m_matrix(2, 1)) * invdet;
@@ -49,6 +51,7 @@ CMatrix3x3 CMatrix3x3::inverse() const
     inverse.m_matrix(2, 1) = (- this->m_matrix(0, 0) * this->m_matrix(2, 1) + this->m_matrix(0, 1) * this->m_matrix(2, 0)) * invdet;
     inverse.m_matrix(2, 2) = (this->m_matrix(0, 0) * this->m_matrix(1, 1) - this->m_matrix(0, 1) * this->m_matrix(1, 0)) * invdet;
 
+    invertible = true;
     return inverse;
 }
 

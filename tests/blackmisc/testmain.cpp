@@ -16,7 +16,7 @@ int CTestMain::unitMain(int argc, char *argv[])
     {
         CTestPhysicalQuantitiesBase pqBaseTests ;
         CTestAviationBase avBaseTests;
-        CTestVectorMatrix vmTests;
+        CTestVectorMatrixBase vmTests;
         status |= QTest::qExec(&pqBaseTests, argc, argv);
         status |= QTest::qExec(&avBaseTests, argc, argv);
         status |= QTest::qExec(&vmTests, argc, argv);

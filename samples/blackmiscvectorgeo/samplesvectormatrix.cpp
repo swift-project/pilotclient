@@ -18,9 +18,10 @@ int BlackMiscTest::CSamplesVectorMatrix::samples()
     CMatrix3x3 mr = m;
     qDebug() << m << mr;
     mr.setRandom();
-    CMatrix3x3 mi = mr.inverse();
+    bool im;
+    CMatrix3x3 mi = mr.inverse(im);
     CMatrix3x3 mid = mr * mi;
-    qDebug() << mr << mi << mid;
+    qDebug() << mr << mi << mid << im;
 
     // bye
     qDebug() << "-----------------------------------------------";
