@@ -7,6 +7,7 @@
 #define BLACKMISC_MATHVECTOR3DBASE_H
 
 #include "blackmisc/basestreamstringifier.h"
+#include "blackmisc/mathematics.h"
 
 namespace BlackMisc
 {
@@ -74,6 +75,26 @@ public:
      * \brief Set zeros
      */
     void setZero();
+
+    /*!
+     * \brief Set zeros
+     */
+    bool isZero() const
+    {
+        return this->m_i == 0 && this->m_j == 0 && this->m_k == 0;
+    }
+
+    /*!
+     * \brief Is identity matrix? Epsilon considered.
+     * \return
+     */
+    bool isZeroEpsilon() const
+    {
+        ImplClass v;
+        v += (*this);
+        v.round();
+        return v.isZero();
+    }
 
     /*!
      * \brief Set zeros
@@ -370,6 +391,18 @@ public:
     {
         return sqrt(this->lengthSquared());
     }
+
+    /*!
+     * \brief Round this vector
+     */
+    void round()
+    {
+        const double epsilon = 1E-10;
+        this->m_i = BlackMisc::Math::CMath::roundEpsilon(this->m_i, epsilon);
+        this->m_j = BlackMisc::Math::CMath::roundEpsilon(this->m_j, epsilon);
+        this->m_k = BlackMisc::Math::CMath::roundEpsilon(this->m_k, epsilon);
+    }
+
 };
 
 } // namespace

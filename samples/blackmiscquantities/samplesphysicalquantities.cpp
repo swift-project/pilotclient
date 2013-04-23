@@ -22,12 +22,12 @@ int CSamplesPhysicalQuantities::samples()
 
     CMeasurementPrefix pf1 = CMeasurementPrefix::h();
     CMeasurementPrefix pf2 = CMeasurementPrefix::M();
-    qDebug() << pf1 << pf2 << 1.0 * pf1;
+    qDebug() << pf1 << pf2 << (1.0 * pf1.toDouble());
 
     CLengthUnit lu1(CLengthUnit::cm());
     CLengthUnit lu2(CLengthUnit::ft());
-    QString lu1s = lu1;
-    QString lu2s = lu2;
+    QString lu1s = lu1.toQString();
+    QString lu2s = lu2.toQString();
     qDebug() << lu1 << lu2 << lu1s << lu2s;
     const CLength l1(5.0, CLengthUnit::ft()); // 5 ft
     CLength l2(1, CLengthUnit::NM()); // 1NM

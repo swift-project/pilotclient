@@ -15,10 +15,10 @@ namespace Math
 // Some namespace wide constant values
 
 //! Mathematical constant Pi
-const qreal PI = 4.0 * qAtan(1.0);
+const double PI = 4.0 * qAtan(1.0);
 
 //! 2 * Pi
-const qreal TwoPI  = 2.0 * PI;
+const double TwoPI  = 2.0 * PI;
 
 /*!
  * \brief Math utils
@@ -33,14 +33,14 @@ public:
      * \param y
      * \return
      */
-    static qreal hypot(qreal x, qreal y);
+    static double hypot(double x, double y);
 
     /*!
      * \brief Calculates the square of x
      * \param x
      * \return
      */
-    static inline qreal square(qreal x)
+    static inline double square(double x)
     {
         return x * x;
     }
@@ -50,7 +50,7 @@ public:
      * \param x
      * \return
      */
-    static inline qreal cubic(const qreal x)
+    static inline double cubic(const double x)
     {
         return x * x * x;
     }
@@ -60,7 +60,23 @@ public:
      * \param x
      * \return
      */
-    static qreal cubicRootReal(qreal x);
+    static double cubicRootReal(double x);
+
+    /*!
+     * \brief Utility round method
+     * \param value
+     * \param digits
+     * \return
+     */
+    static double round(double value, int digits);
+
+    /*!
+     * \brief Round by given epsilon, e.g.
+     * \param value
+     * \param epsilon
+     * \return
+     */
+    static double roundEpsilon(double value, double epsilon);
 
 private:
     /*!

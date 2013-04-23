@@ -93,10 +93,6 @@ public:
     /*!
      * \brief Cast as double
      */
-    operator double() const
-    {
-        return this->m_factor;
-    }
 
     /*!
      * \brief Factor, e.g.1000 for "kilo"
@@ -106,6 +102,16 @@ public:
     {
         return this->m_factor;
     }
+
+    /*!
+     * \brief Factor
+     * \return
+     */
+    double toDouble() const
+    {
+        return this->getFactor();
+    }
+
     /*!
      * \brief Name, e.g. "kilo"
      * \return
@@ -114,6 +120,7 @@ public:
     {
         return this->m_name;
     }
+
     /*!
      * \brief Prefix, e.g. "k" for "kilo"
      * \return
@@ -464,25 +471,17 @@ public:
      */
     double conversionToUnit(double value, const CMeasurementUnit &to) const;
 
-    // --------------------------------------------------------------------
-    // -- static
-    // --------------------------------------------------------------------
-
-    /*!
-     * \brief Utility round method
-     * \param value
-     * \param digits
-     * \return
-     */
-    static double round(double value, int digits);
-
     /*!
      * Epsilon rounding. In some conversion rouding is required to avoid
      * periodical numbers.
      * \param value
      * \return
      */
-    double epsilonRounding(double value) const;
+    double epsilonUpRounding(double value) const;
+
+    // --------------------------------------------------------------------
+    // -- static
+    // --------------------------------------------------------------------
 
     /*!
      * \brief Unit is not specified

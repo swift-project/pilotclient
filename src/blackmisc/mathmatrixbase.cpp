@@ -69,11 +69,11 @@ template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, R
 }
 
 /*
- * All values zero?
+ * All values equal?
  */
 template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, Rows, Columns>::allValuesEqual() const
 {
-    double v = this->getElement(0,0);
+    double v = this->getElement(0, 0);
     for (int r = 0; r < Rows; r++)
     {
         for (int c = 0; c < Columns; c++)
@@ -84,6 +84,19 @@ template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, R
     return true;
 }
 
+/*
+ * Round all values
+ */
+template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::round()
+{
+    for (int r = 0; r < Rows; r++)
+    {
+        for (int c = 0; c < Columns; c++)
+        {
+            this->m_matrix(r, c) = CMath::roundEpsilon(this->m_matrix(r, c), 1E-10);
+        }
+    }
+}
 
 /*
  * Convert to string

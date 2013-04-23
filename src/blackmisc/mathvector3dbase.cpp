@@ -92,13 +92,13 @@ template <class ImplClass> void CVector3DBase<ImplClass>::setElement(size_t row,
 }
 
 /*
- * Corss product
+ * Cross product
  */
 template <class ImplClass> ImplClass CVector3DBase<ImplClass>::crossProduct(const ImplClass &otherVector) const
 {
     ImplClass v(otherVector);
     v.m_i = this->m_j * otherVector.m_k - this->m_k * otherVector.m_j;
-    v.m_j = this->m_k * otherVector.m_i - this->m_j * otherVector.m_k;
+    v.m_j = this->m_k * otherVector.m_i - this->m_i * otherVector.m_k;
     v.m_k = this->m_i * otherVector.m_j - this->m_j * otherVector.m_i;
     return v;
 }

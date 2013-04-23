@@ -37,7 +37,7 @@ double CAngleUnit::conversionSexagesimalFromSi(const CMeasurementUnit &angleUnit
 {
     // using rounding here, since fractions can lead to ugly sexagesimal conversion
     // e.g. 185.499999 gives 185 29' 59.9999"
-    value = angleUnit.epsilonRounding(value * 180 / M_PI); // degree
+    value = angleUnit.epsilonUpRounding(value * 180 / M_PI); // degree
     double v = floor(value);
     double c = value - v;
     double mr = c * 60.0;

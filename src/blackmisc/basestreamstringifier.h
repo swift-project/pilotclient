@@ -75,8 +75,9 @@ public:
 
     /*!
      * \brief Cast as QString
+     * \remarks operator cast caused too many ambiguity trouble
      */
-    operator QString() const
+    QString toQString() const
     {
         return this->stringForConverter();
     }

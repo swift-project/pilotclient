@@ -6,6 +6,7 @@
 #ifndef BLACKMISC_PQPHYSICALQUANTITY_H
 #define BLACKMISC_PQPHYSICALQUANTITY_H
 
+#include "blackmisc/mathematics.h"
 #include "blackmisc/pqbase.h"
 #include "blackmisc/pqunits.h"
 #include "blackmisc/debug.h"
@@ -217,7 +218,8 @@ public:
      */
     qint32 convertedSiValueToInteger() const
     {
-        return static_cast<qint32>(CMeasurementUnit::round(this->m_convertedSiUnitValueD, 0));
+        return static_cast<qint32>(
+                    BlackMisc::Math::CMath::round(this->m_convertedSiUnitValueD, 0));
     }
 
     /*!
@@ -255,15 +257,7 @@ public:
      */
     void substractUnitValue(double value);
 
-    /*!
-     * \brief Cast as QString
-     */
-    operator QString() const
-    {
-        return this->unitValueRoundedWithUnit();
-    }
-
-    /*!
+     /*!
      * \brief Multiply operator *=
      * \param multiply
      * \return

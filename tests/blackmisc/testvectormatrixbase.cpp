@@ -18,7 +18,15 @@ void CTestVectorMatrixBase::vectorBasics()
     CVector3D v1(1);
     v1 *= 2.0;
     CVector3D v2(2);
-    QVERIFY2(v1 == v2, "Matrix should be zero");
+    QVERIFY2(v1 == v2, "Vectors should be equal");
+    CVector3D v3(1, 1, 1);
+    CVector3D v4(2, 2, 2);
+    CVector3D v5 = v3.crossProduct(v4);
+    QVERIFY2(v5.isZeroEpsilon(), "Cross product shall be {0, 0, 0}");
+    CVector3D v6(1, 2, 3);
+    CVector3D v7(3, 4, 5);
+    QVERIFY2(v6.crossProduct(v7) == CVector3D(-2, 4, -2), "Cross product is wrong");
+    QVERIFY2(v6.dotProduct(v7) == 26, "Dot product is wrong, 26 expected");
 }
 
 /*
@@ -58,7 +66,8 @@ void CTestVectorMatrixBase::matrixBasics()
     QVERIFY2(m1(0, 0) == 1 && m1(1, 0) == 2 && m1(0, 2) == 3, "Index error");
     CMatrix3x3 mi = m1.inverse(invertible);
     CMatrix3x3 mid = m1 * mi;
-    QVERIFY2(mid.isIdentity(), qPrintable(QString("Multiply with inverse should be identity: %1").arg(mid)));
+    mid.round();
+    QVERIFY2(mid.isIdentity(), qPrintable(QString("Multiply with inverse should be identity: %1").arg(mid.toQString())));
 }
 
 } // namespace

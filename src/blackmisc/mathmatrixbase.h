@@ -204,6 +204,18 @@ public:
     }
 
     /*!
+     * \brief Is identity matrix? Epsilon considered.
+     * \return
+     */
+    bool isIdentityEpsilon() const
+    {
+        ImplMatrix m(0.0);
+        m += (*this);
+        m.round();
+        return m.isIdentity();
+    }
+
+    /*!
      * \brief Set as identity matrix
      * \return
      */
@@ -229,6 +241,18 @@ public:
     bool isZero() const;
 
     /*!
+     * \brief Is identity matrix? Epsilon considered.
+     * \return
+     */
+    bool isZeroEpsilon() const
+    {
+        ImplMatrix m(0.0);
+        m += (*this);
+        m.round();
+        return m.isZero();
+    }
+
+    /*!
      * \brief All values equal, if so matirx is not invertible
      * \return
      */
@@ -239,6 +263,11 @@ public:
      * \param value
      */
     void fill(double value) { this->m_matrix.fill(value); }
+
+    /*!
+     * \brief Round all values
+     */
+    void round();
 
     /*!
      * \brief Get element

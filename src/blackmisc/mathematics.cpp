@@ -34,5 +34,33 @@ qreal CMath::cubicRootReal(qreal x)
     return x < 0 ? -result : result;
 }
 
+/*
+ * Round utility method
+ */
+double CMath::round(double value, int digits)
+{
+    // gosh, is there no Qt method for this??? It's year 2013
+    double fractpart, intpart;
+    fractpart = modf(value, &intpart);
+    if (fractpart == 0) return value; // do not mess any "integers" to the worse
+    double m = pow(10.0, digits);
+    qint64 ri = qRound(value * m); // do not loose any range here
+    double rv = double(ri) / m;
+    return rv;
+}
+
+/*
+ * Round by given epsilon value
+ */
+double CMath::roundEpsilon(double value, double epsilon)
+{
+    double fractpart, intpart;
+    fractpart = modf(value, &intpart);
+    if (fractpart == 0) return value; // do not mess any "integers" to the worse
+    qint64 ri = qRound(value / epsilon);
+    double rv = double(ri) * epsilon; // do not loose any range here
+    return rv;
+}
+
 } // namespace
 } // namespace

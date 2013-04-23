@@ -90,7 +90,7 @@ void CTestPhysicalQuantitiesBase::frequencyTests()
     QVERIFY2(f1.valueRounded(CFrequencyUnit::kHz(), 2) == 1000, "Mega is 1000kHz");
     QVERIFY2(f1.unitValueToDouble() == 1 , "1MHz");
     QVERIFY2(f1.convertedSiValueToDouble() == 1000000 , "1E6 Hz");
-    CFrequency f2(CMeasurementPrefix::M(), CFrequencyUnit::Hz()) ; // 1 Megahertz
+    CFrequency f2(CMeasurementPrefix::M().toDouble(), CFrequencyUnit::Hz()) ; // 1 Megahertz
     QVERIFY2(f1 == f2 , "MHz is 1E6 Hz");
 }
 

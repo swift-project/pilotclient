@@ -66,7 +66,7 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateNed &ned)
  */
 CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateGeodetic &geo)
 {
-    // TODO: Clarify the comparions with fixed angles (==90, ==180) -> what happens here
+    // TODO: Clarify the comparisons with fixed angles (==90, ==180) -> what happens here
 
     CLatitude lat = geo.latitude();
     CLongitude lon = geo.longitude();

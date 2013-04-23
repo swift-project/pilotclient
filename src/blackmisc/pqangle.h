@@ -6,6 +6,7 @@
 #ifndef BLACKMISC_PQANGLE_H
 #define BLACKMISC_PQANGLE_H
 #include "blackmisc/pqphysicalquantity.h"
+#include "blackmisc/mathematics.h"
 
 namespace BlackMisc
 {
@@ -46,15 +47,17 @@ public:
      * \brief Convenience method PI
      * \return
      */
-    const static double pi() {
+    const static double pi()
+    {
         return M_PI;
     }
     /*!
      * \brief Value as factor of PI (e.g. 0.5PI)
      * \return
      */
-    double piFactor() const {
-        return CMeasurementUnit::round(this->convertedSiValueToDouble() / M_PI, 6);
+    double piFactor() const
+    {
+        return BlackMisc::Math::CMath::round(this->convertedSiValueToDouble() / M_PI, 6);
     }
 };
 

@@ -1,9 +1,12 @@
-/*  Copyright (C) 2013 VATSIM Community
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackmisc/pqbase.h"
+#include "blackmisc/mathematics.h"
+
+using namespace BlackMisc::Math;
 
 namespace BlackMisc
 {
@@ -35,7 +38,7 @@ CMeasurementPrefix::CMeasurementPrefix(const CMeasurementPrefix &otherMultiplier
 /*
  * Assignment operator
  */
-CMeasurementPrefix& CMeasurementPrefix::operator=(const CMeasurementPrefix &otherMultiplier)
+CMeasurementPrefix &CMeasurementPrefix::operator=(const CMeasurementPrefix &otherMultiplier)
 {
 
     if (this == &otherMultiplier) return *this; // Same object? Yes, so skip assignment, and just return *this
@@ -170,7 +173,7 @@ QString CMeasurementUnit::valueRoundedWithUnit(double value, int digits) const
 double CMeasurementUnit::valueRounded(double value, int digits) const
 {
     if (digits < 0) digits = this->m_displayDigits;
-    return CMeasurementUnit::round(value, digits);
+    return CMath::round(value, digits);
 }
 
 /*
@@ -179,30 +182,19 @@ double CMeasurementUnit::valueRounded(double value, int digits) const
 QString CMeasurementUnit::toQStringRounded(double value, int digits) const
 {
     if (digits < 0) digits = this->m_displayDigits;
-    double v = CMeasurementUnit::round(value, digits);
+    double v = CMath::round(value, digits);
     QString s = QLocale::system().toString(v, 'f', digits);
     return s;
 }
 
 /*
- * Round utility method
- */
-double CMeasurementUnit::round(double value, int digits)
-{
-    // gosh, is there no Qt method for this???
-    // It's year 2013
-    double m = pow(10.0, digits);
-    double rv = double(qRound(value * m) / m);
-    return rv;
-}
-
-/*
  * Epsilon rounding
  */
-double CMeasurementUnit::epsilonRounding(double value) const
+double CMeasurementUnit::epsilonUpRounding(double value) const
 {
-    // does notwork reliable with qRound for some reason
-    double v = floor((value + this->m_epsilon) / this->m_epsilon);
+    // Rounds a little up in order to avoid fractions
+    double eps = value > 0 ? this->m_epsilon : -1.0 * this->m_epsilon;
+    double v = floor((value + eps) / this->m_epsilon);
     v *= this->m_epsilon;
     return v;
 }
