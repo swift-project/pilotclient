@@ -3,7 +3,7 @@
 
 using namespace BlackMisc;
 
-Server::Server(QObject *parent) : QObject(parent)
+Server::Server(QObject *parent) : QObject(parent), server(IContext::getInstance())
 {
     QHostAddress local = QHostAddress(QHostAddress::LocalHost);
 
@@ -13,7 +13,7 @@ Server::Server(QObject *parent) : QObject(parent)
 
     CMessageSystem myMessageSystem;
 
-	bInfo << "Com Server running. \n";
+	bAppInfo << "Com Server running. \n";
 }
 
 Server::~Server()
@@ -25,7 +25,7 @@ void Server::onData(QString &messageID, QByteArray &message)
     BlackMisc::IMessage* test = BlackMisc::CMessageFactory::getInstance().create(messageID);
     QDataStream stream(&message, QIODevice::ReadOnly);
 
-    bAssert (test);
+    Q_ASSERT(test);
     *test << stream;
 
     CMessageDispatcher::getInstance().append(test);
@@ -35,5 +35,5 @@ void Server::onData(QString &messageID, QByteArray &message)
 
 void TestMessageHandler::onTestMessage(const TestMessage *testmessage)
 {
-   bDebug << "Message ID: " << testmessage->getID() << " with text: " << testmessage->getTestString();
+   bAppDebug << "Message ID: " << testmessage->getID() << " with text: " << testmessage->getTestString();
 }

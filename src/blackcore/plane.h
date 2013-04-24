@@ -12,6 +12,7 @@ namespace BlackCore {
 
 	class ISimulator;
 	class CInterpolator;
+    class CVectorGeo;
 
 	class CPlane
 	{

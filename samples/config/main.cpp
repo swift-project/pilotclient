@@ -12,15 +12,17 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     BlackMisc::CApplicationContext myApplicationContext;
    
-	CConfigManager::getInstance().setConfigPath(QString("config"));
+    BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
+
+    CConfigManager::getInstance().setConfigPath(QString("config"));
 	if (!CConfigManager::getInstance().readConfig())
 	{
-		bWarning << "To run this sample, there must be a config folder";
-		bWarning << "in the same directory, containing *.cfg files.";
+		bAppWarning << "To run this sample, there must be a config folder";
+		bAppWarning << "in the same directory, containing *.cfg files.";
 	}
 
 	CConfig *myConfig = CConfigManager::getInstance().getConfig("position");
-	bAssert(myConfig);
+	Q_ASSERT(myConfig);
 	myConfig->display();
     
     return a.exec();

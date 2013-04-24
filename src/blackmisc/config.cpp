@@ -3,11 +3,10 @@
 //! License, v. 2.0. If a copy of the MPL was not distributed with this
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
+#include "blackmisc/config.h"
+#include "blackmisc/debug.h"
 #include <QFile>
 #include <QStringList>
-
-#include "blackmisc/debug.h"
-#include "blackmisc/config.h"
 
 namespace BlackMisc
 {
@@ -112,11 +111,9 @@ namespace BlackMisc
         return _bool_value;
     }
 
-    CConfig::CConfig(const QString& filename, const QString& separator, bool isRelative)
+    CConfig::CConfig(IContext &context, const QString& filename, const QString& separator, bool /*isRelative*/)
+        : m_context(context), m_configfile(filename), m_separator(separator)
     {
-        m_configfile = filename;
-        m_separator = separator;
-        Q_UNUSED(isRelative);
     }
 
     bool CConfig::load()
@@ -132,13 +129,13 @@ namespace BlackMisc
 
         if (m_configfile.isEmpty())
         {
-            bError << "Can't open emtpy config file!";
+            bError(m_context) << "Can't open emtpy config file!";
             return false;
         }
         QFile input (m_configfile);
         if ( !input.open(QIODevice::ReadOnly))
         {
-            bError << "Failed to open config file !" << m_configfile;
+            bError(m_context) << "Failed to open config file !" << m_configfile;
             input.close();
             return false;
         }
@@ -170,7 +167,7 @@ namespace BlackMisc
             QStringList tags = line.split(m_separator);
             if ( tags.count() != 2)
             {
-                bWarning << "Could not parse line " << no_line << " in file " << m_configfile << "!";
+                bWarning(m_context) << "Could not parse line " << no_line << " in file " << m_configfile << "!";
                 error = true;
                 continue;
             }
@@ -234,7 +231,7 @@ namespace BlackMisc
         for (it = m_value_map.begin(); it != m_value_map.end(); ++it)
         {
             CValue value = it.value();
-            bDebug << "Key: " << it.key() << " - Value: " << value.asString();
+            bDebug(m_context) << "Key: " << it.key() << " - Value: " << value.asString();
         }
     }
 

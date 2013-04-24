@@ -6,66 +6,67 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include "blackmisc/serialize.h"
 #include <QtGlobal>
 #include <QDataStream>
 #include <QTextStream>
+#include "blackmisc/serialize.h"
 
 namespace BlackMisc
 {
 
-class IMessage : public ISerialize
-{
-public:
-    IMessage(QString &id);
-
-    QString getID() const;
-
-    virtual QDataStream &operator<< (QDataStream &in) = 0;
-    virtual QDataStream &operator>> (QDataStream &out) const = 0;
-
-    virtual QTextStream &operator<< (QTextStream &in) = 0;
-    virtual QTextStream &operator>> (QTextStream &out) const = 0;
-
-
-protected:
-    QString m_message_id;
-};
-
-class TestMessage : public IMessage
-{
-public:
-    TestMessage() :  IMessage(QString("MSG_ID_TestMessage"))
+    class IMessage : public ISerialize
     {
-        testString = "This is a test message!";
-    }
+    public:
+        IMessage(QString id);
 
-    QString getTestString() const { return testString; }
+        QString getID() const;
 
-    //QDataStream &operator>>(qint8 &i);
+        virtual QDataStream& operator<< ( QDataStream& in) = 0;
+        virtual QDataStream& operator>> (QDataStream& out) const = 0;
 
-    virtual QDataStream &operator<< (QDataStream &in)
+        virtual QTextStream& operator<< ( QTextStream& in) = 0;
+        virtual QTextStream& operator>> (QTextStream& out) const = 0;
+
+
+    protected:
+
+        QString m_message_id;
+    };
+
+    class TestMessage : public IMessage
     {
-        in >> m_message_id;
-        in >> testString;
-        return in;
-    }
+    public:
+        TestMessage() :  IMessage("MSG_ID_TestMessage")
+        {
+            testString = "This is a test message!";
+        }
 
-    virtual QDataStream &operator>> (QDataStream &out) const
-    {
-        out << m_message_id;
-        out << testString;
-        return out;
-    }
+        QString getTestString () const { return testString; }
 
-    virtual QTextStream &operator<< (QTextStream &in) { return in; }
-    virtual QTextStream &operator>> (QTextStream &out) const { return out; }
+        //QDataStream &operator>>(qint8 &i);
 
-protected:
+        virtual QDataStream& operator<< ( QDataStream& in)
+        {
+            in >> m_message_id;
+            in >> testString;
+            return in;
+        }
 
-private:
-    QString testString;
-};
+        virtual QDataStream& operator>> (QDataStream& out) const
+        {
+            out << m_message_id;
+            out << testString;
+            return out;
+        }
+
+        virtual QTextStream& operator<< ( QTextStream& in) { return in; }
+        virtual QTextStream& operator>> (QTextStream& out) const { return out; }
+
+    protected:
+
+    private:
+        QString testString;
+    };
 
 } // namespace BlackMisc
 

@@ -1,6 +1,5 @@
-#include "blackmisc/debug.h"
-
 #include "blackcore/fsd_messages.h"
+#include "blackmisc/debug.h"
 
 using namespace BlackMisc;
 
@@ -27,7 +26,7 @@ namespace FSD
             }
             else
             {
-                bError << "Cannot split message. Vector is to small";
+                bAppError << "Cannot split message. Vector is to small";
                 return -1;
             }
         }
@@ -84,7 +83,7 @@ namespace FSD
     {
         QString message = in.readAll();
         qint32 size = unpack(message, m_message_tokens);
-        bAssert ( size == 10 );
+        Q_ASSERT ( size == 10 );
 
         return in;
     }

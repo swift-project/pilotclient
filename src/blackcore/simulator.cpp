@@ -43,7 +43,7 @@ namespace BlackCore {
 		ISimulator *result = NULL;
 
 		getDriverVersionMajor driverVersionMajor;
-		getDriverVersionMinor driverVersionMinor;
+		//getDriverVersionMinor driverVersionMinor;
 		createISimulatorInstance createDriver;
 
 		switch (sim)
@@ -52,18 +52,24 @@ namespace BlackCore {
 		case FS9:
 		{
 			myLib.setFileName(SHARED_LIBRARY_NAME_FS9);
-			bAssertstr(myLib.load(), myLib.errorString());
-			driverVersionMajor = (getDriverVersionMajor) myLib.resolve(DRIVER_VERSION_MAJOR);
+			if (! myLib.load())
+            {
+                //TODO throw
+            }
 
-			if (driverVersionMajor != NULL)
+			driverVersionMajor = (getDriverVersionMajor) myLib.resolve(DRIVER_VERSION_MAJOR);
+			if (driverVersionMajor)
 			{
-				bAssertstr(driverVersionMajor() == ISimulator::InterfaceVersionMajor, QString("Wrong version of the driver. Try to reinstall!"));
+				if (driverVersionMajor() != ISimulator::InterfaceVersionMajor)
+                {
+                    //TODO throw
+                }
 			}
 
 			createDriver = (createISimulatorInstance) myLib.resolve(IDRV_CREATE_SIM_INTERFACE);
 			if (createDriver)
 			{
-				bInfo << "Loaded successfully shared library 'bb_driver_fs9'";
+				bAppInfo << "Loaded successfully shared library 'bb_driver_fs9'";
 				result = createDriver();
 			}
 		}
@@ -71,38 +77,48 @@ namespace BlackCore {
 
 		case FSX:
 			myLib.setFileName(SHARED_LIBRARY_NAME_FSX);
-			bAssertstr(myLib.load(), myLib.errorString());
+			if (! myLib.load())
+            {
+                //TODO throw
+            }
 
 			driverVersionMajor = (getDriverVersionMajor) myLib.resolve(DRIVER_VERSION_MAJOR);
-
-			if (driverVersionMajor != NULL)
+			if (driverVersionMajor)
 			{
-				bAssertstr(driverVersionMajor() == ISimulator::InterfaceVersionMajor, QString("Wrong version of the driver. Try to reinstall!"));
+				if (driverVersionMajor() != ISimulator::InterfaceVersionMajor)
+                {
+                    //TODO throw
+                }
 			}
 
 			createDriver = (createISimulatorInstance) myLib.resolve(IDRV_CREATE_SIM_INTERFACE);
 			if (createDriver)
 			{
-				bInfo << "Loaded successfully shared library 'bb_driver_fsx'";
+				bAppInfo << "Loaded successfully shared library 'bb_driver_fsx'";
 				result = createDriver();
 			}
 		break;
 	#endif
 		case XPLANE:
 			myLib.setFileName(SHARED_LIBRARY_NAME_XPLANE);
-			bAssertstr(myLib.load(), myLib.errorString());
+			if (! myLib.load())
+            {
+                //TODO throw
+            }
 
 			driverVersionMajor = (getDriverVersionMajor) myLib.resolve(DRIVER_VERSION_MAJOR);
-
-			if (driverVersionMajor != NULL)
+			if (driverVersionMajor)
 			{
-				bAssertstr(driverVersionMajor() == ISimulator::InterfaceVersionMajor, QString("Wrong version of the driver. Try to reinstall!"));
+				if (driverVersionMajor() != ISimulator::InterfaceVersionMajor)
+                {
+                    //TODO throw
+                }
 			}
 
 			createDriver = (createISimulatorInstance) myLib.resolve(IDRV_CREATE_SIM_INTERFACE);
 			if (createDriver)
 			{
-				bInfo << "Loaded successfully shared library 'bb_driver_xplane'";
+				bAppInfo << "Loaded successfully shared library 'bb_driver_xplane'";
 				result = createDriver();
 			}
 			break;

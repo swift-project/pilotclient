@@ -6,15 +6,16 @@
 #ifndef COM_CLIENT_H
 #define COM_CLIENT_H
 
+#include "blackmisc/com_handler.h"
 #include <QString>
 #include <QAbstractSocket>
-
-#include "blackmisc/com_handler.h"
 
 class QTcpSocket;
 
 namespace BlackMisc
 {
+
+    class IContext;
 
 class CComClient : public IComHandler
 {
@@ -26,7 +27,7 @@ public:
 	/*!
 	  \param parent Pointer to the parent QObject
 	*/
-    CComClient(QObject *parent = 0);
+    CComClient(IContext &context, QObject *parent = 0);
 
 	//! Destructor
     ~CComClient();
@@ -88,6 +89,9 @@ protected slots:
 	
 	//! Call this slot, when data has been received
     void onReceivingData();
+
+private:
+    IContext&       m_context;
 
 protected:
 	

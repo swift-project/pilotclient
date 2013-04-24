@@ -3,18 +3,18 @@
 //! License, v. 2.0. If a copy of the MPL was not distributed with this
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
+#include "blackmisc/com_server.h"
+#include "blackmisc/com_client_buffer.h"
+#include "blackmisc/debug.h"
+#include "blackmisc/context.h"
 #include <QTcpServer>
 #include <QTcpSocket>
-
-#include "blackmisc/debug.h"
-#include "blackmisc/com_client_buffer.h"
-#include "blackmisc/com_server.h"
 
 namespace BlackMisc
 {
 
-CComServer::CComServer(QObject *parent)
-    : QObject(parent), m_tcp_server(NULL), m_port(0)
+CComServer::CComServer(IContext &context, QObject *parent)
+    : m_context(context), QObject(parent), m_tcp_server(NULL), m_port(0)
 {
     init();
 }
@@ -37,8 +37,8 @@ CComServer::~CComServer()
 bool CComServer::init()
 {
     m_tcp_server = new QTcpServer(this);
-    bAssert (m_tcp_server);
-    bAssert ( QObject::connect(m_tcp_server, SIGNAL(newConnection()), this, SLOT(onIncomingConnection()) ) );
+    Q_ASSERT (m_tcp_server);
+    Q_ASSERT ( QObject::connect(m_tcp_server, SIGNAL(newConnection()), this, SLOT(onIncomingConnection()) ) );
 
     return true;
 }
@@ -47,17 +47,17 @@ void CComServer::Host(const QHostAddress &address, const quint16 port)
 {
     if (isHosting()) return;
 
-    bAssert ( ! address.isNull() );
-    bAssert ( port > 0 );
+    Q_ASSERT ( ! address.isNull() );
+    Q_ASSERT ( port > 0 );
 
     if ( !m_tcp_server->listen(address, port) )
     {
-        bError << "Hosting failed";
+        bError(m_context) << "Hosting failed";
         emit doHostClosed();
     }
     else
     {
-        bDebug << "Hosting successfull";
+        bDebug(m_context) << "Hosting successfull";
         emit doHosting();
     }
 }
@@ -76,7 +76,7 @@ void CComServer::sendToClient( const uint clientID, const QString &messageID, co
 {
     if (!m_client_buffers.contains(clientID))
     {
-        bWarning << "Cannot send data to client - unknown client!";
+        bWarning(m_context) << "Cannot send data to client - unknown client!";
         return;
     }
     m_client_buffers.value(clientID)->sendMessage(messageID, data);
@@ -105,8 +105,8 @@ void CComServer::onIncomingConnection()
         uint clientID = qHash(socket);
 
         // Create new ClientBuffer object. This new object gets the owner of the socket
-        CComClientBuffer* clientbuf = new CComClientBuffer (clientID, socket,this);
-        bAssert(clientbuf);
+        CComClientBuffer* clientbuf = new CComClientBuffer (m_context, clientID, socket,this);
+        Q_ASSERT(clientbuf);
 
         connect(clientbuf, SIGNAL(doDisconnected(uint)), this, SLOT(onClientDisconnected(uint)));
         connect(clientbuf, SIGNAL(doReceivedMessage(uint, QString&, QByteArray&)), this, SLOT(onClientMessageReceived(uint, QString&, QByteArray&)));
@@ -121,7 +121,7 @@ void CComServer::onClientDisconnected(uint clientID)
 {
     if ( !m_client_buffers.contains(clientID))
     {
-        bWarning << "Disconnected unknown client!";
+        bWarning(m_context) << "Disconnected unknown client!";
         return;
     }
 

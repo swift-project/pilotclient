@@ -25,7 +25,7 @@ double CMath::hypot(double x, double y)
 double CMath::cubicRootReal(const double x)
 {
 	double result;
-	result = std::pow(std::abs(x), (double)1/3);
+    result = pow(abs(x), (double)1/3);
 	
 	return x < 0 ? -result : result;
 }

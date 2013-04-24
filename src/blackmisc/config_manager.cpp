@@ -1,23 +1,26 @@
-#include <QDir>
-#include <QStringList>
-
-
+#include "blackmisc/config_manager.h"
 #include "blackmisc/config.h"
 #include "blackmisc/debug.h"
-#include "blackmisc/config_manager.h"
+#include <QDir>
+#include <QStringList>
 
 namespace BlackMisc
 {
 	SINGLETON_CLASS_IMPLEMENTATION(CConfigManager)
+
+    CConfigManager::CConfigManager()
+    : m_context(IContext::getInstance())
+    {
+    }
 	
-	CConfigManager::CConfigManager()
+	CConfigManager::CConfigManager(IContext &context)
+    : m_context(context)
 	{
 	}
 	
-	void CConfigManager::setConfigPath(QString &path)
+    void CConfigManager::setConfigPath(QString path)
 	{
 		m_config_path = QDir(path).absolutePath();
-	
 	}
 
 	int CConfigManager::readConfig(bool forceReload)
@@ -48,7 +51,7 @@ namespace BlackMisc
 			if (!m_config_map.contains(section))
 			{
 				QString filePath = m_config_path + QDir::separator() + (*constIterator);
-				CConfig *config = new CConfig(filePath);
+				CConfig *config = new CConfig(m_context, filePath);
 				config->load();
 				
 				m_config_map.insert(section, config);
@@ -86,7 +89,8 @@ namespace BlackMisc
 			return m_config_map.value(section);
 		else
 		{
-			bError << "Could not find config section: " << section;
+            //@@@ should we throw an exception here?
+			bAppError << "Could not find config section: " << section;
 			return NULL;
 		}
 	}

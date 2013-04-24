@@ -6,11 +6,11 @@
 #ifndef MESSAGE_HANDLER_H
 #define MESSAGE_HANDLER_H
 
-#include <QMap>
+#include "blackmisc/message_dispatcher.h"
 #include "blackmisc/message.h"
 #include "blackmisc/debug.h"
 #include "blackmisc/type_info.h"
-#include "blackmisc/message_dispatcher.h"
+#include <QMap>
 
 namespace BlackMisc
 {

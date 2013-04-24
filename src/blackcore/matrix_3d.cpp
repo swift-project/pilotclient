@@ -1,7 +1,7 @@
-#include <iostream>
-#include "blackmisc/debug.h"
-#include "blackcore/vector_3d.h"
 #include "blackcore/matrix_3d.h"
+#include "blackcore/vector_3d.h"
+#include "blackmisc/debug.h"
+#include <iostream>
 
 /* TODO
  *
@@ -112,14 +112,14 @@ void CMatrix3D::print()
 
 double CMatrix3D::getElement(qint8 row, qint8 column) const
 {
-    bAssert (row < 3 || column < 3);
+    Q_ASSERT (row < 3 || column < 3);
 
     return m[row][column];
 }
 
 void CMatrix3D::setElement(qint8 row, qint8 column, double value)
 {
-    bAssert (row < 3 || column < 3);
+    Q_ASSERT (row < 3 || column < 3);
 
     m[row][column] = value;
 }

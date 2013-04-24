@@ -1,14 +1,14 @@
 #include <QCoreApplication>
 #include <QElapsedTimer>
 
-#include <windows.h>
-
 #include <iostream>
 
 #include "blackcore/matrix_3d.h"
 #include "blackcore/vector_geo.h"
 #include "blackcore/vector_3d.h"
 #include "blackcore/interpolator.h"
+#include "blackmisc/context.h"
+#include "blackmisc/debug.h"
 
 using namespace std;
 using namespace BlackCore;
@@ -16,6 +16,9 @@ using namespace BlackCore;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+
+    BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
+
     QElapsedTimer timer;
 
     CVectorGeo myGeo(48.123, 11.75, 400);

@@ -8,9 +8,12 @@
 
 #include <QtGlobal>
 #include <QMap>
+#include <QString>
 
 namespace BlackMisc
 {
+
+    class IContext;
 
     class CValue
     {
@@ -59,12 +62,13 @@ namespace BlackMisc
     //!  Configuration class.
     /*!
       This class implements the configuration part of the library.
+      \warning it is not safe to use this from within
     */
     class CConfig
     {
     public:
 
-        CConfig(const QString& filename, const QString& separator = "=", bool isRelative = false);
+        CConfig(IContext &context, const QString& filename, const QString& separator = "=", bool isRelative = false);
 
         //! Sets the value of the specified key.
         /*!
@@ -151,6 +155,7 @@ namespace BlackMisc
 
         protected:
 
+        IContext                           &m_context;
         QString                             m_configfile;
         QString                             m_separator;
         typedef QMap<QString, CValue>       TValueMap;

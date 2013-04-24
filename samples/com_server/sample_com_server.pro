@@ -11,22 +11,14 @@ DEPENDPATH += . ../../src
 
 INCLUDEPATH += . ../../src
 
-SOURCES +=  main.cpp \
-            server.cpp
+SOURCES += *.cpp
 
-HEADERS  += server.h
+HEADERS += *.h
 
-win32-msvc* {
-    PRE_TARGETDEPS += ../../lib/blackmisc.lib \
+LIBS    += -L../../lib -lblackmisc
 
-    LIBS += ../../lib/blackmisc.lib \
-}
-
-!win32-msvc* {
-    PRE_TARGETDEPS += ../../lib/libblackmisc.a \
-
-    LIBS += ../../lib/libblackmisc.a \
-}
+win32:  PRE_TARGETDEPS += ../../lib/blackmisc.lib
+else:   PRE_TARGETDEPS += ../../lib/libblackmisc.a
 
 DESTDIR = ../../bin
 

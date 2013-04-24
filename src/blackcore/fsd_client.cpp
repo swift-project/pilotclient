@@ -1,11 +1,9 @@
-#include <blackmisc/context.h>
-#include <blackmisc/debug.h>
-
-#include <QStringList>
-#include <QTextStream>
-
 #include "blackcore/fsd_client.h"
 #include "blackcore/fsd_messages.h"
+#include <blackmisc/context.h>
+#include <blackmisc/debug.h>
+#include <QStringList>
+#include <QTextStream>
 
 namespace FSD
 {
@@ -13,8 +11,8 @@ namespace FSD
 	using namespace BlackMisc;
 
 
-	CFSDClient::CFSDClient()
-		:   m_tcp_socket(NULL), m_port(0), m_simType(FSD::SIM_UNKNOWN)
+	CFSDClient::CFSDClient(IContext &context)
+        :   m_context(context), m_tcp_socket(NULL), m_port(0), m_simType(FSD::SIM_UNKNOWN)
 	{
 		init();
 	}
@@ -27,14 +25,14 @@ namespace FSD
 		if ( isConnected() )
 			return;
 
-		bDebug << "Connecting to FSD server: " << m_host << ":" << m_port;
+		bDebug(m_context) << "Connecting to FSD server: " << m_host << ":" << m_port;
 
 		m_tcp_socket->connectToHost(m_host, m_port);
 	}
 
 	void CFSDClient::disconnectFrom()
 	{
-		bDebug << "Disconnecting from host.";
+		bDebug(m_context) << "Disconnecting from host.";
 
 		m_tcp_socket->disconnectFromHost();
 		m_port = 0;
@@ -69,8 +67,8 @@ namespace FSD
 
 	void CFSDClient::onConnected()
 	{
-		bDebug << "Connected successfully to remote host.";
-		bDebug << "Sending #AP now...";
+		bDebug(m_context) << "Connected successfully to remote host.";
+		bDebug(m_context) << "Sending #AP now...";
 
 		QString line;
 
@@ -92,7 +90,7 @@ namespace FSD
 
 	void CFSDClient::onDisconnected()
 	{
-		bDebug << "Disconnected successfully from remote host.";
+		bDebug(m_context) << "Disconnected successfully from remote host.";
 		emit doDisconnected();
 	}
 
@@ -101,7 +99,7 @@ namespace FSD
 
 		if ( error != 0 )
 		{
-			bError << "Received socket error: " << error << " - Disconnecting...";
+			bError(m_context) << "Received socket error: " << error << " - Disconnecting...";
 		}
 
 		disconnectFrom();
@@ -125,7 +123,7 @@ namespace FSD
 	{
 		if (!isConnected())
 		{
-			bError << "Cannot send data in disconnected state!";
+			bError(m_context) << "Cannot send data in disconnected state!";
 			return false;
 		}
 
@@ -134,7 +132,7 @@ namespace FSD
 		qint64 bytes = m_tcp_socket->write(message.toAscii());
 		if (bytes < 0 || bytes != message_size)
 		{
-			bWarning << "Error writing to socket!";
+			bWarning(m_context) << "Error writing to socket!";
 			return false;
 		}
 
@@ -144,13 +142,13 @@ namespace FSD
 	void CFSDClient::init()
 	{
 		m_tcp_socket = new QTcpSocket(this);
-		bAssert(m_tcp_socket);
+		Q_ASSERT(m_tcp_socket);
 
-		bAssert ( QObject::connect( m_tcp_socket, SIGNAL( connected() ), this, SLOT( onConnected() ) ) );
-		bAssert ( QObject::connect( m_tcp_socket, SIGNAL( disconnected() ), this, SLOT( onDisconnected() ) ) );
-		bAssert ( QObject::connect( m_tcp_socket, SIGNAL( error(QAbstractSocket::SocketError) ), this, SLOT( onError(QAbstractSocket::SocketError) ) ) );
+		Q_ASSERT ( QObject::connect( m_tcp_socket, SIGNAL( connected() ), this, SLOT( onConnected() ) ) );
+		Q_ASSERT ( QObject::connect( m_tcp_socket, SIGNAL( disconnected() ), this, SLOT( onDisconnected() ) ) );
+		Q_ASSERT ( QObject::connect( m_tcp_socket, SIGNAL( error(QAbstractSocket::SocketError) ), this, SLOT( onError(QAbstractSocket::SocketError) ) ) );
 
-		bAssert ( QObject::connect( m_tcp_socket, SIGNAL( readyRead() ), this, SLOT( onReceivingData() ) ) );
+		Q_ASSERT ( QObject::connect( m_tcp_socket, SIGNAL( readyRead() ), this, SLOT( onReceivingData() ) ) );
 
 		registerMessages();
 	}
@@ -178,7 +176,7 @@ namespace FSD
 
 		QTextStream stream(&line);
 		IMessage* fsd_message =  CMessageFactory::getInstance().create(header);
-		bAssert(fsd_message);
+		Q_ASSERT(fsd_message);
 		*fsd_message << stream;
 
 		CMessageDispatcher::getInstance().append(fsd_message);

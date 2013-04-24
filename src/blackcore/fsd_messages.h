@@ -21,7 +21,7 @@ namespace FSD
     class FSD_MSG : public BlackMisc::IMessage
     {
     public:
-        FSD_MSG(QString& id) : IMessage(id)
+        FSD_MSG(QString id) : IMessage(id)
         {
 
         }
@@ -40,7 +40,7 @@ namespace FSD
     class FSD_MSG_AddPilot : public FSD_MSG
     {
     public:
-        FSD_MSG_AddPilot() :  FSD_MSG(QString("#AP")), m_revision(VATSIM_PROTOCOL_REV),
+        FSD_MSG_AddPilot() :  FSD_MSG("#AP"), m_revision(VATSIM_PROTOCOL_REV),
 							  m_rating(1)
         {
         }
@@ -98,7 +98,7 @@ namespace FSD
 			QString m_textmessage;
 			for ( int ii = 2; ii < tokens.size(); ++ii)
 				m_textmessage += tokens.at(ii);
-            bInfo << m_textmessage;
+            bAppInfo << m_textmessage;
             return in;
         }
 

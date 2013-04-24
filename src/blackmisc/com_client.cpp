@@ -3,17 +3,17 @@
 //! License, v. 2.0. If a copy of the MPL was not distributed with this
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
+#include "blackmisc/com_client.h"
+#include "blackmisc/context.h"
+#include "blackmisc/debug.h"
 #include <QTcpSocket>
 #include <QDataStream>
-
-#include "blackmisc/debug.h"
-#include "blackmisc/com_client.h"
 
 namespace BlackMisc
 {
 
-    CComClient::CComClient(QObject *parent)
-        :  IComHandler(parent), m_tcp_socket(NULL), m_port(0)
+    CComClient::CComClient(IContext &context, QObject *parent)
+        :  m_context(context), IComHandler(context, parent), m_tcp_socket(NULL), m_port(0)
     {
         init();
     }
@@ -32,21 +32,21 @@ namespace BlackMisc
     bool CComClient::init()
     {
         m_tcp_socket = new QTcpSocket(this);
-        bAssert(m_tcp_socket);
+        Q_ASSERT(m_tcp_socket);
 
-        bAssert ( QObject::connect( m_tcp_socket, SIGNAL( connected() ), this, SLOT( onConnected() ) ) );
-        bAssert ( QObject::connect( m_tcp_socket, SIGNAL( disconnected() ), this, SLOT( onDisconnected() ) ) );
-        bAssert ( QObject::connect( m_tcp_socket, SIGNAL( error(QAbstractSocket::SocketError) ), this, SLOT( onError(QAbstractSocket::SocketError) ) ) );
+        Q_ASSERT ( QObject::connect( m_tcp_socket, SIGNAL( connected() ), this, SLOT( onConnected() ) ) );
+        Q_ASSERT ( QObject::connect( m_tcp_socket, SIGNAL( disconnected() ), this, SLOT( onDisconnected() ) ) );
+        Q_ASSERT ( QObject::connect( m_tcp_socket, SIGNAL( error(QAbstractSocket::SocketError) ), this, SLOT( onError(QAbstractSocket::SocketError) ) ) );
 
-        bAssert ( QObject::connect( m_tcp_socket, SIGNAL( readyRead() ), this, SLOT( onReceivingData() ) ) );
+        Q_ASSERT ( QObject::connect( m_tcp_socket, SIGNAL( readyRead() ), this, SLOT( onReceivingData() ) ) );
 
         return true;
     }
 
     void CComClient::connectTo( const QString& hostName, quint16 port)
     {
-        bAssert ( ! hostName.isEmpty() );
-        bAssert ( port > 0 );
+        Q_ASSERT ( ! hostName.isEmpty() );
+        Q_ASSERT ( port > 0 );
 
         m_hostName = hostName;
         m_port = port;
@@ -54,7 +54,7 @@ namespace BlackMisc
         if ( isConnected() )
             return;
 
-        bDebug << "Connecting to host: " << hostName << ":" << port;
+        bDebug(m_context) << "Connecting to host: " << hostName << ":" << port;
 
         m_receive_buffer.clear();
 
@@ -69,7 +69,7 @@ namespace BlackMisc
 
     void CComClient::disconnectFrom()
     {
-        bDebug << "Disconnecting from host.";
+        bDebug(m_context) << "Disconnecting from host.";
 
         m_tcp_socket->disconnectFromHost();
         m_port = 0;
@@ -80,7 +80,7 @@ namespace BlackMisc
     {
         if (!isConnected())
         {
-            bError << "Cannot send data in disconnected state!";
+            bError(m_context) << "Cannot send data in disconnected state!";
             return false;
         }
 
@@ -91,7 +91,7 @@ namespace BlackMisc
         qint64 bytes = m_tcp_socket->write(m_sender_buffer);
         if (bytes < 0 || bytes != sender_buffer_size)
         {
-            bWarning << "Error writing to socket!";
+            bWarning(m_context) << "Error writing to socket!";
             return false;
         }
 
@@ -149,13 +149,13 @@ namespace BlackMisc
 
     void CComClient::onConnected()
     {
-        bDebug << "Connected successfully to remote host.";
+        bDebug(m_context) << "Connected successfully to remote host.";
         emit doConnected();
     }
 
     void CComClient::onDisconnected()
     {
-        bDebug << "Disconnected successfully from remote host.";
+        bDebug(m_context) << "Disconnected successfully from remote host.";
         emit doDisconnected();
     }
 
@@ -163,7 +163,7 @@ namespace BlackMisc
     {
         if ( error != 0 )
         {
-            bError << "Received socket error: " << error << " - Disconnecting...";
+            bError(m_context) << "Received socket error: " << error << " - Disconnecting...";
         }
 
         disconnect();

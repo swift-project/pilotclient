@@ -10,7 +10,9 @@ int main(int argc, char *argv[])
     BlackMisc::CApplicationContext myApplicationContext;
     QCoreApplication a(argc, argv);
 
-	Client client;
+    BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
+
+    Client client;
     
     return a.exec();
 }

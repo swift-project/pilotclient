@@ -1,13 +1,11 @@
+
+#include "blackcore/vector_3d.h"
+#include "blackcore/matrix_3d.h"
+#include "blackcore/vector_geo.h"
+#include "blackcore/constants.h"
+#include "blackmisc/debug.h"
 #include <iostream>
 #include <math.h>
-
-#include "blackmisc/debug.h"
-
-#include "blackcore/matrix_3d.h"
-#include "blackcore/vector_3d.h"
-#include "blackcore/vector_geo.h"
-
-#include "blackcore/constants.h"
 
 namespace BlackCore
 {
@@ -59,7 +57,7 @@ double CVector3D::magnitude()
 
 double CVector3D::getElement(qint8 row) const
 {
-    bAssert(row < 3);
+    Q_ASSERT(row < 3);
 
     return v[row];
 }

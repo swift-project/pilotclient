@@ -1,16 +1,27 @@
 TEMPLATE = subdirs
+
 CONFIG += ordered
 
 WITH_BLACKMISC = ON
+
 WITH_BLACKCORE = ON
+
 WITH_BLACKD = ON
+
 WITH_BLACKBOX = ON
+
 WITH_SAMPLES = ON
-WITH_UNITTESTS = ON
 
 #WITH_DRIVER_FSX = ON
+
 #WITH_DRIVER_FS9 = ON
+
 #WITH_DRIVER_XPLANE = ON
+
+#WITH_UNITTESTS = ON
+
+#WITH_DOXYGEN = ON
+
 
 equals(WITH_BLACKMISC, ON) {
     SUBDIRS += src/blackmisc
@@ -47,10 +58,16 @@ equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/geodetic2ecef/sample_geodetic2ecef.pro
     SUBDIRS += samples/interpolator/sample_interpolator.pro
     SUBDIRS += samples/logging/sample_logging.pro
+    SUBDIRS += samples/plugin/sample_plugin.pro
+    SUBDIRS += samples/pluginmgr/sample_pluginmgr.pro
     SUBDIRS += samples/blackmiscquantities/sample_quantities_avionics.pro
     SUBDIRS += samples/blackmiscvectorgeo/sample_vector_geo.pro
 }
 
 equals(WITH_UNITTESTS, ON) {
     SUBDIRS += tests/blackmisc/test_blackmisc.pro
+}
+
+equals(WITH_DOXYGEN, ON) {
+    SUBDIRS += docs/doxygen.pro
 }

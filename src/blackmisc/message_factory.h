@@ -3,8 +3,8 @@
 //! License, v. 2.0. If a copy of the MPL was not distributed with this
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
-#ifndef MESSAGE_FACTORY_H
-#define MESSAGE_FACTORY_H
+#ifndef BLACKMISC_MESSAGE_FACTORY_H
+#define BLACKMISC_MESSAGE_FACTORY_H
 
 #include <QHash>
 #include "blackmisc/message.h"
@@ -33,8 +33,10 @@ namespace BlackMisc
         virtual IMessage* create() { return new T; }
     };
 
-    class CMessageFactory
+    class CMessageFactory : public QObject
     {
+        Q_OBJECT
+
         // safe singleton declaration
         SINGLETON_CLASS_DECLARATION(CMessageFactory)
 
@@ -56,4 +58,4 @@ namespace BlackMisc
 
 } // namespace BlackMisc
 
-#endif // MESSAGE_FACTORY_H
+#endif // BLACKMISC_MESSAGE_FACTORY_H

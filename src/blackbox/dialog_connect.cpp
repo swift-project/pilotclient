@@ -14,7 +14,7 @@ using namespace BlackMisc;
 
 CDialogConnect::CDialogConnect(QWidget *parent) :
     QDialog(parent), m_hasComConnection(false),
-    ui(new Ui::CDialogConnect)
+    ui(new Ui::CDialogConnect), comclient(IContext::getInstance())
 {
     ui->setupUi(this);
 

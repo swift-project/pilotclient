@@ -3,17 +3,16 @@
 //! License, v. 2.0. If a copy of the MPL was not distributed with this
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
-#include <QTcpSocket>
-
-#include "blackmisc/debug.h"
-
 #include "blackmisc/com_client_buffer.h"
+#include "blackmisc/debug.h"
+#include "blackmisc/context.h"
+#include <QTcpSocket>
 
 namespace BlackMisc
 {
 
-    CComClientBuffer::CComClientBuffer(uint clientID, QTcpSocket *socket, QObject *parent)
-        :   m_client_id(clientID), m_tcp_socket(socket), IComHandler(parent)
+    CComClientBuffer::CComClientBuffer(IContext &context, uint clientID, QTcpSocket *socket, QObject *parent)
+        :   m_context(context), m_client_id(clientID), m_tcp_socket(socket), IComHandler(context, parent)
     {
         connect(m_tcp_socket, SIGNAL(readyRead()), this, SLOT(onReceivingData()));
         connect(m_tcp_socket, SIGNAL(disconnected()), this, SLOT(onClientDisconnected()));
@@ -32,7 +31,7 @@ namespace BlackMisc
         qint64 bytes = m_tcp_socket->write(m_sender_buffer);
         if (bytes < 0 || bytes != sender_buffer_size)
         {
-            bWarning << "Error writing to socket!";
+            bWarning(m_context) << "Error writing to socket!";
             return false;
         }
 
@@ -53,7 +52,7 @@ namespace BlackMisc
 
     void CComClientBuffer::onClientDisconnected()
     {
-        bInfo << "Client disconnected!";
+        bInfo(m_context) << "Client disconnected!";
         emit doDisconnected(m_client_id);
     }
 

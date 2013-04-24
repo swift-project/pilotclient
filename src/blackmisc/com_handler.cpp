@@ -3,18 +3,17 @@
 //! License, v. 2.0. If a copy of the MPL was not distributed with this
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
+#include "blackmisc/com_handler.h"
+#include "blackmisc/debug.h"
 #include <QTcpSocket>
 #include <QDataStream>
-
-#include "blackmisc/debug.h"
-
-#include "blackmisc/com_handler.h"
 
 namespace BlackMisc
 {
 
-    IComHandler::IComHandler(QObject *parent) :
-    QObject(parent)
+    IComHandler::IComHandler(IContext &context, QObject *parent) :
+    QObject(parent),
+    m_context(context)
     {
     }
 
@@ -44,7 +43,7 @@ namespace BlackMisc
 
         if (m_receive_buffer.size() < min_size)
         {
-            bDebug << "Received data is to small to read SYNC and frame length!";
+            bDebug(m_context) << "Received data is to small to read SYNC and frame length!";
             return false;
         }
 
@@ -58,7 +57,7 @@ namespace BlackMisc
         do
         {
             qint32 sync = 0;
-            stream >> (qint32)sync;
+            stream >> sync;
             if (sync == Sync_Marker)
                 found_sync = true;
         }
@@ -66,7 +65,7 @@ namespace BlackMisc
 
         if (!found_sync)
         {
-            bWarning << "Could not find sync pattern in the stream. Discarding all data!";
+            bWarning(m_context) << "Could not find sync pattern in the stream. Discarding all data!";
             m_receive_buffer.clear();
             return false;
         }
@@ -78,7 +77,7 @@ namespace BlackMisc
         /////////////////////////////////////////////////
 
         qint32 message_length = 0;
-        stream >> (qint32)message_length;
+        stream >> message_length;
 
         total_length += (int)sizeof(qint32);    // Length
         total_length += message_length;         // Data
@@ -92,7 +91,7 @@ namespace BlackMisc
 
         if (m_receive_buffer.size() < (total_length + (int)sizeof (quint16)))
         {
-            bDebug << "Received data is to small to read data block!";
+            bDebug(m_context) << "Received data is to small to read data block!";
             return false;
         }
 
@@ -103,12 +102,12 @@ namespace BlackMisc
         data.resize(message_length);
         qint32 bytes = stream.readRawData(data.data(), message_length);
 
-        bAssert (bytes == message_length);
-        bAssert (data.size() == message_length);
+        Q_ASSERT (bytes == message_length);
+        Q_ASSERT (data.size() == message_length);
 
         quint16 crc_calc = qChecksum (data.constData(), data.size());
         quint16 crc_recv = 0;
-        stream >> (quint16)crc_recv;
+        stream >> crc_recv;
 
         total_length += (int)sizeof(quint16);
 
@@ -116,7 +115,7 @@ namespace BlackMisc
 
         if (crc_calc != crc_recv)
         {
-            bWarning << "Message CRC error!";
+            bWarning(m_context) << "Message CRC error!";
             data.clear();
             return false;
         }

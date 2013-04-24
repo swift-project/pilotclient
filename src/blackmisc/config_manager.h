@@ -3,8 +3,8 @@
 //! License, v. 2.0. If a copy of the MPL was not distributed with this
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
-#ifndef CONFIGMANAGER_H
-#define CONFIGMANAGER_H
+#ifndef BLACKMISC_CONFIGMANAGER_H
+#define BLACKMISC_CONFIGMANAGER_H
 
 #include <QMap>
 #include <QString>
@@ -16,13 +16,26 @@ namespace BlackMisc
 
 	class CConfig;
 
-	class CConfigManager
+	class CConfigManager : public QObject
     {
+        Q_OBJECT
+
 		// safe singleton declaration
         SINGLETON_CLASS_DECLARATION(CConfigManager)
 		
-		CConfigManager();
     public:
+        /*!
+            Default constructor.
+            \deprecated Do not use.
+            \todo Remove this when removing SINGLETON_CLASS_DECLARATION.
+        */
+        CConfigManager();
+
+        /*!
+            Constructor.
+            \param context
+        */
+		CConfigManager(IContext &context);
 	
 		//! Configuration Manager error codes.
         /*! This enum lists all errors, which can appear. If you need
@@ -36,7 +49,7 @@ namespace BlackMisc
         /*!
           \param path absolute pathname
         */
-		void setConfigPath(QString &path);
+        void setConfigPath(QString path);
 		
 		int readConfig(bool forceReload = false);
 		
@@ -47,6 +60,8 @@ namespace BlackMisc
 		CConfig *getConfig(const QString &section);
 		
 	private:
+
+        IContext                             &m_context;
 		
 		typedef QMap<QString, CConfig*>       TConfigMap;
 		TConfigMap							  m_config_map;
@@ -56,4 +71,4 @@ namespace BlackMisc
 	};
 } // namespace BlackLib
 
-#endif // CONFIGMANAGER_H
+#endif // BLACKMISC_CONFIGMANAGER_H

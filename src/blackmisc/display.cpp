@@ -3,11 +3,11 @@
 //! License, v. 2.0. If a copy of the MPL was not distributed with this
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
+#include "blackmisc/display.h"
+#include "blackmisc/context.h"
 #include <QTextStream>
 #include <QFileInfo>
-
-#include "blackmisc/context.h"
-#include "blackmisc/display.h"
+#include <errno.h>
 
 namespace BlackMisc
 {
@@ -28,7 +28,7 @@ namespace BlackMisc
 
     const char *ILogDisplay::logTypeToString (CLog::TLogType logType)
     {
-        if (logType < CLog::OFF || logType > CLog::UNKNOWN)
+        if (logType < CLog::eOff || logType >= CLog::eLast)
             return "Not defined";
 
         return LogTypeToString[logType];
@@ -68,7 +68,7 @@ namespace BlackMisc
         bool needSpace = false;
         QString line;
 
-        if (logInformation.m_logType != CLog::OFF)
+        if (logInformation.m_logType != CLog::eOff)
         {
             line += logTypeToString(logInformation.m_logType);
             needSpace = true;
@@ -146,21 +146,6 @@ namespace BlackMisc
     {
         m_fileName = filename;
 
-        if (filename.isEmpty())
-        {
-            // Call this first, otherwise the Singleton pointer is NULL
-            CLog::setDefaultApplicationName();
-
-            // Read the process name and name the log accordingly
-            QString *processName = (QString *)IContext::getInstance().singletonPointer("BlackMisc::CLog::m_applicationName");
-
-            // Just in case
-            if ( processName != NULL )
-                m_fileName = QFileInfo(*processName).baseName() + ".log";
-            else
-                printf("Cannot create log file without a filename!");
-        }
-
         m_file = new QFile(m_fileName);
 
         if (eraseLastLog)
@@ -200,7 +185,7 @@ namespace BlackMisc
             needSpace = true;
         }
 
-        if (logInformation.m_logType != CLog::OFF)
+        if (logInformation.m_logType != CLog::eOff)
         {
             if (needSpace) { line += " "; needSpace = false; }
             line += logTypeToString(logInformation.m_logType);
@@ -243,7 +228,7 @@ namespace BlackMisc
         if (m_file->handle() == -1)
         {
             if ( !m_file->open(QIODevice::WriteOnly) )
-                printf ("Can't open log file '%s': %s\n", m_fileName.toLatin1(), strerror (errno));
+                printf ("Can't open log file '%s': %s\n", m_fileName.toLatin1().constData(), strerror (errno));
         }
 
         if (m_file->handle() != -1)

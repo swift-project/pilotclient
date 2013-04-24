@@ -6,10 +6,9 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include "blackmisc/log.h"
 #include <QFile>
 #include <QMutex>
-
-#include "blackmisc/log.h"
 
 namespace BlackMisc
 {
@@ -30,7 +29,7 @@ namespace BlackMisc
 
     protected:
         /// Method to implement in the derived class
-        virtual void doPrint(const CLog::SLogInformation &logInformation, const QString &message) = NULL;
+        virtual void doPrint(const CLog::SLogInformation &logInformation, const QString &message) = 0;
 
         // Return the header string with date (for the first line of the log)
         static QString headLine ();

@@ -8,11 +8,9 @@ DESTDIR = ../../../bin
 
 DEPENDPATH += .
 
-HEADERS += \
-    driver_xplane.h
+HEADERS += *.h
 
-SOURCES += \
-    driver_xplane.cpp
+SOURCES += *.cpp
 
 
 
