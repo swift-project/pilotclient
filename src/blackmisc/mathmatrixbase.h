@@ -39,7 +39,7 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param other
+     * \param otherMatrix
      */
     CMatrixBase(const CMatrixBase &otherMatrix) : m_matrix(otherMatrix.m_matrix) {}
 
@@ -81,7 +81,7 @@ public:
 
     /*!
      * \brief Assigment operator =
-     * \param multiply
+     * \param otherMatrix
      * \return
      */
     CMatrixBase &operator =(const CMatrixBase &otherMatrix)
@@ -116,11 +116,22 @@ public:
     }
 
     /*!
-     * \brief Multiply with 3D vector operator *
-     * \param vector
+     * \brief Operator to support commutative multiplication
+     * \param factor
+     * \param otherMatrix
      * \return
      */
-    template<class ImplVector> ImplVector operator*(const ImplVector vector) const;
+    friend ImplMatrix operator *(double factor, const ImplMatrix &otherMatrix)
+    {
+        return otherMatrix * factor;
+    }
+
+    /*!
+     * \brief Multiply with 3D vector operator *
+     * \param matrix
+     * \return
+     */
+    template<class ImplVector> ImplVector operator*(const ImplVector matrix) const;
 
     /*!
      * \brief Operator /=
@@ -267,7 +278,7 @@ public:
     /*!
      * \brief Round all values
      */
-    void round();
+    ImplMatrix &round();
 
     /*!
      * \brief Get element
@@ -286,7 +297,8 @@ public:
     void setElement(size_t row, size_t column, double value);
 
     /*!
-     * \brief Get element by ()
+     * \brief Get element by operator () modifying
+     * \param row
      * \param column
      * \return
      */
@@ -297,7 +309,8 @@ public:
     }
 
     /*!
-     * \brief Get element by ()
+     * \brief Get element by operator () read only
+     * \param row
      * \param column
      * \return
      */

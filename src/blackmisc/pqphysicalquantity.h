@@ -219,7 +219,7 @@ public:
     qint32 convertedSiValueToInteger() const
     {
         return static_cast<qint32>(
-                    BlackMisc::Math::CMath::round(this->m_convertedSiUnitValueD, 0));
+                   BlackMisc::Math::CMath::round(this->m_convertedSiUnitValueD, 0));
     }
 
     /*!
@@ -257,11 +257,11 @@ public:
      */
     void substractUnitValue(double value);
 
-     /*!
-     * \brief Multiply operator *=
-     * \param multiply
-     * \return
-     */
+    /*!
+    * \brief Multiply operator *=
+    * \param multiply
+    * \return
+    */
     CPhysicalQuantity &operator *=(double multiply);
 
     /*!
@@ -277,6 +277,17 @@ public:
      * \return
      */
     PQ operator *(double multiply) const;
+
+    /*!
+     * \brief Operator to support commutative multiplication
+     * \param factor
+     * \param otherQuantity
+     * \return
+     */
+    friend PQ operator *(double factor, const PQ &otherQuantity)
+    {
+        return otherQuantity * factor;
+    }
 
     /*!
      * \brief Operator /

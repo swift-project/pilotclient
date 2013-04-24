@@ -26,7 +26,7 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param other
+     * \param otherMatrix
      */
     CMatrix3x3(const CMatrix3x3 &otherMatrix) : CMatrixBase(otherMatrix) {}
 
@@ -101,7 +101,7 @@ public:
 
     /*!
      * \brief Operator *
-     * \param multiply
+     * \param otherMatrix
      * \return
      */
     CMatrix3x3 operator *(const CMatrix3x3 &otherMatrix) const

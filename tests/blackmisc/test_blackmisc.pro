@@ -6,18 +6,20 @@ TEMPLATE = app
 CONFIG   += console
 CONFIG   -= app_bundle
 
-DEPENDPATH += . ../../src
+DEPENDPATH += . ../../src/blackmisc
 INCLUDEPATH += . ../../src
 SOURCES += main.cpp testmain.cpp \
-    testphysicalquantitiesbase.cpp \
-    testaviationbase.cpp \
-    testvectormatrixbase.cpp
+    testphysicalquantities.cpp \
+    testvectormatrix.cpp \
+    testaviation.cpp \
+    testgeo.cpp
 
 HEADERS += testmain.h \
-    testphysicalquantitiesbase.h \
     blackmisctest.h \
-    testaviationbase.h \
-    testvectormatrixbase.h
+    testphysicalquantities.h \
+    testvectormatrix.h \
+    testaviation.h \
+    testgeo.h
 
 win32-msvc* {
     PRE_TARGETDEPS +=  ../../lib/blackmisc.lib

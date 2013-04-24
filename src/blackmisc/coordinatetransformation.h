@@ -121,7 +121,7 @@ public:
 
     /*!
      * \brief ECEF to Geodetic
-     * \param geo
+     * \param ecef
      * \return
      */
     static CCoordinateGeodetic toGeodetic(const CCoordinateEcef &ecef);

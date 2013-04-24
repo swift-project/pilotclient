@@ -20,7 +20,7 @@ namespace BlackMiscTest
 /*!
  * \brief Aviation classes basic tests
  */
-class CTestAviationBase : public QObject
+class CTestAviation : public QObject
 {
     Q_OBJECT
 
@@ -29,7 +29,7 @@ public:
      * \brief Standard test case constructor
      * \param parent
      */
-    explicit CTestAviationBase(QObject *parent = 0);
+    explicit CTestAviation(QObject *parent = 0);
 
 private slots:
     /*!

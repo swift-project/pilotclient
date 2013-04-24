@@ -3,7 +3,7 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "testvectormatrixbase.h"
+#include "testvectormatrix.h"
 
 using namespace BlackMisc::Math;
 
@@ -13,12 +13,13 @@ namespace BlackMiscTest
 /*
  * Basic tests vector
  */
-void CTestVectorMatrixBase::vectorBasics()
+void CTestVectorMatrix::vectorBasics()
 {
     CVector3D v1(1);
     v1 *= 2.0;
     CVector3D v2(2);
     QVERIFY2(v1 == v2, "Vectors should be equal");
+    QVERIFY2(v1 * 2 == 2 * v2, "Commutative vector multiplication failed");
     CVector3D v3(1, 1, 1);
     CVector3D v4(2, 2, 2);
     CVector3D v5 = v3.crossProduct(v4);
@@ -33,7 +34,7 @@ void CTestVectorMatrixBase::vectorBasics()
  * Matrix tests
  * http://www.bluebit.gr/matrix-calculator/
  */
-void CTestVectorMatrixBase::matrixBasics()
+void CTestVectorMatrix::matrixBasics()
 {
     CMatrix3x3 m1;
     CMatrix3x3 m2 = m1 - m1;
@@ -55,6 +56,7 @@ void CTestVectorMatrixBase::matrixBasics()
     m2 = m1 + m1;
     m1 = m1 * 2.0;
     QVERIFY2(m1 == m2, "2* Identity should be Identity + Identity");
+    QVERIFY2(m1 * 2 == 2 * m1, "Commutative matrix multiplication failed");
 
     m1 /= 2.0;
     m2 -= m1;

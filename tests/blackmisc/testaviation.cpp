@@ -3,7 +3,7 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "testaviationbase.h"
+#include "testaviation.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -13,7 +13,7 @@ namespace BlackMiscTest {
 /*
  * Constructor
  */
-CTestAviationBase::CTestAviationBase(QObject *parent): QObject(parent)
+CTestAviation::CTestAviation(QObject *parent): QObject(parent)
 {
     // void
 }
@@ -21,7 +21,7 @@ CTestAviationBase::CTestAviationBase(QObject *parent): QObject(parent)
 /*
  * Basic tests
  */
-void CTestAviationBase::headingBasics()
+void CTestAviation::headingBasics()
 {
     CHeading h1(180, true, CAngleUnit::deg());
     CHeading h2(180, false, CAngleUnit::deg());
@@ -45,7 +45,7 @@ void CTestAviationBase::headingBasics()
 /*
  * Vertical positions
  */
-void CTestAviationBase::verticalPosition()
+void CTestAviation::verticalPosition()
 {
     CAviationVerticalPositions vp1 = CAviationVerticalPositions::fromAltitudeAndElevationInFt(10000.0, 3000.0);
     CAviationVerticalPositions vp2 = vp1;
@@ -55,7 +55,7 @@ void CTestAviationBase::verticalPosition()
 /*
  * COM and NAV units
  */
-void CTestAviationBase::comAndNav()
+void CTestAviation::comAndNav()
 {
     CComSystem c1 = CComSystem::getCom1System(122.8);
     CComSystem c2 = CComSystem::getCom2System(122.8);
@@ -72,7 +72,7 @@ void CTestAviationBase::comAndNav()
 /*
  * COM and NAV units
  */
-void CTestAviationBase::transponder()
+void CTestAviation::transponder()
 {
     CTransponder t1 = CTransponder::getStandardTransponder(7000, CTransponder::StateStandby);
     CTransponder t2 = t1;

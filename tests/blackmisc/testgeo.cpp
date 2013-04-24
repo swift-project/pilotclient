@@ -1,0 +1,32 @@
+#include "testgeo.h"
+
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
+
+namespace BlackMiscTest
+{
+
+/*
+ * Geo classes tests
+ */
+void CTestGeo::geoBasics()
+{
+    CLatitude lati(10, CAngleUnit::deg());
+    QVERIFY2(lati * 2 == lati + lati, "Latitude addition should be equal");
+    lati += CLatitude(20, CAngleUnit::deg());
+    QVERIFY2(lati.unitValueToDoubleRounded() == 30.0, "Latitude should be 30 degrees");
+
+    double lat = 27.999999, lon = 86.999999, h = 8820.999999; // Mt Everest
+    CCoordinateGeodetic startGeoVec(lat, lon, h);
+    CCoordinateEcef mediumEcefVec = CCoordinateTransformation::toEcef(startGeoVec);
+    CCoordinateGeodetic endGeoVec = CCoordinateTransformation::toGeodetic(mediumEcefVec);
+    QVERIFY2(startGeoVec == endGeoVec, "Reconverted geo vector should be equal ");
+
+    CCoordinateNed nedVec = CCoordinateTransformation::toNed(mediumEcefVec, startGeoVec);
+    CCoordinateEcef ecefReconvert = CCoordinateTransformation::toEcef(nedVec);
+
+    QVERIFY2(mediumEcefVec != ecefReconvert, "Reconverted geo vector, expect some minor rounding issues");
+    QVERIFY2(mediumEcefVec.round() == ecefReconvert.round(), "Reconverted geo vector should be equal");
+}
+
+} // namespace

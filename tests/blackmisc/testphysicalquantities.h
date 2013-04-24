@@ -13,9 +13,9 @@ namespace BlackMiscTest
 {
 
 /*!
- * \brief Physical quantities,basic tests
+ * \brief Physical quantities, basic tests
  */
-class CTestPhysicalQuantitiesBase : public QObject
+class CTestPhysicalQuantities : public QObject
 {
     Q_OBJECT
 
@@ -24,7 +24,8 @@ public:
      * \brief Standard test case constructor
      * \param parent
      */
-    explicit CTestPhysicalQuantitiesBase(QObject *parent = 0);
+    explicit CTestPhysicalQuantities(QObject *parent = 0);
+
 private slots:
     /*!
      * \brief Basic unit tests for physical units

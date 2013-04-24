@@ -14,12 +14,14 @@ int CTestMain::unitMain(int argc, char *argv[])
 {
     int status = 0;
     {
-        CTestPhysicalQuantitiesBase pqBaseTests ;
-        CTestAviationBase avBaseTests;
-        CTestVectorMatrixBase vmTests;
+        CTestPhysicalQuantities pqBaseTests ;
+        CTestAviation avBaseTests;
+        CTestVectorMatrix vmTests;
+        CTestGeo geoTests;
         status |= QTest::qExec(&pqBaseTests, argc, argv);
         status |= QTest::qExec(&avBaseTests, argc, argv);
         status |= QTest::qExec(&vmTests, argc, argv);
+        status |= QTest::qExec(&geoTests, argc, argv);
     }
     return status;
 }

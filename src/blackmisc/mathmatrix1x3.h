@@ -27,7 +27,7 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param other
+     * \param otherMatrix
      */
     CMatrix1x3(const CMatrix1x3 &otherMatrix) : CMatrixBase(otherMatrix) {}
 

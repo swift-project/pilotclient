@@ -70,29 +70,24 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateGeodetic &geo
 
     CLatitude lat = geo.latitude();
     CLongitude lon = geo.longitude();
-    double latDeg = lat.value(CAngleUnit::deg());
-    double lonDeg = lon.value(CAngleUnit::deg());
 
     double phi = lat.value(CAngleUnit::rad());
     double lambdaRad = lon.value(CAngleUnit::rad());
     double sphi = sin(phi);
-    double cphi = 0;
-    if (abs(latDeg) != 90) cphi = cos(phi);
+    double cphi = cos(phi);
 
     double n = EarthRadiusMeters() / sqrt(1 - e2() * CMath::square(sphi));
 
-    double slambda = 0;
-    if (lonDeg != -180) slambda = sin(lambdaRad);
+    double slambda = sin(lambdaRad);
 
-    double clambda = 0;
-    if (abs(lonDeg) != 90) clambda = cos(lambdaRad);
+    double clambda = cos(lambdaRad);
 
     double h = geo.height().convertedSiValueToDouble();
-    double X = (n + h) * cphi;
-    double Y = X * slambda;
-    X *= clambda;
-    double Z = (e2m() * n + h) * sphi;
-    CCoordinateEcef result(X, Y, Z);
+    double x = (n + h) * cphi;
+    double y = x * slambda;
+    x *= clambda;
+    double z = (e2m() * n + h) * sphi;
+    CCoordinateEcef result(x, y, z);
     return result;
 }
 

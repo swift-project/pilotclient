@@ -33,7 +33,7 @@ protected:
     /*!
      * \brief Default constructor
      */
-    CVector3DBase() {}
+    CVector3DBase() : m_i(0.0), m_j(0.0), m_k(0.0) {}
 
     /*!
      * \brief Constructor by values
@@ -124,8 +124,8 @@ public:
 
 
     /*!
-     * \brief Get element by ()
-     * \param column
+     * \brief Get row element by ()
+     * \param row
      * \return
      */
     double operator()(size_t row) const { return this->getElement(row); }
@@ -273,6 +273,17 @@ public:
     }
 
     /*!
+     * \brief Operator to support commutative multiplication
+     * \param factor
+     * \param otherVector
+     * \return
+     */
+    friend ImplClass operator *(double factor, const ImplClass &otherVector)
+    {
+        return otherVector * factor;
+    }
+
+    /*!
      * \brief Divide by scalar
      * \param divisor
      * \return
@@ -346,8 +357,7 @@ public:
     void matrixMultiplication(const CMatrix3x3 &matrix);
 
     /*!
-     * \brief Reciporcal value
-     * \param otherVector
+     * \brief Reciprocal value
      * \return
      */
     ImplClass reciprocalValues() const
@@ -394,15 +404,16 @@ public:
 
     /*!
      * \brief Round this vector
+     * \return
      */
-    void round()
+    ImplClass &round()
     {
         const double epsilon = 1E-10;
         this->m_i = BlackMisc::Math::CMath::roundEpsilon(this->m_i, epsilon);
         this->m_j = BlackMisc::Math::CMath::roundEpsilon(this->m_j, epsilon);
         this->m_k = BlackMisc::Math::CMath::roundEpsilon(this->m_k, epsilon);
+        return static_cast<ImplClass &>(*this);
     }
-
 };
 
 } // namespace

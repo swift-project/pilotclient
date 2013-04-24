@@ -124,7 +124,7 @@ public:
 
     /*!
      * \brief Set longitude
-     * \param latitude
+     * \param longitude
      */
     void setLongitude(CLongitude longitude)
     {

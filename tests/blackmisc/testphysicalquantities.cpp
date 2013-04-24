@@ -3,7 +3,7 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "testphysicalquantitiesbase.h"
+#include "testphysicalquantities.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -13,7 +13,7 @@ namespace BlackMiscTest
 /*
  * Constructor
  */
-CTestPhysicalQuantitiesBase::CTestPhysicalQuantitiesBase(QObject *parent) : QObject(parent)
+CTestPhysicalQuantities::CTestPhysicalQuantities(QObject *parent) : QObject(parent)
 {
     // void
 }
@@ -21,9 +21,9 @@ CTestPhysicalQuantitiesBase::CTestPhysicalQuantitiesBase(QObject *parent) : QObj
 /*
  * Basic unit tests for physical units
  */
-void CTestPhysicalQuantitiesBase::unitsBasics()
+void CTestPhysicalQuantities::unitsBasics()
 {
-    QVERIFY(CMeasurementPrefix::k() > CMeasurementPrefix::h());
+    QVERIFY2(CMeasurementPrefix::k() > CMeasurementPrefix::h(), "kilo > hecto");
 
     // some tests on units
     CLengthUnit du1 = CLengthUnit::m(); // Copy
@@ -42,15 +42,15 @@ void CTestPhysicalQuantitiesBase::unitsBasics()
 /*
  * Distance tests
  */
-void CTestPhysicalQuantitiesBase::lengthBasics()
+void CTestPhysicalQuantities::lengthBasics()
 {
     CLength d1(1, CLengthUnit::m()); // 1m
     CLength d2(100, CLengthUnit::cm());
     CLength d3(1.852 * 1000, CLengthUnit::m()); // 1852m
     CLength d4(1, CLengthUnit::NM());
-
     QVERIFY2(d1 == d2, "1meter shall be 100cm");
     QVERIFY2(d3 == d4, "1852meters shall be 1NM");
+    QVERIFY2(d1 * 2 == 2 * d1, "Commutative multiplication");
 
     d3 *= 2; // SI value
     d4 *= 2.0; // SI value !
@@ -73,7 +73,7 @@ void CTestPhysicalQuantitiesBase::lengthBasics()
 /*
  * Unit tests for speed
  */
-void CTestPhysicalQuantitiesBase::speedBasics()
+void CTestPhysicalQuantities::speedBasics()
 {
     CSpeed s1(100, CSpeedUnit::km_h());
     CSpeed s2(1000, CSpeedUnit::ft_min());
@@ -84,7 +84,7 @@ void CTestPhysicalQuantitiesBase::speedBasics()
 /*
  * Frequency unit tests
  */
-void CTestPhysicalQuantitiesBase::frequencyTests()
+void CTestPhysicalQuantities::frequencyTests()
 {
     CFrequency f1(1, CFrequencyUnit::MHz());
     QVERIFY2(f1.valueRounded(CFrequencyUnit::kHz(), 2) == 1000, "Mega is 1000kHz");
@@ -97,7 +97,7 @@ void CTestPhysicalQuantitiesBase::frequencyTests()
 /*
  * Angle tests
  */
-void CTestPhysicalQuantitiesBase::angleTests()
+void CTestPhysicalQuantities::angleTests()
 {
     CAngle a1(180, CAngleUnit::deg());
     CAngle a2(1.5 * CAngle::pi(), CAngleUnit::rad());
@@ -111,7 +111,7 @@ void CTestPhysicalQuantitiesBase::angleTests()
 /*
  * Weight tests
  */
-void CTestPhysicalQuantitiesBase::massTests()
+void CTestPhysicalQuantities::massTests()
 {
     CMass w1(1000, CMassUnit::kg());
     CMass w2(w1.unitValueToInteger(), CMassUnit::kg());
@@ -125,7 +125,7 @@ void CTestPhysicalQuantitiesBase::massTests()
 /*
  * Pressure tests
  */
-void CTestPhysicalQuantitiesBase::pressureTests()
+void CTestPhysicalQuantities::pressureTests()
 {
     CPressure p1(1013.25, CPressureUnit::hPa());
     CPressure p2(29.92, CPressureUnit::inHg());
@@ -142,7 +142,7 @@ void CTestPhysicalQuantitiesBase::pressureTests()
 /*
  * Temperature tests
  */
-void CTestPhysicalQuantitiesBase::temperatureTests()
+void CTestPhysicalQuantities::temperatureTests()
 {
     CTemperature t1(0, CTemperatureUnit::C()); // 0C
     CTemperature t2(1, CTemperatureUnit::F()); // 1F
@@ -157,7 +157,7 @@ void CTestPhysicalQuantitiesBase::temperatureTests()
 /*
  * Temperature tests
  */
-void CTestPhysicalQuantitiesBase::timeTests()
+void CTestPhysicalQuantities::timeTests()
 {
     CTime t1(1, CTimeUnit::h());
     QVERIFY2(t1.convertedSiValueToInteger() == 3600, "1hour shall be 3600s");
@@ -166,7 +166,7 @@ void CTestPhysicalQuantitiesBase::timeTests()
 /*
  * Just testing obvious memory create / destruct flaws
  */
-void CTestPhysicalQuantitiesBase::memoryTests()
+void CTestPhysicalQuantities::memoryTests()
 {
     CLength *c = new CLength(100, CLengthUnit::m());
     c->switchUnit(CLengthUnit::NM());
@@ -184,7 +184,7 @@ void CTestPhysicalQuantitiesBase::memoryTests()
 /*
  * @brief Just testing obvious memory create / destruct flaws
  */
-void CTestPhysicalQuantitiesBase::basicArithmetic()
+void CTestPhysicalQuantities::basicArithmetic()
 {
     CPressure p1 = CPhysicalQuantitiesConstants::InternationalStandardSeaLevelPressure();
     CPressure p2(p1);
