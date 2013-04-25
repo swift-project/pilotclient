@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISC_PQMASS_H
-#define BLACKMISC_PQMASS_H
+#ifndef BLACKMISC_PQACCELERATION_H
+#define BLACKMISC_PQACCELERATION_H
 #include "blackmisc/pqphysicalquantity.h"
 
 namespace BlackMisc
@@ -13,40 +13,40 @@ namespace PhysicalQuantities
 {
 
 /*!
- * \brief Mass
+ * \brief Acceleration
  */
-class CMass : public CPhysicalQuantity<CMassUnit, CMass>
+class CAcceleration : public CPhysicalQuantity<CAccelerationUnit, CAcceleration>
 {
 public:
     /*!
      * \brief Default constructor
      */
-    CMass() : CPhysicalQuantity(0, CMassUnit::kg(), CMassUnit::kg()) {}
+    CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::m_s2(), CAccelerationUnit::m_s2()) {}
 
     /*!
      * \brief Init by int value
      * \param value
      * \param unit
      */
-    CMass(qint32 value, const CMassUnit &unit) : CPhysicalQuantity(value, unit, CMassUnit::kg()) {}
+    CAcceleration(qint32 value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit, CAccelerationUnit::m_s2()) {}
 
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
-    CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit, CMassUnit::kg()) {}
+    CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit, CAccelerationUnit::m_s2()) {}
 
     /*!
      * \brief Copy constructor
-     * \param mass
+     * \param acceleration
      */
-    CMass(const CPhysicalQuantity &mass) : CPhysicalQuantity(mass) {}
+    CAcceleration(const CPhysicalQuantity &acceleration) : CPhysicalQuantity(acceleration) {}
 
     /*!
      * \brief Virtual destructor
      */
-    virtual ~CMass() {}
+    virtual ~CAcceleration() {}
 };
 } // namespace
 } // namespace

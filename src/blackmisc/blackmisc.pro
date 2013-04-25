@@ -15,7 +15,8 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
 
 DEFINES += LOG_IN_FILE
 
-HEADERS += *.h
+HEADERS += *.h \
+    pqacceleration.h
 
 SOURCES += *.cpp
 

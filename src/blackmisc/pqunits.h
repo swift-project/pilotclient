@@ -98,11 +98,31 @@ public:
         static CLengthUnit cm("centimeter", "cm", true, false, CMeasurementPrefix::c().getFactor(), CMeasurementPrefix::c(), 1);
         return cm;
     }
+
+    /*!
+     * \brief International mile
+     * \return
+     */
+    static const CLengthUnit &mi()
+    {
+        static CLengthUnit mi("mile", "mi", false, false, 1609.344, CMeasurementPrefix::None(), 3);
+        return mi;
+    }
+
+    /*!
+     * \brief Statute mile
+     * \return
+     */
+    static const CLengthUnit &miStatute()
+    {
+        static CLengthUnit mi("mile(statute)", "mi(statute)", false, false, 1609.3472, CMeasurementPrefix::None(), 3);
+        return mi;
+    }
+
 };
 
 /*!
  * \brief Specialized class for angles (degrees, radian).
- * \author KWB, MS
  */
 class CAngleUnit : public CMeasurementUnit
 {
@@ -144,6 +164,7 @@ public:
      * \param otherUnit
      */
     CAngleUnit(const CAngleUnit &otherUnit) : CMeasurementUnit(otherUnit) { }
+
     /*!
      * \brief Special conversion to QString for sexagesimal degrees.
      * \param value
@@ -151,6 +172,7 @@ public:
      * \return
      */
     virtual QString toQStringRounded(double value, int digits) const;
+
     /*!
      * \brief Radians
      * \return
@@ -160,6 +182,7 @@ public:
         static CAngleUnit rad("radian", "rad", true);
         return rad;
     }
+
     /*!
      * \brief Degrees
      * \return
@@ -169,6 +192,7 @@ public:
         static CAngleUnit deg("degree", "°", false, M_PI / 180);
         return deg;
     }
+
     /*!
      * \brief Sexagesimal degree (degree, minute, seconds)
      * \return
@@ -182,7 +206,6 @@ public:
 
 /*!
  * \brief Specialized class for frequency (hertz, mega hertz, kilo hertz).
- * \author KWB, MS
  */
 class CFrequencyUnit : public CMeasurementUnit
 {
@@ -209,6 +232,7 @@ public:
     {
         // void
     }
+
     /*!
      * \brief Hertz
      * \return
@@ -218,6 +242,7 @@ public:
         static CFrequencyUnit Hz("hertz", "Hz", true);
         return Hz;
     }
+
     /*!
      * \brief Kilohertz
      * \return
@@ -227,6 +252,7 @@ public:
         static CFrequencyUnit kHz("kilohertz", "kHz", true, CMeasurementPrefix::k().getFactor(), CMeasurementPrefix::k(), 1);
         return kHz;
     }
+
     /*!
      * \brief Megahertz
      * \return
@@ -236,6 +262,7 @@ public:
         static CFrequencyUnit MHz("megahertz", "MHz", false, CMeasurementPrefix::M().getFactor(), CMeasurementPrefix::M(), 2);
         return MHz;
     }
+
     /*!
      * \brief Gigahertz
      * \return
@@ -249,7 +276,6 @@ public:
 
 /*!
  * \brief Specialized class for mass units (kg, lbs).
- * \author KWB, MS
  */
 class CMassUnit : public CMeasurementUnit
 {
@@ -276,6 +302,7 @@ public:
     {
         // void
     }
+
     /*!
      * \brief Kilogram, SI base unit
      * \return
@@ -285,6 +312,7 @@ public:
         static CMassUnit kg("kilogram", "kg", true, true, 1.0, CMeasurementPrefix::k(), 1);
         return kg;
     }
+
     /*!
      * \brief Gram, SI unit
      * \return
@@ -294,6 +322,7 @@ public:
         static CMassUnit g("gram", "g", true, false, 1.0 / 1000.0, CMeasurementPrefix::One(), 0);
         return g;
     }
+
     /*!
      * \brief Tonne, aka metric tonne (1000kg)
      * \return
@@ -303,6 +332,7 @@ public:
         static CMassUnit t("tonne", "t", false, false, 1000.0, CMeasurementPrefix::One(), 3);
         return t;
     }
+
     /*!
      * \brief Pound, aka mass pound
      * \return
@@ -316,7 +346,6 @@ public:
 
 /*!
  * \brief Specialized class for pressure (psi, hPa, bar).
- * \author KWB, MS
  */
 class CPressureUnit : public CMeasurementUnit
 {
@@ -343,6 +372,7 @@ public:
     {
         // void
     }
+
     /*!
      * \brief Pascal
      * \return
@@ -352,6 +382,7 @@ public:
         static CPressureUnit Pa("pascal", "Pa", true);
         return Pa;
     }
+
     /*!
      * \brief Hectopascal
      * \return
@@ -361,6 +392,7 @@ public:
         static CPressureUnit hPa("hectopascal", "hPa", true, CMeasurementPrefix::h().getFactor(), CMeasurementPrefix::h());
         return hPa;
     }
+
     /*!
      * \brief Pounds per square inch
      * \return
@@ -370,6 +402,7 @@ public:
         static CPressureUnit psi("pounds per square inch", "psi", false, 6894.8, CMeasurementPrefix::One(), 2);
         return psi;
     }
+
     /*!
      * \brief Bar
      * \return
@@ -379,6 +412,7 @@ public:
         static CPressureUnit bar("bar", "bar", false, 1E5);
         return bar;
     }
+
     /*!
      * \brief Millibar, actually the same as hPa
      * \return
@@ -388,6 +422,7 @@ public:
         static CPressureUnit bar("bar", "bar", false, 1E2);
         return bar;
     }
+
     /*!
      * \brief Inch of mercury at 0°C
      * \return
@@ -397,6 +432,7 @@ public:
         static CPressureUnit inhg("Inch of mercury 0°C", "inHg", false, 3386.389);
         return inhg;
     }
+
     /*!
      * \brief Inch of mercury for flight level 29,92inHg = 1013,25mbar = 1013,25hPa
      * \return
@@ -410,7 +446,6 @@ public:
 
 /*!
  * \brief Specialized class for temperatur units (kelvin, centidegree).
- * \author KWB
  */
 class CTemperatureUnit : public CMeasurementUnit
 {
@@ -438,18 +473,21 @@ protected:
      * \return
      */
     virtual double CTemperatureUnit::conversionToSiConversionUnit(double value) const;
+
     /*!
      * \brief Convert from SI conversion unit, specific for temperature
      * \param value
      * \return
      */
     virtual double CTemperatureUnit::conversionFromSiConversionUnit(double value) const;
+
 public:
     /*!
      * \brief Copy constructor
      * \param otherUnit
      */
     CTemperatureUnit(const CTemperatureUnit &otherUnit) : CMeasurementUnit(otherUnit), m_conversionOffsetToSi(otherUnit.m_conversionOffsetToSi) {}
+
     /*!
      * Assigment operator
      */
@@ -460,6 +498,7 @@ public:
         this->m_conversionOffsetToSi = otherUnit.m_conversionOffsetToSi;
         return (*this);
     }
+
     /*!
      * \brief Kelvin
      * \return
@@ -469,6 +508,7 @@ public:
         static CTemperatureUnit K("Kelvin", "K", true, true);
         return K;
     }
+
     /*!
      * \brief Centigrade C
      * \return
@@ -478,6 +518,7 @@ public:
         static CTemperatureUnit C("centigrade", "°C", false, false, 1.0, 273.15);
         return C;
     }
+
     /*!
      * \brief Fahrenheit F
      * \return
@@ -491,7 +532,6 @@ public:
 
 /*!
  * \brief Specialized class for speed units (m/s, ft/s, NM/h).
- * \author KWB
  */
 class CSpeedUnit : public CMeasurementUnit
 {
@@ -516,6 +556,7 @@ public:
      * \param otherUnit
      */
     CSpeedUnit(const CSpeedUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
+
     /*!
      * \brief Meter/second m/s
      * \return
@@ -525,6 +566,7 @@ public:
         static CSpeedUnit ms("meters/second", "m/s", true, false);
         return ms;
     }
+
     /*!
      * \brief Knots
      * \return
@@ -534,6 +576,7 @@ public:
         static CSpeedUnit kts("knot", "kts", false, false, 1852.0 / 3600.0, CMeasurementPrefix::One(), 1);
         return kts;
     }
+
     /*!
      * \brief Nautical miles per hour NM/h (same as kts)
      * \return
@@ -543,6 +586,7 @@ public:
         static CSpeedUnit NMh("nautical miles/hour", "NM/h", false, false, 1852.0 / 3600.0, CMeasurementPrefix::One(), 1);
         return NMh;
     }
+
     /*!
      * \brief Feet/second ft/s
      * \return
@@ -552,6 +596,7 @@ public:
         static CSpeedUnit fts("feet/seconds", "ft/s", false, false, 0.3048, CMeasurementPrefix::One(), 0);
         return fts;
     }
+
     /*!
      * \brief Feet/min ft/min
      * \return
@@ -561,6 +606,7 @@ public:
         static CSpeedUnit ftmin("feet/minute", "ft/min", false, false, 0.3048 / 60.0, CMeasurementPrefix::One(), 0);
         return ftmin;
     }
+
     /*!
      * \brief Kilometer/hour km/h
      * \return
@@ -574,7 +620,6 @@ public:
 
 /*!
  * \brief Specialized class for time units (ms, hour, min).
- * \author KWB
  */
 class CTimeUnit : public CMeasurementUnit
 {
@@ -594,11 +639,13 @@ private:
     CTimeUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "time", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
+
     /*!
      * Constructor, allows to implement methods in base class
      * \param otherUnit
      */
     CTimeUnit(const CTimeUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
+
     /*!
      * \brief Second s
      * \return
@@ -608,6 +655,7 @@ public:
         static CTimeUnit s("second", "s", true, true, 1, CMeasurementPrefix::None(), 1);
         return s;
     }
+
     /*!
      * \brief Millisecond ms
      * \return
@@ -617,6 +665,7 @@ public:
         static CTimeUnit ms("millisecond", "ms", true, false, 1E-03, CMeasurementPrefix::m(), 0);
         return ms;
     }
+
     /*!
      * \brief Hour
      * \return
@@ -626,6 +675,7 @@ public:
         static CTimeUnit h("hour", "h", false, false, 3600, CMeasurementPrefix::None(), 1);
         return h;
     }
+
     /*!
      * \brief Minute
      * \return
@@ -635,6 +685,7 @@ public:
         static CTimeUnit min("minute", "min", false, false, 60, CMeasurementPrefix::None(), 2);
         return min;
     }
+
     /*!
      * \brief Day
      * \return
@@ -646,6 +697,56 @@ public:
     }
 
 };
+
+/*!
+ * \brief Specialized class for acceleration units (m/s2, ft/s2).
+ */
+class CAccelerationUnit : public CMeasurementUnit
+{
+private:
+    /*!
+     * Constructor
+     * \brief Acceleration unit constructor
+     * \param name
+     * \param unitName
+     * \param isSiUnit
+     * \param isSIBaseUnit
+     * \param conversionFactorToSI
+     * \param mulitplier
+     * \param displayDigits
+     * \param epsilon
+     */
+    CAccelerationUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, unitName, "time", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+public:
+    /*!
+     * Constructor, allows to implement methods in base class
+     * \param otherUnit
+     */
+    CAccelerationUnit(const CAccelerationUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
+
+    /*!
+     * \brief Meter/second^2 (m/s^2)
+     * \return
+     */
+    static const CAccelerationUnit &m_s2()
+    {
+        static CAccelerationUnit ms2("meter/second^2", "m/s^2", true, false, 1, CMeasurementPrefix::None(), 1);
+        return ms2;
+    }
+
+    /*!
+     * \brief Feet/second^2
+     * \return
+     */
+    static const CAccelerationUnit &ft_s2()
+    {
+        static CAccelerationUnit fts2("feet/seconds^s", "ft/s^2", true, false, 3.28084, CMeasurementPrefix::m(), 0);
+        return fts2;
+    }
+};
+
+
 
 } // namespace
 } // namespace
