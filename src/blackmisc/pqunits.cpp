@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -69,7 +69,8 @@ double CAngleUnit::conversionSexagesimalToSi(const CMeasurementUnit &, double va
 QString CAngleUnit::toQStringRounded(double value, int digits) const
 {
     QString s;
-    if ((*this) == CAngleUnit::sexagesimalDeg()) {
+    if ((*this) == CAngleUnit::sexagesimalDeg())
+    {
         // special formatting for sexagesimal degrees
         double de = floor(value);
         double mi = floor((value - de) * 100.0);
@@ -77,7 +78,9 @@ QString CAngleUnit::toQStringRounded(double value, int digits) const
         QString ses = QLocale::system().toString(se, 'f', 2);
         s = QString::number(de).append(this->getUnitName()).append(QString::number(mi))
             .append("'").append(ses).append("\"");
-    } else {
+    }
+    else
+    {
         s = CMeasurementUnit::toQStringRounded(value, digits);
     }
     return s;

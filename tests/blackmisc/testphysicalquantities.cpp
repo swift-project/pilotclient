@@ -11,14 +11,6 @@ namespace BlackMiscTest
 {
 
 /*
- * Constructor
- */
-CTestPhysicalQuantities::CTestPhysicalQuantities(QObject *parent) : QObject(parent)
-{
-    // void
-}
-
-/*
  * Basic unit tests for physical units
  */
 void CTestPhysicalQuantities::unitsBasics()
@@ -164,6 +156,22 @@ void CTestPhysicalQuantities::timeTests()
 }
 
 /*
+ * Test acceleration
+ */
+void CTestPhysicalQuantities::accelerationTests()
+{
+    CLength oneMeter(1, CLengthUnit::m());
+    double ftFactor = oneMeter.switchUnit(CLengthUnit::ft()).unitValueToDouble();
+
+    CAcceleration a1(10.0, CAccelerationUnit::m_s2());
+    CAcceleration a2(a1);
+    a1.switchUnit(CAccelerationUnit::ft_s2());
+    QVERIFY2(a1 == a2, "Accelerations should be similar");
+    QVERIFY2(BlackMisc::Math::CMath::round(a1.unitValueToDouble() * ftFactor, 6) == a2.unitValueToDoubleRounded(6),
+             "Numerical values should be equal");
+}
+
+/*
  * Just testing obvious memory create / destruct flaws
  */
 void CTestPhysicalQuantities::memoryTests()
@@ -182,7 +190,7 @@ void CTestPhysicalQuantities::memoryTests()
 }
 
 /*
- * @brief Just testing obvious memory create / destruct flaws
+ * Some very basic arithmetic tests on the PQs
  */
 void CTestPhysicalQuantities::basicArithmetic()
 {
@@ -195,5 +203,7 @@ void CTestPhysicalQuantities::basicArithmetic()
     QVERIFY2(p3 == p1, "Pressure needs to be the same (1time)");
     p3 = p3 - p3;
     QVERIFY2(p3.unitValueToDouble() == 0, "Value needs to be zero");
+    p3 = CPressure(1013, CPressureUnit::hPa());
+    QVERIFY2(p3 * 1.5 == 1.5 * p3, "Basic commutative test on PQ failed");
 }
 } // namespace

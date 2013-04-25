@@ -26,4 +26,4 @@ private:
 };
 } // namespace
 
-#endif
+#endif // guard

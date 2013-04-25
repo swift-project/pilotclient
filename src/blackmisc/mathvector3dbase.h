@@ -375,7 +375,7 @@ public:
      */
     double length()const
     {
-        return this->m_i * this->m_j + this->m_k;
+        return this->m_i + this->m_j + this->m_k;
     }
 
     /*!

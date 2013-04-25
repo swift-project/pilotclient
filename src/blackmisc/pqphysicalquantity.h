@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -108,11 +108,11 @@ public:
     }
 
     /*!
-     * \brief Switch unit, e.g. feet meter
+     * \brief Switch unit, e.g. feet to meter
      * \param newUnit
      * \return
      */
-    CPhysicalQuantity &switchUnit(const MU &newUnit);
+    PQ &switchUnit(const MU &newUnit);
 
     /*!
      * \brief Value in SI base unit? Meter is an SI base unit, hertz not!

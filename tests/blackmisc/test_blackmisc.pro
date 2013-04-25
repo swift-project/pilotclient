@@ -8,18 +8,9 @@ CONFIG   -= app_bundle
 
 DEPENDPATH += . ../../src/blackmisc
 INCLUDEPATH += . ../../src
-SOURCES += main.cpp testmain.cpp \
-    testphysicalquantities.cpp \
-    testvectormatrix.cpp \
-    testaviation.cpp \
-    testgeo.cpp
 
-HEADERS += testmain.h \
-    blackmisctest.h \
-    testphysicalquantities.h \
-    testvectormatrix.h \
-    testaviation.h \
-    testgeo.h
+HEADERS += *.h
+SOURCES += *.cpp
 
 win32-msvc* {
     PRE_TARGETDEPS +=  ../../lib/blackmisc.lib

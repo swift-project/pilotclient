@@ -110,6 +110,9 @@ int CSamplesPhysicalQuantities::samples()
     ti2.switchUnit(CTimeUnit::ms());
     qDebug() << ti1 << ti2;
 
+    CAcceleration ac1(10, CAccelerationUnit::m_s2());
+    qDebug() << ac1;
+
     // bye
     qDebug() << "-----------------------------------------------";
     return 0;

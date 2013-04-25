@@ -28,6 +28,9 @@ void CTestVectorMatrix::vectorBasics()
     CVector3D v7(3, 4, 5);
     QVERIFY2(v6.crossProduct(v7) == CVector3D(-2, 4, -2), "Cross product is wrong");
     QVERIFY2(v6.dotProduct(v7) == 26, "Dot product is wrong, 26 expected");
+    QVERIFY2(v6.length() == (1 + 2 + 3), "Wrong vector length");
+    QVERIFY2(v6.lengthSquared() == (1 + 4 + 9), "Wrong squared vector length");
+    QVERIFY2(v6.magnitude() == sqrt(1.0 + 4.0 + 9.0), "Wrong vector magnitude");
 }
 
 /*
@@ -68,8 +71,13 @@ void CTestVectorMatrix::matrixBasics()
     QVERIFY2(m1(0, 0) == 1 && m1(1, 0) == 2 && m1(0, 2) == 3, "Index error");
     CMatrix3x3 mi = m1.inverse(invertible);
     CMatrix3x3 mid = m1 * mi;
-    mid.round();
-    QVERIFY2(mid.isIdentity(), qPrintable(QString("Multiply with inverse should be identity: %1").arg(mid.toQString())));
+    QVERIFY2(mid.isIdentityEpsilon(), qPrintable(QString("Multiply with inverse should be identity: %1").arg(mid.toQString())));
+
+    m1.setToIdentity();
+    CMatrix3x1 mc1 = m1.getColumn(0);
+    CMatrix1x3 mr2 = m1.getRow(1);
+    QVERIFY2(mc1 == CMatrix3x1(1, 0, 0), "Wrong column 0");
+    QVERIFY2(mr2 == CMatrix1x3(0, 1, 0), "Wrong row 1");
 }
 
 } // namespace

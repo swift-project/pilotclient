@@ -1,5 +1,10 @@
-#ifndef PQUNITSALL_H
-#define PQUNITSALL_H
+/*  Copyright (C) 2013 VATSIM Community / contributors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#ifndef BLACKMISC_PQUNITSALL_H
+#define BLACKMISC_PQUNITSALL_H
 
 // All units / quantities, required for the instantiations of the template
 // especially as CRTP is used.
@@ -14,5 +19,6 @@
 #include "blackmisc/pqtemperature.h"
 #include "blackmisc/pqangle.h"
 #include "blackmisc/pqtime.h"
+#include "blackmisc/pqacceleration.h"
 
-#endif // PQUNITSALL_H
+#endif // guard

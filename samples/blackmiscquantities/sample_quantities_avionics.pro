@@ -10,10 +10,6 @@ CONFIG   -= app_bundle
 DEPENDPATH += . ../../src/blackmisc
 INCLUDEPATH += . ../../src
 
-SOURCES += main.cpp \
-    samplesphysicalquantities.cpp \
-    samplesaviation.cpp
-
 win32-msvc* {
     PRE_TARGETDEPS += ../../lib/blackmisc.lib
     LIBS += ../../lib/blackmisc.lib
@@ -26,6 +22,5 @@ win32-msvc* {
 
 DESTDIR = ../../bin
 
-HEADERS += \
-    samplesphysicalquantities.h \
-    samplesaviation.h
+HEADERS += *.h
+SOURCES += *.cpp

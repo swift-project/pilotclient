@@ -166,10 +166,10 @@ public:
 
     /*!
      * \brief Get row
-     * \param column
+     * \param row
      * \return
      */
-    CMatrix1x3 getRow(int column) const;
+    CMatrix1x3 getRow(int row) const;
 
 };
 

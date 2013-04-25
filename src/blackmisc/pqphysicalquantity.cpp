@@ -276,13 +276,15 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator <=(const 
 /*
  * Switch to another unit
  */
-template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::switchUnit(const MU &newUnit)
+template <class MU, class PQ> PQ &CPhysicalQuantity<MU, PQ>::switchUnit(const MU &newUnit)
 {
-    if (this->m_unit == newUnit) return *this;
-    double cf = this->m_unit.conversionToUnit(this->m_unitValueD, newUnit);
-    this->m_unit = newUnit;
-    this->setUnitValue(cf);
-    return *this;
+    if (this->m_unit != newUnit)
+    {
+        double cf = this->m_unit.conversionToUnit(this->m_unitValueD, newUnit);
+        this->m_unit = newUnit;
+        this->setUnitValue(cf);
+    }
+    return static_cast<PQ &>(*this);
 }
 
 /*
@@ -407,6 +409,7 @@ template class CPhysicalQuantity<CTemperatureUnit, CTemperature>;
 template class CPhysicalQuantity<CSpeedUnit, CSpeed>;
 template class CPhysicalQuantity<CAngleUnit, CAngle>;
 template class CPhysicalQuantity<CTimeUnit, CTime>;
+template class CPhysicalQuantity<CAccelerationUnit, CAcceleration>;
 
 } // namespace
 } // namespace

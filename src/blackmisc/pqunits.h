@@ -731,7 +731,7 @@ public:
      */
     static const CAccelerationUnit &m_s2()
     {
-        static CAccelerationUnit ms2("meter/second^2", "m/s^2", true, false, 1, CMeasurementPrefix::None(), 1);
+        static CAccelerationUnit ms2("meter/second²", "m/s²", true, false, 1, CMeasurementPrefix::None(), 1);
         return ms2;
     }
 
@@ -741,12 +741,10 @@ public:
      */
     static const CAccelerationUnit &ft_s2()
     {
-        static CAccelerationUnit fts2("feet/seconds^s", "ft/s^2", true, false, 3.28084, CMeasurementPrefix::m(), 0);
+        static CAccelerationUnit fts2("feet/seconds²", "ft/s²", true, false, 3.28084, CMeasurementPrefix::m(), 0);
         return fts2;
     }
 };
-
-
 
 } // namespace
 } // namespace
