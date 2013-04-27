@@ -109,7 +109,7 @@ public:
      */
     ImplMatrix operator *(double factor) const
     {
-        ImplMatrix m(0);
+        ImplMatrix m;
         m += (*this);
         m *= factor;
         return m;
