@@ -1,7 +1,6 @@
 #include <QCoreApplication>
 #include "blackmisc/debug.h"
 #include "blackmisc/context.h"
-#include "blackcore/constants.h"
 #include <limits>
 #include <iostream>
 
@@ -16,6 +15,6 @@ int main(int argc, char *argv[])
     bAppWarning << "This is a bWarning log message";
     bAppError << "This is a bError log message";
     bAppDebug << "This is a bDebug log message";
-    
+
     return a.exec();
 }

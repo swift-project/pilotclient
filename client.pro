@@ -46,7 +46,6 @@ equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/com_client/sample_com_client.pro
     SUBDIRS += samples/com_server/sample_com_server.pro
     SUBDIRS += samples/config/sample_config.pro
-    SUBDIRS += samples/geodetic2ecef/sample_geodetic2ecef.pro
     SUBDIRS += samples/interpolator/sample_interpolator.pro
     SUBDIRS += samples/logging/sample_logging.pro
     SUBDIRS += samples/plugin/sample_plugin.pro
