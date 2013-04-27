@@ -69,7 +69,7 @@ public:
      * \brief Constructor by math vector
      * \param vector
      */
-    CCoordinateNed(const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(), m_hasReferencePosition(false) {}
+    explicit CCoordinateNed(const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(), m_hasReferencePosition(false) {}
 
     /*!
      * \brief Constructor by math vector and reference position

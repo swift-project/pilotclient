@@ -14,10 +14,31 @@ namespace BlackMisc
 {
 namespace Geo
 {
+
+/*!
+ * \brief Interface for geodetic ccordinates
+ */
+class ICoordinateGeodetic
+{
+    /*!
+     * \brief Latitude
+     * \return
+     */
+    virtual CLatitude latitude() const = 0;
+
+    /*!
+     * \brief Longitude
+     * \return
+     */
+    virtual CLongitude longitude() const = 0;
+};
+
 /*!
  * \brief Geodetic coordinate
  */
-class CCoordinateGeodetic : public CBaseStreamStringifier<CCoordinateGeodetic>
+class CCoordinateGeodetic :
+    public CBaseStreamStringifier<CCoordinateGeodetic>,
+    public ICoordinateGeodetic
 {
 
 private:
@@ -97,20 +118,24 @@ public:
     /*!
      * \brief Switch unit of latitude / longitude
      * \param unit
+     * \return
      */
-    void switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit)
+    CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit)
     {
         this->m_latitude.switchUnit(unit);
         this->m_longitude.switchUnit(unit);
+        return (*this);
     }
 
     /*!
      * \brief Switch unit of height
      * \param unit
+     * \return
      */
-    void switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit)
+    CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit)
     {
         this->m_height.switchUnit(unit);
+        return (*this);
     }
 
     /*!

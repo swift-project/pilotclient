@@ -237,7 +237,7 @@ CCoordinateGeodetic CCoordinateTransformation::toGeodetic(const CCoordinateEcef 
     }
 
     double latRad = atan2(sphi, cphi);
-    double lonRad = -atan2(-slam, clam); // Negative signs return lon in [-180, 180)
+    double lonRad = -atan2(-slam, clam); // Negative signs return lon degrees [-180, 180)
     CCoordinateGeodetic result(
         CLatitude(latRad, CAngleUnit::rad()),
         CLongitude(lonRad, CAngleUnit::rad()),

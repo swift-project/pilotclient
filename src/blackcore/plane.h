@@ -1,53 +1,80 @@
-//! Copyright (C) 2013 Roland Winklmeier
-//! This Source Code Form is subject to the terms of the Mozilla Public
-//! License, v. 2.0. If a copy of the MPL was not distributed with this
-//! file, You can obtain one at http://mozilla.org/MPL/2.0/
+/*  Copyright (C) 2013 VATSIM Community / contributors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef PLANE_H
-#define PLANE_H
+#ifndef BLACKCORE_PLANE_H
+#define BLACKCORE_PLANE_H
+#include "blackcore/interpolator.h"
 
-#include <QString>
+namespace BlackCore
+{
 
-namespace BlackCore {
+class ISimulator;
 
-	class ISimulator;
-	class CInterpolator;
-    class CVectorGeo;
+/*!
+ * \brief Plane class
+ */
+class CPlane
+{
+public:
 
-	class CPlane
-	{
-	public:
+    enum ESquawkMode {Standby   = 'S',
+                      Charlie   = 'N',
+                      Ident     = 'Y'
+                     };
 
-		enum ESquawkMode {Standby   = 'S',
-						  Charlie   = 'N',
-						  Ident     = 'Y'};
+    /*!
+     * \brief Default constructor
+     */
+    CPlane();
 
-		CPlane();
-		CPlane(const QString &callsign, ISimulator *driver);
+    /*!
+     * \brief Constructor
+     * \param callsign
+     * \param driver
+     */
+    CPlane(const QString &callsign, ISimulator *driver);
+
+    /*!
+     * \brief Add a position (for the interpolator)
+     * \param position
+     * \param groundVelocity
+     * \param heading
+     * \param pitch
+     * \param bank
+     */
+    void addPosition(const BlackMisc::Geo::CCoordinateGeodetic &position,
+                     const BlackMisc::PhysicalQuantities::CSpeed &groundVelocity,
+                     const BlackMisc::Aviation::CHeading &heading,
+                     const BlackMisc::PhysicalQuantities::CAngle &pitch,
+                     const BlackMisc::PhysicalQuantities::CAngle &bank);
+
+    /*!
+     * \brief Returns the callsign of the multiplayer plane
+     * \return
+     */
+    QString callsign() { return m_callsign; }
 
 
+    /*!
+     * \brief render
+     */
+    void render();
 
-		void addPosition(const CVectorGeo &position, double groundVelocity, double heading, double pitch, double bank);
+    /*!
+     * \brief Last updated timestamp
+     * \return
+     */
+    double getLastUpdateTime() const;
 
-		//! Returns the callsign of the multiplayer plane
-		/*!
-		  \return callsign.
-		*/
-		inline QString& Callsign() { return m_callsign; }
-	
-		void render();
-	
-		double getLastUpdateTime();
+private:
 
-	private:
-
-		QString			m_callsign;
-
-		CInterpolator	*m_interpolator;
-
-		ISimulator		*m_driver;
-	};
+    QString         m_callsign;
+    CInterpolator   *m_interpolator;
+    ISimulator      *m_driver;
+};
 
 } // namespace BlackCore
 
-#endif // PLANE_H
+#endif // guard

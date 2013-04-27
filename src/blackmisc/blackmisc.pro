@@ -9,8 +9,8 @@ INCLUDEPATH += ..
 
 # PRECOMPILED_HEADER = stdpch.h
 precompile_header:!isEmpty(PRECOMPILED_HEADER) {
- DEFINES += USING_PCH
- }
+    DEFINES += USING_PCH
+}
 
 DEFINES += LOG_IN_FILE
 

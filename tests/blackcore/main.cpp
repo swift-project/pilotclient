@@ -1,8 +1,8 @@
-#include "testblackmiscmain.h"
+#include "testblackcoremain.h"
 #include <QCoreApplication>
 #include <QDebug>
 
-using namespace BlackMiscTest;
+using namespace BlackCoreTest;
 
 /*!
  * Starter for test cases
@@ -14,7 +14,7 @@ using namespace BlackMiscTest;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    CBlackMiscTestMain::unitMain(argc, argv);
+    CBlackCoreTestMain::unitMain(argc, argv);
 
     // bye
     return a.exec();

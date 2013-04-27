@@ -3,24 +3,20 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISCTEST_TESTMAIN_H
-#define BLACKMISCTEST_TESTMAIN_H
+#ifndef BLACKCORETEST_TESTMAIN_H
+#define BLACKCORETEST_TESTMAIN_H
 
-#include "testphysicalquantities.h"
-#include "testaviation.h"
-#include "testvectormatrix.h"
-#include "testgeo.h"
 #include <QtTest/QtTest>
 
-namespace BlackMiscTest
+namespace BlackCoreTest
 {
 
 /*!
- * Class firing of all unit tests in this namespace.
+ * Class firing all unit tests in this namespace.
  * Avoids clashes with other main(..) functions and allows to fire the test cases
  * simply from any other main.
  */
-class CTestMain
+class CBlackCoreTestMain
 {
 public:
     /*!
@@ -33,4 +29,4 @@ public:
 };
 }
 
-#endif // BLACKMISCTEST_TESTMAIN_H
+#endif // guard

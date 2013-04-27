@@ -1,5 +1,5 @@
-QT       += core
-QT       -= gui
+# GUI required for matrix classes
+QT       += core gui
 
 TARGET = sample_geo2ecef
 TEMPLATE = app
@@ -8,11 +8,9 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 DEPENDPATH += . ../../src
-
 INCLUDEPATH += . ../../src
 
 SOURCES += *.cpp
-
 LIBS    += -L../../lib -lblackcore -lblackmisc
 
 win32:  PRE_TARGETDEPS += ../../lib/blackmisc.lib \
@@ -21,6 +19,3 @@ else:   PRE_TARGETDEPS += ../../lib/libblackmisc.a \
                           ../../lib/libblackcore.a
 
 DESTDIR = ../../bin
-
-
-

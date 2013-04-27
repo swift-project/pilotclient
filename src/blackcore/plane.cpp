@@ -1,36 +1,54 @@
+/*  Copyright (C) 2013 VATSIM Community / contributors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #include "blackcore/plane.h"
-#include "blackcore/interpolator.h"
-#include "blackcore/simulator.h"
-#include "blackmisc/debug.h"
 
-namespace BlackCore {
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
 
-	CPlane::CPlane()
-		:	m_interpolator(NULL), m_driver(NULL)
-	{
-	}
+namespace BlackCore
+{
 
-	CPlane::CPlane(const QString &callsign, ISimulator *driver)
-		:	m_callsign(callsign), m_interpolator(NULL), m_driver(driver)
-	{
-		m_interpolator = new CInterpolator();
+/*
+ * Default constructor
+ */
+CPlane::CPlane() : m_interpolator(nullptr), m_driver(nullptr) { }
 
-		Q_ASSERT(m_interpolator);
-		Q_ASSERT(driver);
-	}
+/*
+ * Constructor
+ */
+CPlane::CPlane(const QString &callsign, ISimulator *driver) : m_callsign(callsign), m_interpolator(NULL), m_driver(driver)
+{
+    m_interpolator = new CInterpolator();
+    Q_ASSERT(m_interpolator);
+    Q_ASSERT(driver);
+}
 
-	void CPlane::addPosition(const CVectorGeo &position, double groundVelocity, double heading, double pitch, double bank)
-	{
-		Q_ASSERT(m_interpolator);
+/*
+ * Add a position
+ */
+void CPlane::addPosition(const CCoordinateGeodetic &position, const CSpeed &groundVelocity, const BlackMisc::Aviation::CHeading &heading, const CAngle &pitch, const CAngle &bank)
+{
+    Q_ASSERT(m_interpolator);
+    m_interpolator->pushUpdate(position, groundVelocity, heading, pitch, bank);
+}
 
-		m_interpolator->pushUpdate(position, groundVelocity, heading, pitch, bank);
-	}
+/*
+ * Render this object
+ */
+void CPlane::render()
+{
+    // void
+}
 
-	void CPlane::render()
-	{
-		//m_driver->updatePositionAndSpeed();
-	}
-
-
+/*
+ * Last update timestamp
+ */
+double CPlane::getLastUpdateTime() const
+{
+    return 0;
+}
 
 } // namespace BlackCore

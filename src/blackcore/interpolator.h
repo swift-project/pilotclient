@@ -1,79 +1,116 @@
-//! Copyright (C) 2013 Roland Winklmeier
-//! This Source Code Form is subject to the terms of the Mozilla Public
-//! License, v. 2.0. If a copy of the MPL was not distributed with this
-//! file, You can obtain one at http://mozilla.org/MPL/2.0/
+/*  Copyright (C) 2013 VATSIM Community / contributors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/.  */
 
-#ifndef INTERPOLATOR_H
-#define INTERPOLATOR_H
+#ifndef BLACKCORE_INTERPOLATOR_H
+#define BLACKCORE_INTERPOLATOR_H
 
+#include "blackmisc/coordinatetransformation.h"
+#include "blackmisc/pqspeed.h"
+#include "blackmisc/avheading.h"
 #include <QElapsedTimer>
-
-#include "blackcore/vector_geo.h"
-#include <blackcore/ecef.h>
-#include "blackcore/vector_3d.h"
-#include "blackcore/ned.h"
-#include "blackcore/ecef.h"
-#include "blackcore/constants.h"
 
 namespace BlackCore
 {
 
+/*!
+ * \typedef Plane's orientation
+ */
 typedef struct
 {
-    double heading;
-    double pitch;
-    double bank;
+    BlackMisc::Aviation::CHeading heading; // honestly I think this is a track TODO
+    BlackMisc::PhysicalQuantities::CAngle pitch;
+    BlackMisc::PhysicalQuantities::CAngle bank;
 
 } TOrientation;
 
+/*!
+ * \typedef Plane's state
+ */
 typedef struct
 {
-    void reset()
-    {
-    }
+    /*!
+     * \brief Reset data
+     */
+    void reset() {}
 
-    qint64 			timestamp;
-    CEcef 			position;
-    TOrientation 	orientation;
-    double 			groundspeed;
-    CVector3D 		velocity;
-	CNed			velNED;
+    qint64 timestamp;
+    TOrientation orientation;
+    BlackMisc::PhysicalQuantities::CSpeed groundspeed;
+    BlackMisc::Math::CVector3D velocity;
+    BlackMisc::Geo::CCoordinateEcef position;
+    BlackMisc::Geo::CCoordinateNed velNED;
 
 } TPlaneState;
 
+/*!
+ * \brief Interpolator, calculation inbetween positions
+ */
 class CInterpolator
 {
 public:
+    /*!
+     * \brief Default constructor
+     */
     CInterpolator();
-	virtual ~CInterpolator();
 
+    /*!
+     * \brief Virtual destructor
+     */
+    virtual ~CInterpolator();
+
+    /*!
+     * \brief Init object
+     */
     void initialize();
 
-    void pushUpdate(CVectorGeo pos, double groundVelocity, double heading, double pitch, double bank);
+    /*!
+     * \brief Push an update
+     * \param pos
+     * \param groundSpeed
+     * \param heading
+     * \param pitch
+     * \param bank
+     * \return
+     */
+    BlackMisc::Geo::CCoordinateNed pushUpdate(const BlackMisc::Geo::CCoordinateGeodetic &pos,
+            const BlackMisc::PhysicalQuantities::CSpeed &groundSpeed,
+            const BlackMisc::Aviation::CHeading &heading,
+            const BlackMisc::PhysicalQuantities::CAngle &pitch,
+            const BlackMisc::PhysicalQuantities::CAngle &bank);
 
-    bool isValid();
+    /*!
+     * \brief Valid state?
+     * \return
+     */
+    bool isValid() const;
 
+    /*!
+     * \brief Calculate current state
+     * \param state
+     * \return
+     */
+    bool stateNow(TPlaneState *state);
 
-
-    bool     stateNow(TPlaneState *state);
 private:
-    double   normalizeRadians(double radian);
+    BlackMisc::Math::CVector3D m_a;
+    BlackMisc::Math::CVector3D m_b;
+    QElapsedTimer m_time;
+    TPlaneState *m_state_begin;
+    TPlaneState *m_state_end;
+    bool m_valid;
+    double m_timeEnd;
+    double m_timeBegin;
 
-
-    QElapsedTimer   m_time;
-    TPlaneState     *m_state_begin;
-    TPlaneState     *m_state_end;
-
-    bool            m_valid;
-
-    CVector3D       m_a;
-    CVector3D       m_b;
-
-    double          m_timeEnd;
-    double          m_timeBegin;
-
+    /*!
+     * \brief Normalize radians
+     * \param angle
+     * \return
+     */
+    BlackMisc::PhysicalQuantities::CAngle normalizeRadians(const BlackMisc::PhysicalQuantities::CAngle &angle) const;
 };
 
 } // namespace BlackCore
 
-#endif // INTERPOLATOR_H
+#endif // guard

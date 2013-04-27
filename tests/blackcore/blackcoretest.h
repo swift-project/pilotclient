@@ -3,13 +3,13 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISCTEST_H
-#define BLACKMISCTEST_H
+#ifndef BLACKCORETEST_H
+#define BLACKCORETEST_H
 
 /*!
- * @namespace BlackMiscTest
- * Unit tests for BlackMisc. Unit tests do have their own namespace, so
- * the regular namespace BlackMisc is completely free of unit tests.
+ * @namespace BlackCoreTest
+ * Unit tests for BlackCore. Unit tests do have their own namespace, so
+ * the regular namespace BlackCore is completely free of unit tests.
  * Add any new tests to TestMain::unitMain as shown there.
  */
 

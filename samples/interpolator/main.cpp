@@ -1,79 +1,80 @@
-#include <QCoreApplication>
-#include <QElapsedTimer>
+/*  Copyright (C) 2013 VATSIM Community / contributors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include <iostream>
-
-#include "blackcore/matrix_3d.h"
-#include "blackcore/vector_geo.h"
-#include "blackcore/vector_3d.h"
+#include "blackmisc/coordinatetransformation.h"
+#include "blackmisc/pqangle.h"
 #include "blackcore/interpolator.h"
 #include "blackmisc/context.h"
 #include "blackmisc/debug.h"
+#include <QCoreApplication>
+#include <QElapsedTimer>
+#include <iostream>
 
 using namespace std;
 using namespace BlackCore;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::Math;
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Aviation;
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-
     BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
 
     QElapsedTimer timer;
 
-    CVectorGeo myGeo(48.123, 11.75, 400);
-    CVector3D vecNed(1, 0, 0);
-    CVector3D vecEcef;
+//    CCoordinateGeodetic myGeo(48.123, 11.75, 400);
+//    CVector3D vecNed(1, 0, 0);
+//    CVector3D vecEcef;
 
     CInterpolator interpolator;
-
     interpolator.initialize();
 
-    CVectorGeo vecGeo(48.340733, 11.750565, 100);
-    CVectorGeo vecGeo2(48.344727, 11.805153, 100);
+    CCoordinateGeodetic vecGeo(48.340733, 11.750565, 100);
+    CCoordinateGeodetic vecGeo2(48.344727, 11.805153, 100);
 
-    cout << "Start position: "  << endl;
-	vecGeo.print();
-
-    cout << "End position: "    << endl;
-	vecGeo2.print();
+    cout << "Start position: "  << vecGeo << endl;
+    cout << "End position: "    << vecGeo2 << endl;
 
     timer.start();
 
     // CVectorGeo pos, double groundVelocity, double heading, double pitch, double bank
-    interpolator.pushUpdate(vecGeo, 20, 80, 0, 0);
-    interpolator.pushUpdate(vecGeo2, 20, 250, 0, 0);
+    CAngle zeroAngle(0, CAngleUnit::deg());
+    CSpeed speed(20, CSpeedUnit::kts());
+    CCoordinateNed ned;
+
+    ned = interpolator.pushUpdate(vecGeo, speed, CHeading(80, false, CAngleUnit::deg()), zeroAngle, zeroAngle);
+    cout << "Interpolator NED 1: "  << ned << endl;
+    ned = interpolator.pushUpdate(vecGeo2, speed, CHeading(250, false, CAngleUnit::deg()), zeroAngle, zeroAngle);
+    cout << "Interpolator NED 2: "  << ned << endl;
 
     double duration = timer.nsecsElapsed();
-
     TPlaneState teststate;
-	
-	timer.restart();
+    timer.restart();
     interpolator.stateNow(&teststate);
 
-    CEcef pos = teststate.position;
-	CVector3D vel = teststate.velocity;
-	CNed ned = teststate.velNED;
+    CCoordinateEcef pos = teststate.position;
+    CVector3D vel = teststate.velocity;
+    ned = teststate.velNED;
 
     duration = timer.nsecsElapsed();
-	timer.restart();
 
-	CVectorGeo resultGeo = pos.toGeodetic();
+    CCoordinateTransformation::toGeodetic(pos);
+    timer.restart();
+
+    CCoordinateGeodetic resultGeo = CCoordinateTransformation::toGeodetic(pos);
     duration = timer.nsecsElapsed();
 
-    cout << "End position: "    << endl;
-	resultGeo.print();
+    cout << "End position: "  << resultGeo << endl;
+    cout << "End velocity: "  << vel << endl;
+    cout << "End "  << ned << endl;
+    cout << "Heading: ";
+    cout << teststate.orientation.heading.switchUnit(CAngleUnit::deg()) << endl;
     cout << endl;
-	
-	cout << "End velocity: "    << endl;
-	vel.print();
-    cout << endl;
-
-	cout << "Heading: "    << endl;
-	cout << teststate.orientation.heading << endl;
-    cout << endl;
-
-	cout << duration <<  " nanoseconds" << endl;
+    cout << duration <<  " nanoseconds" << endl;
 
     return a.exec();
 }
