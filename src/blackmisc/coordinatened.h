@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -57,6 +57,14 @@ public:
      * \param down
      */
     CCoordinateNed(const CCoordinateGeodetic &referencePosition, double north, double east, double down) : CVector3DBase(north, east, down), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
+
+    /*!
+     * \brief Constructor by values
+     * \param north
+     * \param east
+     * \param down
+     */
+    CCoordinateNed(double north, double east, double down) : CVector3DBase(north, east, down), m_referencePosition(), m_hasReferencePosition(false) {}
 
     /*!
      * \brief Copy constructor

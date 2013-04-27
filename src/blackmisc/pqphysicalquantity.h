@@ -36,7 +36,7 @@ protected:
     MU m_conversionSiUnit; //!< corresponding SI base unit
 
     /*!
-     * \brief Constructor with int
+     * \brief Constructor by integer
      * \param baseValue
      * \param unit
      * \param siConversionUnit
@@ -61,6 +61,15 @@ protected:
     }
 
     /*!
+     * \brief Polymorphic clone as concrete class
+     * \return
+     */
+    PQ clone() const
+    {
+        return static_cast<PQ const &>(*this);
+    }
+
+    /*!
      * \brief Init by integer
      * \param baseValue
      */
@@ -72,6 +81,7 @@ protected:
      */
 
     void setUnitValue(double baseValue);
+
     /*!
      * \brief Set the SI value
      */

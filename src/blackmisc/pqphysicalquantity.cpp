@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -190,8 +190,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, P
  */
 template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator -(const PQ &otherQuantity) const
 {
-    PQ minus;
-    minus += (*this);
+    PQ minus = this->clone();
     minus -= otherQuantity;
     return minus;
 }
@@ -210,8 +209,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, P
  */
 template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator *(double multiply) const
 {
-    PQ times;
-    times += (*this);
+    PQ times = this->clone();
     times *= multiply;
     return times;
 }
@@ -230,8 +228,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, P
  */
 template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator /(double divide) const
 {
-    PQ div;
-    div += (*this);
+    PQ div = this->clone();
     div /= divide;
     return div;
 }

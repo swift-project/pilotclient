@@ -31,6 +31,15 @@ protected:
      */
     QString stringForConverter() const;
 
+    /*!
+     * \brief Clone as conrete implementation
+     * \return
+     */
+    ImplMatrix clone() const
+    {
+        return static_cast<ImplMatrix const &>(*this);
+    }
+
 public:
     /*!
      * \brief Default constructor
@@ -109,8 +118,7 @@ public:
      */
     ImplMatrix operator *(double factor) const
     {
-        ImplMatrix m;
-        m += (*this);
+        ImplMatrix m = this->clone();
         m *= factor;
         return m;
     }
@@ -151,8 +159,7 @@ public:
      */
     ImplMatrix operator /(double factor) const
     {
-        ImplMatrix m(0);
-        m += (*this);
+        ImplMatrix m = this->clone();
         m /= factor;
         return m;
     }
@@ -175,8 +182,7 @@ public:
      */
     ImplMatrix operator +(const ImplMatrix &otherMatrix) const
     {
-        ImplMatrix m(0);
-        m += (*this);
+        ImplMatrix m = this->clone();
         m += otherMatrix;
         return m;
     }
@@ -199,8 +205,7 @@ public:
      */
     ImplMatrix operator -(const ImplMatrix &otherMatrix) const
     {
-        ImplMatrix m(0);
-        m += (*this);
+        ImplMatrix m = this->clone();
         m -= otherMatrix;
         return m;
     }
@@ -220,9 +225,7 @@ public:
      */
     bool isIdentityEpsilon() const
     {
-        ImplMatrix m(0.0);
-        m += (*this);
-        m.round();
+        ImplMatrix m = this->clone().round();
         return m.isIdentity();
     }
 
@@ -257,9 +260,7 @@ public:
      */
     bool isZeroEpsilon() const
     {
-        ImplMatrix m(0.0);
-        m += (*this);
-        m.round();
+        ImplMatrix m = this->clone().round();
         return m.isZero();
     }
 
@@ -277,6 +278,7 @@ public:
 
     /*!
      * \brief Round all values
+     * \return
      */
     ImplMatrix &round();
 

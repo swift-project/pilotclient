@@ -21,7 +21,7 @@ class CMatrix3x1; // forward declaration
 /*!
  * \brief 3D vector base (x, y, z)
  */
-template <class ImplClass> class CVector3DBase : public CBaseStreamStringifier<ImplClass>
+template <class ImplVector> class CVector3DBase : public CBaseStreamStringifier<ImplVector>
 {
 protected:
 
@@ -61,6 +61,16 @@ protected:
      */
     virtual QString stringForConverter() const;
 
+    /*!
+     * \brief Clone as concrete implementation
+     * \return
+     */
+    ImplVector clone() const
+    {
+        return static_cast<ImplVector const &>(*this);
+    }
+
+
 public:
 
     // getter and setters are implemented in the derived classes
@@ -90,7 +100,7 @@ public:
      */
     bool isZeroEpsilon() const
     {
-        ImplClass v;
+        ImplVector v;
         v += (*this);
         v.round();
         return v.isZero();
@@ -186,10 +196,9 @@ public:
      * \param otherVector
      * \return
      */
-    ImplClass operator +(const ImplClass &otherVector) const
+    ImplVector operator +(const ImplVector &otherVector) const
     {
-        ImplClass v;
-        v += (*this);
+        ImplVector v = this->clone();
         v += otherVector;
         return v;
     }
@@ -212,10 +221,9 @@ public:
      * \param otherVector
      * \return
      */
-    ImplClass operator -(const ImplClass &otherVector) const
+    ImplVector operator -(const ImplVector &otherVector) const
     {
-        ImplClass v;
-        v += (*this);
+        ImplVector v = this->clone();
         v -= otherVector;
         return v;
     }
@@ -238,10 +246,9 @@ public:
      * \param otherVector
      * \return
      */
-    ImplClass operator *(const ImplClass &otherVector) const
+    ImplVector operator *(const ImplVector &otherVector) const
     {
-        ImplClass v;
-        v += (*this);
+        ImplVector v = this->clone();
         v *= otherVector;
         return v;
     }
@@ -264,10 +271,9 @@ public:
      * \param factor
      * \return
      */
-    ImplClass operator *(double factor) const
+    ImplVector operator *(double factor) const
     {
-        ImplClass v;
-        v += (*this);
+        ImplVector v = this->clone();
         v *= factor;
         return v;
     }
@@ -278,7 +284,7 @@ public:
      * \param otherVector
      * \return
      */
-    friend ImplClass operator *(double factor, const ImplClass &otherVector)
+    friend ImplVector operator *(double factor, const ImplVector &otherVector)
     {
         return otherVector * factor;
     }
@@ -301,10 +307,9 @@ public:
      * \param divisor
      * \return
      */
-    ImplClass operator /(double divisor) const
+    ImplVector operator /(double divisor) const
     {
-        ImplClass v;
-        v += (*this);
+        ImplVector v = this->clone();
         v /= divisor;
         return v;
     }
@@ -327,10 +332,9 @@ public:
      * \param otherVector
      * \return
      */
-    ImplClass operator /(const ImplClass &otherVector) const
+    ImplVector operator /(const ImplVector &otherVector) const
     {
-        ImplClass v;
-        v += (*this);
+        ImplVector v = this->clone();
         v /= otherVector;
         return v;
     }
@@ -340,14 +344,14 @@ public:
      * \param otherVector
      * \return
      */
-    double dotProduct(const ImplClass &otherVector) const;
+    double dotProduct(const ImplVector &otherVector) const;
 
     /*!
      * \brief Cross product
      * \param otherVector
      * \return
      */
-    ImplClass crossProduct(const ImplClass &otherVector) const;
+    ImplVector crossProduct(const ImplVector &otherVector) const;
 
     /*!
      * \brief Matrix * this vector
@@ -360,12 +364,9 @@ public:
      * \brief Reciprocal value
      * \return
      */
-    ImplClass reciprocalValues() const
+    ImplVector reciprocalValues() const
     {
-        ImplClass v;
-        v.m_i = (1 / this->m_i);
-        v.m_j = (1 / this->m_j);
-        v.m_k = (1 / this->m_j);
+        ImplVector v(1 / this->m_i, 1 / this->m_j, 1 / this->m_j);
         return v;
     }
 
@@ -406,13 +407,13 @@ public:
      * \brief Round this vector
      * \return
      */
-    ImplClass &round()
+    ImplVector &round()
     {
         const double epsilon = 1E-10;
         this->m_i = BlackMisc::Math::CMath::roundEpsilon(this->m_i, epsilon);
         this->m_j = BlackMisc::Math::CMath::roundEpsilon(this->m_j, epsilon);
         this->m_k = BlackMisc::Math::CMath::roundEpsilon(this->m_k, epsilon);
-        return static_cast<ImplClass &>(*this);
+        return static_cast<ImplVector &>(*this);
     }
 };
 
