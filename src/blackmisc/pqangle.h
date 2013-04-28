@@ -14,7 +14,6 @@ namespace PhysicalQuantities
 {
 /*!
  * \brief Physical unit angle (radians, degrees)
- * \author KWB
  */
 class CAngle : public CPhysicalQuantity<CAngleUnit, CAngle>
 {
@@ -23,34 +22,40 @@ public:
      * \brief Default constructor
      */
     CAngle() : CPhysicalQuantity(0, CAngleUnit::rad(), CAngleUnit::rad()) {}
+
     /*!
      * \brief Copy constructor
      */
     CAngle(const CAngle &angle) : CPhysicalQuantity(angle) {}
+
     /*!
      * \brief Init by int value
      * \param value
      * \param unit
      */
     CAngle(qint32 value, const CAngleUnit &unit): CPhysicalQuantity(value, unit, CAngleUnit::rad()) {}
+
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
     CAngle(double value, const CAngleUnit &unit): CPhysicalQuantity(value, unit, CAngleUnit::rad()) {}
+
     /*!
      * \brief Virtual destructor
      */
     virtual ~CAngle() {}
+
     /*!
      * \brief Convenience method PI
      * \return
      */
-    const static double pi()
+    static double pi()
     {
-        return M_PI;
+        return double(M_PI);
     }
+
     /*!
      * \brief Value as factor of PI (e.g. 0.5PI)
      * \return

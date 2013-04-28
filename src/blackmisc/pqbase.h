@@ -255,7 +255,7 @@ protected:
      */
     CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSiUnit, bool isSiBaseUnit, double conversionFactorToSI = 1,
                      const CMeasurementPrefix &multiplier = CMeasurementPrefix::None(), qint32 displayDigits = 2,
-                     double epsilon = 1E-10, UnitConverter toSiConverter = nullptr, UnitConverter fromSiConverter = nullptr);
+                     double epsilon = 1E-10, UnitConverter toSiConverter = 0, UnitConverter fromSiConverter = 0);
 
     /*!
      * \brief Copy constructor

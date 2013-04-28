@@ -17,7 +17,7 @@ namespace BlackCore
 /*
  * Constructor
  */
-CInterpolator::CInterpolator() : m_state_begin(nullptr), m_state_end(nullptr)
+CInterpolator::CInterpolator() : m_state_begin(0), m_state_end(0)
 {
     m_time.start();
 }
@@ -42,7 +42,7 @@ void CInterpolator::initialize() {}
 CCoordinateNed CInterpolator::pushUpdate(const CCoordinateGeodetic &pos, const CSpeed &groundSpeed, const CHeading &heading, const CAngle &pitch, const CAngle &bank)
 {
     CCoordinateNed velocityNED;
-    if (m_state_begin == nullptr)
+    if (m_state_begin == 0)
     {
         m_state_begin = new TPlaneState();
         m_state_begin->position = CCoordinateTransformation::toEcef(pos);
@@ -62,7 +62,7 @@ CCoordinateNed CInterpolator::pushUpdate(const CCoordinateGeodetic &pos, const C
     }
 
     stateNow(m_state_begin);
-    if (m_state_end == nullptr) m_state_end = new TPlaneState();
+    if (m_state_end == 0) m_state_end = new TPlaneState();
     m_state_end->reset();
 
     m_state_end->timestamp = m_time.elapsed();

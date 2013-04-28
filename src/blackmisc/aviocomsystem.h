@@ -6,6 +6,7 @@
 #ifndef BLACKMISC_AVIOCOMUNIT_H
 #define BLACKMISC_AVIOCOMUNIT_H
 #include "blackmisc/aviomodulator.h"
+#include <stdexcept>
 
 namespace BlackMisc
 {

@@ -73,4 +73,4 @@ namespace BlackMisc
 
 } // BlackMisc
 
-#endif LOGMESSAGE_H// LOGMESSAGE_H
+#endif // guard

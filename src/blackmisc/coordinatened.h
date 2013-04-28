@@ -41,7 +41,7 @@ public:
     /*!
      * \brief Default constructor
      */
-    CCoordinateNed() : CVector3DBase(), m_hasReferencePosition(false) {}
+    CCoordinateNed() : CVector3DBase(), m_referencePosition(), m_hasReferencePosition(false) {}
 
     /*!
      * \brief Constructor with reference position
@@ -71,7 +71,7 @@ public:
      * \param otherNed
      */
     CCoordinateNed(const CCoordinateNed &otherNed) :
-        CVector3DBase(otherNed) , m_hasReferencePosition(otherNed.m_hasReferencePosition), m_referencePosition(otherNed.m_referencePosition) {}
+        CVector3DBase(otherNed), m_referencePosition(otherNed.m_referencePosition), m_hasReferencePosition(otherNed.m_hasReferencePosition) {}
 
     /*!
      * \brief Constructor by math vector

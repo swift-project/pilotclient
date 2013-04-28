@@ -44,8 +44,7 @@ namespace BlackMisc
         */
         struct SLogInformation
         {
-            SLogInformation() : m_logType(CLog::eOff), m_threadId(0), m_line(-1), m_sourceFile(NULL), m_methodName(NULL) {}
-
+            SLogInformation() : m_dateTime(), m_logType(CLog::eOff), m_applicationName(), m_threadId(0), m_sourceFile(NULL), m_line(-1), m_methodName(NULL) {}
             QDateTime           m_dateTime;
             TLogType            m_logType;
             QString             m_applicationName;

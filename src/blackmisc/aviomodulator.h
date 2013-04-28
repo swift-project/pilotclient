@@ -60,7 +60,7 @@ protected:
      */
     void setFrequencyActiveKHz(double frequencyKHz)
     {
-        this->m_frequencyActive = CFrequency(frequencyKHz, CFrequencyUnit::kHz());
+        this->m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyKHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
     }
 
     /*!
@@ -69,7 +69,7 @@ protected:
      */
     void setFrequencyStandbyKHz(double frequencyKHz)
     {
-        this->m_frequencyStandby = CFrequency(frequencyKHz, CFrequencyUnit::kHz());
+        this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyKHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
     }
 
     /*!

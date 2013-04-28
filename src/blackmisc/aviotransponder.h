@@ -6,6 +6,7 @@
 #ifndef BLACKMISC_AVIOTRANSPONDER_H
 #define BLACKMISC_AVIOTRANSPONDER_H
 #include "blackmisc/aviobase.h"
+#include <stdexcept>
 
 namespace BlackMisc
 {

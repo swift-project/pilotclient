@@ -139,7 +139,7 @@ private:
      */
     CAngleUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0,
                const CMeasurementPrefix &multiplier = CMeasurementPrefix::One(), qint32 displayDigits = 2,
-               double epsilon = 1E-9, UnitConverter converterToSi = nullptr,  UnitConverter converterFromSi = nullptr) :
+               double epsilon = 1E-9, UnitConverter converterToSi = 0,  UnitConverter converterFromSi = 0) :
         CMeasurementUnit(name, unitName, "angle", isSiUnit, false, conversionFactorToSI,
                          multiplier, displayDigits, epsilon, converterToSi, converterFromSi)
     {
@@ -472,14 +472,14 @@ protected:
      * \param value
      * \return
      */
-    virtual double CTemperatureUnit::conversionToSiConversionUnit(double value) const;
+    virtual double conversionToSiConversionUnit(double value) const;
 
     /*!
      * \brief Convert from SI conversion unit, specific for temperature
      * \param value
      * \return
      */
-    virtual double CTemperatureUnit::conversionFromSiConversionUnit(double value) const;
+    virtual double conversionFromSiConversionUnit(double value) const;
 
 public:
     /*!
@@ -491,7 +491,7 @@ public:
     /*!
      * Assigment operator
      */
-    CTemperatureUnit &CTemperatureUnit::operator =(const CTemperatureUnit &otherUnit)
+    CTemperatureUnit &operator =(const CTemperatureUnit &otherUnit)
     {
         if (this == &otherUnit) return *this; // Same object? Yes, so skip assignment, and just return *this
         CMeasurementUnit::operator = (otherUnit);

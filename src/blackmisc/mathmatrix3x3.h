@@ -7,6 +7,7 @@
 #define BLACKMISC_POSMATRIX3X3_H
 #include "blackmisc/mathmatrix1x3.h"
 #include "blackmisc/mathmatrix3x1.h"
+#include <stdexcept>
 
 namespace BlackMisc
 {

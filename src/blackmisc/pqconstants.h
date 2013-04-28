@@ -92,6 +92,6 @@ public:
         return f;
     }
 };
-} //namespace
 } // namespace
-#endif // BLACKMISC_PQCONSTANTS_H
+} // namespace
+#endif // guard

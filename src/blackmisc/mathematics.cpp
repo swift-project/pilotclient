@@ -5,6 +5,7 @@
 
 #include "blackmisc/mathematics.h"
 #include <algorithm>    // std::max
+#include <cmath>
 
 namespace BlackMisc
 {
@@ -14,7 +15,7 @@ namespace Math
 /*
  * Hypotenuse
  */
-qreal CMath::hypot(qreal x, qreal y)
+double CMath::hypot(double x, double y)
 {
     x = abs(x);
     y = abs(y);
@@ -27,7 +28,7 @@ qreal CMath::hypot(qreal x, qreal y)
 /*
  * Real part of cubic root
  */
-qreal CMath::cubicRootReal(qreal x)
+double CMath::cubicRootReal(double x)
 {
     double result;
     result = std::pow(std::abs(x), (double)1 / 3);
