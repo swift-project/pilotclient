@@ -12,18 +12,14 @@ INCLUDEPATH += . ../../src
 
 SOURCES += *.cpp
 
-win32-msvc* {
-    PRE_TARGETDEPS +=  ../../lib/blackmisc.lib
-    PRE_TARGETDEPS +=  ../../lib/blackcore.lib
-    LIBS += ../../lib/blackmisc.lib
-    LIBS += ../../lib/blackcore.lib
-}
+LIBS    += -L../../lib -lblackcore -lblackmisc
 
-!win32-msvc* {
-    PRE_TARGETDEPS += ../../lib/libblackmisc.a
-    PRE_TARGETDEPS += ../../lib/libblackcore.a
-    LIBS += ../../lib/libblackmisc.a
-    LIBS += ../../lib/libblackcore.a
-}
+win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
+                                     ../../lib/blackcore.lib
+else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
+                                     ../../lib/libblackcore.a
 
 DESTDIR = ../../bin
+
+
+
