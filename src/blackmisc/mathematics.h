@@ -86,7 +86,7 @@ public:
      */
     static const double &PI2()
     {
-        static double pi2 = PI();
+        static double pi2 = 2.0 * PI();
         return pi2;
     }
 
