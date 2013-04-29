@@ -24,6 +24,8 @@ private:
 protected:
     int m_digits; //!< digits used
 
+protected:
+
     /*!
      * \brief Default constructor
      */
@@ -33,9 +35,8 @@ protected:
      * \brief Copy constructor
      * \param otherUnit
      */
-    CModulator(const CModulator &otherUnit) :
-        m_frequencyActive(otherUnit.m_frequencyActive), m_frequencyStandby(otherUnit.m_frequencyStandby),
-        m_digits(otherUnit.m_digits), CAvionicsBase(otherUnit.getName()) {}
+    CModulator(const CModulator &otherUnit) : CAvionicsBase(otherUnit.getName()),
+        m_frequencyActive(otherUnit.m_frequencyActive), m_frequencyStandby(otherUnit.m_frequencyStandby), m_digits(otherUnit.m_digits) {}
 
     /*!
      * \brief Constructor
@@ -45,8 +46,7 @@ protected:
      * \param digits
      */
     CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits) :
-        m_frequencyActive(activeFrequency),
-        m_digits(digits), m_frequencyStandby(standbyFrequency), CAvionicsBase(name) { }
+        CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_digits(digits) { }
 
     /*!
      * \brief String for converter
@@ -199,8 +199,6 @@ protected:
         static BlackMisc::PhysicalQuantities::CFrequency f;
         return f;
     }
-
-
 
 public:
     /*!

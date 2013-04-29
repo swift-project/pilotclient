@@ -13,7 +13,7 @@ namespace BlackMisc
 {
 
     CComClient::CComClient(IContext &context, QObject *parent)
-        :  m_context(context), IComHandler(context, parent), m_tcp_socket(NULL), m_port(0)
+        :  IComHandler(context, parent), m_context(context), m_tcp_socket(NULL), m_port(0)
     {
         init();
     }

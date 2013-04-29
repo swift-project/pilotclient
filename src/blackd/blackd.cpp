@@ -29,7 +29,7 @@ BlackD::BlackD(QWidget *parent) :
     createTrayIcon();
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-                 this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+            this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     setWindowTitle(tr("BlackD"));
 
@@ -41,9 +41,9 @@ BlackD::BlackD(QWidget *parent) :
 
     createLogging();
 
-	createComServer();
+    createComServer();
 
-	m_fsd_client = new CFSDClient(IContext::getInstance());
+    m_fsd_client = new CFSDClient(IContext::getInstance());
 
     bAppDebug << "BlackDaemon running...";
 }
@@ -63,7 +63,8 @@ void BlackD::setVisible(bool visible)
 
 void BlackD::closeEvent(QCloseEvent *event)
 {
-    if (trayIcon->isVisible()) {
+    if (trayIcon->isVisible())
+    {
         QMessageBox::information(this, tr("BlackD"),
                                  tr("The program will keep running in the "
                                     "system tray. To terminate the program, "
@@ -76,69 +77,73 @@ void BlackD::closeEvent(QCloseEvent *event)
 
 void BlackD::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    switch (reason) {
+    switch (reason)
+    {
     case QSystemTrayIcon::DoubleClick:
         setVisible(!isVisible());
+        break;
+    default:
+        break;
     }
 }
 
 void BlackD::createActions()
 {
-     minimizeAction = new QAction(tr("Mi&nimize"), this);
-     connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+    minimizeAction = new QAction(tr("Mi&nimize"), this);
+    connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
 
-     maximizeAction = new QAction(tr("Ma&ximize"), this);
-     connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
+    maximizeAction = new QAction(tr("Ma&ximize"), this);
+    connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
 
-     restoreAction = new QAction(tr("&Restore"), this);
-     connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+    restoreAction = new QAction(tr("&Restore"), this);
+    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
 
-     quitAction = new QAction(tr("&Quit"), this);
-     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
 void BlackD::createTrayIcon()
 {
-     trayIconMenu = new QMenu(this);
-     trayIconMenu->addAction(minimizeAction);
-     trayIconMenu->addAction(maximizeAction);
-     trayIconMenu->addAction(restoreAction);
-     trayIconMenu->addSeparator();
-     trayIconMenu->addAction(quitAction);
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(minimizeAction);
+    trayIconMenu->addAction(maximizeAction);
+    trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
 
-     trayIcon = new QSystemTrayIcon(this);
-     trayIcon->setContextMenu(trayIconMenu);
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setContextMenu(trayIconMenu);
 }
 
 void BlackD::createLogging()
 {
-	BlackMisc::IContext::getInstance().getDebug()->create();
+    BlackMisc::IContext::getInstance().getDebug()->create();
 
     m_displayer = new CQtDisplayer(ui->logginView);
 
-    BlackMisc::IContext::getInstance().getDebug()->getDebugLog()->attachDisplay (m_displayer);
-    BlackMisc::IContext::getInstance().getDebug()->getInfoLog()->attachDisplay (m_displayer);
-    BlackMisc::IContext::getInstance().getDebug()->getWarningLog()->attachDisplay (m_displayer);
-    BlackMisc::IContext::getInstance().getDebug()->getErrorLog()->attachDisplay (m_displayer);
+    BlackMisc::IContext::getInstance().getDebug()->getDebugLog()->attachDisplay(m_displayer);
+    BlackMisc::IContext::getInstance().getDebug()->getInfoLog()->attachDisplay(m_displayer);
+    BlackMisc::IContext::getInstance().getDebug()->getWarningLog()->attachDisplay(m_displayer);
+    BlackMisc::IContext::getInstance().getDebug()->getErrorLog()->attachDisplay(m_displayer);
 }
 
 void BlackD::createComServer()
 {
-	CMessageFactory::getInstance().registerMessages();
-	m_comserver = new CComServer(IContext::getInstance(), this);
+    CMessageFactory::getInstance().registerMessages();
+    m_comserver = new CComServer(IContext::getInstance(), this);
 
-	registerMessageFunction(this, &BlackD::onMSG_CONNECT_TO_VATSIM);
+    registerMessageFunction(this, &BlackD::onMSG_CONNECT_TO_VATSIM);
 
-	QHostAddress local = QHostAddress(QHostAddress::LocalHost);
+    QHostAddress local = QHostAddress(QHostAddress::LocalHost);
 
     m_comserver->Host(local, 42000);
-	connect(m_comserver, SIGNAL(doMessageReceived(QString &, QByteArray&)), this, SLOT(onData(QString &, QByteArray&)));
+    connect(m_comserver, SIGNAL(doMessageReceived(QString &, QByteArray &)), this, SLOT(onData(QString &, QByteArray &)));
 }
 
 void BlackD::onData(QString &messageID, QByteArray &message)
 {
-	bAppDebug << messageID;
-    BlackMisc::IMessage* test = BlackMisc::CMessageFactory::getInstance().create(messageID);
+    bAppDebug << messageID;
+    BlackMisc::IMessage *test = BlackMisc::CMessageFactory::getInstance().create(messageID);
     QDataStream stream(&message, QIODevice::ReadOnly);
 
     Q_ASSERT(test);
@@ -150,19 +155,19 @@ void BlackD::onData(QString &messageID, QByteArray &message)
 
 void BlackD::onMSG_CONNECT_TO_VATSIM(const BlackMisc::MSG_CONNECT_TO_VATSIM *connect)
 {
-		bAppDebug << "Connecting to FSD server:";
-		bAppDebug << connect->getHost() << ":" << connect->getPort();
+    bAppDebug << "Connecting to FSD server:";
+    bAppDebug << connect->getHost() << ":" << connect->getPort();
 
-		FSD::TClientInfo clientinfo;
-		clientinfo.m_callsign = connect->getCallsign();
-		clientinfo.m_host = connect->getHost();
-		clientinfo.m_password = connect->getPassword();
-		clientinfo.m_port = connect->getPort();
-		clientinfo.m_realName = connect->getRealName();
-		clientinfo.m_simType = FSD::SIM_UNKNOWN;
-		clientinfo.m_userid = connect->getUserID();
+    FSD::TClientInfo clientinfo;
+    clientinfo.m_callsign = connect->getCallsign();
+    clientinfo.m_host = connect->getHost();
+    clientinfo.m_password = connect->getPassword();
+    clientinfo.m_port = connect->getPort();
+    clientinfo.m_realName = connect->getRealName();
+    clientinfo.m_simType = FSD::SIM_UNKNOWN;
+    clientinfo.m_userid = connect->getUserID();
 
-		m_fsd_client->updateClientInfo(clientinfo);
+    m_fsd_client->updateClientInfo(clientinfo);
 
-		m_fsd_client->connectTo(connect->getHost(), connect->getPort());
-}	
+    m_fsd_client->connectTo(connect->getHost(), connect->getPort());
+}

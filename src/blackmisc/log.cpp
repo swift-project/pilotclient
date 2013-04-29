@@ -18,9 +18,11 @@
 
 //TODO do we still need these platform includes here?
 #ifdef Q_OS_WIN
-#   define NOMINMAX
-#   include <process.h>
-#   include <windows.h>
+#  ifndef NOMINMAX
+#    define NOMINMAX
+#    include <process.h>
+#    include <windows.h>
+#  endif
 #else
 #   include <unistd.h>
 #endif

@@ -14,7 +14,7 @@ namespace BlackMisc
 {
 
 CComServer::CComServer(IContext &context, QObject *parent)
-    : m_context(context), QObject(parent), m_tcp_server(NULL), m_port(0)
+    : QObject(parent), m_context(context), m_tcp_server(NULL), m_port(0)
 {
     init();
 }
@@ -37,8 +37,8 @@ CComServer::~CComServer()
 bool CComServer::init()
 {
     m_tcp_server = new QTcpServer(this);
-    Q_ASSERT (m_tcp_server);
-    Q_ASSERT ( QObject::connect(m_tcp_server, SIGNAL(newConnection()), this, SLOT(onIncomingConnection()) ) );
+    Q_ASSERT(m_tcp_server);
+    Q_ASSERT(QObject::connect(m_tcp_server, SIGNAL(newConnection()), this, SLOT(onIncomingConnection())));
 
     return true;
 }
@@ -47,10 +47,10 @@ void CComServer::Host(const QHostAddress &address, const quint16 port)
 {
     if (isHosting()) return;
 
-    Q_ASSERT ( ! address.isNull() );
-    Q_ASSERT ( port > 0 );
+    Q_ASSERT(! address.isNull());
+    Q_ASSERT(port > 0);
 
-    if ( !m_tcp_server->listen(address, port) )
+    if (!m_tcp_server->listen(address, port))
     {
         bError(m_context) << "Hosting failed";
         emit doHostClosed();
@@ -72,7 +72,7 @@ void CComServer::close()
     m_tcp_server->close();
 }
 
-void CComServer::sendToClient( const uint clientID, const QString &messageID, const QByteArray& data)
+void CComServer::sendToClient(const uint clientID, const QString &messageID, const QByteArray &data)
 {
     if (!m_client_buffers.contains(clientID))
     {
@@ -82,7 +82,7 @@ void CComServer::sendToClient( const uint clientID, const QString &messageID, co
     m_client_buffers.value(clientID)->sendMessage(messageID, data);
 }
 
-void CComServer::sendToAll(const QString &messageID, const QByteArray& data)
+void CComServer::sendToAll(const QString &messageID, const QByteArray &data)
 {
     TClientBufferHash::const_iterator it = m_client_buffers.constBegin();
     while (it != m_client_buffers.constEnd())
@@ -92,24 +92,24 @@ void CComServer::sendToAll(const QString &messageID, const QByteArray& data)
     }
 }
 
-QString CComServer::getErrorMessage( const QAbstractSocket::SocketError error )
+QString CComServer::getErrorMessage(const QAbstractSocket::SocketError error)
 {
     return QString();
 }
 
 void CComServer::onIncomingConnection()
 {
-    while ( m_tcp_server->hasPendingConnections() )
+    while (m_tcp_server->hasPendingConnections())
     {
-        QTcpSocket* socket = m_tcp_server->nextPendingConnection();
+        QTcpSocket *socket = m_tcp_server->nextPendingConnection();
         uint clientID = qHash(socket);
 
         // Create new ClientBuffer object. This new object gets the owner of the socket
-        CComClientBuffer* clientbuf = new CComClientBuffer (m_context, clientID, socket,this);
+        CComClientBuffer *clientbuf = new CComClientBuffer(m_context, clientID, socket, this);
         Q_ASSERT(clientbuf);
 
         connect(clientbuf, SIGNAL(doDisconnected(uint)), this, SLOT(onClientDisconnected(uint)));
-        connect(clientbuf, SIGNAL(doReceivedMessage(uint, QString&, QByteArray&)), this, SLOT(onClientMessageReceived(uint, QString&, QByteArray&)));
+        connect(clientbuf, SIGNAL(doReceivedMessage(uint, QString &, QByteArray &)), this, SLOT(onClientMessageReceived(uint, QString &, QByteArray &)));
 
         m_client_buffers.insert(clientID, clientbuf);
 
@@ -119,7 +119,7 @@ void CComServer::onIncomingConnection()
 
 void CComServer::onClientDisconnected(uint clientID)
 {
-    if ( !m_client_buffers.contains(clientID))
+    if (!m_client_buffers.contains(clientID))
     {
         bWarning(m_context) << "Disconnected unknown client!";
         return;

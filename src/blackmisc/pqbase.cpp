@@ -91,9 +91,9 @@ bool CMeasurementPrefix::operator <(const CMeasurementPrefix &otherMultiplier) c
 CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSIUnit, bool isSIBaseUnit,
                                    double conversionFactorToSI, const CMeasurementPrefix &multiplier, qint32 displayDigits, double epsilon,
                                    UnitConverter toSiConverter, UnitConverter fromSiConverter):
-    m_name(name), m_unitName(unitName), m_type(type), m_isSiUnit(isSIUnit), m_isSiBaseUnit(isSIBaseUnit), m_displayDigits(displayDigits),
+    m_name(name), m_unitName(unitName), m_type(type), m_isSiUnit(isSIUnit), m_isSiBaseUnit(isSIBaseUnit),
     m_conversionFactorToSIConversionUnit(conversionFactorToSI),
-    m_epsilon(epsilon), m_multiplier(multiplier), m_fromSiConverter(fromSiConverter), m_toSiConverter(toSiConverter)
+    m_epsilon(epsilon), m_displayDigits(displayDigits), m_multiplier(multiplier), m_fromSiConverter(fromSiConverter), m_toSiConverter(toSiConverter)
 {
     // void
 }
@@ -103,8 +103,8 @@ CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &unitName,
  */
 CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &otherUnit):
     m_name(otherUnit.m_name), m_unitName(otherUnit.m_unitName), m_type(otherUnit.m_type), m_isSiUnit(otherUnit.m_isSiUnit),
-    m_isSiBaseUnit(otherUnit.m_isSiBaseUnit), m_displayDigits(otherUnit.m_displayDigits), m_conversionFactorToSIConversionUnit(otherUnit.m_conversionFactorToSIConversionUnit),
-    m_epsilon(otherUnit.m_epsilon), m_multiplier(otherUnit.m_multiplier), m_fromSiConverter(otherUnit.m_fromSiConverter), m_toSiConverter(otherUnit.m_toSiConverter)
+    m_isSiBaseUnit(otherUnit.m_isSiBaseUnit), m_conversionFactorToSIConversionUnit(otherUnit.m_conversionFactorToSIConversionUnit),
+    m_epsilon(otherUnit.m_epsilon), m_displayDigits(otherUnit.m_displayDigits), m_multiplier(otherUnit.m_multiplier), m_fromSiConverter(otherUnit.m_fromSiConverter), m_toSiConverter(otherUnit.m_toSiConverter)
 {
     // void
 }

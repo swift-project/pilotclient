@@ -10,7 +10,16 @@
 #include "blackmisc/coordinategeodetic.h"
 #include "blackmisc/mathvector3d.h"
 #include <QString>
-#include <functional>
+
+
+#if defined(_MSC_VER) && _MSC_VER >= 1600
+# include <unordered_map>
+# include <functional>
+#else
+# include <tr1/unordered_map>
+# include <tr1/functional>
+#endif
+
 
 #define SHARED_LIBRARY_NAME_FS9 "bb_driver_fs9"
 #define SHARED_LIBRARY_NAME_FSX "bb_driver_fsx"

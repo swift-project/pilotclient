@@ -233,10 +233,10 @@ private:
     bool m_isSiBaseUnit; //!< SI base unit?
     double m_conversionFactorToSIConversionUnit; //!< factor to convert to SI, set to 0 if not applicable (rare cases, e.g. temperature)
     double m_epsilon; //!< values with differences below epsilon are the equal
-    qint32 m_displayDigits; //!< standard rounding for string conversions
+    int m_displayDigits; //!< standard rounding for string conversions
     CMeasurementPrefix m_multiplier; //!< multiplier (kilo, Mega)
-    UnitConverter m_toSiConverter; //! allows an arbitrary conversion method as per object
     UnitConverter m_fromSiConverter; //! allows an arbitrary conversion method as per object
+    UnitConverter m_toSiConverter; //! allows an arbitrary conversion method as per object
 
 protected:
     /*!
@@ -478,6 +478,17 @@ public:
      * \return
      */
     double epsilonUpRounding(double value) const;
+
+    /*!
+     * \brief Is given value <= epsilon?
+     * \param checkValue
+     * \return
+     */
+    bool isEpsilon(double checkValue) const
+    {
+        if (checkValue == 0) return true;
+        return abs(checkValue) <= this->m_epsilon;
+    }
 
     // --------------------------------------------------------------------
     // -- static

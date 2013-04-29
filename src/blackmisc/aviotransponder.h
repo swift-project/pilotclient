@@ -43,7 +43,7 @@ private:
      * \param transponderMode
      */
     CTransponder(bool validate, const QString &name, qint32 transponderCode, TransponderMode transponderMode) :
-        m_transponderCode(transponderCode), m_transponderMode(transponderMode), CAvionicsBase(name)
+        CAvionicsBase(name), m_transponderCode(transponderCode), m_transponderMode(transponderMode)
     {
         this->validate(validate);
     }
@@ -56,7 +56,7 @@ private:
      * \param transponderMode
      */
     CTransponder(bool validate, const QString &name, const QString transponderCode, TransponderMode transponderMode) :
-        m_transponderCode(0), m_transponderMode(transponderMode), CAvionicsBase(name)
+        CAvionicsBase(name), m_transponderCode(0), m_transponderMode(transponderMode)
     {
         bool ok = false;
         this->m_transponderCode = transponderCode.toUInt(&ok);

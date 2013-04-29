@@ -14,7 +14,6 @@ namespace BlackMisc
  */
 template <class UsingClass> class CBaseStreamStringifier
 {
-
     /*!
      * \brief Stream << overload to be used in debugging messages
      * \param debug
@@ -26,6 +25,17 @@ template <class UsingClass> class CBaseStreamStringifier
         const CBaseStreamStringifier &s = uc;
         debug << s.stringForStreaming();
         return debug;
+    }
+
+    /*!
+     * \brief Operator << when there is no debug stream
+     * \param nodebug
+     * \param uc
+     * \return
+     */
+    friend QNoDebug &operator<<(QNoDebug &nodebug, const UsingClass &uc)
+    {
+        return nodebug;
     }
 
     /*!

@@ -12,14 +12,6 @@ namespace BlackMisc
 namespace Math
 {
 
-// Some namespace wide constant values
-
-//! Mathematical constant Pi
-const double PI = 4.0 * qAtan(1.0);
-
-//! 2 * Pi
-const double TwoPI  = 2.0 * PI;
-
 /*!
  * \brief Math utils
  */
@@ -77,6 +69,26 @@ public:
      * \return
      */
     static double roundEpsilon(double value, double epsilon);
+
+    /*!
+     * \brief PI
+     * \return
+     */
+    static const double &PI()
+    {
+        static double pi = 4.0 * qAtan(1.0);
+        return pi;
+    }
+
+    /*!
+     * \brief PI * 2
+     * \return
+     */
+    static const double &PI2()
+    {
+        static double pi2 = PI();
+        return pi2;
+    }
 
 private:
     /*!

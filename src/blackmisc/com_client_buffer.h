@@ -14,41 +14,38 @@ class QTcpSocket;
 namespace BlackMisc
 {
 
-    class IContext;
+class IContext;
 
-    class CComClientBuffer : public IComHandler
-    {
-        Q_OBJECT
+class CComClientBuffer : public IComHandler
+{
+    Q_OBJECT
 
-    public:
-        CComClientBuffer(IContext &context, uint clientID, QTcpSocket *socket, QObject *parent = 0);
+public:
+    CComClientBuffer(IContext &context, uint clientID, QTcpSocket *socket, QObject *parent = 0);
 
-        virtual ~CComClientBuffer();
+    virtual ~CComClientBuffer();
 
-        //! Sends a message to the remote host.
-        /*!
-          \param data Reference to the raw byte data to be sent.
-          \return Returns true if sending was successfull, otherwise false.
-        */
-        bool sendMessage (const QString &id, const QByteArray &message);
+    //! Sends a message to the remote host.
+    /*!
+      \param data Reference to the raw byte data to be sent.
+      \return Returns true if sending was successfull, otherwise false.
+    */
+    bool sendMessage(const QString &id, const QByteArray &message);
 
-    signals:
+signals:
 
-        void doReceivedMessage(uint clientID, QString& messageID, QByteArray &message);
-        void doDisconnected(uint clientID);
+    void doReceivedMessage(uint clientID, QString &messageID, QByteArray &message);
+    void doDisconnected(uint clientID);
 
-    protected slots:
+protected slots:
+    void onReceivingData();
+    void onClientDisconnected();
 
-        void onReceivingData();
-        void onClientDisconnected();
-
-    protected:
-
-        IContext&       m_context;
-        QTcpSocket*     m_tcp_socket;
-        uint            m_client_id;
-
-    };
+protected:
+    IContext       &m_context;
+    QTcpSocket     *m_tcp_socket;
+    uint            m_client_id;
+};
 
 } // namespace BlackMisc
 

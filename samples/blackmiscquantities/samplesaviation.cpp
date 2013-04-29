@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -17,8 +17,14 @@ namespace BlackMiscTest
 int CSamplesAviation::samples()
 {
     // CSpeed s1(10, CSpeedUnit::kts());
+    CMeasurementPrefix p1 = CMeasurementPrefix::G();
+    CAngle a(10, CAngleUnit::deg());
+    qDebug() << a;
+
     CHeading h1(180, true, CAngleUnit::deg());
     CHeading h2(180, false, CAngleUnit::deg());
+
+    qDebug() << h1;
     qDebug() << h1 << h2 << (h1 == h2) << (h1 != h2) << (h1 == h1);
 
     CAviationVerticalPositions vp1 = CAviationVerticalPositions::fromAltitudeAndElevationInFt(10000.0, 1111.0);
@@ -36,12 +42,15 @@ int CSamplesAviation::samples()
     else
         qDebug() << "Something is wrong here";
 
-    try {
+    try
+    {
         // uncomment to test assert
         // CFrequency f1(-1.0, CFrequencyUnit::MHz());
         // c1 = CComSystem("ups", f1, f1);
         // qDebug() << "Why do I get here??";
-    } catch (std::range_error &ex) {
+    }
+    catch (std::range_error &ex)
+    {
         qDebug() << "As expected" << ex.what();
     }
 

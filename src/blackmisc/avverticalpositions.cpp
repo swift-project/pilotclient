@@ -19,8 +19,8 @@ namespace Aviation
  */
 CAviationVerticalPositions::CAviationVerticalPositions() :
     m_altitude(CAltitude(0, true, CLengthUnit::ft())),
-    m_height(CPhysicalQuantitiesConstants::Length0ft()),
-    m_elevation(CPhysicalQuantitiesConstants::Length0ft())
+    m_elevation(CPhysicalQuantitiesConstants::Length0ft()),
+    m_height(CPhysicalQuantitiesConstants::Length0ft())
 {
     // void
 }

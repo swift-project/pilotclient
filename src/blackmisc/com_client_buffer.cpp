@@ -11,49 +11,49 @@
 namespace BlackMisc
 {
 
-    CComClientBuffer::CComClientBuffer(IContext &context, uint clientID, QTcpSocket *socket, QObject *parent)
-        :   m_context(context), m_client_id(clientID), m_tcp_socket(socket), IComHandler(context, parent)
+CComClientBuffer::CComClientBuffer(IContext &context, uint clientID, QTcpSocket *socket, QObject *parent)
+    : IComHandler(context, parent), m_context(context), m_tcp_socket(socket), m_client_id(clientID)
+{
+    connect(m_tcp_socket, SIGNAL(readyRead()), this, SLOT(onReceivingData()));
+    connect(m_tcp_socket, SIGNAL(disconnected()), this, SLOT(onClientDisconnected()));
+}
+CComClientBuffer::~CComClientBuffer()
+{
+    m_tcp_socket->deleteLater();
+}
+
+bool CComClientBuffer::sendMessage(const QString &id, const QByteArray &message)
+{
+    createFrame(id, message);
+
+    qint64 sender_buffer_size = m_sender_buffer.size();
+
+    qint64 bytes = m_tcp_socket->write(m_sender_buffer);
+    if (bytes < 0 || bytes != sender_buffer_size)
     {
-        connect(m_tcp_socket, SIGNAL(readyRead()), this, SLOT(onReceivingData()));
-        connect(m_tcp_socket, SIGNAL(disconnected()), this, SLOT(onClientDisconnected()));
-    }
-    CComClientBuffer::~CComClientBuffer()
-    {
-            m_tcp_socket->deleteLater();
-    }
-
-    bool CComClientBuffer::sendMessage(const QString& id, const QByteArray &message)
-    {
-        createFrame(id, message);
-
-        qint64 sender_buffer_size = m_sender_buffer.size();
-
-        qint64 bytes = m_tcp_socket->write(m_sender_buffer);
-        if (bytes < 0 || bytes != sender_buffer_size)
-        {
-            bWarning(m_context) << "Error writing to socket!";
-            return false;
-        }
-
-        return true;
+        bWarning(m_context) << "Error writing to socket!";
+        return false;
     }
 
-    void CComClientBuffer::onReceivingData()
-    {
-        QByteArray message;
-        QString messageID;
+    return true;
+}
 
-        m_receive_buffer.append(m_tcp_socket->readAll());
-        while (parseFrame(messageID, message))
-        {
-            emit doReceivedMessage(m_client_id, messageID, message);
-        }
-    }
+void CComClientBuffer::onReceivingData()
+{
+    QByteArray message;
+    QString messageID;
 
-    void CComClientBuffer::onClientDisconnected()
+    m_receive_buffer.append(m_tcp_socket->readAll());
+    while (parseFrame(messageID, message))
     {
-        bInfo(m_context) << "Client disconnected!";
-        emit doDisconnected(m_client_id);
+        emit doReceivedMessage(m_client_id, messageID, message);
     }
+}
+
+void CComClientBuffer::onClientDisconnected()
+{
+    bInfo(m_context) << "Client disconnected!";
+    emit doDisconnected(m_client_id);
+}
 
 } // namespace BlackMisc

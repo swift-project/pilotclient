@@ -93,12 +93,9 @@ namespace BlackMisc
 	protected:
 
         IContext&       m_context;
-
 		QTcpServer*     m_tcp_server;
-
 		QHostAddress    m_address;
 		quint16         m_port;
-
 		typedef QHash<uint, CComClientBuffer*> TClientBufferHash;
 		TClientBufferHash m_client_buffers;
 	};

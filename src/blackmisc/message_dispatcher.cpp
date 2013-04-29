@@ -3,30 +3,30 @@
 
 namespace BlackMisc
 {
-    SINGLETON_CLASS_IMPLEMENTATION(CMessageDispatcher)
+SINGLETON_CLASS_IMPLEMENTATION(CMessageDispatcher)
 
-    void CMessageDispatcher::append(IMessage *message)
+void CMessageDispatcher::append(IMessage *message)
+{
+    m_messageQueue.enqueue(message);
+}
+
+void CMessageDispatcher::dispatch()
+{
+    IMessage *message = NULL;
+
+    if (m_messageQueue.isEmpty())
+        return;
+
+    message = m_messageQueue.dequeue();
+
+    if (message != NULL)
     {
-        m_messageQueue.enqueue(message);
+        CTypeInfo typeinfo = CTypeInfo(typeid(*message));
+        QList<CMessageHandler *> neededHandlers = m_messageHander.values(typeinfo);
+        int handlerSize = neededHandlers.size();
+        for (int i = 0; i < handlerSize; ++i)
+            neededHandlers.at(i)->handleMessage(message);
     }
-
-    void CMessageDispatcher::dispatch()
-    {
-        IMessage* message = NULL;
-
-        if (m_messageQueue.isEmpty())
-            return;
-
-        message = m_messageQueue.dequeue();
-
-        if (message != NULL)
-        {
-            CTypeInfo typeinfo = CTypeInfo(typeid(*message));
-            QList<CMessageHandler*> neededHandlers = m_messageHander.values(typeinfo);
-            int testsize = neededHandlers.size();
-            for (int i = 0; i < neededHandlers.size(); ++i)
-                 neededHandlers.at(i)->handleMessage(message);
-        }
-    }
+}
 
 } // namespace BlackMisc

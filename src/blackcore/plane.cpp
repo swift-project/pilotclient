@@ -14,7 +14,7 @@ namespace BlackCore
 /*
  * Default constructor
  */
-CPlane::CPlane() : m_interpolator(nullptr), m_driver(nullptr) { }
+CPlane::CPlane() : m_interpolator(0), m_driver(0) { }
 
 /*
  * Constructor

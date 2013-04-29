@@ -25,7 +25,7 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateNed &ned)
 {
     CLatitude lat = ned.referencePosition().latitude();
     CLongitude lon = ned.referencePosition().longitude();
-    double angleRad = - (lat.value(CAngleUnit::rad())) - BlackMisc::Math::PI / 2;
+    double angleRad = - (lat.value(CAngleUnit::rad())) - CMath::PI() / 2;
 
     CMatrix3x3 dcm1;
     CMatrix3x3 dcm2;
@@ -99,7 +99,7 @@ CCoordinateNed CCoordinateTransformation::toNed(const CCoordinateEcef &ecef, con
 
     CLatitude lat = referencePosition.latitude();
     CLongitude lon = referencePosition.longitude();
-    double angleRad = - (lat.value(CAngleUnit::rad())) - BlackMisc::Math::PI / 2;
+    double angleRad = - (lat.value(CAngleUnit::rad())) - CMath::PI() / 2;
 
     CMatrix3x3 dcm1;
     CMatrix3x3 dcm2(0.0);

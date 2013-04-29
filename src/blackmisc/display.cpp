@@ -112,9 +112,6 @@ namespace BlackMisc
         if (needSpace) { line += " : "; needSpace = false; }
 
         line += message;
-
-        static bool consoleMode = true;
-
         QTextStream out(stdout);
         out << line;
     }

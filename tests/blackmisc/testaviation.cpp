@@ -8,7 +8,8 @@
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
-namespace BlackMiscTest {
+namespace BlackMiscTest
+{
 
 /*
  * Constructor
@@ -26,7 +27,7 @@ void CTestAviation::headingBasics()
     CHeading h1(180, true, CAngleUnit::deg());
     CHeading h2(180, false, CAngleUnit::deg());
     CHeading h3(181, true, CAngleUnit::deg());
-    CAngle a1(200,CAngleUnit::deg());
+    CAngle a1(200, CAngleUnit::deg());
     CHeading h4;
     h4 = h1;
     QVERIFY2(h1 != h2, "Magnetic and true heading are not the same");
@@ -49,7 +50,7 @@ void CTestAviation::verticalPosition()
 {
     CAviationVerticalPositions vp1 = CAviationVerticalPositions::fromAltitudeAndElevationInFt(10000.0, 3000.0);
     CAviationVerticalPositions vp2 = vp1;
-    QVERIFY2(vp1== vp2, "Values shall be equal");
+    QVERIFY2(vp1 == vp2, "Values shall be equal");
 }
 
 /*

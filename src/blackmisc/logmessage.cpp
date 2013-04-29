@@ -4,50 +4,50 @@
 namespace BlackMisc
 {
 
-    CLogMessage::LogStream::LogStream(CLog::TLogType type)
-        : output(&buffer, QIODevice::WriteOnly), reference(1),
-          type(type), needSpace(true), enableOutput(true)
-    {}
+CLogMessage::LogStream::LogStream(CLog::TLogType type)
+    : output(&buffer, QIODevice::WriteOnly),
+      type(type), needSpace(true), enableOutput(true), reference(1)
+{}
 
-    CLogMessage::CLogMessage(CDebug &debug_, CLog::TLogType type)
-        : debug(debug_), logStream(new LogStream(type))
-    {
-    }
+CLogMessage::CLogMessage(CDebug &debug_, CLog::TLogType type)
+    : logStream(new LogStream(type)), debug(debug_)
+{
+}
 
-    CLogMessage::CLogMessage(const CLogMessage &other)
-        : debug(other.debug), logStream(other.logStream)
-    {
-        ++logStream->reference;
-    }
+CLogMessage::CLogMessage(const CLogMessage &other)
+    : logStream(other.logStream), debug(other.debug)
+{
+    ++logStream->reference;
+}
 
-    CLogMessage::~CLogMessage()
+CLogMessage::~CLogMessage()
+{
+    if (!--logStream->reference)
     {
-        if (!--logStream->reference)
+        if (logStream->enableOutput)
         {
-            if (logStream->enableOutput)
+            switch (logStream->type)
             {
-                switch (logStream->type)
-                {
-                case CLog::eWarning:
-                    debug.getWarningLog()->printWithNewLine(logStream->buffer);
-                    break;
+            case CLog::eWarning:
+                debug.getWarningLog()->printWithNewLine(logStream->buffer);
+                break;
 
-                case CLog::eInfo:
-                    debug.getInfoLog()->printWithNewLine(logStream->buffer);
-                    break;
+            case CLog::eInfo:
+                debug.getInfoLog()->printWithNewLine(logStream->buffer);
+                break;
 
-                case CLog::eDebug:
-                    debug.getDebugLog()->printWithNewLine(logStream->buffer);
-                    break;
+            case CLog::eDebug:
+                debug.getDebugLog()->printWithNewLine(logStream->buffer);
+                break;
 
-                case CLog::eError:
-                default:
-                    debug.getErrorLog()->printWithNewLine(logStream->buffer);
-                    break;
-                }
+            case CLog::eError:
+            default:
+                debug.getErrorLog()->printWithNewLine(logStream->buffer);
+                break;
             }
-            delete logStream;
         }
+        delete logStream;
     }
+}
 
 } // namespace Blackib

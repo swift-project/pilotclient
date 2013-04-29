@@ -6,162 +6,163 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <QtGlobal>
-#include <QMap>
 #include <QString>
+#include <QtGlobal>
+#include <QDebug>
+#include <QMap>
+
 
 namespace BlackMisc
 {
 
-    class IContext;
+class IContext;
 
-    class CValue
-    {
-    public:
+class CValue
+{
+public:
 
-        //! Configuration type enum.
-        /*! This enum lists the three different values, used in the config file. */
-        typedef enum { CONFIG_STRING = 0,   /*!< Type String. */
-                       CONFIG_INT,          /*!< Type Integer. */
-                       CONFIG_DOUBLE,       /*!< Type Double. */
-                       CONFIG_BOOL,         /*!< Type Bool. */
-                       CONFIG_UNKOWN        /*!< Type Unknown. */
-                     } TConfigType;
+    //! Configuration type enum.
+    /*! This enum lists the three different values, used in the config file. */
+    typedef enum { CONFIG_STRING = 0,   /*!< Type String. */
+                   CONFIG_INT,          /*!< Type Integer. */
+                   CONFIG_DOUBLE,       /*!< Type Double. */
+                   CONFIG_BOOL,         /*!< Type Bool. */
+                   CONFIG_UNKOWN        /*!< Type Unknown. */
+                 } TConfigType;
 
-        CValue ();
+    CValue();
 
-        CValue (const QString& value);
+    CValue(const QString &value);
 
-        void                    init();
+    void                    init();
 
-        QString&                asString() { return _value; }
+    QString                &asString() { return m_value; }
 
-        qint32                  asInt( bool* ok = NULL );
+    qint32                  asInt(bool *ok = NULL);
 
-        bool                    asBool(bool* ok = NULL );
+    bool                    asBool(bool *ok = NULL);
 
-        double                  asDouble( bool* result );
+    double                  asDouble(bool *result);
 
-        inline bool             isValid() {return _type != CONFIG_UNKOWN;}
+    inline bool             isValid() {return m_type != CONFIG_UNKOWN;}
 
-        inline bool             isInt() { return _type == CONFIG_INT; }
-        inline bool             isDouble() { return _type == CONFIG_DOUBLE; }
-        inline bool             isBool() { return _type == CONFIG_BOOL; }
+    inline bool             isInt() { return m_type == CONFIG_INT; }
+    inline bool             isDouble() { return m_type == CONFIG_DOUBLE; }
+    inline bool             isBool() { return m_type == CONFIG_BOOL; }
 
-    protected:
+protected:
 
-        QString                 _value;
-        TConfigType             _type;
+    bool                    m_bool_value;
+    double                  m_double_value;
+    qint32                  m_int_value;
+    TConfigType             m_type;
+    QString                 m_value;
 
-        qint32                  _int_value;
-        double                  _double_value;
-        bool                    _bool_value;
+};
 
-    };
+//!  Configuration class.
+/*!
+  This class implements the configuration part of the library.
+  \warning it is not safe to use this from within
+*/
+class CConfig
+{
+public:
 
-    //!  Configuration class.
+    CConfig(IContext &context, const QString &filename, const QString &separator = "=", bool isRelative = false);
+
+    //! Sets the value of the specified key.
     /*!
-      This class implements the configuration part of the library.
-      \warning it is not safe to use this from within
+      \param key Key, which value should be set.
+      \param value The actual value as T.
     */
-    class CConfig
-    {
-    public:
+    void setValue(const QString &key, const CValue &value);
 
-        CConfig(IContext &context, const QString& filename, const QString& separator = "=", bool isRelative = false);
+    //! Returns the value from key.
+    /*!
+      \param key Specified key.
+      \return The value to key 'key' as T&
+    */
+    CValue value(const QString &key) const;
 
-        //! Sets the value of the specified key.
-        /*!
-          \param key Key, which value should be set.
-          \param value The actual value as T.
-        */
-        void setValue(const QString& key, const CValue& value);
+    //! Function to check if the key is in the config.
+    /*!
+      \param key Specified key.
+      \return Returns true, if key is in the config.
+    */
+    void add(const QString &key, const CValue &value);
 
-        //! Returns the value from key.
-        /*!
-          \param key Specified key.
-          \return The value to key 'key' as T&
-        */
-        CValue value(const QString& key) const;
+    //! Function to check if the key is in the config.
+    /*!
+      \param key Specified key.
+      \return Returns true, if key is in the config.
+    */
+    void update(const QString &key, const CValue &value);
 
-        //! Function to check if the key is in the config.
-        /*!
-          \param key Specified key.
-          \return Returns true, if key is in the config.
-        */
-        void add (const QString& key, const CValue& value);
+    //! Function to check if the key is in the config.
+    /*!
+      \param key Specified key.
+      \return Returns true, if key is in the config.
+    */
+    bool contains(const QString &key) const;
 
-        //! Function to check if the key is in the config.
-        /*!
-          \param key Specified key.
-          \return Returns true, if key is in the config.
-        */
-        void update (const QString& key, const CValue& value);
+    //! Removes the key and its value from the config.
+    /*!
+      \param key Key, which has to be removed.
+    */
+    void remove(const QString &key);
 
-        //! Function to check if the key is in the config.
-        /*!
-          \param key Specified key.
-          \return Returns true, if key is in the config.
-        */
-        bool contains (const QString& key) const;
+    //! Displays the configuration to the debug output.
+    /*!
+      More info.
+    */
+    void display();
 
-        //! Removes the key and its value from the config.
-        /*!
-          \param key Key, which has to be removed.
-        */
-        void remove (const QString& key);
+    /*!
+     * Config File section
+     */
 
-        //! Displays the configuration to the debug output.
-        /*!
-          More info.
-        */
-        void display ();
+    //! Returns the config filename of this config object.
+    /*!
+      \return filename of this config.
+    */
+    const QString &configFile() const {return m_configfile; }
 
-        /*!
-         * Config File section
-         */
+    //! Loads the config file.
+    /*!
+      \return Returns true if loading went well.
+    */
+    bool load();
 
-        //! Returns the config filename of this config object.
-        /*!
-          \return filename of this config.
-        */
-        const QString& configFile() const {return m_configfile; }
+    //! Loads the config file.
+    /*!
+      \param filename Specify a different filename.
+      \return Returns true if loading went well.
+    */
+    bool load(const QString &filename);
 
-        //! Loads the config file.
-        /*!
-          \return Returns true if loading went well.
-        */
-        bool load ();
+    //! Saves the config to file.
+    /*!
+      \return Returns true if loading went well.
+    */
+    bool save() { return false; } // TODO
 
-        //! Loads the config file.
-        /*!
-          \param filename Specify a different filename.
-          \return Returns true if loading went well.
-        */
-        bool load (const QString& filename);
+    //! Saves the config to file.
+    /*!
+      \param filename Specify a different filename.
+      \return Returns true if loading went well.
+    */
+    bool save(const QString &filename) { qDebug() << filename; return false; } // TODO
 
-        //! Saves the config to file.
-        /*!
-          \return Returns true if loading went well.
-        */
-        bool save() {} // TODO
+protected:
 
-        //! Saves the config to file.
-        /*!
-          \param filename Specify a different filename.
-          \return Returns true if loading went well.
-        */
-        bool save(const QString& filename) {} // TODO
+    IContext                           &m_context;
+    QString                             m_configfile;
+    QString                             m_separator;
+    typedef QMap<QString, CValue>       TValueMap;
+    TValueMap                           m_value_map;
 
-        protected:
-
-        IContext                           &m_context;
-        QString                             m_configfile;
-        QString                             m_separator;
-        typedef QMap<QString, CValue>       TValueMap;
-        TValueMap                           m_value_map;
-
-    };
+};
 } //! namespace BlackMisc
 
 #endif // CONFIG_H

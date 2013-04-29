@@ -1,4 +1,4 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -48,21 +48,21 @@ public:
     virtual ~CAngle() {}
 
     /*!
-     * \brief Convenience method PI
-     * \return
-     */
-    static double pi()
-    {
-        return double(M_PI);
-    }
-
-    /*!
      * \brief Value as factor of PI (e.g. 0.5PI)
      * \return
      */
     double piFactor() const
     {
-        return BlackMisc::Math::CMath::round(this->convertedSiValueToDouble() / M_PI, 6);
+        return BlackMisc::Math::CMath::round(this->convertedSiValueToDouble() / BlackMisc::Math::CMath::PI() , 6);
+    }
+
+    /*!
+     * \brief PI as convenience method
+     * \return
+     */
+    static const double &PI()
+    {
+        return BlackMisc::Math::CMath::PI();
     }
 };
 

@@ -8,14 +8,18 @@ TARGET = BlackBox
 TEMPLATE = app
 
 SOURCES += *.cpp
-
 HEADERS += *.h
 
 FORMS   += blackbox.ui dialog_connect.ui dialog_chat.ui
 
-LIBS    += -L../../lib -lblackmisc
+win32-msvc* {
+    PRE_TARGETDEPS +=  ../../lib/blackmisc.lib
+    LIBS += ../../lib/blackmisc.lib
+}
 
-win32:  PRE_TARGETDEPS += ../../lib/blackmisc.lib
-else:   PRE_TARGETDEPS += ../../lib/libblackmisc.a
+!win32-msvc* {
+    PRE_TARGETDEPS += ../../lib/libblackmisc.a
+    LIBS += ../../lib/libblackmisc.a
+}
 
 DESTDIR = ../../bin

@@ -92,7 +92,7 @@ void CTestPhysicalQuantities::frequencyTests()
 void CTestPhysicalQuantities::angleTests()
 {
     CAngle a1(180, CAngleUnit::deg());
-    CAngle a2(1.5 * CAngle::pi(), CAngleUnit::rad());
+    CAngle a2(1.5 * CAngle::PI(), CAngleUnit::rad());
     CAngle a3(35.4336, CAngleUnit::sexagesimalDeg()); // 35.72666
     a2.switchUnit(CAngleUnit::deg());
     QVERIFY2(a2.unitValueToInteger() == 270, qPrintable(QString("1.5Pi should be 270deg, not %1 deg").arg(a2.unitValueToInteger())));

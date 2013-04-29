@@ -61,7 +61,7 @@ int CSamplesPhysicalQuantities::samples()
     qDebug() << s2 << s3;
 
     CAngle a1(180, CAngleUnit::deg());
-    CAngle a2(1.5 * CAngle::pi(), CAngleUnit::rad());
+    CAngle a2(1.5 * CAngle::PI(), CAngleUnit::rad());
     CAngle a3(180.5, CAngleUnit::deg());
     CAngle a4(35.4336, CAngleUnit::sexagesimalDeg()); // 35.72666
     a1 += a2;

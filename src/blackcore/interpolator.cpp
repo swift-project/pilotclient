@@ -142,7 +142,7 @@ bool CInterpolator::stateNow(TPlaneState *state)
 CAngle CInterpolator::normalizeRadians(const CAngle &angle) const
 {
     double radian = angle.value(CAngleUnit::rad());
-    radian = radian - BlackMisc::Math::TwoPI * floor(0.5 + radian / BlackMisc::Math::TwoPI);
+    radian = radian - BlackMisc::Math::CMath::PI2() * floor(0.5 + radian / BlackMisc::Math::CMath::PI2());
     return CAngle(radian, CAngleUnit::rad());
 }
 

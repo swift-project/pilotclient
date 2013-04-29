@@ -17,44 +17,44 @@
 
 namespace BlackMisc
 {
-    class IMessageCreator
-    {
-    public:
-        IMessageCreator(const QString& messageID);
+class IMessageCreator
+{
+public:
+    IMessageCreator(const QString &messageID);
+    virtual IMessage *create() = 0;
+    virtual ~IMessageCreator() {}
+};
 
-        virtual IMessage* create() = 0;
-    };
+template <class T>
+class MessageCreatorImpl : public IMessageCreator
+{
+public:
+    MessageCreatorImpl(const QString &messageID) : IMessageCreator(messageID) {}
+    virtual IMessage *create() { return new T; }
+};
 
-    template <class T>
-    class MessageCreatorImpl : public IMessageCreator
-    {
-    public:
-        MessageCreatorImpl(const QString& messageID) : IMessageCreator(messageID) {}
-        virtual IMessage* create() { return new T; }
-    };
+class CMessageFactory : public QObject
+{
+    Q_OBJECT
 
-    class CMessageFactory : public QObject
-    {
-        Q_OBJECT
+    // safe singleton declaration
+    SINGLETON_CLASS_DECLARATION(CMessageFactory)
 
-        // safe singleton declaration
-        SINGLETON_CLASS_DECLARATION(CMessageFactory)
+    CMessageFactory() { }
+public:
 
-        CMessageFactory() { }
-    public:
+    virtual ~CMessageFactory();
 
-        virtual ~CMessageFactory();
+    IMessage *create(const QString &messageID);
 
-        IMessage* create (const QString &messageID);
+    void registerMessage(const QString &messageID, IMessageCreator *creator);
+    static void registerMessages();
 
-        void registerMessage(const QString &messageID, IMessageCreator* creator);
-        static void registerMessages();
+private:
 
-    private:
-
-        typedef QHash<QString, IMessageCreator*> TMessageCreatorHash;
-        TMessageCreatorHash m_creators;
-    };
+    typedef QHash<QString, IMessageCreator *> TMessageCreatorHash;
+    TMessageCreatorHash m_creators;
+};
 
 } // namespace BlackMisc
 

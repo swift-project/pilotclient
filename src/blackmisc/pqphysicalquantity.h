@@ -20,14 +20,13 @@ namespace PhysicalQuantities
 {
 /*!
  * \brief A physical quantity such as "5m", "20s", "1500ft/s"
- * \author KWB
  */
 template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CBaseStreamStringifier<PQ>
 {
 
 private:
-    qint32 m_unitValueI; //!< value backed by integer, allows sole integer arithmetic
     double m_unitValueD; //!< value backed by double
+    qint32 m_unitValueI; //!< value backed by integer, allows sole integer arithmetic
     double m_convertedSiUnitValueD; //!< SI unit value
     bool m_isIntegerBaseValue; //!< flag integer? / double?
 
@@ -383,6 +382,33 @@ public:
      */
     PQ operator -(const PQ &otherQuantity) const;
 
+    /*!
+     * \brief Quantity value <= epsilon
+     * \return
+     */
+    bool isZeroEpsilon() const
+    {
+        if (this->m_isIntegerBaseValue) return this->m_unitValueI == 0;
+        return this->m_unit.isEpsilon(this->m_unitValueD);
+    }
+
+    /*!
+     * \brief Value >= 0 epsilon considered
+     * \return
+     */
+    bool isGreaterOrEqualZeroEpsilon() const
+    {
+        return this->isZeroEpsilon() || this->m_unitValueD > 0;
+    }
+
+    /*!
+     * \brief Value <= 0 epsilon considered
+     * \return
+     */
+    bool isLessOrEqualZeroEpsilon() const
+    {
+        return this->isZeroEpsilon() || this->m_unitValueD < 0;
+    }
 };
 
 } // namespace

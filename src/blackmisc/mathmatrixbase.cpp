@@ -34,7 +34,8 @@ template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, R
  */
 template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::checkRange(size_t row, size_t column) const
 {
-    bool valid = (row >= 0 && column >= 0 && row < Rows && column < Columns);
+    // no >=0 comparison since unsinged comparison always >=0
+    bool valid = (row < Rows && column < Columns);
     Q_ASSERT_X(valid, "getElement()", "Row or column invalid");
     if (!valid) throw std::range_error("Row or column invalid");
 }
