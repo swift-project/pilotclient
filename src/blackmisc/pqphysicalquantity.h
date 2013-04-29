@@ -60,12 +60,21 @@ protected:
     }
 
     /*!
-     * \brief Polymorphic clone as concrete class
+     * \brief Easy access to derived class (CRTP template parameter)
      * \return
      */
-    PQ clone() const
+    PQ const* derived() const
     {
-        return static_cast<PQ const &>(*this);
+        return static_cast<PQ const *>(this);
+    }
+
+    /*!
+     * \brief Easy access to derived class (CRTP template parameter)
+     * \return
+     */
+    PQ* derived()
+    {
+        return static_cast<PQ *>(this);
     }
 
     /*!

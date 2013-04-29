@@ -190,7 +190,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, P
  */
 template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator -(const PQ &otherQuantity) const
 {
-    PQ minus = this->clone();
+    PQ minus = *derived();
     minus -= otherQuantity;
     return minus;
 }
@@ -209,7 +209,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, P
  */
 template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator *(double multiply) const
 {
-    PQ times = this->clone();
+    PQ times = *derived();
     times *= multiply;
     return times;
 }
@@ -228,7 +228,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, P
  */
 template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator /(double divide) const
 {
-    PQ div = this->clone();
+    PQ div = *derived();
     div /= divide;
     return div;
 }
@@ -281,7 +281,7 @@ template <class MU, class PQ> PQ &CPhysicalQuantity<MU, PQ>::switchUnit(const MU
         this->m_unit = newUnit;
         this->setUnitValue(cf);
     }
-    return static_cast<PQ &>(*this);
+    return *derived();
 }
 
 /*

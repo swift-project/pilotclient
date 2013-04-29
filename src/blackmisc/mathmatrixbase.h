@@ -32,12 +32,21 @@ protected:
     QString stringForConverter() const;
 
     /*!
-     * \brief Clone as conrete implementation
+     * \brief Easy access to derived class (CRTP template parameter)
      * \return
      */
-    ImplMatrix clone() const
+    ImplMatrix const* derived() const
     {
-        return static_cast<ImplMatrix const &>(*this);
+        return static_cast<ImplMatrix const *>(this);
+    }
+
+    /*!
+     * \brief Easy access to derived class (CRTP template parameter)
+     * \return
+     */
+    ImplMatrix* derived()
+    {
+        return static_cast<ImplMatrix *>(this);
     }
 
 public:
@@ -118,7 +127,7 @@ public:
      */
     ImplMatrix operator *(double factor) const
     {
-        ImplMatrix m = this->clone();
+        ImplMatrix m = *derived();
         m *= factor;
         return m;
     }
@@ -159,7 +168,7 @@ public:
      */
     ImplMatrix operator /(double factor) const
     {
-        ImplMatrix m = this->clone();
+        ImplMatrix m = *derived();
         m /= factor;
         return m;
     }
@@ -182,7 +191,7 @@ public:
      */
     ImplMatrix operator +(const ImplMatrix &otherMatrix) const
     {
-        ImplMatrix m = this->clone();
+        ImplMatrix m = *derived();
         m += otherMatrix;
         return m;
     }
@@ -205,7 +214,7 @@ public:
      */
     ImplMatrix operator -(const ImplMatrix &otherMatrix) const
     {
-        ImplMatrix m = this->clone();
+        ImplMatrix m = *derived();
         m -= otherMatrix;
         return m;
     }
@@ -225,8 +234,8 @@ public:
      */
     bool isIdentityEpsilon() const
     {
-        ImplMatrix m = this->clone().round();
-        return m.isIdentity();
+        ImplMatrix m = *derived();
+        return m.round().isIdentity();
     }
 
     /*!
@@ -260,8 +269,8 @@ public:
      */
     bool isZeroEpsilon() const
     {
-        ImplMatrix m = this->clone().round();
-        return m.isZero();
+        ImplMatrix m = *derived();
+        return m.round().isZero();
     }
 
     /*!

@@ -97,7 +97,7 @@ template<class ImplMatrix, int Rows, int Columns> ImplMatrix &CMatrixBase<ImplMa
             this->m_matrix(r, c) = CMath::roundEpsilon(this->m_matrix(r, c), 1E-10);
         }
     }
-    return static_cast<ImplMatrix &>(*this);
+    return *derived();
 }
 
 /*
