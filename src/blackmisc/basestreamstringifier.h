@@ -20,7 +20,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QDebug &operator<<(QDebug &debug, const UsingClass &uc)
+    friend QDebug operator<<(QDebug debug, const UsingClass &uc)
     {
         const CBaseStreamStringifier &s = uc;
         debug << s.stringForStreaming();
@@ -33,7 +33,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QNoDebug &operator<<(QNoDebug &nodebug, const UsingClass &uc)
+    friend QNoDebug operator<<(QNoDebug nodebug, const UsingClass &uc)
     {
         return nodebug;
     }
@@ -57,7 +57,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend CLogMessage &operator<<(CLogMessage &log, const UsingClass &uc)
+    friend CLogMessage operator<<(CLogMessage log, const UsingClass &uc)
     {
         const CBaseStreamStringifier &s = uc;
         log << s.stringForStreaming();
