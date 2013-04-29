@@ -57,26 +57,29 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const 
     // some special cases for best quality
     double diff;
     const double lenient = 1.001; // even diff already has a rounding issue to be avoided
+    bool eq = false;
     if (this->m_unit == otherQuantity.m_unit)
     {
         // same unit
         if (this->m_isIntegerBaseValue && otherQuantity.m_isIntegerBaseValue)
         {
             // pure integer comparison, no rounding issues
-            return this->m_unitValueI == otherQuantity.m_unitValueI;
+            eq = this->m_unitValueI == otherQuantity.m_unitValueI;
         }
         else
         {
-            diff = abs(this->m_unitValueD - otherQuantity.m_unitValueD);
-            return diff <= (lenient * this->m_unit.getEpsilon());
+            // same unit, comparison based on double
+            diff = qAbs(this->m_unitValueD - otherQuantity.m_unitValueD);
+            eq = diff <= (lenient * this->m_unit.getEpsilon());
         }
     }
     else
     {
         // based on SI value
-        diff = abs(this->m_convertedSiUnitValueD - otherQuantity.m_convertedSiUnitValueD);
-        return diff <= (lenient * this->m_unit.getEpsilon());
+        diff = qAbs(this->m_convertedSiUnitValueD - otherQuantity.m_convertedSiUnitValueD);
+        eq = diff <= (lenient * this->m_conversionSiUnit.getEpsilon());
     }
+    return eq;
 }
 
 /*
@@ -89,7 +92,7 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator !=(const 
 }
 
 /*
- * Assigment operator =
+ * Assignment operator =
  */
 template <class MU, class PQ> CPhysicalQuantity<MU, PQ>& CPhysicalQuantity<MU, PQ>::operator=(const CPhysicalQuantity<MU, PQ> &otherQuantity)
 {
@@ -238,9 +241,11 @@ template <class MU, class PQ> PQ CPhysicalQuantity<MU, PQ>::operator /(double di
  */
 template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator <(const CPhysicalQuantity<MU, PQ> &otherQuantity) const
 {
-    if (this == &otherQuantity) return false;
+    if ((*this) == otherQuantity) return false;
+
+    // == considers epsilon, so we now have a diff > epsilon here
     double diff = this->m_convertedSiUnitValueD - otherQuantity.m_convertedSiUnitValueD;
-    return (diff < 0 && abs(diff) >= this->m_unit.getEpsilon());
+    return (diff < 0);
 }
 
 /*
@@ -249,7 +254,7 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator <(const C
 template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator >(const CPhysicalQuantity<MU, PQ> &otherQuantity) const
 {
     if (this == &otherQuantity) return false;
-    return otherQuantity < *this;
+    return otherQuantity < (*this);
 }
 
 /*

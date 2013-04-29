@@ -46,7 +46,7 @@ private:
      */
     static const double &Flattening()
     {
-        static double f = 1 / 298.257223563;
+        static double f = 1.0 / 298.257223563;
         return f;
     }
 
@@ -76,7 +76,7 @@ private:
      */
     static const double &e2abs()
     {
-        static double e2abs = abs(e2());
+        static double e2abs = qAbs(e2());
         return e2abs;
     }
 
@@ -86,7 +86,7 @@ private:
      */
     static const double &e2m()
     {
-        static double e2m = BlackMisc::Math::CMath::square(1 - Flattening());
+        static double e2m = BlackMisc::Math::CMath::square(1.0 - Flattening());
         return e2m;
     }
 
@@ -94,7 +94,6 @@ private:
      * \brief Default constructor, avoid object instantiation
      */
     CCoordinateTransformation() {}
-
 
 public:
     /*!

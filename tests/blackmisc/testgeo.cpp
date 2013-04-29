@@ -20,12 +20,14 @@ void CTestGeo::geoBasics()
     CCoordinateGeodetic startGeoVec(lat, lon, h);
     CCoordinateEcef mediumEcefVec = CCoordinateTransformation::toEcef(startGeoVec);
     CCoordinateGeodetic endGeoVec = CCoordinateTransformation::toGeodetic(mediumEcefVec);
+
+    // this == contains some implicit rounding, since it is based on PQs
     QVERIFY2(startGeoVec == endGeoVec, "Reconverted geo vector should be equal ");
 
     CCoordinateNed nedVec = CCoordinateTransformation::toNed(mediumEcefVec, startGeoVec);
     CCoordinateEcef ecefReconvert = CCoordinateTransformation::toEcef(nedVec);
 
-    QVERIFY2(mediumEcefVec != ecefReconvert, "Reconverted geo vector, expect some minor rounding issues");
+    // check against rounded reconvert
     QVERIFY2(mediumEcefVec.round() == ecefReconvert.round(), "Reconverted geo vector should be equal");
 }
 

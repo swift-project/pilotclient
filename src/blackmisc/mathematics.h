@@ -74,6 +74,16 @@ public:
      * \brief PI
      * \return
      */
+    static const double &PIHALF()
+    {
+        static double pi = 2.0 * qAtan(1.0);
+        return pi;
+    }
+
+    /*!
+     * \brief PI
+     * \return
+     */
     static const double &PI()
     {
         static double pi = 4.0 * qAtan(1.0);
@@ -86,7 +96,7 @@ public:
      */
     static const double &PI2()
     {
-        static double pi2 = PI();
+        static double pi2 = 8.0 * qAtan(1.0);
         return pi2;
     }
 

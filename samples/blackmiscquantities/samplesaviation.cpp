@@ -17,6 +17,7 @@ namespace BlackMiscTest
 int CSamplesAviation::samples()
 {
     // CSpeed s1(10, CSpeedUnit::kts());
+
     CMeasurementPrefix p1 = CMeasurementPrefix::G();
     CAngle a(10, CAngleUnit::deg());
     qDebug() << a;

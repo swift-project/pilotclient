@@ -20,11 +20,26 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QDebug &operator<<(QDebug &debug, const UsingClass &uc)
+    friend QDebug operator<<(QDebug debug, const UsingClass &uc)
     {
-        const CBaseStreamStringifier &s = uc;
-        debug << s.stringForStreaming();
+        const CBaseStreamStringifier &sf = uc; // allows to acces protected method
+        debug << sf.stringForStreaming();
         return debug;
+    }
+    // msvc2010: friend QDebug &operator<<(QDebug &debug, const UsingClass &uc)
+    // MinGW: No reference
+
+    /*!
+     * \brief Operator << based on text stream
+     * \param textStream
+     * \param uc
+     * \return
+     */
+    friend QTextStream &operator<<(QTextStream &textStream, const UsingClass &uc)
+    {
+        const CBaseStreamStringifier &sf = uc; // allows to acces protected method
+        textStream << sf.stringForStreaming();
+        return textStream;
     }
 
     /*!
@@ -46,8 +61,8 @@ template <class UsingClass> class CBaseStreamStringifier
      */
     friend QDataStream &operator<<(QDataStream &stream, const UsingClass &uc)
     {
-        const CBaseStreamStringifier &s = uc;
-        stream << s.stringForStreaming();
+        const CBaseStreamStringifier &sf = uc; // allows to acces protected method
+        stream << sf.stringForStreaming();
         return stream;
     }
 
@@ -59,8 +74,8 @@ template <class UsingClass> class CBaseStreamStringifier
      */
     friend CLogMessage &operator<<(CLogMessage &log, const UsingClass &uc)
     {
-        const CBaseStreamStringifier &s = uc;
-        log << s.stringForStreaming();
+        const CBaseStreamStringifier &sf = uc; // allows to acces protected method
+        log << sf.stringForStreaming();
         return log;
     }
 
@@ -72,8 +87,8 @@ template <class UsingClass> class CBaseStreamStringifier
      */
     friend std::ostream &operator<<(std::ostream &ostr, const UsingClass &uc)
     {
-        const CBaseStreamStringifier &s = uc;
-        ostr << s.stringForStreaming().toStdString();
+        const CBaseStreamStringifier &sf = uc; // allows to acces protected method
+        ostr << sf.stringForStreaming().toStdString();
         return ostr;
     }
 

@@ -1,10 +1,10 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
+/*  Copyright (C) 2013 VATSIM Community / contributors
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackmisc/mathematics.h"
-#include <algorithm>    // std::max
+#include <algorithm> // std::max
 #include <cmath>
 
 namespace BlackMisc
@@ -17,8 +17,8 @@ namespace Math
  */
 double CMath::hypot(double x, double y)
 {
-    x = abs(x);
-    y = abs(y);
+    x = qAbs(x);
+    y = qAbs(y);
     double max = std::max(x, y);
     double min = std::min(x, y);
     double r = min / max;
@@ -31,7 +31,7 @@ double CMath::hypot(double x, double y)
 double CMath::cubicRootReal(double x)
 {
     double result;
-    result = std::pow(std::abs(x), (double)1 / 3);
+    result = std::pow(qAbs(x), (double)1.0 / 3.0);
     return x < 0 ? -result : result;
 }
 

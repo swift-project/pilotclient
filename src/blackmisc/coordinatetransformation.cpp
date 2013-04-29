@@ -66,8 +66,6 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateNed &ned)
  */
 CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateGeodetic &geo)
 {
-    // TODO: Clarify the comparisons with fixed angles (==90, ==180) -> what happens here
-
     CLatitude lat = geo.latitude();
     CLongitude lon = geo.longitude();
 
@@ -96,10 +94,9 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateGeodetic &geo
  */
 CCoordinateNed CCoordinateTransformation::toNed(const CCoordinateEcef &ecef, const CCoordinateGeodetic &referencePosition)
 {
-
     CLatitude lat = referencePosition.latitude();
     CLongitude lon = referencePosition.longitude();
-    double angleRad = - (lat.value(CAngleUnit::rad())) - CMath::PI() / 2;
+    double angleRad = - (lat.value(CAngleUnit::rad())) - CMath::PIHALF();
 
     CMatrix3x3 dcm1;
     CMatrix3x3 dcm2(0.0);

@@ -2,7 +2,7 @@
 
 using namespace BlackMisc::Math;
 
-/*!
+/*
  * Run the samples
  */
 int BlackMiscTest::CSamplesVectorMatrix::samples()

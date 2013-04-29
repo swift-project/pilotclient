@@ -53,12 +53,14 @@ void CTestPhysicalQuantities::lengthBasics()
     QVERIFY2(!(d1 > d2), "Nothing shall be less / greater");
 
     // epsilon tests
+    d1 = d2; // both in same unit
     d1.addUnitValue(d1.getUnit().getEpsilon()); // this should be still the same
-    QVERIFY2(d1 == d2, "Epsilon: 1meter+epsilon shall be 100cm");
-    QVERIFY2(!(d1 != d2), "Epsilon: 1meter+epsilon shall be 100cm");
+    QVERIFY2(d1 == d2, "Epsilon: 100cm + epsilon shall be 100cm");
+    QVERIFY2(!(d1 != d2), "Epsilon: 100cm + epsilon shall be still 100cm");
+    QVERIFY2(!(d1 > d2), "d1 shall not be greater");
 
     d1.addUnitValue(d1.getUnit().getEpsilon()); // now over epsilon threshold
-    QVERIFY2(d1 != d2, "Epsilon exceeded: 1meter+2epsilon shall not be 100cm");
+    QVERIFY2(d1 != d2, "Epsilon exceeded: 100 cm + 2 epsilon shall not be 100cm");
     QVERIFY2(d1 > d2, "d1 shall be greater");
 }
 

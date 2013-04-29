@@ -32,7 +32,8 @@ void CTestAviation::headingBasics()
     h4 = h1;
     QVERIFY2(h1 != h2, "Magnetic and true heading are not the same");
     QVERIFY2(h1 < h3, "180deg are less than 181deg");
-    QVERIFY2(a1 > h3, "200deg are more than 200deg");
+    QVERIFY2(h3 > h1, "181deg are more than 181deg");
+    QVERIFY2(a1 > h3, "200deg are more than 181deg");
     QVERIFY2(h4 == h1, "Values shall be equal");
 
     h1 -= h1;
