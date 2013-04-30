@@ -20,17 +20,7 @@ namespace Math
  */
 template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public BlackMisc::CBaseStreamStringifier<ImplMatrix>
 {
-
-protected:
-    // no bug, Qt expects columns rows
-    QGenericMatrix<Columns, Rows, double> m_matrix; //!< backing data
-
-    /*!
-     * \brief Conversion to string
-     * \return
-     */
-    QString stringForConverter() const;
-
+private:
     /*!
      * \brief Easy access to derived class (CRTP template parameter)
      * \return
@@ -48,6 +38,16 @@ protected:
     {
         return static_cast<ImplMatrix *>(this);
     }
+
+protected:
+    // no bug, Qt expects columns rows
+    QGenericMatrix<Columns, Rows, double> m_matrix; //!< backing data
+
+    /*!
+     * \brief Conversion to string
+     * \return
+     */
+    QString stringForConverter() const;
 
 public:
     /*!

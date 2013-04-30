@@ -23,12 +23,29 @@ namespace PhysicalQuantities
  */
 template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CBaseStreamStringifier<PQ>
 {
-
 private:
     double m_unitValueD; //!< value backed by double
     qint32 m_unitValueI; //!< value backed by integer, allows sole integer arithmetic
     double m_convertedSiUnitValueD; //!< SI unit value
     bool m_isIntegerBaseValue; //!< flag integer? / double?
+
+    /*!
+     * \brief Easy access to derived class (CRTP template parameter)
+     * \return
+     */
+    PQ const* derived() const
+    {
+        return static_cast<PQ const *>(this);
+    }
+
+    /*!
+     * \brief Easy access to derived class (CRTP template parameter)
+     * \return
+     */
+    PQ* derived()
+    {
+        return static_cast<PQ *>(this);
+    }
 
 protected:
     MU m_unit; //!< unit
@@ -57,24 +74,6 @@ protected:
     virtual QString stringForConverter() const
     {
         return this->unitValueRoundedWithUnit(-1);
-    }
-
-    /*!
-     * \brief Easy access to derived class (CRTP template parameter)
-     * \return
-     */
-    PQ const* derived() const
-    {
-        return static_cast<PQ const *>(this);
-    }
-
-    /*!
-     * \brief Easy access to derived class (CRTP template parameter)
-     * \return
-     */
-    PQ* derived()
-    {
-        return static_cast<PQ *>(this);
     }
 
     /*!
