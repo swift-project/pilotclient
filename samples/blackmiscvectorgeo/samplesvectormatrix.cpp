@@ -9,7 +9,7 @@ int BlackMiscTest::CSamplesVectorMatrix::samples()
 {
     CVector3D v1;
     CVector3D v2(1, 2, 3);
-    qDebug() << v1 << "value:" << v2[2] << v2.magnitude();
+    qDebug() << v1 << "value:" << v2[2] << v2.length();
     v2 *= v2; // v2 * v2
     qDebug() << v2 << 2 *  v1 << v1 *v1;
 

@@ -28,9 +28,7 @@ void CTestVectorMatrix::vectorBasics()
     CVector3D v7(3, 4, 5);
     QVERIFY2(v6.crossProduct(v7) == CVector3D(-2, 4, -2), "Cross product is wrong");
     QVERIFY2(v6.dotProduct(v7) == 26, "Dot product is wrong, 26 expected");
-    QVERIFY2(v6.length() == (1 + 2 + 3), "Wrong vector length");
-    QVERIFY2(v6.lengthSquared() == (1 + 4 + 9), "Wrong squared vector length");
-    QVERIFY2(v6.magnitude() == sqrt(1.0 + 4.0 + 9.0), "Wrong vector magnitude");
+    QVERIFY2(v6.length() == sqrt(1.0 + 4.0 + 9.0), "Wrong vector magnitude");
 }
 
 /*

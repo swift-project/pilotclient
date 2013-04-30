@@ -88,7 +88,7 @@ template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, R
 /*
  * Round all values
  */
-template<class ImplMatrix, int Rows, int Columns> ImplMatrix &CMatrixBase<ImplMatrix, Rows, Columns>::round()
+template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::round()
 {
     for (int r = 0; r < Rows; r++)
     {
@@ -97,7 +97,6 @@ template<class ImplMatrix, int Rows, int Columns> ImplMatrix &CMatrixBase<ImplMa
             this->m_matrix(r, c) = CMath::roundEpsilon(this->m_matrix(r, c), 1E-10);
         }
     }
-    return *derived();
 }
 
 /*

@@ -65,7 +65,7 @@ protected:
      * \brief Easy access to derived class (CRTP template parameter)
      * \return
      */
-    ImplVector const* derived() const
+    ImplVector const *derived() const
     {
         return static_cast<ImplVector const *>(this);
     }
@@ -74,7 +74,7 @@ protected:
      * \brief Easy access to derived class (CRTP template parameter)
      * \return
      */
-    ImplVector* derived()
+    ImplVector *derived()
     {
         return static_cast<ImplVector *>(this);
     }
@@ -379,49 +379,40 @@ public:
     }
 
     /*!
-     * \brief Length
-     * \return
-     */
-    double length()const
-    {
-        return this->m_i + this->m_j + this->m_k;
-    }
-
-    /*!
-     * \brief Length squared
-     * \return
-     */
-    double lengthSquared()const
-    {
-        return this->m_i * this->m_i + this->m_j * this->m_j + this->m_k * this->m_k;
-    }
-
-    /*!
      * \brief Converted to matrix
      * \return
      */
     CMatrix3x1 toMatrix3x1() const;
 
     /*!
-     * \brief Magnitude
+     * \brief length / magnitude
      * \return
      */
-    double magnitude() const
+    double length() const
     {
-        return sqrt(this->lengthSquared());
+        return sqrt(this->m_i * this->m_i + this->m_j * this->m_j + this->m_k * this->m_k);
     }
 
     /*!
      * \brief Round this vector
-     * \return
      */
-    ImplVector &round()
+    void round()
     {
         const double epsilon = 1E-10;
         this->m_i = BlackMisc::Math::CMath::roundEpsilon(this->m_i, epsilon);
         this->m_j = BlackMisc::Math::CMath::roundEpsilon(this->m_j, epsilon);
         this->m_k = BlackMisc::Math::CMath::roundEpsilon(this->m_k, epsilon);
-        return *derived();
+    }
+
+    /*!
+     * \brief Rounded vector
+     * \return
+     */
+    ImplVector roundedVector() const
+    {
+        ImplVector v = *derived();
+        v.round();
+        return v;
     }
 };
 

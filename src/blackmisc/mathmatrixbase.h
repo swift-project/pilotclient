@@ -35,7 +35,7 @@ protected:
      * \brief Easy access to derived class (CRTP template parameter)
      * \return
      */
-    ImplMatrix const* derived() const
+    ImplMatrix const *derived() const
     {
         return static_cast<ImplMatrix const *>(this);
     }
@@ -44,7 +44,7 @@ protected:
      * \brief Easy access to derived class (CRTP template parameter)
      * \return
      */
-    ImplMatrix* derived()
+    ImplMatrix *derived()
     {
         return static_cast<ImplMatrix *>(this);
     }
@@ -235,7 +235,8 @@ public:
     bool isIdentityEpsilon() const
     {
         ImplMatrix m = *derived();
-        return m.round().isIdentity();
+        m.round();
+        return m.isIdentity();
     }
 
     /*!
@@ -270,7 +271,8 @@ public:
     bool isZeroEpsilon() const
     {
         ImplMatrix m = *derived();
-        return m.round().isZero();
+        m.round();
+        return m.isZero();
     }
 
     /*!
@@ -287,9 +289,19 @@ public:
 
     /*!
      * \brief Round all values
+     */
+    void round();
+
+    /*!
+     * \brief Return a rounded matrix
      * \return
      */
-    ImplMatrix &round();
+    ImplMatrix roundedMatrix() const
+    {
+        ImplMatrix m = *derived();
+        m.round();
+        return m;
+    }
 
     /*!
      * \brief Get element

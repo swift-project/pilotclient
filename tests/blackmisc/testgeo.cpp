@@ -28,7 +28,7 @@ void CTestGeo::geoBasics()
     CCoordinateEcef ecefReconvert = CCoordinateTransformation::toEcef(nedVec);
 
     // check against rounded reconvert
-    QVERIFY2(mediumEcefVec.round() == ecefReconvert.round(), "Reconverted geo vector should be equal");
+    QVERIFY2(mediumEcefVec.roundedVector() == ecefReconvert.roundedVector(), "Reconverted geo vector should be equal");
 }
 
 } // namespace
