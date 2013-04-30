@@ -23,6 +23,25 @@ class CMatrix3x1; // forward declaration
  */
 template <class ImplVector> class CVector3DBase : public CBaseStreamStringifier<ImplVector>
 {
+private:
+    /*!
+     * \brief Easy access to derived class (CRTP template parameter)
+     * \return
+     */
+    ImplVector const* derived() const
+    {
+        return static_cast<ImplVector const *>(this);
+    }
+
+    /*!
+     * \brief Easy access to derived class (CRTP template parameter)
+     * \return
+     */
+    ImplVector* derived()
+    {
+        return static_cast<ImplVector *>(this);
+    }
+
 protected:
 
     // using own value since Qt QVector3D stores internally as float
@@ -60,24 +79,6 @@ protected:
      * \return
      */
     virtual QString stringForConverter() const;
-
-    /*!
-     * \brief Easy access to derived class (CRTP template parameter)
-     * \return
-     */
-    ImplVector const* derived() const
-    {
-        return static_cast<ImplVector const *>(this);
-    }
-
-    /*!
-     * \brief Easy access to derived class (CRTP template parameter)
-     * \return
-     */
-    ImplVector* derived()
-    {
-        return static_cast<ImplVector *>(this);
-    }
 
 public:
 
