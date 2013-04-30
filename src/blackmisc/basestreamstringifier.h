@@ -48,7 +48,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QNoDebug &operator<<(QNoDebug &nodebug, const UsingClass &uc)
+    friend QNoDebug operator<<(QNoDebug nodebug, const UsingClass &uc)
     {
         return nodebug;
     }
@@ -72,7 +72,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend CLogMessage &operator<<(CLogMessage &log, const UsingClass &uc)
+    friend CLogMessage operator<<(CLogMessage log, const UsingClass &uc)
     {
         const CBaseStreamStringifier &sf = uc; // allows to acces protected method
         log << sf.stringForStreaming();

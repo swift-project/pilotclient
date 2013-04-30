@@ -5,8 +5,9 @@
 
 #ifndef BLACKMISC_PQUNITS_H
 #define BLACKMISC_PQUNITS_H
+
 #include "blackmisc/pqbase.h"
-#include <math.h>
+#include <QtCore/qmath.h>
 
 //
 // Used with the template for quantities. This is the reason for

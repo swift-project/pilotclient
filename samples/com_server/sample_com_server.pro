@@ -13,15 +13,10 @@ INCLUDEPATH += . ../../src
 SOURCES += *.cpp
 HEADERS += *.h
 
-win32-msvc* {
-    PRE_TARGETDEPS +=  ../../lib/blackmisc.lib
-    LIBS += ../../lib/blackmisc.lib
-}
+LIBS    += -L../../lib -lblackmisc
 
-!win32-msvc* {
-    PRE_TARGETDEPS += ../../lib/libblackmisc.a
-    LIBS += ../../lib/libblackmisc.a
-}
+win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib
+else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
 
 DESTDIR = ../../bin
 

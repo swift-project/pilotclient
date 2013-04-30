@@ -62,14 +62,22 @@ protected:
     virtual QString stringForConverter() const;
 
     /*!
-     * \brief Clone as concrete implementation
+     * \brief Easy access to derived class (CRTP template parameter)
      * \return
      */
-    ImplVector clone() const
+    ImplVector const* derived() const
     {
-        return static_cast<ImplVector const &>(*this);
+        return static_cast<ImplVector const *>(this);
     }
 
+    /*!
+     * \brief Easy access to derived class (CRTP template parameter)
+     * \return
+     */
+    ImplVector* derived()
+    {
+        return static_cast<ImplVector *>(this);
+    }
 
 public:
 
@@ -198,7 +206,7 @@ public:
      */
     ImplVector operator +(const ImplVector &otherVector) const
     {
-        ImplVector v = this->clone();
+        ImplVector v = *derived();
         v += otherVector;
         return v;
     }
@@ -223,7 +231,7 @@ public:
      */
     ImplVector operator -(const ImplVector &otherVector) const
     {
-        ImplVector v = this->clone();
+        ImplVector v = *derived();
         v -= otherVector;
         return v;
     }
@@ -248,7 +256,7 @@ public:
      */
     ImplVector operator *(const ImplVector &otherVector) const
     {
-        ImplVector v = this->clone();
+        ImplVector v = *derived();
         v *= otherVector;
         return v;
     }
@@ -273,7 +281,7 @@ public:
      */
     ImplVector operator *(double factor) const
     {
-        ImplVector v = this->clone();
+        ImplVector v = *derived();
         v *= factor;
         return v;
     }
@@ -309,7 +317,7 @@ public:
      */
     ImplVector operator /(double divisor) const
     {
-        ImplVector v = this->clone();
+        ImplVector v = *derived();
         v /= divisor;
         return v;
     }
@@ -334,7 +342,7 @@ public:
      */
     ImplVector operator /(const ImplVector &otherVector) const
     {
-        ImplVector v = this->clone();
+        ImplVector v = *derived();
         v /= otherVector;
         return v;
     }
@@ -413,7 +421,7 @@ public:
         this->m_i = BlackMisc::Math::CMath::roundEpsilon(this->m_i, epsilon);
         this->m_j = BlackMisc::Math::CMath::roundEpsilon(this->m_j, epsilon);
         this->m_k = BlackMisc::Math::CMath::roundEpsilon(this->m_k, epsilon);
-        return static_cast<ImplVector &>(*this);
+        return *derived();
     }
 };
 
