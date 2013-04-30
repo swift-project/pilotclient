@@ -11,17 +11,11 @@ using namespace BlackMisc::PhysicalQuantities;
 namespace BlackMiscTest
 {
 
-/**
+/*
  * Samples
  */
 int CSamplesAviation::samples()
 {
-    // CSpeed s1(10, CSpeedUnit::kts());
-
-    CMeasurementPrefix p1 = CMeasurementPrefix::G();
-    CAngle a(10, CAngleUnit::deg());
-    qDebug() << a;
-
     CHeading h1(180, true, CAngleUnit::deg());
     CHeading h2(180, false, CAngleUnit::deg());
 

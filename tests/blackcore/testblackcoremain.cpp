@@ -8,6 +8,7 @@
 
 namespace BlackCoreTest
 {
+
 /*
  * Starting main, equivalent to QTEST_APPLESS_MAIN for multiple test classes.
  */
