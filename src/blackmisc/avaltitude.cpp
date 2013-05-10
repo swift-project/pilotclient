@@ -25,7 +25,7 @@ QString CAltitude::stringForConverter() const
 /*
  * Assigment
  */
-CAltitude& CAltitude::operator =(const CAltitude &otherAltitude)
+CAltitude &CAltitude::operator =(const CAltitude &otherAltitude)
 {
     // Check for self-assignment!
     if (this == &otherAltitude)  return *this;

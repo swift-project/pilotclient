@@ -19,7 +19,7 @@ namespace Aviation
 /*!
  * \brief Base class for avionics
  */
-class CAvionicsBase : public CBaseStreamStringifier<CAvionicsBase>
+class CAvionicsBase : public CBaseStreamStringifier
 {
 
 private:

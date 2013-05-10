@@ -18,7 +18,7 @@ namespace Math
 /*!
  * \brief Base functionality of a matrix
  */
-template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public BlackMisc::CBaseStreamStringifier<ImplMatrix>
+template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public BlackMisc::CBaseStreamStringifier
 {
 private:
     /*!

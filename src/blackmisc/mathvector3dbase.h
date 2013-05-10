@@ -21,7 +21,7 @@ class CMatrix3x1; // forward declaration
 /*!
  * \brief 3D vector base (x, y, z)
  */
-template <class ImplVector> class CVector3DBase : public CBaseStreamStringifier<ImplVector>
+template <class ImplVector> class CVector3DBase : public CBaseStreamStringifier
 {
 
 private:

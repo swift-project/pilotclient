@@ -12,7 +12,7 @@ namespace BlackMisc
 /*!
  * \brief Provides "to QString" and stream operators
  */
-template <class UsingClass> class CBaseStreamStringifier
+class CBaseStreamStringifier
 {
     /*!
      * \brief Stream << overload to be used in debugging messages
@@ -20,13 +20,13 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QDebug operator<<(QDebug debug, const UsingClass &uc)
+    friend QDebug operator<<(QDebug debug, const CBaseStreamStringifier &uc)
     {
         const CBaseStreamStringifier &sf = uc; // allows to acces protected method
         debug << sf.stringForStreaming();
         return debug;
     }
-    // msvc2010: friend QDebug &operator<<(QDebug &debug, const UsingClass &uc)
+    // msvc2010: friend QDebug &operator<<(QDebug &debug, const CBaseStreamStringifier &uc)
     // MinGW: No reference
 
     /*!
@@ -35,7 +35,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QTextStream &operator<<(QTextStream &textStream, const UsingClass &uc)
+    friend QTextStream &operator<<(QTextStream &textStream, const CBaseStreamStringifier &uc)
     {
         const CBaseStreamStringifier &sf = uc; // allows to acces protected method
         textStream << sf.stringForStreaming();
@@ -48,7 +48,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QNoDebug operator<<(QNoDebug nodebug, const UsingClass &uc)
+    friend QNoDebug operator<<(QNoDebug nodebug, const CBaseStreamStringifier & /* uc */)
     {
         return nodebug;
     }
@@ -59,7 +59,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QDataStream &operator<<(QDataStream &stream, const UsingClass &uc)
+    friend QDataStream &operator<<(QDataStream &stream, const CBaseStreamStringifier &uc)
     {
         const CBaseStreamStringifier &sf = uc; // allows to acces protected method
         stream << sf.stringForStreaming();
@@ -72,7 +72,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend CLogMessage operator<<(CLogMessage log, const UsingClass &uc)
+    friend CLogMessage operator<<(CLogMessage log, const CBaseStreamStringifier &uc)
     {
         const CBaseStreamStringifier &sf = uc; // allows to acces protected method
         log << sf.stringForStreaming();
@@ -85,7 +85,7 @@ template <class UsingClass> class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend std::ostream &operator<<(std::ostream &ostr, const UsingClass &uc)
+    friend std::ostream &operator<<(std::ostream &ostr, const CBaseStreamStringifier &uc)
     {
         const CBaseStreamStringifier &sf = uc; // allows to acces protected method
         ostr << sf.stringForStreaming().toStdString();

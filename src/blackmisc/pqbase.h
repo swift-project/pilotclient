@@ -23,7 +23,7 @@ namespace PhysicalQuantities
  * Use the static values such CMeasurementMultiplier::k() as to specify values.
  * \author KWB
  */
-class CMeasurementPrefix : public CBaseStreamStringifier<CMeasurementPrefix>
+class CMeasurementPrefix : public CBaseStreamStringifier
 {
 private:
     QString m_name; //!< name, e.g. "kilo"
@@ -130,6 +130,14 @@ public:
         return this->m_prefix;
     }
 
+    /*!
+     * \brief Operator as double
+     */
+    operator double() const
+    {
+        return this->m_factor;
+    }
+
     // --- static units, always use these for initialization
     // --- Remark: Static initialization in C++ is random, this is why no static members
     // --- are used
@@ -143,6 +151,7 @@ public:
         static CMeasurementPrefix none("", "", 0.0);
         return none;
     }
+
     /*!
      * \brief Unit "One"
      * \return
@@ -152,6 +161,7 @@ public:
         static CMeasurementPrefix one("one", "", 1.0);
         return one;
     }
+
     /*!
      * \brief Unit "mega"
      * \return
@@ -161,6 +171,7 @@ public:
         static CMeasurementPrefix mega("mega", "M", 1E6);
         return mega;
     }
+
     /*!
      * \brief Unit "kilo"
      * \return
@@ -170,6 +181,7 @@ public:
         static CMeasurementPrefix kilo("kilo", "k", 1000.0);
         return kilo;
     }
+
     /*!
      * \brief Unit "giga"
      * \return
@@ -179,6 +191,7 @@ public:
         static CMeasurementPrefix giga("giga", "G", 1E9);
         return giga;
     }
+
     /*!
      * \brief Unit "hecto"
      * \return
@@ -188,6 +201,7 @@ public:
         static CMeasurementPrefix hecto("hecto", "h", 100.0);
         return hecto;
     }
+
     /*!
      * \brief Unit "centi"
      * \return
@@ -197,6 +211,7 @@ public:
         static CMeasurementPrefix centi("centi", "c", 0.01);
         return centi;
     }
+
     /*!
      * \brief Unit "milli"
      * \return
@@ -216,7 +231,7 @@ public:
 /*!
  * \brief Base class for all units, such as meter, hertz.
  */
-class CMeasurementUnit: public CBaseStreamStringifier<CMeasurementUnit>
+class CMeasurementUnit: public CBaseStreamStringifier
 {
 protected:
     /*!

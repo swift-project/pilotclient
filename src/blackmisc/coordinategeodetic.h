@@ -37,7 +37,7 @@ class ICoordinateGeodetic
  * \brief Geodetic coordinate
  */
 class CCoordinateGeodetic :
-    public CBaseStreamStringifier<CCoordinateGeodetic>,
+    public CBaseStreamStringifier,
     public ICoordinateGeodetic
 {
 
