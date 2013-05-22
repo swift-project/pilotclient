@@ -125,6 +125,13 @@ protected:
      */
     virtual QString stringForConverter() const = 0;
 
+    /*!
+     * \brief Copy assignment operator.
+     * This is protected in order to forbid slicing an instance of one derived
+     * class into an instance of a completely unrelated derived class.
+     * \return
+     */
+    CBaseStreamStringifier& operator=(const CBaseStreamStringifier&) { return *this; }
 };
 
 } // namespace
