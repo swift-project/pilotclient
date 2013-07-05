@@ -4,6 +4,7 @@
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
 #include "blackmisc/context.h"
+#include "blackmisc/debug.h"
 
 #include "blackd.h"
 #include <QApplication>
@@ -16,6 +17,8 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     BlackMisc::CApplicationContext myBlackApp;
+
+    BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
 
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
              QMessageBox::critical(0, QObject::tr("Systray"),

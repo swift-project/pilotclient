@@ -18,9 +18,12 @@ CDialogConnect::CDialogConnect(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(&comclient, SIGNAL(doError(QAbstractSocket::SocketError,QString)), this, SLOT(onError(QAbstractSocket::SocketError,QString)));
-    connect(&comclient, SIGNAL(doConnected()), this, SLOT(onClientConnected()));
-	connect(ui->bt_FSDConnect, SIGNAL(clicked()), this, SLOT(onFSDConnect()));
+    connect(&comclient, &BlackMisc::CComClient::doError,
+            this,       &CDialogConnect::onError);
+    connect(&comclient, &BlackMisc::CComClient::doConnected,
+            this,       &CDialogConnect::onClientConnected);
+    connect(ui->bt_FSDConnect, &QPushButton::clicked,
+            this,       &CDialogConnect::onFSDConnect);
 
     QString address = "127.0.0.1";
     comclient.connectTo(address, 42000);

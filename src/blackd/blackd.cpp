@@ -29,8 +29,8 @@ BlackD::BlackD(QWidget *parent) :
     createActions();
     createTrayIcon();
 
-    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-            this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    connect(trayIcon, &QSystemTrayIcon::activated,
+            this,     &BlackD::iconActivated);
 
     setWindowTitle(tr("BlackD"));
 

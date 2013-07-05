@@ -21,8 +21,10 @@ BlackBox::BlackBox(QWidget *parent) :
     m_dlg_chat = new CDialogChat();
     m_dlg_chat->hide();
 
-    connect(ui->bt_Connect, SIGNAL(clicked()), this, SLOT(onConnect()));
-    connect(ui->bt_Chat, SIGNAL(clicked()), this, SLOT(onButtonChat()));
+    connect(ui->bt_Connect, &QPushButton::clicked,
+            this,           &BlackBox::onConnect);
+    connect(ui->bt_Chat,    &QPushButton::clicked,
+            this,           &BlackBox::onButtonChat);
 }
 
 BlackBox::~BlackBox()
