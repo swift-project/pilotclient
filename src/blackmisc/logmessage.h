@@ -46,7 +46,6 @@ namespace BlackMisc
         inline CLogMessage &maybeSpace() { if (logStream->needSpace) logStream->output << ' '; return *this; }
 
         inline CLogMessage &operator<<(QChar t) { logStream->output << '\'' << t << '\''; return maybeSpace(); }
-        inline CLogMessage &operator<<(QBool t) { logStream->output << (bool(t != 0) ? "true" : "false"); return maybeSpace(); }
         inline CLogMessage &operator<<(bool t) { logStream->output << (t ? "true" : "false"); return maybeSpace(); }
         inline CLogMessage &operator<<(char t) { logStream->output << t; return maybeSpace(); }
         inline CLogMessage &operator<<(signed short t) { logStream->output << t; return maybeSpace(); }
@@ -61,7 +60,7 @@ namespace BlackMisc
         { logStream->output << QString::number(t); return maybeSpace(); }
         inline CLogMessage &operator<<(float t) { logStream->output << t; return maybeSpace(); }
         inline CLogMessage &operator<<(double t) { logStream->output << t; return maybeSpace(); }
-        inline CLogMessage &operator<<(const char *t) { logStream->output << QString::fromAscii(t); return maybeSpace(); }
+        inline CLogMessage &operator<<(const char *t) { logStream->output << QString::fromLatin1(t); return maybeSpace(); }
         inline CLogMessage &operator<<(const QString &t) { logStream->output << '\"' << t  << '\"'; return maybeSpace(); }
         inline CLogMessage &operator<<(const QByteArray &t) { logStream->output  << '\"' << t << '\"'; return maybeSpace(); }
 

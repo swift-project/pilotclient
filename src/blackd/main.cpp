@@ -7,6 +7,7 @@
 
 #include "blackd.h"
 #include <QApplication>
+#include <QMessageBox>
 #include <QtGui>
 
 int main(int argc, char *argv[])

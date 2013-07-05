@@ -4,6 +4,8 @@
 //! file, You can obtain one at http://mozilla.org/MPL/2.0/
 
 #include <QtGui>
+#include <QMessageBox>
+#include <QMenu>
 
 #include "blackmisc/context.h"
 #include "blackmisc/debug.h"
@@ -15,7 +17,6 @@
 #include "blackd.h"
 #include "ui_blackd.h"
 
-using namespace BlackMisc;
 using namespace FSD;
 
 
@@ -43,7 +44,7 @@ BlackD::BlackD(QWidget *parent) :
 
     createComServer();
 
-    m_fsd_client = new CFSDClient(IContext::getInstance());
+    m_fsd_client = new CFSDClient(BlackMisc::IContext::getInstance());
 
     bAppDebug << "BlackDaemon running...";
 }
@@ -129,8 +130,8 @@ void BlackD::createLogging()
 
 void BlackD::createComServer()
 {
-    CMessageFactory::getInstance().registerMessages();
-    m_comserver = new CComServer(IContext::getInstance(), this);
+    BlackMisc::CMessageFactory::getInstance().registerMessages();
+    m_comserver = new BlackMisc::CComServer(BlackMisc::IContext::getInstance(), this);
 
     registerMessageFunction(this, &BlackD::onMSG_CONNECT_TO_VATSIM);
 
@@ -149,8 +150,8 @@ void BlackD::onData(QString &messageID, QByteArray &message)
     Q_ASSERT(test);
     *test << stream;
 
-    CMessageDispatcher::getInstance().append(test);
-    CMessageDispatcher::getInstance().dispatch();
+    BlackMisc::CMessageDispatcher::getInstance().append(test);
+    BlackMisc::CMessageDispatcher::getInstance().dispatch();
 }
 
 void BlackD::onMSG_CONNECT_TO_VATSIM(const BlackMisc::MSG_CONNECT_TO_VATSIM *connect)
