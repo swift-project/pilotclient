@@ -6,7 +6,6 @@
 #include "network_vatlib.h"
 #include <vector>
 #include <exception>
-#include <cassert>
 
 namespace BlackCore
 {
@@ -21,7 +20,6 @@ namespace BlackCore
         try
         {
             Q_ASSERT_X(m_fsdTextCodec, "NetworkVatlib", "Missing default wire text encoding");
-            assert(m_fsdTextCodec);
             //TODO reinit m_fsdTextCodec from WireTextEncoding config setting if present
 
             m_net->InstallOnConnectionStatusChangedEvent(onConnectionStatusChanged, this);
@@ -106,29 +104,22 @@ namespace BlackCore
         {
             throw;
         }
-        //catch (InvalidObjectException& e) //TODO ask Gary to confirm that trying to use an invalid Cvatlib_Network is always the result of a programmer error
-        //catch (ObjectNotSetupException& e) //TODO ask Gary what is "the setup function" mentioned in the ObjectNotSetupException documentation?
         catch (NetworkNotConnectedException& e)
         {
+            // this could be caused by a race condition during normal operation, so not an error
             qDebug() << "NetworkNotConnectedException: " << e.what();
         }
         catch (VatlibException& e)
         {
-            Q_ASSERT_X(false, "NetworkVatlib", e.what());
-            assert(false);
-            qDebug() << "VatlibException: " << e.what();
+            qFatal("VatlibException: %s", e.what());
         }
         catch (std::exception& e)
         {
-            Q_ASSERT_X(false, "NetworkVatlib", e.what());
-            assert(false);
-            qDebug() << "NetworkVatlib: std::exception: " << e.what();
+            qFatal("NetworkVatlib: std::exception: %s", e.what());
         }
         catch (...)
         {
-            Q_ASSERT_X(false, "NetworkVatlib", "Unknown exception");
-            assert(false);
-            qDebug() << "NetworkVatlib: unknown exception";
+            qFatal("NetworkVatlib: unknown exception");
         }
     }
 
@@ -374,21 +365,25 @@ namespace BlackCore
         case Cvatlib_Network::error_Ok:                     return;
         case Cvatlib_Network::error_CallsignTaken:          qCritical() << "The requested callsign is already taken"; break;
         case Cvatlib_Network::error_CallsignInvalid:        qCritical() << "The requested callsign is not valid"; break;
-        case Cvatlib_Network::error_Registered:             break; //TODO ask Gary to explain meaning
-        case Cvatlib_Network::error_Syntax:                 assert(false); qWarning() << "VATSIM shim library: Syntax error: " << cbvar_cast(cbvar)->fromFSD(data); break;
-        case Cvatlib_Network::error_SourceInvalid:          break; //TODO ask Gary to explain meaning
         case Cvatlib_Network::error_CIDPasswdInvalid:       qCritical() << "Wrong user ID or password"; break;
-        case Cvatlib_Network::error_CallsignNotExists:      qDebug() << "Shim lib: " << cbvar_cast(cbvar)->fromFSD(msg) << " (" << cbvar_cast(cbvar)->fromFSD(data) << ")"; break;
-        case Cvatlib_Network::error_NoFP:                   break; //TODO ask Gary under what circumstance this can happen
-        case Cvatlib_Network::error_NoWeather:              break; //TODO ask Gary to explain meaning
         case Cvatlib_Network::error_ProtoVersion:           qCritical() << "This server uses an unsupported protocol version"; break;
-        case Cvatlib_Network::error_LevelTooHigh:           qCritical() << "You are not authorized to use the requested pilot rating"; break; //TODO ask Gary to confirm meaning
+        case Cvatlib_Network::error_LevelTooHigh:           qCritical() << "You are not authorized to use the requested pilot rating"; break;
         case Cvatlib_Network::error_ServerFull:             qCritical() << "The server is full"; break;
         case Cvatlib_Network::error_CIDSuspended:           qCritical() << "Your user account is suspended"; break;
-        case Cvatlib_Network::error_InvalidControl:         break; //TODO ask Gary to explain meaning
         case Cvatlib_Network::error_InvalidPosition:        qCritical() << "You are not authorized to use the requested pilot rating"; break;
         case Cvatlib_Network::error_SoftwareNotAuthorized:  qCritical() << "This client software has not been authorized for use on this network"; break;
-        default:                                            assert(false); qWarning() << "VATSIM shim library: " << cbvar_cast(cbvar)->fromFSD(msg) << "(error " << type << ")"; break;
+
+        case Cvatlib_Network::error_Syntax:                 qWarning() << "Malformed packet: Syntax error: %s" << cbvar_cast(cbvar)->fromFSD(data); break;
+        case Cvatlib_Network::error_SourceInvalid:          qDebug() << "Server: source invalid (" << cbvar_cast(cbvar)->fromFSD(data); break;
+        case Cvatlib_Network::error_CallsignNotExists:      qDebug() << "Shim lib: " << cbvar_cast(cbvar)->fromFSD(msg) << " (" << cbvar_cast(cbvar)->fromFSD(data) << ")"; break;
+        case Cvatlib_Network::error_NoFP:                   qDebug() << "Server: no flight plan"; break;
+        case Cvatlib_Network::error_NoWeather:              qDebug() << "Server: requested weather profile does not exist"; break;
+
+            // we have no idea what these mean
+        case Cvatlib_Network::error_Registered:
+        case Cvatlib_Network::error_InvalidControl:         qWarning() << "Server: " << cbvar_cast(cbvar)->fromFSD(msg); break;
+
+        default:                                            qFatal("VATSIM shim library: %s (error %d)", cbvar_cast(cbvar)->fromFSD(msg), type); break;
         }
     }
 
