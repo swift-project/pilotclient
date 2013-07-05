@@ -195,7 +195,7 @@ namespace BlackCore
     {
         try
         {
-            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_IP, ""/*TODO ask Gary*/);
+            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_IP, "SERVER");
         }
         catch (...) { exceptionDispatcher(); }
     }
@@ -240,7 +240,10 @@ namespace BlackCore
     {
         try
         {
-            m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Freq, toFSD(callsign), toFSD(""/*TODO*/));
+            CFrequency freqCopy = freq;
+            freqCopy.switchUnit(CFrequencyUnit::MHz());
+
+            m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Freq, toFSD(callsign), toFSD(freqCopy.unitValueToQStringRounded(6)));
         }
         catch (...) { exceptionDispatcher(); }
     }
@@ -409,11 +412,11 @@ namespace BlackCore
     {
         switch (type)
         {
-        case Cvatlib_Network::infoQuery_Freq:   emit cbvar_cast(cbvar)->freqQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(0/*TODO ask Gary*/, CFrequencyUnit::kHz())); break;
+        case Cvatlib_Network::infoQuery_Freq:   emit cbvar_cast(cbvar)->freqQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
         case Cvatlib_Network::infoQuery_Server: emit cbvar_cast(cbvar)->serverQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-        case Cvatlib_Network::infoQuery_ATC:    emit cbvar_cast(cbvar)->atcQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), *data == 'Y'); break; //TODO ask Gary
+        case Cvatlib_Network::infoQuery_ATC:    emit cbvar_cast(cbvar)->atcQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(data2), *data == 'Y'); break;
         case Cvatlib_Network::infoQuery_Name:   emit cbvar_cast(cbvar)->nameQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-        case Cvatlib_Network::infoQuery_IP:     emit cbvar_cast(cbvar)->ipQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break; //TODO ask Gary can this refer to another pilot?
+        case Cvatlib_Network::infoQuery_IP:     emit cbvar_cast(cbvar)->ipQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
         }
     }
 
