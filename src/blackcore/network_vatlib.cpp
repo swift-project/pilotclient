@@ -6,6 +6,17 @@
 #include "network_vatlib.h"
 #include <vector>
 #include <exception>
+#include <type_traits>
+
+static_assert(! std::is_abstract<BlackCore::NetworkVatlib>::value, "Must implement all pure virtuals");
+
+//TODO just placeholders to allow this to compile
+#define CLIENT_NAME_VERSION "BlackBox 0.1"
+#define CLIENT_VERSION_MAJOR 0
+#define CLIENT_VERSION_MINOR 1
+#define CLIENT_SIMULATOR_NAME "None"
+#define CLIENT_PUBLIC_ID 0
+#define CLIENT_PRIVATE_KEY ""
 
 namespace BlackCore
 {
@@ -152,7 +163,7 @@ namespace BlackCore
     {
         try
         {
-            m_net->LogoffAndDisconnect(c_logoffTimeoutSeconds); //TODO ask Gary will this block?
+            m_net->LogoffAndDisconnect(c_logoffTimeoutSeconds);
         }
         catch (...) { exceptionDispatcher(); }
     }
@@ -176,6 +187,69 @@ namespace BlackCore
                 freqsVec.push_back(freqs[i].value(CFrequencyUnit::kHz()));
             }
             m_net->SendRadioTextMessage(freqsVec.size(), freqsVec.data(), toFSD(msg));
+        }
+        catch (...) { exceptionDispatcher(); }
+    }
+
+    void NetworkVatlib::sendIpQuery()
+    {
+        try
+        {
+            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_IP, ""/*TODO ask Gary*/);
+        }
+        catch (...) { exceptionDispatcher(); }
+    }
+
+    void NetworkVatlib::sendFreqQuery(const QString& callsign)
+    {
+        try
+        {
+            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_Freq, toFSD(callsign));
+        }
+        catch (...) { exceptionDispatcher(); }
+    }
+
+    void NetworkVatlib::sendServerQuery(const QString& callsign)
+    {
+        try
+        {
+            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_Server, toFSD(callsign));
+        }
+        catch (...) { exceptionDispatcher(); }
+    }
+
+    void NetworkVatlib::sendAtcQuery(const QString& callsign)
+    {
+        try
+        {
+            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_ATC, toFSD(callsign));
+        }
+        catch (...) { exceptionDispatcher(); }
+    }
+
+    void NetworkVatlib::sendNameQuery(const QString& callsign)
+    {
+        try
+        {
+            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_Name, toFSD(callsign));
+        }
+        catch (...) { exceptionDispatcher(); }
+    }
+
+    void NetworkVatlib::replyToFreqQuery(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq)
+    {
+        try
+        {
+            m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Freq, toFSD(callsign), toFSD(""/*TODO*/));
+        }
+        catch (...) { exceptionDispatcher(); }
+    }
+
+    void NetworkVatlib::replyToNameQuery(const QString& callsign, const QString& realname)
+    {
+        try
+        {
+            m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Name, toFSD(callsign), toFSD(realname));
         }
         catch (...) { exceptionDispatcher(); }
     }
@@ -314,7 +388,7 @@ namespace BlackCore
 
     void NetworkVatlib::onPong(Cvatlib_Network*, const char* callsign, INT elapsedTime, void* cbvar)
     {
-        emit cbvar_cast(cbvar)->pong(cbvar_cast(cbvar)->fromFSD(callsign), CTime(elapsedTime, CTimeUnit::ms())); //TODO ask Gary to confirm time unit
+        emit cbvar_cast(cbvar)->pong(cbvar_cast(cbvar)->fromFSD(callsign), CTime(elapsedTime, CTimeUnit::s()));
     }
 
     void NetworkVatlib::onMetarReceived(Cvatlib_Network*, const char* data, void* cbvar)
@@ -322,13 +396,12 @@ namespace BlackCore
         emit cbvar_cast(cbvar)->metarReceived(cbvar_cast(cbvar)->fromFSD(data));
     }
 
-    void NetworkVatlib::onInfoQueryRequestReceived(Cvatlib_Network*, const char* callsign, Cvatlib_Network::infoQuery type, const char* data, void* cbvar)
+    void NetworkVatlib::onInfoQueryRequestReceived(Cvatlib_Network*, const char* callsign, Cvatlib_Network::infoQuery type, const char*, void* cbvar)
     {
         switch (type)
         {
-        case Cvatlib_Network::infoQuery_FP:     emit cbvar_cast(cbvar)->fpQueryRequestReceived(cbvar_cast(cbvar)->fromFSD(callsign)); break;
         case Cvatlib_Network::infoQuery_Freq:   emit cbvar_cast(cbvar)->freqQueryRequestReceived(cbvar_cast(cbvar)->fromFSD(callsign)); break;
-            //TODO ask Gary whether we need to reply to UserInfo, Server, Name, Capabilities, or IP queries
+        case Cvatlib_Network::infoQuery_Name:   emit cbvar_cast(cbvar)->nameQueryRequestReceived(cbvar_cast(cbvar)->fromFSD(callsign)); break;
         }
     }
 
@@ -336,10 +409,11 @@ namespace BlackCore
     {
         switch (type)
         {
-        case Cvatlib_Network::infoQuery_ATIS:           break; //TODO ask Gary do we handle this here or in onAtisReplyReceived or both?
-        case Cvatlib_Network::infoQuery_Name:           break; //TODO ask Gary what are the meanings of data and data2 in this context?
-        case Cvatlib_Network::infoQuery_Capabilities:   break; //TODO ask Gary do we handle this here or in onCapabilitiesReplyReceived or both?
-        case Cvatlib_Network::infoQuery_IP:             emit cbvar_cast(cbvar)->ipQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
+        case Cvatlib_Network::infoQuery_Freq:   emit cbvar_cast(cbvar)->freqQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(0/*TODO ask Gary*/, CFrequencyUnit::kHz())); break;
+        case Cvatlib_Network::infoQuery_Server: emit cbvar_cast(cbvar)->serverQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case Cvatlib_Network::infoQuery_ATC:    emit cbvar_cast(cbvar)->atcQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), *data == 'Y'); break; //TODO ask Gary
+        case Cvatlib_Network::infoQuery_Name:   emit cbvar_cast(cbvar)->nameQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case Cvatlib_Network::infoQuery_IP:     emit cbvar_cast(cbvar)->ipQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break; //TODO ask Gary can this refer to another pilot?
         }
     }
 
@@ -348,7 +422,7 @@ namespace BlackCore
         //TODO
     }
 
-    void NetworkVatlib::onAtisReplyReceived(Cvatlib_Network*, const char* callsign, Cvatlib_Network::atisLineType type, const char* data, void* cbvar)
+    void NetworkVatlib::onAtisReplyReceived(Cvatlib_Network*, const char* callsign, Cvatlib_Network::atisLineType, const char* data, void* cbvar)
     {
         emit cbvar_cast(cbvar)->atisReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data));
     }

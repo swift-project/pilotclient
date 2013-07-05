@@ -37,6 +37,13 @@ namespace BlackCore
         virtual void terminateConnection();
         virtual void sendPrivateTextMessage(const QString& callsign, const QString& msg);
         virtual void sendRadioTextMessage(const QVector<BlackMisc::PhysicalQuantities::CFrequency>& freqs, const QString& msg);
+        virtual void sendIpQuery();
+        virtual void sendFreqQuery(const QString& callsign);
+        virtual void sendServerQuery(const QString& callsign);
+        virtual void sendAtcQuery(const QString& callsign);
+        virtual void sendNameQuery(const QString& callsign);
+        virtual void replyToFreqQuery(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq);
+        virtual void replyToNameQuery(const QString& callsign, const QString& realname);
         virtual void requestPlaneInfo(const QString& callsign);
         virtual void sendPlaneInfo(const QString& callsign, const QString& acTypeICAO, const QString& airlineICAO, const QString& livery);
         virtual void ping(const QString& callsign);

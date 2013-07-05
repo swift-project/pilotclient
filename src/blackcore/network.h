@@ -26,6 +26,9 @@ namespace BlackCore
     {
         Q_OBJECT;
 
+    public:
+        virtual ~INetwork() {}
+
     public slots:
         virtual void setServerDetails(const QString& hostname, quint16 port) = 0;
         virtual void setUserCredentials(const QString& username, const QString& password) = 0;
@@ -33,8 +36,13 @@ namespace BlackCore
         virtual void terminateConnection() = 0;
         virtual void sendPrivateTextMessage(const QString& callsign, const QString& msg) = 0;
         virtual void sendRadioTextMessage(const QVector<BlackMisc::PhysicalQuantities::CFrequency>& freqs, const QString& msg) = 0;
-        //TODO virtual void sendInfoQuery(...) = 0;
-        //TODO virtual void replyToInfoQuery(...) = 0;
+        virtual void sendIpQuery() = 0;
+        virtual void sendFreqQuery(const QString& callsign) = 0;
+        virtual void sendServerQuery(const QString& callsign) = 0;
+        virtual void sendAtcQuery(const QString& callsign) = 0;
+        virtual void sendNameQuery(const QString& callsign) = 0;
+        virtual void replyToFreqQuery(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq) = 0;
+        virtual void replyToNameQuery(const QString& callsign, const QString& realname) = 0;
         virtual void requestPlaneInfo(const QString& callsign) = 0;
         //TODO virtual void setPlanePosition(...) = 0;
         //TODO virtual void sendFlightPlan(...) = 0;
@@ -58,8 +66,12 @@ namespace BlackCore
         //TODO void nameQueryReplyReceived(const QString& callsign, const QString& name);
         //TODO void capabilitiesQueryReplyReceived(...);
         void ipQueryReplyReceived(const QString& ip);
-        void fpQueryRequestReceived(const QString& callsign);
+        void freqQueryReplyReceived(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq);
+        void serverQueryReplyReceived(const QString& callsign, const QString& hostname);
+        void atcQueryReplyReceived(const QString& callsign, bool isATC);
+        void nameQueryReplyReceived(const QString& callsign, const QString& realname);
         void freqQueryRequestReceived(const QString& callsign);
+        void nameQueryRequestReceived(const QString& callsign);
         //TODO void interimPilotPositionUpdate(...);
         void kicked(const QString& msg);
         void metarReceived(const QString& data);
