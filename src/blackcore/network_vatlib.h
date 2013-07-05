@@ -14,6 +14,7 @@
 #include "../../vatlib/vatlib.h"
 #include <QScopedPointer>
 #include <QBasicTimer>
+#include <QTextCodec>
 
 namespace BlackCore
 {
@@ -68,6 +69,9 @@ namespace BlackCore
     private:
         void exceptionDispatcher();
 
+        QByteArray toFSD(QString qstr) const;
+        QString fromFSD(const char* cstr) const;
+
     private:
         QScopedPointer<Cvatlib_Network> m_net;
 
@@ -79,6 +83,8 @@ namespace BlackCore
         quint16 m_serverPort;
         QString m_username;
         QString m_password;
+
+        QTextCodec* m_fsdTextCodec;
     };
 
 } //namespace BlackCore
