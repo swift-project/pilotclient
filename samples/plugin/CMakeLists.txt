@@ -1,6 +1,9 @@
 FILE(GLOB SRC *.cpp)
+SET(HEADERS server.h)
 
-ADD_LIBRARY(sample_plugin MODULE ${SRC})
+QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
+
+ADD_LIBRARY(sample_plugin MODULE ${SRC} ${HEADERS_MOC})
 
 TARGET_LINK_LIBRARIES(sample_plugin blackmisc ${QT_LIBRARIES})
 SET_TARGET_PROPERTIES(sample_plugin PROPERTIES PROJECT_LABEL "Samples - Plugin")

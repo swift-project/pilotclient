@@ -9,6 +9,7 @@ DEPENDPATH += . ../../src
 INCLUDEPATH += . ../../src
 
 SOURCES += *.cpp
+HEADERS += *.h
 
 LIBS    += -L../../lib -lblackmisc
 
