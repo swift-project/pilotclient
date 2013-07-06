@@ -25,6 +25,7 @@ private:
     BlackMisc::IContext &m_context;
 };
 
+// This needs to be in the header so that Qt's "moc" processor can see it.
 class CPluginFactory : public QObject, public BlackMisc::IPluginFactory
 {
     Q_OBJECT
