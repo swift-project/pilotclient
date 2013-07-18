@@ -8,6 +8,7 @@
 #include "blackmisc/context.h"
 #include <QDirIterator>
 #include <iostream>
+#include <stdexcept>
 
 namespace BlackCore
 {
@@ -41,7 +42,7 @@ namespace BlackCore
             {
                 if (! loader->load())
                 {
-                    throw;
+                    throw std::runtime_error(QString("Failed loading plugin from %1").arg(filename).toStdString());
                 }
 
                 PluginEntry entry;
@@ -50,14 +51,14 @@ namespace BlackCore
 
                 if (! entry.factory)
                 {
-                    throw;
+                    throw std::runtime_error(QString("Plugin loaded from %1 is not compatible").arg(filename).toStdString());
                 }
 
                 m_plugins.push_back(entry);
             }
             catch (...)
             {
-                //TODO warning
+                //TODO warning?
             }
         }
     }
