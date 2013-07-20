@@ -9,7 +9,8 @@ Server::Server(QObject *parent) : QObject(parent), server(IContext::getInstance(
 
     server.Host(local, 6809);
 
-    connect(&server, SIGNAL(doMessageReceived(QString &, QByteArray&)), this, SLOT(onData(QString &, QByteArray&)));
+    connect(&server, static_cast<void (BlackMisc::CComServer::*)(QString &, QByteArray &)>(&BlackMisc::CComServer::doMessageReceived),
+            this,    &Server::onData);
 
     CMessageSystem myMessageSystem;
 

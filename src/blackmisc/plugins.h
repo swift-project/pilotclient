@@ -87,51 +87,6 @@ namespace BlackMisc
         virtual const char *getDescription() const = 0;
     };
 
-} //namespace BlackMisc
-
-// must be placed outside namespace and before CPluginFactoryBase
-Q_DECLARE_INTERFACE(BlackMisc::IPluginFactory, "net.vatsim.client.BlackMisc.IPluginFactory")
-
-namespace BlackMisc
-{
-
-    /*!
-        Base class for CPluginFactory template used by MAKE_BLACK_PLUGIN.
-    */
-    class CPluginFactoryBase : public QObject, public IPluginFactory
-    {
-        Q_OBJECT
-        Q_INTERFACES(BlackMisc::IPluginFactory)
-    };
-
-    /*!
-        Template used by MAKE_BLACK_PLUGIN.
-    */
-    template <class P>
-    class CPluginFactory : public CPluginFactoryBase
-    {
-    public:
-        IPlugin *create(IContext &context) { return new P(*this, context); }
-
-        void destroy(IPlugin *plugin) { if (plugin) delete plugin; }
-    };
-
-    /*!
-        Simplifies the process of building a plugin.
-        Put this macro somewhere in one of your plugin's .cpp files (but not in a namespace)
-        to export the necessary factory class for your plugin.
-        FQCLASS must have a constructor with the signature (IPluginFactory&, IContext&).
-        \param NAME A short name for your plugin with no spaces (a bareword, not a string).
-        \param FQCLASS The fully qualified name of the IPlugin subclass that the factory will construct.
-    */
-    #define MAKE_BLACK_PLUGIN(NAME, FQCLASS, DESCR) \
-        class CPluginFactory_##NAME : public BlackMisc::CPluginFactory<FQCLASS> \
-        { \
-            const char *getName() const { return #NAME ; } \
-            const char *getDescription() const { return DESCR; } \
-        }; \
-        Q_EXPORT_PLUGIN2(NAME, CPluginFactory_##NAME )
-
     /*!
         Custom deleter for QScopedPointer.
     */
@@ -146,5 +101,23 @@ namespace BlackMisc
     };
 
 } //namespace BlackMisc
+
+//! Qt interface ID for IPluginFactory.
+#define BLACKMISC_IPLUGINFACTORY_IID "net.vatsim.client.BlackMisc.IPluginFactory"
+
+Q_DECLARE_INTERFACE(BlackMisc::IPluginFactory, BLACKMISC_IPLUGINFACTORY_IID)
+
+/*!
+    Macro to put inside an IPluginFactory subclass to help with implementation.
+    \param CLASS The plugin class which this factory constructs.
+    \param NAME A string literal, the plugin's short name.
+    \param DESCRIPTION A string literal, a brief description of the plugin.
+*/
+#define BLACKMISC_IMPLEMENT_IPLUGINFACTORY(CLASS, NAME, DESCRIPTION) \
+    public: \
+    BlackMisc::IPlugin *create(BlackMisc::IContext &context) { return new CLASS(*this, context); } \
+    void destroy(BlackMisc::IPlugin *plugin) { if (plugin) delete plugin; } \
+    const char *getName() const { return NAME; } \
+    const char *getDescription() const { return DESCRIPTION; }
 
 #endif //BLACKMISC_PLUGINS_H

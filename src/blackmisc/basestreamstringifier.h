@@ -4,6 +4,7 @@
 #include "blackmisc/debug.h"
 #include <QString>
 #include <QtGlobal>
+#include <QDataStream>
 #include <QDebug>
 #include <iostream>
 

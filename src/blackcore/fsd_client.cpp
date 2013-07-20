@@ -129,7 +129,7 @@ namespace FSD
 
 		qint64 message_size = message.size();
 
-		qint64 bytes = m_tcp_socket->write(message.toAscii());
+        qint64 bytes = m_tcp_socket->write(message.toLatin1());
 		if (bytes < 0 || bytes != message_size)
 		{
 			bWarning(m_context) << "Error writing to socket!";

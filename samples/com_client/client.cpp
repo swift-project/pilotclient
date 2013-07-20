@@ -6,8 +6,10 @@ using namespace BlackMisc;
 
 Client::Client(QObject *parent) : QObject(parent), comclient(IContext::getInstance())
 {
-    connect(&comclient, SIGNAL(doError(QAbstractSocket::SocketError,QString)), this, SLOT(onError(QAbstractSocket::SocketError,QString)));
-    connect(&comclient, SIGNAL(doConnected()), this, SLOT(onClientConnected()));
+    connect(&comclient, &BlackMisc::CComClient::doError,
+            this, &Client::onError);
+    connect(&comclient, &BlackMisc::CComClient::doConnected,
+            this, &Client::onClientConnected);
 
     QString address = "127.0.0.1";
     comclient.connectTo(address, 6809);

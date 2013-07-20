@@ -3,27 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "blackmisc/plugins.h"
+#include "plugin.h"
 #include <iostream>
-
-class CPlugin : public BlackMisc::IPlugin
-{
-public:
-    CPlugin(BlackMisc::IPluginFactory &factory, BlackMisc::IContext &context);
-
-    virtual ~CPlugin();
-
-    virtual bool isValid() const { return m_ctorOK; }
-
-    virtual BlackMisc::IPluginFactory &getFactory() { return m_factory; }
-
-private:
-    bool m_ctorOK;
-    BlackMisc::IPluginFactory &m_factory;
-    BlackMisc::IContext &m_context;
-};
-
-MAKE_BLACK_PLUGIN(sample_plugin, CPlugin, "An example minimal plugin")
 
 CPlugin::CPlugin(BlackMisc::IPluginFactory &factory, BlackMisc::IContext &context)
 : m_ctorOK(false),
