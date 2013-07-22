@@ -5,6 +5,8 @@
 
 #ifndef BLACKMISC_AVIOMODULATORUNIT_H
 #define BLACKMISC_AVIOMODULATORUNIT_H
+
+#include <QDBusArgument>
 #include "blackmisc/aviobase.h"
 
 namespace BlackMisc
@@ -52,7 +54,12 @@ protected:
      * \brief String for converter
      * \return
      */
-    virtual QString stringForConverter() const;
+    virtual QString stringForConverter() const  {
+        QString s(this->getName());
+        s.append(" Active: ").append(this->m_frequencyActive.unitValueRoundedWithUnit(3));
+        s.append(" Standby: ").append(this->m_frequencyStandby.unitValueRoundedWithUnit(3));
+        return s;
+    }
 
     /*!
      * \brief Set active frequency
@@ -253,6 +260,48 @@ public:
     void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
     {
         this->m_frequencyStandby = frequency;
+    }
+
+    /*!
+     * \brief Unmarshalling operator >>, DBus to object
+     * \param argument
+     * \param aviationUnit
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, AVIO &aviationUnit) {
+        argument.beginStructure();
+        argument >> aviationUnit.m_frequencyActive;
+        argument >> aviationUnit.m_frequencyStandby;
+        argument >> aviationUnit.m_digits;
+        argument >> aviationUnit.m_name;
+        argument.endStructure();
+        return argument;
+    }
+
+    /*!
+     * \brief Marshalling operator <<, object to DBus
+     * \param argument
+     * \param aviationUnit
+     * \return
+     */
+    friend QDBusArgument &operator<<(QDBusArgument &argument, const AVIO& aviationUnit)
+    {
+        argument.beginStructure();
+        argument << aviationUnit.m_frequencyActive;
+        argument << aviationUnit.m_frequencyStandby;
+        argument << aviationUnit.m_digits;
+        argument << aviationUnit.m_name;
+        argument.endStructure();
+        return argument;
+    }
+
+    /*!
+     * \brief Register metadata
+     */
+    static void registerMetadata()
+    {
+        qRegisterMetaType<AVIO>(typeid(AVIO).name());
+        qDBusRegisterMetaType<AVIO>();
     }
 };
 

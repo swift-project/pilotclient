@@ -1,5 +1,5 @@
 # GUI is required for the matrix classes
-QT       += network
+QT       += network dbus
 
 TARGET = blackcore
 TEMPLATE = lib

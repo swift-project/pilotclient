@@ -23,7 +23,7 @@ class CBaseStreamStringifier
      */
     friend QDebug operator<<(QDebug debug, const CBaseStreamStringifier &uc)
     {
-        const CBaseStreamStringifier &sf = uc; // allows to acces protected method
+        const CBaseStreamStringifier &sf = uc; // allows to access protected method
         debug << sf.stringForStreaming();
         return debug;
     }

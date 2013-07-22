@@ -18,15 +18,16 @@ namespace PhysicalQuantities
  */
 class CSpeed : public CPhysicalQuantity<CSpeedUnit, CSpeed>
 {
+
 public:
     /*!
      * \brief Default constructor
      */
     CSpeed() : CPhysicalQuantity(0, CSpeedUnit::m_s(), CSpeedUnit::m_s()) {}
-    /**
+    /*!
      *\brief Copy constructor
      */
-    CSpeed(const CPhysicalQuantity &speed): CPhysicalQuantity(speed) {}
+    CSpeed(const CSpeed &speed): CPhysicalQuantity(speed) {}
     /*!
      * \brief Init by int value
      * \param value
@@ -44,7 +45,10 @@ public:
      */
     virtual ~CSpeed() {}
 };
+
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeed)
 
 #endif // BLACKMISC_CSPEED_H

@@ -273,5 +273,6 @@ public:
 
 } // namespace
 } // namespace
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CNavSystem)
 
 #endif // BLACKMISC_AVIONAVSYSTEM_H

@@ -48,4 +48,6 @@ public:
 } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTime)
+
 #endif // BLACKMISC_PQTIME_H

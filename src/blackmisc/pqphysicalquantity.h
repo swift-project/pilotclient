@@ -10,6 +10,7 @@
 #include "blackmisc/pqbase.h"
 #include "blackmisc/pqunits.h"
 #include "blackmisc/debug.h"
+#include <QDBusMetaType>
 #include <QtGlobal>
 #include <QString>
 #include <QLocale>
@@ -21,8 +22,10 @@ namespace PhysicalQuantities
 /*!
  * \brief A physical quantity such as "5m", "20s", "1500ft/s"
  */
+
 template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CBaseStreamStringifier
 {
+
 private:
     double m_unitValueD; //!< value backed by double
     qint32 m_unitValueI; //!< value backed by integer, allows sole integer arithmetic
@@ -236,7 +239,7 @@ public:
     qint32 convertedSiValueToInteger() const
     {
         return static_cast<qint32>(
-                   BlackMisc::Math::CMath::round(this->m_convertedSiUnitValueD, 0));
+                    BlackMisc::Math::CMath::round(this->m_convertedSiUnitValueD, 0));
     }
 
     /*!
@@ -417,6 +420,55 @@ public:
     {
         return this->isZeroEpsilon() || this->m_unitValueD < 0;
     }
+
+    /*!
+     * \brief Unmarshalling operator >>, DBus to object
+     * \param argument
+     * \param pq
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, PQ &pq) {
+        argument.beginStructure();
+        argument >> pq.m_unitValueD;
+        argument >> pq.m_unitValueI;
+        argument >> pq.m_convertedSiUnitValueD;
+        argument >> pq.m_isIntegerBaseValue;
+        argument >> pq.m_unit;
+        argument >> pq.m_conversionSiUnit;
+        argument.endStructure();
+        return argument;
+    }
+
+    /*!
+     * \brief Marshalling operator <<, object to DBus
+     * \param argument
+     * \param pq
+     * \return
+     */
+    friend QDBusArgument &operator<<(QDBusArgument &argument, const PQ& pq)
+    {
+        argument.beginStructure();
+        argument << pq.m_unitValueD;
+        argument << pq.m_unitValueI;
+        argument << pq.m_convertedSiUnitValueD;
+        argument << pq.m_isIntegerBaseValue;
+        argument << pq.m_unit;
+        argument << pq.m_conversionSiUnit;
+        argument.endStructure();
+        return argument;
+    }
+
+    /*!
+     * \brief Register metadata of unit and quantity
+     */
+    static void registerMetadata()
+    {
+        qRegisterMetaType<MU>(typeid(MU).name());
+        qDBusRegisterMetaType<MU>();
+        qRegisterMetaType<PQ>(typeid(PQ).name());
+        qDBusRegisterMetaType<PQ>();
+    }
+
 };
 
 } // namespace

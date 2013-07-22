@@ -26,17 +26,6 @@ template <class AVIO> void CModulator<AVIO>::toggleActiveStandby()
 }
 
 /*
- * String representation
- */
-template <class AVIO> QString CModulator<AVIO>::stringForConverter() const
-{
-    QString s(this->getName());
-    s.append(" Active: ").append(this->m_frequencyActive.unitValueRoundedWithUnit(3));
-    s.append(" Standby: ").append(this->m_frequencyStandby.unitValueRoundedWithUnit(3));
-    return s;
-}
-
-/*
  * Assigment operator =
  */
 template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModulator<AVIO> &otherModulator)

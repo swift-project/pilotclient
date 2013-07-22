@@ -46,4 +46,7 @@ public:
 };
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequency)
+
 #endif // BLACKMISC_PQFREQUENCY_H

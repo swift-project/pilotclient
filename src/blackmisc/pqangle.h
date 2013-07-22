@@ -69,4 +69,6 @@ public:
 } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAngle)
+
 #endif // BLACKMISC_PQANGLE_H

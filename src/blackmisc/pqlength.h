@@ -46,4 +46,7 @@ public:
 };
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLength)
+
 #endif // BLACKMISC_PQLENGTH_H

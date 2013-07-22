@@ -16,6 +16,7 @@ WITH_SAMPLES = ON
 
 equals(WITH_BLACKMISC, ON) {
     SUBDIRS += src/blackmisc
+    SUBDIRS += src/blackmisc_cpp2xml
 }
 
 equals(WITH_BLACKCORE, ON) {
@@ -50,8 +51,10 @@ equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/logging/sample_logging.pro
     SUBDIRS += samples/plugin/sample_plugin.pro
     SUBDIRS += samples/pluginmgr/sample_pluginmgr.pro
-    SUBDIRS += samples/blackmiscquantities/sample_quantities_avionics.pro
     SUBDIRS += samples/blackmiscvectorgeo/sample_vector_geo.pro
+    SUBDIRS += samples/blackmiscquantities/sample_quantities_avionics.pro
+    SUBDIRS += samples/blackmiscquantities_dbus/sample_quantities_avionics_dbus.pro
+    SUBDIRS +=
 }
 
 equals(WITH_UNITTESTS, ON) {

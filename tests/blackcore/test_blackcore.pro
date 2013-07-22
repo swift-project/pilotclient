@@ -1,4 +1,4 @@
-QT       += core testlib
+QT       += core testlib dbus
 
 TARGET = test_blackcore
 TEMPLATE = app

@@ -1,4 +1,4 @@
-QT       += core
+QT       += core dbus
 
 TARGET = sample_interpolator
 CONFIG   += console

@@ -7,7 +7,10 @@
 #define BLACKMISC_PQUNITS_H
 
 #include "blackmisc/pqbase.h"
+#include <QDBusArgument>
+#include <QList>
 #include <QtCore/qmath.h>
+
 
 //
 // Used with the template for quantities. This is the reason for
@@ -25,7 +28,7 @@ class CLengthUnit : public CMeasurementUnit
 {
 private:
     /*!
-     * \brief Constructor Distance unit
+     * \brief Constructor length unit
      * \param name
      * \param unitName
      * \param isSiUnit
@@ -41,6 +44,11 @@ private:
         // void
     }
 public:
+    /*!
+     * Default constructor, we do not want this, but required for Qt Metasystem
+     */
+    CLengthUnit() : CMeasurementUnit("meter", "m", "distance", true, true) {}
+
     /*!
      * \brief Copy constructor
      * \param otherUnit
@@ -120,7 +128,51 @@ public:
         return mi;
     }
 
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CLengthUnit> &units()
+    {
+        static QList<CLengthUnit> u;
+        u.append(CLengthUnit::cm());
+        u.append(CLengthUnit::ft());
+        u.append(CLengthUnit::km());
+        u.append(CLengthUnit::m());
+        u.append(CLengthUnit::mi());
+        u.append(CLengthUnit::miStatute());
+        u.append(CLengthUnit::NM());
+        return u;
+    }
+
+    /*!
+     * \brief Unit from name
+     * \param unitName must be valid!
+     * \return
+     */
+    static const CLengthUnit &fromUnitName(const QString &unitName) {
+        QList<CLengthUnit> units = CLengthUnit::units();
+        // read only, avoid deep copy
+        for (int i = 0; i < units.size(); ++i) {
+            if (units.at(i).getUnitName() == unitName) return (units.at(i));
+        }
+        qFatal("Illegal unit name");
+        return CLengthUnit::m(); // just suppress "not all control paths return a value"
+    }
+
+    /*!
+     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \param argument
+     * \param dummy
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CLengthUnit &unit) {
+        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
+        unit = CLengthUnit::fromUnitName(unitName);
+        return argument;
+    }
 };
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLengthUnit)
 
 /*!
  * \brief Specialized class for angles (degrees, radian).
@@ -160,6 +212,11 @@ private:
     static double conversionSexagesimalFromSi(const CMeasurementUnit &angleUnit, double value);
 
 public:
+    /*!
+     * Default constructor, we do not want this, but required for Qt Metasystem
+     */
+    CAngleUnit() : CMeasurementUnit("radian", "rad", "angle", true, false) {}
+
     /*!
      * \brief Copy constructor
      * \param otherUnit
@@ -203,7 +260,48 @@ public:
         static CAngleUnit deg("segadecimal degree", "°", false, M_PI / 180,
                               CMeasurementPrefix::One(), 0, 1E-9, CAngleUnit::conversionSexagesimalToSi, CAngleUnit::conversionSexagesimalFromSi); return deg;
     }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CAngleUnit> &units()
+    {
+        static QList<CAngleUnit> u;
+        u.append(CAngleUnit::deg());
+        u.append(CAngleUnit::rad());
+        u.append(CAngleUnit::sexagesimalDeg());
+        return u;
+    }
+
+    /*!
+     * \brief Unit from name
+     * \param unitName must be valid!
+     * \return
+     */
+    static const CAngleUnit &fromUnitName(const QString &unitName) {
+        QList<CAngleUnit> units = CAngleUnit::units();
+        // read only, avoid deep copy
+        for (int i = 0; i < units.size(); ++i) {
+            if (units.at(i).getUnitName() == unitName) return (units.at(i));
+        }
+        qFatal("Illegal unit name");
+        return CAngleUnit::rad(); // just suppress "not all control paths return a value"
+    }
+
+    /*!
+     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \param argument
+     * \param dummy
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CAngleUnit &unit) {
+        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
+        unit = CAngleUnit::fromUnitName(unitName);
+        return argument;
+    }
 };
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAngleUnit)
 
 /*!
  * \brief Specialized class for frequency (hertz, mega hertz, kilo hertz).
@@ -225,6 +323,11 @@ private:
     CFrequencyUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "frequency", isSiUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
+    /*!
+     * Default constructor, we do not want this, but required for Qt Metasystem
+     */
+    CFrequencyUnit() : CMeasurementUnit("hertz", "Hz", "frequency", true, false) {}
+
     /*!
      * \brief Copy constructor
      * \param otherUnit
@@ -273,7 +376,49 @@ public:
         static CFrequencyUnit GHz("gigahertz", "GHz", true, CMeasurementPrefix::G().getFactor(), CMeasurementPrefix::G(), 2);
         return GHz;
     }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CFrequencyUnit> &units()
+    {
+        static QList<CFrequencyUnit> u;
+        u.append(CFrequencyUnit::GHz());
+        u.append(CFrequencyUnit::Hz());
+        u.append(CFrequencyUnit::kHz());
+        u.append(CFrequencyUnit::MHz());
+        return u;
+    }
+
+    /*!
+     * \brief Unit from name
+     * \param unitName must be valid!
+     * \return
+     */
+    static const CFrequencyUnit &fromUnitName(const QString &unitName) {
+        QList<CFrequencyUnit> units = CFrequencyUnit::units();
+        // read only, avoid deep copy
+        for (int i = 0; i < units.size(); ++i) {
+            if (units.at(i).getUnitName() == unitName) return (units.at(i));
+        }
+        qFatal("Illegal unit name");
+        return CFrequencyUnit::Hz(); // just suppress "not all control paths return a value"
+    }
+
+    /*!
+     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \param argument
+     * \param dummy
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CFrequencyUnit &unit) {
+        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
+        unit = CFrequencyUnit::fromUnitName(unitName);
+        return argument;
+    }
 };
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequencyUnit)
 
 /*!
  * \brief Specialized class for mass units (kg, lbs).
@@ -295,6 +440,11 @@ private:
     CMassUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "mass", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
+    /*!
+     * Default constructor, we do not want this, but required for Qt Metasystem
+     */
+    CMassUnit() : CMeasurementUnit("kilogram", "kg", "mass", true, true, 1.0, CMeasurementPrefix::k(), 1) {}
+
     /*!
      * \brief Copy constructor
      * \param otherUnit
@@ -343,7 +493,50 @@ public:
         static CMassUnit lbs("pound", "lb", false, false, 0.45359237, CMeasurementPrefix::One(), 1);
         return lbs;
     }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CMassUnit> &units()
+    {
+        static QList<CMassUnit> u;
+        u.append(CMassUnit::g());
+        u.append(CMassUnit::kg());
+        u.append(CMassUnit::lb());
+        u.append(CMassUnit::t());
+        return u;
+    }
+
+    /*!
+     * \brief Unit from name
+     * \param unitName must be valid!
+     * \return
+     */
+    static const CMassUnit &fromUnitName(const QString &unitName) {
+        QList<CMassUnit> units = CMassUnit::units();
+        // read only, avoid deep copy
+        for (int i = 0; i < units.size(); ++i) {
+            if (units.at(i).getUnitName() == unitName) return (units.at(i));
+        }
+        qFatal("Illegal unit name");
+        return CMassUnit::kg(); // just suppress "not all control paths return a value"
+    }
+
+    /*!
+     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \param argument
+     * \param dummy
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CMassUnit &unit) {
+        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
+        unit = CMassUnit::fromUnitName(unitName);
+        return argument;
+    }
+
 };
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMassUnit)
 
 /*!
  * \brief Specialized class for pressure (psi, hPa, bar).
@@ -363,8 +556,13 @@ private:
      * \param epsilon
      */
     CPressureUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "frequency", isSiUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+        CMeasurementUnit(name, unitName, "pressure", isSiUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
+    /*!
+     * Default constructor, we do not want this, but required for Qt Metasystem
+     */
+    CPressureUnit() : CMeasurementUnit("pascal", "Pa", "pressure", true, false) {}
+
     /*!
      * \brief Copy constructor
      * \param otherUnit
@@ -443,7 +641,51 @@ public:
         static CPressureUnit inhg("Inch of mercury ", "inHg", false, 3386.5307486631);
         return inhg;
     }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CPressureUnit> &units()
+    {
+        static QList<CPressureUnit> u;
+        u.append(CPressureUnit::bar());
+        u.append(CPressureUnit::hPa());
+        u.append(CPressureUnit::inHg());
+        u.append(CPressureUnit::inHgFL());
+        u.append(CPressureUnit::mbar());
+        u.append(CPressureUnit::psi());
+        return u;
+    }
+
+    /*!
+     * \brief Unit from name
+     * \param unitName must be valid!
+     * \return
+     */
+    static const CPressureUnit &fromUnitName(const QString &unitName) {
+        QList<CPressureUnit> units = CPressureUnit::units();
+        // read only, avoid deep copy
+        for (int i = 0; i < units.size(); ++i) {
+            if (units.at(i).getUnitName() == unitName) return (units.at(i));
+        }
+        qFatal("Illegal unit name");
+        return CPressureUnit::Pa(); // just suppress "not all control paths return a value"
+    }
+
+    /*!
+     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \param argument
+     * \param dummy
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CPressureUnit &unit) {
+        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
+        unit = CPressureUnit::fromUnitName(unitName);
+        return argument;
+    }
 };
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressureUnit)
 
 /*!
  * \brief Specialized class for temperatur units (kelvin, centidegree).
@@ -483,6 +725,11 @@ protected:
     virtual double conversionFromSiConversionUnit(double value) const;
 
 public:
+    /*!
+     * Default constructor, we do not want this, but required for Qt Metasystem
+     */
+    CTemperatureUnit() : CMeasurementUnit("Kelvin", "K", "temperature", true, true) {}
+
     /*!
      * \brief Copy constructor
      * \param otherUnit
@@ -529,7 +776,48 @@ public:
         static CTemperatureUnit F("Fahrenheit", "°F", false, false, 5.0 / 9.0, 459.67);
         return F;
     }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CTemperatureUnit> &units()
+    {
+        static QList<CTemperatureUnit> u;
+        u.append(CTemperatureUnit::C());
+        u.append(CTemperatureUnit::F());
+        u.append(CTemperatureUnit::K());
+        return u;
+    }
+
+    /*!
+     * \brief Unit from name
+     * \param unitName must be valid!
+     * \return
+     */
+    static const CTemperatureUnit &fromUnitName(const QString &unitName) {
+        QList<CTemperatureUnit> units = CTemperatureUnit::units();
+        // read only, avoid deep copy
+        for (int i = 0; i < units.size(); ++i) {
+            if (units.at(i).getUnitName() == unitName) return (units.at(i));
+        }
+        qFatal("Illegal unit name");
+        return CTemperatureUnit::K(); // just suppress "not all control paths return a value"
+    }
+
+    /*!
+     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \param argument
+     * \param dummy
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CTemperatureUnit &unit) {
+        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
+        unit = CTemperatureUnit::fromUnitName(unitName);
+        return argument;
+    }
 };
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperatureUnit)
 
 /*!
  * \brief Specialized class for speed units (m/s, ft/s, NM/h).
@@ -552,6 +840,11 @@ private:
     CSpeedUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "speed", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
+    /*!
+     * Default constructor, we do not want this, but required for Qt Metasystem
+     */
+    CSpeedUnit() : CMeasurementUnit("meters/second", "m/s", "speed", true, false) {}
+
     /*!
      * Constructor, allows to implement methods in base class
      * \param otherUnit
@@ -617,7 +910,51 @@ public:
         static CSpeedUnit kmh("kilometers/hour", "km/h", false, false, 1.0 / 3.6, CMeasurementPrefix::One(), 1);
         return kmh;
     }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CSpeedUnit> &units()
+    {
+        static QList<CSpeedUnit> u;
+        u.append(CSpeedUnit::ft_min());
+        u.append(CSpeedUnit::ft_s());
+        u.append(CSpeedUnit::km_h());
+        u.append(CSpeedUnit::kts());
+        u.append(CSpeedUnit::m_s());
+        u.append(CSpeedUnit::NM_h());
+        return u;
+    }
+
+    /*!
+     * \brief Unit from name
+     * \param unitName must be valid!
+     * \return
+     */
+    static const CSpeedUnit &fromUnitName(const QString &unitName) {
+        QList<CSpeedUnit> units = CSpeedUnit::units();
+        // read only, avoid deep copy
+        for (int i = 0; i < units.size(); ++i) {
+            if (units.at(i).getUnitName() == unitName) return (units.at(i));
+        }
+        qFatal("Illegal unit name");
+        return CSpeedUnit::m_s(); // just suppress "not all control paths return a value"
+    }
+
+    /*!
+     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \param argument
+     * \param dummy
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CSpeedUnit &unit) {
+        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
+        unit = CSpeedUnit::fromUnitName(unitName);
+        return argument;
+    }
 };
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeedUnit)
 
 /*!
  * \brief Specialized class for time units (ms, hour, min).
@@ -640,6 +977,10 @@ private:
     CTimeUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "time", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
+    /*!
+     * Default constructor, we do not want this, but required for Qt Metasystem
+     */
+    CTimeUnit() : CMeasurementUnit("second", "s", "time", true, true, 1, CMeasurementPrefix::None()) {}
 
     /*!
      * Constructor, allows to implement methods in base class
@@ -697,7 +1038,49 @@ public:
         return day;
     }
 
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CTimeUnit> &units()
+    {
+        static QList<CTimeUnit> u;
+        u.append(CTimeUnit::d());
+        u.append(CTimeUnit::h());
+        u.append(CTimeUnit::min());
+        u.append(CTimeUnit::ms());
+        u.append(CTimeUnit::s());
+        return u;
+    }
+
+    /*!
+     * \brief Unit from name
+     * \param unitName must be valid!
+     * \return
+     */
+    static const CTimeUnit &fromUnitName(const QString &unitName) {
+        QList<CTimeUnit> units = CTimeUnit::units();
+        // read only, avoid deep copy
+        for (int i = 0; i < units.size(); ++i) {
+            if (units.at(i).getUnitName() == unitName) return (units.at(i));
+        }
+        qFatal("Illegal unit name");
+        return CTimeUnit::s(); // just suppress "not all control paths return a value"
+    }
+
+    /*!
+     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \param argument
+     * \param dummy
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CTimeUnit &unit) {
+        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
+        unit = CTimeUnit::fromUnitName(unitName);
+        return argument;
+    }
 };
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTimeUnit)
 
 /*!
  * \brief Specialized class for acceleration units (m/s2, ft/s2).
@@ -718,8 +1101,13 @@ private:
      * \param epsilon
      */
     CAccelerationUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "time", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+        CMeasurementUnit(name, unitName, "acceleration", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 public:
+    /*!
+     * Default constructor, we do not want this, but required for Qt Metasystem
+     */
+    CAccelerationUnit() : CMeasurementUnit("meter/second²", "m/s²", "acceleration", true, false, 1, CMeasurementPrefix::None(), 1) {}
+
     /*!
      * Constructor, allows to implement methods in base class
      * \param otherUnit
@@ -745,7 +1133,47 @@ public:
         static CAccelerationUnit fts2("feet/seconds²", "ft/s²", true, false, 3.28084, CMeasurementPrefix::m(), 0);
         return fts2;
     }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CAccelerationUnit> &units()
+    {
+        static QList<CAccelerationUnit> u;
+        u.append(CAccelerationUnit::ft_s2());
+        u.append(CAccelerationUnit::m_s2());
+        return u;
+    }
+
+    /*!
+     * \brief Unit from name
+     * \param unitName must be valid!
+     * \return
+     */
+    static const CAccelerationUnit &fromUnitName(const QString &unitName) {
+        QList<CAccelerationUnit> units = CAccelerationUnit::units();
+        // read only, avoid deep copy
+        for (int i = 0; i < units.size(); ++i) {
+            if (units.at(i).getUnitName() == unitName) return (units.at(i));
+        }
+        qFatal("Illegal unit name");
+        return CAccelerationUnit::m_s2(); // just suppress "not all control paths return a value"
+    }
+
+    /*!
+     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \param argument
+     * \param dummy
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CAccelerationUnit &unit) {
+        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
+        unit = CAccelerationUnit::fromUnitName(unitName);
+        return argument;
+    }
 };
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAccelerationUnit)
 
 } // namespace
 } // namespace

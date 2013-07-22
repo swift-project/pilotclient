@@ -22,10 +22,9 @@ namespace Aviation
 class CAvionicsBase : public CBaseStreamStringifier
 {
 
-private:
-    QString m_name; //!< name of the unit
-
 protected:
+
+    QString m_name; //!< name of the unit
 
     /*!
      * \brief Default constructor

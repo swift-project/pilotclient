@@ -16,6 +16,7 @@ namespace Geo
 {
 
 /*!
+ * Latitude and longitude interface
  * \brief Interface for geodetic ccordinates
  */
 class ICoordinateGeodetic

@@ -1,4 +1,4 @@
-QT       += network
+QT       += network dbus
 
 TARGET = blackmisc
 TEMPLATE = lib
@@ -16,5 +16,4 @@ DEFINES += LOG_IN_FILE
 
 HEADERS += *.h
 SOURCES += *.cpp
-
 DESTDIR = ../../lib

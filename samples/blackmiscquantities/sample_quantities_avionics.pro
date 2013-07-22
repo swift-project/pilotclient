@@ -1,13 +1,13 @@
-QT       += core
+QT       += core dbus
 QT       -= gui
 
-TARGET = sample_physicalquantities
+TARGET = sample_quantities_avionics
 TEMPLATE = app
 
 CONFIG   += console
 CONFIG   -= app_bundle
 
-DEPENDPATH += . ../../src
+DEPENDPATH += . ../../src/blackmisc
 INCLUDEPATH += . ../../src
 
 LIBS += -L../../lib -lblackmisc
@@ -19,3 +19,5 @@ DESTDIR = ../../bin
 
 HEADERS += *.h
 SOURCES += *.cpp
+
+OTHER_FILES +=

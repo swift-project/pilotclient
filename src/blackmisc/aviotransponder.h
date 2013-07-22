@@ -315,5 +315,6 @@ public:
 
 } // namespace
 } // namespace
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CTransponder)
 
 #endif // BLACKMISC_AVIOTRANSPONDER_H

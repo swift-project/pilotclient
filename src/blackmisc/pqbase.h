@@ -8,9 +8,11 @@
 
 #include "blackmisc/basestreamstringifier.h"
 #include "blackmisc/debug.h"
+#include <QDBusArgument>
 #include <QString>
 #include <QtGlobal>
 #include <QDebug>
+
 
 namespace BlackMisc
 {
@@ -240,6 +242,19 @@ protected:
      */
     typedef double(*UnitConverter)(const CMeasurementUnit &, double);
 
+    /*!
+     * \brief Get unit from DBus argument
+     * \param argument
+     * \return
+     */
+    static QString unitNameUnmarshalling(const QDBusArgument &argument) {
+        QString type;
+        argument.beginStructure();
+        argument >> type;
+        argument.endStructure();
+        return type;
+    }
+
 private:
     QString m_name; //!< name, e.g. "meter"
     QString m_unitName; //!< unit name, e.g. "m"
@@ -250,8 +265,8 @@ private:
     double m_epsilon; //!< values with differences below epsilon are the equal
     int m_displayDigits; //!< standard rounding for string conversions
     CMeasurementPrefix m_multiplier; //!< multiplier (kilo, Mega)
-    UnitConverter m_fromSiConverter; //! allows an arbitrary conversion method as per object
-    UnitConverter m_toSiConverter; //! allows an arbitrary conversion method as per object
+    UnitConverter m_fromSiConverter; //! allows an arbitrary conversion method as per object (e.g. angle, sexagesimal)
+    UnitConverter m_toSiConverter; //! allows an arbitrary conversion method as per object (e.g. angle, sexagesimal)
 
 protected:
     /*!
@@ -505,6 +520,21 @@ public:
         return abs(checkValue) <= this->m_epsilon;
     }
 
+    /*!
+     * Marshalling (to DBus) operator, unmarshalling to be found in specialized classes and
+     * mapping back to static object
+     * \brief Marshalling (to DBus) operator <<
+     * \param argument
+     * \param unit
+     * \return
+     */
+    friend QDBusArgument &operator<<(QDBusArgument &argument, const CMeasurementUnit& unit) {
+        argument.beginStructure();
+        argument << unit.m_unitName;
+        argument.endStructure();
+        return argument;
+    }
+
     // --------------------------------------------------------------------
     // -- static
     // --------------------------------------------------------------------
@@ -518,6 +548,7 @@ public:
         static CMeasurementUnit none("none", "", "", false, false, 0.0, CMeasurementPrefix::None(), 0, 0);
         return none;
     }
+
 };
 
 } // namespace

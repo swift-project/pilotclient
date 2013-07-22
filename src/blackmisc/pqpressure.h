@@ -47,4 +47,7 @@ public:
 };
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressure)
+
 #endif // BLACKMISC_PQPRESSURE_H

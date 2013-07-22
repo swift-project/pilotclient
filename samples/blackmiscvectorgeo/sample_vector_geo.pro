@@ -1,4 +1,4 @@
-QT       += core
+QT       += core dbus
 
 TARGET = sample_vector_geo
 CONFIG   += console

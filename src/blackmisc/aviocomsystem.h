@@ -320,5 +320,6 @@ public:
 } // namespace
 
 } // namespace
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem)
 
 #endif // include guard

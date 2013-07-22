@@ -46,4 +46,7 @@ public:
 };
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperature)
+
 #endif // BLACKMISC_CTEMPERATURE_H

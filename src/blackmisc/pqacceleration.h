@@ -51,4 +51,6 @@ public:
 } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAcceleration)
+
 #endif // guard
