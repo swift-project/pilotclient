@@ -52,6 +52,8 @@ equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/pluginmgr/sample_pluginmgr.pro
     SUBDIRS += samples/blackmiscquantities/sample_quantities_avionics.pro
     SUBDIRS += samples/blackmiscvectorgeo/sample_vector_geo.pro
+    SUBDIRS += samples/dbusserver/sample_dbusserver.pro
+    SUBDIRS += samples/dbusclient/sample_dbusclient.pro
 }
 
 equals(WITH_UNITTESTS, ON) {
