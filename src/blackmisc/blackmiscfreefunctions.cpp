@@ -34,6 +34,18 @@ void BlackMisc::Aviation::registerMetadata()
     CAltitude::registerMetadata();
 }
 
+
+/*
+ * Metadata for math
+ */
+void BlackMisc::Math::registerMetadata()
+{
+    CMatrix3x3::registerMetadata();
+    CMatrix3x1::registerMetadata();
+    CMatrix1x3::registerMetadata();
+}
+
+
 /*
  * Metadata for Blackmisc
  */
@@ -41,4 +53,5 @@ void BlackMisc::registerMetadata()
 {
     PhysicalQuantities::registerMetadata();
     Aviation::registerMetadata();
+    Math::registerMetadata();
 }

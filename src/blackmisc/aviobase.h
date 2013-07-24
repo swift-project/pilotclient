@@ -21,6 +21,7 @@ namespace Aviation
  */
 class CAvionicsBase : public BlackMisc::CBaseStreamStringifier
 {
+
 protected:
 
     QString m_name; //!< name of the unit

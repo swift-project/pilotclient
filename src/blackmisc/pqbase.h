@@ -294,14 +294,6 @@ protected:
      */
     typedef double(*UnitConverter)(const CMeasurementUnit &, double);
 
-    /*!
-     * \brief Stream to DBus
-     * \param argument
-     */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
-        argument << this->m_unitName;
-    }
-
 private:
     QString m_name; //!< name, e.g. "meter"
     QString m_unitName; //!< unit name, e.g. "m"
@@ -347,7 +339,6 @@ protected:
      */
     CMeasurementUnit &operator =(const CMeasurementUnit &otherUnit);
 
-protected:
     /*!
      * \brief String for streaming operators is full name
      * \return
@@ -395,6 +386,24 @@ protected:
     virtual double conversionFromSiConversionUnit(double value) const
     {
         return value / this->m_conversionFactorToSIConversionUnit;
+    }
+
+    /*!
+     * \brief Stream to DBus
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const {
+        argument << this->m_unitName;
+    }
+
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &) {
+        // the concrete implementations will override this default
+        // this is required so I can also stream None
+        (*this) = CMeasurementUnit::None();
     }
 
 public:

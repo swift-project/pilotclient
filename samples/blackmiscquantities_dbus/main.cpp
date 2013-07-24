@@ -7,6 +7,7 @@
 #include <QtDBus/qdbusabstractinterface.h>
 #include <QtDBus/qdbusconnection.h>
 #include <QCoreApplication>
+#include <QList>
 
 #include "testservice.h"
 #include "testservice_adaptor.h"
@@ -15,6 +16,7 @@
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Math;
 using namespace BlackMiscTest;
 
 /*!
@@ -88,12 +90,19 @@ int main(int argc, char *argv[])
             if (connection.send(m)) {
                 qDebug() << "Send via low level method" << m;
             }
-            TestserviceTool::sleep(2500);
 
             // same as interface message
             testserviceInterface.receiveStringMessage(msg);
             qDebug() << "Send string via interface" << msg;
-            TestserviceTool::sleep(2500);
+
+            // a list
+            QList<double> list;
+            list << 1.0 << 2.0 << 3.0;
+            testserviceInterface.receiveList(list);
+            qDebug() << "Send list via interface" << list;
+            qDebug() << "Key  .......";
+            getchar();
+
 
             // PQs
             CSpeed speed(speedValue++, BlackMisc::PhysicalQuantities::CSpeedUnit::km_h());
@@ -115,8 +124,17 @@ int main(int argc, char *argv[])
             testserviceInterface.receiveVariant(qv);
             testserviceInterface.receiveAltitude(al);
             qDebug() << "Send altitude via interface" << al;
-
             TestserviceTool::sleep(2500);
+
+            // Math
+            CMatrix3x3 m33;
+            m33.setCellIndex();
+            testserviceInterface.receiveMatrix(m33);
+            qDebug() << "Send matrix" << m33;
+
+            // next round?
+            qDebug() << "Key  .......";
+            getchar();
         }
     }
 

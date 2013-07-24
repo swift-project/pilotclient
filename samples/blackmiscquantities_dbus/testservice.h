@@ -76,6 +76,17 @@ public slots:
      */
     void receiveAltitude(const BlackMisc::Aviation::CAltitude &altitude);
 
+    /*!
+     * \brief Receive matrix
+     * \param matrix
+     */
+    void receiveMatrix(const BlackMisc::Math::CMatrix3x3 &matrix);
+
+    /*!
+     * \brief Receive list
+     * \param list
+     */
+    void receiveList(const QList<double> &list);
 
 public:
     static const QString ServiceName;

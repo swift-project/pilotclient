@@ -54,12 +54,27 @@ void Testservice::receiveComUnit(const BlackMisc::Aviation::CComSystem &comUnit)
 }
 
 /*
- * Receivealtitude
+ * Receive altitude
  */
 void Testservice::receiveAltitude(const BlackMisc::Aviation::CAltitude &altitude)
 {
     qDebug() << "Pid:" << TestserviceTool::getPid() << "Received altitude:" << altitude;
+}
 
+/*
+ * Receive matrix
+ */
+void Testservice::receiveMatrix(const BlackMisc::Math::CMatrix3x3 &matrix)
+{
+    qDebug() << "Pid:" << TestserviceTool::getPid() << "Received matrix:" << matrix;
+}
+
+/*
+ *
+ */
+void Testservice::receiveList(const QList<double> &list)
+{
+    qDebug() << "Pid:" << TestserviceTool::getPid() << "Received list:" << list;
 }
 
 } // namespace

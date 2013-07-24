@@ -159,7 +159,7 @@ protected:
      * \brief Stream to DBus
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &) const { }
+    virtual void marshallToDbus(QDBusArgument &) const {}
 
     /*!
      * \brief Stream from DBus

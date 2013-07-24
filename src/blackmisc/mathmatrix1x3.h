@@ -54,5 +54,6 @@ public:
 } // namespace
 
 } // namespace
+Q_DECLARE_METATYPE(BlackMisc::Math::CMatrix1x3)
 
 #endif // guard

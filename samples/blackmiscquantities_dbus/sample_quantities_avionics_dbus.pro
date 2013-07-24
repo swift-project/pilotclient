@@ -1,5 +1,4 @@
 QT       += core dbus
-QT       -= gui
 
 TARGET = sample_quantities_avionics_dbus
 TEMPLATE = app

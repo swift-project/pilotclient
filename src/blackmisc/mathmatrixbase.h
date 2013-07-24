@@ -9,6 +9,7 @@
 #include "blackmisc/basestreamstringifier.h"
 #include "blackmisc/mathvector3dbase.h"
 #include <QGenericMatrix>
+#include <QDBusMetaType>
 
 namespace BlackMisc
 {
@@ -49,6 +50,34 @@ protected:
      */
     QString stringForConverter() const;
 
+    /*!
+     * \brief Stream to DBus
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const {
+        const QList<double> l = this->toList();
+
+        // there is an issue with the signature of QList, so I use
+        // individual values
+        foreach(double v, l) {
+            argument << v;
+        }
+    }
+
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QList<double> list;
+        double v;
+        while(!argument.atEnd()) {
+            argument >> v;
+            list.append(v);
+        }
+        this->fromList(list);
+    }
+
 public:
     /*!
      * \brief Default constructor
@@ -74,6 +103,18 @@ public:
      * \brief Virtual destructor
      */
     virtual ~CMatrixBase() {}
+
+    /*!
+     * \brief List of values
+     * \return
+     */
+    const QList<double> toList() const;
+
+    /*!
+     * \brief List of values
+     * \return
+     */
+    void fromList(const QList<double> &list);
 
     /*!
      * \brief Equal operator ==
@@ -265,6 +306,11 @@ public:
     bool isZero() const;
 
     /*!
+     * \brief Each cell gets a unique index (used primarily for testing)
+     */
+    void setCellIndex();
+
+    /*!
      * \brief Is identity matrix? Epsilon considered.
      * \return
      */
@@ -341,6 +387,11 @@ public:
     {
         return this->getElement(row, column);
     }
+
+    /*!
+     * \brief Register metadata
+     */
+    static void registerMetadata();
 
 private:
     /*!

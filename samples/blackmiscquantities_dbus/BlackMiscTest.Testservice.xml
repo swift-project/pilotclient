@@ -22,5 +22,13 @@
       <arg name="altitude" type="(didb(s)(s)b)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CAltitude"/>
     </method>
+    <method name="receiveMatrix">
+      <arg name="matrix" type="(ad)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Math::CMatrix3x3"/>
+    </method>
+    <method name="receiveList">
+      <arg name="list" type="ad" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QList&lt;double&gt;"/>
+    </method>
   </interface>
 </node>

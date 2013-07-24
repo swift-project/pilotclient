@@ -7,6 +7,7 @@
 #define BLACKMISC_FREEFUNCTIONS_H
 #include "avallclasses.h"
 #include "pqallquantities.h"
+#include "mathallclasses.h"
 
 namespace BlackMisc {
 
@@ -33,6 +34,15 @@ namespace Aviation {
 void registerMetadata();
 
 } // Aviation
+
+namespace Math {
+
+/*!
+ * \brief Register metadata for math (matrices, vectors)
+ */
+void registerMetadata();
+
+}
 
 /*!
  * \brief Register all relevant metadata in BlackMisc

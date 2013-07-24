@@ -69,6 +69,53 @@ template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, R
     return true;
 }
 
+
+/*
+ * Set cell index
+ */
+template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setCellIndex()
+{
+    for (int r = 0; r < Rows; r++)
+    {
+        for (int c = 0; c < Columns; c++)
+        {
+            this->m_matrix(r, c) = r + 0.1 * c;
+        }
+    }
+}
+
+/*
+ * To list
+ */
+template<class ImplMatrix, int Rows, int Columns> const QList<double> CMatrixBase<ImplMatrix, Rows, Columns>::toList() const
+{
+    QList<double> list;
+    for (int r = 0; r < Rows; r++)
+    {
+        for (int c = 0; c < Columns; c++)
+        {
+            list.append(this->m_matrix(r, c));
+        }
+    }
+    return list;
+}
+
+/*
+ * From list
+ */
+template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::fromList(const QList<double> &list)
+{
+    Q_ASSERT_X(Rows * Columns == list.count(), "fromList()", "Mismatch of elements in list");
+    int ct = 0;
+    for (int r = 0; r < Rows; r++)
+    {
+        for (int c = 0; c < Columns; c++)
+        {
+            this->m_matrix(r, c) = list.at(ct++);
+        }
+    }
+}
+
 /*
  * All values equal?
  */
@@ -119,6 +166,16 @@ template <class ImplMatrix, int Rows, int Columns> QString CMatrixBase<ImplMatri
     s = s.append("}");
     return s;
 }
+
+/*
+ * Register metadata
+ */
+template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::registerMetadata()
+{
+    qRegisterMetaType<ImplMatrix>(typeid(ImplMatrix).name());
+    qDBusRegisterMetaType<ImplMatrix>();
+}
+
 
 // see here for the reason of thess forward instantiations
 // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html

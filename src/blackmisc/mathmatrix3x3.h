@@ -177,5 +177,6 @@ public:
 } // namespace
 
 } // namespace
+Q_DECLARE_METATYPE(BlackMisc::Math::CMatrix3x3)
 
 #endif // guard
