@@ -65,10 +65,17 @@ public slots:
     void receiveSpeed(const BlackMisc::PhysicalQuantities::CSpeed &speed);
 
     /*!
-     * \brief receiveComUnit
+     * \brief Receive com unit
      * \param comUnit
      */
     void receiveComUnit(const BlackMisc::Aviation::CComSystem &comUnit);
+
+    /*!
+     * \brief Receive altitude
+     * \param comUnit
+     */
+    void receiveAltitude(const BlackMisc::Aviation::CAltitude &altitude);
+
 
 public:
     static const QString ServiceName;

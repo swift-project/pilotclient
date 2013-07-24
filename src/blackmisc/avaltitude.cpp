@@ -50,5 +50,14 @@ bool CAltitude::operator !=(const CAltitude &otherAltitude)
     return !((*this) == otherAltitude);
 }
 
+/*
+ * Register metadata
+ */
+void CAltitude::registerMetadata()
+{
+    qRegisterMetaType<CAltitude>(typeid(CAltitude).name());
+    qDBusRegisterMetaType<CAltitude>();
+}
+
 } // namespace
 } // namespace

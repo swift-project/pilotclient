@@ -422,40 +422,29 @@ public:
     }
 
     /*!
-     * \brief Unmarshalling operator >>, DBus to object
+     * \brief Stream to DBus <<
      * \param argument
-     * \param pq
-     * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, PQ &pq) {
-        argument.beginStructure();
-        argument >> pq.m_unitValueD;
-        argument >> pq.m_unitValueI;
-        argument >> pq.m_convertedSiUnitValueD;
-        argument >> pq.m_isIntegerBaseValue;
-        argument >> pq.m_unit;
-        argument >> pq.m_conversionSiUnit;
-        argument.endStructure();
-        return argument;
+    virtual void marshallToDbus(QDBusArgument &argument) const {
+        argument << this->m_unitValueD;
+        argument << this->m_unitValueI;
+        argument << this->m_convertedSiUnitValueD;
+        argument << this->m_isIntegerBaseValue;
+        argument << this->m_unit;
+        argument << this->m_conversionSiUnit;
     }
 
     /*!
-     * \brief Marshalling operator <<, object to DBus
+     * \brief Stream from DBus >>
      * \param argument
-     * \param pq
-     * \return
      */
-    friend QDBusArgument &operator<<(QDBusArgument &argument, const PQ& pq)
-    {
-        argument.beginStructure();
-        argument << pq.m_unitValueD;
-        argument << pq.m_unitValueI;
-        argument << pq.m_convertedSiUnitValueD;
-        argument << pq.m_isIntegerBaseValue;
-        argument << pq.m_unit;
-        argument << pq.m_conversionSiUnit;
-        argument.endStructure();
-        return argument;
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        argument >> this->m_unitValueD;
+        argument >> this->m_unitValueI;
+        argument >> this->m_convertedSiUnitValueD;
+        argument >> this->m_isIntegerBaseValue;
+        argument >> this->m_unit;
+        argument >> this->m_conversionSiUnit;
     }
 
     /*!

@@ -160,16 +160,15 @@ public:
         return CLengthUnit::m(); // just suppress "not all control paths return a value"
     }
 
+protected:
     /*!
-     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \brief Stream from DBus
      * \param argument
-     * \param dummy
-     * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CLengthUnit &unit) {
-        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
-        unit = CLengthUnit::fromUnitName(unitName);
-        return argument;
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CLengthUnit::fromUnitName(unitName);
     }
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLengthUnit)
@@ -289,16 +288,15 @@ public:
         return CAngleUnit::rad(); // just suppress "not all control paths return a value"
     }
 
+protected:
     /*!
-     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \brief Stream from DBus
      * \param argument
-     * \param dummy
-     * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CAngleUnit &unit) {
-        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
-        unit = CAngleUnit::fromUnitName(unitName);
-        return argument;
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CAngleUnit::fromUnitName(unitName);
     }
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAngleUnit)
@@ -406,16 +404,15 @@ public:
         return CFrequencyUnit::Hz(); // just suppress "not all control paths return a value"
     }
 
+protected:
     /*!
-     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \brief Stream from DBus
      * \param argument
-     * \param dummy
-     * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CFrequencyUnit &unit) {
-        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
-        unit = CFrequencyUnit::fromUnitName(unitName);
-        return argument;
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CFrequencyUnit::fromUnitName(unitName);
     }
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequencyUnit)
@@ -523,16 +520,15 @@ public:
         return CMassUnit::kg(); // just suppress "not all control paths return a value"
     }
 
+protected:
     /*!
-     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \brief Stream from DBus
      * \param argument
-     * \param dummy
-     * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CMassUnit &unit) {
-        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
-        unit = CMassUnit::fromUnitName(unitName);
-        return argument;
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CMassUnit::fromUnitName(unitName);
     }
 
 };
@@ -673,16 +669,15 @@ public:
         return CPressureUnit::Pa(); // just suppress "not all control paths return a value"
     }
 
+protected:
     /*!
-     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \brief Stream from DBus
      * \param argument
-     * \param dummy
-     * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CPressureUnit &unit) {
-        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
-        unit = CPressureUnit::fromUnitName(unitName);
-        return argument;
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CPressureUnit::fromUnitName(unitName);
     }
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressureUnit)
@@ -805,16 +800,15 @@ public:
         return CTemperatureUnit::K(); // just suppress "not all control paths return a value"
     }
 
+protected:
     /*!
-     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \brief Stream from DBus
      * \param argument
-     * \param dummy
-     * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CTemperatureUnit &unit) {
-        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
-        unit = CTemperatureUnit::fromUnitName(unitName);
-        return argument;
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CTemperatureUnit::fromUnitName(unitName);
     }
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperatureUnit)
@@ -942,16 +936,15 @@ public:
         return CSpeedUnit::m_s(); // just suppress "not all control paths return a value"
     }
 
+protected:
     /*!
-     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \brief Stream from DBus
      * \param argument
-     * \param dummy
-     * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CSpeedUnit &unit) {
-        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
-        unit = CSpeedUnit::fromUnitName(unitName);
-        return argument;
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CSpeedUnit::fromUnitName(unitName);
     }
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeedUnit)
@@ -1068,16 +1061,15 @@ public:
         return CTimeUnit::s(); // just suppress "not all control paths return a value"
     }
 
+protected:
     /*!
-     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \brief Stream from DBus
      * \param argument
-     * \param dummy
-     * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CTimeUnit &unit) {
-        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
-        unit = CTimeUnit::fromUnitName(unitName);
-        return argument;
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CTimeUnit::fromUnitName(unitName);
     }
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTimeUnit)
@@ -1161,16 +1153,15 @@ public:
         return CAccelerationUnit::m_s2(); // just suppress "not all control paths return a value"
     }
 
+protected:
     /*!
-     * \brief Unmarshalling operator >>, map back to concrete static object
+     * \brief Stream from DBus
      * \param argument
-     * \param dummy
-     * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CAccelerationUnit &unit) {
-        QString unitName = CMeasurementUnit::unitNameUnmarshalling(argument);
-        unit = CAccelerationUnit::fromUnitName(unitName);
-        return argument;
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CAccelerationUnit::fromUnitName(unitName);
     }
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAccelerationUnit)

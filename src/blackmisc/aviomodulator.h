@@ -6,7 +6,7 @@
 #ifndef BLACKMISC_AVIOMODULATORUNIT_H
 #define BLACKMISC_AVIOMODULATORUNIT_H
 
-#include <QDBusArgument>
+#include <QDBusMetaType>
 #include "blackmisc/aviobase.h"
 
 namespace BlackMisc
@@ -19,6 +19,33 @@ namespace Aviation
  */
 template <class AVIO> class CModulator : public CAvionicsBase
 {
+    /*!
+     * \brief Unmarshalling operator >>, DBus to object
+     * \param argument
+     * \param uc
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, AVIO &uc) {
+        // If I do not have the method here, DBus metasystem tries to stream against
+        // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
+        // Once someone solves this, this methods should go and the CBaseStreamStringifier signature
+        // should be used
+        CBaseStreamStringifier &sf = uc;
+        return argument >> sf;
+    }
+
+    /*!
+     * \brief Marshalling operator <<, object to DBus
+     * \param argument
+     * \param pq
+     * \return
+     */
+    friend QDBusArgument &operator<<(QDBusArgument &argument, const AVIO &uc)
+    {
+        const CBaseStreamStringifier &sf = uc;
+        return argument << sf;
+    }
+
 private:
     BlackMisc::PhysicalQuantities::CFrequency m_frequencyActive; //!< active frequency
     BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
@@ -207,6 +234,28 @@ protected:
         return f;
     }
 
+    /*!
+     * \brief Stream to DBus <<
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const {
+        CAvionicsBase::marshallToDbus(argument);
+        argument << this->m_frequencyActive;
+        argument << this->m_frequencyStandby;
+        argument << this->m_digits;
+    }
+
+    /*!
+     * \brief Stream from DBus >>
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        CAvionicsBase::unmarshallFromDbus(argument);
+        argument >> this->m_frequencyActive;
+        argument >> this->m_frequencyStandby;
+        argument >> this->m_digits;
+    }
+
 public:
     /*!
      * \brief Virtual destructor
@@ -263,46 +312,9 @@ public:
     }
 
     /*!
-     * \brief Unmarshalling operator >>, DBus to object
-     * \param argument
-     * \param aviationUnit
-     * \return
-     */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, AVIO &aviationUnit) {
-        argument.beginStructure();
-        argument >> aviationUnit.m_frequencyActive;
-        argument >> aviationUnit.m_frequencyStandby;
-        argument >> aviationUnit.m_digits;
-        argument >> aviationUnit.m_name;
-        argument.endStructure();
-        return argument;
-    }
-
-    /*!
-     * \brief Marshalling operator <<, object to DBus
-     * \param argument
-     * \param aviationUnit
-     * \return
-     */
-    friend QDBusArgument &operator<<(QDBusArgument &argument, const AVIO& aviationUnit)
-    {
-        argument.beginStructure();
-        argument << aviationUnit.m_frequencyActive;
-        argument << aviationUnit.m_frequencyStandby;
-        argument << aviationUnit.m_digits;
-        argument << aviationUnit.m_name;
-        argument.endStructure();
-        return argument;
-    }
-
-    /*!
      * \brief Register metadata
      */
-    static void registerMetadata()
-    {
-        qRegisterMetaType<AVIO>(typeid(AVIO).name());
-        qDBusRegisterMetaType<AVIO>();
-    }
+    static void registerMetadata();
 };
 
 } // namespace

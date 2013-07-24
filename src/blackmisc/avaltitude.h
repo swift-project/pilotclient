@@ -28,6 +28,24 @@ protected:
      */
     virtual QString stringForConverter() const;
 
+    /*!
+     * \brief Stream to DBus <<
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const {
+        CLength::marshallToDbus(argument);
+        argument << this->m_msl;
+    }
+
+    /*!
+     * \brief Stream from DBus >>
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        CLength::unmarshallFromDbus(argument);
+        argument >> this->m_msl;
+    }
+
 public:
 
     /*!
@@ -105,9 +123,16 @@ public:
     {
         return this->m_msl;
     }
+
+    /*!
+     * \brief Register metadata
+     */
+    static void registerMetadata();
+
 };
 
 } // namespace
 } // namespace
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude)
 
 #endif // guard

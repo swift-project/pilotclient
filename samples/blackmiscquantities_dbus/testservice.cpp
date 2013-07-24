@@ -33,7 +33,8 @@ void Testservice::receiveStringMessage(const QString &message)
 void Testservice::receiveVariant(const QDBusVariant &variant)
 {
     QVariant qv = variant.variant();
-    qDebug() << "Pid:" << TestserviceTool::getPid() << "Received variant:" << qv;
+    BlackMisc::Aviation::CAltitude altitude = qv.value<BlackMisc::Aviation::CAltitude>();
+    qDebug() << "Pid:" << TestserviceTool::getPid() << "Received variant:" << altitude;
 }
 
 /*
@@ -52,5 +53,13 @@ void Testservice::receiveComUnit(const BlackMisc::Aviation::CComSystem &comUnit)
     qDebug() << "Pid:" << TestserviceTool::getPid() << "Received COM:" << comUnit;
 }
 
+/*
+ * Receivealtitude
+ */
+void Testservice::receiveAltitude(const BlackMisc::Aviation::CAltitude &altitude)
+{
+    qDebug() << "Pid:" << TestserviceTool::getPid() << "Received altitude:" << altitude;
+
+}
 
 } // namespace

@@ -6,6 +6,7 @@
 #include "blackmisc/aviomodulator.h"
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
+#include "blackmisc/avioadfsystem.h"
 
 using BlackMisc::PhysicalQuantities::CFrequency;
 using BlackMisc::PhysicalQuantities::CFrequencyUnit;
@@ -26,11 +27,19 @@ template <class AVIO> void CModulator<AVIO>::toggleActiveStandby()
 }
 
 /*
+ * Register metadata
+ */
+template <class AVIO> void CModulator<AVIO>::registerMetadata()
+{
+    qRegisterMetaType<AVIO>(typeid(AVIO).name());
+    qDBusRegisterMetaType<AVIO>();
+}
+
+/*
  * Assigment operator =
  */
 template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModulator<AVIO> &otherModulator)
 {
-
     if (this == &otherModulator)  return *this; // Same object?
     this->m_frequencyActive = otherModulator.m_frequencyActive;
     this->m_frequencyStandby = otherModulator.m_frequencyStandby;
@@ -63,6 +72,8 @@ template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> 
 // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
 template class CModulator<CComSystem>;
 template class CModulator<CNavSystem>;
+template class CModulator<CAdfSystem>;
+
 
 } // namespace
 } // namespace

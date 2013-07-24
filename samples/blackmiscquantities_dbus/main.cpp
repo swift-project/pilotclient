@@ -60,8 +60,7 @@ int main(int argc, char *argv[])
         QString service; // service not needed
         if (QDBusConnection::sessionBus().connect(
                     service, Testservice::ServicePath, Testservice::ServiceName,
-                    "sendStringMessage", pTestservice,
-                    SLOT(receiveStringMessage(const QString &)))) {
+                    "sendStringMessage", pTestservice, SLOT(receiveStringMessage(const QString &)))) {
             qDebug() << "Connected object with bus sendStringMessage";
         } else {
             qFatal("Cannot connect service with DBus");
@@ -100,12 +99,23 @@ int main(int argc, char *argv[])
             CSpeed speed(speedValue++, BlackMisc::PhysicalQuantities::CSpeedUnit::km_h());
             testserviceInterface.receiveSpeed(speed);
             qDebug() << "Send speed via interface" << speed;
+
+            speed.switchUnit(CSpeedUnit::kts());
+            testserviceInterface.receiveSpeed(speed);
+            qDebug() << "Send speed via interface" << speed;
             TestserviceTool::sleep(2500);
 
             // Aviation
             CComSystem comSystem = CComSystem("DBUS COM1", CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress(), CPhysicalQuantitiesConstants::FrequencyUnicom());
             testserviceInterface.receiveComUnit(comSystem);
             qDebug() << "Send COM via interface" << comSystem;
+
+            CAltitude al(1000, true, CLengthUnit::ft());
+            QDBusVariant qv(QVariant::fromValue(al));
+            testserviceInterface.receiveVariant(qv);
+            testserviceInterface.receiveAltitude(al);
+            qDebug() << "Send altitude via interface" << al;
+
             TestserviceTool::sleep(2500);
         }
     }

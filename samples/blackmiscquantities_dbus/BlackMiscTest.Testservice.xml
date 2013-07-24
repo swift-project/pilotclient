@@ -15,8 +15,12 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::PhysicalQuantities::CSpeed"/>
     </method>
     <method name="receiveComUnit">
-      <arg name="comUnit" type="((didb(s)(s))(didb(s)(s))i)" direction="in"/>
+      <arg name="comUnit" type="(s(didb(s)(s))(didb(s)(s))i)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CComSystem"/>
+    </method>
+    <method name="receiveAltitude">
+      <arg name="altitude" type="(didb(s)(s)b)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CAltitude"/>
     </method>
   </interface>
 </node>

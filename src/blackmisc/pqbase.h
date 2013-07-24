@@ -50,6 +50,24 @@ protected:
         return this->m_name;
     }
 
+    /*!
+     * \brief Stream to DBus
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const {
+        argument << this->m_name;
+    }
+
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        QString name;
+        argument >> name;
+        (*this) = CMeasurementPrefix::fromPrefixName(name);
+    }
+
 public:
     /*!
      * \brief Copy constructor
@@ -224,6 +242,40 @@ public:
         return milli;
     }
 
+
+    /*!
+     * \brief All prefixes
+     * \return
+     */
+    static const QList<CMeasurementPrefix> &prefixes()
+    {
+        static QList<CMeasurementPrefix> prefixes;
+        prefixes.append(CMeasurementPrefix::c());
+        prefixes.append(CMeasurementPrefix::G());
+        prefixes.append(CMeasurementPrefix::h());
+        prefixes.append(CMeasurementPrefix::k());
+        prefixes.append(CMeasurementPrefix::M());
+        prefixes.append(CMeasurementPrefix::m());
+        prefixes.append(CMeasurementPrefix::None());
+        prefixes.append(CMeasurementPrefix::One());
+        return prefixes;
+    }
+
+    /*!
+     * \brief Prefix from name
+     * \param prefixName must be valid!
+     * \return
+     */
+    static const CMeasurementPrefix &fromPrefixName(const QString &prefixName) {
+        QList<CMeasurementPrefix> prefixes = CMeasurementPrefix::prefixes();
+        // read only, avoid deep copy
+        for (int i = 0; i < prefixes.size(); ++i) {
+            if (prefixes.at(i).getName() == prefixName) return (prefixes.at(i));
+        }
+        qFatal("Illegal unit name");
+        return CMeasurementPrefix::None(); // just suppress "not all control paths return a value"
+    }
+
 };
 
 // ---------------------------------------------------------------------------------
@@ -243,16 +295,11 @@ protected:
     typedef double(*UnitConverter)(const CMeasurementUnit &, double);
 
     /*!
-     * \brief Get unit from DBus argument
+     * \brief Stream to DBus
      * \param argument
-     * \return
      */
-    static QString unitNameUnmarshalling(const QDBusArgument &argument) {
-        QString type;
-        argument.beginStructure();
-        argument >> type;
-        argument.endStructure();
-        return type;
+    virtual void marshallToDbus(QDBusArgument &argument) const {
+        argument << this->m_unitName;
     }
 
 private:
@@ -518,21 +565,6 @@ public:
     {
         if (checkValue == 0) return true;
         return abs(checkValue) <= this->m_epsilon;
-    }
-
-    /*!
-     * Marshalling (to DBus) operator, unmarshalling to be found in specialized classes and
-     * mapping back to static object
-     * \brief Marshalling (to DBus) operator <<
-     * \param argument
-     * \param unit
-     * \return
-     */
-    friend QDBusArgument &operator<<(QDBusArgument &argument, const CMeasurementUnit& unit) {
-        argument.beginStructure();
-        argument << unit.m_unitName;
-        argument.endStructure();
-        return argument;
     }
 
     // --------------------------------------------------------------------

@@ -29,8 +29,9 @@ void BlackMisc::PhysicalQuantities::registerMetadata()
 void BlackMisc::Aviation::registerMetadata()
 {
     CComSystem::registerMetadata();
-    CAdfSystem::registerMetadata();
     CNavSystem::registerMetadata();
+    CAdfSystem::registerMetadata();
+    CAltitude::registerMetadata();
 }
 
 /*

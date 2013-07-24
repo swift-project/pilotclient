@@ -2,6 +2,7 @@
 #define BLACKMISC_BASESTREAMSTRINGIFIER_H
 
 #include "blackmisc/debug.h"
+#include <QDBusMetaType>
 #include <QString>
 #include <QtGlobal>
 #include <QDataStream>
@@ -23,10 +24,10 @@ class CBaseStreamStringifier
      */
     friend QDebug operator<<(QDebug debug, const CBaseStreamStringifier &uc)
     {
-        const CBaseStreamStringifier &sf = uc; // allows to access protected method
-        debug << sf.stringForStreaming();
+        debug << uc.stringForStreaming();
         return debug;
     }
+
     // msvc2010: friend QDebug &operator<<(QDebug &debug, const CBaseStreamStringifier &uc)
     // MinGW: No reference
 
@@ -38,8 +39,7 @@ class CBaseStreamStringifier
      */
     friend QTextStream &operator<<(QTextStream &textStream, const CBaseStreamStringifier &uc)
     {
-        const CBaseStreamStringifier &sf = uc; // allows to acces protected method
-        textStream << sf.stringForStreaming();
+        textStream << uc.stringForStreaming();
         return textStream;
     }
 
@@ -62,8 +62,7 @@ class CBaseStreamStringifier
      */
     friend QDataStream &operator<<(QDataStream &stream, const CBaseStreamStringifier &uc)
     {
-        const CBaseStreamStringifier &sf = uc; // allows to acces protected method
-        stream << sf.stringForStreaming();
+        stream << uc.stringForStreaming();
         return stream;
     }
 
@@ -75,8 +74,7 @@ class CBaseStreamStringifier
      */
     friend CLogMessage operator<<(CLogMessage log, const CBaseStreamStringifier &uc)
     {
-        const CBaseStreamStringifier &sf = uc; // allows to acces protected method
-        log << sf.stringForStreaming();
+        log << uc.stringForStreaming();
         return log;
     }
 
@@ -88,12 +86,39 @@ class CBaseStreamStringifier
      */
     friend std::ostream &operator<<(std::ostream &ostr, const CBaseStreamStringifier &uc)
     {
-        const CBaseStreamStringifier &sf = uc; // allows to acces protected method
-        ostr << sf.stringForStreaming().toStdString();
+        ostr << uc.stringForStreaming().toStdString();
         return ostr;
     }
 
+    /*!
+     * \brief Unmarshalling operator >>, DBus to object
+     * \param argument
+     * \param uc
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CBaseStreamStringifier &uc) {
+        argument.beginStructure();
+        uc.unmarshallFromDbus(argument);
+        argument.endStructure();
+        return argument;
+    }
+
+    /*!
+     * \brief Marshalling operator <<, object to DBus
+     * \param argument
+     * \param pq
+     * \return
+     */
+    friend QDBusArgument &operator<<(QDBusArgument &argument, const CBaseStreamStringifier &uc)
+    {
+        argument.beginStructure();
+        uc.marshallToDbus(argument);
+        argument.endStructure();
+        return argument;
+    }
+
 public:
+
     /*!
      * \brief Virtual destructor
      */
@@ -109,6 +134,10 @@ public:
     }
 
 protected:
+    /*!
+     * \brief Default constructor
+     */
+    CBaseStreamStringifier() {}
 
     /*!
      * \brief String for streaming operators
@@ -125,6 +154,18 @@ protected:
      * \return
      */
     virtual QString stringForConverter() const = 0;
+
+    /*!
+     * \brief Stream to DBus
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &) const { }
+
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &) {}
 
     /*!
      * \brief Copy assignment operator.

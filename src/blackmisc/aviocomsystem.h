@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISC_AVIOCOMUNIT_H
-#define BLACKMISC_AVIOCOMUNIT_H
+#ifndef BLACKMISC_AVIOCOMSYSTEM_H
+#define BLACKMISC_AVIOCOMSYSTEM_H
 #include "blackmisc/aviomodulator.h"
 #include <stdexcept>
 
@@ -315,7 +315,9 @@ public:
     static bool tryGetCom3System(CComSystem &comSystem, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet()) {
         return CComSystem::tryGetComSystem(comSystem, CModulator::NameCom3(), activeFrequency, standbyFrequency);
     }
+
 };
+
 
 } // namespace
 
