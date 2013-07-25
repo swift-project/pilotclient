@@ -88,6 +88,12 @@ public slots:
      */
     void receiveList(const QList<double> &list);
 
+    /*!
+     * \brief Receive a geo position
+     * \param geo
+     */
+    void receiveGeoPosition(const BlackMisc::Geo::CCoordinateGeodetic &geo);
+
 public:
     static const QString ServiceName;
     static const QString ServicePath;

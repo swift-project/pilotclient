@@ -51,30 +51,19 @@ protected:
      * \brief String for converter
      * \return
      */
-    virtual QString stringForConverter() const
-    {
-        QString s = "Geodetic: {%1, %2, %3}";
-        return s.arg(this->m_latitude.unitValueRoundedWithUnit(6)).arg(this->m_longitude.unitValueRoundedWithUnit(6)).arg(this->m_height.unitValueRoundedWithUnit());
-    }
+    virtual QString stringForConverter() const;
+
     /*!
      * \brief Stream to DBus
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
-        argument << this->m_latitude;
-        argument << this->m_longitude;
-        argument << this->m_height;
-    }
+    virtual void marshallToDbus(QDBusArgument &argument) const;
 
     /*!
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
-        argument >> this->m_latitude;
-        argument >> this->m_longitude;
-        argument >> this->m_height;
-    }
+    virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
 public:
     /*!

@@ -35,6 +35,12 @@ public:
     CLongitude(const CLongitude &Longitude) : CEarthAngle(Longitude) {}
 
     /*!
+     * \brief Constructor
+     * \param angle
+     */
+    CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
+
+    /*!
      * \brief Init by double value
      * \param value
      * \param unit

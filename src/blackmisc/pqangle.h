@@ -43,6 +43,19 @@ public:
     CAngle(double value, const CAngleUnit &unit): CPhysicalQuantity(value, unit, CAngleUnit::rad()) {}
 
     /*!
+     * \brief Intir as sexagesimal degrees
+     * \param degrees
+     * \param minutes
+     * \param seconds
+     */
+    CAngle(qint32 degrees, qint32 minutes, double seconds) :
+        CPhysicalQuantity(
+            degrees + minutes / 100.0 + seconds / 10000.0,
+            CAngleUnit::sexagesimalDeg(), CAngleUnit::rad()) {
+        // void
+    }
+
+    /*!
      * \brief Virtual destructor
      */
     virtual ~CAngle() {}

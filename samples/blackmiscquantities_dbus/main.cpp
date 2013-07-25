@@ -17,6 +17,7 @@
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Math;
+using namespace BlackMisc::Geo;
 using namespace BlackMiscTest;
 
 /*!
@@ -100,9 +101,6 @@ int main(int argc, char *argv[])
             list << 1.0 << 2.0 << 3.0;
             testserviceInterface.receiveList(list);
             qDebug() << "Send list via interface" << list;
-            qDebug() << "Key  .......";
-            getchar();
-
 
             // PQs
             CSpeed speed(speedValue++, BlackMisc::PhysicalQuantities::CSpeedUnit::km_h());
@@ -131,6 +129,15 @@ int main(int argc, char *argv[])
             m33.setCellIndex();
             testserviceInterface.receiveMatrix(m33);
             qDebug() << "Send matrix" << m33;
+
+            // Geo
+            // EDDF: 50° 2′ 0″ N, 8° 34′ 14″ E, 100m MSL
+            CLatitude lat = CLatitude::fromWgs84("50° 2′ 1″ 23 N");
+            CLongitude lon = CLongitude::fromWgs84("8° 34′ 14″ E");
+            CLength height(100, CLengthUnit::m());
+            CCoordinateGeodetic geoPos(lat, lon, height);
+            testserviceInterface.receiveGeoPosition(geoPos);
+            qDebug() << "Send geo position" << geoPos;
 
             // next round?
             qDebug() << "Key  .......";

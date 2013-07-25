@@ -67,13 +67,11 @@ template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> 
     return !(otherModulator == (*this));
 }
 
-
 // see here for the reason of thess forward instantiations
 // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
 template class CModulator<CComSystem>;
 template class CModulator<CNavSystem>;
 template class CModulator<CAdfSystem>;
-
 
 } // namespace
 } // namespace

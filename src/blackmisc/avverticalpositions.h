@@ -3,11 +3,12 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISC_AVLATERALPOSITION_H
-#define BLACKMISC_AVLATERALPOSITION_H
+#ifndef BLACKMISC_AVVERTICALPOSITION_H
+#define BLACKMISC_AVVERTICALPOSITION_H
 
 #include "blackmisc/avaltitude.h"
 #include "blackmisc/pqconstants.h"
+#include "blackmisc/basestreamstringifier.h"
 
 namespace BlackMisc
 {
@@ -17,25 +18,8 @@ namespace Aviation
 /*!
  * \brief Vertical (Z) positions of an aircraft
  */
-class CAviationVerticalPositions
+class CAviationVerticalPositions : public BlackMisc::CBaseStreamStringifier
 {
-    /*!
-     * \brief Stream << overload to be used in debugging messages
-     * \param d
-     * \param positions
-     * \return
-     */
-    friend QDebug operator<<(QDebug d, const CAviationVerticalPositions &positions);
-
-    /*!
-     * Stream operator for log messages
-     * \brief operator <<
-     * \param log
-     * \param positions
-     * \return
-     */
-    friend CLogMessage operator<<(CLogMessage log, const CAviationVerticalPositions &positions);
-
 private:
     BlackMisc::Aviation::CAltitude m_altitude;  //!< altitude
     BlackMisc::PhysicalQuantities::CLength m_elevation;  //!< elevation
@@ -43,10 +27,22 @@ private:
 
 protected:
     /*!
-     * \brief Specific stream operation for heading
+     * \brief String for converter
      * \return
      */
-    virtual QString stringForStreamingOperator() const;
+    virtual QString stringForConverter() const;
+
+    /*!
+     * \brief Unmarshall from Dbus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument);
+
+    /*!
+     * \brief Unmarshall from Dbus
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const;
 
 public:
     /*!
@@ -113,6 +109,7 @@ public:
      * \param elevationFt
      * \return
      */
+
     static CAviationVerticalPositions fromAltitudeAndElevationInFt(double altitudeMslFt, double elevationFt);
     /*!
      * \brief Factory getting tupel frome levation and altitude values in meters
@@ -121,9 +118,15 @@ public:
      * \return
      */
     static CAviationVerticalPositions fromAltitudeAndElevationInM(double altitudeMslM, double elevationM);
+
+    /*!
+     * \brief Register metadata
+     */
+    static void registerMetadata();
 };
 
 } // namespace
 } // namespace
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAviationVerticalPositions)
 
-#endif // BLACKMISC_AVLATERALPOSITION_H
+#endif // BLACKMISC_AVVERTICALPOSITION_H

@@ -70,11 +70,19 @@ void Testservice::receiveMatrix(const BlackMisc::Math::CMatrix3x3 &matrix)
 }
 
 /*
- *
+ * Receive a list
  */
 void Testservice::receiveList(const QList<double> &list)
 {
     qDebug() << "Pid:" << TestserviceTool::getPid() << "Received list:" << list;
+}
+
+/*
+ * Receive a geo position
+ */
+void Testservice::receiveGeoPosition(const BlackMisc::Geo::CCoordinateGeodetic &geo)
+{
+    qDebug() << "Pid:" << TestserviceTool::getPid() << "Received geo data:" << geo;
 }
 
 } // namespace

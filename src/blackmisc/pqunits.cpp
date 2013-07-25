@@ -76,7 +76,7 @@ QString CAngleUnit::toQStringRounded(double value, int digits) const
         double mi = floor((value - de) * 100.0);
         double se = floor((value - de - mi / 100.0) * 1000000) / 100.0;
         QString ses = QLocale::system().toString(se, 'f', 2);
-        s = QString::number(de).append(this->getUnitName()).append(QString::number(mi))
+        s = QString::number(de).append(" ").append(QString::number(mi))
             .append("'").append(ses).append("\"");
     }
     else

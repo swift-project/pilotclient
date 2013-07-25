@@ -95,7 +95,7 @@ void CMultiPlayer::addPlane(CPlane *plane)
 
 void CMultiPlayer::removePlane(CPlane *plane)
 {
-    qint32 id;
+    qint32 id = 0;
     m_simulator->removePlane(id);
 }
 

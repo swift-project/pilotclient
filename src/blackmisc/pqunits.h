@@ -246,7 +246,7 @@ public:
      */
     static const CAngleUnit &deg()
     {
-        static CAngleUnit deg("degree", "°", false, M_PI / 180);
+        static CAngleUnit deg("degree", "deg", false, M_PI / 180);
         return deg;
     }
 
@@ -256,7 +256,7 @@ public:
      */
     static const CAngleUnit &sexagesimalDeg()
     {
-        static CAngleUnit deg("segadecimal degree", "°", false, M_PI / 180,
+        static CAngleUnit deg("segadecimal degree", "segd", false, M_PI / 180,
                               CMeasurementPrefix::One(), 0, 1E-9, CAngleUnit::conversionSexagesimalToSi, CAngleUnit::conversionSexagesimalFromSi); return deg;
     }
 

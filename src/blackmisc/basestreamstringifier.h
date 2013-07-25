@@ -14,6 +14,7 @@ namespace BlackMisc
 /*!
  * \brief Provides "to QString" and stream operators
  */
+// Virtual operators: http://stackoverflow.com/a/4571634/356726
 class CBaseStreamStringifier
 {
     /*!

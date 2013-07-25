@@ -74,9 +74,9 @@ bool CAviationVerticalPositions::operator !=(const CAviationVerticalPositions &o
 }
 
 /*
- * String representation for streaming
+ * String representation for converter
  */
-QString CAviationVerticalPositions::stringForStreamingOperator() const
+QString CAviationVerticalPositions::stringForConverter() const
 {
     QString s = QString("Altitude: ").
                 append(this->m_altitude.unitValueRoundedWithUnit()).
@@ -109,22 +109,34 @@ CAviationVerticalPositions CAviationVerticalPositions::fromAltitudeAndElevationI
     return CAviationVerticalPositions(a, e, h);
 }
 
-/*
- * Stream for log message
+
+/*!
+ * \brief Stream to DBus <<
+ * \param argument
  */
-CLogMessage operator <<(CLogMessage log, const CAviationVerticalPositions &positions)
-{
-    log << positions.stringForStreamingOperator();
-    return log;
+void CAviationVerticalPositions::marshallToDbus(QDBusArgument &argument) const {
+    argument << this->m_altitude;
+    argument << this->m_elevation;
+    argument << this->m_height;
+}
+
+/*!
+ * \brief Stream from DBus >>
+ * \param argument
+ */
+void CAviationVerticalPositions::unmarshallFromDbus(const QDBusArgument &argument) {
+    argument >> this->m_altitude;
+    argument >> this->m_elevation;
+    argument >> this->m_height;
 }
 
 /*
- * Stream for qDebug
+ * Register metadata
  */
-QDebug operator <<(QDebug d, const CAviationVerticalPositions &positions)
+void CAviationVerticalPositions::registerMetadata()
 {
-    d <<  positions.stringForStreamingOperator();
-    return d;
+    qRegisterMetaType<CAviationVerticalPositions>(typeid(CAviationVerticalPositions).name());
+    qDBusRegisterMetaType<CAviationVerticalPositions>();
 }
 
 } // namespace

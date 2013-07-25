@@ -32,8 +32,8 @@ void BlackMisc::Aviation::registerMetadata()
     CNavSystem::registerMetadata();
     CAdfSystem::registerMetadata();
     CAltitude::registerMetadata();
+    CAviationVerticalPositions::registerMetadata();
 }
-
 
 /*
  * Metadata for Math

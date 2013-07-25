@@ -23,12 +23,16 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CAltitude"/>
     </method>
     <method name="receiveMatrix">
-      <arg name="matrix" type="(ad)" direction="in"/>
+      <arg name="matrix" type="(ddddddddd)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Math::CMatrix3x3"/>
     </method>
     <method name="receiveList">
       <arg name="list" type="ad" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QList&lt;double&gt;"/>
+    </method>
+    <method name="receiveGeoPosition">
+      <arg name="geo" type="((didb(s)(s))(didb(s)(s))(didb(s)(s)))" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Geo::CCoordinateGeodetic"/>
     </method>
   </interface>
 </node>

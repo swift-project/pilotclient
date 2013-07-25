@@ -54,8 +54,6 @@ void registerMetadata();
 
 } // Geo
 
-
-
 /*!
  * \brief Register all relevant metadata in BlackMisc
  */

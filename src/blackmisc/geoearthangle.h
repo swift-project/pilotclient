@@ -3,8 +3,8 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISC_GEOLATLONBASE_H
-#define BLACKMISC_GEOLATLONBASE_H
+#ifndef BLACKMISC_GEOEARTHANGLE_H
+#define BLACKMISC_GEOEARTHANGLE_H
 #include "blackmisc/pqangle.h"
 
 namespace BlackMisc
@@ -61,6 +61,12 @@ protected:
      * \param unit
      */
     CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CAngle(value, unit) {}
+
+    /*!
+     * \brief Init by double value
+     * \param angle
+     */
+    CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle): CAngle(angle) {}
 
     /*!
      * \brief String for converter and streaming
@@ -212,14 +218,18 @@ public:
         return l;
     }
 
-    /*
+    /*!
      * Register metadata
      */
-    static void registerMetadata()
-    {
-        qRegisterMetaType<LATorLON>(typeid(LATorLON).name());
-        qDBusRegisterMetaType<LATorLON>();
-    }
+    static void registerMetadata();
+
+    /*!
+     * \brief Latitude / Longitude from a WGS string such as
+     * \param wgsCoordinate 50° 2′ 0″ N / 8° 34′ 14″ E
+     * \return
+     */
+    static LATorLON fromWgs84(const QString &wgsCoordinate);
+
 };
 
 } // namespace

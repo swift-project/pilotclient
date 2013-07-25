@@ -1,6 +1,9 @@
 #ifndef BLACKMISC_GEOLATITUDE_H
 #define BLACKMISC_GEOLATITUDE_H
+
+#include <QtCore/qmath.h>
 #include "blackmisc/geoearthangle.h"
+
 
 namespace BlackMisc
 {
@@ -35,6 +38,12 @@ public:
     CLatitude(const CLatitude &latitude) : CEarthAngle(latitude) {}
 
     /*!
+     * \brief Constructor
+     * \param angle
+     */
+    CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
+
+    /*!
      * \brief Init by double value
      * \param value
      * \param unit
@@ -45,6 +54,7 @@ public:
      * \brief Virtual destructor
      */
     virtual ~CLatitude() {}
+
 };
 
 } // namespace
