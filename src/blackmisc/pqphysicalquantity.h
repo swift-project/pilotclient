@@ -271,7 +271,7 @@ public:
     void addUnitValue(double value);
 
     /*!
-     * \brief Substratc to the unit value.
+     * \brief Substract to the unit value.
      * \remarks Since overloading the - operator with double did lead to unintended conversions, as explicit method
      * \param value
      */

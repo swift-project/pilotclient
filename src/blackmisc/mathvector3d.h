@@ -97,4 +97,6 @@ public:
 
 } // namespace
 } // namespace
+Q_DECLARE_METATYPE(BlackMisc::Math::CVector3D)
+
 #endif // guard

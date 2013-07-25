@@ -50,5 +50,6 @@ public:
 } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::Geo::CLatitude)
 
 #endif // guard

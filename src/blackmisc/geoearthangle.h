@@ -16,6 +16,33 @@ namespace Geo
  */
 template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
 {
+    /*!
+     * \brief Unmarshalling operator >>, DBus to object
+     * \param argument
+     * \param uc
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, LATorLON &uc) {
+        // If I do not have the method here, DBus metasystem tries to stream against
+        // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
+        // Once someone solves this, this methods should go and the
+        // CBaseStreamStringifier signature should be used
+        CBaseStreamStringifier &sf = uc;
+        return argument >> sf;
+    }
+
+    /*!
+     * \brief Marshalling operator <<, object to DBus
+     * \param argument
+     * \param pq
+     * \return
+     */
+    friend QDBusArgument &operator<<(QDBusArgument &argument, const LATorLON &uc)
+    {
+        const CBaseStreamStringifier &sf = uc;
+        return argument << sf;
+    }
+
 protected:
     /*!
      * \brief Default constructor
@@ -44,8 +71,23 @@ protected:
         return this->unitValueRoundedWithUnit(6);
     }
 
-public:
+    /*!
+     * \brief Stream to DBus <<
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const {
+        CAngle::marshallToDbus(argument);
+    }
 
+    /*!
+     * \brief Stream from DBus >>
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        CAngle::unmarshallFromDbus(argument);
+    }
+
+public:
     /*!
      * \brief Virtual destructor
      */
@@ -168,6 +210,15 @@ public:
         l += (*this);
         l -= latOrLon;
         return l;
+    }
+
+    /*
+     * Register metadata
+     */
+    static void registerMetadata()
+    {
+        qRegisterMetaType<LATorLON>(typeid(LATorLON).name());
+        qDBusRegisterMetaType<LATorLON>();
     }
 };
 

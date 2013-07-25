@@ -117,6 +117,6 @@ protected:
 
 } // namespace
 } // namespace
-
+Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateEcef)
 
 #endif // guard

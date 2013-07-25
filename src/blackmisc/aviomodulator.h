@@ -29,8 +29,8 @@ template <class AVIO> class CModulator : public CAvionicsBase
     friend const QDBusArgument &operator>>(const QDBusArgument &argument, AVIO &uc) {
         // If I do not have the method here, DBus metasystem tries to stream against
         // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
-        // Once someone solves this, this methods should go and the CBaseStreamStringifier signature
-        // should be used
+        // Once someone solves this, this methods should go and the
+        // CBaseStreamStringifier signature should be used
         CBaseStreamStringifier &sf = uc;
         return argument >> sf;
     }

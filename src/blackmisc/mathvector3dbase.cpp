@@ -20,8 +20,8 @@ template <class ImplVector> QString CVector3DBase<ImplVector>::stringForConverte
 {
     QString s = ("{%1, %2, %3}");
     s = s.arg(QString::number(this->m_i, 'f')).
-        arg(QString::number(this->m_j, 'f')).
-        arg(QString::number(this->m_k, 'f'));
+            arg(QString::number(this->m_j, 'f')).
+            arg(QString::number(this->m_k, 'f'));
     return s;
 }
 
@@ -129,6 +129,36 @@ template <class ImplVector> void CVector3DBase<ImplVector>::matrixMultiplication
 template <class ImplVector> CMatrix3x1 CVector3DBase<ImplVector>::toMatrix3x1() const
 {
     return CMatrix3x1(this->m_i, this->m_j, this->m_k);
+}
+
+
+/*!
+ * \brief Stream to DBus
+ * \param argument
+ */
+template <class ImplVector> void CVector3DBase<ImplVector>::marshallToDbus(QDBusArgument &argument) const {
+    argument << this->m_i;
+    argument << this->m_j;
+    argument << this->m_k;
+}
+
+/*!
+ * \brief Stream from DBus
+ * \param argument
+ */
+template <class ImplVector> void CVector3DBase<ImplVector>::unmarshallFromDbus(const QDBusArgument &argument) {
+    argument >> this->m_i;
+    argument >> this->m_j;
+    argument >> this->m_k;
+}
+
+/*
+ * Register metadata
+ */
+template <class ImplVector> void CVector3DBase<ImplVector>::registerMetadata()
+{
+    qRegisterMetaType<ImplVector>(typeid(ImplVector).name());
+    qDBusRegisterMetaType<ImplVector>();
 }
 
 // see here for the reason of thess forward instantiations

@@ -37,7 +37,7 @@ class CAviationVerticalPositions
     friend CLogMessage operator<<(CLogMessage log, const CAviationVerticalPositions &positions);
 
 private:
-    CAltitude m_altitude;  //!< altitude
+    BlackMisc::Aviation::CAltitude m_altitude;  //!< altitude
     BlackMisc::PhysicalQuantities::CLength m_elevation;  //!< elevation
     BlackMisc::PhysicalQuantities::CLength m_height;  //!< height
 

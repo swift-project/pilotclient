@@ -24,6 +24,33 @@ class CMatrix3x1; // forward declaration
 template <class ImplVector> class CVector3DBase : public CBaseStreamStringifier
 {
 
+    /*!
+     * \brief Unmarshalling operator >>, DBus to object
+     * \param argument
+     * \param uc
+     * \return
+     */
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, ImplVector &uc) {
+        // If I do not have the method here, DBus metasystem tries to stream against
+        // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
+        // Once someone solves this, this methods should go and the
+        // CBaseStreamStringifier signature should be used
+        CBaseStreamStringifier &sf = uc;
+        return argument >> sf;
+    }
+
+    /*!
+     * \brief Marshalling operator <<, object to DBus
+     * \param argument
+     * \param pq
+     * \return
+     */
+    friend QDBusArgument &operator<<(QDBusArgument &argument, const ImplVector &uc)
+    {
+        const CBaseStreamStringifier &sf = uc;
+        return argument << sf;
+    }
+
 private:
     /*!
      * \brief Easy access to derived class (CRTP template parameter)
@@ -80,6 +107,18 @@ protected:
      * \return
      */
     virtual QString stringForConverter() const;
+
+    /*!
+     * \brief Unmarshall from Dbus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument);
+
+    /*!
+     * \brief Marshall to Dbus
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const;
 
 public:
 
@@ -416,6 +455,11 @@ public:
         v.round();
         return v;
     }
+
+    /*!
+     * \brief Register metadata
+     */
+    static void registerMetadata();
 };
 
 } // namespace

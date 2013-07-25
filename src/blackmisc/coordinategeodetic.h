@@ -37,14 +37,12 @@ class ICoordinateGeodetic
 /*!
  * \brief Geodetic coordinate
  */
-class CCoordinateGeodetic :
-    public CBaseStreamStringifier,
-    public ICoordinateGeodetic
+class CCoordinateGeodetic : public CBaseStreamStringifier, public ICoordinateGeodetic
 {
 
 private:
-    CLatitude m_latitude; //!< Latitude
-    CLongitude m_longitude; //!< Longitude
+    BlackMisc::Geo::CLatitude m_latitude; //!< Latitude
+    BlackMisc::Geo::CLongitude m_longitude; //!< Longitude
     BlackMisc::PhysicalQuantities::CLength m_height; //!< height
 
 protected:
@@ -57,6 +55,25 @@ protected:
     {
         QString s = "Geodetic: {%1, %2, %3}";
         return s.arg(this->m_latitude.unitValueRoundedWithUnit(6)).arg(this->m_longitude.unitValueRoundedWithUnit(6)).arg(this->m_height.unitValueRoundedWithUnit());
+    }
+    /*!
+     * \brief Stream to DBus
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const {
+        argument << this->m_latitude;
+        argument << this->m_longitude;
+        argument << this->m_height;
+    }
+
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        argument >> this->m_latitude;
+        argument >> this->m_longitude;
+        argument >> this->m_height;
     }
 
 public:
@@ -203,10 +220,16 @@ public:
         this->m_longitude = otherGeodetic.m_longitude;
         return (*this);
     }
+
+    /*
+     * Register metadata
+     */
+    static void registerMetadata();
+
 };
 
 } // namespace
 } // namespace
-
+Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodetic)
 
 #endif // guard

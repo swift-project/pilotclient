@@ -8,6 +8,7 @@
 #include "avallclasses.h"
 #include "pqallquantities.h"
 #include "mathallclasses.h"
+#include "geoallclasses.h"
 
 namespace BlackMisc {
 
@@ -42,7 +43,18 @@ namespace Math {
  */
 void registerMetadata();
 
-}
+} // Math
+
+namespace Geo {
+
+/*!
+ * \brief Register metadata for geo (coordinates)
+ */
+void registerMetadata();
+
+} // Geo
+
+
 
 /*!
  * \brief Register all relevant metadata in BlackMisc

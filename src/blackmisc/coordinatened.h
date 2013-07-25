@@ -218,6 +218,6 @@ public:
 
 } // namespace
 } // namespace
-
+Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateNed)
 
 #endif // guard
