@@ -69,3 +69,11 @@ void BlackMisc::registerMetadata()
     Math::registerMetadata();
     Geo::registerMetadata();
 }
+
+/*
+ * Init resources
+ */
+void BlackMisc::initResources()
+{
+    initBlackMiscResources();
+}

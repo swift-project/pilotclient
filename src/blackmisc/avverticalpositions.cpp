@@ -76,7 +76,7 @@ bool CAviationVerticalPositions::operator !=(const CAviationVerticalPositions &o
 /*
  * String representation for converter
  */
-QString CAviationVerticalPositions::stringForConverter() const
+QString CAviationVerticalPositions::stringForConverter(bool /** i18n **/) const
 {
     QString s = QString("Altitude: ").
                 append(this->m_altitude.unitValueRoundedWithUnit()).

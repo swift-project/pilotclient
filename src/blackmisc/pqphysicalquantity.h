@@ -71,12 +71,13 @@ protected:
     CPhysicalQuantity(double baseValue, const MU &unit, const MU &siConversionUnit);
 
     /*!
-     * \brief String for converter and streaming
+     * \brief Name as stringification
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const
+    virtual QString stringForConverter(bool i18n = false) const
     {
-        return this->unitValueRoundedWithUnit(-1);
+        return this->unitValueRoundedWithUnit(i18n);
     }
 
     /*!
@@ -180,9 +181,10 @@ public:
      * \brief Value to QString with unit, e.g. "5.00m"
      * \param unit
      * \param digits
+     * \param i18n
      * \return
      */
-    QString valueRoundedWithUnit(const MU &unit, int digits = -1) const;
+    QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Value as int
@@ -205,9 +207,10 @@ public:
     /*!
      * \brief Value to QString with unit, e.g. "5.00m"
      * \param digits
+     * \param i18n
      * \return
      */
-    QString unitValueRoundedWithUnit(int digits = -1) const;
+    QString unitValueRoundedWithUnit(int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Rounded value by n digits
@@ -259,9 +262,10 @@ public:
     /*!
      * \brief SI Base unit value rounded
      * \param digits
+     * \param i18n
      * \return
      */
-    QString convertedSiValueRoundedWithUnit(int digits = -1) const;
+    QString convertedSiValueRoundedWithUnit(int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Add to the unit value.

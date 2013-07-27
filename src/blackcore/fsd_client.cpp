@@ -60,7 +60,7 @@ namespace FSD
 		return m_tcp_socket->state() == QAbstractSocket::ConnectedState;
 	}
 
-	QString CFSDClient::getErrorMessage(QAbstractSocket::SocketError error)
+    QString CFSDClient::getErrorMessage(QAbstractSocket::SocketError /* error */)
 	{
 		return QString("Unknown");
 	}

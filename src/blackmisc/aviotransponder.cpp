@@ -45,7 +45,7 @@ bool CTransponder::validate(bool strict) const
 /**
  * String representation
  */
-QString CTransponder::stringForConverter() const
+QString CTransponder::stringForConverter(bool /** i18n **/) const
 {
     QString s = this->getName();
     s = s.append(" ").append(this->getTransponderCodeFormatted()).append(" ").append(this->getModeAsString());

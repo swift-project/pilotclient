@@ -149,7 +149,7 @@ template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, R
 /*
  * Convert to string
  */
-template <class ImplMatrix, int Rows, int Columns> QString CMatrixBase<ImplMatrix, Rows, Columns>::stringForConverter() const
+template <class ImplMatrix, int Rows, int Columns> QString CMatrixBase<ImplMatrix, Rows, Columns>::stringForConverter(bool /** i18n **/) const
 {
     QString s = "{";
     for (int r = 0; r < Rows; r++)

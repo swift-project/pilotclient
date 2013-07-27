@@ -26,9 +26,9 @@ int CSamplesPhysicalQuantities::samples()
 
     CLengthUnit lu1(CLengthUnit::cm());
     CLengthUnit lu2(CLengthUnit::ft());
-    QString lu1s = lu1.toQString();
-    QString lu2s = lu2.toQString();
-    qDebug() << lu1 << lu2 << lu1s << lu2s;
+    QString lu1s = lu1.toQString(true);
+    QString lu2s = lu2.toQString(true);
+    qDebug() << lu1 << lu2 << lu1s << lu2s << lu1.getName(true) << lu2.getName(true);
     const CLength l1(5.0, CLengthUnit::ft()); // 5 ft
     CLength l2(1, CLengthUnit::NM()); // 1NM
     CLength l3(1, CLengthUnit::km());
@@ -89,8 +89,8 @@ int CSamplesPhysicalQuantities::samples()
     CTemperature t1;
     CTemperature t2(20, CTemperatureUnit::C());
     CTemperature t3(1, CTemperatureUnit::F());
-    qDebug() << t1 << t2 << t2.convertedSiValueRoundedWithUnit();
-    qDebug() << t3 << t3.valueRoundedWithUnit(CTemperatureUnit::C());
+    qDebug() << t1 << t2 << t2.convertedSiValueRoundedWithUnit(true);
+    qDebug() << t3.valueRoundedWithUnit(CTemperatureUnit::F(), -1 ,true)  << t3.valueRoundedWithUnit(CTemperatureUnit::C(), -1, true) << "I18N/UTF";
 
     // some logging with CLogMessage
     // bDebug << p1;
@@ -111,7 +111,7 @@ int CSamplesPhysicalQuantities::samples()
     qDebug() << ti1 << ti2;
 
     CAcceleration ac1(10, CAccelerationUnit::m_s2());
-    qDebug() << ac1;
+    qDebug() << ac1 << ac1.unitValueRoundedWithUnit(-1, true) << "I18N/UTF";
 
     // bye
     qDebug() << "-----------------------------------------------";

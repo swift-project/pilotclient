@@ -9,14 +9,15 @@
 #include <QDebug>
 #include <iostream>
 
-namespace BlackMisc
-{
+namespace BlackMisc {
+
 /*!
  * \brief Provides "to QString" and stream operators
  */
 // Virtual operators: http://stackoverflow.com/a/4571634/356726
 class CBaseStreamStringifier
 {
+
     /*!
      * \brief Stream << overload to be used in debugging messages
      * \param debug
@@ -127,11 +128,12 @@ public:
 
     /*!
      * \brief Cast as QString
+     * \bool i18n
      * \remarks operator cast caused too many ambiguity trouble
      */
-    QString toQString() const
+    QString toQString(bool i18n = false) const
     {
-        return this->stringForConverter();
+        return this->stringForConverter(i18n);
     }
 
 protected:
@@ -152,9 +154,10 @@ protected:
 
     /*!
      * \brief String for converter
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const = 0;
+    virtual QString stringForConverter(bool i18n = false) const = 0;
 
     /*!
      * \brief Stream to DBus
@@ -175,6 +178,7 @@ protected:
      * \return
      */
     CBaseStreamStringifier& operator=(const CBaseStreamStringifier&) { return *this; }
+
 };
 
 } // namespace

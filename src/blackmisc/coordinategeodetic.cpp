@@ -13,10 +13,10 @@ namespace Geo
 /*
  * String for converter
  */
-QString CCoordinateGeodetic::stringForConverter() const
+QString CCoordinateGeodetic::stringForConverter(bool i18n) const
 {
     QString s = "Geodetic: {%1, %2, %3}";
-    return s.arg(this->m_latitude.unitValueRoundedWithUnit(6)).arg(this->m_longitude.unitValueRoundedWithUnit(6)).arg(this->m_height.unitValueRoundedWithUnit());
+    return s.arg(this->m_latitude.unitValueRoundedWithUnit(6, i18n)).arg(this->m_longitude.unitValueRoundedWithUnit(6, i18n)).arg(this->m_height.unitValueRoundedWithUnit(i18n));
 }
 
 /*

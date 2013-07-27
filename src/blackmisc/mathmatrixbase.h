@@ -46,9 +46,10 @@ protected:
 
     /*!
      * \brief Conversion to string
+     * \param i18n
      * \return
      */
-    QString stringForConverter() const;
+    QString stringForConverter(bool i18n = false) const;
 
     /*!
      * \brief Stream to DBus

@@ -339,9 +339,9 @@ template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::unitValueToQStr
 /*
  * Rounded with unit
  */
-template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::unitValueRoundedWithUnit(int digits) const
+template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::unitValueRoundedWithUnit(int digits, bool i18n) const
 {
-    return this->m_unit.valueRoundedWithUnit(this->m_unitValueD, digits);
+    return this->m_unit.valueRoundedWithUnit(this->m_unitValueD, digits, i18n);
 }
 
 /*
@@ -356,20 +356,19 @@ template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::convertedSiValu
 /*
  * SI base unit value with unit
  */
-template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::convertedSiValueRoundedWithUnit(int digits) const
+template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::convertedSiValueRoundedWithUnit(int digits, bool i18n) const
 {
-    if (digits < 1) digits = this->m_conversionSiUnit.getDisplayDigits();
-    return this->convertedSiValueToQStringRounded(digits).append(this->m_conversionSiUnit.getUnitName());
+    return this->m_conversionSiUnit.valueRoundedWithUnit(this->m_convertedSiUnitValueD, digits, i18n);
 }
 
 /*
  * Value rounded in unit
  */
-template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits) const
+template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(const MU &unit, int digits, bool i18n) const
 {
-    if (unit == this->m_unit) return this->unitValueRoundedWithUnit(digits);
-    if (unit == this->m_conversionSiUnit) return this->convertedSiValueRoundedWithUnit(digits);
-    return unit.valueRoundedWithUnit(this->value(unit), digits);
+    if (unit == this->m_unit) return this->unitValueRoundedWithUnit(digits, i18n);
+    if (unit == this->m_conversionSiUnit) return this->convertedSiValueRoundedWithUnit(digits, i18n);
+    return unit.valueRoundedWithUnit(this->value(unit), digits, i18n);
 }
 
 /*

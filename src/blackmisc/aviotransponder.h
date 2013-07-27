@@ -90,9 +90,10 @@ protected:
 
     /*!
      * \brief Meaningful string representation
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const;
+    virtual QString stringForConverter(bool i18n = false) const;
 
 public:
     /*!

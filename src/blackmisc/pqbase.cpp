@@ -162,9 +162,9 @@ double CMeasurementUnit::conversionToUnit(double value, const CMeasurementUnit &
  * Value to QString with unit, e.g. "5.00m"
  * @return
  */
-QString CMeasurementUnit::valueRoundedWithUnit(double value, int digits) const
+QString CMeasurementUnit::valueRoundedWithUnit(double value, int digits, bool i18n) const
 {
-    return this->toQStringRounded(value, digits).append(this->getUnitName());
+    return this->toQStringRounded(value, digits).append(this->getUnitName(i18n));
 }
 
 /*

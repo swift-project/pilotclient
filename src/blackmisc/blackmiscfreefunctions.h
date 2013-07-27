@@ -10,6 +10,14 @@
 #include "mathallclasses.h"
 #include "geoallclasses.h"
 
+/*!
+ * \brief Workaround, to call initResource from namespace
+ */
+inline void initBlackMiscResources() { Q_INIT_RESOURCE(blackmisc); }
+
+/*!
+ * Free functions in BlackMisc
+ */
 namespace BlackMisc {
 
 /*!
@@ -58,6 +66,12 @@ void registerMetadata();
  * \brief Register all relevant metadata in BlackMisc
  */
 void registerMetadata();
+
+/*!
+ * \brief Init resources
+ */
+void initResources();
+
 
 } // BlackMisc
 

@@ -8,6 +8,7 @@
 
 #include "blackmisc/basestreamstringifier.h"
 #include "blackmisc/debug.h"
+#include <QCoreApplication>
 #include <QDBusArgument>
 #include <QString>
 #include <QtGlobal>
@@ -43,9 +44,10 @@ private:
 protected:
     /*!
      * \brief Name as stringification
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const
+    virtual QString stringForConverter(bool /* i18n  */ = false) const
     {
         return this->m_name;
     }
@@ -345,16 +347,17 @@ protected:
      */
     virtual QString stringForStreaming() const
     {
-        return this->m_name;
+        return this->getName(false);
     }
 
     /*!
-     * \brief String for converter is unit
+     * \brief Name as stringification
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const
+    virtual QString stringForConverter(bool i18n = false) const
     {
-        return this->m_unitName;
+        return this->getUnitName(i18n);
     }
 
     /*!
@@ -450,20 +453,22 @@ public:
 
     /*!
      * \brief Name such as "meter"
+     * \param i18n
      * \return
      */
-    QString getName() const
+    QString getName(bool i18n=false) const
     {
-        return this->m_name;
+        return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_name.toStdString().c_str()) : this->m_name;
     }
 
     /*!
      * \brief Unit name such as "m"
+     * \param i18n
      * \return
      */
-    QString getUnitName() const
+    QString getUnitName(bool i18n = false) const
     {
-        return this->m_unitName;
+        return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_unitName.toStdString().c_str()) : this->m_unitName;
     }
 
     /*!
@@ -518,9 +523,10 @@ public:
      * \brief Value rounded with unit, e.g. "5.00m", "30kHz"
      * \param value
      * \param digits
+     * \param i18n
      * \return
      */
-    virtual QString valueRoundedWithUnit(double value, int digits = -1) const;
+    virtual QString valueRoundedWithUnit(double value, int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Threshold for rounding

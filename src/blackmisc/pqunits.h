@@ -10,11 +10,14 @@
 #include <QDBusArgument>
 #include <QList>
 #include <QtCore/qmath.h>
+#include <QTranslator>
 
 
 //
 // Used with the template for quantities. This is the reason for
 // having all units in one file, since template requires concrete instantiations
+//
+// I18N: http://qt-project.org/doc/qt-4.8/linguist-programmers.html#translating-text-that-is-outside-of-a-qobject-subclass
 //
 namespace BlackMisc
 {
@@ -26,6 +29,7 @@ namespace PhysicalQuantities
  */
 class CLengthUnit : public CMeasurementUnit
 {
+
 private:
     /*!
      * \brief Constructor length unit
@@ -43,6 +47,7 @@ private:
     {
         // void
     }
+
 public:
     /*!
      * Default constructor, we do not want this, but required for Qt Metasystem
@@ -66,7 +71,9 @@ public:
     {
         static CLengthUnit m("meter", "m", true, true);
         return m;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "meter");
     }
+
 
     /*!
      * \brief Nautical miles NM
@@ -74,8 +81,9 @@ public:
      */
     static const CLengthUnit &NM()
     {
-        static CLengthUnit NM("nautical miles", "NM", false, false, 1000.0 * 1.85200, CMeasurementPrefix::One(), 3);
+        static CLengthUnit NM("nautical mile", "NM", false, false, 1000.0 * 1.85200, CMeasurementPrefix::One(), 3);
         return NM;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile");
     }
 
     /*!
@@ -86,7 +94,9 @@ public:
     {
         static CLengthUnit ft("foot", "ft", false, false, 0.3048, CMeasurementPrefix::One(), 0);
         return ft;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "foot");
     }
+
 
     /*!
      * \brief Kilometer km
@@ -96,6 +106,7 @@ public:
     {
         static CLengthUnit km("kilometer", "km", true, false, CMeasurementPrefix::k().getFactor(), CMeasurementPrefix::k(), 3);
         return km;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer");
     }
 
     /*!
@@ -106,6 +117,7 @@ public:
     {
         static CLengthUnit cm("centimeter", "cm", true, false, CMeasurementPrefix::c().getFactor(), CMeasurementPrefix::c(), 1);
         return cm;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "centimeter");
     }
 
     /*!
@@ -116,6 +128,7 @@ public:
     {
         static CLengthUnit mi("mile", "mi", false, false, 1609.344, CMeasurementPrefix::None(), 3);
         return mi;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "mile");
     }
 
     /*!
@@ -126,6 +139,7 @@ public:
     {
         static CLengthUnit mi("mile(statute)", "mi(statute)", false, false, 1609.3472, CMeasurementPrefix::None(), 3);
         return mi;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "mile(statute)");
     }
 
     /*!
@@ -238,6 +252,7 @@ public:
     {
         static CAngleUnit rad("radian", "rad", true);
         return rad;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "radian");
     }
 
     /*!
@@ -248,6 +263,8 @@ public:
     {
         static CAngleUnit deg("degree", "deg", false, M_PI / 180);
         return deg;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "degree");
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "deg");
     }
 
     /*!
@@ -258,6 +275,7 @@ public:
     {
         static CAngleUnit deg("segadecimal degree", "segd", false, M_PI / 180,
                               CMeasurementPrefix::One(), 0, 1E-9, CAngleUnit::conversionSexagesimalToSi, CAngleUnit::conversionSexagesimalFromSi); return deg;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "segadecimal degree");
     }
 
     /*!
@@ -614,8 +632,9 @@ public:
      */
     static const CPressureUnit &mbar()
     {
-        static CPressureUnit bar("bar", "bar", false, 1E2);
+        static CPressureUnit bar("millibar", "bar", false, 1E2);
         return bar;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "millibar");
     }
 
     /*!
@@ -624,8 +643,9 @@ public:
      */
     static const CPressureUnit &inHg()
     {
-        static CPressureUnit inhg("Inch of mercury 0°C", "inHg", false, 3386.389);
+        static CPressureUnit inhg("inch of mercury 0C", "inHg", false, 3386.389);
         return inhg;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "inch of mercury 0C");
     }
 
     /*!
@@ -634,8 +654,9 @@ public:
      */
     static const CPressureUnit &inHgFL()
     {
-        static CPressureUnit inhg("Inch of mercury ", "inHg", false, 3386.5307486631);
+        static CPressureUnit inhg("inch of mercury", "inHg", false, 3386.5307486631);
         return inhg;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "inch of mercury 0C");
     }
 
     /*!
@@ -750,6 +771,7 @@ public:
     {
         static CTemperatureUnit K("Kelvin", "K", true, true);
         return K;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "Kelvin");
     }
 
     /*!
@@ -758,8 +780,10 @@ public:
      */
     static const CTemperatureUnit &C()
     {
-        static CTemperatureUnit C("centigrade", "°C", false, false, 1.0, 273.15);
+        static CTemperatureUnit C("centigrade", "C", false, false, 1.0, 273.15);
         return C;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "centigrade");
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "C");
     }
 
     /*!
@@ -768,8 +792,10 @@ public:
      */
     static const CTemperatureUnit &F()
     {
-        static CTemperatureUnit F("Fahrenheit", "°F", false, false, 5.0 / 9.0, 459.67);
+        static CTemperatureUnit F("Fahrenheit", "F", false, false, 5.0 / 9.0, 459.67);
         return F;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "Fahrenheit");
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "F");
     }
 
     /*!
@@ -1098,7 +1124,7 @@ public:
     /*!
      * Default constructor, we do not want this, but required for Qt Metasystem
      */
-    CAccelerationUnit() : CMeasurementUnit("meter/second²", "m/s²", "acceleration", true, false, 1, CMeasurementPrefix::None(), 1) {}
+    CAccelerationUnit() : CMeasurementUnit("meter/second²", "m/s^2", "acceleration", true, false, 1, CMeasurementPrefix::None(), 1) {}
 
     /*!
      * Constructor, allows to implement methods in base class
@@ -1112,8 +1138,10 @@ public:
      */
     static const CAccelerationUnit &m_s2()
     {
-        static CAccelerationUnit ms2("meter/second²", "m/s²", true, false, 1, CMeasurementPrefix::None(), 1);
+        static CAccelerationUnit ms2("meter/second^2", "m/s^2", true, false, 1, CMeasurementPrefix::None(), 1);
         return ms2;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "meter/second^2");
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "m/s^2");
     }
 
     /*!
@@ -1122,8 +1150,10 @@ public:
      */
     static const CAccelerationUnit &ft_s2()
     {
-        static CAccelerationUnit fts2("feet/seconds²", "ft/s²", true, false, 3.28084, CMeasurementPrefix::m(), 0);
+        static CAccelerationUnit fts2("feet/seconds²", "ft/s^2", true, false, 3.28084, CMeasurementPrefix::m(), 0);
         return fts2;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "feet/second^2");
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "ft/s^2");
     }
 
     /*!
@@ -1165,6 +1195,7 @@ protected:
     }
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAccelerationUnit)
+
 
 } // namespace
 } // namespace

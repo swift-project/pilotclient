@@ -80,12 +80,13 @@ protected:
 
     /*!
      * \brief String for converter
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const  {
+    virtual QString stringForConverter(bool i18n = false) const  {
         QString s(this->getName());
-        s.append(" Active: ").append(this->m_frequencyActive.unitValueRoundedWithUnit(3));
-        s.append(" Standby: ").append(this->m_frequencyStandby.unitValueRoundedWithUnit(3));
+        s.append(" Active: ").append(this->m_frequencyActive.unitValueRoundedWithUnit(3, i18n));
+        s.append(" Standby: ").append(this->m_frequencyStandby.unitValueRoundedWithUnit(3, i18n));
         return s;
     }
 

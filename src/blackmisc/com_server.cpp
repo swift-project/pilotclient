@@ -92,7 +92,7 @@ void CComServer::sendToAll(const QString &messageID, const QByteArray &data)
     }
 }
 
-QString CComServer::getErrorMessage(const QAbstractSocket::SocketError error)
+QString CComServer::getErrorMessage(const QAbstractSocket::SocketError /** error **/)
 {
     return QString();
 }
@@ -128,7 +128,7 @@ void CComServer::onClientDisconnected(uint clientID)
     m_client_buffers.take(clientID)->deleteLater();
 }
 
-void CComServer::onClientMessageReceived(uint clientID, QString &messageID, QByteArray &message)
+void CComServer::onClientMessageReceived(uint /** clientID **/, QString &messageID, QByteArray &message)
 {
     emit doMessageReceived(messageID, message);
 }

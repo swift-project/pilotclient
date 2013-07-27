@@ -4,7 +4,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 INCLUDEPATH += . ..
 
-TARGET = BlackBox
+TARGET = blackbox
 TEMPLATE = app
 
 SOURCES += *.cpp
