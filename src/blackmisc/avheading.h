@@ -23,9 +23,28 @@ private:
 protected:
     /*!
      * \brief Specific stream operation for heading
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const;
+    virtual QString stringForConverter(bool i18n = false) const;
+
+    /*!
+     * \brief Stream to DBus <<
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const {
+        CAngle::marshallToDbus(argument);
+        argument << this->m_magnetic;
+    }
+
+    /*!
+     * \brief Stream from DBus >>
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+        CAngle::unmarshallFromDbus(argument);
+        argument >> this->m_magnetic;
+    }
 
 public:
     /*!
@@ -108,8 +127,16 @@ public:
         CAngle::switchUnit(newUnit);
         return (*this);
     }
+
+    /*!
+     * \brief Register metadata
+     */
+    static void registerMetadata();
 };
 
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CHeading)
+
 #endif // guard

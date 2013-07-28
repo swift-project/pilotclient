@@ -240,9 +240,10 @@ public:
      * \brief Special conversion to QString for sexagesimal degrees.
      * \param value
      * \param digits
+     * \param i18n
      * \return
      */
-    virtual QString toQStringRounded(double value, int digits) const;
+    virtual QString toQStringRounded(double value, int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Radians
@@ -477,6 +478,7 @@ public:
     {
         static CMassUnit kg("kilogram", "kg", true, true, 1.0, CMeasurementPrefix::k(), 1);
         return kg;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "kilogram");
     }
 
     /*!
@@ -487,6 +489,7 @@ public:
     {
         static CMassUnit g("gram", "g", true, false, 1.0 / 1000.0, CMeasurementPrefix::One(), 0);
         return g;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "gram");
     }
 
     /*!
@@ -497,6 +500,7 @@ public:
     {
         static CMassUnit t("tonne", "t", false, false, 1000.0, CMeasurementPrefix::One(), 3);
         return t;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "tonne");
     }
 
     /*!
@@ -507,6 +511,7 @@ public:
     {
         static CMassUnit lbs("pound", "lb", false, false, 0.45359237, CMeasurementPrefix::One(), 1);
         return lbs;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "pound");
     }
 
     /*!
@@ -594,6 +599,7 @@ public:
     {
         static CPressureUnit Pa("pascal", "Pa", true);
         return Pa;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "pascal");
     }
 
     /*!
@@ -604,6 +610,7 @@ public:
     {
         static CPressureUnit hPa("hectopascal", "hPa", true, CMeasurementPrefix::h().getFactor(), CMeasurementPrefix::h());
         return hPa;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "hectopascal");
     }
 
     /*!
@@ -614,6 +621,7 @@ public:
     {
         static CPressureUnit psi("pounds per square inch", "psi", false, 6894.8, CMeasurementPrefix::One(), 2);
         return psi;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "pounds per square inch");
     }
 
     /*!
@@ -624,6 +632,7 @@ public:
     {
         static CPressureUnit bar("bar", "bar", false, 1E5);
         return bar;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "bar");
     }
 
     /*!
@@ -879,6 +888,7 @@ public:
     {
         static CSpeedUnit ms("meters/second", "m/s", true, false);
         return ms;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "meters/second");
     }
 
     /*!
@@ -889,6 +899,7 @@ public:
     {
         static CSpeedUnit kts("knot", "kts", false, false, 1852.0 / 3600.0, CMeasurementPrefix::One(), 1);
         return kts;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "knot");
     }
 
     /*!
@@ -899,6 +910,7 @@ public:
     {
         static CSpeedUnit NMh("nautical miles/hour", "NM/h", false, false, 1852.0 / 3600.0, CMeasurementPrefix::One(), 1);
         return NMh;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical miles/hour");
     }
 
     /*!
@@ -907,8 +919,9 @@ public:
      */
     static const CSpeedUnit &ft_s()
     {
-        static CSpeedUnit fts("feet/seconds", "ft/s", false, false, 0.3048, CMeasurementPrefix::One(), 0);
+        static CSpeedUnit fts("feet/second", "ft/s", false, false, 0.3048, CMeasurementPrefix::One(), 0);
         return fts;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "feet/second");
     }
 
     /*!
@@ -919,6 +932,7 @@ public:
     {
         static CSpeedUnit ftmin("feet/minute", "ft/min", false, false, 0.3048 / 60.0, CMeasurementPrefix::One(), 0);
         return ftmin;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "feet/minute");
     }
 
     /*!
@@ -929,6 +943,7 @@ public:
     {
         static CSpeedUnit kmh("kilometers/hour", "km/h", false, false, 1.0 / 3.6, CMeasurementPrefix::One(), 1);
         return kmh;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometers/hour");
     }
 
     /*!
@@ -1015,6 +1030,7 @@ public:
     {
         static CTimeUnit s("second", "s", true, true, 1, CMeasurementPrefix::None(), 1);
         return s;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "second");
     }
 
     /*!
@@ -1025,6 +1041,7 @@ public:
     {
         static CTimeUnit ms("millisecond", "ms", true, false, 1E-03, CMeasurementPrefix::m(), 0);
         return ms;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "millisecond");
     }
 
     /*!
@@ -1035,6 +1052,7 @@ public:
     {
         static CTimeUnit h("hour", "h", false, false, 3600, CMeasurementPrefix::None(), 1);
         return h;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "hour");
     }
 
     /*!
@@ -1045,6 +1063,7 @@ public:
     {
         static CTimeUnit min("minute", "min", false, false, 60, CMeasurementPrefix::None(), 2);
         return min;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "minute");
     }
 
     /*!
@@ -1055,6 +1074,7 @@ public:
     {
         static CTimeUnit day("day", "d", false, false, 3600 * 24, CMeasurementPrefix::None(), 1);
         return day;
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "day");
     }
 
     /*!
@@ -1138,9 +1158,9 @@ public:
      */
     static const CAccelerationUnit &m_s2()
     {
-        static CAccelerationUnit ms2("meter/second^2", "m/s^2", true, false, 1, CMeasurementPrefix::None(), 1);
+        static CAccelerationUnit ms2("meters/second^2", "m/s^2", true, false, 1, CMeasurementPrefix::None(), 1);
         return ms2;
-        QT_TRANSLATE_NOOP("CMeasurementUnit", "meter/second^2");
+        QT_TRANSLATE_NOOP("CMeasurementUnit", "meters/second^2");
         QT_TRANSLATE_NOOP("CMeasurementUnit", "m/s^2");
     }
 

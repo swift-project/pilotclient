@@ -16,7 +16,7 @@ namespace Aviation
 /*
  * Own implementation for streaming
  */
-QString CAltitude::stringForConverter() const
+QString CAltitude::stringForConverter(bool /** i18n **/) const
 {
     QString s = CLength::stringForConverter();
     return s.append(this->m_msl ? " MSL" : " AGL");

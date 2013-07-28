@@ -85,4 +85,20 @@ void Testservice::receiveGeoPosition(const BlackMisc::Geo::CCoordinateGeodetic &
     qDebug() << "Pid:" << TestserviceTool::getPid() << "Received geo data:" << geo;
 }
 
+/*
+ * Receive transponder
+ */
+void Testservice::receiveTransponder(const BlackMisc::Aviation::CTransponder &transponder)
+{
+    qDebug() << "Pid:" << TestserviceTool::getPid() << "Received transponder:" << transponder;
+}
+
+/*
+ * Receive track
+ */
+void Testservice::receiveTrack(const BlackMisc::Aviation::CTrack &track)
+{
+    qDebug() << "Pid:" << TestserviceTool::getPid() << "Received track:" << track;
+}
+
 } // namespace

@@ -507,9 +507,10 @@ public:
      * specialized formatting
      * \param value
      * \param digits
+     * \param i18n
      * \return
      */
-    virtual QString toQStringRounded(double value, int digits = -1) const;
+    virtual QString toQStringRounded(double value, int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Rounded value

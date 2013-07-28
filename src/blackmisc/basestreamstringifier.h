@@ -153,7 +153,7 @@ protected:
     }
 
     /*!
-     * \brief String for converter
+     * \brief String for QString conversion
      * \param i18n
      * \return
      */

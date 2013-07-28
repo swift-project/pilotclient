@@ -179,7 +179,7 @@ double CMeasurementUnit::valueRounded(double value, int digits) const
 /*
  * Rounded to QString
  */
-QString CMeasurementUnit::toQStringRounded(double value, int digits) const
+QString CMeasurementUnit::toQStringRounded(double value, int digits, bool /** i18n **/) const
 {
     if (digits < 0) digits = this->m_displayDigits;
     double v = CMath::round(value, digits);

@@ -33,6 +33,9 @@ void BlackMisc::Aviation::registerMetadata()
     CAdfSystem::registerMetadata();
     CAltitude::registerMetadata();
     CAviationVerticalPositions::registerMetadata();
+    CTransponder::registerMetadata();
+    CHeading::registerMetadata();
+    CTrack::registerMetadata();
 }
 
 /*

@@ -272,6 +272,7 @@ public:
     {
         return this->m_frequencyActive == CModulator::FrequencyNotSet();
     }
+
     /*!
      * \brief Toggle active and standby frequencies
      */

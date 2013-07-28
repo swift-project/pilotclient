@@ -31,6 +31,7 @@ public:
         ModeC = 12,
         ModeS = 20
     };
+
 private:
     qint32 m_transponderCode; //<! Transponder code
     TransponderMode m_transponderMode; //<! Transponder mode
@@ -63,6 +64,7 @@ private:
         if (!ok)this->m_transponderCode = -1; // will cause assert / exception
         this->validate(validate);
     }
+
 protected:
     /*!
      * \brief Are the set values valid / in range?
@@ -94,6 +96,18 @@ protected:
      * \return
      */
     virtual QString stringForConverter(bool i18n = false) const;
+
+    /*!
+     * \brief Stream to DBus <<
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const;
+
+    /*!
+     * \brief Stream from DBus >>
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
 public:
     /*!
@@ -262,6 +276,7 @@ public:
         if (!(s = transponder.validate(false))) transponder = CTransponder(); // reset to default
         return s;
     }
+
     /*!
      * Try to get a Transponder unit with given name and code. Returns true in case an object
      * has been sucessfully created, otherwise returns a default object.
@@ -278,6 +293,7 @@ public:
         if (!(s = transponder.validate(false))) transponder = CTransponder(); // reset to default
         return s;
     }
+
     /*!
      * \brief Transponder unit
      * \param transponderCode
@@ -288,6 +304,7 @@ public:
     {
         return CTransponder("Transponder", transponderCode, mode);
     }
+
     /*!
      * \brief Try to get Transponder unit
      * \param transponder
@@ -311,6 +328,11 @@ public:
     {
         return CTransponder::tryGetTransponder(transponder, "Transponder", transponderCode, mode);
     }
+
+    /*!
+     * \brief Register metadata of unit and quantity
+     */
+    static void registerMetadata();
 
 };
 

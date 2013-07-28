@@ -75,7 +75,10 @@ int main(int argc, char *argv[])
     } else {
         qDebug() << "Already registered, assuming 2nd pid: " << TestserviceTool::getPid();
         BlackmisctestTestserviceInterface testserviceInterface(Testservice::ServiceName, Testservice::ServicePath, connection, &a);
-        double speedValue = 200.0;
+
+        CSpeed speed(200, BlackMisc::PhysicalQuantities::CSpeedUnit::km_h());
+        CAltitude al(1000, true, CLengthUnit::ft());
+
         while (true) {
             QDBusMessage m = QDBusMessage::createSignal(
                         Testservice::ServicePath, Testservice::ServiceName,
@@ -103,7 +106,6 @@ int main(int argc, char *argv[])
             qDebug() << "Send list via interface" << list;
 
             // PQs
-            CSpeed speed(speedValue++, BlackMisc::PhysicalQuantities::CSpeedUnit::km_h());
             testserviceInterface.receiveSpeed(speed);
             qDebug() << "Send speed via interface" << speed;
 
@@ -111,17 +113,28 @@ int main(int argc, char *argv[])
             testserviceInterface.receiveSpeed(speed);
             qDebug() << "Send speed via interface" << speed;
             TestserviceTool::sleep(2500);
+            speed.switchUnit(CSpeedUnit::km_h());
+            speed.addUnitValue(1.0);
 
             // Aviation
             CComSystem comSystem = CComSystem("DBUS COM1", CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress(), CPhysicalQuantitiesConstants::FrequencyUnicom());
             testserviceInterface.receiveComUnit(comSystem);
             qDebug() << "Send COM via interface" << comSystem;
 
-            CAltitude al(1000, true, CLengthUnit::ft());
             QDBusVariant qv(QVariant::fromValue(al));
             testserviceInterface.receiveVariant(qv);
             testserviceInterface.receiveAltitude(al);
             qDebug() << "Send altitude via interface" << al;
+            al.addUnitValue(1);
+
+            CTransponder transponder("transponder", 7000, CTransponder::ModeC);
+            testserviceInterface.receiveTransponder(transponder);
+            qDebug() << "Send transponder via interface" << transponder;
+
+            CTrack track(123.45, true, CAngleUnit::deg());
+            testserviceInterface.receiveTrack(track);
+            qDebug() << "Send track via interface" << track;
+
             TestserviceTool::sleep(2500);
 
             // Math

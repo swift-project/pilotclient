@@ -24,9 +24,10 @@ private:
 protected:
     /*!
      * \brief Specific stream operation for Altitude
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const;
+    virtual QString stringForConverter(bool i18n) const;
 
     /*!
      * \brief Stream to DBus <<

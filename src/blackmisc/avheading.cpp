@@ -16,9 +16,9 @@ namespace Aviation
 /*
  * Own implementation for streaming
  */
-QString CHeading::stringForConverter() const
+QString CHeading::stringForConverter(bool i18n) const
 {
-    QString s = CAngle::stringForConverter();
+    QString s = CAngle::stringForConverter(i18n);
     return s.append(this->m_magnetic ? " magnetic" : " true");
 }
 
@@ -48,6 +48,15 @@ bool CHeading::operator ==(const CHeading &otherHeading)
 bool CHeading::operator !=(const CHeading &otherHeading)
 {
     return !((*this) == otherHeading);
+}
+
+/*!
+ * \brief Register metadata of unit and quantity
+ */
+void CHeading::registerMetadata()
+{
+    qRegisterMetaType<CHeading>(typeid(CHeading).name());
+    qDBusRegisterMetaType<CHeading>();
 }
 
 } // namespace

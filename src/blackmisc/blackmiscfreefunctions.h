@@ -13,6 +13,7 @@
 /*!
  * \brief Workaround, to call initResource from namespace
  */
+// cannot be declare within namespace, see docu
 inline void initBlackMiscResources() { Q_INIT_RESOURCE(blackmisc); }
 
 /*!

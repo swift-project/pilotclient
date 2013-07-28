@@ -34,5 +34,13 @@
       <arg name="geo" type="((didb(s)(s))(didb(s)(s))(didb(s)(s)))" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Geo::CCoordinateGeodetic"/>
     </method>
+    <method name="receiveTransponder">
+      <arg name="transponder" type="(sii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CTransponder"/>
+    </method>
+    <method name="receiveTrack">
+      <arg name="track" type="(didb(s)(s)b)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CTrack"/>
+    </method>
   </interface>
 </node>

@@ -94,6 +94,18 @@ public slots:
      */
     void receiveGeoPosition(const BlackMisc::Geo::CCoordinateGeodetic &geo);
 
+    /*!
+     * \brief Receive transponder
+     * \param transponder
+     */
+    void receiveTransponder(const BlackMisc::Aviation::CTransponder &transponder);
+
+    /*!
+     * \brief Receive track
+     * \param track
+     */
+    void receiveTrack(const BlackMisc::Aviation::CTrack &track);
+
 public:
     static const QString ServiceName;
     static const QString ServicePath;

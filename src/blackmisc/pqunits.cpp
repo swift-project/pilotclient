@@ -66,7 +66,7 @@ double CAngleUnit::conversionSexagesimalToSi(const CMeasurementUnit &, double va
 /*
  * Rounded to QString
  */
-QString CAngleUnit::toQStringRounded(double value, int digits) const
+QString CAngleUnit::toQStringRounded(double value, int digits, bool i18n) const
 {
     QString s;
     if ((*this) == CAngleUnit::sexagesimalDeg())
@@ -76,8 +76,9 @@ QString CAngleUnit::toQStringRounded(double value, int digits) const
         double mi = floor((value - de) * 100.0);
         double se = floor((value - de - mi / 100.0) * 1000000) / 100.0;
         QString ses = QLocale::system().toString(se, 'f', 2);
-        s = QString::number(de).append(" ").append(QString::number(mi))
-            .append("'").append(ses).append("\"");
+        s = QString::number(de);
+        s = s.append(i18n ? CAngleUnit::deg().getUnitName(true) : " ");
+        s = s.append(QString::number(mi)).append("'").append(ses).append("\"");
     }
     else
     {

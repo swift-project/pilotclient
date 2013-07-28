@@ -99,5 +99,36 @@ QString CTransponder::getTransponderCodeFormatted() const
     return f.right(4);
 }
 
+/*!
+ * \brief Stream to DBus <<
+ * \param argument
+ */
+void CTransponder::marshallToDbus(QDBusArgument &argument) const {
+    CAvionicsBase::marshallToDbus(argument);
+    argument << this->m_transponderCode;
+    argument << static_cast<qint32>(this->m_transponderMode);
+}
+
+/*!
+ * \brief Stream from DBus >>
+ * \param argument
+ */
+void CTransponder::unmarshallFromDbus(const QDBusArgument &argument) {
+    CAvionicsBase::unmarshallFromDbus(argument);
+    qint32 tm;
+    argument >> this->m_transponderCode;
+    argument >> tm;
+    this->m_transponderMode = static_cast<TransponderMode>(tm);
+}
+
+/*!
+ * \brief Register metadata of unit and quantity
+ */
+void CTransponder::registerMetadata()
+{
+    qRegisterMetaType<CTransponder>(typeid(CTransponder).name());
+    qDBusRegisterMetaType<CTransponder>();
+}
+
 } // namespace
 } // namespace

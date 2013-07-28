@@ -23,4 +23,5 @@ TRANSLATIONS += translations/blackmisc_i18n_de.ts \
 HEADERS += *.h
 SOURCES += *.cpp
 DESTDIR = ../../lib
-OTHER_FILES += $$TRANSLATIONS
+OTHER_FILES += $$TRANSLATIONS \
+    readme.txt
