@@ -31,7 +31,7 @@ protected:
      * \param i18n
      * \return
      */
-    virtual QString stringForConverter(bool i18n = false) const;
+    virtual QString convertToQString(bool i18n = false) const;
 
     /*!
      * \brief Unmarshall from Dbus

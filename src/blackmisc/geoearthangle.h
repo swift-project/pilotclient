@@ -72,7 +72,7 @@ protected:
      * \brief String for converter and streaming
      * \return
      */
-    virtual QString stringForConverter() const
+    virtual QString convertToQString() const
     {
         return this->unitValueRoundedWithUnit(6);
     }

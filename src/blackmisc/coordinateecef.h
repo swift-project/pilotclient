@@ -104,7 +104,7 @@ protected:
      * \brief String for converter
      * \return
      */
-    virtual QString stringForConverter() const
+    virtual QString convertToQString() const
     {
         QString s = "ECEF: {x %1, y %2, z %3}";
         s = s.arg(QString::number(this->x(), 'f', 6)).

@@ -27,7 +27,7 @@ protected:
      * \brief Specific stream operation for Track
      * \return
      */
-    virtual QString stringForConverter(bool i18n = false) const;
+    virtual QString convertToQString(bool i18n = false) const;
 
     /*!
      * \brief Stream to DBus <<

@@ -133,7 +133,7 @@ public:
      */
     QString toQString(bool i18n = false) const
     {
-        return this->stringForConverter(i18n);
+        return this->convertToQString(i18n);
     }
 
 protected:
@@ -149,7 +149,7 @@ protected:
     virtual QString stringForStreaming() const
     {
         // simplest default implementation requires only one method
-        return this->stringForConverter();
+        return this->convertToQString();
     }
 
     /*!
@@ -157,19 +157,19 @@ protected:
      * \param i18n
      * \return
      */
-    virtual QString stringForConverter(bool i18n = false) const = 0;
+    virtual QString convertToQString(bool i18n = false) const = 0;
 
     /*!
      * \brief Stream to DBus
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &) const {}
+    virtual void marshallToDbus(QDBusArgument &) const = 0;
 
     /*!
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &) {}
+    virtual void unmarshallFromDbus(const QDBusArgument &) = 0;
 
     /*!
      * \brief Copy assignment operator.

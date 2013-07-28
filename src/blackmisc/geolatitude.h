@@ -19,10 +19,10 @@ protected:
     /*!
      * \brief Specific string representation
      */
-    virtual QString stringForConverter() const
+    virtual QString convertToQString() const
     {
         QString s = "latitude ";
-        return s.append(CEarthAngle::stringForConverter());
+        return s.append(CEarthAngle::convertToQString());
     }
 
 public:

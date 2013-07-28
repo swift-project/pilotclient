@@ -49,7 +49,7 @@ protected:
      * \param i18n
      * \return
      */
-    QString stringForConverter(bool i18n = false) const;
+    QString convertToQString(bool i18n = false) const;
 
     /*!
      * \brief Stream to DBus

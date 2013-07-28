@@ -75,7 +75,7 @@ protected:
      * \param i18n
      * \return
      */
-    virtual QString stringForConverter(bool i18n = false) const
+    virtual QString convertToQString(bool i18n = false) const
     {
         return this->unitValueRoundedWithUnit(-1, i18n);
     }

@@ -47,7 +47,7 @@ protected:
      * \param i18n
      * \return
      */
-    virtual QString stringForConverter(bool /* i18n  */ = false) const
+    virtual QString convertToQString(bool /* i18n  */ = false) const
     {
         return this->m_name;
     }
@@ -355,7 +355,7 @@ protected:
      * \param i18n
      * \return
      */
-    virtual QString stringForConverter(bool i18n = false) const
+    virtual QString convertToQString(bool i18n = false) const
     {
         return this->getUnitName(i18n);
     }

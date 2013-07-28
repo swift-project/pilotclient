@@ -16,7 +16,7 @@ namespace Math
 /*
  * Convert to string
  */
-template <class ImplVector> QString CVector3DBase<ImplVector>::stringForConverter(bool /** i18n **/) const
+template <class ImplVector> QString CVector3DBase<ImplVector>::convertToQString(bool /** i18n **/) const
 {
     QString s = ("{%1, %2, %3}");
     s = s.arg(QString::number(this->m_i, 'f')).
