@@ -33,6 +33,8 @@ namespace BlackCore
     public: //INetwork slots overrides
         virtual void setServerDetails(const QString& hostname, quint16 port);
         virtual void setUserCredentials(const QString& username, const QString& password);
+        virtual void setCallsign(const QString& callsign);
+        virtual void setRealName(const QString& name);
         virtual void initiateConnection();
         virtual void terminateConnection();
         virtual void sendPrivateTextMessage(const QString& callsign, const QString& msg);
@@ -41,7 +43,9 @@ namespace BlackCore
         virtual void sendFreqQuery(const QString& callsign);
         virtual void sendServerQuery(const QString& callsign);
         virtual void sendAtcQuery(const QString& callsign);
+        virtual void sendAtisQuery(const QString& callsign);
         virtual void sendNameQuery(const QString& callsign);
+        virtual void sendCapabilitiesQuery(const QString& callsign);
         virtual void replyToFreqQuery(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq);
         virtual void replyToNameQuery(const QString& callsign, const QString& realname);
         virtual void requestPlaneInfo(const QString& callsign);
@@ -74,8 +78,6 @@ namespace BlackCore
         static void onPilotInfoReceived(Cvatlib_Network*, const char* callsign, const char** keysValues, void* cbvar);
 
     private:
-        void exceptionDispatcher();
-
         QByteArray toFSD(QString qstr) const;
         QString fromFSD(const char* cstr) const;
 
@@ -90,6 +92,8 @@ namespace BlackCore
         quint16 m_serverPort;
         QString m_username;
         QString m_password;
+        QString m_callsign;
+        QString m_realname;
 
         QTextCodec* m_fsdTextCodec;
     };

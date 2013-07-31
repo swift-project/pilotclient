@@ -24,14 +24,25 @@ namespace BlackCore
 
     class INetwork : public QObject
     {
-        Q_OBJECT;
+        Q_OBJECT
 
     public:
+        BLACK_INTERFACE(BlackCore::INetwork)
+
         virtual ~INetwork() {}
+
+        enum
+        {
+            AcceptsAtisResponses        = 1 << 0,
+            SupportsInterimPosUpdates   = 1 << 1,
+            SupportsModelDescriptions   = 1 << 2,
+        };
 
     public slots:
         virtual void setServerDetails(const QString& hostname, quint16 port) = 0;
         virtual void setUserCredentials(const QString& username, const QString& password) = 0;
+        virtual void setCallsign(const QString& callsign) = 0;
+        virtual void setRealName(const QString& name) = 0;
         virtual void initiateConnection() = 0;
         virtual void terminateConnection() = 0;
         virtual void sendPrivateTextMessage(const QString& callsign, const QString& msg) = 0;
@@ -40,7 +51,9 @@ namespace BlackCore
         virtual void sendFreqQuery(const QString& callsign) = 0;
         virtual void sendServerQuery(const QString& callsign) = 0;
         virtual void sendAtcQuery(const QString& callsign) = 0;
+        virtual void sendAtisQuery(const QString& callsign) = 0;
         virtual void sendNameQuery(const QString& callsign) = 0;
+        virtual void sendCapabilitiesQuery(const QString& callsign) = 0;
         virtual void replyToFreqQuery(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq) = 0;
         virtual void replyToNameQuery(const QString& callsign, const QString& realname) = 0;
         virtual void requestPlaneInfo(const QString& callsign) = 0;
@@ -55,21 +68,19 @@ namespace BlackCore
         void atcPositionUpdate(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq,
             const BlackMisc::Geo::CCoordinateGeodetic& pos, const BlackMisc::PhysicalQuantities::CLength& range);
         void atcDisconnected(const QString& callsign);
-        void atisReplyReceived(const QString& callsign, const QString& data);
         //TODO void cloudDataReceived(...);
         void connectionStatusIdle();
         void connectionStatusConnecting();
         void connectionStatusConnected();
         void connectionStatusDisconnected();
         void connectionStatusError();
-        //TODO void atisQueryReplyReceived(...);
-        //TODO void nameQueryReplyReceived(const QString& callsign, const QString& name);
-        //TODO void capabilitiesQueryReplyReceived(...);
         void ipQueryReplyReceived(const QString& ip);
         void freqQueryReplyReceived(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq);
         void serverQueryReplyReceived(const QString& callsign, const QString& hostname);
         void atcQueryReplyReceived(const QString& callsign, bool isATC);
+        void atisQueryReplyReceived(const QString& callsign, const QString& data);
         void nameQueryReplyReceived(const QString& callsign, const QString& realname);
+        void capabilitiesQueryReplyReceived(const QString& callsign, quint32 flags);
         void freqQueryRequestReceived(const QString& callsign);
         void nameQueryRequestReceived(const QString& callsign);
         //TODO void interimPilotPositionUpdate(...);
