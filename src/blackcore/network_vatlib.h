@@ -15,6 +15,7 @@
 #include <QScopedPointer>
 #include <QBasicTimer>
 #include <QTextCodec>
+#include <QByteArray>
 
 namespace BlackCore
 {
@@ -80,9 +81,14 @@ namespace BlackCore
     private:
         QByteArray toFSD(QString qstr) const;
         QString fromFSD(const char* cstr) const;
+        bool isDisconnected() const { return m_status == Cvatlib_Network::connStatus_Idle || m_status == Cvatlib_Network::connStatus_Disconnected; }
+
+    signals:
+        void terminate();
 
     private:
         QScopedPointer<Cvatlib_Network> m_net;
+        Cvatlib_Network::connStatus m_status;
 
         QBasicTimer m_timer;
         static int const c_updateIntervalMillisecs = 100;
@@ -92,8 +98,8 @@ namespace BlackCore
         quint16 m_serverPort;
         QString m_username;
         QString m_password;
-        QString m_callsign;
-        QString m_realname;
+        QByteArray m_callsign;
+        QByteArray m_realname;
 
         QTextCodec* m_fsdTextCodec;
     };

@@ -28,10 +28,13 @@ namespace BlackCore
 
     NetworkVatlib::NetworkVatlib()
         : m_net(Create_Cvatlib_Network()),
+          m_status(Cvatlib_Network::connStatus_Idle),
           m_fsdTextCodec(QTextCodec::codecForName("latin1"))
     {
         try
         {
+            connect(this, SIGNAL(terminate()), this, SLOT(terminateConnection()), Qt::QueuedConnection);
+
             Q_ASSERT_X(m_fsdTextCodec, "NetworkVatlib", "Missing default wire text encoding");
             //TODO reinit m_fsdTextCodec from WireTextEncoding config setting if present
 
@@ -75,15 +78,18 @@ namespace BlackCore
 
     NetworkVatlib::~NetworkVatlib()
     {
+        m_timer.stop();
+
         try
         {
-            m_timer.stop();
-
             if (m_net->IsNetworkConnected())
             {
                 m_net->LogoffAndDisconnect(0);
             }
-
+        }
+        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+        try
+        {
             m_net->DestroyNetworkSession();
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
@@ -142,52 +148,57 @@ namespace BlackCore
 
     void NetworkVatlib::setServerDetails(const QString& host, quint16 port)
     {
+        Q_ASSERT_X(isDisconnected(), "NetworkVatlib", "Can't change server details while still connected");
+
         m_serverHost = host;
         m_serverPort = port;
     }
 
     void NetworkVatlib::setUserCredentials(const QString& username, const QString& password)
     {
+        Q_ASSERT_X(isDisconnected(), "NetworkVatlib", "Can't change login details while still connected");
+
         m_username = username;
         m_password = password;
     }
 
     void NetworkVatlib::setCallsign(const QString& callsign)
     {
-        m_callsign = callsign;
+        Q_ASSERT_X(isDisconnected(), "NetworkVatlib", "Can't change callsign while still connected");
+
+        m_callsign = toFSD(callsign);
     }
 
     void NetworkVatlib::setRealName(const QString& name)
     {
-        m_realname = name;
+        Q_ASSERT_X(isDisconnected(), "NetworkVatlib", "Can't change name while still connected");
+
+        m_realname = toFSD(name);
     }
 
     void NetworkVatlib::initiateConnection()
     {
+        Q_ASSERT_X(isDisconnected(), "NetworkVatlib", "Can't connect while still connected");
+
         try
         {
-            //Proper way to copy a const char* to a const char*. Copy it to a char* then assign the char* to the const char*
-            const size_t len1 = strlen(m_callsign.toStdString().c_str()); //Get the length
-            char* tmp1 = new char[len1 + 1]; //Allocate the char*
-            strncpy(tmp1, m_callsign.toStdString().c_str(), len1); //Copy the const char* to the char*
-            tmp1[len1] = '\0'; //Insurance of null termination
-            
-            const size_t len2 = strlen(m_realname.toStdString().c_str());
-            char* tmp2 = new char[len2 + 1];
-            strncpy(tmp2, m_realname.toStdString().c_str(), len2);
-            tmp2[len2] = '\0';
-            
+            m_status = Cvatlib_Network::connStatus_Connecting; //paranoia
+
             Cvatlib_Network::PilotConnectionInfo info;
-            info.callsign = tmp1; //Assign char* to const char*
-            info.name = tmp2;
+            info.callsign = m_callsign.data();
+            info.name = m_realname.data();
             info.rating = Cvatlib_Network::pilotRating_Unknown; //TODO
             info.sim = Cvatlib_Network::simType_XPlane; //TODO
             
-            m_net->SetPilotLoginInfo(m_serverHost.toStdString().c_str(), m_serverPort,
-                m_username.toStdString().c_str(), m_password.toStdString().c_str(), info);
+            m_net->SetPilotLoginInfo(toFSD(m_serverHost).data(), m_serverPort,
+                toFSD(m_username).data(), toFSD(m_password).data(), info);
             m_net->ConnectAndLogon();
         }
-        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            m_status = Cvatlib_Network::connStatus_Idle;
+            exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     void NetworkVatlib::terminateConnection()
@@ -382,6 +393,8 @@ namespace BlackCore
 
     void NetworkVatlib::onConnectionStatusChanged(Cvatlib_Network*, Cvatlib_Network::connStatus, Cvatlib_Network::connStatus newStatus, void* cbvar)
     {
+        cbvar_cast(cbvar)->m_status = newStatus;
+
         switch (newStatus)
         {
         case Cvatlib_Network::connStatus_Idle:          emit cbvar_cast(cbvar)->connectionStatusIdle(); break;
@@ -498,17 +511,17 @@ namespace BlackCore
     {
         switch (type)
         {
-        case Cvatlib_Network::error_Ok:                     return;
-        case Cvatlib_Network::error_CallsignTaken:          qCritical() << "The requested callsign is already taken"; break;
-        case Cvatlib_Network::error_CallsignInvalid:        qCritical() << "The requested callsign is not valid"; break;
-        case Cvatlib_Network::error_CIDPasswdInvalid:       qCritical() << "Wrong user ID or password"; break;
-        case Cvatlib_Network::error_ProtoVersion:           qCritical() << "This server uses an unsupported protocol version"; break;
-        case Cvatlib_Network::error_LevelTooHigh:           qCritical() << "You are not authorized to use the requested pilot rating"; break;
-        case Cvatlib_Network::error_ServerFull:             qCritical() << "The server is full"; break;
-        case Cvatlib_Network::error_CIDSuspended:           qCritical() << "Your user account is suspended"; break;
-        case Cvatlib_Network::error_InvalidPosition:        qCritical() << "You are not authorized to use the requested pilot rating"; break;
-        case Cvatlib_Network::error_SoftwareNotAuthorized:  qCritical() << "This client software has not been authorized for use on this network"; break;
+        case Cvatlib_Network::error_CallsignTaken:          qCritical() << "The requested callsign is already taken"; goto terminate;
+        case Cvatlib_Network::error_CallsignInvalid:        qCritical() << "The requested callsign is not valid"; goto terminate;
+        case Cvatlib_Network::error_CIDPasswdInvalid:       qCritical() << "Wrong user ID or password"; goto terminate;
+        case Cvatlib_Network::error_ProtoVersion:           qCritical() << "This server uses an unsupported protocol version"; goto terminate;
+        case Cvatlib_Network::error_LevelTooHigh:           qCritical() << "You are not authorized to use the requested pilot rating"; goto terminate;
+        case Cvatlib_Network::error_ServerFull:             qCritical() << "The server is full"; goto terminate;
+        case Cvatlib_Network::error_CIDSuspended:           qCritical() << "Your user account is suspended"; goto terminate;
+        case Cvatlib_Network::error_InvalidPosition:        qCritical() << "You are not authorized to use the requested pilot rating"; goto terminate;
+        case Cvatlib_Network::error_SoftwareNotAuthorized:  qCritical() << "This client software has not been authorized for use on this network"; goto terminate;
 
+        case Cvatlib_Network::error_Ok:                     break;
         case Cvatlib_Network::error_Syntax:                 qWarning() << "Malformed packet: Syntax error: %s" << cbvar_cast(cbvar)->fromFSD(data); break;
         case Cvatlib_Network::error_SourceInvalid:          qDebug() << "Server: source invalid (" << cbvar_cast(cbvar)->fromFSD(data); break;
         case Cvatlib_Network::error_CallsignNotExists:      qDebug() << "Shim lib: " << cbvar_cast(cbvar)->fromFSD(msg) << " (" << cbvar_cast(cbvar)->fromFSD(data) << ")"; break;
@@ -519,8 +532,12 @@ namespace BlackCore
         case Cvatlib_Network::error_Registered:
         case Cvatlib_Network::error_InvalidControl:         qWarning() << "Server: " << cbvar_cast(cbvar)->fromFSD(msg); break;
 
-        default:                                            qFatal("VATSIM shim library: %s (error %d)", cbvar_cast(cbvar)->fromFSD(msg), type); break;
+        default:                                            qFatal("VATSIM shim library: %s (error %d)", cbvar_cast(cbvar)->fromFSD(msg), type); goto terminate;
         }
+
+        return;
+        terminate:
+        emit cbvar_cast(cbvar)->terminate();
     }
 
     void NetworkVatlib::onWindDataReceived(Cvatlib_Network*, Cvatlib_Network::WindLayer layers[4], void* cbvar)

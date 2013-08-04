@@ -22,6 +22,13 @@
 namespace BlackCore
 {
 
+    /*!
+     * Interface to a connection to a multi-user flight simulation and ATC network.
+     *
+     * \warning If an INetwork signal is connected to a slot, and that slot emits a signal
+     *          which is connected to an INetwork slot, then at least one of those connections
+     *          must be a Qt::QueuedConnection.
+     */
     class INetwork : public QObject
     {
         Q_OBJECT
