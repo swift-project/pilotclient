@@ -12,7 +12,7 @@ void LineReader::run()
     file.open(stdin, QIODevice::ReadOnly | QIODevice::Text);
     forever
     {
-        QString line = file.readLine();
+        QString line = file.readLine().trimmed();
         if (! line.isEmpty())
         {
             emit command(line);

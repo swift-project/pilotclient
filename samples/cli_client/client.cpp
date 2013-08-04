@@ -93,6 +93,7 @@ void Client::command(QString line)
     QTextStream stream (&line, QIODevice::ReadOnly);
     QString cmd;
     stream >> cmd;
+    stream.skipWhiteSpace();
 
     auto found = m_commands.find(cmd);
     if (found == m_commands.end())
@@ -154,7 +155,7 @@ void Client::setCallsignCmd(QTextStream& args)
 
 void Client::setRealNameCmd(QTextStream& args)
 {
-    emit setRealName(args.readLine().mid(1)); //readLine returns the entire line up to, but excluding, the LF character. mid(int) is the QString equivilent of a substring(start), used here to remove a space
+    emit setRealName(args.readAll());
 }
 
 void Client::initiateConnectionCmd(QTextStream&)
