@@ -166,12 +166,23 @@ namespace BlackCore
     {
         try
         {
+            //Proper way to copy a const char* to a const char*. Copy it to a char* then assign the char* to the const char*
+            const size_t len1 = strlen(m_callsign.toStdString().c_str()); //Get the length
+            char* tmp1 = new char[len1 + 1]; //Allocate the char*
+            strncpy(tmp1, m_callsign.toStdString().c_str(), len1); //Copy the const char* to the char*
+            tmp1[len1] = '\0'; //Insurance of null termination
+            
+            const size_t len2 = strlen(m_realname.toStdString().c_str());
+            char* tmp2 = new char[len2 + 1];
+            strncpy(tmp2, m_realname.toStdString().c_str(), len2);
+            tmp2[len2] = '\0';
+            
             Cvatlib_Network::PilotConnectionInfo info;
-            info.callsign = m_callsign.toStdString().c_str();
-            info.name = m_realname.toStdString().c_str();
+            info.callsign = tmp1; //Assign char* to const char*
+            info.name = tmp2;
             info.rating = Cvatlib_Network::pilotRating_Unknown; //TODO
             info.sim = Cvatlib_Network::simType_XPlane; //TODO
-
+            
             m_net->SetPilotLoginInfo(m_serverHost.toStdString().c_str(), m_serverPort,
                 m_username.toStdString().c_str(), m_password.toStdString().c_str(), info);
             m_net->ConnectAndLogon();
