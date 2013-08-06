@@ -5,7 +5,7 @@
 #include <QDBusConnection>
 #include <QtDBus/QDBusError>
 
-#include "planemanager_interface.h"
+#include "aircraftmanager_interface.h"
 #include "atcmanager_interface.h"
 #include "fsdclient_interface.h"
 
@@ -15,7 +15,7 @@ class DBusClient : public QObject
 
 private:
     QDBusConnection m_connection;
-    org::vatsim::pilotClient::PlaneManager *pilotManagerIface;
+    org::vatsim::pilotClient::AircraftManager *aircraftManagerIface;
     org::vatsim::pilotClient::AtcManager *atcManagerIface;
     org::vatsim::pilotClient::FsdClient *fsdClientIface;
 

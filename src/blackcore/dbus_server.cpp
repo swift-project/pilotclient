@@ -1,16 +1,16 @@
+/*  Copyright (C) 2013 VATSIM Community / contributors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 #include <QDebug>
 
-#include "dbusserver.h"
+#include "dbus_server.h"
 
-namespace BlackCore
-{
+namespace BlackCore {
 
-// TODO:
-// - Change constructor to use address from the config file
-// - Ammend debug message according to the final result in the forum discussion
-
-    CDBusServer::CDBusServer(QObject *parent) :
-        QObject(parent), m_busServer("tcp:host=127.0.0.1,port=6668", parent)
+    CDBusServer::CDBusServer(const QString &address, QObject *parent) :
+        QObject(parent), m_busServer(address, parent)
     {
         if (!m_busServer.isConnected())
         {
@@ -18,7 +18,7 @@ namespace BlackCore
         }
         else
         {
-            qDebug() << "Server is running on" << m_busServer.address();
+            qDebug() << "Server listening on address: " << m_busServer.address();
         }
 
         connect(&m_busServer, &QDBusServer::newConnection, this, &CDBusServer::newConnection);
@@ -52,5 +52,4 @@ namespace BlackCore
     }
 
 } // namespace BlackCore
-
 

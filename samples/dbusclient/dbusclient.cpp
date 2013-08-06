@@ -1,20 +1,22 @@
 #include <QDebug>
 #include <QStringList>
 
+#include "remote_aircraft.h"
+
 #include "dbusclient.h"
 
 
 DBusClient::DBusClient(QObject *parent) :
     QObject(parent), m_connection("daemon")
 {
-    m_connection = QDBusConnection::connectToPeer("tcp:host=127.0.0.1,port=6668", "daemon");
+    m_connection = QDBusConnection::connectToPeer("tcp:host=127.0.0.1,port=45000", "daemon");
 
     if(!m_connection.isConnected())
     {
         qWarning() << m_connection.lastError().message();
     }
 
-    pilotManagerIface = new org::vatsim::pilotClient::PlaneManager("org.vatsim.PilotClient", "/PlaneManager", m_connection, this);
+    aircraftManagerIface = new org::vatsim::pilotClient::AircraftManager("org.vatsim.PilotClient", "/AircraftManager", m_connection, this);
     atcManagerIface = new org::vatsim::pilotClient::AtcManager("org.vatsim.PilotClien", "/AtcManager", m_connection, this);
     fsdClientIface = new org::vatsim::pilotClient::FsdClient("org.vatsim.PilotClient", "/FsdClient", m_connection, this);
     connect(fsdClientIface, &org::vatsim::pilotClient::FsdClient::connectedTo, this, &DBusClient::slot_connected);
@@ -32,19 +34,16 @@ void DBusClient::connectTo(const QString &host)
 
 void DBusClient::disconnectFrom()
 {
-    //iface->disconnectFrom();
 }
 
 void DBusClient::slot_connected( const QString & host)
 {
     qDebug() << "Conntected to " << host;
-    qDebug() << "So lets collect some information... ";
+    qDebug() << "Retrieve all visible aircrafts and controllers...";
 
 
     printPilotList();
     printAtcList();
-
-    //qDebug() << iface->getMetar("EDDM");
 }
 
 void DBusClient::slot_disconnected()
@@ -54,20 +53,19 @@ void DBusClient::slot_disconnected()
 
 void DBusClient::printPilotList()
 {
-    Q_ASSERT(pilotManagerIface);
+    Q_ASSERT(aircraftManagerIface);
 
-    qDebug() << "Online pilots: ";
+    qDebug() << "Online aircrafts: ";
 
-    QStringList planes = pilotManagerIface->pilotList();
-    if (planes.isEmpty())
+    CRemoteAircraftList aircrafts = aircraftManagerIface->aircraftList();
+    if (aircrafts.isEmpty())
     {
-        qWarning() << "Got no pilots. Something went wrong!";
+        qWarning() << "Got no aircrafts. Something went wrong!";
         return;
     }
-
-    foreach(QString plane, planes)
+    foreach(CRemoteAircraft aircraft, aircrafts)
     {
-        qDebug() << plane;
+        qDebug() << aircraft.getCallsign();
     }
 }
 
@@ -78,6 +76,7 @@ void DBusClient::printAtcList()
     qDebug() << "Online controllers: ";
 
     QStringList controllers = atcManagerIface->atcList();
+
     if (controllers.isEmpty())
     {
         qWarning() << "Got no controllers. Something went wrong!";

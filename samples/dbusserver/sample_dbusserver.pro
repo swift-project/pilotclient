@@ -14,13 +14,16 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-DBUS_ADAPTORS += planemanager.xml atcmanager.xml fsdclient.xml
+DBUS_ADAPTORS += dbus/aircraftmanager.xml dbus/atcmanager.xml dbus/fsdclient.xml
 
 DEPENDPATH += . ../../src
 INCLUDEPATH += . ../../src
 
 HEADERS += *.h
 SOURCES += *.cpp
+
+QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i remote_aircraft.h
+QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i remote_aircraft.h
 
 LIBS += -L../../lib -lblackcore -lblackmisc
 
