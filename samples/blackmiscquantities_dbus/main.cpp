@@ -135,6 +135,20 @@ int main(int argc, char *argv[])
             testserviceInterface.receiveTrack(track);
             qDebug() << "Send track via interface" << track;
 
+            CLength len(33, CLengthUnit::m());
+            testserviceInterface.receiveLength(len);
+            qDebug() << "Send length via interface" << len;
+
+            CAltitude alt(33, true, CLengthUnit::m());
+            testserviceInterface.receiveLength(alt);
+            qDebug() << "Send altitude via interface" << alt;
+
+            QVariantList lengths;
+            lengths << QVariant::fromValue(len);
+            lengths << QVariant::fromValue(alt);
+            testserviceInterface.receiveLengths(lengths);
+            qDebug() << "Send lengths via interface";
+
             TestserviceTool::sleep(2500);
 
             // Math

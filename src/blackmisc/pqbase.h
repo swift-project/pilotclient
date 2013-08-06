@@ -24,7 +24,6 @@ namespace PhysicalQuantities
  * \brief Typical prefixes (multipliers) such as kilo, mega, hecto.
  * See <a href="http://www.poynton.com/notes/units/index.html">here</a> for an overview.
  * Use the static values such CMeasurementMultiplier::k() as to specify values.
- * \author KWB
  */
 class CMeasurementPrefix : public CBaseStreamStringifier
 {

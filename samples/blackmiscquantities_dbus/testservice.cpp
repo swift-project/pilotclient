@@ -101,4 +101,24 @@ void Testservice::receiveTrack(const BlackMisc::Aviation::CTrack &track)
     qDebug() << "Pid:" << TestserviceTool::getPid() << "Received track:" << track;
 }
 
+/*
+ * Receive a length
+ */
+void Testservice::receiveLength(const BlackMisc::PhysicalQuantities::CLength &length)
+{
+    qDebug() << "Pid:" << TestserviceTool::getPid() << "Received length:" << length;
+}
+
+/*
+ * Receive lengths
+ */
+void Testservice::receiveLengths(const QVariantList &lengths)
+{
+    BlackMisc::PhysicalQuantities::CLength l;
+    foreach(QVariant lv, lengths) {
+        l = lv.value<BlackMisc::PhysicalQuantities::CLength>();
+        qDebug() << "Pid:" << TestserviceTool::getPid() << "Received in list:" << l;
+    }
+}
+
 } // namespace

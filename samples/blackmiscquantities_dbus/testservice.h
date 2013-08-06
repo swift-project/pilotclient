@@ -106,6 +106,18 @@ public slots:
      */
     void receiveTrack(const BlackMisc::Aviation::CTrack &track);
 
+    /*!
+     * \brief Receive a length
+     * \param length
+     */
+    void receiveLength(const BlackMisc::PhysicalQuantities::CLength &length);
+
+    /*!
+     * \brief Receive lengths
+     * \param length
+     */
+    void receiveLengths(const QVariantList &lengths);
+
 public:
     static const QString ServiceName;
     static const QString ServicePath;

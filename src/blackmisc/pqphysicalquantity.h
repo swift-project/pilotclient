@@ -458,8 +458,10 @@ public:
     {
         qRegisterMetaType<MU>(typeid(MU).name());
         qDBusRegisterMetaType<MU>();
+        qDBusRegisterMetaType<QList<MU>>();
         qRegisterMetaType<PQ>(typeid(PQ).name());
         qDBusRegisterMetaType<PQ>();
+        qDBusRegisterMetaType<QList<PQ>>();
     }
 
 };

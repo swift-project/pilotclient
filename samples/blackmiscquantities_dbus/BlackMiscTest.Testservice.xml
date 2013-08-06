@@ -23,7 +23,7 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CAltitude"/>
     </method>
     <method name="receiveMatrix">
-      <arg name="matrix" type="(ddddddddd)" direction="in"/>
+      <arg name="matrix" type="(adddddddddd)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Math::CMatrix3x3"/>
     </method>
     <method name="receiveList">
@@ -41,6 +41,13 @@
     <method name="receiveTrack">
       <arg name="track" type="(didb(s)(s)b)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CTrack"/>
+    </method>
+    <method name="receiveLength">
+      <arg name="length" type="(didb(s)(s))" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::PhysicalQuantities::CLength"/>
+    </method>
+    <method name="receiveLengths">
+      <arg name="lengths" type="av" direction="in"/>
     </method>
   </interface>
 </node>
