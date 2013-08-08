@@ -19,11 +19,8 @@ DBUS_INTERFACES += dbus/aircraftmanager.xml dbus/atcmanager.xml dbus/fsdclient.x
 QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i remote_aircraft.h
 QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i remote_aircraft.h
 
+DEPENDPATH += . ../../src
+INCLUDEPATH += . ../../src
 
-SOURCES += main.cpp \
-    dbusclient.cpp \
-    remote_aircraft.cpp
-
-HEADERS += \
-    dbusclient.h \
-    remote_aircraft.h
+HEADERS += *.h
+SOURCES += *.cpp
