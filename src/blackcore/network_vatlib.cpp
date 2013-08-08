@@ -514,7 +514,7 @@ namespace BlackCore
         case Cvatlib_Network::error_CallsignTaken:          qCritical() << "The requested callsign is already taken"; goto terminate;
         case Cvatlib_Network::error_CallsignInvalid:        qCritical() << "The requested callsign is not valid"; goto terminate;
         case Cvatlib_Network::error_CIDPasswdInvalid:       qCritical() << "Wrong user ID or password"; goto terminate;
-        case Cvatlib_Network::error_ProtoVersion:           qCritical() << "This server uses an unsupported protocol version"; goto terminate;
+        case Cvatlib_Network::error_ProtoVersion:           qCritical() << "This server does not support our protocol version"; goto terminate;
         case Cvatlib_Network::error_LevelTooHigh:           qCritical() << "You are not authorized to use the requested pilot rating"; goto terminate;
         case Cvatlib_Network::error_ServerFull:             qCritical() << "The server is full"; goto terminate;
         case Cvatlib_Network::error_CIDSuspended:           qCritical() << "Your user account is suspended"; goto terminate;
