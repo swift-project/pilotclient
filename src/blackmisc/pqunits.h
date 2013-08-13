@@ -180,7 +180,6 @@ protected:
         (*this) = CLengthUnit::fromUnitName(unitName);
     }
 };
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLengthUnit)
 
 /*!
  * \brief Specialized class for angles (degrees, radian).
@@ -316,7 +315,6 @@ protected:
         (*this) = CAngleUnit::fromUnitName(unitName);
     }
 };
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAngleUnit)
 
 /*!
  * \brief Specialized class for frequency (hertz, mega hertz, kilo hertz).
@@ -434,7 +432,6 @@ protected:
         (*this) = CFrequencyUnit::fromUnitName(unitName);
     }
 };
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequencyUnit)
 
 /*!
  * \brief Specialized class for mass units (kg, lbs).
@@ -556,7 +553,6 @@ protected:
         (*this) = CMassUnit::fromUnitName(unitName);
     }
 };
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMassUnit)
 
 /*!
  * \brief Specialized class for pressure (psi, hPa, bar).
@@ -713,7 +709,6 @@ protected:
         (*this) = CPressureUnit::fromUnitName(unitName);
     }
 };
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressureUnit)
 
 /*!
  * \brief Specialized class for temperatur units (kelvin, centidegree).
@@ -855,7 +850,6 @@ protected:
         (*this) = CTemperatureUnit::fromUnitName(unitName);
     }
 };
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperatureUnit)
 
 /*!
  * \brief Specialized class for speed units (m/s, ft/s, NM/h).
@@ -1002,7 +996,6 @@ protected:
         (*this) = CSpeedUnit::fromUnitName(unitName);
     }
 };
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeedUnit)
 
 /*!
  * \brief Specialized class for time units (ms, hour, min).
@@ -1137,7 +1130,6 @@ protected:
         (*this) = CTimeUnit::fromUnitName(unitName);
     }
 };
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTimeUnit)
 
 /*!
  * \brief Specialized class for acceleration units (m/s2, ft/s2).
@@ -1238,8 +1230,18 @@ protected:
         (*this) = CAccelerationUnit::fromUnitName(unitName);
     }
 };
-Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAccelerationUnit)
 
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLengthUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAngleUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequencyUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMassUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressureUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperatureUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeedUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTimeUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAccelerationUnit)
+
 #endif // guard
