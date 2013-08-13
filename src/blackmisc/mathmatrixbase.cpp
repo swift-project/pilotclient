@@ -5,6 +5,7 @@
 
 #include "blackmisc/mathmatrix3x3.h"
 #include "blackmisc/mathmatrix3x1.h"
+#include <typeinfo>
 
 namespace BlackMisc
 {

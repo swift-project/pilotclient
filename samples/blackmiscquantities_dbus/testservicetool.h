@@ -5,7 +5,9 @@
 #include <QProcess>
 #ifdef Q_OS_WIN
 // for qdatetime, see here http://qt-project.org/forums/viewthread/22133
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #include <windows.h> // for Sleep
 #endif
 

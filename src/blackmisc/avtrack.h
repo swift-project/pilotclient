@@ -111,8 +111,8 @@ public:
     bool isMagneticTrack() const
     {
         return this->m_magnetic;
-        QT_TRANSLATE_NOOP("Aviation", "magnetic");
-        QT_TRANSLATE_NOOP("Aviation", "true");
+        (void)QT_TRANSLATE_NOOP("Aviation", "magnetic");
+        (void)QT_TRANSLATE_NOOP("Aviation", "true");
     }
 
     /*!

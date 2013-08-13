@@ -14,6 +14,7 @@
 #include <QtGlobal>
 #include <QString>
 #include <QLocale>
+#include <typeinfo>
 
 namespace BlackMisc
 {
@@ -459,10 +460,10 @@ public:
     {
         qRegisterMetaType<MU>(typeid(MU).name());
         qDBusRegisterMetaType<MU>();
-        qDBusRegisterMetaType<QList<MU>>();
+        qDBusRegisterMetaType<QList<MU> >();
         qRegisterMetaType<PQ>(typeid(PQ).name());
         qDBusRegisterMetaType<PQ>();
-        qDBusRegisterMetaType<QList<PQ>>();
+        qDBusRegisterMetaType<QList<PQ> >();
     }
 };
 
