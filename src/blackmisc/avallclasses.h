@@ -13,6 +13,5 @@
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/aviotransponder.h"
 #include "blackmisc/avtrack.h"
-#include "blackmisc/avverticalpositions.h"
 
 #endif // guard
