@@ -140,13 +140,16 @@ public:
     static const QList<CLengthUnit> &units()
     {
         static QList<CLengthUnit> u;
-        u.append(CLengthUnit::cm());
-        u.append(CLengthUnit::ft());
-        u.append(CLengthUnit::km());
-        u.append(CLengthUnit::m());
-        u.append(CLengthUnit::mi());
-        u.append(CLengthUnit::miStatute());
-        u.append(CLengthUnit::NM());
+        if (u.isEmpty())
+        {
+            u.append(CLengthUnit::cm());
+            u.append(CLengthUnit::ft());
+            u.append(CLengthUnit::km());
+            u.append(CLengthUnit::m());
+            u.append(CLengthUnit::mi());
+            u.append(CLengthUnit::miStatute());
+            u.append(CLengthUnit::NM());
+        }
         return u;
     }
 
@@ -277,9 +280,12 @@ public:
     static const QList<CAngleUnit> &units()
     {
         static QList<CAngleUnit> u;
-        u.append(CAngleUnit::deg());
-        u.append(CAngleUnit::rad());
-        u.append(CAngleUnit::sexagesimalDeg());
+        if (u.isEmpty())
+        {
+            u.append(CAngleUnit::deg());
+            u.append(CAngleUnit::rad());
+            u.append(CAngleUnit::sexagesimalDeg());
+        }
         return u;
     }
 
@@ -391,10 +397,13 @@ public:
     static const QList<CFrequencyUnit> &units()
     {
         static QList<CFrequencyUnit> u;
-        u.append(CFrequencyUnit::GHz());
-        u.append(CFrequencyUnit::Hz());
-        u.append(CFrequencyUnit::kHz());
-        u.append(CFrequencyUnit::MHz());
+        if (u.isEmpty())
+        {
+            u.append(CFrequencyUnit::GHz());
+            u.append(CFrequencyUnit::Hz());
+            u.append(CFrequencyUnit::kHz());
+            u.append(CFrequencyUnit::MHz());
+        }
         return u;
     }
 
@@ -510,10 +519,13 @@ public:
     static const QList<CMassUnit> &units()
     {
         static QList<CMassUnit> u;
-        u.append(CMassUnit::g());
-        u.append(CMassUnit::kg());
-        u.append(CMassUnit::lb());
-        u.append(CMassUnit::t());
+        if (u.isEmpty())
+        {
+            u.append(CMassUnit::g());
+            u.append(CMassUnit::kg());
+            u.append(CMassUnit::lb());
+            u.append(CMassUnit::t());
+        }
         return u;
     }
 
@@ -662,12 +674,15 @@ public:
     static const QList<CPressureUnit> &units()
     {
         static QList<CPressureUnit> u;
-        u.append(CPressureUnit::bar());
-        u.append(CPressureUnit::hPa());
-        u.append(CPressureUnit::inHg());
-        u.append(CPressureUnit::inHgFL());
-        u.append(CPressureUnit::mbar());
-        u.append(CPressureUnit::psi());
+        if (u.isEmpty())
+        {
+            u.append(CPressureUnit::bar());
+            u.append(CPressureUnit::hPa());
+            u.append(CPressureUnit::inHg());
+            u.append(CPressureUnit::inHgFL());
+            u.append(CPressureUnit::mbar());
+            u.append(CPressureUnit::psi());
+        }
         return u;
     }
 
@@ -804,9 +819,12 @@ public:
     static const QList<CTemperatureUnit> &units()
     {
         static QList<CTemperatureUnit> u;
-        u.append(CTemperatureUnit::C());
-        u.append(CTemperatureUnit::F());
-        u.append(CTemperatureUnit::K());
+        if (u.isEmpty())
+        {
+            u.append(CTemperatureUnit::C());
+            u.append(CTemperatureUnit::F());
+            u.append(CTemperatureUnit::K());
+        }
         return u;
     }
 
@@ -945,12 +963,15 @@ public:
     static const QList<CSpeedUnit> &units()
     {
         static QList<CSpeedUnit> u;
-        u.append(CSpeedUnit::ft_min());
-        u.append(CSpeedUnit::ft_s());
-        u.append(CSpeedUnit::km_h());
-        u.append(CSpeedUnit::kts());
-        u.append(CSpeedUnit::m_s());
-        u.append(CSpeedUnit::NM_h());
+        if (u.isEmpty())
+        {
+            u.append(CSpeedUnit::ft_min());
+            u.append(CSpeedUnit::ft_s());
+            u.append(CSpeedUnit::km_h());
+            u.append(CSpeedUnit::kts());
+            u.append(CSpeedUnit::m_s());
+            u.append(CSpeedUnit::NM_h());
+        }
         return u;
     }
 
@@ -1078,11 +1099,14 @@ public:
     static const QList<CTimeUnit> &units()
     {
         static QList<CTimeUnit> u;
-        u.append(CTimeUnit::d());
-        u.append(CTimeUnit::h());
-        u.append(CTimeUnit::min());
-        u.append(CTimeUnit::ms());
-        u.append(CTimeUnit::s());
+        if (u.isEmpty())
+        {
+            u.append(CTimeUnit::d());
+            u.append(CTimeUnit::h());
+            u.append(CTimeUnit::min());
+            u.append(CTimeUnit::ms());
+            u.append(CTimeUnit::s());
+        }
         return u;
     }
 
@@ -1179,8 +1203,11 @@ public:
     static const QList<CAccelerationUnit> &units()
     {
         static QList<CAccelerationUnit> u;
-        u.append(CAccelerationUnit::ft_s2());
-        u.append(CAccelerationUnit::m_s2());
+        if (u.isEmpty())
+        {
+            u.append(CAccelerationUnit::ft_s2());
+            u.append(CAccelerationUnit::m_s2());
+        }
         return u;
     }
 

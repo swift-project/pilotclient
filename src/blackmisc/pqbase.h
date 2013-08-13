@@ -249,14 +249,17 @@ public:
     static const QList<CMeasurementPrefix> &prefixes()
     {
         static QList<CMeasurementPrefix> prefixes;
-        prefixes.append(CMeasurementPrefix::c());
-        prefixes.append(CMeasurementPrefix::G());
-        prefixes.append(CMeasurementPrefix::h());
-        prefixes.append(CMeasurementPrefix::k());
-        prefixes.append(CMeasurementPrefix::M());
-        prefixes.append(CMeasurementPrefix::m());
-        prefixes.append(CMeasurementPrefix::None());
-        prefixes.append(CMeasurementPrefix::One());
+        if (prefixes.isEmpty())
+        {
+            prefixes.append(CMeasurementPrefix::c());
+            prefixes.append(CMeasurementPrefix::G());
+            prefixes.append(CMeasurementPrefix::h());
+            prefixes.append(CMeasurementPrefix::k());
+            prefixes.append(CMeasurementPrefix::M());
+            prefixes.append(CMeasurementPrefix::m());
+            prefixes.append(CMeasurementPrefix::None());
+            prefixes.append(CMeasurementPrefix::One());
+        }
         return prefixes;
     }
 
