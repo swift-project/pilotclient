@@ -203,7 +203,7 @@ protected:
      */
     static const QString &NameNav3()
     {
-        static QString n("NAV2");
+        static QString n("NAV3");
         return n;
     }
 
