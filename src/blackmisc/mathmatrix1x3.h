@@ -21,15 +21,15 @@ class CMatrix1x3 : public CMatrixBase<CMatrix1x3, 1, 3>
 {
 public:
     /*!
-     * \brief Matrix 1x3
+     * \brief Constructor
      */
     CMatrix1x3() : CMatrixBase() {}
 
     /*!
      * \brief Copy constructor
-     * \param otherMatrix
+     * \param other
      */
-    CMatrix1x3(const CMatrix1x3 &otherMatrix) : CMatrixBase(otherMatrix) {}
+    CMatrix1x3(const CMatrix1x3 &other) : CMatrixBase(other) {}
 
     /*!
      * \brief Init by fill value
@@ -38,7 +38,7 @@ public:
     explicit CMatrix1x3(double fillValue) : CMatrixBase(fillValue) {}
 
     /*!
-     * \brief CMatrix 3x1
+     * \brief Constructor
      * \param c1
      * \param c2
      * \param c3
@@ -52,8 +52,8 @@ public:
 };
 
 } // namespace
-
 } // namespace
+
 Q_DECLARE_METATYPE(BlackMisc::Math::CMatrix1x3)
 
 #endif // guard

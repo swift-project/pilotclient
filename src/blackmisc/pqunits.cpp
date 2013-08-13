@@ -82,7 +82,7 @@ QString CAngleUnit::toQStringRounded(double value, int digits, bool i18n) const
     }
     else
     {
-        s = CMeasurementUnit::toQStringRounded(value, digits);
+        s = this->CMeasurementUnit::toQStringRounded(value, digits);
     }
     return s;
 }

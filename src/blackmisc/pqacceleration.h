@@ -38,16 +38,17 @@ public:
     CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit, CAccelerationUnit::m_s2()) {}
 
     /*!
-     * \brief Copy constructor
-     * \param acceleration
+     * \brief Copy constructor by base type
+     * \param base
      */
-    CAcceleration(const CPhysicalQuantity &acceleration) : CPhysicalQuantity(acceleration) {}
+    CAcceleration(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
 
     /*!
      * \brief Virtual destructor
      */
     virtual ~CAcceleration() {}
 };
+
 } // namespace
 } // namespace
 

@@ -55,7 +55,8 @@ protected:
      * \brief Stream to DBus
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
         const QList<double> l = this->toList();
 
         // there is an issue with the signature of QList, so I use
@@ -69,7 +70,8 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QList<double> list;
         double v;
         while(!argument.atEnd()) {
@@ -87,9 +89,9 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param otherMatrix
+     * \param other
      */
-    CMatrixBase(const CMatrixBase &otherMatrix) : m_matrix(otherMatrix.m_matrix) {}
+    CMatrixBase(const CMatrixBase &other) : m_matrix(other.m_matrix) {}
 
     /*!
      * \brief Fill with value
@@ -119,36 +121,35 @@ public:
 
     /*!
      * \brief Equal operator ==
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    bool operator ==(const ImplMatrix &otherMatrix) const
+    bool operator ==(const ImplMatrix &other) const
     {
-        if (this == &otherMatrix) return true;
-        return this->m_matrix == otherMatrix.m_matrix;
+        if (this == &other) return true;
+        return this->m_matrix == other.m_matrix;
     }
 
     /*!
      * \brief Unequal operator !=
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    bool operator !=(const ImplMatrix &otherMatrix) const
+    bool operator !=(const ImplMatrix &other) const
     {
-        if (this == &otherMatrix) return false;
-        return !((*this) == otherMatrix);
+        return !((*this) == other);
     }
 
     /*!
      * \brief Assigment operator =
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    CMatrixBase &operator =(const CMatrixBase &otherMatrix)
+    CMatrixBase &operator =(const CMatrixBase &other)
     {
-        if (this == &otherMatrix)  return *this; // Same object?
-        this->m_matrix = otherMatrix.m_matrix;
-        return (*this);
+        if (this == &other) return *this;
+        this->m_matrix = other.m_matrix;
+        return *this;
     }
 
     /*!
@@ -159,7 +160,7 @@ public:
     CMatrixBase &operator *=(double factor)
     {
         this->m_matrix *= factor;
-        return (*this);
+        return *this;
     }
 
     /*!
@@ -177,12 +178,12 @@ public:
     /*!
      * \brief Operator to support commutative multiplication
      * \param factor
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    friend ImplMatrix operator *(double factor, const ImplMatrix &otherMatrix)
+    friend ImplMatrix operator *(double factor, const ImplMatrix &other)
     {
-        return otherMatrix * factor;
+        return other * factor;
     }
 
     /*!
@@ -200,7 +201,7 @@ public:
     CMatrixBase &operator /=(double factor)
     {
         this->m_matrix /= factor;
-        return (*this);
+        return *this;
     }
 
     /*!
@@ -217,47 +218,47 @@ public:
 
     /*!
      * \brief Operator +=
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    CMatrixBase &operator +=(const CMatrixBase &otherMatrix)
+    CMatrixBase &operator +=(const CMatrixBase &other)
     {
-        this->m_matrix += otherMatrix.m_matrix;
-        return (*this);
+        this->m_matrix += other.m_matrix;
+        return *this;
     }
 
     /*!
      * \brief Operator +
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    ImplMatrix operator +(const ImplMatrix &otherMatrix) const
+    ImplMatrix operator +(const ImplMatrix &other) const
     {
         ImplMatrix m = *derived();
-        m += otherMatrix;
+        m += other;
         return m;
     }
 
     /*!
      * \brief Operator -=
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    CMatrixBase &operator -=(const CMatrixBase &otherMatrix)
+    CMatrixBase &operator -=(const CMatrixBase &other)
     {
-        this->m_matrix -= otherMatrix.m_matrix;
-        return (*this);
+        this->m_matrix -= other.m_matrix;
+        return *this;
     }
 
     /*!
      * \brief Operator -
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    ImplMatrix operator -(const ImplMatrix &otherMatrix) const
+    ImplMatrix operator -(const ImplMatrix &other) const
     {
         ImplMatrix m = *derived();
-        m -= otherMatrix;
+        m -= other;
         return m;
     }
 
@@ -402,11 +403,9 @@ private:
      * \throws std::range_error if index out of bounds
      */
     void checkRange(size_t row, size_t column) const;
-
 };
 
 } // namespace
-
 } // namespace
 
 #endif // guard

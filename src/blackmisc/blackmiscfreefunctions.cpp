@@ -10,17 +10,15 @@
  */
 void BlackMisc::PhysicalQuantities::registerMetadata()
 {
-    {
-        CAcceleration::registerMetadata();
-        CAngle::registerMetadata();
-        CFrequency::registerMetadata();
-        CLength::registerMetadata();
-        CMass::registerMetadata();
-        CPressure::registerMetadata();
-        CSpeed::registerMetadata();
-        CTemperature::registerMetadata();
-        CTime::registerMetadata();
-    }
+    CAcceleration::registerMetadata();
+    CAngle::registerMetadata();
+    CFrequency::registerMetadata();
+    CLength::registerMetadata();
+    CMass::registerMetadata();
+    CPressure::registerMetadata();
+    CSpeed::registerMetadata();
+    CTemperature::registerMetadata();
+    CTime::registerMetadata();
 }
 
 /*
@@ -32,7 +30,6 @@ void BlackMisc::Aviation::registerMetadata()
     CNavSystem::registerMetadata();
     CAdfSystem::registerMetadata();
     CAltitude::registerMetadata();
-    CAviationVerticalPositions::registerMetadata();
     CTransponder::registerMetadata();
     CHeading::registerMetadata();
     CTrack::registerMetadata();

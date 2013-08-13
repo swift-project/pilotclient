@@ -24,27 +24,32 @@ public:
      * \brief Default constructor
      */
     CPressure() : CPhysicalQuantity(0, CPressureUnit::Pa(), CPressureUnit::Pa()) {}
+
     /**
-     *\brief Copy constructor
+     *\brief Copy constructor from base type
      */
-    CPressure(const CPressure &pressure) : CPhysicalQuantity(pressure) {}
+    CPressure(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
+
     /*!
      * \brief Init by int value
      * \param value
      * \param unit
      */
     CPressure(qint32 value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit, CPressureUnit::Pa()) {}
+
     /*!
      *\brief Init by double value
      * \param value
      * \param unit
      */
     CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit, CPressureUnit::Pa()) {}
+
     /*!
      * \brief Virtual destructor
      */
     virtual ~CPressure() {}
 };
+
 } // namespace
 } // namespace
 

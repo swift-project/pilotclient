@@ -25,29 +25,28 @@ QString CHeading::convertToQString(bool i18n) const
 /*
  * Assigment
  */
-CHeading& CHeading::operator =(const CHeading &otherHeading)
+CHeading& CHeading::operator =(const CHeading &other)
 {
-    // Check for self-assignment!
-    if (this == &otherHeading)  return *this;
-    CAngle::operator = (otherHeading);
-    this->m_magnetic = otherHeading.m_magnetic;
-    return (*this);
+    if (this == &other) return *this;
+    this->CAngle::operator = (other);
+    this->m_magnetic = other.m_magnetic;
+    return *this;
 }
 
 /*
  * Equal?
  */
-bool CHeading::operator ==(const CHeading &otherHeading)
+bool CHeading::operator ==(const CHeading &other)
 {
-    return otherHeading.m_magnetic == this->m_magnetic && CAngle::operator ==(otherHeading);
+    return other.m_magnetic == this->m_magnetic && this->CAngle::operator ==(other);
 }
 
 /*
  * Unequal?
  */
-bool CHeading::operator !=(const CHeading &otherHeading)
+bool CHeading::operator !=(const CHeading &other)
 {
-    return !((*this) == otherHeading);
+    return !((*this) == other);
 }
 
 /*!

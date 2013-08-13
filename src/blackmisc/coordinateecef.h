@@ -11,6 +11,7 @@ namespace BlackMisc
 {
 namespace Geo
 {
+
 /*!
  * \brief Earth centered, earth fixed position
  */
@@ -112,11 +113,11 @@ protected:
             arg(QString::number(this->z(), 'f', 6));
         return s;
     }
-
 };
 
 } // namespace
 } // namespace
+
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateEcef)
 
 #endif // guard

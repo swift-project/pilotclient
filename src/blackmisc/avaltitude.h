@@ -33,8 +33,9 @@ protected:
      * \brief Stream to DBus <<
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
-        CLength::marshallToDbus(argument);
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
+        this->CLength::marshallToDbus(argument);
         argument << this->m_msl;
     }
 
@@ -42,13 +43,13 @@ protected:
      * \brief Stream from DBus >>
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
-        CLength::unmarshallFromDbus(argument);
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        this->CLength::unmarshallFromDbus(argument);
         argument >> this->m_msl;
     }
 
 public:
-
     /*!
      * \brief Default constructor: 0 Altitude true
      */
@@ -75,37 +76,34 @@ public:
      * \param altitude
      * \param msl
      */
-    CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, bool msl) : BlackMisc::PhysicalQuantities::CLength(), m_msl(msl)
-    {
-        BlackMisc::PhysicalQuantities::CLength::operator =(altitude);
-    }
+    CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, bool msl) : BlackMisc::PhysicalQuantities::CLength(altitude), m_msl(msl) {}
 
     /*!
      * \brief Copy constructor
-     * \param otherAltitude
+     * \param other
      */
-    CAltitude(const CAltitude &otherAltitude) : BlackMisc::PhysicalQuantities::CLength(otherAltitude), m_msl(otherAltitude.m_msl) {}
+    CAltitude(const CAltitude &other) : BlackMisc::PhysicalQuantities::CLength(other), m_msl(other.m_msl) {}
 
     /*!
      * \brief Assignment operator =
-     * \param otherAltitude
+     * \param other
      * @return
      */
-    CAltitude &operator =(const CAltitude &otherAltitude);
+    CAltitude &operator =(const CAltitude &other);
 
     /*!
      * \brief Equal operator ==
-     * \param otherAltitude
+     * \param other
      * @return
      */
-    bool operator ==(const CAltitude &otherAltitude);
+    bool operator ==(const CAltitude &other);
 
     /*!
      * \brief Unequal operator ==
-     * \param otherAltitude
+     * \param other
      * @return
      */
-    bool operator !=(const CAltitude &otherAltitude);
+    bool operator !=(const CAltitude &other);
 
     /*!
      * \brief AGL Above ground level?
@@ -129,11 +127,11 @@ public:
      * \brief Register metadata
      */
     static void registerMetadata();
-
 };
 
 } // namespace
 } // namespace
+
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude)
 
 #endif // guard

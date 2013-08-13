@@ -29,7 +29,6 @@ namespace PhysicalQuantities
  */
 class CLengthUnit : public CMeasurementUnit
 {
-
 private:
     /*!
      * \brief Constructor length unit
@@ -43,10 +42,7 @@ private:
      * \param epsilon
      */
     CLengthUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "distance", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon)
-    {
-        // void
-    }
+        CMeasurementUnit(name, unitName, "distance", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
 
 public:
     /*!
@@ -56,12 +52,9 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param otherUnit
+     * \param other
      */
-    CLengthUnit(const CLengthUnit &otherUnit) : CMeasurementUnit(otherUnit)
-    {
-        // void
-    }
+    CLengthUnit(const CLengthUnit &other) : CMeasurementUnit(other) {}
 
     /*!
      * \brief Meter m
@@ -73,7 +66,6 @@ public:
         return m;
         QT_TRANSLATE_NOOP("CMeasurementUnit", "meter");
     }
-
 
     /*!
      * \brief Nautical miles NM
@@ -96,7 +88,6 @@ public:
         return ft;
         QT_TRANSLATE_NOOP("CMeasurementUnit", "foot");
     }
-
 
     /*!
      * \brief Kilometer km
@@ -164,9 +155,9 @@ public:
      * \param unitName must be valid!
      * \return
      */
-    static const CLengthUnit &fromUnitName(const QString &unitName) {
-        QList<CLengthUnit> units = CLengthUnit::units();
-        // read only, avoid deep copy
+    static const CLengthUnit &fromUnitName(const QString &unitName)
+    {
+        const QList<CLengthUnit> &units = CLengthUnit::units();
         for (int i = 0; i < units.size(); ++i) {
             if (units.at(i).getUnitName() == unitName) return (units.at(i));
         }
@@ -179,7 +170,8 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QString unitName;
         argument >> unitName;
         (*this) = CLengthUnit::fromUnitName(unitName);
@@ -207,16 +199,15 @@ private:
                const CMeasurementPrefix &multiplier = CMeasurementPrefix::One(), qint32 displayDigits = 2,
                double epsilon = 1E-9, UnitConverter converterToSi = 0,  UnitConverter converterFromSi = 0) :
         CMeasurementUnit(name, unitName, "angle", isSiUnit, false, conversionFactorToSI,
-                         multiplier, displayDigits, epsilon, converterToSi, converterFromSi)
-    {
-        // void
-    }
+                         multiplier, displayDigits, epsilon, converterToSi, converterFromSi) {}
+
     /*!
      * \brief Special conversion for sexagesimal degrees
      * \param value
      * \return
      */
     static double conversionSexagesimalToSi(const CMeasurementUnit &angleUnit, double value);
+
     /*!
      * \brief Special conversion for sexagesimal degrees
      * \param value
@@ -226,15 +217,15 @@ private:
 
 public:
     /*!
-     * Default constructor, we do not want this, but required for Qt Metasystem
+     * Default constructor, required for Qt Metasystem
      */
     CAngleUnit() : CMeasurementUnit("radian", "rad", "angle", true, false) {}
 
     /*!
      * \brief Copy constructor
-     * \param otherUnit
+     * \param other
      */
-    CAngleUnit(const CAngleUnit &otherUnit) : CMeasurementUnit(otherUnit) { }
+    CAngleUnit(const CAngleUnit &other) : CMeasurementUnit(other) {}
 
     /*!
      * \brief Special conversion to QString for sexagesimal degrees.
@@ -297,9 +288,9 @@ public:
      * \param unitName must be valid!
      * \return
      */
-    static const CAngleUnit &fromUnitName(const QString &unitName) {
-        QList<CAngleUnit> units = CAngleUnit::units();
-        // read only, avoid deep copy
+    static const CAngleUnit &fromUnitName(const QString &unitName)
+    {
+        const QList<CAngleUnit> &units = CAngleUnit::units();
         for (int i = 0; i < units.size(); ++i) {
             if (units.at(i).getUnitName() == unitName) return (units.at(i));
         }
@@ -312,7 +303,8 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QString unitName;
         argument >> unitName;
         (*this) = CAngleUnit::fromUnitName(unitName);
@@ -339,20 +331,18 @@ private:
      */
     CFrequencyUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "frequency", isSiUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+
 public:
     /*!
-     * Default constructor, we do not want this, but required for Qt Metasystem
+     * Default constructor, required for Qt Metasystem
      */
     CFrequencyUnit() : CMeasurementUnit("hertz", "Hz", "frequency", true, false) {}
 
     /*!
      * \brief Copy constructor
-     * \param otherUnit
+     * \param other
      */
-    CFrequencyUnit(const CFrequencyUnit &otherUnit) : CMeasurementUnit(otherUnit)
-    {
-        // void
-    }
+    CFrequencyUnit(const CFrequencyUnit &other) : CMeasurementUnit(other) {}
 
     /*!
      * \brief Hertz
@@ -413,9 +403,9 @@ public:
      * \param unitName must be valid!
      * \return
      */
-    static const CFrequencyUnit &fromUnitName(const QString &unitName) {
-        QList<CFrequencyUnit> units = CFrequencyUnit::units();
-        // read only, avoid deep copy
+    static const CFrequencyUnit &fromUnitName(const QString &unitName)
+    {
+        const QList<CFrequencyUnit> &units = CFrequencyUnit::units();
         for (int i = 0; i < units.size(); ++i) {
             if (units.at(i).getUnitName() == unitName) return (units.at(i));
         }
@@ -428,7 +418,8 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QString unitName;
         argument >> unitName;
         (*this) = CFrequencyUnit::fromUnitName(unitName);
@@ -455,20 +446,18 @@ private:
      */
     CMassUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "mass", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+
 public:
     /*!
-     * Default constructor, we do not want this, but required for Qt Metasystem
+     * Default constructor, required for Qt Metasystem
      */
     CMassUnit() : CMeasurementUnit("kilogram", "kg", "mass", true, true, 1.0, CMeasurementPrefix::k(), 1) {}
 
     /*!
      * \brief Copy constructor
-     * \param otherUnit
+     * \param other
      */
-    CMassUnit(const CMassUnit &otherUnit) : CMeasurementUnit(otherUnit)
-    {
-        // void
-    }
+    CMassUnit(const CMassUnit &other) : CMeasurementUnit(other) {}
 
     /*!
      * \brief Kilogram, SI base unit
@@ -533,9 +522,9 @@ public:
      * \param unitName must be valid!
      * \return
      */
-    static const CMassUnit &fromUnitName(const QString &unitName) {
-        QList<CMassUnit> units = CMassUnit::units();
-        // read only, avoid deep copy
+    static const CMassUnit &fromUnitName(const QString &unitName)
+    {
+        const QList<CMassUnit> &units = CMassUnit::units();
         for (int i = 0; i < units.size(); ++i) {
             if (units.at(i).getUnitName() == unitName) return (units.at(i));
         }
@@ -548,12 +537,12 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QString unitName;
         argument >> unitName;
         (*this) = CMassUnit::fromUnitName(unitName);
     }
-
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMassUnit)
 
@@ -576,20 +565,18 @@ private:
      */
     CPressureUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "pressure", isSiUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+
 public:
     /*!
-     * Default constructor, we do not want this, but required for Qt Metasystem
+     * Default constructor, required for Qt Metasystem
      */
     CPressureUnit() : CMeasurementUnit("pascal", "Pa", "pressure", true, false) {}
 
     /*!
      * \brief Copy constructor
-     * \param otherUnit
+     * \param other
      */
-    CPressureUnit(const CPressureUnit &otherUnit) : CMeasurementUnit(otherUnit)
-    {
-        // void
-    }
+    CPressureUnit(const CPressureUnit &other) : CMeasurementUnit(other) {}
 
     /*!
      * \brief Pascal
@@ -689,9 +676,9 @@ public:
      * \param unitName must be valid!
      * \return
      */
-    static const CPressureUnit &fromUnitName(const QString &unitName) {
-        QList<CPressureUnit> units = CPressureUnit::units();
-        // read only, avoid deep copy
+    static const CPressureUnit &fromUnitName(const QString &unitName)
+    {
+        const QList<CPressureUnit> &units = CPressureUnit::units();
         for (int i = 0; i < units.size(); ++i) {
             if (units.at(i).getUnitName() == unitName) return (units.at(i));
         }
@@ -704,7 +691,8 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QString unitName;
         argument >> unitName;
         (*this) = CPressureUnit::fromUnitName(unitName);
@@ -719,6 +707,7 @@ class CTemperatureUnit : public CMeasurementUnit
 {
 private:
     double m_conversionOffsetToSi;
+
 private:
     /*!
      * Constructor temperature unit
@@ -734,6 +723,7 @@ private:
      */
     CTemperatureUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, double temperatureOffsetToSI = 0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "temperature", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon), m_conversionOffsetToSi(temperatureOffsetToSI) {}
+
 protected:
     /*!
      * \brief Convert to SI conversion unit, specific for temperature
@@ -751,25 +741,25 @@ protected:
 
 public:
     /*!
-     * Default constructor, we do not want this, but required for Qt Metasystem
+     * Default constructor, required for Qt Metasystem
      */
     CTemperatureUnit() : CMeasurementUnit("Kelvin", "K", "temperature", true, true) {}
 
     /*!
      * \brief Copy constructor
-     * \param otherUnit
+     * \param other
      */
-    CTemperatureUnit(const CTemperatureUnit &otherUnit) : CMeasurementUnit(otherUnit), m_conversionOffsetToSi(otherUnit.m_conversionOffsetToSi) {}
+    CTemperatureUnit(const CTemperatureUnit &other) : CMeasurementUnit(other), m_conversionOffsetToSi(other.m_conversionOffsetToSi) {}
 
     /*!
      * Assigment operator
      */
-    CTemperatureUnit &operator =(const CTemperatureUnit &otherUnit)
+    CTemperatureUnit &operator =(const CTemperatureUnit &other)
     {
-        if (this == &otherUnit) return *this; // Same object? Yes, so skip assignment, and just return *this
-        CMeasurementUnit::operator = (otherUnit);
-        this->m_conversionOffsetToSi = otherUnit.m_conversionOffsetToSi;
-        return (*this);
+        if (this == &other) return *this;
+        CMeasurementUnit::operator = (other);
+        this->m_conversionOffsetToSi = other.m_conversionOffsetToSi;
+        return *this;
     }
 
     /*!
@@ -825,9 +815,9 @@ public:
      * \param unitName must be valid!
      * \return
      */
-    static const CTemperatureUnit &fromUnitName(const QString &unitName) {
-        QList<CTemperatureUnit> units = CTemperatureUnit::units();
-        // read only, avoid deep copy
+    static const CTemperatureUnit &fromUnitName(const QString &unitName)
+    {
+        const QList<CTemperatureUnit> &units = CTemperatureUnit::units();
         for (int i = 0; i < units.size(); ++i) {
             if (units.at(i).getUnitName() == unitName) return (units.at(i));
         }
@@ -840,7 +830,8 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QString unitName;
         argument >> unitName;
         (*this) = CTemperatureUnit::fromUnitName(unitName);
@@ -868,17 +859,18 @@ private:
      */
     CSpeedUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "speed", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+
 public:
     /*!
-     * Default constructor, we do not want this, but required for Qt Metasystem
+     * Default constructor, required for Qt Metasystem
      */
     CSpeedUnit() : CMeasurementUnit("meters/second", "m/s", "speed", true, false) {}
 
     /*!
      * Constructor, allows to implement methods in base class
-     * \param otherUnit
+     * \param other
      */
-    CSpeedUnit(const CSpeedUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
+    CSpeedUnit(const CSpeedUnit &other) : CMeasurementUnit(other) {}
 
     /*!
      * \brief Meter/second m/s
@@ -967,9 +959,9 @@ public:
      * \param unitName must be valid!
      * \return
      */
-    static const CSpeedUnit &fromUnitName(const QString &unitName) {
-        QList<CSpeedUnit> units = CSpeedUnit::units();
-        // read only, avoid deep copy
+    static const CSpeedUnit &fromUnitName(const QString &unitName)
+    {
+        const QList<CSpeedUnit> &units = CSpeedUnit::units();
         for (int i = 0; i < units.size(); ++i) {
             if (units.at(i).getUnitName() == unitName) return (units.at(i));
         }
@@ -982,7 +974,8 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QString unitName;
         argument >> unitName;
         (*this) = CSpeedUnit::fromUnitName(unitName);
@@ -1010,17 +1003,18 @@ private:
      */
     CTimeUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "time", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+
 public:
     /*!
-     * Default constructor, we do not want this, but required for Qt Metasystem
+     * Default constructor, required for Qt Metasystem
      */
     CTimeUnit() : CMeasurementUnit("second", "s", "time", true, true, 1, CMeasurementPrefix::None()) {}
 
     /*!
      * Constructor, allows to implement methods in base class
-     * \param otherUnit
+     * \param other
      */
-    CTimeUnit(const CTimeUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
+    CTimeUnit(const CTimeUnit &other) : CMeasurementUnit(other) {}
 
     /*!
      * \brief Second s
@@ -1097,9 +1091,9 @@ public:
      * \param unitName must be valid!
      * \return
      */
-    static const CTimeUnit &fromUnitName(const QString &unitName) {
-        QList<CTimeUnit> units = CTimeUnit::units();
-        // read only, avoid deep copy
+    static const CTimeUnit &fromUnitName(const QString &unitName)
+    {
+        const QList<CTimeUnit> &units = CTimeUnit::units();
         for (int i = 0; i < units.size(); ++i) {
             if (units.at(i).getUnitName() == unitName) return (units.at(i));
         }
@@ -1112,7 +1106,8 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QString unitName;
         argument >> unitName;
         (*this) = CTimeUnit::fromUnitName(unitName);
@@ -1140,17 +1135,18 @@ private:
      */
     CAccelerationUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
         CMeasurementUnit(name, unitName, "acceleration", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+
 public:
     /*!
-     * Default constructor, we do not want this, but required for Qt Metasystem
+     * Default constructor, required for Qt Metasystem
      */
-    CAccelerationUnit() : CMeasurementUnit("meter/second²", "m/s^2", "acceleration", true, false, 1, CMeasurementPrefix::None(), 1) {}
+    CAccelerationUnit() : CMeasurementUnit("meter/second^2", "m/s^2", "acceleration", true, false, 1, CMeasurementPrefix::None(), 1) {}
 
     /*!
      * Constructor, allows to implement methods in base class
-     * \param otherUnit
+     * \param other
      */
-    CAccelerationUnit(const CAccelerationUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
+    CAccelerationUnit(const CAccelerationUnit &other) : CMeasurementUnit(other) {}
 
     /*!
      * \brief Meter/second^2 (m/s^2)
@@ -1193,9 +1189,9 @@ public:
      * \param unitName must be valid!
      * \return
      */
-    static const CAccelerationUnit &fromUnitName(const QString &unitName) {
-        QList<CAccelerationUnit> units = CAccelerationUnit::units();
-        // read only, avoid deep copy
+    static const CAccelerationUnit &fromUnitName(const QString &unitName)
+    {
+        const QList<CAccelerationUnit> &units = CAccelerationUnit::units();
         for (int i = 0; i < units.size(); ++i) {
             if (units.at(i).getUnitName() == unitName) return (units.at(i));
         }
@@ -1208,14 +1204,14 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QString unitName;
         argument >> unitName;
         (*this) = CAccelerationUnit::fromUnitName(unitName);
     }
 };
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAccelerationUnit)
-
 
 } // namespace
 } // namespace

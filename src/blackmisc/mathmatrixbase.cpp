@@ -34,7 +34,6 @@ template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, R
  */
 template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::checkRange(size_t row, size_t column) const
 {
-    // no >=0 comparison since unsinged comparison always >=0
     bool valid = (row < Rows && column < Columns);
     Q_ASSERT_X(valid, "getElement()", "Row or column invalid");
     if (!valid) throw std::range_error("Row or column invalid");
@@ -149,7 +148,7 @@ template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, R
 /*
  * Convert to string
  */
-template <class ImplMatrix, int Rows, int Columns> QString CMatrixBase<ImplMatrix, Rows, Columns>::convertToQString(bool /** i18n **/) const
+template <class ImplMatrix, int Rows, int Columns> QString CMatrixBase<ImplMatrix, Rows, Columns>::convertToQString(bool /* i18n */) const
 {
     QString s = "{";
     for (int r = 0; r < Rows; r++)
@@ -176,7 +175,6 @@ template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, 
     qDBusRegisterMetaType<ImplMatrix>();
 }
 
-
 // see here for the reason of thess forward instantiations
 // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
 template class CMatrixBase<CMatrix3x3, 3, 3>;
@@ -184,8 +182,4 @@ template class CMatrixBase<CMatrix3x1, 3, 1>;
 template class CMatrixBase<CMatrix1x3, 1, 3>;
 
 } // namespace
-
 } // namespace
-
-#include "mathmatrixbase.h"
-

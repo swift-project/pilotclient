@@ -27,9 +27,9 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param otherMatrix
+     * \param other
      */
-    CMatrix3x3(const CMatrix3x3 &otherMatrix) : CMatrixBase(otherMatrix) {}
+    CMatrix3x3(const CMatrix3x3 &other) : CMatrixBase(other) {}
 
     /*!
      * \brief Init by fill value
@@ -72,43 +72,43 @@ public:
 
     /*!
      * \brief Calculate the inverse
-     * \param invertible
+     * \param[out] o_isInvertible
      * \return
      */
-    CMatrix3x3 inverse(bool &invertible) const;
+    CMatrix3x3 inverse(bool &o_isInvertible) const;
 
     /*!
      * \brief Operator *=
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    CMatrix3x3 &operator *=(const CMatrix3x3 &otherMatrix)
+    CMatrix3x3 &operator *=(const CMatrix3x3 &other)
     {
-        this->m_matrix = this->m_matrix * otherMatrix.m_matrix;
-        return (*this);
+        this->m_matrix = this->m_matrix * other.m_matrix;
+        return *this;
     }
 
     /*!
      * \brief Operator *
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    CMatrix3x1 operator *(const CMatrix3x1 &otherMatrix) const
+    CMatrix3x1 operator *(const CMatrix3x1 &other) const
     {
         CMatrix3x1 m;
-        m.m_matrix = this->m_matrix * otherMatrix.m_matrix;
+        m.m_matrix = this->m_matrix * other.m_matrix;
         return m;
     }
 
     /*!
      * \brief Operator *
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    CMatrix3x3 operator *(const CMatrix3x3 &otherMatrix) const
+    CMatrix3x3 operator *(const CMatrix3x3 &other) const
     {
         CMatrix3x3 m(*this);
-        m *= otherMatrix;
+        m *= other;
         return m;
     }
 
@@ -144,7 +144,7 @@ public:
     CMatrix3x3 &operator *=(double factor)
     {
         CMatrixBase::operator *=(factor);
-        return (*this);
+        return *this;
     }
 
     /*!
@@ -175,8 +175,8 @@ public:
 };
 
 } // namespace
-
 } // namespace
+
 Q_DECLARE_METATYPE(BlackMisc::Math::CMatrix3x3)
 
 #endif // guard

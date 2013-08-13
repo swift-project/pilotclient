@@ -33,9 +33,9 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param latitude
+     * \param other
      */
-    CLatitude(const CLatitude &latitude) : CEarthAngle(latitude) {}
+    CLatitude(const CLatitude &other) : CEarthAngle(other) {}
 
     /*!
      * \brief Constructor
@@ -48,13 +48,12 @@ public:
      * \param value
      * \param unit
      */
-    CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CEarthAngle(value, unit) {}
+    CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
 
     /*!
      * \brief Virtual destructor
      */
     virtual ~CLatitude() {}
-
 };
 
 } // namespace

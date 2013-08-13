@@ -23,17 +23,17 @@ class CMatrix3x1 : public CMatrixBase<CMatrix3x1, 3, 1>
 
 public:
     /*!
-     * \brief CMatrix 3x1
+     * \brief Constructor
      */
     CMatrix3x1() : CMatrixBase() {}
 
     /*!
-     * \brief CMatrix 3x1
+     * \brief Constructor
      * \param r1
      * \param r2
      * \param r3
      */
-    CMatrix3x1(qreal r1, qreal r2, qreal r3) : CMatrixBase()
+    CMatrix3x1(double r1, double r2, double r3) : CMatrixBase()
     {
         this->m_matrix(0, 0) = r1;
         this->m_matrix(1, 0) = r2;
@@ -44,7 +44,7 @@ public:
      * \brief Copy constructor
      * \param otherMatrix
      */
-    CMatrix3x1(const CMatrix3x1 &otherMatrix) : CMatrixBase(otherMatrix) {}
+    CMatrix3x1(const CMatrix3x1 &other) : CMatrixBase(other) {}
 
     /*!
      * \brief Init by fill value
@@ -74,8 +74,8 @@ public:
 };
 
 } // namespace
-
 } // namespace
+
 Q_DECLARE_METATYPE(BlackMisc::Math::CMatrix3x1)
 
 #endif // guard

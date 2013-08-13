@@ -31,6 +31,7 @@ private:
     QString m_name; //!< name, e.g. "kilo"
     QString m_prefix; //!< prefix, e.g. "k" for kilo
     double m_factor; //!< factor, e.g. 1000 for kilo 1/100 for centi
+
     /*!
      * Constructor by parameters
      * \brief CMeasurementMultiplier
@@ -46,7 +47,7 @@ protected:
      * \param i18n
      * \return
      */
-    virtual QString convertToQString(bool /* i18n  */ = false) const
+    virtual QString convertToQString(bool /* i18n */ = false) const
     {
         return this->m_name;
     }
@@ -55,7 +56,8 @@ protected:
      * \brief Stream to DBus
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
         argument << this->m_name;
     }
 
@@ -63,7 +65,8 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         QString name;
         argument >> name;
         (*this) = CMeasurementPrefix::fromPrefixName(name);
@@ -72,48 +75,44 @@ protected:
 public:
     /*!
      * \brief Copy constructor
-     * \param otherMultiplier
+     * \param other
      */
-    CMeasurementPrefix(const CMeasurementPrefix &otherMultiplier);
+    CMeasurementPrefix(const CMeasurementPrefix &other);
 
     /*!
      * \brief Assigmnet operator =
-     * \param otherMultiplier
+     * \param other
      * \return
      */
-    CMeasurementPrefix &operator =(const CMeasurementPrefix &otherMultiplier);
+    CMeasurementPrefix &operator =(const CMeasurementPrefix &other);
 
     /*!
      * \brief Equal operator ==
-     * \param otherMultiplier
+     * \param other
      * \return
      */
-    bool operator == (const CMeasurementPrefix &otherMultiplier) const;
+    bool operator == (const CMeasurementPrefix &other) const;
 
     /*!
      * \brief Unequal operator !=
-     * \param otherMultiplier
+     * \param other
      * \return
      */
-    bool operator != (const CMeasurementPrefix &otherMultiplier) const;
+    bool operator != (const CMeasurementPrefix &other) const;
 
     /*!
      * \brief Greater operator >
-     * \param otherMultiplier
+     * \param other
      * \return
      */
-    bool operator > (const CMeasurementPrefix &otherMultiplier) const;
+    bool operator > (const CMeasurementPrefix &other) const;
 
     /*!
      * \brief Less operator <
-     * \param otherMultiplier
+     * \param other
      * \return
      */
-    bool operator < (const CMeasurementPrefix &otherMultiplier) const;
-
-    /*!
-     * \brief Cast as double
-     */
+    bool operator < (const CMeasurementPrefix &other) const;
 
     /*!
      * \brief Factor, e.g.1000 for "kilo"
@@ -243,7 +242,6 @@ public:
         return milli;
     }
 
-
     /*!
      * \brief All prefixes
      * \return
@@ -267,9 +265,9 @@ public:
      * \param prefixName must be valid!
      * \return
      */
-    static const CMeasurementPrefix &fromPrefixName(const QString &prefixName) {
-        QList<CMeasurementPrefix> prefixes = CMeasurementPrefix::prefixes();
-        // read only, avoid deep copy
+    static const CMeasurementPrefix &fromPrefixName(const QString &prefixName)
+    {
+        const QList<CMeasurementPrefix> &prefixes = CMeasurementPrefix::prefixes();
         for (int i = 0; i < prefixes.size(); ++i) {
             if (prefixes.at(i).getName() == prefixName) return (prefixes.at(i));
         }
@@ -329,16 +327,16 @@ protected:
 
     /*!
      * \brief Copy constructor
-     * \param otherUnit
+     * \param other
      */
-    CMeasurementUnit(const CMeasurementUnit &otherUnit);
+    CMeasurementUnit(const CMeasurementUnit &other);
 
     /*!
      * \brief Assignment operator =
-     * \param otherUnit
+     * \param other
      * \return
      */
-    CMeasurementUnit &operator =(const CMeasurementUnit &otherUnit);
+    CMeasurementUnit &operator =(const CMeasurementUnit &other);
 
     /*!
      * \brief String for streaming operators is full name
@@ -394,7 +392,8 @@ protected:
      * \brief Stream to DBus
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
         argument << this->m_unitName;
     }
 
@@ -402,7 +401,8 @@ protected:
      * \brief Stream from DBus
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &) {
+    virtual void unmarshallFromDbus(const QDBusArgument &)
+    {
         // the concrete implementations will override this default
         // this is required so I can also stream None
         (*this) = CMeasurementUnit::None();
@@ -411,17 +411,17 @@ protected:
 public:
     /*!
      * \brief Equal operator ==
-     * \param otherUnit
+     * \param other
      * \return
      */
-    bool operator == (const CMeasurementUnit &otherUnit) const;
+    bool operator == (const CMeasurementUnit &other) const;
 
     /*!
      * \brief Unequal operator !=
-     * \param otherUnit
+     * \param other
      * \return
      */
-    bool operator != (const CMeasurementUnit &otherUnit) const;
+    bool operator != (const CMeasurementUnit &other) const;
 
     /*!
      * \brief Representing an SI unit? Examples: kilometer, meter, hertz
@@ -455,7 +455,7 @@ public:
      * \param i18n
      * \return
      */
-    QString getName(bool i18n=false) const
+    QString getName(bool i18n = false) const
     {
         return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_name.toStdString().c_str()) : this->m_name;
     }
@@ -573,13 +573,13 @@ public:
 
     /*!
      * \brief Is given value <= epsilon?
-     * \param checkValue
+     * \param value
      * \return
      */
-    bool isEpsilon(double checkValue) const
+    bool isEpsilon(double value) const
     {
-        if (checkValue == 0) return true;
-        return abs(checkValue) <= this->m_epsilon;
+        if (value == 0) return true;
+        return abs(value) <= this->m_epsilon;
     }
 
     // --------------------------------------------------------------------
@@ -587,7 +587,7 @@ public:
     // --------------------------------------------------------------------
 
     /*!
-     * \brief Unit is not specified
+     * \brief Dimensionless unit
      * \return
      */
     static CMeasurementUnit &None()
@@ -595,7 +595,6 @@ public:
         static CMeasurementUnit none("none", "", "", false, false, 0.0, CMeasurementPrefix::None(), 0, 0);
         return none;
     }
-
 };
 
 } // namespace

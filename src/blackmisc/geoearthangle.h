@@ -22,7 +22,8 @@ template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantiti
      * \param uc
      * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, LATorLON &uc) {
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, LATorLON &uc)
+    {
         // If I do not have the method here, DBus metasystem tries to stream against
         // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
         // Once someone solves this, this methods should go and the
@@ -53,20 +54,20 @@ protected:
      * \brief Copy constructor
      * \param latOrLon
      */
-    CEarthAngle(const LATorLON &latOrLon) : CAngle(latOrLon) { }
+    CEarthAngle(const LATorLON &latOrLon) : CAngle(latOrLon) {}
 
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
-    CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CAngle(value, unit) {}
+    CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit) {}
 
     /*!
      * \brief Init by double value
      * \param angle
      */
-    CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle): CAngle(angle) {}
+    CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CAngle(angle) {}
 
     /*!
      * \brief String for converter and streaming
@@ -81,16 +82,18 @@ protected:
      * \brief Stream to DBus <<
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
-        CAngle::marshallToDbus(argument);
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
+        this->CAngle::marshallToDbus(argument);
     }
 
     /*!
      * \brief Stream from DBus >>
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
-        CAngle::unmarshallFromDbus(argument);
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        this->CAngle::unmarshallFromDbus(argument);
     }
 
 public:
@@ -106,7 +109,7 @@ public:
      */
     bool operator==(const LATorLON &latOrLon) const
     {
-        return CAngle::operator ==(latOrLon);
+        return this->CAngle::operator ==(latOrLon);
     }
 
     /*!
@@ -116,7 +119,7 @@ public:
      */
     bool operator!=(const LATorLON &latOrLon) const
     {
-        return CAngle::operator !=(latOrLon);
+        return this->CAngle::operator !=(latOrLon);
     }
 
     /*!
@@ -126,8 +129,8 @@ public:
      */
     CEarthAngle &operator +=(const CEarthAngle &latOrLon)
     {
-        CAngle::operator +=(latOrLon);
-        return (*this);
+        this->CAngle::operator +=(latOrLon);
+        return *this;
     }
 
     /*!
@@ -137,8 +140,8 @@ public:
      */
     CEarthAngle &operator -=(const CEarthAngle &latOrLon)
     {
-        CAngle::operator -=(latOrLon);
-        return (*this);
+        this->CAngle::operator -=(latOrLon);
+        return *this;
     }
 
     /*!
@@ -148,7 +151,7 @@ public:
      */
     bool operator >(const LATorLON &latOrLon) const
     {
-        return CAngle::operator >(latOrLon);
+        return this->CAngle::operator >(latOrLon);
     }
 
     /*!
@@ -158,7 +161,7 @@ public:
      */
     bool operator <(const LATorLON &latOrLon) const
     {
-        return CAngle::operator >(latOrLon);
+        return this->CAngle::operator >(latOrLon);
     }
 
     /*!
@@ -168,7 +171,7 @@ public:
      */
     bool operator <=(const LATorLON &latOrLon) const
     {
-        return CAngle::operator <=(latOrLon);
+        return this->CAngle::operator <=(latOrLon);
     }
 
     /*!
@@ -178,7 +181,7 @@ public:
      */
     bool operator >=(const LATorLON &latOrLon) const
     {
-        return CAngle::operator >=(latOrLon);
+        return this->CAngle::operator >=(latOrLon);
     }
 
     /*!
@@ -188,8 +191,8 @@ public:
      */
     CEarthAngle &operator =(const LATorLON &latOrLon)
     {
-        CAngle::operator =(latOrLon);
-        return (*this);
+        this->CAngle::operator =(latOrLon);
+        return *this;
     }
 
     /*!
@@ -199,8 +202,7 @@ public:
      */
     LATorLON operator +(const LATorLON &latOrLon) const
     {
-        LATorLON l(0.0, this->getUnit());
-        l += (*this);
+        LATorLON l(*this);
         l += latOrLon;
         return l;
     }
@@ -212,8 +214,7 @@ public:
      */
     LATorLON operator -(const LATorLON &latOrLon) const
     {
-        LATorLON l(0.0, this->getUnit());
-        l += (*this);
+        LATorLON l(*this);
         l -= latOrLon;
         return l;
     }
@@ -229,7 +230,6 @@ public:
      * \return
      */
     static LATorLON fromWgs84(const QString &wgsCoordinate);
-
 };
 
 } // namespace

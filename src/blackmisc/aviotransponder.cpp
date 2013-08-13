@@ -45,7 +45,7 @@ bool CTransponder::validate(bool strict) const
 /**
  * String representation
  */
-QString CTransponder::convertToQString(bool /** i18n **/) const
+QString CTransponder::convertToQString(bool /* i18n */) const
 {
     QString s = this->getName();
     s = s.append(" ").append(this->getTransponderCodeFormatted()).append(" ").append(this->getModeAsString());
@@ -103,8 +103,9 @@ QString CTransponder::getTransponderCodeFormatted() const
  * \brief Stream to DBus <<
  * \param argument
  */
-void CTransponder::marshallToDbus(QDBusArgument &argument) const {
-    CAvionicsBase::marshallToDbus(argument);
+void CTransponder::marshallToDbus(QDBusArgument &argument) const
+{
+    this->CAvionicsBase::marshallToDbus(argument);
     argument << this->m_transponderCode;
     argument << static_cast<qint32>(this->m_transponderMode);
 }
@@ -113,8 +114,9 @@ void CTransponder::marshallToDbus(QDBusArgument &argument) const {
  * \brief Stream from DBus >>
  * \param argument
  */
-void CTransponder::unmarshallFromDbus(const QDBusArgument &argument) {
-    CAvionicsBase::unmarshallFromDbus(argument);
+void CTransponder::unmarshallFromDbus(const QDBusArgument &argument)
+{
+    this->CAvionicsBase::unmarshallFromDbus(argument);
     qint32 tm;
     argument >> this->m_transponderCode;
     argument >> tm;

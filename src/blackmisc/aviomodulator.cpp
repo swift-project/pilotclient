@@ -38,33 +38,33 @@ template <class AVIO> void CModulator<AVIO>::registerMetadata()
 /*
  * Assigment operator =
  */
-template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModulator<AVIO> &otherModulator)
+template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModulator<AVIO> &other)
 {
-    if (this == &otherModulator)  return *this; // Same object?
-    this->m_frequencyActive = otherModulator.m_frequencyActive;
-    this->m_frequencyStandby = otherModulator.m_frequencyStandby;
-    this->m_digits = otherModulator.m_digits;
-    this->setName(otherModulator.getName());
+    if (this == &other) return *this;
+    this->m_frequencyActive = other.m_frequencyActive;
+    this->m_frequencyStandby = other.m_frequencyStandby;
+    this->m_digits = other.m_digits;
+    this->setName(other.getName());
     return *this;
 }
 
 /*
  * Equal operator ==
  */
-template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &otherModulator) const
+template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &other) const
 {
-    if (this == &otherModulator) return true;
-    return (this->getName() == otherModulator.getName() &&
-            this->m_frequencyActive == otherModulator.m_frequencyActive &&
-            this->m_frequencyStandby == otherModulator.m_frequencyStandby);
+    if (this == &other) return true;
+    return (this->getName() == other.getName() &&
+            this->m_frequencyActive == other.m_frequencyActive &&
+            this->m_frequencyStandby == other.m_frequencyStandby);
 }
 
 /*
  * Equal operator !=
  */
-template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> &otherModulator) const
+template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> &other) const
 {
-    return !(otherModulator == (*this));
+    return !(other == (*this));
 }
 
 // see here for the reason of thess forward instantiations

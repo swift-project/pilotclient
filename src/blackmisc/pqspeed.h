@@ -24,22 +24,26 @@ public:
      * \brief Default constructor
      */
     CSpeed() : CPhysicalQuantity(0, CSpeedUnit::m_s(), CSpeedUnit::m_s()) {}
+
     /*!
-     *\brief Copy constructor
+     *\brief Copy constructor from base type
      */
-    CSpeed(const CSpeed &speed): CPhysicalQuantity(speed) {}
+    CSpeed(const CPhysicalQuantity &base): CPhysicalQuantity(base) {}
+
     /*!
      * \brief Init by int value
      * \param value
      * \param unit
      */
     CSpeed(qint32 value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit, CSpeedUnit::m_s()) {}
+
     /*!
      *\brief Init by double value
      * \param value
      * \param unit
      */
     CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit, CSpeedUnit::m_s()) {}
+
     /*!
      * \brief Destructor
      */

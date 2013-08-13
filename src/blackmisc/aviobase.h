@@ -21,15 +21,13 @@ namespace Aviation
  */
 class CAvionicsBase : public BlackMisc::CBaseStreamStringifier
 {
-
 protected:
-
     QString m_name; //!< name of the unit
 
     /*!
      * \brief Constructor
      */
-    CAvionicsBase(const QString &name) : CBaseStreamStringifier(), m_name(name) {}
+    CAvionicsBase(const QString &name) : m_name(name) {}
 
     /*!
      * \brief Are the set values valid / in range
@@ -51,20 +49,21 @@ protected:
 
     /*!
      * \brief operator ==
-     * \param otherSystem
+     * \param other
      * \return
      */
-    bool operator ==(const CAvionicsBase &otherSystem) const
+    bool operator ==(const CAvionicsBase &other) const
     {
-        if (this == &otherSystem) return true;
-        return this->m_name == otherSystem.m_name;
+        if (this == &other) return true;
+        return this->m_name == other.m_name;
     }
 
     /*!
      * \brief Stream to DBus <<
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
         argument << this->m_name;
     }
 
@@ -72,7 +71,8 @@ protected:
      * \brief Stream from DBus >>
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         argument >> this->m_name;
     }
 
@@ -91,6 +91,7 @@ public:
         return this->m_name;
     }
 };
+
 } // namespace
 } // namespace
 

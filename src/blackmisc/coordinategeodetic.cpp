@@ -22,7 +22,8 @@ QString CCoordinateGeodetic::convertToQString(bool i18n) const
 /*
  * Marshall to Dbus
  */
-void CCoordinateGeodetic::marshallToDbus(QDBusArgument &argument) const {
+void CCoordinateGeodetic::marshallToDbus(QDBusArgument &argument) const
+{
     argument << this->m_latitude;
     argument << this->m_longitude;
     argument << this->m_height;
@@ -31,7 +32,8 @@ void CCoordinateGeodetic::marshallToDbus(QDBusArgument &argument) const {
 /*
  * Unmarshall from Dbus
  */
-void CCoordinateGeodetic::unmarshallFromDbus(const QDBusArgument &argument) {
+void CCoordinateGeodetic::unmarshallFromDbus(const QDBusArgument &argument)
+{
     argument >> this->m_latitude;
     argument >> this->m_longitude;
     argument >> this->m_height;

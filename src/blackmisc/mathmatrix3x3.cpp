@@ -15,27 +15,25 @@ namespace Math
  */
 double CMatrix3x3::determinant() const
 {
-    double determinant =
+    return
         this->m_matrix(0, 0) * this->m_matrix(1, 1) * this->m_matrix(2, 2) +
         this->m_matrix(0, 1) * this->m_matrix(1, 2) * this->m_matrix(2, 0) +
         this->m_matrix(0, 2) * this->m_matrix(1, 0) * this->m_matrix(2, 1) -
         this->m_matrix(0, 1) * this->m_matrix(1, 0) * this->m_matrix(2, 2) -
         this->m_matrix(0, 2) * this->m_matrix(1, 1) * this->m_matrix(2, 0) -
         this->m_matrix(0, 0) * this->m_matrix(1, 2) * this->m_matrix(2, 1);
-
-    return determinant;
 }
 
 /*
  * Inverse
  */
-CMatrix3x3 CMatrix3x3::inverse(bool &invertible) const
+CMatrix3x3 CMatrix3x3::inverse(bool &o_invertible) const
 {
     CMatrix3x3 inverse;
     double det;
-    if (this->allValuesEqual() || (det = determinant()) == 0)
+    if (this->allValuesEqual() || (det = this->determinant()) == 0)
     {
-        invertible = false;
+        o_invertible = false;
         inverse.setZero();
         return inverse;
     }
@@ -51,7 +49,7 @@ CMatrix3x3 CMatrix3x3::inverse(bool &invertible) const
     inverse.m_matrix(2, 1) = (- this->m_matrix(0, 0) * this->m_matrix(2, 1) + this->m_matrix(0, 1) * this->m_matrix(2, 0)) * invdet;
     inverse.m_matrix(2, 2) = (this->m_matrix(0, 0) * this->m_matrix(1, 1) - this->m_matrix(0, 1) * this->m_matrix(1, 0)) * invdet;
 
-    invertible = true;
+    o_invertible = true;
     return inverse;
 }
 
@@ -78,5 +76,4 @@ CMatrix3x1 CMatrix3x3::getColumn(int column) const
 }
 
 } // namespace
-
 } // namespace

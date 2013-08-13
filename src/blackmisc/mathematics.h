@@ -102,9 +102,9 @@ public:
 
 private:
     /*!
-     * \brief Avoid object init
+     * \brief Deleted
      */
-    CMath() {}
+    CMath();
 };
 
 } // namespace

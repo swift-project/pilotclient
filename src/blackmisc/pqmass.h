@@ -38,16 +38,17 @@ public:
     CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit, CMassUnit::kg()) {}
 
     /*!
-     * \brief Copy constructor
-     * \param mass
+     * \brief Copy constructor from base type
+     * \param base
      */
-    CMass(const CPhysicalQuantity &mass) : CPhysicalQuantity(mass) {}
+    CMass(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
 
     /*!
      * \brief Virtual destructor
      */
     virtual ~CMass() {}
 };
+
 } // namespace
 } // namespace
 

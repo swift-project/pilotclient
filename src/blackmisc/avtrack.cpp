@@ -25,29 +25,28 @@ QString CTrack::convertToQString(bool i18n) const
 /*
  * Assigment
  */
-CTrack& CTrack::operator =(const CTrack &otherTrack)
+CTrack& CTrack::operator =(const CTrack &other)
 {
-    // Check for self-assignment!
-    if (this == &otherTrack)  return *this;
-    CAngle::operator = (otherTrack);
-    this->m_magnetic = otherTrack.m_magnetic;
-    return (*this);
+    if (this == &other) return *this;
+    this->CAngle::operator = (other);
+    this->m_magnetic = other.m_magnetic;
+    return *this;
 }
 
 /*
  * Equal?
  */
-bool CTrack::operator ==(const CTrack &otherTrack)
+bool CTrack::operator ==(const CTrack &other)
 {
-    return otherTrack.m_magnetic == this->m_magnetic && CAngle::operator ==(otherTrack);
+    return other.m_magnetic == this->m_magnetic && this->CAngle::operator ==(other);
 }
 
 /*
  * Unequal?
  */
-bool CTrack::operator !=(const CTrack &otherTrack)
+bool CTrack::operator !=(const CTrack &other)
 {
-    return !((*this) == otherTrack);
+    return !((*this) == other);
 }
 
 /*!

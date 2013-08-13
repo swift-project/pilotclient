@@ -23,27 +23,32 @@ public:
      * \brief Default constructor
      */
     CLength() : CPhysicalQuantity(0, CLengthUnit::m(), CLengthUnit::m()) {}
+
     /**
-     *\brief Copy constructor
+     *\brief Copy constructor from base type
      */
-    CLength(const CLength &length) : CPhysicalQuantity(length) {}
+    CLength(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
+
     /*!
      * \brief Init by int value
      * \param value
      * \param unit
      */
     CLength(qint32 value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit, CLengthUnit::m()) {}
+
     /*!
      *\brief Init by double value
      * \param value
      * \param unit
      */
     CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit, CLengthUnit::m()) {}
+
     /*!
      * \brief Virtual destructor
      */
     virtual ~CLength() {}
 };
+
 } // namespace
 } // namespace
 

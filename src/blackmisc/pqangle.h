@@ -12,6 +12,7 @@ namespace BlackMisc
 {
 namespace PhysicalQuantities
 {
+
 /*!
  * \brief Physical unit angle (radians, degrees)
  */
@@ -24,9 +25,9 @@ public:
     CAngle() : CPhysicalQuantity(0, CAngleUnit::rad(), CAngleUnit::rad()) {}
 
     /*!
-     * \brief Copy constructor
+     * \brief Copy constructor from base type
      */
-    CAngle(const CAngle &angle) : CPhysicalQuantity(angle) {}
+    CAngle(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
 
     /*!
      * \brief Init by int value
@@ -51,9 +52,7 @@ public:
     CAngle(qint32 degrees, qint32 minutes, double seconds) :
         CPhysicalQuantity(
             degrees + minutes / 100.0 + seconds / 10000.0,
-            CAngleUnit::sexagesimalDeg(), CAngleUnit::rad()) {
-        // void
-    }
+            CAngleUnit::sexagesimalDeg(), CAngleUnit::rad()) {}
 
     /*!
      * \brief Virtual destructor

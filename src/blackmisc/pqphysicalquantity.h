@@ -19,13 +19,12 @@ namespace BlackMisc
 {
 namespace PhysicalQuantities
 {
+
 /*!
  * \brief A physical quantity such as "5m", "20s", "1500ft/s"
  */
-
 template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CBaseStreamStringifier
 {
-
 private:
     double m_unitValueD; //!< value backed by double
     qint32 m_unitValueI; //!< value backed by integer, allows sole integer arithmetic
@@ -71,7 +70,7 @@ protected:
     CPhysicalQuantity(double baseValue, const MU &unit, const MU &siConversionUnit);
 
     /*!
-     * \brief Name as stringification
+     * \brief Name as string
      * \param i18n
      * \return
      */
@@ -101,9 +100,9 @@ protected:
 public:
     /*!
      * \brief Copy constructor
-     * \param otherQuantity
+     * \param other
      */
-    CPhysicalQuantity(const CPhysicalQuantity &otherQuantity);
+    CPhysicalQuantity(const CPhysicalQuantity &other);
 
     /*!
      * \brief Virtual destructor
@@ -305,12 +304,12 @@ public:
     /*!
      * \brief Operator to support commutative multiplication
      * \param factor
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    friend PQ operator *(double factor, const PQ &otherQuantity)
+    friend PQ operator *(double factor, const PQ &other)
     {
-        return otherQuantity * factor;
+        return other * factor;
     }
 
     /*!
@@ -322,80 +321,80 @@ public:
 
     /*!
      * \brief Equal operator ==
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator==(const CPhysicalQuantity &otherQuantity) const;
+    bool operator==(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Not equal operator !=
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator!=(const CPhysicalQuantity &otherQuantity) const;
+    bool operator!=(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Plus operator +=
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    CPhysicalQuantity &operator +=(const CPhysicalQuantity &otherQuantity);
+    CPhysicalQuantity &operator +=(const CPhysicalQuantity &other);
 
     /*!
      * \brief Minus operator-=
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    CPhysicalQuantity &operator -=(const CPhysicalQuantity &otherQuantity);
+    CPhysicalQuantity &operator -=(const CPhysicalQuantity &other);
 
     /*!
      * \brief Greater operator >
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator >(const CPhysicalQuantity &otherQuantity) const;
+    bool operator >(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Less operator <
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator <(const CPhysicalQuantity &otherQuantity) const;
+    bool operator <(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Less equal operator <=
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator <=(const CPhysicalQuantity &otherQuantity) const;
+    bool operator <=(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Greater equal operator >=
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator >=(const CPhysicalQuantity &otherQuantity) const;
+    bool operator >=(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Assignment operator =
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    CPhysicalQuantity &operator =(const CPhysicalQuantity &otherQuantity);
+    CPhysicalQuantity &operator =(const CPhysicalQuantity &other);
 
     /*!
      * \brief Plus operator +
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    PQ operator +(const PQ &otherQuantity) const;
+    PQ operator +(const PQ &other) const;
 
     /*!
      * \brief Minus operator -
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    PQ operator -(const PQ &otherQuantity) const;
+    PQ operator -(const PQ &other) const;
 
     /*!
      * \brief Quantity value <= epsilon
@@ -429,7 +428,8 @@ public:
      * \brief Stream to DBus <<
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
         argument << this->m_unitValueD;
         argument << this->m_unitValueI;
         argument << this->m_convertedSiUnitValueD;
@@ -442,7 +442,8 @@ public:
      * \brief Stream from DBus >>
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
         argument >> this->m_unitValueD;
         argument >> this->m_unitValueI;
         argument >> this->m_convertedSiUnitValueD;
@@ -463,7 +464,6 @@ public:
         qDBusRegisterMetaType<PQ>();
         qDBusRegisterMetaType<QList<PQ>>();
     }
-
 };
 
 } // namespace

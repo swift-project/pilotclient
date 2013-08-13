@@ -16,7 +16,7 @@ namespace Math
 /*
  * Convert to string
  */
-template <class ImplVector> QString CVector3DBase<ImplVector>::convertToQString(bool /** i18n **/) const
+template <class ImplVector> QString CVector3DBase<ImplVector>::convertToQString(bool /* i18n */) const
 {
     QString s = ("{%1, %2, %3}");
     s = s.arg(QString::number(this->m_i, 'f')).
@@ -94,21 +94,21 @@ template <class ImplVector> void CVector3DBase<ImplVector>::setElement(size_t ro
 /*
  * Cross product
  */
-template <class ImplVector> ImplVector CVector3DBase<ImplVector>::crossProduct(const ImplVector &otherVector) const
+template <class ImplVector> ImplVector CVector3DBase<ImplVector>::crossProduct(const ImplVector &other) const
 {
-    ImplVector v(otherVector);
-    v.m_i = this->m_j * otherVector.m_k - this->m_k * otherVector.m_j;
-    v.m_j = this->m_k * otherVector.m_i - this->m_i * otherVector.m_k;
-    v.m_k = this->m_i * otherVector.m_j - this->m_j * otherVector.m_i;
+    ImplVector v(other);
+    v.m_i = this->m_j * other.m_k - this->m_k * other.m_j;
+    v.m_j = this->m_k * other.m_i - this->m_i * other.m_k;
+    v.m_k = this->m_i * other.m_j - this->m_j * other.m_i;
     return v;
 }
 
 /*
  * Cross product
  */
-template <class ImplVector> double CVector3DBase<ImplVector>::dotProduct(const ImplVector &otherVector) const
+template <class ImplVector> double CVector3DBase<ImplVector>::dotProduct(const ImplVector &other) const
 {
-    return this->m_i * otherVector.m_i + this->m_j * otherVector.m_j + this->m_k * otherVector.m_k;
+    return this->m_i * other.m_i + this->m_j * other.m_j + this->m_k * other.m_k;
 }
 
 
@@ -117,7 +117,7 @@ template <class ImplVector> double CVector3DBase<ImplVector>::dotProduct(const I
  */
 template <class ImplVector> void CVector3DBase<ImplVector>::matrixMultiplication(const CMatrix3x3 &matrix)
 {
-    CMatrix3x1 m = matrix * (this->toMatrix3x1());
+    CMatrix3x1 m = matrix * this->toMatrix3x1();
     this->m_i = m(0, 0);
     this->m_j = m(1, 0);
     this->m_k = m(2, 0);
@@ -136,7 +136,8 @@ template <class ImplVector> CMatrix3x1 CVector3DBase<ImplVector>::toMatrix3x1() 
  * \brief Stream to DBus
  * \param argument
  */
-template <class ImplVector> void CVector3DBase<ImplVector>::marshallToDbus(QDBusArgument &argument) const {
+template <class ImplVector> void CVector3DBase<ImplVector>::marshallToDbus(QDBusArgument &argument) const
+{
     argument << this->m_i;
     argument << this->m_j;
     argument << this->m_k;
@@ -146,7 +147,8 @@ template <class ImplVector> void CVector3DBase<ImplVector>::marshallToDbus(QDBus
  * \brief Stream from DBus
  * \param argument
  */
-template <class ImplVector> void CVector3DBase<ImplVector>::unmarshallFromDbus(const QDBusArgument &argument) {
+template <class ImplVector> void CVector3DBase<ImplVector>::unmarshallFromDbus(const QDBusArgument &argument)
+{
     argument >> this->m_i;
     argument >> this->m_j;
     argument >> this->m_k;
@@ -168,5 +170,4 @@ template class CVector3DBase<BlackMisc::Geo::CCoordinateEcef>;
 template class CVector3DBase<BlackMisc::Geo::CCoordinateNed>;
 
 } // namespace
-
 } // namespace

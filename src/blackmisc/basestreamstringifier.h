@@ -17,7 +17,6 @@ namespace BlackMisc {
 // Virtual operators: http://stackoverflow.com/a/4571634/356726
 class CBaseStreamStringifier
 {
-
     /*!
      * \brief Stream << overload to be used in debugging messages
      * \param debug
@@ -29,9 +28,6 @@ class CBaseStreamStringifier
         debug << uc.stringForStreaming();
         return debug;
     }
-
-    // msvc2010: friend QDebug &operator<<(QDebug &debug, const CBaseStreamStringifier &uc)
-    // MinGW: No reference
 
     /*!
      * \brief Operator << based on text stream
@@ -98,7 +94,8 @@ class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CBaseStreamStringifier &uc) {
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CBaseStreamStringifier &uc)
+    {
         argument.beginStructure();
         uc.unmarshallFromDbus(argument);
         argument.endStructure();
@@ -120,7 +117,6 @@ class CBaseStreamStringifier
     }
 
 public:
-
     /*!
      * \brief Virtual destructor
      */
@@ -129,7 +125,6 @@ public:
     /*!
      * \brief Cast as QString
      * \bool i18n
-     * \remarks operator cast caused too many ambiguity trouble
      */
     QString toQString(bool i18n = false) const
     {
@@ -173,12 +168,11 @@ protected:
 
     /*!
      * \brief Copy assignment operator.
-     * This is protected in order to forbid slicing an instance of one derived
-     * class into an instance of a completely unrelated derived class.
+     * \remark This is protected in order to forbid slicing an instance of one derived
+     *         class into an instance of a completely unrelated derived class.
      * \return
      */
     CBaseStreamStringifier& operator=(const CBaseStreamStringifier&) { return *this; }
-
 };
 
 } // namespace

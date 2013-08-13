@@ -24,27 +24,32 @@ public:
      * \brief Default constructor
      */
     CTime() : CPhysicalQuantity(0, CTimeUnit::s(), CTimeUnit::s()) {}
+
     /**
-     *\brief Copy constructor
+     *\brief Copy constructor from base type
      */
-    CTime(const CPhysicalQuantity &time): CPhysicalQuantity(time) {}
+    CTime(const CPhysicalQuantity &base): CPhysicalQuantity(base) {}
+
     /*!
      * \brief Init by int value
      * \param value
      * \param unit
      */
     CTime(qint32 value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit, CTimeUnit::s()) {}
+
     /*!
      *\brief Init by double value
      * \param value
      * \param unit
      */
     CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit, CTimeUnit::s()) {}
+
     /*!
      * \brief Destructor
      */
     virtual ~CTime() {}
 };
+
 } // namespace
 } // namespace
 

@@ -30,9 +30,9 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param Longitude
+     * \param other
      */
-    CLongitude(const CLongitude &Longitude) : CEarthAngle(Longitude) {}
+    CLongitude(const CLongitude &other) : CEarthAngle(other) {}
 
     /*!
      * \brief Constructor
@@ -45,7 +45,7 @@ public:
      * \param value
      * \param unit
      */
-    CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CEarthAngle(value, unit) {}
+    CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
 
     /*!
      * \brief Virtual destructor

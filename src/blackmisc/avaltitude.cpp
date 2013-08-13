@@ -16,38 +16,37 @@ namespace Aviation
 /*
  * Own implementation for streaming
  */
-QString CAltitude::convertToQString(bool /** i18n **/) const
+QString CAltitude::convertToQString(bool /* i18n */) const
 {
-    QString s = CLength::convertToQString();
+    QString s = this->CLength::convertToQString();
     return s.append(this->m_msl ? " MSL" : " AGL");
 }
 
 /*
  * Assigment
  */
-CAltitude &CAltitude::operator =(const CAltitude &otherAltitude)
+CAltitude &CAltitude::operator =(const CAltitude &other)
 {
-    // Check for self-assignment!
-    if (this == &otherAltitude)  return *this;
-    CLength::operator = (otherAltitude);
-    this->m_msl = otherAltitude.m_msl;
-    return (*this);
+    if (this == &other) return *this;
+    CLength::operator = (other);
+    this->m_msl = other.m_msl;
+    return *this;
 }
 
 /*
  * Equal?
  */
-bool CAltitude::operator ==(const CAltitude &otherAltitude)
+bool CAltitude::operator ==(const CAltitude &other)
 {
-    return otherAltitude.m_msl == this->m_msl && CLength::operator ==(otherAltitude);
+    return other.m_msl == this->m_msl && this->CLength::operator ==(other);
 }
 
 /*
  * Unequal?
  */
-bool CAltitude::operator !=(const CAltitude &otherAltitude)
+bool CAltitude::operator !=(const CAltitude &other)
 {
-    return !((*this) == otherAltitude);
+    return !((*this) == other);
 }
 
 /*

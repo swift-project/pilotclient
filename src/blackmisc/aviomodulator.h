@@ -11,7 +11,6 @@
 
 namespace BlackMisc
 {
-
 namespace Aviation
 {
 
@@ -26,7 +25,8 @@ template <class AVIO> class CModulator : public CAvionicsBase
      * \param uc
      * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, AVIO &uc) {
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, AVIO &uc)
+    {
         // If I do not have the method here, DBus metasystem tries to stream against
         // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
         // Once someone solves this, this methods should go and the
@@ -55,7 +55,6 @@ protected:
     int m_digits; //!< digits used
 
 protected:
-
     /*!
      * \brief Default constructor
      */
@@ -63,10 +62,10 @@ protected:
 
     /*!
      * \brief Copy constructor
-     * \param otherUnit
+     * \param other
      */
-    CModulator(const CModulator &otherUnit) : CAvionicsBase(otherUnit.getName()),
-        m_frequencyActive(otherUnit.m_frequencyActive), m_frequencyStandby(otherUnit.m_frequencyStandby), m_digits(otherUnit.m_digits) {}
+    CModulator(const CModulator &other) : CAvionicsBase(other.getName()),
+        m_frequencyActive(other.m_frequencyActive), m_frequencyStandby(other.m_frequencyStandby), m_digits(other.m_digits) {}
 
     /*!
      * \brief Constructor
@@ -76,14 +75,15 @@ protected:
      * \param digits
      */
     CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits) :
-        CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_digits(digits) { }
+        CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_digits(digits) {}
 
     /*!
      * \brief String for converter
      * \param i18n
      * \return
      */
-    virtual QString convertToQString(bool i18n = false) const  {
+    virtual QString convertToQString(bool i18n = false) const
+    {
         QString s(this->getName());
         s.append(" Active: ").append(this->m_frequencyActive.unitValueRoundedWithUnit(3, i18n));
         s.append(" Standby: ").append(this->m_frequencyStandby.unitValueRoundedWithUnit(3, i18n));
@@ -128,24 +128,25 @@ protected:
 
     /*!
      * \brief Assigment operator =
-     * \param otherModulator
+     * \param other
      * \return
      */
-    CModulator &operator =(const CModulator &otherModulator);
+    CModulator &operator =(const CModulator &other);
 
     /*!
      * \brief operator ==
-     * \param otherModulator
+     * \param other
      * \return
      */
-    bool operator ==(const CModulator &otherModulator) const;
+    bool operator ==(const CModulator &other) const;
 
     /*!
      * \brief operator !=
-     * \param otherModulator
+     * \param other
      * \return
      */
-    bool operator !=(const CModulator &otherModulator) const;
+    bool operator !=(const CModulator &other) const;
+
     /*!
      * \brief COM1
      * \return
@@ -240,8 +241,9 @@ protected:
      * \brief Stream to DBus <<
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
-        CAvionicsBase::marshallToDbus(argument);
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
+        this->CAvionicsBase::marshallToDbus(argument);
         argument << this->m_frequencyActive;
         argument << this->m_frequencyStandby;
         argument << this->m_digits;
@@ -251,8 +253,9 @@ protected:
      * \brief Stream from DBus >>
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
-        CAvionicsBase::unmarshallFromDbus(argument);
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        this->CAvionicsBase::unmarshallFromDbus(argument);
         argument >> this->m_frequencyActive;
         argument >> this->m_frequencyStandby;
         argument >> this->m_digits;

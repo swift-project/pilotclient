@@ -7,7 +7,6 @@
 #define BLACKMISC_AVTRACK_H
 #include "blackmisc/pqangle.h"
 
-
 namespace BlackMisc
 {
 namespace Aviation
@@ -33,8 +32,9 @@ protected:
      * \brief Stream to DBus <<
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
-        CAngle::marshallToDbus(argument);
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
+        this->CAngle::marshallToDbus(argument);
         argument << this->m_magnetic;
     }
 
@@ -42,8 +42,9 @@ protected:
      * \brief Stream from DBus >>
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
-        CAngle::unmarshallFromDbus(argument);
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        this->CAngle::unmarshallFromDbus(argument);
         argument >> this->m_magnetic;
     }
 
@@ -52,6 +53,7 @@ public:
      * \brief Default constructor: 0 Track magnetic
      */
     CTrack() : BlackMisc::PhysicalQuantities::CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_magnetic(true) {}
+
     /*!
      * \brief Constructor
      * \param value
@@ -59,6 +61,7 @@ public:
      * \param unit
      */
     CTrack(double value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_magnetic(magnetic) {}
+
     /*!
      * \brief Constructor
      * \param value
@@ -66,42 +69,47 @@ public:
      * \param unit
      */
     CTrack(int value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_magnetic(magnetic) {}
+
     /*!
      * \brief Constructor by CAngle
      * \param track
      * \param magnetic
      */
-    CTrack(BlackMisc::PhysicalQuantities::CAngle track, bool magnetic) : BlackMisc::PhysicalQuantities::CAngle(), m_magnetic(magnetic) {
-        BlackMisc::PhysicalQuantities::CAngle::operator =(track);
-    }
+    CTrack(BlackMisc::PhysicalQuantities::CAngle track, bool magnetic) : BlackMisc::PhysicalQuantities::CAngle(track), m_magnetic(magnetic) {}
+
     /*!
      * \brief Copy constructor
-     * \param otherTrack
+     * \param other
      */
-    CTrack(const CTrack &otherTrack) : BlackMisc::PhysicalQuantities::CAngle(otherTrack), m_magnetic(otherTrack.m_magnetic) {}
+    CTrack(const CTrack &other) : BlackMisc::PhysicalQuantities::CAngle(other), m_magnetic(other.m_magnetic) {}
+
     /*!
      * \brief Assignment operator =
-     * \param otherTrack
-     * @return
+     * \param other
+     * \return
      */
-    CTrack &operator =(const CTrack &otherTrack);
+    CTrack &operator =(const CTrack &other);
+
     /*!
      * \brief Equal operator ==
-     * \param otherTrack
-     * @return
+     * \param other
+     * \return
      */
-    bool operator ==(const CTrack &otherTrack);
+    bool operator ==(const CTrack &other);
+
     /*!
      * \brief Unequal operator ==
-     * \param otherTrack
-     * @return
+     * \param other
+     * \return
      */
-    bool operator !=(const CTrack &otherTrack);
+    bool operator !=(const CTrack &other);
+
     /*!
      * \brief Magnetic Track?
      * \return
      */
-    bool isMagneticTrack() const {
+    bool isMagneticTrack() const
+    {
         return this->m_magnetic;
         QT_TRANSLATE_NOOP("Aviation", "magnetic");
         QT_TRANSLATE_NOOP("Aviation", "true");
@@ -111,8 +119,20 @@ public:
      * \brief True Track?
      * \return
      */
-    bool isTrueTrack() const {
+    bool isTrueTrack() const
+    {
         return !this->m_magnetic;
+    }
+
+    /*!
+     * \brief Switch angle unit
+     * \param newUnit
+     * \return
+     */
+    CTrack &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &newUnit)
+    {
+        this->CAngle::switchUnit(newUnit);
+        return *this;
     }
 
     /*!
@@ -122,7 +142,6 @@ public:
 };
 
 } // namespace
-
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTrack)

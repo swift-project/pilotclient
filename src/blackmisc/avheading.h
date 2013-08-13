@@ -11,6 +11,7 @@ namespace BlackMisc
 {
 namespace Aviation
 {
+
 /*!
  * \brief Heading as used in aviation, can be true or magnetic heading
  * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
@@ -32,8 +33,9 @@ protected:
      * \brief Stream to DBus <<
      * \param argument
      */
-    virtual void marshallToDbus(QDBusArgument &argument) const {
-        CAngle::marshallToDbus(argument);
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
+        this->CAngle::marshallToDbus(argument);
         argument << this->m_magnetic;
     }
 
@@ -41,8 +43,9 @@ protected:
      * \brief Stream from DBus >>
      * \param argument
      */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument) {
-        CAngle::unmarshallFromDbus(argument);
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        this->CAngle::unmarshallFromDbus(argument);
         argument >> this->m_magnetic;
     }
 
@@ -58,8 +61,8 @@ public:
      * \param magnetic
      * \param unit
      */
-
     CHeading(double value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
+
     /*!
      * \brief Constructor
      * \param value
@@ -73,37 +76,34 @@ public:
      * \param heading
      * \param magnetic
      */
-    CHeading(CAngle heading, bool magnetic) : CAngle(), m_magnetic(magnetic)
-    {
-        CAngle::operator =(heading);
-    }
+    CHeading(CAngle heading, bool magnetic) : CAngle(heading), m_magnetic(magnetic) {}
 
     /*!
      * \brief Copy constructor
-     * \param otherHeading
+     * \param other
      */
-    CHeading(const CHeading &otherHeading) : CAngle(otherHeading), m_magnetic(otherHeading.m_magnetic) {}
+    CHeading(const CHeading &other) : CAngle(other), m_magnetic(other.m_magnetic) {}
 
     /*!
      * \brief Assignment operator =
-     * \param otherHeading
+     * \param other
      * @return
      */
-    CHeading &operator =(const CHeading &otherHeading);
+    CHeading &operator =(const CHeading &other);
 
     /*!
      * \brief Equal operator ==
-     * \param otherHeading
+     * \param other
      * @return
      */
-    bool operator ==(const CHeading &otherHeading);
+    bool operator ==(const CHeading &other);
 
     /*!
      * \brief Unequal operator ==
-     * \param otherHeading
+     * \param other
      * @return
      */
-    bool operator !=(const CHeading &otherHeading);
+    bool operator !=(const CHeading &other);
 
     /*!
      * \brief Magnetic heading?
@@ -118,14 +118,14 @@ public:
     bool isTrueHeading() const { return !this->m_magnetic; }
 
     /*!
-     * \brief Switch heading unit
+     * \brief Switch angle unit
      * \param newUnit
      * \return
      */
     CHeading &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &newUnit)
     {
-        CAngle::switchUnit(newUnit);
-        return (*this);
+        this->CAngle::switchUnit(newUnit);
+        return *this;
     }
 
     /*!
