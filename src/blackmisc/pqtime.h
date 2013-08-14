@@ -31,13 +31,6 @@ public:
     CTime(const CPhysicalQuantity &base): CPhysicalQuantity(base) {}
 
     /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CTime(qint32 value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit, CTimeUnit::s()) {}
-
-    /*!
      *\brief Init by double value
      * \param value
      * \param unit

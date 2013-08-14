@@ -31,13 +31,6 @@ public:
     CSpeed(const CPhysicalQuantity &base): CPhysicalQuantity(base) {}
 
     /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CSpeed(qint32 value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit, CSpeedUnit::m_s()) {}
-
-    /*!
      *\brief Init by double value
      * \param value
      * \param unit

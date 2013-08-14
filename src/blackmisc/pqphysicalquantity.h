@@ -28,9 +28,7 @@ template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CBaseS
 {
 private:
     double m_unitValueD; //!< value backed by double
-    qint32 m_unitValueI; //!< value backed by integer, allows sole integer arithmetic
     double m_convertedSiUnitValueD; //!< SI unit value
-    bool m_isIntegerBaseValue; //!< flag integer? / double?
 
     /*!
      * \brief Easy access to derived class (CRTP template parameter)
@@ -55,14 +53,6 @@ protected:
     MU m_conversionSiUnit; //!< corresponding SI base unit
 
     /*!
-     * \brief Constructor by integer
-     * \param baseValue
-     * \param unit
-     * \param siConversionUnit
-     */
-    CPhysicalQuantity(qint32 baseValue, const MU &unit, const MU &siConversionUnit);
-
-    /*!
      * \brief Constructor with double
      * \param baseValue
      * \param unit
@@ -79,12 +69,6 @@ protected:
     {
         return this->unitValueRoundedWithUnit(-1, i18n);
     }
-
-    /*!
-     * \brief Init by integer
-     * \param baseValue
-     */
-    void setUnitValue(qint32 baseValue);
 
     /*!
      * \brief Init by double
@@ -187,15 +171,6 @@ public:
     QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
 
     /*!
-     * \brief Value as int
-     * \return
-     */
-    qint32 unitValueToInteger() const
-    {
-        return this->m_unitValueI;
-    }
-
-    /*!
      * \brief Value as double
      * \return
      */
@@ -233,16 +208,6 @@ public:
     double convertedSiValueToDouble() const
     {
         return this->m_convertedSiUnitValueD;
-    }
-
-    /*!
-     * \brief SI value as integer
-     * \return
-     */
-    qint32 convertedSiValueToInteger() const
-    {
-        return static_cast<qint32>(
-                    BlackMisc::Math::CMath::round(this->m_convertedSiUnitValueD, 0));
     }
 
     /*!
@@ -403,7 +368,6 @@ public:
      */
     bool isZeroEpsilon() const
     {
-        if (this->m_isIntegerBaseValue) return this->m_unitValueI == 0;
         return this->m_unit.isEpsilon(this->m_unitValueD);
     }
 
@@ -432,9 +396,7 @@ public:
     virtual void marshallToDbus(QDBusArgument &argument) const
     {
         argument << this->m_unitValueD;
-        argument << this->m_unitValueI;
         argument << this->m_convertedSiUnitValueD;
-        argument << this->m_isIntegerBaseValue;
         argument << this->m_unit;
         argument << this->m_conversionSiUnit;
     }
@@ -446,9 +408,7 @@ public:
     virtual void unmarshallFromDbus(const QDBusArgument &argument)
     {
         argument >> this->m_unitValueD;
-        argument >> this->m_unitValueI;
         argument >> this->m_convertedSiUnitValueD;
-        argument >> this->m_isIntegerBaseValue;
         argument >> this->m_unit;
         argument >> this->m_conversionSiUnit;
     }

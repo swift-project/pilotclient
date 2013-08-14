@@ -30,13 +30,6 @@ public:
     CFrequency(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
 
     /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CFrequency(qint32 value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit, CFrequencyUnit::Hz()) {}
-
-    /*!
      * \brief Init by double value
      * \param value
      * \param unit

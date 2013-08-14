@@ -30,13 +30,6 @@ public:
     CTemperature(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
 
     /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CTemperature(qint32 value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit, CTemperatureUnit::K()) {}
-
-    /*!
      * \brief Init by double value
      * \param value
      * \param unit

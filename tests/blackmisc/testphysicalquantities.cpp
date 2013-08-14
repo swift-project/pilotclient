@@ -97,7 +97,6 @@ void CTestPhysicalQuantities::angleTests()
     CAngle a2(1.5 * CAngle::PI(), CAngleUnit::rad());
     CAngle a3(35.4336, CAngleUnit::sexagesimalDeg()); // 35.72666
     a2.switchUnit(CAngleUnit::deg());
-    QVERIFY2(a2.unitValueToInteger() == 270, qPrintable(QString("1.5Pi should be 270deg, not %1 deg").arg(a2.unitValueToInteger())));
     QVERIFY2(a1.piFactor() == 1, qPrintable(QString("Pi should be 1PI, not %1").arg(a1.piFactor())));
     QVERIFY2(a3.valueRounded(CAngleUnit::deg()) == 35.73, "Expecting 35.73");
 }
@@ -108,9 +107,9 @@ void CTestPhysicalQuantities::angleTests()
 void CTestPhysicalQuantities::massTests()
 {
     CMass w1(1000, CMassUnit::kg());
-    CMass w2(w1.unitValueToInteger(), CMassUnit::kg());
+    CMass w2(w1.unitValueToDouble(), CMassUnit::kg());
     w2.switchUnit(CMassUnit::t());
-    QVERIFY2(w2.unitValueToInteger() == 1, "1tonne shall be 1000kg");
+    QVERIFY2(w2.unitValueToDouble() == 1, "1tonne shall be 1000kg");
     w2.switchUnit(CMassUnit::lb());
     QVERIFY2(w2.unitValueToDoubleRounded(2) == 2204.62, "1tonne shall be 2204pounds");
     QVERIFY2(w1 == w2, "Masses shall be equal");
@@ -154,7 +153,7 @@ void CTestPhysicalQuantities::temperatureTests()
 void CTestPhysicalQuantities::timeTests()
 {
     CTime t1(1, CTimeUnit::h());
-    QVERIFY2(t1.convertedSiValueToInteger() == 3600, "1hour shall be 3600s");
+    QVERIFY2(t1.convertedSiValueToDouble() == 3600, "1hour shall be 3600s");
 }
 
 /*

@@ -24,13 +24,6 @@ public:
     CMass() : CPhysicalQuantity(0, CMassUnit::kg(), CMassUnit::kg()) {}
 
     /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CMass(qint32 value, const CMassUnit &unit) : CPhysicalQuantity(value, unit, CMassUnit::kg()) {}
-
-    /*!
      * \brief Init by double value
      * \param value
      * \param unit

@@ -24,13 +24,6 @@ public:
     CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::m_s2(), CAccelerationUnit::m_s2()) {}
 
     /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CAcceleration(qint32 value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit, CAccelerationUnit::m_s2()) {}
-
-    /*!
      * \brief Init by double value
      * \param value
      * \param unit

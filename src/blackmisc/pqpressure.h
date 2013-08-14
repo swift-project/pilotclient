@@ -31,13 +31,6 @@ public:
     CPressure(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
 
     /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CPressure(qint32 value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit, CPressureUnit::Pa()) {}
-
-    /*!
      *\brief Init by double value
      * \param value
      * \param unit

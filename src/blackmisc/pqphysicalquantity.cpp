@@ -11,15 +11,6 @@ namespace PhysicalQuantities
 {
 
 /*
- * Constructor by integer
- */
-template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(qint32 baseValue, const MU &unit, const MU &siConversionUnit) :
-    m_unit(unit), m_conversionSiUnit(siConversionUnit)
-{
-    this->setUnitValue(baseValue);
-}
-
-/*
  * Constructor by double
  */
 template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double baseValue, const MU &unit, const MU &siConversionUnit) :
@@ -32,8 +23,8 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(doubl
  * Copy constructor
  */
 template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(const CPhysicalQuantity &other) :
-    m_unitValueD(other.m_unitValueD), m_unitValueI(other.m_unitValueI), m_convertedSiUnitValueD(other.m_convertedSiUnitValueD),
-    m_isIntegerBaseValue(other.m_isIntegerBaseValue), m_unit(other.m_unit), m_conversionSiUnit(other.m_conversionSiUnit)
+    m_unitValueD(other.m_unitValueD), m_convertedSiUnitValueD(other.m_convertedSiUnitValueD),
+    m_unit(other.m_unit), m_conversionSiUnit(other.m_conversionSiUnit)
 {
 }
 
@@ -58,18 +49,9 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const 
     bool eq = false;
     if (this->m_unit == other.m_unit)
     {
-        // same unit
-        if (this->m_isIntegerBaseValue && other.m_isIntegerBaseValue)
-        {
-            // pure integer comparison, no rounding issues
-            eq = this->m_unitValueI == other.m_unitValueI;
-        }
-        else
-        {
-            // same unit, comparison based on double
-            diff = qAbs(this->m_unitValueD - other.m_unitValueD);
-            eq = diff <= (lenient * this->m_unit.getEpsilon());
-        }
+        // same unit, comparison based on double
+        diff = qAbs(this->m_unitValueD - other.m_unitValueD);
+        eq = diff <= (lenient * this->m_unit.getEpsilon());
     }
     else
     {
@@ -95,10 +77,8 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ>& CPhysicalQuantity<MU, P
 {
     if (this == &other) return *this;
 
-    this->m_unitValueI = other.m_unitValueI;
     this->m_unitValueD = other.m_unitValueD;
     this->m_convertedSiUnitValueD = other.m_convertedSiUnitValueD;
-    this->m_isIntegerBaseValue = other.m_isIntegerBaseValue;
     this->m_unit = other.m_unit;
     this->m_conversionSiUnit = other.m_conversionSiUnit;
     return *this;
@@ -111,16 +91,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, P
 {
     if (this->m_unit == other.m_unit)
     {
-        // same unit
-        if (this->m_isIntegerBaseValue && other.m_isIntegerBaseValue)
-        {
-            // pure integer, no rounding issues
-            this->setUnitValue(other.m_unitValueI + this->m_unitValueI);
-        }
-        else
-        {
-            this->setUnitValue(other.m_unitValueD + this->m_unitValueD);
-        }
+        this->setUnitValue(other.m_unitValueD + this->m_unitValueD);
     }
     else
     {
@@ -163,16 +134,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, P
 {
     if (this->m_unit == other.m_unit)
     {
-        // same unit
-        if (this->m_isIntegerBaseValue && other.m_isIntegerBaseValue)
-        {
-            // pure integer, no rounding issues
-            this->setUnitValue(other.m_unitValueI - this->m_unitValueI);
-        }
-        else
-        {
-            this->setUnitValue(other.m_unitValueD - this->m_unitValueD);
-        }
+        this->setUnitValue(other.m_unitValueD - this->m_unitValueD);
     }
     else
     {
@@ -284,24 +246,11 @@ template <class MU, class PQ> PQ &CPhysicalQuantity<MU, PQ>::switchUnit(const MU
 }
 
 /*
- * Init by integer
- */
-template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::setUnitValue(qint32 baseValue)
-{
-    this->m_unitValueI = baseValue;
-    this->m_unitValueD = double(baseValue);
-    this->m_isIntegerBaseValue = true;
-    this->setConversionSiUnitValue();
-}
-
-/*
  * Init by double
  */
 template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::setUnitValue(double baseValue)
 {
     this->m_unitValueD = baseValue;
-    this->m_unitValueI = qRound(baseValue);
-    this->m_isIntegerBaseValue = false;
     this->setConversionSiUnitValue();
 }
 

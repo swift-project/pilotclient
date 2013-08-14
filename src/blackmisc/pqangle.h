@@ -30,13 +30,6 @@ public:
     CAngle(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
 
     /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CAngle(qint32 value, const CAngleUnit &unit): CPhysicalQuantity(value, unit, CAngleUnit::rad()) {}
-
-    /*!
      * \brief Init by double value
      * \param value
      * \param unit
