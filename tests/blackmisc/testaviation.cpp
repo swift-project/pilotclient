@@ -45,16 +45,6 @@ void CTestAviation::headingBasics()
 }
 
 /*
- * Vertical positions
- */
-void CTestAviation::verticalPosition()
-{
-    CAviationVerticalPositions vp1 = CAviationVerticalPositions::fromAltitudeAndElevationInFt(10000.0, 3000.0);
-    CAviationVerticalPositions vp2 = vp1;
-    QVERIFY2(vp1 == vp2, "Values shall be equal");
-}
-
-/*
  * COM and NAV units
  */
 void CTestAviation::comAndNav()

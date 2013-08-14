@@ -8,7 +8,6 @@
 
 #include "blackmisc/pqconstants.h"
 #include "blackmisc/avheading.h"
-#include "blackmisc/avverticalpositions.h"
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/aviotransponder.h"
@@ -36,10 +35,6 @@ private slots:
      * \brief Basic unit tests for physical units
      */
     void headingBasics();
-    /*!
-     * \brief Vertical positions
-     */
-    void verticalPosition();
     /*!
      * \brief COM and NAV units
      */
