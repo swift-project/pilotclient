@@ -25,13 +25,13 @@ class ICoordinateGeodetic
      * \brief Latitude
      * \return
      */
-    virtual CLatitude latitude() const = 0;
+    virtual const CLatitude &latitude() const = 0;
 
     /*!
      * \brief Longitude
      * \return
      */
-    virtual CLongitude longitude() const = 0;
+    virtual const CLongitude &longitude() const = 0;
 };
 
 /*!
@@ -98,7 +98,7 @@ public:
      * \brief Latitude
      * \return
      */
-    CLatitude latitude() const
+    const CLatitude &latitude() const
     {
         return this->m_latitude;
     }
@@ -107,7 +107,7 @@ public:
      * \brief Longitude
      * \return
      */
-    CLongitude longitude() const
+    const CLongitude &longitude() const
     {
         return this->m_longitude;
     }
@@ -116,7 +116,7 @@ public:
      * \brief Height
      * \return
      */
-    BlackMisc::PhysicalQuantities::CLength height() const
+    const BlackMisc::PhysicalQuantities::CLength &height() const
     {
         return this->m_height;
     }
