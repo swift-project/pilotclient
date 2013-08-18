@@ -8,12 +8,14 @@
 
 #include "blackmisc/basestreamstringifier.h"
 #include "blackmisc/debug.h"
+#include "blackmisc/mathematics.h"
 #include <QCoreApplication>
 #include <QDBusArgument>
 #include <QString>
 #include <QtGlobal>
 #include <QDebug>
-
+#include <QSharedData>
+#include <QSharedDataPointer>
 
 namespace BlackMisc
 {
@@ -23,13 +25,13 @@ namespace PhysicalQuantities
 /*!
  * \brief Typical prefixes (multipliers) such as kilo, mega, hecto.
  * See <a href="http://www.poynton.com/notes/units/index.html">here</a> for an overview.
- * Use the static values such CMeasurementMultiplier::k() as to specify values.
+ * Use the static values such as CMeasurementPrefix::k() to specify values.
  */
 class CMeasurementPrefix : public CBaseStreamStringifier
 {
 private:
     QString m_name; //!< name, e.g. "kilo"
-    QString m_prefix; //!< prefix, e.g. "k" for kilo
+    QString m_symbol; //!< prefix, e.g. "k" for kilo
     double m_factor; //!< factor, e.g. 1000 for kilo 1/100 for centi
 
     /*!
@@ -39,11 +41,11 @@ private:
      * \param prefixName
      * \param factor
      */
-    CMeasurementPrefix(const QString &name, const QString &prefixName, double factor);
+    CMeasurementPrefix(const QString &name, const QString &symbol, double factor);
 
 protected:
     /*!
-     * \brief Name as stringification
+     * \brief Name as string
      * \param i18n
      * \return
      */
@@ -101,20 +103,6 @@ public:
     bool operator != (const CMeasurementPrefix &other) const;
 
     /*!
-     * \brief Greater operator >
-     * \param other
-     * \return
-     */
-    bool operator > (const CMeasurementPrefix &other) const;
-
-    /*!
-     * \brief Less operator <
-     * \param other
-     * \return
-     */
-    bool operator < (const CMeasurementPrefix &other) const;
-
-    /*!
      * \brief Factor, e.g.1000 for "kilo"
      * \return
      */
@@ -136,26 +124,18 @@ public:
      * \brief Name, e.g. "kilo"
      * \return
      */
-    QString getName() const
+    QString getName(bool i18n = false) const
     {
-        return this->m_name;
+        return i18n ? QCoreApplication::translate("CMeasurementPrefix", this->m_name.toStdString().c_str()) : this->m_name;
     }
 
     /*!
      * \brief Prefix, e.g. "k" for "kilo"
      * \return
      */
-    QString getPrefix() const
+    QString getSymbol(bool i18n = false) const
     {
-        return this->m_prefix;
-    }
-
-    /*!
-     * \brief Operator as double
-     */
-    operator double() const
-    {
-        return this->m_factor;
+        return i18n ? QCoreApplication::translate("CMeasurementPrefix", this->m_symbol.toStdString().c_str()) : this->m_symbol;
     }
 
     // --- static units, always use these for initialization
@@ -178,7 +158,7 @@ public:
      */
     static const CMeasurementPrefix &One()
     {
-        static CMeasurementPrefix one("one", "", 1.0);
+        static CMeasurementPrefix one(QT_TR_NOOP("one"), "", 1.0);
         return one;
     }
 
@@ -188,7 +168,7 @@ public:
      */
     static const CMeasurementPrefix &M()
     {
-        static CMeasurementPrefix mega("mega", "M", 1E6);
+        static CMeasurementPrefix mega(QT_TR_NOOP("mega"), "M", 1E6);
         return mega;
     }
 
@@ -198,7 +178,7 @@ public:
      */
     static const CMeasurementPrefix &k()
     {
-        static CMeasurementPrefix kilo("kilo", "k", 1000.0);
+        static CMeasurementPrefix kilo(QT_TR_NOOP("kilo"), "k", 1000.0);
         return kilo;
     }
 
@@ -208,7 +188,7 @@ public:
      */
     static const CMeasurementPrefix &G()
     {
-        static CMeasurementPrefix giga("giga", "G", 1E9);
+        static CMeasurementPrefix giga(QT_TR_NOOP("giga"), "G", 1E9);
         return giga;
     }
 
@@ -218,7 +198,7 @@ public:
      */
     static const CMeasurementPrefix &h()
     {
-        static CMeasurementPrefix hecto("hecto", "h", 100.0);
+        static CMeasurementPrefix hecto(QT_TR_NOOP("hecto"), "h", 100.0);
         return hecto;
     }
 
@@ -228,7 +208,7 @@ public:
      */
     static const CMeasurementPrefix &c()
     {
-        static CMeasurementPrefix centi("centi", "c", 0.01);
+        static CMeasurementPrefix centi(QT_TR_NOOP("centi"), "c", 0.01);
         return centi;
     }
 
@@ -238,7 +218,7 @@ public:
      */
     static const CMeasurementPrefix &m()
     {
-        static CMeasurementPrefix milli("milli", "m", 1E-03);
+        static CMeasurementPrefix milli(QT_TR_NOOP("milli"), "m", 1E-03);
         return milli;
     }
 
@@ -287,46 +267,171 @@ public:
 /*!
  * \brief Base class for all units, such as meter, hertz.
  */
-class CMeasurementUnit: public CBaseStreamStringifier
+class CMeasurementUnit : public CBaseStreamStringifier
 {
 protected:
     /*!
-     * \brief Points to an individual converter method
-     * Conversion as perobject, as required for CAnglewith sexagesimal conversion
+     * Abstract strategy pattern that encapsulates a unit conversion strategy.
      */
-    typedef double(*UnitConverter)(const CMeasurementUnit &, double);
+    class Converter : public QSharedData
+    {
+    public:
+        /*!
+         * Virtual destructor.
+         */
+        virtual ~Converter() {}
+        /*!
+         * Convert from this unit to default unit.
+         * \param factor
+         * \return
+         */
+        virtual double toDefault(double factor) const = 0;
+        /*!
+         * Convert from default unit to this unit.
+         * \param factor
+         * \return
+         */
+        virtual double fromDefault(double factor) const = 0;
+        /*!
+         * Make a copy of this object with a different prefix.
+         * \param prefix
+         * \return
+         */
+        virtual Converter *clone(const CMeasurementPrefix &prefix) const = 0;
+    };
+
+    /*!
+     * Concrete strategy pattern for converting unit with linear conversion.
+     */
+    class LinearConverter : public Converter
+    {
+        double m_factor;
+    public:
+        /*!
+         * Constructor
+         * \param factor
+         */
+        LinearConverter(double factor) : m_factor(factor) {}
+        virtual double toDefault(double factor) const { return factor * m_factor; }
+        virtual double fromDefault(double factor) const { return factor / m_factor; }
+        virtual Converter *clone(const CMeasurementPrefix &prefix) const { auto ret = new LinearConverter(*this); ret->m_factor *= prefix.getFactor(); return ret; }
+    };
+
+    /*!
+     * Concrete strategy pattern for converting unit with affine conversion.
+     */
+    class AffineConverter : public Converter
+    {
+        double m_factor;
+        double m_offset;
+    public:
+        /*!
+         * Constructor
+         * \param factor
+         * \param offset
+         */
+        AffineConverter(double factor, double offset) : m_factor(factor), m_offset(offset) {}
+        virtual double toDefault(double factor) const { return (factor - m_offset) * m_factor; }
+        virtual double fromDefault(double factor) const { return factor / m_factor + m_offset; }
+        virtual Converter *clone(const CMeasurementPrefix &prefix) const { auto ret = new AffineConverter(*this); ret->m_factor *= prefix.getFactor(); return ret; }
+    };
+
+    /*!
+     * Concrete strategy pattern for converting unit with subdivision conversion.
+     */
+    template <int Num, int Den>
+    class SubdivisionConverter : public Converter
+    {
+        double m_factor;
+    public:
+        /*!
+         * Constructor
+         */
+        SubdivisionConverter(double factor = 1) : m_factor(factor) {}
+        virtual double toDefault(double factor) const   { using BlackMisc::Math::CMath;
+                                                          double ret  = CMath::trunc(factor); factor = CMath::fract(factor) * Den;
+                                                                 ret +=              factor / Num;
+                                                          return ret * m_factor; }
+        virtual double fromDefault(double factor) const { using BlackMisc::Math::CMath;
+                                                          factor /= m_factor;
+                                                          double ret  = CMath::trunc(factor); factor = CMath::fract(factor) * Num;
+                                                          return ret +=              factor / Den; }
+        virtual Converter *clone(const CMeasurementPrefix &) const { qFatal("Not implemented"); return 0; }
+    };
+
+    /*!
+     * Concrete strategy pattern for converting unit with subdivision conversion.
+     */
+    template <int Num1, int Den1, int Num2, int Den2>
+    class SubdivisionConverter2 : public Converter
+    {
+        double m_factor;
+    public:
+        /*!
+         * Constructor
+         */
+        SubdivisionConverter2(double factor = 1) : m_factor(factor) {}
+        virtual double toDefault(double factor) const   { using BlackMisc::Math::CMath;
+                                                          double ret  = CMath::trunc(factor);        factor = CMath::fract(factor) * Den1;
+                                                                 ret += CMath::trunc(factor) / Num1; factor = CMath::fract(factor) * Den2;
+                                                                 ret +=              factor  / (Num1 * Num2);
+                                                          return ret * m_factor; }
+        virtual double fromDefault(double factor) const { using BlackMisc::Math::CMath;
+                                                          factor /= m_factor;
+                                                          double ret  = CMath::trunc(factor);        factor = CMath::fract(factor) * Num1;
+                                                                 ret += CMath::trunc(factor) / Den1; factor = CMath::fract(factor) * Num2;
+                                                          return ret +=              factor  / (Den1 * Den2); }
+        virtual Converter *clone(const CMeasurementPrefix &) const { qFatal("Not implemented"); return 0; }
+    };
 
 private:
     QString m_name; //!< name, e.g. "meter"
-    QString m_unitName; //!< unit name, e.g. "m"
-    QString m_type; //!< type,such as distance. Somehow redundant, but simplifies unit comparisons
-    bool m_isSiUnit; //!< is this a SI unit?
-    bool m_isSiBaseUnit; //!< SI base unit?
-    double m_conversionFactorToSIConversionUnit; //!< factor to convert to SI, set to 0 if not applicable (rare cases, e.g. temperature)
+    QString m_symbol; //!< unit name, e.g. "m"
     double m_epsilon; //!< values with differences below epsilon are the equal
     int m_displayDigits; //!< standard rounding for string conversions
-    CMeasurementPrefix m_multiplier; //!< multiplier (kilo, Mega)
-    UnitConverter m_fromSiConverter; //! allows an arbitrary conversion method as per object (e.g. angle, sexagesimal)
-    UnitConverter m_toSiConverter; //! allows an arbitrary conversion method as per object (e.g. angle, sexagesimal)
+    CMeasurementPrefix m_prefix; //!< multiplier (kilo, Mega)
+    QSharedDataPointer<Converter> m_converter; //!< strategy pattern allows an arbitrary conversion method as per object
 
 protected:
     /*!
-     * Constructor by parameter
+     * Construct a unit with linear conversion
      * \param name
-     * \param unitName
-     * \param type
-     * \param isSiUnit
-     * \param isSiBaseUnit
-     * \param conversionFactorToSI
-     * \param multiplier
+     * \param symbol
+     * \param factor
      * \param displayDigits
      * \param epsilon
-     * \param toSiConverter
-     * \param fromSiConverter
      */
-    CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSiUnit, bool isSiBaseUnit, double conversionFactorToSI = 1,
-                     const CMeasurementPrefix &multiplier = CMeasurementPrefix::None(), qint32 displayDigits = 2,
-                     double epsilon = 1E-10, UnitConverter toSiConverter = 0, UnitConverter fromSiConverter = 0);
+    CMeasurementUnit(const QString &name, const QString &symbol, double factor, int displayDigits, double epsilon);
+
+    /*!
+     * Construct a unit with affine conversion
+     * \param name
+     * \param symbol
+     * \param factor
+     * \param offset
+     * \param displayDigits
+     * \param epsilon
+     */
+    CMeasurementUnit(const QString &name, const QString &symbol, double factor, double offset, int displayDigits, double epsilon);
+
+    /*!
+     * Construct a unit with custom conversion
+     * \param name
+     * \param symbol
+     * \param converter
+     * \param displayDigits
+     * \param epsilon
+     */
+    CMeasurementUnit(const QString &name, const QString &symbol, Converter *converter, int displayDigits, double epsilon);
+
+    /*!
+     * Construct from base unit and prefix
+     * \param base
+     * \param prefix
+     * \param displayDigits
+     * \param epsilon
+     */
+    CMeasurementUnit(const CMeasurementUnit &base, const CMeasurementPrefix &prefix, int displayDigits = 2, double epsilon = 1E-10);
 
     /*!
      * \brief Copy constructor
@@ -357,38 +462,7 @@ protected:
      */
     virtual QString convertToQString(bool i18n = false) const
     {
-        return this->getUnitName(i18n);
-    }
-
-    /*!
-     * \brief Conversion factor to SI conversion unit
-     * \return
-     */
-    double getConversionFactorToSI() const
-    {
-        return this->m_conversionFactorToSIConversionUnit;
-    }
-
-    /*!
-     * Given value to conversion SI conversion unit (e.g. meter, hertz).
-     * Standard implementaion is simply factor based.
-     * \param value
-     * \return
-     */
-    virtual double conversionToSiConversionUnit(double value) const
-    {
-        return value * this->m_conversionFactorToSIConversionUnit;
-    }
-
-    /*!
-     * \brief Value from SI conversion unit to this unit.
-     * Standard implementation is simply factor based.
-     * \param value
-     * \return
-     */
-    virtual double conversionFromSiConversionUnit(double value) const
-    {
-        return value / this->m_conversionFactorToSIConversionUnit;
+        return this->getSymbol(i18n);
     }
 
     /*!
@@ -397,7 +471,7 @@ protected:
      */
     virtual void marshallToDbus(QDBusArgument &argument) const
     {
-        argument << this->m_unitName;
+        argument << this->m_symbol;
     }
 
     /*!
@@ -409,6 +483,22 @@ protected:
         // the concrete implementations will override this default
         // this is required so I can also stream None
         (*this) = CMeasurementUnit::None();
+    }
+
+    /*!
+     * \brief Unit from symbol
+     * \param symbol must be a valid unit symbol (without i18n) or empty string (empty means default unit)
+     * \return
+     */
+    template <class U> static const U &unitFromSymbol(const QString &symbol)
+    {
+        if (symbol.isEmpty()) return U::defaultUnit();
+        const QList<U> &units = U::allUnits();
+        for (int i = 0; i < units.size(); ++i) {
+            if (units.at(i).getSymbol() == symbol) return units.at(i);
+        }
+        qFatal("Illegal unit name");
+        return U::defaultUnit(); // just suppress "not all control paths return a value"
     }
 
 public:
@@ -427,40 +517,14 @@ public:
     bool operator != (const CMeasurementUnit &other) const;
 
     /*!
-     * \brief Representing an SI unit? Examples: kilometer, meter, hertz
-     * \return
-     */
-    bool isSiUnit() const
-    {
-        return this->m_isSiUnit;
-    }
-
-    /*!
-     * \brief Representing an base SI unit? Examples: second, meter
-     * \return
-     */
-    bool isSiBaseUnit() const
-    {
-        return this->m_isSiUnit;
-    }
-
-    /*!
-     * \brief Representing an SI base unit? Example: meter
-     * \return
-     */
-    bool isUnprefixedSiUnit() const
-    {
-        return this->m_isSiUnit && this->m_multiplier.getFactor() == 1;
-    }
-
-    /*!
      * \brief Name such as "meter"
      * \param i18n
      * \return
      */
     QString getName(bool i18n = false) const
     {
-        return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_name.toStdString().c_str()) : this->m_name;
+        QString base = i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_name.toStdString().c_str()) : this->m_name;
+        return this->m_prefix.getName(i18n) + base;
     }
 
     /*!
@@ -468,41 +532,19 @@ public:
      * \param i18n
      * \return
      */
-    QString getUnitName(bool i18n = false) const
+    QString getSymbol(bool i18n = false) const
     {
-        return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_unitName.toStdString().c_str()) : this->m_unitName;
+        QString base = i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_symbol.toStdString().c_str()) : this->m_symbol;
+        return this->m_prefix.getSymbol(i18n) + base;
     }
 
     /*!
-     * \brief Type such as "distance", "frequency"
-     * \return
-     */
-    QString getType() const
-    {
-        return this->m_type;
-    }
-
-    /*!
-     * Given value to conversion SI conversion unit (e.g. meter, hertz).
-     * Standard implementation is simply factor based.
+     * \brief Rounded value
      * \param value
+     * \param digits
      * \return
      */
-    double convertToSiConversionUnit(double value) const
-    {
-        return (this->m_toSiConverter) ? this->m_toSiConverter((*this), value) : this->conversionToSiConversionUnit(value);
-    }
-
-    /*!
-     * Value from SI conversion unit to this unit.
-     * Standard implementation is simply factor based.
-     * \param value
-     * \return
-     */
-    double convertFromSiConversionUnit(double value) const
-    {
-        return (this->m_fromSiConverter) ? this->m_fromSiConverter((*this), value) : this->conversionFromSiConversionUnit(value);
-    }
+    double roundValue(double value, int digits = -1) const;
 
     /*!
      * Rounded string utility method, virtual so units can have
@@ -512,15 +554,7 @@ public:
      * \param i18n
      * \return
      */
-    virtual QString toQStringRounded(double value, int digits = -1, bool i18n = false) const;
-
-    /*!
-     * \brief Rounded value
-     * \param value
-     * \param digits
-     * \return
-     */
-    double valueRounded(double value, int digits = -1) const;
+    virtual QString makeRoundedQString(double value, int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Value rounded with unit, e.g. "5.00m", "30kHz"
@@ -529,7 +563,7 @@ public:
      * \param i18n
      * \return
      */
-    virtual QString valueRoundedWithUnit(double value, int digits = -1, bool i18n = false) const;
+    virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Threshold for rounding
@@ -544,7 +578,7 @@ public:
      * \brief getDisplayDigits
      * \return
      */
-    qint32 getDisplayDigits() const
+    int getDisplayDigits() const
     {
         return this->m_displayDigits;
     }
@@ -553,26 +587,16 @@ public:
      * \brief Multiplier such as "kilo"
      * \return
      */
-    CMeasurementPrefix getMultiplier() const
+    CMeasurementPrefix getPrefix() const
     {
-        return this->m_multiplier;
+        return this->m_prefix;
     }
 
     /*!
-     * \brief Factor to convert to given unit
-     * \param value
-     * \param to
-     * \return
+     * Convert from other unit to this unit.
+     * \param
      */
-    double conversionToUnit(double value, const CMeasurementUnit &to) const;
-
-    /*!
-     * Epsilon rounding. In some conversion rouding is required to avoid
-     * periodical numbers.
-     * \param value
-     * \return
-     */
-    double epsilonUpRounding(double value) const;
+    double convertFrom(double value, const CMeasurementUnit &unit) const;
 
     /*!
      * \brief Is given value <= epsilon?
@@ -595,7 +619,7 @@ public:
      */
     static CMeasurementUnit &None()
     {
-        static CMeasurementUnit none("none", "", "", false, false, 0.0, CMeasurementPrefix::None(), 0, 0);
+        static CMeasurementUnit none("none", "", 0.0, 0, 0);
         return none;
     }
 };

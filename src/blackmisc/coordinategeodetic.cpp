@@ -16,7 +16,7 @@ namespace Geo
 QString CCoordinateGeodetic::convertToQString(bool i18n) const
 {
     QString s = "Geodetic: {%1, %2, %3}";
-    return s.arg(this->m_latitude.unitValueRoundedWithUnit(6, i18n)).arg(this->m_longitude.unitValueRoundedWithUnit(6, i18n)).arg(this->m_height.unitValueRoundedWithUnit(i18n));
+    return s.arg(this->m_latitude.valueRoundedWithUnit(6, i18n)).arg(this->m_longitude.valueRoundedWithUnit(6, i18n)).arg(this->m_height.valueRoundedWithUnit(i18n));
 }
 
 /*

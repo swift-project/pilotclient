@@ -21,14 +21,14 @@ public:
     /*!
      * \brief Default constructor
      */
-    CMass() : CPhysicalQuantity(0, CMassUnit::kg(), CMassUnit::kg()) {}
+    CMass() : CPhysicalQuantity(0, CMassUnit::defaultUnit()) {}
 
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
-    CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit, CMassUnit::kg()) {}
+    CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
 
     /*!
      * \brief Copy constructor from base type

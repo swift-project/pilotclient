@@ -37,11 +37,11 @@ void CTestAviation::headingBasics()
     QVERIFY2(h4 == h1, "Values shall be equal");
 
     h1 -= h1;
-    QVERIFY2(h1.unitValueToDouble() == 0, "Value shall be 0");
+    QVERIFY2(h1.value() == 0, "Value shall be 0");
 
     // h4 = h1 + h2; does not work, because misleading
     h2 += h2; // add just angle
-    QVERIFY2(h2.unitValueToDouble() == 360, "Value shall be 360");
+    QVERIFY2(h2.value() == 360, "Value shall be 360");
 }
 
 /*

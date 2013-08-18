@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
             qDebug() << "Send speed via interface" << speed;
             TestserviceTool::sleep(2500);
             speed.switchUnit(CSpeedUnit::km_h());
-            speed.addUnitValue(1.0);
+            speed.addValueSameUnit(1.0);
 
             // Aviation
             CComSystem comSystem = CComSystem("DBUS COM1", CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress(), CPhysicalQuantitiesConstants::FrequencyUnicom());
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
             testserviceInterface.receiveVariant(qv);
             testserviceInterface.receiveAltitude(al);
             qDebug() << "Send altitude via interface" << al;
-            al.addUnitValue(1);
+            al.addValueSameUnit(1);
 
             CTransponder transponder("transponder", 7000, CTransponder::ModeC);
             testserviceInterface.receiveTransponder(transponder);

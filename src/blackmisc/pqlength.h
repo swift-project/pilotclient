@@ -22,7 +22,7 @@ public:
     /*!
      * \brief Default constructor
      */
-    CLength() : CPhysicalQuantity(0, CLengthUnit::m(), CLengthUnit::m()) {}
+    CLength() : CPhysicalQuantity(0, CLengthUnit::defaultUnit()) {}
 
     /**
      *\brief Copy constructor from base type
@@ -34,7 +34,7 @@ public:
      * \param value
      * \param unit
      */
-    CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit, CLengthUnit::m()) {}
+    CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit) {}
 
     /*!
      * \brief Virtual destructor

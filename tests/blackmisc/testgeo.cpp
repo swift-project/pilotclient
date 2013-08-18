@@ -14,7 +14,7 @@ void CTestGeo::geoBasics()
     CLatitude lati(10, CAngleUnit::deg());
     QVERIFY2(lati * 2 == lati + lati, "Latitude addition should be equal");
     lati += CLatitude(20, CAngleUnit::deg());
-    QVERIFY2(lati.unitValueToDoubleRounded() == 30.0, "Latitude should be 30 degrees");
+    QVERIFY2(lati.valueRounded() == 30.0, "Latitude should be 30 degrees");
 
     double lat = 27.999999, lon = 86.999999, h = 8820.999999; // Mt Everest
     CCoordinateGeodetic startGeoVec(lat, lon, h);

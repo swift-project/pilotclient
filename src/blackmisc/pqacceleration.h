@@ -21,14 +21,14 @@ public:
     /*!
      * \brief Default constructor
      */
-    CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::m_s2(), CAccelerationUnit::m_s2()) {}
+    CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::defaultUnit()) {}
 
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
-    CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit, CAccelerationUnit::m_s2()) {}
+    CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit) {}
 
     /*!
      * \brief Copy constructor by base type

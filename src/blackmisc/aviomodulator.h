@@ -85,8 +85,8 @@ protected:
     virtual QString convertToQString(bool i18n = false) const
     {
         QString s(this->getName());
-        s.append(" Active: ").append(this->m_frequencyActive.unitValueRoundedWithUnit(3, i18n));
-        s.append(" Standby: ").append(this->m_frequencyStandby.unitValueRoundedWithUnit(3, i18n));
+        s.append(" Active: ").append(this->m_frequencyActive.valueRoundedWithUnit(3, i18n));
+        s.append(" Standby: ").append(this->m_frequencyStandby.valueRoundedWithUnit(3, i18n));
         return s;
     }
 

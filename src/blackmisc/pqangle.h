@@ -22,7 +22,7 @@ public:
     /*!
      * \brief Default constructor
      */
-    CAngle() : CPhysicalQuantity(0, CAngleUnit::rad(), CAngleUnit::rad()) {}
+    CAngle() : CPhysicalQuantity(0, CAngleUnit::defaultUnit()) {}
 
     /*!
      * \brief Copy constructor from base type
@@ -34,18 +34,30 @@ public:
      * \param value
      * \param unit
      */
-    CAngle(double value, const CAngleUnit &unit): CPhysicalQuantity(value, unit, CAngleUnit::rad()) {}
+    CAngle(double value, const CAngleUnit &unit): CPhysicalQuantity(value, unit) {}
 
     /*!
-     * \brief Intir as sexagesimal degrees
+     * \brief Init as sexagesimal degrees, minutes, seconds
+     * The sign of all parameters must be the same, either all positive or all negative.
      * \param degrees
      * \param minutes
      * \param seconds
      */
-    CAngle(qint32 degrees, qint32 minutes, double seconds) :
+    CAngle(int degrees, int minutes, double seconds) :
         CPhysicalQuantity(
             degrees + minutes / 100.0 + seconds / 10000.0,
-            CAngleUnit::sexagesimalDeg(), CAngleUnit::rad()) {}
+            CAngleUnit::sexagesimalDeg()) {}
+
+    /*!
+     * \brief Init as sexagesimal degrees, minutes
+     * The sign of both parameters must be the same, either both positive or both negative.
+     * \param degrees
+     * \param minutes
+     */
+    CAngle(int degrees, double minutes) :
+        CPhysicalQuantity(
+            degrees + minutes / 100.0,
+            CAngleUnit::sexagesimalDegMin()) {}
 
     /*!
      * \brief Virtual destructor
@@ -58,7 +70,7 @@ public:
      */
     double piFactor() const
     {
-        return BlackMisc::Math::CMath::round(this->convertedSiValueToDouble() / BlackMisc::Math::CMath::PI() , 6);
+        return BlackMisc::Math::CMath::round(this->value(CAngleUnit::rad()) / BlackMisc::Math::CMath::PI() , 6);
     }
 
     /*!

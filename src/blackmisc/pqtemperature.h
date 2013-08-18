@@ -22,7 +22,7 @@ public:
     /*!
      * \brief Default constructor
      */
-    CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::K(), CTemperatureUnit::K()) {}
+    CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::defaultUnit()) {}
 
     /**
      * \brief Copy constructor from base type
@@ -34,7 +34,7 @@ public:
      * \param value
      * \param unit
      */
-    CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit, CTemperatureUnit::K()) {}
+    CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit) {}
 
     /*!
      * \brief Destructor

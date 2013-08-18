@@ -14,14 +14,14 @@ namespace PhysicalQuantities
 {
 
 // -----------------------------------------------------------------------
-// --- Mulitplier --------------------------------------------------------
+// --- Prefix ------------------------------------------------------------
 // -----------------------------------------------------------------------
 
 /*
  * Constructor
  */
-CMeasurementPrefix::CMeasurementPrefix(const QString &name, const QString &unitName, double factor) :
-    m_name(name), m_prefix(unitName), m_factor(factor)
+CMeasurementPrefix::CMeasurementPrefix(const QString &name, const QString &symbol, double factor) :
+    m_name(name), m_symbol(symbol), m_factor(factor)
 {
 }
 
@@ -29,7 +29,7 @@ CMeasurementPrefix::CMeasurementPrefix(const QString &name, const QString &unitN
  * Constructor
  */
 CMeasurementPrefix::CMeasurementPrefix(const CMeasurementPrefix &other) :
-    m_name(other.m_name), m_prefix(other.m_prefix), m_factor(other.m_factor)
+    m_name(other.m_name), m_symbol(other.m_symbol), m_factor(other.m_factor)
 {
 }
 
@@ -40,7 +40,7 @@ CMeasurementPrefix &CMeasurementPrefix::operator=(const CMeasurementPrefix &othe
 {
     if (this == &other) return *this;
     this->m_name = other.m_name;
-    this->m_prefix = other.m_prefix;
+    this->m_symbol= other.m_symbol;
     this->m_factor = other.m_factor;
     return *this;
 }
@@ -62,22 +62,6 @@ bool CMeasurementPrefix::operator !=(const CMeasurementPrefix &other) const
     return !(*this == other);
 }
 
-/*
- * Greater?
- */
-bool CMeasurementPrefix::operator >(const CMeasurementPrefix &other) const
-{
-    return this->m_factor > other.m_factor;
-}
-
-/*
- * Less?
- */
-bool CMeasurementPrefix::operator <(const CMeasurementPrefix &other) const
-{
-    return this->m_factor < other.m_factor;
-}
-
 // -----------------------------------------------------------------------
 // --- Measurement unit --------------------------------------------------
 // -----------------------------------------------------------------------
@@ -85,22 +69,40 @@ bool CMeasurementPrefix::operator <(const CMeasurementPrefix &other) const
 /*
  * Constructor
  */
-CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &unitName, const QString &type, bool isSIUnit, bool isSIBaseUnit,
-                                   double conversionFactorToSI, const CMeasurementPrefix &multiplier, qint32 displayDigits, double epsilon,
-                                   UnitConverter toSiConverter, UnitConverter fromSiConverter):
-    m_name(name), m_unitName(unitName), m_type(type), m_isSiUnit(isSIUnit), m_isSiBaseUnit(isSIBaseUnit),
-    m_conversionFactorToSIConversionUnit(conversionFactorToSI),
-    m_epsilon(epsilon), m_displayDigits(displayDigits), m_multiplier(multiplier), m_fromSiConverter(fromSiConverter), m_toSiConverter(toSiConverter)
+CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, double factor, qint32 displayDigits, double epsilon) :
+    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_prefix(CMeasurementPrefix::One()), m_converter(new LinearConverter(factor))
+{
+}
+
+/*
+ * Constructor
+ */
+CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, double factor, double offset, qint32 displayDigits, double epsilon) :
+    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_prefix(CMeasurementPrefix::One()), m_converter(new AffineConverter(factor, offset))
+{
+}
+
+/*
+ * Constructor
+ */
+CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, Converter *converter, qint32 displayDigits, double epsilon) :
+    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_prefix(CMeasurementPrefix::One()), m_converter(converter)
+{
+}
+
+/*
+ * Constructor
+ */
+CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &base, const CMeasurementPrefix &prefix, qint32 displayDigits, double epsilon) :
+    m_name(base.m_name), m_symbol(base.m_symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_prefix(prefix), m_converter(base.m_converter->clone(prefix))
 {
 }
 
 /*
  * Copy constructor
  */
-CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &other):
-    m_name(other.m_name), m_unitName(other.m_unitName), m_type(other.m_type), m_isSiUnit(other.m_isSiUnit),
-    m_isSiBaseUnit(other.m_isSiBaseUnit), m_conversionFactorToSIConversionUnit(other.m_conversionFactorToSIConversionUnit),
-    m_epsilon(other.m_epsilon), m_displayDigits(other.m_displayDigits), m_multiplier(other.m_multiplier), m_fromSiConverter(other.m_fromSiConverter), m_toSiConverter(other.m_toSiConverter)
+CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &other) :
+    m_name(other.m_name), m_symbol(other.m_symbol), m_epsilon(other.m_epsilon), m_displayDigits(other.m_displayDigits), m_prefix(other.m_prefix), m_converter(other.m_converter)
 {
 }
 
@@ -111,16 +113,11 @@ CMeasurementUnit &CMeasurementUnit::operator =(const CMeasurementUnit &other)
 {
     if (this == &other) return *this; // Same object? Yes, so skip assignment, and just return *this
     this->m_name = other.m_name;
-    this->m_unitName = other.m_unitName;
-    this->m_type = other.m_type;
-    this->m_isSiUnit = other.m_isSiUnit;
-    this->m_isSiBaseUnit = other.m_isSiBaseUnit;
-    this->m_conversionFactorToSIConversionUnit = other.m_conversionFactorToSIConversionUnit;
-    this->m_multiplier = other.m_multiplier;
+    this->m_symbol = other.m_symbol;
+    this->m_prefix = other.m_prefix;
     this->m_displayDigits = other.m_displayDigits;
     this->m_epsilon = other.m_epsilon;
-    this->m_fromSiConverter = other.m_fromSiConverter;
-    this->m_toSiConverter = other.m_toSiConverter;
+    this->m_converter = other.m_converter;
     return *this;
 }
 
@@ -130,9 +127,7 @@ CMeasurementUnit &CMeasurementUnit::operator =(const CMeasurementUnit &other)
 bool CMeasurementUnit::operator ==(const CMeasurementUnit &other) const
 {
     if (this == &other) return true;
-    if (this->m_type != other.m_type) return false;
-    return this->m_multiplier == other.m_multiplier && this->m_name == other.m_name
-           && this->m_isSiUnit == other.m_isSiUnit;
+    return this->m_prefix == other.m_prefix && this->m_name == other.m_name;
 }
 
 /*
@@ -144,28 +139,29 @@ bool CMeasurementUnit::operator !=(const CMeasurementUnit &other) const
 }
 
 /*
- * Conversion factor from unit x to y
+ * Conversion
  */
-double CMeasurementUnit::conversionToUnit(double value, const CMeasurementUnit &to) const
+double CMeasurementUnit::convertFrom(double value, const CMeasurementUnit &unit) const
 {
-    if (to == *this) return value;
-    double siValue = this->convertToSiConversionUnit(value);
-    return to.convertFromSiConversionUnit(siValue);
+    Q_ASSERT(this->m_converter);
+    Q_ASSERT(unit.m_converter);
+    if (this->m_converter == unit.m_converter) return value;
+    return this->m_converter->fromDefault(unit.m_converter->toDefault(value));
 }
 
 /*
  * Value to QString with unit, e.g. "5.00m"
  * @return
  */
-QString CMeasurementUnit::valueRoundedWithUnit(double value, int digits, bool i18n) const
+QString CMeasurementUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
 {
-    return this->toQStringRounded(value, digits).append(this->getUnitName(i18n));
+    return this->makeRoundedQString(value, digits).append(this->getSymbol(i18n));
 }
 
 /*
  * Value rounded
  */
-double CMeasurementUnit::valueRounded(double value, int digits) const
+double CMeasurementUnit::roundValue(double value, int digits) const
 {
     if (digits < 0) digits = this->m_displayDigits;
     return CMath::round(value, digits);
@@ -174,24 +170,12 @@ double CMeasurementUnit::valueRounded(double value, int digits) const
 /*
  * Rounded to QString
  */
-QString CMeasurementUnit::toQStringRounded(double value, int digits, bool /* i18n */) const
+QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool /* i18n */) const
 {
     if (digits < 0) digits = this->m_displayDigits;
     double v = CMath::round(value, digits);
     QString s = QLocale::system().toString(v, 'f', digits);
     return s;
-}
-
-/*
- * Epsilon rounding
- */
-double CMeasurementUnit::epsilonUpRounding(double value) const
-{
-    // Rounds a little up in order to avoid fractions
-    double eps = value > 0 ? this->m_epsilon : -1.0 * this->m_epsilon;
-    double v = floor((value + eps) / this->m_epsilon);
-    v *= this->m_epsilon;
-    return v;
 }
 
 } // namespace

@@ -23,7 +23,7 @@ public:
     /*!
      * \brief Default constructor
      */
-    CTime() : CPhysicalQuantity(0, CTimeUnit::s(), CTimeUnit::s()) {}
+    CTime() : CPhysicalQuantity(0, CTimeUnit::defaultUnit()) {}
 
     /**
      *\brief Copy constructor from base type
@@ -35,7 +35,7 @@ public:
      * \param value
      * \param unit
      */
-    CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit, CTimeUnit::s()) {}
+    CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit) {}
 
     /*!
      * \brief Destructor

@@ -23,7 +23,7 @@ public:
     /*!
      * \brief Default constructor
      */
-    CPressure() : CPhysicalQuantity(0, CPressureUnit::Pa(), CPressureUnit::Pa()) {}
+    CPressure() : CPhysicalQuantity(0, CPressureUnit::defaultUnit()) {}
 
     /**
      *\brief Copy constructor from base type
@@ -35,7 +35,7 @@ public:
      * \param value
      * \param unit
      */
-    CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit, CPressureUnit::Pa()) {}
+    CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit) {}
 
     /*!
      * \brief Virtual destructor

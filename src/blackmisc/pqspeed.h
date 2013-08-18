@@ -23,7 +23,7 @@ public:
     /*!
      * \brief Default constructor
      */
-    CSpeed() : CPhysicalQuantity(0, CSpeedUnit::m_s(), CSpeedUnit::m_s()) {}
+    CSpeed() : CPhysicalQuantity(0, CSpeedUnit::defaultUnit()) {}
 
     /*!
      *\brief Copy constructor from base type
@@ -35,7 +35,7 @@ public:
      * \param value
      * \param unit
      */
-    CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit, CSpeedUnit::m_s()) {}
+    CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit) {}
 
     /*!
      * \brief Destructor

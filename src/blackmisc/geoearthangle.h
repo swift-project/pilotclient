@@ -75,7 +75,7 @@ protected:
      */
     virtual QString convertToQString() const
     {
-        return this->unitValueRoundedWithUnit(6);
+        return this->valueRoundedWithUnit(6);
     }
 
     /*!

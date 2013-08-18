@@ -22,7 +22,7 @@ public:
     /*!
      * \brief Default constructor
      */
-    CFrequency() : CPhysicalQuantity(0, CFrequencyUnit::Hz(), CFrequencyUnit::Hz()) {}
+    CFrequency() : CPhysicalQuantity(0, CFrequencyUnit::defaultUnit()) {}
 
     /**
      *\brief Copy constructor from base type
@@ -34,7 +34,7 @@ public:
      * \param value
      * \param unit
      */
-    CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit, CFrequencyUnit::Hz()) {}
+    CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit) {}
 
     /*!
      * \brief Virtual destructor

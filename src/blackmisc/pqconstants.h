@@ -70,6 +70,16 @@ public:
     }
 
     /*!
+     * \brief Standard pressure datum for flight levels expressed in mmHg, such as in Russia, 760mmHg
+     * \return
+     */
+    static const CPressure& RuFlightLevelPressure()
+    {
+        static CPressure p(760, CPressureUnit::mmHg());
+        return p;
+    }
+
+    /*!
      * \brief Unicom frequency
      * \return
      */

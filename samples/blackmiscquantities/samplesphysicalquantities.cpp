@@ -57,7 +57,7 @@ int CSamplesPhysicalQuantities::samples()
     CSpeed s2 = CSpeed(1000, CSpeedUnit::ft_min());
     CSpeed s3 = CSpeed(s2);
     s3.switchUnit(CSpeedUnit::m_s());
-    qDebug() << s1 << s1.convertedSiValueRoundedWithUnit() << s1.valueRoundedWithUnit(CSpeedUnit::NM_h());
+    qDebug() << s1 << s1.valueRoundedWithUnit(CSpeedUnit::defaultUnit()) << s1.valueRoundedWithUnit(CSpeedUnit::NM_h());
     qDebug() << s2 << s3;
 
     CAngle a1(180, CAngleUnit::deg());
@@ -72,7 +72,7 @@ int CSamplesPhysicalQuantities::samples()
     a2 = a1 + a1;
 
     a2.switchUnit(CAngleUnit::deg());
-    qDebug() << a1.unitValueRoundedWithUnit() << a1.piFactor();
+    qDebug() << a1.valueRoundedWithUnit() << a1.piFactor();
     qDebug() << a2;
     a3.switchUnit(CAngleUnit::sexagesimalDeg());
     a4.switchUnit(CAngleUnit::deg());
@@ -89,8 +89,8 @@ int CSamplesPhysicalQuantities::samples()
     CTemperature t1;
     CTemperature t2(20, CTemperatureUnit::C());
     CTemperature t3(1, CTemperatureUnit::F());
-    qDebug() << t1 << t2 << t2.convertedSiValueRoundedWithUnit(true);
-    qDebug() << t3.valueRoundedWithUnit(CTemperatureUnit::F(), -1 ,true)  << t3.valueRoundedWithUnit(CTemperatureUnit::C(), -1, true) << "I18N/UTF";
+    qDebug() << t1 << t2 << t2.valueRoundedWithUnit(CTemperatureUnit::defaultUnit(), -1, true);
+    qDebug() << t3.valueRoundedWithUnit(CTemperatureUnit::F(), -1, true)  << t3.valueRoundedWithUnit(CTemperatureUnit::C(), -1, true) << "I18N/UTF";
 
     // some logging with CLogMessage
     // bDebug << p1;
@@ -108,10 +108,13 @@ int CSamplesPhysicalQuantities::samples()
     CTime ti1(1, CTimeUnit::h());
     CTime ti2(ti1);
     ti2.switchUnit(CTimeUnit::ms());
-    qDebug() << ti1 << ti2;
+    CTime ti3(1.0101, CTimeUnit::hms());
+    CTime ti4(1.15, CTimeUnit::hrmin());
+    CTime ti5(1.30, CTimeUnit::minsec());
+    qDebug() << ti1 << ti2 << ti3 << ti4 << ti5;
 
     CAcceleration ac1(10, CAccelerationUnit::m_s2());
-    qDebug() << ac1 << ac1.unitValueRoundedWithUnit(-1, true) << "I18N/UTF";
+    qDebug() << ac1 << ac1.valueRoundedWithUnit(-1, true) << "I18N/UTF";
 
     // bye
     qDebug() << "-----------------------------------------------";

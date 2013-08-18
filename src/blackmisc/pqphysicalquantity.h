@@ -27,8 +27,13 @@ namespace PhysicalQuantities
 template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CBaseStreamStringifier
 {
 private:
-    double m_unitValueD; //!< value backed by double
-    double m_convertedSiUnitValueD; //!< SI unit value
+    double m_value; //!< numeric part
+    MU m_unit; //!< unit part
+
+    /*!
+     * Which subclass of CMeasurementUnit does this quantity use?
+     */
+    typedef MU UnitClass;
 
     /*!
      * \brief Easy access to derived class (CRTP template parameter)
@@ -49,16 +54,25 @@ private:
     }
 
 protected:
-    MU m_unit; //!< unit
-    MU m_conversionSiUnit; //!< corresponding SI base unit
-
     /*!
      * \brief Constructor with double
-     * \param baseValue
+     * \param value
      * \param unit
-     * \param siConversionUnit
      */
-    CPhysicalQuantity(double baseValue, const MU &unit, const MU &siConversionUnit);
+    CPhysicalQuantity(double value, const MU &unit);
+
+    /*!
+     * \brief Copy constructor
+     * \param other
+     */
+    CPhysicalQuantity(const CPhysicalQuantity &other);
+
+    /*!
+     * \brief Assignment operator =
+     * \param other
+     * \return
+     */
+    CPhysicalQuantity &operator =(const CPhysicalQuantity &other);
 
     /*!
      * \brief Name as string
@@ -67,32 +81,20 @@ protected:
      */
     virtual QString convertToQString(bool i18n = false) const
     {
-        return this->unitValueRoundedWithUnit(-1, i18n);
+        return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
     }
 
     /*!
-     * \brief Init by double
-     * \param baseValue
+     * \brief Change value without changing unit
+     * \param value
      */
-
-    void setUnitValue(double baseValue);
-
-    /*!
-     * \brief Set the SI value
-     */
-    void setConversionSiUnitValue();
+    void setValueSameUnit(double value);
 
 public:
     /*!
-     * \brief Copy constructor
-     * \param other
-     */
-    CPhysicalQuantity(const CPhysicalQuantity &other);
-
-    /*!
      * \brief Virtual destructor
      */
-    virtual ~CPhysicalQuantity();
+    virtual ~CPhysicalQuantity() {}
 
     /*!
      * \brief Unit of the distance
@@ -104,47 +106,11 @@ public:
     }
 
     /*!
-     * \brief Conversion SI unit
-     * \return
-     */
-    MU getConversionSiUnit() const
-    {
-        return this->m_conversionSiUnit;
-    }
-
-    /*!
-     * \brief Switch unit, e.g. feet to meter
+     * \brief Change unit, and convert value to maintain the same quantity
      * \param newUnit
      * \return
      */
     PQ &switchUnit(const MU &newUnit);
-
-    /*!
-     * \brief Value in SI base unit? Meter is an SI base unit, hertz not!
-     * \return
-     */
-    bool isSiBaseUnit() const
-    {
-        return this->m_unit.isSiBaseUnit();
-    }
-
-    /*!
-     * \brief Value in SI unit? Hertz is an derived SI unit, NM not!
-     * \return
-     */
-    bool isSiUnit() const
-    {
-        return this->m_unit.isSiUnit();
-    }
-
-    /*!
-     * \brief Value in unprefixed SI unit? Meter is a unprefixed, kilometer a prefixed SI Unit
-     * \return
-     */
-    bool isUnprefixedSiUnit() const
-    {
-        return this->m_unit.isUnprefixedSiUnit();
-    }
 
     /*!
      * \brief Value in given unit
@@ -154,7 +120,16 @@ public:
     double value(const MU &unit) const;
 
     /*!
-     * \brief Rounded value in unit
+     * \brief Value in current unit
+     * \return
+     */
+    double value() const
+    {
+        return this->m_value;
+    }
+
+    /*!
+     * \brief Rounded value in given unit
      * \param unit
      * \param digits
      * \return
@@ -162,7 +137,17 @@ public:
     double valueRounded(const MU &unit, int digits = -1) const;
 
     /*!
-     * \brief Value to QString with unit, e.g. "5.00m"
+     * \brief Rounded value in current unit
+     * \param digits
+     * \return
+     */
+    double valueRounded(int digits = -1) const
+    {
+        return this->valueRounded(this->m_unit, digits);
+    }
+
+    /*!
+     * \brief Value to QString with the given unit, e.g. "5.00m"
      * \param unit
      * \param digits
      * \param i18n
@@ -171,80 +156,27 @@ public:
     QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
 
     /*!
-     * \brief Value as double
-     * \return
-     */
-    double unitValueToDouble() const
-    {
-        return this->m_unitValueD;
-    }
-
-    /*!
-     * \brief Value to QString with unit, e.g. "5.00m"
+     * \brief Value to QString with the current unit, e.g. "5.00m"
      * \param digits
      * \param i18n
      * \return
      */
-    QString unitValueRoundedWithUnit(int digits = -1, bool i18n = false) const;
-
-    /*!
-     * \brief Rounded value by n digits
-     * \param digits
-     * \return
-     */
-    double unitValueToDoubleRounded(int digits = -1) const;
-
-    /*!
-     * \brief Rounded value by n digits
-     * \param digits if no value is provided, unit rounding is taken
-     * \return
-     */
-    QString unitValueToQStringRounded(int digits = -1) const;
-
-    /*!
-     * \brief Conversion SI value as double
-     * \return
-     */
-    double convertedSiValueToDouble() const
+    QString valueRoundedWithUnit(int digits = -1, bool i18n = false) const
     {
-        return this->m_convertedSiUnitValueD;
+        return this->valueRoundedWithUnit(this->m_unit, digits, i18n);
     }
 
     /*!
-     * \brief Rounded SI value by n digits
-     * \param digits
-     * \return
-     */
-    double convertedSiValueToDoubleRounded(int digits = -1) const;
-
-    /*!
-     * \brief Rounded value by n digits
-     * \param digits if no value is provided, unit rounding is taken
-     * \return
-     */
-    QString convertedSiValueToQStringRounded(int digits = -1) const;
-
-    /*!
-     * \brief SI Base unit value rounded
-     * \param digits
-     * \param i18n
-     * \return
-     */
-    QString convertedSiValueRoundedWithUnit(int digits = -1, bool i18n = false) const;
-
-    /*!
-     * \brief Add to the unit value.
-     * \remarks Since overloading the + operator with double did lead to unintended conversions, as explicit method
+     * \brief Add to the value in the current unit.
      * \param value
      */
-    void addUnitValue(double value);
+    void addValueSameUnit(double value);
 
     /*!
-     * \brief Substract to the unit value.
-     * \remarks Since overloading the - operator with double did lead to unintended conversions, as explicit method
+     * \brief Substract from the value in the current unit.
      * \param value
      */
-    void substractUnitValue(double value);
+    void substractValueSameUnit(double value);
 
     /*!
     * \brief Multiply operator *=
@@ -342,13 +274,6 @@ public:
     bool operator >=(const CPhysicalQuantity &other) const;
 
     /*!
-     * \brief Assignment operator =
-     * \param other
-     * \return
-     */
-    CPhysicalQuantity &operator =(const CPhysicalQuantity &other);
-
-    /*!
      * \brief Plus operator +
      * \param other
      * \return
@@ -368,25 +293,25 @@ public:
      */
     bool isZeroEpsilon() const
     {
-        return this->m_unit.isEpsilon(this->m_unitValueD);
+        return this->m_unit.isEpsilon(this->m_value);
     }
 
     /*!
      * \brief Value >= 0 epsilon considered
      * \return
      */
-    bool isGreaterOrEqualZeroEpsilon() const
+    bool isNonNegativeEpsilon() const
     {
-        return this->isZeroEpsilon() || this->m_unitValueD > 0;
+        return this->isZeroEpsilon() || this->m_value > 0;
     }
 
     /*!
      * \brief Value <= 0 epsilon considered
      * \return
      */
-    bool isLessOrEqualZeroEpsilon() const
+    bool isNonPositiveEpsilon() const
     {
-        return this->isZeroEpsilon() || this->m_unitValueD < 0;
+        return this->isZeroEpsilon() || this->m_value < 0;
     }
 
     /*!
@@ -395,10 +320,9 @@ public:
      */
     virtual void marshallToDbus(QDBusArgument &argument) const
     {
-        argument << this->m_unitValueD;
-        argument << this->m_convertedSiUnitValueD;
+        argument << this->value(UnitClass::defaultUnit());
+        argument << this->m_value;
         argument << this->m_unit;
-        argument << this->m_conversionSiUnit;
     }
 
     /*!
@@ -407,10 +331,10 @@ public:
      */
     virtual void unmarshallFromDbus(const QDBusArgument &argument)
     {
-        argument >> this->m_unitValueD;
-        argument >> this->m_convertedSiUnitValueD;
+        double ignore;
+        argument >> ignore;
+        argument >> this->m_value;
         argument >> this->m_unit;
-        argument >> this->m_conversionSiUnit;
     }
 
     /*!
