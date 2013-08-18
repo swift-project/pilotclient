@@ -125,17 +125,6 @@ public:
     }
 
     /*!
-     * \brief Switch angle unit
-     * \param newUnit
-     * \return
-     */
-    CTrack &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &newUnit)
-    {
-        this->CAngle::switchUnit(newUnit);
-        return *this;
-    }
-
-    /*!
      * \brief Register metadata
      */
     static void registerMetadata();

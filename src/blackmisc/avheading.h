@@ -118,17 +118,6 @@ public:
     bool isTrueHeading() const { return !this->m_magnetic; }
 
     /*!
-     * \brief Switch angle unit
-     * \param newUnit
-     * \return
-     */
-    CHeading &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &newUnit)
-    {
-        this->CAngle::switchUnit(newUnit);
-        return *this;
-    }
-
-    /*!
      * \brief Register metadata
      */
     static void registerMetadata();
