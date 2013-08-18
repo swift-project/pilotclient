@@ -1,5 +1,5 @@
-#ifndef BLACKMISC_BASESTREAMSTRINGIFIER_H
-#define BLACKMISC_BASESTREAMSTRINGIFIER_H
+#ifndef BLACKMISC_STREAMABLE_H
+#define BLACKMISC_STREAMABLE_H
 
 #include "blackmisc/debug.h"
 #include <QDBusMetaType>
@@ -12,10 +12,11 @@
 namespace BlackMisc {
 
 /*!
- * \brief Provides "to QString" and stream operators
+ * \brief Base class for streamable value objects.
+ * Public non-virtual interface with protected virtual implementation.
  */
 // Virtual operators: http://stackoverflow.com/a/4571634/356726
-class CBaseStreamStringifier
+class CStreamable
 {
     /*!
      * \brief Stream << overload to be used in debugging messages
@@ -23,7 +24,7 @@ class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QDebug operator<<(QDebug debug, const CBaseStreamStringifier &uc)
+    friend QDebug operator<<(QDebug debug, const CStreamable &uc)
     {
         debug << uc.stringForStreaming();
         return debug;
@@ -35,7 +36,7 @@ class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QTextStream &operator<<(QTextStream &textStream, const CBaseStreamStringifier &uc)
+    friend QTextStream &operator<<(QTextStream &textStream, const CStreamable &uc)
     {
         textStream << uc.stringForStreaming();
         return textStream;
@@ -47,7 +48,7 @@ class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QNoDebug operator<<(QNoDebug nodebug, const CBaseStreamStringifier & /* uc */)
+    friend QNoDebug operator<<(QNoDebug nodebug, const CStreamable & /* uc */)
     {
         return nodebug;
     }
@@ -58,7 +59,7 @@ class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend QDataStream &operator<<(QDataStream &stream, const CBaseStreamStringifier &uc)
+    friend QDataStream &operator<<(QDataStream &stream, const CStreamable &uc)
     {
         stream << uc.stringForStreaming();
         return stream;
@@ -70,7 +71,7 @@ class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend CLogMessage operator<<(CLogMessage log, const CBaseStreamStringifier &uc)
+    friend CLogMessage operator<<(CLogMessage log, const CStreamable &uc)
     {
         log << uc.stringForStreaming();
         return log;
@@ -82,7 +83,7 @@ class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend std::ostream &operator<<(std::ostream &ostr, const CBaseStreamStringifier &uc)
+    friend std::ostream &operator<<(std::ostream &ostr, const CStreamable &uc)
     {
         ostr << uc.stringForStreaming().toStdString();
         return ostr;
@@ -94,7 +95,7 @@ class CBaseStreamStringifier
      * \param uc
      * \return
      */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CBaseStreamStringifier &uc)
+    friend const QDBusArgument &operator>>(const QDBusArgument &argument, CStreamable &uc)
     {
         argument.beginStructure();
         uc.unmarshallFromDbus(argument);
@@ -108,7 +109,7 @@ class CBaseStreamStringifier
      * \param pq
      * \return
      */
-    friend QDBusArgument &operator<<(QDBusArgument &argument, const CBaseStreamStringifier &uc)
+    friend QDBusArgument &operator<<(QDBusArgument &argument, const CStreamable &uc)
     {
         argument.beginStructure();
         uc.marshallToDbus(argument);
@@ -120,7 +121,7 @@ public:
     /*!
      * \brief Virtual destructor
      */
-    virtual ~CBaseStreamStringifier() {}
+    virtual ~CStreamable() {}
 
     /*!
      * \brief Cast as QString
@@ -135,7 +136,7 @@ protected:
     /*!
      * \brief Default constructor
      */
-    CBaseStreamStringifier() {}
+    CStreamable() {}
 
     /*!
      * \brief String for streaming operators
@@ -172,7 +173,7 @@ protected:
      *         class into an instance of a completely unrelated derived class.
      * \return
      */
-    CBaseStreamStringifier& operator=(const CBaseStreamStringifier&) { return *this; }
+    CStreamable& operator=(const CStreamable&) { return *this; }
 };
 
 } // namespace

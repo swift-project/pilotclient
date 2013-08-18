@@ -24,7 +24,7 @@ namespace PhysicalQuantities
 /*!
  * \brief A physical quantity such as "5m", "20s", "1500ft/s"
  */
-template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CBaseStreamStringifier
+template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CStreamable
 {
 private:
     double m_value; //!< numeric part

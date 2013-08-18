@@ -6,7 +6,7 @@
 #ifndef BLACKMISC_MATHMATRIXBASE_H
 #define BLACKMISC_MATHMATRIXBASE_H
 
-#include "blackmisc/basestreamstringifier.h"
+#include "blackmisc/streamable.h"
 #include "blackmisc/mathvector3dbase.h"
 #include <QGenericMatrix>
 #include <QDBusMetaType>
@@ -19,7 +19,7 @@ namespace Math
 /*!
  * \brief Base functionality of a matrix
  */
-template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public BlackMisc::CBaseStreamStringifier
+template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public BlackMisc::CStreamable
 {
 private:
     /*!

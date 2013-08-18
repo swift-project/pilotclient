@@ -37,7 +37,7 @@ class ICoordinateGeodetic
 /*!
  * \brief Geodetic coordinate
  */
-class CCoordinateGeodetic : public CBaseStreamStringifier, public ICoordinateGeodetic
+class CCoordinateGeodetic : public CStreamable, public ICoordinateGeodetic
 {
 private:
     BlackMisc::Geo::CLatitude m_latitude; //!< Latitude

@@ -6,7 +6,7 @@
 #ifndef BLACKMISC_PQBASE_H
 #define BLACKMISC_PQBASE_H
 
-#include "blackmisc/basestreamstringifier.h"
+#include "blackmisc/streamable.h"
 #include "blackmisc/debug.h"
 #include "blackmisc/mathematics.h"
 #include <QCoreApplication>
@@ -27,7 +27,7 @@ namespace PhysicalQuantities
  * See <a href="http://www.poynton.com/notes/units/index.html">here</a> for an overview.
  * Use the static values such as CMeasurementPrefix::k() to specify values.
  */
-class CMeasurementPrefix : public CBaseStreamStringifier
+class CMeasurementPrefix : public CStreamable
 {
 private:
     QString m_name; //!< name, e.g. "kilo"
@@ -267,7 +267,7 @@ public:
 /*!
  * \brief Base class for all units, such as meter, hertz.
  */
-class CMeasurementUnit : public CBaseStreamStringifier
+class CMeasurementUnit : public CStreamable
 {
 protected:
     /*!

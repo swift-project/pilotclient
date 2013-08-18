@@ -6,7 +6,7 @@
 #ifndef BLACKMISC_MATHVECTOR3DBASE_H
 #define BLACKMISC_MATHVECTOR3DBASE_H
 
-#include "blackmisc/basestreamstringifier.h"
+#include "blackmisc/streamable.h"
 #include "blackmisc/mathematics.h"
 
 namespace BlackMisc
@@ -21,7 +21,7 @@ class CMatrix3x1; // forward declaration
 /*!
  * \brief 3D vector base (x, y, z)
  */
-template <class ImplVector> class CVector3DBase : public CBaseStreamStringifier
+template <class ImplVector> class CVector3DBase : public CStreamable
 {
     /*!
      * \brief Unmarshalling operator >>, DBus to object
@@ -34,8 +34,8 @@ template <class ImplVector> class CVector3DBase : public CBaseStreamStringifier
         // If I do not have the method here, DBus metasystem tries to stream against
         // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
         // Once someone solves this, this methods should go and the
-        // CBaseStreamStringifier signature should be used
-        CBaseStreamStringifier &sf = uc;
+        // CStreamable signature should be used
+        CStreamable &sf = uc;
         return argument >> sf;
     }
 
@@ -47,7 +47,7 @@ template <class ImplVector> class CVector3DBase : public CBaseStreamStringifier
      */
     friend QDBusArgument &operator<<(QDBusArgument &argument, const ImplVector &uc)
     {
-        const CBaseStreamStringifier &sf = uc;
+        const CStreamable &sf = uc;
         return argument << sf;
     }
 

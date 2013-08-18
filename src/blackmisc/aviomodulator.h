@@ -30,8 +30,8 @@ template <class AVIO> class CModulator : public CAvionicsBase
         // If I do not have the method here, DBus metasystem tries to stream against
         // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
         // Once someone solves this, this methods should go and the
-        // CBaseStreamStringifier signature should be used
-        CBaseStreamStringifier &sf = uc;
+        // CStreamable signature should be used
+        CStreamable &sf = uc;
         return argument >> sf;
     }
 
@@ -43,7 +43,7 @@ template <class AVIO> class CModulator : public CAvionicsBase
      */
     friend QDBusArgument &operator<<(QDBusArgument &argument, const AVIO &uc)
     {
-        const CBaseStreamStringifier &sf = uc;
+        const CStreamable &sf = uc;
         return argument << sf;
     }
 
