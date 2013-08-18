@@ -627,17 +627,7 @@ public:
      */
     static const CPressureUnit &inHg()
     {
-        static CPressureUnit inhg(QT_TRANSLATE_NOOP("CMeasurementUnit", "inch of mercury 0C"), "inHg", false, 3386.389);
-        return inhg;
-    }
-
-    /*!
-     * \brief Inch of mercury for flight level 29,92inHg = 1013,25mbar = 1013,25hPa
-     * \return
-     */
-    static const CPressureUnit &inHgFL()
-    {
-        static CPressureUnit inhg(QT_TRANSLATE_NOOP("CMeasurementUnit", "inch of mercury"), "inHg", false, 3386.5307486631);
+        static CPressureUnit inhg(QT_TRANSLATE_NOOP("CMeasurementUnit", "inch of mercury"), "inHg", false, 3386.389);
         return inhg;
     }
 
@@ -653,7 +643,6 @@ public:
             u.append(CPressureUnit::bar());
             u.append(CPressureUnit::hPa());
             u.append(CPressureUnit::inHg());
-            u.append(CPressureUnit::inHgFL());
             u.append(CPressureUnit::mbar());
             u.append(CPressureUnit::psi());
         }

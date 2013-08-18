@@ -122,13 +122,11 @@ void CTestPhysicalQuantities::pressureTests()
 {
     CPressure p1(1013.25, CPressureUnit::hPa());
     CPressure p2(29.92, CPressureUnit::inHg());
-    CPressure p3(29.92, CPressureUnit::inHgFL());
     CPressure p4(p1);
     p4.switchUnit(CPressureUnit::mbar());
 
     // does not match exactly
     QVERIFY2(p1 != p2, "Standard pressure test little difference");
-    QVERIFY2(p1 == p3, "Standard pressure test matching");
     QVERIFY2(p1.unitValueToDouble() == p4.unitValueToDouble(), "mbar/hPa test");
 }
 
@@ -195,7 +193,7 @@ void CTestPhysicalQuantities::memoryTests()
  */
 void CTestPhysicalQuantities::basicArithmetic()
 {
-    CPressure p1 = CPhysicalQuantitiesConstants::InternationalStandardSeaLevelPressure();
+    CPressure p1 = CPhysicalQuantitiesConstants::ISASeaLevelPressure();
     CPressure p2(p1);
     p2 *= 2.0;
     CPressure p3 = p1 + p1;

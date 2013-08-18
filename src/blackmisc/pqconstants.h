@@ -40,12 +40,32 @@ public:
     }
 
     /*!
-     * \brief Standard pressure 1013,25mbar / 29.92inHg
+     * \brief International Standard Atmosphere pressure at mean sea level, 1013.25hPa
      * \return
      */
-    static const CPressure& InternationalStandardSeaLevelPressure()
+    static const CPressure& ISASeaLevelPressure()
     {
         static CPressure p(1013.25, CPressureUnit::hPa());
+        return p;
+    }
+
+    /*!
+     * \brief ICAO standard pressure datum for flight levels, 1013.2hPa
+     * \return
+     */
+    static const CPressure& ICAOFlightLevelPressure()
+    {
+        static CPressure p(1013.2, CPressureUnit::hPa());
+        return p;
+    }
+
+    /*!
+     * \brief Standard pressure datum for flight levels in USA, Canada, parts of Latin America, 29.92inHg
+     * \return
+     */
+    static const CPressure& USFlightLevelPressure()
+    {
+        static CPressure p(29.92, CPressureUnit::inHg());
         return p;
     }
 
