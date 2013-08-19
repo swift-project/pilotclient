@@ -82,7 +82,7 @@ void CMultiPlayer::onPositionUpdate(const FSD::FSD_MSG_Plane_Position *plane_pos
 
     plane->addPosition(position,
                        CSpeed(plane_position->Speed(), CSpeedUnit::kts()),
-                       CHeading((qint32)pitchBankHeading.hdg, false, CAngleUnit::deg()),
+                       CHeading((qint32)pitchBankHeading.hdg, CHeading::True, CAngleUnit::deg()),
                        CAngle((qint32)pitchBankHeading.pitch, CAngleUnit::deg()),
                        CAngle((qint32)pitchBankHeading.bank, CAngleUnit::deg()));
 

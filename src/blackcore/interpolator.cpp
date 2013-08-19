@@ -67,7 +67,7 @@ CCoordinateNed CInterpolator::pushUpdate(const CCoordinateGeodetic &pos, const C
 
     m_state_end->timestamp = m_time.elapsed();
     m_state_end->position = CCoordinateTransformation::toEcef(pos);
-    m_state_end->orientation.heading = CHeading(normalizeRadians(heading), false);
+    m_state_end->orientation.heading = CHeading(normalizeRadians(heading), CHeading::True);
     m_state_end->orientation.pitch = normalizeRadians(pitch);
     m_state_end->orientation.bank = normalizeRadians(bank);
     m_state_end->groundspeed = groundSpeed;
@@ -131,7 +131,7 @@ bool CInterpolator::stateNow(TPlaneState *state)
     // Plane Orientation
     double vEast = state->velNED.east();
     double vNorth = state->velNED.north();
-    state->orientation.heading = CHeading(atan2(vNorth, vEast), false, CAngleUnit::rad());
+    state->orientation.heading = CHeading(atan2(vNorth, vEast), CHeading::True, CAngleUnit::rad());
 
     return true;
 }

@@ -19,7 +19,7 @@ namespace Aviation
 QString CAltitude::convertToQString(bool /* i18n */) const
 {
     QString s = this->CLength::convertToQString();
-    return s.append(this->m_msl ? " MSL" : " AGL");
+    return s.append(this->isMeanSeaLevel() ? " MSL" : " AGL");
 }
 
 /*
@@ -27,7 +27,7 @@ QString CAltitude::convertToQString(bool /* i18n */) const
  */
 bool CAltitude::operator ==(const CAltitude &other)
 {
-    return other.m_msl == this->m_msl && this->CLength::operator ==(other);
+    return other.m_datum == this->m_datum && this->CLength::operator ==(other);
 }
 
 /*

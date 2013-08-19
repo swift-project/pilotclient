@@ -19,7 +19,7 @@ namespace Aviation
 QString CTrack::convertToQString(bool i18n) const
 {
     QString s = CAngle::convertToQString(i18n);
-    return s.append(this->m_magnetic ? " magnetic" : " true");
+    return s.append(this->isMagneticTrack() ? " magnetic" : " true");
 }
 
 /*
@@ -27,7 +27,7 @@ QString CTrack::convertToQString(bool i18n) const
  */
 bool CTrack::operator ==(const CTrack &other)
 {
-    return other.m_magnetic == this->m_magnetic && this->CAngle::operator ==(other);
+    return other.m_north == this->m_north && this->CAngle::operator ==(other);
 }
 
 /*

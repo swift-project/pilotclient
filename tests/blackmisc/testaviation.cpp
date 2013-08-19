@@ -24,9 +24,9 @@ CTestAviation::CTestAviation(QObject *parent): QObject(parent)
  */
 void CTestAviation::headingBasics()
 {
-    CHeading h1(180, true, CAngleUnit::deg());
-    CHeading h2(180, false, CAngleUnit::deg());
-    CHeading h3(181, true, CAngleUnit::deg());
+    CHeading h1(180, CHeading::Magnetic, CAngleUnit::deg());
+    CHeading h2(180, CHeading::True, CAngleUnit::deg());
+    CHeading h3(181, CHeading::Magnetic, CAngleUnit::deg());
     CAngle a1(200, CAngleUnit::deg());
     CHeading h4;
     h4 = h1;

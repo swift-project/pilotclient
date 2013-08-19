@@ -16,8 +16,8 @@ namespace BlackMiscTest
  */
 int CSamplesAviation::samples()
 {
-    CHeading h1(180, true, CAngleUnit::deg());
-    CHeading h2(180, false, CAngleUnit::deg());
+    CHeading h1(180, CHeading::Magnetic, CAngleUnit::deg());
+    CHeading h2(180, CHeading::True, CAngleUnit::deg());
 
     qDebug() << h1;
     qDebug() << h1 << h2 << (h1 == h2) << (h1 != h2) << (h1 == h1);

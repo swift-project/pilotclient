@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
         BlackmisctestTestserviceInterface testserviceInterface(Testservice::ServiceName, Testservice::ServicePath, connection, &a);
 
         CSpeed speed(200, BlackMisc::PhysicalQuantities::CSpeedUnit::km_h());
-        CAltitude al(1000, true, CLengthUnit::ft());
+        CAltitude al(1000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
 
         while (true) {
             QDBusMessage m = QDBusMessage::createSignal(
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
             testserviceInterface.receiveTransponder(transponder);
             qDebug() << "Send transponder via interface" << transponder;
 
-            CTrack track(123.45, true, CAngleUnit::deg());
+            CTrack track(123.45, CTrack::Magnetic, CAngleUnit::deg());
             testserviceInterface.receiveTrack(track);
             qDebug() << "Send track via interface" << track;
 
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
             testserviceInterface.receiveLength(len);
             qDebug() << "Send length via interface" << len;
 
-            CAltitude alt(33, true, CLengthUnit::m());
+            CAltitude alt(33, CAltitude::MeanSeaLevel, CLengthUnit::m());
             testserviceInterface.receiveLength(alt);
             qDebug() << "Send altitude via interface" << alt;
 

@@ -18,8 +18,18 @@ namespace Aviation
  */
 class CTrack : public BlackMisc::PhysicalQuantities::CAngle
 {
+public:
+    /*!
+     * Enum type to distinguish between true north and magnetic north
+     */
+    enum ReferenceNorth
+    {
+        Magnetic = 0,   //!< magnetic north
+        True = 1,       //!< true north
+    };
+
 private:
-    bool m_magnetic; //!< magnetic or true Track?
+    ReferenceNorth m_north; //!< magnetic or true?
 
 protected:
     /*!
@@ -35,7 +45,7 @@ protected:
     virtual void marshallToDbus(QDBusArgument &argument) const
     {
         this->CAngle::marshallToDbus(argument);
-        argument << this->m_magnetic;
+        argument << qint32(this->m_north);
     }
 
     /*!
@@ -45,37 +55,31 @@ protected:
     virtual void unmarshallFromDbus(const QDBusArgument &argument)
     {
         this->CAngle::unmarshallFromDbus(argument);
-        argument >> this->m_magnetic;
+        qint32 north;
+        argument >> north;
+        this->m_north = static_cast<ReferenceNorth>(north);
     }
 
 public:
     /*!
      * \brief Default constructor: 0 Track magnetic
      */
-    CTrack() : BlackMisc::PhysicalQuantities::CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_magnetic(true) {}
+    CTrack() : BlackMisc::PhysicalQuantities::CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
     /*!
      * \brief Constructor
      * \param value
-     * \param magnetic
+     * \param north
      * \param unit
      */
-    CTrack(double value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_magnetic(magnetic) {}
-
-    /*!
-     * \brief Constructor
-     * \param value
-     * \param magnetic
-     * \param unit
-     */
-    CTrack(int value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_magnetic(magnetic) {}
+    CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_north(north) {}
 
     /*!
      * \brief Constructor by CAngle
      * \param track
-     * \param magnetic
+     * \param north
      */
-    CTrack(BlackMisc::PhysicalQuantities::CAngle track, bool magnetic) : BlackMisc::PhysicalQuantities::CAngle(track), m_magnetic(magnetic) {}
+    CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : BlackMisc::PhysicalQuantities::CAngle(track), m_north(north) {}
 
     /*!
      * \brief Equal operator ==
@@ -97,9 +101,8 @@ public:
      */
     bool isMagneticTrack() const
     {
-        return this->m_magnetic;
+        return Magnetic == this->m_north;
         (void)QT_TRANSLATE_NOOP("Aviation", "magnetic");
-        (void)QT_TRANSLATE_NOOP("Aviation", "true");
     }
 
     /*!
@@ -108,8 +111,15 @@ public:
      */
     bool isTrueTrack() const
     {
-        return !this->m_magnetic;
+        return True == this->m_north;
+        (void)QT_TRANSLATE_NOOP("Aviation", "true");
     }
+
+    /*!
+     * \brief Get reference north (magnetic or true)
+     * \return
+     */
+    ReferenceNorth getReferenceNorth() const { return m_north; }
 
     /*!
      * \brief Register metadata

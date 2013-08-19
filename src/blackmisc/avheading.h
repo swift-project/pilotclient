@@ -18,8 +18,18 @@ namespace Aviation
  */
 class CHeading : public BlackMisc::PhysicalQuantities::CAngle
 {
+public:
+    /*!
+     * Enum type to distinguish between true north and magnetic north
+     */
+    enum ReferenceNorth
+    {
+        Magnetic = 0,   //!< magnetic north
+        True = 1,       //!< true north
+    };
+
 private:
-    bool m_magnetic; //!< magnetic or true heading?
+    ReferenceNorth m_north; //!< magnetic or true?
 
 protected:
     /*!
@@ -36,7 +46,7 @@ protected:
     virtual void marshallToDbus(QDBusArgument &argument) const
     {
         this->CAngle::marshallToDbus(argument);
-        argument << this->m_magnetic;
+        argument << qint32(this->m_north);
     }
 
     /*!
@@ -46,37 +56,31 @@ protected:
     virtual void unmarshallFromDbus(const QDBusArgument &argument)
     {
         this->CAngle::unmarshallFromDbus(argument);
-        argument >> this->m_magnetic;
+        qint32 north;
+        argument >> north;
+        this->m_north = static_cast<ReferenceNorth>(north);
     }
 
 public:
     /*!
      * \brief Default constructor: 0 heading true
      */
-    CHeading() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_magnetic(true) {}
+    CHeading() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
     /*!
      * \brief Constructor
      * \param value
-     * \param magnetic
+     * \param north
      * \param unit
      */
-    CHeading(double value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
-
-    /*!
-     * \brief Constructor
-     * \param value
-     * \param magnetic
-     * \param unit
-     */
-    CHeading(int value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
+    CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
 
     /*!
      * \brief Constructor by CAngle
-     * \param heading
+     * \param north
      * \param magnetic
      */
-    CHeading(CAngle heading, bool magnetic) : CAngle(heading), m_magnetic(magnetic) {}
+    CHeading(CAngle heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
 
     /*!
      * \brief Equal operator ==
@@ -96,13 +100,19 @@ public:
      * \brief Magnetic heading?
      * \return
      */
-    bool isMagneticHeading() const { return this->m_magnetic; }
+    bool isMagneticHeading() const { return Magnetic == this->m_north; }
 
     /*!
      * \brief True heading?
      * \return
      */
-    bool isTrueHeading() const { return !this->m_magnetic; }
+    bool isTrueHeading() const { return True == this->m_north; }
+
+    /*!
+     * \brief Get reference north (magnetic or true)
+     * \return
+     */
+    ReferenceNorth getReferenceNorth() const { return m_north; }
 
     /*!
      * \brief Register metadata
