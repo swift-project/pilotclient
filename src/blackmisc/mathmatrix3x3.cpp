@@ -30,8 +30,8 @@ double CMatrix3x3::determinant() const
 CMatrix3x3 CMatrix3x3::inverse(bool &o_invertible) const
 {
     CMatrix3x3 inverse;
-    double det;
-    if (this->allValuesEqual() || (det = this->determinant()) == 0)
+    double det = this->determinant();
+    if (det == 0)
     {
         o_invertible = false;
         inverse.setZero();

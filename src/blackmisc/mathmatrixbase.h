@@ -111,7 +111,7 @@ public:
      * \brief List of values
      * \return
      */
-    const QList<double> toList() const;
+    QList<double> toList() const;
 
     /*!
      * \brief List of values
@@ -164,7 +164,7 @@ public:
     }
 
     /*!
-     * \brief Operator to support commutative multiplication
+     * \brief Operator to support commutative scalar multiplication
      * \param factor
      * \param other
      * \return
@@ -173,13 +173,6 @@ public:
     {
         return other * factor;
     }
-
-    /*!
-     * \brief Multiply with 3D vector operator *
-     * \param matrix
-     * \return
-     */
-    template<class ImplVector> ImplVector operator*(const ImplVector matrix) const;
 
     /*!
      * \brief Operator /=
@@ -280,11 +273,6 @@ public:
     }
 
     /*!
-     * \brief Fills the matrix with random elements
-     */
-    void setRandom();
-
-    /*!
      * \brief All values to zero
      */
     void setZero() { this->m_matrix.fill(0.0); }
@@ -312,13 +300,7 @@ public:
     }
 
     /*!
-     * \brief All values equal, if so matirx is not invertible
-     * \return
-     */
-    bool allValuesEqual() const;
-
-    /*!
-     * \brief Set a dedicated value
+     * \brief Set all elements the same
      * \param value
      */
     void fill(double value) { this->m_matrix.fill(value); }

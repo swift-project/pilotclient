@@ -14,12 +14,14 @@ namespace BlackMisc
 namespace Math
 {
 
+class CMatrix3x3;
+
 /*!
  * \brief Matrix 3x1
  */
 class CMatrix3x1 : public CMatrixBase<CMatrix3x1, 3, 1>
 {
-    friend class CMatrix3x3; // for matrix multiplicaion to access m_matrix
+    friend class CMatrix3x3;
 
 public:
     /*!

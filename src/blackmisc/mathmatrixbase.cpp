@@ -41,20 +41,6 @@ template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, R
 }
 
 /*
- * All values to random value
- */
-template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setRandom()
-{
-    for (int r = 0; r < Rows; r++)
-    {
-        for (int c = 0; c < Columns; c++)
-        {
-            this->m_matrix(r, c) = (qrand() % 101);  // 0...100
-        }
-    }
-}
-
-/*
  * All values zero?
  */
 template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, Rows, Columns>::isZero() const
@@ -87,7 +73,7 @@ template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, R
 /*
  * To list
  */
-template<class ImplMatrix, int Rows, int Columns> const QList<double> CMatrixBase<ImplMatrix, Rows, Columns>::toList() const
+template<class ImplMatrix, int Rows, int Columns> QList<double> CMatrixBase<ImplMatrix, Rows, Columns>::toList() const
 {
     QList<double> list;
     for (int r = 0; r < Rows; r++)
@@ -114,22 +100,6 @@ template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, R
             this->m_matrix(r, c) = list.at(ct++);
         }
     }
-}
-
-/*
- * All values equal?
- */
-template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, Rows, Columns>::allValuesEqual() const
-{
-    double v = this->getElement(0, 0);
-    for (int r = 0; r < Rows; r++)
-    {
-        for (int c = 0; c < Columns; c++)
-        {
-            if (this->m_matrix(r, c) != v) return false;
-        }
-    }
-    return true;
 }
 
 /*

@@ -44,28 +44,30 @@ template <class ImplVector> void CVector3DBase<ImplVector>::fill(double value)
 }
 
 /*
+ * Element (return by reference)
+ */
+template <class ImplVector> double &CVector3DBase<ImplVector>::getElement(size_t row)
+{
+    switch (row)
+    {
+    case 0:
+        return this->m_i;
+    case 1:
+        return this->m_j;
+    case 2:
+        return this->m_k;
+    default:
+        Q_ASSERT_X(true, "getElement", "Detected invalid index in 3D vector");
+        throw std::range_error("Detected invalid index in 3D vector");
+    }
+}
+
+/*
  * Element
  */
 template <class ImplVector> double CVector3DBase<ImplVector>::getElement(size_t row) const
 {
-    double d;
-    switch (row)
-    {
-    case 0:
-        d = this->m_i;
-        break;
-    case 1:
-        d = this->m_j;
-        break;
-    case 2:
-        d = this->m_k;
-        break;
-    default:
-        Q_ASSERT_X(true, "getElement", "Detected invalid index in 3D vector");
-        throw std::range_error("Detected invalid index in 3D vector");
-        break;
-    }
-    return d;
+    return const_cast<CVector3DBase<ImplVector>*>(this)->getElement(row);
 }
 
 /*
@@ -111,17 +113,6 @@ template <class ImplVector> double CVector3DBase<ImplVector>::dotProduct(const I
     return this->m_i * other.m_i + this->m_j * other.m_j + this->m_k * other.m_k;
 }
 
-
-/*
- * Multiply with matrix
- */
-template <class ImplVector> void CVector3DBase<ImplVector>::matrixMultiplication(const CMatrix3x3 &matrix)
-{
-    CMatrix3x1 m = matrix * this->toMatrix3x1();
-    this->m_i = m(0, 0);
-    this->m_j = m(1, 0);
-    this->m_k = m(2, 0);
-}
 
 /*
  * Convert to matrix

@@ -15,7 +15,7 @@ namespace Math
 {
 
 /*!
- * \brief 3D matrix
+ * \brief Matrix 1x3
  */
 class CMatrix1x3 : public CMatrixBase<CMatrix1x3, 1, 3>
 {

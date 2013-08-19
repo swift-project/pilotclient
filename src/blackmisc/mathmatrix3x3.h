@@ -87,6 +87,17 @@ public:
         this->m_matrix = this->m_matrix * other.m_matrix;
         return *this;
     }
+    /*!
+     * \brief Operator *
+     * \param other
+     * \return
+     */
+    CMatrix3x3 operator *(const CMatrix3x3 &other) const
+    {
+        CMatrix3x3 m(*this);
+        m *= other;
+        return m;
+    }
 
     /*!
      * \brief Operator *
@@ -101,27 +112,24 @@ public:
     }
 
     /*!
-     * \brief Operator *
-     * \param other
-     * \return
-     */
-    CMatrix3x3 operator *(const CMatrix3x3 &other) const
-    {
-        CMatrix3x3 m(*this);
-        m *= other;
-        return m;
-    }
-
-    /*!
-     * \brief Multiply vector with this 3x3 matrix
+     * \brief Multiply this matrix with vector
      * \param vector
      * \return
      */
     CVector3D operator *(const CVector3D &vector) const
     {
-        CVector3D v(vector);
-        v.matrixMultiplication(*this);
-        return v;
+        return ((*this) * CMatrix3x1(vector.toMatrix3x1())).toVector3D();
+    }
+
+    /*!
+     * \brief Multiply with factor
+     * \param factor
+     * \return
+     */
+    CMatrix3x3 &operator *=(double factor)
+    {
+        this->CMatrixBase::operator *=(factor);
+        return *this;
     }
 
     /*!
@@ -134,17 +142,6 @@ public:
         CMatrix3x3 m(*this);
         m *= factor;
         return m;
-    }
-
-    /*!
-     * \brief Multiply with factor
-     * \param factor
-     * \return
-     */
-    CMatrix3x3 &operator *=(double factor)
-    {
-        CMatrixBase::operator *=(factor);
-        return *this;
     }
 
     /*!
@@ -171,7 +168,6 @@ public:
      * \return
      */
     CMatrix1x3 getRow(int row) const;
-
 };
 
 } // namespace

@@ -14,9 +14,7 @@ namespace BlackMisc
 namespace Math
 {
 
-class CMatrix3x3; // forward declaration
-class CMatrix3x1; // forward declaration
-
+class CMatrix3x1;
 
 /*!
  * \brief 3D vector base (x, y, z)
@@ -102,6 +100,13 @@ protected:
     CVector3DBase(const CVector3DBase &other) : m_i(other.m_i), m_j(other.m_j), m_k(other.m_k) {}
 
     /*!
+     * \brief Get element
+     * \param row
+     * \return Mutable reference
+     */
+    double &getElement(size_t row);
+
+    /*!
      * \brief String for converter
      * \param i18n
      * \return
@@ -155,7 +160,8 @@ public:
     }
 
     /*!
-     * \brief Set zeros
+     * \brief Set all elements the same
+     * \param value
      */
     void fill(double value);
 
@@ -179,6 +185,13 @@ public:
      * \return
      */
     double operator[](size_t row) const { return this->getElement(row); }
+
+    /*!
+     * \brief Operator []
+     * \param row
+     * \return Mutable reference
+     */
+    double &operator[](size_t row) { return this->getElement(row); }
 
     /*!
      * \brief Equal operator ==
@@ -254,31 +267,6 @@ public:
     }
 
     /*!
-     * \brief Operator *=, just x*x, y*y, z*z neither vector nor dot product (like a matrix produc)
-     * \param other
-     * \return
-     */
-    CVector3DBase &operator *=(const CVector3DBase &other)
-    {
-        this->m_i *= other.m_i;
-        this->m_j *= other.m_j;
-        this->m_k *= other.m_k;
-        return *this;
-    }
-
-    /*!
-     * \brief Operator, just x*x, y*y, z*z neither vector nor dot product, (like a matrix produc)
-     * \param other
-     * \return
-     */
-    ImplVector operator *(const ImplVector &other) const
-    {
-        ImplVector v = *derived();
-        v *= other;
-        return v;
-    }
-
-    /*!
      * \brief Multiply with scalar
      * \param factor
      * \return
@@ -340,31 +328,6 @@ public:
     }
 
     /*!
-     * \brief Operator /=, just x/x, y/y, z/z
-     * \param other
-     * \return
-     */
-    CVector3DBase &operator /=(const CVector3DBase &other)
-    {
-        this->m_i /= other.m_i;
-        this->m_j /= other.m_j;
-        this->m_k /= other.m_k;
-        return *this;
-    }
-
-    /*!
-     * \brief Operator, just x/x, y/y, z/z
-     * \param other
-     * \return
-     */
-    ImplVector operator /(const ImplVector &other) const
-    {
-        ImplVector v = *derived();
-        v /= other;
-        return v;
-    }
-
-    /*!
      * \brief Dot product
      * \param other
      * \return
@@ -377,13 +340,6 @@ public:
      * \return
      */
     ImplVector crossProduct(const ImplVector &other) const;
-
-    /*!
-     * \brief Matrix * this vector
-     * \param matrix
-     * \return
-     */
-    void matrixMultiplication(const CMatrix3x3 &matrix);
 
     /*!
      * \brief Reciprocal value
