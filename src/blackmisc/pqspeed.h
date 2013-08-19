@@ -26,11 +26,6 @@ public:
     CSpeed() : CPhysicalQuantity(0, CSpeedUnit::defaultUnit()) {}
 
     /*!
-     *\brief Copy constructor from base type
-     */
-    CSpeed(const CPhysicalQuantity &base): CPhysicalQuantity(base) {}
-
-    /*!
      *\brief Init by double value
      * \param value
      * \param unit

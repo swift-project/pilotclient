@@ -109,20 +109,6 @@ public:
     }
 
     /*!
-     * \brief Assigment operator =
-     * \param other
-     * \return
-     */
-    CCoordinateNed &operator =(const CCoordinateNed &other)
-    {
-        if (this == &other) return *this;
-        this->CVector3DBase::operator = (other);
-        this->m_hasReferencePosition = other.m_hasReferencePosition;
-        this->m_referencePosition = other.m_referencePosition;
-        return *this;
-    }
-
-    /*!
      * \brief Corresponding reference position
      * \return
      */

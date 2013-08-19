@@ -24,11 +24,6 @@ public:
      */
     CFrequency() : CPhysicalQuantity(0, CFrequencyUnit::defaultUnit()) {}
 
-    /**
-     *\brief Copy constructor from base type
-     */
-    CFrequency(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
-
     /*!
      * \brief Init by double value
      * \param value

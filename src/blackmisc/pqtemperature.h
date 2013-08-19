@@ -24,11 +24,6 @@ public:
      */
     CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::defaultUnit()) {}
 
-    /**
-     * \brief Copy constructor from base type
-     */
-    CTemperature(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
-
     /*!
      * \brief Init by double value
      * \param value

@@ -79,19 +79,6 @@ public:
     CHeading(CAngle heading, bool magnetic) : CAngle(heading), m_magnetic(magnetic) {}
 
     /*!
-     * \brief Copy constructor
-     * \param other
-     */
-    CHeading(const CHeading &other) : CAngle(other), m_magnetic(other.m_magnetic) {}
-
-    /*!
-     * \brief Assignment operator =
-     * \param other
-     * @return
-     */
-    CHeading &operator =(const CHeading &other);
-
-    /*!
      * \brief Equal operator ==
      * \param other
      * @return

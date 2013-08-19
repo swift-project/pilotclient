@@ -152,17 +152,6 @@ public:
     }
 
     /*!
-     * \brief Assigment operator =
-     * \param other
-     * \return
-     */
-    CComSystem& operator =(const CComSystem &other)
-    {
-        this->CModulator::operator =(other);
-        return *this;
-    }
-
-    /*!
      * \brief operator ==
      * \param other
      * \return

@@ -31,12 +31,6 @@ public:
     CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
 
     /*!
-     * \brief Copy constructor from base type
-     * \param base
-     */
-    CMass(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
-
-    /*!
      * \brief Virtual destructor
      */
     virtual ~CMass() {}

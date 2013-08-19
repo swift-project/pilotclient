@@ -204,20 +204,6 @@ public:
     }
 
     /*!
-     * \brief Assigment operator =
-     * \param other
-     * \return
-     */
-    CVector3DBase &operator =(const CVector3DBase &other)
-    {
-        if (this == &other) return *this;
-        this->m_i = other.m_i;
-        this->m_j = other.m_j;
-        this->m_k = other.m_k;
-        return *this;
-    }
-
-    /*!
      * \brief Operator +=
      * \param other
      * \return

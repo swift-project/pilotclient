@@ -225,19 +225,6 @@ public:
     }
 
     /*!
-     * \brief Assigment operator =
-     * \param other
-     * \return
-     */
-    CTransponder &operator =(const CTransponder &other)
-    {
-        this->CAvionicsBase::operator =(other);
-        this->m_transponderMode = other.m_transponderMode;
-        this->m_transponderCode = other.m_transponderCode;
-        return *this;
-    }
-
-    /*!
      * \brief operator ==
      * \param other
      * \return

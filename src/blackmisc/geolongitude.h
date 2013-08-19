@@ -29,12 +29,6 @@ public:
     CLongitude() : CEarthAngle() {}
 
     /*!
-     * \brief Copy constructor
-     * \param other
-     */
-    CLongitude(const CLongitude &other) : CEarthAngle(other) {}
-
-    /*!
      * \brief Constructor
      * \param angle
      */

@@ -62,19 +62,6 @@ protected:
     CPhysicalQuantity(double value, const MU &unit);
 
     /*!
-     * \brief Copy constructor
-     * \param other
-     */
-    CPhysicalQuantity(const CPhysicalQuantity &other);
-
-    /*!
-     * \brief Assignment operator =
-     * \param other
-     * \return
-     */
-    CPhysicalQuantity &operator =(const CPhysicalQuantity &other);
-
-    /*!
      * \brief Name as string
      * \param i18n
      * \return

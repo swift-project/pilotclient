@@ -127,13 +127,6 @@ protected:
     }
 
     /*!
-     * \brief Assigment operator =
-     * \param other
-     * \return
-     */
-    CModulator &operator =(const CModulator &other);
-
-    /*!
      * \brief operator ==
      * \param other
      * \return

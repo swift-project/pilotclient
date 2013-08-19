@@ -78,19 +78,6 @@ public:
     CTrack(BlackMisc::PhysicalQuantities::CAngle track, bool magnetic) : BlackMisc::PhysicalQuantities::CAngle(track), m_magnetic(magnetic) {}
 
     /*!
-     * \brief Copy constructor
-     * \param other
-     */
-    CTrack(const CTrack &other) : BlackMisc::PhysicalQuantities::CAngle(other), m_magnetic(other.m_magnetic) {}
-
-    /*!
-     * \brief Assignment operator =
-     * \param other
-     * \return
-     */
-    CTrack &operator =(const CTrack &other);
-
-    /*!
      * \brief Equal operator ==
      * \param other
      * \return

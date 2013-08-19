@@ -25,11 +25,6 @@ public:
      */
     CTime() : CPhysicalQuantity(0, CTimeUnit::defaultUnit()) {}
 
-    /**
-     *\brief Copy constructor from base type
-     */
-    CTime(const CPhysicalQuantity &base): CPhysicalQuantity(base) {}
-
     /*!
      *\brief Init by double value
      * \param value

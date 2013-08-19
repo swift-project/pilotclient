@@ -79,19 +79,6 @@ public:
     CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, bool msl) : BlackMisc::PhysicalQuantities::CLength(altitude), m_msl(msl) {}
 
     /*!
-     * \brief Copy constructor
-     * \param other
-     */
-    CAltitude(const CAltitude &other) : BlackMisc::PhysicalQuantities::CLength(other), m_msl(other.m_msl) {}
-
-    /*!
-     * \brief Assignment operator =
-     * \param other
-     * @return
-     */
-    CAltitude &operator =(const CAltitude &other);
-
-    /*!
      * \brief Equal operator ==
      * \param other
      * @return

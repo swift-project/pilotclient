@@ -23,17 +23,6 @@ QString CTrack::convertToQString(bool i18n) const
 }
 
 /*
- * Assigment
- */
-CTrack& CTrack::operator =(const CTrack &other)
-{
-    if (this == &other) return *this;
-    this->CAngle::operator = (other);
-    this->m_magnetic = other.m_magnetic;
-    return *this;
-}
-
-/*
  * Equal?
  */
 bool CTrack::operator ==(const CTrack &other)

@@ -36,19 +36,6 @@ template <class AVIO> void CModulator<AVIO>::registerMetadata()
 }
 
 /*
- * Assigment operator =
- */
-template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModulator<AVIO> &other)
-{
-    if (this == &other) return *this;
-    this->m_frequencyActive = other.m_frequencyActive;
-    this->m_frequencyStandby = other.m_frequencyStandby;
-    this->m_digits = other.m_digits;
-    this->setName(other.getName());
-    return *this;
-}
-
-/*
  * Equal operator ==
  */
 template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &other) const

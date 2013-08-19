@@ -23,17 +23,6 @@ QString CHeading::convertToQString(bool i18n) const
 }
 
 /*
- * Assigment
- */
-CHeading& CHeading::operator =(const CHeading &other)
-{
-    if (this == &other) return *this;
-    this->CAngle::operator = (other);
-    this->m_magnetic = other.m_magnetic;
-    return *this;
-}
-
-/*
  * Equal?
  */
 bool CHeading::operator ==(const CHeading &other)

@@ -25,11 +25,6 @@ public:
      */
     CPressure() : CPhysicalQuantity(0, CPressureUnit::defaultUnit()) {}
 
-    /**
-     *\brief Copy constructor from base type
-     */
-    CPressure(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
-
     /*!
      *\brief Init by double value
      * \param value

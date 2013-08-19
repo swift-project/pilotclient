@@ -166,14 +166,6 @@ protected:
      * \param argument
      */
     virtual void unmarshallFromDbus(const QDBusArgument &) = 0;
-
-    /*!
-     * \brief Copy assignment operator.
-     * \remark This is protected in order to forbid slicing an instance of one derived
-     *         class into an instance of a completely unrelated derived class.
-     * \return
-     */
-    CStreamable& operator=(const CStreamable&) { return *this; }
 };
 
 } // namespace

@@ -51,12 +51,6 @@ protected:
     CEarthAngle() : CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
 
     /*!
-     * \brief Copy constructor
-     * \param latOrLon
-     */
-    CEarthAngle(const LATorLON &latOrLon) : CAngle(latOrLon) {}
-
-    /*!
      * \brief Init by double value
      * \param value
      * \param unit
@@ -182,17 +176,6 @@ public:
     bool operator >=(const LATorLON &latOrLon) const
     {
         return this->CAngle::operator >=(latOrLon);
-    }
-
-    /*!
-     * \brief Assignment operator =
-     * \param latOrLon
-     * \return
-     */
-    CEarthAngle &operator =(const LATorLON &latOrLon)
-    {
-        this->CAngle::operator =(latOrLon);
-        return *this;
     }
 
     /*!

@@ -23,17 +23,6 @@ QString CAltitude::convertToQString(bool /* i18n */) const
 }
 
 /*
- * Assigment
- */
-CAltitude &CAltitude::operator =(const CAltitude &other)
-{
-    if (this == &other) return *this;
-    CLength::operator = (other);
-    this->m_msl = other.m_msl;
-    return *this;
-}
-
-/*
  * Equal?
  */
 bool CAltitude::operator ==(const CAltitude &other)

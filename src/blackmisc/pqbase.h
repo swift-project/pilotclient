@@ -41,7 +41,8 @@ private:
      * \param prefixName
      * \param factor
      */
-    CMeasurementPrefix(const QString &name, const QString &symbol, double factor);
+    CMeasurementPrefix(const QString &name, const QString &symbol, double factor) :
+        m_name(name), m_symbol(symbol), m_factor(factor) {}
 
 protected:
     /*!
@@ -75,19 +76,6 @@ protected:
     }
 
 public:
-    /*!
-     * \brief Copy constructor
-     * \param other
-     */
-    CMeasurementPrefix(const CMeasurementPrefix &other);
-
-    /*!
-     * \brief Assigmnet operator =
-     * \param other
-     * \return
-     */
-    CMeasurementPrefix &operator =(const CMeasurementPrefix &other);
-
     /*!
      * \brief Equal operator ==
      * \param other
@@ -438,13 +426,6 @@ protected:
      * \param other
      */
     CMeasurementUnit(const CMeasurementUnit &other);
-
-    /*!
-     * \brief Assignment operator =
-     * \param other
-     * \return
-     */
-    CMeasurementUnit &operator =(const CMeasurementUnit &other);
 
     /*!
      * \brief String for streaming operators is full name

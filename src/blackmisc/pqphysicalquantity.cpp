@@ -19,14 +19,6 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(doubl
 }
 
 /*
- * Copy constructor
- */
-template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(const CPhysicalQuantity &other) :
-    m_value(other.m_value), m_unit(other.m_unit)
-{
-}
-
-/*
  * Equal operator ==
  */
 template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const CPhysicalQuantity<MU, PQ> &other) const
@@ -42,18 +34,6 @@ template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const 
 template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator !=(const CPhysicalQuantity<MU, PQ> &other) const
 {
     return !((*this) == other);
-}
-
-/*
- * Assignment operator =
- */
-template <class MU, class PQ> CPhysicalQuantity<MU, PQ>& CPhysicalQuantity<MU, PQ>::operator=(const CPhysicalQuantity<MU, PQ> &other)
-{
-    if (this == &other) return *this;
-
-    this->m_value = other.m_value;
-    this->m_unit = other.m_unit;
-    return *this;
 }
 
 /*

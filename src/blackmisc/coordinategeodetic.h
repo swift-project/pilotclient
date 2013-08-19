@@ -194,20 +194,6 @@ public:
         return !((*this) == other);
     }
 
-    /*!
-     * \brief Assigment operator =
-     * \param other
-     * \return
-     */
-    CCoordinateGeodetic &operator =(const CCoordinateGeodetic &other)
-    {
-        if (this == &other) return *this;
-        this->m_height = other.m_height;
-        this->m_latitude = other.m_latitude;
-        this->m_longitude = other.m_longitude;
-        return *this;
-    }
-
     /*
      * Register metadata
      */

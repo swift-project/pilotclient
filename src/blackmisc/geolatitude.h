@@ -32,12 +32,6 @@ public:
     CLatitude() : CEarthAngle() {}
 
     /*!
-     * \brief Copy constructor
-     * \param other
-     */
-    CLatitude(const CLatitude &other) : CEarthAngle(other) {}
-
-    /*!
      * \brief Constructor
      * \param angle
      */

@@ -18,34 +18,6 @@ namespace PhysicalQuantities
 // -----------------------------------------------------------------------
 
 /*
- * Constructor
- */
-CMeasurementPrefix::CMeasurementPrefix(const QString &name, const QString &symbol, double factor) :
-    m_name(name), m_symbol(symbol), m_factor(factor)
-{
-}
-
-/*
- * Constructor
- */
-CMeasurementPrefix::CMeasurementPrefix(const CMeasurementPrefix &other) :
-    m_name(other.m_name), m_symbol(other.m_symbol), m_factor(other.m_factor)
-{
-}
-
-/*
- * Assignment operator
- */
-CMeasurementPrefix &CMeasurementPrefix::operator=(const CMeasurementPrefix &other)
-{
-    if (this == &other) return *this;
-    this->m_name = other.m_name;
-    this->m_symbol= other.m_symbol;
-    this->m_factor = other.m_factor;
-    return *this;
-}
-
-/*
  * Equal?
  */
 bool CMeasurementPrefix::operator ==(const CMeasurementPrefix &other) const
@@ -104,21 +76,6 @@ CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &base, const CMeasurem
 CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &other) :
     m_name(other.m_name), m_symbol(other.m_symbol), m_epsilon(other.m_epsilon), m_displayDigits(other.m_displayDigits), m_prefix(other.m_prefix), m_converter(other.m_converter)
 {
-}
-
-/*
- * Assigment operator
- */
-CMeasurementUnit &CMeasurementUnit::operator =(const CMeasurementUnit &other)
-{
-    if (this == &other) return *this; // Same object? Yes, so skip assignment, and just return *this
-    this->m_name = other.m_name;
-    this->m_symbol = other.m_symbol;
-    this->m_prefix = other.m_prefix;
-    this->m_displayDigits = other.m_displayDigits;
-    this->m_epsilon = other.m_epsilon;
-    this->m_converter = other.m_converter;
-    return *this;
 }
 
 /*

@@ -25,11 +25,6 @@ public:
     CAngle() : CPhysicalQuantity(0, CAngleUnit::defaultUnit()) {}
 
     /*!
-     * \brief Copy constructor from base type
-     */
-    CAngle(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
-
-    /*!
      * \brief Init by double value
      * \param value
      * \param unit

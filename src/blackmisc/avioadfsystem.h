@@ -122,17 +122,6 @@ public:
     }
 
     /*!
-     * \brief Assigment operator =
-     * \param otherSystem
-     * \return
-     */
-    CAdfSystem &operator =(const CAdfSystem &otherSystem)
-    {
-        this->CModulator::operator =(otherSystem);
-        return *this;
-    }
-
-    /*!
      * \brief operator ==
      * \param otherSystem
      * \return

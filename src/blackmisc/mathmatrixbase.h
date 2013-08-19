@@ -141,18 +141,6 @@ public:
     }
 
     /*!
-     * \brief Assigment operator =
-     * \param other
-     * \return
-     */
-    CMatrixBase &operator =(const CMatrixBase &other)
-    {
-        if (this == &other) return *this;
-        this->m_matrix = other.m_matrix;
-        return *this;
-    }
-
-    /*!
      * \brief Operator *=
      * \param factor
      * \return

@@ -133,17 +133,6 @@ public:
     }
 
     /*!
-     * \brief Assigment operator =
-     * \param other
-     * \return
-     */
-    CNavSystem &operator =(const CNavSystem &other)
-    {
-        this->CModulator::operator =(other);
-        return *this;
-    }
-
-    /*!
      * \brief operator ==
      * \param other
      * \return

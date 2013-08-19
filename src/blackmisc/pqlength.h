@@ -24,11 +24,6 @@ public:
      */
     CLength() : CPhysicalQuantity(0, CLengthUnit::defaultUnit()) {}
 
-    /**
-     *\brief Copy constructor from base type
-     */
-    CLength(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
-
     /*!
      *\brief Init by double value
      * \param value
