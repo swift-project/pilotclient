@@ -612,7 +612,7 @@ public:
      */
     static const CPressureUnit &bar()
     {
-        static CPressureUnit bar(QT_TRANSLATE_NOOP("CMeasurementUnit", "bar"), "bar", 1000, 1, 1E5);
+        static CPressureUnit bar(QT_TRANSLATE_NOOP("CMeasurementUnit", "bar"), "bar", 1000, 1);
         return bar;
     }
 
@@ -622,7 +622,7 @@ public:
      */
     static const CPressureUnit &mbar()
     {
-        static CPressureUnit bar(CMeasurementPrefix::m(), bar(), 1, 1E2);
+        static CPressureUnit bar(CMeasurementPrefix::m(), bar(), 1);
         return bar;
     }
 
