@@ -35,7 +35,7 @@ public:
      * \brief Constructor
      * \param angle
      */
-    CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
+    explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
     /*!
      * \brief Init by double value

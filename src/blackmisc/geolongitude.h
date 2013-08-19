@@ -32,7 +32,7 @@ public:
      * \brief Constructor
      * \param angle
      */
-    CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
+    explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
     /*!
      * \brief Init by double value
