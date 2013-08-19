@@ -3,7 +3,7 @@ QT       += core dbus
 TARGET = sample_quantities_avionics_dbus
 TEMPLATE = app
 
-CONFIG   += console
+CONFIG   += console c++11
 CONFIG   -= app_bundle
 
 # Causes nmake to run qdbusxml2cpp to automatically generate the dbus adaptor and interface classes,

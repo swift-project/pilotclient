@@ -3,7 +3,7 @@ QT       += core dbus
 TARGET = blackmisc_cpp2xml
 TEMPLATE = lib
 
-CONFIG += plugin
+CONFIG += plugin c++11
 
 DEPENDPATH += . ../../src/blackmisc
 INCLUDEPATH += . ../../src

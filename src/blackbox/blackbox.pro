@@ -6,6 +6,7 @@ INCLUDEPATH += . ..
 
 TARGET = blackbox
 TEMPLATE = app
+CONFIG += c++11
 
 SOURCES += *.cpp
 HEADERS += *.h

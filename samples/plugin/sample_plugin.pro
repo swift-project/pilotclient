@@ -3,7 +3,7 @@ QT       -= gui
 
 TARGET = sample_plugin
 TEMPLATE = lib
-CONFIG += plugin
+CONFIG += plugin c++11
 
 DEPENDPATH += . ../../src
 INCLUDEPATH += . ../../src

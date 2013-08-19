@@ -4,7 +4,7 @@ QT       -= gui
 TARGET = com_server
 TEMPLATE = app
 
-CONFIG   += console
+CONFIG   += console c++11
 CONFIG   -= app_bundle
 
 DEPENDPATH += . ../../src

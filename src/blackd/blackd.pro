@@ -5,6 +5,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = blackd
 TEMPLATE = app
+CONFIG += c++11
 
 DEPENDPATH += . ..
 INCLUDEPATH += ..

@@ -622,8 +622,8 @@ public:
      */
     static const CPressureUnit &mbar()
     {
-        static CPressureUnit bar(CMeasurementPrefix::m(), bar(), 1);
-        return bar;
+        static CPressureUnit mbar(CMeasurementPrefix::m(), bar(), 1);
+        return mbar;
     }
 
     /*!
