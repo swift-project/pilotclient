@@ -135,7 +135,7 @@ public:
      */
     static const CLengthUnit &SM()
     {
-        static CLengthUnit sm(QT_TRANSLATE_NOOP("CMeasurementUnit", "statute miles"), "SM", 1609.3472, 3);
+        static CLengthUnit sm(QT_TRANSLATE_NOOP("CMeasurementUnit", "statute mile"), "SM", 1609.3472, 3);
         return sm;
     }
 
@@ -253,7 +253,7 @@ public:
      */
     static const CAngleUnit &sexagesimalDeg()
     {
-        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degrees minutes seconds"), "DMS", new SubdivisionConverter2<60, 100, 60, 100>, 0);
+        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second"), "DMS", new SubdivisionConverter2<60, 100, 60, 100>, 0);
         return deg;
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2'%L3\"");
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%-L1 %L2'%L3\"");
@@ -265,7 +265,7 @@ public:
      */
     static const CAngleUnit &sexagesimalDegMin()
     {
-        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degrees minutes"), "MinDec", new SubdivisionConverter<60, 100>, 2);
+        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute"), "MinDec", new SubdivisionConverter<60, 100>, 2);
         return deg;
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2'");
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2'");
@@ -602,7 +602,7 @@ public:
      */
     static const CPressureUnit &psi()
     {
-        static CPressureUnit psi(QT_TRANSLATE_NOOP("CMeasurementUnit", "pounds per square inch"), "psi", 68.948, 2);
+        static CPressureUnit psi(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound per square inch"), "psi", 68.948, 2);
         return psi;
     }
 
@@ -814,7 +814,7 @@ public:
      */
     static const CSpeedUnit &m_s()
     {
-        static CSpeedUnit ms(QT_TRANSLATE_NOOP("CMeasurementUnit", "meters/second"), "m/s", 1);
+        static CSpeedUnit ms(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second"), "m/s", 1);
         return ms;
     }
 
@@ -834,7 +834,7 @@ public:
      */
     static const CSpeedUnit &NM_h()
     {
-        static CSpeedUnit NMh(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical miles/hour"), "NM/h", 1852.0 / 3600.0, 1);
+        static CSpeedUnit NMh(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile per hour"), "NM/h", 1852.0 / 3600.0, 1);
         return NMh;
     }
 
@@ -844,7 +844,7 @@ public:
      */
     static const CSpeedUnit &ft_s()
     {
-        static CSpeedUnit fts(QT_TRANSLATE_NOOP("CMeasurementUnit", "feet/second"), "ft/s", 0.3048, 0);
+        static CSpeedUnit fts(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second"), "ft/s", 0.3048, 0);
         return fts;
     }
 
@@ -854,7 +854,7 @@ public:
      */
     static const CSpeedUnit &ft_min()
     {
-        static CSpeedUnit ftmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "feet/minute"), "ft/min", 0.3048 / 60.0, 0);
+        static CSpeedUnit ftmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per minute"), "ft/min", 0.3048 / 60.0, 0);
         return ftmin;
     }
 
@@ -864,7 +864,7 @@ public:
      */
     static const CSpeedUnit &km_h()
     {
-        static CSpeedUnit kmh(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometers/hour"), "km/h", 1.0 / 3.6, 1);
+        static CSpeedUnit kmh(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer per hour"), "km/h", 1.0 / 3.6, 1);
         return kmh;
     }
 
@@ -1020,7 +1020,7 @@ public:
      */
     static const CTimeUnit &hms()
     {
-        static CTimeUnit hms(QT_TRANSLATE_NOOP("CMeasurementUnit", "hours minutes seconds"), "hms", new SubdivisionConverter2<60, 100, 60, 100>(3600), 0);
+        static CTimeUnit hms(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second"), "hms", new SubdivisionConverter2<60, 100, 60, 100>(3600), 0);
         return hms;
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m%L3s");
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%-L1h%L2m%L3s");
@@ -1031,7 +1031,7 @@ public:
      */
     static const CTimeUnit &hrmin()
     {
-        static CTimeUnit hrmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "hours minutes"), "hm", new SubdivisionConverter<60, 100>(3600), 1);
+        static CTimeUnit hrmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute"), "hm", new SubdivisionConverter<60, 100>(3600), 1);
         return hrmin;
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m");
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1h%L2m");
@@ -1042,7 +1042,7 @@ public:
      */
     static const CTimeUnit &minsec()
     {
-        static CTimeUnit minsec(QT_TRANSLATE_NOOP("CMeasurementUnit", "minutes seconds"), "minsec", new SubdivisionConverter<60, 100>(60), 0);
+        static CTimeUnit minsec(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second"), "minsec", new SubdivisionConverter<60, 100>(60), 0);
         return minsec;
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1m%L2s");
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1m%L2s");
@@ -1120,7 +1120,7 @@ public:
      */
     static const CAccelerationUnit &m_s2()
     {
-        static CAccelerationUnit ms2(QT_TRANSLATE_NOOP("CMeasurementUnit", "meters/second^2"), QT_TRANSLATE_NOOP("CMeasurementUnit", "m/s^2"), 1, 1);
+        static CAccelerationUnit ms2(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second per second"), QT_TRANSLATE_NOOP("CMeasurementUnit", "m/s^2"), 1, 1);
         return ms2;
     }
 
@@ -1130,7 +1130,7 @@ public:
      */
     static const CAccelerationUnit &ft_s2()
     {
-        static CAccelerationUnit fts2(QT_TRANSLATE_NOOP("CMeasurementUnit", "feet/second^2"), QT_TRANSLATE_NOOP("CMeasurementUnit", "ft/s^2"), 3.28084, 0);
+        static CAccelerationUnit fts2(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second per second"), QT_TRANSLATE_NOOP("CMeasurementUnit", "ft/s^2"), 3.28084, 0);
         return fts2;
     }
 
