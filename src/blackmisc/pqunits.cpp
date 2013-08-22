@@ -24,7 +24,7 @@ QString CAngleUnit::makeRoundedQString(double value, int digits, bool i18n) cons
         double de = CMath::trunc(value);
         double mi = CMath::trunc((value - de) * 100.0);
         double se = CMath::trunc((value - de - mi / 100.0) * 1000000) / 100.0;
-        const char *fmt = value < 0 ? "-%L1 %L2'%L3\"" : "%L1 %L2'%L3\"";
+        const char *fmt = value < 0 ? "-%L1 %L2 %L3" : "%L1 %L2 %L3";
         s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
         s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 2, 'f', digits, '0');
     }
@@ -32,7 +32,7 @@ QString CAngleUnit::makeRoundedQString(double value, int digits, bool i18n) cons
     {
         double de = CMath::trunc(value);
         double mi = CMath::trunc((value - de) * 100.0);
-        const char *fmt = value < 0 ? "-%L1 %L2'" : "%L1 %L2'";
+        const char *fmt = value < 0 ? "-%L1 %L2" : "%L1 %L2";
         s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
         s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 2, 'f', digits, '0');
     }

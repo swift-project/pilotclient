@@ -257,8 +257,8 @@ public:
     {
         static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second"), "DMS", new SubdivisionConverter2<60, 100, 60, 100>, 0);
         return deg;
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2'%L3\"");
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%-L1 %L2'%L3\"");
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2 %L3");
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2 %L3");
     }
 
     /*!
@@ -269,8 +269,8 @@ public:
     {
         static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute"), "MinDec", new SubdivisionConverter<60, 100>, 2);
         return deg;
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2'");
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2'");
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2");
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2");
     }
 
     /*!
