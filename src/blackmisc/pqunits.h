@@ -488,13 +488,23 @@ public:
     }
 
     /*!
-     * \brief Tonne, aka metric tonne (1000kg)
+     * \brief Tonne, aka metric ton (1000kg)
      * \return
      */
-    static const CMassUnit &t()
+    static const CMassUnit &tonne()
     {
         static CMassUnit t(QT_TRANSLATE_NOOP("CMeasurementUnit", "tonne"), "t", 1000.0, 3);
         return t;
+    }
+
+    /*!
+     * \brief Short ton (2000lb) used in the United States
+     * \return
+     */
+    static const CMassUnit &shortTon()
+    {
+        static CMassUnit ton(QT_TRANSLATE_NOOP("CMeasurementUnit", "short ton"), "ton", 907.18474, 3);
+        return ton;
     }
 
     /*!
@@ -519,7 +529,8 @@ public:
             u.append(CMassUnit::g());
             u.append(CMassUnit::kg());
             u.append(CMassUnit::lb());
-            u.append(CMassUnit::t());
+            u.append(CMassUnit::tonne());
+            u.append(CMassUnit::shortTon());
         }
         return u;
     }

@@ -78,7 +78,7 @@ int CSamplesPhysicalQuantities::samples()
     a4.switchUnit(CAngleUnit::deg());
     qDebug() << a3 << a4;
 
-    CMass w1(1, CMassUnit::t());
+    CMass w1(1, CMassUnit::tonne());
     CMass w2(w1);
     w2.switchUnit(CMassUnit::lb());
     qDebug() << w1 << w1.valueRoundedWithUnit(CMassUnit::kg()) << w2;

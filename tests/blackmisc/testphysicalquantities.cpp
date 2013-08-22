@@ -109,7 +109,7 @@ void CTestPhysicalQuantities::massTests()
 {
     CMass w1(1000, CMassUnit::kg());
     CMass w2(w1.value(), CMassUnit::kg());
-    w2.switchUnit(CMassUnit::t());
+    w2.switchUnit(CMassUnit::tonne());
     QVERIFY2(w2.value() == 1, "1tonne shall be 1000kg");
     w2.switchUnit(CMassUnit::lb());
     QVERIFY2(w2.valueRounded(2) == 2204.62, "1tonne shall be 2204pounds");
