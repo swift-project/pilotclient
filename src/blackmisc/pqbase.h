@@ -377,7 +377,6 @@ private:
     QString m_symbol; //!< unit name, e.g. "m"
     double m_epsilon; //!< values with differences below epsilon are the equal
     int m_displayDigits; //!< standard rounding for string conversions
-    CMeasurementPrefix m_prefix; //!< multiplier (kilo, Mega)
     QSharedDataPointer<Converter> m_converter; //!< strategy pattern allows an arbitrary conversion method as per object
 
 protected:
@@ -419,7 +418,7 @@ protected:
      * \param displayDigits
      * \param epsilon
      */
-    CMeasurementUnit(const CMeasurementUnit &base, const CMeasurementPrefix &prefix, int displayDigits = 2, double epsilon = 1E-10);
+    CMeasurementUnit(const QString &name, const QString &symbol, const CMeasurementUnit &base, const CMeasurementPrefix &prefix, int displayDigits = 2, double epsilon = 1E-10);
 
     /*!
      * \brief Copy constructor
@@ -504,8 +503,7 @@ public:
      */
     QString getName(bool i18n = false) const
     {
-        QString base = i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_name.toStdString().c_str()) : this->m_name;
-        return this->m_prefix.getName(i18n) + base;
+        return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_name.toStdString().c_str()) : this->m_name;
     }
 
     /*!
@@ -515,8 +513,7 @@ public:
      */
     QString getSymbol(bool i18n = false) const
     {
-        QString base = i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_symbol.toStdString().c_str()) : this->m_symbol;
-        return this->m_prefix.getSymbol(i18n) + base;
+        return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_symbol.toStdString().c_str()) : this->m_symbol;
     }
 
     /*!
@@ -562,15 +559,6 @@ public:
     int getDisplayDigits() const
     {
         return this->m_displayDigits;
-    }
-
-    /*!
-     * \brief Multiplier such as "kilo"
-     * \return
-     */
-    CMeasurementPrefix getPrefix() const
-    {
-        return this->m_prefix;
     }
 
     /*!

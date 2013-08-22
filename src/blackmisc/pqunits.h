@@ -43,13 +43,15 @@ private:
 
     /*!
      * \brief Constructor length unit
+     * \param name
+     * \param symbol
      * \param prefix
      * \param base
      * \param displayDigits
      * \param epsilon
      */
-    CLengthUnit(const CMeasurementPrefix &prefix, const CLengthUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(base, prefix, displayDigits, epsilon) {}
+    CLengthUnit(const QString &name, const QString &symbol, const CMeasurementPrefix &prefix, const CLengthUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, base, prefix, displayDigits, epsilon) {}
 
 public:
     /*!
@@ -105,7 +107,7 @@ public:
      */
     static const CLengthUnit &km()
     {
-        static CLengthUnit km(CMeasurementPrefix::k(), m(), 3);
+        static CLengthUnit km(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer"), "km", CMeasurementPrefix::k(), m(), 3);
         return km;
     }
 
@@ -115,7 +117,7 @@ public:
      */
     static const CLengthUnit &cm()
     {
-        static CLengthUnit cm(CMeasurementPrefix::c(), m(), 1);
+        static CLengthUnit cm(QT_TRANSLATE_NOOP("CMeasurementUnit", "centimeter"), "cm", CMeasurementPrefix::c(), m(), 1);
         return cm;
     }
 
@@ -320,13 +322,15 @@ private:
 
     /*!
      * Constructor frequency unit
+     * \param name
+     * \param symbol
      * \param prefix
      * \param base
      * \param displayDigits
      * \param epsilon
      */
-    CFrequencyUnit(const CMeasurementPrefix &prefix, const CFrequencyUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(base, prefix, displayDigits, epsilon) {}
+    CFrequencyUnit(const QString &name, const QString &symbol, const CMeasurementPrefix &prefix, const CFrequencyUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, base, prefix, displayDigits, epsilon) {}
 
 public:
     /*!
@@ -362,7 +366,7 @@ public:
      */
     static const CFrequencyUnit &kHz()
     {
-        static CFrequencyUnit kHz(CMeasurementPrefix::k(), Hz(), 1);
+        static CFrequencyUnit kHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilohertz"), "kHz", CMeasurementPrefix::k(), Hz(), 1);
         return kHz;
     }
 
@@ -372,7 +376,7 @@ public:
      */
     static const CFrequencyUnit &MHz()
     {
-        static CFrequencyUnit MHz(CMeasurementPrefix::M(), Hz(), 2);
+        static CFrequencyUnit MHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "megahertz"), "MHz", CMeasurementPrefix::M(), Hz(), 2);
         return MHz;
     }
 
@@ -382,7 +386,7 @@ public:
      */
     static const CFrequencyUnit &GHz()
     {
-        static CFrequencyUnit GHz(CMeasurementPrefix::G(), Hz(), 2);
+        static CFrequencyUnit GHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "gigahertz"), "GHz", CMeasurementPrefix::G(), Hz(), 2);
         return GHz;
     }
 
@@ -435,13 +439,15 @@ private:
 
     /*!
      * \brief Constructor mass units
+     * \param name
+     * \param symbol
      * \param prefix
      * \param base
      * \param displayDigits
      * \param epsilon
      */
-    CMassUnit(const CMeasurementPrefix &prefix, const CMassUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(base, prefix, displayDigits, epsilon) {}
+    CMassUnit(const QString &name, const QString &symbol, const CMeasurementPrefix &prefix, const CMassUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, base, prefix, displayDigits, epsilon) {}
 
 public:
     /*!
@@ -467,7 +473,7 @@ public:
      */
     static const CMassUnit &kg()
     {
-        static CMassUnit kg(CMeasurementPrefix::k(), g(), 1);
+        static CMassUnit kg(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilogram"), "kg", CMeasurementPrefix::k(), g(), 1);
         return kg;
     }
 
@@ -550,13 +556,15 @@ private:
 
     /*!
      * \brief Pressure unit constructor
+     * \param name
+     * \param symbol
      * \param prefix
      * \param base
      * \param displayDigits
      * \param epsilon
      */
-    CPressureUnit(const CMeasurementPrefix &prefix, const CPressureUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(base, prefix, displayDigits, epsilon) {}
+    CPressureUnit(const QString &name, const QString &symbol, const CMeasurementPrefix &prefix, const CPressureUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, base, prefix, displayDigits, epsilon) {}
 
 public:
     /*!
@@ -592,7 +600,7 @@ public:
      */
     static const CPressureUnit &hPa()
     {
-        static CPressureUnit hPa(CMeasurementPrefix::h(), Pa());
+        static CPressureUnit hPa(QT_TRANSLATE_NOOP("CMeasurementUnit", "hectopascal"), "hPa", CMeasurementPrefix::h(), Pa());
         return hPa;
     }
 
@@ -622,7 +630,7 @@ public:
      */
     static const CPressureUnit &mbar()
     {
-        static CPressureUnit mbar(CMeasurementPrefix::m(), bar(), 1);
+        static CPressureUnit mbar(QT_TRANSLATE_NOOP("CMeasurementUnit", "millibar"), "mbar", CMeasurementPrefix::m(), bar(), 1);
         return mbar;
     }
 
@@ -919,13 +927,15 @@ private:
 
     /*!
      * \brief Time unit constructor
+     * \param name
+     * \param symbol
      * \param prefix
      * \param base
      * \param displayDigits
      * \param epsilon
      */
-    CTimeUnit(const CMeasurementPrefix &prefix, const CTimeUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(base, prefix, displayDigits, epsilon) {}
+    CTimeUnit(const QString &name, const QString &symbol, const CMeasurementPrefix &prefix, const CTimeUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, base, prefix, displayDigits, epsilon) {}
 
     /*!
      * \brief Time unit constructor
@@ -981,7 +991,7 @@ public:
      */
     static const CTimeUnit &ms()
     {
-        static CTimeUnit ms(CMeasurementPrefix::m(), s(), 0);
+        static CTimeUnit ms(QT_TRANSLATE_NOOP("CMeasurementUnit", "millisecond"), "ms", CMeasurementPrefix::m(), s(), 0);
         return ms;
     }
 

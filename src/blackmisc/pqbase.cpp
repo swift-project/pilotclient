@@ -42,7 +42,7 @@ bool CMeasurementPrefix::operator !=(const CMeasurementPrefix &other) const
  * Constructor
  */
 CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, double factor, int displayDigits, double epsilon) :
-    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_prefix(CMeasurementPrefix::One()), m_converter(new LinearConverter(factor))
+    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(new LinearConverter(factor))
 {
 }
 
@@ -50,7 +50,7 @@ CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, d
  * Constructor
  */
 CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, double factor, double offset, int displayDigits, double epsilon) :
-    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_prefix(CMeasurementPrefix::One()), m_converter(new AffineConverter(factor, offset))
+    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(new AffineConverter(factor, offset))
 {
 }
 
@@ -58,15 +58,15 @@ CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, d
  * Constructor
  */
 CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, Converter *converter, int displayDigits, double epsilon) :
-    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_prefix(CMeasurementPrefix::One()), m_converter(converter)
+    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(converter)
 {
 }
 
 /*
  * Constructor
  */
-CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &base, const CMeasurementPrefix &prefix, int displayDigits, double epsilon) :
-    m_name(base.m_name), m_symbol(base.m_symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_prefix(prefix), m_converter(base.m_converter->clone(prefix))
+CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, const CMeasurementUnit &base, const CMeasurementPrefix &prefix, int displayDigits, double epsilon) :
+    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(base.m_converter->clone(prefix))
 {
 }
 
@@ -74,7 +74,7 @@ CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &base, const CMeasurem
  * Copy constructor
  */
 CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &other) :
-    m_name(other.m_name), m_symbol(other.m_symbol), m_epsilon(other.m_epsilon), m_displayDigits(other.m_displayDigits), m_prefix(other.m_prefix), m_converter(other.m_converter)
+    m_name(other.m_name), m_symbol(other.m_symbol), m_epsilon(other.m_epsilon), m_displayDigits(other.m_displayDigits), m_converter(other.m_converter)
 {
 }
 
@@ -84,7 +84,7 @@ CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &other) :
 bool CMeasurementUnit::operator ==(const CMeasurementUnit &other) const
 {
     if (this == &other) return true;
-    return this->m_prefix == other.m_prefix && this->m_name == other.m_name;
+    return this->m_name == other.m_name;
 }
 
 /*
