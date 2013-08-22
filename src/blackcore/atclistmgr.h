@@ -13,11 +13,6 @@
 #include "blackmisc/atclist.h"
 #include <QObject>
 
-namespace BlackCoreTest
-{
-    class EnableTesting;
-}
-
 namespace BlackCore
 {
 
@@ -78,13 +73,6 @@ namespace BlackCore
         void remove(const QString& callsign);
         void clear();
         /*! \} */
-
-    public:
-        /*!
-         * Constructor that does not connect INetwork signals to CAtcListManager slots.
-         * \warning Only used for testing purposes.
-         */
-        explicit CAtcListManager(const BlackCoreTest::EnableTesting&);
 
     private:
         BlackMisc::CAtcList m_list;

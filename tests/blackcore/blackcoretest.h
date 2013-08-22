@@ -13,12 +13,4 @@
  * Add any new tests to TestMain::unitMain as shown there.
  */
 
-namespace BlackCoreTest
-{
-    /*!
-     * An "option type" used to alter the construction of objects under test.
-     */
-    class EnableTesting {};
-}
-
 #endif // guard

@@ -4,6 +4,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "testnetmediators.h"
+#include "blackmisc/context.h"
 #include <QObject>
 
 namespace BlackCoreTest
@@ -14,26 +15,36 @@ namespace BlackCoreTest
     using namespace BlackMisc::PhysicalQuantities;
     using namespace BlackMisc::Geo;
 
+    void CTestNetMediators::initTestCase()
+    {
+        BlackMisc::IContext::getInstance().setSingleton<INetwork>(&m_networkDummy);
+    }
+
+    void CTestNetMediators::cleanupTestCase()
+    {
+        BlackMisc::IContext::getInstance().releaseSingleton<INetwork>();
+    }
+
     void CTestNetMediators::atcListManagerTest()
     {
-        CAtcListManager mgr ( (EnableTesting()) ); //extra pair of parentheses to disambiguate most vexing parse
+        CAtcListManager mgr;
         AtcListConsumer cons;
 
         QObject::connect(&mgr, &IAtcListManager::listChanged, &cons, &AtcListConsumer::listChanged);
 
         QVERIFY(cons.m_list.constMap().size() == 0);
-        mgr.update("EGLL_TWR", CFrequency(118.7, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(50, CLengthUnit::m()));
+        emit m_networkDummy.atcPositionUpdate("EGLL_TWR", CFrequency(118.7, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(50, CLengthUnit::m()));
         QVERIFY(cons.m_list.constMap().size() == 1);
-        mgr.update("EGLL_GND", CFrequency(121.9, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(20, CLengthUnit::m()));
+        emit m_networkDummy.atcPositionUpdate("EGLL_GND", CFrequency(121.9, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(20, CLengthUnit::m()));
         QVERIFY(cons.m_list.constMap().size() == 2);
-        mgr.update("EGLL_TWR", CFrequency(118.5, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(50, CLengthUnit::m()));
+        emit m_networkDummy.atcPositionUpdate("EGLL_TWR", CFrequency(118.5, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(50, CLengthUnit::m()));
         QVERIFY(cons.m_list.constMap().size() == 2);
-        mgr.remove("EGLL_TWR");
+        emit m_networkDummy.atcDisconnected("EGLL_TWR");
         QVERIFY(cons.m_list.constMap().size() == 1);
-        mgr.clear();
+        emit m_networkDummy.connectionStatusDisconnected();
         QVERIFY(cons.m_list.constMap().size() == 0);
 
-        mgr.update("EGLL_TWR", CFrequency(118.5, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(50, CLengthUnit::m()));
+        emit m_networkDummy.atcPositionUpdate("EGLL_TWR", CFrequency(118.5, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(50, CLengthUnit::m()));
         QVERIFY(cons.m_list.constMap().contains("EGLL_TWR"));
         QVERIFY(cons.m_list.constMap()["EGLL_TWR"].getCallsign() == "EGLL_TWR");
         QVERIFY(cons.m_list.constMap()["EGLL_TWR"].getFrequency() == CFrequency(118.5, CFrequencyUnit::MHz()));

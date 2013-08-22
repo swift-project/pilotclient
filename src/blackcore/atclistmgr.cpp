@@ -6,10 +6,6 @@
 #include "atclistmgr.h"
 #include "network.h"
 
-BlackCore::CAtcListManager::CAtcListManager(const BlackCoreTest::EnableTesting&)
-{
-}
-
 BlackCore::CAtcListManager::CAtcListManager()
 {
     INetwork *net = BlackMisc::IContext::getInstance().singleton<INetwork>();

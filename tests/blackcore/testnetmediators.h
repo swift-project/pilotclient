@@ -8,6 +8,7 @@
 
 #include "blackcore/atclistmgr.h"
 #include "blackcoretest.h"
+#include "blackcore/network.h"
 #include <QtTest/QtTest>
 
 namespace BlackCoreTest
@@ -29,9 +30,22 @@ namespace BlackCoreTest
 
     private slots:
         /*!
+         * Called before the first test.
+         */
+        void initTestCase();
+
+        /*!
          * Test CAtcListManager
          */
         void atcListManagerTest();
+
+        /*!
+         * Called after the last test.
+         */
+        void cleanupTestCase();
+
+    private:
+        BlackCore::NetworkDummy m_networkDummy;
     };
 
     /*!

@@ -104,6 +104,36 @@ namespace BlackCore
         //TODO void windDataReceived(...);
     };
 
+    /*!
+     * Dummy implementation of INetwork used for testing.
+     */
+    class NetworkDummy : public INetwork
+    {
+    public: //INetwork slots overrides
+        virtual void setServerDetails(const QString&, quint16) {}
+        virtual void setUserCredentials(const QString&, const QString&) {}
+        virtual void setCallsign(const QString&) {}
+        virtual void setRealName(const QString&) {}
+        virtual void initiateConnection() {}
+        virtual void terminateConnection() {}
+        virtual void sendPrivateTextMessage(const QString&, const QString&) {}
+        virtual void sendRadioTextMessage(const QVector<BlackMisc::PhysicalQuantities::CFrequency>&, const QString&) {}
+        virtual void sendIpQuery() {}
+        virtual void sendFreqQuery(const QString&) {}
+        virtual void sendServerQuery(const QString&) {}
+        virtual void sendAtcQuery(const QString&) {}
+        virtual void sendAtisQuery(const QString&) {}
+        virtual void sendNameQuery(const QString&) {}
+        virtual void sendCapabilitiesQuery(const QString&) {}
+        virtual void replyToFreqQuery(const QString&, const BlackMisc::PhysicalQuantities::CFrequency&) {}
+        virtual void replyToNameQuery(const QString&, const QString&) {}
+        virtual void requestPlaneInfo(const QString&) {}
+        virtual void sendPlaneInfo(const QString&, const QString&, const QString&, const QString&) {}
+        virtual void ping(const QString&) {}
+        virtual void requestMetar(const QString&) {}
+        virtual void requestWeatherData(const QString&) {}
+    };
+
 } //namespace BlackCore
 
 #endif //BLACKCORE_NETWORK_H
