@@ -7,10 +7,18 @@
 #define BLACKCORETEST_H
 
 /*!
- * @namespace BlackCoreTest
+ * \namespace BlackCoreTest
  * Unit tests for BlackCore. Unit tests do have their own namespace, so
  * the regular namespace BlackCore is completely free of unit tests.
  * Add any new tests to TestMain::unitMain as shown there.
  */
+
+namespace BlackCoreTest
+{
+    /*!
+     * An "option type" used to alter the construction of objects under test.
+     */
+    class EnableTesting {};
+}
 
 #endif // guard
