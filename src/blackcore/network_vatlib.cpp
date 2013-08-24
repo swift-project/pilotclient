@@ -187,7 +187,7 @@ namespace BlackCore
             Cvatlib_Network::PilotConnectionInfo info;
             info.callsign = m_callsign.data();
             info.name = m_realname.data();
-            info.rating = Cvatlib_Network::pilotRating_Unknown; //TODO
+            info.rating = Cvatlib_Network::pilotRating_Student; //TODO
             info.sim = Cvatlib_Network::simType_XPlane; //TODO
             
             m_net->SetPilotLoginInfo(toFSD(m_serverHost).data(), m_serverPort,
