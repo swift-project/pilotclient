@@ -168,6 +168,34 @@ protected:
     virtual void unmarshallFromDbus(const QDBusArgument &) = 0;
 };
 
+/*!
+ * Non-member non-friend operator for streaming T objects to QDBusArgument.
+ * Needed because we can't rely on the friend operator in some cases due to
+ * an unrelated template for streaming Container<T> in QtDBus/qdbusargument.h
+ * which matches more types than it can actually handle.
+ * \param argument
+ * \param uc
+ */
+template <class T> typename std::enable_if<std::is_base_of<CStreamable, T>::value, QDBusArgument>::type const&
+operator>>(const QDBusArgument &argument, T &uc)
+{
+    return argument >> static_cast<CStreamable&>(uc);
+}
+
+/*!
+ * Non-member non-friend operator for streaming T objects from QDBusArgument.
+ * Needed because we can't rely on the friend operator in some cases due to
+ * an unrelated template for streaming Container<T> in QtDBus/qdbusargument.h
+ * which matches more types than it can actually handle.
+ * \param argument
+ * \param uc
+ */
+template <class T> typename std::enable_if<std::is_base_of<CStreamable, T>::value, QDBusArgument>::type&
+operator<<(QDBusArgument &argument, T &uc)
+{
+    return argument << static_cast<CStreamable const&>(uc);
+}
+
 } // namespace
 
 #endif // guard

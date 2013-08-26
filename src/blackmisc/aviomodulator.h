@@ -19,34 +19,6 @@ namespace Aviation
  */
 template <class AVIO> class CModulator : public CAvionicsBase
 {
-    /*!
-     * \brief Unmarshalling operator >>, DBus to object
-     * \param argument
-     * \param uc
-     * \return
-     */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, AVIO &uc)
-    {
-        // If I do not have the method here, DBus metasystem tries to stream against
-        // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
-        // Once someone solves this, this methods should go and the
-        // CStreamable signature should be used
-        CStreamable &sf = uc;
-        return argument >> sf;
-    }
-
-    /*!
-     * \brief Marshalling operator <<, object to DBus
-     * \param argument
-     * \param pq
-     * \return
-     */
-    friend QDBusArgument &operator<<(QDBusArgument &argument, const AVIO &uc)
-    {
-        const CStreamable &sf = uc;
-        return argument << sf;
-    }
-
 private:
     BlackMisc::PhysicalQuantities::CFrequency m_frequencyActive; //!< active frequency
     BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency

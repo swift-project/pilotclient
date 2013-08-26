@@ -21,34 +21,6 @@ class CMatrix3x1;
  */
 template <class ImplVector> class CVector3DBase : public CStreamable
 {
-    /*!
-     * \brief Unmarshalling operator >>, DBus to object
-     * \param argument
-     * \param uc
-     * \return
-     */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, ImplVector &uc)
-    {
-        // If I do not have the method here, DBus metasystem tries to stream against
-        // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
-        // Once someone solves this, this methods should go and the
-        // CStreamable signature should be used
-        CStreamable &sf = uc;
-        return argument >> sf;
-    }
-
-    /*!
-     * \brief Marshalling operator <<, object to DBus
-     * \param argument
-     * \param pq
-     * \return
-     */
-    friend QDBusArgument &operator<<(QDBusArgument &argument, const ImplVector &uc)
-    {
-        const CStreamable &sf = uc;
-        return argument << sf;
-    }
-
 private:
     /*!
      * \brief Easy access to derived class (CRTP template parameter)

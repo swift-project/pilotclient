@@ -16,34 +16,6 @@ namespace Geo
  */
 template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
 {
-    /*!
-     * \brief Unmarshalling operator >>, DBus to object
-     * \param argument
-     * \param uc
-     * \return
-     */
-    friend const QDBusArgument &operator>>(const QDBusArgument &argument, LATorLON &uc)
-    {
-        // If I do not have the method here, DBus metasystem tries to stream against
-        // a container: inline const QDBusArgument &operator>>(const QDBusArgument &arg, Container<T> &list)
-        // Once someone solves this, this methods should go and the
-        // CStreamable signature should be used
-        CStreamable &sf = uc;
-        return argument >> sf;
-    }
-
-    /*!
-     * \brief Marshalling operator <<, object to DBus
-     * \param argument
-     * \param pq
-     * \return
-     */
-    friend QDBusArgument &operator<<(QDBusArgument &argument, const LATorLON &uc)
-    {
-        const CStreamable &sf = uc;
-        return argument << sf;
-    }
-
 protected:
     /*!
      * \brief Default constructor
