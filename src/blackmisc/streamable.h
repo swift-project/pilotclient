@@ -2,7 +2,7 @@
 #define BLACKMISC_STREAMABLE_H
 
 #include "blackmisc/debug.h"
-#include <QDBusMetaType>
+#include <QtDBus/QDBusMetaType>
 #include <QString>
 #include <QtGlobal>
 #include <QDataStream>

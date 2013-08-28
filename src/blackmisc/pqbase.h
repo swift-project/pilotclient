@@ -10,7 +10,7 @@
 #include "blackmisc/debug.h"
 #include "blackmisc/mathematics.h"
 #include <QCoreApplication>
-#include <QDBusArgument>
+#include <QtDBus/QDBusArgument>
 #include <QString>
 #include <QtGlobal>
 #include <QDebug>

@@ -7,7 +7,7 @@
 #define BLACKMISC_PQUNITS_H
 
 #include "blackmisc/pqbase.h"
-#include <QDBusArgument>
+#include <QtDBus/QDBusArgument>
 #include <QList>
 #include <QtCore/qmath.h>
 #include <QTranslator>

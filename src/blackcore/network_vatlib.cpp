@@ -300,10 +300,7 @@ namespace BlackCore
     {
         try
         {
-            CFrequency freqCopy = freq;
-            freqCopy.switchUnit(CFrequencyUnit::MHz());
-
-            m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Freq, toFSD(callsign), toFSD(freqCopy.unitValueToQStringRounded(6)));
+            m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Freq, toFSD(callsign), toFSD(QString::number(freq.value(CFrequencyUnit::MHz()), 'f', 3)));
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }

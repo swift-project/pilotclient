@@ -1,10 +1,10 @@
-QT       += core
+QT       += core dbus
 QT       -= gui
 
 TARGET = sample_cli_client
 TEMPLATE = app
 
-CONFIG   += console
+CONFIG   += console c++11
 CONFIG   -= app_bundle
 
 DEPENDPATH += . ../../src

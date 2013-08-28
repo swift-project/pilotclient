@@ -10,7 +10,7 @@
 #include "blackmisc/pqbase.h"
 #include "blackmisc/pqunits.h"
 #include "blackmisc/debug.h"
-#include <QDBusMetaType>
+#include <QtDBus/QDBusMetaType>
 #include <QtGlobal>
 #include <QString>
 #include <QLocale>
