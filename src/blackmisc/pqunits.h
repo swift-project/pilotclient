@@ -227,7 +227,7 @@ public:
      * \param i18n
      * \return
      */
-    virtual QString makeRoundedQString(double value, int digits = -1, bool i18n = false) const;
+    virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Radians
@@ -255,7 +255,7 @@ public:
      */
     static const CAngleUnit &sexagesimalDeg()
     {
-        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second"), "DMS", new SubdivisionConverter2<60, 100, 60, 100>, 0);
+        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second"), "DMS", new SubdivisionConverter2<60, 100, 60, 100>, 4);
         return deg;
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2 %L3");
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2 %L3");
@@ -267,7 +267,7 @@ public:
      */
     static const CAngleUnit &sexagesimalDegMin()
     {
-        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute"), "MinDec", new SubdivisionConverter<60, 100>, 2);
+        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute"), "MinDec", new SubdivisionConverter<60, 100>, 4);
         return deg;
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2");
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2");
@@ -984,7 +984,7 @@ public:
      * \param i18n
      * \return
      */
-    virtual QString makeRoundedQString(double value, int digits = -1, bool i18n = false) const;
+    virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Second s
@@ -1041,7 +1041,7 @@ public:
      */
     static const CTimeUnit &hms()
     {
-        static CTimeUnit hms(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second"), "hms", new SubdivisionConverter2<60, 100, 60, 100>(3600), 0);
+        static CTimeUnit hms(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second"), "hms", new SubdivisionConverter2<60, 100, 60, 100>(3600), 4);
         return hms;
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m%L3s");
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%-L1h%L2m%L3s");
@@ -1052,7 +1052,7 @@ public:
      */
     static const CTimeUnit &hrmin()
     {
-        static CTimeUnit hrmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute"), "hm", new SubdivisionConverter<60, 100>(3600), 1);
+        static CTimeUnit hrmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute"), "hm", new SubdivisionConverter<60, 100>(3600), 3);
         return hrmin;
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m");
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1h%L2m");
@@ -1063,7 +1063,7 @@ public:
      */
     static const CTimeUnit &minsec()
     {
-        static CTimeUnit minsec(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second"), "minsec", new SubdivisionConverter<60, 100>(60), 0);
+        static CTimeUnit minsec(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second"), "minsec", new SubdivisionConverter<60, 100>(60), 2);
         return minsec;
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1m%L2s");
         (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1m%L2s");

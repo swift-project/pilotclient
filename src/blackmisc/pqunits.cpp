@@ -15,12 +15,14 @@ using BlackMisc::Math::CMath;
 /*
  * Rounded to QString
  */
-QString CAngleUnit::makeRoundedQString(double value, int digits, bool i18n) const
+QString CAngleUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
 {
     if (digits < 0) digits = this->getDisplayDigits();
     QString s;
     if ((*this) == CAngleUnit::sexagesimalDeg())
     {
+        digits -= 4;
+        Q_ASSERT(digits >= 0);
         double de = CMath::trunc(value);
         double mi = CMath::trunc((value - de) * 100.0);
         double se = CMath::trunc((value - de - mi / 100.0) * 1000000) / 100.0;
@@ -30,6 +32,8 @@ QString CAngleUnit::makeRoundedQString(double value, int digits, bool i18n) cons
     }
     else if ((*this) == CAngleUnit::sexagesimalDegMin())
     {
+        digits -= 2;
+        Q_ASSERT(digits >= 0);
         double de = CMath::trunc(value);
         double mi = CMath::trunc((value - de) * 100.0);
         const char *fmt = value < 0 ? "-%L1 %L2" : "%L1 %L2";
@@ -38,7 +42,7 @@ QString CAngleUnit::makeRoundedQString(double value, int digits, bool i18n) cons
     }
     else
     {
-        s = this->CMeasurementUnit::makeRoundedQString(value, digits, i18n);
+        s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, i18n);
     }
     return s;
 }
@@ -46,12 +50,14 @@ QString CAngleUnit::makeRoundedQString(double value, int digits, bool i18n) cons
 /*
  * Rounded to QString
  */
-QString CTimeUnit::makeRoundedQString(double value, int digits, bool i18n) const
+QString CTimeUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
 {
     if (digits < 0) digits = this->getDisplayDigits();
     QString s;
     if ((*this) == CTimeUnit::hms())
     {
+        digits -= 4;
+        Q_ASSERT(digits >= 0);
         double hr = CMath::trunc(value);
         double mi = CMath::trunc((value - hr) * 100.0);
         double se = CMath::trunc((value - hr - mi / 100.0) * 1000000) / 100.0;
@@ -61,6 +67,8 @@ QString CTimeUnit::makeRoundedQString(double value, int digits, bool i18n) const
     }
     else if ((*this) == CTimeUnit::hrmin())
     {
+        digits -= 2;
+        Q_ASSERT(digits >= 0);
         double hr = CMath::trunc(value);
         double mi = CMath::trunc((value - hr) * 100.0);
         const char *fmt = value < 0 ? "-%L1h%L2m" : "%L1h%L2m";
@@ -69,6 +77,8 @@ QString CTimeUnit::makeRoundedQString(double value, int digits, bool i18n) const
     }
     else if ((*this) == CTimeUnit::minsec())
     {
+        digits -= 2;
+        Q_ASSERT(digits >= 0);
         double mi = CMath::trunc(value);
         double se = CMath::trunc((value - mi) * 100.0);
         const char *fmt = value < 0 ? "-%L2m%L3s" : "%L2m%L3s";
@@ -77,7 +87,7 @@ QString CTimeUnit::makeRoundedQString(double value, int digits, bool i18n) const
     }
     else
     {
-        s = this->CMeasurementUnit::makeRoundedQString(value, digits, i18n);
+        s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, i18n);
     }
     return s;
 }
