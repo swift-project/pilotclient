@@ -44,6 +44,7 @@ equals(WITH_DRIVER_XPLANE, ON) {
 }
 
 equals(WITH_SAMPLES, ON) {
+    SUBDIRS += samples/cli_client/sample_cli_client.pro
     SUBDIRS += samples/com_client/sample_com_client.pro
     SUBDIRS += samples/com_server/sample_com_server.pro
     SUBDIRS += samples/config/sample_config.pro

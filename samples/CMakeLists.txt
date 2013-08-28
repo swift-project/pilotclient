@@ -1,4 +1,5 @@
 ADD_SUBDIRECTORY(logging)
+ADD_SUBDIRECTORY(cli_client)
 ADD_SUBDIRECTORY(com_server)
 ADD_SUBDIRECTORY(com_client)
 ADD_SUBDIRECTORY(geodetic2ecef)
