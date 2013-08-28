@@ -33,18 +33,29 @@ namespace BlackCoreTest
         QObject::connect(&mgr, &IAtcListManager::listChanged, &cons, &AtcListConsumer::listChanged);
 
         QVERIFY(cons.m_list.constMap().size() == 0);
+
         emit m_networkDummy.atcPositionUpdate("EGLL_TWR", CFrequency(118.7, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(50, CLengthUnit::m()));
+        QCoreApplication::processEvents();
         QVERIFY(cons.m_list.constMap().size() == 1);
+
         emit m_networkDummy.atcPositionUpdate("EGLL_GND", CFrequency(121.9, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(20, CLengthUnit::m()));
+        QCoreApplication::processEvents();
         QVERIFY(cons.m_list.constMap().size() == 2);
+
         emit m_networkDummy.atcPositionUpdate("EGLL_TWR", CFrequency(118.5, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(50, CLengthUnit::m()));
+        QCoreApplication::processEvents();
         QVERIFY(cons.m_list.constMap().size() == 2);
+
         emit m_networkDummy.atcDisconnected("EGLL_TWR");
+        QCoreApplication::processEvents();
         QVERIFY(cons.m_list.constMap().size() == 1);
+
         emit m_networkDummy.connectionStatusDisconnected();
+        QCoreApplication::processEvents();
         QVERIFY(cons.m_list.constMap().size() == 0);
 
         emit m_networkDummy.atcPositionUpdate("EGLL_TWR", CFrequency(118.5, CFrequencyUnit::MHz()), CCoordinateGeodetic(51.4775, 0.46139, 0), CLength(50, CLengthUnit::m()));
+        QCoreApplication::processEvents();
         QVERIFY(cons.m_list.constMap().contains("EGLL_TWR"));
         QVERIFY(cons.m_list.constMap()["EGLL_TWR"].getCallsign() == "EGLL_TWR");
         QVERIFY(cons.m_list.constMap()["EGLL_TWR"].getFrequency() == CFrequency(118.5, CFrequencyUnit::MHz()));
