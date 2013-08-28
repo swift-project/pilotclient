@@ -3,6 +3,7 @@ QT       -= gui
 
 TARGET = sample_config
 TEMPLATE = app
+CONFIG += c++11
 
 DEPENDPATH += . ../../src
 INCLUDEPATH += . ../../src

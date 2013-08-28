@@ -7,7 +7,7 @@
 #define BLACKMISC_AVIOBASE_H
 
 // QtGlobal is required for asserts
-#include "blackmisc/basestreamstringifier.h"
+#include "blackmisc/streamable.h"
 #include "blackmisc/pqconstants.h"
 #include <QtGlobal>
 
@@ -19,16 +19,13 @@ namespace Aviation
 /*!
  * \brief Base class for avionics
  */
-class CAvionicsBase : public CBaseStreamStringifier
+class CAvionicsBase : public BlackMisc::CStreamable
 {
-
-private:
+protected:
     QString m_name; //!< name of the unit
 
-protected:
-
     /*!
-     * \brief Default constructor
+     * \brief Constructor
      */
     CAvionicsBase(const QString &name) : m_name(name) {}
 
@@ -52,13 +49,31 @@ protected:
 
     /*!
      * \brief operator ==
-     * \param otherSystem
+     * \param other
      * \return
      */
-    bool operator ==(const CAvionicsBase &otherSystem) const
+    bool operator ==(const CAvionicsBase &other) const
     {
-        if (this == &otherSystem) return true;
-        return this->m_name == otherSystem.m_name;
+        if (this == &other) return true;
+        return this->m_name == other.m_name;
+    }
+
+    /*!
+     * \brief Stream to DBus <<
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
+        argument << this->m_name;
+    }
+
+    /*!
+     * \brief Stream from DBus >>
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        argument >> this->m_name;
     }
 
 public:
@@ -76,6 +91,7 @@ public:
         return this->m_name;
     }
 };
+
 } // namespace
 } // namespace
 

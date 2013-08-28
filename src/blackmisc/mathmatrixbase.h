@@ -6,9 +6,10 @@
 #ifndef BLACKMISC_MATHMATRIXBASE_H
 #define BLACKMISC_MATHMATRIXBASE_H
 
-#include "blackmisc/basestreamstringifier.h"
+#include "blackmisc/streamable.h"
 #include "blackmisc/mathvector3dbase.h"
 #include <QGenericMatrix>
+#include <QDBusMetaType>
 
 namespace BlackMisc
 {
@@ -18,7 +19,7 @@ namespace Math
 /*!
  * \brief Base functionality of a matrix
  */
-template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public BlackMisc::CBaseStreamStringifier
+template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public BlackMisc::CStreamable
 {
 private:
     /*!
@@ -45,9 +46,40 @@ protected:
 
     /*!
      * \brief Conversion to string
+     * \param i18n
      * \return
      */
-    QString stringForConverter() const;
+    QString convertToQString(bool i18n = false) const;
+
+    /*!
+     * \brief Stream to DBus
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
+        const QList<double> l = this->toList();
+
+        // there is an issue with the signature of QList, so I use
+        // individual values
+        foreach(double v, l) {
+            argument << v;
+        }
+    }
+
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        QList<double> list;
+        double v;
+        while(!argument.atEnd()) {
+            argument >> v;
+            list.append(v);
+        }
+        this->fromList(list);
+    }
 
 public:
     /*!
@@ -57,9 +89,9 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param otherMatrix
+     * \param other
      */
-    CMatrixBase(const CMatrixBase &otherMatrix) : m_matrix(otherMatrix.m_matrix) {}
+    CMatrixBase(const CMatrixBase &other) : m_matrix(other.m_matrix) {}
 
     /*!
      * \brief Fill with value
@@ -76,37 +108,36 @@ public:
     virtual ~CMatrixBase() {}
 
     /*!
-     * \brief Equal operator ==
-     * \param otherMatrix
+     * \brief List of values
      * \return
      */
-    bool operator ==(const ImplMatrix &otherMatrix) const
+    QList<double> toList() const;
+
+    /*!
+     * \brief List of values
+     * \return
+     */
+    void fromList(const QList<double> &list);
+
+    /*!
+     * \brief Equal operator ==
+     * \param other
+     * \return
+     */
+    bool operator ==(const ImplMatrix &other) const
     {
-        if (this == &otherMatrix) return true;
-        return this->m_matrix == otherMatrix.m_matrix;
+        if (this == &other) return true;
+        return this->m_matrix == other.m_matrix;
     }
 
     /*!
      * \brief Unequal operator !=
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    bool operator !=(const ImplMatrix &otherMatrix) const
+    bool operator !=(const ImplMatrix &other) const
     {
-        if (this == &otherMatrix) return false;
-        return !((*this) == otherMatrix);
-    }
-
-    /*!
-     * \brief Assigment operator =
-     * \param otherMatrix
-     * \return
-     */
-    CMatrixBase &operator =(const CMatrixBase &otherMatrix)
-    {
-        if (this == &otherMatrix)  return *this; // Same object?
-        this->m_matrix = otherMatrix.m_matrix;
-        return (*this);
+        return !((*this) == other);
     }
 
     /*!
@@ -117,7 +148,7 @@ public:
     CMatrixBase &operator *=(double factor)
     {
         this->m_matrix *= factor;
-        return (*this);
+        return *this;
     }
 
     /*!
@@ -133,22 +164,15 @@ public:
     }
 
     /*!
-     * \brief Operator to support commutative multiplication
+     * \brief Operator to support commutative scalar multiplication
      * \param factor
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    friend ImplMatrix operator *(double factor, const ImplMatrix &otherMatrix)
+    friend ImplMatrix operator *(double factor, const ImplMatrix &other)
     {
-        return otherMatrix * factor;
+        return other * factor;
     }
-
-    /*!
-     * \brief Multiply with 3D vector operator *
-     * \param matrix
-     * \return
-     */
-    template<class ImplVector> ImplVector operator*(const ImplVector matrix) const;
 
     /*!
      * \brief Operator /=
@@ -158,7 +182,7 @@ public:
     CMatrixBase &operator /=(double factor)
     {
         this->m_matrix /= factor;
-        return (*this);
+        return *this;
     }
 
     /*!
@@ -175,47 +199,47 @@ public:
 
     /*!
      * \brief Operator +=
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    CMatrixBase &operator +=(const CMatrixBase &otherMatrix)
+    CMatrixBase &operator +=(const CMatrixBase &other)
     {
-        this->m_matrix += otherMatrix.m_matrix;
-        return (*this);
+        this->m_matrix += other.m_matrix;
+        return *this;
     }
 
     /*!
      * \brief Operator +
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    ImplMatrix operator +(const ImplMatrix &otherMatrix) const
+    ImplMatrix operator +(const ImplMatrix &other) const
     {
         ImplMatrix m = *derived();
-        m += otherMatrix;
+        m += other;
         return m;
     }
 
     /*!
      * \brief Operator -=
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    CMatrixBase &operator -=(const CMatrixBase &otherMatrix)
+    CMatrixBase &operator -=(const CMatrixBase &other)
     {
-        this->m_matrix -= otherMatrix.m_matrix;
-        return (*this);
+        this->m_matrix -= other.m_matrix;
+        return *this;
     }
 
     /*!
      * \brief Operator -
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    ImplMatrix operator -(const ImplMatrix &otherMatrix) const
+    ImplMatrix operator -(const ImplMatrix &other) const
     {
         ImplMatrix m = *derived();
-        m -= otherMatrix;
+        m -= other;
         return m;
     }
 
@@ -249,11 +273,6 @@ public:
     }
 
     /*!
-     * \brief Fills the matrix with random elements
-     */
-    void setRandom();
-
-    /*!
      * \brief All values to zero
      */
     void setZero() { this->m_matrix.fill(0.0); }
@@ -263,6 +282,11 @@ public:
      * \return
      */
     bool isZero() const;
+
+    /*!
+     * \brief Each cell gets a unique index (used primarily for testing)
+     */
+    void setCellIndex();
 
     /*!
      * \brief Is identity matrix? Epsilon considered.
@@ -276,13 +300,7 @@ public:
     }
 
     /*!
-     * \brief All values equal, if so matirx is not invertible
-     * \return
-     */
-    bool allValuesEqual() const;
-
-    /*!
-     * \brief Set a dedicated value
+     * \brief Set all elements the same
      * \param value
      */
     void fill(double value) { this->m_matrix.fill(value); }
@@ -342,6 +360,11 @@ public:
         return this->getElement(row, column);
     }
 
+    /*!
+     * \brief Register metadata
+     */
+    static void registerMetadata();
+
 private:
     /*!
      * \brief Check range of row / column
@@ -350,11 +373,9 @@ private:
      * \throws std::range_error if index out of bounds
      */
     void checkRange(size_t row, size_t column) const;
-
 };
 
 } // namespace
-
 } // namespace
 
 #endif // guard

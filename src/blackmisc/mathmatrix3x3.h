@@ -27,9 +27,9 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param otherMatrix
+     * \param other
      */
-    CMatrix3x3(const CMatrix3x3 &otherMatrix) : CMatrixBase(otherMatrix) {}
+    CMatrix3x3(const CMatrix3x3 &other) : CMatrixBase(other) {}
 
     /*!
      * \brief Init by fill value
@@ -72,56 +72,64 @@ public:
 
     /*!
      * \brief Calculate the inverse
-     * \param invertible
+     * \param[out] o_isInvertible
      * \return
      */
-    CMatrix3x3 inverse(bool &invertible) const;
+    CMatrix3x3 inverse(bool &o_isInvertible) const;
 
     /*!
      * \brief Operator *=
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    CMatrix3x3 &operator *=(const CMatrix3x3 &otherMatrix)
+    CMatrix3x3 &operator *=(const CMatrix3x3 &other)
     {
-        this->m_matrix = this->m_matrix * otherMatrix.m_matrix;
-        return (*this);
+        this->m_matrix = this->m_matrix * other.m_matrix;
+        return *this;
     }
-
     /*!
      * \brief Operator *
-     * \param otherMatrix
+     * \param other
      * \return
      */
-    CMatrix3x1 operator *(const CMatrix3x1 &otherMatrix) const
-    {
-        CMatrix3x1 m;
-        m.m_matrix = this->m_matrix * otherMatrix.m_matrix;
-        return m;
-    }
-
-    /*!
-     * \brief Operator *
-     * \param otherMatrix
-     * \return
-     */
-    CMatrix3x3 operator *(const CMatrix3x3 &otherMatrix) const
+    CMatrix3x3 operator *(const CMatrix3x3 &other) const
     {
         CMatrix3x3 m(*this);
-        m *= otherMatrix;
+        m *= other;
         return m;
     }
 
     /*!
-     * \brief Multiply vector with this 3x3 matrix
+     * \brief Operator *
+     * \param other
+     * \return
+     */
+    CMatrix3x1 operator *(const CMatrix3x1 &other) const
+    {
+        CMatrix3x1 m;
+        m.m_matrix = this->m_matrix * other.m_matrix;
+        return m;
+    }
+
+    /*!
+     * \brief Multiply this matrix with vector
      * \param vector
      * \return
      */
     CVector3D operator *(const CVector3D &vector) const
     {
-        CVector3D v(vector);
-        v.matrixMultiplication(*this);
-        return v;
+        return ((*this) * CMatrix3x1(vector.toMatrix3x1())).toVector3D();
+    }
+
+    /*!
+     * \brief Multiply with factor
+     * \param factor
+     * \return
+     */
+    CMatrix3x3 &operator *=(double factor)
+    {
+        this->CMatrixBase::operator *=(factor);
+        return *this;
     }
 
     /*!
@@ -134,17 +142,6 @@ public:
         CMatrix3x3 m(*this);
         m *= factor;
         return m;
-    }
-
-    /*!
-     * \brief Multiply with factor
-     * \param factor
-     * \return
-     */
-    CMatrix3x3 &operator *=(double factor)
-    {
-        CMatrixBase::operator *=(factor);
-        return (*this);
     }
 
     /*!
@@ -171,11 +168,11 @@ public:
      * \return
      */
     CMatrix1x3 getRow(int row) const;
-
 };
 
 } // namespace
-
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Math::CMatrix3x3)
 
 #endif // guard

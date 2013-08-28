@@ -3,7 +3,7 @@ QT       += network dbus
 
 TARGET = blackcore
 TEMPLATE = lib
-CONFIG += staticlib
+CONFIG += staticlib c++11
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..

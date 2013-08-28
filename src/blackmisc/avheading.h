@@ -11,105 +11,118 @@ namespace BlackMisc
 {
 namespace Aviation
 {
+
 /*!
  * \brief Heading as used in aviation, can be true or magnetic heading
  * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
  */
 class CHeading : public BlackMisc::PhysicalQuantities::CAngle
 {
+public:
+    /*!
+     * Enum type to distinguish between true north and magnetic north
+     */
+    enum ReferenceNorth
+    {
+        Magnetic = 0,   //!< magnetic north
+        True = 1,       //!< true north
+    };
+
 private:
-    bool m_magnetic; //!< magnetic or true heading?
+    ReferenceNorth m_north; //!< magnetic or true?
 
 protected:
     /*!
      * \brief Specific stream operation for heading
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const;
+    virtual QString convertToQString(bool i18n = false) const;
+
+    /*!
+     * \brief Stream to DBus <<
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
+        this->CAngle::marshallToDbus(argument);
+        argument << qint32(this->m_north);
+    }
+
+    /*!
+     * \brief Stream from DBus >>
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        this->CAngle::unmarshallFromDbus(argument);
+        qint32 north;
+        argument >> north;
+        this->m_north = static_cast<ReferenceNorth>(north);
+    }
 
 public:
     /*!
      * \brief Default constructor: 0 heading true
      */
-    CHeading() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_magnetic(true) {}
+    CHeading() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
     /*!
      * \brief Constructor
      * \param value
-     * \param magnetic
+     * \param north
      * \param unit
      */
-
-    CHeading(double value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
-    /*!
-     * \brief Constructor
-     * \param value
-     * \param magnetic
-     * \param unit
-     */
-    CHeading(int value, bool magnetic, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_magnetic(magnetic) {}
+    CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
 
     /*!
      * \brief Constructor by CAngle
-     * \param heading
+     * \param north
      * \param magnetic
      */
-    CHeading(CAngle heading, bool magnetic) : CAngle(), m_magnetic(magnetic)
-    {
-        CAngle::operator =(heading);
-    }
-
-    /*!
-     * \brief Copy constructor
-     * \param otherHeading
-     */
-    CHeading(const CHeading &otherHeading) : CAngle(otherHeading), m_magnetic(otherHeading.m_magnetic) {}
-
-    /*!
-     * \brief Assignment operator =
-     * \param otherHeading
-     * @return
-     */
-    CHeading &operator =(const CHeading &otherHeading);
+    CHeading(CAngle heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
 
     /*!
      * \brief Equal operator ==
-     * \param otherHeading
+     * \param other
      * @return
      */
-    bool operator ==(const CHeading &otherHeading);
+    bool operator ==(const CHeading &other);
 
     /*!
      * \brief Unequal operator ==
-     * \param otherHeading
+     * \param other
      * @return
      */
-    bool operator !=(const CHeading &otherHeading);
+    bool operator !=(const CHeading &other);
 
     /*!
      * \brief Magnetic heading?
      * \return
      */
-    bool isMagneticHeading() const { return this->m_magnetic; }
+    bool isMagneticHeading() const { return Magnetic == this->m_north; }
 
     /*!
      * \brief True heading?
      * \return
      */
-    bool isTrueHeading() const { return !this->m_magnetic; }
+    bool isTrueHeading() const { return True == this->m_north; }
 
     /*!
-     * \brief Switch heading unit
-     * \param newUnit
+     * \brief Get reference north (magnetic or true)
      * \return
      */
-    CHeading &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &newUnit)
-    {
-        CAngle::switchUnit(newUnit);
-        return (*this);
-    }
+    ReferenceNorth getReferenceNorth() const { return m_north; }
+
+    /*!
+     * \brief Register metadata
+     */
+    static void registerMetadata();
 };
 
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CHeading)
+
 #endif // guard

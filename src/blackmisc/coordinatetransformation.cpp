@@ -80,7 +80,7 @@ CCoordinateEcef CCoordinateTransformation::toEcef(const CCoordinateGeodetic &geo
 
     double clambda = cos(lambdaRad);
 
-    double h = geo.height().convertedSiValueToDouble();
+    double h = geo.height().value(CLengthUnit::m());
     double x = (n + h) * cphi;
     double y = x * slambda;
     x *= clambda;

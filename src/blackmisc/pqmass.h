@@ -21,34 +21,24 @@ public:
     /*!
      * \brief Default constructor
      */
-    CMass() : CPhysicalQuantity(0, CMassUnit::kg(), CMassUnit::kg()) {}
-
-    /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CMass(qint32 value, const CMassUnit &unit) : CPhysicalQuantity(value, unit, CMassUnit::kg()) {}
+    CMass() : CPhysicalQuantity(0, CMassUnit::defaultUnit()) {}
 
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
-    CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit, CMassUnit::kg()) {}
-
-    /*!
-     * \brief Copy constructor
-     * \param mass
-     */
-    CMass(const CPhysicalQuantity &mass) : CPhysicalQuantity(mass) {}
+    CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
 
     /*!
      * \brief Virtual destructor
      */
     virtual ~CMass() {}
 };
+
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMass)
 
 #endif // guard

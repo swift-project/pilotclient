@@ -35,9 +35,9 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param otherVector
+     * \param other
      */
-    CVector3D(const CVector3D &otherVector) : CVector3DBase(otherVector) {}
+    CVector3D(const CVector3D &other) : CVector3DBase(other) {}
 
     /*!
      * \brief i
@@ -97,4 +97,7 @@ public:
 
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Math::CVector3D)
+
 #endif // guard

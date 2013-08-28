@@ -19,7 +19,7 @@ Client::~Client()
 {
 }
 
-void Client::onError(QAbstractSocket::SocketError error, QString message)
+void Client::onError(QAbstractSocket::SocketError /* error */, QString message)
 {
     bAppWarning << "Socket error!";
 }

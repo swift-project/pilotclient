@@ -7,11 +7,17 @@
 #define BLACKMISC_PQUNITS_H
 
 #include "blackmisc/pqbase.h"
+#include <QDBusArgument>
+#include <QList>
 #include <QtCore/qmath.h>
+#include <QTranslator>
+
 
 //
 // Used with the template for quantities. This is the reason for
 // having all units in one file, since template requires concrete instantiations
+//
+// I18N: http://qt-project.org/doc/qt-4.8/linguist-programmers.html#translating-text-that-is-outside-of-a-qobject-subclass
 //
 namespace BlackMisc
 {
@@ -25,30 +31,45 @@ class CLengthUnit : public CMeasurementUnit
 {
 private:
     /*!
-     * \brief Constructor Distance unit
+     * \brief Constructor length unit
      * \param name
-     * \param unitName
-     * \param isSiUnit
-     * \param isSIBaseUnit
-     * \param conversionFactorToSI
-     * \param mulitplier
+     * \param symbol
+     * \param factor
      * \param displayDigits
      * \param epsilon
      */
-    CLengthUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "distance", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon)
-    {
-        // void
-    }
+    CLengthUnit(const QString &name, const QString &symbol, double factor, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, factor, displayDigits, epsilon) {}
+
+    /*!
+     * \brief Constructor length unit
+     * \param name
+     * \param symbol
+     * \param prefix
+     * \param base
+     * \param displayDigits
+     * \param epsilon
+     */
+    CLengthUnit(const QString &name, const QString &symbol, const CMeasurementPrefix &prefix, const CLengthUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, base, prefix, displayDigits, epsilon) {}
+
 public:
     /*!
-     * \brief Copy constructor
-     * \param otherUnit
+     * Default constructor, required for Qt Metasystem
      */
-    CLengthUnit(const CLengthUnit &otherUnit) : CMeasurementUnit(otherUnit)
-    {
-        // void
-    }
+    CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
+
+    /*!
+     * \brief Copy constructor
+     * \param other
+     */
+    CLengthUnit(const CLengthUnit &other) : CMeasurementUnit(other) {}
+
+    /*!
+     * \brief Default unit
+     * \return
+     */
+    static const CLengthUnit &defaultUnit() { return m(); }
 
     /*!
      * \brief Meter m
@@ -56,7 +77,7 @@ public:
      */
     static const CLengthUnit &m()
     {
-        static CLengthUnit m("meter", "m", true, true);
+        static CLengthUnit m(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter"), "m", 1);
         return m;
     }
 
@@ -66,7 +87,7 @@ public:
      */
     static const CLengthUnit &NM()
     {
-        static CLengthUnit NM("nautical miles", "NM", false, false, 1000.0 * 1.85200, CMeasurementPrefix::One(), 3);
+        static CLengthUnit NM(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile"), "NM", 1000.0 * 1.85200, 3);
         return NM;
     }
 
@@ -76,7 +97,7 @@ public:
      */
     static const CLengthUnit &ft()
     {
-        static CLengthUnit ft("foot", "ft", false, false, 0.3048, CMeasurementPrefix::One(), 0);
+        static CLengthUnit ft(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot"), "ft", 0.3048, 0);
         return ft;
     }
 
@@ -86,7 +107,7 @@ public:
      */
     static const CLengthUnit &km()
     {
-        static CLengthUnit km("kilometer", "km", true, false, CMeasurementPrefix::k().getFactor(), CMeasurementPrefix::k(), 3);
+        static CLengthUnit km(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer"), "km", CMeasurementPrefix::k(), m(), 3);
         return km;
     }
 
@@ -96,7 +117,7 @@ public:
      */
     static const CLengthUnit &cm()
     {
-        static CLengthUnit cm("centimeter", "cm", true, false, CMeasurementPrefix::c().getFactor(), CMeasurementPrefix::c(), 1);
+        static CLengthUnit cm(QT_TRANSLATE_NOOP("CMeasurementUnit", "centimeter"), "cm", CMeasurementPrefix::c(), m(), 1);
         return cm;
     }
 
@@ -106,7 +127,7 @@ public:
      */
     static const CLengthUnit &mi()
     {
-        static CLengthUnit mi("mile", "mi", false, false, 1609.344, CMeasurementPrefix::None(), 3);
+        static CLengthUnit mi(QT_TRANSLATE_NOOP("CMeasurementUnit", "mile"), "mi", 1609.344, 3);
         return mi;
     }
 
@@ -114,12 +135,43 @@ public:
      * \brief Statute mile
      * \return
      */
-    static const CLengthUnit &miStatute()
+    static const CLengthUnit &SM()
     {
-        static CLengthUnit mi("mile(statute)", "mi(statute)", false, false, 1609.3472, CMeasurementPrefix::None(), 3);
-        return mi;
+        static CLengthUnit sm(QT_TRANSLATE_NOOP("CMeasurementUnit", "statute mile"), "SM", 1609.3472, 3);
+        return sm;
     }
 
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CLengthUnit> &allUnits()
+    {
+        static QList<CLengthUnit> u;
+        if (u.isEmpty())
+        {
+            u.append(CLengthUnit::cm());
+            u.append(CLengthUnit::ft());
+            u.append(CLengthUnit::km());
+            u.append(CLengthUnit::m());
+            u.append(CLengthUnit::mi());
+            u.append(CLengthUnit::SM());
+            u.append(CLengthUnit::NM());
+        }
+        return u;
+    }
+
+protected:
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CMeasurementUnit::unitFromSymbol<CLengthUnit>(unitName);
+    }
 };
 
 /*!
@@ -131,48 +183,51 @@ private:
     /*!
      * \brief Constructor angle units: Radian, degree
      * \param name
-     * \param unitName
-     * \param isSiUnit
-     * \param conversionFactorToSI
-     * \param multiplier
+     * \param symbol
+     * \param factor
      * \param displayDigits
      * \param epsilon
      */
-    CAngleUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0,
-               const CMeasurementPrefix &multiplier = CMeasurementPrefix::One(), qint32 displayDigits = 2,
-               double epsilon = 1E-9, UnitConverter converterToSi = 0,  UnitConverter converterFromSi = 0) :
-        CMeasurementUnit(name, unitName, "angle", isSiUnit, false, conversionFactorToSI,
-                         multiplier, displayDigits, epsilon, converterToSi, converterFromSi)
-    {
-        // void
-    }
+    CAngleUnit(const QString &name, const QString &symbol, double factor, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, factor, displayDigits, epsilon) {}
+
     /*!
-     * \brief Special conversion for sexagesimal degrees
-     * \param value
-     * \return
+     * \brief Constructor angle units: Sexagesimal
+     * \param name
+     * \param symbol
+     * \param converter
+     * \param displayDigits
+     * \param epsilon
      */
-    static double conversionSexagesimalToSi(const CMeasurementUnit &angleUnit, double value);
-    /*!
-     * \brief Special conversion for sexagesimal degrees
-     * \param value
-     * \return
-     */
-    static double conversionSexagesimalFromSi(const CMeasurementUnit &angleUnit, double value);
+    CAngleUnit(const QString &name, const QString &symbol, Converter *converter, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon) {}
 
 public:
     /*!
-     * \brief Copy constructor
-     * \param otherUnit
+     * Default constructor, required for Qt Metasystem
      */
-    CAngleUnit(const CAngleUnit &otherUnit) : CMeasurementUnit(otherUnit) { }
+    CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
 
     /*!
-     * \brief Special conversion to QString for sexagesimal degrees.
-     * \param value
-     * \param digits
+     * \brief Copy constructor
+     * \param other
+     */
+    CAngleUnit(const CAngleUnit &other) : CMeasurementUnit(other) {}
+
+    /*!
+     * \brief Default unit
      * \return
      */
-    virtual QString toQStringRounded(double value, int digits) const;
+    static const CAngleUnit &defaultUnit() { return deg(); }
+
+    /*!
+     * \brief Override for sexagesimal degrees.
+     * \param value
+     * \param digits
+     * \param i18n
+     * \return
+     */
+    virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Radians
@@ -180,7 +235,7 @@ public:
      */
     static const CAngleUnit &rad()
     {
-        static CAngleUnit rad("radian", "rad", true);
+        static CAngleUnit rad(QT_TRANSLATE_NOOP("CMeasurementUnit", "radian"), "rad", 180.0 / M_PI);
         return rad;
     }
 
@@ -190,18 +245,61 @@ public:
      */
     static const CAngleUnit &deg()
     {
-        static CAngleUnit deg("degree", "°", false, M_PI / 180);
+        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree"), QT_TRANSLATE_NOOP("CMeasurementUnit", "deg"), 1);
         return deg;
     }
 
     /*!
-     * \brief Sexagesimal degree (degree, minute, seconds)
+     * \brief Sexagesimal degree (degrees, minutes, seconds, decimal seconds)
      * \return
      */
     static const CAngleUnit &sexagesimalDeg()
     {
-        static CAngleUnit deg("segadecimal degree", "°", false, M_PI / 180,
-                              CMeasurementPrefix::One(), 0, 1E-9, CAngleUnit::conversionSexagesimalToSi, CAngleUnit::conversionSexagesimalFromSi); return deg;
+        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second"), "DMS", new SubdivisionConverter2<60, 100, 60, 100>, 4);
+        return deg;
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2 %L3");
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2 %L3");
+    }
+
+    /*!
+     * \brief Sexagesimal degree (degrees, minutes, decimal minutes)
+     * \return
+     */
+    static const CAngleUnit &sexagesimalDegMin()
+    {
+        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute"), "MinDec", new SubdivisionConverter<60, 100>, 4);
+        return deg;
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2");
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2");
+    }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CAngleUnit> &allUnits()
+    {
+        static QList<CAngleUnit> u;
+        if (u.isEmpty())
+        {
+            u.append(CAngleUnit::deg());
+            u.append(CAngleUnit::rad());
+            u.append(CAngleUnit::sexagesimalDeg());
+            u.append(CAngleUnit::sexagesimalDegMin());
+        }
+        return u;
+    }
+
+protected:
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CMeasurementUnit::unitFromSymbol<CAngleUnit>(unitName);
     }
 };
 
@@ -212,27 +310,45 @@ class CFrequencyUnit : public CMeasurementUnit
 {
 private:
     /*!
-     * Constructor
-     * \brief CFrequencyUnit
+     * Constructor frequency unit
      * \param name
-     * \param unitName
-     * \param isSiUnit
-     * \param conversionFactorToSI
-     * \param mulitplier
+     * \param symbol
+     * \param factor
      * \param displayDigits
      * \param epsilon
      */
-    CFrequencyUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "frequency", isSiUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CFrequencyUnit(const QString &name, const QString &symbol, double factor, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, factor, displayDigits, epsilon) {}
+
+    /*!
+     * Constructor frequency unit
+     * \param name
+     * \param symbol
+     * \param prefix
+     * \param base
+     * \param displayDigits
+     * \param epsilon
+     */
+    CFrequencyUnit(const QString &name, const QString &symbol, const CMeasurementPrefix &prefix, const CFrequencyUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, base, prefix, displayDigits, epsilon) {}
+
 public:
     /*!
-     * \brief Copy constructor
-     * \param otherUnit
+     * Default constructor, required for Qt Metasystem
      */
-    CFrequencyUnit(const CFrequencyUnit &otherUnit) : CMeasurementUnit(otherUnit)
-    {
-        // void
-    }
+    CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
+
+    /*!
+     * \brief Copy constructor
+     * \param other
+     */
+    CFrequencyUnit(const CFrequencyUnit &other) : CMeasurementUnit(other) {}
+
+    /*!
+     * \brief Default unit
+     * \return
+     */
+    static const CFrequencyUnit &defaultUnit() { return Hz(); }
 
     /*!
      * \brief Hertz
@@ -240,7 +356,7 @@ public:
      */
     static const CFrequencyUnit &Hz()
     {
-        static CFrequencyUnit Hz("hertz", "Hz", true);
+        static CFrequencyUnit Hz(QT_TRANSLATE_NOOP("CMeasurementUnit", "hertz"), "Hz", 1);
         return Hz;
     }
 
@@ -250,7 +366,7 @@ public:
      */
     static const CFrequencyUnit &kHz()
     {
-        static CFrequencyUnit kHz("kilohertz", "kHz", true, CMeasurementPrefix::k().getFactor(), CMeasurementPrefix::k(), 1);
+        static CFrequencyUnit kHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilohertz"), "kHz", CMeasurementPrefix::k(), Hz(), 1);
         return kHz;
     }
 
@@ -260,7 +376,7 @@ public:
      */
     static const CFrequencyUnit &MHz()
     {
-        static CFrequencyUnit MHz("megahertz", "MHz", false, CMeasurementPrefix::M().getFactor(), CMeasurementPrefix::M(), 2);
+        static CFrequencyUnit MHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "megahertz"), "MHz", CMeasurementPrefix::M(), Hz(), 2);
         return MHz;
     }
 
@@ -270,8 +386,37 @@ public:
      */
     static const CFrequencyUnit &GHz()
     {
-        static CFrequencyUnit GHz("gigahertz", "GHz", true, CMeasurementPrefix::G().getFactor(), CMeasurementPrefix::G(), 2);
+        static CFrequencyUnit GHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "gigahertz"), "GHz", CMeasurementPrefix::G(), Hz(), 2);
         return GHz;
+    }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CFrequencyUnit> &allUnits()
+    {
+        static QList<CFrequencyUnit> u;
+        if (u.isEmpty())
+        {
+            u.append(CFrequencyUnit::GHz());
+            u.append(CFrequencyUnit::Hz());
+            u.append(CFrequencyUnit::kHz());
+            u.append(CFrequencyUnit::MHz());
+        }
+        return u;
+    }
+
+protected:
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CMeasurementUnit::unitFromSymbol<CFrequencyUnit>(unitName);
     }
 };
 
@@ -284,25 +429,43 @@ private:
     /*!
      * \brief Constructor mass units
      * \param name
-     * \param unitName
-     * \param isSiUnit
-     * \param isSIBaseUnit
-     * \param conversionFactorToSI
-     * \param mulitplier
+     * \param symbol
+     * \param factor
      * \param displayDigits
      * \param epsilon
      */
-    CMassUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "mass", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CMassUnit(const QString &name, const QString &symbol, double factor, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, factor, displayDigits, epsilon) {}
+
+    /*!
+     * \brief Constructor mass units
+     * \param name
+     * \param symbol
+     * \param prefix
+     * \param base
+     * \param displayDigits
+     * \param epsilon
+     */
+    CMassUnit(const QString &name, const QString &symbol, const CMeasurementPrefix &prefix, const CMassUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, base, prefix, displayDigits, epsilon) {}
+
 public:
     /*!
-     * \brief Copy constructor
-     * \param otherUnit
+     * Default constructor, required for Qt Metasystem
      */
-    CMassUnit(const CMassUnit &otherUnit) : CMeasurementUnit(otherUnit)
-    {
-        // void
-    }
+    CMassUnit() : CMeasurementUnit(defaultUnit()) {}
+
+    /*!
+     * \brief Copy constructor
+     * \param other
+     */
+    CMassUnit(const CMassUnit &other) : CMeasurementUnit(other) {}
+
+    /*!
+     * \brief Default unit
+     * \return
+     */
+    static const CMassUnit &defaultUnit() { return kg(); }
 
     /*!
      * \brief Kilogram, SI base unit
@@ -310,7 +473,7 @@ public:
      */
     static const CMassUnit &kg()
     {
-        static CMassUnit kg("kilogram", "kg", true, true, 1.0, CMeasurementPrefix::k(), 1);
+        static CMassUnit kg(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilogram"), "kg", CMeasurementPrefix::k(), g(), 1);
         return kg;
     }
 
@@ -320,18 +483,28 @@ public:
      */
     static const CMassUnit &g()
     {
-        static CMassUnit g("gram", "g", true, false, 1.0 / 1000.0, CMeasurementPrefix::One(), 0);
+        static CMassUnit g(QT_TRANSLATE_NOOP("CMeasurementUnit", "gram"), "g", 0.001, 0);
         return g;
     }
 
     /*!
-     * \brief Tonne, aka metric tonne (1000kg)
+     * \brief Tonne, aka metric ton (1000kg)
      * \return
      */
-    static const CMassUnit &t()
+    static const CMassUnit &tonne()
     {
-        static CMassUnit t("tonne", "t", false, false, 1000.0, CMeasurementPrefix::One(), 3);
+        static CMassUnit t(QT_TRANSLATE_NOOP("CMeasurementUnit", "tonne"), "t", 1000.0, 3);
         return t;
+    }
+
+    /*!
+     * \brief Short ton (2000lb) used in the United States
+     * \return
+     */
+    static const CMassUnit &shortTon()
+    {
+        static CMassUnit ton(QT_TRANSLATE_NOOP("CMeasurementUnit", "short ton"), "ton", 907.18474, 3);
+        return ton;
     }
 
     /*!
@@ -340,8 +513,38 @@ public:
      */
     static const CMassUnit &lb()
     {
-        static CMassUnit lbs("pound", "lb", false, false, 0.45359237, CMeasurementPrefix::One(), 1);
+        static CMassUnit lbs(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound"), "lb", 0.45359237, 1);
         return lbs;
+    }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CMassUnit> &allUnits()
+    {
+        static QList<CMassUnit> u;
+        if (u.isEmpty())
+        {
+            u.append(CMassUnit::g());
+            u.append(CMassUnit::kg());
+            u.append(CMassUnit::lb());
+            u.append(CMassUnit::tonne());
+            u.append(CMassUnit::shortTon());
+        }
+        return u;
+    }
+
+protected:
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CMeasurementUnit::unitFromSymbol<CMassUnit>(unitName);
     }
 };
 
@@ -352,27 +555,45 @@ class CPressureUnit : public CMeasurementUnit
 {
 private:
     /*!
-     * Constructor
-     * \brief Pressure unit
+     * \brief Pressure unit constructor
      * \param name
-     * \param unitName
-     * \param isSiUnit
-     * \param conversionFactorToSI
-     * \param mulitplier
+     * \param symbol
+     * \param factor
      * \param displayDigits
      * \param epsilon
      */
-    CPressureUnit(const QString &name, const QString &unitName, bool isSiUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "frequency", isSiUnit, false, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CPressureUnit(const QString &name, const QString &symbol, double factor, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, factor, displayDigits, epsilon) {}
+
+    /*!
+     * \brief Pressure unit constructor
+     * \param name
+     * \param symbol
+     * \param prefix
+     * \param base
+     * \param displayDigits
+     * \param epsilon
+     */
+    CPressureUnit(const QString &name, const QString &symbol, const CMeasurementPrefix &prefix, const CPressureUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, base, prefix, displayDigits, epsilon) {}
+
 public:
     /*!
-     * \brief Copy constructor
-     * \param otherUnit
+     * Default constructor, required for Qt Metasystem
      */
-    CPressureUnit(const CPressureUnit &otherUnit) : CMeasurementUnit(otherUnit)
-    {
-        // void
-    }
+    CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
+
+    /*!
+     * \brief Copy constructor
+     * \param other
+     */
+    CPressureUnit(const CPressureUnit &other) : CMeasurementUnit(other) {}
+
+    /*!
+     * \brief Default unit
+     * \return
+     */
+    static const CPressureUnit &defaultUnit() { return hPa(); }
 
     /*!
      * \brief Pascal
@@ -380,7 +601,7 @@ public:
      */
     static const CPressureUnit &Pa()
     {
-        static CPressureUnit Pa("pascal", "Pa", true);
+        static CPressureUnit Pa(QT_TRANSLATE_NOOP("CMeasurementUnit", "pascal"), "Pa", 0.01);
         return Pa;
     }
 
@@ -390,7 +611,7 @@ public:
      */
     static const CPressureUnit &hPa()
     {
-        static CPressureUnit hPa("hectopascal", "hPa", true, CMeasurementPrefix::h().getFactor(), CMeasurementPrefix::h());
+        static CPressureUnit hPa(QT_TRANSLATE_NOOP("CMeasurementUnit", "hectopascal"), "hPa", CMeasurementPrefix::h(), Pa());
         return hPa;
     }
 
@@ -400,7 +621,7 @@ public:
      */
     static const CPressureUnit &psi()
     {
-        static CPressureUnit psi("pounds per square inch", "psi", false, 6894.8, CMeasurementPrefix::One(), 2);
+        static CPressureUnit psi(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound per square inch"), "psi", 68.948, 2);
         return psi;
     }
 
@@ -410,7 +631,7 @@ public:
      */
     static const CPressureUnit &bar()
     {
-        static CPressureUnit bar("bar", "bar", false, 1E5);
+        static CPressureUnit bar(QT_TRANSLATE_NOOP("CMeasurementUnit", "bar"), "bar", 1000, 1);
         return bar;
     }
 
@@ -420,8 +641,8 @@ public:
      */
     static const CPressureUnit &mbar()
     {
-        static CPressureUnit bar("bar", "bar", false, 1E2);
-        return bar;
+        static CPressureUnit mbar(QT_TRANSLATE_NOOP("CMeasurementUnit", "millibar"), "mbar", CMeasurementPrefix::m(), bar(), 1);
+        return mbar;
     }
 
     /*!
@@ -430,18 +651,49 @@ public:
      */
     static const CPressureUnit &inHg()
     {
-        static CPressureUnit inhg("Inch of mercury 0°C", "inHg", false, 3386.389);
+        static CPressureUnit inhg(QT_TRANSLATE_NOOP("CMeasurementUnit", "inch of mercury"), "inHg", 33.86389);
         return inhg;
     }
 
     /*!
-     * \brief Inch of mercury for flight level 29,92inHg = 1013,25mbar = 1013,25hPa
+     * \brief Millimeter of mercury
      * \return
      */
-    static const CPressureUnit &inHgFL()
+    static const CPressureUnit &mmHg()
     {
-        static CPressureUnit inhg("Inch of mercury ", "inHg", false, 3386.5307486631);
-        return inhg;
+        static CPressureUnit mmhg(QT_TRANSLATE_NOOP("CMeasurementUnit", "millimeter of mercury"), "mmHg", 860.142806);
+        return mmhg;
+    }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CPressureUnit> &allUnits()
+    {
+        static QList<CPressureUnit> u;
+        if (u.isEmpty())
+        {
+            u.append(CPressureUnit::bar());
+            u.append(CPressureUnit::hPa());
+            u.append(CPressureUnit::inHg());
+            u.append(CPressureUnit::mmHg());
+            u.append(CPressureUnit::mbar());
+            u.append(CPressureUnit::psi());
+        }
+        return u;
+    }
+
+protected:
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CMeasurementUnit::unitFromSymbol<CPressureUnit>(unitName);
     }
 };
 
@@ -451,54 +703,35 @@ public:
 class CTemperatureUnit : public CMeasurementUnit
 {
 private:
-    double m_conversionOffsetToSi;
-private:
     /*!
      * Constructor temperature unit
      * \param name
-     * \param unitName
-     * \param isSiUnit
-     * \param isSIBaseUnit
-     * \param conversionFactorToSI
-     * \param temperatureOffsetToSI
-     * \param mulitplier
+     * \param symbol
+     * \param factor
+     * \param offset
      * \param displayDigits
      * \param epsilon
      */
-    CTemperatureUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, double temperatureOffsetToSI = 0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "temperature", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon), m_conversionOffsetToSi(temperatureOffsetToSI) {}
-protected:
-    /*!
-     * \brief Convert to SI conversion unit, specific for temperature
-     * \param value
-     * \return
-     */
-    virtual double conversionToSiConversionUnit(double value) const;
-
-    /*!
-     * \brief Convert from SI conversion unit, specific for temperature
-     * \param value
-     * \return
-     */
-    virtual double conversionFromSiConversionUnit(double value) const;
+    CTemperatureUnit(const QString &name, const QString &symbol, double factor, double offset, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, factor, offset, displayDigits, epsilon) {}
 
 public:
     /*!
-     * \brief Copy constructor
-     * \param otherUnit
+     * Default constructor, required for Qt Metasystem
      */
-    CTemperatureUnit(const CTemperatureUnit &otherUnit) : CMeasurementUnit(otherUnit), m_conversionOffsetToSi(otherUnit.m_conversionOffsetToSi) {}
+    CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
 
     /*!
-     * Assigment operator
+     * \brief Copy constructor
+     * \param other
      */
-    CTemperatureUnit &operator =(const CTemperatureUnit &otherUnit)
-    {
-        if (this == &otherUnit) return *this; // Same object? Yes, so skip assignment, and just return *this
-        CMeasurementUnit::operator = (otherUnit);
-        this->m_conversionOffsetToSi = otherUnit.m_conversionOffsetToSi;
-        return (*this);
-    }
+    CTemperatureUnit(const CTemperatureUnit &other) : CMeasurementUnit(other) {}
+
+    /*!
+     * \brief Default unit
+     * \return
+     */
+    static const CTemperatureUnit &defaultUnit() { return C(); }
 
     /*!
      * \brief Kelvin
@@ -506,7 +739,7 @@ public:
      */
     static const CTemperatureUnit &K()
     {
-        static CTemperatureUnit K("Kelvin", "K", true, true);
+        static CTemperatureUnit K(QT_TRANSLATE_NOOP("CMeasurementUnit", "Kelvin"), "K", 1, 273.15);
         return K;
     }
 
@@ -516,7 +749,7 @@ public:
      */
     static const CTemperatureUnit &C()
     {
-        static CTemperatureUnit C("centigrade", "°C", false, false, 1.0, 273.15);
+        static CTemperatureUnit C(QT_TRANSLATE_NOOP("CMeasurementUnit", "centigrade"), QT_TRANSLATE_NOOP("CMeasurementUnit", "C"), 1, 0);
         return C;
     }
 
@@ -526,8 +759,36 @@ public:
      */
     static const CTemperatureUnit &F()
     {
-        static CTemperatureUnit F("Fahrenheit", "°F", false, false, 5.0 / 9.0, 459.67);
+        static CTemperatureUnit F(QT_TRANSLATE_NOOP("CMeasurementUnit", "Fahrenheit"), QT_TRANSLATE_NOOP("CMeasurementUnit", "F"), 5.0 / 9.0, 32);
         return F;
+    }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CTemperatureUnit> &allUnits()
+    {
+        static QList<CTemperatureUnit> u;
+        if (u.isEmpty())
+        {
+            u.append(CTemperatureUnit::C());
+            u.append(CTemperatureUnit::F());
+            u.append(CTemperatureUnit::K());
+        }
+        return u;
+    }
+
+protected:
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CMeasurementUnit::unitFromSymbol<CTemperatureUnit>(unitName);
     }
 };
 
@@ -538,25 +799,33 @@ class CSpeedUnit : public CMeasurementUnit
 {
 private:
     /*!
-     * Constructor
      * \brief Speed unit constructor
      * \param name
-     * \param unitName
-     * \param isSiUnit
-     * \param isSIBaseUnit
-     * \param conversionFactorToSI
-     * \param mulitplier
+     * \param symbol
+     * \param factor
      * \param displayDigits
      * \param epsilon
      */
-    CSpeedUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "speed", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CSpeedUnit(const QString &name, const QString &symbol, double factor, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, factor, displayDigits, epsilon) {}
+
 public:
     /*!
-     * Constructor, allows to implement methods in base class
-     * \param otherUnit
+     * Default constructor, required for Qt Metasystem
      */
-    CSpeedUnit(const CSpeedUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
+    CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
+
+    /*!
+     * Constructor, allows to implement methods in base class
+     * \param other
+     */
+    CSpeedUnit(const CSpeedUnit &other) : CMeasurementUnit(other) {}
+
+    /*!
+     * Default unit
+     * \return
+     */
+    static const CSpeedUnit &defaultUnit() { return m_s(); }
 
     /*!
      * \brief Meter/second m/s
@@ -564,7 +833,7 @@ public:
      */
     static const CSpeedUnit &m_s()
     {
-        static CSpeedUnit ms("meters/second", "m/s", true, false);
+        static CSpeedUnit ms(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second"), "m/s", 1);
         return ms;
     }
 
@@ -574,7 +843,7 @@ public:
      */
     static const CSpeedUnit &kts()
     {
-        static CSpeedUnit kts("knot", "kts", false, false, 1852.0 / 3600.0, CMeasurementPrefix::One(), 1);
+        static CSpeedUnit kts(QT_TRANSLATE_NOOP("CMeasurementUnit", "knot"), "kts", 1852.0 / 3600.0, 1);
         return kts;
     }
 
@@ -584,7 +853,7 @@ public:
      */
     static const CSpeedUnit &NM_h()
     {
-        static CSpeedUnit NMh("nautical miles/hour", "NM/h", false, false, 1852.0 / 3600.0, CMeasurementPrefix::One(), 1);
+        static CSpeedUnit NMh(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile per hour"), "NM/h", 1852.0 / 3600.0, 1);
         return NMh;
     }
 
@@ -594,7 +863,7 @@ public:
      */
     static const CSpeedUnit &ft_s()
     {
-        static CSpeedUnit fts("feet/seconds", "ft/s", false, false, 0.3048, CMeasurementPrefix::One(), 0);
+        static CSpeedUnit fts(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second"), "ft/s", 0.3048, 0);
         return fts;
     }
 
@@ -604,7 +873,7 @@ public:
      */
     static const CSpeedUnit &ft_min()
     {
-        static CSpeedUnit ftmin("feet/minute", "ft/min", false, false, 0.3048 / 60.0, CMeasurementPrefix::One(), 0);
+        static CSpeedUnit ftmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per minute"), "ft/min", 0.3048 / 60.0, 0);
         return ftmin;
     }
 
@@ -614,8 +883,39 @@ public:
      */
     static const CSpeedUnit &km_h()
     {
-        static CSpeedUnit kmh("kilometers/hour", "km/h", false, false, 1.0 / 3.6, CMeasurementPrefix::One(), 1);
+        static CSpeedUnit kmh(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer per hour"), "km/h", 1.0 / 3.6, 1);
         return kmh;
+    }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CSpeedUnit> &allUnits()
+    {
+        static QList<CSpeedUnit> u;
+        if (u.isEmpty())
+        {
+            u.append(CSpeedUnit::ft_min());
+            u.append(CSpeedUnit::ft_s());
+            u.append(CSpeedUnit::km_h());
+            u.append(CSpeedUnit::kts());
+            u.append(CSpeedUnit::m_s());
+            u.append(CSpeedUnit::NM_h());
+        }
+        return u;
+    }
+
+protected:
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CMeasurementUnit::unitFromSymbol<CSpeedUnit>(unitName);
     }
 };
 
@@ -626,26 +926,65 @@ class CTimeUnit : public CMeasurementUnit
 {
 private:
     /*!
-     * Constructor
      * \brief Time unit constructor
      * \param name
-     * \param unitName
-     * \param isSiUnit
-     * \param isSIBaseUnit
-     * \param conversionFactorToSI
-     * \param mulitplier
+     * \param symbol
+     * \param factor
      * \param displayDigits
      * \param epsilon
      */
-    CTimeUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "time", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CTimeUnit(const QString &name, const QString &symbol, double factor, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, factor, displayDigits, epsilon) {}
+
+    /*!
+     * \brief Time unit constructor
+     * \param name
+     * \param symbol
+     * \param prefix
+     * \param base
+     * \param displayDigits
+     * \param epsilon
+     */
+    CTimeUnit(const QString &name, const QString &symbol, const CMeasurementPrefix &prefix, const CTimeUnit &base, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, base, prefix, displayDigits, epsilon) {}
+
+    /*!
+     * \brief Time unit constructor
+     * \param name
+     * \param symbol
+     * \param converter
+     * \param displayDigits
+     * \param epsilon
+     */
+    CTimeUnit(const QString &name, const QString &symbol, Converter *converter, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon) {}
+
 public:
+    /*!
+     * Default constructor, required for Qt Metasystem
+     */
+    CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
 
     /*!
      * Constructor, allows to implement methods in base class
-     * \param otherUnit
+     * \param other
      */
-    CTimeUnit(const CTimeUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
+    CTimeUnit(const CTimeUnit &other) : CMeasurementUnit(other) {}
+
+    /*!
+     * Default unit
+     * \return
+     */
+    static const CTimeUnit &defaultUnit() { return s(); }
+
+    /*!
+     * \brief Override for subdivisional units.
+     * \param value
+     * \param digits
+     * \param i18n
+     * \return
+     */
+    virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
 
     /*!
      * \brief Second s
@@ -653,7 +992,7 @@ public:
      */
     static const CTimeUnit &s()
     {
-        static CTimeUnit s("second", "s", true, true, 1, CMeasurementPrefix::None(), 1);
+        static CTimeUnit s(QT_TRANSLATE_NOOP("CMeasurementUnit", "second"), "s", 1, 1);
         return s;
     }
 
@@ -663,7 +1002,7 @@ public:
      */
     static const CTimeUnit &ms()
     {
-        static CTimeUnit ms("millisecond", "ms", true, false, 1E-03, CMeasurementPrefix::m(), 0);
+        static CTimeUnit ms(QT_TRANSLATE_NOOP("CMeasurementUnit", "millisecond"), "ms", CMeasurementPrefix::m(), s(), 0);
         return ms;
     }
 
@@ -673,7 +1012,7 @@ public:
      */
     static const CTimeUnit &h()
     {
-        static CTimeUnit h("hour", "h", false, false, 3600, CMeasurementPrefix::None(), 1);
+        static CTimeUnit h(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour"), "h", 3600, 1);
         return h;
     }
 
@@ -683,7 +1022,7 @@ public:
      */
     static const CTimeUnit &min()
     {
-        static CTimeUnit min("minute", "min", false, false, 60, CMeasurementPrefix::None(), 2);
+        static CTimeUnit min(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute"), "min", 60, 2);
         return min;
     }
 
@@ -693,10 +1032,72 @@ public:
      */
     static const CTimeUnit &d()
     {
-        static CTimeUnit day("day", "d", false, false, 3600 * 24, CMeasurementPrefix::None(), 1);
+        static CTimeUnit day(QT_TRANSLATE_NOOP("CMeasurementUnit", "day"), "d", 3600 * 24, 1);
         return day;
     }
 
+    /*!
+     * \brief Hours, minutes, seconds
+     */
+    static const CTimeUnit &hms()
+    {
+        static CTimeUnit hms(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second"), "hms", new SubdivisionConverter2<60, 100, 60, 100>(3600), 4);
+        return hms;
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m%L3s");
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%-L1h%L2m%L3s");
+    }
+
+    /*!
+     * \brief Hours, minutes
+     */
+    static const CTimeUnit &hrmin()
+    {
+        static CTimeUnit hrmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute"), "hm", new SubdivisionConverter<60, 100>(3600), 3);
+        return hrmin;
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m");
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1h%L2m");
+    }
+
+    /*!
+     * \brief Minutes, seconds
+     */
+    static const CTimeUnit &minsec()
+    {
+        static CTimeUnit minsec(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second"), "minsec", new SubdivisionConverter<60, 100>(60), 2);
+        return minsec;
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1m%L2s");
+        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1m%L2s");
+    }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CTimeUnit> &allUnits()
+    {
+        static QList<CTimeUnit> u;
+        if (u.isEmpty())
+        {
+            u.append(CTimeUnit::d());
+            u.append(CTimeUnit::h());
+            u.append(CTimeUnit::min());
+            u.append(CTimeUnit::ms());
+            u.append(CTimeUnit::s());
+        }
+        return u;
+    }
+
+protected:
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CMeasurementUnit::unitFromSymbol<CTimeUnit>(unitName);
+    }
 };
 
 /*!
@@ -706,25 +1107,33 @@ class CAccelerationUnit : public CMeasurementUnit
 {
 private:
     /*!
-     * Constructor
      * \brief Acceleration unit constructor
      * \param name
-     * \param unitName
-     * \param isSiUnit
-     * \param isSIBaseUnit
-     * \param conversionFactorToSI
-     * \param mulitplier
+     * \param symbol
+     * \param factor
      * \param displayDigits
      * \param epsilon
      */
-    CAccelerationUnit(const QString &name, const QString &unitName, bool isSiUnit, bool isSIBaseUnit, double conversionFactorToSI = 1.0, const CMeasurementPrefix &mulitplier = CMeasurementPrefix::One(), qint32 displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, unitName, "time", isSiUnit, isSIBaseUnit, conversionFactorToSI, mulitplier, displayDigits, epsilon) {}
+    CAccelerationUnit(const QString &name, const QString &symbol, double factor, int displayDigits = 2, double epsilon = 1E-9) :
+        CMeasurementUnit(name, symbol, factor, displayDigits, epsilon) {}
+
 public:
     /*!
-     * Constructor, allows to implement methods in base class
-     * \param otherUnit
+     * Default constructor, required for Qt Metasystem
      */
-    CAccelerationUnit(const CAccelerationUnit &otherUnit) : CMeasurementUnit(otherUnit) {}
+    CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}
+
+    /*!
+     * Copy constructor
+     * \param other
+     */
+    CAccelerationUnit(const CAccelerationUnit &other) : CMeasurementUnit(other) {}
+
+    /*!
+     * Default unit
+     * \return
+     */
+    static const CAccelerationUnit &defaultUnit() { return m_s2(); }
 
     /*!
      * \brief Meter/second^2 (m/s^2)
@@ -732,7 +1141,7 @@ public:
      */
     static const CAccelerationUnit &m_s2()
     {
-        static CAccelerationUnit ms2("meter/second²", "m/s²", true, false, 1, CMeasurementPrefix::None(), 1);
+        static CAccelerationUnit ms2(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second per second"), QT_TRANSLATE_NOOP("CMeasurementUnit", "m/s^2"), 1, 1);
         return ms2;
     }
 
@@ -742,11 +1151,49 @@ public:
      */
     static const CAccelerationUnit &ft_s2()
     {
-        static CAccelerationUnit fts2("feet/seconds²", "ft/s²", true, false, 3.28084, CMeasurementPrefix::m(), 0);
+        static CAccelerationUnit fts2(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second per second"), QT_TRANSLATE_NOOP("CMeasurementUnit", "ft/s^2"), 3.28084, 0);
         return fts2;
+    }
+
+    /*!
+     * \brief All units
+     * \return
+     */
+    static const QList<CAccelerationUnit> &allUnits()
+    {
+        static QList<CAccelerationUnit> u;
+        if (u.isEmpty())
+        {
+            u.append(CAccelerationUnit::ft_s2());
+            u.append(CAccelerationUnit::m_s2());
+        }
+        return u;
+    }
+
+protected:
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        QString unitName;
+        argument >> unitName;
+        (*this) = CMeasurementUnit::unitFromSymbol<CAccelerationUnit>(unitName);
     }
 };
 
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLengthUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAngleUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequencyUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMassUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressureUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperatureUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeedUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTimeUnit)
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAccelerationUnit)
+
 #endif // guard

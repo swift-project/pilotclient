@@ -21,34 +21,30 @@ public:
     /*!
      * \brief Default constructor
      */
-    CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::m_s2(), CAccelerationUnit::m_s2()) {}
-
-    /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CAcceleration(qint32 value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit, CAccelerationUnit::m_s2()) {}
+    CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::defaultUnit()) {}
 
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
-    CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit, CAccelerationUnit::m_s2()) {}
+    CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit) {}
 
     /*!
-     * \brief Copy constructor
-     * \param acceleration
+     * \brief Copy constructor by base type
+     * \param base
      */
-    CAcceleration(const CPhysicalQuantity &acceleration) : CPhysicalQuantity(acceleration) {}
+    CAcceleration(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
 
     /*!
      * \brief Virtual destructor
      */
     virtual ~CAcceleration() {}
 };
+
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAcceleration)
 
 #endif // guard

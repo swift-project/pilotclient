@@ -6,6 +6,7 @@
 #include "blackmisc/aviomodulator.h"
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
+#include "blackmisc/avioadfsystem.h"
 
 using BlackMisc::PhysicalQuantities::CFrequency;
 using BlackMisc::PhysicalQuantities::CFrequencyUnit;
@@ -26,54 +27,38 @@ template <class AVIO> void CModulator<AVIO>::toggleActiveStandby()
 }
 
 /*
- * String representation
+ * Register metadata
  */
-template <class AVIO> QString CModulator<AVIO>::stringForConverter() const
+template <class AVIO> void CModulator<AVIO>::registerMetadata()
 {
-    QString s(this->getName());
-    s.append(" Active: ").append(this->m_frequencyActive.unitValueRoundedWithUnit(3));
-    s.append(" Standby: ").append(this->m_frequencyStandby.unitValueRoundedWithUnit(3));
-    return s;
-}
-
-/*
- * Assigment operator =
- */
-template <class AVIO> CModulator<AVIO>& CModulator<AVIO>::operator=(const CModulator<AVIO> &otherModulator)
-{
-
-    if (this == &otherModulator)  return *this; // Same object?
-    this->m_frequencyActive = otherModulator.m_frequencyActive;
-    this->m_frequencyStandby = otherModulator.m_frequencyStandby;
-    this->m_digits = otherModulator.m_digits;
-    this->setName(otherModulator.getName());
-    return *this;
+    qRegisterMetaType<AVIO>(typeid(AVIO).name());
+    qDBusRegisterMetaType<AVIO>();
 }
 
 /*
  * Equal operator ==
  */
-template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &otherModulator) const
+template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &other) const
 {
-    if (this == &otherModulator) return true;
-    return (this->getName() == otherModulator.getName() &&
-            this->m_frequencyActive == otherModulator.m_frequencyActive &&
-            this->m_frequencyStandby == otherModulator.m_frequencyStandby);
+    if (this == &other) return true;
+    return (this->getName() == other.getName() &&
+            this->m_frequencyActive == other.m_frequencyActive &&
+            this->m_frequencyStandby == other.m_frequencyStandby);
 }
 
 /*
  * Equal operator !=
  */
-template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> &otherModulator) const
+template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> &other) const
 {
-    return !(otherModulator == (*this));
+    return !(other == (*this));
 }
-
 
 // see here for the reason of thess forward instantiations
 // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
 template class CModulator<CComSystem>;
 template class CModulator<CNavSystem>;
+template class CModulator<CAdfSystem>;
 
 } // namespace
 } // namespace

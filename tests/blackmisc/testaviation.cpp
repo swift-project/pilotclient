@@ -24,9 +24,9 @@ CTestAviation::CTestAviation(QObject *parent): QObject(parent)
  */
 void CTestAviation::headingBasics()
 {
-    CHeading h1(180, true, CAngleUnit::deg());
-    CHeading h2(180, false, CAngleUnit::deg());
-    CHeading h3(181, true, CAngleUnit::deg());
+    CHeading h1(180, CHeading::Magnetic, CAngleUnit::deg());
+    CHeading h2(180, CHeading::True, CAngleUnit::deg());
+    CHeading h3(181, CHeading::Magnetic, CAngleUnit::deg());
     CAngle a1(200, CAngleUnit::deg());
     CHeading h4;
     h4 = h1;
@@ -37,21 +37,11 @@ void CTestAviation::headingBasics()
     QVERIFY2(h4 == h1, "Values shall be equal");
 
     h1 -= h1;
-    QVERIFY2(h1.unitValueToDouble() == 0, "Value shall be 0");
+    QVERIFY2(h1.value() == 0, "Value shall be 0");
 
     // h4 = h1 + h2; does not work, because misleading
     h2 += h2; // add just angle
-    QVERIFY2(h2.unitValueToDouble() == 360, "Value shall be 360");
-}
-
-/*
- * Vertical positions
- */
-void CTestAviation::verticalPosition()
-{
-    CAviationVerticalPositions vp1 = CAviationVerticalPositions::fromAltitudeAndElevationInFt(10000.0, 3000.0);
-    CAviationVerticalPositions vp2 = vp1;
-    QVERIFY2(vp1 == vp2, "Values shall be equal");
+    QVERIFY2(h2.value() == 360, "Value shall be 360");
 }
 
 /*

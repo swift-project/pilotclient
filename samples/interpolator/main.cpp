@@ -46,9 +46,9 @@ int main(int argc, char *argv[])
     CSpeed speed(20, CSpeedUnit::kts());
     CCoordinateNed ned;
 
-    ned = interpolator.pushUpdate(vecGeo, speed, CHeading(80, false, CAngleUnit::deg()), zeroAngle, zeroAngle);
+    ned = interpolator.pushUpdate(vecGeo, speed, CHeading(80, CHeading::True, CAngleUnit::deg()), zeroAngle, zeroAngle);
     cout << "Interpolator NED 1: "  << ned << endl;
-    ned = interpolator.pushUpdate(vecGeo2, speed, CHeading(250, false, CAngleUnit::deg()), zeroAngle, zeroAngle);
+    ned = interpolator.pushUpdate(vecGeo2, speed, CHeading(250, CHeading::True, CAngleUnit::deg()), zeroAngle, zeroAngle);
     cout << "Interpolator NED 2: "  << ned << endl;
 
     double duration = timer.nsecsElapsed();

@@ -16,38 +16,35 @@ namespace Aviation
 /*
  * Own implementation for streaming
  */
-QString CAltitude::stringForConverter() const
+QString CAltitude::convertToQString(bool /* i18n */) const
 {
-    QString s = CLength::stringForConverter();
-    return s.append(this->m_msl ? " MSL" : " AGL");
-}
-
-/*
- * Assigment
- */
-CAltitude &CAltitude::operator =(const CAltitude &otherAltitude)
-{
-    // Check for self-assignment!
-    if (this == &otherAltitude)  return *this;
-    CLength::operator = (otherAltitude);
-    this->m_msl = otherAltitude.m_msl;
-    return (*this);
+    QString s = this->CLength::convertToQString();
+    return s.append(this->isMeanSeaLevel() ? " MSL" : " AGL");
 }
 
 /*
  * Equal?
  */
-bool CAltitude::operator ==(const CAltitude &otherAltitude)
+bool CAltitude::operator ==(const CAltitude &other)
 {
-    return otherAltitude.m_msl == this->m_msl && CLength::operator ==(otherAltitude);
+    return other.m_datum == this->m_datum && this->CLength::operator ==(other);
 }
 
 /*
  * Unequal?
  */
-bool CAltitude::operator !=(const CAltitude &otherAltitude)
+bool CAltitude::operator !=(const CAltitude &other)
 {
-    return !((*this) == otherAltitude);
+    return !((*this) == other);
+}
+
+/*
+ * Register metadata
+ */
+void CAltitude::registerMetadata()
+{
+    qRegisterMetaType<CAltitude>(typeid(CAltitude).name());
+    qDBusRegisterMetaType<CAltitude>();
 }
 
 } // namespace

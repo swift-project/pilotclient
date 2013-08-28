@@ -5,6 +5,8 @@
 
 #ifndef BLACKMISC_AVIOMODULATORUNIT_H
 #define BLACKMISC_AVIOMODULATORUNIT_H
+
+#include <QDBusMetaType>
 #include "blackmisc/aviobase.h"
 
 namespace BlackMisc
@@ -25,7 +27,6 @@ protected:
     int m_digits; //!< digits used
 
 protected:
-
     /*!
      * \brief Default constructor
      */
@@ -33,10 +34,10 @@ protected:
 
     /*!
      * \brief Copy constructor
-     * \param otherUnit
+     * \param other
      */
-    CModulator(const CModulator &otherUnit) : CAvionicsBase(otherUnit.getName()),
-        m_frequencyActive(otherUnit.m_frequencyActive), m_frequencyStandby(otherUnit.m_frequencyStandby), m_digits(otherUnit.m_digits) {}
+    CModulator(const CModulator &other) : CAvionicsBase(other.getName()),
+        m_frequencyActive(other.m_frequencyActive), m_frequencyStandby(other.m_frequencyStandby), m_digits(other.m_digits) {}
 
     /*!
      * \brief Constructor
@@ -46,13 +47,20 @@ protected:
      * \param digits
      */
     CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits) :
-        CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_digits(digits) { }
+        CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_digits(digits) {}
 
     /*!
      * \brief String for converter
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const;
+    virtual QString convertToQString(bool i18n = false) const
+    {
+        QString s(this->getName());
+        s.append(" Active: ").append(this->m_frequencyActive.valueRoundedWithUnit(3, i18n));
+        s.append(" Standby: ").append(this->m_frequencyStandby.valueRoundedWithUnit(3, i18n));
+        return s;
+    }
 
     /*!
      * \brief Set active frequency
@@ -91,25 +99,19 @@ protected:
     }
 
     /*!
-     * \brief Assigment operator =
-     * \param otherModulator
-     * \return
-     */
-    CModulator &operator =(const CModulator &otherModulator);
-
-    /*!
      * \brief operator ==
-     * \param otherModulator
+     * \param other
      * \return
      */
-    bool operator ==(const CModulator &otherModulator) const;
+    bool operator ==(const CModulator &other) const;
 
     /*!
      * \brief operator !=
-     * \param otherModulator
+     * \param other
      * \return
      */
-    bool operator !=(const CModulator &otherModulator) const;
+    bool operator !=(const CModulator &other) const;
+
     /*!
      * \brief COM1
      * \return
@@ -166,7 +168,7 @@ protected:
      */
     static const QString &NameNav3()
     {
-        static QString n("NAV2");
+        static QString n("NAV3");
         return n;
     }
 
@@ -200,6 +202,30 @@ protected:
         return f;
     }
 
+    /*!
+     * \brief Stream to DBus <<
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
+        this->CAvionicsBase::marshallToDbus(argument);
+        argument << this->m_frequencyActive;
+        argument << this->m_frequencyStandby;
+        argument << this->m_digits;
+    }
+
+    /*!
+     * \brief Stream from DBus >>
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        this->CAvionicsBase::unmarshallFromDbus(argument);
+        argument >> this->m_frequencyActive;
+        argument >> this->m_frequencyStandby;
+        argument >> this->m_digits;
+    }
+
 public:
     /*!
      * \brief Virtual destructor
@@ -214,6 +240,7 @@ public:
     {
         return this->m_frequencyActive == CModulator::FrequencyNotSet();
     }
+
     /*!
      * \brief Toggle active and standby frequencies
      */
@@ -254,6 +281,11 @@ public:
     {
         this->m_frequencyStandby = frequency;
     }
+
+    /*!
+     * \brief Register metadata
+     */
+    static void registerMetadata();
 };
 
 } // namespace

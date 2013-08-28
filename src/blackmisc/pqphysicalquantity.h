@@ -10,24 +10,30 @@
 #include "blackmisc/pqbase.h"
 #include "blackmisc/pqunits.h"
 #include "blackmisc/debug.h"
+#include <QDBusMetaType>
 #include <QtGlobal>
 #include <QString>
 #include <QLocale>
+#include <typeinfo>
 
 namespace BlackMisc
 {
 namespace PhysicalQuantities
 {
+
 /*!
  * \brief A physical quantity such as "5m", "20s", "1500ft/s"
  */
-template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CBaseStreamStringifier
+template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CStreamable
 {
 private:
-    double m_unitValueD; //!< value backed by double
-    qint32 m_unitValueI; //!< value backed by integer, allows sole integer arithmetic
-    double m_convertedSiUnitValueD; //!< SI unit value
-    bool m_isIntegerBaseValue; //!< flag integer? / double?
+    double m_value; //!< numeric part
+    MU m_unit; //!< unit part
+
+    /*!
+     * Which subclass of CMeasurementUnit does this quantity use?
+     */
+    typedef MU UnitClass;
 
     /*!
      * \brief Easy access to derived class (CRTP template parameter)
@@ -48,63 +54,34 @@ private:
     }
 
 protected:
-    MU m_unit; //!< unit
-    MU m_conversionSiUnit; //!< corresponding SI base unit
-
-    /*!
-     * \brief Constructor by integer
-     * \param baseValue
-     * \param unit
-     * \param siConversionUnit
-     */
-    CPhysicalQuantity(qint32 baseValue, const MU &unit, const MU &siConversionUnit);
-
     /*!
      * \brief Constructor with double
-     * \param baseValue
+     * \param value
      * \param unit
-     * \param siConversionUnit
      */
-    CPhysicalQuantity(double baseValue, const MU &unit, const MU &siConversionUnit);
+    CPhysicalQuantity(double value, const MU &unit);
 
     /*!
-     * \brief String for converter and streaming
+     * \brief Name as string
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const
+    virtual QString convertToQString(bool i18n = false) const
     {
-        return this->unitValueRoundedWithUnit(-1);
+        return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
     }
 
     /*!
-     * \brief Init by integer
-     * \param baseValue
+     * \brief Change value without changing unit
+     * \param value
      */
-    void setUnitValue(qint32 baseValue);
-
-    /*!
-     * \brief Init by double
-     * \param baseValue
-     */
-
-    void setUnitValue(double baseValue);
-
-    /*!
-     * \brief Set the SI value
-     */
-    void setConversionSiUnitValue();
+    void setValueSameUnit(double value);
 
 public:
     /*!
-     * \brief Copy constructor
-     * \param otherQuantity
-     */
-    CPhysicalQuantity(const CPhysicalQuantity &otherQuantity);
-
-    /*!
      * \brief Virtual destructor
      */
-    virtual ~CPhysicalQuantity();
+    virtual ~CPhysicalQuantity() {}
 
     /*!
      * \brief Unit of the distance
@@ -116,47 +93,11 @@ public:
     }
 
     /*!
-     * \brief Conversion SI unit
-     * \return
-     */
-    MU getConversionSiUnit() const
-    {
-        return this->m_conversionSiUnit;
-    }
-
-    /*!
-     * \brief Switch unit, e.g. feet to meter
+     * \brief Change unit, and convert value to maintain the same quantity
      * \param newUnit
      * \return
      */
     PQ &switchUnit(const MU &newUnit);
-
-    /*!
-     * \brief Value in SI base unit? Meter is an SI base unit, hertz not!
-     * \return
-     */
-    bool isSiBaseUnit() const
-    {
-        return this->m_unit.isSiBaseUnit();
-    }
-
-    /*!
-     * \brief Value in SI unit? Hertz is an derived SI unit, NM not!
-     * \return
-     */
-    bool isSiUnit() const
-    {
-        return this->m_unit.isSiUnit();
-    }
-
-    /*!
-     * \brief Value in unprefixed SI unit? Meter is a unprefixed, kilometer a prefixed SI Unit
-     * \return
-     */
-    bool isUnprefixedSiUnit() const
-    {
-        return this->m_unit.isUnprefixedSiUnit();
-    }
 
     /*!
      * \brief Value in given unit
@@ -166,7 +107,16 @@ public:
     double value(const MU &unit) const;
 
     /*!
-     * \brief Rounded value in unit
+     * \brief Value in current unit
+     * \return
+     */
+    double value() const
+    {
+        return this->m_value;
+    }
+
+    /*!
+     * \brief Rounded value in given unit
      * \param unit
      * \param digits
      * \return
@@ -174,105 +124,46 @@ public:
     double valueRounded(const MU &unit, int digits = -1) const;
 
     /*!
-     * \brief Value to QString with unit, e.g. "5.00m"
+     * \brief Rounded value in current unit
+     * \param digits
+     * \return
+     */
+    double valueRounded(int digits = -1) const
+    {
+        return this->valueRounded(this->m_unit, digits);
+    }
+
+    /*!
+     * \brief Value to QString with the given unit, e.g. "5.00m"
      * \param unit
      * \param digits
+     * \param i18n
      * \return
      */
-    QString valueRoundedWithUnit(const MU &unit, int digits = -1) const;
+    QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
 
     /*!
-     * \brief Value as int
+     * \brief Value to QString with the current unit, e.g. "5.00m"
+     * \param digits
+     * \param i18n
      * \return
      */
-    qint32 unitValueToInteger() const
+    QString valueRoundedWithUnit(int digits = -1, bool i18n = false) const
     {
-        return this->m_unitValueI;
+        return this->valueRoundedWithUnit(this->m_unit, digits, i18n);
     }
 
     /*!
-     * \brief Value as double
-     * \return
-     */
-    double unitValueToDouble() const
-    {
-        return this->m_unitValueD;
-    }
-
-    /*!
-     * \brief Value to QString with unit, e.g. "5.00m"
-     * \param digits
-     * \return
-     */
-    QString unitValueRoundedWithUnit(int digits = -1) const;
-
-    /*!
-     * \brief Rounded value by n digits
-     * \param digits
-     * \return
-     */
-    double unitValueToDoubleRounded(int digits = -1) const;
-
-    /*!
-     * \brief Rounded value by n digits
-     * \param digits if no value is provided, unit rounding is taken
-     * \return
-     */
-    QString unitValueToQStringRounded(int digits = -1) const;
-
-    /*!
-     * \brief Conversion SI value as double
-     * \return
-     */
-    double convertedSiValueToDouble() const
-    {
-        return this->m_convertedSiUnitValueD;
-    }
-
-    /*!
-     * \brief SI value as integer
-     * \return
-     */
-    qint32 convertedSiValueToInteger() const
-    {
-        return static_cast<qint32>(
-                   BlackMisc::Math::CMath::round(this->m_convertedSiUnitValueD, 0));
-    }
-
-    /*!
-     * \brief Rounded SI value by n digits
-     * \param digits
-     * \return
-     */
-    double convertedSiValueToDoubleRounded(int digits = -1) const;
-
-    /*!
-     * \brief Rounded value by n digits
-     * \param digits if no value is provided, unit rounding is taken
-     * \return
-     */
-    QString convertedSiValueToQStringRounded(int digits = -1) const;
-
-    /*!
-     * \brief SI Base unit value rounded
-     * \param digits
-     * \return
-     */
-    QString convertedSiValueRoundedWithUnit(int digits = -1) const;
-
-    /*!
-     * \brief Add to the unit value.
-     * \remarks Since overloading the + operator with double did lead to unintended conversions, as explicit method
+     * \brief Add to the value in the current unit.
      * \param value
      */
-    void addUnitValue(double value);
+    void addValueSameUnit(double value);
 
     /*!
-     * \brief Substratc to the unit value.
-     * \remarks Since overloading the - operator with double did lead to unintended conversions, as explicit method
+     * \brief Substract from the value in the current unit.
      * \param value
      */
-    void substractUnitValue(double value);
+    void substractValueSameUnit(double value);
 
     /*!
     * \brief Multiply operator *=
@@ -298,12 +189,12 @@ public:
     /*!
      * \brief Operator to support commutative multiplication
      * \param factor
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    friend PQ operator *(double factor, const PQ &otherQuantity)
+    friend PQ operator *(double factor, const PQ &other)
     {
-        return otherQuantity * factor;
+        return other * factor;
     }
 
     /*!
@@ -315,80 +206,73 @@ public:
 
     /*!
      * \brief Equal operator ==
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator==(const CPhysicalQuantity &otherQuantity) const;
+    bool operator==(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Not equal operator !=
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator!=(const CPhysicalQuantity &otherQuantity) const;
+    bool operator!=(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Plus operator +=
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    CPhysicalQuantity &operator +=(const CPhysicalQuantity &otherQuantity);
+    CPhysicalQuantity &operator +=(const CPhysicalQuantity &other);
 
     /*!
      * \brief Minus operator-=
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    CPhysicalQuantity &operator -=(const CPhysicalQuantity &otherQuantity);
+    CPhysicalQuantity &operator -=(const CPhysicalQuantity &other);
 
     /*!
      * \brief Greater operator >
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator >(const CPhysicalQuantity &otherQuantity) const;
+    bool operator >(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Less operator <
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator <(const CPhysicalQuantity &otherQuantity) const;
+    bool operator <(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Less equal operator <=
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator <=(const CPhysicalQuantity &otherQuantity) const;
+    bool operator <=(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Greater equal operator >=
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    bool operator >=(const CPhysicalQuantity &otherQuantity) const;
-
-    /*!
-     * \brief Assignment operator =
-     * \param otherQuantity
-     * \return
-     */
-    CPhysicalQuantity &operator =(const CPhysicalQuantity &otherQuantity);
+    bool operator >=(const CPhysicalQuantity &other) const;
 
     /*!
      * \brief Plus operator +
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    PQ operator +(const PQ &otherQuantity) const;
+    PQ operator +(const PQ &other) const;
 
     /*!
      * \brief Minus operator -
-     * \param otherQuantity
+     * \param other
      * \return
      */
-    PQ operator -(const PQ &otherQuantity) const;
+    PQ operator -(const PQ &other) const;
 
     /*!
      * \brief Quantity value <= epsilon
@@ -396,26 +280,61 @@ public:
      */
     bool isZeroEpsilon() const
     {
-        if (this->m_isIntegerBaseValue) return this->m_unitValueI == 0;
-        return this->m_unit.isEpsilon(this->m_unitValueD);
+        return this->m_unit.isEpsilon(this->m_value);
     }
 
     /*!
      * \brief Value >= 0 epsilon considered
      * \return
      */
-    bool isGreaterOrEqualZeroEpsilon() const
+    bool isNonNegativeEpsilon() const
     {
-        return this->isZeroEpsilon() || this->m_unitValueD > 0;
+        return this->isZeroEpsilon() || this->m_value > 0;
     }
 
     /*!
      * \brief Value <= 0 epsilon considered
      * \return
      */
-    bool isLessOrEqualZeroEpsilon() const
+    bool isNonPositiveEpsilon() const
     {
-        return this->isZeroEpsilon() || this->m_unitValueD < 0;
+        return this->isZeroEpsilon() || this->m_value < 0;
+    }
+
+    /*!
+     * \brief Stream to DBus <<
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const
+    {
+        argument << this->value(UnitClass::defaultUnit());
+        argument << this->m_value;
+        argument << this->m_unit;
+    }
+
+    /*!
+     * \brief Stream from DBus >>
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        double ignore;
+        argument >> ignore;
+        argument >> this->m_value;
+        argument >> this->m_unit;
+    }
+
+    /*!
+     * \brief Register metadata of unit and quantity
+     */
+    static void registerMetadata()
+    {
+        qRegisterMetaType<MU>(typeid(MU).name());
+        qDBusRegisterMetaType<MU>();
+        qDBusRegisterMetaType<QList<MU> >();
+        qRegisterMetaType<PQ>(typeid(PQ).name());
+        qDBusRegisterMetaType<PQ>();
+        qDBusRegisterMetaType<QList<PQ> >();
     }
 };
 

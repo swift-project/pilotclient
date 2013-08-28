@@ -16,15 +16,11 @@ namespace BlackMiscTest
  */
 int CSamplesAviation::samples()
 {
-    CHeading h1(180, true, CAngleUnit::deg());
-    CHeading h2(180, false, CAngleUnit::deg());
+    CHeading h1(180, CHeading::Magnetic, CAngleUnit::deg());
+    CHeading h2(180, CHeading::True, CAngleUnit::deg());
 
     qDebug() << h1;
     qDebug() << h1 << h2 << (h1 == h2) << (h1 != h2) << (h1 == h1);
-
-    CAviationVerticalPositions vp1 = CAviationVerticalPositions::fromAltitudeAndElevationInFt(10000.0, 1111.0);
-    CAviationVerticalPositions vp2 = vp1;
-    qDebug() << vp1 << (vp1 == vp2) << (vp1 != vp2);
 
     CComSystem c1 = CComSystem::getCom1System(125.3);
     qDebug() << c1;

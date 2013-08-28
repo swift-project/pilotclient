@@ -8,7 +8,6 @@
 
 #include "blackmisc/pqconstants.h"
 #include "blackmisc/avheading.h"
-#include "blackmisc/avverticalpositions.h"
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/aviotransponder.h"

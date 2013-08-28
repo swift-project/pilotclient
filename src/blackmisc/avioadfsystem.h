@@ -7,6 +7,7 @@
 #define BLACKMISC_AVIOADFSYSTEM_H
 
 #include "blackmisc/aviomodulator.h"
+#include <stdexcept>
 
 namespace BlackMisc
 {
@@ -24,11 +25,12 @@ private:
      * \param f
      * \return
      */
-    bool isValidFrequency(CFrequency f) const
+    bool isValidFrequency(PhysicalQuantities::CFrequency f) const
     {
-        double fr = f.valueRounded(CFrequencyUnit::kHz(), this->m_digits);
+        double fr = f.valueRounded(PhysicalQuantities::CFrequencyUnit::kHz(), this->m_digits);
         return fr >= 190.0 && fr <= 1750.0;
     }
+
     /*!
      * \brief Constructor
      * \param validate
@@ -38,7 +40,7 @@ private:
      * \param digits
      *
      */
-    CAdfSystem(bool validate, const QString &name, const CFrequency &activeFrequency, const CFrequency &standbyFrequency, int digits = 3):
+    CAdfSystem(bool validate, const QString &name, const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency, int digits = 3):
         CModulator(name, activeFrequency, standbyFrequency, digits)
     {
         this->validate(validate);
@@ -53,8 +55,8 @@ protected:
     {
         if (this->isDefaultValue()) return true; // special case
         return
-            (this->isValidFrequency(this->getFrequencyActive()) &&
-             (this->isValidFrequency(this->getFrequencyStandby())));
+            this->isValidFrequency(this->getFrequencyActive()) &&
+            this->isValidFrequency(this->getFrequencyStandby());
     }
 
     /*!
@@ -73,16 +75,19 @@ protected:
         if (!valid) throw std::range_error("Illegal values in CAdfSystem::validate");
         return true;
     }
+
 public:
     /*!
      * Default constructor
      */
     CAdfSystem() : CModulator() {}
+
     /*!
      * \brief Copy constructor
-     * \param otherSystem
+     * \param other
      */
-    CAdfSystem(const CAdfSystem &otherSystem) : CModulator(otherSystem) {}
+    CAdfSystem(const CAdfSystem &other) : CModulator(other) {}
+
     /*!
      * \brief Constructor
      * \param name
@@ -90,39 +95,32 @@ public:
      * \param standbyFrequency
      * \param digits
      */
-    CAdfSystem(const QString &name, const CFrequency &activeFrequency, const CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
+    CAdfSystem(const QString &name, const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
         CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits)
     {
         this->validate(true);
     }
+
     /*!
      * \brief Set active frequency
      * \param frequencyKHz
      */
     void setFrequencyActiveKHz(double frequencyKHz)
     {
-        CModulator::setFrequencyActiveKHz(frequencyKHz);
+        this->CModulator::setFrequencyActiveKHz(frequencyKHz);
         this->validate(true);
     }
+
     /*!
      * \brief Set standby frequency
      * \param frequencyKHz
      */
-    void setFrequencyActiveKHz(double frequencyKHz)
+    void setFrequencyStandbyKHz(double frequencyKHz)
     {
-        CModulator::setFrequencyStandbyKHz(frequencyKHz);
+        this->CModulator::setFrequencyStandbyKHz(frequencyKHz);
         this->validate(true);
     }
-    /*!
-     * \brief Assigment operator =
-     * \param otherSystem
-     * \return
-     */
-    CAdfSystem &operator =(const CAdfSystem &otherSystem)
-    {
-        CModulator::operator =(otherSystem);
-        return (*this);
-    }
+
     /*!
      * \brief operator ==
      * \param otherSystem
@@ -130,8 +128,9 @@ public:
      */
     bool operator ==(const CAdfSystem &otherSystem) const
     {
-        return CModulator::operator ==(otherSystem);
+        return this->CModulator::operator ==(otherSystem);
     }
+
     /*!
      * \brief operator ==
      * \param otherSystem
@@ -139,42 +138,43 @@ public:
      */
     bool operator !=(const CAdfSystem &otherSystem) const
     {
-        return CModulator::operator !=(otherSystem);
+        return this->CModulator::operator !=(otherSystem);
     }
 
     /*!
      * Try to get a ADF unit with given name and frequency. Returns true in case an object
-     * has been sucessfully created, otherwise returns a default object.
-     * \param adfSystem
+     * has been sucessfully created, otherwise returns a default object and false.
+     * \param[out] o_adfSystem
      * \param name
      * \param activeFrequencyKHz
      * \param standbyFrequencyKHz
      * \return
      */
-    static bool tryGetAdfSystem(CAdfSystem &adfSystem, const QString &name, double activeFrequencyKHz, double standbyFrequencyKHz = -1)
+    static bool tryGetAdfSystem(CAdfSystem &o_adfSystem, const QString &name, double activeFrequencyKHz, double standbyFrequencyKHz = -1)
     {
-        adfSystem = CAdfSystem(false, name, CFrequency(activeFrequencyKHz, CFrequencyUnit::MHz()), CFrequency(standbyFrequencyKHz < 0 ? activeFrequencyKHz : standbyFrequencyKHz, CFrequencyUnit::MHz()));
+        o_adfSystem = CAdfSystem(false, name, PhysicalQuantities::CFrequency(activeFrequencyKHz, PhysicalQuantities::CFrequencyUnit::MHz()), PhysicalQuantities::CFrequency(standbyFrequencyKHz < 0 ? activeFrequencyKHz : standbyFrequencyKHz, PhysicalQuantities::CFrequencyUnit::MHz()));
         bool s;
-        if (!(s = adfSystem.validate(false))) adfSystem = CAdfSystem(); // reset to default
+        if (!(s = o_adfSystem.validate(false))) o_adfSystem = CAdfSystem(); // reset to default
         return s;
     }
 
     /*!
      * Try to get a ADF unit with given name and frequency. Returns true in case an object
      * has been sucessfully created, otherwise returns a default object.
-     * \param adfSystem
+     * \param[out] o_adfSystem
      * \param name
      * \param activeFrequency
      * \param standbyFrequency
      * \return
      */
-    static bool tryGetAdfSystem(CAdfSystem &adfSystem, const QString &name, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+    static bool tryGetAdfSystem(CAdfSystem &o_adfSystem, const QString &name, PhysicalQuantities::CFrequency activeFrequency, PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
     {
-        adfSystem = CAdfSystem(false, name, activeFrequency, standbyFrequency);
+        o_adfSystem = CAdfSystem(false, name, activeFrequency, standbyFrequency);
         bool s;
-        if (!(s = adfSystem.validate(false))) adfSystem = CAdfSystem(); // reset to default
+        if (!(s = o_adfSystem.validate(false))) o_adfSystem = CAdfSystem(); // reset to default
         return s;
     }
+
     /*!
      * \brief ADF1 unit
      * \param activeFrequencyKHz
@@ -183,40 +183,44 @@ public:
      */
     static CAdfSystem GetAdf1System(double activeFrequencyKHz, double standbyFrequencyKHz = -1)
     {
-        return CAdfSystem(CModulator::NameCom1(), CFrequency(activeFrequencyKHz, CFrequencyUnit::MHz()), CFrequency(standbyFrequencyKHz < 0 ? activeFrequencyKHz : standbyFrequencyKHz, CFrequencyUnit::MHz()));
+        return CAdfSystem(CModulator::NameCom1(), PhysicalQuantities::CFrequency(activeFrequencyKHz, PhysicalQuantities::CFrequencyUnit::MHz()), PhysicalQuantities::CFrequency(standbyFrequencyKHz < 0 ? activeFrequencyKHz : standbyFrequencyKHz, PhysicalQuantities::CFrequencyUnit::MHz()));
     }
+
     /*!
      * \brief ADF1 unit
      * \param activeFrequency
      * \param standbyFrequency
      * \return
      */
-    static CAdfSystem GetAdf1System(CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+    static CAdfSystem GetAdf1System(PhysicalQuantities::CFrequency activeFrequency, PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
     {
         return CAdfSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
     }
+
     /*!
      * \brief Try to get ADF unit
-     * \param adfSystem
+     * \param[out] o_adfSystem
      * \param activeFrequencyKHz
      * \param standbyFrequencyKHz
      * \return
      */
-    static bool tryGetAdf1Unit(CAdfSystem &adfSystem, double activeFrequencyKHz, double standbyFrequencyKHz = -1)
+    static bool tryGetAdf1Unit(CAdfSystem &o_adfSystem, double activeFrequencyKHz, double standbyFrequencyKHz = -1)
     {
-        return CAdfSystem::tryGetAdfSystem(adfSystem, CModulator::NameCom1(), activeFrequencyKHz, standbyFrequencyKHz);
+        return CAdfSystem::tryGetAdfSystem(o_adfSystem, CModulator::NameCom1(), activeFrequencyKHz, standbyFrequencyKHz);
     }
+
     /*!
      * \brief Try to get ADF unit
-     * \param adfSystem
+     * \param[out] o_adfSystem
      * \param activeFrequency
      * \param standbyFrequency
      * \return
      */
-    static bool tryGetAdf1Unit(CAdfSystem &adfSystem, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+    static bool tryGetAdf1Unit(CAdfSystem &o_adfSystem, PhysicalQuantities::CFrequency activeFrequency, PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
     {
-        return CAdfSystem::tryGetAdfSystem(adfSystem, CModulator::NameCom1(), activeFrequency, standbyFrequency);
+        return CAdfSystem::tryGetAdfSystem(o_adfSystem, CModulator::NameCom1(), activeFrequency, standbyFrequency);
     }
+
     /*!
      * \brief ADF2 unit
      * \param activeFrequencyKHz
@@ -225,44 +229,48 @@ public:
      */
     static CAdfSystem GetAdf2System(double activeFrequencyKHz, double standbyFrequencyKHz = -1)
     {
-        return CAdfSystem(CModulator::NameCom2(), CFrequency(activeFrequencyKHz, CFrequencyUnit::MHz()), CFrequency(standbyFrequencyKHz < 0 ? activeFrequencyKHz : standbyFrequencyKHz, CFrequencyUnit::MHz()));
+        return CAdfSystem(CModulator::NameCom2(), PhysicalQuantities::CFrequency(activeFrequencyKHz, PhysicalQuantities::CFrequencyUnit::MHz()), PhysicalQuantities::CFrequency(standbyFrequencyKHz < 0 ? activeFrequencyKHz : standbyFrequencyKHz, PhysicalQuantities::CFrequencyUnit::MHz()));
     }
+
     /*!
      * \brief ADF2 unit
      * \param activeFrequency
      * \param standbyFrequency
      * \return
      */
-    static CAdfSystem GetAdf2System(CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+    static CAdfSystem GetAdf2System(PhysicalQuantities::CFrequency activeFrequency, PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
     {
         return CAdfSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
     }
+
     /*!
      * \brief Try to get ADF unit
-     * \param adfSystem
+     * \param[out] o_adfSystem
      * \param activeFrequencyKHz
      * \param standbyFrequencyKHz
      * \return
      */
-    static bool tryGetAdf2System(CAdfSystem &adfSystem, double activeFrequencyKHz, double standbyFrequencyKHz = -1)
+    static bool tryGetAdf2System(CAdfSystem &o_adfSystem, double activeFrequencyKHz, double standbyFrequencyKHz = -1)
     {
-        return CAdfSystem::tryGetAdfSystem(adfSystem, CModulator::NameCom2(), activeFrequencyKHz, standbyFrequencyKHz);
+        return CAdfSystem::tryGetAdfSystem(o_adfSystem, CModulator::NameCom2(), activeFrequencyKHz, standbyFrequencyKHz);
     }
+
     /*!
      * \brief Try to get ADF unit
-     * \param adfSystem
+     * \param[out] o_adfSystem
      * \param activeFrequency
      * \param standbyFrequency
      * \return
      */
-    static bool tryGetAdf2System(CAdfSystem &adfSystem, CFrequency activeFrequency, CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+    static bool tryGetAdf2System(CAdfSystem &o_adfSystem, PhysicalQuantities::CFrequency activeFrequency, PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
     {
-        return CAdfSystem::tryGetAdfSystem(adfSystem, CModulator::NameCom2(), activeFrequency, standbyFrequency);
+        return CAdfSystem::tryGetAdfSystem(o_adfSystem, CModulator::NameCom2(), activeFrequency, standbyFrequency);
     }
 };
 
 } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CAdfSystem)
 
 #endif // BLACKMISC_AVIOADFSYSTEM_H

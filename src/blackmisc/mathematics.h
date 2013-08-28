@@ -6,6 +6,7 @@
 #ifndef BLACKMISC_MATHEMATICS_H
 #define BLACKMISC_MATHEMATICS_H
 #include <QtCore/qmath.h>
+#include <cmath>
 
 namespace BlackMisc
 {
@@ -71,6 +72,26 @@ public:
     static double roundEpsilon(double value, double epsilon);
 
     /*!
+     * \brief Nearest integer not greater in magnitude than value, correcting for epsilon
+     * \param value
+     * \param epsilon
+     */
+    static inline double trunc(double value, double epsilon = 1e-10)
+    {
+        return value < 0 ? ceil(value - epsilon) : floor(value + epsilon);
+    }
+
+    /*!
+     * \brief Fractional part of value
+     * \param value
+     */
+    static inline double fract(double value)
+    {
+        double unused;
+        return modf(value, &unused);
+    }
+
+    /*!
      * \brief PI
      * \return
      */
@@ -102,9 +123,9 @@ public:
 
 private:
     /*!
-     * \brief Avoid object init
+     * \brief Deleted
      */
-    CMath() {}
+    CMath();
 };
 
 } // namespace

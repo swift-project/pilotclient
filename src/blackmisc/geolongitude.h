@@ -16,10 +16,10 @@ protected:
     /*!
      * \brief Specific string representation
      */
-    virtual QString stringForConverter() const
+    virtual QString convertToQString() const
     {
         QString s = "longitude ";
-        return s.append(CEarthAngle::stringForConverter());
+        return s.append(CEarthAngle::convertToQString());
     }
 
 public:
@@ -29,17 +29,17 @@ public:
     CLongitude() : CEarthAngle() {}
 
     /*!
-     * \brief Copy constructor
-     * \param Longitude
+     * \brief Constructor
+     * \param angle
      */
-    CLongitude(const CLongitude &Longitude) : CEarthAngle(Longitude) {}
+    explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
     /*!
      * \brief Init by double value
      * \param value
      * \param unit
      */
-    CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit): CEarthAngle(value, unit) {}
+    CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
 
     /*!
      * \brief Virtual destructor
@@ -49,5 +49,7 @@ public:
 
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Geo::CLongitude)
 
 #endif // guard

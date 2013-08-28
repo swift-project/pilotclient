@@ -14,7 +14,7 @@ CDebug::CDebug()
 
 }
 
-void CDebug::create(const char *logPath, bool logInFile, bool eraseLastLog)
+void CDebug::create(const char * /** logPath **/, bool logInFile, bool eraseLastLog)
 {
     if (!m_isInitialized)
     {

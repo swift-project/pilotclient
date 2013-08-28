@@ -6,7 +6,7 @@
 #ifndef BLACKMISC_MATHVECTOR3DBASE_H
 #define BLACKMISC_MATHVECTOR3DBASE_H
 
-#include "blackmisc/basestreamstringifier.h"
+#include "blackmisc/streamable.h"
 #include "blackmisc/mathematics.h"
 
 namespace BlackMisc
@@ -14,16 +14,13 @@ namespace BlackMisc
 namespace Math
 {
 
-class CMatrix3x3; // forward declaration
-class CMatrix3x1; // forward declaration
-
+class CMatrix3x1;
 
 /*!
  * \brief 3D vector base (x, y, z)
  */
-template <class ImplVector> class CVector3DBase : public CBaseStreamStringifier
+template <class ImplVector> class CVector3DBase : public CStreamable
 {
-
 private:
     /*!
      * \brief Easy access to derived class (CRTP template parameter)
@@ -44,7 +41,6 @@ private:
     }
 
 protected:
-
     // using own value since Qt QVector3D stores internally as float
     double m_i; //!< Vector data i
     double m_j; //!< Vector data j
@@ -71,18 +67,37 @@ protected:
 
     /*!
      * \brief Copy constructor
-     * \param otherVector
+     * \param other
      */
-    CVector3DBase(const CVector3DBase &otherVector) : m_i(otherVector.m_i), m_j(otherVector.m_j), m_k(otherVector.m_k) {}
+    CVector3DBase(const CVector3DBase &other) : m_i(other.m_i), m_j(other.m_j), m_k(other.m_k) {}
+
+    /*!
+     * \brief Get element
+     * \param row
+     * \return Mutable reference
+     */
+    double &getElement(size_t row);
 
     /*!
      * \brief String for converter
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const;
+    virtual QString convertToQString(bool i18n = false) const;
+
+    /*!
+     * \brief Unmarshall from Dbus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument);
+
+    /*!
+     * \brief Marshall to Dbus
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const;
 
 public:
-
     // getter and setters are implemented in the derived classes
     // as they have different names (x, i, north)
 
@@ -97,7 +112,7 @@ public:
     void setZero();
 
     /*!
-     * \brief Set zeros
+     * \brief Is zero
      */
     bool isZero() const
     {
@@ -111,13 +126,14 @@ public:
     bool isZeroEpsilon() const
     {
         ImplVector v;
-        v += (*this);
+        v += *this;
         v.round();
         return v.isZero();
     }
 
     /*!
-     * \brief Set zeros
+     * \brief Set all elements the same
+     * \param value
      */
     void fill(double value);
 
@@ -142,124 +158,83 @@ public:
      */
     double operator[](size_t row) const { return this->getElement(row); }
 
-
     /*!
-     * \brief Get row element by ()
+     * \brief Operator []
      * \param row
-     * \return
+     * \return Mutable reference
      */
-    double operator()(size_t row) const { return this->getElement(row); }
+    double &operator[](size_t row) { return this->getElement(row); }
 
     /*!
      * \brief Equal operator ==
-     * \param otherVector
+     * \param other
      * \return
      */
-    bool operator ==(const CVector3DBase &otherVector) const
+    bool operator ==(const CVector3DBase &other) const
     {
-        if (this == &otherVector) return true;
-        return this->m_i == otherVector.m_i &&
-               this->m_j == otherVector.m_j &&
-               this->m_k == otherVector.m_k;
+        if (this == &other) return true;
+        return this->m_i == other.m_i &&
+               this->m_j == other.m_j &&
+               this->m_k == other.m_k;
     }
 
     /*!
      * \brief Unequal operator !=
-     * \param otherVector
+     * \param other
      * \return
      */
-    bool operator !=(const CVector3DBase &otherVector) const
+    bool operator !=(const CVector3DBase &other) const
     {
-        if (this == &otherVector) return false;
-        return !((*this) == otherVector);
-    }
-
-    /*!
-     * \brief Assigment operator =
-     * \param otherVector
-     * \return
-     */
-    CVector3DBase &operator =(const CVector3DBase &otherVector)
-    {
-        if (this == &otherVector) return *this; // Same object?
-        this->m_i = otherVector.m_i;
-        this->m_j = otherVector.m_j;
-        this->m_k = otherVector.m_k;
-        return (*this);
+        return !((*this) == other);
     }
 
     /*!
      * \brief Operator +=
-     * \param otherVector
+     * \param other
      * \return
      */
-    CVector3DBase &operator +=(const CVector3DBase &otherVector)
+    CVector3DBase &operator +=(const CVector3DBase &other)
     {
-        this->m_i += otherVector.m_i;
-        this->m_j += otherVector.m_j;
-        this->m_k += otherVector.m_k;
-        return (*this);
+        this->m_i += other.m_i;
+        this->m_j += other.m_j;
+        this->m_k += other.m_k;
+        return *this;
     }
 
     /*!
      * \brief Operator +
-     * \param otherVector
+     * \param other
      * \return
      */
-    ImplVector operator +(const ImplVector &otherVector) const
+    ImplVector operator +(const ImplVector &other) const
     {
         ImplVector v = *derived();
-        v += otherVector;
+        v += other;
         return v;
     }
 
     /*!
      * \brief Operator -=
-     * \param otherVector
+     * \param other
      * \return
      */
-    CVector3DBase &operator -=(const CVector3DBase &otherVector)
+    CVector3DBase &operator -=(const CVector3DBase &other)
     {
-        this->m_i -= otherVector.m_i;
-        this->m_j -= otherVector.m_j;
-        this->m_k -= otherVector.m_k;
-        return (*this);
+        this->m_i -= other.m_i;
+        this->m_j -= other.m_j;
+        this->m_k -= other.m_k;
+        return *this;
     }
 
     /*!
      * \brief Operator -
-     * \param otherVector
+     * \param other
      * \return
      */
-    ImplVector operator -(const ImplVector &otherVector) const
+    ImplVector operator -(const ImplVector &other) const
     {
         ImplVector v = *derived();
-        v -= otherVector;
-        return v;
-    }
-
-    /*!
-     * \brief Operator *=, just x*x, y*y, z*z neither vector nor dot product (like a matrix produc)
-     * \param otherVector
-     * \return
-     */
-    CVector3DBase &operator *=(const CVector3DBase &otherVector)
-    {
-        this->m_i *= otherVector.m_i;
-        this->m_j *= otherVector.m_j;
-        this->m_k *= otherVector.m_k;
-        return (*this);
-    }
-
-    /*!
-     * \brief Operator, just x*x, y*y, z*z neither vector nor dot product, (like a matrix produc)
-     * \param otherVector
-     * \return
-     */
-    ImplVector operator *(const ImplVector &otherVector) const
-    {
-        ImplVector v = *derived();
-        v *= otherVector;
+        v -= other;
         return v;
     }
 
@@ -273,7 +248,7 @@ public:
         this->m_i *= factor;
         this->m_j *= factor;
         this->m_k *= factor;
-        return (*this);
+        return *this;
     }
 
     /*!
@@ -294,9 +269,9 @@ public:
      * \param otherVector
      * \return
      */
-    friend ImplVector operator *(double factor, const ImplVector &otherVector)
+    friend ImplVector operator *(double factor, const ImplVector &other)
     {
-        return otherVector * factor;
+        return other * factor;
     }
 
     /*!
@@ -309,7 +284,7 @@ public:
         this->m_i /= divisor;
         this->m_j /= divisor;
         this->m_k /= divisor;
-        return (*this);
+        return *this;
     }
 
     /*!
@@ -325,50 +300,18 @@ public:
     }
 
     /*!
-     * \brief Operator /=, just x/x, y/y, z/z
-     * \param otherVector
-     * \return
-     */
-    CVector3DBase &operator /=(const CVector3DBase &otherVector)
-    {
-        this->m_i /= otherVector.m_i;
-        this->m_j /= otherVector.m_j;
-        this->m_k /= otherVector.m_k;
-        return (*this);
-    }
-
-    /*!
-     * \brief Operator, just x/x, y/y, z/z
-     * \param otherVector
-     * \return
-     */
-    ImplVector operator /(const ImplVector &otherVector) const
-    {
-        ImplVector v = *derived();
-        v /= otherVector;
-        return v;
-    }
-
-    /*!
      * \brief Dot product
-     * \param otherVector
+     * \param other
      * \return
      */
-    double dotProduct(const ImplVector &otherVector) const;
+    double dotProduct(const ImplVector &other) const;
 
     /*!
      * \brief Cross product
-     * \param otherVector
+     * \param other
      * \return
      */
-    ImplVector crossProduct(const ImplVector &otherVector) const;
-
-    /*!
-     * \brief Matrix * this vector
-     * \param matrix
-     * \return
-     */
-    void matrixMultiplication(const CMatrix3x3 &matrix);
+    ImplVector crossProduct(const ImplVector &other) const;
 
     /*!
      * \brief Reciprocal value
@@ -410,16 +353,20 @@ public:
      * \brief Rounded vector
      * \return
      */
-    ImplVector roundedVector() const
+    ImplVector rounded() const
     {
         ImplVector v = *derived();
         v.round();
         return v;
     }
+
+    /*!
+     * \brief Register metadata
+     */
+    static void registerMetadata();
 };
 
 } // namespace
-
 } // namespace
 
 #endif // guard

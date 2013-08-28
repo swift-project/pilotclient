@@ -23,29 +23,24 @@ public:
     /*!
      * \brief Default constructor
      */
-    CTime() : CPhysicalQuantity(0, CTimeUnit::s(), CTimeUnit::s()) {}
-    /**
-     *\brief Copy constructor
-     */
-    CTime(const CPhysicalQuantity &time): CPhysicalQuantity(time) {}
-    /*!
-     * \brief Init by int value
-     * \param value
-     * \param unit
-     */
-    CTime(qint32 value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit, CTimeUnit::s()) {}
+    CTime() : CPhysicalQuantity(0, CTimeUnit::defaultUnit()) {}
+
     /*!
      *\brief Init by double value
      * \param value
      * \param unit
      */
-    CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit, CTimeUnit::s()) {}
+    CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit) {}
+
     /*!
      * \brief Destructor
      */
     virtual ~CTime() {}
 };
+
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTime)
 
 #endif // BLACKMISC_PQTIME_H

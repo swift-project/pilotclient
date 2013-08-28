@@ -10,78 +10,84 @@ namespace BlackMisc
 namespace PhysicalQuantities
 {
 
-/*
- * Convert to SI
- */
-double CTemperatureUnit::conversionToSiConversionUnit(double value) const
-{
-    double v = value + this->m_conversionOffsetToSi;
-    v *= this->getConversionFactorToSI();
-    return v;
-}
+using BlackMisc::Math::CMath;
 
 /*
- * Convert from SI
+ * Rounded to QString
  */
-double CTemperatureUnit::conversionFromSiConversionUnit(double value) const
+QString CAngleUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
 {
-    double v = value / this->getConversionFactorToSI();
-    v -= this->m_conversionOffsetToSi;
-    return v;
-}
-
-/*
- * Convert from SI
- */
-double CAngleUnit::conversionSexagesimalFromSi(const CMeasurementUnit &angleUnit, double value)
-{
-    // using rounding here, since fractions can lead to ugly sexagesimal conversion
-    // e.g. 185.499999 gives 185 29' 59.9999"
-    value = angleUnit.epsilonUpRounding(value * 180 / M_PI); // degree
-    double v = floor(value);
-    double c = value - v;
-    double mr = c * 60.0;
-    double m = floor(mr); // minutes
-    double s = (mr - m) * 60; // seconds + rest fraction
-    v = (v + (m / 100) + (s / 10000));
-    return v;
-}
-
-/*
- * Convert to SI
- */
-double CAngleUnit::conversionSexagesimalToSi(const CMeasurementUnit &, double value)
-{
-    double v = floor(value); // degrees
-    double c = value - v;
-    c = c * 100.0;
-    double m = floor(c);
-    c = c - m;
-    m /= 60.0; // minutes back to decimals
-    double s = c / 36.0; // seconds back to decimals
-    v = v + m + s;
-    return v / 180.0 * M_PI;
+    if (digits < 0) digits = this->getDisplayDigits();
+    QString s;
+    if ((*this) == CAngleUnit::sexagesimalDeg())
+    {
+        digits -= 4;
+        Q_ASSERT(digits >= 0);
+        double de = CMath::trunc(value);
+        double mi = CMath::trunc((value - de) * 100.0);
+        double se = CMath::trunc((value - de - mi / 100.0) * 1000000) / 100.0;
+        const char *fmt = value < 0 ? "-%L1 %L2 %L3" : "%L1 %L2 %L3";
+        s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
+        s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 2, 'f', digits, '0');
+    }
+    else if ((*this) == CAngleUnit::sexagesimalDegMin())
+    {
+        digits -= 2;
+        Q_ASSERT(digits >= 0);
+        double de = CMath::trunc(value);
+        double mi = CMath::trunc((value - de) * 100.0);
+        const char *fmt = value < 0 ? "-%L1 %L2" : "%L1 %L2";
+        s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
+        s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 2, 'f', digits, '0');
+    }
+    else
+    {
+        s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, i18n);
+    }
+    return s;
 }
 
 /*
  * Rounded to QString
  */
-QString CAngleUnit::toQStringRounded(double value, int digits) const
+QString CTimeUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
 {
+    if (digits < 0) digits = this->getDisplayDigits();
     QString s;
-    if ((*this) == CAngleUnit::sexagesimalDeg())
+    if ((*this) == CTimeUnit::hms())
     {
-        // special formatting for sexagesimal degrees
-        double de = floor(value);
-        double mi = floor((value - de) * 100.0);
-        double se = floor((value - de - mi / 100.0) * 1000000) / 100.0;
-        QString ses = QLocale::system().toString(se, 'f', 2);
-        s = QString::number(de).append(this->getUnitName()).append(QString::number(mi))
-            .append("'").append(ses).append("\"");
+        digits -= 4;
+        Q_ASSERT(digits >= 0);
+        double hr = CMath::trunc(value);
+        double mi = CMath::trunc((value - hr) * 100.0);
+        double se = CMath::trunc((value - hr - mi / 100.0) * 1000000) / 100.0;
+        const char *fmt = value < 0 ? "-%L1h%L2m%L3s" : "%L1h%L2m%L3s";
+        s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
+        s = s.arg(fabs(hr), 0, 'f', 0).arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 2, 'f', digits, '0');
+    }
+    else if ((*this) == CTimeUnit::hrmin())
+    {
+        digits -= 2;
+        Q_ASSERT(digits >= 0);
+        double hr = CMath::trunc(value);
+        double mi = CMath::trunc((value - hr) * 100.0);
+        const char *fmt = value < 0 ? "-%L1h%L2m" : "%L1h%L2m";
+        s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
+        s = s.arg(fabs(hr), 0, 'f', 0).arg(fabs(mi), 2, 'f', digits, '0');
+    }
+    else if ((*this) == CTimeUnit::minsec())
+    {
+        digits -= 2;
+        Q_ASSERT(digits >= 0);
+        double mi = CMath::trunc(value);
+        double se = CMath::trunc((value - mi) * 100.0);
+        const char *fmt = value < 0 ? "-%L2m%L3s" : "%L2m%L3s";
+        s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
+        s = s.arg(fabs(mi), 0, 'f', 0).arg(fabs(se), 2, 'f', digits, '0');
     }
     else
     {
-        s = CMeasurementUnit::toQStringRounded(value, digits);
+        s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, i18n);
     }
     return s;
 }

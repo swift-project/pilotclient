@@ -45,7 +45,7 @@ bool CTransponder::validate(bool strict) const
 /**
  * String representation
  */
-QString CTransponder::stringForConverter() const
+QString CTransponder::convertToQString(bool /* i18n */) const
 {
     QString s = this->getName();
     s = s.append(" ").append(this->getTransponderCodeFormatted()).append(" ").append(this->getModeAsString());
@@ -97,6 +97,39 @@ QString CTransponder::getTransponderCodeFormatted() const
     QString f("0000");
     f = f.append(QString::number(this->m_transponderCode));
     return f.right(4);
+}
+
+/*!
+ * \brief Stream to DBus <<
+ * \param argument
+ */
+void CTransponder::marshallToDbus(QDBusArgument &argument) const
+{
+    this->CAvionicsBase::marshallToDbus(argument);
+    argument << this->m_transponderCode;
+    argument << static_cast<qint32>(this->m_transponderMode);
+}
+
+/*!
+ * \brief Stream from DBus >>
+ * \param argument
+ */
+void CTransponder::unmarshallFromDbus(const QDBusArgument &argument)
+{
+    this->CAvionicsBase::unmarshallFromDbus(argument);
+    qint32 tm;
+    argument >> this->m_transponderCode;
+    argument >> tm;
+    this->m_transponderMode = static_cast<TransponderMode>(tm);
+}
+
+/*!
+ * \brief Register metadata of unit and quantity
+ */
+void CTransponder::registerMetadata()
+{
+    qRegisterMetaType<CTransponder>(typeid(CTransponder).name());
+    qDBusRegisterMetaType<CTransponder>();
 }
 
 } // namespace

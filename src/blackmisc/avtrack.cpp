@@ -16,38 +16,35 @@ namespace Aviation
 /*
  * Own implementation for streaming
  */
-QString CTrack::stringForConverter() const
+QString CTrack::convertToQString(bool i18n) const
 {
-    QString s = CAngle::stringForConverter();
-    return s.append(this->m_magnetic ? " magnetic" : " true");
-}
-
-/*
- * Assigment
- */
-CTrack& CTrack::operator =(const CTrack &otherTrack)
-{
-    // Check for self-assignment!
-    if (this == &otherTrack)  return *this;
-    CAngle::operator = (otherTrack);
-    this->m_magnetic = otherTrack.m_magnetic;
-    return (*this);
+    QString s = CAngle::convertToQString(i18n);
+    return s.append(this->isMagneticTrack() ? " magnetic" : " true");
 }
 
 /*
  * Equal?
  */
-bool CTrack::operator ==(const CTrack &otherTrack)
+bool CTrack::operator ==(const CTrack &other)
 {
-    return otherTrack.m_magnetic == this->m_magnetic && CAngle::operator ==(otherTrack);
+    return other.m_north == this->m_north && this->CAngle::operator ==(other);
 }
 
 /*
  * Unequal?
  */
-bool CTrack::operator !=(const CTrack &otherTrack)
+bool CTrack::operator !=(const CTrack &other)
 {
-    return !((*this) == otherTrack);
+    return !((*this) == other);
+}
+
+/*!
+ * \brief Register metadata of unit and quantity
+ */
+void CTrack::registerMetadata()
+{
+    qRegisterMetaType<CTrack>(typeid(CTrack).name());
+    qDBusRegisterMetaType<CTrack>();
 }
 
 } // namespace

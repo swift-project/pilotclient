@@ -100,8 +100,8 @@ namespace BlackMisc
         /////////////////////////////////////////////////
 
         data.resize(message_length);
+        // creates warning when compiled as RELEASE
         qint32 bytes = stream.readRawData(data.data(), message_length);
-
         Q_ASSERT (bytes == message_length);
         Q_ASSERT (data.size() == message_length);
 

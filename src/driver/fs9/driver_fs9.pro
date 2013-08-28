@@ -1,6 +1,6 @@
 TARGET = bb_driver_fs9
 TEMPLATE = lib
-CONFIG += dll
+CONFIG += dll c++11
 
 INCLUDEPATH += .. ../../
 

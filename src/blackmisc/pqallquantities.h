@@ -7,7 +7,7 @@
 #define BLACKMISC_PQUNITSALL_H
 
 // All units / quantities, required for the instantiations of the template
-// especially as CRTP is used.
+// especially as CRTP (Curiously recurring template pattern) is used.
 // http://www.parashift.com/c++-faq-lite/separate-template-fn-defn-from-decl.html
 // http://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
 
@@ -20,5 +20,6 @@
 #include "blackmisc/pqangle.h"
 #include "blackmisc/pqtime.h"
 #include "blackmisc/pqacceleration.h"
+#include "blackmisc/pqunits.h"
 
 #endif // guard

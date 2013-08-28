@@ -91,9 +91,9 @@ private:
     }
 
     /*!
-     * \brief Default constructor, avoid object instantiation
+     * \brief Default constructor, deleted
      */
-    CCoordinateTransformation() {}
+    CCoordinateTransformation();
 
 public:
     /*!
@@ -124,7 +124,6 @@ public:
      * \return
      */
     static CCoordinateGeodetic toGeodetic(const CCoordinateEcef &ecef);
-
 };
 
 } // namespace

@@ -81,7 +81,7 @@ namespace BlackCore {
 
 		void addPlane(CPlane *plane);
 
-		void removePlane(CPlane *plane);
+        void removePlane(CPlane *);
 
 		bool needsToRemoved(CPlane *plane);
 

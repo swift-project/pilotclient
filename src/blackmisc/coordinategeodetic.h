@@ -16,6 +16,7 @@ namespace Geo
 {
 
 /*!
+ * Latitude and longitude interface
  * \brief Interface for geodetic ccordinates
  */
 class ICoordinateGeodetic
@@ -24,39 +25,44 @@ class ICoordinateGeodetic
      * \brief Latitude
      * \return
      */
-    virtual CLatitude latitude() const = 0;
+    virtual const CLatitude &latitude() const = 0;
 
     /*!
      * \brief Longitude
      * \return
      */
-    virtual CLongitude longitude() const = 0;
+    virtual const CLongitude &longitude() const = 0;
 };
 
 /*!
  * \brief Geodetic coordinate
  */
-class CCoordinateGeodetic :
-    public CBaseStreamStringifier,
-    public ICoordinateGeodetic
+class CCoordinateGeodetic : public CStreamable, public ICoordinateGeodetic
 {
-
 private:
-    CLatitude m_latitude; //!< Latitude
-    CLongitude m_longitude; //!< Longitude
+    BlackMisc::Geo::CLatitude m_latitude; //!< Latitude
+    BlackMisc::Geo::CLongitude m_longitude; //!< Longitude
     BlackMisc::PhysicalQuantities::CLength m_height; //!< height
 
 protected:
-
     /*!
      * \brief String for converter
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const
-    {
-        QString s = "Geodetic: {%1, %2, %3}";
-        return s.arg(this->m_latitude.unitValueRoundedWithUnit(6)).arg(this->m_longitude.unitValueRoundedWithUnit(6)).arg(this->m_height.unitValueRoundedWithUnit());
-    }
+    virtual QString convertToQString(bool i18n = false) const;
+
+    /*!
+     * \brief Stream to DBus
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const;
+
+    /*!
+     * \brief Stream from DBus
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
 public:
     /*!
@@ -92,7 +98,7 @@ public:
      * \brief Latitude
      * \return
      */
-    CLatitude latitude() const
+    const CLatitude &latitude() const
     {
         return this->m_latitude;
     }
@@ -101,7 +107,7 @@ public:
      * \brief Longitude
      * \return
      */
-    CLongitude longitude() const
+    const CLongitude &longitude() const
     {
         return this->m_longitude;
     }
@@ -110,7 +116,7 @@ public:
      * \brief Height
      * \return
      */
-    BlackMisc::PhysicalQuantities::CLength height() const
+    const BlackMisc::PhysicalQuantities::CLength &height() const
     {
         return this->m_height;
     }
@@ -124,7 +130,7 @@ public:
     {
         this->m_latitude.switchUnit(unit);
         this->m_longitude.switchUnit(unit);
-        return (*this);
+        return *this;
     }
 
     /*!
@@ -135,14 +141,14 @@ public:
     CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit)
     {
         this->m_height.switchUnit(unit);
-        return (*this);
+        return *this;
     }
 
     /*!
      * \brief Set latitude
      * \param latitude
      */
-    void setLatitude(CLatitude latitude)
+    void setLatitude(const CLatitude &latitude)
     {
         this->m_latitude = latitude;
     }
@@ -151,7 +157,7 @@ public:
      * \brief Set longitude
      * \param longitude
      */
-    void setLongitude(CLongitude longitude)
+    void setLongitude(const CLongitude &longitude)
     {
         this->m_longitude = longitude;
     }
@@ -160,52 +166,43 @@ public:
      * \brief Set height
      * \param height
      */
-    void setHeight(BlackMisc::PhysicalQuantities::CLength height)
+    void setHeight(const BlackMisc::PhysicalQuantities::CLength &height)
     {
         this->m_height = height;
     }
 
     /*!
      * \brief Equal operator ==
-     * \param otherGeodetic
+     * \param other
      * \return
      */
-    bool operator ==(const CCoordinateGeodetic &otherGeodetic) const
+    bool operator ==(const CCoordinateGeodetic &other) const
     {
-        if (this == &otherGeodetic) return true;
-        return this->m_height == otherGeodetic.m_height &&
-               this->m_latitude == otherGeodetic.m_latitude &&
-               this->m_longitude == otherGeodetic.m_longitude;
+        if (this == &other) return true;
+        return this->m_height == other.m_height &&
+               this->m_latitude == other.m_latitude &&
+               this->m_longitude == other.m_longitude;
     }
 
     /*!
      * \brief Unequal operator !=
-     * \param otherGeodetic
+     * \param other
      * \return
      */
-    bool operator !=(const CCoordinateGeodetic &otherGeodetic) const
+    bool operator !=(const CCoordinateGeodetic &other) const
     {
-        if (this == &otherGeodetic) return false;
-        return !((*this) == otherGeodetic);
+        return !((*this) == other);
     }
 
-    /*!
-     * \brief Assigment operator =
-     * \param otherGeodetic
-     * \return
+    /*
+     * Register metadata
      */
-    CCoordinateGeodetic &operator =(const CCoordinateGeodetic &otherGeodetic)
-    {
-        if (this == &otherGeodetic)  return *this; // Same object?
-        this->m_height = otherGeodetic.m_height;
-        this->m_latitude = otherGeodetic.m_latitude;
-        this->m_longitude = otherGeodetic.m_longitude;
-        return (*this);
-    }
+    static void registerMetadata();
 };
 
 } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodetic)
 
 #endif // guard

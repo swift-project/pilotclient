@@ -11,6 +11,7 @@ namespace BlackMisc
 {
 namespace Geo
 {
+
 /*!
  * \brief Earth centered, earth fixed position
  */
@@ -104,7 +105,7 @@ protected:
      * \brief String for converter
      * \return
      */
-    virtual QString stringForConverter() const
+    virtual QString convertToQString() const
     {
         QString s = "ECEF: {x %1, y %2, z %3}";
         s = s.arg(QString::number(this->x(), 'f', 6)).
@@ -112,11 +113,11 @@ protected:
             arg(QString::number(this->z(), 'f', 6));
         return s;
     }
-
 };
 
 } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateEcef)
 
 #endif // guard

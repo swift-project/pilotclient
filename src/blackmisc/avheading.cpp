@@ -16,38 +16,35 @@ namespace Aviation
 /*
  * Own implementation for streaming
  */
-QString CHeading::stringForConverter() const
+QString CHeading::convertToQString(bool i18n) const
 {
-    QString s = CAngle::stringForConverter();
-    return s.append(this->m_magnetic ? " magnetic" : " true");
-}
-
-/*
- * Assigment
- */
-CHeading& CHeading::operator =(const CHeading &otherHeading)
-{
-    // Check for self-assignment!
-    if (this == &otherHeading)  return *this;
-    CAngle::operator = (otherHeading);
-    this->m_magnetic = otherHeading.m_magnetic;
-    return (*this);
+    QString s = CAngle::convertToQString(i18n);
+    return s.append(this->isMagneticHeading() ? " magnetic" : " true");
 }
 
 /*
  * Equal?
  */
-bool CHeading::operator ==(const CHeading &otherHeading)
+bool CHeading::operator ==(const CHeading &other)
 {
-    return otherHeading.m_magnetic == this->m_magnetic && CAngle::operator ==(otherHeading);
+    return other.m_north == this->m_north && this->CAngle::operator ==(other);
 }
 
 /*
  * Unequal?
  */
-bool CHeading::operator !=(const CHeading &otherHeading)
+bool CHeading::operator !=(const CHeading &other)
 {
-    return !((*this) == otherHeading);
+    return !((*this) == other);
+}
+
+/*!
+ * \brief Register metadata of unit and quantity
+ */
+void CHeading::registerMetadata()
+{
+    qRegisterMetaType<CHeading>(typeid(CHeading).name());
+    qDBusRegisterMetaType<CHeading>();
 }
 
 } // namespace

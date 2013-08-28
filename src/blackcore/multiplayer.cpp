@@ -82,7 +82,7 @@ void CMultiPlayer::onPositionUpdate(const FSD::FSD_MSG_Plane_Position *plane_pos
 
     plane->addPosition(position,
                        CSpeed(plane_position->Speed(), CSpeedUnit::kts()),
-                       CHeading((qint32)pitchBankHeading.hdg, false, CAngleUnit::deg()),
+                       CHeading((qint32)pitchBankHeading.hdg, CHeading::True, CAngleUnit::deg()),
                        CAngle((qint32)pitchBankHeading.pitch, CAngleUnit::deg()),
                        CAngle((qint32)pitchBankHeading.bank, CAngleUnit::deg()));
 
@@ -93,9 +93,9 @@ void CMultiPlayer::addPlane(CPlane *plane)
     m_multiplayer_planes.insert(plane->callsign(), plane);
 }
 
-void CMultiPlayer::removePlane(CPlane *plane)
+void CMultiPlayer::removePlane(CPlane * /** plane **/)
 {
-    qint32 id;
+    qint32 id = 0;
     m_simulator->removePlane(id);
 }
 

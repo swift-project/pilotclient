@@ -31,6 +31,7 @@ public:
         ModeC = 12,
         ModeS = 20
     };
+
 private:
     qint32 m_transponderCode; //<! Transponder code
     TransponderMode m_transponderMode; //<! Transponder mode
@@ -60,9 +61,10 @@ private:
     {
         bool ok = false;
         this->m_transponderCode = transponderCode.toUInt(&ok);
-        if (!ok)this->m_transponderCode = -1; // will cause assert / exception
+        if (!ok) this->m_transponderCode = -1; // will cause assert / exception
         this->validate(validate);
     }
+
 protected:
     /*!
      * \brief Are the set values valid / in range?
@@ -90,9 +92,22 @@ protected:
 
     /*!
      * \brief Meaningful string representation
+     * \param i18n
      * \return
      */
-    virtual QString stringForConverter() const;
+    virtual QString convertToQString(bool i18n = false) const;
+
+    /*!
+     * \brief Stream to DBus <<
+     * \param argument
+     */
+    virtual void marshallToDbus(QDBusArgument &argument) const;
+
+    /*!
+     * \brief Stream from DBus >>
+     * \param argument
+     */
+    virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
 public:
     /*!
@@ -102,10 +117,10 @@ public:
 
     /*!
      * \brief Copy constructor
-     * \param otherTransponder
+     * \param other
      */
-    CTransponder(const CTransponder &otherTransponder) : CAvionicsBase(otherTransponder.getName()),
-        m_transponderCode(otherTransponder.m_transponderCode), m_transponderMode(otherTransponder.m_transponderMode) {}
+    CTransponder(const CTransponder &other) : CAvionicsBase(other.getName()),
+        m_transponderCode(other.m_transponderCode), m_transponderMode(other.m_transponderMode) {}
 
     /*!
      * \brief Constructor
@@ -130,7 +145,7 @@ public:
     {
         bool ok = false;
         this->m_transponderCode = transponderCode.toUInt(&ok);
-        if (!ok)this->m_transponderCode = -1; // will cause assert / exception
+        if (!ok) this->m_transponderCode = -1; // will cause assert / exception
         this->validate(true);
     }
 
@@ -194,7 +209,7 @@ public:
     }
 
     /*!
-     * \brief Set emergency
+     * \brief Set VFR
      */
     void setVFR()
     {
@@ -202,7 +217,7 @@ public:
     }
 
     /*!
-     * \brief Set emergency
+     * \brief Set IFR
      */
     void setIFR()
     {
@@ -210,73 +225,62 @@ public:
     }
 
     /*!
-     * \brief Assigment operator =
-     * \param otherTransponder
-     * \return
-     */
-    CTransponder &operator =(const CTransponder &otherTransponder)
-    {
-        CAvionicsBase::operator =(otherTransponder);
-        this->m_transponderMode = otherTransponder.m_transponderMode;
-        this->m_transponderCode = otherTransponder.m_transponderCode;
-        return (*this);
-    }
-
-    /*!
      * \brief operator ==
-     * \param otherTransponder
+     * \param other
      * \return
      */
-    bool operator ==(const CTransponder &otherTransponder) const
+    bool operator ==(const CTransponder &other) const
     {
         return
-            this->m_transponderCode == otherTransponder.m_transponderCode &&
-            this->m_transponderMode == otherTransponder.m_transponderMode &&
-            CAvionicsBase::operator ==(otherTransponder);
+            this->m_transponderCode == other.m_transponderCode &&
+            this->m_transponderMode == other.m_transponderMode &&
+            this->CAvionicsBase::operator ==(other);
     }
 
     /*!
      * \brief operator =!
-     * \param otherSystem
+     * \param other
      * \return
      */
-    bool operator !=(const CTransponder &otherSystem) const
+    bool operator !=(const CTransponder &other) const
     {
-        return !((*this) == otherSystem);
+        return !((*this) == other);
     }
 
     /*!
      * Try to get a Transponder unit with given name and code. Returns true in case an object
      * has been sucessfully created, otherwise returns a default object.
-     * \param transponder
+     * \param[out] o_transponder
      * \param name
      * \param transponderCode
      * \param mode
      * \return
      */
-    static bool tryGetTransponder(CTransponder &transponder, const QString &name, qint32 transponderCode, TransponderMode mode)
+    static bool tryGetTransponder(CTransponder &o_transponder, const QString &name, qint32 transponderCode, TransponderMode mode)
     {
-        transponder = CTransponder(false, name, transponderCode, mode);
+        o_transponder = CTransponder(false, name, transponderCode, mode);
         bool s;
-        if (!(s = transponder.validate(false))) transponder = CTransponder(); // reset to default
+        if (!(s = o_transponder.validate(false))) o_transponder = CTransponder(); // reset to default
         return s;
     }
+
     /*!
      * Try to get a Transponder unit with given name and code. Returns true in case an object
      * has been sucessfully created, otherwise returns a default object.
-     * \param transponder
+     * \param[out] o_transponder
      * \param name
      * \param transponderCode
      * \param mode
      * \return
      */
-    static bool tryGetTransponder(CTransponder &transponder, const QString &name, const QString &transponderCode, TransponderMode mode)
+    static bool tryGetTransponder(CTransponder &o_transponder, const QString &name, const QString &transponderCode, TransponderMode mode)
     {
-        transponder = CTransponder(false, name, transponderCode, mode);
+        o_transponder = CTransponder(false, name, transponderCode, mode);
         bool s;
-        if (!(s = transponder.validate(false))) transponder = CTransponder(); // reset to default
+        if (!(s = o_transponder.validate(false))) o_transponder = CTransponder(); // reset to default
         return s;
     }
+
     /*!
      * \brief Transponder unit
      * \param transponderCode
@@ -287,33 +291,41 @@ public:
     {
         return CTransponder("Transponder", transponderCode, mode);
     }
+
     /*!
      * \brief Try to get Transponder unit
-     * \param transponder
+     * \param[out] o_transponder
      * \param transponderCode
      * \param mode
      * \return
      */
-    static bool tryGetStandardTransponder(CTransponder &transponder, qint32 transponderCode, TransponderMode mode)
+    static bool tryGetStandardTransponder(CTransponder &o_transponder, qint32 transponderCode, TransponderMode mode)
     {
-        return CTransponder::tryGetTransponder(transponder, "Transponder", transponderCode, mode);
+        return CTransponder::tryGetTransponder(o_transponder, "Transponder", transponderCode, mode);
     }
 
     /*!
      * \brief Try to get Transponder unit
-     * \param transponder
+     * \param[out] o_transponder
      * \param transponderCode
      * \param mode
      * \return
      */
-    static bool tryGetStandardTransponder(CTransponder &transponder, const QString &transponderCode, TransponderMode mode)
+    static bool tryGetStandardTransponder(CTransponder &o_transponder, const QString &transponderCode, TransponderMode mode)
     {
-        return CTransponder::tryGetTransponder(transponder, "Transponder", transponderCode, mode);
+        return CTransponder::tryGetTransponder(o_transponder, "Transponder", transponderCode, mode);
     }
+
+    /*!
+     * \brief Register metadata of unit and quantity
+     */
+    static void registerMetadata();
 
 };
 
 } // namespace
 } // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Aviation::CTransponder)
 
 #endif // BLACKMISC_AVIOTRANSPONDER_H

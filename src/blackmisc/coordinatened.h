@@ -18,7 +18,6 @@ namespace Geo
  */
 class CCoordinateNed : public BlackMisc::Math::CVector3DBase<CCoordinateNed>
 {
-
 private:
     CCoordinateGeodetic m_referencePosition; //!< geodetic reference position
     bool m_hasReferencePosition; //!< valid reference position?
@@ -28,7 +27,7 @@ protected:
      * \brief String for converter
      * \return
      */
-    virtual QString stringForConverter() const
+    virtual QString convertToQString() const
     {
         QString s = "NED: {N %1, E %2, D %3}";
         s = s.arg(QString::number(this->north(), 'f', 6)).
@@ -70,58 +69,43 @@ public:
      * \brief Copy constructor
      * \param otherNed
      */
-    CCoordinateNed(const CCoordinateNed &otherNed) :
-        CVector3DBase(otherNed), m_referencePosition(otherNed.m_referencePosition), m_hasReferencePosition(otherNed.m_hasReferencePosition) {}
+    CCoordinateNed(const CCoordinateNed &other) :
+        CVector3DBase(other), m_referencePosition(other.m_referencePosition), m_hasReferencePosition(other.m_hasReferencePosition) {}
 
     /*!
      * \brief Constructor by math vector
      * \param vector
      */
-    explicit CCoordinateNed(const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(), m_hasReferencePosition(false) {}
+    explicit CCoordinateNed(const BlackMisc::Math::CVector3D &vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(), m_hasReferencePosition(false) {}
 
     /*!
      * \brief Constructor by math vector and reference position
      * \param referencePosition
      * \param vector
      */
-    CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
+    CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D &vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
     /*!
      * \brief Equal operator ==
-     * \param otherNed
+     * \param other
      * \return
      */
-    bool operator ==(const CCoordinateNed &otherNed) const
+    bool operator ==(const CCoordinateNed &other) const
     {
-        if (this == &otherNed) return true;
-        return this->m_hasReferencePosition == otherNed.m_hasReferencePosition &&
-               this->m_referencePosition == otherNed.m_referencePosition &&
-               CVector3DBase::operator== (otherNed);
+        if (this == &other) return true;
+        return this->m_hasReferencePosition == other.m_hasReferencePosition &&
+               this->m_referencePosition == other.m_referencePosition &&
+               this->CVector3DBase::operator== (other);
     }
 
     /*!
      * \brief Unequal operator !=
-     * \param otherNed
+     * \param other
      * \return
      */
-    bool operator !=(const CCoordinateNed &otherNed) const
+    bool operator !=(const CCoordinateNed &other) const
     {
-        if (this == &otherNed) return false;
-        return !((*this) == otherNed);
-    }
-
-    /*!
-     * \brief Assigment operator =
-     * \param otherNed
-     * \return
-     */
-    CCoordinateNed &operator =(const CCoordinateNed &otherNed)
-    {
-        if (this == &otherNed)  return *this; // Same object?
-        CVector3DBase::operator = (otherNed);
-        this->m_hasReferencePosition = otherNed.m_hasReferencePosition;
-        this->m_referencePosition = otherNed.m_referencePosition;
-        return (*this);
+        return !((*this) == other);
     }
 
     /*!
@@ -219,5 +203,6 @@ public:
 } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateNed)
 
 #endif // guard

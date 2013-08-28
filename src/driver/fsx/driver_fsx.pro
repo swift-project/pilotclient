@@ -1,6 +1,6 @@
 TARGET = bb_driver_fsx
 TEMPLATE = lib
-CONFIG += dll
+CONFIG += dll c++11
 
 INCLUDEPATH += .. ../../
 
