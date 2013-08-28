@@ -419,5 +419,5 @@ void Client::radioTextMessageReceived(const QString& callsign, const QString& ms
 
 void Client::privateTextMessageReceived(const QString& fromCallsign, const QString& toCallsign, const QString& msg)
 {
-    std::cout << "PRIV_MSG " << fromCallsign.toStdString() << " -> " << toCallsign.toStdString() << msg.toStdString() << std::endl;
+    std::cout << "PRIV_MSG " << fromCallsign.toStdString() << " -> " << toCallsign.toStdString() << " " << msg.toStdString() << std::endl;
 }
