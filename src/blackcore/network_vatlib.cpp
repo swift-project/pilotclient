@@ -529,7 +529,7 @@ namespace BlackCore
         case Cvatlib_Network::error_Registered:
         case Cvatlib_Network::error_InvalidControl:         qWarning() << "Server: " << cbvar_cast(cbvar)->fromFSD(msg); break;
 
-        default:                                            qFatal("VATSIM shim library: %s (error %d)", cbvar_cast(cbvar)->fromFSD(msg), type); goto terminate;
+        default:                                            qFatal("VATSIM shim library: %s (error %d)", msg, type); goto terminate;
         }
 
         return;
