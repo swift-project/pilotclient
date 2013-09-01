@@ -5,6 +5,7 @@
 
 #include "testblackcoremain.h"
 #include "testinterpolator.h"
+#include "testnetwork.h"
 #include "testnetmediators.h"
 
 namespace BlackCoreTest
@@ -19,6 +20,10 @@ int CBlackCoreTestMain::unitMain(int argc, char *argv[])
     {
         CTestInterpolator interpolatorTests;
         status |= QTest::qExec(&interpolatorTests, argc, argv);
+    }
+    {
+        CTestNetwork networkTests;
+        status |= QTest::qExec(&networkTests, argc, argv);
     }
     {
         CTestNetMediators mediatorTests;
