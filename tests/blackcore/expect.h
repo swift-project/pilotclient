@@ -7,6 +7,7 @@
 #define BLACKCORETEST_EXPECT_H
 
 #include <QObject>
+#include <QMetaMethod>
 #include <QPointer>
 #include <QVector>
 #include <QSet>
@@ -87,6 +88,9 @@ public:
     {
         auto subj = subject<F1>();
         m_expects.push_back([=]{
+            m_waitingFor = subj->metaObject()->className();
+            m_waitingFor += "::";
+            m_waitingFor += QMetaMethod::fromSignal(signal).name();
             m_guard += QObject::connect(subj, signal, slot);
             m_guard += QObject::connect(subj, signal, [=]{ next(); });
         });
@@ -118,6 +122,7 @@ private:
     QPointer<Expect> m_parent;
     QPointer<QObject> m_subject;
     SourceLocation m_srcloc;
+    QString m_waitingFor;
     QVector<std::function<void()>> m_sends;
     QVector<std::function<void()>> m_expects;
     mutable QVector<std::function<void()>>::const_iterator m_nextExpect;
@@ -184,6 +189,7 @@ private:
     friend class ExpectUnit;
 
     void wait(const SourceLocation& srcloc, int timeout);
+    void reportTimeout(const SourceLocation& srcloc, const QSet<const ExpectUnit*>& units);
 
     QPointer<QObject> m_subject;
     QSet<const ExpectUnit*> m_units;

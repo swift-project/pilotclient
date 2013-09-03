@@ -73,12 +73,12 @@ void Expect::wait(const SourceLocation& srcloc, int timeout)
     QTimer timer;
     timer.setSingleShot(true);
     QObject::connect(&timer, &QTimer::timeout, [=, &unitsCopy]{
+        reportTimeout(srcloc, unitsCopy);
         for (auto i = unitsCopy.begin(); i != unitsCopy.end(); ++i)
         {
             (*i)->onDone(nullptr); //paranoia
         }
         unitsCopy.clear();
-        QTest::qFail("*** Timed Out ***", qPrintable(srcloc.file), srcloc.line);
         m_failed = true;
     });
     timer.start(timeout * 1000);
@@ -87,6 +87,18 @@ void Expect::wait(const SourceLocation& srcloc, int timeout)
     {
         QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
     }
+}
+
+void Expect::reportTimeout(const SourceLocation& srcloc, const QSet<const ExpectUnit*>& units)
+{
+    QString msg = "*** Timed Out ***";
+    QString prefix = "\nwhile waiting for ";
+    for (auto i = units.begin(); i != units.end(); ++i)
+    {
+        msg += prefix + (*i)->m_waitingFor;
+        prefix = "\nand ";
+    }
+    QTest::qFail(qPrintable(msg), qPrintable(srcloc.file), srcloc.line);
 }
 
 } //namespace BlackCoreTest
