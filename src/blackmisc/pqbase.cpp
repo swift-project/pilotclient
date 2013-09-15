@@ -14,69 +14,8 @@ namespace PhysicalQuantities
 {
 
 // -----------------------------------------------------------------------
-// --- Prefix ------------------------------------------------------------
-// -----------------------------------------------------------------------
-
-/*
- * Equal?
- */
-bool CMeasurementPrefix::operator ==(const CMeasurementPrefix &other) const
-{
-    if (this == &other) return true;
-    return this->m_factor == other.m_factor && this->m_name == other.m_name;
-}
-
-/*
- * Not equal
- */
-bool CMeasurementPrefix::operator !=(const CMeasurementPrefix &other) const
-{
-    return !(*this == other);
-}
-
-// -----------------------------------------------------------------------
 // --- Measurement unit --------------------------------------------------
 // -----------------------------------------------------------------------
-
-/*
- * Constructor
- */
-CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, double factor, int displayDigits, double epsilon) :
-    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(new LinearConverter(factor))
-{
-}
-
-/*
- * Constructor
- */
-CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, double factor, double offset, int displayDigits, double epsilon) :
-    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(new AffineConverter(factor, offset))
-{
-}
-
-/*
- * Constructor
- */
-CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, Converter *converter, int displayDigits, double epsilon) :
-    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(converter)
-{
-}
-
-/*
- * Constructor
- */
-CMeasurementUnit::CMeasurementUnit(const QString &name, const QString &symbol, const CMeasurementUnit &base, const CMeasurementPrefix &prefix, int displayDigits, double epsilon) :
-    m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(base.m_converter->clone(prefix))
-{
-}
-
-/*
- * Copy constructor
- */
-CMeasurementUnit::CMeasurementUnit(const CMeasurementUnit &other) :
-    m_name(other.m_name), m_symbol(other.m_symbol), m_epsilon(other.m_epsilon), m_displayDigits(other.m_displayDigits), m_converter(other.m_converter)
-{
-}
 
 /*
  * Equal operator

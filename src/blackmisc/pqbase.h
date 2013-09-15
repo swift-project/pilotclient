@@ -22,232 +22,6 @@ namespace BlackMisc
 namespace PhysicalQuantities
 {
 
-/*!
- * \brief Typical prefixes (multipliers) such as kilo, mega, hecto.
- * See <a href="http://www.poynton.com/notes/units/index.html">here</a> for an overview.
- * Use the static values such as CMeasurementPrefix::k() to specify values.
- */
-class CMeasurementPrefix : public CStreamable
-{
-private:
-    QString m_name; //!< name, e.g. "kilo"
-    QString m_symbol; //!< prefix, e.g. "k" for kilo
-    double m_factor; //!< factor, e.g. 1000 for kilo 1/100 for centi
-
-    /*!
-     * Constructor by parameters
-     * \brief CMeasurementMultiplier
-     * \param name
-     * \param prefixName
-     * \param factor
-     */
-    CMeasurementPrefix(const QString &name, const QString &symbol, double factor) :
-        m_name(name), m_symbol(symbol), m_factor(factor) {}
-
-protected:
-    /*!
-     * \brief Name as string
-     * \param i18n
-     * \return
-     */
-    virtual QString convertToQString(bool /* i18n */ = false) const
-    {
-        return this->m_name;
-    }
-
-    /*!
-     * \brief Stream to DBus
-     * \param argument
-     */
-    virtual void marshallToDbus(QDBusArgument &argument) const
-    {
-        argument << this->m_name;
-    }
-
-    /*!
-     * \brief Stream from DBus
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        QString name;
-        argument >> name;
-        (*this) = CMeasurementPrefix::fromPrefixName(name);
-    }
-
-public:
-    /*!
-     * \brief Equal operator ==
-     * \param other
-     * \return
-     */
-    bool operator == (const CMeasurementPrefix &other) const;
-
-    /*!
-     * \brief Unequal operator !=
-     * \param other
-     * \return
-     */
-    bool operator != (const CMeasurementPrefix &other) const;
-
-    /*!
-     * \brief Factor, e.g.1000 for "kilo"
-     * \return
-     */
-    double getFactor() const
-    {
-        return this->m_factor;
-    }
-
-    /*!
-     * \brief Factor
-     * \return
-     */
-    double toDouble() const
-    {
-        return this->getFactor();
-    }
-
-    /*!
-     * \brief Name, e.g. "kilo"
-     * \return
-     */
-    QString getName(bool i18n = false) const
-    {
-        return i18n ? QCoreApplication::translate("CMeasurementPrefix", this->m_name.toStdString().c_str()) : this->m_name;
-    }
-
-    /*!
-     * \brief Prefix, e.g. "k" for "kilo"
-     * \return
-     */
-    QString getSymbol(bool i18n = false) const
-    {
-        return i18n ? QCoreApplication::translate("CMeasurementPrefix", this->m_symbol.toStdString().c_str()) : this->m_symbol;
-    }
-
-    // --- static units, always use these for initialization
-    // --- Remark: Static initialization in C++ is random, this is why no static members
-    // --- are used
-
-    /*!
-     * \brief Unit "None"
-     * \return
-     */
-    static const CMeasurementPrefix &None()
-    {
-        static CMeasurementPrefix none("", "", 0.0);
-        return none;
-    }
-
-    /*!
-     * \brief Unit "One"
-     * \return
-     */
-    static const CMeasurementPrefix &One()
-    {
-        static CMeasurementPrefix one(QT_TR_NOOP("one"), "", 1.0);
-        return one;
-    }
-
-    /*!
-     * \brief Unit "mega"
-     * \return
-     */
-    static const CMeasurementPrefix &M()
-    {
-        static CMeasurementPrefix mega(QT_TR_NOOP("mega"), "M", 1E6);
-        return mega;
-    }
-
-    /*!
-     * \brief Unit "kilo"
-     * \return
-     */
-    static const CMeasurementPrefix &k()
-    {
-        static CMeasurementPrefix kilo(QT_TR_NOOP("kilo"), "k", 1000.0);
-        return kilo;
-    }
-
-    /*!
-     * \brief Unit "giga"
-     * \return
-     */
-    static const CMeasurementPrefix &G()
-    {
-        static CMeasurementPrefix giga(QT_TR_NOOP("giga"), "G", 1E9);
-        return giga;
-    }
-
-    /*!
-     * \brief Unit "hecto"
-     * \return
-     */
-    static const CMeasurementPrefix &h()
-    {
-        static CMeasurementPrefix hecto(QT_TR_NOOP("hecto"), "h", 100.0);
-        return hecto;
-    }
-
-    /*!
-     * \brief Unit "centi"
-     * \return
-     */
-    static const CMeasurementPrefix &c()
-    {
-        static CMeasurementPrefix centi(QT_TR_NOOP("centi"), "c", 0.01);
-        return centi;
-    }
-
-    /*!
-     * \brief Unit "milli"
-     * \return
-     */
-    static const CMeasurementPrefix &m()
-    {
-        static CMeasurementPrefix milli(QT_TR_NOOP("milli"), "m", 1E-03);
-        return milli;
-    }
-
-    /*!
-     * \brief All prefixes
-     * \return
-     */
-    static const QList<CMeasurementPrefix> &prefixes()
-    {
-        static QList<CMeasurementPrefix> prefixes;
-        if (prefixes.isEmpty())
-        {
-            prefixes.append(CMeasurementPrefix::c());
-            prefixes.append(CMeasurementPrefix::G());
-            prefixes.append(CMeasurementPrefix::h());
-            prefixes.append(CMeasurementPrefix::k());
-            prefixes.append(CMeasurementPrefix::M());
-            prefixes.append(CMeasurementPrefix::m());
-            prefixes.append(CMeasurementPrefix::None());
-            prefixes.append(CMeasurementPrefix::One());
-        }
-        return prefixes;
-    }
-
-    /*!
-     * \brief Prefix from name
-     * \param prefixName must be valid!
-     * \return
-     */
-    static const CMeasurementPrefix &fromPrefixName(const QString &prefixName)
-    {
-        const QList<CMeasurementPrefix> &prefixes = CMeasurementPrefix::prefixes();
-        for (int i = 0; i < prefixes.size(); ++i) {
-            if (prefixes.at(i).getName() == prefixName) return (prefixes.at(i));
-        }
-        qFatal("Illegal unit name");
-        return CMeasurementPrefix::None(); // just suppress "not all control paths return a value"
-    }
-
-};
-
 // ---------------------------------------------------------------------------------
 // --- Unit
 // ---------------------------------------------------------------------------------
@@ -280,97 +54,116 @@ protected:
          * \return
          */
         virtual double fromDefault(double factor) const = 0;
-        /*!
-         * Make a copy of this object with a different prefix.
-         * \param prefix
-         * \return
-         */
-        virtual Converter *clone(const CMeasurementPrefix &prefix) const = 0;
+    };
+
+    /*!
+     * Concrete strategy pattern for converting unit that does nothing.
+     */
+    struct IdentityConverter : public Converter
+    {
+        virtual double toDefault(double factor) const { return factor; }
+        virtual double fromDefault(double factor) const { return factor; }
     };
 
     /*!
      * Concrete strategy pattern for converting unit with linear conversion.
+     * \tparam Policy a policy class with static method factor() returning double
      */
-    class LinearConverter : public Converter
+    template <class Policy>
+    struct LinearConverter : public Converter
     {
-        double m_factor;
-    public:
-        /*!
-         * Constructor
-         * \param factor
-         */
-        LinearConverter(double factor) : m_factor(factor) {}
-        virtual double toDefault(double factor) const { return factor * m_factor; }
-        virtual double fromDefault(double factor) const { return factor / m_factor; }
-        virtual Converter *clone(const CMeasurementPrefix &prefix) const { auto ret = new LinearConverter(*this); ret->m_factor *= prefix.getFactor(); return ret; }
+        virtual double toDefault(double factor) const { return factor * Policy::factor(); }
+        virtual double fromDefault(double factor) const { return factor / Policy::factor(); }
     };
 
     /*!
-     * Concrete strategy pattern for converting unit with affine conversion.
+     * Concrete strategy pattern for converting unit with offset linear conversion.
+     * \tparam Policy a policy class with static methods factor() and offset() returning double
      */
-    class AffineConverter : public Converter
+    template <class Policy>
+    struct AffineConverter : public Converter
     {
-        double m_factor;
-        double m_offset;
-    public:
-        /*!
-         * Constructor
-         * \param factor
-         * \param offset
-         */
-        AffineConverter(double factor, double offset) : m_factor(factor), m_offset(offset) {}
-        virtual double toDefault(double factor) const { return (factor - m_offset) * m_factor; }
-        virtual double fromDefault(double factor) const { return factor / m_factor + m_offset; }
-        virtual Converter *clone(const CMeasurementPrefix &prefix) const { auto ret = new AffineConverter(*this); ret->m_factor *= prefix.getFactor(); return ret; }
+        virtual double toDefault(double factor) const { return (factor - Policy::offset()) * Policy::factor(); }
+        virtual double fromDefault(double factor) const { return factor / Policy::factor() + Policy::offset(); }
     };
 
     /*!
-     * Concrete strategy pattern for converting unit with subdivision conversion.
+     * Concrete strategy pattern for converting unit with one subdivision conversion.
+     * \tparam FactorPolicy a policy class with static method factor() returning double
+     * \tparam SubdivPolicy a policy class with static methods fraction() and subfactor() returning double
      */
-    template <int Num, int Den>
-    class SubdivisionConverter : public Converter
+    template <class FactorPolicy, class SubdivPolicy>
+    struct SubdivisionConverter : public Converter
     {
-        double m_factor;
-    public:
-        /*!
-         * Constructor
-         */
-        SubdivisionConverter(double factor = 1) : m_factor(factor) {}
         virtual double toDefault(double factor) const   { using BlackMisc::Math::CMath;
-                                                          double ret  = CMath::trunc(factor); factor = CMath::fract(factor) * Den;
-                                                                 ret +=              factor / Num;
-                                                          return ret * m_factor; }
+                                                          double part2 = CMath::fract(factor) * SubdivPolicy::fraction();
+                                                          factor = CMath::trunc(factor) + part2 / SubdivPolicy::subfactor();
+                                                          return factor * FactorPolicy::factor(); }
         virtual double fromDefault(double factor) const { using BlackMisc::Math::CMath;
-                                                          factor /= m_factor;
-                                                          double ret  = CMath::trunc(factor); factor = CMath::fract(factor) * Num;
-                                                          return ret +=              factor / Den; }
-        virtual Converter *clone(const CMeasurementPrefix &) const { qFatal("Not implemented"); return 0; }
+                                                          factor /= FactorPolicy::factor();
+                                                          double part2 = CMath::fract(factor) * SubdivPolicy::subfactor();
+                                                          return CMath::trunc(factor) + part2 / SubdivPolicy::fraction(); }
     };
 
     /*!
-     * Concrete strategy pattern for converting unit with subdivision conversion.
+     * Concrete strategy pattern for converting unit with two subdivision conversions.
+     * \tparam FactorPolicy a policy class with static method factor() returning double
+     * \tparam SubdivPolicy a policy class with static methods fraction() and subfactor() returning double
      */
-    template <int Num1, int Den1, int Num2, int Den2>
-    class SubdivisionConverter2 : public Converter
+    template <class FactorPolicy, class SubdivPolicy>
+    struct SubdivisionConverter2 : public Converter
     {
-        double m_factor;
-    public:
-        /*!
-         * Constructor
-         */
-        SubdivisionConverter2(double factor = 1) : m_factor(factor) {}
         virtual double toDefault(double factor) const   { using BlackMisc::Math::CMath;
-                                                          double ret  = CMath::trunc(factor);        factor = CMath::fract(factor) * Den1;
-                                                                 ret += CMath::trunc(factor) / Num1; factor = CMath::fract(factor) * Den2;
-                                                                 ret +=              factor  / (Num1 * Num2);
-                                                          return ret * m_factor; }
+                                                          double part2 = CMath::fract(factor) * SubdivPolicy::fraction();
+                                                          double part3 = CMath::fract(part2) * SubdivPolicy::fraction();
+                                                          factor = CMath::trunc(factor) + (CMath::trunc(part2) + part3 / SubdivPolicy::subfactor()) / SubdivPolicy::subfactor();
+                                                          return factor * FactorPolicy::factor(); }
         virtual double fromDefault(double factor) const { using BlackMisc::Math::CMath;
-                                                          factor /= m_factor;
-                                                          double ret  = CMath::trunc(factor);        factor = CMath::fract(factor) * Num1;
-                                                                 ret += CMath::trunc(factor) / Den1; factor = CMath::fract(factor) * Num2;
-                                                          return ret +=              factor  / (Den1 * Den2); }
-        virtual Converter *clone(const CMeasurementPrefix &) const { qFatal("Not implemented"); return 0; }
+                                                          factor /= FactorPolicy::factor();
+                                                          double part2 = CMath::fract(factor) * SubdivPolicy::subfactor();
+                                                          double part3 = CMath::fract(part2) * SubdivPolicy::subfactor();
+                                                          return CMath::trunc(factor) + (CMath::trunc(part2) + part3 / SubdivPolicy::fraction()) / SubdivPolicy::fraction(); }
     };
+
+    //! \{
+    //! Metapolicy that can be used to modify template parameters of converters
+    struct One {
+        static double factor() { return 1; } //!< factor \return
+    };
+    template <class Policy>
+    struct Two {
+        static double factor() { return Policy::factor() * 2.0; } //!< factor \return
+    };
+    template <class Policy>
+    struct Milli {
+        static double factor() { return Policy::factor() / 1000.0; } //!< factor \return
+    };
+    template <class Policy>
+    struct Centi {
+        static double factor() { return Policy::factor() / 100.0; } //!< factor \return
+    };
+    template <class Policy>
+    struct Hecto {
+        static double factor() { return Policy::factor() * 100.0; } //!< factor \return
+    };
+    template <class Policy>
+    struct Kilo {
+        static double factor() { return Policy::factor() * 1000.0; } //!< factor \return
+    };
+    template <class Policy>
+    struct Mega {
+        static double factor() { return Policy::factor() * 1e+6; } //!< factor \return
+    };
+    template <class Policy>
+    struct Giga {
+        static double factor() { return Policy::factor() * 1e+9; } //!< factor \return
+    };
+    template <int Subfactor>
+    struct InEachHundred {
+        static double fraction() { return 100.0f; } //!< fraction \return
+        static double subfactor() { return float(Subfactor); } //!< subfactor \return
+    };
+    //! \}
 
 private:
     QString m_name; //!< name, e.g. "meter"
@@ -381,50 +174,24 @@ private:
 
 protected:
     /*!
-     * Construct a unit with linear conversion
-     * \param name
-     * \param symbol
-     * \param factor
-     * \param displayDigits
-     * \param epsilon
-     */
-    CMeasurementUnit(const QString &name, const QString &symbol, double factor, int displayDigits, double epsilon);
-
-    /*!
-     * Construct a unit with affine conversion
-     * \param name
-     * \param symbol
-     * \param factor
-     * \param offset
-     * \param displayDigits
-     * \param epsilon
-     */
-    CMeasurementUnit(const QString &name, const QString &symbol, double factor, double offset, int displayDigits, double epsilon);
-
-    /*!
      * Construct a unit with custom conversion
      * \param name
      * \param symbol
-     * \param converter
      * \param displayDigits
      * \param epsilon
      */
-    CMeasurementUnit(const QString &name, const QString &symbol, Converter *converter, int displayDigits, double epsilon);
-
-    /*!
-     * Construct from base unit and prefix
-     * \param base
-     * \param prefix
-     * \param displayDigits
-     * \param epsilon
-     */
-    CMeasurementUnit(const QString &name, const QString &symbol, const CMeasurementUnit &base, const CMeasurementPrefix &prefix, int displayDigits = 2, double epsilon = 1E-10);
+    template <class Converter>
+    CMeasurementUnit(const QString &name, const QString &symbol, const Converter &, int displayDigits, double epsilon)
+        : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(new Converter)
+    {}
 
     /*!
      * \brief Copy constructor
      * \param other
      */
-    CMeasurementUnit(const CMeasurementUnit &other);
+    CMeasurementUnit(const CMeasurementUnit &other)
+        : m_name(other.m_name), m_symbol(other.m_symbol), m_epsilon(other.m_epsilon), m_displayDigits(other.m_displayDigits), m_converter(other.m_converter)
+    {}
 
     /*!
      * \brief String for streaming operators is full name
@@ -588,7 +355,12 @@ public:
      */
     static CMeasurementUnit &None()
     {
-        static CMeasurementUnit none("none", "", 0.0, 0, 0);
+        struct NilConverter : public Converter
+        {
+            virtual double toDefault(double) const { return 0.0; }
+            virtual double fromDefault(double) const { return 0.0; }
+        };
+        static CMeasurementUnit none("none", "", NilConverter(), 0, 0);
         return none;
     }
 };

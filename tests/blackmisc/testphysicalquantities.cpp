@@ -81,7 +81,7 @@ void CTestPhysicalQuantities::frequencyTests()
     QVERIFY2(f1.valueRounded(CFrequencyUnit::kHz(), 2) == 1000, "Mega is 1000kHz");
     QVERIFY2(f1.value() == 1 , "1MHz");
     QVERIFY2(f1.value(CFrequencyUnit::defaultUnit()) == 1000000 , "1E6 Hz");
-    CFrequency f2(CMeasurementPrefix::M().toDouble(), CFrequencyUnit::Hz()) ; // 1 Megahertz
+    CFrequency f2(1e+6, CFrequencyUnit::Hz()) ; // 1 Megahertz
     QVERIFY2(f1 == f2 , "MHz is 1E6 Hz");
 }
 
@@ -173,7 +173,7 @@ void CTestPhysicalQuantities::accelerationTests()
     CAcceleration a2(a1);
     a1.switchUnit(CAccelerationUnit::ft_s2());
     QVERIFY2(a1 == a2, "Accelerations should be similar");
-    QVERIFY2(BlackMisc::Math::CMath::round(a1.value() * ftFactor, 6) == a2.valueRounded(6),
+    QVERIFY2(BlackMisc::Math::CMath::round(a2.value() * ftFactor, 6) == a1.valueRounded(6),
              "Numerical values should be equal");
 }
 

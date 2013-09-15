@@ -15,14 +15,8 @@ namespace BlackMiscTest
  */
 int CSamplesPhysicalQuantities::samples()
 {
-
     // cases which must not work
-    // CMeasurementUnit mu; //must not work
     // CLengthUnit du1(CAngleUnit::rad());
-
-    CMeasurementPrefix pf1 = CMeasurementPrefix::h();
-    CMeasurementPrefix pf2 = CMeasurementPrefix::M();
-    qDebug() << pf1 << pf2 << (1.0 * pf1.toDouble());
 
     CLengthUnit lu1(CLengthUnit::cm());
     CLengthUnit lu2(CLengthUnit::ft());
