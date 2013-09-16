@@ -45,7 +45,7 @@ double CMath::round(double value, int digits)
     fractpart = modf(value, &intpart);
     if (fractpart == 0) return value; // do not mess any "integers" to the worse
     double m = pow(10.0, digits);
-    qint64 ri = qRound(value * m); // do not loose any range here
+    qint64 ri = qRound64(value * m); // do not loose any range here
     double rv = double(ri) / m;
     return rv;
 }
