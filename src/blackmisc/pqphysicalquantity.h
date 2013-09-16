@@ -71,12 +71,6 @@ protected:
         return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
     }
 
-    /*!
-     * \brief Change value without changing unit
-     * \param value
-     */
-    void setValueSameUnit(double value);
-
 public:
     /*!
      * \brief Virtual destructor
@@ -152,6 +146,12 @@ public:
     {
         return this->valueRoundedWithUnit(this->m_unit, digits, i18n);
     }
+
+    /*!
+     * \brief Change value without changing unit
+     * \param value
+     */
+    void setValueSameUnit(double value);
 
     /*!
      * \brief Add to the value in the current unit.
