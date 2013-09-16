@@ -24,7 +24,7 @@ template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(doubl
 template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const CPhysicalQuantity<MU, PQ> &other) const
 {
     if (this == &other) return true;
-    double diff = abs(this->m_value - other.value(this->m_unit));
+    double diff = std::abs(this->m_value - other.value(this->m_unit));
     return diff <= this->m_unit.getEpsilon();
 }
 
