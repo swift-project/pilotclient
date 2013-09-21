@@ -2,6 +2,8 @@ TEMPLATE = subdirs
 
 CONFIG += ordered
 
+include (externals.pri)
+
 WITH_BLACKMISC = ON
 WITH_BLACKCORE = ON
 WITH_BLACKD = ON
@@ -16,7 +18,7 @@ WITH_SAMPLES = ON
 
 equals(WITH_BLACKMISC, ON) {
     SUBDIRS += src/blackmisc
-    SUBDIRS += src/blackmisc_cpp2xml
+    #SUBDIRS += src/blackmisc_cpp2xml
 }
 
 equals(WITH_BLACKCORE, ON) {
