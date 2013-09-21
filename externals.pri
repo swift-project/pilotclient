@@ -8,14 +8,12 @@
 
 isEmpty(EXTERNALDIR) {
     EXTERNALDIR = $$(VATSIM_EXTERNAL_DIR)
-    message($$EXTERNALDIR)
 
 }
 
 # if no env variable is set, we use the standard path in the client folder.
 isEmpty(EXTERNALDIR) {
     EXTERNALDIR = $$TOPSRCDIR/externals
-    message($$EXTERNALDIR)
 }
 
 # Test the folder if it exists and has a include subfolder
@@ -37,9 +35,13 @@ win32:contains(QMAKE_TARGET.arch, x86) {
 }
 
 win32-g++ {
-    message("Can't figure out if MinGW version is 32 bit or 64.")
-    message("Defaulting to 64 bit. If this is not correct, change the path manually!")
-    LIBS *= -L$$EXTERNALDIR/mingw64/lib
+    MINGW = $$system($$QMAKE_CXX -Q --help=target | find \"-m64\")
+    contains(MINGW,-m64) {
+        LIBS *= -L$$EXTERNALDIR/mingw64/lib
+    }
+    else {
+        LIBS *= -L$$EXTERNALDIR/mingw32/lib
+    }
 }
 
 linux-g++-32 {
