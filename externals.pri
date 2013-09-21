@@ -35,8 +35,9 @@ win32:contains(QMAKE_TARGET.arch, x86) {
 }
 
 win32-g++ {
-    MINGW = $$system($$QMAKE_CXX -Q --help=target | find \"-m64\")
-    contains(MINGW,-m64) {
+    WIN_FIND = $$(SYSTEMROOT)\system32\find
+    MINGW64 = $$system($$QMAKE_CXX -Q --help=target | $$WIN_FIND \"-m64\")
+    contains(MINGW64,enabled) {
         LIBS *= -L$$EXTERNALDIR/mingw64/lib
     }
     else {
