@@ -11,7 +11,7 @@
 #define BLACKCORE_NETWORK_VATLIB_H
 
 #include "network.h"
-#include "../../vatlib/vatlib.h"
+#include <vatlib/vatlib.h>
 #include <QScopedPointer>
 #include <QBasicTimer>
 #include <QTextCodec>

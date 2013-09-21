@@ -1,3 +1,5 @@
+include (../../externals.pri)
+
 # GUI is required for the matrix classes
 QT       += network dbus
 
