@@ -486,9 +486,12 @@ namespace BlackCore
         {
             const char* key = keysValues[0];
             const char* value = keysValues[1];
-            if (key == net->capability_AtcInfo)         { flags |= AcceptsAtisResponses; }
-            else if (key == net->capability_InterimPos) { flags |= SupportsInterimPosUpdates; }
-            else if (key == net->capability_ModelDesc)  { flags |= SupportsModelDescriptions; }
+            if (*value == '1')
+            {
+                if (key == net->capability_AtcInfo)         { flags |= AcceptsAtisResponses; }
+                else if (key == net->capability_InterimPos) { flags |= SupportsInterimPosUpdates; }
+                else if (key == net->capability_ModelDesc)  { flags |= SupportsModelDescriptions; }
+            }
             keysValues += 2;
         }
         emit cbvar_cast(cbvar)->capabilitiesQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), flags);
