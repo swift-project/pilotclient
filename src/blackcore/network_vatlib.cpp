@@ -427,12 +427,12 @@ namespace BlackCore
         emit cbvar_cast(cbvar)->atcDisconnected(cbvar_cast(cbvar)->fromFSD(callsign));
     }
 
-    void NetworkVatlib::onPilotPositionUpdate(Cvatlib_Network*, const char* callsign, Cvatlib_Network::PilotPosUpdate pos, void* cbvar)
+    void NetworkVatlib::onPilotPositionUpdate(Cvatlib_Network*, const char* /*callsign*/, Cvatlib_Network::PilotPosUpdate /*pos*/, void* /*cbvar*/)
     {
         //TODO
     }
 
-    void NetworkVatlib::onInterimPilotPositionUpdate(Cvatlib_Network*, const char* callsign, Cvatlib_Network::PilotPosUpdate pos, void* cbvar)
+    void NetworkVatlib::onInterimPilotPositionUpdate(Cvatlib_Network*, const char* /*callsign*/, Cvatlib_Network::PilotPosUpdate /*pos*/, void* /*cbvar*/)
     {
         //TODO
     }
@@ -499,7 +499,7 @@ namespace BlackCore
         emit cbvar_cast(cbvar)->atisQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data));
     }
 
-    void NetworkVatlib::onTemperatureDataReceived(Cvatlib_Network*, Cvatlib_Network::TempLayer layers[4], INT pressure, void* cbvar)
+    void NetworkVatlib::onTemperatureDataReceived(Cvatlib_Network*, Cvatlib_Network::TempLayer /*layers*/[4], INT /*pressure*/, void* /*cbvar*/)
     {
         //TODO
     }
@@ -537,12 +537,12 @@ namespace BlackCore
         emit cbvar_cast(cbvar)->terminate();
     }
 
-    void NetworkVatlib::onWindDataReceived(Cvatlib_Network*, Cvatlib_Network::WindLayer layers[4], void* cbvar)
+    void NetworkVatlib::onWindDataReceived(Cvatlib_Network*, Cvatlib_Network::WindLayer /*layers*/[4], void* /*cbvar*/)
     {
         //TODO
     }
 
-    void NetworkVatlib::onCloudDataReceived(Cvatlib_Network*, Cvatlib_Network::CloudLayer layers[2], Cvatlib_Network::StormLayer storm, float vis, void* cbvar)
+    void NetworkVatlib::onCloudDataReceived(Cvatlib_Network*, Cvatlib_Network::CloudLayer /*layers*/[2], Cvatlib_Network::StormLayer /*storm*/, float /*vis*/, void* /*cbvar*/)
     {
         //TODO
     }

@@ -86,8 +86,16 @@ namespace BlackCore
     signals:
         void terminate();
 
+    public:
+        //! Deletion policy for QScopedPointer
+        struct VatlibQScopedPointerDeleter
+        {
+            //! Called by QScopedPointer destructor
+            static void cleanup(Cvatlib_Network *net) { if (net) net->Destroy(); }
+        };
+
     private:
-        QScopedPointer<Cvatlib_Network> m_net;
+        QScopedPointer<Cvatlib_Network, VatlibQScopedPointerDeleter> m_net;
         Cvatlib_Network::connStatus m_status;
 
         QBasicTimer m_timer;
