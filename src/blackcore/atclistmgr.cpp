@@ -6,9 +6,9 @@
 #include "atclistmgr.h"
 #include "network.h"
 
-BlackCore::CAtcListManager::CAtcListManager()
+BlackCore::CAtcListManager::CAtcListManager(BlackMisc::IContext &ctx)
 {
-    INetwork *net = BlackMisc::IContext::getInstance().singleton<INetwork>();
+    INetwork *net = &ctx.getObject<INetwork>();
 
     connect(net, &INetwork::atcPositionUpdate, this, &CAtcListManager::update, Qt::QueuedConnection);
     connect(net, &INetwork::atcDisconnected, this, &CAtcListManager::remove, Qt::QueuedConnection);

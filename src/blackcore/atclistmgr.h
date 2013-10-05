@@ -25,8 +25,6 @@ namespace BlackCore
         Q_PROPERTY(BlackMisc::CAtcList list READ getList NOTIFY listChanged)
 
     public:
-        BLACK_INTERFACE(BlackCore::IAtcListManager)
-
         /*!
          * Virtual destructor.
          */
@@ -49,7 +47,7 @@ namespace BlackCore
     /*!
      * Concrete ATC list manager. Implementation of IAtcListManager.
      *
-     * Has a dependency on INetwork. An INetwork must be available through the IContext singleton.
+     * Has a dependency on INetwork. An INetwork must be available through the IContext.
      */
     class CAtcListManager : public IAtcListManager
     {
@@ -58,8 +56,9 @@ namespace BlackCore
     public:
         /*!
          * Constructor.
+         * \param context
          */
-        CAtcListManager();
+        CAtcListManager(BlackMisc::IContext &context);
 
         virtual const BlackMisc::CAtcList& getList() const { return m_list; }
 

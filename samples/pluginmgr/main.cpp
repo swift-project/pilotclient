@@ -9,9 +9,11 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    BlackMisc::CApplicationContext myApplicationContext;
 
-    BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
+    BlackMisc::CApplicationContext ctx;
+    BlackMisc::IContext::setInstance(ctx);
+    BlackMisc::CDebug debug;
+    ctx.setObject(debug);
 
     {
         const QString pluginPath = "../../build/bin";

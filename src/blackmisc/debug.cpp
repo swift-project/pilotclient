@@ -1,6 +1,7 @@
 #include "blackmisc/debug.h"
 #include "blackmisc/log.h"
 #include "blackmisc/display.h"
+#include "blackmisc/context.h"
 #include <QDir>
 #include <QCoreApplication>
 

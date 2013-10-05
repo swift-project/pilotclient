@@ -5,6 +5,7 @@
 
 #include "blackmisc/com_handler.h"
 #include "blackmisc/debug.h"
+#include "blackmisc/context.h"
 #include <QTcpSocket>
 #include <QDataStream>
 

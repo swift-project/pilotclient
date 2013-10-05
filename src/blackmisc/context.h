@@ -6,178 +6,202 @@
 #ifndef BLACKMISC_CONTEXT_H
 #define BLACKMISC_CONTEXT_H
 
+#include "blackmisc/debug.h"
+#include <QMetaType>
 #include <QObject>
 #include <QMap>
+#include <stdexcept>
 
 namespace BlackMisc
 {
 
-    class CDebug;
-
     /*!
-      Keeps track of all singleton and pseudo-singleton objects.
-    */
+     * Provides centralized modular access to long-lived interface objects.
+     */
     class IContext
     {
     public:
         /*!
-          Returns a reference to the static global context singleton.
-          \return
-          \warning Do not use this from within a plugin.
-        */
+         * Returns a reference to a static global context singleton.
+         * \return
+         * \warning Do not use this in code which could be called from within a plugin.
+         * \deprecated Provided as a crutch to ease transition from singleton-based design.
+         */
         static IContext &getInstance();
 
         /*!
-          Destructor.
-        */
+         * Allows for apps to set the static global context singleton.
+         * \deprecated Provided as a crutch to ease transition from singleton-based design.
+         */
+        static void setInstance(IContext &);
+
+        /*!
+         * Destructor.
+         */
         virtual ~IContext();
 
         /*!
-          Returns the pointer to a singleton object by its name.
-          You usually use the template overload of this method instead.
-          \param singletonName
-          \return
-          \throw std::logic_error The requested singleton is not present.
-        */
-        virtual QObject *singleton(const QString &singletonName) = 0;
-
-        /*!
-          Returns true if a singleton object with the give name is present.
-          You usually use the template overload of this method instead.
-          \param singletonName
-          \return
-        */
-        virtual bool hasSingleton(const QString &singletonName) const = 0;
-
-        /*!
-          Sets a singleton pointer, given by its name.
-          You usually use the template overload of this method instead.
-          \param singletonName
-          \param object
-        */
-        virtual void setSingleton(const QString &singletonName, QObject *object) = 0;
-
-        /*!
-          Removes the singleton pointer, given by its name.
-          You usually use the template overload of this method instead.
-          \param singletonName
-          \param object
-        */
-        virtual void releaseSingleton(const QString &singletonName) = 0;
-
-        /*!
-            Return the singleton pointer with the type T.
-            \tparam T An interface defined with the BLACK_INTERFACE macro.
-            \return
-            \throw std::logic_error The requested singleton is not present.
-        */
-        template <class T>
-        T *singleton()
+         * Returns true if an object with the given name is present.
+         * You usually use the type-safe hasObject method instead.
+         * \param name
+         * \return
+         */
+        bool hasQObject(const QString &name)
         {
-            QObject *qobj = singleton(T::blackInterfaceId());
-            T *t = qobject_cast<T *>(qobj);
-            Q_ASSERT_X(t, "IContext", "qobject_cast failed");
-            return t;
+            return getQObjectNothrow(name);
         }
 
         /*!
-            Return true if the requested singleton in present in the context.
-            \tparam T An interface defined with the BLACK_INTERFACE macro.
-            \return
-        */
-        template <class T>
-        bool hasSingleton() const
+         * Set the object pointer with the type T.
+         * \tparam T A class derived from QObject using the Q_OBJECT macro.
+         * \param object
+         * \param name The name of the object; default is the name of its class, T.
+         */
+        template <class T> void setObject(T &object, QString name = T::staticMetaObject.className())
         {
-            return hasSingleton(T::blackInterfaceId());
+            setQObject(name, object);
         }
 
         /*!
-            Set the singleton pointer with the type T.
-            \tparam T An interface defined with the BLACK_INTERFACE macro.
-            \param object
-        */
-        template <class T>
-        void setSingleton(T *object)
+         * Remove the object pointer with the type T.
+         * \tparam T A class derived from QObject using the Q_OBJECT macro.
+         * \param name The name of the object; default is the name of its class T.
+         */
+        template <class T> void removeObject(const QString &name = T::staticMetaObject.className())
         {
-            setSingleton(T::blackInterfaceId(), object);
+            removeQObject(name);
         }
 
         /*!
-            Remove the singleton pointer with the type T.
-            \tparam T An interface defined with the BLACK_INTERFACE macro.
-        */
-        template <class T>
-        void releaseSingleton()
+         * Return an object pointer of the class T.
+         * \tparam T A class derived from QObject using the Q_OBJECT macro.
+         * \param name The name of the object; default is the name of its class, T.
+         * \return
+         * \throw std::logic_error The requested object is not present.
+         */
+        template <class T> T &getObject(const QString &name = T::staticMetaObject.className())
         {
-            releaseSingleton(T::blackInterfaceId());
+            T *obj = qobject_cast<T *>(getQObjectNothrow(name));
+            if (!obj) { throw std::logic_error("IContext: qobject_cast failed"); }
+            return *obj;
         }
 
         /*!
-            Set the global name of the application.
-            \param appName
-        */
-        virtual void setApplicationName(const QString &appName) = 0;
+         * Return true if the requested object in present in the context.
+         * \tparam T A class derived from QObject using the Q_OBJECT macro.
+         * \param name The name of the object; default is the name of its class, T.
+         * \return
+         */
+        template <class T> bool hasObject(const QString &name = T::staticMetaObject.className()) const
+        {
+            QObject *qobj = getQObjectNothrow(name);
+            return qobj && qobject_cast<T*>(qobj);
+        }
 
         /*!
-            Set the application name to the default.
-        */
+         * Sets an object pointer, given by its name.
+         * You usually use the type-safe setObject method instead.
+         * \param object
+         * \param name
+         */
+        virtual void setQObject(QString name, QObject &object) = 0;
+
+        /*!
+         * Removes an object pointer, given by its name.
+         * You usually use the type-safe removeObject method instead.
+         * \param name
+         * \param object
+         */
+        virtual void removeQObject(const QString &name) = 0;
+
+        /*!
+         * Like getQObject but returns nullptr instead of throwing an exception.
+         * \param name
+         * \return
+         */
+        virtual const QObject *getQObjectNothrow(const QString &name) const = 0;
+
+        /*!
+         * Like getQObject but returns nullptr instead of throwing an exception.
+         * \param name
+         * \return
+         */
+        QObject *getQObjectNothrow(const QString &name)
+        {
+            return const_cast<QObject *>(static_cast<const IContext*>(this)->getQObjectNothrow(name));
+        }
+
+        /*!
+         * Returns the pointer to an object by its name.
+         * You usually use the type-safe getObject method instead.
+         * \param name
+         * \return
+         * \throw std::logic_error The requested object is not present.
+         */
+        QObject &getQObject(const QString &name)
+        {
+            QObject *qobj = getQObjectNothrow(name);
+            if (!qobj) { throw std::logic_error("IContext: named object not found"); }
+            return *qobj;
+        }
+
+        /*!
+         * Set the global name of the application.
+         * \param appName
+         */
+        virtual void setApplicationName(QString appName) = 0;
+
+        /*!
+         * Set the application name to the default.
+         */
         virtual void setDefaultApplicationName() = 0;
 
         /*!
-            Return the global name of the application.
-            \return
-        */
+         * Return the global name of the application.
+         * \return
+         */
         virtual const QString &getApplicationName() const = 0;
 
         /*!
-            Return the CDebug singleton.
-            \return
-            \deprecated Use getSingletonPointer<CDebug>() instead.
-            \throw std::logic_error The requested singleton is not present.
-        */
-        virtual CDebug *getDebug() = 0;
+         * Return the CDebug object.
+         * \return
+         * \throw std::logic_error The requested object is not present.
+         */
+        CDebug &getDebug()
+        {
+            return getObject<CDebug>();
+        }
 
         /*!
-            Set the CDebug singleton.
-            \param debug
-            \deprecated Use setSingletonPointer<CDebug>() instead.
-        */
-        virtual void setDebug(CDebug *debug) = 0;
+         * Set the CDebug object.
+         * \param debug
+         */
+        void setDebug(CDebug &debug)
+        {
+            setObject(debug);
+        }
     };
 
     /*!
-        Enable an interface to be manipulated with the template methods of IContext.
-        Put this macro in the public section of the interface definition.
-        \param FQNAME The fully qualified name of the interface (e.g. BlackMisc::IWhatever).
-    */
-#define BLACK_INTERFACE(FQNAME) static const char *blackInterfaceId() { return #FQNAME ; }
-
-    /*!
-      Default implementation of the IContext interface.
-    */
+     * Default implementation of the IContext interface.
+     */
     class CApplicationContext : public IContext
     {
     public:
         /*!
-            Constructor
-        */
+         * Constructor
+         */
         CApplicationContext();
 
-        virtual QObject *singleton(const QString &singletonName);
-        virtual bool hasSingleton(const QString &singletonName) const;
-        virtual void setSingleton(const QString &singletonName, QObject *object);
-        virtual void releaseSingleton(const QString &singletonName);
-        virtual CDebug *getDebug();
-        virtual void setDebug(CDebug *debug);
-        virtual void setApplicationName(const QString &applicationName) { m_appName = applicationName; }
+        virtual const QObject *getQObjectNothrow(const QString &) const;
+        virtual void setQObject(QString, QObject &);
+        virtual void removeQObject(const QString &);
+        virtual void setApplicationName(QString appName) { m_appName = appName; }
         virtual void setDefaultApplicationName();
         virtual const QString &getApplicationName() const { return m_appName; }
 
     private:
-        typedef QMap<QString, QObject *> TSingletonMap;
-
-        TSingletonMap m_singletons;
-
+        QMap<QString, QObject *> m_map;
         QString m_appName;
     };
 
@@ -186,7 +210,7 @@ namespace BlackMisc
         which registers itself with the application context.
         \warning Singletons defined with this macro will not be accessible in plugins.
         \deprecated Preferred way is, during application initialization,
-                    construct singletons and register them manually,
+                    construct would-be singletons and register them manually,
                     and when you want to access them, do it through the IContext.
     */
 #define SINGLETON_CLASS_DECLARATION(className) \
@@ -202,15 +226,15 @@ public:\
         if (m_instance == NULL) \
         { \
             /* Get the singleton object from the context, if there is one */ \
-            if (BlackMisc::IContext::getInstance().hasSingleton(#className)) \
+            if (BlackMisc::IContext::getInstance().hasQObject(#className)) \
             { \
-                m_instance = reinterpret_cast<className*>(BlackMisc::IContext::getInstance().singleton(#className)); \
+                m_instance = static_cast<className*>(&BlackMisc::IContext::getInstance().getQObject(#className)); \
             } \
             else \
             { \
                 /* We have no allocated object yet, so do it now. */ \
                 m_instance = new className; \
-                BlackMisc::IContext::getInstance().setSingleton(#className, m_instance); \
+                BlackMisc::IContext::getInstance().setQObject(#className, *m_instance); \
             } \
         } \
         return *m_instance; \

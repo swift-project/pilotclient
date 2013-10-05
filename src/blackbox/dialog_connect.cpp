@@ -9,6 +9,7 @@
 #include "blackmisc/debug.h"
 #include "blackmisc/message.h"
 #include "blackmisc/gui_messages.h"
+#include "blackmisc/context.h"
 
 using namespace BlackMisc;
 

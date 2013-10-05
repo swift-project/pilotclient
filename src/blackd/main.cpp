@@ -18,7 +18,10 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     BlackMisc::CApplicationContext myBlackApp;
 
-    BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
+    BlackMisc::CApplicationContext ctx;
+    BlackMisc::IContext::setInstance(ctx);
+    BlackMisc::CDebug debug;
+    ctx.setObject(debug);
 
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
              QMessageBox::critical(0, QObject::tr("Systray"),

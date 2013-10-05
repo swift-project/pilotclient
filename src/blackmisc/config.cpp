@@ -5,6 +5,7 @@
 
 #include "blackmisc/config.h"
 #include "blackmisc/debug.h"
+#include "blackmisc/context.h"
 #include <QFile>
 #include <QStringList>
 

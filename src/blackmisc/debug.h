@@ -6,7 +6,6 @@
 #ifndef BLACKMISC_DEBUG_H
 #define BLACKMISC_DEBUG_H
 
-#include "blackmisc/context.h"
 #include "blackmisc/log.h"
 #include "blackmisc/display.h"
 #include "blackmisc/logmessage.h"
@@ -26,8 +25,6 @@ namespace BlackMisc
         Q_OBJECT
 
     public:
-        BLACK_INTERFACE(BlackMisc::CDebug)
-
         CDebug();
 
         // internal use only
@@ -110,10 +107,10 @@ namespace BlackMisc
         CLog *m_debugLog;
     };
 
-#define bInfo(CONTEXT)      ( (CONTEXT).getDebug()->blackInfo(__LINE__, __FILE__, __FUNCTION__ ) )
-#define bWarning(CONTEXT)   ( (CONTEXT).getDebug()->blackWarning(__LINE__, __FILE__, __FUNCTION__ ) )
-#define bDebug(CONTEXT)     ( (CONTEXT).getDebug()->blackDebug(__LINE__, __FILE__, __FUNCTION__ ) )
-#define bError(CONTEXT)     ( (CONTEXT).getDebug()->blackError(__LINE__, __FILE__, __FUNCTION__ ) )
+#define bInfo(CONTEXT)      ( (CONTEXT).getDebug().blackInfo(__LINE__, __FILE__, __FUNCTION__ ) )
+#define bWarning(CONTEXT)   ( (CONTEXT).getDebug().blackWarning(__LINE__, __FILE__, __FUNCTION__ ) )
+#define bDebug(CONTEXT)     ( (CONTEXT).getDebug().blackDebug(__LINE__, __FILE__, __FUNCTION__ ) )
+#define bError(CONTEXT)     ( (CONTEXT).getDebug().blackError(__LINE__, __FILE__, __FUNCTION__ ) )
 
 #define bAppInfo    bInfo(BlackMisc::IContext::getInstance())
 #define bAppWarning bWarning(BlackMisc::IContext::getInstance())

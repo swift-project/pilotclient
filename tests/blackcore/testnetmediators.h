@@ -45,6 +45,7 @@ namespace BlackCoreTest
         void cleanupTestCase();
 
     private:
+        BlackMisc::CApplicationContext m_context;
         BlackCore::NetworkDummy m_networkDummy;
     };
 

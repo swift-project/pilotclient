@@ -34,8 +34,6 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-        BLACK_INTERFACE(BlackCore::INetwork)
-
         virtual ~INetwork() {}
 
         enum

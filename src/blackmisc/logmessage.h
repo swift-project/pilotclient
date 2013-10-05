@@ -7,7 +7,6 @@
 #define LOGMESSAGE_H
 
 #include "blackmisc/log.h"
-#include "blackmisc/context.h"
 #include <QTextStream>
 
 namespace BlackMisc

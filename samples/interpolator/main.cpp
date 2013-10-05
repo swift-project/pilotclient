@@ -22,7 +22,11 @@ using namespace BlackMisc::Aviation;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
+
+    BlackMisc::CApplicationContext ctx;
+    BlackMisc::IContext::setInstance(ctx);
+    BlackMisc::CDebug debug;
+    ctx.setObject(debug);
 
     QElapsedTimer timer;
 

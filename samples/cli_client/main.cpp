@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackcore/network_vatlib.h"
+#include "blackmisc/context.h"
 #include "client.h"
 #include "reader.h"
 #include <QCoreApplication>
@@ -12,11 +13,15 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication app (argc, argv);
-    BlackMisc::CApplicationContext myApplicationContext;
-    BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
-    BlackMisc::IContext::getInstance().setSingleton<BlackCore::INetwork>(new BlackCore::NetworkVatlib());
 
-    Client client;
+    BlackMisc::CApplicationContext ctx;
+    BlackMisc::IContext::setInstance(ctx);
+    BlackMisc::CDebug debug;
+    ctx.setObject(debug);
+    BlackCore::NetworkVatlib net;
+    ctx.setObject<BlackCore::INetwork>(net);
+
+    Client client(ctx);
     LineReader reader;
     QObject::connect(&reader, SIGNAL(command(const QString&)), &client, SLOT(command(const QString&)));
     QObject::connect(&client, SIGNAL(quit()), &reader, SLOT(terminate()));

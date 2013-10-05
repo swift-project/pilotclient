@@ -118,14 +118,14 @@ void BlackD::createTrayIcon()
 
 void BlackD::createLogging()
 {
-    BlackMisc::IContext::getInstance().getDebug()->create();
+    BlackMisc::IContext::getInstance().getDebug().create();
 
     m_displayer = new CQtDisplayer(ui->logginView);
 
-    BlackMisc::IContext::getInstance().getDebug()->getDebugLog()->attachDisplay(m_displayer);
-    BlackMisc::IContext::getInstance().getDebug()->getInfoLog()->attachDisplay(m_displayer);
-    BlackMisc::IContext::getInstance().getDebug()->getWarningLog()->attachDisplay(m_displayer);
-    BlackMisc::IContext::getInstance().getDebug()->getErrorLog()->attachDisplay(m_displayer);
+    BlackMisc::IContext::getInstance().getDebug().getDebugLog()->attachDisplay(m_displayer);
+    BlackMisc::IContext::getInstance().getDebug().getInfoLog()->attachDisplay(m_displayer);
+    BlackMisc::IContext::getInstance().getDebug().getWarningLog()->attachDisplay(m_displayer);
+    BlackMisc::IContext::getInstance().getDebug().getErrorLog()->attachDisplay(m_displayer);
 }
 
 void BlackD::createComServer()

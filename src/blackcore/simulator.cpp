@@ -14,7 +14,7 @@
 
 #include "blackcore/simulator.h"
 #include "blackmisc/debug.h"
-
+#include "blackmisc/context.h"
 #include <QtGlobal>
 #include <QLibrary>
 

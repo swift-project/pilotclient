@@ -6,7 +6,6 @@
 #include "blackmisc/debug.h"
 #include "blackmisc/context.h"
 #include <QFileInfo>
-#include <stdexcept>
 
 #ifdef Q_OS_WIN
 #include <Windows.h>
@@ -15,10 +14,21 @@
 namespace BlackMisc
 {
 
-    IContext &IContext::getInstance()
+    IContext *&instancePointer()
     {
         static CApplicationContext context;
-        return context;
+        static IContext *ptr = &context;
+        return ptr;
+    }
+
+    void IContext::setInstance(IContext &context)
+    {
+        instancePointer() = &context;
+    }
+
+    IContext &IContext::getInstance()
+    {
+        return *instancePointer();
     }
 
     IContext::~IContext()
@@ -29,44 +39,20 @@ namespace BlackMisc
     {
     }
 
-    QObject *CApplicationContext::singleton(const QString &singletonName)
+    const QObject *CApplicationContext::getQObjectNothrow(const QString &name) const
     {
-        TSingletonMap::const_iterator it = m_singletons.find(singletonName);
-        if (it != m_singletons.end())
-        {
-            return it.value();
-        }
-        throw std::logic_error("Requested singleton not present");
+        auto it = m_map.find(name);
+        return it == m_map.end() ? nullptr : it.value();
     }
 
-    bool CApplicationContext::hasSingleton(const QString &singletonName) const
+    void CApplicationContext::setQObject(QString name, QObject &object)
     {
-        TSingletonMap::const_iterator it = m_singletons.find(singletonName);
-        if (it != m_singletons.end())
-        {
-            return true;
-        }
-        return false;
+        m_map.insert(name, &object);
     }
 
-    void CApplicationContext::setSingleton(const QString &singletonName, QObject *object)
+    void CApplicationContext::removeQObject(const QString &name)
     {
-        m_singletons.insert(singletonName, object);
-    }
-
-    void CApplicationContext::releaseSingleton(const QString &singletonName)
-    {
-        m_singletons.remove(singletonName);
-    }
-
-    CDebug *CApplicationContext::getDebug()
-    {
-        return IContext::singleton<CDebug>();
-    }
-
-    void CApplicationContext::setDebug(CDebug *debug)
-    {
-        IContext::setSingleton(debug);
+        m_map.remove(name);
     }
 
     void CApplicationContext::setDefaultApplicationName()

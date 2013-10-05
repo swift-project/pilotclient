@@ -6,18 +6,19 @@
 #ifndef __BLACKSAMPLE_CLI_CLIENT_H__
 #define __BLACKSAMPLE_CLI_CLIENT_H__
 
+#include "blackcore/network.h"
+#include "blackmisc/context.h"
 #include <QObject>
 #include <QTextStream>
 #include <QMap>
 #include <functional>
-#include "blackcore/network.h"
 
 class Client : public QObject
 {
     Q_OBJECT
 
 public:
-    Client();
+    Client(BlackMisc::IContext &);
 
 signals:
     void quit();

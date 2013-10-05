@@ -17,17 +17,17 @@ namespace BlackCoreTest
 
     void CTestNetMediators::initTestCase()
     {
-        BlackMisc::IContext::getInstance().setSingleton<INetwork>(&m_networkDummy);
+        m_context.setObject<INetwork>(m_networkDummy);
     }
 
     void CTestNetMediators::cleanupTestCase()
     {
-        BlackMisc::IContext::getInstance().releaseSingleton<INetwork>();
+        m_context.removeObject<INetwork>();
     }
 
     void CTestNetMediators::atcListManagerTest()
     {
-        CAtcListManager mgr;
+        CAtcListManager mgr(m_context);
         AtcListConsumer cons;
 
         QObject::connect(&mgr, &IAtcListManager::listChanged, &cons, &AtcListConsumer::listChanged);

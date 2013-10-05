@@ -8,8 +8,8 @@
 #include <iostream>
 #include <QStringList>
 
-Client::Client()
-    : m_net(BlackMisc::IContext::getInstance().singleton<BlackCore::INetwork>())
+Client::Client(BlackMisc::IContext &ctx)
+    : m_net(&ctx.getObject<BlackCore::INetwork>())
 {
     using namespace BlackCore;
     connect(m_net, &INetwork::atcPositionUpdate,                this, &Client::atcPositionUpdate);

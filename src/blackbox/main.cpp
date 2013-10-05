@@ -11,7 +11,11 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-	BlackMisc::IContext::getInstance().setSingleton(new BlackMisc::CDebug());
+
+    BlackMisc::CApplicationContext ctx;
+    BlackMisc::IContext::setInstance(ctx);
+    BlackMisc::CDebug debug;
+	ctx.setObject(debug);
 	
     BlackBox w;
     w.show();
