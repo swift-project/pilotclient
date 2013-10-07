@@ -16,7 +16,6 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(blackd);
 
     QApplication app(argc, argv);
-    BlackMisc::CApplicationContext myBlackApp;
 
     BlackMisc::CApplicationContext ctx;
     BlackMisc::IContext::setInstance(ctx);
