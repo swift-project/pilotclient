@@ -46,11 +46,11 @@ public:
     //! Disconnect and remove all stored connections.
     void cleanup() { for (auto i = m_conns.begin(); i != m_conns.end(); ++i) QObject::disconnect(*i); m_conns.clear(); }
 
-    //! \{
     //! Copying is only allowed when there are no connections stored.
+    //! @{
     ConnectGuard(const ConnectGuard& other) { Q_ASSERT(other.m_conns.isEmpty()); }
     ConnectGuard& operator= (const ConnectGuard& other) { Q_ASSERT(other.m_conns.isEmpty()); }
-    //! \}
+    //! @}
 
 private:
     QVector<QMetaObject::Connection> m_conns;
@@ -64,19 +64,19 @@ private:
 class ExpectUnit
 {
 public:
-    //! \{
     /*!
      * Adds a signal to the list of signals to send, with optional arguments.
      * \param slot A pointer-to-member-function of the subject class.
      * \return this object, so methods can be chained.
      */
+    //! @{
     template <class F> ExpectUnit& send(F slot) { m_sends.push_back(std::bind(slot, subject<F>())); return *this; }
     template <class F, class T1> ExpectUnit& send(F slot, T1 arg1) { m_sends.push_back(std::bind(slot, subject<F>(), arg1)); return *this; }
     template <class F, class T1, class T2> ExpectUnit& send(F slot, T1 arg1, T2 arg2) { m_sends.push_back(std::bind(slot, subject<F>(), arg1, arg2)); return *this; }
     template <class F, class T1, class T2, class T3> ExpectUnit& send(F slot, T1 arg1, T2 arg2, T3 arg3) { m_sends.push_back(std::bind(slot, subject<F>(), arg1, arg2, arg3)); return *this; }
     template <class F, class T1, class T2, class T3, class T4> ExpectUnit& send(F slot, T1 arg1, T2 arg2, T3 arg3, T4 arg4) { m_sends.push_back(std::bind(slot, subject<F>(), arg1, arg2, arg3, arg4)); return *this; }
     template <class F, class T1, class T2, class T3, class T4, class T5> ExpectUnit& send(F slot, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) { m_sends.push_back(std::bind(slot, subject<F>(), arg1, arg2, arg3, arg4, arg5)); return *this; }
-    //! \}
+    //! @}
 
     /*!
      * Adds a signal to the list of signals which are expects to be received.
@@ -172,18 +172,18 @@ public:
      */
     ExpectUnit unit(const SourceLocation& srcloc = SOURCE_LOCATION) { return ExpectUnit(this, m_subject, srcloc); }
 
-    //! \{
     /*!
      * Allows two or more units of expectation to be waited on simultaneously. Commonly valled via the EXPECT_WAIT macro.
      * \param srcloc Represents the caller's location in the source code, for error reporting.
      * \param timeout Time to wait in seconds. Qt event queue is processed when waiting.
      */
+    //! @{
     void wait(const SourceLocation& srcloc, int timeout, const ExpectUnit& u1) { m_units.insert(&u1); wait(srcloc, timeout); }
     void wait(const SourceLocation& srcloc, int timeout, const ExpectUnit& u1, const ExpectUnit& u2) { m_units.insert(&u1); m_units.insert(&u2); wait(srcloc, timeout); }
     void wait(const SourceLocation& srcloc, int timeout, const ExpectUnit& u1, const ExpectUnit& u2, const ExpectUnit& u3) { m_units.insert(&u1); m_units.insert(&u2); m_units.insert(&u3); wait(srcloc, timeout); }
     void wait(const SourceLocation& srcloc, int timeout, const ExpectUnit& u1, const ExpectUnit& u2, const ExpectUnit& u3, const ExpectUnit& u4) { m_units.insert(&u1); m_units.insert(&u2); m_units.insert(&u3); m_units.insert(&u4); wait(srcloc, timeout); }
     void wait(const SourceLocation& srcloc, int timeout, const ExpectUnit& u1, const ExpectUnit& u2, const ExpectUnit& u3, const ExpectUnit& u4, const ExpectUnit& u5) { m_units.insert(&u1); m_units.insert(&u2); m_units.insert(&u3); m_units.insert(&u4); m_units.insert(&u5); wait(srcloc, timeout); }
-    //! \}
+    //! @}
 
 private:
     friend class ExpectUnit;
@@ -204,18 +204,18 @@ private:
  */
 #define EXPECT_UNIT(EXP) ((EXP).unit(SOURCE_LOCATION))
 
-//! \{
 /*!
  * Wrapper for Expect::wait() which fills in the source location parameter.
  * Allows two or more units of expectation to be waited on simultaneously.
  * \param EXP Instance of Expect on which to call wait().
  * \param TIME Time to wait in seconds. Qt event queue is processed when waiting.
  */
+//! @{
 #define EXPECT_WAIT_2(EXP, TIME, U1, U2) ((EXP).wait(SOURCE_LOCATION, (TIME), (U1), (U2)))
 #define EXPECT_WAIT_3(EXP, TIME, U1, U2, U3) ((EXP).wait(SOURCE_LOCATION, (TIME), (U1), (U2), (U3)))
 #define EXPECT_WAIT_4(EXP, TIME, U1, U2, U3, U4) ((EXP).wait(SOURCE_LOCATION, (TIME), (U1), (U2), (U3), (U4)))
 #define EXPECT_WAIT_5(EXP, TIME, U1, U2, U3, U4, U5) ((EXP).wait(SOURCE_LOCATION, (TIME), (U1), (U2), (U3), (U4), (U5)))
-//! \}
+//! @}
 
 } //namespace BlackCoreTest
 

@@ -125,8 +125,8 @@ protected:
                                                           return CMath::trunc(factor) + (CMath::trunc(part2) + part3 / SubdivPolicy::fraction()) / SubdivPolicy::fraction(); }
     };
 
-    //! \{
     //! Metapolicy that can be used to modify template parameters of converters
+    //! @{
     struct One {
         static double factor() { return 1; } //!< factor \return
     };
@@ -163,7 +163,7 @@ protected:
         static double fraction() { return 100.0f; } //!< fraction \return
         static double subfactor() { return float(Subfactor); } //!< subfactor \return
     };
-    //! \}
+    //! @}
 
 private:
     QString m_name; //!< name, e.g. "meter"
