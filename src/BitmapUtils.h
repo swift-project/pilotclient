@@ -34,7 +34,7 @@
 */
 
 #if APL
-#pragma options align=mac68k
+#pragma pack(push, 2)
 #endif
 #if IBM
 #pragma pack(push, 2)
@@ -43,27 +43,27 @@
 struct	BMPHeader {
 	char			signature1;
 	char			signature2;
-	long			fileSize;
-	long			reserved;
-	long			dataOffset;
+	int			fileSize;
+	int			reserved;
+	int			dataOffset;
 };
 
 struct	BMPImageDesc {
-	long			structSize;
-	long			imageWidth;
-	long			imageHeight;
+	int			structSize;
+	int			imageWidth;
+	int			imageHeight;
 	short			planes;
 	short			bitCount;
-	long			compressionType;
-	long			imageSize;
-	long			xPixelsPerM;	//130B0000?  B013 = 45075?
-	long			yPixelsPerM;
-	long			colorsUsed;
-	long			colorsImportant;
+	int			compressionType;
+	int			imageSize;
+	int			xPixelsPerM;	//130B0000?  B013 = 45075?
+	int			yPixelsPerM;
+	int			colorsUsed;
+	int			colorsImportant;
 };
 
 #if APL
-#pragma options align=reset
+#pragma pack(pop)
 #endif
 #if IBM
 #pragma pack(pop)
@@ -82,10 +82,10 @@ struct	BMPImageDesc {
 
 struct	ImageInfo {
 	unsigned char *	data;
-	long			width;
-	long			height;
-	long			pad;
-	short			channels;
+	int				width;
+	int				height;
+	int				pad;
+	int				channels;
 };	
 
 /* Given a file path and an uninitialized imageInfo structure, this routine fills
@@ -110,7 +110,7 @@ int		WriteBitmapToFile(const struct ImageInfo * inImage, const char * inFilePath
 
 /* This routine creates a new bitmap and fills in an uninitialized imageInfo structure.
  * The contents of the bitmap are undetermined and must be 'cleared' by you. */
-int		CreateNewBitmap(long inWidth, long inHeight, short inChannels, struct ImageInfo * outImageInfo);
+int		CreateNewBitmap(int inWidth, int inHeight, int inChannels, struct ImageInfo * outImageInfo);
 
 /* Given a bitmap, this routine fills the whole bitmap in with a gray level of c, where
  * c = 0 means black and c = 255 means white. */
@@ -127,30 +127,30 @@ void	DestroyBitmap(const struct ImageInfo * inImageInfo);
 void	CopyBitmapSection(
 			const struct ImageInfo *	inSrc,
 			const struct ImageInfo *	inDst,
-			long				inSrcLeft,
-			long				inSrcTop,
-			long				inSrcRight,
-			long				inSrcBottom,
-			long				inDstLeft,
-			long				inDstTop,
-			long				inDstRight,
-			long				inDstBottom);
+			int				inSrcLeft,
+			int				inSrcTop,
+			int				inSrcRight,
+			int				inSrcBottom,
+			int				inDstLeft,
+			int				inDstTop,
+			int				inDstRight,
+			int				inDstBottom);
 			
 void	CopyBitmapSectionWarped(
 			const struct ImageInfo *	inSrc,
 			const struct ImageInfo *	inDst,
-			long				inTopLeftX,
-			long				inTopLeftY,
-			long				inTopRightX,
-			long				inTopRightY,
-			long				inBotRightX,
-			long				inBotRightY,
-			long				inBotLeftX,
-			long				inBotLeftY,
-			long				inDstLeft,
-			long				inDstTop,
-			long				inDstRight,
-			long				inDstBottom);
+			int				inTopLeftX,
+			int				inTopLeftY,
+			int				inTopRightX,
+			int				inTopRightY,
+			int				inBotRightX,
+			int				inBotRightY,
+			int				inBotLeftX,
+			int				inBotLeftY,
+			int				inDstLeft,
+			int				inDstTop,
+			int				inDstRight,
+			int				inDstBottom);
 			
 /* This routine rotates a bitmap counterclockwise 90 degrees, exchanging its width
  * and height. */

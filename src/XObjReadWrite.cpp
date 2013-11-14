@@ -360,7 +360,7 @@ bool	XObjWrite(const char * inFile, const XObj& inObj)
 		case type_PtLine:
 		
 			if (gCmds[index].elem_count == 0)
-				fprintf(fi,"%s %d\t\t//" CRLF, gCmds[index].name, iter->rgb.size());
+				fprintf(fi,"%s %zd\t\t//" CRLF, gCmds[index].name, iter->rgb.size());
 			else
 				fprintf(fi,"%s\t\t//" CRLF, gCmds[index].name);
 			
@@ -378,7 +378,7 @@ bool	XObjWrite(const char * inFile, const XObj& inObj)
 		case type_Poly:
 		
 			if (gCmds[index].elem_count == 0)
-				fprintf(fi,"%s %d\t\t//" CRLF, gCmds[index].name, iter->st.size());
+				fprintf(fi,"%s %zd\t\t//" CRLF, gCmds[index].name, iter->st.size());
 			else
 				fprintf(fi,"%s\t\t//" CRLF, gCmds[index].name);
 			
