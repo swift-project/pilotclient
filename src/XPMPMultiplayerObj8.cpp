@@ -24,12 +24,10 @@
 #include "XPMPMultiplayerObj8.h"
 #include "XPMPMultiplayerVars.h"
 #include "XPLMScenery.h"
+#include "XPLMUtilities.h"
 #include <stddef.h>
 #include <vector>
 using namespace std;
-
-#define WANT_ASYNC 1
-
 
 struct	one_inst {
 	one_inst * next;
@@ -50,6 +48,27 @@ struct	one_obj {
 };
 
 static	one_obj *	s_worklist = NULL;
+
+
+static void (*XPLMLoadObjectAsync_p)(
+                                   const char *         inPath,    
+                                   XPLMObjectLoaded_f   inCallback,    
+                                   void *               inRefcon)=NULL;
+
+void	obj_init()
+{
+	int sim, xplm;
+	XPLMHostApplicationID app;
+	XPLMGetVersions(&sim,&xplm,&app);
+	// Ben says: we need the 2.10 SDK (e.g. X-Plane 10) to have async load at all.  But we need 10.30 to pick up an SDK bug
+	// fix where async load crashes if we queue a second load before the first completes.  So for users on 10.25, they get
+	// pauses.
+	if(sim >= 10300 && xplm >= 210)
+	{
+		XPLMLoadObjectAsync_p = (void (*)(const char *, XPLMObjectLoaded_f, void *)) XPLMFindSymbol("XPLMLoadObjectAsync");
+	}
+}
+
 
 
 static void		draw_objects_for_mode(one_obj * who, int want_translucent)
@@ -98,11 +117,10 @@ void	obj_schedule_one_aircraft(
 		if(model->handle == NULL &&
 			!model->file.empty())
 		{
-			#if WANT_ASYNC
-			XPLMLoadObjectAsync(model->file.c_str(),obj_loaded_cb,(void *) &model->handle);
-			#else
-			model->handle = XPLMLoadObject(model->file.c_str());			
-			#endif
+			if(XPLMLoadObjectAsync_p)
+				XPLMLoadObjectAsync_p(model->file.c_str(),obj_loaded_cb,(void *) &model->handle);
+			else
+				model->handle = XPLMLoadObject(model->file.c_str());			
 			model->file.clear();
 		}
 	

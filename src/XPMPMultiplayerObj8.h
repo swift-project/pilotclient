@@ -59,6 +59,8 @@ struct	obj_for_acf {
 
 struct	CSLPlane_t;
 
+void	obj_init();
+
 bool	obj_load_one_attached_obj(
 						const char *		file_name,
 						bool				needs_anim,

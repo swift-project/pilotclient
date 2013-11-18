@@ -256,6 +256,7 @@ static	bool			LoadOnePackage(const string& inPath, int pass);
 bool			CSL_Init(
 						const char* inTexturePath)
 {
+	obj_init();
 	bool ok = OBJ_Init(inTexturePath);
 	if (!ok)
 		XPLMDump() << "XSB WARNING: we failed to find XSB's custom lighting texture at " << inTexturePath << ".\n";
