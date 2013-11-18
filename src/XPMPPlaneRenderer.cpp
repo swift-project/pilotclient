@@ -454,6 +454,7 @@ void			XPMPDefaultPlaneRenderer(void)
 	vector<PlaneToRender_t *>			planes_obj_lites;
 	multimap<int, PlaneToRender_t *>	planes_austin;
 	multimap<int, PlaneToRender_t *>	planes_obj;
+	vector<PlaneToRender_t *>			planes_obj8;
 
 	vector<PlaneToRender_t *>::iterator			planeIter;
 	multimap<int, PlaneToRender_t *>::iterator	planeMapIter;
@@ -489,6 +490,10 @@ void			XPMPDefaultPlaneRenderer(void)
 				{
 					planes_obj.insert(multimap<int, PlaneToRender_t *>::value_type(CSL_GetOGLIndex(iter->second.model), &iter->second));
 					planes_obj_lites.push_back(&iter->second);					
+				}
+				else if(iter->second.model->plane_type == plane_Obj8)
+				{
+					planes_obj8.push_back(&iter->second);
 				}
 			
 			} else {
@@ -568,6 +573,24 @@ void			XPMPDefaultPlaneRenderer(void)
 			++gOBJPlanes;
 	}
 
+	for(planeIter = planes_obj8.begin(); planeIter != planes_obj8.end(); ++planeIter)
+	{
+		CSL_DrawObject( (*planeIter)->model, 
+						(*planeIter)->dist,
+						(*planeIter)->x,
+						(*planeIter)->y,
+						(*planeIter)->z,
+						(*planeIter)->pitch,
+						(*planeIter)->roll,
+						(*planeIter)->heading,
+						plane_Obj8,
+						(*planeIter)->full ? 1 : 0,
+						(*planeIter)->lights,
+					   &(*planeIter)->state);
+	}
+
+	obj_draw_solid();
+
 	// PASS 3 - draw OBJ lights.
 
 	if (!planes_obj_lites.empty())
@@ -590,6 +613,9 @@ void			XPMPDefaultPlaneRenderer(void)
 						   &(*planeIter)->state);
 		}
 	}
+	
+	obj_draw_translucent();
+	obj_draw_done();	
 	
 	// PASS 4 - Labels
 	if ( gDrawLabels )
