@@ -410,11 +410,11 @@ typedef	void (* XPMPPlaneNotifier_f)(
  *
  * This function fetches specific data about a plane in the sim.  Pass in a plane ID, a data type
  * and a pointer to a struct for the data.  The struct's size field must be filled in!  The data
- * will be returned if possible, as well as the sim cycle the data is from, or 0 if the data could not
- * be fetched.
+ * will be returned if possible, as well as an enum code indicating whether we are returning new
+ * data, old data, or we have no data at all.
  *
  */
- int			XPMPGetPlaneData(
+ XPMPPlaneCallbackResult XPMPGetPlaneData(
 							XPMPPlaneID					inPlane,
 							XPMPPlaneDataType			inDataType,
 							void *						outData);
