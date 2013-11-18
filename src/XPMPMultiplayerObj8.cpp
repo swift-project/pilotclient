@@ -25,9 +25,11 @@
 #include "XPMPMultiplayerVars.h"
 #include "XPLMScenery.h"
 #include "XPLMUtilities.h"
+#include "XPLMDataAccess.h"
 #include <stddef.h>
 #include <vector>
 using namespace std;
+
 
 struct	one_inst {
 	one_inst * next;
@@ -50,6 +52,98 @@ struct	one_obj {
 static	one_obj *	s_worklist = NULL;
 
 
+static one_inst *	s_cur_plane = NULL;
+
+enum {
+	gear_rat = 0,
+	flap_rat,
+	spoi_rat,
+	sbrk_rat,
+	slat_rat,
+	swep_rat,
+	thrs_rat,
+	ptch_rat,
+	head_rat,
+	roll_rat,
+
+	lan_lite_on,
+	bcn_lite_on,
+	str_lite_on,
+	nav_lite_on,
+	
+	dref_dim
+};
+
+const char * dref_names[dref_dim] = {
+	"libxplanemp/controls/gear_ratio",
+	"libxplanemp/controls/flap_ratio",
+	"libxplanemp/controls/spoiler_ratio",
+	"libxplanemp/controls/speed_brake_ratio",
+	"libxplanemp/controls/slat_ratio",
+	"libxplanemp/controls/wing_sweep_ratio",
+	"libxplanemp/controls/thrust_ratio",
+	"libxplanemp/controls/yoke_pitch_ratio",
+	"libxplanemp/controls/yoke_heading_ratio",
+	"libxplanemp/controls/yoke_roll_ratio",
+
+	"libxplanemp/controls/landing_lites_on",
+	"libxplanemp/controls/beacon_lites_on",
+	"libxplanemp/controls/strobe_lites_on",
+	"libxplanemp/controls/nav_lites_on"
+};
+
+
+static float obj_get_float(void * inRefcon)
+{
+	if(s_cur_plane == NULL) return 0.0f;
+	
+	int v = reinterpret_cast<intptr_t>(inRefcon);
+	switch(v) 
+	{
+		case gear_rat:			return s_cur_plane->state->gearPosition;		break;
+		case flap_rat:			return s_cur_plane->state->flapRatio;			break;
+		case spoi_rat:			return s_cur_plane->state->spoilerRatio;		break;
+		case sbrk_rat:			return s_cur_plane->state->speedBrakeRatio;		break;
+		case slat_rat:			return s_cur_plane->state->slatRatio;			break;
+		case swep_rat:			return s_cur_plane->state->wingSweep;			break;
+		case thrs_rat:			return s_cur_plane->state->thrust;				break;
+		case ptch_rat:			return s_cur_plane->state->yokePitch;			break;
+		case head_rat:			return s_cur_plane->state->yokeHeading;			break;
+		case roll_rat:			return s_cur_plane->state->yokeRoll;			break;
+
+		case lan_lite_on:		return s_cur_plane->lights.landLights;			break;
+		case bcn_lite_on:		return s_cur_plane->lights.bcnLights;			break;
+		case str_lite_on:		return s_cur_plane->lights.strbLights;			break;
+		case nav_lite_on:		return s_cur_plane->lights.navLights;			break;			
+			
+		default:
+			return 0.0f;
+	}
+}
+
+int obj_get_float_array(
+                                   void *               inRefcon,    
+                                   float *              inValues,    
+                                   int                  inOffset,    
+                                   int                  inCount)
+{
+	if(inValues == NULL) 
+		return 1;
+	float rv = obj_get_float(inRefcon);
+	for(int i = 0; i < inCount; ++i)
+		inValues[i] = rv;
+	return inCount;
+}
+
+
+
+
+
+
+
+
+
+
 static void (*XPLMLoadObjectAsync_p)(
                                    const char *         inPath,    
                                    XPLMObjectLoaded_f   inCallback,    
@@ -67,6 +161,18 @@ void	obj_init()
 	{
 		XPLMLoadObjectAsync_p = (void (*)(const char *, XPLMObjectLoaded_f, void *)) XPLMFindSymbol("XPLMLoadObjectAsync");
 	}
+	
+	for(int i = 0; i < dref_dim; ++i)
+	{
+		XPLMRegisterDataAccessor(
+		dref_names[i], xplmType_Float|xplmType_FloatArray, 0,
+		NULL, NULL, 
+		obj_get_float, NULL, 
+		NULL, NULL, 
+		NULL, NULL, 
+		obj_get_float_array, NULL, 
+		NULL, NULL, reinterpret_cast<void *>(i), NULL);
+	}	
 }
 
 
@@ -81,12 +187,14 @@ static void		draw_objects_for_mode(one_obj * who, int want_translucent)
 		{
 			for(one_inst * i = who->head; i; i = i->next)
 			{
+				s_cur_plane = i;
 				// set dataref ptr to light + obj sate from "one_inst".			
 				XPLMDrawObjects(who->model->handle, 1, &i->location, 1, 0);
 			}
 		}
 		who = who->next;
 	}
+	s_cur_plane = NULL;
 }
 
 void obj_loaded_cb(XPLMObjectRef obj, void * refcon)
