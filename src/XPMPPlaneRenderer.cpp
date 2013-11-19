@@ -256,7 +256,7 @@ struct	PlaneToRender_t {
 typedef	std::map<float, PlaneToRender_t>	RenderMap;
 
 
-void			XPMPDefaultPlaneRenderer(void)
+void			XPMPDefaultPlaneRenderer(int is_blend)
 {
 	long	planeCount = XPMPCountPlanes();
 #if DEBUG_RENDERER
@@ -510,6 +510,7 @@ void			XPMPDefaultPlaneRenderer(void)
 				// Using the user's planes can cause the internal flight model to get f-cked up.
 				// Using a non-loaded plane can trigger internal asserts in x-plane.
 				if (modelCount > 1)
+				if(!is_blend)
 					XPLMDrawAircraft(1,
 					(float) iter->second.x, (float) iter->second.y, (float) iter->second.z, 
 					iter->second.pitch, iter->second.roll, iter->second.heading, 
@@ -532,6 +533,7 @@ void			XPMPDefaultPlaneRenderer(void)
 	
 	// PASS 1 - draw Austin's planes.
 
+	if(!is_blend)
 	for (planeMapIter = planes_austin.begin(); planeMapIter != planes_austin.end(); ++planeMapIter)	
 	{
 		CSL_DrawObject(	planeMapIter->second->model, 
@@ -554,7 +556,14 @@ void			XPMPDefaultPlaneRenderer(void)
 	}
 	
 	// PASS 2 - draw OBJs
-	
+	// Blend for solid OBJ7s?  YES!  First, in HDR mode, they DO NOT draw to the gbuffer properly -
+	// they splat their livery into the normal map, which is terrifying and stupid.  Then they are also
+	// pre-lit...the net result is surprisingly not much worse than regular rendering considering how many
+	// bad things have happened, but for all I know we're getting NaNs somewhere.
+	// 
+	// Blending isn't going to hurt things in NON-HDR because our rendering is so stupid for old objs - there's
+	// pretty much never translucency so we aren't going to get Z-order fails.  So f--- it...always draw blend.<
+	if(is_blend)
 	for (planeMapIter = planes_obj.begin(); planeMapIter != planes_obj.end(); ++planeMapIter)	
 	{	
 		CSL_DrawObject(
@@ -589,10 +598,12 @@ void			XPMPDefaultPlaneRenderer(void)
 					   &(*planeIter)->state);
 	}
 
-	obj_draw_solid();
+	if(!is_blend)
+		obj_draw_solid();
 
 	// PASS 3 - draw OBJ lights.
 
+	if(is_blend)
 	if (!planes_obj_lites.empty())
 	{
 		OBJ_BeginLightDrawing();
@@ -614,10 +625,12 @@ void			XPMPDefaultPlaneRenderer(void)
 		}
 	}
 	
-	obj_draw_translucent();
+	if(is_blend)
+		obj_draw_translucent();
 	obj_draw_done();	
 	
 	// PASS 4 - Labels
+	if(is_blend)
 	if ( gDrawLabels )
 	{
 		GLfloat	vp[4];

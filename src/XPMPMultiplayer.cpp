@@ -33,6 +33,7 @@
 
 #include "XPLMProcessing.h"
 #include "XPLMPlanes.h"
+#include "XPLMDataAccess.h"
 #include "XPLMDisplay.h"
 #include "XPLMPlugin.h"
 #include "XPLMUtilities.h"
@@ -476,10 +477,22 @@ int	XPMPRenderMultiplayerPlanes(
                                    int                  inIsBefore,    
                                    void *               inRefcon)
 {
+	static int is_blend = 0;
+	
+	static XPLMDataRef wrt = XPLMFindDataRef("sim/graphics/view/world_render_type");
+	static XPLMDataRef prt = XPLMFindDataRef("sim/graphics/view/plane_render_type");
+	
+	int is_shadow = wrt != NULL && XPLMGetDatai(wrt) != 0;
+	
+	if(prt) 
+		is_blend = XPLMGetDatai(prt) == 2;
+
 	if (gRenderer)
-		gRenderer(gRendererRef);
+		gRenderer(is_shadow ? 0 : is_blend,gRendererRef);
 	else
-		XPMPDefaultPlaneRenderer();
+		XPMPDefaultPlaneRenderer(is_shadow ? 0 : is_blend);
+	if(!is_shadow)
+	is_blend = 1 - is_blend;	
 	return 1;
 }
 
