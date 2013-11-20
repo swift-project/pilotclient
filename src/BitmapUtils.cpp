@@ -31,14 +31,14 @@
 #if APL
 	#include <Carbon/Carbon.h>
 	#if defined(__POWERPC__)
-inline void BMP_EndianFlipLong(long * x) { long t = Endian32_Swap(*x); *x = t; }
+inline void BMP_EndianFlipInt(int * x) { int t = Endian32_Swap(*x); *x = t; }
 inline void BMP_EndianFlipShort(short * x) { short t = Endian16_Swap(*x); *x = t; }
 #else
-#define BMP_EndianFlipLong(x) 	(x)
+#define BMP_EndianFlipInt(x) 	(x)
 #define BMP_EndianFlipShort(x) (x)
 #endif
 #else
-	#define BMP_EndianFlipLong(x) 	(x)
+	#define BMP_EndianFlipInt(x) 	(x)
 	#define BMP_EndianFlipShort(x) (x)
 #endif
 
@@ -75,7 +75,7 @@ int		CreateBitmapFromFile(const char * inFilePath, struct ImageInfo * outImageIn
 {
 		struct	BMPHeader		header;
 		struct	BMPImageDesc	imageDesc;
-		long					pad;
+		int						pad;
 		int 					err = 0;
 		FILE *					fi = NULL;
 		
@@ -93,11 +93,11 @@ int		CreateBitmapFromFile(const char * inFilePath, struct ImageInfo * outImageIn
 	if (fread(&imageDesc, sizeof(imageDesc), 1, fi) != 1)
 		goto bail;
 	
-	BMP_EndianFlipLong(&header.fileSize);
-	BMP_EndianFlipLong(&header.dataOffset);
+	BMP_EndianFlipInt(&header.fileSize);
+	BMP_EndianFlipInt(&header.dataOffset);
 	
-	BMP_EndianFlipLong(&imageDesc.imageWidth);
-	BMP_EndianFlipLong(&imageDesc.imageHeight);
+	BMP_EndianFlipInt(&imageDesc.imageWidth);
+	BMP_EndianFlipInt(&imageDesc.imageHeight);
 	BMP_EndianFlipShort(&imageDesc.bitCount);
 	
 	if ((header.signature1 != 'B') || 
@@ -158,9 +158,9 @@ int		WriteBitmapToFile(const struct ImageInfo * inImage, const char * inFilePath
 	header.fileSize = sizeof(struct BMPHeader) + sizeof(struct BMPImageDesc) + ((inImage->width * 3 + inImage->pad) * inImage->height);
 	header.reserved = 0;
 	header.dataOffset = sizeof(struct BMPHeader) + sizeof(struct BMPImageDesc);
-	BMP_EndianFlipLong(&header.fileSize);
-	BMP_EndianFlipLong(&header.reserved);
-	BMP_EndianFlipLong(&header.dataOffset);
+	BMP_EndianFlipInt(&header.fileSize);
+	BMP_EndianFlipInt(&header.reserved);
+	BMP_EndianFlipInt(&header.dataOffset);
 
 	imageDesc.structSize = sizeof(imageDesc);
 	imageDesc.imageWidth = inImage->width;
@@ -174,17 +174,17 @@ int		WriteBitmapToFile(const struct ImageInfo * inImage, const char * inFilePath
 	imageDesc.colorsUsed = 0;
 	imageDesc.colorsImportant = 0;
 
-	BMP_EndianFlipLong(&imageDesc.structSize);
-	BMP_EndianFlipLong(&imageDesc.imageWidth);
-	BMP_EndianFlipLong(&imageDesc.imageHeight);
+	BMP_EndianFlipInt(&imageDesc.structSize);
+	BMP_EndianFlipInt(&imageDesc.imageWidth);
+	BMP_EndianFlipInt(&imageDesc.imageHeight);
 	BMP_EndianFlipShort(&imageDesc.planes);
 	BMP_EndianFlipShort(&imageDesc.bitCount);
-	BMP_EndianFlipLong(&imageDesc.compressionType);
-	BMP_EndianFlipLong(&imageDesc.imageSize);
-	BMP_EndianFlipLong(&imageDesc.xPixelsPerM);
-	BMP_EndianFlipLong(&imageDesc.yPixelsPerM);
-	BMP_EndianFlipLong(&imageDesc.colorsUsed);
-	BMP_EndianFlipLong(&imageDesc.colorsImportant);
+	BMP_EndianFlipInt(&imageDesc.compressionType);
+	BMP_EndianFlipInt(&imageDesc.imageSize);
+	BMP_EndianFlipInt(&imageDesc.xPixelsPerM);
+	BMP_EndianFlipInt(&imageDesc.yPixelsPerM);
+	BMP_EndianFlipInt(&imageDesc.colorsUsed);
+	BMP_EndianFlipInt(&imageDesc.colorsImportant);
 		
 	fi = fopen(inFilePath, "wb");
 	if (fi == NULL)
@@ -211,7 +211,7 @@ bail:
 	return err;
 }
 
-int		CreateNewBitmap(long inWidth, long inHeight, short inChannels, struct ImageInfo * outImageInfo)
+int		CreateNewBitmap(int inWidth, int inHeight, int inChannels, struct ImageInfo * outImageInfo)
 {
 	outImageInfo->width = inWidth;
 	outImageInfo->height = inHeight;
@@ -238,14 +238,14 @@ void	DestroyBitmap(const struct ImageInfo * inImageInfo)
 void	CopyBitmapSection(
 			const struct ImageInfo *	inSrc,
 			const struct ImageInfo	*	inDst,
-			long				inSrcLeft,
-			long				inSrcTop,
-			long				inSrcRight,
-			long				inSrcBottom,
-			long				inDstLeft,
-			long				inDstTop,
-			long				inDstRight,
-			long				inDstBottom)
+			int				inSrcLeft,
+			int				inSrcTop,
+			int				inSrcRight,
+			int				inSrcBottom,
+			int				inDstLeft,
+			int				inDstTop,
+			int				inDstRight,
+			int				inDstBottom)
 {
 	/*  This routine copies a subsection of one bitmap onto a subsection of another, using bicubic interpolation
 		for scaling. */
@@ -271,9 +271,9 @@ void	CopyBitmapSection(
 
 	double	dx, dy;	
 	
-	long	srcRowBytes = inSrc->width * inSrc->channels + inSrc->pad;
-	long	srcRowBytes2 = srcRowBytes * 2;
-	long	dstRowBytes = inDst->width * inSrc->channels + inDst->pad;
+	int	srcRowBytes = inSrc->width * inSrc->channels + inSrc->pad;
+	int	srcRowBytes2 = srcRowBytes * 2;
+	int	dstRowBytes = inDst->width * inSrc->channels + inDst->pad;
 	unsigned char *	srcBaseAddr = inSrc->data;
 	unsigned char *	dstBaseAddr = inDst->data;
 	
@@ -289,8 +289,8 @@ void	CopyBitmapSection(
 			double	sx = ((dx - dstLeft) / dstWidth * srcWidth) + srcLeft;
 			double	sy = ((dy - dstTop) / dstHeight * srcHeight) + srcTop;
 		
-			unsigned char *	dstPixel = dstBaseAddr + ((long) dx * inDst->channels) + ((long) dy * dstRowBytes);			
-			unsigned char *	srcPixel = srcBaseAddr + ((long) sx * inSrc->channels) + ((long) sy * srcRowBytes);
+			unsigned char *	dstPixel = dstBaseAddr + ((int) dx * inDst->channels) + ((int) dy * dstRowBytes);			
+			unsigned char *	srcPixel = srcBaseAddr + ((int) sx * inSrc->channels) + ((int) sy * srcRowBytes);
 
 			/* 	If we would need pixels from off the edge of the image for bicubic interpolation,
 			 	just use bilinear. */
@@ -355,18 +355,18 @@ inline double	Interp2(double frac, double sml, double big)
 void	CopyBitmapSectionWarped(
 			const struct ImageInfo *	inSrc,
 			const struct ImageInfo *	inDst,
-			long				inTopLeftX,
-			long				inTopLeftY,
-			long				inTopRightX,
-			long				inTopRightY,
-			long				inBotRightX,
-			long				inBotRightY,
-			long				inBotLeftX,
-			long				inBotLeftY,
-			long				inDstLeft,
-			long				inDstTop,
-			long				inDstRight,
-			long				inDstBottom)
+			int				inTopLeftX,
+			int				inTopLeftY,
+			int				inTopRightX,
+			int				inTopRightY,
+			int				inBotRightX,
+			int				inBotRightY,
+			int				inBotLeftX,
+			int				inBotLeftY,
+			int				inDstLeft,
+			int				inDstTop,
+			int				inDstRight,
+			int				inDstBottom)
 {
 	/*  This routine copies a subsection of one bitmap onto a subsection of another, using bicubic interpolation
 		for scaling. */
@@ -391,9 +391,9 @@ void	CopyBitmapSectionWarped(
 
 	double	dx, dy;	
 	
-	long	srcRowBytes = inSrc->width * inSrc->channels + inSrc->pad;
-	long	srcRowBytes2 = srcRowBytes * 2;
-	long	dstRowBytes = inDst->width * inSrc->channels + inDst->pad;
+	int	srcRowBytes = inSrc->width * inSrc->channels + inSrc->pad;
+	int	srcRowBytes2 = srcRowBytes * 2;
+	int	dstRowBytes = inDst->width * inSrc->channels + inDst->pad;
 	unsigned char *	srcBaseAddr = inSrc->data;
 	unsigned char *	dstBaseAddr = inDst->data;
 	
@@ -412,8 +412,8 @@ void	CopyBitmapSectionWarped(
 			double	sx = Interp2(frac_y, Interp2(frac_x, topLeftX, topRightX), Interp2(frac_x, botLeftX, botRightX));
 			double	sy = Interp2(frac_x, Interp2(frac_y, topLeftY, botLeftY), Interp2(frac_y, topRightY, botRightY));
 
-			unsigned char *	dstPixel = dstBaseAddr + ((long) dx * inDst->channels) + ((long) dy * dstRowBytes);			
-			unsigned char *	srcPixel = srcBaseAddr + ((long) sx * inSrc->channels) + ((long) sy * srcRowBytes);
+			unsigned char *	dstPixel = dstBaseAddr + ((int) dx * inDst->channels) + ((int) dy * dstRowBytes);			
+			unsigned char *	srcPixel = srcBaseAddr + ((int) sx * inSrc->channels) + ((int) sy * srcRowBytes);
 
 			/* 	If we would need pixels from off the edge of the image for bicubic interpolation,
 			 	just use bilinear. */
@@ -476,22 +476,22 @@ void	RotateBitmapCCW(
 	/* We have to allocate a new bitmap to transfer our old data to.  The new bitmap might not have the same
 	 * storage size as the old bitmap because of padding! */
 	 
-	long	newWidth = ioBitmap->height;
-	long	newHeight = ioBitmap->width;
-	long	newPad = ((newWidth * ioBitmap->channels + 3) & ~3) - (newWidth * ioBitmap->channels);
+	int	newWidth = ioBitmap->height;
+	int	newHeight = ioBitmap->width;
+	int	newPad = ((newWidth * ioBitmap->channels + 3) & ~3) - (newWidth * ioBitmap->channels);
 	unsigned char * newData = (unsigned char *) malloc(((newWidth * ioBitmap->channels) + newPad) * newHeight);
 	if (newData == NULL)
 		return;
 
-	for (long y = 0; y < ioBitmap->height; ++y)
-	for (long x = 0; x < ioBitmap->width; ++x)
+	for (int y = 0; y < ioBitmap->height; ++y)
+	for (int x = 0; x < ioBitmap->width; ++x)
 	{
-		long	nx = ioBitmap->height - y - 1;
-		long	ny = x;
+		int	nx = ioBitmap->height - y - 1;
+		int	ny = x;
 		
 		unsigned char *	srcP = ioBitmap->data + (x * ioBitmap->channels) + (y * (ioBitmap->channels * ioBitmap->width + ioBitmap->pad));
 		unsigned char *	dstP = newData + (nx * ioBitmap->channels) + (ny * (ioBitmap->channels * newWidth + newPad));
-		long	chCount = ioBitmap->channels;
+		int	chCount = ioBitmap->channels;
 		while (chCount--)
 		{
 			*dstP++ = *srcP++;
@@ -510,8 +510,8 @@ int	ConvertBitmapToAlpha(
 			struct ImageInfo *		ioImage)
 {
 		unsigned char * 	oldData, * newData, * srcPixel, * dstPixel;
-		long 	count;
-		long	x,y;
+		int 	count;
+		int	x,y;
 		
 	if (ioImage->channels == 4)
 		return 0;
@@ -567,8 +567,8 @@ int	ConvertAlphaToBitmap(
 			struct ImageInfo *		ioImage)
 {
 		unsigned char * 	oldData, * newData, * srcPixel, * dstPixel;
-		long 	count;
-		long 	x,y;
+		int 	count;
+		int 	x,y;
 		
 	if (ioImage->channels == 3)
 		return 0;

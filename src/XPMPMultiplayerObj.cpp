@@ -345,6 +345,8 @@ int		OBJ_LoadModel(const char * inFilePath)
 	tex_path += sObjects.back().obj.texture;
 	tex_path += ".png";
 	sObjects.back().texnum = OBJ_LoadTexture(tex_path.c_str(), false);
+	if(sObjects.back().texnum == 0)
+		printf("WARNING: %s failed to load for %s.\n", tex_path.c_str(),inFilePath);
 
 	tex_path = path;
 	p = tex_path.find_last_of("\\:/");//XPLMGetDirectorySeparator());
