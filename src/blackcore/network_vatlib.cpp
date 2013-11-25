@@ -557,9 +557,9 @@ namespace BlackCore
 
     void NetworkVatlib::onPilotInfoReceived(Cvatlib_Network* net, const char* callsign, const char** keysValues, void* cbvar)
     {
-        const char* acTypeICAO;
-        const char* airlineICAO;
-        const char* livery;
+        const char* acTypeICAO = nullptr;
+        const char* airlineICAO = nullptr;
+        const char* livery = nullptr;
         while (*keysValues)
         {
             QString key (*keysValues);
