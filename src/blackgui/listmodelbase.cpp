@@ -15,7 +15,8 @@ namespace BlackGui
     /*
      * Column count
      */
-    template <typename ObjectType, typename ListType> int CListModelBase<ObjectType, ListType>::columnCount(const QModelIndex & /** modelIndex **/) const
+    template <typename ObjectType, typename ListType>
+    int CListModelBase<ObjectType, ListType>::columnCount(const QModelIndex & /** modelIndex **/) const
     {
         int c = this->m_columns.size();
         return c;
@@ -24,7 +25,8 @@ namespace BlackGui
     /*
      * Row count
      */
-    template <typename ObjectType, typename ListType> int CListModelBase<ObjectType, ListType>::rowCount(const QModelIndex & /** parent */) const
+    template <typename ObjectType, typename ListType>
+    int CListModelBase<ObjectType, ListType>::rowCount(const QModelIndex & /** parent */) const
     {
         return this->m_list.size();
     }
@@ -32,7 +34,8 @@ namespace BlackGui
     /*
      * Column to property index
      */
-    template <typename ObjectType, typename ListType> int CListModelBase<ObjectType, ListType>::columnToPropertyIndex(int column) const
+    template <typename ObjectType, typename ListType>
+    int CListModelBase<ObjectType, ListType>::columnToPropertyIndex(int column) const
     {
         return this->m_columns.columnToPropertyIndex(column);
     }
@@ -40,7 +43,8 @@ namespace BlackGui
     /*
      * Header data
      */
-    template <typename ObjectType, typename ListType> QVariant CListModelBase<ObjectType, ListType>::headerData(int section, Qt::Orientation orientation, int role) const
+    template <typename ObjectType, typename ListType> QVariant
+    CListModelBase<ObjectType, ListType>::headerData(int section, Qt::Orientation orientation, int role) const
     {
         if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
         {
@@ -55,7 +59,8 @@ namespace BlackGui
     /*
      * Data
      */
-    template <typename ObjectType, typename ListType> QVariant CListModelBase<ObjectType, ListType>::data(const QModelIndex &index, int role) const
+    template <typename ObjectType, typename ListType>
+    QVariant CListModelBase<ObjectType,  ListType>::data(const QModelIndex &index, int role) const
     {
         // checks
         if (index.row() < 0 || index.row() >= this->m_list.size() ||
@@ -81,7 +86,8 @@ namespace BlackGui
     /*
      * Update
      */
-    template <typename ObjectType, typename ListType> int CListModelBase<ObjectType, ListType>::update(const ListType &list)
+    template <typename ObjectType, typename ListType>
+    int CListModelBase<ObjectType, ListType>::update(const ListType &list)
     {
         ListType copyList = (list.size() > 1 && this->hasValidSortColumn() ?
                              this->sortListByColumn(list, this->m_sortedColumn, this->m_sortOrder) :

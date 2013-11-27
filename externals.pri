@@ -44,6 +44,18 @@ win32-g++ {
     }
 }
 
+linux-g++ {
+    GCC64 = $$system($$QMAKE_CXX -Q --help=target | grep m64)
+    contains(GCC64,[enabled]) {
+        LIBS *= -L$$EXTERNALDIR/linux64/lib
+        message("64 bit")
+    }
+    else {
+        LIBS *= -L$$EXTERNALDIR/linux32/lib
+        message("32 bit")
+    }
+}
+
 linux-g++-32 {
     LIBS *= -L$$EXTERNALDIR/linux32/lib
 }
