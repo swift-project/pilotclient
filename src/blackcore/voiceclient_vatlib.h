@@ -23,17 +23,22 @@ namespace BlackCore
         virtual ~CVoiceClientVatlib();
 
         virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void joinVoiceServer(const uint32_t comUnit, const QString &serverSpec);
-        virtual void leaveVoiceServer(const uint32_t comUnit) = 0;
+        virtual void joinVoiceRoom(const uint32_t comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom);
+        virtual void leaveVoiceRoom(const uint32_t comUnit);
         virtual void setVolume(const uint32_t comUnit, const uint32_t volumne);
         virtual void startTransmitting(const uint32_t comUnit);
         virtual void stopTransmitting(const uint32_t comUnit);
         virtual bool isReceiving(const uint32_t comUnit);
         virtual bool isConnected(const uint32_t comUnit);
 
-        virtual void getUserList(const uint32_t comUnit);
-        virtual void getInputDevices(const uint32_t comUnit);
-        virtual void getOutputDevices(const uint32_t comUnit);
+        virtual void roomUserList(const uint32_t comUnit);
+        virtual void audioInputDevices(const uint32_t comUnit);
+        virtual void audioOutputDevices(const uint32_t comUnit);
+
+        virtual void setInputDevice(const uint32_t comUnit, BlackMisc::Voice::CInputAudioDevice &device);
+        virtual void setOutputDevice(const uint32_t comUnit, BlackMisc::Voice::COutputAudioDevice &device);
+
+        virtual const BlackMisc::Voice::CVoiceRoom &voiceRoom (const uint32_t comUnit);
 
     signals:
 

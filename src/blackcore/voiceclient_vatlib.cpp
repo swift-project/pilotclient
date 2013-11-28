@@ -19,12 +19,12 @@ namespace BlackCore
         m_callsign = callsign;
     }
 
-    void CVoiceClientVatlib::joinVoiceServer(const uint32_t comIndex, const QString &serverSpec)
+    void CVoiceClientVatlib::joinVoiceRoom(const uint32_t comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom)
     {
 
     }
 
-    void CVoiceClientVatlib::leaveVoiceServer(const uint32_t comIndex)
+    void CVoiceClientVatlib::leaveVoiceRoom(const uint32_t comUnit)
     {
 
     }
@@ -54,17 +54,32 @@ namespace BlackCore
 
     }
 
-    void CVoiceClientVatlib::getUserList(const uint32_t comIndex)
+    void CVoiceClientVatlib::roomUserList(const uint32_t comIndex)
     {
 
     }
 
-    void CVoiceClientVatlib::getInputDevices(const uint32_t comIndex)
+    void CVoiceClientVatlib::audioInputDevices(const uint32_t comIndex)
     {
 
     }
 
-    void CVoiceClientVatlib::getOutputDevices(const uint32_t comIndex)
+    void CVoiceClientVatlib::audioOutputDevices(const uint32_t comIndex)
+    {
+
+    }
+
+    void CVoiceClientVatlib::setInputDevice(const uint32_t comUnit, BlackMisc::Voice::CInputAudioDevice &device)
+    {
+
+    }
+
+    void CVoiceClientVatlib::setOutputDevice(const uint32_t comUnit, BlackMisc::Voice::COutputAudioDevice &device)
+    {
+
+    }
+
+    const BlackMisc::Voice::CVoiceRoom &CVoiceClientVatlib::voiceRoom(const uint32_t comUnit)
     {
 
     }
