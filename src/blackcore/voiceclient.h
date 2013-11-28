@@ -12,6 +12,7 @@
 
 #include "../blackmisc/context.h"
 #include "../blackmisc/avcallsign.h"
+#include "../blackmisc/vvoiceroom.h"
 
 #include <vatlib/vatlib.h>
 
@@ -45,8 +46,8 @@ namespace BlackCore
         virtual ~IVoiceClient() {}
 
         virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-        virtual void joinVoiceServer(const uint32_t comUnit, const QString &serverSpec) = 0;
-        virtual void leaveVoiceServer(const uint32_t comUnit) = 0;
+        virtual void joinVoiceRoom(const uint32_t comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom) = 0;
+        virtual void leaveVoiceRoom(const uint32_t comUnit) = 0;
         virtual void setVolume(const uint32_t comUnit, const uint32_t volumne) = 0;
         virtual void startTransmitting(const uint32_t comUnit) = 0;
         virtual void stopTransmitting(const uint32_t comUnit) = 0;
@@ -56,6 +57,8 @@ namespace BlackCore
         virtual void getUserList(const uint32_t comUnit) = 0;
         virtual void getInputDevices(const uint32_t comUnit) = 0;
         virtual void getOutputDevices(const uint32_t comUnit) = 0;
+
+        virtual const BlackMisc::Voice::CVoiceRoom &voiceRoom (const uint32_t comUnit) = 0;
 
     signals:
         void notConnected(const uint32_t comUnit);

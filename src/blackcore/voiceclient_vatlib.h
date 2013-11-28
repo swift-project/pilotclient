@@ -9,6 +9,7 @@
 #include "voiceclient.h"
 
 #include <QScopedPointer>
+#include <QMap>
 
 namespace BlackCore
 {
@@ -41,12 +42,13 @@ namespace BlackCore
     private:
 
         // shimlib callbacks
-        void onRoomStatusUpdate(Cvatlib_Voice_Simple* obj, roomStatusUpdate upd, INT roomIndex, void* cbVar);
-        void onRoomUserReceived(vatlib_Voice_Simple* obj, const char* name, void* cbVar);
+        void onRoomStatusUpdate(Cvatlib_Voice_Simple* obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, INT roomIndex, void* cbVar);
+        void onRoomUserReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
         void onHardwareDeviceReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
 
         QScopedPointer<Cvatlib_Voice_Simple> m_voice;
         BlackMisc::Aviation::CCallsign m_callsign;
+        QMap<uint32_t, BlackMisc::Voice::CVoiceRoom> m_voiceRoomMap;
 
     };
 

@@ -69,12 +69,12 @@ namespace BlackCore
 
     }
 
-    void CVoiceClientVatlib::onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, roomStatusUpdate upd, int32_t roomIndex, void *cbVar)
+    void CVoiceClientVatlib::onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, int32_t roomIndex, void *cbVar)
     {
 
     }
 
-    void CVoiceClientVatlib::onRoomUserReceived(vatlib_Voice_Simple *obj, const char *name, void *cbVar)
+    void CVoiceClientVatlib::onRoomUserReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar)
     {
 
     }
