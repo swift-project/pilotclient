@@ -60,8 +60,8 @@ namespace BlackCore
         // and signals emitted in case of a change. This way other objects can listen to this signals and call the getter
         // again.
         virtual void roomUserList(const uint32_t comUnit) = 0;
-        virtual void audioInputDevices(const uint32_t comUnit) = 0;
-        virtual void audioOutputDevices(const uint32_t comUnit) = 0;
+        virtual const QList<BlackMisc::Voice::CInputAudioDevice> & audioInputDevices(const uint32_t comUnit) const = 0;
+        virtual const QList<BlackMisc::Voice::COutputAudioDevice> & audioOutputDevices(const uint32_t comUnit) const = 0;
 
         virtual void setInputDevice(const uint32_t comUnit, BlackMisc::Voice::CInputAudioDevice &device) = 0;
         virtual void setOutputDevice(const uint32_t comUnit, BlackMisc::Voice::COutputAudioDevice &device) = 0;

@@ -52,6 +52,7 @@ equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/blackgui/sample_blackgui.pro
     SUBDIRS += samples/blackcore/sample_blackcore.pro
     SUBDIRS += samples/blackmisc/sample_blackmisc.pro
+    SUBDIRS += samples/voiceclient/sample_voice_client.pro
 }
 
 equals(WITH_UNITTESTS, ON) {

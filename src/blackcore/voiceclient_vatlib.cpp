@@ -5,13 +5,22 @@
 
 #include "voiceclient_vatlib.h"
 
+#include <QDebug>
+
 namespace BlackCore
 {
-
     CVoiceClientVatlib::CVoiceClientVatlib(QObject *parent) :
         IVoiceClient(parent),
         m_voice(Create_Cvatlib_Voice_Simple())
     {
+        m_voice->Setup(true, 3290, 2, 1, onRoomStatusUpdate, this);
+        m_voice->GetInputDevices(onInputHardwareDeviceReceived, this);
+        m_voice->GetOutputDevices(onOutputHardwareDeviceReceived, this);
+    }
+
+    CVoiceClientVatlib::~CVoiceClientVatlib()
+    {
+
     }
 
     void CVoiceClientVatlib::setCallsign(const BlackMisc::Aviation::CCallsign &callsign)
@@ -59,14 +68,14 @@ namespace BlackCore
 
     }
 
-    void CVoiceClientVatlib::audioInputDevices(const uint32_t comIndex)
+    const QList<BlackMisc::Voice::CInputAudioDevice> &CVoiceClientVatlib::audioInputDevices(const uint32_t comIndex) const
     {
-
+        return m_inputDevices;
     }
 
-    void CVoiceClientVatlib::audioOutputDevices(const uint32_t comIndex)
+    const QList<BlackMisc::Voice::COutputAudioDevice> &CVoiceClientVatlib::audioOutputDevices(const uint32_t comIndex) const
     {
-
+        return m_outputDevices;
     }
 
     void CVoiceClientVatlib::setInputDevice(const uint32_t comUnit, BlackMisc::Voice::CInputAudioDevice &device)
@@ -84,6 +93,15 @@ namespace BlackCore
 
     }
 
+    /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
+    /**********************************           shimlib callbacks           ************************************/
+    /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
+
+    CVoiceClientVatlib *cbvar_cast(void *cbvar)
+    {
+        return static_cast<CVoiceClientVatlib *>(cbvar);
+    }
+
     void CVoiceClientVatlib::onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, int32_t roomIndex, void *cbVar)
     {
 
@@ -94,9 +112,16 @@ namespace BlackCore
 
     }
 
-    void CVoiceClientVatlib::onHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar)
+    void CVoiceClientVatlib::onInputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar)
     {
+        BlackMisc::Voice::CInputAudioDevice inputDevice(cbvar_cast(cbVar)->m_inputDevices.size(), QString(name));
+        cbvar_cast(cbVar)->m_inputDevices.append(inputDevice);
+    }
 
+    void CVoiceClientVatlib::onOutputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar)
+    {
+        BlackMisc::Voice::COutputAudioDevice outputDevice(cbvar_cast(cbVar)->m_outputDevices.size(), QString(name));
+        cbvar_cast(cbVar)->m_outputDevices.append(outputDevice);
     }
 
 } // namespace BlackCore

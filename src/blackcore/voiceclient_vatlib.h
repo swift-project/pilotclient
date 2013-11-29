@@ -32,8 +32,8 @@ namespace BlackCore
         virtual bool isConnected(const uint32_t comUnit);
 
         virtual void roomUserList(const uint32_t comUnit);
-        virtual void audioInputDevices(const uint32_t comUnit);
-        virtual void audioOutputDevices(const uint32_t comUnit);
+        virtual const QList<BlackMisc::Voice::CInputAudioDevice> &audioInputDevices(const uint32_t comUnit) const ;
+        virtual const QList<BlackMisc::Voice::COutputAudioDevice> & audioOutputDevices(const uint32_t comUnit) const;
 
         virtual void setInputDevice(const uint32_t comUnit, BlackMisc::Voice::CInputAudioDevice &device);
         virtual void setOutputDevice(const uint32_t comUnit, BlackMisc::Voice::COutputAudioDevice &device);
@@ -47,14 +47,16 @@ namespace BlackCore
     private:
 
         // shimlib callbacks
-        void onRoomStatusUpdate(Cvatlib_Voice_Simple* obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, INT roomIndex, void* cbVar);
-        void onRoomUserReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
-        void onHardwareDeviceReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
+        static void onRoomStatusUpdate(Cvatlib_Voice_Simple* obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, INT roomIndex, void* cbVar);
+        static void onRoomUserReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
+        static void onInputHardwareDeviceReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
+        static void onOutputHardwareDeviceReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
 
         QScopedPointer<Cvatlib_Voice_Simple> m_voice;
         BlackMisc::Aviation::CCallsign m_callsign;
         QMap<uint32_t, BlackMisc::Voice::CVoiceRoom> m_voiceRoomMap;
-
+        QList<BlackMisc::Voice::CInputAudioDevice> m_inputDevices;
+        QList<BlackMisc::Voice::COutputAudioDevice> m_outputDevices;
     };
 
 } // namespace BlackCore
