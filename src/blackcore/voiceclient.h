@@ -21,6 +21,9 @@
 
 namespace BlackCore
 {
+    /*!
+     * Interface to a connection to a ATC voice server for use in flight simulation.
+     */
     class IVoiceClient : public QObject
     {
 
@@ -54,17 +57,25 @@ namespace BlackCore
         virtual bool isConnected(const uint32_t comUnit) = 0;
 
 
-        // The following methods should be called everytime you receive a update signal.
-        // Reason:
-        // We cannot say when the device and user lists are completed. Instead information is cached internally
-        // and signals emitted in case of a change. This way other objects can listen to this signals and call the getter
-        // again.
+        // The following method should be called everytime you receive a user update signal
         virtual void roomUserList(const uint32_t comUnit) = 0;
-        virtual const QList<BlackMisc::Voice::CInputAudioDevice> & audioInputDevices(const uint32_t comUnit) const = 0;
-        virtual const QList<BlackMisc::Voice::COutputAudioDevice> & audioOutputDevices(const uint32_t comUnit) const = 0;
 
-        virtual void setInputDevice(const uint32_t comUnit, BlackMisc::Voice::CInputAudioDevice &device) = 0;
-        virtual void setOutputDevice(const uint32_t comUnit, BlackMisc::Voice::COutputAudioDevice &device) = 0;
+        // Hardware devices
+        virtual const QList<BlackMisc::Voice::CInputAudioDevice> & audioInputDevices() const = 0;
+        virtual const QList<BlackMisc::Voice::COutputAudioDevice> & audioOutputDevices() const = 0;
+
+        virtual const BlackMisc::Voice::CInputAudioDevice & defaultAudioInputDevice() const = 0;
+        virtual const BlackMisc::Voice::COutputAudioDevice & defaultAudioOutputDevice() const = 0;
+
+        virtual void setInputDevice(const BlackMisc::Voice::CInputAudioDevice &device) = 0;
+        virtual void setOutputDevice(const BlackMisc::Voice::COutputAudioDevice &device) = 0;
+
+        // Mic tests
+
+        virtual void runSquelchTest() = 0;
+        virtual void runMicTest() = 0;
+
+        virtual float inputSquelch() const = 0;
 
         virtual const BlackMisc::Voice::CVoiceRoom &voiceRoom (const uint32_t comUnit) = 0;
 
@@ -85,6 +96,13 @@ namespace BlackCore
         // Audio signals
         void audioStarted(const uint32_t comUnit);
         void audioStopped(const uint32_t comUnit);
+
+        // Test signals
+        void squelchTestFinished();
+        void micTestFinished();
+
+        // non protocol related signals
+        void exception(const QString &message, bool fatal = false); // let remote places know there was an exception
 
     public slots:
 

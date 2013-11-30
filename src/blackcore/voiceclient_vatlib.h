@@ -13,7 +13,9 @@
 
 namespace BlackCore
 {
-
+    /*!
+     * Vatlib implementation of the IVoiceClient interface.
+     */
     class CVoiceClientVatlib : public IVoiceClient
     {
         Q_OBJECT
@@ -32,17 +34,40 @@ namespace BlackCore
         virtual bool isConnected(const uint32_t comUnit);
 
         virtual void roomUserList(const uint32_t comUnit);
-        virtual const QList<BlackMisc::Voice::CInputAudioDevice> &audioInputDevices(const uint32_t comUnit) const ;
-        virtual const QList<BlackMisc::Voice::COutputAudioDevice> & audioOutputDevices(const uint32_t comUnit) const;
 
-        virtual void setInputDevice(const uint32_t comUnit, BlackMisc::Voice::CInputAudioDevice &device);
-        virtual void setOutputDevice(const uint32_t comUnit, BlackMisc::Voice::COutputAudioDevice &device);
+        // Hardware devices
+        // TODO: Vatlib supports multiple output devices. That basically means, you could connect
+        // to different voice rooms and send their audio to different devices, e.g. ATIS to loudspeakers
+        // and ATC to headspeakers. Is not important to implement that now, if ever.
+        virtual const QList<BlackMisc::Voice::CInputAudioDevice> & audioInputDevices() const ;
+        virtual const QList<BlackMisc::Voice::COutputAudioDevice> & audioOutputDevices() const;
+
+        virtual const BlackMisc::Voice::CInputAudioDevice & defaultAudioInputDevice() const;
+        virtual const BlackMisc::Voice::COutputAudioDevice & defaultAudioOutputDevice() const;
+
+        virtual void setInputDevice(const BlackMisc::Voice::CInputAudioDevice &device);
+        virtual void setOutputDevice(const BlackMisc::Voice::COutputAudioDevice &device);
+
+        // Mic tests
+        virtual void runSquelchTest();
+        virtual void runMicTest();
+
+        virtual float inputSquelch() const;
+
 
         virtual const BlackMisc::Voice::CVoiceRoom &voiceRoom (const uint32_t comUnit);
 
     signals:
 
     public slots:
+
+    protected: // QObject overrides
+        virtual void timerEvent(QTimerEvent *);
+
+    private slots:
+        // slots for Mic tests
+        void onEndFindSquelch();
+        void onEndMicTest();
 
     private:
 
@@ -52,11 +77,23 @@ namespace BlackCore
         static void onInputHardwareDeviceReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
         static void onOutputHardwareDeviceReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
 
-        QScopedPointer<Cvatlib_Voice_Simple> m_voice;
+        void exceptionDispatcher(const char *caller);
+
+        struct Cvatlib_Voice_Simple_Deleter
+        {
+            static inline void cleanup(Cvatlib_Voice_Simple *pointer)
+            {
+                pointer->Destroy();
+            }
+        };
+
+        QScopedPointer<Cvatlib_Voice_Simple, Cvatlib_Voice_Simple_Deleter> m_voice;
         BlackMisc::Aviation::CCallsign m_callsign;
         QMap<uint32_t, BlackMisc::Voice::CVoiceRoom> m_voiceRoomMap;
         QList<BlackMisc::Voice::CInputAudioDevice> m_inputDevices;
         QList<BlackMisc::Voice::COutputAudioDevice> m_outputDevices;
+
+        float m_inputSquelch;
     };
 
 } // namespace BlackCore
