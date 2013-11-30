@@ -4,6 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackcore/voiceclient_vatlib.h"
+
+#include "client.h"
+#include "reader.h"
+
 #include <QCoreApplication>
 #include <QDebug>
 
@@ -15,15 +19,12 @@ int main(int argc, char *argv[])
     BlackMisc::IContext::getInstance().setObject(*new BlackMisc::CDebug());
     BlackMisc::IContext::getInstance().setObject<BlackCore::IVoiceClient>(*new BlackCore::CVoiceClientVatlib());
 
-    BlackCore::IVoiceClient *voiceClient = BlackMisc::IContext::getInstance().singleton<BlackCore::IVoiceClient>();
-    QList<COutputAudioDevice> outputDevices = voiceClient->audioOutputDevices(0);
+    Client client;
+    LineReader reader;
+    QObject::connect(&reader, SIGNAL(command(const QString&)), &client, SLOT(command(const QString&)));
+    QObject::connect(&client, SIGNAL(quit()), &reader, SLOT(terminate()));
+    QObject::connect(&client, SIGNAL(quit()), &app, SLOT(quit()));
 
-    qDebug() << "Found " << outputDevices.size() << " output devices:";
-
-    foreach (COutputAudioDevice device, outputDevices)
-    {
-        qDebug() << device.name();
-    }
-
+    reader.start();
     app.exec();
 }

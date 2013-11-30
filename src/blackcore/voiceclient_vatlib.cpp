@@ -177,6 +177,11 @@ namespace BlackCore
         return m_inputSquelch;
     }
 
+    Cvatlib_Voice_Simple::agc CVoiceClientVatlib::micTestResult() const
+    {
+        return m_micTestResult;
+    }
+
     const BlackMisc::Voice::CVoiceRoom &CVoiceClientVatlib::voiceRoom(const uint32_t comUnit)
     {
 
@@ -202,7 +207,6 @@ namespace BlackCore
 
             //TODO: store captured squelch
             m_inputSquelch = m_voice->GetInputSquelch();
-            qDebug() << m_inputSquelch;
             emit squelchTestFinished();
         }
         catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
@@ -214,8 +218,7 @@ namespace BlackCore
         {
            Q_ASSERT_X (m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
-            Cvatlib_Voice_Simple::agc micTestResult = m_voice->EndMicTest();
-            qDebug() << micTestResult;
+            m_micTestResult = m_voice->EndMicTest();
             emit micTestFinished();
         }
         catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }

@@ -53,6 +53,7 @@ namespace BlackCore
         virtual void runMicTest();
 
         virtual float inputSquelch() const;
+        virtual Cvatlib_Voice_Simple::agc micTestResult() const;
 
 
         virtual const BlackMisc::Voice::CVoiceRoom &voiceRoom (const uint32_t comUnit);
@@ -94,6 +95,7 @@ namespace BlackCore
         QList<BlackMisc::Voice::COutputAudioDevice> m_outputDevices;
 
         float m_inputSquelch;
+        Cvatlib_Voice_Simple::agc m_micTestResult;
     };
 
 } // namespace BlackCore
