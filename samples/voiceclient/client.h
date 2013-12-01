@@ -29,12 +29,19 @@ private: //commands
     void exit(QTextStream &args);
     void runSquelchTest(QTextStream &args);
     void runMicTest(QTextStream &args);
+    void setCallsignCmd(QTextStream &args);
+    void initiateConnectionCmd(QTextStream &args);
+    void terminateConnectionCmd(QTextStream &args);
 
     void printLinePrefix();
 
 public slots:
     void onSquelchTestFinished();
     void onMicTestFinished();
+private slots:
+
+    void connectionStatusConnected();
+    void connectionStatusDisconnected();
 
 private:
     QMap<QString, std::function<void(QTextStream &)>> m_commands;

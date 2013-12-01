@@ -25,15 +25,15 @@ namespace BlackCore
         virtual ~CVoiceClientVatlib();
 
         virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void joinVoiceRoom(const uint32_t comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom);
-        virtual void leaveVoiceRoom(const uint32_t comUnit);
-        virtual void setVolume(const uint32_t comUnit, const uint32_t volumne);
-        virtual void startTransmitting(const uint32_t comUnit);
-        virtual void stopTransmitting(const uint32_t comUnit);
-        virtual bool isReceiving(const uint32_t comUnit);
-        virtual bool isConnected(const uint32_t comUnit);
+        virtual void joinVoiceRoom(const int32_t comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom);
+        virtual void leaveVoiceRoom(const int32_t comUnit);
+        virtual void setVolume(const int32_t comUnit, const uint32_t volumne);
+        virtual void startTransmitting(const int32_t comUnit);
+        virtual void stopTransmitting(const int32_t comUnit);
+        virtual bool isReceiving(const int32_t comUnit);
+        virtual bool isConnected(const int32_t comUnit);
 
-        virtual void roomUserList(const uint32_t comUnit);
+        virtual const QStringList roomUserList(const int32_t comUnit);
 
         // Hardware devices
         // TODO: Vatlib supports multiple output devices. That basically means, you could connect
@@ -48,6 +48,8 @@ namespace BlackCore
         virtual void setInputDevice(const BlackMisc::Voice::CInputAudioDevice &device);
         virtual void setOutputDevice(const BlackMisc::Voice::COutputAudioDevice &device);
 
+        virtual void enableAudio(const int32_t comUnit);
+
         // Mic tests
         virtual void runSquelchTest();
         virtual void runMicTest();
@@ -57,6 +59,8 @@ namespace BlackCore
 
 
         virtual const BlackMisc::Voice::CVoiceRoom &voiceRoom (const uint32_t comUnit);
+
+        int32_t queryUserRoomIndex() const {return m_queryUserRoomIndex;}
 
     signals:
 
@@ -70,6 +74,12 @@ namespace BlackCore
         void onEndFindSquelch();
         void onEndMicTest();
 
+        // slot to handle users
+        void onUserJoinedLeft(const int32_t roomIndex);
+
+    signals:
+        void userJoinedLeft(const int32_t roomIndex);
+
     private:
 
         // shimlib callbacks
@@ -77,6 +87,9 @@ namespace BlackCore
         static void onRoomUserReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
         static void onInputHardwareDeviceReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
         static void onOutputHardwareDeviceReceived(Cvatlib_Voice_Simple* obj, const char* name, void* cbVar);
+
+        void addUserInRoom(const int32_t roomIndex, const QString &callsign);
+        void removeUserFromRoom(const int32_t roomIndex, const QString &callsign);
 
         void exceptionDispatcher(const char *caller);
 
@@ -90,12 +103,21 @@ namespace BlackCore
 
         QScopedPointer<Cvatlib_Voice_Simple, Cvatlib_Voice_Simple_Deleter> m_voice;
         BlackMisc::Aviation::CCallsign m_callsign;
-        QMap<uint32_t, BlackMisc::Voice::CVoiceRoom> m_voiceRoomMap;
+        QMap<uint32_t, BlackMisc::Voice::CVoiceRoom> m_voiceRooms;
         QList<BlackMisc::Voice::CInputAudioDevice> m_inputDevices;
         QList<BlackMisc::Voice::COutputAudioDevice> m_outputDevices;
 
         float m_inputSquelch;
         Cvatlib_Voice_Simple::agc m_micTestResult;
+
+        typedef QMap<int32_t, Cvatlib_Voice_Simple::roomStatusUpdate> TMapRoomsStatus;
+        TMapRoomsStatus m_voiceRoomsStatus;
+
+        typedef QMap<int32_t, QStringList> TMapRoomsUsers;
+        TMapRoomsUsers m_voiceRoomsUsers;
+
+        // Need to keep the roomIndex because GetRoomUserList does not specifiy it
+        int32_t m_queryUserRoomIndex;
     };
 
 } // namespace BlackCore

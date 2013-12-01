@@ -18,11 +18,17 @@
 #include <vatlib/vatlib.h>
 
 #include <QObject>
+#include <QStringList>
 
 namespace BlackCore
 {
     /*!
      * Interface to a connection to a ATC voice server for use in flight simulation.
+     *
+     * \warning If an INetwork signal is connected to a slot, and that slot emits a signal
+     *          which is connected to an INetwork slot, then at least one of those connections
+     *          must be a Qt::QueuedConnection.
+     *          Reason: IVoiceClient implementations are not re-entrant.
      */
     class IVoiceClient : public QObject
     {
@@ -47,18 +53,8 @@ namespace BlackCore
 
         virtual ~IVoiceClient() {}
 
-        virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-        virtual void joinVoiceRoom(const uint32_t comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom) = 0;
-        virtual void leaveVoiceRoom(const uint32_t comUnit) = 0;
-        virtual void setVolume(const uint32_t comUnit, const uint32_t volumne) = 0;
-        virtual void startTransmitting(const uint32_t comUnit) = 0;
-        virtual void stopTransmitting(const uint32_t comUnit) = 0;
-        virtual bool isReceiving(const uint32_t comUnit) = 0;
-        virtual bool isConnected(const uint32_t comUnit) = 0;
-
-
         // The following method should be called everytime you receive a user update signal
-        virtual void roomUserList(const uint32_t comUnit) = 0;
+        virtual const QStringList roomUserList(const int32_t comUnit) = 0;
 
         // Hardware devices
         virtual const QList<BlackMisc::Voice::CInputAudioDevice> & audioInputDevices() const = 0;
@@ -70,6 +66,8 @@ namespace BlackCore
         virtual void setInputDevice(const BlackMisc::Voice::CInputAudioDevice &device) = 0;
         virtual void setOutputDevice(const BlackMisc::Voice::COutputAudioDevice &device) = 0;
 
+        virtual void enableAudio(const int32_t comUnit) = 0;
+
         // Mic tests
 
         virtual void runSquelchTest() = 0;
@@ -80,23 +78,36 @@ namespace BlackCore
 
         virtual const BlackMisc::Voice::CVoiceRoom &voiceRoom (const uint32_t comUnit) = 0;
 
+    public slots:
+        virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void joinVoiceRoom(const int32_t comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom) = 0;
+        virtual void leaveVoiceRoom(const int32_t comUnit) = 0;
+        virtual void setVolume(const int32_t comUnit, const uint32_t volumne) = 0;
+        virtual void startTransmitting(const int32_t comUnit) = 0;
+        virtual void stopTransmitting(const int32_t comUnit) = 0;
+        virtual bool isReceiving(const int32_t comUnit) = 0;
+        virtual bool isConnected(const int32_t comUnit) = 0;
+
+
     signals:
         // Signals regarding the voice server connection
-        void notConnected(const uint32_t comUnit);
-        void connecting(const uint32_t comUnit);
-        void connected(const uint32_t comUnit);
-        void connectionFailed(const uint32_t comUnit);
-        void kicked(const uint32_t comUnit);
-        void disconnecting(const uint32_t comUnit);
-        void disconnected(const uint32_t comUnit);
+        void notConnected(const int32_t comUnit);
+        void connecting(const int32_t comUnit);
+        void connected(const int32_t comUnit);
+        void connectionFailed(const int32_t comUnit);
+        void kicked(const int32_t comUnit);
+        void disconnecting(const int32_t comUnit);
+        void disconnected(const int32_t comUnit);
 
         // Signals about users joining and leaving
-        void userJoined(const uint32_t comUnit, const BlackMisc::Aviation::CCallsign &callsign);
-        void userLeft(const uint32_t comUnit, const BlackMisc::Aviation::CCallsign &callsign);
+        void userJoinedRoom(const QString &callsign);
+        void userLeftRoom(const QString &callsign);
 
         // Audio signals
-        void audioStarted(const uint32_t comUnit);
-        void audioStopped(const uint32_t comUnit);
+        void audioStarted(const int32_t comUnit);
+        void audioStopped(const int32_t comUnit);
+        void audioStarted();
+        void audioStopped();
 
         // Test signals
         void squelchTestFinished();
