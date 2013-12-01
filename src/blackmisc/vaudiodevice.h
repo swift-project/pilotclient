@@ -3,6 +3,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#ifndef BLACKMISC_AUDIODEVICE_H
+#define BLACKMISC_AUDIODEVICE_H
+
 /*!
     \file
 */
@@ -11,8 +14,10 @@
 
 #include <QString>
 
-#ifndef BLACKMISC_AUDIODEVICE_H
-#define BLACKMISC_AUDIODEVICE_H
+#ifdef Q_OS_WIN
+typedef short           int16_t;
+#endif
+
 
 namespace BlackMisc
 {
@@ -30,7 +35,7 @@ namespace BlackMisc
             /*!
              * Default constructor.
              */
-            CAudioDevice() : m_deviceIndex(-1), m_deviceName("") {}
+            CAudioDevice() : m_deviceIndex(0), m_deviceName("") {}
 
 
             /*!

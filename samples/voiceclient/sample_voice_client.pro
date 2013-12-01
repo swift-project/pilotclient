@@ -13,9 +13,7 @@ DEPENDPATH += . ../../src
 INCLUDEPATH += . ../../src
 
 SOURCES += *.cpp
-HEADERS += *.h \
-    client.h \
-    reader.h
+HEADERS += *.h
 
 LIBS    += -L../../lib -lblackcore -lblackmisc
 LIBS	+= -lvatlib

@@ -12,7 +12,7 @@ namespace BlackCore
 {
     CVoiceClientVatlib::CVoiceClientVatlib(QObject *parent) :
         IVoiceClient(parent),
-        m_voice(Create_Cvatlib_Voice_Simple()),
+        m_voice(Cvatlib_Voice_Simple::Create()),
         m_inputSquelch(-1),
         m_queryUserRoomIndex(-1)
     {
@@ -139,7 +139,7 @@ namespace BlackCore
         try
         {
             Q_ASSERT_X (m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-            m_voice->IsRoomConnected(comUnit);
+            return m_voice->IsRoomConnected(comUnit);
         }
         catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
     }
@@ -259,7 +259,7 @@ namespace BlackCore
 
     const BlackMisc::Voice::CVoiceRoom &CVoiceClientVatlib::voiceRoom(const uint32_t comUnit)
     {
-
+        return BlackMisc::Voice::CVoiceRoom();
     }
 
     void CVoiceClientVatlib::timerEvent(QTimerEvent *)

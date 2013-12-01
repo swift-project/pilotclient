@@ -13,19 +13,19 @@ Client::Client(QObject *parent) :
     connect(m_voiceClient, &IVoiceClient::squelchTestFinished,                  this, &Client::onSquelchTestFinished);
     connect(m_voiceClient, &IVoiceClient::micTestFinished,                      this, &Client::onMicTestFinished);
     connect(m_voiceClient, &IVoiceClient::connected,                            this, &Client::connectionStatusConnected);
-
-
-
+    connect(m_voiceClient, &IVoiceClient::disconnected,                         this, &Client::connectionStatusDisconnected);
 
     using namespace std::placeholders;
     m_commands["help"]              = std::bind(&Client::help, this, _1);
     m_commands["echo"]              = std::bind(&Client::echo, this, _1);
     m_commands["exit"]              = std::bind(&Client::exit, this, _1);
-    m_commands["squelchtest"]       = std::bind(&Client::runSquelchTest, this, _1);
-    m_commands["mictest"]           = std::bind(&Client::runMicTest, this, _1);
+    m_commands["squelchtest"]       = std::bind(&Client::squelchTestCmd, this, _1);
+    m_commands["mictest"]           = std::bind(&Client::micTestCmd, this, _1);
     m_commands["setcallsign"]       = std::bind(&Client::setCallsignCmd, this, _1);
     m_commands["initconnect"]       = std::bind(&Client::initiateConnectionCmd, this, _1);
     m_commands["termconnect"]       = std::bind(&Client::terminateConnectionCmd, this, _1);
+    m_commands["inputdevices"]      = std::bind(&Client::inputDevicesCmd, this, _1);
+    m_commands["outputdevices"]     = std::bind(&Client::outputDevicesCmd, this, _1);
 
 }
 
@@ -80,14 +80,14 @@ void Client::exit(QTextStream &)
     emit quit();
 }
 
-void Client::runSquelchTest(QTextStream &args)
+void Client::squelchTestCmd(QTextStream &args)
 {
     std::cout << "Running squelch test. Please be quiet for 5 seconds..." << std::endl;
     printLinePrefix();
     m_voiceClient->runSquelchTest();
 }
 
-void Client::runMicTest(QTextStream &args)
+void Client::micTestCmd(QTextStream &args)
 {
     std::cout << "Running mic test. Speak normally for 5 seconds..." << std::endl;
     printLinePrefix();
@@ -115,6 +115,26 @@ void Client::terminateConnectionCmd(QTextStream &args)
 {
     std::cout << "Leaving room." << std::endl;
     m_voiceClient->leaveVoiceRoom(0);
+    printLinePrefix();
+}
+
+void Client::inputDevicesCmd(QTextStream &args)
+{
+    QList<BlackMisc::Voice::CInputAudioDevice> devices = m_voiceClient->audioInputDevices();
+    foreach (BlackMisc::Voice::CInputAudioDevice device, devices)
+    {
+        std::cout << device.name().toStdString() << std::endl;
+    }
+    printLinePrefix();
+}
+
+void Client::outputDevicesCmd(QTextStream &args)
+{
+    QList<BlackMisc::Voice::COutputAudioDevice> devices = m_voiceClient->audioOutputDevices();
+    foreach (BlackMisc::Voice::COutputAudioDevice device, devices)
+    {
+        std::cout << " " << device.name().toStdString() << std::endl;
+    }
     printLinePrefix();
 }
 

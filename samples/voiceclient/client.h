@@ -9,6 +9,7 @@
 #include "blackcore/voiceclient.h"
 
 #include <QObject>
+#include <functional>
 #include <QMap>
 
 class Client : public QObject
@@ -27,11 +28,13 @@ private: //commands
     void help(QTextStream &args);
     void echo(QTextStream &args);
     void exit(QTextStream &args);
-    void runSquelchTest(QTextStream &args);
-    void runMicTest(QTextStream &args);
+    void squelchTestCmd(QTextStream &args);
+    void micTestCmd(QTextStream &args);
     void setCallsignCmd(QTextStream &args);
     void initiateConnectionCmd(QTextStream &args);
     void terminateConnectionCmd(QTextStream &args);
+    void inputDevicesCmd(QTextStream &args);
+    void outputDevicesCmd(QTextStream &args);
 
     void printLinePrefix();
 
