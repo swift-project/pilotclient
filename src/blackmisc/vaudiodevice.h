@@ -34,8 +34,10 @@ namespace BlackMisc
 
             /*!
              * Default constructor.
+             * If m_deviceIndex is -1, default should be used. However on Windows this doesnt work. Needs
+             * to be checked in Vatlib.
              */
-            CAudioDevice() : m_deviceIndex(0), m_deviceName("") {}
+            CAudioDevice() : m_deviceIndex(invalidDevice()), m_deviceName("") {}
 
 
             /*!
@@ -65,10 +67,10 @@ namespace BlackMisc
             const QString &name() const { return m_deviceName; }
 
             /*!
-             * \brief Valid voice room object?
+             * \brief Valid audio device object?
              * \return
              */
-            bool isValid() const { return m_deviceIndex >= 0 && !m_deviceName.isEmpty(); }
+            bool isValid() const { return m_deviceIndex >= -1 && !m_deviceName.isEmpty(); }
 
             /*!
              * \brief Equal operator ==
@@ -93,6 +95,10 @@ namespace BlackMisc
              * \brief Register metadata
              */
             static void registerMetadata();
+
+            static int16_t defaultDevice() {return -1;}
+
+            static int16_t invalidDevice() {return -2;}
 
         protected:
 

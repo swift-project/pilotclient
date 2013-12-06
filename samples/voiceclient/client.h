@@ -35,6 +35,7 @@ private: //commands
     void terminateConnectionCmd(QTextStream &args);
     void inputDevicesCmd(QTextStream &args);
     void outputDevicesCmd(QTextStream &args);
+    void listUsersCmd(QTextStream &args);
 
     void printLinePrefix();
 
@@ -43,8 +44,12 @@ public slots:
     void onMicTestFinished();
 private slots:
 
-    void connectionStatusConnected();
+    void connectionStatusConnected(const BlackCore::IVoiceClient::ComUnit comUnit);
     void connectionStatusDisconnected();
+    void audioStartedStream(const BlackCore::IVoiceClient::ComUnit comUnit);
+    void audioStoppedStream(const BlackCore::IVoiceClient::ComUnit comUnit);
+    void userJoinedRoom(const QString &callsign);
+    void userLeftRoom(const QString &callsign);
 
 private:
     QMap<QString, std::function<void(QTextStream &)>> m_commands;
