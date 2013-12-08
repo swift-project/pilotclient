@@ -89,6 +89,14 @@ namespace BlackMisc
         void registerMetadata();
     }
 
+    namespace Voice
+    {
+        /*!
+         * \brief Registe metadata for settings
+         */
+        void registerMetadata();
+    }
+
     /*!
      * \brief Register all relevant metadata in BlackMisc
      */

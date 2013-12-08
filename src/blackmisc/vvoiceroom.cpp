@@ -68,7 +68,7 @@ namespace BlackMisc
             qDBusRegisterMetaType<CVoiceRoom>();
         }
 
-        QString CVoiceRoom::convertToQString(bool i18n) const
+        QString CVoiceRoom::convertToQString(bool /* i18n */ ) const
         {
             if (m_hostname.isEmpty() || m_channel.isEmpty()) return "Unknown";
             QString s = m_hostname;

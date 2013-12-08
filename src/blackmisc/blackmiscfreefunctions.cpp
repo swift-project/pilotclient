@@ -11,6 +11,8 @@
 #include "networkallclasses.h"
 #include "settingsallclasses.h"
 #include "valuemap.h"
+#include "statusmessages.h"
+#include "voiceallclasses.h"
 
 /*
  * Metadata for PQs
@@ -95,6 +97,16 @@ void BlackMisc::Settings::registerMetadata()
 }
 
 /*
+ * Metadata for Voice
+ */
+void BlackMisc::Voice::registerMetadata()
+{
+    COutputAudioDevice::registerMetadata();
+    CInputAudioDevice::registerMetadata();
+    CVoiceRoom::registerMetadata();
+}
+
+/*
  * Metadata for Blackmisc
  */
 void BlackMisc::registerMetadata()
@@ -110,6 +122,7 @@ void BlackMisc::registerMetadata()
     Geo::registerMetadata();
     Network::registerMetadata();
     Settings::registerMetadata();
+    Voice::registerMetadata();
 }
 
 /*

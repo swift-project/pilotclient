@@ -85,14 +85,14 @@ void Client::exit(QTextStream &)
     emit quit();
 }
 
-void Client::squelchTestCmd(QTextStream &args)
+void Client::squelchTestCmd(QTextStream & /** args **/)
 {
     std::cout << "Running squelch test. Please be quiet for 5 seconds..." << std::endl;
     printLinePrefix();
     m_voiceClient->runSquelchTest();
 }
 
-void Client::micTestCmd(QTextStream &args)
+void Client::micTestCmd(QTextStream & /** args **/)
 {
     std::cout << "Running mic test. Speak normally for 5 seconds..." << std::endl;
     printLinePrefix();
@@ -116,27 +116,27 @@ void Client::initiateConnectionCmd(QTextStream &args)
     printLinePrefix();
 }
 
-void Client::terminateConnectionCmd(QTextStream &args)
+void Client::terminateConnectionCmd(QTextStream & /** args **/)
 {
     std::cout << "Leaving room." << std::endl;
     m_voiceClient->leaveVoiceRoom(BlackCore::IVoiceClient::COM1);
     printLinePrefix();
 }
 
-void Client::inputDevicesCmd(QTextStream &args)
+void Client::inputDevicesCmd(QTextStream & /** args **/)
 {
     QList<BlackMisc::Voice::CInputAudioDevice> devices = m_voiceClient->audioInputDevices();
-    foreach (BlackMisc::Voice::CInputAudioDevice device, devices)
+    foreach(BlackMisc::Voice::CInputAudioDevice device, devices)
     {
         std::cout << device.name().toStdString() << std::endl;
     }
     printLinePrefix();
 }
 
-void Client::outputDevicesCmd(QTextStream &args)
+void Client::outputDevicesCmd(QTextStream & /** args **/)
 {
     QList<BlackMisc::Voice::COutputAudioDevice> devices = m_voiceClient->audioOutputDevices();
-    foreach (BlackMisc::Voice::COutputAudioDevice device, devices)
+    foreach(BlackMisc::Voice::COutputAudioDevice device, devices)
     {
         std::cout << " " << device.name().toStdString() << std::endl;
     }
@@ -147,7 +147,7 @@ void Client::listUsersCmd(QTextStream &args)
 {
     Q_UNUSED(args)
     QSet<QString> users = m_voiceClient->roomUserList(BlackCore::IVoiceClient::COM1);
-    foreach (QString user, users)
+    foreach(QString user, users)
     {
         std::cout << " " << user.toStdString() << std::endl;
     }
@@ -166,7 +166,7 @@ void Client::onMicTestFinished()
     printLinePrefix();
 }
 
-void Client::connectionStatusConnected(const BlackCore::IVoiceClient::ComUnit comUnit)
+void Client::connectionStatusConnected(const BlackCore::IVoiceClient::ComUnit /** comUnit **/)
 {
     std::cout << "CONN_STATUS_CONNECTED" << std::endl;
     printLinePrefix();

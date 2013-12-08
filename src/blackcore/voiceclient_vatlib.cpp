@@ -470,7 +470,7 @@ namespace BlackCore
         cbvar_cast(cbVar)->m_outputDevices.append(outputDevice);
     }
 
-    void CVoiceClientVatlib::addUserInRoom(const ComUnit comUnit, const QString &callsign)
+    void CVoiceClientVatlib::addUserInRoom(const ComUnit /** comUnit **/, const QString &callsign)
     {
         m_voiceRoomUsersUpdate.insert(callsign);
     }

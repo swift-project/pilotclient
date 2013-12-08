@@ -52,7 +52,7 @@ namespace BlackMisc
             qDBusRegisterMetaType<CAudioDevice>();
         }
 
-        QString CAudioDevice::convertToQString(bool i18n) const
+        QString CAudioDevice::convertToQString(bool /* i18n */) const
         {
             return m_deviceName;
         }
