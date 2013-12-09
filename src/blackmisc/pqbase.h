@@ -403,10 +403,16 @@ namespace BlackMisc
                 static CMeasurementUnit none("none", "", NilConverter(), 0, 0);
                 return none;
             }
+
+            /*!
+             * \brief Metadata, mainly needed for None
+             */
+            static void registerMetadata();
         };
 
     } // namespace
 } // namespace
 
+Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMeasurementUnit)
 
 #endif // guard

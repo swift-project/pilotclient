@@ -74,5 +74,16 @@ namespace BlackMisc
             return s;
         }
 
+        /*!
+         * \brief Register metadata of unit and quantity
+         */
+        void CMeasurementUnit::registerMetadata()
+        {
+            qRegisterMetaType<CMeasurementUnit>();
+            qDBusRegisterMetaType<CMeasurementUnit>();
+        }
+
+
+
     } // namespace
 } // namespace
