@@ -62,6 +62,21 @@ namespace BlackMisc
             return rv;
         }
 
+        /*
+         * To radians
+         */
+        double CMath::deg2rad(double degree)
+        {
+            return degree * CMath::PI() / 180.0;
+        }
+
+        /*
+         * To radians
+         */
+        double CMath::rad2deg(double radians)
+        {
+            return radians * 180.0 / CMath::PI();
+        }
 
     } // namespace
 } // namespace

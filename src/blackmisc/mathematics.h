@@ -121,6 +121,21 @@ namespace BlackMisc
                 return pi2;
             }
 
+            /*!
+             * \brief Degree to radians
+             * \param degree
+             * \return
+             */
+            static double deg2rad(double degree);
+
+            /*!
+             * \brief Radians to degrees
+             * \param radians
+             * \return
+             */
+            static double rad2deg(double radians);
+
+
         private:
             /*!
              * \brief No objects, just static
