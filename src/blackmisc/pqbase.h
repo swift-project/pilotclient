@@ -380,9 +380,10 @@ namespace BlackMisc
             /*!
              * \brief Unit from symbol
              * \param symbol must be a valid unit symbol (without i18n) or empty string (empty means default unit)
+             * \param strict strict check means if unit is not found, program terminates
              * \return
              */
-            template <class U> static const U &unitFromSymbol(const QString &symbol)
+            template <class U> static const U &unitFromSymbol(const QString &symbol, bool strict = true)
             {
                 if (symbol.isEmpty()) return U::defaultUnit();
                 const QList<U> &units = U::allUnits();
@@ -390,8 +391,24 @@ namespace BlackMisc
                 {
                     if (units.at(i).getSymbol() == symbol) return units.at(i);
                 }
-                qFatal("Illegal unit name");
-                return U::defaultUnit(); // just suppress "not all control paths return a value"
+                if (strict) qFatal("Illegal unit name");
+                return U::defaultUnit();
+            }
+
+            /*!
+             * \brief Valid unit symbol
+             * \param symbol must be a valid unit symbol (without i18n) or empty string (empty means default unit)
+             * \return
+             */
+            template <class U> static bool isValidUnitSymbol(const QString &symbol)
+            {
+                if (symbol.isEmpty()) return false;
+                const QList<U> &units = U::allUnits();
+                for (int i = 0; i < units.size(); ++i)
+                {
+                    if (units.at(i).getSymbol() == symbol) return true;
+                }
+                return false;
             }
 
             /*!
