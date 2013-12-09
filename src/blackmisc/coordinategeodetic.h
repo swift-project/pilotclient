@@ -226,6 +226,15 @@ namespace BlackMisc
              * Register metadata
              */
             static void registerMetadata();
+
+            /*!
+             * \brief Coordinate by WGS84 position data
+             * \param latitudeWgs84
+             * \param longitudeWgs84
+             * \param height
+             * \return
+             */
+            static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength height = BlackMisc::PhysicalQuantities::CLength());
         };
 
     } // namespace

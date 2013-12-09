@@ -5,6 +5,11 @@
 
 #include "blackmisc/coordinategeodetic.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "mathematics.h"
+#include <QtCore/qmath.h>
+
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Math;
 
 namespace BlackMisc
 {
@@ -80,6 +85,15 @@ namespace BlackMisc
             return BlackMisc::calculateHash(hashs, "CCoordinateGeodetic");
         }
 
+        /*
+         * From WGS84 coordinates
+         */
+        CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CLength height)
+        {
+            CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
+            CLongitude lon = CLongitude::fromWgs84(longitudeWgs84);
+            return CCoordinateGeodetic(lat, lon, height);
+        }
 
         /*
          * Great circle distance
