@@ -6,7 +6,7 @@
 #ifndef BLACKMISC_PQBASE_H
 #define BLACKMISC_PQBASE_H
 
-#include "blackmisc/streamable.h"
+#include "blackmisc/valueobject.h"
 #include "blackmisc/debug.h"
 #include "blackmisc/mathematics.h"
 #include <QCoreApplication>
@@ -24,7 +24,7 @@ namespace BlackMisc
         /*!
          * \brief Base class for all units, such as meter, hertz.
          */
-        class CMeasurementUnit : public CStreamable
+        class CMeasurementUnit : public CValueObject
         {
         protected:
             /*!

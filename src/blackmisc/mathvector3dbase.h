@@ -6,7 +6,7 @@
 #ifndef BLACKMISC_MATHVECTOR3DBASE_H
 #define BLACKMISC_MATHVECTOR3DBASE_H
 
-#include "blackmisc/streamable.h"
+#include "blackmisc/valueobject.h"
 #include "blackmisc/mathematics.h"
 
 namespace BlackMisc
@@ -19,7 +19,7 @@ namespace BlackMisc
         /*!
          * \brief 3D vector base (x, y, z)
          */
-        template <class ImplVector> class CVector3DBase : public CStreamable
+        template <class ImplVector> class CVector3DBase : public CValueObject
         {
         private:
             /*!

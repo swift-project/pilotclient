@@ -7,7 +7,7 @@
 #define BLACKMISC_AVIOBASE_H
 
 // QtGlobal is required for asserts
-#include "blackmisc/streamable.h"
+#include "blackmisc/valueobject.h"
 #include "blackmisc/pqconstants.h"
 #include <QtGlobal>
 
@@ -16,10 +16,10 @@ namespace BlackMisc
     namespace Aviation
     {
 
-class CAvionicsBase : public BlackMisc::CStreamable
         /*!
          * \brief Base class for avionics
          */
+        class CAvionicsBase : public BlackMisc::CValueObject
         {
         protected:
             QString m_name; //!< name of the unit

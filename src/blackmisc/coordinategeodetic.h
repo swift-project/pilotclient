@@ -55,11 +55,10 @@ namespace BlackMisc
 
         };
 
-
         /*!
          * \brief Geodetic coordinate
          */
-        class CCoordinateGeodetic : public CStreamable
+        class CCoordinateGeodetic : public CValueObject
         {
         private:
             BlackMisc::Geo::CLatitude m_latitude; //!< Latitude

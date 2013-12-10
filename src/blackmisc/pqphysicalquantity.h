@@ -23,7 +23,7 @@ namespace BlackMisc
         /*!
          * \brief A physical quantity such as "5m", "20s", "1500ft/s"
          */
-        template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CStreamable
+        template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CValueObject
         {
 
         private:
