@@ -1,6 +1,19 @@
 #ifndef BLACKMISC_VALUEOBJECT_H
 #define BLACKMISC_VALUEOBJECT_H
 
+namespace BlackMisc
+{
+    class CValueObject;
+}
+
+/*!
+ * qHash overload, needed for storing CValueObject in a QSet.
+ * \param value
+ * \return
+ */
+// Appears before all #include directives, to workaround an issue with GCC where the overload is not visible in QSet
+unsigned int qHash(const BlackMisc::CValueObject &value);
+
 #include "blackmisc/debug.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>

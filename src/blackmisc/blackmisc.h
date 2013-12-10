@@ -34,4 +34,19 @@
  * \brief Classes for physical quantities and units such as length, mass, speed.
  */
 
+/*!
+ * \namespace BlackMisc::Predicates
+ * \brief Functor classes for evaluating predicate calculus expressions.
+ */
+
+/*!
+ * \internal
+ * \namespace BlackMisc::Predicates::Private
+ */
+
+/*!
+ * \namespace BlackMisc::Iterators
+ * \brief Iterator classes for the containers.
+ */
+
 #endif

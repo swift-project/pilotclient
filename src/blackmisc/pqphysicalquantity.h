@@ -6,9 +6,9 @@
 #ifndef BLACKMISC_PQPHYSICALQUANTITY_H
 #define BLACKMISC_PQPHYSICALQUANTITY_H
 
-#include "blackmisc/mathematics.h"
 #include "blackmisc/pqbase.h"
 #include "blackmisc/pqunits.h"
+#include "blackmisc/mathematics.h"
 #include "blackmisc/debug.h"
 #include <QtDBus/QDBusMetaType>
 #include <QtGlobal>

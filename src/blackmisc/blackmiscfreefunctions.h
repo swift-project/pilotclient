@@ -6,6 +6,7 @@
 #ifndef BLACKMISC_FREEFUNCTIONS_H
 #define BLACKMISC_FREEFUNCTIONS_H
 
+#include "valueobject.h" // for qHash overload
 #include <QDir> // for Q_INIT_RESOURCE
 #include <QList>
 #include <QVariant>

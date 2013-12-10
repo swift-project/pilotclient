@@ -3,6 +3,7 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "testcontainers.h"
 #include "testblackmiscmain.h"
 
 namespace BlackMiscTest
@@ -18,10 +19,12 @@ namespace BlackMiscTest
             CTestAviation avBaseTests;
             CTestVectorMatrix vmTests;
             CTestGeo geoTests;
+            CTestContainers containerTests;
             status |= QTest::qExec(&pqBaseTests, argc, argv);
             status |= QTest::qExec(&avBaseTests, argc, argv);
             status |= QTest::qExec(&vmTests, argc, argv);
             status |= QTest::qExec(&geoTests, argc, argv);
+            status |= QTest::qExec(&containerTests, argc, argv);
 
         }
         return status;
