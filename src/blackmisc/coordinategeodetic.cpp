@@ -68,5 +68,31 @@ namespace BlackMisc
         }
 
 
+        /*
+         * Great circle distance
+         */
+        PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
+        {
+            // same coordinate results in 0 distance
+            if (coordinate1.latitude() == coordinate2.latitude() && coordinate1.longitude() == coordinate2.longitude())
+            {
+                return CLength(0, CLengthUnit::NM());
+            }
+
+            // first, prelimary distance calculation
+            // http://www.geodatasource.com/developers/c
+            double dist;
+            double lon1rad = coordinate1.longitude().value(CAngleUnit::rad());
+            double lon2rad = coordinate2.longitude().value(CAngleUnit::rad());
+            double lat1rad = coordinate1.latitude().value(CAngleUnit::rad());
+            double lat2rad = coordinate2.latitude().value(CAngleUnit::rad());
+            double theta = lon1rad - lon2rad;
+            dist = qSin(lat1rad) * qSin(lat2rad) + qCos(lat1rad) * qCos(lat2rad) * cos(theta);
+            dist = qAcos(dist);
+            dist = CMath::rad2deg(dist);
+            dist = dist * 60; // dist in NM
+            return CLength(qAbs(dist), CLengthUnit::NM());
+        }
+
     } // namespace
 } // namespace

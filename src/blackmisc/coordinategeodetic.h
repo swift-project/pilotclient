@@ -56,9 +56,17 @@ namespace BlackMisc
         };
 
         /*!
+         * \brief Great circle distance between points
+         * \param coordinate1
+         * \param coordinate2
+         * \return
+         */
+        BlackMisc::PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+
+        /*!
          * \brief Geodetic coordinate
          */
-        class CCoordinateGeodetic : public CValueObject
+        class CCoordinateGeodetic : public CValueObject, public ICoordinateGeodetic
         {
         private:
             BlackMisc::Geo::CLatitude m_latitude; //!< Latitude
