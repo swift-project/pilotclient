@@ -86,6 +86,15 @@ namespace BlackMisc
             CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D &vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
             /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Equal operator ==
              * \param other
              * \return

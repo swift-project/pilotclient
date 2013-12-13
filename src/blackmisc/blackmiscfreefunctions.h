@@ -7,6 +7,8 @@
 #define BLACKMISC_FREEFUNCTIONS_H
 
 #include <QDir> // for Q_INIT_RESOURCE
+#include <QVariant>
+#include <QDBusArgument>
 
 /*!
  * Workaround, to call initResource from namespace. Used in BlackMisc::initResources().
@@ -78,6 +80,34 @@ namespace BlackMisc
      * \brief Init resources
      */
     void initResources();
+
+    /*!
+     * \brief QVariant to string, allows to stringify CValueObject
+     * \param qv
+     * \param i18n
+     * \return
+     */
+    QString qVariantToString(const QVariant &qv, bool i18n = false);
+
+    /*!
+     * Fix variant. Required if a variant "comes in" via DBus,
+     * and represents a QDBusArgument rather than the real type.
+     * \param variant
+     * \param localUserType
+     * \return
+     */
+    QVariant fixQVariantFromDbusArgument(const QVariant &variant, int localUserType);
+
+    /*!
+     * Convert a QDBusArgument back to a concrete type if required
+     * This is a workaround if a QVariant is sent via DBus, QDBusArgument is
+     * received and Qt is nor able to get the original QVariant back
+     * \param argument
+     * \param type
+     * \return
+     */
+    // TODO: To be removed if a better solution is found
+    QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
 
 } // BlackMisc
 

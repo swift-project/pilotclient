@@ -48,6 +48,15 @@ namespace BlackMisc
             CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Default unit
              * \return
              */
@@ -177,6 +186,15 @@ namespace BlackMisc
             CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Default unit
              * \return
              */
@@ -285,6 +303,15 @@ namespace BlackMisc
             CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Default unit
              * \return
              */
@@ -379,6 +406,15 @@ namespace BlackMisc
              * Default constructor, required for Qt Metasystem
              */
             CMassUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
             /*!
              * \brief Default unit
@@ -488,6 +524,15 @@ namespace BlackMisc
              * Default constructor, required for Qt Metasystem
              */
             CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
             /*!
              * \brief Default unit
@@ -626,6 +671,15 @@ namespace BlackMisc
             CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Default unit
              * \return
              */
@@ -711,6 +765,15 @@ namespace BlackMisc
              * Default constructor, required for Qt Metasystem
              */
             CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
             /*!
              * Default unit
@@ -831,6 +894,15 @@ namespace BlackMisc
              * Default constructor, required for Qt Metasystem
              */
             CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
             /*!
              * Default unit
@@ -979,6 +1051,15 @@ namespace BlackMisc
              * Default constructor, required for Qt Metasystem
              */
             CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
             /*!
              * Default unit

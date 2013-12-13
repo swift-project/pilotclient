@@ -54,6 +54,15 @@ namespace BlackMisc
              */
             explicit CMatrix3x1(double fillValue) : CMatrixBase(fillValue) {}
 
+            /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
 
             /*!
              * \brief Convert to vector

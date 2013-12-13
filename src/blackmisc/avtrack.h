@@ -73,6 +73,15 @@ namespace BlackMisc
             CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : BlackMisc::PhysicalQuantities::CAngle(track), m_north(north) {}
 
             /*!
+             * \brief As QVariant
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Equal operator ==
              * \param other
              * \return

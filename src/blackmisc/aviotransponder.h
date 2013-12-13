@@ -149,6 +149,15 @@ namespace BlackMisc
             }
 
             /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Transponder mode as string
              * \return
              * \throws std::range_erros

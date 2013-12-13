@@ -145,6 +145,15 @@ namespace BlackMisc
             }
 
             /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Switch unit of latitude / longitude
              * \param unit
              * \return

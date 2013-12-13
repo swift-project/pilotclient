@@ -30,6 +30,15 @@ namespace BlackMisc
             CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit) {}
 
             /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Virtual destructor
              */
             virtual ~CFrequency() {}

@@ -38,6 +38,15 @@ namespace BlackMisc
             explicit CCoordinateEcef(const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()) {}
 
             /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief x
              * \return
              */

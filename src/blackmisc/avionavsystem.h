@@ -112,6 +112,14 @@ namespace BlackMisc
                 this->validate(true);
             }
 
+            /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
             /*!
              * \brief Set active frequency

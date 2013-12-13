@@ -49,6 +49,15 @@ namespace BlackMisc
                 this->m_matrix(0, 1) = c2;
                 this->m_matrix(0, 2) = c3;
             }
+
+            /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
         };
 
     } // namespace

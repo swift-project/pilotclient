@@ -73,6 +73,15 @@ namespace BlackMisc
             CHeading(CAngle heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
 
             /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Equal operator ==
              * \param other
              * @return

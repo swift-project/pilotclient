@@ -54,6 +54,14 @@ namespace BlackMisc
                     degrees + minutes / 100.0,
                     CAngleUnit::sexagesimalDegMin()) {}
 
+            /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
             /*!
              * \brief Virtual destructor

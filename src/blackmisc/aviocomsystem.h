@@ -79,6 +79,15 @@ namespace BlackMisc
             CComSystem(const CComSystem &other) : CModulator(other) {}
 
             /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Constructor
              * \param name
              * \param activeFrequency

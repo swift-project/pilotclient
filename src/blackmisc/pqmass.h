@@ -31,6 +31,15 @@ namespace BlackMisc
             CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
 
             /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Virtual destructor
              */
             virtual ~CMass() {}

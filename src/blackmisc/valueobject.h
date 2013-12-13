@@ -132,6 +132,18 @@ namespace BlackMisc
          */
         std::string toStdString(bool i18n = false) const;
 
+        /*!
+         * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+         * \return
+         */
+        virtual QVariant toQVariant() const = 0;
+
+        /*!
+         * \brief The stored object as CValueObject
+         * \param qv
+         * \return
+         */
+        static const CValueObject *fromQVariant(const QVariant &qv);
 
     protected:
         /*!

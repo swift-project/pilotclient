@@ -33,6 +33,15 @@ namespace BlackMisc
             CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit) {}
 
             /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
              * \brief Virtual destructor
              */
             virtual ~CPressure() {}
