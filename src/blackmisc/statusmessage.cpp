@@ -8,7 +8,7 @@ namespace BlackMisc
     /*
      * Constructor
      */
-    CStatusMessage::CStatusMessage(StatusType type, StatusSeverity severity, const QString message)
+    CStatusMessage::CStatusMessage(StatusType type, StatusSeverity severity, const QString &message)
         : m_type(type), m_severity(severity), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
     {
         // void

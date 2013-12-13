@@ -8,6 +8,8 @@
 #include "pqallquantities.h"
 #include "mathallclasses.h"
 #include "geoallclasses.h"
+#include "networkallclasses.h"
+#include "settingsallclasses.h"
 #include "valuemap.h"
 
 /*
@@ -39,6 +41,14 @@ void BlackMisc::Aviation::registerMetadata()
     CTransponder::registerMetadata();
     CHeading::registerMetadata();
     CTrack::registerMetadata();
+    CCallsign::registerMetadata();
+    CAtcStation::registerMetadata();
+    CInformationMessage::registerMetadata();
+    CAtcStationList::registerMetadata();
+    CAircraft::registerMetadata();
+    CAircraftList::registerMetadata();
+    CAircraftSituation::registerMetadata();
+    CAircraftIcao::registerMetadata();
 }
 
 /*
@@ -66,6 +76,26 @@ void BlackMisc::Geo::registerMetadata()
 }
 
 /*
+ * Metadata for Network
+ */
+void BlackMisc::Network::registerMetadata()
+{
+    CUser::registerMetadata();
+    CServer::registerMetadata();
+    CServerList::registerMetadata();
+    CTextMessage::registerMetadata();
+    CTextMessageList::registerMetadata();
+}
+
+/*
+ * Metadata for Settings
+ */
+void BlackMisc::Settings::registerMetadata()
+{
+    CSettingsNetwork::registerMetadata();
+}
+
+/*
  * Metadata for Blackmisc
  */
 void BlackMisc::registerMetadata()
@@ -73,10 +103,14 @@ void BlackMisc::registerMetadata()
     // !! make sure the first id is correctly returned by
     // !! firstBlackMetaType
     CValueMap::registerMetadata();
+
+    // sub namespaces
     PhysicalQuantities::registerMetadata();
     Aviation::registerMetadata();
     Math::registerMetadata();
     Geo::registerMetadata();
+    Network::registerMetadata();
+    Settings::registerMetadata();
 }
 
 /*

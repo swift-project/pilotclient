@@ -1,0 +1,64 @@
+/* Copyright (C) 2013 VATSIM Community / authors
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/*!
+    \file
+*/
+
+#ifndef BLACKMISC_SERVERLIST_H
+#define BLACKMISC_SERVERLIST_H
+
+#include "nwserver.h"
+#include "collection.h"
+#include "sequence.h"
+#include <QObject>
+#include <QString>
+#include <QList>
+
+namespace BlackMisc
+{
+    namespace Network
+    {
+        /*!
+         * Value object encapsulating a list of servers.
+         */
+        class CServerList : public CSequence<CServer>
+        {
+        public:
+            /*!
+             * \brief Empty constructor.
+             */
+            CServerList();
+
+            /*!
+             * \brief Construct from a base class object.
+             * \param other
+             */
+            CServerList(const CSequence<CServer> &other);
+
+            /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
+             * \brief Register metadata
+             */
+            static void registerMetadata();
+
+        };
+
+    } //namespace
+} // namespace
+
+Q_DECLARE_METATYPE(BlackMisc::Network::CServerList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Network::CServer>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Network::CServer>)
+
+#endif //guard

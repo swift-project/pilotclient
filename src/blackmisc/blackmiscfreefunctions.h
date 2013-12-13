@@ -73,6 +73,22 @@ namespace BlackMisc
 
     } // Geo
 
+    namespace Network
+    {
+        /*!
+         * \brief Register metadata for network (server, user)
+         */
+        void registerMetadata();
+    }
+
+    namespace Settings
+    {
+        /*!
+         * \brief Register metadata for settings
+         */
+        void registerMetadata();
+    }
+
     /*!
      * \brief Register all relevant metadata in BlackMisc
      */

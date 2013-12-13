@@ -13,5 +13,11 @@
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/aviotransponder.h"
 #include "blackmisc/avtrack.h"
+#include "blackmisc/avcallsign.h"
+#include "blackmisc/avatcstation.h"
+#include "blackmisc/avatcstationlist.h"
+#include "blackmisc/avaircraft.h"
+#include "blackmisc/avaircraftlist.h"
+#include "blackmisc/avinformationmessage.h"
 
 #endif // guard

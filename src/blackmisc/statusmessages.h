@@ -90,7 +90,7 @@ namespace BlackMisc
          * \brief As QVariant
          * \return
          */
-        virtual QVariant asQVariant() const
+        virtual QVariant toQVariant() const
         {
             return QVariant::fromValue(*this);
         }
