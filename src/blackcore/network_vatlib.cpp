@@ -554,8 +554,8 @@ namespace BlackCore
         case Cvatlib_Network::error_SoftwareNotAuthorized:  qCritical() << "This client software has not been authorized for use on this network"; goto terminate;
 
         case Cvatlib_Network::error_Ok:                     break;
-        case Cvatlib_Network::error_Syntax:                 qWarning() << "Malformed packet: Syntax error: %s" << cbvar_cast(cbvar)->fromFSD(data); break;
-        case Cvatlib_Network::error_SourceInvalid:          qDebug() << "Server: source invalid (" << cbvar_cast(cbvar)->fromFSD(data); break;
+        case Cvatlib_Network::error_Syntax:                 qWarning() << "Malformed packet: Syntax error: " << cbvar_cast(cbvar)->fromFSD(data); break;
+        case Cvatlib_Network::error_SourceInvalid:          qDebug() << "Server: source invalid " << cbvar_cast(cbvar)->fromFSD(data); break;
         case Cvatlib_Network::error_CallsignNotExists:      qDebug() << "Shim lib: " << cbvar_cast(cbvar)->fromFSD(msg) << " (" << cbvar_cast(cbvar)->fromFSD(data) << ")"; break;
         case Cvatlib_Network::error_NoFP:                   qDebug() << "Server: no flight plan"; break;
         case Cvatlib_Network::error_NoWeather:              qDebug() << "Server: requested weather profile does not exist"; break;
