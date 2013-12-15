@@ -12,9 +12,9 @@ static_assert(! std::is_abstract<BlackCore::NetworkVatlib>::value, "Must impleme
 static_assert(! std::is_abstract<BlackCore::NetworkDummy>::value, "Must implement all pure virtuals");
 
 //TODO just placeholders to allow this to compile
-#define CLIENT_NAME_VERSION "BlackBox 0.1"
+#define CLIENT_NAME_VERSION "BlackBox 0.3"
 #define CLIENT_VERSION_MAJOR 0
-#define CLIENT_VERSION_MINOR 1
+#define CLIENT_VERSION_MINOR 3
 #define CLIENT_SIMULATOR_NAME "None"
 #define CLIENT_PUBLIC_ID 0
 #define CLIENT_PRIVATE_KEY ""
