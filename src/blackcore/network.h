@@ -36,6 +36,13 @@ namespace BlackCore
     {
         Q_OBJECT
 
+    protected:
+        /*!
+         * \brief Constructor
+         * \param parent
+         */
+        INetwork(QObject *parent = nullptr) : QObject(parent) {}
+
     public:
         virtual ~INetwork() {}
 

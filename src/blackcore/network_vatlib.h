@@ -26,7 +26,7 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-        NetworkVatlib();
+        NetworkVatlib(QObject *parent = nullptr);
         virtual ~NetworkVatlib();
 
     protected: // QObject overrides
