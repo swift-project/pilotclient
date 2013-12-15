@@ -62,7 +62,6 @@ void BlackMisc::Math::registerMetadata()
     CVector3D::registerMetadata();
 }
 
-
 /*
  * Metadata for Geo
  */
@@ -326,6 +325,75 @@ QVariant BlackMisc::complexQtTypeFromDbusArgument(const QDBusArgument &argument,
     }
     return QVariant(); // suppress compiler warning
 }
+
+#ifdef Q_CC_MSVC
+#include <crtdbg.h>
+
+// surpress some GCC warnings, if someone finds
+// a better solution for this, feel free
+#if defined(__GCC__) || defined(__MINGW32__) || defined(__MINGW64__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
+
+/*
+ * Heap size of an object
+ */
+size_t BlackMisc::heapSizeOf(const QMetaType &metaType)
+{
+
+    metaType.destroy(metaType.create()); // ignore one-off allocations of a class being instantiated for the first time
+    _CrtMemState oldState, newState, diff;
+    oldState.lTotalCount = newState.lTotalCount = diff.lTotalCount = 0; // avoid compiler warning
+    diff.lSizes[_NORMAL_BLOCK] = 0;
+    _CrtMemCheckpoint(&oldState);
+    void *p = metaType.create();
+    _CrtMemCheckpoint(&newState);
+    metaType.destroy(p);
+    _CrtMemDifference(&diff, &oldState, &newState);
+    return diff.lSizes[_NORMAL_BLOCK];
+}
+
+/*
+ * Heap size of an object
+ */
+size_t BlackMisc::heapSizeOf(const QMetaObject &metaObject)
+{
+    delete metaObject.newInstance(); //ignore one-off allocations of a class being instantiated for the first time
+    _CrtMemState oldState, newState, diff;
+    oldState.lTotalCount = newState.lTotalCount = diff.lTotalCount = 0; // avoid compiler warning
+    diff.lSizes[_NORMAL_BLOCK] = 0;
+    _CrtMemCheckpoint(&oldState);
+    QObject *obj = metaObject.newInstance();
+    _CrtMemCheckpoint(&newState);
+    delete obj;
+    _CrtMemDifference(&diff, &oldState, &newState);
+    return diff.lSizes[_NORMAL_BLOCK];
+}
+#if defined(__GCC__) || defined(__MINGW32__) || defined(__MINGW64__)
+#pragma GCC diagnostic pop
+#endif
+
+#else //!Q_OS_WIN32
+/*
+ * Heap size of an object
+ */
+size_t BlackMisc::heapSizeOf(const QMetaType &)
+{
+    qDebug() << "heapSizeOf not supported on this OS";
+    return 0;
+}
+/*
+ * Heap size of an object
+ */
+size_t BlackMisc::heapSizeOf(const QMetaObject &)
+{
+    qDebug() << "heapSizeOf not supported on this OS";
+    return 0;
+}
+#endif //!Q_OS_WIN32
 
 /*
  * Dump all user types

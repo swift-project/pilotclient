@@ -169,6 +169,20 @@ namespace BlackMisc
      */
     uint calculateHash(const QList<uint> &values, const char *className);
 
+    /*!
+     * \brief Real heap size of an object
+     * \param type
+     * \return
+     */
+    size_t heapSizeOf(const QMetaType &type);
+
+    /*!
+     * \brief Real heap size of an object
+     * \param objectType
+     * \return
+     */
+    size_t heapSizeOf(const QMetaObject &objectType);
+
 } // BlackMisc
 
 #endif // guard
