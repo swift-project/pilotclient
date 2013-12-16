@@ -6,6 +6,7 @@ include (externals.pri)
 
 WITH_BLACKMISC = ON
 WITH_BLACKCORE = ON
+WITH_BLACKGUI = ON
 WITH_SAMPLES = ON
 
 #WITH_DRIVER_FSX = ON
@@ -23,6 +24,8 @@ equals(WITH_BLACKCORE, ON) {
     SUBDIRS += src/blackcore
 }
 
+equals(WITH_BLACKGUI, ON) {
+    SUBDIRS += src/blackgui
 }
 
 equals(WITH_DRIVER_FSX, ON) {
