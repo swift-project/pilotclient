@@ -22,4 +22,4 @@ Citations
 
 Doxygen Documentation
 ---------------------
-Doxygen documentation is generated
+Doxygen documentation is generated automatically
