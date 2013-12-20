@@ -206,6 +206,13 @@ namespace BlackMisc
             }
 
             /*!
+             * \brief Set transponder code
+             * \param transponderCode
+             */
+            void setTransponderCode(const QString &transponderCode);
+
+
+            /*!
              * \brief Set transponder mode
              * \param mode
              */
@@ -248,7 +255,7 @@ namespace BlackMisc
             {
                 return
                     this->m_transponderCode == other.m_transponderCode &&
-                    this->m_transponderMode == other.m_transponderMode &&
+                    this->getTransponderMode() == other.getTransponderMode() &&
                     this->CAvionicsBase::operator ==(other);
             }
 
@@ -336,6 +343,20 @@ namespace BlackMisc
              * \return
              */
             virtual uint getValueHash() const;
+
+            /*!
+             * \brief Is valid transponder code?
+             * \param transponderCode
+             * \return
+             */
+            static bool isValidTransponderCode(const QString &transponderCode);
+
+            /*!
+             * \brief Is valid transponder code?
+             * \param transponderCode
+             * \return
+             */
+            static bool isValidTransponderCode(qint32 transponderMode);
 
             /*!
              * \brief Register metadata of unit and quantity

@@ -17,18 +17,7 @@ namespace BlackMisc
         bool CTransponder::validValues() const
         {
             if (this->isDefaultValue()) return true; // special case
-            if (this->m_transponderCode < 0 || this->m_transponderCode > 7777) return false;
-
-            // check each digit
-            qint32 tc = this->m_transponderCode;
-            qint32 d;
-            while (tc > 7)
-            {
-                d = (tc % 10);
-                if (d > 7) return false;
-                tc /= 10;
-            }
-            return true;
+            return CTransponder::isValidTransponderCode(this->m_transponderCode);
         }
 
         /*
@@ -60,7 +49,7 @@ namespace BlackMisc
         QString CTransponder::getModeAsString() const
         {
             QString m;
-            switch (this->m_transponderMode)
+            switch (this->getTransponderMode())
             {
             case StateIdent:
                 m = "Ident";
@@ -113,6 +102,45 @@ namespace BlackMisc
             QString s = this->getTransponderCodeFormatted();
             s.append(' ').append(this->getModeAsString());
             return s;
+        }
+
+        /*
+         * Transponder by string
+         */
+        void CTransponder::setTransponderCode(const QString &transponderCode)
+        {
+            if (CTransponder::isValidTransponderCode(transponderCode))
+            {
+                bool ok;
+                this->setTransponderCode(transponderCode.toInt(&ok));
+            }
+            else
+            {
+                Q_ASSERT_X(false, "CTransponder::setTransponderCode", "illegal transponder value");
+            }
+        }
+
+        /*
+         * Valid code?
+         */
+        bool CTransponder::isValidTransponderCode(const QString &transponderCode)
+        {
+            if (transponderCode.isEmpty() || transponderCode.length() > 4) return false;
+            bool number;
+            qint32 tc = transponderCode.toInt(&number);
+            if (!number) return false;
+            if (tc < 0 || tc > 7777) return false;
+            QRegExp rx("[0-7]{1,4}");
+            return rx.exactMatch(transponderCode);
+        }
+
+        /*
+         * Valid code?
+         */
+        bool CTransponder::isValidTransponderCode(qint32 transponderCode)
+        {
+            if (transponderCode < 0 || transponderCode > 7777) return false;
+            return CTransponder::isValidTransponderCode(QString::number(transponderCode));
         }
 
         /*
