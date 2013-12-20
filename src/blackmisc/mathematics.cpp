@@ -63,6 +63,15 @@ namespace BlackMisc
         }
 
         /*
+         * Equal, considering equal
+         */
+        bool CMath::epsilonEqual(double v1, double v2, double epsilon)
+        {
+            if (v1 == v2) return true;
+            return qAbs(v1-v2) <= epsilon;
+        }
+
+        /*
          * To radians
          */
         double CMath::deg2rad(double degree)

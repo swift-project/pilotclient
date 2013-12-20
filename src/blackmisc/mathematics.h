@@ -72,6 +72,15 @@ namespace BlackMisc
             static double roundEpsilon(double value, double epsilon);
 
             /*!
+             * \brief Epsilon safe equal
+             * \param v1
+             * \param v2
+             * \param epsilon
+             * \return
+             */
+            static bool epsilonEqual(double v1, double v2, double epsilon = 1E-06);
+
+            /*!
              * \brief Nearest integer not greater in magnitude than value, correcting for epsilon
              * \param value
              * \param epsilon
