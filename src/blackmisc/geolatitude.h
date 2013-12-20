@@ -18,11 +18,15 @@ namespace BlackMisc
         protected:
             /*!
              * \brief Specific string representation
+             * \param i18n
+             * \return
              */
-            virtual QString convertToQString() const
+            virtual QString convertToQString(bool i18n = false) const
             {
-                QString s = "latitude ";
-                return s.append(CEarthAngle::convertToQString());
+                QString s(CEarthAngle::convertToQString(i18n));
+                if (!this->isZeroEpsilonConsidered())
+                    s.append(this->isNegativeWithEpsilonConsidered() ? " S" : " N");
+                return s;
             }
 
         public:
