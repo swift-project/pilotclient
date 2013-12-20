@@ -8,6 +8,9 @@
 
 #include <QDBusMetaType>
 #include "blackmisc/aviobase.h"
+#include "blackmisc/mathematics.h"
+
+using namespace BlackMisc::Math;
 
 namespace BlackMisc
 {
@@ -86,6 +89,7 @@ namespace BlackMisc
              */
             void setFrequencyActiveMHz(double frequencyMHz)
             {
+                frequencyMHz = CMath::round(frequencyMHz, 3);
                 this->m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
 
@@ -95,6 +99,7 @@ namespace BlackMisc
              */
             void setFrequencyStandbyMHz(double frequencyMHz)
             {
+                frequencyMHz = CMath::round(frequencyMHz, 3);
                 this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
 
