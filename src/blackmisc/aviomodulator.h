@@ -255,7 +255,7 @@ namespace BlackMisc
              */
             BlackMisc::PhysicalQuantities::CFrequency getFrequencyStandby() const
             {
-                return this->m_frequencyActive;
+                return this->m_frequencyStandby;
             }
 
             /*!
