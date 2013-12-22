@@ -78,6 +78,20 @@ namespace BlackMisc
     void registerMetadata();
 
     /*!
+     * Deals with the issue that the BlackMisc metatype does not always start with
+     * the same id, e.g. with GUI enabled:
+     * type: 1024 name: QPaintBufferCacheEntry
+     * type: 1025 .... some classes I cannot foresee
+     * type: 1027 name: BlackMisc::CValueMap
+     *
+     * This is important when marshalling Variants via DBus among different
+     * binaries, as the offset has to be considered
+     *
+     * \return
+     */
+    int firstBlackMetaType();
+
+    /*!
      * \brief Init resources
      */
     void initResources();
@@ -124,6 +138,11 @@ namespace BlackMisc
      */
     // TODO: To be removed if a better solution is found
     QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
+
+    /*!
+     * \brief displayAllUserTypes
+     */
+    void displayAllUserMetatypesTypes();
 
     /*!
      * \brief Add several hash values

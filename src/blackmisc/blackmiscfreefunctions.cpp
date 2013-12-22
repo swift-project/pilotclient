@@ -8,6 +8,7 @@
 #include "pqallquantities.h"
 #include "mathallclasses.h"
 #include "geoallclasses.h"
+#include "valuemap.h"
 
 /*
  * Metadata for PQs
@@ -68,10 +69,22 @@ void BlackMisc::Geo::registerMetadata()
  */
 void BlackMisc::registerMetadata()
 {
+    // !! make sure the first id is correctly returned by
+    // !! firstBlackMetaType
+    CValueMap::registerMetadata();
     PhysicalQuantities::registerMetadata();
     Aviation::registerMetadata();
     Math::registerMetadata();
     Geo::registerMetadata();
+}
+
+/*
+ * First of our ids
+ */
+int BlackMisc::firstBlackMetaType()
+{
+    // must be the first registered above
+    return qMetaTypeId<CValueMap>();
 }
 
 /*
@@ -279,3 +292,15 @@ QVariant BlackMisc::complexQtTypeFromDbusArgument(const QDBusArgument &argument,
     return QVariant(); // suppress compiler warning
 }
 
+/*
+ * Dump all user types
+ */
+void BlackMisc::displayAllUserMetatypesTypes()
+{
+    for (int mt = QMetaType::User; mt < QMetaType::User + 1000; mt++)
+    {
+        if (!QMetaType::isRegistered(mt)) continue;
+        QMetaType metaType(mt);
+        qDebug() << "type:" << mt << "name:" << QMetaType::typeName(mt) << QMetaType::sizeOf(mt) << BlackMisc::heapSizeOf(metaType);
+    }
+}

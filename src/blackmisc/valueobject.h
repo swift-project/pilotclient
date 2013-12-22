@@ -109,6 +109,38 @@ namespace BlackMisc
          */
         friend QDBusArgument &operator<<(QDBusArgument &argument, const CValueObject &uc);
 
+        /*!
+         * \brief Operator == with value map
+         * \param valueMap
+         * \param uc
+         * \return
+         */
+        friend bool operator==(const CValueMap &valueMap, const CValueObject &uc);
+
+        /*!
+         * \brief Operator != with value map
+         * \param valueMap
+         * \param uc
+         * \return
+         */
+        friend bool operator!=(const CValueMap &valueMap, const CValueObject &uc);
+
+        /*!
+         * \brief Operator == with value map
+         * \param uc
+         * \param valueMap
+         * \return
+         */
+        friend bool operator==(const CValueObject &uc, const CValueMap &valueMap);
+
+        /*!
+         * \brief Operator != with value map
+         * \param uc
+         * \param valueMap
+         * \return
+         */
+        friend bool operator!=(const CValueObject &uc, const CValueMap &valueMap);
+
     public:
         /*!
          * \brief Virtual destructor
@@ -135,6 +167,13 @@ namespace BlackMisc
         std::string toStdString(bool i18n = false) const;
 
         /*!
+         * \brief Update by variant map
+         * \param valueMap
+         * \return
+         */
+        int apply(const BlackMisc::CValueMap &valueMap);
+
+        /*!
          * \brief Value hash, allows comparisons between QVariants
          * \return
          */
@@ -154,6 +193,32 @@ namespace BlackMisc
          * \return
          */
         virtual QVariant toQVariant() const = 0;
+
+        /*!
+         * \brief Set property by index
+         * \remarks Intentionally not abstract, avoiding all classes need to implement this method
+         * \param index
+         * \return
+         */
+        virtual void setPropertyByIndex(const QVariant &variant, int index);
+
+        /*!
+         * \brief Property by index
+         * \remarks Intentionally not abstract, avoiding all classes need to implement this method
+         * \param index
+         * \return
+         */
+        virtual QVariant propertyByIndex(int index) const;
+
+        /*!
+         * \brief Property by index as String
+         * \remarks Intentionally not abstract, avoiding all classes need to implement this method
+
+         * \param index
+         * \param i18n
+         * \return
+         */
+        virtual QString propertyByIndexAsString(int index, bool i18n = false) const;
 
         /*!
          * \brief The stored object as CValueObject
