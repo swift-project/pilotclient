@@ -144,6 +144,18 @@ namespace BlackMisc
             argument >> this->m_k;
         }
 
+        /*!
+         * \brief Stream to DBus
+         * \param argument
+         */
+        template <class ImplVector> uint CVector3DBase<ImplVector>::getValueHash() const
+        {
+            QList<uint> hashs;
+            hashs << qHash(static_cast<long>(this->m_i));
+            hashs << qHash(static_cast<long>(this->m_j));
+            hashs << qHash(static_cast<long>(this->m_k));
+            return BlackMisc::calculateHash(hashs, "CVector3DBase");
+        }
 
         /*
          * Register metadata

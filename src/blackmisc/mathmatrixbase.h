@@ -90,6 +90,12 @@ namespace BlackMisc
             QList<double> toList() const;
 
             /*!
+             * \brief Value hash
+             * \return
+             */
+            virtual uint getValueHash() const;
+
+            /*!
              * \brief List of values
              * \return
              */

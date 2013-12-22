@@ -88,6 +88,15 @@ namespace BlackMisc
             }
 
             /*!
+             * \brief Value hash
+             * \return
+             */
+            virtual uint getValueHash() const
+            {
+                return CModulator::getValueHash();
+            }
+
+            /*!
              * \brief Constructor
              * \param name
              * \param activeFrequency

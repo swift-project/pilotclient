@@ -332,6 +332,12 @@ namespace BlackMisc
             }
 
             /*!
+             * \brief Value hash
+             * \return
+             */
+            virtual uint getValueHash() const;
+
+            /*!
              * \brief Register metadata of unit and quantity
              */
             static void registerMetadata();

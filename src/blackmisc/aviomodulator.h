@@ -214,6 +214,12 @@ namespace BlackMisc
              */
             virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
+            /*!
+             * \brief Value hash
+             * \return
+             */
+            virtual uint getValueHash() const;
+
         public:
             /*!
              * \brief Virtual destructor

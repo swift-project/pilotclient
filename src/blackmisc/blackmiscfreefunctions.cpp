@@ -81,6 +81,98 @@ void BlackMisc::initResources()
 {
     initBlackMiscResources();
 }
+
+/*
+ * Stupid extension bo be able to compare 2 QVariants
+ */
+bool BlackMisc::equalQVariants(const QVariant &v1, const QVariant &v2)
+{
+    // prephase, shortcuts
+    if (v1 == v2) return true; // compares on primitives or on address
+    if (!v1.isValid() || !v2.isValid()) return false;
+    if (v1.type() != v2.type()) return false;
+    if (v1.userType() != v2.userType()) return false;
+
+    // I have same types now
+    const CValueObject *cs1 = CValueObject::fromQVariant(v1);
+    const CValueObject *cs2 = CValueObject::fromQVariant(v2);
+    if (cs1 && cs2)
+    {
+        uint h1 = cs1->getValueHash();
+        uint h2 = cs2->getValueHash();
+        return h1 == h2;
+    }
+    return  false;
+}
+
+/*
+ * Compare values
+ */
+int BlackMisc:: compareQVariants(const QVariant &v1, const QVariant &v2)
+{
+    if (v1 == v2) return 0; // compares on primitives or on address
+
+    if (!v1.isValid() || !v2.isValid()) qFatal("Invalid variants");
+    if (v1.type() != v2.type()) qFatal("Mismatching types");
+    if (v1.userType() != v2.userType()) qFatal("Mismatching user types");
+
+    switch (v1.type())
+    {
+    case QMetaType::QString:
+        {
+            QString s1 = v1.value<QString>();
+            QString s2 = v2.value<QString>();
+            return s1.compare(s2);
+        }
+    case QMetaType::QDateTime:
+        {
+            QDateTime dt1 = v1.value<QDateTime>();
+            QDateTime dt2 = v2.value<QDateTime>();
+            if (dt1 == dt2) return 0;
+            return dt1 < dt2 ? -1 : 1;
+        }
+    case QMetaType::QDate:
+        {
+            QDate d1 = v1.value<QDate>();
+            QDate d2 = v2.value<QDate>();
+            if (d1 == d2) return 0;
+            return d1 < d2 ? -1 : 1;
+        }
+    case QMetaType::QTime:
+        {
+            QTime t1 = v1.value<QTime>();
+            QTime t2 = v2.value<QTime>();
+            if (t1 == t2) return 0;
+            return t1 < t2 ? -1 : 1;
+        }
+    default:
+        break;
+    }
+
+    // BlackObject
+    if (v1.type() == QVariant::UserType)
+    {
+        const CValueObject *cs1 = CValueObject::fromQVariant(v1);
+        const CValueObject *cs2 = CValueObject::fromQVariant(v2);
+        if (cs1 && cs2)
+        {
+            return cs1->compare(v2); // Note, that I have to compare against QVariant
+        }
+    }
+
+    // all kind of numeric values
+    if (v1.canConvert<double>())
+    {
+        double d1 = v1.value<double>();
+        double d2 = v2.value<double>();
+        if (d1 == d2) return 0;
+        return d1 < d2 ? -1 : 1;
+    }
+
+    qFatal("Unknown type for compare");
+    return -1;
+}
+
 /*
  * To string
  */
@@ -96,6 +188,27 @@ QString BlackMisc::qVariantToString(const QVariant &qv, bool i18n)
     {
         return "unknown";
     }
+}
+
+/*
+ * Add hash values
+ */
+uint BlackMisc::calculateHash(const QList<uint> &values, const char *className)
+{
+    // http://stackoverflow.com/questions/113511/hash-code-implementation/113600#113600
+    if (values.isEmpty()) return 0;
+    uint hash = values.first();
+    for (int i = 1; i < values.size(); i++)
+    {
+        hash = 37 * hash + values.at(i);
+    }
+
+    // same values, but different class?
+    if (className)
+    {
+        hash = 37 * hash + qHash(QString(className));
+    }
+    return hash;
 }
 
 /*

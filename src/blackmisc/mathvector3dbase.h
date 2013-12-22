@@ -324,6 +324,12 @@ namespace BlackMisc
             CMatrix3x1 toMatrix3x1() const;
 
             /*!
+             * \brief Value hash
+             * \return
+             */
+            virtual uint getValueHash() const;
+
+            /*!
              * \brief length / magnitude
              * \return
              */

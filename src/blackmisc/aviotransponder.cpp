@@ -4,6 +4,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackmisc/aviotransponder.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
@@ -134,6 +135,18 @@ namespace BlackMisc
             argument >> this->m_transponderCode;
             argument >> tm;
             this->m_transponderMode = static_cast<TransponderMode>(tm);
+        }
+
+        /*
+         * Value hash
+         */
+        uint CTransponder::getValueHash() const
+        {
+            QList<uint> hashs;
+            hashs << qHash(this->m_name);
+            hashs << qHash(this->m_transponderCode);
+            hashs << qHash(this->m_transponderMode);
+            return BlackMisc::calculateHash(hashs, "CTransponder");
         }
 
         /*

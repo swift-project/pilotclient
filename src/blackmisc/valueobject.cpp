@@ -61,6 +61,16 @@ namespace BlackMisc
     }
 
     /*
+     * Compare
+     */
+    int CValueObject::compare(const QVariant & /** qv **/) const
+    {
+        // not all classes have to implement this
+        qFatal("Property by index as string not implemented");
+        return -1; // avoid compiler warning
+    }
+
+    /*
      * from DBus
      */
     const QDBusArgument &operator>>(const QDBusArgument &argument, CValueObject &uc)

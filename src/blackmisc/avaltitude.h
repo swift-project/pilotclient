@@ -123,6 +123,17 @@ namespace BlackMisc
             }
 
             /*!
+             * \copydoc BlackObject::compare
+             */
+            virtual int compare(const QVariant &qv) const;
+
+            /*!
+             * \todo this is a hack, to avoid hiding inherited names in CPhysicalQuantity
+             * (see Effective C++ item 33) CPhysicalQuantity::compare is the real culprit
+             */
+            int compare(const CLength &other) const { return static_cast<const CLength *>(this)->compare(other); }
+
+            /*!
              * \brief Register metadata
              */
             static void registerMetadata();

@@ -185,6 +185,11 @@ namespace BlackMisc
             }
 
             /*!
+             * Compare
+             */
+            int compare(const QVariant &qv) const;
+
+            /*!
              * Register metadata
              */
             static void registerMetadata();

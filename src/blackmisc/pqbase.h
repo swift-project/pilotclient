@@ -16,6 +16,7 @@
 #include <QDebug>
 #include <QSharedData>
 #include <QSharedDataPointer>
+#include <QHash>
 
 namespace BlackMisc
 {
@@ -301,6 +302,14 @@ namespace BlackMisc
                 return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_symbol.toStdString().c_str()) : this->m_symbol;
             }
 
+            /*!
+             * \brief Value hash
+             * \return
+             */
+            virtual uint getValueHash() const
+            {
+                return qHash(this->getName());
+            }
 
             /*!
              * \brief Rounded value

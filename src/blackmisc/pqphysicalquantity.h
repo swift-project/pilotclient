@@ -348,10 +348,25 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
             /*!
+             * \brief Value hash
+             * \return
+             */
+            virtual uint getValueHash() const;
+
+            /*!
              * \brief Register metadata of unit and quantity
              */
             static void registerMetadata();
 
+            /*!
+             * \copydoc BlackObject::compare
+             */
+            virtual int compare(const QVariant &qv) const;
+
+            /*!
+             * \copydoc BlackObject::compare
+             */
+            virtual int compare(const PQ &other) const;
         };
 
     } // namespace

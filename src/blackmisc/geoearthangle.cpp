@@ -71,6 +71,18 @@ namespace BlackMisc
             return LATorLON(a);
         }
 
+        /*
+         * Compare
+         */
+        template <class LATorLON> int CEarthAngle<LATorLON>::compare(const QVariant &qv) const
+        {
+            Q_ASSERT(qv.canConvert<LATorLON>() || qv.canConvert<CAngle>());
+            Q_ASSERT(qv.isValid() && !qv.isNull());
+            if (qv.canConvert<LATorLON>())
+                return this->toAngle().compare(qv.value<LATorLON>().toAngle());
+            else
+                return this->toAngle().compare(qv.value<CAngle>());
+        }
 
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html

@@ -7,6 +7,7 @@
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/avioadfsystem.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 
 using BlackMisc::PhysicalQuantities::CFrequency;
 using BlackMisc::PhysicalQuantities::CFrequencyUnit;
@@ -74,6 +75,18 @@ namespace BlackMisc
             argument >> this->m_frequencyActive;
             argument >> this->m_frequencyStandby;
             argument >> this->m_digits;
+        }
+
+        /*
+         * Value hash
+         */
+        template <class AVIO> uint CModulator<AVIO>::getValueHash() const
+        {
+            QList<uint> hashs;
+            hashs << this->m_frequencyActive.getValueHash();
+            hashs << this->m_frequencyStandby.getValueHash();
+            hashs << qHash(this->m_digits);
+            return BlackMisc::calculateHash(hashs, "CModulator");
         }
 
         // see here for the reason of thess forward instantiations

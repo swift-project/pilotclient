@@ -218,6 +218,11 @@ namespace BlackMisc
             bool operator !=(const CCoordinateGeodetic &other) const;
 
             /*!
+             * \brief value Hash
+             */
+            virtual uint getValueHash() const;
+
+            /*!
              * Register metadata
              */
             static void registerMetadata();

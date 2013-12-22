@@ -4,6 +4,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
@@ -65,6 +66,18 @@ namespace BlackMisc
         {
             qRegisterMetaType<CCoordinateGeodetic>();
             qDBusRegisterMetaType<CCoordinateGeodetic>();
+        }
+
+        /*
+         * Hash
+         */
+        uint CCoordinateGeodetic::getValueHash() const
+        {
+            QList<uint> hashs;
+            hashs << this->m_latitude.getValueHash();
+            hashs << this->m_longitude.getValueHash();
+            hashs << this->m_height.getValueHash();
+            return BlackMisc::calculateHash(hashs, "CCoordinateGeodetic");
         }
 
 

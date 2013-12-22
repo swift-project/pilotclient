@@ -59,6 +59,28 @@ namespace BlackMisc
         }
 
         /*
+         * Compare
+         */
+        int CAltitude::compare(const QVariant &qv) const
+        {
+            Q_ASSERT(qv.canConvert<CAltitude>() || qv.canConvert<CLength>());
+            Q_ASSERT(qv.isValid() && !qv.isNull());
+            if (qv.canConvert<CAltitude>())
+            {
+                CAltitude other = qv.value<CAltitude>();
+                if (this->isMeanSeaLevel() && other.isAboveGroundLevel()) return 1;
+                if (this->isAboveGroundLevel() && other.isMeanSeaLevel()) return -1;
+                return this->compare(other);
+            }
+            else if (qv.canConvert<CLength>())
+            {
+                return this->compare(qv.value<CLength>());
+            }
+            qFatal("Invalid comparison");
+            return 0; // just for compiler
+        }
+
+        /*
          * Register metadata
          */
         void CAltitude::registerMetadata()

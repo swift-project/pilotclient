@@ -139,6 +139,23 @@ namespace BlackMisc
         }
 
         /*
+         * Hash
+         */
+        template <class ImplMatrix, int Rows, int Columns> uint CMatrixBase<ImplMatrix, Rows, Columns>::getValueHash() const
+        {
+            const QList<double> l = this->toList();
+            QList<uint> hashs;
+
+            // there is an issue with the signature of QList, so I use
+            // individual values
+            foreach(double v, l)
+            {
+                hashs << qHash(static_cast<long>(v));
+            }
+            return BlackMisc::calculateHash(hashs, "CMatrixBase");
+        }
+
+        /*
          * To DBus
          */
         template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::marshallToDbus(QDBusArgument &argument) const

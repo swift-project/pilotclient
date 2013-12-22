@@ -12,6 +12,8 @@
 
 namespace BlackMisc
 {
+    // forward declaration
+    class CValueMap;
 
     /*!
      * \brief Base class for value objects.
@@ -133,6 +135,21 @@ namespace BlackMisc
         std::string toStdString(bool i18n = false) const;
 
         /*!
+         * \brief Value hash, allows comparisons between QVariants
+         * \return
+         */
+        virtual uint getValueHash() const = 0;
+
+        /*!
+         * Compares with QVariant with this object
+         * and returns an integer less than, equal to, or greater than zero
+         * if this is less than, equal to, or greater than QVariant.
+         * \remarks allows sorting among QVariants, not all classes implement this
+         * \return
+         */
+        virtual int compare(const QVariant &qv) const;
+
+        /*!
          * \brief Virtual method to return QVariant, used with DBUS QVariant lists
          * \return
          */
@@ -214,6 +231,48 @@ namespace BlackMisc
     operator<<(QDBusArgument &argument, const T &uc)
     {
         return argument << static_cast<CValueObject const &>(uc);
+    }
+
+    /*!
+     * Allow comparison with QVariant, e.g.
+     * QVariant == CFrequency ?
+     */
+    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
+    operator==(const QVariant &variant, const T &uc)
+    {
+        if (!variant.canConvert<T>()) return false;
+        T vuc = variant.value<T>();
+        return vuc == uc;
+    }
+
+    /*!
+     * Allow comparison with QVariant, e.g.
+     * QVariant != CFrequency ?
+     */
+    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
+    operator!=(const QVariant &variant, const T &uc)
+    {
+        return !(variant == uc);
+    }
+
+    /*!
+     * Allow comparison with QVariant, e.g.
+     * QVariant == CFrequency ?
+     */
+    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
+    operator==(const T &uc, const QVariant &variant)
+    {
+        return variant == uc;
+    }
+
+    /*!
+     * Allow comparison with QVariant, e.g.
+     * QVariant != CFrequency ?
+     */
+    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
+    operator!=(const T &uc, const QVariant &variant)
+    {
+        return variant != uc;
     }
 
 } // namespace

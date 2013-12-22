@@ -254,6 +254,36 @@ namespace BlackMisc
             return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
         }
 
+        /*
+         * Hash
+         */
+        template <class MU, class PQ> uint CPhysicalQuantity<MU, PQ>::getValueHash() const
+        {
+            QList<uint> hashs;
+            hashs << this->m_unit.getValueHash();
+            hashs << qHash(static_cast<long>(this->m_value));
+            return BlackMisc::calculateHash(hashs, "PQ");
+        }
+
+        /*
+         * Compare
+         */
+        template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::compare(const QVariant &qv) const
+        {
+            Q_ASSERT(qv.canConvert<PQ>());
+            Q_ASSERT(!qv.isNull() && qv.isValid());
+            return this->compare(qv.value<PQ>());
+        }
+
+        /*
+         * Compare
+         */
+        template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::compare(const PQ &other) const
+        {
+            if (other == (*this)) return 0;
+            return ((*this) < other) ? -1 : 1;
+        }
+
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class CPhysicalQuantity<CLengthUnit, CLength>;

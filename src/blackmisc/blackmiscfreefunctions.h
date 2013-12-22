@@ -7,6 +7,7 @@
 #define BLACKMISC_FREEFUNCTIONS_H
 
 #include <QDir> // for Q_INIT_RESOURCE
+#include <QList>
 #include <QVariant>
 #include <QDBusArgument>
 
@@ -82,6 +83,21 @@ namespace BlackMisc
     void initResources();
 
     /*!
+     * \brief Compare 2 QVariants
+     * \param v1
+     * \param v2
+     */
+    bool equalQVariants(const QVariant &v1, const QVariant &v2);
+
+    /*!
+     * \brief Compare QVariants
+     * \param v1
+     * \param v2
+     * \return
+     */
+    int compareQVariants(const QVariant &v1, const QVariant &v2);
+
+    /*!
      * \brief QVariant to string, allows to stringify CValueObject
      * \param qv
      * \param i18n
@@ -108,6 +124,14 @@ namespace BlackMisc
      */
     // TODO: To be removed if a better solution is found
     QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
+
+    /*!
+     * \brief Add several hash values
+     * \param values
+     * \param classTypeId
+     * \return
+     */
+    uint calculateHash(const QList<uint> &values, const char *className);
 
 } // BlackMisc
 
