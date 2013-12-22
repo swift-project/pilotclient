@@ -20,42 +20,39 @@ Client::Client(BlackMisc::IContext &ctx)
     connect(m_net, &INetwork::connectionStatusDisconnected,     this, &Client::connectionStatusDisconnected);
     connect(m_net, &INetwork::connectionStatusError,            this, &Client::connectionStatusError);
     connect(m_net, &INetwork::ipQueryReplyReceived,             this, &Client::ipQueryReplyReceived);
-    connect(m_net, &INetwork::freqQueryReplyReceived,           this, &Client::freqQueryReplyReceived);
+    connect(m_net, &INetwork::frequencyQueryReplyReceived,      this, &Client::freqQueryReplyReceived);
     connect(m_net, &INetwork::serverQueryReplyReceived,         this, &Client::serverQueryReplyReceived);
     connect(m_net, &INetwork::atcQueryReplyReceived,            this, &Client::atcQueryReplyReceived);
     connect(m_net, &INetwork::atisQueryReplyReceived,           this, &Client::atisQueryReplyReceived);
     connect(m_net, &INetwork::nameQueryReplyReceived,           this, &Client::nameQueryReplyReceived);
     connect(m_net, &INetwork::capabilitiesQueryReplyReceived,   this, &Client::capabilitiesQueryReplyReceived);
-    connect(m_net, &INetwork::freqQueryRequestReceived,         this, &Client::freqQueryRequestReceived);
+    connect(m_net, &INetwork::frequencyQueryRequestReceived,    this, &Client::freqQueryRequestReceived);
     connect(m_net, &INetwork::nameQueryRequestReceived,         this, &Client::nameQueryRequestReceived);
     connect(m_net, &INetwork::kicked,                           this, &Client::kicked);
     connect(m_net, &INetwork::metarReceived,                    this, &Client::metarReceived);
     connect(m_net, &INetwork::pilotDisconnected,                this, &Client::pilotDisconnected);
-    connect(m_net, &INetwork::planeInfoReceived,                this, &Client::planeInfoReceived);
-    connect(m_net, &INetwork::planeInfoRequestReceived,         this, &Client::planeInfoRequestReceived);
+    connect(m_net, &INetwork::aircraftInfoReceived,             this, &Client::aircraftInfoReceived);
+    connect(m_net, &INetwork::aircraftInfoRequestReceived,      this, &Client::aircraftInfoRequestReceived);
     connect(m_net, &INetwork::pong,                             this, &Client::pong);
-    connect(m_net, &INetwork::radioTextMessageReceived,         this, &Client::radioTextMessageReceived);
-    connect(m_net, &INetwork::privateTextMessageReceived,       this, &Client::privateTextMessageReceived);
+    connect(m_net, &INetwork::textMessagesReceived,             this, &Client::textMessagesReceived);
 
-    connect(this, &Client::setServerDetails,                    m_net, &INetwork::setServerDetails);
-    connect(this, &Client::setUserCredentials,                  m_net, &INetwork::setUserCredentials);
+    connect(this, &Client::setServer,                           m_net, &INetwork::setServer);
     connect(this, &Client::setCallsign,                         m_net, &INetwork::setCallsign);
     connect(this, &Client::setRealName,                         m_net, &INetwork::setRealName);
     connect(this, &Client::initiateConnection,                  m_net, &INetwork::initiateConnection);
     connect(this, &Client::terminateConnection,                 m_net, &INetwork::terminateConnection);
-    connect(this, &Client::sendPrivateTextMessage,              m_net, &INetwork::sendPrivateTextMessage);
-    connect(this, &Client::sendRadioTextMessage,                m_net, &INetwork::sendRadioTextMessage);
+    connect(this, &Client::sendTextMessages,                    m_net, &INetwork::sendTextMessages);
     connect(this, &Client::sendIpQuery,                         m_net, &INetwork::sendIpQuery);
-    connect(this, &Client::sendFreqQuery,                       m_net, &INetwork::sendFreqQuery);
+    connect(this, &Client::sendFreqQuery,                       m_net, &INetwork::sendFrequencyQuery);
     connect(this, &Client::sendServerQuery,                     m_net, &INetwork::sendServerQuery);
     connect(this, &Client::sendAtcQuery,                        m_net, &INetwork::sendAtcQuery);
     connect(this, &Client::sendAtisQuery,                       m_net, &INetwork::sendAtisQuery);
     connect(this, &Client::sendNameQuery,                       m_net, &INetwork::sendNameQuery);
     connect(this, &Client::sendCapabilitiesQuery,               m_net, &INetwork::sendCapabilitiesQuery);
-    connect(this, &Client::replyToFreqQuery,                    m_net, &INetwork::replyToFreqQuery);
+    connect(this, &Client::replyToFreqQuery,                    m_net, &INetwork::replyToFrequencyQuery);
     connect(this, &Client::replyToNameQuery,                    m_net, &INetwork::replyToNameQuery);
-    connect(this, &Client::requestPlaneInfo,                    m_net, &INetwork::requestPlaneInfo);
-    connect(this, &Client::sendPlaneInfo,                       m_net, &INetwork::sendPlaneInfo);
+    connect(this, &Client::requestPlaneInfo,                    m_net, &INetwork::requestAircraftInfo);
+    connect(this, &Client::sendAircraftInfo,                    m_net, &INetwork::sendAircraftInfo);
     connect(this, &Client::ping,                                m_net, &INetwork::ping);
     connect(this, &Client::requestMetar,                        m_net, &INetwork::requestMetar);
     connect(this, &Client::requestWeatherData,                  m_net, &INetwork::requestWeatherData);
@@ -64,8 +61,7 @@ Client::Client(BlackMisc::IContext &ctx)
     m_commands["help"]              = std::bind(&Client::help, this, _1);
     m_commands["echo"]              = std::bind(&Client::echo, this, _1);
     m_commands["exit"]              = std::bind(&Client::exit, this, _1);
-    m_commands["setserver"]         = std::bind(&Client::setServerDetailsCmd, this, _1);
-    m_commands["setuser"]           = std::bind(&Client::setUserCredentialsCmd, this, _1);
+    m_commands["setserver"]         = std::bind(&Client::setServerCmd, this, _1);
     m_commands["setcallsign"]       = std::bind(&Client::setCallsignCmd, this, _1);
     m_commands["setrealname"]       = std::bind(&Client::setRealNameCmd, this, _1);
     m_commands["initconnect"]       = std::bind(&Client::initiateConnectionCmd, this, _1);
@@ -81,8 +77,8 @@ Client::Client(BlackMisc::IContext &ctx)
     m_commands["caps"]              = std::bind(&Client::sendCapabilitiesQueryCmd, this, _1);
     m_commands["freqreply"]         = std::bind(&Client::replyToFreqQueryCmd, this, _1);
     m_commands["namereply"]         = std::bind(&Client::replyToNameQueryCmd, this, _1);
-    m_commands["planeinfo"]         = std::bind(&Client::requestPlaneInfoCmd, this, _1);
-    m_commands["planeinforeply"]    = std::bind(&Client::sendPlaneInfoCmd, this, _1);
+    m_commands["aircraftinfo"]      = std::bind(&Client::requestAircraftInfoCmd, this, _1);
+    m_commands["aircraftinforeply"] = std::bind(&Client::sendAircraftInfoCmd, this, _1);
     m_commands["ping"]              = std::bind(&Client::pingCmd, this, _1);
     m_commands["metar"]             = std::bind(&Client::requestMetarCmd, this, _1);
     m_commands["weather"]           = std::bind(&Client::requestWeatherDataCmd, this, _1);
@@ -130,20 +126,14 @@ void Client::exit(QTextStream &)
     emit quit();
 }
 
-void Client::setServerDetailsCmd(QTextStream &args)
+void Client::setServerCmd(QTextStream &args)
 {
     QString hostname;
     quint16 port;
-    args >> hostname >> port;
-    emit setServerDetails(hostname, port);
-}
-
-void Client::setUserCredentialsCmd(QTextStream &args)
-{
     QString username;
     QString password;
-    args >> username >> password;
-    emit setUserCredentials(username, password);
+    args >> hostname >> port >> username >> password;
+    emit setServer(BlackMisc::Network::CServer("", "", hostname, port, BlackMisc::Network::CUser(username, "", "", password)));
 }
 
 void Client::setCallsignCmd(QTextStream &args)
@@ -173,7 +163,8 @@ void Client::sendPrivateTextMessageCmd(QTextStream &args)
     QString callsign;
     args >> callsign;
     args.skipWhiteSpace();
-    emit sendPrivateTextMessage(callsign, args.readAll());
+    BlackMisc::Network::CTextMessageList msgs(args.readAll(), BlackMisc::Aviation::CCallsign(callsign));
+    emit sendTextMessages(msgs);
 }
 
 void Client::sendRadioTextMessageCmd(QTextStream &args)
@@ -181,12 +172,13 @@ void Client::sendRadioTextMessageCmd(QTextStream &args)
     QString freqsBlob;
     args >> freqsBlob;
     QStringList freqStrings = freqsBlob.split("|");
-    QVector<BlackMisc::PhysicalQuantities::CFrequency> freqs;
+    QList<BlackMisc::PhysicalQuantities::CFrequency> frequencies;
     for (auto i = freqStrings.begin(); i != freqStrings.end(); ++i)
     {
-        freqs.push_back(BlackMisc::PhysicalQuantities::CFrequency(i->toDouble(), BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
+        frequencies.push_back(BlackMisc::PhysicalQuantities::CFrequency(i->toDouble(), BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
     }
-    emit sendRadioTextMessage(freqs, args.readAll());
+    BlackMisc::Network::CTextMessageList msgs(args.readAll(), frequencies);
+    emit sendTextMessages(msgs);
 }
 
 void Client::sendIpQueryCmd(QTextStream &)
@@ -253,21 +245,22 @@ void Client::replyToNameQueryCmd(QTextStream &args)
     emit replyToNameQuery(callsign, realname);
 }
 
-void Client::requestPlaneInfoCmd(QTextStream& args)
+void Client::requestAircraftInfoCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
     emit requestPlaneInfo(callsign);
 }
 
-void Client::sendPlaneInfoCmd(QTextStream& args)
+void Client::sendAircraftInfoCmd(QTextStream &args)
 {
     QString callsign;
     QString acTypeICAO;
     QString airlineICAO;
     QString livery;
     args >> callsign >> acTypeICAO >> airlineICAO >> livery;
-    emit sendPlaneInfo(callsign, acTypeICAO, airlineICAO, livery);
+    BlackMisc::Aviation::CAircraftIcao icao(acTypeICAO, "L2J", airlineICAO, livery, "");
+    emit sendAircraftInfo(callsign, icao);
 }
 
 void Client::pingCmd(QTextStream &args)
@@ -295,15 +288,15 @@ void Client::requestWeatherDataCmd(QTextStream &args)
 /************      Slots to receive signals from INetwork       *************/
 /****************************************************************************/
 
-void Client::atcPositionUpdate(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq,
-    const BlackMisc::Geo::CCoordinateGeodetic& pos, const BlackMisc::PhysicalQuantities::CLength& range)
+void Client::atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
+                               const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range)
 {
-    std::cout << "POSITION " << callsign.toStdString() << " " << freq << " " << pos << " " << range << std::endl;
+    std::cout << "POSITION " << callsign << " " << freq << " " << pos << " " << range << std::endl;
 }
 
-void Client::atcDisconnected(const QString& callsign)
+void Client::atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
 {
-    std::cout << "ATC_DISCONNECTED " << callsign.toStdString() << std::endl;
+    std::cout << "ATC_DISCONNECTED " << callsign << std::endl;
 }
 
 void Client::connectionStatusIdle()
@@ -336,44 +329,44 @@ void Client::ipQueryReplyReceived(const QString &ip)
     std::cout << "IP_REPLY " << ip.toStdString() << std::endl;
 }
 
-void Client::freqQueryReplyReceived(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq)
+void Client::freqQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq)
 {
-    std::cout << "FREQ_REPLY " << callsign.toStdString() << " " << freq << std::endl;
+    std::cout << "FREQ_REPLY " << callsign << " " << freq << std::endl;
 }
 
-void Client::serverQueryReplyReceived(const QString& callsign, const QString& hostname)
+void Client::serverQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname)
 {
-    std::cout << "SERVER_REPLY " << callsign.toStdString() << " " << hostname.toStdString() << std::endl;
+    std::cout << "SERVER_REPLY " << callsign << " " << hostname.toStdString() << std::endl;
 }
 
-void Client::atcQueryReplyReceived(const QString& callsign, bool isATC)
+void Client::atcQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC)
 {
-    std::cout << "ATC_REPLY " << callsign.toStdString() << (isATC ? " yes" : " no") << std::endl;
+    std::cout << "ATC_REPLY " << callsign << (isATC ? " yes" : " no") << std::endl;
 }
 
-void Client::atisQueryReplyReceived(const QString& callsign, const QString& data)
+void Client::atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &data)
 {
-    std::cout << "ATIS_REPLY " << callsign.toStdString() << " " << data.toStdString() << std::endl;
+    std::cout << "ATIS_REPLY " << callsign << " " << data.toStdString() << std::endl;
 }
 
-void Client::nameQueryReplyReceived(const QString& callsign, const QString& realname)
+void Client::nameQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname)
 {
-    std::cout << "NAME_REPLY " << callsign.toStdString() << " " << realname.toStdString() << std::endl;
+    std::cout << "NAME_REPLY " << callsign << " " << realname.toStdString() << std::endl;
 }
 
-void Client::capabilitiesQueryReplyReceived(const QString& callsign, quint32 flags)
+void Client::capabilitiesQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags)
 {
-    std::cout << "CAPS_REPLY " << callsign.toStdString() << " " << flags << std::endl;
+    std::cout << "CAPS_REPLY " << callsign << " " << flags << std::endl;
 }
 
-void Client::freqQueryRequestReceived(const QString& callsign)
+void Client::freqQueryRequestReceived(const BlackMisc::Aviation::CCallsign &callsign)
 {
-    std::cout << "FREQ_QUERY " << callsign.toStdString() << std::endl;
+    std::cout << "FREQ_QUERY " << callsign << std::endl;
 }
 
-void Client::nameQueryRequestReceived(const QString& callsign)
+void Client::nameQueryRequestReceived(const BlackMisc::Aviation::CCallsign &callsign)
 {
-    std::cout << "NAME_QUERY " << callsign.toStdString() << std::endl;
+    std::cout << "NAME_QUERY " << callsign << std::endl;
 }
 
 void Client::kicked(const QString &msg)
@@ -386,38 +379,27 @@ void Client::metarReceived(const QString &data)
     std::cout << "METAR " << data.toStdString() << std::endl;
 }
 
-void Client::pilotDisconnected(const QString& callsign)
+void Client::pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
 {
-    std::cout << "PILOT_DISCONNECTED " << callsign.toStdString() << std::endl;
+    std::cout << "PILOT_DISCONNECTED " << callsign << std::endl;
 }
 
-void Client::planeInfoReceived(const QString& callsign, const QString& acTypeICAO, const QString& airlineICAO, const QString& livery)
+void Client::aircraftInfoReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData)
 {
-    std::cout << "PLANE_INFO_REPLY " << callsign.toStdString() << " " << acTypeICAO.toStdString() << " " << airlineICAO.toStdString() << " " << livery.toStdString() << std::endl;
+    std::cout << "PLANE_INFO_REPLY " << callsign << " " << icaoData.toStdString();
 }
 
-void Client::planeInfoRequestReceived(const QString& callsign)
+void Client::aircraftInfoRequestReceived(const BlackMisc::Aviation::CCallsign &callsign)
 {
-    std::cout << "PLANE_INFO_QUERY " << callsign.toStdString() << std::endl;
+    std::cout << "PLANE_INFO_QUERY " << callsign << std::endl;
 }
 
-void Client::pong(const QString& callsign, const BlackMisc::PhysicalQuantities::CTime& elapsedTime)
+void Client::pong(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime)
 {
-    std::cout << "PONG " << callsign.toStdString() << " " << elapsedTime << std::endl;
+    std::cout << "PONG " << callsign << " " << elapsedTime << std::endl;
 }
 
-void Client::radioTextMessageReceived(const QString& callsign, const QString& msg, const QVector<BlackMisc::PhysicalQuantities::CFrequency>& freqs)
+void Client::textMessagesReceived(const BlackMisc::Network::CTextMessageList &list)
 {
-    QString freqsBlob = freqs[0].toQString();
-    for (auto i = freqs.begin() + 1; i != freqs.end(); ++i)
-    {
-        freqsBlob.append("|");
-        freqsBlob.append(i->toQString());
-    }
-    std::cout << "TEXT_MSG " << callsign.toStdString() << " " << freqsBlob.toStdString() << " " << msg.toStdString() << std::endl;
-}
-
-void Client::privateTextMessageReceived(const QString& fromCallsign, const QString& toCallsign, const QString& msg)
-{
-    std::cout << "PRIV_MSG " << fromCallsign.toStdString() << " -> " << toCallsign.toStdString() << " " << msg.toStdString() << std::endl;
+    std::cout << "TEXT MESSAGE" << list.toStdString();
 }

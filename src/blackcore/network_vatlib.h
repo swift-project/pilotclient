@@ -11,6 +11,7 @@
 #define BLACKCORE_NETWORK_VATLIB_H
 
 #include "network.h"
+#include "blackmisc/avallclasses.h"
 #include <vatlib/vatlib.h>
 #include <QScopedPointer>
 #include <QBasicTimer>
@@ -34,31 +35,33 @@ namespace BlackCore
     public: // INetwork slots overrides
 
         // Network
-        virtual void setCallsign(const QString& callsign);
-        virtual void setServerDetails(const QString &hostname, quint16 port);
-        virtual void setUserCredentials(const QString &username, const QString &password);
+        virtual void setServer(const BlackMisc::Network::CServer &server);
+        virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void setRealName(const QString &name);
         virtual void initiateConnection();
         virtual void terminateConnection();
-        virtual void sendPrivateTextMessage(const QString& callsign, const QString& msg);
-        virtual void sendRadioTextMessage(const QVector<BlackMisc::PhysicalQuantities::CFrequency>& freqs, const QString& msg);
         virtual void sendIpQuery();
-        virtual void sendFreqQuery(const QString& callsign);
-        virtual void sendServerQuery(const QString& callsign);
-        virtual void sendAtcQuery(const QString& callsign);
-        virtual void sendAtisQuery(const QString& callsign);
-        virtual void sendNameQuery(const QString& callsign);
-        virtual void sendCapabilitiesQuery(const QString& callsign);
-        virtual void replyToFreqQuery(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq);
-        virtual void replyToNameQuery(const QString& callsign, const QString& realname);
-        virtual void requestPlaneInfo(const QString& callsign);
-        virtual void sendPlaneInfo(const QString& callsign, const QString& acTypeICAO, const QString& airlineICAO, const QString& livery);
-        virtual void ping(const QString& callsign);
+        virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
+        virtual void ping(const BlackMisc::Aviation::CCallsign &callsign);
+
         // Weather
         virtual void requestWeatherData(const QString &airportICAO);
 
+        // Text messages
+        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages);
+
+        // Aircraft
+        virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao);
+        virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
 
         // ATC
+        virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void requestMetar(const QString &airportICAO);
 
     private: //shimlib callbacks
@@ -86,7 +89,8 @@ namespace BlackCore
 
     private:
         QByteArray toFSD(QString qstr) const;
-        QString fromFSD(const char* cstr) const;
+        QByteArray toFSD(const BlackMisc::Aviation::CCallsign &callsign) const;
+        QString fromFSD(const char *cstr) const;
         bool isDisconnected() const { return m_status == Cvatlib_Network::connStatus_Idle || m_status == Cvatlib_Network::connStatus_Disconnected; }
 
     signals:
@@ -105,13 +109,10 @@ namespace BlackCore
         Cvatlib_Network::connStatus m_status;
 
         QBasicTimer m_timer;
+        BlackMisc::Network::CServer m_server;
         static int const c_updateIntervalMillisecs = 100;
         static int const c_logoffTimeoutSeconds = 5;
 
-        QString m_serverHost;
-        quint16 m_serverPort;
-        QString m_username;
-        QString m_password;
         QByteArray m_callsign;
         QByteArray m_realname;
 
