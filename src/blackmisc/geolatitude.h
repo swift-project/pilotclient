@@ -7,50 +7,50 @@
 
 namespace BlackMisc
 {
-namespace Geo
-{
-
-/*!
- * \brief Latitude
- */
-class CLatitude : public CEarthAngle<CLatitude>
-{
-protected:
-    /*!
-     * \brief Specific string representation
-     */
-    virtual QString convertToQString() const
+    namespace Geo
     {
-        QString s = "latitude ";
-        return s.append(CEarthAngle::convertToQString());
-    }
 
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CLatitude() : CEarthAngle() {}
+        /*!
+         * \brief Latitude
+         */
+        class CLatitude : public CEarthAngle<CLatitude>
+        {
+        protected:
+            /*!
+             * \brief Specific string representation
+             */
+            virtual QString convertToQString() const
+            {
+                QString s = "latitude ";
+                return s.append(CEarthAngle::convertToQString());
+            }
 
-    /*!
-     * \brief Constructor
-     * \param angle
-     */
-    explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CLatitude() : CEarthAngle() {}
 
-    /*!
-     * \brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
+            /*!
+             * \brief Constructor
+             * \param angle
+             */
+            explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
-    /*!
-     * \brief Virtual destructor
-     */
-    virtual ~CLatitude() {}
-};
+            /*!
+             * \brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
 
-} // namespace
+            /*!
+             * \brief Virtual destructor
+             */
+            virtual ~CLatitude() {}
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CLatitude)

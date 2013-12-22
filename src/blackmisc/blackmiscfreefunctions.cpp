@@ -4,6 +4,10 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackmiscfreefunctions.h"
+#include "avallclasses.h"
+#include "pqallquantities.h"
+#include "mathallclasses.h"
+#include "geoallclasses.h"
 
 /*
  * Metadata for PQs

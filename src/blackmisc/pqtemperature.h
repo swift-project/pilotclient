@@ -9,35 +9,35 @@
 
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
+    namespace PhysicalQuantities
+    {
 
-/*!
- * \brief Physical unit temperature
- * \author KWB
- */
-class CTemperature : public CPhysicalQuantity<CTemperatureUnit, CTemperature>
-{
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::defaultUnit()) {}
+        /*!
+         * \brief Physical unit temperature
+         * \author KWB
+         */
+        class CTemperature : public CPhysicalQuantity<CTemperatureUnit, CTemperature>
+        {
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::defaultUnit()) {}
 
-    /*!
-     * \brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit) {}
+            /*!
+             * \brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit) {}
 
-    /*!
-     * \brief Destructor
-     */
-    virtual ~CTemperature() {}
-};
+            /*!
+             * \brief Destructor
+             */
+            virtual ~CTemperature() {}
+        };
 
-} // namespace
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperature)

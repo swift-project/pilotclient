@@ -9,36 +9,35 @@
 
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
+    namespace PhysicalQuantities
+    {
 
-/*!
- * \brief Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
- * \author KWB
- */
-class CSpeed : public CPhysicalQuantity<CSpeedUnit, CSpeed>
-{
+        /*!
+         * \brief Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
+         */
+        class CSpeed : public CPhysicalQuantity<CSpeedUnit, CSpeed>
+        {
 
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CSpeed() : CPhysicalQuantity(0, CSpeedUnit::defaultUnit()) {}
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CSpeed() : CPhysicalQuantity(0, CSpeedUnit::defaultUnit()) {}
 
-    /*!
-     *\brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit) {}
+            /*!
+             *\brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-    /*!
-     * \brief Destructor
-     */
-    virtual ~CSpeed() {}
-};
+            /*!
+             * \brief Destructor
+             */
+            virtual ~CSpeed() {}
+        };
 
-} // namespace
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeed)

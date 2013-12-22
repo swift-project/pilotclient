@@ -7,7 +7,8 @@
 
 #include "dbus_server.h"
 
-namespace BlackCore {
+namespace BlackCore
+{
 
     CDBusServer::CDBusServer(const QString &address, QObject *parent) :
         QObject(parent), m_busServer(address, parent)

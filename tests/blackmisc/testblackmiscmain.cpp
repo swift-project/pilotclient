@@ -7,22 +7,23 @@
 
 namespace BlackMiscTest
 {
-/*
- * Starting main, equivalent to QTEST_APPLESS_MAIN for multiple test classes.
- */
-int CBlackMiscTestMain::unitMain(int argc, char *argv[])
-{
-    int status = 0;
+    /*
+     * Starting main, equivalent to QTEST_APPLESS_MAIN for multiple test classes.
+     */
+    int CBlackMiscTestMain::unitMain(int argc, char *argv[])
     {
-        CTestPhysicalQuantities pqBaseTests ;
-        CTestAviation avBaseTests;
-        CTestVectorMatrix vmTests;
-        CTestGeo geoTests;
-        status |= QTest::qExec(&pqBaseTests, argc, argv);
-        status |= QTest::qExec(&avBaseTests, argc, argv);
-        status |= QTest::qExec(&vmTests, argc, argv);
-        status |= QTest::qExec(&geoTests, argc, argv);
+        int status = 0;
+        {
+            CTestPhysicalQuantities pqBaseTests ;
+            CTestAviation avBaseTests;
+            CTestVectorMatrix vmTests;
+            CTestGeo geoTests;
+            status |= QTest::qExec(&pqBaseTests, argc, argv);
+            status |= QTest::qExec(&avBaseTests, argc, argv);
+            status |= QTest::qExec(&vmTests, argc, argv);
+            status |= QTest::qExec(&geoTests, argc, argv);
+
+        }
+        return status;
     }
-    return status;
-}
 } // namespace

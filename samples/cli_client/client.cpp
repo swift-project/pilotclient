@@ -90,7 +90,7 @@ Client::Client(BlackMisc::IContext &ctx)
 
 void Client::command(QString line)
 {
-    QTextStream stream (&line, QIODevice::ReadOnly);
+    QTextStream stream(&line, QIODevice::ReadOnly);
     QString cmd;
     stream >> cmd;
     stream.skipWhiteSpace();
@@ -110,7 +110,7 @@ void Client::command(QString line)
 /************                      Commands                     *************/
 /****************************************************************************/
 
-void Client::help(QTextStream&)
+void Client::help(QTextStream &)
 {
     std::cout << "Commands:" << std::endl;
     auto keys = m_commands.keys();
@@ -120,17 +120,17 @@ void Client::help(QTextStream&)
     }
 }
 
-void Client::echo(QTextStream& line)
+void Client::echo(QTextStream &line)
 {
     std::cout << "echo: " << line.readAll().toStdString() << std::endl;
 }
 
-void Client::exit(QTextStream&)
+void Client::exit(QTextStream &)
 {
     emit quit();
 }
 
-void Client::setServerDetailsCmd(QTextStream& args)
+void Client::setServerDetailsCmd(QTextStream &args)
 {
     QString hostname;
     quint16 port;
@@ -138,7 +138,7 @@ void Client::setServerDetailsCmd(QTextStream& args)
     emit setServerDetails(hostname, port);
 }
 
-void Client::setUserCredentialsCmd(QTextStream& args)
+void Client::setUserCredentialsCmd(QTextStream &args)
 {
     QString username;
     QString password;
@@ -146,29 +146,29 @@ void Client::setUserCredentialsCmd(QTextStream& args)
     emit setUserCredentials(username, password);
 }
 
-void Client::setCallsignCmd(QTextStream& args)
+void Client::setCallsignCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
     emit setCallsign(callsign);
 }
 
-void Client::setRealNameCmd(QTextStream& args)
+void Client::setRealNameCmd(QTextStream &args)
 {
     emit setRealName(args.readAll());
 }
 
-void Client::initiateConnectionCmd(QTextStream&)
+void Client::initiateConnectionCmd(QTextStream &)
 {
     emit initiateConnection();
 }
 
-void Client::terminateConnectionCmd(QTextStream&)
+void Client::terminateConnectionCmd(QTextStream &)
 {
     emit terminateConnection();
 }
 
-void Client::sendPrivateTextMessageCmd(QTextStream& args)
+void Client::sendPrivateTextMessageCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
@@ -176,7 +176,7 @@ void Client::sendPrivateTextMessageCmd(QTextStream& args)
     emit sendPrivateTextMessage(callsign, args.readAll());
 }
 
-void Client::sendRadioTextMessageCmd(QTextStream& args)
+void Client::sendRadioTextMessageCmd(QTextStream &args)
 {
     QString freqsBlob;
     args >> freqsBlob;
@@ -189,63 +189,63 @@ void Client::sendRadioTextMessageCmd(QTextStream& args)
     emit sendRadioTextMessage(freqs, args.readAll());
 }
 
-void Client::sendIpQueryCmd(QTextStream&)
+void Client::sendIpQueryCmd(QTextStream &)
 {
     emit sendIpQuery();
 }
 
-void Client::sendFreqQueryCmd(QTextStream& args)
+void Client::sendFreqQueryCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
     emit sendFreqQuery(callsign);
 }
 
-void Client::sendServerQueryCmd(QTextStream& args)
+void Client::sendServerQueryCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
     emit sendServerQuery(callsign);
 }
 
-void Client::sendAtcQueryCmd(QTextStream& args)
+void Client::sendAtcQueryCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
     emit sendAtcQuery(callsign);
 }
 
-void Client::sendAtisQueryCmd(QTextStream& args)
+void Client::sendAtisQueryCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
     emit sendAtisQuery(callsign);
 }
 
-void Client::sendNameQueryCmd(QTextStream& args)
+void Client::sendNameQueryCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
     emit sendNameQuery(callsign);
 }
 
-void Client::sendCapabilitiesQueryCmd(QTextStream& args)
+void Client::sendCapabilitiesQueryCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
     emit sendCapabilitiesQuery(callsign);
 }
 
-void Client::replyToFreqQueryCmd(QTextStream& args)
+void Client::replyToFreqQueryCmd(QTextStream &args)
 {
     QString callsign;
     double num;
     args >> callsign >> num;
-    BlackMisc::PhysicalQuantities::CFrequency freq (num, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
+    BlackMisc::PhysicalQuantities::CFrequency freq(num, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
     emit replyToFreqQuery(callsign, freq);
 }
 
-void Client::replyToNameQueryCmd(QTextStream& args)
+void Client::replyToNameQueryCmd(QTextStream &args)
 {
     QString callsign;
     QString realname;
@@ -270,21 +270,21 @@ void Client::sendPlaneInfoCmd(QTextStream& args)
     emit sendPlaneInfo(callsign, acTypeICAO, airlineICAO, livery);
 }
 
-void Client::pingCmd(QTextStream& args)
+void Client::pingCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
     emit ping(callsign);
 }
 
-void Client::requestMetarCmd(QTextStream& args)
+void Client::requestMetarCmd(QTextStream &args)
 {
     QString airportICAO;
     args >> airportICAO;
     emit requestMetar(airportICAO);
 }
 
-void Client::requestWeatherDataCmd(QTextStream& args)
+void Client::requestWeatherDataCmd(QTextStream &args)
 {
     QString airportICAO;
     args >> airportICAO;
@@ -331,7 +331,7 @@ void Client::connectionStatusError()
     std::cout << "CONN_STATUS_ERROR" << std::endl;
 }
 
-void Client::ipQueryReplyReceived(const QString& ip)
+void Client::ipQueryReplyReceived(const QString &ip)
 {
     std::cout << "IP_REPLY " << ip.toStdString() << std::endl;
 }
@@ -376,12 +376,12 @@ void Client::nameQueryRequestReceived(const QString& callsign)
     std::cout << "NAME_QUERY " << callsign.toStdString() << std::endl;
 }
 
-void Client::kicked(const QString& msg)
+void Client::kicked(const QString &msg)
 {
     std::cout << "KICKED " << msg.toStdString() << std::endl;
 }
 
-void Client::metarReceived(const QString& data)
+void Client::metarReceived(const QString &data)
 {
     std::cout << "METAR " << data.toStdString() << std::endl;
 }

@@ -9,37 +9,36 @@
 
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
+    namespace PhysicalQuantities
+    {
 
-/*!
- * \brief Physical unit length (length)
- * \author KWB
- */
-class CLength : public CPhysicalQuantity<CLengthUnit, CLength>
-{
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CLength() : CPhysicalQuantity(0, CLengthUnit::defaultUnit()) {}
+        /*!
+         * \brief Physical unit length (length)
+         */
+        class CLength : public CPhysicalQuantity<CLengthUnit, CLength>
+        {
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CLength() : CPhysicalQuantity(0, CLengthUnit::defaultUnit()) {}
 
-    /*!
-     *\brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit) {}
+            /*!
+             * \brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-    /*!
-     * \brief Virtual destructor
-     */
-    virtual ~CLength() {}
-};
+            /*!
+             * \brief Virtual destructor
+             */
+            virtual ~CLength() {}
+        };
 
-} // namespace
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLength)
 
-#endif // BLACKMISC_PQLENGTH_H
+#endif // guard

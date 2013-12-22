@@ -10,7 +10,9 @@
 #include <QMetaType>
 
 /*!
- * \brief Plugin to register all relevant blackmisc classes for QDBusCpp2XmlPlugin
+ * Plugin to register all relevant blackmisc classes for QDBusCpp2XmlPlugin
+ * This needs to be recompiled whenever a new DBus compliant class has been created.
+ * Compile as "release", otherwise plugin will not work.
  */
 class BlackmiscPlugin : public QObject, public QDBusCpp2XmlPlugin
 {
@@ -25,4 +27,4 @@ public:
     virtual void registerMetaTypes();
 };
 
-#endif // BLACKMISC_CPP2XML_H
+#endif // guard

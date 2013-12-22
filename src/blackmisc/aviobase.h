@@ -13,86 +13,86 @@
 
 namespace BlackMisc
 {
-namespace Aviation
-{
+    namespace Aviation
+    {
 
-/*!
- * \brief Base class for avionics
- */
 class CAvionicsBase : public BlackMisc::CStreamable
-{
-protected:
-    QString m_name; //!< name of the unit
+        /*!
+         * \brief Base class for avionics
+         */
+        {
+        protected:
+            QString m_name; //!< name of the unit
 
-    /*!
-     * \brief Constructor
-     */
-    CAvionicsBase(const QString &name) : m_name(name) {}
+            /*!
+             * \brief Constructor
+             */
+            CAvionicsBase(const QString &name) : m_name(name) {}
 
-    /*!
-     * \brief Are the set values valid / in range
-     * \return
-     */
-    virtual bool validValues()
-    {
-        return true;
-    }
+            /*!
+             * \brief Are the set values valid / in range
+             * \return
+             */
+            virtual bool validValues()
+            {
+                return true;
+            }
 
-    /*!
-     * \brief Set name
-     * \param name
-     */
-    void setName(const QString &name)
-    {
-        this->m_name = name;
-    }
+            /*!
+             * \brief Set name
+             * \param name
+             */
+            void setName(const QString &name)
+            {
+                this->m_name = name;
+            }
 
-    /*!
-     * \brief operator ==
-     * \param other
-     * \return
-     */
-    bool operator ==(const CAvionicsBase &other) const
-    {
-        if (this == &other) return true;
-        return this->m_name == other.m_name;
-    }
+            /*!
+             * \brief operator ==
+             * \param other
+             * \return
+             */
+            bool operator ==(const CAvionicsBase &other) const
+            {
+                if (this == &other) return true;
+                return this->m_name == other.m_name;
+            }
 
-    /*!
-     * \brief Stream to DBus <<
-     * \param argument
-     */
-    virtual void marshallToDbus(QDBusArgument &argument) const
-    {
-        argument << this->m_name;
-    }
+            /*!
+             * \brief Stream to DBus <<
+             * \param argument
+             */
+            virtual void marshallToDbus(QDBusArgument &argument) const
+            {
+                argument << this->m_name;
+            }
 
-    /*!
-     * \brief Stream from DBus >>
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        argument >> this->m_name;
-    }
+            /*!
+             * \brief Stream from DBus >>
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                argument >> this->m_name;
+            }
 
-public:
-    /*!
-     * \brief Virtual destructor
-     */
-    virtual ~CAvionicsBase() {}
+        public:
+            /*!
+             * \brief Virtual destructor
+             */
+            virtual ~CAvionicsBase() {}
 
-    /*!
-     * \brief Name
-     * \return
-     */
-    QString getName() const
-    {
-        return this->m_name;
-    }
-};
+            /*!
+             * \brief Name
+             * \return
+             */
+            QString getName() const
+            {
+                return this->m_name;
+            }
+        };
 
-} // namespace
+    } // namespace
 } // namespace
 
 #endif // guard

@@ -9,35 +9,33 @@
 
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
+    namespace PhysicalQuantities
+    {
+        /*!
+         * \brief Physical unit frequency
+         */
+        class CFrequency : public CPhysicalQuantity<CFrequencyUnit, CFrequency>
+        {
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CFrequency() : CPhysicalQuantity(0, CFrequencyUnit::defaultUnit()) {}
 
-/*!
- * \brief Physical unit distance
- * \author KWB
- */
-class CFrequency : public CPhysicalQuantity<CFrequencyUnit, CFrequency>
-{
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CFrequency() : CPhysicalQuantity(0, CFrequencyUnit::defaultUnit()) {}
+            /*!
+             * \brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-    /*!
-     * \brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit) {}
+            /*!
+             * \brief Virtual destructor
+             */
+            virtual ~CFrequency() {}
+        };
 
-    /*!
-     * \brief Virtual destructor
-     */
-    virtual ~CFrequency() {}
-};
-
-} // namespace
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequency)

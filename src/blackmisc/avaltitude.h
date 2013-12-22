@@ -9,124 +9,117 @@
 
 namespace BlackMisc
 {
-namespace Aviation
-{
-
-/*!
- * \brief Altitude as used in aviation, can be AGL or MSL altitude
- * \remarks Intentionally allowing +/- CLength , and >= / <= CLength.
- */
-class CAltitude : public BlackMisc::PhysicalQuantities::CLength
-{
-public:
-    /*!
-     * Enum type to distinguish between MSL and AGL
-     */
-    enum ReferenceDatum
+    namespace Aviation
     {
-        MeanSeaLevel = 0,   //!< MSL
-        AboveGround = 1,    //!< AGL
-    };
 
-private:
-    ReferenceDatum m_datum; //!< MSL or AGL?
+        /*!
+         * \brief Altitude as used in aviation, can be AGL or MSL altitude
+         * \remarks Intentionally allowing +/- CLength , and >= / <= CLength.
+         */
+        class CAltitude : public BlackMisc::PhysicalQuantities::CLength
+        {
+        public:
+            /*!
+             * Enum type to distinguish between MSL and AGL
+             */
+            enum ReferenceDatum
+            {
+                MeanSeaLevel = 0,   //!< MSL
+                AboveGround = 1     //!< AGL
+            };
 
-protected:
-    /*!
-     * \brief Specific stream operation for Altitude
-     * \param i18n
-     * \return
-     */
-    virtual QString convertToQString(bool i18n) const;
+        private:
+            ReferenceDatum m_datum; //!< MSL or AGL?
 
-    /*!
-     * \brief Stream to DBus <<
-     * \param argument
-     */
-    virtual void marshallToDbus(QDBusArgument &argument) const
-    {
-        this->CLength::marshallToDbus(argument);
-        argument << qint32(this->m_datum);
-    }
+        protected:
+            /*!
+             * \brief Specific stream operation for Altitude
+             * \param i18n
+             * \return
+             */
+            virtual QString convertToQString(bool i18n) const;
 
-    /*!
-     * \brief Stream from DBus >>
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        this->CLength::unmarshallFromDbus(argument);
-        qint32 datum;
-        argument >> datum;
-        this->m_datum = static_cast<ReferenceDatum>(datum);
-    }
+            /*!
+             * \brief Stream to DBus <<
+             * \param argument
+             */
+            virtual void marshallToDbus(QDBusArgument &argument) const;
 
-public:
-    /*!
-     * \brief Default constructor: 0 Altitude true
-     */
-    CAltitude() : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
+            /*!
+             * \brief Stream from DBus >>
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
-    /*!
-     * \brief Constructor
-     * \param value
-     * \param datum MSL or AGL?
-     * \param unit
-     */
-    CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : BlackMisc::PhysicalQuantities::CLength(value, unit), m_datum(datum) {}
+        public:
+            /*!
+             * \brief Default constructor: 0 Altitude true
+             */
+            CAltitude() : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
 
-    /*!
-     * \brief Constructor by CLength
-     * \param altitude
-     * \param datum
-     */
-    CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, ReferenceDatum datum) : BlackMisc::PhysicalQuantities::CLength(altitude), m_datum(datum) {}
+            /*!
+             * \brief Constructor
+             * \param value
+             * \param datum MSL or AGL?
+             * \param unit
+             */
+            CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : BlackMisc::PhysicalQuantities::CLength(value, unit), m_datum(datum) {}
 
-    /*!
-     * \brief Equal operator ==
-     * \param other
-     * @return
-     */
-    bool operator ==(const CAltitude &other);
+            /*!
+             * \brief Constructor by CLength
+             * \param altitude
+             * \param datum
+             */
+            CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, ReferenceDatum datum) : BlackMisc::PhysicalQuantities::CLength(altitude), m_datum(datum) {}
 
-    /*!
-     * \brief Unequal operator ==
-     * \param other
-     * @return
-     */
-    bool operator !=(const CAltitude &other);
+            /*!
+             * \brief Equal operator ==
+             * \param other
+             * @return
+             */
+            bool operator ==(const CAltitude &other) const;
 
-    /*!
-     * \brief AGL Above ground level?
-     * \return
-     */
-    bool isAboveGroundLevel() const
-    {
-        return AboveGround == this->m_datum;
-    }
+            /*!
+             * \brief Unequal operator ==
+             * \param other
+             * @return
+             */
+            bool operator !=(const CAltitude &other) const;
 
-    /*!
-     * \brief MSL Mean sea level?
-     * \return
-     */
-    bool isMeanSeaLevel() const
-    {
-        return MeanSeaLevel == this->m_datum;
-    }
+            /*!
+             * \brief AGL Above ground level?
+             * \return
+             */
+            bool isAboveGroundLevel() const
+            {
+                return AboveGround == this->m_datum;
+            }
 
-    /*!
-     * \brief Get reference datum (MSL or AGL)
-     * \return
-     */
-    ReferenceDatum getReferenceDatum() const { return m_datum; }
+            /*!
+             * \brief MSL Mean sea level?
+             * \return
+             */
+            bool isMeanSeaLevel() const
+            {
+                return MeanSeaLevel == this->m_datum;
+            }
 
-    /*!
-     * \brief Register metadata
-     */
-    static void registerMetadata();
-};
+            /*!
+             * \brief Get reference datum (MSL or AGL)
+             * \return
+             */
+            ReferenceDatum getReferenceDatum() const
+            {
+                return m_datum;
+            }
 
-} // namespace
+            /*!
+             * \brief Register metadata
+             */
+            static void registerMetadata();
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude)

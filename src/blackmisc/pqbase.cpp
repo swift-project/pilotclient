@@ -10,69 +10,69 @@ using namespace BlackMisc::Math;
 
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
+    namespace PhysicalQuantities
+    {
 
 // -----------------------------------------------------------------------
 // --- Measurement unit --------------------------------------------------
 // -----------------------------------------------------------------------
 
-/*
- * Equal operator
- */
-bool CMeasurementUnit::operator ==(const CMeasurementUnit &other) const
-{
-    if (this == &other) return true;
-    return this->m_name == other.m_name;
-}
+        /*
+         * Equal operator
+         */
+        bool CMeasurementUnit::operator ==(const CMeasurementUnit &other) const
+        {
+            if (this == &other) return true;
+            return this->m_name == other.m_name;
+        }
 
-/*
- * Unequal operator
- */
-bool CMeasurementUnit::operator !=(const CMeasurementUnit &other) const
-{
-    return !(other == *this);
-}
+        /*
+         * Unequal operator
+         */
+        bool CMeasurementUnit::operator !=(const CMeasurementUnit &other) const
+        {
+            return !(other == *this);
+        }
 
-/*
- * Conversion
- */
-double CMeasurementUnit::convertFrom(double value, const CMeasurementUnit &unit) const
-{
-    Q_ASSERT(this->m_converter);
-    Q_ASSERT(unit.m_converter);
-    if (this->m_converter == unit.m_converter) return value;
-    return this->m_converter->fromDefault(unit.m_converter->toDefault(value));
-}
+        /*
+         * Conversion
+         */
+        double CMeasurementUnit::convertFrom(double value, const CMeasurementUnit &unit) const
+        {
+            Q_ASSERT(this->m_converter);
+            Q_ASSERT(unit.m_converter);
+            if (this->m_converter == unit.m_converter) return value;
+            return this->m_converter->fromDefault(unit.m_converter->toDefault(value));
+        }
 
-/*
- * Value to QString with unit, e.g. "5.00m"
- * @return
- */
-QString CMeasurementUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
-{
-    return this->makeRoundedQString(value, digits).append(this->getSymbol(i18n));
-}
+        /*
+         * Value to QString with unit, e.g. "5.00m"
+         * @return
+         */
+        QString CMeasurementUnit::makeRoundedQStringWithUnit(double value, int digits, bool i18n) const
+        {
+            return this->makeRoundedQString(value, digits).append(this->getSymbol(i18n));
+        }
 
-/*
- * Value rounded
- */
-double CMeasurementUnit::roundValue(double value, int digits) const
-{
-    if (digits < 0) digits = this->m_displayDigits;
-    return CMath::round(value, digits);
-}
+        /*
+         * Value rounded
+         */
+        double CMeasurementUnit::roundValue(double value, int digits) const
+        {
+            if (digits < 0) digits = this->m_displayDigits;
+            return CMath::round(value, digits);
+        }
 
-/*
- * Rounded to QString
- */
-QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool /* i18n */) const
-{
-    if (digits < 0) digits = this->m_displayDigits;
-    double v = CMath::round(value, digits);
-    QString s = QLocale::system().toString(v, 'f', digits);
-    return s;
-}
+        /*
+         * Rounded to QString
+         */
+        QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool /* i18n */) const
+        {
+            if (digits < 0) digits = this->m_displayDigits;
+            double v = CMath::round(value, digits);
+            QString s = QLocale::system().toString(v, 'f', digits);
+            return s;
+        }
 
-} // namespace
+    } // namespace
 } // namespace

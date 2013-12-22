@@ -8,7 +8,6 @@
 
 isEmpty(EXTERNALDIR) {
     EXTERNALDIR = $$(VATSIM_EXTERNAL_DIR)
-
 }
 
 # if no env variable is set, we use the standard path in the client folder.
@@ -52,10 +51,3 @@ linux-g++-32 {
 linux-g++-64 {
     LIBS *= -L$$EXTERNALDIR/linux64/lib
 }
-
-
-
-
-
-
-

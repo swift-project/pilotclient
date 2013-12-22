@@ -5,75 +5,80 @@
 
 #ifndef BLACKMISC_FREEFUNCTIONS_H
 #define BLACKMISC_FREEFUNCTIONS_H
-#include "avallclasses.h"
-#include "pqallquantities.h"
-#include "mathallclasses.h"
-#include "geoallclasses.h"
+
+#include <QDir> // for Q_INIT_RESOURCE
 
 /*!
- * \brief Workaround, to call initResource from namespace
+ * Workaround, to call initResource from namespace. Used in BlackMisc::initResources().
+ * Q_INIT_RESOURCE adds resource, here the translation files.
  */
-// cannot be declare within namespace, see docu
+// cannot be declared within namespace, see docu
+// hence BlackMisc::initResources() calls this inline function
 inline void initBlackMiscResources() { Q_INIT_RESOURCE(blackmisc); }
 
 /*!
  * Free functions in BlackMisc
  */
-namespace BlackMisc {
+namespace BlackMisc
+{
+    /*!
+     * Free functions in PQs
+     */
+    namespace PhysicalQuantities
+    {
 
-/*!
- * Free functions in PQ
- */
-namespace PhysicalQuantities {
+        /*!
+         * \brief Register all metadata for PQs
+         */
+        void registerMetadata();
 
-/*!
- * \brief Register all metadata for PQs
- */
-void registerMetadata();
+    } // PQ
 
-} // PQ
+    /*!
+     * Free functions in aviation
+     */
+    namespace Aviation
+    {
 
-/*!
- * Free functions in aviation
- */
-namespace Aviation {
+        /*!
+         * \brief Register metadata for aviation
+         */
+        void registerMetadata();
 
-/*!
- * \brief Register metadata for aviation
- */
-void registerMetadata();
+    } // Aviation
 
-} // Aviation
+    /*!
+     * Free functions in Math
+     */
+    namespace Math
+    {
+        /*!
+         * \brief Register metadata for math (matrices, vectors)
+         */
+        void registerMetadata();
 
-namespace Math {
+    } // Math
 
-/*!
- * \brief Register metadata for math (matrices, vectors)
- */
-void registerMetadata();
+    namespace Geo
+    {
 
-} // Math
+        /*!
+         * \brief Register metadata for geo (coordinates)
+         */
+        void registerMetadata();
 
-namespace Geo {
+    } // Geo
 
-/*!
- * \brief Register metadata for geo (coordinates)
- */
-void registerMetadata();
+    /*!
+     * \brief Register all relevant metadata in BlackMisc
+     */
+    void registerMetadata();
 
-} // Geo
-
-/*!
- * \brief Register all relevant metadata in BlackMisc
- */
-void registerMetadata();
-
-/*!
- * \brief Init resources
- */
-void initResources();
-
+    /*!
+     * \brief Init resources
+     */
+    void initResources();
 
 } // BlackMisc
 
-#endif // BLACKMISC_FREEFUNCTIONS_H
+#endif // guard

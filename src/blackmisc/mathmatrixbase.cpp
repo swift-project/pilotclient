@@ -5,152 +5,183 @@
 
 #include "blackmisc/mathmatrix3x3.h"
 #include "blackmisc/mathmatrix3x1.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <typeinfo>
 
 namespace BlackMisc
 {
-namespace Math
-{
-
-/*
- * Get element by column / row
- */
-template<class ImplMatrix, int Rows, int Columns> double CMatrixBase<ImplMatrix, Rows, Columns>::getElement(size_t row, size_t column) const
-{
-    this->checkRange(row, column);
-    return this->m_matrix(row, column);
-}
-
-/*
- * Set element by column / row
- */
-template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setElement(size_t row, size_t column, double value)
-{
-    this->checkRange(row, column);
-    this->m_matrix(row, column) = value;
-}
-
-/*
- * Check range
- */
-template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::checkRange(size_t row, size_t column) const
-{
-    bool valid = (row < Rows && column < Columns);
-    Q_ASSERT_X(valid, "getElement()", "Row or column invalid");
-    if (!valid) throw std::range_error("Row or column invalid");
-}
-
-/*
- * All values zero?
- */
-template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, Rows, Columns>::isZero() const
-{
-    for (int r = 0; r < Rows; r++)
+    namespace Math
     {
-        for (int c = 0; c < Columns; c++)
+
+        /*
+         * Get element by column / row
+         */
+        template<class ImplMatrix, int Rows, int Columns> double CMatrixBase<ImplMatrix, Rows, Columns>::getElement(size_t row, size_t column) const
         {
-            if (this->m_matrix(r, c) != 0) return false;
+            this->checkRange(row, column);
+            return this->m_matrix(row, column);
         }
-    }
-    return true;
-}
 
-
-/*
- * Set cell index
- */
-template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setCellIndex()
-{
-    for (int r = 0; r < Rows; r++)
-    {
-        for (int c = 0; c < Columns; c++)
+        /*
+         * Set element by column / row
+         */
+        template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setElement(size_t row, size_t column, double value)
         {
-            this->m_matrix(r, c) = r + 0.1 * c;
+            this->checkRange(row, column);
+            this->m_matrix(row, column) = value;
         }
-    }
-}
 
-/*
- * To list
- */
-template<class ImplMatrix, int Rows, int Columns> QList<double> CMatrixBase<ImplMatrix, Rows, Columns>::toList() const
-{
-    QList<double> list;
-    for (int r = 0; r < Rows; r++)
-    {
-        for (int c = 0; c < Columns; c++)
+        /*
+         * Check range
+         */
+        template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::checkRange(size_t row, size_t column) const
         {
-            list.append(this->m_matrix(r, c));
+            bool valid = (row < Rows && column < Columns);
+            Q_ASSERT_X(valid, "getElement()", "Row or column invalid");
+            if (!valid) throw std::range_error("Row or column invalid");
         }
-    }
-    return list;
-}
 
-/*
- * From list
- */
-template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::fromList(const QList<double> &list)
-{
-    Q_ASSERT_X(Rows * Columns == list.count(), "fromList()", "Mismatch of elements in list");
-    int ct = 0;
-    for (int r = 0; r < Rows; r++)
-    {
-        for (int c = 0; c < Columns; c++)
+        /*
+         * All values zero?
+         */
+        template<class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, Rows, Columns>::isZero() const
         {
-            this->m_matrix(r, c) = list.at(ct++);
+            for (int r = 0; r < Rows; r++)
+            {
+                for (int c = 0; c < Columns; c++)
+                {
+                    if (this->m_matrix(r, c) != 0) return false;
+                }
+            }
+            return true;
         }
-    }
-}
 
-/*
- * Round all values
- */
-template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::round()
-{
-    for (int r = 0; r < Rows; r++)
-    {
-        for (int c = 0; c < Columns; c++)
+
+        /*
+         * Set cell index
+         */
+        template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setCellIndex()
         {
-            this->m_matrix(r, c) = CMath::roundEpsilon(this->m_matrix(r, c), 1E-10);
+            for (int r = 0; r < Rows; r++)
+            {
+                for (int c = 0; c < Columns; c++)
+                {
+                    this->m_matrix(r, c) = r + 0.1 * c;
+                }
+            }
         }
-    }
-}
 
-/*
- * Convert to string
- */
-template <class ImplMatrix, int Rows, int Columns> QString CMatrixBase<ImplMatrix, Rows, Columns>::convertToQString(bool /* i18n */) const
-{
-    QString s = "{";
-    for (int r = 0; r < Rows; r++)
-    {
-        s = s.append("{");
-        for (int c = 0; c < Columns; c++)
+        /*
+         * To list
+         */
+        template<class ImplMatrix, int Rows, int Columns> QList<double> CMatrixBase<ImplMatrix, Rows, Columns>::toList() const
         {
-            QString n = QString::number(this->m_matrix(r, c), 'f', 2);
-            if (c > 0) s = s.append(",");
-            s = s.append(n);
+            QList<double> list;
+            for (int r = 0; r < Rows; r++)
+            {
+                for (int c = 0; c < Columns; c++)
+                {
+                    list.append(this->m_matrix(r, c));
+                }
+            }
+            return list;
         }
-        s = s.append("}");
-    }
-    s = s.append("}");
-    return s;
-}
 
-/*
- * Register metadata
- */
-template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::registerMetadata()
-{
-    qRegisterMetaType<ImplMatrix>(typeid(ImplMatrix).name());
-    qDBusRegisterMetaType<ImplMatrix>();
-}
+        /*
+         * From list
+         */
+        template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::fromList(const QList<double> &list)
+        {
+            Q_ASSERT_X(Rows * Columns == list.count(), "fromList()", "Mismatch of elements in list");
+            int ct = 0;
+            for (int r = 0; r < Rows; r++)
+            {
+                for (int c = 0; c < Columns; c++)
+                {
+                    this->m_matrix(r, c) = list.at(ct++);
+                }
+            }
+        }
 
-// see here for the reason of thess forward instantiations
-// http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
-template class CMatrixBase<CMatrix3x3, 3, 3>;
-template class CMatrixBase<CMatrix3x1, 3, 1>;
-template class CMatrixBase<CMatrix1x3, 1, 3>;
+        /*
+         * Round all values
+         */
+        template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::round()
+        {
+            for (int r = 0; r < Rows; r++)
+            {
+                for (int c = 0; c < Columns; c++)
+                {
+                    this->m_matrix(r, c) = CMath::roundEpsilon(this->m_matrix(r, c), 1E-10);
+                }
+            }
+        }
 
-} // namespace
+        /*
+         * Convert to string
+         */
+        template <class ImplMatrix, int Rows, int Columns> QString CMatrixBase<ImplMatrix, Rows, Columns>::convertToQString(bool /* i18n */) const
+        {
+            QString s = "{";
+            for (int r = 0; r < Rows; r++)
+            {
+                s = s.append("{");
+                for (int c = 0; c < Columns; c++)
+                {
+                    QString n = QString::number(this->m_matrix(r, c), 'f', 2);
+                    if (c > 0) s = s.append(",");
+                    s = s.append(n);
+                }
+                s = s.append("}");
+            }
+            s = s.append("}");
+            return s;
+        }
+
+        /*
+         * To DBus
+         */
+        template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::marshallToDbus(QDBusArgument &argument) const
+        {
+            const QList<double> l = this->toList();
+
+            // there is an issue with the signature of QList, so I use
+            // individual values
+            foreach(double v, l)
+            {
+                argument << v;
+            }
+        }
+
+        /*
+         * From DBus
+         */
+        template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            QList<double> list;
+            double v;
+            while (!argument.atEnd())
+            {
+                argument >> v;
+                list.append(v);
+            }
+            this->fromList(list);
+        }
+
+        /*
+             * Register metadata
+             */
+        template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::registerMetadata()
+        {
+            qRegisterMetaType<ImplMatrix>();
+            qDBusRegisterMetaType<ImplMatrix>();
+        }
+
+        // see here for the reason of thess forward instantiations
+        // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
+        template class CMatrixBase<CMatrix3x3, 3, 3>;
+        template class CMatrixBase<CMatrix3x1, 3, 1>;
+        template class CMatrixBase<CMatrix1x3, 1, 3>;
+
+    } // namespace
 } // namespace

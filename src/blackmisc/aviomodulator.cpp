@@ -13,52 +13,74 @@ using BlackMisc::PhysicalQuantities::CFrequencyUnit;
 
 namespace BlackMisc
 {
-namespace Aviation
-{
+    namespace Aviation
+    {
 
-/*
- * Toggle standby <-> active
- */
-template <class AVIO> void CModulator<AVIO>::toggleActiveStandby()
-{
-    CFrequency a = this->m_frequencyActive;
-    this->m_frequencyActive = this->m_frequencyStandby;
-    this->m_frequencyStandby = a;
-}
+        /*
+         * Toggle standby <-> active
+         */
+        template <class AVIO> void CModulator<AVIO>::toggleActiveStandby()
+        {
+            CFrequency a = this->m_frequencyActive;
+            this->m_frequencyActive = this->m_frequencyStandby;
+            this->m_frequencyStandby = a;
+        }
 
-/*
- * Register metadata
- */
-template <class AVIO> void CModulator<AVIO>::registerMetadata()
-{
-    qRegisterMetaType<AVIO>(typeid(AVIO).name());
-    qDBusRegisterMetaType<AVIO>();
-}
+        /*
+         * Register metadata
+         */
+        template <class AVIO> void CModulator<AVIO>::registerMetadata()
+        {
+            qRegisterMetaType<AVIO>();
+            qDBusRegisterMetaType<AVIO>();
+        }
 
-/*
- * Equal operator ==
- */
-template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &other) const
-{
-    if (this == &other) return true;
-    return (this->getName() == other.getName() &&
-            this->m_frequencyActive == other.m_frequencyActive &&
-            this->m_frequencyStandby == other.m_frequencyStandby);
-}
+        /*
+         * Equal operator ==
+         */
+        template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &other) const
+        {
+            if (this == &other) return true;
+            return (this->getName() == other.getName() &&
+                    this->m_frequencyActive == other.m_frequencyActive &&
+                    this->m_frequencyStandby == other.m_frequencyStandby);
+        }
 
-/*
- * Equal operator !=
- */
-template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> &other) const
-{
-    return !(other == (*this));
-}
+        /*
+         * Equal operator !=
+         */
+        template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> &other) const
+        {
+            return !(other == (*this));
+        }
 
-// see here for the reason of thess forward instantiations
-// http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
-template class CModulator<CComSystem>;
-template class CModulator<CNavSystem>;
-template class CModulator<CAdfSystem>;
+        /*
+         * To DBus
+         */
+        template <class AVIO> void CModulator<AVIO>::marshallToDbus(QDBusArgument &argument) const
+        {
+            this->CAvionicsBase::marshallToDbus(argument);
+            argument << this->m_frequencyActive;
+            argument << this->m_frequencyStandby;
+            argument << this->m_digits;
+        }
 
-} // namespace
+        /*
+         * From DBuss
+         */
+        template <class AVIO> void CModulator<AVIO>::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            this->CAvionicsBase::unmarshallFromDbus(argument);
+            argument >> this->m_frequencyActive;
+            argument >> this->m_frequencyStandby;
+            argument >> this->m_digits;
+        }
+
+        // see here for the reason of thess forward instantiations
+        // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
+        template class CModulator<CComSystem>;
+        template class CModulator<CNavSystem>;
+        template class CModulator<CAdfSystem>;
+
+    } // namespace
 } // namespace

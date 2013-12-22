@@ -47,7 +47,7 @@ namespace BlackCore
     /*!
      * Concrete ATC list manager. Implementation of IAtcListManager.
      *
-     * Has a dependency on INetwork. An INetwork must be available through the IContext.
+     * Has a dependency on INetwork. An INetwork must be available through the IContext singleton.
      */
     class CAtcListManager : public IAtcListManager
     {
@@ -65,13 +65,13 @@ namespace BlackCore
     public slots:
         /*!
          * CAtcListManager is responsible for connecting these slots.
-         * @{
+         * \{
          */
         void update(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq,
             const BlackMisc::Geo::CCoordinateGeodetic& pos, const BlackMisc::PhysicalQuantities::CLength& range);
         void remove(const QString& callsign);
         void clear();
-        /*! @} */
+        /*! \} */
 
     private:
         BlackMisc::CAtcList m_list;

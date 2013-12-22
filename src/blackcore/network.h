@@ -23,7 +23,7 @@ namespace BlackCore
 {
 
     /*!
-     * Interface to a connection to a multi-user flight simulation and ATC network.
+     * Interface for a connection to a multi-user flight simulation and ATC network.
      *
      * \warning If an INetwork signal is connected to a slot, and that slot emits a signal
      *          which is connected to an INetwork slot, then at least one of those connections
@@ -40,18 +40,21 @@ namespace BlackCore
         {
             AcceptsAtisResponses        = 1 << 0,
             SupportsInterimPosUpdates   = 1 << 1,
-            SupportsModelDescriptions   = 1 << 2,
+            SupportsModelDescriptions   = 1 << 2
         };
 
     public slots:
-        virtual void setServerDetails(const QString& hostname, quint16 port) = 0;
-        virtual void setUserCredentials(const QString& username, const QString& password) = 0;
         virtual void setCallsign(const QString& callsign) = 0;
-        virtual void setRealName(const QString& name) = 0;
+
+        // Network
+        virtual void setServerDetails(const QString &hostname, quint16 port) = 0;
+        virtual void setUserCredentials(const QString &username, const QString &password) = 0;
+        virtual void setRealName(const QString &name) = 0;
         virtual void initiateConnection() = 0;
         virtual void terminateConnection() = 0;
         virtual void sendPrivateTextMessage(const QString& callsign, const QString& msg) = 0;
         virtual void sendRadioTextMessage(const QVector<BlackMisc::PhysicalQuantities::CFrequency>& freqs, const QString& msg) = 0;
+
         virtual void sendIpQuery() = 0;
         virtual void sendFreqQuery(const QString& callsign) = 0;
         virtual void sendServerQuery(const QString& callsign) = 0;
@@ -66,20 +69,25 @@ namespace BlackCore
         //TODO virtual void sendFlightPlan(...) = 0;
         virtual void sendPlaneInfo(const QString& callsign, const QString& acTypeICAO, const QString& airlineICAO, const QString& livery) = 0;
         virtual void ping(const QString& callsign) = 0;
-        virtual void requestMetar(const QString& airportICAO) = 0;
-        virtual void requestWeatherData(const QString& airportICAO) = 0;
+
+        // Weather / flight plan
+        virtual void requestMetar(const QString &airportICAO) = 0;
+        virtual void requestWeatherData(const QString &airportICAO) = 0;
 
     signals:
         void atcPositionUpdate(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq,
             const BlackMisc::Geo::CCoordinateGeodetic& pos, const BlackMisc::PhysicalQuantities::CLength& range);
         void atcDisconnected(const QString& callsign);
         //TODO void cloudDataReceived(...);
+        void metarReceived(const QString &data);
+
+        // Connection / Network in general
+        void kicked(const QString &msg);
         void connectionStatusIdle();
         void connectionStatusConnecting();
         void connectionStatusConnected();
         void connectionStatusDisconnected();
         void connectionStatusError();
-        void ipQueryReplyReceived(const QString& ip);
         void freqQueryReplyReceived(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq);
         void serverQueryReplyReceived(const QString& callsign, const QString& hostname);
         void atcQueryReplyReceived(const QString& callsign, bool isATC);
@@ -89,8 +97,6 @@ namespace BlackCore
         void freqQueryRequestReceived(const QString& callsign);
         void nameQueryRequestReceived(const QString& callsign);
         //TODO void interimPilotPositionUpdate(...);
-        void kicked(const QString& msg);
-        void metarReceived(const QString& data);
         void pilotDisconnected(const QString& callsign);
         void planeInfoReceived(const QString& callsign, const QString& acTypeICAO, const QString& airlineICAO, const QString& livery);
         void planeInfoRequestReceived(const QString& callsign);
@@ -98,6 +104,7 @@ namespace BlackCore
         void pong(const QString& callsign, const BlackMisc::PhysicalQuantities::CTime& elapsedTime);
         void radioTextMessageReceived(const QString& callsign, const QString& msg, const QVector<BlackMisc::PhysicalQuantities::CFrequency>& freqs);
         void privateTextMessageReceived(const QString& fromCallsign, const QString& toCallsign, const QString& msg);
+        void ipQueryReplyReceived(const QString &ip);
         //TODO void temperatureDataReceived(...);
         //TODO void windDataReceived(...);
     };
@@ -132,6 +139,6 @@ namespace BlackCore
         virtual void requestWeatherData(const QString&) {}
     };
 
-} //namespace BlackCore
+} // namespace
 
-#endif //BLACKCORE_NETWORK_H
+#endif // guard

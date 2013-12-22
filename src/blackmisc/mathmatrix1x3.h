@@ -11,47 +11,47 @@
 
 namespace BlackMisc
 {
-namespace Math
-{
-
-/*!
- * \brief Matrix 1x3
- */
-class CMatrix1x3 : public CMatrixBase<CMatrix1x3, 1, 3>
-{
-public:
-    /*!
-     * \brief Constructor
-     */
-    CMatrix1x3() : CMatrixBase() {}
-
-    /*!
-     * \brief Copy constructor
-     * \param other
-     */
-    CMatrix1x3(const CMatrix1x3 &other) : CMatrixBase(other) {}
-
-    /*!
-     * \brief Init by fill value
-     * \param fillValue
-     */
-    explicit CMatrix1x3(double fillValue) : CMatrixBase(fillValue) {}
-
-    /*!
-     * \brief Constructor
-     * \param c1
-     * \param c2
-     * \param c3
-     */
-    CMatrix1x3(double c1, double c2, double c3) : CMatrixBase()
+    namespace Math
     {
-        this->m_matrix(0, 0) = c1;
-        this->m_matrix(0, 1) = c2;
-        this->m_matrix(0, 2) = c3;
-    }
-};
 
-} // namespace
+        /*!
+         * \brief Matrix 1x3
+         */
+        class CMatrix1x3 : public CMatrixBase<CMatrix1x3, 1, 3>
+        {
+        public:
+            /*!
+             * \brief Constructor
+             */
+            CMatrix1x3() : CMatrixBase() {}
+
+            /*!
+             * \brief Copy constructor
+             * \param other
+             */
+            CMatrix1x3(const CMatrix1x3 &other) : CMatrixBase(other) {}
+
+            /*!
+             * \brief Init by fill value
+             * \param fillValue
+             */
+            explicit CMatrix1x3(double fillValue) : CMatrixBase(fillValue) {}
+
+            /*!
+             * \brief Constructor
+             * \param c1
+             * \param c2
+             * \param c3
+             */
+            CMatrix1x3(double c1, double c2, double c3) : CMatrixBase()
+            {
+                this->m_matrix(0, 0) = c1;
+                this->m_matrix(0, 1) = c2;
+                this->m_matrix(0, 2) = c3;
+            }
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Math::CMatrix1x3)

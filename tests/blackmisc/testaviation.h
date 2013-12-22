@@ -16,35 +16,35 @@
 namespace BlackMiscTest
 {
 
-/*!
- * \brief Aviation classes basic tests
- */
-class CTestAviation : public QObject
-{
-    Q_OBJECT
+    /*!
+     * \brief Aviation classes basic tests
+     */
+    class CTestAviation : public QObject
+    {
+        Q_OBJECT
 
-public:
-    /*!
-     * \brief Standard test case constructor
-     * \param parent
-     */
-    explicit CTestAviation(QObject *parent = 0);
+    public:
+        /*!
+         * \brief Standard test case constructor
+         * \param parent
+         */
+        explicit CTestAviation(QObject *parent = 0);
 
-private slots:
-    /*!
-     * \brief Basic unit tests for physical units
-     */
-    void headingBasics();
-    /*!
-     * \brief COM and NAV units
-     */
-    void comAndNav();
+    private slots:
+        /*!
+         * \brief Basic unit tests for physical units
+         */
+        void headingBasics();
+        /*!
+         * \brief COM and NAV units
+         */
+        void comAndNav();
 
-    /*!
-     * \brief Transponder
-     */
-    void transponder();
-};
+        /*!
+         * \brief Transponder
+         */
+        void transponder();
+
 
 } // namespace
 

@@ -9,185 +9,195 @@
 
 namespace BlackMisc
 {
-namespace Geo
-{
-/*!
- * \brief Base class for latitude / longitude
- */
-template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
-{
-protected:
-    /*!
-     * \brief Default constructor
-     */
-    CEarthAngle() : CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
-
-    /*!
-     * \brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit) {}
-
-    /*!
-     * \brief Init by double value
-     * \param angle
-     */
-    CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CAngle(angle) {}
-
-    /*!
-     * \brief String for converter and streaming
-     * \return
-     */
-    virtual QString convertToQString() const
+    namespace Geo
     {
-        return this->valueRoundedWithUnit(6);
-    }
+        /*!
+         * \brief Base class for latitude / longitude
+         */
+        template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
+        {
+        protected:
+            /*!
+             * \brief Default constructor
+             */
+            CEarthAngle() : CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
 
-    /*!
-     * \brief Stream to DBus <<
-     * \param argument
-     */
-    virtual void marshallToDbus(QDBusArgument &argument) const
-    {
-        this->CAngle::marshallToDbus(argument);
-    }
+            /*!
+             * \brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit) {}
 
-    /*!
-     * \brief Stream from DBus >>
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        this->CAngle::unmarshallFromDbus(argument);
-    }
+            /*!
+             * \brief Init by double value
+             * \param angle
+             */
+            CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CAngle(angle) {}
 
-public:
-    /*!
-     * \brief Virtual destructor
-     */
-    virtual ~CEarthAngle() {}
+            /*!
+             * \brief String representation
+             * \param i18n
+             * \return
+             */
+            virtual QString convertToQString(bool i18n = false) const
+            {
+                return this->valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CAngleUnit::deg(), 6, i18n);
+            }
 
-    /*!
-     * \brief Equal operator ==
-     * \param latOrLon
-     * \return
-     */
-    bool operator==(const LATorLON &latOrLon) const
-    {
-        return this->CAngle::operator ==(latOrLon);
-    }
+            /*!
+             * \brief Stream to DBus <<
+             * \param argument
+             */
+            virtual void marshallToDbus(QDBusArgument &argument) const
+            {
+                this->CAngle::marshallToDbus(argument);
+            }
 
-    /*!
-     * \brief Not equal operator !=
-     * \param latOrLon
-     * \return
-     */
-    bool operator!=(const LATorLON &latOrLon) const
-    {
-        return this->CAngle::operator !=(latOrLon);
-    }
+            /*!
+             * \brief Stream from DBus >>
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                this->CAngle::unmarshallFromDbus(argument);
+            }
 
-    /*!
-     * \brief Plus operator +=
-     * \param latOrLon
-     * \return
-     */
-    CEarthAngle &operator +=(const CEarthAngle &latOrLon)
-    {
-        this->CAngle::operator +=(latOrLon);
-        return *this;
-    }
+        public:
+            /*!
+             * \brief Virtual destructor
+             */
+            virtual ~CEarthAngle() {}
 
-    /*!
-     * \brief Minus operator-=
-     * \param latOrLon
-     * \return
-     */
-    CEarthAngle &operator -=(const CEarthAngle &latOrLon)
-    {
-        this->CAngle::operator -=(latOrLon);
-        return *this;
-    }
+            /*!
+             * \brief Equal operator ==
+             * \param latOrLon
+             * \return
+             */
+            bool operator==(const LATorLON &latOrLon) const
+            {
+                return this->CAngle::operator ==(latOrLon);
+            }
 
-    /*!
-     * \brief Greater operator >
-     * \param latOrLon
-     * \return
-     */
-    bool operator >(const LATorLON &latOrLon) const
-    {
-        return this->CAngle::operator >(latOrLon);
-    }
+            /*!
+             * \brief Not equal operator !=
+             * \param latOrLon
+             * \return
+             */
+            bool operator!=(const LATorLON &latOrLon) const
+            {
+                return this->CAngle::operator !=(latOrLon);
+            }
 
-    /*!
-     * \brief Less operator <
-     * \param latOrLon
-     * \return
-     */
-    bool operator <(const LATorLON &latOrLon) const
-    {
-        return this->CAngle::operator >(latOrLon);
-    }
+            /*!
+             * \brief Plus operator +=
+             * \param latOrLon
+             * \return
+             */
+            CEarthAngle &operator +=(const CEarthAngle &latOrLon)
+            {
+                this->CAngle::operator +=(latOrLon);
+                return *this;
+            }
 
-    /*!
-     * \brief Less equal operator <=
-     * \param latOrLon
-     * \return
-     */
-    bool operator <=(const LATorLON &latOrLon) const
-    {
-        return this->CAngle::operator <=(latOrLon);
-    }
+            /*!
+             * \brief Minus operator-=
+             * \param latOrLon
+             * \return
+             */
+            CEarthAngle &operator -=(const CEarthAngle &latOrLon)
+            {
+                this->CAngle::operator -=(latOrLon);
+                return *this;
+            }
 
-    /*!
-     * \brief Greater equal operator >=
-     * \param latOrLon
-     * \return
-     */
-    bool operator >=(const LATorLON &latOrLon) const
-    {
-        return this->CAngle::operator >=(latOrLon);
-    }
+            /*!
+             * \brief Greater operator >
+             * \param latOrLon
+             * \return
+             */
+            bool operator >(const LATorLON &latOrLon) const
+            {
+                return this->CAngle::operator >(latOrLon);
+            }
 
-    /*!
-     * \brief Plus operator +
-     * \param latOrLon
-     * \return
-     */
-    LATorLON operator +(const LATorLON &latOrLon) const
-    {
-        LATorLON l(*this);
-        l += latOrLon;
-        return l;
-    }
+            /*!
+             * \brief Less operator <
+             * \param latOrLon
+             * \return
+             */
+            bool operator <(const LATorLON &latOrLon) const
+            {
+                return this->CAngle::operator >(latOrLon);
+            }
 
-    /*!
-     * \brief Minus operator -
-     * \param latOrLon
-     * \return
-     */
-    LATorLON operator -(const LATorLON &latOrLon) const
-    {
-        LATorLON l(*this);
-        l -= latOrLon;
-        return l;
-    }
+            /*!
+             * \brief Less equal operator <=
+             * \param latOrLon
+             * \return
+             */
+            bool operator <=(const LATorLON &latOrLon) const
+            {
+                return this->CAngle::operator <=(latOrLon);
+            }
 
-    /*!
-     * Register metadata
-     */
-    static void registerMetadata();
+            /*!
+             * \brief Greater equal operator >=
+             * \param latOrLon
+             * \return
+             */
+            bool operator >=(const LATorLON &latOrLon) const
+            {
+                return this->CAngle::operator >=(latOrLon);
+            }
 
-    /*!
-     * \brief Latitude / Longitude from a WGS string such as
-     * \param wgsCoordinate 50° 2′ 0″ N / 8° 34′ 14″ E
-     * \return
-     */
-    static LATorLON fromWgs84(const QString &wgsCoordinate);
-};
+            /*!
+             * \brief Plus operator +
+             * \param latOrLon
+             * \return
+             */
+            LATorLON operator +(const LATorLON &latOrLon) const
+            {
+                LATorLON l(*this);
+                l += latOrLon;
+                return l;
+            }
 
-} // namespace
+            /*!
+             * \brief Minus operator -
+             * \param latOrLon
+             * \return
+             */
+            LATorLON operator -(const LATorLON &latOrLon) const
+            {
+                LATorLON l(*this);
+                l -= latOrLon;
+                return l;
+            }
+
+            /*!
+             * \brief To angle
+             * \return
+             */
+            BlackMisc::PhysicalQuantities::CAngle toAngle() const
+            {
+                return BlackMisc::PhysicalQuantities::CAngle(static_cast<BlackMisc::PhysicalQuantities::CAngle>(*this));
+            }
+
+            /*!
+             * Register metadata
+             */
+            static void registerMetadata();
+
+            /*!
+             * \brief Latitude / Longitude from a WGS string such as
+             * \param wgsCoordinate 50° 2′ 0″ N / 8° 34′ 14″ E
+             * \return
+             */
+            static LATorLON fromWgs84(const QString &wgsCoordinate);
+        };
+
+    } // namespace
 } // namespace
 
 #endif // guard

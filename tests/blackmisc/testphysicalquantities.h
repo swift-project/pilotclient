@@ -91,4 +91,4 @@ private slots:
 
 } // namespace
 
-#endif // BLACKMISCTEST_TESTPHYSICALQUANTITIESBASE_H
+#endif // guard
