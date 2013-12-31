@@ -63,7 +63,6 @@ namespace BlackCore
         virtual void ping(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-        virtual void replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname) = 0;
         virtual void sendIpQuery() = 0;
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
@@ -77,10 +76,11 @@ namespace BlackCore
         // Aircraft
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
         virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-        virtual void sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao) = 0;
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-        virtual void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq) = 0;
-        // TODO virtual void setOwnAircraftPosition(...) = 0;
+        virtual void setOwnAircraftPosition(const BlackMisc::Aviation::CAircraftSituation &aircraft) = 0;
+        virtual void setOwnAircraftTransponder(const BlackMisc::Aviation::CTransponder &xpdr) = 0;
+        virtual void setOwnAircraftFrequency(const BlackMisc::PhysicalQuantities::CFrequency &freq) = 0;
+        virtual void setOwnAircraftIcao(const BlackMisc::Aviation::CAircraftIcao &icao) = 0;
 
         // Weather / flight plan
         virtual void requestMetar(const QString &airportICAO) = 0;
@@ -99,12 +99,10 @@ namespace BlackCore
         // Aircraft
         void pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void aircraftInfoReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao);
-        void aircraftInfoRequestReceived(const BlackMisc::Aviation::CCallsign &callsign);
         void aircraftPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation,
                                     const BlackMisc::Aviation::CTransponder &transponder);
         // TODO void aircraftInterimPositionUpdate(...);
         void frequencyQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
-        void frequencyQueryRequestReceived(const BlackMisc::Aviation::CCallsign &callsign);
 
         // Connection / Network in general
         void kicked(const QString &msg);
@@ -117,9 +115,7 @@ namespace BlackCore
         void capabilitiesQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
         void ipQueryReplyReceived(const QString &ip);
         void serverQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);
-
         void nameQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
-        void nameQueryRequestReceived(const BlackMisc::Aviation::CCallsign &callsign);
 
         // Text messages
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
@@ -143,7 +139,6 @@ namespace BlackCore
         virtual void terminateConnection() {}
         virtual void ping(const BlackMisc::Aviation::CCallsign &) {}
         virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void replyToNameQuery(const BlackMisc::Aviation::CCallsign &, const QString &) {}
         virtual void sendIpQuery() {}
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &) {}
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &) {}
@@ -151,9 +146,11 @@ namespace BlackCore
         virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &) {}
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &) {}
         virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void sendAircraftInfo(const BlackMisc::Aviation::CCallsign &, const BlackMisc::Aviation::CAircraftIcao &) {}
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &, const BlackMisc::PhysicalQuantities::CFrequency &) {}
+        virtual void setOwnAircraftPosition(const BlackMisc::Aviation::CAircraftSituation &) {}
+        virtual void setOwnAircraftTransponder(const BlackMisc::Aviation::CTransponder &) {}
+        virtual void setOwnAircraftFrequency(const BlackMisc::PhysicalQuantities::CFrequency &) {}
+        virtual void setOwnAircraftIcao(const BlackMisc::Aviation::CAircraftIcao &) {}
         virtual void requestMetar(const QString &) {}
         virtual void requestWeatherData(const QString &) {}
     };

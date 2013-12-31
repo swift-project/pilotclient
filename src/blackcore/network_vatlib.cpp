@@ -75,15 +75,15 @@ namespace BlackCore
             m_net->InstallOnPilotInfoRequestReceivedEvent(onPilotInfoRequestReceived, this);
             m_net->InstallOnPilotInfoReceivedEvent(onPilotInfoReceived, this);
 
-            m_timer.start(c_updateIntervalMillisecs, this);
+            connect(&m_processingTimer, SIGNAL(timeout()), this, SLOT(process()));
+            connect(&m_updateTimer, SIGNAL(timeout()), this, SLOT(update()));
+            m_processingTimer.start(c_processingIntervalMsec);
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
     NetworkVatlib::~NetworkVatlib()
     {
-        m_timer.stop();
-
         try
         {
             if (m_net->IsNetworkConnected())
@@ -99,13 +99,42 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void NetworkVatlib::timerEvent(QTimerEvent *)
+    void NetworkVatlib::process()
     {
         try
         {
             if (m_net->IsValid() && m_net->IsSessionExists())
             {
                 m_net->DoProcessing();
+            }
+        }
+        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+    }
+
+    void NetworkVatlib::update()
+    {
+        try
+        {
+            if (m_net->IsValid() && m_net->IsSessionExists())
+            {
+                Cvatlib_Network::PilotPosUpdate pos;
+                pos.altAdj = 0; // TODO
+                pos.altTrue = m_ownAircraft.getAltitude().value(CLengthUnit::ft());
+                pos.bank = m_ownAircraft.getBank().value(CAngleUnit::deg());
+                pos.groundSpeed = m_ownAircraft.getGroundSpeed().value(CSpeedUnit::kts());
+                pos.heading = m_ownAircraft.getHeading().value(CAngleUnit::deg());
+                pos.lat = m_ownAircraft.getPosition().latitude().value(CAngleUnit::deg());
+                pos.lon = m_ownAircraft.getPosition().longitude().value(CAngleUnit::deg());
+                pos.pitch = m_ownAircraft.getPitch().value(CAngleUnit::deg());
+                pos.rating = Cvatlib_Network::pilotRating_Unknown;
+                pos.xpdrCode = m_ownTransponder.getTransponderCodeFormatted().toShort();
+                switch (m_ownTransponder.getTransponderMode())
+                {
+                case CTransponder::ModeC: pos.xpdrMode = Cvatlib_Network::xpndrMode_Normal; break;
+                case CTransponder::StateIdent: pos.xpdrMode = Cvatlib_Network::xpndrMode_Ident; break;
+                default: pos.xpdrMode = Cvatlib_Network::xpndrMode_Standby; break;
+                }
+                m_net->SendPilotUpdate(pos);
             }
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
@@ -202,9 +231,34 @@ namespace BlackCore
     {
         try
         {
-            m_net->LogoffAndDisconnect(c_logoffTimeoutSeconds);
+            m_net->LogoffAndDisconnect(c_logoffTimeoutSec);
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+    }
+
+    void NetworkVatlib::setOwnAircraftPosition(const BlackMisc::Aviation::CAircraftSituation &aircraft)
+    {
+        m_ownAircraft = aircraft;
+
+        if (! m_updateTimer.isActive())
+        {
+            m_updateTimer.start(c_updateIntervalMsec);
+        }
+    }
+
+    void NetworkVatlib::setOwnAircraftTransponder(const BlackMisc::Aviation::CTransponder &xpdr)
+    {
+        m_ownTransponder = xpdr;
+    }
+
+    void NetworkVatlib::setOwnAircraftFrequency(const BlackMisc::PhysicalQuantities::CFrequency &freq)
+    {
+        m_ownFrequency = freq;
+    }
+
+    void NetworkVatlib::setOwnAircraftIcao(const BlackMisc::Aviation::CAircraftIcao &icao)
+    {
+        m_ownAircraftIcao = icao;
     }
 
     void NetworkVatlib::sendTextMessages(const BlackMisc::Network::CTextMessageList &messages)
@@ -296,20 +350,20 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void NetworkVatlib::replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq)
+    void NetworkVatlib::replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         try
         {
-            m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Freq, toFSD(callsign), toFSD(QString::number(freq.value(CFrequencyUnit::MHz()), 'f', 3)));
+            m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Freq, toFSD(callsign), toFSD(QString::number(m_ownFrequency.value(CFrequencyUnit::MHz()), 'f', 3)));
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void NetworkVatlib::replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname)
+    void NetworkVatlib::replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         try
         {
-            m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Name, toFSD(callsign), toFSD(realname));
+            m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Name, toFSD(callsign), toFSD(m_realname));
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
@@ -323,25 +377,25 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void NetworkVatlib::sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao)
+    void NetworkVatlib::sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign)
     {
         try
         {
-            const QByteArray acTypeICAObytes = toFSD(icao.getDesignator());
-            const QByteArray airlineICAObytes = toFSD(icao.getAirline());
-            const QByteArray liverybytes = toFSD(icao.getLivery());
+            const QByteArray acTypeICAObytes = toFSD(m_ownAircraftIcao.getDesignator());
+            const QByteArray airlineICAObytes = toFSD(m_ownAircraftIcao.getAirline());
+            const QByteArray liverybytes = toFSD(m_ownAircraftIcao.getLivery());
             std::vector<const char *> keysValues;
-            if (!icao.getDesignator().isEmpty())
+            if (!m_ownAircraftIcao.getDesignator().isEmpty())
             {
                 keysValues.push_back(m_net->acinfo_Equipment);
                 keysValues.push_back(acTypeICAObytes);
             }
-            if (icao.hasAirline())
+            if (m_ownAircraftIcao.hasAirline())
             {
                 keysValues.push_back(m_net->acinfo_Airline);
                 keysValues.push_back(airlineICAObytes);
             }
-            if (icao.hasLivery())
+            if (m_ownAircraftIcao.hasLivery())
             {
                 keysValues.push_back(m_net->acinfo_Livery);
                 keysValues.push_back(liverybytes);
@@ -490,12 +544,21 @@ namespace BlackCore
         emit cbvar_cast(cbvar)->metarReceived(cbvar_cast(cbvar)->fromFSD(data));
     }
 
-    void NetworkVatlib::onInfoQueryRequestReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::infoQuery type, const char *, void *cbvar)
+    void NetworkVatlib::onInfoQueryRequestReceived(Cvatlib_Network *, const char *callsignString, Cvatlib_Network::infoQuery type, const char *, void *cbvar)
     {
+        auto timer = new QTimer(cbvar_cast(cbvar));
+        timer->setSingleShot(true);
+        timer->start(0);
+
+        BlackMisc::Aviation::CCallsign callsign(callsignString);
         switch (type)
         {
-        case Cvatlib_Network::infoQuery_Freq:   emit cbvar_cast(cbvar)->frequencyQueryRequestReceived(cbvar_cast(cbvar)->fromFSD(callsign)); break;
-        case Cvatlib_Network::infoQuery_Name:   emit cbvar_cast(cbvar)->nameQueryRequestReceived(cbvar_cast(cbvar)->fromFSD(callsign)); break;
+        case Cvatlib_Network::infoQuery_Freq:
+            connect(timer, &QTimer::timeout, [ = ]() { cbvar_cast(cbvar)->replyToFrequencyQuery(callsign); });
+            break;
+        case Cvatlib_Network::infoQuery_Name:
+            connect(timer, &QTimer::timeout, [ = ]() { cbvar_cast(cbvar)->replyToNameQuery(callsign); });
+            break;
         }
     }
 
@@ -582,9 +645,14 @@ namespace BlackCore
         //TODO
     }
 
-    void NetworkVatlib::onPilotInfoRequestReceived(Cvatlib_Network *, const char *callsign, void *cbvar)
+    void NetworkVatlib::onPilotInfoRequestReceived(Cvatlib_Network *, const char *callsignString, void *cbvar)
     {
-        emit cbvar_cast(cbvar)->aircraftInfoRequestReceived(cbvar_cast(cbvar)->fromFSD(callsign));
+        auto timer = new QTimer(cbvar_cast(cbvar));
+        timer->setSingleShot(true);
+        timer->start(0);
+
+        BlackMisc::Aviation::CCallsign callsign(callsignString);
+        connect(timer, &QTimer::timeout, [ = ]() { cbvar_cast(cbvar)->sendAircraftInfo(callsign); });
     }
 
     void NetworkVatlib::onPilotInfoReceived(Cvatlib_Network *net, const char *callsign, const char **keysValues, void *cbvar)

@@ -26,13 +26,10 @@ Client::Client(BlackMisc::IContext &ctx)
     connect(m_net, &INetwork::atisQueryReplyReceived,           this, &Client::atisQueryReplyReceived);
     connect(m_net, &INetwork::nameQueryReplyReceived,           this, &Client::nameQueryReplyReceived);
     connect(m_net, &INetwork::capabilitiesQueryReplyReceived,   this, &Client::capabilitiesQueryReplyReceived);
-    connect(m_net, &INetwork::frequencyQueryRequestReceived,    this, &Client::freqQueryRequestReceived);
-    connect(m_net, &INetwork::nameQueryRequestReceived,         this, &Client::nameQueryRequestReceived);
     connect(m_net, &INetwork::kicked,                           this, &Client::kicked);
     connect(m_net, &INetwork::metarReceived,                    this, &Client::metarReceived);
     connect(m_net, &INetwork::pilotDisconnected,                this, &Client::pilotDisconnected);
     connect(m_net, &INetwork::aircraftInfoReceived,             this, &Client::aircraftInfoReceived);
-    connect(m_net, &INetwork::aircraftInfoRequestReceived,      this, &Client::aircraftInfoRequestReceived);
     connect(m_net, &INetwork::pong,                             this, &Client::pong);
     connect(m_net, &INetwork::textMessagesReceived,             this, &Client::textMessagesReceived);
 
@@ -49,10 +46,11 @@ Client::Client(BlackMisc::IContext &ctx)
     connect(this, &Client::sendAtisQuery,                       m_net, &INetwork::sendAtisQuery);
     connect(this, &Client::sendNameQuery,                       m_net, &INetwork::sendNameQuery);
     connect(this, &Client::sendCapabilitiesQuery,               m_net, &INetwork::sendCapabilitiesQuery);
-    connect(this, &Client::replyToFreqQuery,                    m_net, &INetwork::replyToFrequencyQuery);
-    connect(this, &Client::replyToNameQuery,                    m_net, &INetwork::replyToNameQuery);
     connect(this, &Client::requestPlaneInfo,                    m_net, &INetwork::requestAircraftInfo);
-    connect(this, &Client::sendAircraftInfo,                    m_net, &INetwork::sendAircraftInfo);
+    connect(this, &Client::setOwnAircraftPosition,              m_net, &INetwork::setOwnAircraftPosition);
+    connect(this, &Client::setOwnAircraftTransponder,           m_net, &INetwork::setOwnAircraftTransponder);
+    connect(this, &Client::setOwnAircraftFrequency,             m_net, &INetwork::setOwnAircraftFrequency);
+    connect(this, &Client::setOwnAircraftIcao,                  m_net, &INetwork::setOwnAircraftIcao);
     connect(this, &Client::ping,                                m_net, &INetwork::ping);
     connect(this, &Client::requestMetar,                        m_net, &INetwork::requestMetar);
     connect(this, &Client::requestWeatherData,                  m_net, &INetwork::requestWeatherData);
@@ -75,10 +73,11 @@ Client::Client(BlackMisc::IContext &ctx)
     m_commands["atis"]              = std::bind(&Client::sendAtisQueryCmd, this, _1);
     m_commands["name"]              = std::bind(&Client::sendNameQueryCmd, this, _1);
     m_commands["caps"]              = std::bind(&Client::sendCapabilitiesQueryCmd, this, _1);
-    m_commands["freqreply"]         = std::bind(&Client::replyToFreqQueryCmd, this, _1);
-    m_commands["namereply"]         = std::bind(&Client::replyToNameQueryCmd, this, _1);
     m_commands["aircraftinfo"]      = std::bind(&Client::requestAircraftInfoCmd, this, _1);
-    m_commands["aircraftinforeply"] = std::bind(&Client::sendAircraftInfoCmd, this, _1);
+    m_commands["setposition"]       = std::bind(&Client::setOwnAircraftPositionCmd, this, _1);
+    m_commands["setsquawk"]         = std::bind(&Client::setOwnAircraftTransponderCmd, this, _1);
+    m_commands["setfreq"]           = std::bind(&Client::setOwnAircraftFrequencyCmd, this, _1);
+    m_commands["seticao"]           = std::bind(&Client::setOwnAircraftIcaoCmd, this, _1);
     m_commands["ping"]              = std::bind(&Client::pingCmd, this, _1);
     m_commands["metar"]             = std::bind(&Client::requestMetarCmd, this, _1);
     m_commands["weather"]           = std::bind(&Client::requestWeatherDataCmd, this, _1);
@@ -228,23 +227,6 @@ void Client::sendCapabilitiesQueryCmd(QTextStream &args)
     emit sendCapabilitiesQuery(callsign);
 }
 
-void Client::replyToFreqQueryCmd(QTextStream &args)
-{
-    QString callsign;
-    double num;
-    args >> callsign >> num;
-    BlackMisc::PhysicalQuantities::CFrequency freq(num, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
-    emit replyToFreqQuery(callsign, freq);
-}
-
-void Client::replyToNameQueryCmd(QTextStream &args)
-{
-    QString callsign;
-    QString realname;
-    args >> callsign >> realname;
-    emit replyToNameQuery(callsign, realname);
-}
-
 void Client::requestAircraftInfoCmd(QTextStream &args)
 {
     QString callsign;
@@ -252,7 +234,16 @@ void Client::requestAircraftInfoCmd(QTextStream &args)
     emit requestPlaneInfo(callsign);
 }
 
-void Client::sendAircraftInfoCmd(QTextStream &args)
+void Client::setOwnAircraftFrequencyCmd(QTextStream &args)
+{
+    QString callsign;
+    double num;
+    args >> callsign >> num;
+    BlackMisc::PhysicalQuantities::CFrequency freq(num, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
+    emit setOwnAircraftFrequency(freq);
+}
+
+void Client::setOwnAircraftIcaoCmd(QTextStream &args)
 {
     QString callsign;
     QString acTypeICAO;
@@ -260,7 +251,37 @@ void Client::sendAircraftInfoCmd(QTextStream &args)
     QString livery;
     args >> callsign >> acTypeICAO >> airlineICAO >> livery;
     BlackMisc::Aviation::CAircraftIcao icao(acTypeICAO, "L2J", airlineICAO, livery, "");
-    emit sendAircraftInfo(callsign, icao);
+    emit setOwnAircraftIcao(icao);
+}
+
+void Client::setOwnAircraftPositionCmd(QTextStream &args)
+{
+    QString lat;
+    QString lon;
+    QString alt;
+    QString speed;
+    QString hdg;
+    QString pitch;
+    QString bank;
+    args >> lat >> lon >> alt >> speed >> hdg >> pitch >> bank;
+    BlackMisc::Aviation::CAircraftSituation position(BlackMisc::Geo::CCoordinateGeodetic(lat.toDouble(), lon.toDouble(), 0),
+        BlackMisc::Aviation::CAltitude(alt.toDouble(), BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+        BlackMisc::Aviation::CHeading(hdg.toDouble(), BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+        BlackMisc::PhysicalQuantities::CAngle(pitch.toDouble(), BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+        BlackMisc::PhysicalQuantities::CAngle(bank.toDouble(), BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+        BlackMisc::PhysicalQuantities::CSpeed(speed.toDouble(), BlackMisc::PhysicalQuantities::CSpeedUnit::kts()));
+    emit setOwnAircraftPosition(position);
+}
+
+void Client::setOwnAircraftTransponderCmd(QTextStream &args)
+{
+    QString code;
+    QString mode;
+    args >> code >> mode;
+    BlackMisc::Aviation::CTransponder xpdr("transponder", code.toInt(), BlackMisc::Aviation::CTransponder::StateStandby);
+    if (mode == "c") { xpdr.setTransponderCode(BlackMisc::Aviation::CTransponder::ModeC); }
+    else if (mode == "i") { xpdr.setTransponderCode(BlackMisc::Aviation::CTransponder::StateIdent); }
+    emit setOwnAircraftTransponder(xpdr);
 }
 
 void Client::pingCmd(QTextStream &args)
@@ -359,16 +380,6 @@ void Client::capabilitiesQueryReplyReceived(const BlackMisc::Aviation::CCallsign
     std::cout << "CAPS_REPLY " << callsign << " " << flags << std::endl;
 }
 
-void Client::freqQueryRequestReceived(const BlackMisc::Aviation::CCallsign &callsign)
-{
-    std::cout << "FREQ_QUERY " << callsign << std::endl;
-}
-
-void Client::nameQueryRequestReceived(const BlackMisc::Aviation::CCallsign &callsign)
-{
-    std::cout << "NAME_QUERY " << callsign << std::endl;
-}
-
 void Client::kicked(const QString &msg)
 {
     std::cout << "KICKED " << msg.toStdString() << std::endl;
@@ -387,11 +398,6 @@ void Client::pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
 void Client::aircraftInfoReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData)
 {
     std::cout << "PLANE_INFO_REPLY " << callsign << " " << icaoData.toStdString();
-}
-
-void Client::aircraftInfoRequestReceived(const BlackMisc::Aviation::CCallsign &callsign)
-{
-    std::cout << "PLANE_INFO_QUERY " << callsign << std::endl;
 }
 
 void Client::pong(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime)

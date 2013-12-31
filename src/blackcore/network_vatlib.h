@@ -14,7 +14,7 @@
 #include "blackmisc/avallclasses.h"
 #include <vatlib/vatlib.h>
 #include <QScopedPointer>
-#include <QBasicTimer>
+#include <QTimer>
 #include <QTextCodec>
 #include <QByteArray>
 
@@ -29,9 +29,6 @@ namespace BlackCore
         NetworkVatlib(QObject *parent = nullptr);
         virtual ~NetworkVatlib();
 
-    protected: // QObject overrides
-        virtual void timerEvent(QTimerEvent *);
-
     public: // INetwork slots overrides
 
         // Network
@@ -44,7 +41,6 @@ namespace BlackCore
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
         virtual void ping(const BlackMisc::Aviation::CCallsign &callsign);
 
         // Weather
@@ -55,14 +51,21 @@ namespace BlackCore
 
         // Aircraft
         virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao);
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
+        virtual void setOwnAircraftPosition(const BlackMisc::Aviation::CAircraftSituation &aircraft);
+        virtual void setOwnAircraftTransponder(const BlackMisc::Aviation::CTransponder &xpdr);
+        virtual void setOwnAircraftFrequency(const BlackMisc::PhysicalQuantities::CFrequency &freq);
+        virtual void setOwnAircraftIcao(const BlackMisc::Aviation::CAircraftIcao &icao);
 
         // ATC
         virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void requestMetar(const QString &airportICAO);
+
+    private slots:
+        void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        void replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        void sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign);
 
     private: //shimlib callbacks
         static void onConnectionStatusChanged(Cvatlib_Network *, Cvatlib_Network::connStatus oldStatus, Cvatlib_Network::connStatus newStatus, void *cbvar);
@@ -93,6 +96,10 @@ namespace BlackCore
         QString fromFSD(const char *cstr) const;
         bool isDisconnected() const { return m_status == Cvatlib_Network::connStatus_Idle || m_status == Cvatlib_Network::connStatus_Disconnected; }
 
+    private slots:
+        void process();
+        void update();
+
     signals:
         void terminate();
 
@@ -107,14 +114,20 @@ namespace BlackCore
     private:
         QScopedPointer<Cvatlib_Network, VatlibQScopedPointerDeleter> m_net;
         Cvatlib_Network::connStatus m_status;
-
-        QBasicTimer m_timer;
         BlackMisc::Network::CServer m_server;
-        static int const c_updateIntervalMillisecs = 100;
-        static int const c_logoffTimeoutSeconds = 5;
+
+        QTimer m_processingTimer;
+        QTimer m_updateTimer;
+        static int const c_processingIntervalMsec = 100;
+        static int const c_updateIntervalMsec = 5000;
+        static int const c_logoffTimeoutSec = 5;
 
         QByteArray m_callsign;
         QByteArray m_realname;
+        BlackMisc::Aviation::CAircraftSituation m_ownAircraft;
+        BlackMisc::Aviation::CTransponder m_ownTransponder;
+        BlackMisc::PhysicalQuantities::CFrequency m_ownFrequency;
+        BlackMisc::Aviation::CAircraftIcao m_ownAircraftIcao;
 
         QTextCodec *m_fsdTextCodec;
     };
