@@ -44,6 +44,13 @@ namespace BlackMiscTest
 
 //    cned += ce2; // must not work
 
+        // checked with http://www.movable-type.co.uk/scripts/latlong.html
+        CCoordinateGeodetic coord1 = CCoordinateGeodetic::fromWgs84("50 03 59N", "005 42 53W");
+        CCoordinateGeodetic coord2 = CCoordinateGeodetic::fromWgs84("50 03 59N", "005 42 53W");
+        CCoordinateGeodetic coord3 = CCoordinateGeodetic::fromWgs84("58 38 38N", "003 04 12W");
+        qDebug() << coord1 << coord2 << greatCircleDistance(coord1, coord2); // should be 0
+        qDebug() << coord1 << coord3 << greatCircleDistance(coord1, coord3) << greatCircleDistance(coord1, coord3).switchUnit(CLengthUnit::km()) ; // should be Distance:  968.9 km (to 4 SF*)
+
         // bye
         qDebug() << "-----------------------------------------------";
         return 0;

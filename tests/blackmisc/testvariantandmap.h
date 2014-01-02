@@ -3,9 +3,11 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISCTEST_TESTAVIATIONBASE_H
-#define BLACKMISCTEST_TESTAVIATIONBASE_H
+#ifndef BLACKMISCTEST_TESTVARIANTANDVALUEMAP_H
+#define BLACKMISCTEST_TESTVARIANTANDVALUEMAP_H
 
+#include "blackmisc/pqconstants.h"
+#include "blackmisc/avatcstation.h"
 #include <QtTest/QtTest>
 
 namespace BlackMiscTest
@@ -14,7 +16,7 @@ namespace BlackMiscTest
     /*!
      * \brief Aviation classes basic tests
      */
-    class CTestAviation : public QObject
+    class CTestVariantAndValueMap : public QObject
     {
         Q_OBJECT
 
@@ -23,32 +25,18 @@ namespace BlackMiscTest
          * \brief Standard test case constructor
          * \param parent
          */
-        explicit CTestAviation(QObject *parent = nullptr);
+        explicit CTestVariantAndValueMap(QObject *parent = 0) : QObject(parent) {}
 
     private slots:
         /*!
-         * \brief Basic unit tests for physical units
+         * \brief Basic unit tests for value objects and variants
          */
-        void headingBasics();
+        void variant();
         /*!
-         * \brief COM and NAV units
+         * \brief Unit tests for value maps and value objects
          */
-        void comAndNav();
+        void valueMap();
 
-        /*!
-         * \brief Transponder
-         */
-        void transponder();
-
-        /*!
-         * \brief Callsigns
-         */
-        void callsign();
-
-        /*!
-         * \brief Testing copying and equality of objects
-         */
-        void copyAndEqual();
     };
 
 } // namespace

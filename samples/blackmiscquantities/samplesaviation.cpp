@@ -9,11 +9,15 @@
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/aviotransponder.h"
+#include "blackmisc/avatcstationlist.h"
 
 #include <QDebug>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::Network;
 
 namespace BlackMiscTest
 {
@@ -62,7 +66,38 @@ namespace BlackMiscTest
         CTransponder tr2("T2", "4532", CTransponder::ModeMil3);
         qDebug() << tr1 << tr2;
 
+        // Callsign and ATC station
+        CCallsign callsign1("d-ambz");
+        CCallsign callsign2("DAmbz");
+        qDebug() << callsign1 << callsign2 << (callsign1 == callsign2);
 
+        QDateTime dtFrom = QDateTime::currentDateTimeUtc();
+        QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
+        QDateTime dtFrom2 = dtUntil;
+        QDateTime dtUntil2 = dtUntil.addSecs(60 * 60.0);
+        CCoordinateGeodetic geoPos =
+            CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(1487, CLengthUnit::ft()));
+        CAtcStation station1(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
+                             CFrequency(118.7, CFrequencyUnit::MHz()),
+                             geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
+        CAtcStation station2(station1);
+        CAtcStation station3(CCallsign("eddm_twr"), CUser("654321", "Jen Doe"),
+                             CFrequency(118.7, CFrequencyUnit::MHz()),
+                             geoPos, CLength(100, CLengthUnit::km()), false, dtFrom2, dtUntil2);
+        qDebug() << station1 << station2 << (station1.getCallsign() == station2.getCallsign());
+
+
+        // ATC List
+        CAtcStationList atcList;
+        atcList.push_back(station1);
+        atcList.push_back(station2);
+        atcList.push_back(station3);
+        atcList.push_back(station1);
+        atcList.push_back(station2);
+        atcList.push_back(station3);
+        atcList = atcList.findBy(&CAtcStation::getCallsign, "eddm_twr", &CAtcStation::getFrequency, CFrequency(118.7, CFrequencyUnit::MHz()));
+        atcList = atcList.sortedBy(&CAtcStation::getBookedFromUtc, &CAtcStation::getCallsign, &CAtcStation::getControllerRealname);
+        qDebug() << atcList;
 
         qDebug() << "-----------------------------------------------";
         return 0;

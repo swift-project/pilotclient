@@ -1,0 +1,36 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="blackmisctest.datacontext">
+    <property name="qpAtcOnlineList" type="(a((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)))" access="readwrite">
+      <annotation name="org.qtproject.QtDBus.QtTypeName" value="BlackMisc::Aviation::CAtcStationList"/>
+    </property>
+    <property name="qpAtcBookedList" type="(a((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)))" access="readwrite">
+      <annotation name="org.qtproject.QtDBus.QtTypeName" value="BlackMisc::Aviation::CAtcStationList"/>
+    </property>
+    <property name="qpFooStrings" type="as" access="read"/>
+    <signal name="fooSignal">
+      <arg name="message" type="s" direction="out"/>
+    </signal>
+    <method name="fooSlot">
+      <arg name="baz" type="s" direction="in"/>
+    </method>
+    <method name="fooSlotRet">
+      <arg type="s" direction="out"/>
+      <arg name="baz" type="s" direction="in"/>
+    </method>
+    <method name="updateBookedControllers">
+      <arg type="i" direction="out"/>
+      <arg name="condition" type="(aiavai)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::CValueMap"/>
+      <arg name="values" type="(aiavai)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="BlackMisc::CValueMap"/>
+    </method>
+    <method name="updateOnlineControllers">
+      <arg type="i" direction="out"/>
+      <arg name="condition" type="(aiavai)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::CValueMap"/>
+      <arg name="values" type="(aiavai)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="BlackMisc::CValueMap"/>
+    </method>
+  </interface>
+</node>

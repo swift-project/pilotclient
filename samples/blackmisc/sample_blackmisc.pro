@@ -1,6 +1,6 @@
 QT       += core dbus
 
-TARGET = sample_quantities_avionics
+TARGET = sample_blackmisc
 TEMPLATE = app
 
 CONFIG   += console c++11

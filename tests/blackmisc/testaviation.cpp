@@ -4,9 +4,23 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "testaviation.h"
+#include "blackmisc/pqconstants.h"
+#include "blackmisc/avheading.h"
+#include "blackmisc/avinformationmessage.h"
+#include "blackmisc/avaircraftsituation.h"
+#include "blackmisc/avaircrafticao.h"
+#include "blackmisc/avcallsign.h"
+#include "blackmisc/aviocomsystem.h"
+#include "blackmisc/avionavsystem.h"
+#include "blackmisc/aviotransponder.h"
+#include "blackmisc/avatcstation.h"
+#include "blackmisc/nwuser.h"
+#include "blackmisc/nwserver.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::Geo;
 
 namespace BlackMiscTest
 {
@@ -76,6 +90,59 @@ namespace BlackMiscTest
         QVERIFY2(!CTransponder::tryGetStandardTransponder(t1, "0781", CTransponder::StateStandby), "No valid transponder");
         QVERIFY2(CTransponder::tryGetStandardTransponder(t1, "7211", CTransponder::StateStandby), "No valid transponder");
         QVERIFY2(!CTransponder::tryGetStandardTransponder(t1, "schnitzel", CTransponder::StateStandby), "No valid transponder");
+
+    }
+
+    /*
+     * Callsign
+     */
+    void CTestAviation::callsign()
+    {
+        CCallsign cs1("EDDm_twr");
+        CCallsign cs2("EDDmtwr");
+        CCallsign cs3("EDDmapp");
+        QVERIFY2(cs1 == cs2, "Callsigns shall be equal");
+        QVERIFY2(cs1 != cs3, "Callsigns shall not be equal");
+    }
+
+    /*
+     * Copy and compare
+     */
+    void CTestAviation::copyAndEqual()
+    {
+        CFrequency f1(123.45, CFrequencyUnit::MHz());
+        CFrequency f2(f1);
+        QVERIFY2(f1 == f2, "frequencies shall be equal");
+
+        CCallsign c1("EABCD");
+        CCallsign c2(c1);
+        QVERIFY2(c1 == c2, "callsigns shall be equal");
+
+        CInformationMessage im1(CInformationMessage::METAR, "I am a metar");
+        CInformationMessage im2(im1);
+        QVERIFY2(im1 == im2, "information shall be equal");
+
+        CUser user1("112233dd", "Joe", "", "secret");
+        CUser user2(user1);
+        QVERIFY2(user1 == user2, "information shall be equal");
+
+        CServer server1("development", "VATSIM dev.server", "vatsim-germany.org", 6809, user1);
+        CServer server2(server1);
+        QVERIFY2(server1 == server2, "server shall be equal");
+
+        CAircraftSituation situation1(
+            CCoordinateGeodetic(
+                CLatitude::fromWgs84("N 049° 18' 17"),
+                CLongitude::fromWgs84("E 008° 27' 05"),
+                CLength(0, CLengthUnit::m())),
+            CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
+        );
+        CAircraftSituation situation2(situation1);
+        QVERIFY2(situation1 == situation2, "situations shall be equal");
+
+        CAircraftIcao icao1(CAircraftIcao("C172", "L1P", "GA", "GA", "0000ff"));
+        CAircraftIcao icao2(icao1);
+        QVERIFY2(icao1 == icao2, "ICAOs shall be equal");
 
     }
 

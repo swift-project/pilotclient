@@ -6,10 +6,6 @@
 #ifndef BLACKMISCTEST_TESTMAIN_H
 #define BLACKMISCTEST_TESTMAIN_H
 
-#include "testphysicalquantities.h"
-#include "testaviation.h"
-#include "testvectormatrix.h"
-#include "testgeo.h"
 #include <QtTest/QtTest>
 
 namespace BlackMiscTest
