@@ -31,7 +31,7 @@ namespace BlackCore
 
     NetworkVatlib::NetworkVatlib(QObject *parent)
         : INetwork(parent),
-          m_net(Create_Cvatlib_Network()),
+          m_net(Cvatlib_Network::Create()),
           m_status(Cvatlib_Network::connStatus_Idle),
           m_fsdTextCodec(QTextCodec::codecForName("latin1"))
     {
