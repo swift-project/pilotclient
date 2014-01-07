@@ -24,6 +24,7 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
 QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
 DBUS_ADAPTORS += blackcore.contextnetwork.xml
 DBUS_ADAPTORS += blackcore.contextsettings.xml
+DBUS_ADAPTORS += blackcore.contextapplication.xml
 
 # QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
 # DBUS_INTERFACES += blackcore.contextnetwork.xml

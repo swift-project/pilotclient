@@ -12,7 +12,9 @@ namespace BlackCore
      * Constructor
      */
     CCoreRuntime::CCoreRuntime(bool withDbus, QObject *parent) :
-        QObject(parent), m_init(false), m_dbusServer(nullptr), m_contextNetwork(nullptr), m_settings(nullptr)
+        QObject(parent), m_init(false), m_dbusServer(nullptr),
+        m_contextNetwork(nullptr), m_contextVoice(nullptr),
+        m_contextSettings(nullptr), m_contextApplication(nullptr)
     {
         this->init(withDbus);
     }
@@ -34,11 +36,17 @@ namespace BlackCore
         }
 
         // contexts
-        this->m_settings = new CContextSettings(this);
-        if (withDbus) this->m_settings->registerWithDBus(this->m_dbusServer);
+        this->m_contextSettings = new CContextSettings(this);
+        if (withDbus) this->m_contextSettings->registerWithDBus(this->m_dbusServer);
 
         this->m_contextNetwork = new CContextNetwork(this);
-        if (withDbus) this->m_contextNetwork->registerWithDBus(this->m_dbusServer); // complete object after init
+        if (withDbus) this->m_contextNetwork->registerWithDBus(this->m_dbusServer);
+
+        this->m_contextApplication = new CContextApplication(this);
+        if (withDbus) this->m_contextApplication->registerWithDBus(this->m_dbusServer);
+
+        this->m_contextVoice = new CContextVoice(this);
+        if (withDbus) this->m_contextVoice->registerWithDBus(this->m_dbusServer);
 
         // flag
         m_init = true;
