@@ -84,7 +84,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdAtcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
     {
-        this->log(Q_FUNC_INFO, callsign.toQString(), frequency.toQString(), position.toQString(), range.toQString());
+        // this->log(Q_FUNC_INFO, callsign.toQString(), frequency.toQString(), position.toQString(), range.toQString());
         CAtcStationList stationsWithCallsign = this->m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
         {
@@ -96,10 +96,12 @@ namespace BlackCore
             station.setPosition(position);
             station.setOnline(true);
             station.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
-            this->m_atcStationsOnline.insert(station);
+            this->m_atisMessageBuilder[callsign.asString()] = ""; // reset ATIS builder
+            this->m_atcStationsOnline.push_back(station);
             emit this->changedAtcStationsOnline();
             emit this->m_network->sendAtisQuery(callsign); // request ATIS
             emit this->m_network->sendNameQuery(callsign);
+            emit this->m_network->sendServerQuery(callsign);
         }
         else
         {
@@ -118,7 +120,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdAtcControllerDisconnected(const CCallsign &callsign)
     {
-        this->log(Q_FUNC_INFO, callsign.toQString());
+        // this->log(Q_FUNC_INFO, callsign.toQString());
         this->m_atcStationsOnline.removeIf(&CAtcStation::getCallsign, callsign);
         emit this->changedAtcStationsOnline();
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, CValueMap(CAtcStation::IndexIsOnline, QVariant(false)));
@@ -140,7 +142,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdMetarReceived(const QString &metarMessage)
     {
-        this->log(Q_FUNC_INFO, metarMessage);
+        // this->log(Q_FUNC_INFO, metarMessage);
         if (metarMessage.length() < 10) return; // invalid
         const QString icaoCode = metarMessage.left(4).toUpper();
         const QString icaoCodeTower = icaoCode + "_TWR";
@@ -192,7 +194,7 @@ namespace BlackCore
                         }
                         else if (name == "name")
                         {
-                            user.setRealname(value);
+                            user.setRealName(value);
                         }
                         else if (name == "cid")
                         {
@@ -221,7 +223,7 @@ namespace BlackCore
 
                     // consolidate and append
                     this->m_atcStationsOnline.mergeWithBooking(bookedStation);
-                    stations.insert(bookedStation);
+                    stations.push_back(bookedStation);
                 }
                 nwReply->close();
                 nwReply->deleteLater();

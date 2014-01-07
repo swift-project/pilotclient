@@ -15,8 +15,9 @@
 #include "blackmisc/coordinategeodetic.h"
 #include "blackmisc/pqlength.h"
 #include "blackmisc/pqtime.h"
+#include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwtextmessagelist.h"
-#include "blackmisc/nwserver.h"
+#include "blackmisc/statusmessagelist.h"
 #include <QObject>
 #include <QString>
 #include <QMap>
@@ -129,7 +130,7 @@ namespace BlackCore
     /*!
      * Dummy implementation of INetwork used for testing.
      */
-    class NetworkDummy : public INetwork
+    class CNetworkDummy : public INetwork
     {
     public: //INetwork slots overrides
         virtual void setServer(const BlackMisc::Network::CServer &) {}

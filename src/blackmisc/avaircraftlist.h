@@ -22,13 +22,13 @@ namespace BlackMisc
     namespace Aviation
     {
         /*!
-         * Value object encapsulating a list of aircraft stations.
+         * Value object encapsulating a list of aircrafts.
          */
         class CAircraftList : public CSequence<CAircraft>
         {
         public:
             /*!
-             * \brief Empty constructor.
+             * \brief Default constructor.
              */
             CAircraftList();
 

@@ -69,8 +69,8 @@ namespace BlackMiscTest
     {
         CSpeed s1(100, CSpeedUnit::km_h());
         CSpeed s2(1000, CSpeedUnit::ft_min());
-        QVERIFY2(s1.valueRounded(CSpeedUnit::NM_h(), 0) == 54, qPrintable(QString("100km/h is not %1 NM/h").arg(s1.valueRounded(CSpeedUnit::NM_h(), 0))));
-        QVERIFY2(s2.valueRounded(CSpeedUnit::m_s(), 1) == 5.1, qPrintable(QString("1000ft/min is not %1 m/s").arg(s2.valueRounded(CSpeedUnit::m_s(), 1))));
+        QVERIFY2(CMath::epsilonEqual(s1.valueRounded(CSpeedUnit::NM_h(), 0), 54), qPrintable(QString("100km/h is not %1 NM/h").arg(s1.valueRounded(CSpeedUnit::NM_h(), 0))));
+        QVERIFY2(CMath::epsilonEqual(s2.valueRounded(CSpeedUnit::m_s(), 1), 5.1), qPrintable(QString("1000ft/min is not %1 m/s").arg(s2.valueRounded(CSpeedUnit::m_s(), 1))));
     }
 
     /*
@@ -97,10 +97,10 @@ namespace BlackMiscTest
         CAngle a4(35.436, CAngleUnit::sexagesimalDegMin()); // 35.72666
         CAngle a5(-60.3015, CAngleUnit::sexagesimalDeg()); // negative angles = west longitude or south latitude
         a2.switchUnit(CAngleUnit::deg());
-        QVERIFY2(a1.piFactor() == 1, qPrintable(QString("Pi should be 1PI, not %1").arg(a1.piFactor())));
-        QVERIFY2(a3.valueRounded(CAngleUnit::deg()) == 35.73, "Expecting 35.73");
-        QVERIFY2(a4.valueRounded(CAngleUnit::deg()) == 35.73, "Expecting 35.73");
-        QVERIFY2(a5.valueRounded(CAngleUnit::deg(), 4) == -60.5042, "Expecting -60.5042");
+        QVERIFY2(CMath::epsilonEqual(a1.piFactor(), 1.00), qPrintable(QString("Pi should be 1PI, not %1").arg(a1.piFactor())));
+        QVERIFY2(CMath::epsilonEqual(a3.valueRounded(CAngleUnit::deg()), 35.73), "Expecting 35.73");
+        QVERIFY2(CMath::epsilonEqual(a4.valueRounded(CAngleUnit::deg()), 35.73), "Expecting 35.73");
+        QVERIFY2(CMath::epsilonEqual(a5.valueRounded(CAngleUnit::deg(), 4), -60.5042), "Expecting -60.5042");
     }
 
     /*
@@ -113,7 +113,7 @@ namespace BlackMiscTest
         w2.switchUnit(CMassUnit::tonne());
         QVERIFY2(w2.value() == 1, "1tonne shall be 1000kg");
         w2.switchUnit(CMassUnit::lb());
-        QVERIFY2(w2.valueRounded(2) == 2204.62, "1tonne shall be 2204pounds");
+        QVERIFY2(CMath::epsilonEqual(w2.valueRounded(2), 2204.62), "1tonne shall be 2204pounds");
         QVERIFY2(w1 == w2, "Masses shall be equal");
     }
 
@@ -141,10 +141,10 @@ namespace BlackMiscTest
         CTemperature t2(1, CTemperatureUnit::F()); // 1F
         CTemperature t3(220.15, CTemperatureUnit::F());
         CTemperature t4(10, CTemperatureUnit::F());
-        QVERIFY2(t1.valueRounded(CTemperatureUnit::K()) == 273.15, qPrintable(QString("0C shall be 273.15K, not %1 K").arg(t1.valueRounded(CTemperatureUnit::K()))));
-        QVERIFY2(t2.valueRounded(CTemperatureUnit::C()) == -17.22, qPrintable(QString("1F shall be -17.22C, not %1 C").arg(t2.valueRounded(CTemperatureUnit::C()))));
-        QVERIFY2(t3.valueRounded(CTemperatureUnit::C()) == 104.53, qPrintable(QString("220.15F shall be 104.53C, not %1 C").arg(t3.valueRounded(CTemperatureUnit::C()))));
-        QVERIFY2(t4.valueRounded(CTemperatureUnit::K()) == 260.93, qPrintable(QString("10F shall be 260.93K, not %1 K").arg(t4.valueRounded(CTemperatureUnit::K()))));
+        QVERIFY2(CMath::epsilonEqual(t1.valueRounded(CTemperatureUnit::K()), 273.15), qPrintable(QString("0C shall be 273.15K, not %1 K").arg(t1.valueRounded(CTemperatureUnit::K()))));
+        QVERIFY2(CMath::epsilonEqual(t2.valueRounded(CTemperatureUnit::C()), -17.22), qPrintable(QString("1F shall be -17.22C, not %1 C").arg(t2.valueRounded(CTemperatureUnit::C()))));
+        QVERIFY2(CMath::epsilonEqual(t3.valueRounded(CTemperatureUnit::C()), 104.53), qPrintable(QString("220.15F shall be 104.53C, not %1 C").arg(t3.valueRounded(CTemperatureUnit::C()))));
+        QVERIFY2(CMath::epsilonEqual(t4.valueRounded(CTemperatureUnit::K()), 260.93), qPrintable(QString("10F shall be 260.93K, not %1 K").arg(t4.valueRounded(CTemperatureUnit::K()))));
     }
 
     /*
@@ -174,7 +174,8 @@ namespace BlackMiscTest
         CAcceleration a2(a1);
         a1.switchUnit(CAccelerationUnit::ft_s2());
         QVERIFY2(a1 == a2, "Accelerations should be similar");
-        QVERIFY2(BlackMisc::Math::CMath::round(a2.value() * ftFactor, 6) == a1.valueRounded(6),
+        QVERIFY2(CMath::epsilonEqual(BlackMisc::Math::CMath::round(a2.value() * ftFactor, 6),
+                                     a1.valueRounded(6)),
                  "Numerical values should be equal");
     }
 

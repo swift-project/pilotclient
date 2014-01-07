@@ -11,21 +11,16 @@
 #include "blackcore/context_network_interface.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessages.h"
-#include <QObject>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QTimer>
-#include <QMap>
+#include "blackmisc/statusmessagelist.h"
+
+class QNetworkAccessManager;
+class QNetworkReply;
 
 #define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "blackcore.contextnetwork"
 
 namespace BlackCore
 {
-
     class CCoreRuntime;
-
 
     /*!
      * \brief Network context
@@ -90,7 +85,7 @@ namespace BlackCore
         // needs to be crosschecked with the latest version of Qt
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const
         {
-            this->log(Q_FUNC_INFO);
+            // this->log(Q_FUNC_INFO);
             return m_atcStationsOnline;
         }
 
@@ -101,7 +96,7 @@ namespace BlackCore
         // If I make this &getAtcStations XML is not generated correctly
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const
         {
-            this->log(Q_FUNC_INFO);
+            // this->log(Q_FUNC_INFO);
             return m_atcStationsBooked;
         }
 
@@ -112,7 +107,7 @@ namespace BlackCore
         // If I make this &getAtcStations XML is not generated correctly
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const
         {
-            this->log(Q_FUNC_INFO);
+            // this->log(Q_FUNC_INFO);
             return m_aircraftsInRange;
         }
 
@@ -120,13 +115,13 @@ namespace BlackCore
          * \brief Connect to Network
          * \return
          */
-        virtual BlackMisc::CStatusMessages connectToNetwork();
+        virtual BlackMisc::CStatusMessageList connectToNetwork();
 
         /*!
          * \brief Disconnect from network
          * \return
          */
-        virtual BlackMisc::CStatusMessages disconnectFromNetwork();
+        virtual BlackMisc::CStatusMessageList disconnectFromNetwork();
 
         /*!
          * \brief Network connected?
@@ -139,7 +134,7 @@ namespace BlackCore
          * \param aircraft
          * \return
          */
-        virtual BlackMisc::CStatusMessages setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
+        virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
 
         /*!
          * \brief Update own position
@@ -193,7 +188,8 @@ namespace BlackCore
         BlackMisc::Aviation::CAircraftList m_aircraftsInRange;
         BlackCore::INetwork *m_network;
         BlackMisc::Aviation::CAircraft m_ownAircraft;
-        QMap<QString, BlackMisc::Aviation::CInformationMessage> m_metarCache;
+        QMap<QString, BlackMisc::Aviation::CInformationMessage> m_metarCache /*!< Keep METARs for a while */;
+        QMap<QString, QString> m_atisMessageBuilder; /*!< ATIS consists of several parts, complete ATIS needs to be concatenated */
 
         // for reading XML
         QNetworkAccessManager *m_networkManager;
@@ -231,18 +227,6 @@ namespace BlackCore
         }
 
         /*!
-         * \brief Check position update before sending to network
-         */
-        void sendOwnAircraftCheckedPositionUpdateToNetwork() const;
-
-        /*!
-         * \brief Own aircraft details
-         * \param aircraft
-         * \return
-         */
-        BlackMisc::CStatusMessages sendOwnAircraftDetails();
-
-        /*!
          * \brief Init my very onw aircraft
          */
         void initOwnAircraft();
@@ -276,11 +260,12 @@ namespace BlackCore
         void psFsdAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
 
         /*!
-         * \brief ATIS received
+         * \brief ATIS received (also relevant to get voice server)
          * \param callsign
+         * \param lineType
          * \param atisMessage
          */
-        void psFsdAtisQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &atisMessage);
+        void psFsdAtisQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, Cvatlib_Network::atisLineType lineType, const QString &atisMessage);
 
         /*!
          * \brief METAR received

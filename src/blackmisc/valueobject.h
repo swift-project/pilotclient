@@ -244,7 +244,18 @@ namespace BlackMisc
         /*!
          * \brief Default constructor
          */
-        CValueObject();
+        CValueObject() {}
+
+        /*!
+         * \brief Copy constructor
+         */
+        CValueObject(const CValueObject &) {}
+
+        /*!
+         * \brief Copy assignment operator =
+         * \return
+         */
+        CValueObject &operator=(const CValueObject &) { return *this; }
 
         /*!
          * \brief String for streaming operators

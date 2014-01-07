@@ -61,13 +61,13 @@ namespace BlackMisc
              * Get callsign.
              * \return
              */
-            const QString &asString() const { return m_callsign; }
+            const QString &asString() const { return this->m_callsign; }
 
             /*!
              * Get callsign.
              * \return
              */
-            const QString &getStringAsSet() const { return m_callsignAsSet; }
+            const QString &getStringAsSet() const { return this->m_callsignAsSet; }
 
             /*!
              * \brief Get ICAO code, if this possible

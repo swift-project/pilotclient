@@ -22,10 +22,10 @@ namespace BlackMisc
         /*
          * Wrong path name messages
          */
-        CStatusMessages CSettingUtilities::wrongPathMessages(const QString &path)
+        CStatusMessageList CSettingUtilities::wrongPathMessages(const QString &path)
         {
-            BlackMisc::CStatusMessages rps;
-            rps.append(CSettingUtilities::wrongPathMessage(path));
+            BlackMisc::CStatusMessageList rps;
+            rps.push_back(CSettingUtilities::wrongPathMessage(path));
             return rps;
         }
 

@@ -15,16 +15,15 @@
 #include <QString>
 
 #ifdef Q_OS_WIN
-typedef short           int16_t;
+typedef short int16_t;
 #endif
-
 
 namespace BlackMisc
 {
     namespace Voice
     {
         /*!
-         * \brief Value object encapsulating information of a audio device.
+         * Value object encapsulating information of a audio device.
          * If you want to safe this object, use the name instead of the index, since the index can change after
          * a restart.
          */

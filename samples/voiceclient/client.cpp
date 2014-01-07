@@ -30,7 +30,7 @@ Client::Client(QObject *parent) :
     m_commands["termconnect"]       = std::bind(&Client::terminateConnectionCmd, this, _1);
     m_commands["inputdevices"]      = std::bind(&Client::inputDevicesCmd, this, _1);
     m_commands["outputdevices"]     = std::bind(&Client::outputDevicesCmd, this, _1);
-    m_commands["users"]             = std::bind(&Client::listUsersCmd, this, _1);
+    m_commands["users"]             = std::bind(&Client::listCallsignsCmd, this, _1);
 
 }
 
@@ -103,7 +103,7 @@ void Client::setCallsignCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
-    m_voiceClient->setCallsign(BlackMisc::Aviation::CCallsign(callsign));
+    m_voiceClient->setMyAircraftCallsign(BlackMisc::Aviation::CCallsign(callsign));
 }
 
 void Client::initiateConnectionCmd(QTextStream &args)
@@ -143,7 +143,10 @@ void Client::outputDevicesCmd(QTextStream & /** args **/)
     printLinePrefix();
 }
 
-void Client::listUsersCmd(QTextStream &args)
+/*
+ * Input devices
+ */
+void Client::listCallsignsCmd(QTextStream &args)
 {
     Q_UNUSED(args)
     QSet<QString> users = m_voiceClient->roomUserList(BlackCore::IVoiceClient::COM1);

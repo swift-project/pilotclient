@@ -153,11 +153,11 @@ bool MainWindow::reloadOwnAircraft()
  */
 void MainWindow::toggleNetworkConnection()
 {
-    CStatusMessages msgs;
+    CStatusMessageList msgs;
     if (!this->isContextNetworkAvailableCheck()) return;
     if (!this->m_contextNetwork->isConnected())
     {
-        QString cs = this->ui->le_SettingsPlaneCallsign->text();
+        QString cs = this->ui->le_SettingsAircraftCallsign->text();
         if (cs.isEmpty())
         {
             this->displayStatusMessage(CStatusMessage::getValidationError("missing callsign"));
@@ -196,10 +196,10 @@ void MainWindow::displayStatusMessage(const CStatusMessage &message)
 /*
  * Display a status message
  */
-void MainWindow::displayStatusMessages(const CStatusMessages &messages)
+void MainWindow::displayStatusMessages(const CStatusMessageList &messages)
 {
     if (messages.isEmpty()) return;
-    foreach(CStatusMessage msg, messages.getMessages())
+    foreach(CStatusMessage msg, messages)
     {
         this->displayStatusMessage(msg);
     }
@@ -211,37 +211,44 @@ void MainWindow::displayStatusMessages(const CStatusMessages &messages)
 void MainWindow::menuClicked()
 {
     QObject *sender = QObject::sender();
-    CStatusMessages msgs;
+    CStatusMessageList msgs;
+
     if (sender == this->ui->menu_TestLocationsEDRY)
     {
-        this->m_contextNetwork->updateOwnPosition(
-            CCoordinateGeodetic(
-                CLatitude::fromWgs84("N 049° 18' 17"),
-                CLongitude::fromWgs84("E 008° 27' 05"),
-                CLength(0, CLengthUnit::m())),
-            CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
-        );
+        this->setTestPosition("N 049° 18' 17", "E 008° 27' 05", CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
+    }
+    else if (sender == this->ui->menu_TestLocationsEDNX)
+    {
+        this->setTestPosition("N 048° 14′ 22", "E 011° 33′ 41", CAltitude(486, CAltitude::MeanSeaLevel, CLengthUnit::m()));
+    }
+    else if (sender == this->ui->menu_TestLocationsEDDM)
+    {
+        this->setTestPosition("N 048° 21′ 14", "E 011° 47′ 10", CAltitude(448, CAltitude::MeanSeaLevel, CLengthUnit::m()));
+    }
+    else if (sender == this->ui->menu_TestLocationsEDDF)
+    {
+        this->setTestPosition("N 50° 2′ 0", "E 8° 34′ 14", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
     }
     else if (sender == this->ui->menu_ReloadSettings)
     {
         this->reloadSettings();
-        msgs.append(CStatusMessage::getInfoMessage("Settings reloaded"));
+        msgs.push_back(CStatusMessage::getInfoMessage("Settings reloaded"));
     }
 
     if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
 }
 
 /*
- * Connection terminated
- */
+* Connection terminated
+*/
 void MainWindow::connectionTerminated()
 {
     this->updateGuiStatusInformation();
 }
 
 /*
- * Connection status changed
- */
+* Connection status changed
+*/
 void MainWindow::connectionStatusChanged(uint /** from **/, uint to)
 {
     // CContextNetwork::ConnectionStatus statusFrom = static_cast<CContextNetwork::ConnectionStatus>(from);

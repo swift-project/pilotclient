@@ -20,9 +20,7 @@ TRANSLATIONS += translations/blackmisc_i18n_de.ts \
                 translations/blackmisc_i18n_fr.ts \
                 translations/blackmisc_i18n_en.ts
 
-HEADERS += *.h \
-    vaudiodevice.h \
-    voiceallclasses.h
+HEADERS += *.h
 SOURCES += *.cpp
 DESTDIR = ../../lib
 OTHER_FILES += $$TRANSLATIONS readme.txt

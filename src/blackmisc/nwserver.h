@@ -147,7 +147,7 @@ namespace BlackMisc
                 IndexAddress,
                 IndexPort,
                 IndexUserId,
-                IndexUserRealname,
+                IndexUserRealName,
                 IndexUserPassword
             };
 

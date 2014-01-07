@@ -38,7 +38,7 @@ namespace BlackCoreTest
          */
         void networkTest(BlackCore::INetwork *);
 
-        BlackCore::NetworkVatlib m_networkVatlib;
+        BlackCore::CNetworkVatlib m_networkVatlib;
     };
 
 } //namespace BlackCoreTest

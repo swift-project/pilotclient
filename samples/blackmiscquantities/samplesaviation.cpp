@@ -96,7 +96,7 @@ namespace BlackMiscTest
         atcList.push_back(station2);
         atcList.push_back(station3);
         atcList = atcList.findBy(&CAtcStation::getCallsign, "eddm_twr", &CAtcStation::getFrequency, CFrequency(118.7, CFrequencyUnit::MHz()));
-        atcList = atcList.sortedBy(&CAtcStation::getBookedFromUtc, &CAtcStation::getCallsign, &CAtcStation::getControllerRealname);
+        atcList = atcList.sortedBy(&CAtcStation::getBookedFromUtc, &CAtcStation::getCallsign, &CAtcStation::getControllerRealName);
         qDebug() << atcList;
 
         qDebug() << "-----------------------------------------------";

@@ -17,7 +17,7 @@ WITH_SAMPLES = ON
 
 equals(WITH_BLACKMISC, ON) {
     SUBDIRS += src/blackmisc
-    #SUBDIRS += src/blackmisc_cpp2xml
+    SUBDIRS += src/blackmisc_cpp2xml
 }
 
 equals(WITH_BLACKCORE, ON) {

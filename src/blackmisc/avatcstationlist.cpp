@@ -69,70 +69,75 @@ namespace BlackMisc
         /*
          * Merge with booking
          */
-        int  CAtcStationList::mergeWithBooking(CAtcStation &booking)
+        int  CAtcStationList::mergeWithBooking(CAtcStation &bookedAtcStation)
         {
             int c = 0;
-            booking.setOnline(false); // reset
+            bookedAtcStation.setOnline(false); // reset
 
             for (auto i = this->begin(); i != this->end(); ++i)
             {
-                CAtcStation currentOnline = *i;
-                if (currentOnline.getCallsign() != booking.getCallsign()) continue;
+                CAtcStation onlineAtcStation = *i;
+                if (onlineAtcStation.getCallsign() != bookedAtcStation.getCallsign()) continue;
 
                 // from online to booking
-                booking.setOnline(true);
-                booking.setFrequency(currentOnline.getFrequency());
+                bookedAtcStation.setOnline(true);
+                bookedAtcStation.setFrequency(onlineAtcStation.getFrequency());
+
+                // Logoff Zulu Time set?
+                // comes directly from the online controller and is most likely more accurate
+                if (!onlineAtcStation.getBookedUntilUtc().isNull())
+                    bookedAtcStation.setBookedUntilUtc(onlineAtcStation.getBookedUntilUtc());
 
                 // from booking to online
-                if (!currentOnline.isBookedNow() && booking.hasValidBookingTimes())
+                if (!onlineAtcStation.isBookedNow() && bookedAtcStation.hasValidBookingTimes())
                 {
-                    if (currentOnline.hasValidBookingTimes())
+                    if (onlineAtcStation.hasValidBookingTimes())
                     {
-                        if (booking.isBookedNow())
+                        if (bookedAtcStation.isBookedNow())
                         {
                             // can't get any better
-                            currentOnline.setBookedFromUntil(booking);
+                            onlineAtcStation.setBookedFromUntil(bookedAtcStation);
                         }
                         else
                         {
                             // we already have some booking dates
-                            CTime timeDiffBooking = booking.bookedWhen();
-                            CTime timeDiffOnline = currentOnline.bookedWhen();
+                            CTime timeDiffBooking = bookedAtcStation.bookedWhen();
+                            CTime timeDiffOnline = onlineAtcStation.bookedWhen();
                             if (timeDiffBooking.isNegativeWithEpsilonConsidered() && timeDiffOnline.isNegativeWithEpsilonConsidered())
                             {
                                 // both in past
                                 if (timeDiffBooking > timeDiffOnline)
-                                    currentOnline.setBookedFromUntil(booking);
+                                    onlineAtcStation.setBookedFromUntil(bookedAtcStation);
                             }
                             else if (timeDiffBooking.isPositiveWithEpsilonConsidered() && timeDiffOnline.isPositiveWithEpsilonConsidered())
                             {
                                 // both in future
                                 if (timeDiffBooking < timeDiffOnline)
-                                    currentOnline.setBookedFromUntil(booking);
+                                    onlineAtcStation.setBookedFromUntil(bookedAtcStation);
                             }
                             else if (timeDiffBooking.isPositiveWithEpsilonConsidered() && timeDiffOnline.isNegativeWithEpsilonConsidered())
                             {
                                 // future booking is better than past booking
-                                currentOnline.setBookedFromUntil(booking);
+                                onlineAtcStation.setBookedFromUntil(bookedAtcStation);
                             }
                         }
                     }
                     else
                     {
                         // no booking info so far
-                        currentOnline.setBookedFromUntil(booking);
+                        onlineAtcStation.setBookedFromUntil(bookedAtcStation);
                     }
                 }
 
                 // both ways
-                currentOnline.syncronizeControllerData(booking);
-                if (currentOnline.hasValidDistance())
-                    booking.setDistanceToPlane(currentOnline.getDistanceToPlane());
-                else if (booking.hasValidDistance())
-                    currentOnline.setDistanceToPlane(booking.getDistanceToPlane());
+                onlineAtcStation.syncronizeControllerData(bookedAtcStation);
+                if (onlineAtcStation.hasValidDistance())
+                    bookedAtcStation.setDistanceToPlane(onlineAtcStation.getDistanceToPlane());
+                else if (bookedAtcStation.hasValidDistance())
+                    onlineAtcStation.setDistanceToPlane(bookedAtcStation.getDistanceToPlane());
 
                 // update
-                *i = currentOnline;
+                *i = onlineAtcStation;
                 c++;
             }
 

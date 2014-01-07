@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
     Client client;
     LineReader reader;
-    QObject::connect(&reader, SIGNAL(command(const QString&)), &client, SLOT(command(const QString&)));
+    QObject::connect(&reader, SIGNAL(command(const QString &)), &client, SLOT(command(const QString &)));
     QObject::connect(&client, SIGNAL(quit()), &reader, SLOT(terminate()));
     QObject::connect(&client, SIGNAL(quit()), &app, SLOT(quit()));
 

@@ -6,11 +6,6 @@ namespace BlackMisc
 {
 
     /*
-     * Constructor
-     */
-    CValueObject::CValueObject() {}
-
-    /*
      * Stringify
      */
     QString CValueObject::toQString(bool i18n) const

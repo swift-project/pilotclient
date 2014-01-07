@@ -20,7 +20,7 @@ namespace BlackCore
     void CContextNetwork::psFsdTextMessageReceived(const CTextMessageList &messages)
     {
         if (messages.isEmpty()) return;
-        this->log(Q_FUNC_INFO, messages.toQString());
+        // this->log(Q_FUNC_INFO, messages.toQString());
         this->textMessagesReceived(messages); // relay
     }
 

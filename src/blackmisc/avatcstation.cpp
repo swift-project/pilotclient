@@ -317,8 +317,8 @@ namespace BlackMisc
                 return QVariant(this->m_callsign.getStringAsSet());
             case IndexController:
                 return this->m_controller.toQVariant();
-            case IndexControllerRealname:
-                return QVariant(this->getControllerRealname());
+            case IndexControllerRealName:
+                return QVariant(this->getControllerRealName());
             case IndexControllerId:
                 return QVariant(this->getControllerId());
             case IndexFrequency:
@@ -374,8 +374,8 @@ namespace BlackMisc
             case IndexController:
                 this->setController(variant.value<CUser>());
                 break;
-            case IndexControllerRealname:
-                this->setControllerRealname(variant.value<QString>());
+            case IndexControllerRealName:
+                this->setControllerRealName(variant.value<QString>());
                 break;
             case IndexControllerId:
                 this->setControllerId(variant.value<QString>());
@@ -437,9 +437,9 @@ namespace BlackMisc
             {
             case IndexFrequency:
                 if (!CComSystem::isValidCivilAviationFrequency(qv.value<CFrequency>()))
-                {
                     return "";
-                }
+                else
+                    return qv.value<CFrequency>().valueRoundedWithUnit(3, i18n);
                 break;
             case IndexDistance:
                 {

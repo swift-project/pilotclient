@@ -15,7 +15,6 @@
 #include "avheading.h"
 #include "pqspeed.h"
 #include "valueobject.h"
-#include <QDateTime>
 
 namespace BlackMisc
 {
@@ -49,7 +48,6 @@ namespace BlackMisc
                                const BlackMisc::PhysicalQuantities::CSpeed &gs = BlackMisc::PhysicalQuantities::CSpeed())
                 : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch), m_bank(bank), m_groundspeed(gs),
                 m_timestamp(QDateTime::currentDateTimeUtc()) {}
-
 
             /*!
              * \brief Properties by index

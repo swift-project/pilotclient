@@ -3,8 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef SAMPLE_VOICECLIENT
+#define SAMPLE_VOICECLIENT
 
 #include "blackcore/voiceclient.h"
 
@@ -15,8 +15,9 @@
 class Client : public QObject
 {
     Q_OBJECT
+
 public:
-    Client(QObject *parent = 0);
+    Client(QObject *parent = nullptr);
 
 signals:
     void quit();
@@ -35,7 +36,7 @@ private: //commands
     void terminateConnectionCmd(QTextStream &args);
     void inputDevicesCmd(QTextStream &args);
     void outputDevicesCmd(QTextStream &args);
-    void listUsersCmd(QTextStream &args);
+    void listCallsignsCmd(QTextStream &args);
 
     void printLinePrefix();
 

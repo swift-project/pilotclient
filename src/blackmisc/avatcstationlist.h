@@ -75,10 +75,10 @@ namespace BlackMisc
 
             /*!
              * \brief Merge with ATC station representing booking information
-             * \param booking
+             * \param bookedAtcStation
              * \return
              */
-            int mergeWithBooking(CAtcStation &booking);
+            int mergeWithBooking(CAtcStation &bookedAtcStation);
         };
 
     } //namespace

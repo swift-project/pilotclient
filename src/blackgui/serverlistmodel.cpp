@@ -22,7 +22,7 @@ namespace BlackGui
         this->m_columns.addColumn(CServer::IndexDescription, "description");
         this->m_columns.addColumn(CServer::IndexAddress, "address");
         this->m_columns.addColumn(CServer::IndexPort, "port");
-        this->m_columns.addColumn(CServer::IndexUserRealname, "username");
+        this->m_columns.addColumn(CServer::IndexUserRealName, "realname");
         this->m_columns.addColumn(CServer::IndexUserId, "userid");
 
         // force strings for translation in resource files
@@ -30,7 +30,7 @@ namespace BlackGui
         (void)QT_TRANSLATE_NOOP("ViewServerList", "description");
         (void)QT_TRANSLATE_NOOP("ViewServerList", "address");
         (void)QT_TRANSLATE_NOOP("ViewServerList", "port");
-        (void)QT_TRANSLATE_NOOP("ViewServerList", "username");
+        (void)QT_TRANSLATE_NOOP("ViewServerList", "realname");
         (void)QT_TRANSLATE_NOOP("ViewServerList", "userid");
     }
 

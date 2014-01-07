@@ -8,6 +8,7 @@
 
 #include "blackmisc/valueobject.h"
 #include "blackmisc/mathematics.h"
+using namespace BlackMisc::Math;
 
 namespace BlackMisc
 {
@@ -167,9 +168,10 @@ namespace BlackMisc
             bool operator ==(const CVector3DBase &other) const
             {
                 if (this == &other) return true;
-                return this->m_i == other.m_i &&
-                       this->m_j == other.m_j &&
-                       this->m_k == other.m_k;
+                return
+                    CMath::epsilonEqual(this->m_i, other.m_i, 1E-9) &&
+                    CMath::epsilonEqual(this->m_j, other.m_j, 1E-9) &&
+                    CMath::epsilonEqual(this->m_k, other.m_k, 1E-9);
             }
 
             /*!

@@ -18,43 +18,29 @@
       <arg name="to" type="u" direction="out"/>
     </signal>
     <signal name="textMessagesReceived">
-      <arg name="textMessages" type="(a((s)(s)s(dd(s))))" direction="out"/>
+      <arg name="textMessages" type="(a((ss)(ss)s(dd(s))))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Network::CTextMessageList"/>
     </signal>
     <method name="readAtcBookingsFromSource">
     </method>
     <method name="getAtcStationsOnline">
-      <arg type="(a((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))))" direction="out"/>
+      <arg type="(a((ss)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))(ssbb)))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CAtcStationList"/>
     </method>
     <method name="getAtcStationsBooked">
-      <arg type="(a((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))))" direction="out"/>
+      <arg type="(a((ss)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))(ssbb)))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CAtcStationList"/>
     </method>
     <method name="getAircraftsInRange">
-      <arg type="(a((s)(ssss)(((dd(s))(dd(s))(dd(s)))(dd(s)i)(dd(s)i)(dd(s))(dd(s))(dd(s))((iii)(iiii)i))(s(dd(s))(dd(s))i)(s(dd(s))(dd(s))i)(sii)(sssss)(dd(s))))" direction="out"/>
+      <arg type="(a((ss)(ssss)(((dd(s))(dd(s))(dd(s)))(dd(s)i)(dd(s)i)(dd(s))(dd(s))(dd(s))((iii)(iiii)i))(s(dd(s))(dd(s))iii)(s(dd(s))(dd(s))iii)(sii)(sssss)(dd(s))))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CAircraftList"/>
     </method>
     <method name="getOwnAircraft">
-      <arg type="((s)(ssss)(((dd(s))(dd(s))(dd(s)))(dd(s)i)(dd(s)i)(dd(s))(dd(s))(dd(s))((iii)(iiii)i))(s(dd(s))(dd(s))i)(s(dd(s))(dd(s))i)(sii)(sssss)(dd(s)))" direction="out"/>
+      <arg type="((ss)(ssss)(((dd(s))(dd(s))(dd(s)))(dd(s)i)(dd(s)i)(dd(s))(dd(s))(dd(s))((iii)(iiii)i))(s(dd(s))(dd(s))iii)(s(dd(s))(dd(s))iii)(sii)(sssss)(dd(s)))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CAircraft"/>
-    </method>
-    <method name="connectToNetwork">
-      <arg type="(a(sii((iii)(iiii)i)))" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::CStatusMessages"/>
-    </method>
-    <method name="disconnectFromNetwork">
-      <arg type="(a(sii((iii)(iiii)i)))" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::CStatusMessages"/>
     </method>
     <method name="isConnected">
       <arg type="b" direction="out"/>
-    </method>
-    <method name="setOwnAircraft">
-      <arg type="(a(sii((iii)(iiii)i)))" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::CStatusMessages"/>
-      <arg name="aircraft" type="((s)(ssss)(((dd(s))(dd(s))(dd(s)))(dd(s)i)(dd(s)i)(dd(s))(dd(s))(dd(s))((iii)(iiii)i))(s(dd(s))(dd(s))i)(s(dd(s))(dd(s))i)(sii)(sssss)(dd(s)))" direction="in"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CAircraft"/>
     </method>
     <method name="updateOwnPosition">
       <arg name="position" type="((dd(s))(dd(s))(dd(s)))" direction="in"/>
@@ -67,15 +53,15 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CAircraftSituation"/>
     </method>
     <method name="updateOwnCockpit">
-      <arg name="com1" type="(s(dd(s))(dd(s))i)" direction="in"/>
+      <arg name="com1" type="(s(dd(s))(dd(s))iii)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CComSystem"/>
-      <arg name="com2" type="(s(dd(s))(dd(s))i)" direction="in"/>
+      <arg name="com2" type="(s(dd(s))(dd(s))iii)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="BlackMisc::Aviation::CComSystem"/>
       <arg name="transponder" type="(sii)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="BlackMisc::Aviation::CTransponder"/>
     </method>
     <method name="sendTextMessages">
-      <arg name="textMessages" type="(a((s)(s)s(dd(s))))" direction="in"/>
+      <arg name="textMessages" type="(a((ss)(ss)s(dd(s))))" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Network::CTextMessageList"/>
     </method>
     <method name="getMetar">

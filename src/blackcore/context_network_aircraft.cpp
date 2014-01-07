@@ -21,7 +21,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdAircraftInfoReceived(const CCallsign &callsign, const CAircraftIcao &icaoData)
     {
-        this->log(Q_FUNC_INFO, callsign.toQString(), icaoData.toQString());
+        // this->log(Q_FUNC_INFO, callsign.toQString(), icaoData.toQString());
         CAircraftList aircraftsWithCallsign = this->m_aircraftsInRange.findByCallsign(callsign);
         if (aircraftsWithCallsign.isEmpty())
         {
@@ -30,7 +30,7 @@ namespace BlackCore
             aircraft.setCallsign(callsign);
             aircraft.setIcaoInfo(icaoData);
             aircraft.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
-            this->m_aircraftsInRange.insert(aircraft);
+            this->m_aircraftsInRange.push_back(aircraft);
             emit this->m_network->sendFrequencyQuery(callsign);
             emit this->m_network->sendNameQuery(callsign);
             emit this->changedAircraftsInRange();
@@ -49,7 +49,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdAircraftPositionUpdate(const CCallsign &callsign, const CAircraftSituation &situation, const CTransponder &transponder)
     {
-        this->log(Q_FUNC_INFO, callsign.toQString(), situation.toQString(), transponder.toQString());
+        // this->log(Q_FUNC_INFO, callsign.toQString(), situation.toQString(), transponder.toQString());
         CAircraftList list = this->m_aircraftsInRange.findByCallsign(callsign);
         if (list.isEmpty())
         {
@@ -59,7 +59,7 @@ namespace BlackCore
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
             aircraft.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
-            this->m_aircraftsInRange.insert(aircraft);
+            this->m_aircraftsInRange.push_back(aircraft);
             emit this->m_network->sendFrequencyQuery(callsign);
             emit this->m_network->sendNameQuery(callsign);
             emit this->m_network->requestAircraftInfo(callsign);
@@ -68,9 +68,12 @@ namespace BlackCore
         else
         {
             // update
+            CLength distance = this->m_ownAircraft.calculcateDistanceToPlane(situation.getPosition());
+            distance.switchUnit(CLengthUnit::NM());
             CValueMap vm;
             vm.addValue(CAircraft::IndexTransponder, transponder);
             vm.addValue(CAircraft::IndexSituation, situation);
+            vm.addValue(CAircraft::IndexDistance, distance);
             this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);
             emit this->changedAircraftsInRange();
         }
@@ -81,7 +84,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdPilotDisconnected(const CCallsign &callsign)
     {
-        this->log(Q_FUNC_INFO, callsign.toQString());
+        // this->log(Q_FUNC_INFO, callsign.toQString());
         this->m_aircraftsInRange.removeIf(&CAircraft::getCallsign, callsign);
     }
 
@@ -90,7 +93,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdFrequencyReceived(const CCallsign &callsign, const CFrequency &frequency)
     {
-        this->log(Q_FUNC_INFO, callsign.toQString(), frequency.toQString());
+        // this->log(Q_FUNC_INFO, callsign.toQString(), frequency.toQString());
 
         // update
         CValueMap vm(CAircraft::IndexFrequencyCom1, frequency.toQVariant());

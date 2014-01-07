@@ -97,8 +97,8 @@ namespace BlackMisc
                 return QVariant::fromValue(this->m_port);
             case IndexUserId:
                 return QVariant::fromValue(this->m_user.getId());
-            case IndexUserRealname:
-                return QVariant::fromValue(this->m_user.getRealname());
+            case IndexUserRealName:
+                return QVariant::fromValue(this->m_user.getRealName());
             default:
                 break;
             }
@@ -142,8 +142,8 @@ namespace BlackMisc
             case IndexUserPassword:
                 this->m_user.setPassword(variant.value<QString>());
                 break;
-            case IndexUserRealname:
-                this->m_user.setRealname(variant.value<QString>());
+            case IndexUserRealName:
+                this->m_user.setRealName(variant.value<QString>());
                 break;
             default:
                 Q_ASSERT_X(false, "CServer", "index unknown");

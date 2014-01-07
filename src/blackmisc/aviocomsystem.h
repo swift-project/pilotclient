@@ -39,15 +39,7 @@ namespace BlackMisc
              * \brief Are the set values valid / in range?
              * \return
              */
-            bool validValues() const
-            {
-                if (this->isDefaultValue()) return true; // special case
-                return
-                    (CComSystem::isValidCivilAviationFrequency(this->getFrequencyActive()) ||
-                     CComSystem::isValidMilitaryFrequency(this->getFrequencyActive())) &&
-                    (CComSystem::isValidCivilAviationFrequency(this->getFrequencyStandby()) ||
-                     CComSystem::isValidMilitaryFrequency(this->getFrequencyStandby()));
-            }
+            bool validValues() const;
 
             /*!
              * \brief Validate values by assert and exception
@@ -56,15 +48,7 @@ namespace BlackMisc
              * \remarks Cannot be virtual because used in constructor
              * \return
              */
-            bool validate(bool strict = true) const
-            {
-                if (this->isDefaultValue()) return true;
-                bool valid = this->validValues();
-                if (!strict) return valid;
-                Q_ASSERT_X(valid, "CComSystem::validate", "illegal values");
-                if (!valid) throw std::range_error("Illegal values in CComSystem::validate");
-                return true;
-            }
+            bool validate(bool strict = true) const;
 
         public:
             /*!
@@ -113,21 +97,13 @@ namespace BlackMisc
              * \brief Set active frequency
              * \param frequencyMHz
              */
-            void setFrequencyActiveMHz(double frequencyMHz)
-            {
-                this->CModulator::setFrequencyActiveMHz(frequencyMHz);
-                this->validate(true);
-            }
+            void setFrequencyActiveMHz(double frequencyMHz);
 
             /*!
              * \brief Set standby frequency
              * \param frequencyMHz
              */
-            void setFrequencyStandbyMHz(double frequencyMHz)
-            {
-                this->CModulator::setFrequencyStandbyMHz(frequencyMHz);
-                this->validate(true);
-            }
+            void setFrequencyStandbyMHz(double frequencyMHz);
 
             /*!
              * \brief Set UNICOM frequency as active
@@ -344,7 +320,7 @@ namespace BlackMisc
              * \param f
              * \return
              */
-            static bool isValidCivilAviationFrequency(BlackMisc::PhysicalQuantities::CFrequency f)
+            static bool isValidCivilAviationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
                 double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
                 return fr >= 118.0 && fr <= 136.975;
@@ -355,11 +331,19 @@ namespace BlackMisc
              * \param f
              * \return
              */
-            static bool isValidMilitaryFrequency(BlackMisc::PhysicalQuantities::CFrequency f)
+            static bool isValidMilitaryFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
                 double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
                 return fr >= 220.0 && fr <= 399.95;
             }
+
+            /*!
+             * \brief Round to 25KHz
+             * \param f
+             * \return
+             */
+            static void roundTo25KHz(BlackMisc::PhysicalQuantities::CFrequency &frequency);
+
         };
 
     } // namespace

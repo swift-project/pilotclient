@@ -55,41 +55,6 @@ namespace BlackMisc
         }
 
         /*
-         * Set / append ATIS message
-         */
-        void CInformationMessage::addMessage(const QString &message)
-        {
-            const QString np = message.trimmed();
-            if (np.isEmpty()) return;
-
-            // detect the stupid z1, z2, z3 placeholders
-            // TODO: Anything better as this stupid code here?
-            const QString test = np.toLower().remove(QRegExp("[\\n\\t\\r]"));
-            if (test == "z") return;
-            if (test.startsWith("z") && test.length() == 2) return;
-            if (test.length() == 1) return;
-
-            // set message
-            bool outdated = this->isOutdated();
-            if (outdated) this->m_message.clear();
-            if (!this->m_message.isEmpty()) this->m_message.append("\n");
-            this->m_message.append(np);
-            this->m_receivedTimestamp = QDateTime::currentDateTimeUtc();
-        }
-
-        /*
-         * Outdated? New ATIS, or just a part
-         */
-        bool CInformationMessage::isOutdated() const
-        {
-            // everything received within this timespan is considered to be the
-            // same ATIS values
-            // FSD sends messages as parts
-            qint64 diff = this->m_receivedTimestamp.msecsTo(QDateTime::currentDateTimeUtc());
-            return (diff > 1000 * 10); // n seconds
-        }
-
-        /*
          * Register metadata
          */
         void CInformationMessage::registerMetadata()

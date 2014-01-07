@@ -156,8 +156,8 @@ namespace BlackMisc
                 return QVariant(this->m_callsign.getStringAsSet());
             case IndexPilotId:
                 return QVariant::fromValue(this->m_pilot.getId());
-            case IndexPilotRealname:
-                return QVariant::fromValue(this->m_pilot.getRealname());
+            case IndexPilotRealName:
+                return QVariant::fromValue(this->m_pilot.getRealName());
             case IndexDistance:
                 return this->m_distanceToPlane.toQVariant();
             case IndexCom1System:
@@ -194,9 +194,9 @@ namespace BlackMisc
             {
             case IndexFrequencyCom1:
                 if (!CComSystem::isValidCivilAviationFrequency(qv.value<CFrequency>()))
-                {
                     return "";
-                }
+                else
+                    return qv.value<CFrequency>().valueRoundedWithUnit(3, i18n);
                 break;
             case IndexDistance:
                 {
@@ -229,8 +229,11 @@ namespace BlackMisc
             case IndexCallsignAsString:
                 this->m_callsign = CCallsign(variant.value<QString>());
                 break;
-            case IndexPilotRealname:
-                this->m_pilot.setRealname(variant.value<QString>());
+            case IndexPilotRealName:
+                this->m_pilot.setRealName(variant.value<QString>());
+                break;
+            case IndexDistance:
+                this->m_distanceToPlane = variant.value<CLength>();
                 break;
             case IndexCom1System:
                 this->setCom1System(variant.value<CComSystem>());

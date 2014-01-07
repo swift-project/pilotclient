@@ -1,6 +1,6 @@
 #include "setnetwork.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/statusmessages.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
 
 using namespace BlackMisc::Network;
@@ -91,11 +91,11 @@ namespace BlackMisc
         /*
          * Value
          */
-        BlackMisc::CStatusMessages CSettingsNetwork::value(const QString &path, const QString &command, const QVariant &value, bool &changedFlag)
+        BlackMisc::CStatusMessageList CSettingsNetwork::value(const QString &path, const QString &command, const QVariant &value, bool &changedFlag)
         {
             // TODO: This needs to be refactored to a smarter way to delegate commands
             changedFlag = false;
-            CStatusMessages msgs;
+            CStatusMessageList msgs;
             if (path == CSettingsNetwork::PathTrafficServer())
             {
                 const CServer server = value.value<CServer>();
@@ -118,7 +118,7 @@ namespace BlackMisc
                     changedFlag = this->m_trafficNetworkServers.contains(&CServer::getName, server.getName());
                     this->m_trafficNetworkServers.removeIf(&CServer::getName, server.getName());
                 }
-                msgs.append(CStatusMessage::getInfoMessage("set current server"));
+                msgs.push_back(CStatusMessage::getInfoMessage("set current server"));
                 return msgs;
             }
             return CSettingUtilities::wrongPathMessages(path);

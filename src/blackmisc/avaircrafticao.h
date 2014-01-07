@@ -36,7 +36,8 @@ namespace BlackMisc
              * \param color
              */
             CAircraftIcao(const QString &icao, const QString &type, const QString &airline, const QString &livery, const QString &color)
-                : m_designator(icao), m_type(type), m_airline(airline), m_livery(livery), m_color(color) {}
+                : m_designator(icao.trimmed().toUpper()), m_type(type.trimmed().toUpper()), m_airline(airline.trimmed().toUpper()),
+                m_livery(livery.trimmed().toUpper()), m_color(color.trimmed().toUpper()) {}
 
             /*!
              * \brief QVariant, required for DBus QVariant lists
@@ -87,7 +88,7 @@ namespace BlackMisc
              * \brief Set airline
              * \param livery
              */
-            void setLivery(const QString &livery) { this->m_livery = livery; }
+            void setLivery(const QString &livery) { this->m_livery = livery.trimmed().toUpper(); }
 
             /*!
              * \brief Livery?

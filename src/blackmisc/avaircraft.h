@@ -297,7 +297,7 @@ namespace BlackMisc
                 IndexCallsignAsString,
                 IndexCallsignAsStringAsSet,
                 IndexPilotId,
-                IndexPilotRealname,
+                IndexPilotRealName,
                 IndexDistance,
                 IndexCom1System,
                 IndexFrequencyCom1,

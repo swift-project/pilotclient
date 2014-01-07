@@ -6,12 +6,14 @@
 #ifndef BLACKMISC_PQUNITS_H
 #define BLACKMISC_PQUNITS_H
 
+#pragma push_macro("min")
+#undef min
+
 #include "blackmisc/pqbase.h"
 #include <QtDBus/QDBusArgument>
 #include <QList>
 #include <QtCore/qmath.h>
 #include <QTranslator>
-
 
 //
 // Used with the template for quantities. This is the reason for
@@ -949,14 +951,15 @@ namespace BlackMisc
                 return h;
             }
 
+
             /*!
              * \brief Minute
              * \return
              */
             static const CTimeUnit &min()
             {
-                static CTimeUnit min(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute"), "min", LinearConverter<MinutesToSeconds>(), 2);
-                return min;
+                static CTimeUnit minute(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute"), "min", LinearConverter<MinutesToSeconds>(), 2);
+                return minute;
             }
 
             /*!
@@ -1128,4 +1131,5 @@ Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeedUnit)
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTimeUnit)
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAccelerationUnit)
 
+#pragma pop_macro("min")
 #endif // guard

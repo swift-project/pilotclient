@@ -7,6 +7,7 @@
 #define BLACKMISC_NETWORKALLCLASSES_H
 
 #include "blackmisc/nwuser.h"
+#include "blackmisc/nwuserlist.h"
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwtextmessagelist.h"
 

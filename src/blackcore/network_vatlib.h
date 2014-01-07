@@ -21,13 +21,13 @@
 namespace BlackCore
 {
 
-    class NetworkVatlib : public INetwork
+    class CNetworkVatlib : public INetwork
     {
         Q_OBJECT
 
     public:
-        NetworkVatlib(QObject *parent = nullptr);
-        virtual ~NetworkVatlib();
+        CNetworkVatlib(QObject *parent = nullptr);
+        virtual ~CNetworkVatlib();
 
     public: // INetwork slots overrides
 

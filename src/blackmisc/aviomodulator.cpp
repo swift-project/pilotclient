@@ -16,7 +16,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         /*
          * Toggle standby <-> active
          */
@@ -67,7 +66,7 @@ namespace BlackMisc
         }
 
         /*
-         * From DBuss
+         * From DBus
          */
         template <class AVIO> void CModulator<AVIO>::unmarshallFromDbus(const QDBusArgument &argument)
         {

@@ -8,11 +8,12 @@
 
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessages.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackcore/network_vatlib.h"
 #include <QObject>
+#include <QStringList>
 #include <QDBusAbstractInterface>
 
 #define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "blackcore.contextnetwork"
@@ -197,13 +198,13 @@ namespace BlackCore
          * \brief Connect to Network
          * \return
          */
-        virtual BlackMisc::CStatusMessages connectToNetwork();
+        virtual BlackMisc::CStatusMessageList connectToNetwork();
 
         /*!
          * \brief Disconnect from network
          * \return
          */
-        virtual BlackMisc::CStatusMessages disconnectFromNetwork();
+        virtual BlackMisc::CStatusMessageList disconnectFromNetwork();
 
         /*!
          * \brief Network connected?
@@ -216,7 +217,7 @@ namespace BlackCore
          * \param aircraft
          * \return
          */
-        virtual BlackMisc::CStatusMessages setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
+        virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
 
         /*!
          * \brief Own position, be aware height is terrain height

@@ -41,7 +41,7 @@ namespace BlackMisc
                 IndexCallsignAsString,
                 IndexCallsignAsStringAsSet,
                 IndexController,
-                IndexControllerRealname,
+                IndexControllerRealName,
                 IndexControllerId,
                 IndexFrequency,
                 IndexPosition,
@@ -165,7 +165,7 @@ namespace BlackMisc
              * Get controller name.
              * \return
              */
-            QString getControllerRealname() const { return m_controller.getRealname(); }
+            QString getControllerRealName() const { return m_controller.getRealName(); }
 
             /*!
              * Get controller name.
@@ -183,7 +183,7 @@ namespace BlackMisc
              * Set controller's name
              * \param controllerName
              */
-            void setControllerRealname(const QString &controllerName) { this->m_controller.setRealname(controllerName); }
+            void setControllerRealName(const QString &controllerName) { this->m_controller.setRealName(controllerName); }
 
             /*!
              * Set controller's id
@@ -195,7 +195,7 @@ namespace BlackMisc
              * \brief Has valid realname?
              * \return
              */
-            bool hasValidRealname() const { return this->m_controller.hasValidRealname(); }
+            bool hasValidRealName() const { return this->m_controller.hasValidRealName(); }
 
             /*!
              * \brief Has valid id?
@@ -354,7 +354,7 @@ namespace BlackMisc
              * \brief Set ATIS Message
              * \param atis
              */
-            void setAtisMessage(const QString &atis) { this->m_atis.addMessage(atis); }
+            void setAtisMessage(const QString &atis) { this->m_atis.setMessage(atis); }
 
             /*!
              * \brief Get METAR
@@ -372,7 +372,7 @@ namespace BlackMisc
              * \brief Set METAR Message
              * \param msg
              */
-            void setMetarMessage(const QString &metar) { this->m_metar.addMessage(metar); }
+            void setMetarMessage(const QString &metar) { this->m_metar.setMessage(metar); }
 
             /*!
              * Set booked until

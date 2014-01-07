@@ -168,8 +168,6 @@ void MainWindow::closeTextMessageTab()
     if (index >= 0) this->ui->tw_TextMessages->removeTab(index);
 }
 
-
-
 /*
  * Command entered
  */
@@ -185,7 +183,7 @@ void MainWindow::commandEntered()
     QString cmd = parts[0].startsWith('.') ? parts[0].toLower() : "";
     if (cmd == ".m" || cmd == ".msg")
     {
-        if (!this->m_contextNetwork->isConnected())
+        if (!this->m_contextNetworkAvailable || !this->m_contextNetwork->isConnected())
         {
             this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "network needs to be connected"));
             return;
@@ -217,7 +215,7 @@ void MainWindow::commandEntered()
             this->ui->tw_TextMessages->setCurrentWidget(tab);
         }
         CTextMessage tm = this->getTextMessageStubForChannel();
-        int index = cmdLine.indexOf(tm.getToCallsign().asString(), 0, Qt::CaseInsensitive);
+        int index = cmdLine.indexOf(tm.getToCallsign().getStringAsSet(), 0, Qt::CaseInsensitive);
         if (index < 0)
         {
             this->displayStatusMessage(

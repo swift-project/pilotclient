@@ -6,7 +6,7 @@
 #ifndef BLACKCORE_CONTEXTSETTINGS_INTERFACE_H
 #define BLACKCORE_CONTEXTSETTINGS_INTERFACE_H
 
-#include "blackmisc/statusmessages.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/setnetwork.h"
@@ -24,7 +24,7 @@ namespace BlackCore
 {
 
     /*!
-     * \brief The IContextSettings class
+     * \brief The interface context settings
      */
     class IContextSettings : public QObject
     {
@@ -80,7 +80,7 @@ namespace BlackCore
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
         /*!
-         * \brief Relay connection signals to local signals
+         * Relay connection signals to local signals
          * No idea why this has to be wired and is not done automatically
          * \param connection
          */
@@ -115,7 +115,7 @@ namespace BlackCore
          * \param value
          * \return
          */
-        virtual BlackMisc::CStatusMessages value(const QString &path, const QString &command, const QVariant &value);
+        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value);
 
         /*!
          * Basically an unwanted signature as this is different from the "local" signature and
@@ -129,7 +129,7 @@ namespace BlackCore
          * \param unifiedBlackMetaType
          * \return
          */
-        virtual BlackMisc::CStatusMessages value(const QString &path, const QString &command, QDBusVariant value, int unifiedBlackMetaType);
+        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, QDBusVariant value, int unifiedBlackMetaType);
     };
 }
 

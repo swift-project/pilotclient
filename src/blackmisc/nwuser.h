@@ -21,6 +21,18 @@ namespace BlackMisc
         class CUser : public BlackMisc::CValueObject
         {
         public:
+
+            /*!
+             * \brief Properties by index
+             */
+            enum ColumnIndex
+            {
+                IndexEmail,
+                IndexId,
+                IndexPassword,
+                IndexRealName
+            };
+
             /*!
              * Default constructor.
              */
@@ -46,13 +58,13 @@ namespace BlackMisc
              * Get full name.
              * \return
              */
-            QString getRealname() const { return m_realname; }
+            QString getRealName() const { return m_realname; }
 
             /*!
-             * \brief setRealname
+             * \brief setRealName
              * \param realname
              */
-            void setRealname(const QString &realname) { m_realname = realname.trimmed(); }
+            void setRealName(const QString &realname) { m_realname = realname.trimmed(); }
 
             /*!
              * Get password
@@ -82,7 +94,7 @@ namespace BlackMisc
              * \brief Valid real name?
              * \return
              */
-            bool hasValidRealname() const { return !this->m_realname.isEmpty(); }
+            bool hasValidRealName() const { return !this->m_realname.isEmpty(); }
 
             /*!
              * \brief Valid id?
@@ -150,6 +162,20 @@ namespace BlackMisc
              * \param otherUser
              */
             void syncronizeData(CUser &otherUser);
+
+            /*!
+             * \brief Property by index
+             * \param index
+             * \return
+             */
+            QVariant propertyByIndex(int index) const;
+
+            /*!
+             * \brief Property by index
+             * \param variant
+             * \param index
+             */
+            void propertyByIndex(const QVariant &variant, int index);
 
         protected:
             /*!

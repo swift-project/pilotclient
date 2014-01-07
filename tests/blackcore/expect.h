@@ -48,8 +48,8 @@ public:
 
     //! Copying is only allowed when there are no connections stored.
     //! @{
-    ConnectGuard(const ConnectGuard& other) { Q_ASSERT(other.m_conns.isEmpty()); }
-    ConnectGuard& operator= (const ConnectGuard& other) { Q_ASSERT(other.m_conns.isEmpty()); }
+    ConnectGuard(const ConnectGuard& other) { Q_ASSERT(other.m_conns.isEmpty()); Q_UNUSED(other); }
+    ConnectGuard& operator= (const ConnectGuard& other) { Q_ASSERT(other.m_conns.isEmpty()); Q_UNUSED(other); }
     //! @}
 
 private:

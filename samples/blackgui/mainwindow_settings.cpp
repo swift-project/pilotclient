@@ -50,7 +50,7 @@ void MainWindow::alterTrafficServer()
 
     const QString path = CSettingUtilities::appendPaths(IContextSettings::PathNetworkSettings(), CSettingsNetwork::PathTrafficServer());
     QObject *sender = QObject::sender();
-    CStatusMessages msgs;
+    CStatusMessageList msgs;
     if (sender == this->ui->pb_SettingsTnCurrentServer)
     {
         msgs = this->m_contextSettings->value(path, CSettingsNetwork::CmdSetCurrentServer(), server.toQVariant());
@@ -85,7 +85,7 @@ void MainWindow::updateGuiSelectedServerTextboxes(const CServer &server)
     this->ui->le_SettingsTnCsDescription->setText(server.getDescription());
     this->ui->le_SettingsTnCsAddress->setText(server.getAddress());
     this->ui->le_SettingsTnCsPort->setText(QString::number(server.getPort()));
-    this->ui->le_SettingsTnCsRealname->setText(server.getUser().getRealname());
+    this->ui->le_SettingsTnCsRealName->setText(server.getUser().getRealName());
     this->ui->le_SettingsTnCsNetworkId->setText(server.getUser().getId());
     this->ui->le_SettingsTnCsPassword->setText(server.getUser().getPassword());
 }
@@ -105,7 +105,7 @@ CServer MainWindow::selectedServerFromTextboxes() const
     if (!portOk) server.setPort(-1);
 
     CUser user;
-    user.setRealname(this->ui->le_SettingsTnCsRealname->text());
+    user.setRealName(this->ui->le_SettingsTnCsRealName->text());
     user.setId(this->ui->le_SettingsTnCsNetworkId->text());
     user.setPassword(this->ui->le_SettingsTnCsPassword->text());
     server.setUser(user);

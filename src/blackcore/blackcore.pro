@@ -1,6 +1,7 @@
 include (../../externals.pri)
 
 # GUI is required for the matrix classes
+# Network for host info etc.
 QT       += network dbus xml
 
 TARGET = blackcore
@@ -20,11 +21,11 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
 # Causes nmake to run qdbusxml2cpp to automatically generate the dbus adaptor and interface classes,
 # then automatically adds them to the sources to compile
 # !! Make sure the plugin is available as release build and known QT_PLUGIN_PATH
-# QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
 QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
 DBUS_ADAPTORS += blackcore.contextnetwork.xml
 DBUS_ADAPTORS += blackcore.contextsettings.xml
 
+# QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
 # DBUS_INTERFACES += blackcore.contextnetwork.xml
 
 DEFINES += LOG_IN_FILE
@@ -37,4 +38,4 @@ else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
 
 DESTDIR = ../../lib
 
-OTHER_FILES += readme.txt blackcore.contextnetwork.xml blackcore.contextsettings.xml
+OTHER_FILES += readme.txt *.xml

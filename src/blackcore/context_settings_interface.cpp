@@ -24,7 +24,7 @@ namespace BlackCore
     }
 
     /*
-     * Workaround for unreliable signals
+     * Workaround for signals
      */
     void IContextSettings::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
@@ -43,16 +43,16 @@ namespace BlackCore
     /*
      * Relay to DBus
      */
-    BlackMisc::CStatusMessages IContextSettings::value(const QString &path, const QString &command, const QVariant &value)
+    BlackMisc::CStatusMessageList IContextSettings::value(const QString &path, const QString &command, const QVariant &value)
     {
         int type = value.userType() - BlackMisc::firstBlackMetaType();
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessages>(QLatin1Literal("value"), path, command, QDBusVariant(value), type);
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("value"), path, command, QDBusVariant(value), type);
     }
 
     /*
      * DBus version of value
      */
-    BlackMisc::CStatusMessages IContextSettings::value(const QString &path, const QString &command, QDBusVariant value, int unifiedBlackMetaType)
+    BlackMisc::CStatusMessageList IContextSettings::value(const QString &path, const QString &command, QDBusVariant value, int unifiedBlackMetaType)
     {
         QVariant qv = value.variant();
         if (qv.canConvert<QDBusArgument>())

@@ -88,17 +88,14 @@ namespace BlackMisc
             bool hasMessage() const { return !m_message.isEmpty(); }
 
             /*!
-             * \brief Add message
-             * \remarks ATIS message come in as parts, this here features some logic, to either append or reset the message
-             * \param message
-             */
-            void addMessage(const QString &message);
-
-            /*!
              * \brief Set message
              * \param message
              */
-            void setMessage(const QString &message) { m_message = message; }
+            void setMessage(const QString &message)
+            {
+                this->m_receivedTimestamp = QDateTime::currentDateTimeUtc();
+                this->m_message = message;
+            }
 
             /*!
              * \brief Type as string
@@ -167,12 +164,6 @@ namespace BlackMisc
             InformationType m_type;
             QString m_message;
             QDateTime m_receivedTimestamp;
-
-            /*!
-             * \brief Outdated timestamp?
-             * \return
-             */
-            bool isOutdated() const;
         };
     } // namespace
 } // namespace

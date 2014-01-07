@@ -9,7 +9,7 @@
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_settings_interface.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessages.h"
+#include "blackmisc/statusmessagelist.h"
 #include <QObject>
 
 #define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "blackcore.contextsettings"
@@ -72,7 +72,7 @@ namespace BlackCore
          * \param value
          * \return
          */
-        virtual BlackMisc::CStatusMessages value(const QString &path, const QString &command, const QVariant &value);
+        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value);
 
     private:
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;

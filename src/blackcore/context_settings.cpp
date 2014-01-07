@@ -43,12 +43,12 @@ namespace BlackCore
     /*
      * Pass value
      */
-    BlackMisc::CStatusMessages CContextSettings::value(const QString &path, const QString &command, const QVariant &value)
+    BlackMisc::CStatusMessageList CContextSettings::value(const QString &path, const QString &command, const QVariant &value)
     {
         Q_ASSERT(path.length() > 3);
         Q_ASSERT(path.indexOf('/') >= 0);
         QString nextLevelPath = CSettingUtilities::removeLeadingPath(path);
-        BlackMisc::CStatusMessages msgs = CSettingUtilities::wrongPathMessages(path);
+        BlackMisc::CStatusMessageList msgs = CSettingUtilities::wrongPathMessages(path);
         bool changed = false;
         if (path.startsWith(IContextSettings::PathNetworkSettings()))
         {

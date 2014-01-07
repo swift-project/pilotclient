@@ -17,7 +17,7 @@ namespace BlackGui
     CAircraftListModel::CAircraftListModel(QObject *parent) : CListModelBase("ViewAircraftList", parent)
     {
         this->m_columns.addColumn(CAircraft::IndexCallsign, "callsign");
-        this->m_columns.addColumn(CAircraft::IndexPilotRealname, "pilotrealname");
+        this->m_columns.addColumn(CAircraft::IndexPilotRealName, "pilotrealname");
         this->m_columns.addColumn(CAircraft::IndexDistance, "distance", Qt::AlignRight | Qt::AlignVCenter);
         this->m_columns.addColumn(CAircraft::IndexFrequencyCom1, "frequency", Qt::AlignRight | Qt::AlignVCenter);
         this->m_columns.addColumn(CAircraftIcao::IndexAsString, "model");

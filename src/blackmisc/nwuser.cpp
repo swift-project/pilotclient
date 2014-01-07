@@ -59,10 +59,10 @@ namespace BlackMisc
         {
             if (otherUser == (*this)) return;
 
-            if (this->hasValidRealname())
-                otherUser.setRealname(this->getRealname());
-            else if (otherUser.hasValidRealname())
-                this->setRealname(otherUser.getRealname());
+            if (this->hasValidRealName())
+                otherUser.setRealName(this->getRealName());
+            else if (otherUser.hasValidRealName())
+                this->setRealName(otherUser.getRealName());
 
             if (this->hasValidId())
                 otherUser.setId(this->getId());
@@ -104,5 +104,53 @@ namespace BlackMisc
             qDBusRegisterMetaType<CUser>();
         }
 
+        /*
+         * Property by index
+         */
+        QVariant CUser::propertyByIndex(int index) const
+        {
+            switch (index)
+            {
+            case IndexEmail:
+                return QVariant(this->m_email);
+            case IndexId:
+                return QVariant(this->m_id);
+            case IndexPassword:
+                return QVariant(this->m_password);
+            case IndexRealName:
+                return QVariant(this->m_realname);
+            default:
+                break;
+            }
+
+            Q_ASSERT_X(false, "CUser", "index unknown");
+            QString m = QString("no property, index ").append(QString::number(index));
+            return QVariant::fromValue(m);
+        }
+
+        /*
+         * Set property as index
+         */
+        void CUser::propertyByIndex(const QVariant &variant, int index)
+        {
+            switch (index)
+            {
+            case IndexEmail:
+                this->setEmail(variant.value<QString>());
+                break;
+            case IndexId:
+                this->setId(variant.value<QString>());
+                break;
+            case IndexPassword:
+                this->setPassword(variant.value<QString>());
+                break;
+            case IndexRealName:
+                this->setRealName(variant.value<QString>());
+                break;
+            default:
+                Q_ASSERT_X(false, "CUser", "index unknown (setter)");
+                break;
+            }
+        }
     } // namespace
 } // namespace

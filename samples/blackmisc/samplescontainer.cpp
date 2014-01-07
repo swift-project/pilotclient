@@ -52,7 +52,7 @@ namespace BlackMiscTest
         qDebug() << "-- find by:";
         qDebug() << atcListFind.toQString();
 
-        CAtcStationList atcListSort = atcList.sortedBy(&CAtcStation::getBookedFromUtc, &CAtcStation::getCallsign, &CAtcStation::getControllerRealname);
+        CAtcStationList atcListSort = atcList.sortedBy(&CAtcStation::getBookedFromUtc, &CAtcStation::getCallsign, &CAtcStation::getControllerRealName);
         qDebug() << "-- sort by:";
         qDebug() << atcListSort.toQString();
 

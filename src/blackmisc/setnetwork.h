@@ -12,7 +12,7 @@
 
 #include "nwserverlist.h"
 #include "valueobject.h"
-#include "statusmessages.h"
+#include "statusmessagelist.h"
 #include "settingutilities.h"
 
 
@@ -112,7 +112,7 @@ namespace BlackMisc
              * \param changedFlag
              * \return
              */
-            virtual BlackMisc::CStatusMessages value(const QString &path, const QString &command, const QVariant &value, bool &changedFlag);
+            virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value, bool &changedFlag);
 
             /*!
              * \brief Value hash

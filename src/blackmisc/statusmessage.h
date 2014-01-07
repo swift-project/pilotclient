@@ -96,6 +96,20 @@ namespace BlackMisc
         }
 
         /*!
+         * \brief Equal operator ==
+         * \param other
+         * @return
+         */
+        bool operator ==(const CStatusMessage &other) const;
+
+        /*!
+         * \brief Unequal operator ==
+         * \param other
+         * @return
+         */
+        bool operator !=(const CStatusMessage &other) const;
+
+        /*!
          * \brief Register metadata
          */
         static void registerMetadata();
@@ -113,7 +127,6 @@ namespace BlackMisc
          * \return
          */
         static CStatusMessage getInfoMessage(const QString &message);
-
 
     protected:
         /*!

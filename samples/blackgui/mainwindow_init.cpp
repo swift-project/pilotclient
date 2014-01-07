@@ -17,7 +17,6 @@ using namespace BlackGui;
 void MainWindow::init(bool withDBus)
 {
     if (this->m_init) return;
-    this->m_init = true;
     this->m_withDBus = withDBus;
 
     // init models, the delete allows to re-init
@@ -120,6 +119,7 @@ void MainWindow::init(bool withDBus)
     connect = this->connect(this->ui->sw_MainMiddle, SIGNAL(currentChanged(int)),
                             this, SLOT(middlePanelChanged(int)));
     Q_ASSERT_X(connect, "init", "cannot connect middle panle changed");
+    Q_UNUSED(connect);
 
 
     // start timers
@@ -132,6 +132,10 @@ void MainWindow::init(bool withDBus)
 
     // start screen
     this->setMainPage(true);
+
+    // do this as last statement, so it can be used as flag
+    // whether init has been completed
+    this->m_init = true;
 }
 
 /*
@@ -140,8 +144,8 @@ void MainWindow::init(bool withDBus)
 void MainWindow::initialDataReads()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
-    m_contextNetworkAvailable = (this->m_contextNetwork->usingLocalObjects() || (this->m_contextNetwork->ping(t) == t));
-    if (!this->m_contextNetworkAvailable)
+    this->m_coreAvailable = (this->m_contextNetwork->usingLocalObjects() || (this->m_contextApplication->ping(t) == t));
+    if (!this->m_coreAvailable)
     {
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError,
                                    "No initial data read as network context is not available"));

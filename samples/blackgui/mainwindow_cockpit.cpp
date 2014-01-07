@@ -20,6 +20,8 @@ using namespace BlackMisc::Math;
 void MainWindow::cockpitValuesChanged()
 {
     Q_ASSERT(this->m_timerCollectedCockpitUpdates);
+
+    // this will call send cockpit updates with all changes made
     this->m_timerCollectedCockpitUpdates->stop();
     this->m_timerCollectedCockpitUpdates->start(1000); // start
     this->m_timerCollectedCockpitUpdates->setSingleShot(true);
@@ -83,6 +85,21 @@ void MainWindow::updateCockpitFromContext()
     default:
         break;
     }
+
+/*
+ * Reset transponder mode to Standby
+ */
+void MainWindow::resetTransponderModerToStandby()
+{
+    this->ui->cb_CockpitTransponderMode->setCurrentText("S");
+}
+
+/*
+ * Reset transponder mode to Standby
+ */
+void MainWindow::resetTransponderModerToCharly()
+{
+    this->ui->cb_CockpitTransponderMode->setCurrentText("C");
 }
 
 /*
@@ -94,6 +111,9 @@ void MainWindow::sendCockpitUpdates()
     CComSystem com1 = this->m_ownAircraft.getCom1System();
     CComSystem com2 = this->m_ownAircraft.getCom2System();
 
+    //
+    // Transponder
+    //
     QString transponderCode = QString::number(qRound(this->ui->ds_CockpitTransponder->value()));
     if (CTransponder::isValidTransponderCode(transponderCode))
     {
@@ -101,8 +121,8 @@ void MainWindow::sendCockpitUpdates()
     }
     else
     {
-        this->displayStatusMessage(CStatusMessage::getValidationError("Wrong transponder code"));
-        return;
+        this->displayStatusMessage(CStatusMessage::getValidationError("Wrong transponder code, reset"));
+        this->ui->ds_CockpitTransponder->setValue(transponder.getTransponderCode());
     }
 
     QString tm = this->ui->cb_CockpitTransponderMode->currentText().toUpper();
@@ -111,13 +131,28 @@ void MainWindow::sendCockpitUpdates()
     else if (tm == "C")
         transponder.setTransponderMode(CTransponder::ModeC);
     else if (tm == "I")
+    {
+        // ident shall be sent for some time, then reset
         transponder.setTransponderMode(CTransponder::StateIdent);
+        if (this->m_ownAircraft.getTransponderMode() == CTransponder::ModeS)
+            QTimer::singleShot(5000, this, SLOT(resetTransponderModerToStandby()));
+        else
+            QTimer::singleShot(5000, this, SLOT(resetTransponderModerToCharly()));
+    }
 
+    //
+    // COM units
+    //
     com1.setFrequencyActiveMHz(this->ui->ds_CockpitCom1Active->value());
     com1.setFrequencyStandbyMHz(this->ui->ds_CockpitCom1Standby->value());
     com2.setFrequencyActiveMHz(this->ui->ds_CockpitCom2Active->value());
     com2.setFrequencyStandbyMHz(this->ui->ds_CockpitCom2Standby->value());
 
+
+    //
+    // Send to context
+    //
+    bool changedCockpit = false;
     if (this->m_contextNetworkAvailable)
     {
         if (this->m_ownAircraft.getCom1System() != com1 ||
@@ -125,7 +160,8 @@ void MainWindow::sendCockpitUpdates()
                 this->m_ownAircraft.getTransponder() != transponder)
         {
             this->m_contextNetwork->updateOwnCockpit(com1, com2, transponder);
-            this->reloadOwnAircraft();
+            this->reloadOwnAircraft(); // also loads resolved voice rooms
+            changedCockpit = true;
         }
     }
 }

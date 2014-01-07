@@ -12,7 +12,7 @@
 #include "blackmisc/settingsallclasses.h"
 #include "blackmisc/valuemap.h"
 #include "blackmisc/networkallclasses.h"
-#include "blackmisc/statusmessages.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/voiceallclasses.h"
 

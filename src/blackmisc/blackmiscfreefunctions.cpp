@@ -11,7 +11,7 @@
 #include "networkallclasses.h"
 #include "settingsallclasses.h"
 #include "valuemap.h"
-#include "statusmessages.h"
+#include "statusmessagelist.h"
 #include "voiceallclasses.h"
 
 /*
@@ -82,6 +82,7 @@ void BlackMisc::Geo::registerMetadata()
 void BlackMisc::Network::registerMetadata()
 {
     CUser::registerMetadata();
+    CUserList::registerMetadata();
     CServer::registerMetadata();
     CServerList::registerMetadata();
     CTextMessage::registerMetadata();
@@ -114,6 +115,9 @@ void BlackMisc::registerMetadata()
     // !! make sure the first id is correctly returned by
     // !! firstBlackMetaType
     CValueMap::registerMetadata();
+
+    CStatusMessage::registerMetadata();
+    CStatusMessageList::registerMetadata();
 
     // sub namespaces
     PhysicalQuantities::registerMetadata();

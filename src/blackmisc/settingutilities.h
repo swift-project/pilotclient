@@ -1,7 +1,7 @@
 #ifndef BLACKMISC_SETTINGUTILITIES_H
 #define BLACKMISC_SETTINGUTILITIES_H
 
-#include "blackmisc/statusmessages.h"
+#include "blackmisc/statusmessagelist.h"
 
 namespace BlackMisc
 {
@@ -66,7 +66,7 @@ namespace BlackMisc
              * \param path
              * \return
              */
-            static BlackMisc::CStatusMessages wrongPathMessages(const QString &path = "");
+            static BlackMisc::CStatusMessageList wrongPathMessages(const QString &path = "");
 
             /*!
              * \brief Remove leading path

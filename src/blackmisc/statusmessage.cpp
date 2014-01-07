@@ -72,6 +72,25 @@ namespace BlackMisc
     }
 
     /*
+     * Equal
+     */
+    bool CStatusMessage::operator ==(const CStatusMessage &other) const
+    {
+        return this->m_severity == other.m_severity &&
+               this->m_type == other.m_type &&
+               this->m_timestamp == other.m_timestamp &&
+               this->m_message == other.m_message;
+    }
+
+    /*
+     * Equal
+     */
+    bool CStatusMessage::operator !=(const CStatusMessage &other) const
+    {
+        return !(other == (*this));
+    }
+
+    /*
      * To DBus
      */
     void CStatusMessage::marshallToDbus(QDBusArgument &arg) const

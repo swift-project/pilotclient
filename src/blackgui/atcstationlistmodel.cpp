@@ -18,7 +18,7 @@ namespace BlackGui
         this->m_columns.addColumn(CAtcStation::IndexCallsignAsStringAsSet, "callsign");
         this->m_columns.addColumn(CAtcStation::IndexDistance, "distance", Qt::AlignRight  | Qt::AlignVCenter);
         this->m_columns.addColumn(CAtcStation::IndexFrequency, "frequency", Qt::AlignRight  | Qt::AlignVCenter);
-        this->m_columns.addColumn(CAtcStation::IndexControllerRealname, "controllername");
+        this->m_columns.addColumn(CAtcStation::IndexControllerRealName, "controllername");
         this->m_columns.addColumn(CAtcStation::IndexIsOnline, "online");
         this->m_columns.addColumn(CAtcStation::IndexBookedFrom, "bookedfrom");
         this->m_columns.addColumn(CAtcStation::IndexBookedUntil, "bookeduntil");
