@@ -1,4 +1,4 @@
-QT       += core dbus
+QT       += core dbus network
 
 TARGET = sample_quantities_aviation
 TEMPLATE = app

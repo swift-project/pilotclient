@@ -1,4 +1,4 @@
-QT       += core testlib dbus
+QT       += core testlib dbus network
 
 TARGET = test_blackmisc
 TEMPLATE = app

@@ -1,4 +1,4 @@
-QT       += core dbus
+QT       += core dbus network
 
 TARGET = sample_interpolator
 CONFIG   += console c++11

@@ -1,6 +1,6 @@
 include (../../externals.pri)
 
-QT       += core dbus
+QT       += core dbus network
 QT       -= gui
 
 TARGET = sample_voice_client
