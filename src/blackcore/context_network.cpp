@@ -328,15 +328,6 @@ namespace BlackCore
         this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
     }
 
-
-    /*
-     * Ping, is DBus alive?
-     */
-    qint64 CContextNetwork::ping(qint64 token) const
-    {
-        return token;
-    }
-
     /*
      * Exception to status message
      */

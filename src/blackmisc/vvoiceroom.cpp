@@ -17,11 +17,15 @@ namespace BlackMisc
 {
     namespace Voice
     {
-        CVoiceRoom::CVoiceRoom(const QString &serverSpec) : m_hostname(""), m_channel("")
+        CVoiceRoom::CVoiceRoom(const QString &serverUrl, bool connected) :
+            m_hostname(""), m_channel(""), m_connected(connected), m_audioPlaying(false)
         {
-            if (serverSpec.contains("/"))
+            if (serverUrl.contains("/"))
             {
-                QStringList splittedSpec = serverSpec.split("/");
+                QString url = serverUrl.trimmed().toLower();
+                url.replace(CVoiceRoom::protocolComplete(), "");
+                url.replace(CVoiceRoom::protocol(), "");
+                QStringList splittedSpec = serverUrl.split("/");
                 m_hostname = splittedSpec.at(0);
                 m_channel = splittedSpec.at(1);
             }
@@ -32,18 +36,11 @@ namespace BlackMisc
          */
         bool CVoiceRoom::operator ==(const CVoiceRoom &other) const
         {
-            if (&other == this)
-            {
-                return true;
-            }
-
-            if (m_hostname == other.m_hostname && m_channel == other.m_channel)
-            {
-                return true;
-            }
-
-            // otherwise
-            return false;
+            if (&other == this) return true;
+            return (m_hostname == other.m_hostname &&
+                    m_channel == other.m_channel &&
+                    m_connected == other.m_connected &&
+                    m_audioPlaying == other.m_audioPlaying);
         }
 
         /*
@@ -54,25 +51,37 @@ namespace BlackMisc
             return !((*this) == other);
         }
 
+        /*
+         * Value hash
+         */
         uint CVoiceRoom::getValueHash() const
         {
             QList<uint> hashs;
             hashs << qHash(m_hostname);
             hashs << qHash(m_channel);
+            hashs << qHash(m_connected);
+            hashs << qHash(m_audioPlaying);
             return BlackMisc::calculateHash(hashs, "CVoiceRoom");
         }
 
+        /*
+         * Metadata
+         */
         void CVoiceRoom::registerMetadata()
         {
             qRegisterMetaType<CVoiceRoom>();
             qDBusRegisterMetaType<CVoiceRoom>();
         }
 
-        QString CVoiceRoom::convertToQString(bool /* i18n */ ) const
+        /*
+         * To string
+         */
+        QString CVoiceRoom::convertToQString(bool /* i18n */) const
         {
-            if (m_hostname.isEmpty() || m_channel.isEmpty()) return "Unknown";
-            QString s = m_hostname;
-            s.append("/").append(m_channel);
+            if (!this->isValid()) return "Invalid";
+            QString s = this->getVoiceRoomUrl(false);
+            s.append(this ->isConnected() ? " connected" : " unconnected");
+            if (this->m_audioPlaying) s.append(" playing");
             return s;
         }
 
@@ -83,6 +92,8 @@ namespace BlackMisc
         {
             argument << m_hostname;
             argument << m_channel;
+            argument << m_connected;
+            argument << m_audioPlaying;
         }
 
         /*
@@ -92,8 +103,29 @@ namespace BlackMisc
         {
             argument >> m_hostname;
             argument >> m_channel;
+            argument >> m_connected;
+            argument >> m_audioPlaying;
         }
 
+        /*
+         * Server URL
+         */
+        QString CVoiceRoom::getVoiceRoomUrl(bool noProtocol) const
+        {
+            if (!this->isValid()) return "";
+            QString url(noProtocol ? "" : CVoiceRoom::protocolComplete());
+            url.append(this->m_hostname);
+            url.append("/");
+            url.append(this->m_channel);
+            return url;
+        }
 
+        /*
+         * ATIS voice channel
+         */
+        bool CVoiceRoom::isAtis() const
+        {
+            return (this->m_channel.contains("ATIS", Qt::CaseInsensitive));
+        }
     } // Voice
 } // BlackMisc

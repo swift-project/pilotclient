@@ -69,9 +69,9 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CInformationMessage"/>
       <arg name="airportIcaoCode" type="s" direction="in"/>
     </method>
-    <method name="ping">
-      <arg type="x" direction="out"/>
-      <arg name="token" type="x" direction="in"/>
+    <method name="getSelectedVoiceRooms">
+      <arg type="(a(ssbb))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Voice::CVoiceRoomList"/>
     </method>
   </interface>
 </node>

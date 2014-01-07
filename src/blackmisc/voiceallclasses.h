@@ -7,6 +7,8 @@
 #define BLACKMISC_VOICEALLCLASSES_H
 
 #include "blackmisc/vaudiodevice.h"
+#include "blackmisc/vaudiodevicelist.h"
 #include "blackmisc/vvoiceroom.h"
+#include "blackmisc/vvoiceroomlist.h"
 
 #endif // guard

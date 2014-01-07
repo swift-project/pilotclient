@@ -9,11 +9,13 @@
 
 #ifndef BLACKMISC_ATCSTATION_H
 #define BLACKMISC_ATCSTATION_H
+
 #include "valuemap.h"
 #include "pqfrequency.h"
 #include "pqlength.h"
 #include "pqtime.h"
 #include "nwuser.h"
+#include "vvoiceroom.h"
 #include "coordinategeodetic.h"
 #include "avcallsign.h"
 #include "avinformationmessage.h"
@@ -55,7 +57,9 @@ namespace BlackMisc
                 IndexAtis,
                 IndexAtisMessage,
                 IndexMetar,
-                IndexMetarMessage
+                IndexMetarMessage,
+                IndexVoiceRoom,
+                IndexVoiceRoomUrl
             };
 
             /*!
@@ -284,6 +288,24 @@ namespace BlackMisc
             void setOnline(bool online) { this->m_isOnline = online; }
 
             /*!
+             * \brief Get voice room
+             * \return
+             */
+            const BlackMisc::Voice::CVoiceRoom &getVoiceRoom() const { return this->m_voiceRoom; }
+
+            /*!
+             * \brief Set voice room
+             * \param
+             */
+            void setVoiceRoom(const BlackMisc::Voice::CVoiceRoom &voiceRoom) { this->m_voiceRoom = voiceRoom; }
+
+            /*!
+             * \brief Valid voice room?
+             * \return
+             */
+            bool hasValidVoiceRoom() const { return this->m_voiceRoom.isValid(); }
+
+            /*!
              * Booked date/time if any.
              * This represents the closest booking within a time frame as there can be multiple bookings.
              * \return
@@ -468,6 +490,7 @@ namespace BlackMisc
             QDateTime m_bookedUntilUtc;
             CInformationMessage m_atis;
             CInformationMessage m_metar;
+            BlackMisc::Voice::CVoiceRoom m_voiceRoom;
         };
 
     } // namespace

@@ -39,6 +39,7 @@ namespace BlackMiscTest
         while (line != "x")
         {
             const BlackCore::IContextNetwork *networkContext = core->getIContextNetwork();
+            const BlackCore::IContextVoice *voiceContext = core->getIContextVoice();
 
             // display current status
             qDebug() << "-------------";
@@ -58,6 +59,7 @@ namespace BlackMiscTest
             qDebug() << "2 .. ATC online";
             qDebug() << "3 .. Aircrafts in range";
             qDebug() << "4 .. my aircraft";
+            qDebug() << "5 .. voice rooms";
 
             line = qtin.readLine();
 
@@ -85,6 +87,13 @@ namespace BlackMiscTest
                 qDebug() << "my aircraft";
                 qDebug() << networkContext->getOwnAircraft();
             }
+            else if (line.startsWith("5"))
+            {
+                qDebug() << "-------------";
+                qDebug() << "voice rooms";
+                qDebug() << voiceContext->getComVoiceRooms();
+            }
+
         }
     }
 } // namespace

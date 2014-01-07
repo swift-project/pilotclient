@@ -4,10 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackcore/context_network_interface.h"
+#include "blackmisc/vvoiceroomlist.h"
 #include <QObject>
 #include <QMetaEnum>
 #include <QDBusConnection>
-
 
 namespace BlackCore
 {
@@ -165,11 +165,11 @@ namespace BlackCore
     }
 
     /*
-     * Ping, is DBus alive?
+     * Relay to DBus
      */
-    qint64 IContextNetwork::ping(qint64 token) const
+    BlackMisc::Voice::CVoiceRoomList IContextNetwork::getSelectedVoiceRooms() const
     {
-        return this->m_dBusInterface->callDBusRet<qint64>(QLatin1Literal("ping"), token);
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Voice::CVoiceRoomList>(QLatin1Literal("getSelectedVoiceRooms"));
     }
 
     /*

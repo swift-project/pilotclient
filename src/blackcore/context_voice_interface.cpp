@@ -1,0 +1,130 @@
+/* Copyright (C) 2013 VATSIM Community / authors
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "blackcore/context_voice_interface.h"
+#include <QObject>
+#include <QDBusConnection>
+
+using namespace BlackMisc::Voice;
+using namespace BlackMisc::Network;
+
+namespace BlackCore
+{
+
+    /*
+     * Constructor for DBus
+     */
+    IContextVoice::IContextVoice(const QString &serviceName, QDBusConnection &connection, QObject *parent) : QObject(parent), m_dBusInterface(0)
+    {
+        this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(serviceName , IContextVoice::ServicePath(), IContextVoice::InterfaceName(), connection, this);
+        this->relaySignals(serviceName, connection);
+    }
+
+    /*
+     * Workaround for signals, not working without, but why?
+     */
+    void IContextVoice::relaySignals(const QString & /** serviceName **/, QDBusConnection & /** connection **/)
+    {
+        // void
+    }
+
+    /*
+     * Leave all voice rooms
+     */
+    void IContextVoice::leaveAllVoiceRooms()
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("leaveAllVoiceRooms"));
+    }
+
+    /*
+     * COM1 users
+     */
+    QList<BlackMisc::Aviation::CCallsign> IContextVoice::getCom1RoomCallsigns() const
+    {
+        return this->m_dBusInterface->callDBusRet<QList<BlackMisc::Aviation::CCallsign> >(QLatin1Literal("getCom1RoomCallsigns"));
+    }
+
+    /*
+     * COM2 users
+     */
+    QList<BlackMisc::Aviation::CCallsign> IContextVoice::getCom2RoomCallsigns() const
+    {
+        return this->m_dBusInterface->callDBusRet<QList<BlackMisc::Aviation::CCallsign> >(QLatin1Literal("getCom2RoomCallsigns"));
+    }
+
+    /*
+     * Audio devices
+     */
+    CAudioDeviceList IContextVoice::getAudioDevices() const
+    {
+        return this->m_dBusInterface->callDBusRet<CAudioDeviceList>(QLatin1Literal("getAudioDevices"));
+    }
+
+    /*
+     * Set current audio device
+     */
+    BlackMisc::Voice::CAudioDeviceList IContextVoice::getCurrentAudioDevices() const
+    {
+        return this->m_dBusInterface->callDBusRet<CAudioDeviceList>(QLatin1Literal("getCurrentAudioDevices"));
+    }
+
+    /*
+     * Relay to DBus
+     */
+    CVoiceRoomList IContextVoice::getComVoiceRoomsWithAudioStatus()
+    {
+        return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1Literal("getComVoiceRoomsWithAudioStatus"));
+    }
+
+    /*
+     * Relay to DBus
+     */
+    CVoiceRoomList IContextVoice::getComVoiceRooms() const
+    {
+        return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1Literal("getComVoiceRooms"));
+    }
+
+    /*
+     * Set voice rooms
+     */
+    void IContextVoice::setComVoiceRooms(const BlackMisc::Voice::CVoiceRoom &voiceRoomCom1, const BlackMisc::Voice::CVoiceRoom &voiceRoomCom2)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("setComVoiceRooms"), voiceRoomCom1, voiceRoomCom2);
+    }
+
+    /*
+     * Set current audio device
+     */
+    void IContextVoice::setCurrentAudioDevice(const CAudioDevice &audioDevice)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("setCurrentAudioDevice"), audioDevice);
+    }
+
+    /*
+     * Volumes, by COM systems
+     */
+    void IContextVoice::setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("setVolumes"), com1, com2);
+    }
+
+    /*
+     * Logging
+     */
+    void IContextVoice::log(const QString &method, const QString &m1, const QString &m2, const QString &m3, const QString &m4) const
+    {
+        if (m1.isEmpty())
+            qDebug() << "   LOG: " << method;
+        else if (m2.isEmpty())
+            qDebug() << "   LOG: " << method << m1;
+        else if (m3.isEmpty())
+            qDebug() << "   LOG: " << method << m1 << m2;
+        else if (m4.isEmpty())
+            qDebug() << "   LOG: " << method << m1 << m2 << m3;
+        else
+            qDebug() << "   LOG: " << method << m1 << m2 << m3 << m4;
+    }
+
+} // namespace

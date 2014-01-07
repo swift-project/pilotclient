@@ -11,7 +11,6 @@
 */
 
 #include "valueobject.h"
-
 #include <QString>
 
 #ifdef Q_OS_WIN
@@ -32,17 +31,26 @@ namespace BlackMisc
         public:
 
             /*!
+             * \brief Type
+             */
+            enum DeviceType
+            {
+                InputDevice,
+                OutputDevice,
+                Unknown
+            };
+
+            /*!
              * Default constructor.
              * If m_deviceIndex is -1, default should be used. However on Windows this doesnt work. Needs
              * to be checked in Vatlib.
              */
-            CAudioDevice() : m_deviceIndex(invalidDevice()), m_deviceName("") {}
-
+            CAudioDevice();
 
             /*!
              * Constructor.
              */
-            CAudioDevice(const int16_t index, const QString &name) : m_deviceIndex(index), m_deviceName(name) {}
+            CAudioDevice(DeviceType type, const int16_t index, const QString &getName);
 
             /*!
              * \brief QVariant, required for DBus QVariant lists
@@ -57,13 +65,19 @@ namespace BlackMisc
              * Get the device index
              * \return
              */
-            int16_t index() const { return m_deviceIndex; }
+            int16_t getIndex() const { return m_deviceIndex; }
 
             /*!
              * Get the device name
              * \return
              */
-            const QString &name() const { return m_deviceName; }
+            const QString &getName() const { return m_deviceName; }
+
+            /*!
+             * \brief Type
+             * \return
+             */
+            DeviceType getType() const { return m_type; }
 
             /*!
              * \brief Valid audio device object?
@@ -95,8 +109,16 @@ namespace BlackMisc
              */
             static void registerMetadata();
 
+            /*!
+             * \brief Device type
+             * \return
+             */
             static int16_t defaultDevice() {return -1;}
 
+            /*!
+             * \brief Device type
+             * \return
+             */
             static int16_t invalidDevice() {return -2;}
 
         protected:
@@ -125,76 +147,22 @@ namespace BlackMisc
              * deviceIndex is the number is the reference for the VVL. The device is selected by this index.
              * The managing class needs to take care, that indexes are valid.
              */
+            DeviceType m_type;
             int16_t m_deviceIndex;
             QString m_deviceName;
+            QString m_hostName;
 
-        };
-
-        class CInputAudioDevice : public CAudioDevice
-        {
-        public:
+        private:
             /*!
-             * Default constructor.
-             */
-            CInputAudioDevice() : CAudioDevice() {}
-
-
-            /*!
-             * Constructor.
-             */
-            CInputAudioDevice(const int16_t index, const QString &name) : CAudioDevice(index, name) {}
-
-            /*!
-             * \brief QVariant, required for DBus QVariant lists
+             * \brief Own host name
              * \return
              */
-            virtual QVariant toQVariant() const
-            {
-                return QVariant::fromValue(*this);
-            }
-
-            /*!
-             * \brief Register metadata
-             */
-            static void registerMetadata();
-
+            static QString hostName();
         };
 
-        class COutputAudioDevice : public CAudioDevice
-        {
-        public:
-            /*!
-             * Default constructor.
-             */
-            COutputAudioDevice() : CAudioDevice() {}
-
-
-            /*!
-             * Constructor.
-             */
-            COutputAudioDevice(const int16_t index, const QString &name) : CAudioDevice(index, name) {}
-
-            /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
-             */
-            virtual QVariant toQVariant() const
-            {
-                return QVariant::fromValue(*this);
-            }
-
-            /*!
-             * \brief Register metadata
-             */
-            static void registerMetadata();
-
-        };
     } // Voice
 } // BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Voice::CAudioDevice)
-Q_DECLARE_METATYPE(BlackMisc::Voice::COutputAudioDevice)
-Q_DECLARE_METATYPE(BlackMisc::Voice::CInputAudioDevice)
 
-
-#endif // BLACKMISC_AUDIODEVICE_H
+#endif // guard

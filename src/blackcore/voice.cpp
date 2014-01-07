@@ -3,13 +3,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "voiceclient.h"
+#include "voice.h"
 
 namespace BlackCore
 {
-    IVoiceClient::IVoiceClient(QObject *parent)
-        : QObject(parent)
+    IVoice::IVoice(QObject *parent) : QObject(parent)
     {
-        qRegisterMetaType<IVoiceClient::ComUnit>("IVoiceClient::ComUnit");
+        // http://qt-project.org/forums/viewthread/27495
+        qRegisterMetaType<IVoice::ComUnit>("IVoice::ComUnit");
     }
 }

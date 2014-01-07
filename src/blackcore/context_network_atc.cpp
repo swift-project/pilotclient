@@ -18,6 +18,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Voice;
 
 namespace BlackCore
 {
@@ -77,6 +78,26 @@ namespace BlackCore
             }
         }
         return metar;
+    }
+
+    /*
+     * Selected voice rooms
+     */
+    CVoiceRoomList CContextNetwork::getSelectedVoiceRooms() const
+    {
+        CFrequency com1 = this->m_ownAircraft.getCom1System().getFrequencyActive();
+        CFrequency com2 = this->m_ownAircraft.getCom2System().getFrequencyActive();
+
+        CAtcStationList stationsCom1 = this->m_atcStationsOnline.findBy(&CAtcStation::getFrequency, com1);
+        CAtcStationList stationsCom2 = this->m_atcStationsOnline.findBy(&CAtcStation::getFrequency, com2);
+        stationsCom1.sortBy(&CAtcStation::getDistanceToPlane);
+        stationsCom1.sortBy(&CAtcStation::getDistanceToPlane);
+
+        CVoiceRoom vr;
+        CVoiceRoomList rooms;
+        rooms.push_back(stationsCom1.isEmpty() ? vr : stationsCom1[0].getVoiceRoom());
+        rooms.push_back(stationsCom2.isEmpty() ? vr : stationsCom2[0].getVoiceRoom());
+        return rooms;
     }
 
     /*

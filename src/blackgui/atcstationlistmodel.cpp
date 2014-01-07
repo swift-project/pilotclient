@@ -22,6 +22,8 @@ namespace BlackGui
         this->m_columns.addColumn(CAtcStation::IndexIsOnline, "online");
         this->m_columns.addColumn(CAtcStation::IndexBookedFrom, "bookedfrom");
         this->m_columns.addColumn(CAtcStation::IndexBookedUntil, "bookeduntil");
+        this->m_columns.addColumn(CAtcStation::IndexVoiceRoomUrl, "voiceroomurl");
+
 
         // default sort order
         this->setSortColumnByPropertyIndex(CAtcStation::IndexDistance);
@@ -35,5 +37,6 @@ namespace BlackGui
         (void)QT_TRANSLATE_NOOP("ViewAtcList", "online");
         (void)QT_TRANSLATE_NOOP("ViewAtcList", "bookedfrom");
         (void)QT_TRANSLATE_NOOP("ViewAtcList", "bookeduntil");
+        (void)QT_TRANSLATE_NOOP("ViewAtcList", "voiceroomurl");
     }
 }

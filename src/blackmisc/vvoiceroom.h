@@ -8,9 +8,7 @@
 */
 
 #include "valueobject.h"
-
 #include <QString>
-
 
 #ifndef BLACKMISC_VOICEROOM_H
 #define BLACKMISC_VOICEROOM_H
@@ -29,17 +27,23 @@ namespace BlackMisc
             /*!
              * Default constructor.
              */
-            CVoiceRoom() : m_hostname(""), m_channel("") {}
+            CVoiceRoom() :
+                m_hostname(""), m_channel(""), m_connected(false), m_audioPlaying(false) {}
 
             /*!
              * Constructor.
+             * \param hostname
+             * \param channel
              */
-            CVoiceRoom(const QString &hostname, const QString &channel) : m_hostname(hostname), m_channel(channel) {}
+            CVoiceRoom(const QString &hostname, const QString &channel) :
+                m_hostname(hostname), m_channel(channel), m_audioPlaying(false) {}
 
             /*!
              * Constructor.
+             * \param serverUrl
+             * \param connected
              */
-            CVoiceRoom(const QString &serverSpec);
+            CVoiceRoom(const QString &serverUrl, bool connected = false);
 
             /*!
              * \brief QVariant, required for DBus QVariant lists
@@ -54,13 +58,13 @@ namespace BlackMisc
              * Get the host name
              * \return
              */
-            const QString &hostName() const { return m_hostname; }
+            const QString &getHostName() const { return m_hostname; }
 
             /*!
              * Get the voice room
              * \return
              */
-            const QString &channel() const { return m_channel; }
+            const QString &getChannel() const { return m_channel; }
 
             /*!
              * Set the host name
@@ -75,16 +79,53 @@ namespace BlackMisc
             void setChannel(const QString &channel) { m_channel = channel; }
 
             /*!
+             * \brief Server URL
+             * \param noProtocol
+             * \return
+             */
+            QString getVoiceRoomUrl(bool noProtocol = true) const;
+
+            /*!
              * \brief Valid voice room object?
              * \return
              */
             bool isValid() const { return !this->m_hostname.isEmpty() &&  !this->m_channel.isEmpty(); }
 
             /*!
-             * \brief Equal operator ==
-             * \param other
-             * @return
+             * \brief Is connected
+             * \return
              */
+            bool isConnected() const { return this->isValid() && this->m_connected; }
+
+            /*!
+             * \brief Set connected status
+             * \param isConnected
+             */
+            void setConnected(bool isConnected) { this->m_connected = isConnected; }
+
+            /*!
+             * \brief Is audio playing in this room?
+             * \return
+             */
+            bool isAudioPlaying() const { return this->m_audioPlaying; }
+
+            /*!
+             * \brief Set audio playing
+             * \param playing
+             */
+            void setAudioPlaying(bool playing)  { this->m_audioPlaying = playing; }
+
+            /*!
+             * \brief Is ATIS voice channel
+             * \return
+             */
+            bool isAtis() const;
+
+            /*!
+              * \brief Equal operator ==
+              * \param other
+              * @return
+              */
             bool operator ==(const CVoiceRoom &other) const;
 
             /*!
@@ -103,6 +144,18 @@ namespace BlackMisc
              * \brief Register metadata
              */
             static void registerMetadata();
+
+            /*!
+             * \brief Protocol
+             * \return
+             */
+            static const QString &protocol() { static QString p("vvl"); return p; }
+
+            /*!
+             * \brief Protocol
+             * \return
+             */
+            static const QString &protocolComplete() { static QString p("vvl://"); return p; }
 
         protected:
 
@@ -125,15 +178,15 @@ namespace BlackMisc
              */
             virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
-
         private:
             QString m_hostname;
             QString m_channel;
-
+            bool m_connected;
+            bool m_audioPlaying;
         };
     } // Voice
 } // BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Voice::CVoiceRoom)
 
-#endif // BLACKMISC_VOICEROOM_H
+#endif // guard

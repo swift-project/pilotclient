@@ -176,11 +176,10 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode);
 
         /*!
-         * \brief Used to check if network is alive
-         * \param token
+         * \brief Selected COM1/2 frequencies as voice rooms, "" means no resolution
          * \return
          */
-        virtual qint64 ping(qint64 token) const;
+        virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
 
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;

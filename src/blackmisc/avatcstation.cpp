@@ -1,10 +1,12 @@
 #include "avatcstation.h"
 #include "aviocomsystem.h"
+#include "vvoiceroom.h"
 #include "blackmiscfreefunctions.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Voice;
 
 namespace BlackMisc
 {
@@ -142,7 +144,7 @@ namespace BlackMisc
             (void)QT_TRANSLATE_NOOP("Aviation", "until(UTC)");
             (void)QT_TRANSLATE_NOOP("Aviation", "range");
             (void)QT_TRANSLATE_NOOP("Aviation", "distance");
-
+            (void)QT_TRANSLATE_NOOP("Network", "voiceroom");
         }
 
         /*
@@ -161,6 +163,7 @@ namespace BlackMisc
             argument << this->m_bookedUntilUtc;
             argument << this->m_atis;
             argument << this->m_metar;
+            argument << this->m_voiceRoom;
         }
 
         /*
@@ -179,6 +182,7 @@ namespace BlackMisc
             argument >> this->m_bookedUntilUtc;
             argument >> this->m_atis;
             argument >> this->m_metar;
+            argument >> this->m_voiceRoom;
         }
 
         /*
@@ -205,6 +209,7 @@ namespace BlackMisc
             if (other.getController() != this->getController()) return false;
             if (other.getAtis() != this->getAtis()) return false;
             if (other.getMetar() != this->getMetar()) return false;
+            if (other.getVoiceRoom() != this->getVoiceRoom()) return false;
 
             return this->getBookedFromUtc() == other.getBookedFromUtc() &&
                    this->getBookedUntilUtc() == other.getBookedUntilUtc();
@@ -292,6 +297,7 @@ namespace BlackMisc
             hashs << this->m_distanceToPlane.getValueHash();
             hashs << this->m_metar.getValueHash();
             hashs << this->m_atis.getValueHash();
+            hashs << this->m_voiceRoom.getValueHash();
             hashs << qHash(this->m_isOnline ? 1 : 3);
             hashs << qHash(this->m_bookedFromUtc);
             hashs << qHash(this->m_bookedUntilUtc);
@@ -343,6 +349,10 @@ namespace BlackMisc
                 return this->m_metar.toQVariant();
             case IndexMetarMessage:
                 return QVariant(this->m_metar.getMessage());
+            case IndexVoiceRoom:
+                return QVariant(this->m_voiceRoom.toQVariant());
+            case IndexVoiceRoomUrl:
+                return QVariant(this->m_voiceRoom.getVoiceRoomUrl());
             default:
                 break;
             }
@@ -406,6 +416,12 @@ namespace BlackMisc
                 break;
             case IndexMetarMessage:
                 this->setMetarMessage(variant.value<QString>());
+                break;
+            case IndexVoiceRoom:
+                this->setVoiceRoom(variant.value<CVoiceRoom>());
+                break;
+            case IndexVoiceRoomUrl:
+                this->setVoiceRoom(CVoiceRoom(variant.toString()));
                 break;
             default:
                 Q_ASSERT_X(false, "CAtcStation", "index unknown (setter)");

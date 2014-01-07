@@ -8,12 +8,12 @@
 
 #include "../blackmisc/context.h"
 #include "../blackmisc/avcallsign.h"
-#include "../blackmisc/vvoiceroom.h"
-#include "../blackmisc/vaudiodevice.h"
-
+#include "../blackmisc/nwuserlist.h"
+#include "../blackmisc/vvoiceroomlist.h"
+#include "../blackmisc/vaudiodevicelist.h"
 #include <vatlib/vatlib.h>
-
 #include <QObject>
+#include <QSet>
 #include <QStringList>
 #include <QMetaType>
 
@@ -27,7 +27,7 @@ namespace BlackCore
      *          must be a Qt::QueuedConnection.
      *          Reason: IVoiceClient implementations are not re-entrant.
      */
-    class IVoiceClient : public QObject
+    class IVoice : public QObject
     {
 
         /* TODOS:
@@ -43,90 +43,44 @@ namespace BlackCore
          * \brief Default constructor with parent
          * \param parent
          */
-        IVoiceClient(QObject *parent = 0);
+        IVoice(QObject *parent = nullptr);
 
     public:
 
         //! ComUnit
         /*! IVoiceClient currently supports two different com units */
-        enum ComUnit {
+        enum ComUnit
+        {
             COM1 = 0,   /*!< ComUnit 1 */
             COM2        /*!< ComUnit 2 */
         };
 
         //! Virtual destructor.
-        virtual ~IVoiceClient() {}
+        virtual ~IVoice() {}
 
-        //! roomUserList
         /*!
-          \return A list of users currently connected to the voice room
-        */
-        virtual const QSet<QString> roomUserList(const ComUnit comUnit) = 0;
+         * \brief Own aircraft's callsign
+         * \param callsign
+         */
+        virtual void setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
-        //! audioInputDevices
         /*!
-          \return A list of available input devices
-        */
-        virtual const QList<BlackMisc::Voice::CInputAudioDevice> & audioInputDevices() const = 0;
+         * \brief Audio devices
+         * \return
+         */
+        virtual const BlackMisc::Voice::CAudioDeviceList &audioDevices() const = 0;
 
-        //! audioOutputDevices
         /*!
-          \return A list of available output devices
-        */
-        virtual const QList<BlackMisc::Voice::COutputAudioDevice> & audioOutputDevices() const = 0;
+         * \brief Default input device
+         * \return
+         */
+        virtual const BlackMisc::Voice::CAudioDevice defaultAudioInputDevice() const = 0;
 
-        //! defaultAudioInputDevice
         /*!
-          \return Default input device
-        */
-        virtual const BlackMisc::Voice::CInputAudioDevice defaultAudioInputDevice() const = 0;
-
-        //! defaultAudioOutputDevice
-        /*!
-          \return Default output device
-        */
-        virtual const BlackMisc::Voice::COutputAudioDevice defaultAudioOutputDevice() const = 0;
-
-        //! setInputDevice
-        /*!
-          \param input device
-        */
-        virtual void setInputDevice(const BlackMisc::Voice::CInputAudioDevice &device) = 0;
-
-        //! setOutputDevice
-        /*!
-          \param output device
-        */
-        virtual void setOutputDevice(const BlackMisc::Voice::COutputAudioDevice &device) = 0;
-
-        //! enableAudio
-        /*!
-          \brief After you have joined a voice room, you must enable audio output.
-          \param comUnit
-        */
-        virtual void enableAudio(const ComUnit comUnit) = 0;
-
-        //! voiceRoom
-        /*!
-          \brief After you have joined a voice room, you must enable audio output.
-          \param comUnit
-          \return voiceRoom
-        */
-        virtual const BlackMisc::Voice::CVoiceRoom voiceRoom (const ComUnit comUnit) = 0;
-
-        //! isConnected
-        /*!
-          \param comUnit
-          \return if connected
-        */
-        virtual bool isConnected(const ComUnit comUnit) = 0;
-
-        //! isReceiving
-        /*!
-          \param comUnit
-        */
-        virtual bool isReceiving(const ComUnit comUnit) = 0;
-
+         * \brief Default output device
+         * \return
+         */
+        virtual const BlackMisc::Voice::CAudioDevice defaultAudioOutputDevice() const = 0;
 
         /************************************************
          * SETUP TESTS
@@ -164,43 +118,74 @@ namespace BlackCore
 
     public slots:
 
-        //! setCallsign
+        //! setInputDevice
         /*!
-          \param callsign
+          \param input device
         */
-        virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void setInputDevice(const BlackMisc::Voice::CAudioDevice &device) = 0;
 
-        //! joinVoiceRoom
+        //! setOutputDevice
         /*!
-          \param comUnit
-          \param voiceRoom
+          \param output device
         */
+        virtual void setOutputDevice(const BlackMisc::Voice::CAudioDevice &device) = 0;
+
+        /*!
+         * Get COM1/2 voice rooms, which then allows to retrieve information
+         * such as connection status etc.
+         * \return
+         */
+        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() = 0;
+
+        /*!
+         * Get COM1/2 voice rooms, const and with no status update
+         * \return
+         */
+        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const = 0;
+
+        /*!
+         * \brief Join voice room
+         * \param comUnit
+         * \param voiceRoom
+         */
         virtual void joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom) = 0;
 
-        //! leaveVoiceRoom
         /*!
-          \param comUnit
-        */
+         * \brief Leave voice room
+         * \param comUnit
+         */
         virtual void leaveVoiceRoom(const ComUnit comUnit) = 0;
 
-        //! setVolume
         /*!
-          \param comUnit
-          \param volumne
-        */
-        virtual void setVolume(const ComUnit comUnit, const int32_t volumne) = 0;
+         * \brief Leave all voice rooms
+         */
+        virtual void leaveAllVoiceRooms() = 0;
 
-        //! startTransmitting
         /*!
-          \param comUnit
-        */
+         * \brief Set room output volume
+         * \param comUnit
+         * \param volumne
+         */
+        virtual void setRoomOutputVolume(const ComUnit comUnit, const int32_t volumne) = 0;
+
+        /*!
+         * \brief Start transmitting
+         * \param comUnit
+         */
         virtual void startTransmitting(const ComUnit comUnit) = 0;
 
-        //! stopTransmitting
         /*!
-          \param comUnit
-        */
+         * \brief Stop transmitting
+         * \param comUnit
+         */
         virtual void stopTransmitting(const ComUnit comUnit) = 0;
+
+        /*!
+         * \brief Get voice room callsings
+         * \param comUnit
+         * \return
+         */
+        virtual QSet<QString> getVoiceRoomCallsings(const ComUnit comUnit) const = 0;
 
     signals:
         // Signals regarding the voice server connection
@@ -228,14 +213,10 @@ namespace BlackCore
 
         // non protocol related signals
         void exception(const QString &message, bool fatal = false); // let remote places know there was an exception
-
-    protected:
-
-
     };
 
 } // namespace BlackCore
 
-Q_DECLARE_METATYPE(BlackCore::IVoiceClient::ComUnit)
+Q_DECLARE_METATYPE(BlackCore::IVoice::ComUnit)
 
-#endif // BLACKCORE_VOICE_H
+#endif // guard

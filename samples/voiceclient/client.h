@@ -6,7 +6,7 @@
 #ifndef SAMPLE_VOICECLIENT
 #define SAMPLE_VOICECLIENT
 
-#include "blackcore/voiceclient.h"
+#include "blackcore/voice.h"
 
 #include <QObject>
 #include <functional>
@@ -45,17 +45,17 @@ public slots:
     void onMicTestFinished();
 private slots:
 
-    void connectionStatusConnected(const BlackCore::IVoiceClient::ComUnit comUnit);
+    void connectionStatusConnected(const BlackCore::IVoice::ComUnit comUnit);
     void connectionStatusDisconnected();
-    void audioStartedStream(const BlackCore::IVoiceClient::ComUnit comUnit);
-    void audioStoppedStream(const BlackCore::IVoiceClient::ComUnit comUnit);
+    void audioStartedStream(const BlackCore::IVoice::ComUnit comUnit);
+    void audioStoppedStream(const BlackCore::IVoice::ComUnit comUnit);
     void userJoinedRoom(const QString &callsign);
     void userLeftRoom(const QString &callsign);
 
 private:
     QMap<QString, std::function<void(QTextStream &)>> m_commands;
-    BlackCore::IVoiceClient *m_voiceClient;
+    BlackCore::IVoice *m_voiceClient;
 
 };
 
-#endif // CLIENT_H
+#endif // SAMPLE_VOICECLIENT

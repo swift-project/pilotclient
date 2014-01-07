@@ -102,9 +102,10 @@ void BlackMisc::Settings::registerMetadata()
  */
 void BlackMisc::Voice::registerMetadata()
 {
-    COutputAudioDevice::registerMetadata();
-    CInputAudioDevice::registerMetadata();
+    CAudioDevice::registerMetadata();
+    CAudioDeviceList::registerMetadata();
     CVoiceRoom::registerMetadata();
+    CVoiceRoomList::registerMetadata();
 }
 
 /*

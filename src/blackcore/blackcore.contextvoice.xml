@@ -1,0 +1,39 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="blackcore.contextvoice">
+    <method name="getComVoiceRoomsWithAudioStatus">
+      <arg type="(a(ssbb))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Voice::CVoiceRoomList"/>
+    </method>
+    <method name="getComVoiceRooms">
+      <arg type="(a(ssbb))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Voice::CVoiceRoomList"/>
+    </method>
+    <method name="setComVoiceRooms">
+      <arg name="voiceRoomCom1" type="(ssbb)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Voice::CVoiceRoom"/>
+      <arg name="voiceRoomCom2" type="(ssbb)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="BlackMisc::Voice::CVoiceRoom"/>
+    </method>
+    <method name="leaveAllVoiceRooms">
+    </method>
+    <method name="getAudioDevices">
+      <arg type="(a(unss))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Voice::CAudioDeviceList"/>
+    </method>
+    <method name="getCurrentAudioDevices">
+      <arg type="(a(unss))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Voice::CAudioDeviceList"/>
+    </method>
+    <method name="setCurrentAudioDevice">
+      <arg name="audioDevice" type="(unss)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Voice::CAudioDevice"/>
+    </method>
+    <method name="setVolumes">
+      <arg name="com1" type="(s(dd(s))(dd(s))iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CComSystem"/>
+      <arg name="com2" type="(s(dd(s))(dd(s))iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="BlackMisc::Aviation::CComSystem"/>
+    </method>
+  </interface>
+</node>

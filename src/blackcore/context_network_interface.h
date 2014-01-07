@@ -12,6 +12,7 @@
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackcore/network_vatlib.h"
+#include "blackmisc/vvoiceroomlist.h"
 #include <QObject>
 #include <QStringList>
 #include <QDBusAbstractInterface>
@@ -256,12 +257,10 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode);
 
         /*!
-         * \brief Ping
-         * \param token
+         * \brief Use the selected COM1/2 frequencies, and get the corresponding voice room for it
          * \return
          */
-        virtual qint64 ping(qint64 token) const;
-
+        virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
     };
 }
 

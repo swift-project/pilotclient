@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "blackcore/voiceclient_vatlib.h"
+#include "blackcore/voice_vatlib.h"
 
 #include "client.h"
 #include "reader.h"
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app (argc, argv);
     BlackMisc::IContext::getInstance().setObject(*new BlackMisc::CDebug());
-    BlackMisc::IContext::getInstance().setObject<BlackCore::IVoiceClient>(*new BlackCore::CVoiceClientVatlib());
+    BlackMisc::IContext::getInstance().setObject<BlackCore::IVoice>(*new BlackCore::CVoiceVatlib());
 
     Client client;
     LineReader reader;
