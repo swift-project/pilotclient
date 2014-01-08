@@ -17,6 +17,7 @@
 #include <QTimer>
 #include <QTextCodec>
 #include <QByteArray>
+#include <QMap>
 
 namespace BlackCore
 {
@@ -115,6 +116,7 @@ namespace BlackCore
         QScopedPointer<Cvatlib_Network, VatlibQScopedPointerDeleter> m_net;
         Cvatlib_Network::connStatus m_status;
         BlackMisc::Network::CServer m_server;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CInformationMessage> m_atisParts;
 
         QTimer m_processingTimer;
         QTimer m_updateTimer;

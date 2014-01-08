@@ -90,7 +90,7 @@ public slots: //to receive from INetwork
     void freqQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
     void serverQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);
     void atcQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC);
-    void atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &data);
+    void atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
     void nameQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
     void capabilitiesQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
     void kicked(const QString &msg);

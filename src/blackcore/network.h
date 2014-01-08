@@ -18,6 +18,7 @@
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/avinformationmessage.h"
 #include <QObject>
 #include <QString>
 #include <QMap>
@@ -94,7 +95,7 @@ namespace BlackCore
                                const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
         void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void atcQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC);
-        void atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &data);
+        void atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
         void metarReceived(const QString &data);
 
         // Aircraft

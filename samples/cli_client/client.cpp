@@ -365,9 +365,9 @@ void Client::atcQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsig
     std::cout << "ATC_REPLY " << callsign << (isATC ? " yes" : " no") << std::endl;
 }
 
-void Client::atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &data)
+void Client::atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis)
 {
-    std::cout << "ATIS_REPLY " << callsign << " " << data.toStdString() << std::endl;
+    std::cout << "ATIS_REPLY " << callsign << " " << atis << std::endl;
 }
 
 void Client::nameQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname)

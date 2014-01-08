@@ -98,6 +98,16 @@ namespace BlackMisc
             }
 
             /*!
+             * \brief Append message part
+             * \param messagePart
+             */
+            void appendMessage(const QString &messagePart)
+            {
+                this->m_receivedTimestamp = QDateTime::currentDateTimeUtc();
+                this->m_message.append(messagePart);
+            }
+
+            /*!
              * \brief Type as string
              * \return
              */
@@ -108,6 +118,12 @@ namespace BlackMisc
              * \return
              */
             InformationType getType() const { return this->m_type; }
+
+            /*!
+             * \brief Set type
+             * \param type
+             */
+            void setType(InformationType type) { this->m_type = type; }
 
             /*!
              * \brief Timestamp
