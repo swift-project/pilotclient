@@ -30,8 +30,8 @@ namespace BlackMisc
             /*!
              * Constructor.
              */
-            CCallsign(const QString &callsign)
-                : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign))
+            CCallsign(const QString &callsign, const QString &callsignPronounced = "")
+                : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign)), m_callsignPronounced(callsignPronounced)
             {}
 
             /*!
@@ -68,6 +68,12 @@ namespace BlackMisc
              * \return
              */
             const QString &getStringAsSet() const { return this->m_callsignAsSet; }
+
+            /*!
+             * \brief Get callsign pronounced
+             * \return
+             */
+            const QString &getCallsignPronounced() const { return this->m_callsignPronounced; }
 
             /*!
              * \brief Get ICAO code, if this possible
@@ -155,6 +161,7 @@ namespace BlackMisc
         private:
             QString m_callsignAsSet;
             QString m_callsign;
+            QString m_callsignPronounced;
         };
     } // namespace
 } // namespace
