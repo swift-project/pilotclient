@@ -2,12 +2,19 @@
 #define BLACKCORE_CORERUNTIME_H
 
 #include <QObject>
-#include "dbus_server.h"
-#include "context_network.h"
-#include "context_settings.h"
 
 namespace BlackCore
 {
+    class CDBusServer;
+    class CContextNetwork;
+    class CContextVoice;
+    class CContextSettings;
+    class CContextApplication;
+    class IContextNetwork;
+    class IContextVoice;
+    class IContextSettings;
+    class IContextApplication;
+
     /*!
      * \brief The CCoreRuntime class
      */
@@ -19,7 +26,9 @@ namespace BlackCore
         bool m_init; /*!< flag */
         CDBusServer *m_dbusServer;
         CContextNetwork *m_contextNetwork;
-        CContextSettings *m_settings;
+        CContextVoice *m_contextVoice;
+        CContextSettings *m_contextSettings;
+        CContextApplication *m_contextApplication;
 
         /*!
          * \brief Init
@@ -53,37 +62,50 @@ namespace BlackCore
          * \brief Context for network
          * \return
          */
-        IContextNetwork *getIContextNetwork()
-        {
-            return this->m_contextNetwork;
-        }
+        IContextNetwork *getIContextNetwork();
 
         /*!
          * \brief Context for network
          * \return
          */
-        const IContextNetwork *getIContextNetwork() const
-        {
-            return this->m_contextNetwork;
-        }
+        const IContextNetwork *getIContextNetwork() const;
+
+        /*!
+         * \brief Context for network
+         * \return
+         */
+        IContextVoice *getIContextVoice();
+
+        /*!
+         * \brief Context for network
+         * \return
+         */
+        const IContextVoice *getIContextVoice() const;
+
 
         /*!
          * \brief Settings
          * \return
          */
-        IContextSettings *getIContextSettings()
-        {
-            return this->m_settings;
-        }
+        IContextSettings *getIContextSettings();
 
         /*!
          * \brief Settings
          * \return
          */
-        const IContextSettings *getIContextSettings() const
-        {
-            return this->m_settings;
-        }
+        const IContextSettings *getIContextSettings() const;
+
+        /*!
+         * \brief Context for application
+         * \return
+         */
+        const IContextApplication *getIContextApplication() const;
+
+        /*!
+         * \brief Application
+         * \return
+         */
+        IContextApplication *getIContextApplication();
 
     };
 }

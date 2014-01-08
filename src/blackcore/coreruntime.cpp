@@ -1,6 +1,10 @@
 #include "blackcore/coreruntime.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/nwserver.h"
+#include "blackcore/context_application.h"
+#include "blackcore/context_network.h"
+#include "blackcore/context_settings.h"
+#include "blackcore/context_voice.h"
 
 namespace BlackCore
 {
@@ -39,4 +43,20 @@ namespace BlackCore
         // flag
         m_init = true;
     }
+
+    IContextNetwork *CCoreRuntime::getIContextNetwork() { return this->m_contextNetwork; }
+
+    const IContextNetwork *CCoreRuntime::getIContextNetwork() const { return this->m_contextNetwork; }
+
+    IContextVoice *CCoreRuntime::getIContextVoice() { return this->m_contextVoice; }
+
+    const IContextVoice *CCoreRuntime::getIContextVoice() const { return this->m_contextVoice; }
+
+    IContextSettings *CCoreRuntime::getIContextSettings() { return this->m_contextSettings; }
+
+    const IContextSettings *CCoreRuntime::getIContextSettings() const { return this->m_contextSettings; }
+
+    const IContextApplication *CCoreRuntime::getIContextApplication() const { return this->m_contextApplication; }
+
+    IContextApplication *CCoreRuntime::getIContextApplication() { return this->m_contextApplication; }
 }

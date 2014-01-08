@@ -6,7 +6,9 @@
 #include "context_network.h"
 #include "coreruntime.h"
 #include "blackmisc/avatcstationlist.h"
+#include "context_settings.h"
 #include <QtXml/QDomElement>
+#include <QNetworkAccessManager>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

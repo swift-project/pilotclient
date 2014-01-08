@@ -1,6 +1,10 @@
 #include "tool.h"
 #include "blackcore/coreruntime.h"
+#include "blackcore/context_network.h"
+#include "blackcore/context_voice.h"
 #include "blackmisc/valuemap.h"
+#include "blackmisc/avallclasses.h"
+#include "blackmisc/pqallquantities.h"
 #include <QTextStream>
 #include <QString>
 #include <QFuture>

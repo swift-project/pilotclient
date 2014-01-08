@@ -12,6 +12,7 @@
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackcore/coreruntime.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -20,8 +21,6 @@ class QNetworkReply;
 
 namespace BlackCore
 {
-    class CCoreRuntime;
-
     /*!
      * \brief Network context
      */
@@ -60,7 +59,7 @@ namespace BlackCore
          */
         const CCoreRuntime *getRuntime() const
         {
-            return reinterpret_cast<CCoreRuntime *>(this->parent());
+            return static_cast<CCoreRuntime *>(this->parent());
         }
 
         /*!

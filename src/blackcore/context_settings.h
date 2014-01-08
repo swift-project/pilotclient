@@ -10,14 +10,13 @@
 #include "blackcore/context_settings_interface.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackcore/coreruntime.h"
 #include <QObject>
 
 #define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "blackcore.contextsettings"
 
 namespace BlackCore
 {
-    class CCoreRuntime;
-
     /*!
      * \brief Network context
      */
@@ -56,7 +55,7 @@ namespace BlackCore
          */
         const CCoreRuntime *getRuntime() const
         {
-            return reinterpret_cast<CCoreRuntime *>(this->parent());
+            return static_cast<CCoreRuntime *>(this->parent());
         }
 
     public slots:

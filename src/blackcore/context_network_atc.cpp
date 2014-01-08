@@ -10,6 +10,8 @@
 #include <QMetaEnum>
 #include <QUrl>
 #include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QNetworkAccessManager>
 #include <QXmlStreamReader>
 #include <QtXml/QDomElement>
 
