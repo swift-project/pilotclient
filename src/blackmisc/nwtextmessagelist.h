@@ -35,24 +35,25 @@ namespace BlackMisc
             /*!
              * \brief Constructor, single private message
              * \param message
-             * \param frequency
+             * \param recipient
              */
-            CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &toCallsign);
+            CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &recipient);
 
             /*!
              * \brief Constructor, single private message
              * \param message
-             * \param fromCallsign
-             * \param toCallsign
+             * \param sender
+             * \param recipient
              */
-            CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &fromCallsign, const BlackMisc::Aviation::CCallsign &toCallsign);
+            CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &sender, const BlackMisc::Aviation::CCallsign &recipient);
 
             /*!
              * \brief Constructor, single radio message
              * \param message
              * \param frequency
+             * \param sender
              */
-            CTextMessageList(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &fromCallsign = BlackMisc::Aviation::CCallsign());
+            CTextMessageList(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &sender = BlackMisc::Aviation::CCallsign());
 
             /*!
              * \brief Constructor, single message
@@ -64,8 +65,9 @@ namespace BlackMisc
              * \brief Constructor, multi-frequency radio messages
              * \param message
              * \param frequencies
+             * \param sender
              */
-            CTextMessageList(const QString &message, const QList<BlackMisc::PhysicalQuantities::CFrequency> &frequencies, const BlackMisc::Aviation::CCallsign &fromCallsign = BlackMisc::Aviation::CCallsign());
+            CTextMessageList(const QString &message, const QList<BlackMisc::PhysicalQuantities::CFrequency> &frequencies, const BlackMisc::Aviation::CCallsign &sender = BlackMisc::Aviation::CCallsign());
 
             /*!
              * \brief Construct from a base class object.
@@ -111,7 +113,7 @@ namespace BlackMisc
              * \param callsign
              * \return
              */
-            CTextMessageList findByToCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+            CTextMessageList findByRecipient(const BlackMisc::Aviation::CCallsign &callsign) const;
 
             /*!
              * \brief Find by frequency

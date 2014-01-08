@@ -121,9 +121,9 @@ namespace BlackMisc
         /*
          * Find by callsign
          */
-        CTextMessageList CTextMessageList::findByToCallsign(const CCallsign &callsign) const
+        CTextMessageList CTextMessageList::findByRecipient(const CCallsign &callsign) const
         {
-            return CTextMessageList(this->findBy(&CTextMessage::getToCallsign, callsign));
+            return CTextMessageList(this->findBy(&CTextMessage::getRecipient, callsign));
         }
 
         /*
@@ -143,7 +143,7 @@ namespace BlackMisc
             for (int i = 0; i < this->size(); i++)
             {
                 CTextMessage tm = (*this)[i];
-                tm.toggleSenderReceiver();
+                tm.toggleSenderRecipient();
                 (*this)[i] = tm;
             }
         }

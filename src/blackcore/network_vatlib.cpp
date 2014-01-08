@@ -269,8 +269,8 @@ namespace BlackCore
             CTextMessageList privateMessages = messages.getPrivateMessages();
             foreach(BlackMisc::Network::CTextMessage message, privateMessages)
             {
-                if (message.getToCallsign().isEmpty()) continue;
-                m_net->SendPrivateTextMessage(toFSD(message.getToCallsign()), toFSD(message.getMessage()));
+                if (message.getRecipient().isEmpty()) continue;
+                m_net->SendPrivateTextMessage(toFSD(message.getRecipient()), toFSD(message.getMessage()));
             }
             CTextMessageList radioMessages = messages.getRadioMessages();
             if (radioMessages.isEmpty()) return;

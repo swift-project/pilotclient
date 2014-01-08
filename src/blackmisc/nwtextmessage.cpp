@@ -15,8 +15,8 @@ namespace BlackMisc
             QString s(this->m_message);
             if (this->isPrivateMessage())
             {
-                s.append(" ").append(this->m_fromCallsign.toQString(i18n));
-                s.append(" ").append(this->m_toCallsign.toQString(i18n));
+                s.append(" ").append(this->m_sender.toQString(i18n));
+                s.append(" ").append(this->m_recipient.toQString(i18n));
             }
             else
             {
@@ -30,8 +30,8 @@ namespace BlackMisc
          */
         void CTextMessage::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_fromCallsign;
-            argument << this->m_toCallsign;
+            argument << this->m_sender;
+            argument << this->m_recipient;
             argument << this->m_message;
             argument << this->m_frequency;
         }
@@ -41,8 +41,8 @@ namespace BlackMisc
          */
         void CTextMessage::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_fromCallsign;
-            argument >> this->m_toCallsign;
+            argument >> this->m_sender;
+            argument >> this->m_recipient;
             argument >> this->m_message;
             argument >> this->m_frequency;
         }
@@ -52,7 +52,7 @@ namespace BlackMisc
          */
         bool CTextMessage::isPrivateMessage() const
         {
-            return !this->m_fromCallsign.isEmpty() && !this->m_toCallsign.isEmpty();
+            return !this->m_sender.isEmpty() && !this->m_recipient.isEmpty();
         }
 
         /*
@@ -75,9 +75,9 @@ namespace BlackMisc
         /*
          * Valid receiver?
          */
-        bool CTextMessage::hasValidReceiver() const
+        bool CTextMessage::hasValidRecipient() const
         {
-            if (!this->m_toCallsign.isEmpty()) return true;
+            if (!this->m_recipient.isEmpty()) return true;
             return BlackMisc::Aviation::CComSystem::isValidCivilAviationFrequency(this->m_frequency);
         }
 
@@ -92,21 +92,23 @@ namespace BlackMisc
         /*
          * Formatted string
          */
-        QString CTextMessage::asString(bool withFrom, bool withTo, const QString separator) const
+        QString CTextMessage::asString(bool withSender, bool withRecipient, const QString separator) const
         {
             QString s;
-            if (withFrom)
+            if (withSender)
             {
-                if (!this->m_fromCallsign.isEmpty())
-                    s.append(this->m_fromCallsign.getStringAsSet());
+                if (!this->m_sender.isEmpty())
+                {
+                    s.append(this->m_sender.getStringAsSet());
+                }
             }
 
-            if (withTo)
+            if (withRecipient)
             {
-                if (!this->m_toCallsign.isEmpty())
+                if (!this->m_recipient.isEmpty())
                 {
                     if (!s.isEmpty()) s.append(separator);
-                    s.append(this->m_toCallsign.getStringAsSet());
+                    s.append(this->m_recipient.getStringAsSet());
                 }
                 else
                 {
@@ -115,9 +117,8 @@ namespace BlackMisc
                         if (!s.isEmpty()) s.append(separator);
                         s.append(this->m_frequency.valueRoundedWithUnit(3, true));
                     }
-
                 }
-            } // to
+            }
 
             if (this->m_message.isEmpty()) return s;
             if (!s.isEmpty()) s.append(separator);
@@ -128,11 +129,9 @@ namespace BlackMisc
         /*
          * Toggle sender / receiver
          */
-        void CTextMessage::toggleSenderReceiver()
+        void CTextMessage::toggleSenderRecipient()
         {
-            BlackMisc::Aviation::CCallsign csOldFrom(this->getFromCallsign());
-            this->setFromCallsign(this->getToCallsign());
-            this->setToCallsign(csOldFrom);
+            qSwap(this->m_sender, this->m_recipient);
         }
 
         /*
@@ -158,8 +157,8 @@ namespace BlackMisc
         uint CTextMessage::getValueHash() const
         {
             QList<uint> hashs;
-            hashs << qHash(this->m_fromCallsign);
-            hashs << qHash(this->m_toCallsign);
+            hashs << qHash(this->m_sender);
+            hashs << qHash(this->m_recipient);
             hashs << qHash(this->m_frequency);
             hashs << qHash(this->m_message);
             return BlackMisc::calculateHash(hashs, "CTextMessage");

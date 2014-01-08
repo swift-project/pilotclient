@@ -64,7 +64,7 @@ QWidget *MainWindow::addNewTextMessageTab(const QString &tabName)
 void MainWindow::addPrivateChannelTextMessage(const CTextMessage &textMessage, bool sending)
 {
     if (!textMessage.isPrivateMessage()) return;
-    CCallsign cs = sending ? textMessage.getToCallsign() : textMessage.getFromCallsign();
+    CCallsign cs = sending ? textMessage.getRecipient() : textMessage.getSender();
     if (cs.isEmpty()) return;
     QWidget *tab = this->findTextMessageTabByName(cs.getStringAsSet());
     if (tab == nullptr) tab = this->findTextMessageTabByName(cs.asString());
@@ -104,7 +104,7 @@ CTextMessage MainWindow::getTextMessageStubForChannel()
     if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesAll)) return tm;
 
     // from
-    tm.setFromCallsign(this->m_ownAircraft.getCallsign());
+    tm.setSender(this->m_ownAircraft.getCallsign());
 
     if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM1) ||
             index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM2) ||
@@ -138,14 +138,14 @@ CTextMessage MainWindow::getTextMessageStubForChannel()
             }
             else
             {
-                CCallsign toCallsign(selectedTabText);
-                tm.setToCallsign(toCallsign);
+                CCallsign recipient(selectedTabText);
+                tm.setRecipient(recipient);
             }
         }
         else
         {
-            CCallsign toCallsign(selectedTabText);
-            tm.setToCallsign(toCallsign);
+            CCallsign recipient(selectedTabText);
+            tm.setRecipient(recipient);
         }
     }
     return tm; // now valid message stub with receiver
@@ -215,7 +215,7 @@ void MainWindow::commandEntered()
             this->ui->tw_TextMessages->setCurrentWidget(tab);
         }
         CTextMessage tm = this->getTextMessageStubForChannel();
-        int index = cmdLine.indexOf(tm.getToCallsign().getStringAsSet(), 0, Qt::CaseInsensitive);
+        int index = cmdLine.indexOf(tm.getRecipient().getStringAsSet(), 0, Qt::CaseInsensitive);
         if (index < 0)
         {
             this->displayStatusMessage(
@@ -224,7 +224,7 @@ void MainWindow::commandEntered()
             );
             return;
         }
-        QString msg(cmdLine.mid(index + tm.getToCallsign().asString().length() + 1));
+        QString msg(cmdLine.mid(index + tm.getRecipient().asString().length() + 1));
         tm.setMessage(msg);
         if (tm.isEmpty()) return;
         if (!this->isContextNetworkAvailableCheck()) return;

@@ -33,10 +33,10 @@ namespace BlackMisc
              * Constructor, radio message
              * \param message
              * \param frequency
-             * \param fromCallsign
+             * \param sender
              */
-            CTextMessage(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &fromCallsign = BlackMisc::Aviation::CCallsign())
-                : m_message(message), m_fromCallsign(fromCallsign), m_frequency(frequency)
+            CTextMessage(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &sender = BlackMisc::Aviation::CCallsign())
+                : m_message(message), m_sender(sender), m_frequency(frequency)
             {
                 this->m_frequency.switchUnit(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
@@ -44,11 +44,11 @@ namespace BlackMisc
             /*!
              * Constructor, private message
              * \param message
-             * \param fromCallsign
-             * \param toCallsign
+             * \param sender
+             * \param recipient
              */
-            CTextMessage(const QString &message, const BlackMisc::Aviation::CCallsign &fromCallsign, const BlackMisc::Aviation::CCallsign &toCallsign = BlackMisc::Aviation::CCallsign())
-                : m_message(message), m_fromCallsign(fromCallsign), m_toCallsign(toCallsign), m_frequency(-1.0, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()) {}
+            CTextMessage(const QString &message, const BlackMisc::Aviation::CCallsign &sender, const BlackMisc::Aviation::CCallsign &recipient = BlackMisc::Aviation::CCallsign())
+                : m_message(message), m_sender(sender), m_recipient(recipient), m_frequency(-1.0, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()) {}
 
             /*!
              * \brief QVariant, required for DBus QVariant lists
@@ -63,25 +63,25 @@ namespace BlackMisc
              * Get callsign (from)
              * \return
              */
-            const BlackMisc::Aviation::CCallsign &getFromCallsign() const { return m_fromCallsign; }
+            const BlackMisc::Aviation::CCallsign &getSender() const { return m_sender; }
 
             /*!
              * Set callsign (from)
              * \param
              */
-            void setFromCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_fromCallsign = callsign; }
+            void setSender(const BlackMisc::Aviation::CCallsign &sender) { m_sender = sender; }
 
             /*!
              * Get callsign (to)
              * \return
              */
-            const BlackMisc::Aviation::CCallsign &getToCallsign() const { return m_toCallsign; }
+            const BlackMisc::Aviation::CCallsign &getRecipient() const { return m_recipient; }
 
             /*!
              * Set callsign (to)
              * \param
              */
-            void setToCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_toCallsign = callsign; }
+            void setRecipient(const BlackMisc::Aviation::CCallsign &recipient) { m_recipient = recipient; }
 
             /*
              * Send to frequency?
@@ -97,10 +97,10 @@ namespace BlackMisc
             bool isSendToUnicom() const;
 
             /*!
-             * \brief Valid receviver?
+             * \brief Valid recipient?
              * \return
              */
-            bool hasValidReceiver() const;
+            bool hasValidRecipient() const;
 
             /*!
              * Get message
@@ -147,17 +147,17 @@ namespace BlackMisc
             /*!
              * Whole message as formatted string.
              * Used to display message in a console window.
-             * \param withFrom
-             * \param withTo
+             * \param withSender
+             * \param withRecipient
              * \param separator
              * \return
              */
-            QString asString(bool withFrom, bool withTo, const QString separator = ", ") const;
+            QString asString(bool withSender, bool withRecipient, QString separator = ", ") const;
 
             /*!
              * Toggle sender receiver, can be used to ping my own message
              */
-            void toggleSenderReceiver();
+            void toggleSenderRecipient();
 
             /*!
              * \brief Equal operator ==
@@ -205,8 +205,8 @@ namespace BlackMisc
 
         private:
             QString m_message;
-            BlackMisc::Aviation::CCallsign m_fromCallsign;
-            BlackMisc::Aviation::CCallsign m_toCallsign;
+            BlackMisc::Aviation::CCallsign m_sender;
+            BlackMisc::Aviation::CCallsign m_recipient;
             BlackMisc::PhysicalQuantities::CFrequency m_frequency;
         };
     } // namespace
