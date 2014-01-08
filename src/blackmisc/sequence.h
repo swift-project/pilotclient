@@ -259,6 +259,136 @@ namespace BlackMisc
         iterator erase(iterator it1, iterator it2) { Q_ASSERT(pimpl()); return pimpl()->erase(it1, it2); }
 
         /*!
+         * \brief Modify by applying a value map to each element for which a given predicate returns true.
+         * \param p
+         * \param newValues
+         */
+        template <class Predicate>
+        void applyIf(Predicate p, const CValueMap &newValues)
+        {
+            std::for_each(begin(), end(), [ &, p ](T &value) { if (p(value)) { value.apply(newValues); } });
+        }
+
+        /*!
+         * \brief Modify by applying a value map to each element matching a particular key/value pair.
+         * \param key1 A pointer to a member function of T.
+         * \param value1 Will be compared to the return value of key1.
+         * \param newValues
+         */
+        template <class K1, class V1>
+        void applyIf(K1 key1, V1 value1, const CValueMap &newValues)
+        {
+            applyIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1), newValues);
+        }
+
+        /*!
+         * \brief Modify by applying a value map to each element matching a given value map.
+         * \param pattern
+         * \param newValues
+         */
+        void applyIf(const CValueMap &pattern, const CValueMap &newValues)
+        {
+            applyIf([ & ](const T &value) { return value == pattern; }, newValues);
+        }
+
+        /*!
+         * \brief Replace elements for which a given predicate returns true.
+         * \param p
+         * \param replacement
+         */
+        template <class Predicate>
+        void replaceIf(Predicate p, const T &replacement)
+        {
+            std::replace_if(begin(), end(), p, replacement);
+        }
+
+        /*!
+         * \brief Replace elements matching a particular key/value pair.
+         * \param key1 A pointer to a member function of T.
+         * \param value1 Will be compared to the return value of key1.
+         * \param replacement
+         */
+        template <class K1, class V1>
+        void replaceIf(K1 key1, V1 value1, const T &replacement)
+        {
+            replaceIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1), replacement);
+        }
+
+        /*!
+         * \brief Replace elements for which a given predicate returns true. If there is no match, push the new element on the end.
+         * \param p
+         * \param replacement
+         */
+        template <class Predicate>
+        void replaceOrAdd(Predicate p, const T &replacement)
+        {
+            if (this->contains(p)) { replaceIf(p, replacement); }
+            else { push_back(replacement); }
+        }
+
+        /*!
+         * \brief Replace elements matching a particular key/value pair. If there is no match, push the new element on the end.
+         * \param key1 A pointer to a member function of T.
+         * \param value1 Will be compared to the return value of key1.
+         * \param replacement
+         */
+        template <class K1, class V1>
+        void replaceOrAdd(K1 key1, V1 value1, const T &replacement)
+        {
+            if (this->contains(key1, value1)) { replaceIf(key1, value1, replacement); }
+            else { push_back(replacement); }
+        }
+
+        /*!
+         * \brief Return a copy sorted by a given comparator predicate.
+         * \param p
+         * \return
+         */
+        template <class Predicate>
+        CSequence sorted(Predicate p) const
+        {
+            CSequence result = *this;
+            std::sort(result.begin(), result.end(), p);
+            return result;
+        }
+
+        /*!
+         * \brief Return a copy sorted by a particular key.
+         * \param key1 A pointer to a member function of T.
+         * \return
+         */
+        template <class K1>
+        CSequence sortedBy(K1 key1) const
+        {
+            return sorted(BlackMisc::Predicates::MemberLess<T>(key1));
+        }
+
+        /*!
+         * \brief Return a copy sorted by some particular keys.
+         * \param key1 A pointer to a member function of T.
+         * \param key2 A pointer to a member function of T.
+         * \return
+         */
+        template <class K1, class K2>
+        CSequence sortedBy(K1 key1, K2 key2) const
+        {
+            return sorted(BlackMisc::Predicates::MemberLess<T>(key1, key2));
+        }
+
+        /*!
+         * \brief Return a copy sorted by some particular keys.
+         * \param key1 A pointer to a member function of T.
+         * \param key2 A pointer to a member function of T.
+         * \param key3 A pointer to a member function of T.
+         * \return
+         */
+        template <class K1, class K2, class K3>
+        CSequence sortedBy(K1 key1, K2 key2, K3 key3) const
+        {
+            return sorted(BlackMisc::Predicates::MemberLess<T>(key1, key2, key3));
+        }
+
+        /*!
          * \brief Test for equality.
          * \param other
          * \return
