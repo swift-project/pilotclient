@@ -340,6 +340,45 @@ namespace BlackMisc
         }
 
         /*!
+         * \brief In-place sort by a given comparator predicate.
+         * \param p
+         */
+        template <class Predicate> void sort(Predicate p)
+        {
+            std::sort(begin(), end(), p);
+        }
+
+        /*!
+         * \brief In-place sort by a particular key.
+         * \param key1 A pointer to a member function of T.
+         */
+        template <class K1> void sortBy(K1 key1)
+        {
+            sort(BlackMisc::Predicates::MemberLess<T>(key1));
+        }
+
+        /*!
+         * \brief In-place sort by some particular keys.
+         * \param key1 A pointer to a member function of T.
+         * \param key2 A pointer to a member function of T.
+         */
+        template <class K1, class K2> void sortBy(K1 key1, K2 key2)
+        {
+            sort(BlackMisc::Predicates::MemberLess<T>(key1, key2));
+        }
+
+        /*!
+         * \brief In-place sort by some particular keys.
+         * \param key1 A pointer to a member function of T.
+         * \param key2 A pointer to a member function of T.
+         * \param key3 A pointer to a member function of T.
+         */
+        template <class K1, class K2, class K3> void sortBy(K1 key1, K2 key2, K3 key3)
+        {
+            sort(BlackMisc::Predicates::MemberLess<T>(key1, key2, key3));
+        }
+
+        /*!
          * \brief Return a copy sorted by a given comparator predicate.
          * \param p
          * \return
@@ -348,7 +387,7 @@ namespace BlackMisc
         CSequence sorted(Predicate p) const
         {
             CSequence result = *this;
-            std::sort(result.begin(), result.end(), p);
+            result.sort(p);
             return result;
         }
 
