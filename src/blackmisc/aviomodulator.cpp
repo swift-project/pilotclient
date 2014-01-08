@@ -63,6 +63,8 @@ namespace BlackMisc
             argument << this->m_frequencyActive;
             argument << this->m_frequencyStandby;
             argument << this->m_digits;
+            argument << this->m_volumeInput;
+            argument << this->m_volumeOutput;
         }
 
         /*
@@ -74,6 +76,8 @@ namespace BlackMisc
             argument >> this->m_frequencyActive;
             argument >> this->m_frequencyStandby;
             argument >> this->m_digits;
+            argument >> this->m_volumeInput;
+            argument >> this->m_volumeOutput;
         }
 
         /*

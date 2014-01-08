@@ -25,6 +25,8 @@ namespace BlackMisc
         private:
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyActive; //!< active frequency
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
+            qint32 m_volumeInput; //!< volume input
+            qint32 m_volumeOutput; //!< volume output
 
         protected:
             int m_digits; //!< digits used
@@ -33,14 +35,8 @@ namespace BlackMisc
             /*!
              * \brief Default constructor
              */
-            CModulator() : CAvionicsBase("default") {}
-
-            /*!
-             * \brief Copy constructor
-             * \param other
-             */
-            CModulator(const CModulator &other) : CAvionicsBase(other.getName()),
-                m_frequencyActive(other.m_frequencyActive), m_frequencyStandby(other.m_frequencyStandby), m_digits(other.m_digits) {}
+            CModulator() :
+                CAvionicsBase("default"), m_volumeInput(0), m_volumeOutput(0), m_digits(2) {}
 
             /*!
              * \brief Constructor
@@ -50,7 +46,7 @@ namespace BlackMisc
              * \param digits
              */
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits) :
-                CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_digits(digits) {}
+                CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_volumeInput(0), m_volumeOutput(0), m_digits(digits) {}
 
             /*!
              * \brief String for converter
@@ -280,6 +276,28 @@ namespace BlackMisc
             {
                 this->m_frequencyStandby = frequency;
             }
+
+            /*!
+             * \brief Output volume
+             * \return
+             */
+            qint32 getVolumeOutput() const { return this->m_volumeOutput; }
+
+            /*!
+             * \brief Input volume
+             * \return
+             */
+            qint32 getVolumeInput() const { return this->m_volumeInput; }
+
+            /*!
+             * \brief Output volume
+             */
+            void setVolumeOutput(qint32 volume) { this->m_volumeOutput = volume; }
+
+            /*!
+             * \brief Input volume
+             */
+            void setVolumeInput(qint32 volume) { this->m_volumeInput = volume; }
 
             /*!
              * \brief Register metadata
