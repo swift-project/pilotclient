@@ -86,6 +86,34 @@ void MainWindow::updateCockpitFromContext()
         break;
     }
 
+    //
+    // voice
+    //
+    if (!this->ui->cb_CockpitVoiceRoom1Override->isChecked())
+    {
+        if (!this->ui->cb_CockpitVoiceRoom1Override->isChecked() && this->m_voiceRoomCom1.isValid())
+        {
+            QString s(this->m_voiceRoomCom1.isConnected() ? "*" : "");
+            s.append(this->m_voiceRoomCom1.getVoiceRoomUrl());
+            this->ui->le_CockpitVoiceRoomCom1->setText(s);
+        }
+        else
+            this->ui->le_CockpitVoiceRoomCom1->setText("");
+    }
+
+    if (!this->ui->cb_CockpitVoiceRoom2Override->isChecked())
+    {
+        if (this->m_voiceRoomCom2.isValid())
+        {
+            QString s(this->m_voiceRoomCom2.isConnected() ? "*" : "");
+            s.append(this->m_voiceRoomCom2.getVoiceRoomUrl());
+            this->ui->le_CockpitVoiceRoomCom2->setText(s);
+        }
+        else
+            this->ui->le_CockpitVoiceRoomCom2->setText("");
+    }
+}
+
 /*
  * Reset transponder mode to Standby
  */
@@ -163,5 +191,34 @@ void MainWindow::sendCockpitUpdates()
             this->reloadOwnAircraft(); // also loads resolved voice rooms
             changedCockpit = true;
         }
+    }
+
+    //
+    // Now with the new voice room data, really set the
+    // voice rooms in the context
+    //
+    if (changedCockpit && this->m_contextVoiceAvailable)
+    {
+        // set voice rooms here, this allows to use local/remote
+        // voice context
+        this->m_contextVoice->setComVoiceRooms(this->m_voiceRoomCom1, this->m_voiceRoomCom2);
+    }
+}
+
+/*
+ * Voice room override
+ */
+void MainWindow::voiceRoomOverride()
+{
+    this->ui->le_CockpitVoiceRoomCom1->setReadOnly(!this->ui->cb_CockpitVoiceRoom1Override->isChecked());
+    this->ui->le_CockpitVoiceRoomCom2->setReadOnly(!this->ui->cb_CockpitVoiceRoom2Override->isChecked());
+    if (this->ui->cb_CockpitVoiceRoom1Override->isChecked())
+    {
+        this->m_voiceRoomCom1 = this->ui->cb_CockpitVoiceRoom1Override->text().trimmed();
+    }
+
+    if (this->ui->cb_CockpitVoiceRoom2Override->isChecked())
+    {
+        this->m_voiceRoomCom2 = this->ui->cb_CockpitVoiceRoom2Override->text().trimmed();
     }
 }

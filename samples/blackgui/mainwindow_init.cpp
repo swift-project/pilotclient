@@ -62,13 +62,17 @@ void MainWindow::init(bool withDBus)
     {
         this->m_dBusConnection = QDBusConnection::sessionBus();
         this->m_contextNetwork = new BlackCore::IContextNetwork(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
+        this->m_contextVoice = new BlackCore::IContextVoice(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextSettings = new BlackCore::IContextSettings(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
+        this->m_contextApplication = new BlackCore::IContextApplication(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
     }
     else
     {
         this->m_coreRuntime = new CCoreRuntime(false, this);
         this->m_contextNetwork = this->m_coreRuntime->getIContextNetwork();
+        this->m_contextVoice = this->m_coreRuntime->getIContextVoice();
         this->m_contextSettings = this->m_coreRuntime->getIContextSettings();
+        this->m_contextApplication = this->m_coreRuntime->getIContextApplication();
     }
 
     // relay status messages
@@ -126,6 +130,12 @@ void MainWindow::init(bool withDBus)
     this->m_timerUpdateAircraftsInRange->start(10 * 1000);
     this->m_timerUpdateAtcStationsOnline->start(10 * 1000);
     this->m_timerContextWatchdog->start(2 * 1000);
+
+    // init availability
+    this->setContextAvailability();
+
+    // voice panel
+    this->setAudioDeviceLists();
 
     // data
     this->initialDataReads();

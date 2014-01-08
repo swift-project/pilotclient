@@ -12,6 +12,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
+using namespace BlackMisc::Voice;
 
 /*
  * Constructor
@@ -19,11 +20,16 @@ using namespace BlackMisc::Settings;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow),
     m_init(false), m_withDBus(true),
+    m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextVoiceAvailable(false),
     m_dBusConnection("dummy"), m_coreRuntime(nullptr),
-    m_atcListOnline(nullptr), m_atcListBooked(nullptr), m_trafficServerList(nullptr), m_aircraftsInRange(nullptr),
-    m_contextNetwork(nullptr), m_contextSettings(nullptr),
-    m_ownAircraft(),
-    m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerContextWatchdog(nullptr), m_timerCollectedCockpitUpdates(nullptr)
+    m_atcListOnline(nullptr), m_atcListBooked(nullptr),
+    m_trafficServerList(nullptr), m_aircraftsInRange(nullptr),
+    m_contextApplication(nullptr),
+    m_contextNetwork(nullptr), m_contextVoice(nullptr),
+    m_contextSettings(nullptr),
+    m_ownAircraft(), m_voiceRoomCom1(), m_voiceRoomCom2(),
+    m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr),
+    m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr)
 {
     ui->setupUi(this);
 }
@@ -51,6 +57,11 @@ void MainWindow::gracefulShutdown()
         this->m_contextNetwork->disconnectFromNetwork();
     }
 
+    if (this->m_contextVoiceAvailable)
+    {
+        this->m_contextVoice->leaveAllVoiceRooms();
+    }
+
     if (this->m_timerUpdateAircraftsInRange)
     {
         this->m_timerUpdateAircraftsInRange->disconnect(this);
@@ -71,7 +82,6 @@ void MainWindow::gracefulShutdown()
         this->m_timerCollectedCockpitUpdates->disconnect(this);
         this->m_timerCollectedCockpitUpdates->stop();
     }
-
 }
 
 /*
@@ -103,52 +113,6 @@ void MainWindow::setMainPage(bool start)
 }
 
 /*
- * Read stations
- */
-void MainWindow::reloadAtcStationsBooked()
-{
-    if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_atcListBooked->update(this->m_contextNetwork->getAtcStationsBooked());
-    this->ui->tv_AtcStationsBooked->resizeColumnsToContents();
-}
-
-/*
- * Read stations
- */
-void MainWindow::reloadAtcStationsOnline()
-{
-    if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_atcListOnline->update(this->m_contextNetwork->getAtcStationsOnline());
-    this->ui->tv_AtcStationsOnline->resizeColumnsToContents();
-}
-
-/*
- * Read aircrafts
- */
-void MainWindow::reloadAircraftsInRange()
-{
-    if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_aircraftsInRange->update(this->m_contextNetwork->getAircraftsInRange());
-    this->ui->tv_AircraftsInRange->resizeColumnsToContents();
-}
-
-/*
- * Read own aircraft
- */
-bool MainWindow::reloadOwnAircraft()
-{
-    if (!this->isContextNetworkAvailableCheck()) return false;
-    if (this->isCockpitUpdatePending()) return false;
-    CAircraft loadedAircraft = this->m_contextNetwork->getOwnAircraft();
-    if (loadedAircraft == this->m_ownAircraft) return false;
-
-    // changed aircraft
-    this->m_ownAircraft = loadedAircraft;
-    this->updateCockpitFromContext();
-    return true;
-}
-
-/*
  * Connect to Network
  */
 void MainWindow::toggleNetworkConnection()
@@ -170,6 +134,7 @@ void MainWindow::toggleNetworkConnection()
     else
     {
         msgs = this->m_contextNetwork->disconnectFromNetwork();
+        this->m_contextVoice->leaveAllVoiceRooms();
     }
     if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
 }
@@ -181,6 +146,16 @@ bool MainWindow::isContextNetworkAvailableCheck()
 {
     if (this->m_contextNetworkAvailable) return true;
     this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError, "Network context not available, no updates this time"));
+    return false;
+}
+
+/*
+ * Is the voice context available?
+ */
+bool MainWindow::isContextVoiceAvailableCheck()
+{
+    if (this->m_contextVoiceAvailable) return true;
+    this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError, "Voice context not available"));
     return false;
 }
 
@@ -265,30 +240,8 @@ void MainWindow::connectionStatusChanged(uint /** from **/, uint to)
 }
 
 /*
- * Station selected
- */
-void MainWindow::onlineAtcStationSelected(QModelIndex index)
-{
-    this->ui->te_AtcStationsOnlineInfo->setText(""); // reset
-    const CAtcStation stationClicked = this->m_atcListOnline->at(index);
-    QString infoMessage;
-
-    if (stationClicked.hasAtis())
-    {
-        infoMessage.append(stationClicked.getAtis().getMessage());
-    }
-    if (stationClicked.hasMetar())
-    {
-        if (!infoMessage.isEmpty()) infoMessage.append("\n\n");
-        infoMessage.append(stationClicked.getMetar().getMessage());
-    }
-
-    this->ui->te_AtcStationsOnlineInfo->setText(infoMessage);
-}
-
-/*
- * Timer event
- */
+* Timer event
+*/
 void MainWindow::updateTimer()
 {
     QObject *sender = QObject::sender();
@@ -308,8 +261,7 @@ void MainWindow::updateTimer()
     }
     else if (sender == this->m_timerContextWatchdog)
     {
-        qint64 t = QDateTime::currentMSecsSinceEpoch();
-        m_contextNetworkAvailable = (this->m_contextNetwork->usingLocalObjects() || (this->m_contextNetwork->ping(t) == t));
+        this->setContextAvailability();
         this->updateGuiStatusInformation();
     }
 
@@ -321,43 +273,19 @@ void MainWindow::updateTimer()
 }
 
 /*
- * Get METAR
- */
-void MainWindow::getMetar(const QString &airportIcaoCode)
+* Context availability
+*/
+void MainWindow::setContextAvailability()
 {
-    if (!this->isContextNetworkAvailableCheck()) return;
-    if (!this->m_contextNetwork->isConnected()) return;
-    QString icao = airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper();
-    this->ui->le_AtcStationsOnlineMetar->setText(icao);
-    if (icao.length() != 4) return;
-    CInformationMessage metar = this->m_contextNetwork->getMetar(icao);
-    if (metar.getType() != CInformationMessage::METAR) return;
-    if (metar.isEmpty()) return;
-    this->ui->te_AtcStationsOnlineInfo->setText(metar.getMessage());
+    qint64 t = QDateTime::currentMSecsSinceEpoch();
+    this->m_coreAvailable = this->m_contextApplication->ping(t) == t;
+    this->m_contextNetworkAvailable = this->m_coreAvailable || this->m_contextNetwork->usingLocalObjects();
+    this->m_contextVoiceAvailable = this->m_coreAvailable || this->m_contextVoice->usingLocalObjects();
 }
 
 /*
- * ATC station tab changed are changed
- */
-void MainWindow::atcStationTabChanged(int /** tabIndex **/)
-{
-    if (this->isContextNetworkAvailableCheck())
-    {
-        if (this->ui->tw_AtcStations->currentWidget() == this->ui->tb_AtcStationsBooked)
-        {
-            if (this->m_atcListBooked->rowCount() < 1)
-                this->reloadAtcStationsBooked();
-        }
-        else if (this->ui->tw_AtcStations->currentWidget() == this->ui->tb_AtcStationsOnline)
-        {
-            this->reloadAtcStationsOnline();
-        }
-    }
-}
-
-/*
- * Middle panel changed
- */
+* Middle panel changed
+*/
 void MainWindow::middlePanelChanged(int /* index */)
 {
     if (this->isContextNetworkAvailableCheck())
@@ -373,32 +301,39 @@ void MainWindow::middlePanelChanged(int /* index */)
 }
 
 /*
- * Update GUI
- */
+* Update GUI
+*/
 void MainWindow::updateGuiStatusInformation()
 {
+    const QString now = QDateTime::currentDateTimeUtc().toString("yyyy - MM - dd HH: mm: ss");
+    QString network("unavailable");
     if (this->m_contextNetworkAvailable)
     {
-        const QString now = QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
-        this->ui->le_networkContextAvailable->setText(
-            this->m_contextNetwork->usingLocalObjects() ? "local" :
-            now);
-        if (this->m_contextNetwork->isConnected())
-        {
-            this->ui->pb_MainConnect->setText("Disconnect");
-            this->ui->pb_MainConnect->setStyleSheet("background-color: green");
-            if (!this->ui->le_StatusNetworkConnected->text().startsWith("2"))
-                this->ui->le_StatusNetworkConnected->setText(now);
-        }
-        else
-        {
-            this->ui->pb_MainConnect->setText("Connect");
-            this->ui->pb_MainConnect->setStyleSheet("background-color:");
-            this->ui->le_StatusNetworkConnected->setText("Disconnected");
-        }
+        network = this->m_contextNetwork->usingLocalObjects() ? "local" : now;
+    }
+
+    QString voice("unavailable");
+    if (this->m_contextVoiceAvailable)
+    {
+        voice = this->m_contextVoice->usingLocalObjects() ? "local" : now;
+    }
+
+    this->ui->le_StatusNetworkContext->setText(network);
+    this->ui->le_StatusVoiceContext->setText(voice);
+    this->ui->cb_StatusWithDBus->setCheckState(this->m_withDBus ? Qt::Checked : Qt::Unchecked);
+
+    // Connected button
+    if (this->m_contextNetworkAvailable && this->m_contextNetwork->isConnected())
+    {
+        this->ui->pb_MainConnect->setText("Disconnect");
+        this->ui->pb_MainConnect->setStyleSheet("background-color: green");
+        if (!this->ui->le_StatusNetworkConnected->text().startsWith("2"))
+            this->ui->le_StatusNetworkConnected->setText(now);
     }
     else
     {
-        this->ui->le_networkContextAvailable->setText("Not available");
+        this->ui->pb_MainConnect->setText("Connect");
+        this->ui->pb_MainConnect->setStyleSheet("background-color: ");
+        this->ui->le_StatusNetworkConnected->setText("Disconnected");
     }
 }

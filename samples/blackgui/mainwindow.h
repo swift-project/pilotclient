@@ -10,8 +10,10 @@
 #include "blackgui/aircraftlistmodel.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/nwtextmessage.h"
+#include "blackcore/context_voice.h"
 #include "blackcore/context_network_interface.h"
 #include "blackcore/context_settings_interface.h"
+#include "blackcore/context_application_interface.h"
 #include "blackcore/coreruntime.h"
 #include <QMainWindow>
 #include <QTextEdit>
@@ -57,20 +59,26 @@ private:
     Ui::MainWindow *ui;
     bool m_init;
     bool m_withDBus;
+    bool m_coreAvailable;
     bool m_contextNetworkAvailable;
+    bool m_contextVoiceAvailable;
     QDBusConnection m_dBusConnection;
     BlackCore::CCoreRuntime *m_coreRuntime; /*!< runtime, if working with local core */
     BlackGui::CAtcListModel *m_atcListOnline;
     BlackGui::CAtcListModel *m_atcListBooked;
     BlackGui::CServerListModel *m_trafficServerList;
     BlackGui::CAircraftListModel *m_aircraftsInRange;
+    BlackCore::IContextApplication *m_contextApplication; /*!< overall application state */
     BlackCore::IContextNetwork *m_contextNetwork;
+    BlackCore::IContextVoice *m_contextVoice;
     BlackCore::IContextSettings *m_contextSettings;
-    BlackMisc::Aviation::CAircraft m_ownAircraft;
-    QTimer *m_timerUpdateAtcStationsOnline;
-    QTimer *m_timerUpdateAircraftsInRange;
-    QTimer *m_timerCollectedCockpitUpdates;
-    QTimer *m_timerContextWatchdog;
+    BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
+    BlackMisc::Voice::CVoiceRoom m_voiceRoomCom1;
+    BlackMisc::Voice::CVoiceRoom m_voiceRoomCom2;
+    QTimer *m_timerUpdateAtcStationsOnline; /*!< update stations */
+    QTimer *m_timerUpdateAircraftsInRange; /*!< update aircrafts */
+    QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
+    QTimer *m_timerContextWatchdog; /*!< core available? */
 
     /*!
      * \brief GUI status update
@@ -95,10 +103,16 @@ private:
     void initialDataReads();
 
     /*!
-     * \brief Context network available check, otherwise status message
+     * \brief Context network availability check, otherwise status message
      * \return
      */
     bool isContextNetworkAvailableCheck();
+
+    /*!
+     * \brief Context voice availability check, otherwise status message
+     * \return
+     */
+    bool isContextVoiceAvailableCheck();
 
     /*!
      * \brief Own cockpit, update from context
@@ -138,6 +152,25 @@ private:
      */
     BlackMisc::Network::CTextMessage getTextMessageStubForChannel();
 
+    /*!
+     * \brief Audio device lists
+     * \return
+     */
+    void setAudioDeviceLists();
+
+    /*!
+     * \brief Context availability, used by watchdog
+     */
+    void setContextAvailability();
+
+    /*!
+     * \brief Position of own plane for testing
+     * \param wgsLatitude
+     * \param wgsLongitude
+     * \param altitude
+     */
+    void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude);
+
 private slots:
 
     //
@@ -175,7 +208,7 @@ private slots:
      * \brief Display status messages
      * \param messages
      */
-    void displayStatusMessages(const BlackMisc::CStatusMessages &messages);
+    void displayStatusMessages(const BlackMisc::CStatusMessageList &messages);
 
     /*!
      * \brief Connection status changed
@@ -286,6 +319,27 @@ private slots:
      * \brief Cockpit values changed
      */
     void cockpitValuesChanged();
+
+    /*!
+     * \brief Audio device selected
+     * \param index
+     */
+    void audioDeviceSelected(int index);
+
+    /*!
+     * \brief Reset transponder to standby
+     */
+    void resetTransponderModerToStandby();
+
+    /*!
+     * \brief Reset transponder to Charly
+     */
+    void resetTransponderModerToCharly();
+
+    /*!
+     * \brief Override voice room
+     */
+    void voiceRoomOverride();
 
 };
 

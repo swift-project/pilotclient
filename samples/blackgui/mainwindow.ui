@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>615</width>
     <height>541</height>
    </rect>
   </property>
@@ -160,11 +160,24 @@
           <widget class="QWidget" name="pg_StatusStatusPage">
            <layout class="QVBoxLayout" name="verticalLayout_3">
             <item>
-             <layout class="QFormLayout" name="fl_StatusPage">
-              <item row="0" column="0">
-               <widget class="QLabel" name="lbl_StatusNetworkConnected">
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="1" column="3">
+               <widget class="QLineEdit" name="le_StatusVoiceContext">
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QCheckBox" name="cb_StatusWithDBus">
                 <property name="text">
-                 <string>Network connected</string>
+                 <string>DBus</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="tristate">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -175,17 +188,31 @@
                 </property>
                </widget>
               </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="le_StatusNetworkContext">
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="lbl_StatusNetworkContext">
+                <property name="text">
+                 <string>Voice context</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="lbl_StatusNetworkConnected">
+                <property name="text">
+                 <string>Network connected</string>
+                </property>
+               </widget>
+              </item>
               <item row="1" column="0">
                <widget class="QLabel" name="lbl_networkContextAvailable">
                 <property name="text">
                  <string>Network context</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="le_networkContextAvailable">
-                <property name="readOnly">
-                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -591,144 +618,10 @@
           <widget class="QWidget" name="pg_Cockpit">
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
-             <layout class="QGridLayout" name="gl_Cockpit">
+             <layout class="QGridLayout" name="gl_CockpitCom">
               <property name="spacing">
                <number>3</number>
               </property>
-              <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="ds_CockpitCom2Active">
-                <property name="accelerated">
-                 <bool>false</bool>
-                </property>
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="minimum">
-                 <double>118.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>136.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.250000000000000</double>
-                </property>
-                <property name="value">
-                 <double>118.250000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QDoubleSpinBox" name="ds_CockpitTransponder">
-                <property name="decimals">
-                 <number>0</number>
-                </property>
-                <property name="maximum">
-                 <double>7777.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>7000.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QDoubleSpinBox" name="ds_CockpitCom1Active">
-                <property name="maximumSize">
-                 <size>
-                  <width>75</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="minimum">
-                 <double>118.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>136.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.250000000000000</double>
-                </property>
-                <property name="value">
-                 <double>118.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="lbl_CockpitCom2">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>COM 2</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="lbl_CockpitTransponder">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Transponder</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="lbl_CockpitCom1">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>COM 1</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <spacer name="vs_Cockpit">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="2" column="2">
-               <widget class="QComboBox" name="cb_CockpitTransponderMode">
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>S</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>C</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>I</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
               <item row="0" column="2">
                <widget class="QDoubleSpinBox" name="ds_CockpitCom1Standby">
                 <property name="minimumSize">
@@ -760,6 +653,31 @@
                 </property>
                </widget>
               </item>
+              <item row="2" column="2">
+               <widget class="QComboBox" name="cb_CockpitTransponderMode">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>S</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>C</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>I</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
               <item row="1" column="2">
                <widget class="QDoubleSpinBox" name="ds_CockpitCom2Standby">
                 <property name="decimals">
@@ -777,6 +695,174 @@
                 <property name="value">
                  <double>119.250000000000000</double>
                 </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="lbl_CockpitTransponder">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Transponder</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="lbl_CockpitCom1">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>COM 1</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="lbl_CockpitCom2">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>COM 2</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QDoubleSpinBox" name="ds_CockpitCom2Active">
+                <property name="accelerated">
+                 <bool>false</bool>
+                </property>
+                <property name="decimals">
+                 <number>3</number>
+                </property>
+                <property name="minimum">
+                 <double>118.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>136.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.250000000000000</double>
+                </property>
+                <property name="value">
+                 <double>118.250000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QDoubleSpinBox" name="ds_CockpitCom1Active">
+                <property name="maximumSize">
+                 <size>
+                  <width>75</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="decimals">
+                 <number>3</number>
+                </property>
+                <property name="minimum">
+                 <double>118.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>136.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.250000000000000</double>
+                </property>
+                <property name="value">
+                 <double>118.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QDoubleSpinBox" name="ds_CockpitTransponder">
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+                <property name="maximum">
+                 <double>7777.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>7000.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QGridLayout" name="ql_CockpitVoiceRooms">
+              <item row="1" column="0">
+               <widget class="QColumnView" name="cv_CockpitVoiceRoom1"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QColumnView" name="cv_CockpitVoiceRoom2"/>
+              </item>
+              <item row="0" column="1">
+               <widget class="QWidget" name="qi_CokpitViewRoom2" native="true">
+                <layout class="QHBoxLayout" name="horizontalLayout_6">
+                 <property name="spacing">
+                  <number>2</number>
+                 </property>
+                 <property name="margin">
+                  <number>2</number>
+                 </property>
+                 <item>
+                  <widget class="QLineEdit" name="le_CockpitVoiceRoomCom2">
+                   <property name="font">
+                    <font>
+                     <pointsize>7</pointsize>
+                    </font>
+                   </property>
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_CockpitVoiceRoom2Override">
+                   <property name="text">
+                    <string>Ovr.</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QWidget" name="qi_CokpitViewRoom1" native="true">
+                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                 <property name="spacing">
+                  <number>2</number>
+                 </property>
+                 <property name="margin">
+                  <number>2</number>
+                 </property>
+                 <item>
+                  <widget class="QLineEdit" name="le_CockpitVoiceRoomCom1">
+                   <property name="font">
+                    <font>
+                     <pointsize>7</pointsize>
+                    </font>
+                   </property>
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_CockpitVoiceRoom1Override">
+                   <property name="text">
+                    <string>Ovr.</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
              </layout>
@@ -1002,14 +1088,14 @@
                    </widget>
                   </item>
                   <item row="4" column="0">
-                   <widget class="QLabel" name="lbl_SettingsTnCsRealname">
+                   <widget class="QLabel" name="lbl_SettingsTnCsRealName">
                     <property name="text">
                      <string>Real name</string>
                     </property>
                    </widget>
                   </item>
                   <item row="4" column="1">
-                   <widget class="QLineEdit" name="le_SettingsTnCsRealname">
+                   <widget class="QLineEdit" name="le_SettingsTnCsRealName">
                     <property name="text">
                      <string/>
                     </property>
@@ -1086,22 +1172,56 @@
                 </item>
                </layout>
               </widget>
-              <widget class="QWidget" name="tb_SettingsPlane">
+              <widget class="QWidget" name="tb_SettingsVoice">
                <attribute name="title">
-                <string>Whatsoever</string>
+                <string>Voice</string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_14">
+                <item>
+                 <layout class="QFormLayout" name="formLayout">
+                  <property name="fieldGrowthPolicy">
+                   <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                  </property>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="lbl_VoiceInputDevice">
+                    <property name="text">
+                     <string>In</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="cb_VoiceInputDevice"/>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="lbl_VoiceOutputDevice">
+                    <property name="text">
+                     <string>Out</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="cb_VoiceOutputDevice"/>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tb_SettingsAircraft">
+               <attribute name="title">
+                <string>Aircraft</string>
                </attribute>
                <layout class="QVBoxLayout" name="verticalLayout_5">
                 <item>
-                 <layout class="QFormLayout" name="fl_SettingsPlane">
+                 <layout class="QFormLayout" name="fl_SettingsAircraft">
                   <item row="0" column="0">
-                   <widget class="QLabel" name="lbl_SettingsPlaneCallsign">
+                   <widget class="QLabel" name="lbl_SettingsAircraftCallsign">
                     <property name="text">
                      <string>Callsign</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QLineEdit" name="le_SettingsPlaneCallsign">
+                   <widget class="QLineEdit" name="le_SettingsAircraftCallsign">
                     <property name="text">
                      <string>BLACK</string>
                     </property>
@@ -1228,7 +1348,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>615</width>
      <height>21</height>
     </rect>
    </property>
@@ -1243,6 +1363,7 @@
      <addaction name="menu_TestLocationsEDRY"/>
      <addaction name="menu_TestLocationsEDDF"/>
      <addaction name="menu_TestLocationsEDDM"/>
+     <addaction name="menu_TestLocationsEDNX"/>
     </widget>
     <widget class="QMenu" name="menu_Reload">
      <property name="title">
@@ -1266,22 +1387,27 @@
   <widget class="QStatusBar" name="sb_MainStatusBar"/>
   <action name="menu_TestLocationsEDDF">
    <property name="text">
-    <string>Position EDDF</string>
+    <string>Position EDDF (Frankfurt, GER)</string>
    </property>
   </action>
   <action name="menu_TestLocationsEDDM">
    <property name="text">
-    <string>Position EDDM</string>
+    <string>Position EDDM (Munich, GER)</string>
    </property>
   </action>
   <action name="menu_TestLocationsEDRY">
    <property name="text">
-    <string>Position EDRY</string>
+    <string>Position EDRY (Speyer, GER)</string>
    </property>
   </action>
   <action name="menu_ReloadSettings">
    <property name="text">
     <string>Reload settings</string>
+   </property>
+  </action>
+  <action name="menu_TestLocationsEDNX">
+   <property name="text">
+    <string>Position EDNX (Schleißheim, GER)</string>
    </property>
   </action>
  </widget>
@@ -1503,8 +1629,8 @@
    <slot>reloadAtcStationsBooked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>178</x>
-     <y>110</y>
+     <x>175</x>
+     <y>72</y>
     </hint>
     <hint type="destinationlabel">
      <x>2</x>
@@ -1519,8 +1645,8 @@
    <slot>onlineAtcStationSelected(QModelIndex)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>253</x>
-     <y>116</y>
+     <x>174</x>
+     <y>50</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -1583,8 +1709,8 @@
    <slot>commandEntered()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>176</x>
-     <y>73</y>
+     <x>166</x>
+     <y>63</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
@@ -1599,8 +1725,8 @@
    <slot>getMetar()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>374</x>
-     <y>491</y>
+     <x>145</x>
+     <y>71</y>
     </hint>
     <hint type="destinationlabel">
      <x>20</x>
@@ -1615,8 +1741,8 @@
    <slot>getMetar()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>338</x>
-     <y>491</y>
+     <x>118</x>
+     <y>71</y>
     </hint>
     <hint type="destinationlabel">
      <x>341</x>
@@ -1631,8 +1757,8 @@
    <slot>cockpitValuesChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>370</x>
-     <y>55</y>
+     <x>449</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
      <x>337</x>
@@ -1663,8 +1789,8 @@
    <slot>cockpitValuesChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>379</x>
-     <y>88</y>
+     <x>449</x>
+     <y>96</y>
     </hint>
     <hint type="destinationlabel">
      <x>253</x>
@@ -1711,12 +1837,172 @@
    <slot>cockpitValuesChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>385</x>
-     <y>103</y>
+     <x>449</x>
+     <y>119</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
      <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cb_VoiceOutputDevice</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>audioDeviceSelected(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>2</x>
+     <y>316</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cb_VoiceOutputDevice</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>audioDeviceSelected(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>379</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cb_VoiceInputDevice</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>audioDeviceSelected(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>55</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>26</x>
+     <y>355</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>menu_TestLocationsEDNX</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>menuClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>307</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>menu_TestLocationsEDDF</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>menuClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>307</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>menu_TestLocationsEDDM</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>menuClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>307</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_CockpitVoiceRoomCom1</sender>
+   <signal>returnPressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>voiceRoomOverride()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>232</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>40</x>
+     <y>388</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>le_CockpitVoiceRoomCom2</sender>
+   <signal>returnPressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>voiceRoomOverride()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>253</x>
+     <y>82</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>70</x>
+     <y>304</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cb_CockpitVoiceRoom2Override</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>voiceRoomOverride()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>346</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>559</x>
+     <y>412</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cb_CockpitVoiceRoom1Override</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>voiceRoomOverride()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>368</x>
+     <y>61</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>587</x>
+     <y>340</y>
     </hint>
    </hints>
   </connection>
@@ -1732,5 +2018,7 @@
   <slot>commandEntered()</slot>
   <slot>getMetar()</slot>
   <slot>cockpitValuesChanged()</slot>
+  <slot>audioDeviceSelected(int)</slot>
+  <slot>voiceRoomOverride()</slot>
  </slots>
 </ui>
