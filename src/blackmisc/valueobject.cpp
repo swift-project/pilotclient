@@ -175,8 +175,3 @@ namespace BlackMisc
         return argument;
     }
 }
-
-uint qHash(const BlackMisc::CValueObject &value)
-{
-    return value.getValueHash();
-}
