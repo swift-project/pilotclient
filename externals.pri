@@ -31,6 +31,7 @@ win32:contains(QMAKE_TARGET.arch, x86_64) {
 }
 win32:contains(QMAKE_TARGET.arch, x86) {
     LIBS *= -L$$EXTERNALDIR/vs2010_32/lib
+    LIBS += -luser32
 }
 
 win32-g++ {
@@ -42,6 +43,7 @@ win32-g++ {
     else {
         LIBS *= -L$$EXTERNALDIR/mingw32/lib
     }
+    LIBS += -luser32
 }
 
 linux-g++ {
