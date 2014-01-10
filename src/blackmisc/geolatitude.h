@@ -7,50 +7,63 @@
 
 namespace BlackMisc
 {
-namespace Geo
-{
-
-/*!
- * \brief Latitude
- */
-class CLatitude : public CEarthAngle<CLatitude>
-{
-protected:
-    /*!
-     * \brief Specific string representation
-     */
-    virtual QString convertToQString() const
+    namespace Geo
     {
-        QString s = "latitude ";
-        return s.append(CEarthAngle::convertToQString());
-    }
 
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CLatitude() : CEarthAngle() {}
+        /*!
+         * \brief Latitude
+         */
+        class CLatitude : public CEarthAngle<CLatitude>
+        {
+        protected:
+            /*!
+             * \brief Specific string representation
+             * \param i18n
+             * \return
+             */
+            virtual QString convertToQString(bool i18n = false) const
+            {
+                QString s(CEarthAngle::convertToQString(i18n));
+                if (!this->isZeroEpsilonConsidered())
+                    s.append(this->isNegativeWithEpsilonConsidered() ? " S" : " N");
+                return s;
+            }
 
-    /*!
-     * \brief Constructor
-     * \param angle
-     */
-    explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CLatitude() : CEarthAngle() {}
 
-    /*!
-     * \brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
+            /*!
+             * \brief Constructor
+             * \param angle
+             */
+            explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
-    /*!
-     * \brief Virtual destructor
-     */
-    virtual ~CLatitude() {}
-};
+            /*!
+             * \brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
 
-} // namespace
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
+             * \brief Virtual destructor
+             */
+            virtual ~CLatitude() {}
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CLatitude)

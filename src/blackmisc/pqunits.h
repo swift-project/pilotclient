@@ -6,12 +6,14 @@
 #ifndef BLACKMISC_PQUNITS_H
 #define BLACKMISC_PQUNITS_H
 
+#pragma push_macro("min")
+#undef min
+
 #include "blackmisc/pqbase.h"
 #include <QtDBus/QDBusArgument>
 #include <QList>
 #include <QtCore/qmath.h>
 #include <QTranslator>
-
 
 //
 // Used with the template for quantities. This is the reason for
@@ -21,1014 +23,1102 @@
 //
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
-
-/*!
- * \brief Specialized class for distance units (meter, foot, nautical miles).
- */
-class CLengthUnit : public CMeasurementUnit
-{
-private:
-    template <class Converter>
-    CLengthUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
-    {}
-
-    struct NauticalMilesToMeters    { static double factor() { return 1852.0;    } };
-    struct FeetToMeters             { static double factor() { return    0.3048; } };
-    struct MilesToMeters            { static double factor() { return 1609.344;  } };
-    struct StatuteMilesToMeters     { static double factor() { return 1609.3472; } };
-    typedef One MetersToMeters;
-
-public:
-    /*!
-     * Default constructor, required for Qt Metasystem
-     */
-    CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
-
-    /*!
-     * \brief Default unit
-     * \return
-     */
-    static const CLengthUnit &defaultUnit() { return m(); }
-
-    /*!
-     * \brief Meter m
-     * \return
-     */
-    static const CLengthUnit &m()
+    namespace PhysicalQuantities
     {
-        static CLengthUnit m(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter"), "m", IdentityConverter());
-        return m;
-    }
 
-    /*!
-     * \brief Nautical miles NM
-     * \return
-     */
-    static const CLengthUnit &NM()
-    {
-        static CLengthUnit NM(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile"), "NM", LinearConverter<NauticalMilesToMeters>(), 3);
-        return NM;
-    }
-
-    /*!
-     * \brief Foot ft
-     * \return
-     */
-    static const CLengthUnit &ft()
-    {
-        static CLengthUnit ft(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot"), "ft", LinearConverter<FeetToMeters>(), 0);
-        return ft;
-    }
-
-    /*!
-     * \brief Kilometer km
-     * \return
-     */
-    static const CLengthUnit &km()
-    {
-        static CLengthUnit km(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer"), "km", LinearConverter<Kilo<MetersToMeters>>(), 3);
-        return km;
-    }
-
-    /*!
-     * \brief Centimeter cm
-     * \return
-     */
-    static const CLengthUnit &cm()
-    {
-        static CLengthUnit cm(QT_TRANSLATE_NOOP("CMeasurementUnit", "centimeter"), "cm", LinearConverter<Centi<MetersToMeters>>(), 1);
-        return cm;
-    }
-
-    /*!
-     * \brief International mile
-     * \return
-     */
-    static const CLengthUnit &mi()
-    {
-        static CLengthUnit mi(QT_TRANSLATE_NOOP("CMeasurementUnit", "mile"), "mi", LinearConverter<MilesToMeters>(), 3);
-        return mi;
-    }
-
-    /*!
-     * \brief Statute mile
-     * \return
-     */
-    static const CLengthUnit &SM()
-    {
-        static CLengthUnit sm(QT_TRANSLATE_NOOP("CMeasurementUnit", "statute mile"), "SM", LinearConverter<StatuteMilesToMeters>(), 3);
-        return sm;
-    }
-
-    /*!
-     * \brief All units
-     * \return
-     */
-    static const QList<CLengthUnit> &allUnits()
-    {
-        static QList<CLengthUnit> u;
-        if (u.isEmpty())
+        /*!
+         * \brief Specialized class for distance units (meter, foot, nautical miles).
+         */
+        class CLengthUnit : public CMeasurementUnit
         {
-            u.append(CLengthUnit::cm());
-            u.append(CLengthUnit::ft());
-            u.append(CLengthUnit::km());
-            u.append(CLengthUnit::m());
-            u.append(CLengthUnit::mi());
-            u.append(CLengthUnit::SM());
-            u.append(CLengthUnit::NM());
-        }
-        return u;
-    }
+        private:
+            template <class Converter>
+            CLengthUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+            {}
 
-protected:
-    /*!
-     * \brief Stream from DBus
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        QString unitName;
-        argument >> unitName;
-        (*this) = CMeasurementUnit::unitFromSymbol<CLengthUnit>(unitName);
-    }
-};
+            struct NauticalMilesToMeters    { static double factor() { return 1852.0;    } };
+            struct FeetToMeters             { static double factor() { return    0.3048; } };
+            struct MilesToMeters            { static double factor() { return 1609.344;  } };
+            struct StatuteMilesToMeters     { static double factor() { return 1609.3472; } };
+            typedef One MetersToMeters;
 
-/*!
- * \brief Specialized class for angles (degrees, radian).
- */
-class CAngleUnit : public CMeasurementUnit
-{
-private:
-    template <class Converter>
-    CAngleUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
-    {}
+        public:
+            /*!
+             * Default constructor, required for Qt Metasystem
+             */
+            CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
 
-    struct RadiansToDegrees { static double factor() { return 180.0 / M_PI; } };
-    typedef One DegreesToDegrees;
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-public:
-    /*!
-     * Default constructor, required for Qt Metasystem
-     */
-    CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
+            /*!
+             * \brief Default unit
+             * \return
+             */
+            static const CLengthUnit &defaultUnit() { return m(); }
 
-    /*!
-     * \brief Default unit
-     * \return
-     */
-    static const CAngleUnit &defaultUnit() { return deg(); }
+            /*!
+             * \brief Meter m
+             * \return
+             */
+            static const CLengthUnit &m()
+            {
+                static CLengthUnit m(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter"), "m", IdentityConverter());
+                return m;
+            }
 
-    /*!
-     * \brief Override for sexagesimal degrees.
-     * \param value
-     * \param digits
-     * \param i18n
-     * \return
-     */
-    virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
+            /*!
+             * \brief Nautical miles NM
+             * \return
+             */
+            static const CLengthUnit &NM()
+            {
+                static CLengthUnit NM(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile"), "NM", LinearConverter<NauticalMilesToMeters>(), 3);
+                return NM;
+            }
 
-    /*!
-     * \brief Radians
-     * \return
-     */
-    static const CAngleUnit &rad()
-    {
-        static CAngleUnit rad(QT_TRANSLATE_NOOP("CMeasurementUnit", "radian"), "rad", LinearConverter<RadiansToDegrees>());
-        return rad;
-    }
+            /*!
+             * \brief Foot ft
+             * \return
+             */
+            static const CLengthUnit &ft()
+            {
+                static CLengthUnit ft(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot"), "ft", LinearConverter<FeetToMeters>(), 0);
+                return ft;
+            }
 
-    /*!
-     * \brief Degrees
-     * \return
-     */
-    static const CAngleUnit &deg()
-    {
-        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree"), QT_TRANSLATE_NOOP("CMeasurementUnit", "deg"), IdentityConverter());
-        return deg;
-    }
+            /*!
+             * \brief Kilometer km
+             * \return
+             */
+            static const CLengthUnit &km()
+            {
+                static CLengthUnit km(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer"), "km", LinearConverter<Kilo<MetersToMeters> >(), 3);
+                return km;
+            }
 
-    /*!
-     * \brief Sexagesimal degree (degrees, minutes, seconds, decimal seconds)
-     * \return
-     */
-    static const CAngleUnit &sexagesimalDeg()
-    {
-        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second"), "DMS", SubdivisionConverter2<DegreesToDegrees, InEachHundred<60>>(), 4);
-        return deg;
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2 %L3");
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2 %L3");
-    }
+            /*!
+             * \brief Centimeter cm
+             * \return
+             */
+            static const CLengthUnit &cm()
+            {
+                static CLengthUnit cm(QT_TRANSLATE_NOOP("CMeasurementUnit", "centimeter"), "cm", LinearConverter<Centi<MetersToMeters> >(), 1);
+                return cm;
+            }
 
-    /*!
-     * \brief Sexagesimal degree (degrees, minutes, decimal minutes)
-     * \return
-     */
-    static const CAngleUnit &sexagesimalDegMin()
-    {
-        static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute"), "MinDec", SubdivisionConverter<DegreesToDegrees, InEachHundred<60>>(), 4);
-        return deg;
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2");
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2");
-    }
+            /*!
+             * \brief International mile
+             * \return
+             */
+            static const CLengthUnit &mi()
+            {
+                static CLengthUnit mi(QT_TRANSLATE_NOOP("CMeasurementUnit", "mile"), "mi", LinearConverter<MilesToMeters>(), 3);
+                return mi;
+            }
 
-    /*!
-     * \brief All units
-     * \return
-     */
-    static const QList<CAngleUnit> &allUnits()
-    {
-        static QList<CAngleUnit> u;
-        if (u.isEmpty())
+            /*!
+             * \brief Statute mile
+             * \return
+             */
+            static const CLengthUnit &SM()
+            {
+                static CLengthUnit sm(QT_TRANSLATE_NOOP("CMeasurementUnit", "statute mile"), "SM", LinearConverter<StatuteMilesToMeters>(), 3);
+                return sm;
+            }
+
+            /*!
+             * \brief All units
+             * \return
+             */
+            static const QList<CLengthUnit> &allUnits()
+            {
+                static QList<CLengthUnit> u;
+                if (u.isEmpty())
+                {
+                    u.append(CLengthUnit::cm());
+                    u.append(CLengthUnit::ft());
+                    u.append(CLengthUnit::km());
+                    u.append(CLengthUnit::m());
+                    u.append(CLengthUnit::mi());
+                    u.append(CLengthUnit::SM());
+                    u.append(CLengthUnit::NM());
+                }
+                return u;
+            }
+
+        protected:
+            /*!
+             * \brief Stream from DBus
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                QString unitName;
+                argument >> unitName;
+                (*this) = CMeasurementUnit::unitFromSymbol<CLengthUnit>(unitName);
+            }
+        };
+
+        /*!
+         * \brief Specialized class for angles (degrees, radian).
+         */
+        class CAngleUnit : public CMeasurementUnit
         {
-            u.append(CAngleUnit::deg());
-            u.append(CAngleUnit::rad());
-            u.append(CAngleUnit::sexagesimalDeg());
-            u.append(CAngleUnit::sexagesimalDegMin());
-        }
-        return u;
-    }
+        private:
+            template <class Converter>
+            CAngleUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+            {}
 
-protected:
-    /*!
-     * \brief Stream from DBus
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        QString unitName;
-        argument >> unitName;
-        (*this) = CMeasurementUnit::unitFromSymbol<CAngleUnit>(unitName);
-    }
-};
+            struct RadiansToDegrees { static double factor() { return 180.0 / M_PI; } };
+            typedef One DegreesToDegrees;
 
-/*!
- * \brief Specialized class for frequency (hertz, mega hertz, kilo hertz).
- */
-class CFrequencyUnit : public CMeasurementUnit
-{
-private:
-    template <class Converter>
-    CFrequencyUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
-    {}
+        public:
+            /*!
+             * Default constructor, required for Qt Metasystem
+             */
+            CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
 
-    typedef One HertzToHertz;
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-public:
-    /*!
-     * Default constructor, required for Qt Metasystem
-     */
-    CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
+            /*!
+             * \brief Default unit
+             * \return
+             */
+            static const CAngleUnit &defaultUnit() { return deg(); }
 
-    /*!
-     * \brief Default unit
-     * \return
-     */
-    static const CFrequencyUnit &defaultUnit() { return Hz(); }
+            /*!
+             * \brief Override for sexagesimal degrees.
+             * \param value
+             * \param digits
+             * \param i18n
+             * \return
+             */
+            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
 
-    /*!
-     * \brief Hertz
-     * \return
-     */
-    static const CFrequencyUnit &Hz()
-    {
-        static CFrequencyUnit Hz(QT_TRANSLATE_NOOP("CMeasurementUnit", "hertz"), "Hz", IdentityConverter());
-        return Hz;
-    }
+            /*!
+             * \brief Radians
+             * \return
+             */
+            static const CAngleUnit &rad()
+            {
+                static CAngleUnit rad(QT_TRANSLATE_NOOP("CMeasurementUnit", "radian"), "rad", LinearConverter<RadiansToDegrees>());
+                return rad;
+            }
 
-    /*!
-     * \brief Kilohertz
-     * \return
-     */
-    static const CFrequencyUnit &kHz()
-    {
-        static CFrequencyUnit kHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilohertz"), "kHz", LinearConverter<Kilo<HertzToHertz>>(), 1);
-        return kHz;
-    }
+            /*!
+             * \brief Degrees
+             * \return
+             */
+            static const CAngleUnit &deg()
+            {
+                static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree"), QT_TRANSLATE_NOOP("CMeasurementUnit", "deg"), IdentityConverter());
+                return deg;
+            }
 
-    /*!
-     * \brief Megahertz
-     * \return
-     */
-    static const CFrequencyUnit &MHz()
-    {
-        static CFrequencyUnit MHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "megahertz"), "MHz", LinearConverter<Mega<HertzToHertz>>(), 2);
-        return MHz;
-    }
+            /*!
+             * \brief Sexagesimal degree (degrees, minutes, seconds, decimal seconds)
+             * \return
+             */
+            static const CAngleUnit &sexagesimalDeg()
+            {
+                static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second"), "DMS", SubdivisionConverter2<DegreesToDegrees, InEachHundred<60> >(), 4);
+                return deg;
+                (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2 %L3");
+                (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2 %L3");
+            }
 
-    /*!
-     * \brief Gigahertz
-     * \return
-     */
-    static const CFrequencyUnit &GHz()
-    {
-        static CFrequencyUnit GHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "gigahertz"), "GHz", LinearConverter<Giga<HertzToHertz>>(), 2);
-        return GHz;
-    }
+            /*!
+             * \brief Sexagesimal degree (degrees, minutes, decimal minutes)
+             * \return
+             */
+            static const CAngleUnit &sexagesimalDegMin()
+            {
+                static CAngleUnit deg(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute"), "MinDec", SubdivisionConverter<DegreesToDegrees, InEachHundred<60> >(), 4);
+                return deg;
+                (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2");
+                (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2");
+            }
 
-    /*!
-     * \brief All units
-     * \return
-     */
-    static const QList<CFrequencyUnit> &allUnits()
-    {
-        static QList<CFrequencyUnit> u;
-        if (u.isEmpty())
+            /*!
+             * \brief All units
+             * \return
+             */
+            static const QList<CAngleUnit> &allUnits()
+            {
+                static QList<CAngleUnit> u;
+                if (u.isEmpty())
+                {
+                    u.append(CAngleUnit::deg());
+                    u.append(CAngleUnit::rad());
+                    u.append(CAngleUnit::sexagesimalDeg());
+                    u.append(CAngleUnit::sexagesimalDegMin());
+                }
+                return u;
+            }
+
+        protected:
+            /*!
+             * \brief Stream from DBus
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                QString unitName;
+                argument >> unitName;
+                (*this) = CMeasurementUnit::unitFromSymbol<CAngleUnit>(unitName);
+            }
+        };
+
+        /*!
+         * \brief Specialized class for frequency (hertz, mega hertz, kilo hertz).
+         */
+        class CFrequencyUnit : public CMeasurementUnit
         {
-            u.append(CFrequencyUnit::GHz());
-            u.append(CFrequencyUnit::Hz());
-            u.append(CFrequencyUnit::kHz());
-            u.append(CFrequencyUnit::MHz());
-        }
-        return u;
-    }
+        private:
+            template <class Converter>
+            CFrequencyUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+            {}
 
-protected:
-    /*!
-     * \brief Stream from DBus
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        QString unitName;
-        argument >> unitName;
-        (*this) = CMeasurementUnit::unitFromSymbol<CFrequencyUnit>(unitName);
-    }
-};
+            typedef One HertzToHertz;
 
-/*!
- * \brief Specialized class for mass units (kg, lbs).
- */
-class CMassUnit : public CMeasurementUnit
-{
-private:
-    template <class Converter>
-    CMassUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
-    {}
+        public:
+            /*!
+             * Default constructor, required for Qt Metasystem
+             */
+            CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
 
-    typedef Milli<One> GramsToKilograms;
-    struct PoundsToKilograms { static double factor() { return 0.45359237; } };
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-public:
-    /*!
-     * Default constructor, required for Qt Metasystem
-     */
-    CMassUnit() : CMeasurementUnit(defaultUnit()) {}
+            /*!
+             * \brief Default unit
+             * \return
+             */
+            static const CFrequencyUnit &defaultUnit() { return Hz(); }
 
-    /*!
-     * \brief Default unit
-     * \return
-     */
-    static const CMassUnit &defaultUnit() { return kg(); }
+            /*!
+             * \brief Hertz
+             * \return
+             */
+            static const CFrequencyUnit &Hz()
+            {
+                static CFrequencyUnit Hz(QT_TRANSLATE_NOOP("CMeasurementUnit", "hertz"), "Hz", IdentityConverter());
+                return Hz;
+            }
 
-    /*!
-     * \brief Kilogram, SI base unit
-     * \return
-     */
-    static const CMassUnit &kg()
-    {
-        static CMassUnit kg(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilogram"), "kg", IdentityConverter(), 1);
-        return kg;
-    }
+            /*!
+             * \brief Kilohertz
+             * \return
+             */
+            static const CFrequencyUnit &kHz()
+            {
+                static CFrequencyUnit kHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilohertz"), "kHz", LinearConverter<Kilo<HertzToHertz> >(), 1);
+                return kHz;
+            }
 
-    /*!
-     * \brief Gram, SI unit
-     * \return
-     */
-    static const CMassUnit &g()
-    {
-        static CMassUnit g(QT_TRANSLATE_NOOP("CMeasurementUnit", "gram"), "g", LinearConverter<GramsToKilograms>(), 0);
-        return g;
-    }
+            /*!
+             * \brief Megahertz
+             * \return
+             */
+            static const CFrequencyUnit &MHz()
+            {
+                static CFrequencyUnit MHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "megahertz"), "MHz", LinearConverter<Mega<HertzToHertz> >(), 2);
+                return MHz;
+            }
 
-    /*!
-     * \brief Tonne, aka metric ton (1000kg)
-     * \return
-     */
-    static const CMassUnit &tonne()
-    {
-        static CMassUnit t(QT_TRANSLATE_NOOP("CMeasurementUnit", "tonne"), "t", LinearConverter<Mega<GramsToKilograms>>(), 3);
-        return t;
-    }
+            /*!
+             * \brief Gigahertz
+             * \return
+             */
+            static const CFrequencyUnit &GHz()
+            {
+                static CFrequencyUnit GHz(QT_TRANSLATE_NOOP("CMeasurementUnit", "gigahertz"), "GHz", LinearConverter<Giga<HertzToHertz> >(), 2);
+                return GHz;
+            }
 
-    /*!
-     * \brief Short ton (2000lb) used in the United States
-     * \return
-     */
-    static const CMassUnit &shortTon()
-    {
-        static CMassUnit ton(QT_TRANSLATE_NOOP("CMeasurementUnit", "short ton"), "ton", LinearConverter<Two<Kilo<PoundsToKilograms>>>(), 3);
-        return ton;
-    }
+            /*!
+             * \brief All units
+             * \return
+             */
+            static const QList<CFrequencyUnit> &allUnits()
+            {
+                static QList<CFrequencyUnit> u;
+                if (u.isEmpty())
+                {
+                    u.append(CFrequencyUnit::GHz());
+                    u.append(CFrequencyUnit::Hz());
+                    u.append(CFrequencyUnit::kHz());
+                    u.append(CFrequencyUnit::MHz());
+                }
+                return u;
+            }
 
-    /*!
-     * \brief Pound, aka mass pound
-     * \return
-     */
-    static const CMassUnit &lb()
-    {
-        static CMassUnit lbs(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound"), "lb", LinearConverter<PoundsToKilograms>(), 1);
-        return lbs;
-    }
+        protected:
+            /*!
+             * \brief Stream from DBus
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                QString unitName;
+                argument >> unitName;
+                (*this) = CMeasurementUnit::unitFromSymbol<CFrequencyUnit>(unitName);
+            }
+        };
 
-    /*!
-     * \brief All units
-     * \return
-     */
-    static const QList<CMassUnit> &allUnits()
-    {
-        static QList<CMassUnit> u;
-        if (u.isEmpty())
+        /*!
+         * \brief Specialized class for mass units (kg, lbs).
+         */
+        class CMassUnit : public CMeasurementUnit
         {
-            u.append(CMassUnit::g());
-            u.append(CMassUnit::kg());
-            u.append(CMassUnit::lb());
-            u.append(CMassUnit::tonne());
-            u.append(CMassUnit::shortTon());
-        }
-        return u;
-    }
+        private:
+            template <class Converter>
+            CMassUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+            {}
 
-protected:
-    /*!
-     * \brief Stream from DBus
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        QString unitName;
-        argument >> unitName;
-        (*this) = CMeasurementUnit::unitFromSymbol<CMassUnit>(unitName);
-    }
-};
+            typedef Milli<One> GramsToKilograms;
+            struct PoundsToKilograms { static double factor() { return 0.45359237; } };
 
-/*!
- * \brief Specialized class for pressure (psi, hPa, bar).
- */
-class CPressureUnit : public CMeasurementUnit
-{
-private:
-    template <class Converter>
-    CPressureUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
-    {}
+        public:
+            /*!
+             * Default constructor, required for Qt Metasystem
+             */
+            CMassUnit() : CMeasurementUnit(defaultUnit()) {}
 
-    typedef Centi<One> PascalsToHectopascals;
-    struct PsiToHectopascals            { static double factor() { return  68.948;      } };
-    struct InchesToHectopascals         { static double factor() { return  33.86389;    } };
-    struct MillimetersToHectopascals    { static double factor() { return 860.142806;   } };
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-public:
-    /*!
-     * Default constructor, required for Qt Metasystem
-     */
-    CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
+            /*!
+             * \brief Default unit
+             * \return
+             */
+            static const CMassUnit &defaultUnit() { return kg(); }
 
-    /*!
-     * \brief Default unit
-     * \return
-     */
-    static const CPressureUnit &defaultUnit() { return hPa(); }
+            /*!
+             * \brief Kilogram, SI base unit
+             * \return
+             */
+            static const CMassUnit &kg()
+            {
+                static CMassUnit kg(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilogram"), "kg", IdentityConverter(), 1);
+                return kg;
+            }
 
-    /*!
-     * \brief Pascal
-     * \return
-     */
-    static const CPressureUnit &Pa()
-    {
-        static CPressureUnit Pa(QT_TRANSLATE_NOOP("CMeasurementUnit", "pascal"), "Pa", LinearConverter<PascalsToHectopascals>());
-        return Pa;
-    }
+            /*!
+             * \brief Gram, SI unit
+             * \return
+             */
+            static const CMassUnit &g()
+            {
+                static CMassUnit g(QT_TRANSLATE_NOOP("CMeasurementUnit", "gram"), "g", LinearConverter<GramsToKilograms>(), 0);
+                return g;
+            }
 
-    /*!
-     * \brief Hectopascal
-     * \return
-     */
-    static const CPressureUnit &hPa()
-    {
-        static CPressureUnit hPa(QT_TRANSLATE_NOOP("CMeasurementUnit", "hectopascal"), "hPa", IdentityConverter());
-        return hPa;
-    }
+            /*!
+             * \brief Tonne, aka metric ton (1000kg)
+             * \return
+             */
+            static const CMassUnit &tonne()
+            {
+                static CMassUnit t(QT_TRANSLATE_NOOP("CMeasurementUnit", "tonne"), "t", LinearConverter<Mega<GramsToKilograms> >(), 3);
+                return t;
+            }
 
-    /*!
-     * \brief Pounds per square inch
-     * \return
-     */
-    static const CPressureUnit &psi()
-    {
-        static CPressureUnit psi(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound per square inch"), "psi", LinearConverter<PsiToHectopascals>(), 2);
-        return psi;
-    }
+            /*!
+             * \brief Short ton (2000lb) used in the United States
+             * \return
+             */
+            static const CMassUnit &shortTon()
+            {
+                static CMassUnit ton(QT_TRANSLATE_NOOP("CMeasurementUnit", "short ton"), "ton", LinearConverter<Two<Kilo<PoundsToKilograms> > >(), 3);
+                return ton;
+            }
 
-    /*!
-     * \brief Bar
-     * \return
-     */
-    static const CPressureUnit &bar()
-    {
-        static CPressureUnit bar(QT_TRANSLATE_NOOP("CMeasurementUnit", "bar"), "bar", LinearConverter<Kilo<One>>(), 1);
-        return bar;
-    }
+            /*!
+             * \brief Pound, aka mass pound
+             * \return
+             */
+            static const CMassUnit &lb()
+            {
+                static CMassUnit lbs(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound"), "lb", LinearConverter<PoundsToKilograms>(), 1);
+                return lbs;
+            }
 
-    /*!
-     * \brief Millibar, actually the same as hPa
-     * \return
-     */
-    static const CPressureUnit &mbar()
-    {
-        static CPressureUnit mbar(QT_TRANSLATE_NOOP("CMeasurementUnit", "millibar"), "mbar", IdentityConverter(), 1);
-        return mbar;
-    }
+            /*!
+             * \brief All units
+             * \return
+             */
+            static const QList<CMassUnit> &allUnits()
+            {
+                static QList<CMassUnit> u;
+                if (u.isEmpty())
+                {
+                    u.append(CMassUnit::g());
+                    u.append(CMassUnit::kg());
+                    u.append(CMassUnit::lb());
+                    u.append(CMassUnit::tonne());
+                    u.append(CMassUnit::shortTon());
+                }
+                return u;
+            }
 
-    /*!
-     * \brief Inch of mercury at 0°C
-     * \return
-     */
-    static const CPressureUnit &inHg()
-    {
-        static CPressureUnit inhg(QT_TRANSLATE_NOOP("CMeasurementUnit", "inch of mercury"), "inHg", LinearConverter<InchesToHectopascals>());
-        return inhg;
-    }
+        protected:
+            /*!
+             * \brief Stream from DBus
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                QString unitName;
+                argument >> unitName;
+                (*this) = CMeasurementUnit::unitFromSymbol<CMassUnit>(unitName);
+            }
+        };
 
-    /*!
-     * \brief Millimeter of mercury
-     * \return
-     */
-    static const CPressureUnit &mmHg()
-    {
-        static CPressureUnit mmhg(QT_TRANSLATE_NOOP("CMeasurementUnit", "millimeter of mercury"), "mmHg", LinearConverter<MillimetersToHectopascals>());
-        return mmhg;
-    }
-
-    /*!
-     * \brief All units
-     * \return
-     */
-    static const QList<CPressureUnit> &allUnits()
-    {
-        static QList<CPressureUnit> u;
-        if (u.isEmpty())
+        /*!
+         * \brief Specialized class for pressure (psi, hPa, bar).
+         */
+        class CPressureUnit : public CMeasurementUnit
         {
-            u.append(CPressureUnit::bar());
-            u.append(CPressureUnit::hPa());
-            u.append(CPressureUnit::inHg());
-            u.append(CPressureUnit::mmHg());
-            u.append(CPressureUnit::mbar());
-            u.append(CPressureUnit::psi());
-        }
-        return u;
-    }
+        private:
+            template <class Converter>
+            CPressureUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+            {}
 
-protected:
-    /*!
-     * \brief Stream from DBus
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        QString unitName;
-        argument >> unitName;
-        (*this) = CMeasurementUnit::unitFromSymbol<CPressureUnit>(unitName);
-    }
-};
+            typedef Centi<One> PascalsToHectopascals;
+            struct PsiToHectopascals            { static double factor() { return  68.948;      } };
+            struct InchesToHectopascals         { static double factor() { return  33.86389;    } };
+            struct MillimetersToHectopascals    { static double factor() { return 860.142806;   } };
 
-/*!
- * \brief Specialized class for temperatur units (kelvin, centidegree).
- */
-class CTemperatureUnit : public CMeasurementUnit
-{
-private:
-    template <class Converter>
-    CTemperatureUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
-    {}
+        public:
+            /*!
+             * Default constructor, required for Qt Metasystem
+             */
+            CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
 
-    struct KelvinToCentigrade { static double factor() { return 1.0; }
-                                static double offset() { return 273.15; } };
-    struct FahrenheitToCentigrade { static double factor() { return 5.0 / 9.0; }
-                                    static double offset() { return 32.0; } };
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-public:
-    /*!
-     * Default constructor, required for Qt Metasystem
-     */
-    CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
+            /*!
+             * \brief Default unit
+             * \return
+             */
+            static const CPressureUnit &defaultUnit() { return hPa(); }
 
-    /*!
-     * \brief Default unit
-     * \return
-     */
-    static const CTemperatureUnit &defaultUnit() { return C(); }
+            /*!
+             * \brief Pascal
+             * \return
+             */
+            static const CPressureUnit &Pa()
+            {
+                static CPressureUnit Pa(QT_TRANSLATE_NOOP("CMeasurementUnit", "pascal"), "Pa", LinearConverter<PascalsToHectopascals>());
+                return Pa;
+            }
 
-    /*!
-     * \brief Kelvin
-     * \return
-     */
-    static const CTemperatureUnit &K()
-    {
-        static CTemperatureUnit K(QT_TRANSLATE_NOOP("CMeasurementUnit", "Kelvin"), "K", AffineConverter<KelvinToCentigrade>());
-        return K;
-    }
+            /*!
+             * \brief Hectopascal
+             * \return
+             */
+            static const CPressureUnit &hPa()
+            {
+                static CPressureUnit hPa(QT_TRANSLATE_NOOP("CMeasurementUnit", "hectopascal"), "hPa", IdentityConverter());
+                return hPa;
+            }
 
-    /*!
-     * \brief Centigrade C
-     * \return
-     */
-    static const CTemperatureUnit &C()
-    {
-        static CTemperatureUnit C(QT_TRANSLATE_NOOP("CMeasurementUnit", "centigrade"), QT_TRANSLATE_NOOP("CMeasurementUnit", "C"), IdentityConverter());
-        return C;
-    }
+            /*!
+             * \brief Pounds per square inch
+             * \return
+             */
+            static const CPressureUnit &psi()
+            {
+                static CPressureUnit psi(QT_TRANSLATE_NOOP("CMeasurementUnit", "pound per square inch"), "psi", LinearConverter<PsiToHectopascals>(), 2);
+                return psi;
+            }
 
-    /*!
-     * \brief Fahrenheit F
-     * \return
-     */
-    static const CTemperatureUnit &F()
-    {
-        static CTemperatureUnit F(QT_TRANSLATE_NOOP("CMeasurementUnit", "Fahrenheit"), QT_TRANSLATE_NOOP("CMeasurementUnit", "F"), AffineConverter<FahrenheitToCentigrade>());
-        return F;
-    }
+            /*!
+             * \brief Bar
+             * \return
+             */
+            static const CPressureUnit &bar()
+            {
+                static CPressureUnit bar(QT_TRANSLATE_NOOP("CMeasurementUnit", "bar"), "bar", LinearConverter<Kilo<One> >(), 1);
+                return bar;
+            }
 
-    /*!
-     * \brief All units
-     * \return
-     */
-    static const QList<CTemperatureUnit> &allUnits()
-    {
-        static QList<CTemperatureUnit> u;
-        if (u.isEmpty())
+            /*!
+             * \brief Millibar, actually the same as hPa
+             * \return
+             */
+            static const CPressureUnit &mbar()
+            {
+                static CPressureUnit mbar(QT_TRANSLATE_NOOP("CMeasurementUnit", "millibar"), "mbar", IdentityConverter(), 1);
+                return mbar;
+            }
+
+            /*!
+             * \brief Inch of mercury at 0°C
+             * \return
+             */
+            static const CPressureUnit &inHg()
+            {
+                static CPressureUnit inhg(QT_TRANSLATE_NOOP("CMeasurementUnit", "inch of mercury"), "inHg", LinearConverter<InchesToHectopascals>());
+                return inhg;
+            }
+
+            /*!
+             * \brief Millimeter of mercury
+             * \return
+             */
+            static const CPressureUnit &mmHg()
+            {
+                static CPressureUnit mmhg(QT_TRANSLATE_NOOP("CMeasurementUnit", "millimeter of mercury"), "mmHg", LinearConverter<MillimetersToHectopascals>());
+                return mmhg;
+            }
+
+            /*!
+             * \brief All units
+             * \return
+             */
+            static const QList<CPressureUnit> &allUnits()
+            {
+                static QList<CPressureUnit> u;
+                if (u.isEmpty())
+                {
+                    u.append(CPressureUnit::bar());
+                    u.append(CPressureUnit::hPa());
+                    u.append(CPressureUnit::inHg());
+                    u.append(CPressureUnit::mmHg());
+                    u.append(CPressureUnit::mbar());
+                    u.append(CPressureUnit::psi());
+                }
+                return u;
+            }
+
+        protected:
+            /*!
+             * \brief Stream from DBus
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                QString unitName;
+                argument >> unitName;
+                (*this) = CMeasurementUnit::unitFromSymbol<CPressureUnit>(unitName);
+            }
+        };
+
+        /*!
+         * \brief Specialized class for temperatur units (kelvin, centidegree).
+         */
+        class CTemperatureUnit : public CMeasurementUnit
         {
-            u.append(CTemperatureUnit::C());
-            u.append(CTemperatureUnit::F());
-            u.append(CTemperatureUnit::K());
-        }
-        return u;
-    }
+        private:
+            template <class Converter>
+            CTemperatureUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+            {}
 
-protected:
-    /*!
-     * \brief Stream from DBus
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        QString unitName;
-        argument >> unitName;
-        (*this) = CMeasurementUnit::unitFromSymbol<CTemperatureUnit>(unitName);
-    }
-};
+            struct KelvinToCentigrade
+            {
+                static double factor() { return 1.0; }
+                static double offset() { return 273.15; }
+            };
+            struct FahrenheitToCentigrade
+            {
+                static double factor() { return 5.0 / 9.0; }
+                static double offset() { return 32.0; }
+            };
 
-/*!
- * \brief Specialized class for speed units (m/s, ft/s, NM/h).
- */
-class CSpeedUnit : public CMeasurementUnit
-{
-private:
-    template <class Converter>
-    CSpeedUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
-    {}
+        public:
+            /*!
+             * Default constructor, required for Qt Metasystem
+             */
+            CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
 
-    struct KnotsToMps       { static double factor() { return 1852.0    / 3600.0; } };
-    struct KphToMps         { static double factor() { return    1.0    /    3.6; } };
-    struct FtPerSecToMps    { static double factor() { return    0.3048         ; } };
-    struct FtPerMinToMps    { static double factor() { return    0.3048 /   60.0; } };
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-public:
-    /*!
-     * Default constructor, required for Qt Metasystem
-     */
-    CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
+            /*!
+             * \brief Default unit
+             * \return
+             */
+            static const CTemperatureUnit &defaultUnit() { return C(); }
 
-    /*!
-     * Default unit
-     * \return
-     */
-    static const CSpeedUnit &defaultUnit() { return m_s(); }
+            /*!
+             * \brief Kelvin
+             * \return
+             */
+            static const CTemperatureUnit &K()
+            {
+                static CTemperatureUnit K(QT_TRANSLATE_NOOP("CMeasurementUnit", "Kelvin"), "K", AffineConverter<KelvinToCentigrade>());
+                return K;
+            }
 
-    /*!
-     * \brief Meter/second m/s
-     * \return
-     */
-    static const CSpeedUnit &m_s()
-    {
-        static CSpeedUnit ms(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second"), "m/s", IdentityConverter());
-        return ms;
-    }
+            /*!
+             * \brief Centigrade C
+             * \return
+             */
+            static const CTemperatureUnit &C()
+            {
+                static CTemperatureUnit C(QT_TRANSLATE_NOOP("CMeasurementUnit", "centigrade"), QT_TRANSLATE_NOOP("CMeasurementUnit", "C"), IdentityConverter());
+                return C;
+            }
 
-    /*!
-     * \brief Knots
-     * \return
-     */
-    static const CSpeedUnit &kts()
-    {
-        static CSpeedUnit kts(QT_TRANSLATE_NOOP("CMeasurementUnit", "knot"), "kts", LinearConverter<KnotsToMps>(), 1);
-        return kts;
-    }
+            /*!
+             * \brief Fahrenheit F
+             * \return
+             */
+            static const CTemperatureUnit &F()
+            {
+                static CTemperatureUnit F(QT_TRANSLATE_NOOP("CMeasurementUnit", "Fahrenheit"), QT_TRANSLATE_NOOP("CMeasurementUnit", "F"), AffineConverter<FahrenheitToCentigrade>());
+                return F;
+            }
 
-    /*!
-     * \brief Nautical miles per hour NM/h (same as kts)
-     * \return
-     */
-    static const CSpeedUnit &NM_h()
-    {
-        static CSpeedUnit NMh(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile per hour"), "NM/h", LinearConverter<KnotsToMps>(), 1);
-        return NMh;
-    }
+            /*!
+             * \brief All units
+             * \return
+             */
+            static const QList<CTemperatureUnit> &allUnits()
+            {
+                static QList<CTemperatureUnit> u;
+                if (u.isEmpty())
+                {
+                    u.append(CTemperatureUnit::C());
+                    u.append(CTemperatureUnit::F());
+                    u.append(CTemperatureUnit::K());
+                }
+                return u;
+            }
 
-    /*!
-     * \brief Feet/second ft/s
-     * \return
-     */
-    static const CSpeedUnit &ft_s()
-    {
-        static CSpeedUnit fts(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second"), "ft/s", LinearConverter<FtPerSecToMps>(), 0);
-        return fts;
-    }
+        protected:
+            /*!
+             * \brief Stream from DBus
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                QString unitName;
+                argument >> unitName;
+                (*this) = CMeasurementUnit::unitFromSymbol<CTemperatureUnit>(unitName);
+            }
+        };
 
-    /*!
-     * \brief Feet/min ft/min
-     * \return
-     */
-    static const CSpeedUnit &ft_min()
-    {
-        static CSpeedUnit ftmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per minute"), "ft/min", LinearConverter<FtPerMinToMps>(), 0);
-        return ftmin;
-    }
-
-    /*!
-     * \brief Kilometer/hour km/h
-     * \return
-     */
-    static const CSpeedUnit &km_h()
-    {
-        static CSpeedUnit kmh(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer per hour"), "km/h", LinearConverter<KphToMps>(), 1);
-        return kmh;
-    }
-
-    /*!
-     * \brief All units
-     * \return
-     */
-    static const QList<CSpeedUnit> &allUnits()
-    {
-        static QList<CSpeedUnit> u;
-        if (u.isEmpty())
+        /*!
+         * \brief Specialized class for speed units (m/s, ft/s, NM/h).
+         */
+        class CSpeedUnit : public CMeasurementUnit
         {
-            u.append(CSpeedUnit::ft_min());
-            u.append(CSpeedUnit::ft_s());
-            u.append(CSpeedUnit::km_h());
-            u.append(CSpeedUnit::kts());
-            u.append(CSpeedUnit::m_s());
-            u.append(CSpeedUnit::NM_h());
-        }
-        return u;
-    }
+        private:
+            template <class Converter>
+            CSpeedUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+            {}
 
-protected:
-    /*!
-     * \brief Stream from DBus
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        QString unitName;
-        argument >> unitName;
-        (*this) = CMeasurementUnit::unitFromSymbol<CSpeedUnit>(unitName);
-    }
-};
+            struct KnotsToMps       { static double factor() { return 1852.0    / 3600.0; } };
+            struct KphToMps         { static double factor() { return    1.0    /    3.6; } };
+            struct FtPerSecToMps    { static double factor() { return    0.3048         ; } };
+            struct FtPerMinToMps    { static double factor() { return    0.3048 /   60.0; } };
 
-/*!
- * \brief Specialized class for time units (ms, hour, min).
- */
-class CTimeUnit : public CMeasurementUnit
-{
-private:
-    template <class Converter>
-    CTimeUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
-    {}
+        public:
+            /*!
+             * Default constructor, required for Qt Metasystem
+             */
+            CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
 
-    typedef One SecondsToSeconds;
-    struct DaysToSeconds    { static double factor() { return 60.0 * 60.0 * 24.0;   } };
-    struct HoursToSeconds   { static double factor() { return 60.0 * 60.0;          } };
-    struct MinutesToSeconds { static double factor() { return 60.0;                 } };
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-public:
-    /*!
-     * Default constructor, required for Qt Metasystem
-     */
-    CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
+            /*!
+             * Default unit
+             * \return
+             */
+            static const CSpeedUnit &defaultUnit() { return m_s(); }
 
-    /*!
-     * Default unit
-     * \return
-     */
-    static const CTimeUnit &defaultUnit() { return s(); }
+            /*!
+             * \brief Meter/second m/s
+             * \return
+             */
+            static const CSpeedUnit &m_s()
+            {
+                static CSpeedUnit ms(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second"), "m/s", IdentityConverter());
+                return ms;
+            }
 
-    /*!
-     * \brief Override for subdivisional units.
-     * \param value
-     * \param digits
-     * \param i18n
-     * \return
-     */
-    virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
+            /*!
+             * \brief Knots
+             * \return
+             */
+            static const CSpeedUnit &kts()
+            {
+                static CSpeedUnit kts(QT_TRANSLATE_NOOP("CMeasurementUnit", "knot"), "kts", LinearConverter<KnotsToMps>(), 1);
+                return kts;
+            }
 
-    /*!
-     * \brief Second s
-     * \return
-     */
-    static const CTimeUnit &s()
-    {
-        static CTimeUnit s(QT_TRANSLATE_NOOP("CMeasurementUnit", "second"), "s", IdentityConverter(), 1);
-        return s;
-    }
+            /*!
+             * \brief Nautical miles per hour NM/h (same as kts)
+             * \return
+             */
+            static const CSpeedUnit &NM_h()
+            {
+                static CSpeedUnit NMh(QT_TRANSLATE_NOOP("CMeasurementUnit", "nautical mile per hour"), "NM/h", LinearConverter<KnotsToMps>(), 1);
+                return NMh;
+            }
 
-    /*!
-     * \brief Millisecond ms
-     * \return
-     */
-    static const CTimeUnit &ms()
-    {
-        static CTimeUnit ms(QT_TRANSLATE_NOOP("CMeasurementUnit", "millisecond"), "ms", LinearConverter<Milli<SecondsToSeconds>>(), 0);
-        return ms;
-    }
+            /*!
+             * \brief Feet/second ft/s
+             * \return
+             */
+            static const CSpeedUnit &ft_s()
+            {
+                static CSpeedUnit fts(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second"), "ft/s", LinearConverter<FtPerSecToMps>(), 0);
+                return fts;
+            }
 
-    /*!
-     * \brief Hour
-     * \return
-     */
-    static const CTimeUnit &h()
-    {
-        static CTimeUnit h(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour"), "h", LinearConverter<HoursToSeconds>(), 1);
-        return h;
-    }
+            /*!
+             * \brief Feet/min ft/min
+             * \return
+             */
+            static const CSpeedUnit &ft_min()
+            {
+                static CSpeedUnit ftmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per minute"), "ft/min", LinearConverter<FtPerMinToMps>(), 0);
+                return ftmin;
+            }
 
-    /*!
-     * \brief Minute
-     * \return
-     */
-    static const CTimeUnit &min()
-    {
-        static CTimeUnit min(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute"), "min", LinearConverter<MinutesToSeconds>(), 2);
-        return min;
-    }
+            /*!
+             * \brief Kilometer/hour km/h
+             * \return
+             */
+            static const CSpeedUnit &km_h()
+            {
+                static CSpeedUnit kmh(QT_TRANSLATE_NOOP("CMeasurementUnit", "kilometer per hour"), "km/h", LinearConverter<KphToMps>(), 1);
+                return kmh;
+            }
 
-    /*!
-     * \brief Day
-     * \return
-     */
-    static const CTimeUnit &d()
-    {
-        static CTimeUnit day(QT_TRANSLATE_NOOP("CMeasurementUnit", "day"), "d", LinearConverter<DaysToSeconds>(), 1);
-        return day;
-    }
+            /*!
+             * \brief All units
+             * \return
+             */
+            static const QList<CSpeedUnit> &allUnits()
+            {
+                static QList<CSpeedUnit> u;
+                if (u.isEmpty())
+                {
+                    u.append(CSpeedUnit::ft_min());
+                    u.append(CSpeedUnit::ft_s());
+                    u.append(CSpeedUnit::km_h());
+                    u.append(CSpeedUnit::kts());
+                    u.append(CSpeedUnit::m_s());
+                    u.append(CSpeedUnit::NM_h());
+                }
+                return u;
+            }
 
-    /*!
-     * \brief Hours, minutes, seconds
-     */
-    static const CTimeUnit &hms()
-    {
-        static CTimeUnit hms(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second"), "hms", SubdivisionConverter2<HoursToSeconds, InEachHundred<60>>(), 4);
-        return hms;
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m%L3s");
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%-L1h%L2m%L3s");
-    }
+        protected:
+            /*!
+             * \brief Stream from DBus
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                QString unitName;
+                argument >> unitName;
+                (*this) = CMeasurementUnit::unitFromSymbol<CSpeedUnit>(unitName);
+            }
+        };
 
-    /*!
-     * \brief Hours, minutes
-     */
-    static const CTimeUnit &hrmin()
-    {
-        static CTimeUnit hrmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute"), "hm", SubdivisionConverter<HoursToSeconds, InEachHundred<60>>(), 3);
-        return hrmin;
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m");
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1h%L2m");
-    }
-
-    /*!
-     * \brief Minutes, seconds
-     */
-    static const CTimeUnit &minsec()
-    {
-        static CTimeUnit minsec(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second"), "minsec", SubdivisionConverter<MinutesToSeconds, InEachHundred<60>>(), 2);
-        return minsec;
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1m%L2s");
-        (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1m%L2s");
-    }
-
-    /*!
-     * \brief All units
-     * \return
-     */
-    static const QList<CTimeUnit> &allUnits()
-    {
-        static QList<CTimeUnit> u;
-        if (u.isEmpty())
+        /*!
+         * \brief Specialized class for time units (ms, hour, min).
+         */
+        class CTimeUnit : public CMeasurementUnit
         {
-            u.append(CTimeUnit::d());
-            u.append(CTimeUnit::h());
-            u.append(CTimeUnit::min());
-            u.append(CTimeUnit::ms());
-            u.append(CTimeUnit::s());
-        }
-        return u;
-    }
+        private:
+            template <class Converter>
+            CTimeUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+            {}
 
-protected:
-    /*!
-     * \brief Stream from DBus
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        QString unitName;
-        argument >> unitName;
-        (*this) = CMeasurementUnit::unitFromSymbol<CTimeUnit>(unitName);
-    }
-};
+            typedef One SecondsToSeconds;
+            struct DaysToSeconds    { static double factor() { return 60.0 * 60.0 * 24.0;   } };
+            struct HoursToSeconds   { static double factor() { return 60.0 * 60.0;          } };
+            struct MinutesToSeconds { static double factor() { return 60.0;                 } };
 
-/*!
- * \brief Specialized class for acceleration units (m/s2, ft/s2).
- */
-class CAccelerationUnit : public CMeasurementUnit
-{
-private:
-    template <class Converter>
-    CAccelerationUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-        CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
-    {}
+        public:
+            /*!
+             * Default constructor, required for Qt Metasystem
+             */
+            CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
 
-    struct FeetToMeters { static double factor() { return 0.3048; } };
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-public:
-    /*!
-     * Default constructor, required for Qt Metasystem
-     */
-    CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}
+            /*!
+             * Default unit
+             * \return
+             */
+            static const CTimeUnit &defaultUnit() { return s(); }
 
-    /*!
-     * Default unit
-     * \return
-     */
-    static const CAccelerationUnit &defaultUnit() { return m_s2(); }
+            /*!
+             * \brief Override for subdivisional units.
+             * \param value
+             * \param digits
+             * \param i18n
+             * \return
+             */
+            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
 
-    /*!
-     * \brief Meter/second^2 (m/s^2)
-     * \return
-     */
-    static const CAccelerationUnit &m_s2()
-    {
-        static CAccelerationUnit ms2(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second per second"), QT_TRANSLATE_NOOP("CMeasurementUnit", "m/s^2"), IdentityConverter(), 1);
-        return ms2;
-    }
+            /*!
+             * \brief Second s
+             * \return
+             */
+            static const CTimeUnit &s()
+            {
+                static CTimeUnit s(QT_TRANSLATE_NOOP("CMeasurementUnit", "second"), "s", IdentityConverter(), 1);
+                return s;
+            }
 
-    /*!
-     * \brief Feet/second^2
-     * \return
-     */
-    static const CAccelerationUnit &ft_s2()
-    {
-        static CAccelerationUnit fts2(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second per second"), QT_TRANSLATE_NOOP("CMeasurementUnit", "ft/s^2"), LinearConverter<FeetToMeters>(), 0);
-        return fts2;
-    }
+            /*!
+             * \brief Millisecond ms
+             * \return
+             */
+            static const CTimeUnit &ms()
+            {
+                static CTimeUnit ms(QT_TRANSLATE_NOOP("CMeasurementUnit", "millisecond"), "ms", LinearConverter<Milli<SecondsToSeconds> >(), 0);
+                return ms;
+            }
 
-    /*!
-     * \brief All units
-     * \return
-     */
-    static const QList<CAccelerationUnit> &allUnits()
-    {
-        static QList<CAccelerationUnit> u;
-        if (u.isEmpty())
+            /*!
+             * \brief Hour
+             * \return
+             */
+            static const CTimeUnit &h()
+            {
+                static CTimeUnit h(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour"), "h", LinearConverter<HoursToSeconds>(), 1);
+                return h;
+            }
+
+
+            /*!
+             * \brief Minute
+             * \return
+             */
+            static const CTimeUnit &min()
+            {
+                static CTimeUnit minute(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute"), "min", LinearConverter<MinutesToSeconds>(), 2);
+                return minute;
+            }
+
+            /*!
+             * \brief Day
+             * \return
+             */
+            static const CTimeUnit &d()
+            {
+                static CTimeUnit day(QT_TRANSLATE_NOOP("CMeasurementUnit", "day"), "d", LinearConverter<DaysToSeconds>(), 1);
+                return day;
+            }
+
+            /*!
+             * \brief Hours, minutes, seconds
+             */
+            static const CTimeUnit &hms()
+            {
+                static CTimeUnit hms(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second"), "hms", SubdivisionConverter2<HoursToSeconds, InEachHundred<60> >(), 4);
+                return hms;
+                (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m%L3s");
+                (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%-L1h%L2m%L3s");
+            }
+
+            /*!
+             * \brief Hours, minutes
+             */
+            static const CTimeUnit &hrmin()
+            {
+                static CTimeUnit hrmin(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute"), "hm", SubdivisionConverter<HoursToSeconds, InEachHundred<60> >(), 3);
+                return hrmin;
+                (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m");
+                (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1h%L2m");
+            }
+
+            /*!
+             * \brief Minutes, seconds
+             */
+            static const CTimeUnit &minsec()
+            {
+                static CTimeUnit minsec(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second"), "minsec", SubdivisionConverter<MinutesToSeconds, InEachHundred<60> >(), 2);
+                return minsec;
+                (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1m%L2s");
+                (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1m%L2s");
+            }
+
+            /*!
+             * \brief All units
+             * \return
+             */
+            static const QList<CTimeUnit> &allUnits()
+            {
+                static QList<CTimeUnit> u;
+                if (u.isEmpty())
+                {
+                    u.append(CTimeUnit::d());
+                    u.append(CTimeUnit::h());
+                    u.append(CTimeUnit::min());
+                    u.append(CTimeUnit::ms());
+                    u.append(CTimeUnit::s());
+                }
+                return u;
+            }
+
+        protected:
+            /*!
+             * \brief Stream from DBus
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                QString unitName;
+                argument >> unitName;
+                (*this) = CMeasurementUnit::unitFromSymbol<CTimeUnit>(unitName);
+            }
+        };
+
+        /*!
+         * \brief Specialized class for acceleration units (m/s2, ft/s2).
+         */
+        class CAccelerationUnit : public CMeasurementUnit
         {
-            u.append(CAccelerationUnit::ft_s2());
-            u.append(CAccelerationUnit::m_s2());
-        }
-        return u;
-    }
+        private:
+            template <class Converter>
+            CAccelerationUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
+                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+            {}
 
-protected:
-    /*!
-     * \brief Stream from DBus
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        QString unitName;
-        argument >> unitName;
-        (*this) = CMeasurementUnit::unitFromSymbol<CAccelerationUnit>(unitName);
-    }
-};
+            struct FeetToMeters { static double factor() { return 0.3048; } };
 
-} // namespace
+        public:
+            /*!
+             * Default constructor, required for Qt Metasystem
+             */
+            CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}
+
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
+             * Default unit
+             * \return
+             */
+            static const CAccelerationUnit &defaultUnit() { return m_s2(); }
+
+            /*!
+             * \brief Meter/second^2 (m/s^2)
+             * \return
+             */
+            static const CAccelerationUnit &m_s2()
+            {
+                static CAccelerationUnit ms2(QT_TRANSLATE_NOOP("CMeasurementUnit", "meter per second per second"), QT_TRANSLATE_NOOP("CMeasurementUnit", "m/s^2"), IdentityConverter(), 1);
+                return ms2;
+            }
+
+            /*!
+             * \brief Feet/second^2
+             * \return
+             */
+            static const CAccelerationUnit &ft_s2()
+            {
+                static CAccelerationUnit fts2(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot per second per second"), QT_TRANSLATE_NOOP("CMeasurementUnit", "ft/s^2"), LinearConverter<FeetToMeters>(), 0);
+                return fts2;
+            }
+
+            /*!
+             * \brief All units
+             * \return
+             */
+            static const QList<CAccelerationUnit> &allUnits()
+            {
+                static QList<CAccelerationUnit> u;
+                if (u.isEmpty())
+                {
+                    u.append(CAccelerationUnit::ft_s2());
+                    u.append(CAccelerationUnit::m_s2());
+                }
+                return u;
+            }
+
+        protected:
+            /*!
+             * \brief Stream from DBus
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            {
+                QString unitName;
+                argument >> unitName;
+                (*this) = CMeasurementUnit::unitFromSymbol<CAccelerationUnit>(unitName);
+            }
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLengthUnit)
@@ -1041,4 +1131,5 @@ Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeedUnit)
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTimeUnit)
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAccelerationUnit)
 
+#pragma pop_macro("min")
 #endif // guard

@@ -1,4 +1,4 @@
-QT       += core dbus
+QT       += core dbus network
 
 TARGET = blackmisc_cpp2xml
 TEMPLATE = lib

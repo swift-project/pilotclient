@@ -9,34 +9,43 @@
 
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
+    namespace PhysicalQuantities
+    {
 
-/*!
- * \brief Mass
- */
-class CMass : public CPhysicalQuantity<CMassUnit, CMass>
-{
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CMass() : CPhysicalQuantity(0, CMassUnit::defaultUnit()) {}
+        /*!
+         * \brief Mass
+         */
+        class CMass : public CPhysicalQuantity<CMassUnit, CMass>
+        {
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CMass() : CPhysicalQuantity(0, CMassUnit::defaultUnit()) {}
 
-    /*!
-     * \brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
+            /*!
+             * \brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-    /*!
-     * \brief Virtual destructor
-     */
-    virtual ~CMass() {}
-};
+            /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-} // namespace
+            /*!
+             * \brief Virtual destructor
+             */
+            virtual ~CMass() {}
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMass)

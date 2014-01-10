@@ -8,29 +8,30 @@
 
 using namespace BlackCore;
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
 
-void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork* net)
+void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
 {
     Expect e(net);
-    QString callsign = "TEST01";
 
     EXPECT_UNIT(e)
-        .send(&INetwork::setServerDetails, "vatsim-germany.org", 6809)
-        .send(&INetwork::setUserCredentials, "guest", "guest")
-        .send(&INetwork::setRealName, "Pilot Client Tester")
-        .send(&INetwork::setCallsign, callsign)
+        .send(&INetwork::setServer, CServer("", "", "vatsim-germany.org", 6809, CUser("guest", "", "", "guest")))
+        .send(&INetwork::setCallsign, "BLACK")
         .send(&INetwork::initiateConnection)
-        .expect(&INetwork::connectionStatusConnecting, []{ qDebug() << "CONNECTING"; })
-        .expect(&INetwork::connectionStatusConnected, []{ qDebug() << "CONNECTED"; })
+        .expect(&INetwork::connectionStatusConnecting, [] { qDebug() << "CONNECTING"; })
+        .expect(&INetwork::connectionStatusConnected, [] { qDebug() << "CONNECTED"; })
         .wait(10);
 
     EXPECT_UNIT(e)
         .send(&INetwork::ping, "server")
-        .expect(&INetwork::pong, [](QString s, PhysicalQuantities::CTime t){ qDebug() << "PONG" << s << t; })
+        .expect(&INetwork::pong, [](CCallsign callsign, PhysicalQuantities::CTime elapsedTime) { qDebug() << "PONG" << callsign << elapsedTime; })
         .wait(10);
 
     EXPECT_UNIT(e)
         .send(&INetwork::terminateConnection)
-        .expect(&INetwork::connectionStatusDisconnected, []{ qDebug() << "DISCONNECTED"; })
+        .expect(&INetwork::connectionStatusDisconnected, [] { qDebug() << "DISCONNECTED"; })
         .wait(10);
 }

@@ -6,6 +6,7 @@
 #ifndef BLACKCORETEST_TESTMAIN_H
 #define BLACKCORETEST_TESTMAIN_H
 
+#include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue
 #include <QtTest/QtTest>
 
 namespace BlackCoreTest

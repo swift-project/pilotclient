@@ -4,49 +4,122 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/blackmiscfreefunctions.h"
+#include "mathematics.h"
+#include <QtCore/qmath.h>
+
+using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Math;
 
 namespace BlackMisc
 {
-namespace Geo
-{
+    namespace Geo
+    {
 
-/*
- * String for converter
- */
-QString CCoordinateGeodetic::convertToQString(bool i18n) const
-{
-    QString s = "Geodetic: {%1, %2, %3}";
-    return s.arg(this->m_latitude.valueRoundedWithUnit(6, i18n)).arg(this->m_longitude.valueRoundedWithUnit(6, i18n)).arg(this->m_height.valueRoundedWithUnit(i18n));
-}
+        /*
+         * String for converter
+         */
+        QString CCoordinateGeodetic::convertToQString(bool i18n) const
+        {
+            QString s = "Geodetic: {%1, %2, %3}";
+            return s.arg(this->m_latitude.valueRoundedWithUnit(6, i18n)).arg(this->m_longitude.valueRoundedWithUnit(6, i18n)).arg(this->m_height.valueRoundedWithUnit(i18n));
+        }
 
-/*
- * Marshall to Dbus
- */
-void CCoordinateGeodetic::marshallToDbus(QDBusArgument &argument) const
-{
-    argument << this->m_latitude;
-    argument << this->m_longitude;
-    argument << this->m_height;
-}
+        /*
+         * Marshall to Dbus
+         */
+        void CCoordinateGeodetic::marshallToDbus(QDBusArgument &argument) const
+        {
+            argument << this->m_latitude;
+            argument << this->m_longitude;
+            argument << this->m_height;
+        }
 
-/*
- * Unmarshall from Dbus
- */
-void CCoordinateGeodetic::unmarshallFromDbus(const QDBusArgument &argument)
-{
-    argument >> this->m_latitude;
-    argument >> this->m_longitude;
-    argument >> this->m_height;
-}
+        /*
+         * Unmarshall from Dbus
+         */
+        void CCoordinateGeodetic::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            argument >> this->m_latitude;
+            argument >> this->m_longitude;
+            argument >> this->m_height;
+        }
 
-/*
- * Register metadata
- */
-void CCoordinateGeodetic::registerMetadata()
-{
-    qRegisterMetaType<CCoordinateGeodetic>(typeid(CCoordinateGeodetic).name());
-    qDBusRegisterMetaType<CCoordinateGeodetic>();
-}
+        /*
+         * Same coordinate
+         */
+        bool CCoordinateGeodetic::operator ==(const CCoordinateGeodetic &other) const
+        {
+            if (this == &other) return true;
+            return this->m_height == other.m_height &&
+                   this->m_latitude == other.m_latitude &&
+                   this->m_longitude == other.m_longitude;
+        }
 
-} // namespace
+        /*
+         * Unequal?
+         */
+        bool CCoordinateGeodetic::operator !=(const CCoordinateGeodetic &other) const
+        {
+            return !((*this) == other);
+        }
+
+        /*
+         * Register metadata
+         */
+        void CCoordinateGeodetic::registerMetadata()
+        {
+            qRegisterMetaType<CCoordinateGeodetic>();
+            qDBusRegisterMetaType<CCoordinateGeodetic>();
+        }
+
+        /*
+         * Hash
+         */
+        uint CCoordinateGeodetic::getValueHash() const
+        {
+            QList<uint> hashs;
+            hashs << this->m_latitude.getValueHash();
+            hashs << this->m_longitude.getValueHash();
+            hashs << this->m_height.getValueHash();
+            return BlackMisc::calculateHash(hashs, "CCoordinateGeodetic");
+        }
+
+        /*
+         * From WGS84 coordinates
+         */
+        CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CLength height)
+        {
+            CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
+            CLongitude lon = CLongitude::fromWgs84(longitudeWgs84);
+            return CCoordinateGeodetic(lat, lon, height);
+        }
+
+        /*
+         * Great circle distance
+         */
+        PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
+        {
+            // same coordinate results in 0 distance
+            if (coordinate1.latitude() == coordinate2.latitude() && coordinate1.longitude() == coordinate2.longitude())
+            {
+                return CLength(0, CLengthUnit::NM());
+            }
+
+            // first, prelimary distance calculation
+            // http://www.geodatasource.com/developers/c
+            double dist;
+            double lon1rad = coordinate1.longitude().value(CAngleUnit::rad());
+            double lon2rad = coordinate2.longitude().value(CAngleUnit::rad());
+            double lat1rad = coordinate1.latitude().value(CAngleUnit::rad());
+            double lat2rad = coordinate2.latitude().value(CAngleUnit::rad());
+            double theta = lon1rad - lon2rad;
+            dist = qSin(lat1rad) * qSin(lat2rad) + qCos(lat1rad) * qCos(lat2rad) * cos(theta);
+            dist = qAcos(dist);
+            dist = CMath::rad2deg(dist);
+            dist = dist * 60; // dist in NM
+            return CLength(qAbs(dist), CLengthUnit::NM());
+        }
+
+    } // namespace
 } // namespace

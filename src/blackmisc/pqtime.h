@@ -10,35 +10,44 @@
 
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
+    namespace PhysicalQuantities
+    {
 
-/*!
- * \brief Time class, e.g. "ms", "hour", "s", "day"
- * \author KWB
- */
-class CTime : public CPhysicalQuantity<CTimeUnit, CTime>
-{
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CTime() : CPhysicalQuantity(0, CTimeUnit::defaultUnit()) {}
+        /*!
+         * \brief Time class, e.g. "ms", "hour", "s", "day"
+         * \author KWB
+         */
+        class CTime : public CPhysicalQuantity<CTimeUnit, CTime>
+        {
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CTime() : CPhysicalQuantity(0, CTimeUnit::defaultUnit()) {}
 
-    /*!
-     *\brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit) {}
+            /*!
+             *\brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-    /*!
-     * \brief Destructor
-     */
-    virtual ~CTime() {}
-};
+            /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-} // namespace
+            /*!
+             * \brief Destructor
+             */
+            virtual ~CTime() {}
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTime)

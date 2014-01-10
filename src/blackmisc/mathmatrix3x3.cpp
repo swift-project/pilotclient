@@ -7,73 +7,74 @@
 
 namespace BlackMisc
 {
-namespace Math
-{
-
-/*
- * Determinant
- */
-double CMatrix3x3::determinant() const
-{
-    return
-        this->m_matrix(0, 0) * this->m_matrix(1, 1) * this->m_matrix(2, 2) +
-        this->m_matrix(0, 1) * this->m_matrix(1, 2) * this->m_matrix(2, 0) +
-        this->m_matrix(0, 2) * this->m_matrix(1, 0) * this->m_matrix(2, 1) -
-        this->m_matrix(0, 1) * this->m_matrix(1, 0) * this->m_matrix(2, 2) -
-        this->m_matrix(0, 2) * this->m_matrix(1, 1) * this->m_matrix(2, 0) -
-        this->m_matrix(0, 0) * this->m_matrix(1, 2) * this->m_matrix(2, 1);
-}
-
-/*
- * Inverse
- */
-CMatrix3x3 CMatrix3x3::inverse(bool &o_invertible) const
-{
-    CMatrix3x3 inverse;
-    double det = this->determinant();
-    if (det == 0)
+    namespace Math
     {
-        o_invertible = false;
-        inverse.setZero();
-        return inverse;
-    }
-    double invdet = 1.0 / det;
 
-    inverse.m_matrix(0, 0) = (this->m_matrix(1, 1) * this->m_matrix(2, 2) - this->m_matrix(1, 2) * this->m_matrix(2, 1)) * invdet;
-    inverse.m_matrix(0, 1) = (- this->m_matrix(0, 1) * this->m_matrix(2, 2) + this->m_matrix(0, 2) * this->m_matrix(2, 1)) * invdet;
-    inverse.m_matrix(0, 2) = (this->m_matrix(0, 1) * this->m_matrix(1, 2) - this->m_matrix(0, 2) * this->m_matrix(1, 1)) * invdet;
-    inverse.m_matrix(1, 0) = (- this->m_matrix(1, 0) * this->m_matrix(2, 2) + this->m_matrix(1, 2) * this->m_matrix(2, 0)) * invdet;
-    inverse.m_matrix(1, 1) = (this->m_matrix(0, 0) * this->m_matrix(2, 2) - this->m_matrix(0, 2) * this->m_matrix(2, 0)) * invdet;
-    inverse.m_matrix(1, 2) = (- this->m_matrix(0, 0) * this->m_matrix(1, 2) + this->m_matrix(0, 2) * this->m_matrix(1, 0)) * invdet;
-    inverse.m_matrix(2, 0) = (this->m_matrix(1, 0) * this->m_matrix(2, 1) - this->m_matrix(1, 1) * this->m_matrix(2, 0)) * invdet;
-    inverse.m_matrix(2, 1) = (- this->m_matrix(0, 0) * this->m_matrix(2, 1) + this->m_matrix(0, 1) * this->m_matrix(2, 0)) * invdet;
-    inverse.m_matrix(2, 2) = (this->m_matrix(0, 0) * this->m_matrix(1, 1) - this->m_matrix(0, 1) * this->m_matrix(1, 0)) * invdet;
+        /*
+         * Determinant
+         */
+        double CMatrix3x3::determinant() const
+        {
+            return
+                this->m_matrix(0, 0) * this->m_matrix(1, 1) * this->m_matrix(2, 2) +
+                this->m_matrix(0, 1) * this->m_matrix(1, 2) * this->m_matrix(2, 0) +
+                this->m_matrix(0, 2) * this->m_matrix(1, 0) * this->m_matrix(2, 1) -
+                this->m_matrix(0, 1) * this->m_matrix(1, 0) * this->m_matrix(2, 2) -
+                this->m_matrix(0, 2) * this->m_matrix(1, 1) * this->m_matrix(2, 0) -
+                this->m_matrix(0, 0) * this->m_matrix(1, 2) * this->m_matrix(2, 1);
+        }
 
-    o_invertible = true;
-    return inverse;
-}
+        /*
+         * Inverse
+         */
+        CMatrix3x3 CMatrix3x3::inverse(bool &o_invertible) const
+        {
+            CMatrix3x3 inverse;
+            double det = this->determinant();
+            if (det == 0)
+            {
+                o_invertible = false;
+                inverse.setZero();
+                return inverse;
+            }
+            double invdet = 1.0 / det;
 
-/*
- * Get a row
- */
-CMatrix1x3 CMatrix3x3::getRow(int row) const
-{
-    bool valid = row >= 0 && row <= 3;
-    Q_ASSERT_X(valid, "getRow", "invalid row");
-    if (!valid) throw std::range_error("invalid row");
-    return CMatrix1x3(this->getElement(row, 0), this->getElement(row, 1), this->getElement(row, 2));
-}
+            inverse.m_matrix(0, 0) = (this->m_matrix(1, 1) * this->m_matrix(2, 2) - this->m_matrix(1, 2) * this->m_matrix(2, 1)) * invdet;
+            inverse.m_matrix(0, 1) = (- this->m_matrix(0, 1) * this->m_matrix(2, 2) + this->m_matrix(0, 2) * this->m_matrix(2, 1)) * invdet;
+            inverse.m_matrix(0, 2) = (this->m_matrix(0, 1) * this->m_matrix(1, 2) - this->m_matrix(0, 2) * this->m_matrix(1, 1)) * invdet;
+            inverse.m_matrix(1, 0) = (- this->m_matrix(1, 0) * this->m_matrix(2, 2) + this->m_matrix(1, 2) * this->m_matrix(2, 0)) * invdet;
+            inverse.m_matrix(1, 1) = (this->m_matrix(0, 0) * this->m_matrix(2, 2) - this->m_matrix(0, 2) * this->m_matrix(2, 0)) * invdet;
+            inverse.m_matrix(1, 2) = (- this->m_matrix(0, 0) * this->m_matrix(1, 2) + this->m_matrix(0, 2) * this->m_matrix(1, 0)) * invdet;
+            inverse.m_matrix(2, 0) = (this->m_matrix(1, 0) * this->m_matrix(2, 1) - this->m_matrix(1, 1) * this->m_matrix(2, 0)) * invdet;
+            inverse.m_matrix(2, 1) = (- this->m_matrix(0, 0) * this->m_matrix(2, 1) + this->m_matrix(0, 1) * this->m_matrix(2, 0)) * invdet;
+            inverse.m_matrix(2, 2) = (this->m_matrix(0, 0) * this->m_matrix(1, 1) - this->m_matrix(0, 1) * this->m_matrix(1, 0)) * invdet;
 
-/*
- * Get a column
- */
-CMatrix3x1 CMatrix3x3::getColumn(int column) const
-{
-    bool valid = column >= 0 && column <= 3;
-    Q_ASSERT_X(valid, "getColumn", "invalid column");
-    if (!valid) throw new std::range_error("invalid column");
-    return CMatrix3x1(this->getElement(0, column), this->getElement(1, column), this->getElement(2, column));
-}
+            o_invertible = true;
+            return inverse;
+        }
 
-} // namespace
+        /*
+         * Get a row
+         */
+        CMatrix1x3 CMatrix3x3::getRow(int row) const
+        {
+            bool valid = row >= 0 && row <= 3;
+            Q_ASSERT_X(valid, "getRow", "invalid row");
+            if (!valid) throw std::range_error("invalid row");
+            return CMatrix1x3(this->getElement(row, 0), this->getElement(row, 1), this->getElement(row, 2));
+        }
+
+        /*
+         * Get a column
+         */
+        CMatrix3x1 CMatrix3x3::getColumn(int column) const
+        {
+            bool valid = column >= 0 && column <= 3;
+            Q_ASSERT_X(valid, "getColumn", "invalid column");
+            if (!valid) throw new std::range_error("invalid column");
+            return CMatrix3x1(this->getElement(0, column), this->getElement(1, column), this->getElement(2, column));
+        }
+
+
+    } // namespace
 } // namespace

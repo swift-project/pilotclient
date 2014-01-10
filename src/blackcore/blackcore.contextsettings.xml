@@ -1,0 +1,11 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="blackcore.contextsettings">
+    <signal name="changedNetworkSettings">
+    </signal>
+    <method name="getNetworkSettings">
+      <arg type="((sssi(ssss))(a(sssi(ssss))))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Settings::CSettingsNetwork"/>
+    </method>
+  </interface>
+</node>

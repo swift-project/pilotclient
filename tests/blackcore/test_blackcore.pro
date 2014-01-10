@@ -1,6 +1,6 @@
 include (../../externals.pri)
 
-QT       += core testlib dbus
+QT       += core testlib dbus network
 
 TARGET = test_blackcore
 TEMPLATE = app

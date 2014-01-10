@@ -4,50 +4,63 @@
 
 namespace BlackMisc
 {
-namespace Geo
-{
-
-/*!
- * \brief Longitude
- */
-class CLongitude : public CEarthAngle<CLongitude>
-{
-protected:
-    /*!
-     * \brief Specific string representation
-     */
-    virtual QString convertToQString() const
+    namespace Geo
     {
-        QString s = "longitude ";
-        return s.append(CEarthAngle::convertToQString());
-    }
 
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CLongitude() : CEarthAngle() {}
+        /*!
+         * \brief Longitude
+         */
+        class CLongitude : public CEarthAngle<CLongitude>
+        {
+        protected:
+            /*!
+             * \brief Specific string representation
+             * \param i18n
+             * \return
+             */
+            virtual QString convertToQString(bool i18n = false) const
+            {
+                QString s(CEarthAngle::convertToQString(i18n));
+                if (!this->isZeroEpsilonConsidered())
+                    s.append(this->isNegativeWithEpsilonConsidered() ? " W" : " E");
+                return s;
+            }
 
-    /*!
-     * \brief Constructor
-     * \param angle
-     */
-    explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CLongitude() : CEarthAngle() {}
 
-    /*!
-     * \brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
+            /*!
+             * \brief Constructor
+             * \param angle
+             */
+            explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
-    /*!
-     * \brief Virtual destructor
-     */
-    virtual ~CLongitude() {}
-};
+            /*!
+             * \brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
 
-} // namespace
+            /*!
+             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
+
+            /*!
+             * \brief Virtual destructor
+             */
+            virtual ~CLongitude() {}
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CLongitude)

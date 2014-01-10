@@ -6,13 +6,6 @@
 #ifndef BLACKMISCTEST_SAMPLESAVIATION_H
 #define BLACKMISCTEST_SAMPLESAVIATION_H
 
-#include "blackmisc/pqconstants.h"
-#include "blackmisc/avheading.h"
-#include "blackmisc/aviocomsystem.h"
-#include "blackmisc/avionavsystem.h"
-#include "blackmisc/aviotransponder.h"
-#include <QDebug>
-
 namespace BlackMiscTest {
 
 /*!

@@ -10,42 +10,71 @@ using BlackMisc::PhysicalQuantities::CAngleUnit;
 
 namespace BlackMisc
 {
-namespace Aviation
-{
+    namespace Aviation
+    {
 
-/*
- * Own implementation for streaming
- */
-QString CHeading::convertToQString(bool i18n) const
-{
-    QString s = CAngle::convertToQString(i18n);
-    return s.append(this->isMagneticHeading() ? " magnetic" : " true");
-}
+        /*
+         * Own implementation for streaming
+         */
+        QString CHeading::convertToQString(bool i18n) const
+        {
+            QString s = CAngle::convertToQString(i18n).append(" ");
+            if (i18n)
+            {
+                return s.append(this->isMagneticHeading() ?
+                                QCoreApplication::translate("Aviation", "magnetic") :
+                                QCoreApplication::translate("Aviation", "true"));
+            }
+            else
+            {
+                return s.append(this->isMagneticHeading() ? "magnetic" : "true");
+            }
+        }
 
-/*
- * Equal?
- */
-bool CHeading::operator ==(const CHeading &other)
-{
-    return other.m_north == this->m_north && this->CAngle::operator ==(other);
-}
+        /*
+         * Marshall to DBus
+         */
+        void CHeading::marshallToDbus(QDBusArgument &argument) const
+        {
+            this->CAngle::marshallToDbus(argument);
+            argument << qint32(this->m_north);
+        }
 
-/*
- * Unequal?
- */
-bool CHeading::operator !=(const CHeading &other)
-{
-    return !((*this) == other);
-}
+        /*
+         * Unmarshall from DBus
+         */
+        void CHeading::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            this->CAngle::unmarshallFromDbus(argument);
+            qint32 north;
+            argument >> north;
+            this->m_north = static_cast<ReferenceNorth>(north);
+        }
 
-/*!
- * \brief Register metadata of unit and quantity
- */
-void CHeading::registerMetadata()
-{
-    qRegisterMetaType<CHeading>(typeid(CHeading).name());
-    qDBusRegisterMetaType<CHeading>();
-}
+        /*
+         * Equal?
+         */
+        bool CHeading::operator ==(const CHeading &other) const
+        {
+            return other.m_north == this->m_north && this->CAngle::operator ==(other);
+        }
 
-} // namespace
+        /*
+         * Unequal?
+         */
+        bool CHeading::operator !=(const CHeading &other) const
+        {
+            return !((*this) == other);
+        }
+
+        /*!
+         * \brief Register metadata of unit and quantity
+         */
+        void CHeading::registerMetadata()
+        {
+            qRegisterMetaType<CHeading>();
+            qDBusRegisterMetaType<CHeading>();
+        }
+
+    } // namespace
 } // namespace

@@ -10,10 +10,15 @@
 #ifndef BLACKCORE_NETWORK_H
 #define BLACKCORE_NETWORK_H
 
-#include "../blackmisc/pqfrequency.h"
-#include "../blackmisc/coordinategeodetic.h"
-#include "../blackmisc/pqlength.h"
-#include "../blackmisc/pqtime.h"
+#include "blackmisc/avaircraft.h"
+#include "blackmisc/pqfrequency.h"
+#include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/pqlength.h"
+#include "blackmisc/pqtime.h"
+#include "blackmisc/nwserverlist.h"
+#include "blackmisc/nwtextmessagelist.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/avinformationmessage.h"
 #include <QObject>
 #include <QString>
 #include <QMap>
@@ -23,7 +28,7 @@ namespace BlackCore
 {
 
     /*!
-     * Interface to a connection to a multi-user flight simulation and ATC network.
+     * Interface for a connection to a multi-user flight simulation and ATC network.
      *
      * \warning If an INetwork signal is connected to a slot, and that slot emits a signal
      *          which is connected to an INetwork slot, then at least one of those connections
@@ -33,6 +38,13 @@ namespace BlackCore
     {
         Q_OBJECT
 
+    protected:
+        /*!
+         * \brief Constructor
+         * \param parent
+         */
+        INetwork(QObject *parent = nullptr) : QObject(parent) {}
+
     public:
         virtual ~INetwork() {}
 
@@ -40,98 +52,111 @@ namespace BlackCore
         {
             AcceptsAtisResponses        = 1 << 0,
             SupportsInterimPosUpdates   = 1 << 1,
-            SupportsModelDescriptions   = 1 << 2,
+            SupportsModelDescriptions   = 1 << 2
         };
 
     public slots:
-        virtual void setServerDetails(const QString& hostname, quint16 port) = 0;
-        virtual void setUserCredentials(const QString& username, const QString& password) = 0;
-        virtual void setCallsign(const QString& callsign) = 0;
-        virtual void setRealName(const QString& name) = 0;
+        // Network
+        virtual void setServer(const BlackMisc::Network::CServer &server) = 0;
+        virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void setRealName(const QString &name) = 0;
         virtual void initiateConnection() = 0;
         virtual void terminateConnection() = 0;
-        virtual void sendPrivateTextMessage(const QString& callsign, const QString& msg) = 0;
-        virtual void sendRadioTextMessage(const QVector<BlackMisc::PhysicalQuantities::CFrequency>& freqs, const QString& msg) = 0;
+        virtual void ping(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
         virtual void sendIpQuery() = 0;
-        virtual void sendFreqQuery(const QString& callsign) = 0;
-        virtual void sendServerQuery(const QString& callsign) = 0;
-        virtual void sendAtcQuery(const QString& callsign) = 0;
-        virtual void sendAtisQuery(const QString& callsign) = 0;
-        virtual void sendNameQuery(const QString& callsign) = 0;
-        virtual void sendCapabilitiesQuery(const QString& callsign) = 0;
-        virtual void replyToFreqQuery(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq) = 0;
-        virtual void replyToNameQuery(const QString& callsign, const QString& realname) = 0;
-        virtual void requestPlaneInfo(const QString& callsign) = 0;
-        //TODO virtual void setPlanePosition(...) = 0;
-        //TODO virtual void sendFlightPlan(...) = 0;
-        virtual void sendPlaneInfo(const QString& callsign, const QString& acTypeICAO, const QString& airlineICAO, const QString& livery) = 0;
-        virtual void ping(const QString& callsign) = 0;
-        virtual void requestMetar(const QString& airportICAO) = 0;
-        virtual void requestWeatherData(const QString& airportICAO) = 0;
+        virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        // Text messages
+        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) = 0;
+
+        // ATC
+        virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        // Aircraft
+        virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void setOwnAircraftPosition(const BlackMisc::Aviation::CAircraftSituation &aircraft) = 0;
+        virtual void setOwnAircraftTransponder(const BlackMisc::Aviation::CTransponder &xpdr) = 0;
+        virtual void setOwnAircraftFrequency(const BlackMisc::PhysicalQuantities::CFrequency &freq) = 0;
+        virtual void setOwnAircraftIcao(const BlackMisc::Aviation::CAircraftIcao &icao) = 0;
+
+        // Weather / flight plan
+        virtual void requestMetar(const QString &airportICAO) = 0;
+        virtual void requestWeatherData(const QString &airportICAO) = 0;
+        // TODO virtual void sendFlightPlan(...) = 0;
 
     signals:
-        void atcPositionUpdate(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq,
-            const BlackMisc::Geo::CCoordinateGeodetic& pos, const BlackMisc::PhysicalQuantities::CLength& range);
-        void atcDisconnected(const QString& callsign);
-        //TODO void cloudDataReceived(...);
+        // ATC
+        void atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
+                               const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
+        void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
+        void atcQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC);
+        void atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
+        void metarReceived(const QString &data);
+
+        // Aircraft
+        void pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
+        void aircraftInfoReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao);
+        void aircraftPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation,
+                                    const BlackMisc::Aviation::CTransponder &transponder);
+        // TODO void aircraftInterimPositionUpdate(...);
+        void frequencyQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
+
+        // Connection / Network in general
+        void kicked(const QString &msg);
         void connectionStatusIdle();
         void connectionStatusConnecting();
         void connectionStatusConnected();
         void connectionStatusDisconnected();
         void connectionStatusError();
-        void ipQueryReplyReceived(const QString& ip);
-        void freqQueryReplyReceived(const QString& callsign, const BlackMisc::PhysicalQuantities::CFrequency& freq);
-        void serverQueryReplyReceived(const QString& callsign, const QString& hostname);
-        void atcQueryReplyReceived(const QString& callsign, bool isATC);
-        void atisQueryReplyReceived(const QString& callsign, const QString& data);
-        void nameQueryReplyReceived(const QString& callsign, const QString& realname);
-        void capabilitiesQueryReplyReceived(const QString& callsign, quint32 flags);
-        void freqQueryRequestReceived(const QString& callsign);
-        void nameQueryRequestReceived(const QString& callsign);
-        //TODO void interimPilotPositionUpdate(...);
-        void kicked(const QString& msg);
-        void metarReceived(const QString& data);
-        void pilotDisconnected(const QString& callsign);
-        void planeInfoReceived(const QString& callsign, const QString& acTypeICAO, const QString& airlineICAO, const QString& livery);
-        void planeInfoRequestReceived(const QString& callsign);
-        //TODO void pilotPositionUpdate(...);
-        void pong(const QString& callsign, const BlackMisc::PhysicalQuantities::CTime& elapsedTime);
-        void radioTextMessageReceived(const QString& callsign, const QString& msg, const QVector<BlackMisc::PhysicalQuantities::CFrequency>& freqs);
-        void privateTextMessageReceived(const QString& fromCallsign, const QString& toCallsign, const QString& msg);
-        //TODO void temperatureDataReceived(...);
-        //TODO void windDataReceived(...);
+        void pong(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);
+        void capabilitiesQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
+        void ipQueryReplyReceived(const QString &ip);
+        void serverQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);
+        void nameQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
+
+        // Text messages
+        void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
+
+        // Weather
+        // TODO void temperatureDataReceived(...);
+        // TODO void windDataReceived(...);
+        // TODO void cloudDataReceived(...);
     };
 
     /*!
      * Dummy implementation of INetwork used for testing.
      */
-    class NetworkDummy : public INetwork
+    class CNetworkDummy : public INetwork
     {
     public: //INetwork slots overrides
-        virtual void setServerDetails(const QString&, quint16) {}
-        virtual void setUserCredentials(const QString&, const QString&) {}
-        virtual void setCallsign(const QString&) {}
-        virtual void setRealName(const QString&) {}
+        virtual void setServer(const BlackMisc::Network::CServer &) {}
+        virtual void setCallsign(const BlackMisc::Aviation::CCallsign &) {}
+        virtual void setRealName(const QString &) {}
         virtual void initiateConnection() {}
         virtual void terminateConnection() {}
-        virtual void sendPrivateTextMessage(const QString&, const QString&) {}
-        virtual void sendRadioTextMessage(const QVector<BlackMisc::PhysicalQuantities::CFrequency>&, const QString&) {}
+        virtual void ping(const BlackMisc::Aviation::CCallsign &) {}
+        virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &) {}
         virtual void sendIpQuery() {}
-        virtual void sendFreqQuery(const QString&) {}
-        virtual void sendServerQuery(const QString&) {}
-        virtual void sendAtcQuery(const QString&) {}
-        virtual void sendAtisQuery(const QString&) {}
-        virtual void sendNameQuery(const QString&) {}
-        virtual void sendCapabilitiesQuery(const QString&) {}
-        virtual void replyToFreqQuery(const QString&, const BlackMisc::PhysicalQuantities::CFrequency&) {}
-        virtual void replyToNameQuery(const QString&, const QString&) {}
-        virtual void requestPlaneInfo(const QString&) {}
-        virtual void sendPlaneInfo(const QString&, const QString&, const QString&, const QString&) {}
-        virtual void ping(const QString&) {}
-        virtual void requestMetar(const QString&) {}
-        virtual void requestWeatherData(const QString&) {}
+        virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &) {}
+        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &) {}
+        virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &) {}
+        virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &) {}
+        virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &) {}
+        virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &) {}
+        virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &) {}
+        virtual void setOwnAircraftPosition(const BlackMisc::Aviation::CAircraftSituation &) {}
+        virtual void setOwnAircraftTransponder(const BlackMisc::Aviation::CTransponder &) {}
+        virtual void setOwnAircraftFrequency(const BlackMisc::PhysicalQuantities::CFrequency &) {}
+        virtual void setOwnAircraftIcao(const BlackMisc::Aviation::CAircraftIcao &) {}
+        virtual void requestMetar(const QString &) {}
+        virtual void requestWeatherData(const QString &) {}
     };
 
-} //namespace BlackCore
+} // namespace
 
-#endif //BLACKCORE_NETWORK_H
+#endif // guard

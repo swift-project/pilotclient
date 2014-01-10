@@ -6,6 +6,9 @@
 #include "blackmisc/debug.h"
 #include "blackmisc/context.h"
 #include <QFileInfo>
+#include <QCoreApplication>
+#include <stdexcept>
+
 
 #ifdef Q_OS_WIN
 #include <Windows.h>
@@ -57,23 +60,9 @@ namespace BlackMisc
 
     void CApplicationContext::setDefaultApplicationName()
     {
-#ifdef Q_OS_WIN
-        //! By default, we use the executables name.
-        if (getApplicationName().isEmpty())
-        {
-            WCHAR name[1024];
-            int size = GetModuleFileName(NULL, name, 1023);
-            QString applicationPath = QString::fromWCharArray(name, size);
-            setApplicationName(QFileInfo(applicationPath).fileName());
-        }
-#else
-        //! Todo: Check if there a corresponding API in Linux and Mac
-        //! For the time being, set it to unknown.
-        if (m_context.getApplicationName().isEmpty())
-        {
-            m_context.setApplicationName("<Unknown>");
-        }
-#endif
+        // This part was not working before on linux.
+        // This class is depricated, but as long as it is not removed, if fixed it anyway.
+        setApplicationName(QFileInfo(QCoreApplication::applicationFilePath()).fileName());
     }
 
 } // namespace BlackMisc

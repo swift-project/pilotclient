@@ -10,42 +10,84 @@ using BlackMisc::PhysicalQuantities::CLengthUnit;
 
 namespace BlackMisc
 {
-namespace Aviation
-{
+    namespace Aviation
+    {
 
-/*
- * Own implementation for streaming
- */
-QString CAltitude::convertToQString(bool /* i18n */) const
-{
-    QString s = this->CLength::convertToQString();
-    return s.append(this->isMeanSeaLevel() ? " MSL" : " AGL");
-}
+        /*
+         * Own implementation for streaming
+         */
+        QString CAltitude::convertToQString(bool /* i18n */) const
+        {
+            QString s = this->CLength::convertToQString();
+            return s.append(this->isMeanSeaLevel() ? " MSL" : " AGL");
+        }
 
-/*
- * Equal?
- */
-bool CAltitude::operator ==(const CAltitude &other)
-{
-    return other.m_datum == this->m_datum && this->CLength::operator ==(other);
-}
+        /*
+         * Marshall to DBus
+         */
+        void CAltitude::marshallToDbus(QDBusArgument &argument) const
+        {
+            this->CLength::marshallToDbus(argument);
+            argument << qint32(this->m_datum);
+        }
 
-/*
- * Unequal?
- */
-bool CAltitude::operator !=(const CAltitude &other)
-{
-    return !((*this) == other);
-}
+        /*
+         * Unmarshall from DBus
+         */
+        void CAltitude::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            this->CLength::unmarshallFromDbus(argument);
+            qint32 datum;
+            argument >> datum;
+            this->m_datum = static_cast<ReferenceDatum>(datum);
+        }
 
-/*
- * Register metadata
- */
-void CAltitude::registerMetadata()
-{
-    qRegisterMetaType<CAltitude>(typeid(CAltitude).name());
-    qDBusRegisterMetaType<CAltitude>();
-}
+        /*
+         * Equal?
+         */
+        bool CAltitude::operator ==(const CAltitude &other) const
+        {
+            return other.m_datum == this->m_datum && this->CLength::operator ==(other);
+        }
 
-} // namespace
+        /*
+         * Unequal?
+         */
+        bool CAltitude::operator !=(const CAltitude &other) const
+        {
+            return !((*this) == other);
+        }
+
+        /*
+         * Compare
+         */
+        int CAltitude::compare(const QVariant &qv) const
+        {
+            Q_ASSERT(qv.canConvert<CAltitude>() || qv.canConvert<CLength>());
+            Q_ASSERT(qv.isValid() && !qv.isNull());
+            if (qv.canConvert<CAltitude>())
+            {
+                CAltitude other = qv.value<CAltitude>();
+                if (this->isMeanSeaLevel() && other.isAboveGroundLevel()) return 1;
+                if (this->isAboveGroundLevel() && other.isMeanSeaLevel()) return -1;
+                return this->compare(other);
+            }
+            else if (qv.canConvert<CLength>())
+            {
+                return this->compare(qv.value<CLength>());
+            }
+            qFatal("Invalid comparison");
+            return 0; // just for compiler
+        }
+
+        /*
+         * Register metadata
+         */
+        void CAltitude::registerMetadata()
+        {
+            qRegisterMetaType<CAltitude>();
+            qDBusRegisterMetaType<CAltitude>();
+        }
+
+    } // namespace
 } // namespace

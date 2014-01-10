@@ -1,4 +1,4 @@
-QT       += core dbus
+QT       += core dbus network
 
 TARGET = sample_vector_geo
 CONFIG   += console c++11

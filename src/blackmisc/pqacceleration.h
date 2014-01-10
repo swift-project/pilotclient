@@ -9,40 +9,49 @@
 
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
+    namespace PhysicalQuantities
+    {
 
-/*!
- * \brief Acceleration
- */
-class CAcceleration : public CPhysicalQuantity<CAccelerationUnit, CAcceleration>
-{
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::defaultUnit()) {}
+        /*!
+         * \brief Acceleration
+         */
+        class CAcceleration : public CPhysicalQuantity<CAccelerationUnit, CAcceleration>
+        {
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::defaultUnit()) {}
 
-    /*!
-     * \brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit) {}
+            /*!
+             * \brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-    /*!
-     * \brief Copy constructor by base type
-     * \param base
-     */
-    CAcceleration(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
+            /*!
+             * \brief Copy constructor by base type
+             * \param base
+             */
+            CAcceleration(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
 
-    /*!
-     * \brief Virtual destructor
-     */
-    virtual ~CAcceleration() {}
-};
+            /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-} // namespace
+            /*!
+             * \brief Virtual destructor
+             */
+            virtual ~CAcceleration() {}
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAcceleration)

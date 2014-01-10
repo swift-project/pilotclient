@@ -224,8 +224,10 @@ namespace BlackMisc
         // Try to open the file if the handle is invalid
         if (m_file->handle() == -1)
         {
-            if ( !m_file->open(QIODevice::WriteOnly) )
-                printf ("Can't open log file '%s': %s\n", m_fileName.toLatin1().constData(), strerror(errno));
+            if ( !m_file->open(QIODevice::WriteOnly) ) {
+                // suppress warning about unsafe strerror
+                printf ("Can't open log file '%s': %d (%s)\n", m_fileName.toLatin1().constData(), errno, ""/*strerror(errno)*/);
+            }
         }
 
         if (m_file->handle() != -1)

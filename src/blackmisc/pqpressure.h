@@ -10,35 +10,44 @@
 
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
+    namespace PhysicalQuantities
+    {
 
-/*!
- * \brief Physical unit distance
- * \author KWB
- */
-class CPressure : public CPhysicalQuantity<CPressureUnit, CPressure>
-{
-public:
-    /*!
-     * \brief Default constructor
-     */
-    CPressure() : CPhysicalQuantity(0, CPressureUnit::defaultUnit()) {}
+        /*!
+         * \brief Physical unit distance
+         * \author KWB
+         */
+        class CPressure : public CPhysicalQuantity<CPressureUnit, CPressure>
+        {
+        public:
+            /*!
+             * \brief Default constructor
+             */
+            CPressure() : CPhysicalQuantity(0, CPressureUnit::defaultUnit()) {}
 
-    /*!
-     *\brief Init by double value
-     * \param value
-     * \param unit
-     */
-    CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit) {}
+            /*!
+             *\brief Init by double value
+             * \param value
+             * \param unit
+             */
+            CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-    /*!
-     * \brief Virtual destructor
-     */
-    virtual ~CPressure() {}
-};
+            /*!
+             * \brief QVariant, required for DBus QVariant lists
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-} // namespace
+            /*!
+             * \brief Virtual destructor
+             */
+            virtual ~CPressure() {}
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPressure)

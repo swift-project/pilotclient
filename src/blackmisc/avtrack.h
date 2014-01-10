@@ -9,127 +9,127 @@
 
 namespace BlackMisc
 {
-namespace Aviation
-{
-
-/*!
- * \brief Track as used in aviation, can be true or magnetic Track
- * \remarks Intentionally allowing +/- BlackMisc::PhysicalQuantities::CAngle , and >= / <= CAngle.
- */
-class CTrack : public BlackMisc::PhysicalQuantities::CAngle
-{
-public:
-    /*!
-     * Enum type to distinguish between true north and magnetic north
-     */
-    enum ReferenceNorth
+    namespace Aviation
     {
-        Magnetic = 0,   //!< magnetic north
-        True = 1,       //!< true north
-    };
 
-private:
-    ReferenceNorth m_north; //!< magnetic or true?
+        /*!
+         * \brief Track as used in aviation, can be true or magnetic Track
+         * \remarks Intentionally allowing +/- BlackMisc::PhysicalQuantities::CAngle ,
+         *          and >= / <= CAngle.
+         */
+        class CTrack : public BlackMisc::PhysicalQuantities::CAngle
+        {
+        public:
+            /*!
+             * Enum type to distinguish between true north and magnetic north
+             */
+            enum ReferenceNorth
+            {
+                Magnetic = 0,   //!< magnetic north
+                True = 1        //!< true north
+            };
 
-protected:
-    /*!
-     * \brief Specific stream operation for Track
-     * \return
-     */
-    virtual QString convertToQString(bool i18n = false) const;
+        private:
+            ReferenceNorth m_north; //!< magnetic or true?
 
-    /*!
-     * \brief Stream to DBus <<
-     * \param argument
-     */
-    virtual void marshallToDbus(QDBusArgument &argument) const
-    {
-        this->CAngle::marshallToDbus(argument);
-        argument << qint32(this->m_north);
-    }
+        protected:
+            /*!
+             * \brief Specific stream operation for Track
+             * \return
+             */
+            virtual QString convertToQString(bool i18n = false) const;
 
-    /*!
-     * \brief Stream from DBus >>
-     * \param argument
-     */
-    virtual void unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        this->CAngle::unmarshallFromDbus(argument);
-        qint32 north;
-        argument >> north;
-        this->m_north = static_cast<ReferenceNorth>(north);
-    }
+            /*!
+             * \brief Stream to DBus <<
+             * \param argument
+             */
+            virtual void marshallToDbus(QDBusArgument &argument) const;
 
-public:
-    /*!
-     * \brief Default constructor: 0 Track magnetic
-     */
-    CTrack() : BlackMisc::PhysicalQuantities::CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
+            /*!
+             * \brief Stream from DBus >>
+             * \param argument
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
-    /*!
-     * \brief Constructor
-     * \param value
-     * \param north
-     * \param unit
-     */
-    CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_north(north) {}
+        public:
+            /*!
+             * \brief Default constructor: 0 Track magnetic
+             */
+            CTrack() : BlackMisc::PhysicalQuantities::CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
-    /*!
-     * \brief Constructor by CAngle
-     * \param track
-     * \param north
-     */
-    CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : BlackMisc::PhysicalQuantities::CAngle(track), m_north(north) {}
+            /*!
+             * \brief Constructor
+             * \param value
+             * \param north
+             * \param unit
+             */
+            CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_north(north) {}
 
-    /*!
-     * \brief Equal operator ==
-     * \param other
-     * \return
-     */
-    bool operator ==(const CTrack &other);
+            /*!
+             * \brief Constructor by CAngle
+             * \param track
+             * \param north
+             */
+            CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : BlackMisc::PhysicalQuantities::CAngle(track), m_north(north) {}
 
-    /*!
-     * \brief Unequal operator ==
-     * \param other
-     * \return
-     */
-    bool operator !=(const CTrack &other);
+            /*!
+             * \brief As QVariant
+             * \return
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
-    /*!
-     * \brief Magnetic Track?
-     * \return
-     */
-    bool isMagneticTrack() const
-    {
-        return Magnetic == this->m_north;
-        (void)QT_TRANSLATE_NOOP("Aviation", "magnetic");
-    }
+            /*!
+             * \brief Equal operator ==
+             * \param other
+             * \return
+             */
+            bool operator ==(const CTrack &other) const;
 
-    /*!
-     * \brief True Track?
-     * \return
-     */
-    bool isTrueTrack() const
-    {
-        return True == this->m_north;
-        (void)QT_TRANSLATE_NOOP("Aviation", "true");
-    }
+            /*!
+             * \brief Unequal operator ==
+             * \param other
+             * \return
+             */
+            bool operator !=(const CTrack &other) const;
 
-    /*!
-     * \brief Get reference north (magnetic or true)
-     * \return
-     */
-    ReferenceNorth getReferenceNorth() const { return m_north; }
+            /*!
+             * \brief Magnetic Track?
+             * \return
+             */
+            bool isMagneticTrack() const
+            {
+                return Magnetic == this->m_north;
+                (void)QT_TRANSLATE_NOOP("Aviation", "magnetic");
+            }
 
-    /*!
-     * \brief Register metadata
-     */
-    static void registerMetadata();
-};
+            /*!
+             * \brief True Track?
+             * \return
+             */
+            bool isTrueTrack() const
+            {
+                return True == this->m_north;
+                (void)QT_TRANSLATE_NOOP("Aviation", "true");
+            }
 
-} // namespace
+            /*!
+             * \brief Get reference north (magnetic or true)
+             * \return
+             */
+            ReferenceNorth getReferenceNorth() const { return m_north; }
+
+            /*!
+             * \brief Register metadata
+             */
+            static void registerMetadata();
+        };
+
+    } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTrack)
 
-#endif // BLACKMISC_AVTRACK_H
+#endif // guard
