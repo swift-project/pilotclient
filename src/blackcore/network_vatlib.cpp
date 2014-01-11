@@ -447,11 +447,11 @@ namespace BlackCore
         cbvar_cast(cbvar)->m_status = newStatus;
         switch (newStatus)
         {
-        case Cvatlib_Network::connStatus_Idle:          emit cbvar_cast(cbvar)->connectionStatusIdle(); break;
-        case Cvatlib_Network::connStatus_Connecting:    emit cbvar_cast(cbvar)->connectionStatusConnecting(); break;
-        case Cvatlib_Network::connStatus_Connected:     emit cbvar_cast(cbvar)->connectionStatusConnected(); break;
-        case Cvatlib_Network::connStatus_Disconnected:  emit cbvar_cast(cbvar)->connectionStatusDisconnected(); break;
-        case Cvatlib_Network::connStatus_Error:         emit cbvar_cast(cbvar)->connectionStatusError(); break;
+        case Cvatlib_Network::connStatus_Idle:          emit cbvar_cast(cbvar)->connectionStatusChanged(Disconnected); break;
+        case Cvatlib_Network::connStatus_Connecting:    emit cbvar_cast(cbvar)->connectionStatusChanged(Connecting); break;
+        case Cvatlib_Network::connStatus_Connected:     emit cbvar_cast(cbvar)->connectionStatusChanged(Connected); break;
+        case Cvatlib_Network::connStatus_Disconnected:  emit cbvar_cast(cbvar)->connectionStatusChanged(Disconnected); break;
+        case Cvatlib_Network::connStatus_Error:         emit cbvar_cast(cbvar)->connectionStatusChanged(Disconnected); break;
         }
     }
 

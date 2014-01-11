@@ -81,11 +81,7 @@ public slots: //to receive from INetwork
     void atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
                            const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
     void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-    void connectionStatusIdle();
-    void connectionStatusConnecting();
-    void connectionStatusConnected();
-    void connectionStatusDisconnected();
-    void connectionStatusError();
+    void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus status);
     void ipQueryReplyReceived(const QString &ip);
     void freqQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
     void serverQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);

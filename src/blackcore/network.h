@@ -55,6 +55,13 @@ namespace BlackCore
             SupportsModelDescriptions   = 1 << 2
         };
 
+        enum ConnectionStatus
+        {
+            Disconnected = 0,
+            Connecting,
+            Connected
+        };
+
     public slots:
         // Network
         virtual void setServer(const BlackMisc::Network::CServer &server) = 0;
@@ -108,11 +115,7 @@ namespace BlackCore
 
         // Connection / Network in general
         void kicked(const QString &msg);
-        void connectionStatusIdle();
-        void connectionStatusConnecting();
-        void connectionStatusConnected();
-        void connectionStatusDisconnected();
-        void connectionStatusError();
+        void connectionStatusChanged(ConnectionStatus status);
         void pong(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);
         void capabilitiesQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
         void ipQueryReplyReceived(const QString &ip);

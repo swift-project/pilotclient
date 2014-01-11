@@ -21,8 +21,8 @@ void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
         .send(&INetwork::setServer, CServer("", "", "vatsim-germany.org", 6809, CUser("guest", "", "", "guest")))
         .send(&INetwork::setCallsign, "BLACK")
         .send(&INetwork::initiateConnection)
-        .expect(&INetwork::connectionStatusConnecting, [] { qDebug() << "CONNECTING"; })
-        .expect(&INetwork::connectionStatusConnected, [] { qDebug() << "CONNECTED"; })
+        .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus s) { QVERIFY(s == INetwork::Connecting); qDebug() << "CONNECTING"; })
+        .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus s) { QVERIFY(s == INetwork::Connected); qDebug() << "CONNECTED"; })
         .wait(10);
 
     EXPECT_UNIT(e)
@@ -32,6 +32,6 @@ void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
 
     EXPECT_UNIT(e)
         .send(&INetwork::terminateConnection)
-        .expect(&INetwork::connectionStatusDisconnected, [] { qDebug() << "DISCONNECTED"; })
+        .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus s) { QVERIFY(s == INetwork::Disconnected); qDebug() << "DISCONNECTED"; })
         .wait(10);
 }

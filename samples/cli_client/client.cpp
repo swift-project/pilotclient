@@ -14,11 +14,7 @@ Client::Client(BlackMisc::IContext &ctx)
     using namespace BlackCore;
     connect(m_net, &INetwork::atcPositionUpdate,                this, &Client::atcPositionUpdate);
     connect(m_net, &INetwork::atcDisconnected,                  this, &Client::atcDisconnected);
-    connect(m_net, &INetwork::connectionStatusIdle,             this, &Client::connectionStatusIdle);
-    connect(m_net, &INetwork::connectionStatusConnecting,       this, &Client::connectionStatusConnecting);
-    connect(m_net, &INetwork::connectionStatusConnected,        this, &Client::connectionStatusConnected);
-    connect(m_net, &INetwork::connectionStatusDisconnected,     this, &Client::connectionStatusDisconnected);
-    connect(m_net, &INetwork::connectionStatusError,            this, &Client::connectionStatusError);
+    connect(m_net, &INetwork::connectionStatusChanged,          this, &Client::connectionStatusChanged);
     connect(m_net, &INetwork::ipQueryReplyReceived,             this, &Client::ipQueryReplyReceived);
     connect(m_net, &INetwork::frequencyQueryReplyReceived,      this, &Client::freqQueryReplyReceived);
     connect(m_net, &INetwork::serverQueryReplyReceived,         this, &Client::serverQueryReplyReceived);
@@ -320,29 +316,14 @@ void Client::atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
     std::cout << "ATC_DISCONNECTED " << callsign << std::endl;
 }
 
-void Client::connectionStatusIdle()
+void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus status)
 {
-    std::cout << "CONN_STATUS_IDLE" << std::endl;
-}
-
-void Client::connectionStatusConnecting()
-{
-    std::cout << "CONN_STATUS_CONNECTING" << std::endl;
-}
-
-void Client::connectionStatusConnected()
-{
-    std::cout << "CONN_STATUS_CONNECTED" << std::endl;
-}
-
-void Client::connectionStatusDisconnected()
-{
-    std::cout << "CONN_STATUS_DISCONNECTED" << std::endl;
-}
-
-void Client::connectionStatusError()
-{
-    std::cout << "CONN_STATUS_ERROR" << std::endl;
+    switch (status)
+    {
+    case BlackCore::INetwork::Disconnected: std::cout << "CONN_STATUS_DISCONNECTED" << std::endl; break;
+    case BlackCore::INetwork::Connecting:   std::cout << "CONN_STATUS_CONNECTING" << std::endl; break;
+    case BlackCore::INetwork::Connected:    std::cout << "CONN_STATUS_CONNECTED" << std::endl; break;
+    }
 }
 
 void Client::ipQueryReplyReceived(const QString &ip)
