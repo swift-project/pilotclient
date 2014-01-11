@@ -238,8 +238,8 @@ namespace BlackMisc
             struct base { void push_back(); }; template <class C> struct derived : public C, public base {};
             static yes hasPushHelper(...); template <class D> static no hasPushHelper(D *, typecheck<void (base::*)(), &D::push_back> * = 0);
             template <class C> struct hasPush : public std::integral_constant<bool, sizeof(hasPushHelper((derived<C>*)0)) == sizeof(yes)> {};
-            template <class C> static iterator insertImpl(typename std::enable_if< hasPush<C>::value, C>::type &c, const T &value) { c.push_back(value); return c.end() - 1; }
-            template <class C> static iterator insertImpl(typename std::enable_if < !hasPush<C>::value, C >::type &c, const T &value) { return c.insert(value); }
+            template <class C> static iterator insertImpl(typename std::enable_if< hasPush<C>::value, C>::type &c, const T &value) { c.push_back(value); return iterator::fromImpl(c.end() - 1); }
+            template <class C> static iterator insertImpl(typename std::enable_if < !hasPush<C>::value, C >::type &c, const T &value) { return iterator::fromImpl(c.insert(value)); }
         };
 
         template <class C> class Pimpl : public PimplBase
@@ -249,18 +249,19 @@ namespace BlackMisc
             Pimpl(C &&c) : m_impl(std::move(c)) {}
             PimplBase *clone() const { return new Pimpl(*this); }
             PimplBase *cloneEmpty() const { return new Pimpl(C()); }
-            iterator begin() { return m_impl.begin(); }
-            const_iterator begin() const { return m_impl.cbegin(); }
-            const_iterator cbegin() const { return m_impl.cbegin(); }
-            iterator end() { return m_impl.end(); }
-            const_iterator end() const { return m_impl.cend(); }
-            const_iterator cend() const { return m_impl.cend(); }
+            iterator begin() { return iterator::fromImpl(m_impl.begin()); }
+            const_iterator begin() const { return const_iterator::fromImpl(m_impl.cbegin()); }
+            const_iterator cbegin() const { return const_iterator::fromImpl(m_impl.cbegin()); }
+            iterator end() { return iterator::fromImpl(m_impl.end()); }
+            const_iterator end() const { return const_iterator::fromImpl(m_impl.cend()); }
+            const_iterator cend() const { return const_iterator::fromImpl(m_impl.cend()); }
             size_type size() const { return m_impl.size(); }
             bool empty() const { return m_impl.empty(); }
             void clear() { m_impl.clear(); }
             iterator insert(const T &value) { return PimplBase::insertImpl<C>(m_impl, value); }
-            iterator erase(iterator pos) { return m_impl.erase(*static_cast<const typename C::iterator *>(pos.getImpl())); }
-            iterator erase(iterator it1, iterator it2) { return m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl(), it2.getImpl())); }
+            iterator erase(iterator pos) { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(pos.getImpl()))); }
+            //iterator erase(iterator it1, iterator it2) { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()), *static_cast<const typename C::iterator*>(it2.getImpl()))); }
+            iterator erase(iterator it1, iterator it2) { while (it1 != it2) { it1 = iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()))); } return it1; }
             bool operator ==(const PimplBase &other) const { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.insert(*i); return m_impl == copy.m_impl; }
         private:
             C m_impl;

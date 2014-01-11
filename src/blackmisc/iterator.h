@@ -45,12 +45,6 @@ namespace BlackMisc
             ConstForwardIterator() {}
 
             /*!
-             * \brief Constructor.
-             * \param i
-             */
-            template <class I> ConstForwardIterator(I i) : m_pimpl(new Pimpl<I>(std::move(i))) {}
-
-            /*!
              * \brief Copy constructor.
              * \param other
              */
@@ -61,13 +55,6 @@ namespace BlackMisc
              * \param other
              */
             ConstForwardIterator(ConstForwardIterator &&other) : m_pimpl(other.m_pimpl.take()) {}
-
-            /*!
-             * \brief Assignment.
-             * \param i
-             * \return
-             */
-            template <class I> ConstForwardIterator &operator =(I i) { m_pimpl.reset(new Pimpl<I>(std::move(i))); return *this; }
 
             /*!
              * \brief Copy assignment.
@@ -82,6 +69,14 @@ namespace BlackMisc
              * \return
              */
             ConstForwardIterator &operator =(ConstForwardIterator &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+
+            /*!
+             * \brief Create a new iterator with a specific implementation type.
+             * \tparam C Becomes the iterator's implementation type.
+             * \param c Initial value for the iterator. The value is copied.
+             * \return
+             */
+            template <class I> static ConstForwardIterator fromImpl(I i) { return ConstForwardIterator(new Pimpl<I>(std::move(i))); }
 
             /*!
              * \brief Returns a reference to the object pointed to.
@@ -183,6 +178,8 @@ namespace BlackMisc
             typedef QScopedPointer<PimplBase> PimplPtr;
             PimplPtr m_pimpl;
 
+            explicit ConstForwardIterator(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()
+
             // using these methods to access m_pimpl.data() eases the cognitive burden of correctly forwarding const
             PimplBase *pimpl() { return m_pimpl.data(); }
             const PimplBase *pimpl() const { return m_pimpl.data(); }
@@ -212,12 +209,6 @@ namespace BlackMisc
             ConstBidirectionalIterator() {}
 
             /*!
-             * \brief Constructor.
-             * \param i
-             */
-            template <class I> ConstBidirectionalIterator(I i) : m_pimpl(new Pimpl<I>(std::move(i))) {}
-
-            /*!
              * \brief Copy constructor.
              * \param other
              */
@@ -228,13 +219,6 @@ namespace BlackMisc
              * \param other
              */
             ConstBidirectionalIterator(ConstBidirectionalIterator &&other) : m_pimpl(other.m_pimpl.take()) {}
-
-            /*!
-             * \brief Assignment.
-             * \param i
-             * \return
-             */
-            template <class I> ConstBidirectionalIterator &operator =(I i) { m_pimpl.reset(new Pimpl<I>(std::move(i))); return *this; }
 
             /*!
              * \brief Copy assignment.
@@ -249,6 +233,14 @@ namespace BlackMisc
              * \return
              */
             ConstBidirectionalIterator &operator =(ConstBidirectionalIterator &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+
+            /*!
+             * \brief Create a new iterator with a specific implementation type.
+             * \tparam C Becomes the iterator's implementation type.
+             * \param c Initial value for the iterator. The value is copied.
+             * \return
+             */
+            template <class I> static ConstBidirectionalIterator fromImpl(I i) { return ConstBidirectionalIterator(new Pimpl<I>(std::move(i))); }
 
             /*!
              * \brief Returns a reference to the object pointed to.
@@ -404,6 +396,8 @@ namespace BlackMisc
             typedef QScopedPointer<PimplBase> PimplPtr;
             PimplPtr m_pimpl;
 
+            explicit ConstBidirectionalIterator(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()
+
             // using these methods to access m_pimpl.data() eases the cognitive burden of correctly forwarding const
             PimplBase *pimpl() { return m_pimpl.data(); }
             const PimplBase *pimpl() const { return m_pimpl.data(); }
@@ -433,12 +427,6 @@ namespace BlackMisc
             BidirectionalIterator() {}
 
             /*!
-             * \brief Constructor.
-             * \param i
-             */
-            template <class I> BidirectionalIterator(I i) : m_pimpl(new Pimpl<I>(std::move(i))) {}
-
-            /*!
              * \brief Copy constructor.
              * \param other
              */
@@ -449,13 +437,6 @@ namespace BlackMisc
              * \param other
              */
             BidirectionalIterator(BidirectionalIterator &&other) : m_pimpl(other.m_pimpl.take()) {}
-
-            /*!
-             * \brief Assignment.
-             * \param i
-             * \return
-             */
-            template <class I> BidirectionalIterator &operator =(I i) { m_pimpl.reset(new Pimpl<I>(std::move(i))); return *this; }
 
             /*!
              * \brief Copy assignment.
@@ -470,6 +451,14 @@ namespace BlackMisc
              * \return
              */
             BidirectionalIterator &operator =(BidirectionalIterator &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+
+            /*!
+             * \brief Create a new iterator with a specific implementation type.
+             * \tparam C Becomes the iterator's implementation type.
+             * \param c Initial value for the iterator. The value is copied.
+             * \return
+             */
+            template <class I> static BidirectionalIterator fromImpl(I i) { return BidirectionalIterator(new Pimpl<I>(std::move(i))); }
 
             /*!
              * \brief Returns a reference to the object pointed to.
@@ -640,6 +629,8 @@ namespace BlackMisc
 
             typedef QScopedPointer<PimplBase> PimplPtr;
             PimplPtr m_pimpl;
+
+            explicit BidirectionalIterator(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()
 
             // using these methods to access m_pimpl.data() eases the cognitive burden of correctly forwarding const
             PimplBase *pimpl() { return m_pimpl.data(); }

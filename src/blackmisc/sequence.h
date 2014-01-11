@@ -474,12 +474,12 @@ namespace BlackMisc
             Pimpl(C &&c) : m_impl(std::move(c)) {}
             PimplBase *clone() const { return new Pimpl(*this); }
             PimplBase *cloneEmpty() const { return new Pimpl(C()); }
-            iterator begin() { return m_impl.begin(); }
-            const_iterator begin() const { return m_impl.cbegin(); }
-            const_iterator cbegin() const { return m_impl.cbegin(); }
-            iterator end() { return m_impl.end(); }
-            const_iterator end() const { return m_impl.cend(); }
-            const_iterator cend() const { return m_impl.cend(); }
+            iterator begin() { return iterator::fromImpl(m_impl.begin()); }
+            const_iterator begin() const { return const_iterator::fromImpl(m_impl.cbegin()); }
+            const_iterator cbegin() const { return const_iterator::fromImpl(m_impl.cbegin()); }
+            iterator end() { return iterator::fromImpl(m_impl.end()); }
+            const_iterator end() const { return const_iterator::fromImpl(m_impl.cend()); }
+            const_iterator cend() const { return const_iterator::fromImpl(m_impl.cend()); }
             reference operator [](size_type index) { return m_impl[index]; }
             const_reference operator [](size_type index) const { return m_impl[index]; }
             reference front() { return m_impl.front(); }
@@ -489,11 +489,11 @@ namespace BlackMisc
             size_type size() const { return m_impl.size(); }
             bool empty() const { return m_impl.empty(); }
             void clear() { m_impl.clear(); }
-            iterator insert(iterator pos, const T &value) { return m_impl.insert(*static_cast<const typename C::iterator*>(pos.getImpl()), value); }
+            iterator insert(iterator pos, const T &value) { return iterator::fromImpl(m_impl.insert(*static_cast<const typename C::iterator*>(pos.getImpl()), value)); }
             void push_back(const T &value) { m_impl.push_back(value); }
             void pop_back() { m_impl.pop_back(); }
-            iterator erase(iterator pos) { return m_impl.erase(*static_cast<const typename C::iterator*>(pos.getImpl())); }
-            iterator erase(iterator it1, iterator it2) { return m_impl.erase(*static_cast<const typename C::iterator*>(it1.getImpl(), it2.getImpl())); }
+            iterator erase(iterator pos) { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator*>(pos.getImpl()))); }
+            iterator erase(iterator it1, iterator it2) { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator*>(it1.getImpl()), *static_cast<const typename C::iterator*>(it2.getImpl()))); }
             bool operator ==(const PimplBase &other) const { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.push_back(*i); return m_impl == copy.m_impl; }
         private:
             C m_impl;
