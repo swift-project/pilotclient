@@ -154,7 +154,7 @@ namespace BlackMisc
 
         virtual void marshallToDbus(QDBusArgument &argument) const
         {
-            argument.beginArray();
+            argument.beginArray(qMetaTypeId<T>());
             std::for_each(derived().begin(), derived().end(), [ & ](const T &value) { argument << value; });
             argument.endArray();
         }
