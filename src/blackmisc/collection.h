@@ -51,13 +51,6 @@ namespace BlackMisc
         CCollection() : m_pimpl(new Pimpl<QSet<T>>(QSet<T>())) {}
 
         /*!
-         * \brief Constructor.
-         * \tparam C Becomes the collection's implementation type.
-         * \param c Initial value for the collection; typically empty, but could contain elements.
-         */
-        template <class C> CCollection(C c) : m_pimpl(new Pimpl<C>(std::move(c))) {}
-
-        /*!
          * \brief Copy constructor.
          * \param other
          */
@@ -68,13 +61,6 @@ namespace BlackMisc
          * \param other
          */
         CCollection(CCollection &&other) : m_pimpl(other.m_pimpl.take()) {}
-
-        /*!
-         * \brief Assignment.
-         * \tparam C Becomes the collection's new implementation type.
-         * \param c New value for the collection; typically empty, but could contain elements.
-         */
-        template <class C> CCollection &operator =(C c) { m_pimpl.reset(new Pimpl<C>(std::move(c))); return *this; }
 
         /*!
          * \brief Copy assignment.
@@ -91,10 +77,18 @@ namespace BlackMisc
         CCollection &operator =(CCollection && other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
         /*!
+         * \brief Create a new collection with a specific implementation type.
+         * \tparam C Becomes the collection's implementation type.
+         * \param c Initial value for the collection; default is empty, but it could contain elements if desired. The value is copied.
+         * \return
+         */
+        template <class C> static CCollection fromImpl(C c = C()) { return CCollection(new Pimpl<C>(std::move(c))); }
+
+        /*!
          * \brief Change the implementation type but keep all the same elements, by copying them into the new implementation.
          * \tparam C Becomes the collection's new implementation type.
          */
-        template <class C> void changeImpl(C = C()) { CCollection c = C(); for (auto i = cbegin(); i != cend(); ++i) c.insert(*i); *this = std::move(c); }
+        template <class C> void changeImpl(C = C()) { auto c = fromImpl(C()); for (auto i = cbegin(); i != cend(); ++i) c.insert(*i); *this = std::move(c); }
 
         /*!
          * \brief Like changeImpl, but uses the implementation type of another collection.
@@ -274,6 +268,8 @@ namespace BlackMisc
 
         typedef QScopedPointer<PimplBase> PimplPtr;
         PimplPtr m_pimpl;
+
+        CCollection(PimplBase *pimpl) : m_pimpl(pimpl) {} // private ctor used by fromImpl()
 
         // using these methods to access m_pimpl.data() eases the cognitive burden of correctly forwarding const
         PimplBase *pimpl() { return m_pimpl.data(); }

@@ -3,9 +3,9 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "testcontainers.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
-#include "testcontainers.h"
 #include <QList>
 #include <QString>
 #include <vector>
@@ -19,7 +19,7 @@ namespace BlackMiscTest
     {
         CCollection<int> c1;
         QVERIFY2(c1.empty(), "Uninitialized collection is empty");
-        CCollection<int> c2 = QList<int>();
+        auto c2 = CCollection<int>::fromImpl(QList<int>());
         QVERIFY2(c1 == c2, "Uninitialized and empty collections are equal");
         c1.changeImpl(std::vector<int>());
         QVERIFY2(c1 == c2, "Two empty collections are equal");
@@ -42,7 +42,7 @@ namespace BlackMiscTest
     {
         CSequence<int> s1;
         QVERIFY2(s1.empty(), "Uninitialized sequence is empty");
-        CSequence<int> s2 = QList<int>();
+        auto s2 = CSequence<int>::fromImpl(QList<int>());
         QVERIFY2(s1 == s2, "Uninitialized and empty sequence are equal");
         s1.changeImpl(std::vector<int>());
         QVERIFY2(s1 == s2, "Two empty sequences are equal");
