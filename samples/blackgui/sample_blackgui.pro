@@ -14,6 +14,8 @@ CONFIG  += c++11
 DEPENDPATH += . ../../src/blackmisc ../../src/blackcore ../../src/blackgui
 INCLUDEPATH += . ../../src
 
+DESTDIR = ../../bin
+
 LIBS    += -L../../lib -lblackcore -lblackmisc -lblackgui
 LIBS	+= -lvatlib
 
