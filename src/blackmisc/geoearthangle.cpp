@@ -79,9 +79,9 @@ namespace BlackMisc
             Q_ASSERT(qv.canConvert<LATorLON>() || qv.canConvert<CAngle>());
             Q_ASSERT(qv.isValid() && !qv.isNull());
             if (qv.canConvert<LATorLON>())
-                return this->toAngle().compare(qv.value<LATorLON>().toAngle());
+                return this->compare(qv.value<LATorLON>());
             else
-                return this->toAngle().compare(qv.value<CAngle>());
+                return this->compare(qv.value<CAngle>());
         }
 
         // see here for the reason of thess forward instantiations

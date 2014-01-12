@@ -176,18 +176,18 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief To angle
-             * \return
-             */
-            BlackMisc::PhysicalQuantities::CAngle toAngle() const
-            {
-                return BlackMisc::PhysicalQuantities::CAngle(static_cast<BlackMisc::PhysicalQuantities::CAngle>(*this));
-            }
-
-            /*!
              * Compare
              */
             int compare(const QVariant &qv) const;
+
+            /*!
+             * \todo this is a hack, to avoid hiding inherited names in CPhysicalQuantity
+             * (see Effective C++ item 33) CPhysicalQuantity::compare is the real culprit
+             */
+            int compare(const CEarthAngle &other) const
+            {
+                return static_cast<const CPhysicalQuantity<BlackMisc::PhysicalQuantities::CAngleUnit, BlackMisc::PhysicalQuantities::CAngle> *>(this)->compare(other);
+            }
 
             /*!
              * Register metadata
