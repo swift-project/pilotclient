@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CIntroWindow</class>
+ <widget class="QDialog" name="CIntroWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>239</width>
+    <height>260</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>BlackGUI intro screen</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../../src/blackgui/blackgui.qrc">
+    <normaloff>:/blackgui/icons/aircraftdeparture.png</normaloff>:/blackgui/icons/aircraftdeparture.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+        font-family: arial-rounded;
+        font: bold 10px;
+        color: yellow; /** font **/
+		background-color: black;
+}
+
+QPushButton {
+        background-color: rgba(255, 255, 0, 175);
+		color: black;
+        border-style: solid;
+        border-width:1px;
+        border-radius: 5px;
+        border-color: green;
+		margin: 3px;
+		padding: 3px;
+}
+
+QRadioButton {
+        background-color: transparent;
+}
+
+QGroupBox {
+	border: 2px solid yellow;
+	border-radius: 5px;
+    margin-top: 2ex; /* leave space at the top for the title */
+}
+
+
+ QGroupBox::title {
+     subcontrol-origin: margin;
+     subcontrol-position: top left; /* position at the top center */
+     padding: 0 0px;
+	margin: 0px;
+     background-color: black;
+ }
+
+#lbl_Icon {
+	max-height: 128;
+	max-width: 128;
+
+}</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="leftMargin">
+      <number>9</number>
+     </property>
+     <property name="topMargin">
+      <number>9</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>9</number>
+     </property>
+     <property name="spacing">
+      <number>9</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QGroupBox" name="gb_Window">
+       <property name="title">
+        <string>Window</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QRadioButton" name="rb_WindowNormal">
+          <property name="text">
+           <string>Normal</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rb_WindowFrameless">
+          <property name="text">
+           <string>Frameless</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QGroupBox" name="gb_Core">
+       <property name="title">
+        <string>Core</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QRadioButton" name="rb_CoreInGuiProcess">
+          <property name="text">
+           <string>Included in GUI
+process</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rb_CoreExternal">
+          <property name="text">
+           <string>External (DBus)</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rb_CoreExternalVoiceLocal">
+          <property name="text">
+           <string>External,
+voice included</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="1" rowspan="2">
+      <widget class="QFrame" name="fr_Info">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QVBoxLayout" name="vl_FrameInfo">
+        <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="pb_ModelDb">
+          <property name="text">
+           <string>Model DB</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_WebSite">
+          <property name="text">
+           <string>Web site</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="bb_OkCancel">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../../src/blackgui/blackgui.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>bb_OkCancel</sender>
+   <signal>accepted()</signal>
+   <receiver>CIntroWindow</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>230</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bb_OkCancel</sender>
+   <signal>rejected()</signal>
+   <receiver>CIntroWindow</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>310</x>
+     <y>230</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_ModelDb</sender>
+   <signal>clicked()</signal>
+   <receiver>CIntroWindow</receiver>
+   <slot>buttonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>217</x>
+     <y>34</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>37</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_WebSite</sender>
+   <signal>clicked()</signal>
+   <receiver>CIntroWindow</receiver>
+   <slot>buttonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>262</x>
+     <y>58</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>322</x>
+     <y>73</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>buttonClicked()</slot>
+ </slots>
+</ui>
