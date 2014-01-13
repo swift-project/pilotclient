@@ -6,11 +6,11 @@
 #ifndef BLACKCORE_CONTEXTSETTINGS_H
 #define BLACKCORE_CONTEXTSETTINGS_H
 
+#include "blackcore/coreruntime.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_settings_interface.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackcore/coreruntime.h"
 #include <QObject>
 
 #define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "blackcore.contextsettings"
