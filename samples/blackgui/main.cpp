@@ -1,5 +1,8 @@
+#include "introwindow.h"
 #include "mainwindow.h"
+#include "guimodeenums.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include <QtGlobal>
 #include <QApplication>
 #include <QMessageBox>
 #include <QPushButton>
@@ -13,6 +16,7 @@
 int main(int argc, char *argv[])
 {
     // register
+    Q_INIT_RESOURCE(blackgui);
     BlackMisc::initResources();
     BlackMisc::registerMetadata();
     // BlackMisc::displayAllUserMetatypesTypes();
@@ -26,29 +30,27 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.installTranslator(&translator);
 
-    // window
-    MainWindow w;
-    bool withDBus = false;
+    // modes
+    GuiModes::WindowMode windowMode;
+    GuiModes::CoreMode coreMode;
 
     // Dialog to decide external or internal core
-    QMessageBox msgBox;
-    msgBox.setText("How to start the GUI");
-    msgBox.setIcon(QMessageBox::Question);
-    QPushButton *buttonNoDbus = msgBox.addButton("With core included", QMessageBox::AcceptRole);
-    QPushButton *buttonDBus = msgBox.addButton("External core via DBus", QMessageBox::AcceptRole);
-    QPushButton *buttonClose = msgBox.addButton("Close", QMessageBox::RejectRole);
-    msgBox.setDefaultButton(buttonNoDbus);
-    msgBox.exec();
-    if (msgBox.clickedButton() == buttonDBus)
-        withDBus = true;
-    else if (msgBox.clickedButton() == buttonNoDbus)
-        withDBus = false;
-    else if (msgBox.clickedButton() == buttonClose)
-        exit(4);
-    msgBox.close();
+    CIntroWindow intro;
+    if (intro.exec() == QDialog::Rejected)
+    {
+        return 0;
+    }
+    else
+    {
+        coreMode = intro.getCoreMode();
+        windowMode = intro.getWindowMode();
+    }
+    intro.close();
 
     // show window
+    MainWindow w(windowMode);
     w.show();
-    w.init(withDBus); // object is complete by now
-    return a.exec();
+    w.init(coreMode); // object is complete by now
+    int r = a.exec();
+    return r;
 }
