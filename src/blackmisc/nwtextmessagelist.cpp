@@ -21,9 +21,9 @@ namespace BlackMisc
         /*
          * Single private message constructor
          */
-        CTextMessageList::CTextMessageList(const QString &message, const CCallsign &toCallsign)
+        CTextMessageList::CTextMessageList(const QString &message, const CCallsign &recipientCallsign)
         {
-            CTextMessage pm(message, toCallsign);
+            CTextMessage pm(message, recipientCallsign);
             this->push_back(pm);
         }
 
@@ -119,14 +119,6 @@ namespace BlackMisc
         }
 
         /*
-         * Find by callsign
-         */
-        CTextMessageList CTextMessageList::findByRecipient(const CCallsign &callsign) const
-        {
-            return CTextMessageList(this->findBy(&CTextMessage::getRecipient, callsign));
-        }
-
-        /*
          * Find by frequency
          */
         CTextMessageList CTextMessageList::findByFrequency(const CFrequency &frequency) const
@@ -137,7 +129,7 @@ namespace BlackMisc
         /*
          * Toggle all senders / receivers
          */
-        void CTextMessageList::toggleSenderReceivers()
+        void CTextMessageList::toggleSenderRecipients()
         {
             if (this->isEmpty()) return;
             for (int i = 0; i < this->size(); i++)

@@ -35,17 +35,17 @@ namespace BlackMisc
             /*!
              * \brief Constructor, single private message
              * \param message
-             * \param recipient
+             * \param recipientCallsign
              */
-            CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &recipient);
+            CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &recipientCallsign);
 
             /*!
              * \brief Constructor, single private message
              * \param message
-             * \param sender
-             * \param recipient
+             * \param senderCallsign
+             * \param recipientCallsign
              */
-            CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &sender, const BlackMisc::Aviation::CCallsign &recipient);
+            CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign);
 
             /*!
              * \brief Constructor, single radio message
@@ -53,7 +53,7 @@ namespace BlackMisc
              * \param frequency
              * \param sender
              */
-            CTextMessageList(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &sender = BlackMisc::Aviation::CCallsign());
+            CTextMessageList(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &senderCallsign = BlackMisc::Aviation::CCallsign());
 
             /*!
              * \brief Constructor, single message
@@ -109,13 +109,6 @@ namespace BlackMisc
             bool containsRadioMessages() const;
 
             /*!
-             * \brief Find 0..n stations by callsign
-             * \param callsign
-             * \return
-             */
-            CTextMessageList findByRecipient(const BlackMisc::Aviation::CCallsign &callsign) const;
-
-            /*!
              * \brief Find by frequency
              * \param frequency
              * \return
@@ -125,7 +118,7 @@ namespace BlackMisc
             /*!
              * \brief Toggle all sender receivers
              */
-            void toggleSenderReceivers();
+            void toggleSenderRecipients();
 
             /*!
              * \brief Register metadata

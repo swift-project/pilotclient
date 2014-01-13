@@ -27,16 +27,16 @@ namespace BlackMisc
             /*!
              * Default constructor.
              */
-            CTextMessage() : m_frequency(-1.0, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()) {}
+            CTextMessage() : m_received(QDateTime::currentDateTimeUtc()), m_frequency(-1.0, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()) {}
 
             /*!
              * Constructor, radio message
              * \param message
              * \param frequency
-             * \param sender
+             * \param senderCallsign
              */
-            CTextMessage(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &sender = BlackMisc::Aviation::CCallsign())
-                : m_message(message), m_sender(sender), m_frequency(frequency)
+            CTextMessage(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &senderCallsign = BlackMisc::Aviation::CCallsign())
+                : m_message(message), m_received(QDateTime::currentDateTimeUtc()), m_senderCallsign(senderCallsign), m_frequency(frequency)
             {
                 this->m_frequency.switchUnit(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
@@ -44,11 +44,11 @@ namespace BlackMisc
             /*!
              * Constructor, private message
              * \param message
-             * \param sender
-             * \param recipient
+             * \param senderCallsign
+             * \param recipientCallsign
              */
-            CTextMessage(const QString &message, const BlackMisc::Aviation::CCallsign &sender, const BlackMisc::Aviation::CCallsign &recipient = BlackMisc::Aviation::CCallsign())
-                : m_message(message), m_sender(sender), m_recipient(recipient), m_frequency(-1.0, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()) {}
+            CTextMessage(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign = BlackMisc::Aviation::CCallsign())
+                : m_message(message), m_received(QDateTime::currentDateTimeUtc()), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(-1.0, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()) {}
 
             /*!
              * \brief QVariant, required for DBus QVariant lists
@@ -63,25 +63,37 @@ namespace BlackMisc
              * Get callsign (from)
              * \return
              */
-            const BlackMisc::Aviation::CCallsign &getSender() const { return m_sender; }
+            const BlackMisc::Aviation::CCallsign &getSenderCallsign() const
+            {
+                return m_senderCallsign;
+            }
 
             /*!
              * Set callsign (from)
              * \param
              */
-            void setSender(const BlackMisc::Aviation::CCallsign &sender) { m_sender = sender; }
+            void setSenderCallsign(const BlackMisc::Aviation::CCallsign &callsign)
+            {
+                m_senderCallsign = callsign;
+            }
 
             /*!
              * Get callsign (to)
              * \return
              */
-            const BlackMisc::Aviation::CCallsign &getRecipient() const { return m_recipient; }
+            const BlackMisc::Aviation::CCallsign &getRecipientCallsign() const
+            {
+                return m_recipientCallsign;
+            }
 
             /*!
              * Set callsign (to)
              * \param
              */
-            void setRecipient(const BlackMisc::Aviation::CCallsign &recipient) { m_recipient = recipient; }
+            void setRecipientCallsign(const BlackMisc::Aviation::CCallsign &callsign)
+            {
+                m_recipientCallsign = callsign;
+            }
 
             /*
              * Send to frequency?
@@ -97,7 +109,7 @@ namespace BlackMisc
             bool isSendToUnicom() const;
 
             /*!
-             * \brief Valid recipient?
+             * \brief Valid receviver?
              * \return
              */
             bool hasValidRecipient() const;
@@ -106,31 +118,46 @@ namespace BlackMisc
              * Get message
              * \return
              */
-            const QString &getMessage() const { return m_message; }
+            const QString &getMessage() const
+            {
+                return m_message;
+            }
 
             /*!
              * Empty message
              * \return
              */
-            bool isEmpty() const { return m_message.isEmpty(); }
+            bool isEmpty() const
+            {
+                return m_message.isEmpty();
+            }
 
             /*!
              * Set message
              * \param
              */
-            void setMessage(const QString &message) { m_message = message.trimmed(); }
+            void setMessage(const QString &message)
+            {
+                m_message = message.trimmed();
+            }
 
             /*!
              * Get frequency
              * \return
              */
-            const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }
+            const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const
+            {
+                return m_frequency;
+            }
 
             /*!
              * Set frequency
              * \param
              */
-            void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) { m_frequency = frequency; }
+            void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
+            {
+                m_frequency = frequency;
+            }
 
             /*!
              * \brief Is private message?
@@ -145,6 +172,22 @@ namespace BlackMisc
             bool isRadioMessage() const;
 
             /*!
+             * \brief Initial message of server?
+             * \return
+             */
+            bool isServerMessage() const;
+
+            /*!
+             * \brief Received (hh mm ss)
+             * \return
+             */
+            QString receivedTime() const
+            {
+                QString rt = this->m_received.toString("hh::mm::ss");
+                return rt;
+            }
+
+            /*!
              * Whole message as formatted string.
              * Used to display message in a console window.
              * \param withSender
@@ -152,7 +195,7 @@ namespace BlackMisc
              * \param separator
              * \return
              */
-            QString asString(bool withSender, bool withRecipient, QString separator = ", ") const;
+            QString asString(bool withSender, bool withRecipient, const QString separator = ", ") const;
 
             /*!
              * Toggle sender receiver, can be used to ping my own message
@@ -205,8 +248,9 @@ namespace BlackMisc
 
         private:
             QString m_message;
-            BlackMisc::Aviation::CCallsign m_sender;
-            BlackMisc::Aviation::CCallsign m_recipient;
+            QDateTime m_received;
+            BlackMisc::Aviation::CCallsign m_senderCallsign;
+            BlackMisc::Aviation::CCallsign m_recipientCallsign;
             BlackMisc::PhysicalQuantities::CFrequency m_frequency;
         };
     } // namespace

@@ -2,6 +2,9 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqconstants.h"
 #include "blackmisc/aviocomsystem.h"
+#include "blackmisc/avcallsign.h"
+
+using namespace BlackMisc::Aviation;
 
 namespace BlackMisc
 {
@@ -15,8 +18,8 @@ namespace BlackMisc
             QString s(this->m_message);
             if (this->isPrivateMessage())
             {
-                s.append(" ").append(this->m_sender.toQString(i18n));
-                s.append(" ").append(this->m_recipient.toQString(i18n));
+                s.append(" ").append(this->m_senderCallsign.toQString(i18n));
+                s.append(" ").append(this->m_recipientCallsign.toQString(i18n));
             }
             else
             {
@@ -30,10 +33,11 @@ namespace BlackMisc
          */
         void CTextMessage::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_sender;
-            argument << this->m_recipient;
+            argument << this->m_senderCallsign;
+            argument << this->m_recipientCallsign;
             argument << this->m_message;
             argument << this->m_frequency;
+            argument << this->m_received;
         }
 
         /*
@@ -41,10 +45,11 @@ namespace BlackMisc
          */
         void CTextMessage::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_sender;
-            argument >> this->m_recipient;
+            argument >> this->m_senderCallsign;
+            argument >> this->m_recipientCallsign;
             argument >> this->m_message;
             argument >> this->m_frequency;
+            argument >> this->m_received;
         }
 
         /*
@@ -52,7 +57,7 @@ namespace BlackMisc
          */
         bool CTextMessage::isPrivateMessage() const
         {
-            return !this->m_sender.isEmpty() && !this->m_recipient.isEmpty();
+            return !this->m_senderCallsign.isEmpty() && !this->m_recipientCallsign.isEmpty();
         }
 
         /*
@@ -77,7 +82,7 @@ namespace BlackMisc
          */
         bool CTextMessage::hasValidRecipient() const
         {
-            if (!this->m_recipient.isEmpty()) return true;
+            if (!this->m_recipientCallsign.isEmpty()) return true;
             return BlackMisc::Aviation::CComSystem::isValidCivilAviationFrequency(this->m_frequency);
         }
 
@@ -90,25 +95,36 @@ namespace BlackMisc
         }
 
         /*
+         * Initial server message?
+         */
+        bool CTextMessage::isServerMessage() const
+        {
+            if (!this->isPrivateMessage()) return false;
+            CCallsign cs = this->getSenderCallsign();
+            return (cs.asString().startsWith("SERVER", Qt::CaseInsensitive));
+        }
+
+        /*
          * Formatted string
          */
         QString CTextMessage::asString(bool withSender, bool withRecipient, const QString separator) const
         {
-            QString s;
+            QString s = this->receivedTime();
             if (withSender)
             {
-                if (!this->m_sender.isEmpty())
+                if (!this->m_senderCallsign.isEmpty())
                 {
-                    s.append(this->m_sender.getStringAsSet());
+                    if (!s.isEmpty()) s.append(separator);
+                    s.append(this->m_senderCallsign.getStringAsSet());
                 }
             }
 
             if (withRecipient)
             {
-                if (!this->m_recipient.isEmpty())
+                if (!this->m_recipientCallsign.isEmpty())
                 {
                     if (!s.isEmpty()) s.append(separator);
-                    s.append(this->m_recipient.getStringAsSet());
+                    s.append(this->m_recipientCallsign.getStringAsSet());
                 }
                 else
                 {
@@ -117,8 +133,9 @@ namespace BlackMisc
                         if (!s.isEmpty()) s.append(separator);
                         s.append(this->m_frequency.valueRoundedWithUnit(3, true));
                     }
+
                 }
-            }
+            } // to
 
             if (this->m_message.isEmpty()) return s;
             if (!s.isEmpty()) s.append(separator);
@@ -131,7 +148,9 @@ namespace BlackMisc
          */
         void CTextMessage::toggleSenderRecipient()
         {
-            qSwap(this->m_sender, this->m_recipient);
+            BlackMisc::Aviation::CCallsign csOldFrom(this->getSenderCallsign());
+            this->setSenderCallsign(this->getRecipientCallsign());
+            this->setRecipientCallsign(csOldFrom);
         }
 
         /*
@@ -157,10 +176,11 @@ namespace BlackMisc
         uint CTextMessage::getValueHash() const
         {
             QList<uint> hashs;
-            hashs << qHash(this->m_sender);
-            hashs << qHash(this->m_recipient);
-            hashs << qHash(this->m_frequency);
+            hashs << qHash(this->m_senderCallsign.getValueHash());
+            hashs << qHash(this->m_recipientCallsign.getValueHash());
+            hashs << qHash(this->m_frequency.getValueHash());
             hashs << qHash(this->m_message);
+            hashs << qHash(this->m_received);
             return BlackMisc::calculateHash(hashs, "CTextMessage");
         }
 
