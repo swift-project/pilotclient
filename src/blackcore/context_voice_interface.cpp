@@ -111,6 +111,14 @@ namespace BlackCore
     }
 
     /*
+     * Muted?
+     */
+    bool IContextVoice::isMuted() const
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isMuted"));
+    }
+
+    /*
      * Logging
      */
     void IContextVoice::log(const QString &method, const QString &m1, const QString &m2, const QString &m3, const QString &m4) const

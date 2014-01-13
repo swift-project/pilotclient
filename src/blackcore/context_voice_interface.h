@@ -163,6 +163,12 @@ namespace BlackCore
          */
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
+        /*!
+         * \brief Is muted?
+         * \return
+         */
+        virtual bool isMuted() const;
+
     };
 }
 
