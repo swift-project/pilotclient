@@ -1,10 +1,19 @@
-#ifndef BLACKMISC_MAINWINDOW_H
-#define BLACKMISC_MAINWINDOW_H
+/* Copyright (C) 2013 VATSIM Community / authors
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#ifndef SAMPLE_MAINWINDOW_H
+#define SAMPLE_MAINWINDOW_H
 
 // clash with struct interface in objbase.h used to happen
 #pragma push_macro("interface")
 #undef interface
 
+#include <QMainWindow>
+#include <QTextEdit>
+#include <QItemSelection>
+#include <QTimer>
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/serverlistmodel.h"
 #include "blackgui/aircraftlistmodel.h"
@@ -15,10 +24,8 @@
 #include "blackcore/context_settings_interface.h"
 #include "blackcore/context_application_interface.h"
 #include "blackcore/coreruntime.h"
-#include <QMainWindow>
-#include <QTextEdit>
-#include <QItemSelection>
-#include <QTimer>
+#include "infowindow.h"
+#include "guimodeenums.h"
 
 namespace Ui
 {
@@ -35,9 +42,10 @@ class MainWindow : public QMainWindow
 public:
     /*!
      * \brief Constructor
+     * \param windowMode
      * \param parent
      */
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(GuiModes::WindowMode windowMode, QWidget *parent = nullptr);
 
     /*!
      * Destructor
@@ -46,19 +54,54 @@ public:
 
     /*!
      * \brief Init data
-     * \param withDBus
+     * \param coreMode
      */
-    void init(bool withDBus);
+    void init(GuiModes::CoreMode coreMode);
 
     /*!
      * \brief Graceful shutdown
      */
     void gracefulShutdown();
 
+protected:
+    /*!
+     * \brief Close event, e.g. when window is closed
+     * \param event
+     */
+    void closeEvent(QCloseEvent *event);
+
+    /*!
+     * \brief Mouse moving, required for frameless window
+     * \param event
+     */
+    void mouseMoveEvent(QMouseEvent *event);
+
+    /*!
+     * \brief Mouse press, required for frameless window
+     * \param event
+     */
+    void mousePressEvent(QMouseEvent *event);
+
+    /*!
+     * \brief Main page indexes
+     */
+    enum MainPageIndex
+    {
+        MainPageStatus = 0,
+        MainPageAtc = 1,
+        MainPageAircrafts = 2,
+        MainPageCockpit = 3,
+        MainPageTextMessages = 4,
+        MainPageFlightplan = 5,
+        MainPageSettings = 6
+    };
+
 private:
     Ui::MainWindow *ui;
+    CInfoWindow *m_infoWindow;
     bool m_init;
-    bool m_withDBus;
+    GuiModes::WindowMode m_windowMode;
+    GuiModes::CoreMode m_coreMode;
     bool m_coreAvailable;
     bool m_contextNetworkAvailable;
     bool m_contextVoiceAvailable;
@@ -75,10 +118,18 @@ private:
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
     BlackMisc::Voice::CVoiceRoom m_voiceRoomCom1;
     BlackMisc::Voice::CVoiceRoom m_voiceRoomCom2;
-    QTimer *m_timerUpdateAtcStationsOnline; /*!< update stations */
-    QTimer *m_timerUpdateAircraftsInRange; /*!< update aircrafts */
+    QTimer *m_timerUpdateAtcStationsOnline; /*!< timer for update of stations */
+    QTimer *m_timerUpdateAircraftsInRange; /*!< timer for update of aircrafts */
     QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
     QTimer *m_timerContextWatchdog; /*!< core available? */
+    QPixmap m_resPixmapConnectionConnected;
+    QPixmap m_resPixmapConnectionDisconnected;
+    QPixmap m_resPixmapConnectionConnecting;
+    QPixmap m_resPixmapVoiceHigh;
+    QPixmap m_resPixmapVoiceLow;
+    QPixmap m_resPixmapVoiceMuted;
+    QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
+    QMenu *m_contextMenuAudio; /*! Audio context menu */
 
     /*!
      * \brief GUI status update
@@ -101,6 +152,11 @@ private:
      * \brief 1st data reads
      */
     void initialDataReads();
+
+    /*!
+     * \brief Init GUI signals
+     */
+    void initGuiSignals();
 
     /*!
      * \brief Context network availability check, otherwise status message
@@ -137,7 +193,7 @@ private:
      * \param name
      * \return
      */
-    QWidget *findTextMessageTabByName(const QString &name);
+    QWidget *findTextMessageTabByName(const QString &name) const;
 
     /*!
      * \brief Private channel text message
@@ -147,7 +203,8 @@ private:
     void addPrivateChannelTextMessage(const BlackMisc::Network::CTextMessage &textMessage, bool sending = false);
 
     /*!
-     * \brief stub for sending a text message (eihter radio or private message)
+     * Stub for sending a text message (eihter radio or private message).
+     * Sets sender / receiver depending on frequency / channel situation.
      * \return
      */
     BlackMisc::Network::CTextMessage getTextMessageStubForChannel();
@@ -170,6 +227,30 @@ private:
      * \param altitude
      */
     void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude);
+
+    /*!
+     * \brief Display the overlay window
+     */
+    void displayOverlayInfo(const QString &message = "");
+
+    /*!
+     * \brief Is given main page selected?
+     * \param mainPage
+     * \return
+     */
+    bool isMainPageSelected(MainPageIndex mainPage) const;
+
+    /*!
+     * \brief For this text message's receiver, is the current tab selected
+     * \param textMessage
+     * \return
+     */
+    bool isCorrespondingTextMessageTabSelected(BlackMisc::Network::CTextMessage textMessage) const;
+
+    /*!
+     * \brief Init the context menus
+     */
+    void initContextMenus();
 
 private slots:
 
@@ -218,11 +299,11 @@ private slots:
     void connectionStatusChanged(uint from, uint to);
 
     /*!
-     * \brief Text messages received
+     * \brief Append text messages (received, to be sent) to GUI
      * \param messages
      * \param sending
      */
-    void textMessageReceived(const BlackMisc::Network::CTextMessageList &messages, bool sending = false);
+    void appendTextMessagesToGui(const BlackMisc::Network::CTextMessageList &messages, bool sending = false);
 
     /*!
      * \brief Reload settings
@@ -240,8 +321,15 @@ private slots:
 
     /*!
      * \brief Set the main page
+     * \param start Startup phase
      */
     void setMainPage(bool start = false);
+
+    /*!
+     * \brief setMainPage
+     * \param mainPage
+     */
+    void setMainPage(MainPageIndex mainPage);
 
     /*!
      * \brief Connect to network
@@ -285,7 +373,7 @@ private slots:
     /*!
      * \brief Update timer
      */
-    void updateTimer();
+    void timerBasedUpdates();
 
     /*!
      * \brief ATC station, tab changed, reload data
@@ -337,9 +425,25 @@ private slots:
     void resetTransponderModerToCharly();
 
     /*!
-     * \brief Override voice room
+     * \brief Override voice room (allows to set an arbitrary voice room for testing purposes)
      */
     void voiceRoomOverride();
+
+    /*!
+     * \brief Audio volume handling and mute
+     */
+    void audioVolumes();
+
+    /*!
+     * \brief changeOpacity
+     * \param opacity 0-100
+     */
+    void changeWindowOpacity(int opacity = -1);
+
+    /*!
+     * \brief Context menu for audio
+     */
+    void audioIconContextMenu(const QPoint &position);
 
 };
 

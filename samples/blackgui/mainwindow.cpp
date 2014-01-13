@@ -3,6 +3,7 @@
 #include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
+#include <QMouseEvent>
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -17,9 +18,11 @@ using namespace BlackMisc::Voice;
 /*
  * Constructor
  */
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow),
-    m_init(false), m_withDBus(true),
+MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
+    QMainWindow(parent, windowMode == GuiModes::WindowFrameless ? (Qt::Window | Qt::FramelessWindowHint) : Qt::Tool),
+    ui(new Ui::MainWindow),
+    m_infoWindow(nullptr),
+    m_windowMode(windowMode), m_init(false), m_coreMode(GuiModes::CoreExternal),
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextVoiceAvailable(false),
     m_dBusConnection("dummy"), m_coreRuntime(nullptr),
     m_atcListOnline(nullptr), m_atcListBooked(nullptr),
@@ -29,8 +32,16 @@ MainWindow::MainWindow(QWidget *parent) :
     m_contextSettings(nullptr),
     m_ownAircraft(), m_voiceRoomCom1(), m_voiceRoomCom2(),
     m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr),
-    m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr)
+    m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
+    m_contextMenuAudio(nullptr)
 {
+    if (windowMode == GuiModes::WindowFrameless)
+    {
+        // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
+        this->setAttribute(Qt::WA_NoSystemBackground, true);
+        this->setAttribute(Qt::WA_TranslucentBackground, true);
+        // this->setAttribute(Qt::WA_PaintOnScreen);
+    }
     ui->setupUi(this);
 }
 
@@ -85,6 +96,39 @@ void MainWindow::gracefulShutdown()
 }
 
 /*
+ * Close event, window closes
+ */
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    this->gracefulShutdown();
+    QMainWindow::closeEvent(event);
+    QApplication::exit();
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    // this->ui->fr_PseudoWindowBar->geometry().contains(event->pos())
+    if (this->m_windowMode == GuiModes::WindowFrameless && event->buttons() & Qt::LeftButton)
+    {
+        move(event->globalPos() - this->m_dragPosition);
+        event->accept();
+        return;
+    }
+    QWidget::mouseMoveEvent(event);
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (this->m_windowMode == GuiModes::WindowFrameless && event->button() == Qt::LeftButton)
+    {
+        this->m_dragPosition = event->globalPos() - this->frameGeometry().topLeft();
+        event->accept();
+        return;
+    }
+    QWidget::mousePressEvent(event);
+}
+
+/*
  * Select correct main page
  */
 void MainWindow::setMainPage(bool start)
@@ -97,19 +141,35 @@ void MainWindow::setMainPage(bool start)
 
     QObject *sender = QObject::sender();
     if (sender == this->ui->pb_MainConnect || sender == this->ui->pb_MainStatus)
-        this->ui->sw_MainMiddle->setCurrentIndex(0);
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageStatus);
     else if (sender == this->ui->pb_MainAtc)
-        this->ui->sw_MainMiddle->setCurrentIndex(1);
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageAtc);
     else if (sender == this->ui->pb_MainAircrafts)
-        this->ui->sw_MainMiddle->setCurrentIndex(2);
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageAircrafts);
     else if (sender == this->ui->pb_MainCockpit)
-        this->ui->sw_MainMiddle->setCurrentIndex(3);
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageCockpit);
     else if (sender == this->ui->pb_MainTextMessages)
-        this->ui->sw_MainMiddle->setCurrentIndex(4);
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageTextMessages);
     else if (sender == this->ui->pb_MainFlightplan)
-        this->ui->sw_MainMiddle->setCurrentIndex(5);
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageFlightplan);
     else if (sender == this->ui->pb_MainSettings)
-        this->ui->sw_MainMiddle->setCurrentIndex(6);
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageSettings);
+}
+
+/*
+ * Set main page
+ */
+void MainWindow::setMainPage(MainWindow::MainPageIndex mainPage)
+{
+    this->ui->sw_MainMiddle->setCurrentIndex(mainPage);
+}
+
+/*
+ * Given main page selected?
+ */
+bool MainWindow::isMainPageSelected(MainWindow::MainPageIndex mainPage) const
+{
+    return this->ui->sw_MainMiddle->currentIndex() == static_cast<int>(mainPage);
 }
 
 /*
@@ -119,6 +179,8 @@ void MainWindow::toggleNetworkConnection()
 {
     CStatusMessageList msgs;
     if (!this->isContextNetworkAvailableCheck()) return;
+
+    this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(this->m_resPixmapConnectionConnecting);
     if (!this->m_contextNetwork->isConnected())
     {
         QString cs = this->ui->le_SettingsAircraftCallsign->text();
@@ -133,8 +195,8 @@ void MainWindow::toggleNetworkConnection()
     }
     else
     {
+        if (this->m_contextVoiceAvailable) this->m_contextVoice->leaveAllVoiceRooms();
         msgs = this->m_contextNetwork->disconnectFromNetwork();
-        this->m_contextVoice->leaveAllVoiceRooms();
     }
     if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
 }
@@ -181,39 +243,6 @@ void MainWindow::displayStatusMessages(const CStatusMessageList &messages)
 }
 
 /*
- * Menu clicked
- */
-void MainWindow::menuClicked()
-{
-    QObject *sender = QObject::sender();
-    CStatusMessageList msgs;
-
-    if (sender == this->ui->menu_TestLocationsEDRY)
-    {
-        this->setTestPosition("N 049° 18' 17", "E 008° 27' 05", CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-    }
-    else if (sender == this->ui->menu_TestLocationsEDNX)
-    {
-        this->setTestPosition("N 048° 14′ 22", "E 011° 33′ 41", CAltitude(486, CAltitude::MeanSeaLevel, CLengthUnit::m()));
-    }
-    else if (sender == this->ui->menu_TestLocationsEDDM)
-    {
-        this->setTestPosition("N 048° 21′ 14", "E 011° 47′ 10", CAltitude(448, CAltitude::MeanSeaLevel, CLengthUnit::m()));
-    }
-    else if (sender == this->ui->menu_TestLocationsEDDF)
-    {
-        this->setTestPosition("N 50° 2′ 0", "E 8° 34′ 14", CAltitude(100, CAltitude::MeanSeaLevel, CLengthUnit::m()));
-    }
-    else if (sender == this->ui->menu_ReloadSettings)
-    {
-        this->reloadSettings();
-        msgs.push_back(CStatusMessage::getInfoMessage("Settings reloaded"));
-    }
-
-    if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
-}
-
-/*
 * Connection terminated
 */
 void MainWindow::connectionTerminated()
@@ -227,12 +256,12 @@ void MainWindow::connectionTerminated()
 void MainWindow::connectionStatusChanged(uint /** from **/, uint to)
 {
     // CContextNetwork::ConnectionStatus statusFrom = static_cast<CContextNetwork::ConnectionStatus>(from);
-    CContextNetwork::ConnectionStatus statusTo = static_cast<CContextNetwork::ConnectionStatus>(to);
+    INetwork::ConnectionStatus statusTo = static_cast<INetwork::ConnectionStatus>(to);
 
     // always
     this->updateGuiStatusInformation();
 
-    if (statusTo == CContextNetwork::ConnectionStatusConnected)
+    if (statusTo == INetwork::Connected)
     {
         QTimer::singleShot(5 * 1000, this, SLOT(reloadAircraftsInRange()));
         QTimer::singleShot(5 * 1000, this, SLOT(reloadAtcStationsOnline()));
@@ -242,19 +271,19 @@ void MainWindow::connectionStatusChanged(uint /** from **/, uint to)
 /*
 * Timer event
 */
-void MainWindow::updateTimer()
+void MainWindow::timerBasedUpdates()
 {
     QObject *sender = QObject::sender();
     if (sender == this->m_timerUpdateAtcStationsOnline)
     {
-        int t = this->ui->hs_AtcStationsOnline->value() * 1000;
+        int t = this->ui->hs_SettingsGuiAtcRefreshTime->value() * 1000;
         this->m_timerUpdateAtcStationsOnline->start(t);
         if (ui->tv_AtcStationsOnline->isVisible())
             this->reloadAtcStationsOnline();
     }
     if (sender == this->m_timerUpdateAircraftsInRange)
     {
-        int t = this->ui->hs_AtcStationsOnline->value() * 1000;
+        int t = this->ui->hs_SettingsGuiAircraftRefreshTime->value() * 1000;
         this->m_timerUpdateAircraftsInRange->start(t);
         if (ui->tv_AircraftsInRange->isVisible())
             this->reloadAircraftsInRange();
@@ -312,28 +341,78 @@ void MainWindow::updateGuiStatusInformation()
         network = this->m_contextNetwork->usingLocalObjects() ? "local" : now;
     }
 
+    // handle voice, mute
     QString voice("unavailable");
     if (this->m_contextVoiceAvailable)
     {
         voice = this->m_contextVoice->usingLocalObjects() ? "local" : now;
+        this->ui->pb_SoundMute->setEnabled(true);
+    }
+    else
+    {
+        // voice not available
+        this->ui->pb_SoundMute->setEnabled(false);
     }
 
+    // update status fields
     this->ui->le_StatusNetworkContext->setText(network);
     this->ui->le_StatusVoiceContext->setText(voice);
-    this->ui->cb_StatusWithDBus->setCheckState(this->m_withDBus ? Qt::Checked : Qt::Unchecked);
+    this->ui->cb_StatusWithDBus->setCheckState(this->m_coreMode ? Qt::Checked : Qt::Unchecked);
 
     // Connected button
     if (this->m_contextNetworkAvailable && this->m_contextNetwork->isConnected())
     {
+        if (this->ui->lbl_StatusNetworkConnectedIcon->toolTip().startsWith("dis", Qt::CaseInsensitive))
+            this->ui->lbl_StatusNetworkConnectedIcon->setToolTip(now);
         this->ui->pb_MainConnect->setText("Disconnect");
         this->ui->pb_MainConnect->setStyleSheet("background-color: green");
-        if (!this->ui->le_StatusNetworkConnected->text().startsWith("2"))
-            this->ui->le_StatusNetworkConnected->setText(now);
+        this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(this->m_resPixmapConnectionConnected);
     }
     else
     {
+        this->ui->lbl_StatusNetworkConnectedIcon->setToolTip("disconnected");
         this->ui->pb_MainConnect->setText("Connect");
         this->ui->pb_MainConnect->setStyleSheet("background-color: ");
-        this->ui->le_StatusNetworkConnected->setText("Disconnected");
+        this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(this->m_resPixmapConnectionDisconnected);
+    }
+}
+
+/*
+ * Opacity 0-100
+ */
+void MainWindow::changeWindowOpacity(int opacity)
+{
+    if (opacity < 0)
+    {
+        QObject *sender = QObject::sender();
+        if (sender == this->ui->pb_MainKeypadOpacity050)
+            opacity = 50;
+        else if (sender == this->ui->pb_MainKeypadOpacity100)
+            opacity = 100;
+        else
+            return;
+    }
+    qreal o = opacity / 100.0;
+    QWidget::setWindowOpacity(o);
+}
+
+/*
+ * Display the info window
+ */
+void MainWindow::displayOverlayInfo(const QString &message)
+{
+    if (!this->m_infoWindow)
+    {
+        this->m_infoWindow = new CInfoWindow(this);
+    }
+
+    // display window
+    if (message.isEmpty())
+    {
+        this->m_infoWindow->hide();
+    }
+    else
+    {
+        this->m_infoWindow->setInfoMessage(message);
     }
 }

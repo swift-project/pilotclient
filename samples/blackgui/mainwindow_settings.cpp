@@ -24,6 +24,8 @@ void MainWindow::reloadSettings()
     // update servers
     this->m_trafficServerList->setSelectedServer(nws.getCurrentNetworkServer());
     this->m_trafficServerList->update(nws.getTrafficNetworkServers());
+    this->ui->tv_SettingsTnServers->resizeColumnsToContents();
+    this->ui->tv_SettingsTnServers->resizeRowsToContents();
 }
 
 /*

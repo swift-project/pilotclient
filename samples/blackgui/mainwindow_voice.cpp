@@ -77,3 +77,71 @@ void MainWindow::audioDeviceSelected(int index)
         this->m_contextVoice->setCurrentAudioDevice(selectedDevice);
     }
 }
+
+/*
+ * Select audio device
+ */
+void MainWindow::audioVolumes()
+{
+    if (!this->m_contextVoiceAvailable)
+    {
+        this->ui->pb_SoundMute->setEnabled(false);
+        this->ui->pb_SoundMaxVolume->setEnabled(false);
+        return;
+    }
+
+    // enable the buttons, as we have a voice context
+    this->ui->pb_SoundMute->setEnabled(true);
+    this->ui->pb_SoundMaxVolume->setEnabled(true);
+    QObject *sender = QObject::sender();
+
+    CComSystem com1 = this->m_ownAircraft.getCom1System();
+    CComSystem com2 = this->m_ownAircraft.getCom2System();
+    bool muted;
+
+    if (sender == this->ui->pb_SoundMute)
+    {
+        if (this->m_contextVoice->isMuted())
+        {
+            // muted right now, now unmute
+            muted = false;
+        }
+        else
+        {
+            // unmuted right now, now mute
+            muted = true;
+        }
+    }
+    else if (sender == this->ui->pb_SoundMaxVolume)
+    {
+        muted = false;
+        com1.setVolumeOutput(100);
+        com2.setVolumeOutput(100);
+        this->ui->di_CockpitCom1Volume->setValue(100);
+        this->ui->di_CockpitCom2Volume->setValue(100);
+    }
+    else if (sender == this->ui->di_CockpitCom1Volume ||
+             sender == this->ui->di_CockpitCom2Volume)
+    {
+        muted = false;
+        com1.setVolumeOutput(this->ui->di_CockpitCom1Volume->value());
+        com2.setVolumeOutput(this->ui->di_CockpitCom2Volume->value());
+    }
+    else
+    {
+        return;
+    }
+
+    // mute / umute
+    com1.setEnabled(!muted);
+    com2.setEnabled(!muted);
+    this->ui->pb_SoundMute->setText(muted ? "Unmute" : "Mute");
+    this->ui->lbl_VoiceStatus->setPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
+    this->ui->pb_SoundMute->setStyleSheet(muted ? "background-color: red;" : "");
+    if (muted) this->displayOverlayInfo("Sound is muted!");
+
+    // update own aircraft, also set volume/mute in voice
+    this->m_ownAircraft.setCom1System(com1);
+    this->m_ownAircraft.setCom1System(com2);
+    this->m_contextVoice->setVolumes(this->m_ownAircraft.getCom1System(), this->m_ownAircraft.getCom1System());
+}

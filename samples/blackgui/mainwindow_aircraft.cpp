@@ -22,6 +22,7 @@ void MainWindow::reloadAircraftsInRange()
     if (!this->isContextNetworkAvailableCheck()) return;
     this->m_aircraftsInRange->update(this->m_contextNetwork->getAircraftsInRange());
     this->ui->tv_AircraftsInRange->resizeColumnsToContents();
+    this->ui->tv_AircraftsInRange->resizeRowsToContents();
 }
 
 /*

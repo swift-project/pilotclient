@@ -21,6 +21,29 @@ void MainWindow::cockpitValuesChanged()
 {
     Q_ASSERT(this->m_timerCollectedCockpitUpdates);
 
+    // frequency switch?
+    QObject *sender = QObject::sender();
+    if (sender == this->ui->pb_CockpitToggleCom1)
+    {
+        if (this->ui->ds_CockpitCom1Standby->value() == this->ui->ds_CockpitCom1Active->value()) return;
+        double f = this->ui->ds_CockpitCom1Active->value();
+        this->ui->ds_CockpitCom1Active->setValue(this->ui->ds_CockpitCom1Standby->value());
+        this->ui->ds_CockpitCom1Standby->setValue(f);
+    }
+    else if (sender == this->ui->pb_CockpitToggleCom2)
+    {
+        if (this->ui->ds_CockpitCom2Standby->value() == this->ui->ds_CockpitCom2Active->value()) return;
+        double f = this->ui->ds_CockpitCom2Active->value();
+        this->ui->ds_CockpitCom2Active->setValue(this->ui->ds_CockpitCom2Standby->value());
+        this->ui->ds_CockpitCom2Standby->setValue(f);
+    }
+    else if (sender == this->ui->pb_CockpitIdent)
+    {
+        // trigger the real button
+        this->ui->cb_CockpitTransponderMode->setCurrentText("I");
+        return;
+    }
+
     // this will call send cockpit updates with all changes made
     this->m_timerCollectedCockpitUpdates->stop();
     this->m_timerCollectedCockpitUpdates->start(1000); // start
@@ -87,7 +110,7 @@ void MainWindow::updateCockpitFromContext()
     }
 
     //
-    // voice
+    // Voice room override
     //
     if (!this->ui->cb_CockpitVoiceRoom1Override->isChecked())
     {

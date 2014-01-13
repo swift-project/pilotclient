@@ -22,6 +22,7 @@ void MainWindow::reloadAtcStationsBooked()
     if (!this->isContextNetworkAvailableCheck()) return;
     this->m_atcListBooked->update(this->m_contextNetwork->getAtcStationsBooked());
     this->ui->tv_AtcStationsBooked->resizeColumnsToContents();
+    this->ui->tv_AtcStationsBooked->resizeRowsToContents();
 }
 
 /*
@@ -32,6 +33,7 @@ void MainWindow::reloadAtcStationsOnline()
     if (!this->isContextNetworkAvailableCheck()) return;
     this->m_atcListOnline->update(this->m_contextNetwork->getAtcStationsOnline());
     this->ui->tv_AtcStationsOnline->resizeColumnsToContents();
+    this->ui->tv_AtcStationsOnline->resizeRowsToContents();
 }
 
 /*
