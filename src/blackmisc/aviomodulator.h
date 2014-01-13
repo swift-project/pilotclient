@@ -27,6 +27,7 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
             qint32 m_volumeInput; //!< volume input
             qint32 m_volumeOutput; //!< volume output
+            bool m_enabled; //!< is enabled, used e.g. for mute etc.
 
         protected:
             int m_digits; //!< digits used
@@ -46,7 +47,7 @@ namespace BlackMisc
              * \param digits
              */
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits) :
-                CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_volumeInput(0), m_volumeOutput(0), m_digits(digits) {}
+                CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_volumeInput(0), m_volumeOutput(0), m_digits(digits), m_enabled(true) {}
 
             /*!
              * \brief String for converter
@@ -298,6 +299,18 @@ namespace BlackMisc
              * \brief Input volume
              */
             void setVolumeInput(qint32 volume) { this->m_volumeInput = volume; }
+
+            /*!
+             * \brief Enabled?
+             * \return
+             */
+            bool isEnabled() const { return this->m_enabled;}
+
+            /*!
+             * \brief Enabled?
+             * \param
+             */
+            void setEnabled(bool enable) { this->m_enabled = enable;}
 
             /*!
              * \brief Register metadata
