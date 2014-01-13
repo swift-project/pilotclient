@@ -2,8 +2,8 @@
 <node>
   <interface name="blackcore.contextapplication">
     <signal name="statusMessage">
-      <arg name="message" type="(sii((iii)(iiii)i))" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::CStatusMessage"/>
+      <arg name="message" type="(sii((iii)(iiii)i))" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::CStatusMessage"/>
     </signal>
     <signal name="widgetGuiStarting">
     </signal>

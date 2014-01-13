@@ -30,10 +30,13 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Voice::CAudioDevice"/>
     </method>
     <method name="setVolumes">
-      <arg name="com1" type="(s(dd(s))(dd(s))iii)" direction="in"/>
+      <arg name="com1" type="(s(dd(s))(dd(s))iiib)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CComSystem"/>
-      <arg name="com2" type="(s(dd(s))(dd(s))iii)" direction="in"/>
+      <arg name="com2" type="(s(dd(s))(dd(s))iiib)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="BlackMisc::Aviation::CComSystem"/>
+    </method>
+    <method name="isMuted">
+      <arg type="b" direction="out"/>
     </method>
   </interface>
 </node>

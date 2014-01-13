@@ -7,5 +7,13 @@
       <arg type="((sssi(ssss))(a(sssi(ssss))))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Settings::CSettingsNetwork"/>
     </method>
+    <method name="value">
+      <arg type="(a(sii((iii)(iiii)i)))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::CStatusMessageList"/>
+      <arg name="path" type="s" direction="in"/>
+      <arg name="command" type="s" direction="in"/>
+      <arg name="value" type="v" direction="in"/>
+      <arg name="unifiedBlackMetaType" type="i" direction="in"/>
+    </method>
   </interface>
 </node>
