@@ -26,3 +26,5 @@ win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
 else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
                                      ../../lib/libblackcore.a \
                                      ../../lib/libblackgui.a
+
+OTHER_FILES += *.qss
