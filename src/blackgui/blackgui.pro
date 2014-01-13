@@ -1,4 +1,8 @@
-QT       += network dbus gui widgets
+# quick is required for metadata registration
+
+QT       += network dbus gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 
 TARGET = blackgui
 TEMPLATE = lib
@@ -28,3 +32,5 @@ HEADERS += *.h
 SOURCES += *.cpp
 DESTDIR = ../../lib
 OTHER_FILES +=
+
+RESOURCES += blackgui.qrc
