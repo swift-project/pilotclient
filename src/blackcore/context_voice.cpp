@@ -30,7 +30,6 @@ namespace BlackCore
      */
     CContextVoice::~CContextVoice()
     {
-        Q_ASSERT(this->m_voice);
         this->leaveAllVoiceRooms();
     }
 
@@ -89,7 +88,6 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(audioDevice.getType() != CAudioDevice::Unknown);
-        this->log(Q_FUNC_INFO, audioDevice.toQString());
         if (audioDevice.getType() == CAudioDevice::InputDevice)
         {
             this->m_voice->setInputDevice(audioDevice);
@@ -103,14 +101,24 @@ namespace BlackCore
     }
 
     /*
-     * Set volumnes
+     * Set volumes
      */
     void CContextVoice::setVolumes(const CComSystem &com1, const CComSystem &com2)
     {
         Q_ASSERT(this->m_voice);
-        this->log(Q_FUNC_INFO, com1.toQString(), com2.toQString());
-        this->m_voice->setRoomOutputVolume(IVoice::COM1, com1.getVolumeInput());
-        this->m_voice->setRoomOutputVolume(IVoice::COM2, com2.getVolumeInput());
+        this->m_voice->setRoomOutputVolume(IVoice::COM1, com1.getVolumeOutput());
+        this->m_voice->setRoomOutputVolume(IVoice::COM2, com2.getVolumeOutput());
+        this->m_voice->switchAudioOutput(IVoice::COM1, com1.isEnabled());
+        this->m_voice->switchAudioOutput(IVoice::COM2, com2.isEnabled());
+    }
+
+    /*
+     * Muted?
+     */
+    bool CContextVoice::isMuted() const
+    {
+        Q_ASSERT(this->m_voice);
+        return this->m_voice->isMuted();
     }
 
     /*
@@ -163,7 +171,4 @@ namespace BlackCore
         }
         return callsigns;
     }
-
-
-
 } // namespace

@@ -130,11 +130,17 @@ namespace BlackCore
         virtual void setCurrentAudioDevice(const BlackMisc::Voice::CAudioDevice &audioDevice);
 
         /*!
-         * \brief Set volumes
+         * \brief Set volumes, also allows to mute
          * \param com1
          * \param com2
          */
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+
+        /*!
+         * \brief Is muted?
+         * \return
+         */
+        virtual bool isMuted() const;
 
     private:
         CVoiceVatlib *m_voice;
