@@ -130,6 +130,23 @@ namespace BlackCore
             return this->m_voiceRoomCallsigns[comUnit];
         }
 
+        /*!
+          * \brief Switch audio output
+          * \param comUnit
+          * \param enable
+          */
+        virtual void switchAudioOutput(const ComUnit comUnit, bool enable);
+
+        /*!
+         * \brief Muted?
+         */
+        virtual bool isMuted() const
+        {
+            if (this->m_outputEnabled.isEmpty()) return false;
+            bool enabled = this->m_outputEnabled[COM1] || this->m_outputEnabled[COM2];
+            return !enabled;
+        }
+
         /************************************************
          * NON API METHODS:
          * The following methods are not part of the
@@ -137,9 +154,21 @@ namespace BlackCore
          * workflow.
          * *********************************************/
 
-        int32_t queryUserRoomIndex() const {return m_queryUserRoomIndex;}
+        /*!
+         * \brief Voice room index
+         * \return
+         */
+        int32_t temporaryUserRoomIndex() const
+        {
+            return m_temporaryUserRoomIndex;
+        }
 
-        void changeRoomStatus(ComUnit comUnit, Cvatlib_Voice_Simple::roomStatusUpdate upd);
+        /*!
+         * \brief Room status update, used in callback
+         * \param comUnit
+         * \param upd
+         */
+        void changeRoomStatus(ComUnit comUnit, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus);
 
     signals:
 
@@ -266,15 +295,15 @@ namespace BlackCore
         bool m_pushToTalk; /*!< flag, PTT pressed */
         float m_inputSquelch;
         Cvatlib_Voice_Simple::agc m_micTestResult;
+        QMap < ComUnit, QSet<QString> > m_voiceRoomCallsigns; /*!< voice room callsigns */
+        QSet<QString> m_temporaryVoiceRoomCallsigns; /*!< temp. storage of voice rooms during update */
+        QMap<ComUnit, bool> m_outputEnabled; /*!< output enabled, basically a mute flag */
 
-        typedef QMap<ComUnit, QSet<QString>> TMapRoomCallsigns;
-        TMapRoomCallsigns m_voiceRoomCallsigns;
-        QSet<QString> m_voiceRoomCallsignsUpdate;
-
-        // Need to keep the roomIndex because GetRoomUserList does not specifiy it
+        // Need to keep the roomIndex?
         // KB: I would remove this approach, it is potentially unsafe
         //     Maybe just use 2 "wrapper" callbacks, which then set explicitly the voice room (it is only 2 methods)
-        int32_t m_queryUserRoomIndex;
+        int32_t m_temporaryUserRoomIndex; /*!< temp. storage of voice room, in order to retrieve it in static callback */
+        const static int32_t InvalidRoomIndex = -1; /*! marks invalid room */
 
     };
 

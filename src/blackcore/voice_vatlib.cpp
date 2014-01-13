@@ -18,12 +18,11 @@ namespace BlackCore
     CVoiceVatlib::CVoiceVatlib(QObject *parent) :
         IVoice(parent),
         m_voice(Cvatlib_Voice_Simple::Create()),
-        m_aircraftCallsign(), m_voiceRooms(), m_devices(),
         m_keyboardPtt(new CKeyboard(nullptr)),
         m_pushToTalk(false),
         m_inputSquelch(-1),
         m_micTestResult(Cvatlib_Voice_Simple::agc_Ok),
-        m_queryUserRoomIndex(-1)
+        m_temporaryUserRoomIndex(CVoiceVatlib::InvalidRoomIndex)
     {
         try
         {
@@ -32,7 +31,7 @@ namespace BlackCore
             m_voice->GetOutputDevices(onOutputHardwareDeviceReceived, this);
 
             // TODO: read audio device settings here and init with the same devices
-            // If not settings are there or it is the first run, use the default one
+            // If not, settings are there or it is the first run, use the default one
             // TODO: KB, setting this kind of default device results in an error
             // setInputDevice(defaultAudioInputDevice());
             // setOutputDevice(defaultAudioOutputDevice());
@@ -42,6 +41,8 @@ namespace BlackCore
 
             this->m_voiceRooms.push_back(CVoiceRoom()); // COM1
             this->m_voiceRooms.push_back(CVoiceRoom()); // COM2
+            this->m_outputEnabled.insert(COM1, true);
+            this->m_outputEnabled.insert(COM2, true);
 
             // do processing
             this->startTimer(100);
@@ -49,7 +50,10 @@ namespace BlackCore
             // as last thing enable keyboard handling
             this->m_keyboardPtt.data()->s_voice = this;
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
@@ -106,7 +110,10 @@ namespace BlackCore
                 qWarning() << "Input device hit a fatal error";
             }
         }
-        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
@@ -129,7 +136,10 @@ namespace BlackCore
                 qWarning() << "Input device hit a fatal error";
             }
         }
-        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
@@ -157,15 +167,19 @@ namespace BlackCore
     /*
      * Enable audio
      */
-    void CVoiceVatlib::enableAudio(const ComUnit comUnit)
+    void CVoiceVatlib::switchAudioOutput(const ComUnit comUnit, bool enable)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<int32_t>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
         try
         {
-            m_voice->SetOutoutState(static_cast<int32_t>(comUnit), 0, true);
+            m_voice->SetOutoutState(static_cast<int32_t>(comUnit), 0, enable);
+            this->m_outputEnabled[comUnit] = enable;
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
@@ -179,12 +193,18 @@ namespace BlackCore
         {
             m_voice->BeginFindSquelch();
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
 
         // Start the timer only if no exception was thrown before
         QTimer::singleShot(5000, this, SLOT(onEndFindSquelch()));
     }
 
+    /*
+     * Start microphone test
+     */
     void CVoiceVatlib::runMicTest()
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
@@ -193,23 +213,34 @@ namespace BlackCore
         {
             m_voice->BeginMicTest();
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
 
         // Start the timer only if no exception was thrown before
         QTimer::singleShot(5000, this, SLOT(onEndMicTest()));
     }
 
+    /*
+     * Input squelch volume
+     */
     float CVoiceVatlib::inputSquelch() const
     {
         return m_inputSquelch;
     }
 
+    /*
+     * Mic test
+     */
     int32_t CVoiceVatlib::micTestResult() const
     {
         return m_micTestResult;
     }
 
-
+    /*
+     * Mic test, result as string
+     */
     QString CVoiceVatlib::micTestResultAsString() const
     {
         QString result;
@@ -270,7 +301,10 @@ namespace BlackCore
             QString serverSpec = voiceRoom.getVoiceRoomUrl();
             m_voice->JoinRoom(static_cast<int32_t>(comUnit), m_aircraftCallsign.toQString().toLatin1().constData(), serverSpec.toLatin1().constData());
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
@@ -290,7 +324,10 @@ namespace BlackCore
             vr.setConnected(false);
             this->setVoiceRoomForUnit(comUnit, vr);
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
@@ -314,7 +351,10 @@ namespace BlackCore
         {
             m_voice->SetRoomVolume(static_cast<int32_t>(comUnit), volumne);
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
@@ -329,7 +369,10 @@ namespace BlackCore
         {
             m_voice->SetMicState(static_cast<int32_t>(comUnit), true);
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
@@ -343,20 +386,23 @@ namespace BlackCore
         {
             m_voice->SetMicState(static_cast<int32_t>(comUnit), false);
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
      * Change room status
      */
-    void CVoiceVatlib::changeRoomStatus(ComUnit comUnit, Cvatlib_Voice_Simple::roomStatusUpdate upd)
+    void CVoiceVatlib::changeRoomStatus(ComUnit comUnit, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus)
     {
         CVoiceRoom vr = this->voiceRoomForUnit(comUnit);
 
-        switch (upd)
+        switch (roomStatus)
         {
         case Cvatlib_Voice_Simple::roomStatusUpdate_JoinSuccess:
-            enableAudio(comUnit);
+            switchAudioOutput(comUnit, this->m_outputEnabled[comUnit]);
             vr.setConnected(true);
             this->setVoiceRoomForUnit(comUnit, vr);
             emit connected(comUnit);
@@ -408,7 +454,10 @@ namespace BlackCore
             this->m_voice->DoProcessing();
             this->handlePushToTalk();
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
@@ -424,7 +473,10 @@ namespace BlackCore
             m_inputSquelch = m_voice->GetInputSquelch();
             emit squelchTestFinished();
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     void CVoiceVatlib::onEndMicTest()
@@ -436,7 +488,10 @@ namespace BlackCore
             m_micTestResult = m_voice->EndMicTest();
             emit micTestFinished();
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /*
@@ -445,53 +500,49 @@ namespace BlackCore
     void CVoiceVatlib::onUserJoinedLeft(const ComUnit comUnit)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_queryUserRoomIndex == -1, "CVoiceClientVatlib::onUserJoinedLeft", "Cannot list users for two rooms in parallel!");
+        Q_ASSERT_X(m_temporaryUserRoomIndex == CVoiceVatlib::InvalidRoomIndex, "CVoiceClientVatlib::onUserJoinedLeft", "Cannot list users for two rooms in parallel!");
         try
         {
             // Paranoia...
             if (!m_voice->IsRoomConnected(static_cast<int32_t>(comUnit)))
                 return;
 
-            // Store the room index for the slot.
-            m_queryUserRoomIndex = static_cast<int32_t>(comUnit);
+            // Store the room index for the slot (called in static callback)
+            m_temporaryUserRoomIndex = static_cast<int32_t>(comUnit);
+
+            // Callbacks completed when function is called, after the method is done
+            // m_voiceRoomCallsignsUpdate is filled with the latest callsigns
             m_voice->GetRoomUserList(static_cast<int32_t>(comUnit), onRoomUserReceived, this);
-            m_queryUserRoomIndex = -1;
+            m_temporaryUserRoomIndex = CVoiceVatlib::InvalidRoomIndex; // reset
 
-            QSet<QString> temporaryUsers;
-
+            // we have all current users in m_voi
             foreach(QString callsign, m_voiceRoomCallsigns.value(comUnit))
             {
-                if (m_voiceRoomCallsignsUpdate.contains(callsign))
+                if (!m_temporaryVoiceRoomCallsigns.contains(callsign))
                 {
-                    // The user is still there.
-                    temporaryUsers.insert(callsign);
-                }
-                else
-                {
-                    // He is has probably left
+                    // He is has left
                     emit userLeftRoom(callsign);
                 }
             }
 
-            foreach(QString callsign, m_voiceRoomCallsignsUpdate)
+            foreach(QString callsign, m_temporaryVoiceRoomCallsigns)
             {
-                if (m_voiceRoomCallsigns.value(comUnit).contains(callsign))
+                if (!m_voiceRoomCallsigns.value(comUnit).contains(callsign))
                 {
-                    // User was already there before
-                    temporaryUsers.insert(callsign);
-                }
-                else
-                {
-                    // He joined
-                    temporaryUsers.insert(callsign);
+                    // he joined
                     emit userJoinedRoom(callsign);
                 }
             }
 
             // Finally we update it with our new list
-            m_voiceRoomCallsignsUpdate.clear();
+            this->m_voiceRoomCallsigns[comUnit] = this->m_temporaryVoiceRoomCallsigns;
+            this->m_temporaryVoiceRoomCallsigns.clear();
+
         }
-        catch (...) { this->exceptionDispatcher(Q_FUNC_INFO); }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
     }
 
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
@@ -530,7 +581,7 @@ namespace BlackCore
 
         // add user
         CVoiceVatlib *voiceClientVatlib = cbvar_cast_voice(cbVar);
-        ComUnit comUnit = static_cast<ComUnit>(voiceClientVatlib->queryUserRoomIndex());
+        ComUnit comUnit = static_cast<ComUnit>(voiceClientVatlib->temporaryUserRoomIndex());
 
         // add user
         voiceClientVatlib->addUserInRoom(comUnit, callsign);
@@ -577,7 +628,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::addUserInRoom(const ComUnit /** comUnit **/, const QString &callsign)
     {
-        m_voiceRoomCallsignsUpdate.insert(callsign);
+        m_temporaryVoiceRoomCallsigns.insert(callsign);
     }
 
     /*
