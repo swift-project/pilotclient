@@ -8,63 +8,86 @@
 
 namespace BlackCore
 {
-    /*
-     * Constructor
-     */
-    CCoreRuntime::CCoreRuntime(bool withDbus, QObject *parent) :
-        QObject(parent), m_init(false), m_dbusServer(nullptr),
-        m_contextNetwork(nullptr), m_contextVoice(nullptr),
-        m_contextSettings(nullptr), m_contextApplication(nullptr)
-    {
-        this->init(withDbus);
+/*
+ * Constructor
+ */
+CCoreRuntime::CCoreRuntime(bool withDbus, QObject *parent) :
+    QObject(parent), m_init(false), m_dbusServer(nullptr),
+    m_contextNetwork(nullptr), m_contextVoice(nullptr),
+    m_contextSettings(nullptr), m_contextApplication(nullptr)
+{
+    this->init(withDbus);
+}
+
+/*
+ * Init runtime
+ */
+void CCoreRuntime::init(bool withDbus)
+{
+    if (m_init) return;
+    BlackMisc::registerMetadata();
+    BlackMisc::initResources();
+
+    // TODO: read settings
+    if (withDbus) {
+        QString dBusAddress = "session";
+        this->m_dbusServer = new CDBusServer(dBusAddress, this);
     }
 
-    /*
-     * Init runtime
-     */
-    void CCoreRuntime::init(bool withDbus)
-    {
-        if (m_init) return;
-        BlackMisc::registerMetadata();
-        BlackMisc::initResources();
+    // contexts
+    this->m_contextSettings = new CContextSettings(this);
+    if (withDbus) this->m_contextSettings->registerWithDBus(this->m_dbusServer);
 
-        // TODO: read settings
-        if (withDbus)
-        {
-            QString dBusAddress = "session";
-            this->m_dbusServer = new CDBusServer(dBusAddress, this);
-        }
+    this->m_contextNetwork = new CContextNetwork(this);
+    if (withDbus) this->m_contextNetwork->registerWithDBus(this->m_dbusServer);
 
-        // contexts
-        this->m_contextSettings = new CContextSettings(this);
-        if (withDbus) this->m_contextSettings->registerWithDBus(this->m_dbusServer);
+    this->m_contextApplication = new CContextApplication(this);
+    if (withDbus) this->m_contextApplication->registerWithDBus(this->m_dbusServer);
 
-        this->m_contextNetwork = new CContextNetwork(this);
-        if (withDbus) this->m_contextNetwork->registerWithDBus(this->m_dbusServer);
+    this->m_contextVoice = new CContextVoice(this);
+    if (withDbus) this->m_contextVoice->registerWithDBus(this->m_dbusServer);
 
-        this->m_contextApplication = new CContextApplication(this);
-        if (withDbus) this->m_contextApplication->registerWithDBus(this->m_dbusServer);
+    // flag
+    m_init = true;
+}
 
-        this->m_contextVoice = new CContextVoice(this);
-        if (withDbus) this->m_contextVoice->registerWithDBus(this->m_dbusServer);
+IContextNetwork *CCoreRuntime::getIContextNetwork()
+{
+    return this->m_contextNetwork;
+}
 
-        // flag
-        m_init = true;
-    }
+const IContextNetwork *CCoreRuntime::getIContextNetwork() const
+{
+    return this->m_contextNetwork;
+}
 
-    IContextNetwork *CCoreRuntime::getIContextNetwork() { return this->m_contextNetwork; }
+IContextVoice *CCoreRuntime::getIContextVoice()
+{
+    return this->m_contextVoice;
+}
 
-    const IContextNetwork *CCoreRuntime::getIContextNetwork() const { return this->m_contextNetwork; }
+const IContextVoice *CCoreRuntime::getIContextVoice() const
+{
+    return this->m_contextVoice;
+}
 
-    IContextVoice *CCoreRuntime::getIContextVoice() { return this->m_contextVoice; }
+IContextSettings *CCoreRuntime::getIContextSettings()
+{
+    return this->m_contextSettings;
+}
 
-    const IContextVoice *CCoreRuntime::getIContextVoice() const { return this->m_contextVoice; }
+const IContextSettings *CCoreRuntime::getIContextSettings() const
+{
+    return this->m_contextSettings;
+}
 
-    IContextSettings *CCoreRuntime::getIContextSettings() { return this->m_contextSettings; }
+const IContextApplication *CCoreRuntime::getIContextApplication() const
+{
+    return this->m_contextApplication;
+}
 
-    const IContextSettings *CCoreRuntime::getIContextSettings() const { return this->m_contextSettings; }
-
-    const IContextApplication *CCoreRuntime::getIContextApplication() const { return this->m_contextApplication; }
-
-    IContextApplication *CCoreRuntime::getIContextApplication() { return this->m_contextApplication; }
+IContextApplication *CCoreRuntime::getIContextApplication()
+{
+    return this->m_contextApplication;
+}
 }

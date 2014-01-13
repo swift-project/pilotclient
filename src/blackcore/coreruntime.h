@@ -5,108 +5,109 @@
 
 namespace BlackCore
 {
-    class CDBusServer;
-    class CContextNetwork;
-    class CContextVoice;
-    class CContextSettings;
-    class CContextApplication;
-    class IContextNetwork;
-    class IContextVoice;
-    class IContextSettings;
-    class IContextApplication;
+// forward declaration, see review
+// https://dev.vatsim-germany.org/boards/22/topics/1350?r=1359#message-1359
+class CDBusServer;
+class CContextNetwork;
+class CContextVoice;
+class CContextSettings;
+class CContextApplication;
+class IContextNetwork;
+class IContextVoice;
+class IContextSettings;
+class IContextApplication;
+
+/*!
+ * \brief The CCoreRuntime class
+ */
+class CCoreRuntime : public QObject
+{
+    Q_OBJECT
+
+private:
+    bool m_init; /*!< flag */
+    CDBusServer *m_dbusServer;
+    CContextNetwork *m_contextNetwork;
+    CContextVoice *m_contextVoice;
+    CContextSettings *m_contextSettings;
+    CContextApplication *m_contextApplication;
 
     /*!
-     * \brief The CCoreRuntime class
+     * \brief Init
+     * \param withDbus
      */
-    class CCoreRuntime : public QObject
-    {
-        Q_OBJECT
+    void init(bool withDbus);
 
-    private:
-        bool m_init; /*!< flag */
-        CDBusServer *m_dbusServer;
-        CContextNetwork *m_contextNetwork;
-        CContextVoice *m_contextVoice;
-        CContextSettings *m_contextSettings;
-        CContextApplication *m_contextApplication;
+public:
+    /*!
+     * \brief Constructor
+     * \param withDbus
+     * \param parent
+     */
+    CCoreRuntime(bool withDbus = true, QObject *parent = nullptr);
 
-        /*!
-         * \brief Init
-         * \param withDbus
-         */
-        void init(bool withDbus);
+    /*!
+     * \brief Destructor
+     */
+    virtual ~CCoreRuntime() {}
 
-    public:
-        /*!
-         * \brief Constructor
-         * \param withDbus
-         * \param parent
-         */
-        CCoreRuntime(bool withDbus = true, QObject *parent = nullptr);
+    /*!
+     * \brief DBus server
+     * \return
+     */
+    const CDBusServer *getDBusServer() const {
+        return this->m_dbusServer;
+    }
 
-        /*!
-         * \brief Destructor
-         */
-        virtual ~CCoreRuntime() {}
+    /*!
+     * \brief Context for network
+     * \return
+     */
+    IContextNetwork *getIContextNetwork();
 
-        /*!
-         * \brief DBus server
-         * \return
-         */
-        const CDBusServer *getDBusServer() const
-        {
-            return this->m_dbusServer;
-        }
+    /*!
+     * \brief Context for network
+     * \return
+     */
+    const IContextNetwork *getIContextNetwork() const;
 
-        /*!
-         * \brief Context for network
-         * \return
-         */
-        IContextNetwork *getIContextNetwork();
+    /*!
+     * \brief Context for network
+     * \return
+     */
+    IContextVoice *getIContextVoice();
 
-        /*!
-         * \brief Context for network
-         * \return
-         */
-        const IContextNetwork *getIContextNetwork() const;
-
-        /*!
-         * \brief Context for network
-         * \return
-         */
-        IContextVoice *getIContextVoice();
-
-        /*!
-         * \brief Context for network
-         * \return
-         */
-        const IContextVoice *getIContextVoice() const;
+    /*!
+     * \brief Context for network
+     * \return
+     */
+    const IContextVoice *getIContextVoice() const;
 
 
-        /*!
-         * \brief Settings
-         * \return
-         */
-        IContextSettings *getIContextSettings();
+    /*!
+     * \brief Settings
+     * \return
+     */
+    IContextSettings *getIContextSettings();
 
-        /*!
-         * \brief Settings
-         * \return
-         */
-        const IContextSettings *getIContextSettings() const;
+    /*!
+     * \brief Settings
+     * \return
+     */
+    const IContextSettings *getIContextSettings() const;
 
-        /*!
-         * \brief Context for application
-         * \return
-         */
-        const IContextApplication *getIContextApplication() const;
+    /*!
+     * \brief Context for application
+     * \return
+     */
+    const IContextApplication *getIContextApplication() const;
 
-        /*!
-         * \brief Application
-         * \return
-         */
-        IContextApplication *getIContextApplication();
+    /*!
+     * \brief Application
+     * \return
+     */
+    IContextApplication *getIContextApplication();
 
-    };
+};
 }
 #endif // guard
