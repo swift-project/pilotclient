@@ -42,6 +42,18 @@ namespace BlackMisc
         }
 
         /*
+         * Callsign as Observer
+         */
+        QString CCallsign::getAsObserverCallsignString() const
+        {
+            if (this->isEmpty()) return "";
+            QString obs = this->getStringAsSet();
+            if (obs.endsWith("_OBS", Qt::CaseInsensitive)) return obs;
+            if (obs.contains('_')) obs = obs.left(obs.lastIndexOf('_'));
+            return obs.append("_OBS").toUpper();
+        }
+
+        /*
          * Equals callsign?
          */
         bool CCallsign::equalsString(const QString &callsignString) const

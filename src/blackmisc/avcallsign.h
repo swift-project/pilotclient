@@ -76,10 +76,16 @@ namespace BlackMisc
             const QString &getCallsignPronounced() const { return this->m_callsignPronounced; }
 
             /*!
-             * \brief Get ICAO code, if this possible
+             * \brief Get ICAO code, if this makes sense (EDDF_TWR -> EDDF)
              * \return
              */
             QString getIcaoCode() const { return m_callsign.left(4).toUpper(); }
+
+            /*!
+             * \brief Makes this callsign looking like an observer callsign (DAMBZ -> DAMBZ_OBS)
+             * \return
+             */
+            QString getAsObserverCallsignString() const;
 
             /*!
              * \brief Equals callsign string?
