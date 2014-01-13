@@ -76,7 +76,7 @@ namespace BlackMisc
             hashs << qHash(this->m_name);
             hashs << qHash(this->m_address);
             hashs << qHash(this->m_port);
-            hashs << qHash(this->m_user);
+            hashs << qHash(this->m_user.getValueHash());
             return BlackMisc::calculateHash(hashs, "CServer");
         }
 
