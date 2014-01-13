@@ -8,14 +8,13 @@
 
 #include "blackcore/dbus_server.h"
 #include "blackcore/network_vatlib.h"
+#include "blackcore/coreruntime.h"
 #include "blackcore/context_network_interface.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackcore/coreruntime.h"
-
-class QNetworkAccessManager;
-class QNetworkReply;
+#include <QTimer>
+#include <QNetworkAccessManager>
 
 #define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "blackcore.contextnetwork"
 
@@ -32,12 +31,11 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-
         /*!
          * \brief With link to server
          * \param server
          */
-        CContextNetwork(CCoreRuntime *parent);
+        CContextNetwork(CCoreRuntime *runtime);
 
         /*!
          * \brief Destructor
@@ -240,7 +238,7 @@ namespace BlackCore
          * \param from
          * \param to
          */
-        void psFsdConnectionStatusChanged(Cvatlib_Network::connStatus from, Cvatlib_Network::connStatus to);
+        void psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
 
         /*!
          * \brief ATC position update
@@ -330,8 +328,5 @@ namespace BlackCore
 
     };
 }
-
-// Declaring BlackCore::CContextNetwork * crashed when reading data
-Q_DECLARE_METATYPE(BlackCore::CContextNetwork::ConnectionStatus)
 
 #endif // guard

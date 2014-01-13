@@ -57,18 +57,6 @@ namespace BlackCore
         }
 
         /*!
-         * \brief Qt compliant status
-         */
-        enum ConnectionStatus
-        {
-            ConnectionStatusIdle = static_cast<uint>(Cvatlib_Network::connStatus_Idle),
-            ConnectionStatusConnected = static_cast<uint>(Cvatlib_Network::connStatus_Connected),
-            ConnectionStatusConnecting = static_cast<uint>(Cvatlib_Network::connStatus_Connecting),
-            ConnectionStatusDisconnected = static_cast<uint>(Cvatlib_Network::connStatus_Disconnected),
-            ConnectionStatusError = static_cast<uint>(Cvatlib_Network::connStatus_Error)
-        };
-
-        /*!
          * \brief DBus version constructor
          * \param serviceName
          * \param connection
@@ -103,12 +91,7 @@ namespace BlackCore
          * \brief IContextNetwork
          * \param parent
          */
-        IContextNetwork(QObject *parent = 0) : QObject(parent), m_dBusInterface(0) {}
-
-        /*!
-         * Connection status as cleartext
-         */
-        QString connectionStatusToString(ConnectionStatus status) const;
+        IContextNetwork(QObject *parent = nullptr) : QObject(parent), m_dBusInterface(0) {}
 
         /*!
          * \brief Helper for logging, likely to be removed / changed
@@ -154,6 +137,8 @@ namespace BlackCore
          * \param to
          */
         // If I use the enum, adaptor / interface are not created correctly
+
+
         void connectionStatusChanged(uint from, uint to);
 
         /*!

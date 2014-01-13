@@ -43,16 +43,6 @@ namespace BlackCore
     }
 
     /*
-     * Clear text of status
-     */
-    QString IContextNetwork::connectionStatusToString(ConnectionStatus status) const
-    {
-        int index = metaObject()->indexOfEnumerator("ConnectionStatus");
-        QMetaEnum metaEnum = metaObject()->enumerator(index);
-        return metaEnum.valueToKey(status);
-    }
-
-    /*
      * Relay to DBus
      */
     void IContextNetwork::readAtcBookingsFromSource() const
