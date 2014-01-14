@@ -9,7 +9,6 @@
 #include <type_traits>
 
 static_assert(! std::is_abstract<BlackCore::CNetworkVatlib>::value, "Must implement all pure virtuals");
-static_assert(! std::is_abstract<BlackCore::CNetworkDummy>::value, "Must implement all pure virtuals");
 
 //TODO just placeholders to allow this to compile
 #define CLIENT_NAME_VERSION "BlackBox 0.3"

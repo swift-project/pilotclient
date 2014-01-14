@@ -131,35 +131,6 @@ namespace BlackCore
         // TODO void cloudDataReceived(...);
     };
 
-    /*!
-     * Dummy implementation of INetwork used for testing.
-     */
-    class CNetworkDummy : public INetwork
-    {
-    public: //INetwork slots overrides
-        virtual void setServer(const BlackMisc::Network::CServer &) {}
-        virtual void setCallsign(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void setRealName(const QString &) {}
-        virtual void initiateConnection() {}
-        virtual void terminateConnection() {}
-        virtual void ping(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void sendIpQuery() {}
-        virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &) {}
-        virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &) {}
-        virtual void setOwnAircraftPosition(const BlackMisc::Aviation::CAircraftSituation &) {}
-        virtual void setOwnAircraftTransponder(const BlackMisc::Aviation::CTransponder &) {}
-        virtual void setOwnAircraftFrequency(const BlackMisc::PhysicalQuantities::CFrequency &) {}
-        virtual void setOwnAircraftIcao(const BlackMisc::Aviation::CAircraftIcao &) {}
-        virtual void requestMetar(const QString &) {}
-        virtual void requestWeatherData(const QString &) {}
-    };
-
 } // namespace
 
 #endif // guard
