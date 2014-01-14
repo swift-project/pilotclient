@@ -139,12 +139,41 @@ namespace BlackMisc
              * \param transponderCode
              * \param transponderMode
              */
-            CTransponder(const QString &name, const QString &transponderCode, TransponderMode transponderMode) :
+            CTransponder(const QString &name, qint32 transponderCode, QString transponderMode) :
+                CAvionicsBase(name), m_transponderCode(transponderCode), m_transponderMode(StateStandby)
+            {
+                this->setModeAsString(transponderMode);
+                this->validate(true);
+            }
+
+            /*!
+             * \brief Constructor
+             * \param name
+             * \param transponderCode
+             * \param transponderMode
+             */
+            CTransponder(const QString &name, QString transponderCode, TransponderMode transponderMode) :
                 CAvionicsBase(name), m_transponderCode(0), m_transponderMode(transponderMode)
             {
                 bool ok = false;
                 this->m_transponderCode = transponderCode.toUInt(&ok);
                 if (!ok) this->m_transponderCode = -1; // will cause assert / exception
+                this->validate(true);
+            }
+
+            /*!
+             * \brief Constructor
+             * \param name
+             * \param transponderCode
+             * \param transponderMode
+             */
+            CTransponder(const QString &name, QString transponderCode, QString transponderMode) :
+                CAvionicsBase(name), m_transponderCode(0), m_transponderMode(StateStandby)
+            {
+                bool ok = false;
+                this->m_transponderCode = transponderCode.toUInt(&ok);
+                if (!ok) this->m_transponderCode = -1; // will cause assert / exception
+                this->setModeAsString(transponderMode);
                 this->validate(true);
             }
 
@@ -160,13 +189,20 @@ namespace BlackMisc
             /*!
              * \brief Transponder mode as string
              * \return
-             * \throws std::range_erros
              */
             QString getModeAsString() const;
 
             /*!
+             * \brief Transponder mode as string
+             * \param mode
+             * \throws std::range_error
+             */
+            void setModeAsString(const QString &mode);
+
+            /*!
              * \brief Transponder mode
              * \return
+             * \throws std::range_error
              */
             TransponderMode getTransponderMode() const
             {

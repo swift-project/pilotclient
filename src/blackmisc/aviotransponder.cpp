@@ -85,6 +85,53 @@ namespace BlackMisc
         }
 
         /*
+         * Mode as readable string
+         */
+        void CTransponder::setModeAsString(const QString &m)
+        {
+            if (m == "Ident")
+            {
+                this->setTransponderMode(StateIdent);
+            }
+            else if (m == "Standby")
+            {
+                this->setTransponderMode(StateStandby);
+            }
+            else if (m == "Mode C")
+            {
+                this->setTransponderMode(ModeC);
+            }
+            else if (m == "Mode S")
+            {
+                this->setTransponderMode(ModeS);
+            }
+            else if (m == "Mil.Mode 1")
+            {
+                this->setTransponderMode(ModeMil1);
+            }
+            else if (m == "Mil.Mode 2")
+            {
+                this->setTransponderMode(ModeMil2);
+            }
+            else if (m == "Mil.Mode 3")
+            {
+                this->setTransponderMode(ModeMil3);
+            }
+            else if (m == "Mil.Mode 4")
+            {
+                this->setTransponderMode(ModeMil4);
+            }
+            else if (m == "Mil.Mode 5")
+            {
+                this->setTransponderMode(ModeMil5);
+            }
+            else
+            {
+                throw std::range_error("Illegal Transponder Mode");
+            }
+        }
+
+        /*
          * Formatted transponder code
          */
         QString CTransponder::getTransponderCodeFormatted() const
