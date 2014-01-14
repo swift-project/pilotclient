@@ -94,7 +94,7 @@ namespace BlackMisc
          */
         template <class LATorLON> int CEarthAngle<LATorLON>::compareImpl(const CValueObject &otherBase) const
         {
-            const auto &other = static_cast<const LATorLON &>(otherBase);
+            const auto &other = static_cast<const CEarthAngle &>(otherBase);
 
             if (*this < other) { return -1; }
             else if (*this > other) { return 1; }

@@ -89,7 +89,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator==(const LATorLON &latOrLon) const
+            bool operator==(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator ==(latOrLon);
             }
@@ -99,7 +99,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator!=(const LATorLON &latOrLon) const
+            bool operator!=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator !=(latOrLon);
             }
@@ -131,7 +131,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator >(const LATorLON &latOrLon) const
+            bool operator >(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >(latOrLon);
             }
@@ -141,7 +141,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator <(const LATorLON &latOrLon) const
+            bool operator <(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >(latOrLon);
             }
@@ -151,7 +151,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator <=(const LATorLON &latOrLon) const
+            bool operator <=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator <=(latOrLon);
             }
@@ -161,7 +161,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator >=(const LATorLON &latOrLon) const
+            bool operator >=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >=(latOrLon);
             }
@@ -171,7 +171,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            LATorLON operator +(const LATorLON &latOrLon) const
+            LATorLON operator +(const CEarthAngle &latOrLon) const
             {
                 LATorLON l(*this);
                 l += latOrLon;
@@ -183,7 +183,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            LATorLON operator -(const LATorLON &latOrLon) const
+            LATorLON operator -(const CEarthAngle &latOrLon) const
             {
                 LATorLON l(*this);
                 l -= latOrLon;
