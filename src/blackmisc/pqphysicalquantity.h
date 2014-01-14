@@ -62,6 +62,12 @@ namespace BlackMisc
             CPhysicalQuantity(double value, const MU &unit);
 
             /*!
+             * \brief Copy constructor
+             * \param other
+             */
+            CPhysicalQuantity(const CPhysicalQuantity &other);
+
+            /*!
              * \brief Rounded value as string
              * \param i18n
              * \return

@@ -21,6 +21,16 @@ namespace BlackMisc
         }
 
         /*
+         * Copy constructor
+         * (The implicitly generated copy constructor would suffice, but for what seems to be a bug in MSVC2010 template instantiation)
+         */
+        template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(const CPhysicalQuantity &other) :
+            m_value(other.m_value), m_unit(other.m_unit)
+        {
+            // void
+        }
+
+        /*
          * Equal operator ==
          */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const CPhysicalQuantity<MU, PQ> &other) const
