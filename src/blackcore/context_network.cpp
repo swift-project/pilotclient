@@ -38,23 +38,29 @@ namespace BlackCore
         this->connect(this->m_atcBookingTimer, SIGNAL(timeout()), this, SLOT(readAtcBookingsFromSource()));
         this->m_atcBookingTimer->start(15 * 1000);
 
+
+
         // 4. connect signals and slots
         bool connect;
         connect = this->connect(this->m_network, SIGNAL(connectionStatusChanged(INetwork::ConnectionStatus, INetwork::ConnectionStatus)),
                                 this, SLOT(psFsdConnectionStatusChanged(INetwork::ConnectionStatus, INetwork::ConnectionStatus)));
         Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect connectionStatusChanged");
 
-        connect = this->connect(this->m_network, SIGNAL(terminate()),
-                                this, SLOT(psFsdConnectionTerminated()));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect terminate");
-
         connect = this->connect(this->m_network, SIGNAL(atcPositionUpdate(BlackMisc::Aviation::CCallsign, BlackMisc::PhysicalQuantities::CFrequency, BlackMisc::Geo::CCoordinateGeodetic, BlackMisc::PhysicalQuantities::CLength)),
                                 this, SLOT(psFsdAtcPositionUpdate(BlackMisc::Aviation::CCallsign, BlackMisc::PhysicalQuantities::CFrequency, BlackMisc::Geo::CCoordinateGeodetic, BlackMisc::PhysicalQuantities::CLength)));
         Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect atcPositionUpdate");
 
-        connect = this->connect(this->m_network, SIGNAL(atisQueryReplyReceived(BlackMisc::Aviation::CCallsign, Cvatlib_Network::atisLineType, QString)),
-                                this, SLOT(psFsdAtisQueryReceived(BlackMisc::Aviation::CCallsign, Cvatlib_Network::atisLineType, QString)));
+        connect = this->connect(this->m_network, SIGNAL(atisQueryReplyReceived(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CInformationMessage)),
+                                this, SLOT(psFsdAtisQueryReceived(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CInformationMessage)));
         Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect atis");
+
+        connect = this->connect(this->m_network, SIGNAL(atisQueryVoiceRoomReplyReceived(BlackMisc::Aviation::CCallsign, QString)),
+                                this, SLOT(psFsdAtisVoiceRoomQueryReceived(BlackMisc::Aviation::CCallsign, QString)));
+        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect atis voice room");
+
+        connect = this->connect(this->m_network, SIGNAL(atisQueryLogoffTimeReplyReceived(BlackMisc::Aviation::CCallsign, QString)),
+                                this, SLOT(psFsdAtisLogoffTimeQueryReceived(BlackMisc::Aviation::CCallsign, QString)));
+        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect atis logoff time");
 
         connect = this->connect(this->m_network, SIGNAL(metarReceived(QString)),
                                 this, SLOT(psFsdMetarReceived(QString)));
@@ -63,10 +69,6 @@ namespace BlackCore
         connect = this->connect(this->m_network, SIGNAL(nameQueryReplyReceived(BlackMisc::Aviation::CCallsign, QString)),
                                 this, SLOT(psFsdNameQueryReplyReceived(BlackMisc::Aviation::CCallsign, QString)));
         Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect name reply");
-
-        connect = this->connect(this->m_network, SIGNAL(exception(QString, bool)),
-                                this, SLOT(psVatlibExceptionMessage(QString, bool)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect exception");
 
         connect = this->connect(this->m_network, SIGNAL(aircraftInfoReceived(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcao)),
                                 this, SLOT(psFsdAircraftInfoReceived(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcao)));
@@ -143,7 +145,7 @@ namespace BlackCore
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Invalid user credentials"));
         }
-        else if (!this->m_network->isDisconnected())
+        else if (this->m_network->isConnected())
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Already connected"));
         }
@@ -167,11 +169,7 @@ namespace BlackCore
     {
         // this->log(Q_FUNC_INFO);
         CStatusMessageList msgs;
-        if (this->m_network->isDisconnected())
-        {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Already disconnected"));
-        }
-        else
+        if (this->m_network->isConnected())
         {
             this->m_network->terminateConnection();
             this->m_aircraftsInRange.clear();
@@ -179,6 +177,10 @@ namespace BlackCore
             this->m_atcStationsOnline.clear();
             this->m_metarCache.clear();
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, "Connection terminating"));
+        }
+        else
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Already disconnected"));
         }
         return msgs;
     }
@@ -188,7 +190,7 @@ namespace BlackCore
      */
     bool CContextNetwork::isConnected() const
     {
-        return !this->m_network->isDisconnected();
+        return this->m_network->isConnected();
     }
 
     /*
@@ -198,13 +200,13 @@ namespace BlackCore
     {
         // this->log(Q_FUNC_INFO, aircraft.toQString());
         CStatusMessageList msgs;
-        if (this->m_network->isDisconnected())
+        if (this->m_network->isConnected())
         {
-            this->m_ownAircraft = aircraft;
+            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "Cannot set plane info, network already connected"));
         }
         else
         {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "Cannot set plane info, network already connected"));
+            this->m_ownAircraft = aircraft;
         }
         return msgs;
     }
@@ -216,7 +218,7 @@ namespace BlackCore
     {
         this->m_ownAircraft.setPosition(position);
         this->m_ownAircraft.setAltitude(altitude);
-        this->m_network->updateOwnPosition(position, altitude);
+        this->m_network->setOwnAircraftPosition(position, altitude);
     }
 
     /*
@@ -226,7 +228,7 @@ namespace BlackCore
     {
         // TODO: Do I really need own member?
         this->m_ownAircraft.setSituation(situation);
-        this->m_network->updateOwnSituation(situation);
+        this->m_network->setOwnAircraftSituation(situation);
     }
 
     /*
@@ -252,7 +254,7 @@ namespace BlackCore
         }
 
         if (!changed) return;
-        this->m_network->updateOwnCockpit(com1, com2, transponder);
+        this->m_network->setOwnAircraftAvionics(com1, com2, transponder);
     }
 
     /*
@@ -271,15 +273,6 @@ namespace BlackCore
     {
         // this->log(Q_FUNC_INFO, textMessages.toQString());
         this->m_network->sendTextMessages(textMessages);
-    }
-
-    /*
-     * Connection terminated
-     */
-    void CContextNetwork::psFsdConnectionTerminated()
-    {
-        emit this->statusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, "connection terminated"));
-        emit this->connectionTerminated();
     }
 
     /*
@@ -319,15 +312,6 @@ namespace BlackCore
 
         vm = CValueMap(CAircraft::IndexPilotRealName, realname);
         this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
-    }
-
-    /*
-     * Exception to status message
-     */
-    void CContextNetwork::psVatlibExceptionMessage(const QString &message, bool fatal)
-    {
-        CStatusMessage msg(CStatusMessage::TypeTrafficNetwork, fatal ? CStatusMessage::SeverityError : CStatusMessage::SeverityWarning, message);
-        emit this->statusMessage(msg);
     }
 
 } // namespace

@@ -27,8 +27,17 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-        CNetworkVatlib(QObject *parent = nullptr);
+        enum LoginMode
+        {
+            LoginNormal = 0,
+            LoginAsObserver,
+            LoginStealth
+        };
+
+        CNetworkVatlib(LoginMode loginMode = LoginNormal, QObject *parent = nullptr);
         virtual ~CNetworkVatlib();
+
+        bool isConnected() const;
 
     public: // INetwork slots overrides
 
@@ -53,10 +62,11 @@ namespace BlackCore
         // Aircraft
         virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void setOwnAircraftPosition(const BlackMisc::Aviation::CAircraftSituation &aircraft);
-        virtual void setOwnAircraftTransponder(const BlackMisc::Aviation::CTransponder &xpdr);
-        virtual void setOwnAircraftFrequency(const BlackMisc::PhysicalQuantities::CFrequency &freq);
-        virtual void setOwnAircraftIcao(const BlackMisc::Aviation::CAircraftIcao &icao);
+        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
+        virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
+        virtual void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+        virtual void setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
+            const BlackMisc::Aviation::CTransponder &xpdr);
 
         // ATC
         virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign);
@@ -114,8 +124,10 @@ namespace BlackCore
 
     private:
         QScopedPointer<Cvatlib_Network, VatlibQScopedPointerDeleter> m_net;
+        LoginMode m_loginMode;
         Cvatlib_Network::connStatus m_status;
         BlackMisc::Network::CServer m_server;
+        BlackMisc::Aviation::CAircraft m_ownAircraft;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CInformationMessage> m_atisParts;
 
         QTimer m_processingTimer;
@@ -123,14 +135,6 @@ namespace BlackCore
         static int const c_processingIntervalMsec = 100;
         static int const c_updateIntervalMsec = 5000;
         static int const c_logoffTimeoutSec = 5;
-
-        QByteArray m_callsign;
-        QByteArray m_realname;
-        BlackMisc::Aviation::CAircraftSituation m_ownAircraft;
-        BlackMisc::Aviation::CTransponder m_ownTransponder;
-        BlackMisc::PhysicalQuantities::CFrequency m_ownFrequency;
-        BlackMisc::Aviation::CAircraftIcao m_ownAircraftIcao;
-
         QTextCodec *m_fsdTextCodec;
     };
 

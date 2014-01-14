@@ -45,10 +45,10 @@ private: //commands
     void sendNameQueryCmd(QTextStream &args);
     void sendCapabilitiesQueryCmd(QTextStream &args);
     void requestAircraftInfoCmd(QTextStream &args);
+    void setOwnAircraftCmd(QTextStream &args);
     void setOwnAircraftPositionCmd(QTextStream &args);
-    void setOwnAircraftTransponderCmd(QTextStream &args);
-    void setOwnAircraftFrequencyCmd(QTextStream &args);
-    void setOwnAircraftIcaoCmd(QTextStream &args);
+    void setOwnAircraftSituationCmd(QTextStream &args);
+    void setOwnAircraftAvionicsCmd(QTextStream &args);
     void pingCmd(QTextStream &args);
     void requestMetarCmd(QTextStream &args);
     void requestWeatherDataCmd(QTextStream &args);
@@ -69,10 +69,11 @@ signals: //to send to INetwork
     void sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void requestPlaneInfo(const BlackMisc::Aviation::CCallsign &callsign);
-    void setOwnAircraftPosition(const BlackMisc::Aviation::CAircraftSituation &position);
-    void setOwnAircraftTransponder(const BlackMisc::Aviation::CTransponder &xpdr);
-    void setOwnAircraftFrequency(const BlackMisc::PhysicalQuantities::CFrequency &freq);
-    void setOwnAircraftIcao(const BlackMisc::Aviation::CAircraftIcao &icao);
+    void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
+    void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
+    void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+    void setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
+        const BlackMisc::Aviation::CTransponder &xpdr);
     void ping(const BlackMisc::Aviation::CCallsign &callsign);
     void requestMetar(const QString &airportICAO);
     void requestWeatherData(const QString &airportICAO);
@@ -81,7 +82,7 @@ public slots: //to receive from INetwork
     void atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
                            const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
     void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-    void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus status);
+    void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
     void ipQueryReplyReceived(const QString &ip);
     void freqQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
     void serverQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);

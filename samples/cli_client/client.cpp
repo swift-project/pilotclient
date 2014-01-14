@@ -43,10 +43,10 @@ Client::Client(BlackMisc::IContext &ctx)
     connect(this, &Client::sendNameQuery,                       m_net, &INetwork::sendNameQuery);
     connect(this, &Client::sendCapabilitiesQuery,               m_net, &INetwork::sendCapabilitiesQuery);
     connect(this, &Client::requestPlaneInfo,                    m_net, &INetwork::requestAircraftInfo);
+    connect(this, &Client::setOwnAircraft,                      m_net, &INetwork::setOwnAircraft);
     connect(this, &Client::setOwnAircraftPosition,              m_net, &INetwork::setOwnAircraftPosition);
-    connect(this, &Client::setOwnAircraftTransponder,           m_net, &INetwork::setOwnAircraftTransponder);
-    connect(this, &Client::setOwnAircraftFrequency,             m_net, &INetwork::setOwnAircraftFrequency);
-    connect(this, &Client::setOwnAircraftIcao,                  m_net, &INetwork::setOwnAircraftIcao);
+    connect(this, &Client::setOwnAircraftSituation,             m_net, &INetwork::setOwnAircraftSituation);
+    connect(this, &Client::setOwnAircraftAvionics,              m_net, &INetwork::setOwnAircraftAvionics);
     connect(this, &Client::ping,                                m_net, &INetwork::ping);
     connect(this, &Client::requestMetar,                        m_net, &INetwork::requestMetar);
     connect(this, &Client::requestWeatherData,                  m_net, &INetwork::requestWeatherData);
@@ -70,10 +70,10 @@ Client::Client(BlackMisc::IContext &ctx)
     m_commands["name"]              = std::bind(&Client::sendNameQueryCmd, this, _1);
     m_commands["caps"]              = std::bind(&Client::sendCapabilitiesQueryCmd, this, _1);
     m_commands["aircraftinfo"]      = std::bind(&Client::requestAircraftInfoCmd, this, _1);
+    m_commands["setaircraft"]       = std::bind(&Client::setOwnAircraftCmd, this, _1);
     m_commands["setposition"]       = std::bind(&Client::setOwnAircraftPositionCmd, this, _1);
-    m_commands["setsquawk"]         = std::bind(&Client::setOwnAircraftTransponderCmd, this, _1);
-    m_commands["setfreq"]           = std::bind(&Client::setOwnAircraftFrequencyCmd, this, _1);
-    m_commands["seticao"]           = std::bind(&Client::setOwnAircraftIcaoCmd, this, _1);
+    m_commands["setsituation"]      = std::bind(&Client::setOwnAircraftSituationCmd, this, _1);
+    m_commands["setavionics"]       = std::bind(&Client::setOwnAircraftAvionicsCmd, this, _1);
     m_commands["ping"]              = std::bind(&Client::pingCmd, this, _1);
     m_commands["metar"]             = std::bind(&Client::requestMetarCmd, this, _1);
     m_commands["weather"]           = std::bind(&Client::requestWeatherDataCmd, this, _1);
@@ -230,54 +230,72 @@ void Client::requestAircraftInfoCmd(QTextStream &args)
     emit requestPlaneInfo(callsign);
 }
 
-void Client::setOwnAircraftFrequencyCmd(QTextStream &args)
-{
-    QString callsign;
-    double num;
-    args >> callsign >> num;
-    BlackMisc::PhysicalQuantities::CFrequency freq(num, BlackMisc::PhysicalQuantities::CFrequencyUnit::kHz());
-    emit setOwnAircraftFrequency(freq);
-}
-
-void Client::setOwnAircraftIcaoCmd(QTextStream &args)
+void Client::setOwnAircraftCmd(QTextStream &args)
 {
     QString callsign;
     QString acTypeICAO;
     QString airlineICAO;
     QString livery;
-    args >> callsign >> acTypeICAO >> airlineICAO >> livery;
-    BlackMisc::Aviation::CAircraftIcao icao(acTypeICAO, "L2J", airlineICAO, livery, "");
-    emit setOwnAircraftIcao(icao);
+    double lat;
+    double lon;
+    double alt;
+    double hdg;
+    double pitch;
+    double bank;
+    double gs;
+    args >> callsign >> acTypeICAO >> airlineICAO >> livery >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs;
+    emit setOwnAircraft(BlackMisc::Aviation::CAircraft(callsign, BlackMisc::Network::CUser(), BlackMisc::Aviation::CAircraftSituation(
+        BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
+        BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+        BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+        BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+        BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+        BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
+    )));
 }
 
 void Client::setOwnAircraftPositionCmd(QTextStream &args)
 {
-    QString lat;
-    QString lon;
-    QString alt;
-    QString speed;
-    QString hdg;
-    QString pitch;
-    QString bank;
-    args >> lat >> lon >> alt >> speed >> hdg >> pitch >> bank;
-    BlackMisc::Aviation::CAircraftSituation position(BlackMisc::Geo::CCoordinateGeodetic(lat.toDouble(), lon.toDouble(), 0),
-        BlackMisc::Aviation::CAltitude(alt.toDouble(), BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
-        BlackMisc::Aviation::CHeading(hdg.toDouble(), BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-        BlackMisc::PhysicalQuantities::CAngle(pitch.toDouble(), BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-        BlackMisc::PhysicalQuantities::CAngle(bank.toDouble(), BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-        BlackMisc::PhysicalQuantities::CSpeed(speed.toDouble(), BlackMisc::PhysicalQuantities::CSpeedUnit::kts()));
-    emit setOwnAircraftPosition(position);
+    double lat;
+    double lon;
+    double alt;
+    args >> lat >> lon >> alt;
+    emit setOwnAircraftPosition(BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
+        BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()));
 }
 
-void Client::setOwnAircraftTransponderCmd(QTextStream &args)
+void Client::setOwnAircraftSituationCmd(QTextStream &args)
 {
-    QString code;
-    QString mode;
-    args >> code >> mode;
-    BlackMisc::Aviation::CTransponder xpdr("transponder", code.toInt(), BlackMisc::Aviation::CTransponder::StateStandby);
-    if (mode == "c") { xpdr.setTransponderCode(BlackMisc::Aviation::CTransponder::ModeC); }
-    else if (mode == "i") { xpdr.setTransponderCode(BlackMisc::Aviation::CTransponder::StateIdent); }
-    emit setOwnAircraftTransponder(xpdr);
+    double lat;
+    double lon;
+    double alt;
+    double hdg;
+    double pitch;
+    double bank;
+    double gs;
+    args >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs;
+    emit setOwnAircraftSituation(BlackMisc::Aviation::CAircraftSituation(
+        BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
+        BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+        BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+        BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+        BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+        BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
+    ));
+}
+
+void Client::setOwnAircraftAvionicsCmd(QTextStream &args)
+{
+    double com1;
+    double com2;
+    int xpdrCode;
+    QString xpdrMode;
+    args >> com1 >> com2 >> xpdrCode >> xpdrMode;
+    emit setOwnAircraftAvionics(
+        BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
+        BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
+        BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode)
+    );
 }
 
 void Client::pingCmd(QTextStream &args)
@@ -316,13 +334,21 @@ void Client::atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
     std::cout << "ATC_DISCONNECTED " << callsign << std::endl;
 }
 
-void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus status)
+void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus)
 {
-    switch (status)
+    switch (newStatus)
     {
-    case BlackCore::INetwork::Disconnected: std::cout << "CONN_STATUS_DISCONNECTED" << std::endl; break;
-    case BlackCore::INetwork::Connecting:   std::cout << "CONN_STATUS_CONNECTING" << std::endl; break;
-    case BlackCore::INetwork::Connected:    std::cout << "CONN_STATUS_CONNECTED" << std::endl; break;
+    case BlackCore::INetwork::Disconnected:         std::cout << "CONN_STATUS_DISCONNECTED"; break;
+    case BlackCore::INetwork::DisconnectedError:    std::cout << "CONN_STATUS_DISCONNECTED_ERROR"; break;
+    case BlackCore::INetwork::Connecting:           std::cout << "CONN_STATUS_CONNECTING"; break;
+    case BlackCore::INetwork::Connected:            std::cout << "CONN_STATUS_CONNECTED"; break;
+    }
+    switch (oldStatus)
+    {
+    case BlackCore::INetwork::Disconnected:         std::cout << " (was CONN_STATUS_DISCONNECTED)\n"; break;
+    case BlackCore::INetwork::DisconnectedError:    std::cout << " (was CONN_STATUS_DISCONNECTED_ERROR)\n"; break;
+    case BlackCore::INetwork::Connecting:           std::cout << " (was CONN_STATUS_CONNECTING)\n"; break;
+    case BlackCore::INetwork::Connected:            std::cout << " (was CONN_STATUS_CONNECTED)\n"; break;
     }
 }
 

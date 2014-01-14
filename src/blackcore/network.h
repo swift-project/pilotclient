@@ -23,6 +23,7 @@
 #include <QString>
 #include <QMap>
 #include <QVector>
+#include <QMetaEnum>
 
 namespace BlackCore
 {
@@ -58,9 +59,19 @@ namespace BlackCore
         enum ConnectionStatus
         {
             Disconnected = 0,
+            DisconnectedError,
             Connecting,
             Connected
         };
+
+        QString connectionStatusToString(ConnectionStatus status) const
+        {
+            int index = metaObject()->indexOfEnumerator("ConnectionStatus");
+            QMetaEnum metaEnum = metaObject()->enumerator(index);
+            return metaEnum.valueToKey(status);
+        }
+
+        virtual bool isConnected() const = 0;
 
     public slots:
         // Network
@@ -86,10 +97,11 @@ namespace BlackCore
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
         virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign) = 0;
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-        virtual void setOwnAircraftPosition(const BlackMisc::Aviation::CAircraftSituation &aircraft) = 0;
-        virtual void setOwnAircraftTransponder(const BlackMisc::Aviation::CTransponder &xpdr) = 0;
-        virtual void setOwnAircraftFrequency(const BlackMisc::PhysicalQuantities::CFrequency &freq) = 0;
-        virtual void setOwnAircraftIcao(const BlackMisc::Aviation::CAircraftIcao &icao) = 0;
+        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
+        virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
+        virtual void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
+        virtual void setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
+            const BlackMisc::Aviation::CTransponder &xpdr) = 0;
 
         // Weather / flight plan
         virtual void requestMetar(const QString &airportICAO) = 0;
@@ -103,6 +115,8 @@ namespace BlackCore
         void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void atcQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC);
         void atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
+        void atisQueryVoiceRoomReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
+        void atisQueryLogoffTimeReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
         void metarReceived(const QString &data);
 
         // Aircraft
@@ -114,8 +128,9 @@ namespace BlackCore
         void frequencyQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
 
         // Connection / Network in general
+        void statusMessage(const BlackMisc::CStatusMessage &message);
         void kicked(const QString &msg);
-        void connectionStatusChanged(ConnectionStatus status);
+        void connectionStatusChanged(ConnectionStatus oldStatus, ConnectionStatus newStatus);
         void pong(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);
         void capabilitiesQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
         void ipQueryReplyReceived(const QString &ip);

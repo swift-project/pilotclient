@@ -119,7 +119,6 @@ namespace BlackCore
             station.setPosition(position);
             station.setOnline(true);
             station.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
-            this->m_atisMessageBuilder[callsign.asString()] = ""; // reset ATIS builder
             this->m_atcStationsOnline.push_back(station);
             emit this->changedAtcStationsOnline();
             emit this->m_network->sendAtisQuery(callsign); // request ATIS
@@ -152,75 +151,45 @@ namespace BlackCore
     /*
      * ATIS received
      */
-    void CContextNetwork::psFsdAtisQueryReceived(const CCallsign &callsign, Cvatlib_Network::atisLineType lineType, const QString &atisMessage)
+    void CContextNetwork::psFsdAtisQueryReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
     {
         // this->log(Q_FUNC_INFO, callsign.toQString(), atisMessage);
 
-        // The ATIS consists of several lines, so the complete
-        // message needs to be build up before it can be set
-        // :V -> voice room address.
-        // :T Controller atis message
-        // :E Zulu logoff time
-        // :Z atis line count including this one
+        CValueMap vm(CAtcStation::IndexAtisMessage, atisMessage.toQVariant());
+        this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
+        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+    }
 
-        QString currentAtisMessage = this->m_atisMessageBuilder.contains(callsign.asString()) ?
-                                     this->m_atisMessageBuilder[callsign.asString()] : "";
-        switch (lineType)
+    /*
+     * ATIS (voice room part) received
+     */
+    void CContextNetwork::psFsdAtisVoiceRoomQueryReceived(const CCallsign &callsign, const QString &url)
+    {
+        QString trimmedUrl = url.trimmed();
+        CValueMap vm(CAtcStation::IndexVoiceRoomUrl, trimmedUrl);
+        this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
+        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+    }
+
+    /*
+     * ATIS (logoff time part) received
+     */
+    void CContextNetwork::psFsdAtisLogoffTimeQueryReceived(const CCallsign &callsign, const QString &zuluTime)
+    {
+        if (zuluTime.length() == 4)
         {
-        case Cvatlib_Network::atisLineType_LineCount:
-            {
-                // line count denotes end of ATIS
-                CValueMap vm(CAtcStation::IndexAtisMessage, currentAtisMessage);
-                this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
-                this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-                this->m_atisMessageBuilder.remove(callsign.asString());
-                return; // ignore, nothing to do
-            }
-        case Cvatlib_Network::atisLineType_VoiceRoom:
-            {
-                QString voiceRoomUrl = atisMessage.trimmed();
-                CValueMap vm(CAtcStation::IndexVoiceRoomUrl, voiceRoomUrl);
-                this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
-                this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-                break; // voice room set, but also add to message
-            }
-        case Cvatlib_Network::atisLineType_ZuluLogoff:
-            {
-                if (atisMessage.length() == 4)
-                {
-                    // Logic to set logoff time
-                    bool ok;
-                    int h = atisMessage.left(2).toInt(&ok);
-                    if (!ok) break;
-                    int m = atisMessage.right(2).toInt(&ok);
-                    if (!ok) break;
-                    QDateTime zuluLogoff = QDateTime::currentDateTimeUtc();
-                    zuluLogoff.setTime(QTime(h, m));
-                    CValueMap vm(CAtcStation::IndexBookedUntil, zuluLogoff);
-                    this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
-                    this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-                }
-                break; // ZULU time set, but also add to message
-            }
-        case Cvatlib_Network::atisLineType_TextMessage:
-            break;
-        default:
-            break;
+            // Logic to set logoff time
+            bool ok;
+            int h = zuluTime.left(2).toInt(&ok);
+            if (!ok) return;
+            int m = zuluTime.right(2).toInt(&ok);
+            if (!ok) return;
+            QDateTime logoffDateTime = QDateTime::currentDateTimeUtc();
+            logoffDateTime.setTime(QTime(h, m));
+            CValueMap vm(CAtcStation::IndexBookedUntil, logoffDateTime);
+            this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
+            this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
         }
-
-        const QString fixedAtisMessage = atisMessage.trimmed();
-        if (fixedAtisMessage.isEmpty()) return;
-
-        // detect the stupid z1, z2, z3 placeholders
-        // TODO: Anything better as this stupid code here?
-        const QString atisTest = fixedAtisMessage.toLower().remove(QRegExp("[\\n\\t\\r]"));
-        if (atisTest == "z") return;
-        if (atisTest.startsWith("z") && atisTest.length() == 2) return; // z1, z2, ..
-        if (atisTest.length() == 1) return; // sometimes just z
-
-        if (!currentAtisMessage.isEmpty()) currentAtisMessage.append("\n");
-        currentAtisMessage.append(fixedAtisMessage);
-        this->m_atisMessageBuilder[callsign.asString()] = currentAtisMessage;
     }
 
     /*

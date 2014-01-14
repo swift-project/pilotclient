@@ -185,7 +185,6 @@ namespace BlackCore
         BlackCore::INetwork *m_network;
         BlackMisc::Aviation::CAircraft m_ownAircraft;
         QMap<QString, BlackMisc::Aviation::CInformationMessage> m_metarCache /*!< Keep METARs for a while */;
-        QMap<QString, QString> m_atisMessageBuilder; /*!< ATIS consists of several parts, complete ATIS needs to be concatenated */
 
         // for reading XML
         QNetworkAccessManager *m_networkManager;
@@ -229,11 +228,6 @@ namespace BlackCore
 
     private slots:
         /*!
-         * \brief Terminated connection
-         */
-        void psFsdConnectionTerminated();
-
-        /*!
          * \brief Connection status changed
          * \param from
          * \param to
@@ -256,12 +250,25 @@ namespace BlackCore
         void psFsdAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
 
         /*!
-         * \brief ATIS received (also relevant to get voice server)
+         * \brief ATIS received
          * \param callsign
-         * \param lineType
          * \param atisMessage
          */
-        void psFsdAtisQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, Cvatlib_Network::atisLineType lineType, const QString &atisMessage);
+        void psFsdAtisQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
+
+        /*!
+         * \brief ATIS received (voice room part)
+         * \param callsign
+         * \param url
+         */
+        void psFsdAtisVoiceRoomQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
+
+        /*!
+         * \brief ATIS received (logoff time part)
+         * \param callsign
+         * \param zuluTime
+         */
+        void psFsdAtisLogoffTimeQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
 
         /*!
          * \brief METAR received
@@ -318,15 +325,8 @@ namespace BlackCore
          * TODO: encapsulate reading from WWW in some class
          */
         void psAtcBookingsRead(QNetworkReply *nwReply);
-
-        /*!
-         * \brief Exception message
-         * \param message
-         * \param fatal
-         */
-        void psVatlibExceptionMessage(const QString &message, bool fatal);
-
     };
+
 }
 
 #endif // guard
