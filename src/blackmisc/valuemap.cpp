@@ -39,6 +39,33 @@ namespace BlackMisc
     }
 
     /*
+     * metaTypeId
+     */
+    int CValueMap::getMetaTypeId() const
+    {
+        return qMetaTypeId<CValueMap>();
+    }
+
+    /*
+     * is a
+     */
+    bool CValueMap::isA(int metaTypeId) const
+    {
+        if (metaTypeId == qMetaTypeId<CValueMap>()) { return true; }
+
+        return this->CValueObject::isA(metaTypeId);
+    }
+
+    /*
+     * Compare
+     */
+    int CValueMap::compareImpl(const CValueObject &/*otherBase*/) const
+    {
+        qFatal("not implemented");
+        return 0;
+    }
+
+    /*
      * Marshall to DBus
      */
     void CValueMap::marshallToDbus(QDBusArgument &argument) const

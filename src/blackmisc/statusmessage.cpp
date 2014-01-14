@@ -34,6 +34,36 @@ namespace BlackMisc
     }
 
     /*
+     * metaTypeId
+     */
+    int CStatusMessage::getMetaTypeId() const
+    {
+        return qMetaTypeId<CStatusMessage>();
+    }
+
+    /*
+     * is a
+     */
+    bool CStatusMessage::isA(int metaTypeId) const
+    {
+        if (metaTypeId == qMetaTypeId<CStatusMessage>()) { return true; }
+
+        return this->CValueObject::isA(metaTypeId);
+    }
+
+    /*
+     * Compare
+     */
+    int CStatusMessage::compareImpl(const CValueObject &otherBase) const
+    {
+        const auto &other = static_cast<const CStatusMessage &>(otherBase);
+
+        if (this->m_type < other.m_type) { return -1; }
+        if (this->m_type > other.m_type) { return 1; }
+        return this->m_message.compare(other.m_message);
+    }
+
+    /*
      * Metadata
      */
     void CStatusMessage::registerMetadata()

@@ -59,25 +59,35 @@ namespace BlackMisc
         }
 
         /*
+         * metaTypeId
+         */
+        int CAltitude::getMetaTypeId() const
+        {
+            return qMetaTypeId<CAltitude>();
+        }
+
+        /*
+         * is a
+         */
+        bool CAltitude::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CAltitude>()) { return true; }
+
+            return this->CLength::isA(metaTypeId);
+        }
+
+        /*
          * Compare
          */
-        int CAltitude::compare(const QVariant &qv) const
+        int CAltitude::compareImpl(const CValueObject &otherBase) const
         {
-            Q_ASSERT(qv.canConvert<CAltitude>() || qv.canConvert<CLength>());
-            Q_ASSERT(qv.isValid() && !qv.isNull());
-            if (qv.canConvert<CAltitude>())
-            {
-                CAltitude other = qv.value<CAltitude>();
-                if (this->isMeanSeaLevel() && other.isAboveGroundLevel()) return 1;
-                if (this->isAboveGroundLevel() && other.isMeanSeaLevel()) return -1;
-                return this->compare(other);
-            }
-            else if (qv.canConvert<CLength>())
-            {
-                return this->compare(qv.value<CLength>());
-            }
-            qFatal("Invalid comparison");
-            return 0; // just for compiler
+            const auto &other = static_cast<const CAltitude &>(otherBase);
+
+            if (this->isMeanSeaLevel() && other.isAboveGroundLevel()) { return 1; }
+            if (this->isAboveGroundLevel() && other.isMeanSeaLevel()) { return -1; }
+            if (*this < other) { return -1; }
+            if (*this > other) { return 1; }
+            return 0;
         }
 
         /*

@@ -430,14 +430,31 @@ namespace BlackMisc
         }
 
         /*
+         * metaTypeId
+         */
+        int CAtcStation::getMetaTypeId() const
+        {
+            return qMetaTypeId<CAtcStation>();
+        }
+
+        /*
+         * is a
+         */
+        bool CAtcStation::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CAtcStation>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
          * Compare
          */
-        int CAtcStation::compare(const QVariant &qv) const
+        int CAtcStation::compareImpl(const CValueObject &otherBase) const
         {
-            Q_ASSERT(qv.canConvert<CAtcStation>());
-            Q_ASSERT(!qv.isNull() && qv.isValid());
-            CAtcStation atc = qv.value<CAtcStation>();
-            return this->getCallsign().compare(atc.getCallsign());
+            const auto &other = static_cast<const CAtcStation &>(otherBase);
+
+            return this->getCallsign().asString().compare(other.getCallsign().asString(), Qt::CaseInsensitive);
         }
 
         /*

@@ -14,6 +14,36 @@ namespace BlackMisc
         }
 
         /*
+         * metaTypeId
+         */
+        int CInformationMessage::getMetaTypeId() const
+        {
+            return qMetaTypeId<CInformationMessage>();
+        }
+
+        /*
+         * is a
+         */
+        bool CInformationMessage::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CInformationMessage>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        int CInformationMessage::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CInformationMessage &>(otherBase);
+
+            if (this->m_type < other.m_type) { return -1; }
+            if (this->m_type > other.m_type) { return 1; }
+            return this->m_message.compare(other.m_message);
+        }
+
+        /*
          * Marshall to DBus
          */
         void CInformationMessage::marshallToDbus(QDBusArgument &argument) const

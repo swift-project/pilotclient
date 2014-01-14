@@ -8,6 +8,7 @@
 #include "blackmisc/coordinateecef.h"
 #include "blackmisc/coordinatened.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include <tuple>
 
 namespace BlackMisc
 {
@@ -24,6 +25,39 @@ namespace BlackMisc
                 arg(QString::number(this->m_j, 'f')).
                 arg(QString::number(this->m_k, 'f'));
             return s;
+        }
+
+        /*
+         * metaTypeId
+         */
+        template <class ImplVector> int CVector3DBase<ImplVector>::getMetaTypeId() const
+        {
+            return qMetaTypeId<ImplVector>();
+        }
+
+        /*
+         * is a
+         */
+        template <class ImplVector> bool CVector3DBase<ImplVector>::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<ImplVector>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        template <class ImplVector> int CVector3DBase<ImplVector>::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CVector3DBase &>(otherBase);
+
+            const auto lhs = std::tie(this->m_i, this->m_j, this->m_k);
+            const auto rhs = std::tie(other.m_i, other.m_j, other.m_k);
+
+            if (lhs < rhs) { return -1; }
+            if (lhs > rhs) { return 1; }
+            return 0;
         }
 
         /*

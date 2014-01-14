@@ -46,6 +46,21 @@ namespace BlackMisc
             }
 
             /*!
+             * \copydoc CValueObject::getMetaTypeId
+             */
+            virtual int getMetaTypeId() const;
+
+            /*!
+             * \copydoc CValueObject::isA
+             */
+            virtual bool isA(int metaTypeId) const;
+
+            /*!
+             * \copydoc CValueObject::compareImpl
+             */
+            virtual int compareImpl(const CValueObject &other) const;
+
+            /*!
              * \brief Stream to DBus <<
              * \param argument
              */
@@ -173,20 +188,6 @@ namespace BlackMisc
                 LATorLON l(*this);
                 l -= latOrLon;
                 return l;
-            }
-
-            /*!
-             * Compare
-             */
-            int compare(const QVariant &qv) const;
-
-            /*!
-             * \todo this is a hack, to avoid hiding inherited names in CPhysicalQuantity
-             * (see Effective C++ item 33) CPhysicalQuantity::compare is the real culprit
-             */
-            int compare(const CEarthAngle &other) const
-            {
-                return static_cast<const CPhysicalQuantity<BlackMisc::PhysicalQuantities::CAngleUnit, BlackMisc::PhysicalQuantities::CAngle> *>(this)->compare(other);
             }
 
             /*!

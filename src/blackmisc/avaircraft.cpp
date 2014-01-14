@@ -125,14 +125,31 @@ namespace BlackMisc
         }
 
         /*
+         * metaTypeId
+         */
+        int CAircraft::getMetaTypeId() const
+        {
+            return qMetaTypeId<CAircraft>();
+        }
+
+        /*
+         * is a
+         */
+        bool CAircraft::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CAircraft>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
          * Compare
          */
-        int CAircraft::compare(const QVariant &qv) const
+        int CAircraft::compareImpl(const CValueObject &otherBase) const
         {
-            Q_ASSERT(qv.canConvert<CAircraft>());
-            Q_ASSERT(!qv.isNull() && qv.isValid());
-            CAircraft aircraft = qv.value<CAircraft>();
-            return this->getCallsign().compare(aircraft.getCallsign());
+            const auto &other = static_cast<const CAircraft &>(otherBase);
+
+            return this->getCallsign().asString().compare(other.getCallsign().asString(), Qt::CaseInsensitive);
         }
 
         /*

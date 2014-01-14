@@ -1,5 +1,6 @@
 #include "avaircrafticao.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include <tuple>
 
 namespace BlackMisc
 {
@@ -17,6 +18,39 @@ namespace BlackMisc
             if (this->hasLivery()) s.append(" ").append(this->m_livery);
             if (this->hasColor()) s.append(" ").append(this->m_color);
             return s;
+        }
+
+        /*
+         * metaTypeId
+         */
+        int CAircraftIcao::getMetaTypeId() const
+        {
+            return qMetaTypeId<CAircraftIcao>();
+        }
+
+        /*
+         * is a
+         */
+        bool CAircraftIcao::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CAircraftIcao>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        int CAircraftIcao::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CAircraftIcao &>(otherBase);
+
+            const auto lhs = std::tie(this->m_designator, this->m_color, this->m_airline, this->m_livery);
+            const auto rhs = std::tie(other.m_designator, other.m_color, other.m_airline, other.m_livery);
+
+            if (lhs < rhs) { return -1; }
+            if (lhs > rhs) { return 1; }
+            return 0;
         }
 
         /*

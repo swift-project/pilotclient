@@ -1,5 +1,6 @@
 #include "nwserver.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include <tuple>
 
 namespace BlackMisc
 {
@@ -16,6 +17,39 @@ namespace BlackMisc
             s.append(" ").append(QString::number(this->m_port));
             s.append(" ").append(this->m_user.toQString(i18n));
             return s;
+        }
+
+        /*
+         * metaTypeId
+         */
+        int CServer::getMetaTypeId() const
+        {
+            return qMetaTypeId<CServer>();
+        }
+
+        /*
+         * is a
+         */
+        bool CServer::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CServer>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        int CServer::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CServer &>(otherBase);
+
+            const auto lhs = std::tie(this->m_name, this->m_description, this->m_address, this->m_port);
+            const auto rhs = std::tie(other.m_name, other.m_description, other.m_address, other.m_port);
+
+            if (lhs < rhs) { return -1; }
+            if (lhs > rhs) { return 1; }
+            return compare(this->m_user, other.m_user);
         }
 
         /*

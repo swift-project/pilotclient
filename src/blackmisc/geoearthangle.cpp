@@ -72,16 +72,33 @@ namespace BlackMisc
         }
 
         /*
+         * metaTypeId
+         */
+        template <class LATorLON> int CEarthAngle<LATorLON>::getMetaTypeId() const
+        {
+            return qMetaTypeId<LATorLON>();
+        }
+
+        /*
+         * is a
+         */
+        template <class LATorLON> bool CEarthAngle<LATorLON>::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<LATorLON>()) { return true; }
+
+            return this->CAngle::isA(metaTypeId);
+        }
+
+        /*
          * Compare
          */
-        template <class LATorLON> int CEarthAngle<LATorLON>::compare(const QVariant &qv) const
+        template <class LATorLON> int CEarthAngle<LATorLON>::compareImpl(const CValueObject &otherBase) const
         {
-            Q_ASSERT(qv.canConvert<LATorLON>() || qv.canConvert<CAngle>());
-            Q_ASSERT(qv.isValid() && !qv.isNull());
-            if (qv.canConvert<LATorLON>())
-                return this->compare(qv.value<LATorLON>());
-            else
-                return this->compare(qv.value<CAngle>());
+            const auto &other = static_cast<const LATorLON &>(otherBase);
+
+            if (*this < other) { return -1; }
+            else if (*this > other) { return 1; }
+            else { return 0; }
         }
 
         // see here for the reason of thess forward instantiations

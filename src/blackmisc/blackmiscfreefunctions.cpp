@@ -221,7 +221,7 @@ int BlackMisc:: compareQVariants(const QVariant &v1, const QVariant &v2)
         const CValueObject *cs2 = CValueObject::fromQVariant(v2);
         if (cs1 && cs2)
         {
-            return cs1->compare(v2); // Note, that I have to compare against QVariant
+            return compare(*cs1, *cs2);
         }
     }
 

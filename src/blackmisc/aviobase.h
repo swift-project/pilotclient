@@ -59,6 +59,26 @@ namespace BlackMisc
             }
 
             /*!
+             * \copydoc CValueObject::getMetaTypeId
+             */
+            virtual int getMetaTypeId() const { return 0; }
+
+            /*!
+             * \copydoc CValueObject::isA
+             */
+            virtual bool isA(int metaTypeId) const { return this->CValueObject::isA(metaTypeId); }
+
+            /*!
+             * \copydoc CValueObject::compareImpl
+             */
+            virtual int compareImpl(const CValueObject &other) const
+            {
+                Q_UNUSED(other);
+                qFatal("not implemented");
+                return 0;
+            }
+
+            /*!
              * \brief Stream to DBus <<
              * \param argument
              */

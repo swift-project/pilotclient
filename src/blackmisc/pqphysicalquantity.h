@@ -68,6 +68,21 @@ namespace BlackMisc
              */
             virtual QString convertToQString(bool i18n = false) const;
 
+            /*!
+             * \copydoc CValueObject::getMetaTypeId
+             */
+            virtual int getMetaTypeId() const;
+
+            /*!
+             * \copydoc CValueObject::isA
+             */
+            virtual bool isA(int metaTypeId) const;
+
+            /*!
+             * \copydoc CValueObject::compareImpl
+             */
+            virtual int compareImpl(const CValueObject &other) const;
+
         public:
             /*!
              * \brief Virtual destructor
@@ -357,16 +372,6 @@ namespace BlackMisc
              * \brief Register metadata of unit and quantity
              */
             static void registerMetadata();
-
-            /*!
-             * \copydoc BlackObject::compare
-             */
-            virtual int compare(const QVariant &qv) const;
-
-            /*!
-             * \copydoc BlackObject::compare
-             */
-            virtual int compare(const PQ &other) const;
         };
 
     } // namespace

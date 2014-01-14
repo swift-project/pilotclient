@@ -46,6 +46,10 @@ namespace BlackMiscTest
         QVERIFY2(station1 == station1qv, "Station should be equal (QVariant)");
         QVERIFY2(station2 == station1qv, "Station should be equal (QVariant)");
         QVERIFY2(station3 != station1qv, "Station should be equal (QVariant)");
+
+        QVERIFY2(compare(station1, station1) == 0, "Station should be equal");
+        QVERIFY2(compare(station1, station2) == 0, "Station should be equal");
+        QVERIFY2(compare(station1, station3) != 0, "Station should not be equal");
     }
 
     /*

@@ -98,21 +98,31 @@ namespace BlackMisc
         }
 
         /*
-         * Compare
+         * metaTypeId
          */
-        int CCallsign::compare(const QVariant &qv) const
+        int CCallsign::getMetaTypeId() const
         {
-            Q_ASSERT(qv.canConvert<CCallsign>());
-            Q_ASSERT(!qv.isNull() && qv.isValid());
-            return this->compare(qv.value<CCallsign>());
+            return qMetaTypeId<CCallsign>();
+        }
+
+        /*
+         * is a
+         */
+        bool CCallsign::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CCallsign>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
         }
 
         /*
          * Compare
          */
-        int CCallsign::compare(const CCallsign &callsign) const
+        int CCallsign::compareImpl(const CValueObject &otherBase) const
         {
-            return this->m_callsign.compare(callsign.asString(), Qt::CaseInsensitive);
+            const auto &other = static_cast<const CCallsign &>(otherBase);
+
+            return this->m_callsign.compare(other.asString(), Qt::CaseInsensitive);
         }
 
         /*

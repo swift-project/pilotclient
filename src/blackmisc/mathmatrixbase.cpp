@@ -139,6 +139,42 @@ namespace BlackMisc
         }
 
         /*
+         * metaTypeId
+         */
+        template <class ImplMatrix, int Rows, int Columns> int CMatrixBase<ImplMatrix, Rows, Columns>::getMetaTypeId() const
+        {
+            return qMetaTypeId<ImplMatrix>();
+        }
+
+        /*
+         * is a
+         */
+        template <class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, Rows, Columns>::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<ImplMatrix>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        template <class ImplMatrix, int Rows, int Columns> int CMatrixBase<ImplMatrix, Rows, Columns>::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CMatrixBase &>(otherBase);
+
+            for (int r = 0; r < Rows; ++r)
+            {
+                for (int c = 0; c < Columns; ++c)
+                {
+                    if (this->m_matrix(r, c) < other.m_matrix(r, c)) { return -1; }
+                    if (this->m_matrix(r, c) > other.m_matrix(r, c)) { return 1; }
+                }
+            }
+            return 0;
+        }
+
+        /*
          * Hash
          */
         template <class ImplMatrix, int Rows, int Columns> uint CMatrixBase<ImplMatrix, Rows, Columns>::getValueHash() const

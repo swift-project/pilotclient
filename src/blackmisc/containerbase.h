@@ -152,6 +152,36 @@ namespace BlackMisc
             return str += "}";
         }
 
+        /*!
+         * \copydoc CValueObject::getMetaTypeId
+         */
+        virtual int getMetaTypeId() const { return qMetaTypeId<C<T>>(); }
+
+        /*!
+         * \copydoc CValueObject::isA
+         */
+        virtual bool isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<C<T>>()) { return true; }
+            return CValueObject::isA(metaTypeId);
+        }
+
+        /*!
+         * \copydoc CValueObject::compareImpl
+         */
+        virtual int compareImpl(const CValueObject &/*other*/) const
+        {
+            //const auto &o = static_cast<const CContainerBase &>(other);
+            //if (derived().size() < o.derived().size()) { return -1; }
+            //if (derived().size() > o.derived().size()) { return 1; }
+            //for (auto i1 = derived().begin(), i2 = o.derived().begin(); i1 != derived().end() && i2 != o.derived().end(); ++i1, ++i2)
+            //{
+            //    if (*i1 < *i2) { return -1; }
+            //    if (*i1 > *i2) { return 1; }
+            //}
+            return 0;
+        }
+
         virtual void marshallToDbus(QDBusArgument &argument) const
         {
             argument.beginArray(qMetaTypeId<T>());
