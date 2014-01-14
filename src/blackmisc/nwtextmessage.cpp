@@ -148,9 +148,7 @@ namespace BlackMisc
          */
         void CTextMessage::toggleSenderRecipient()
         {
-            BlackMisc::Aviation::CCallsign csOldFrom(this->getSenderCallsign());
-            this->setSenderCallsign(this->getRecipientCallsign());
-            this->setRecipientCallsign(csOldFrom);
+            qSwap(this->m_senderCallsign, this->m_recipientCallsign);
         }
 
         /*
