@@ -10,22 +10,22 @@
 #pragma push_macro("interface")
 #undef interface
 
-#include <QMainWindow>
-#include <QTextEdit>
-#include <QItemSelection>
-#include <QTimer>
-#include "blackgui/atcstationlistmodel.h"
-#include "blackgui/serverlistmodel.h"
-#include "blackgui/aircraftlistmodel.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/nwtextmessage.h"
+#include "infowindow.h"
+#include "guimodeenums.h"
 #include "blackcore/context_voice.h"
 #include "blackcore/context_network_interface.h"
 #include "blackcore/context_settings_interface.h"
 #include "blackcore/context_application_interface.h"
 #include "blackcore/coreruntime.h"
-#include "infowindow.h"
-#include "guimodeenums.h"
+#include "blackgui/atcstationlistmodel.h"
+#include "blackgui/serverlistmodel.h"
+#include "blackgui/aircraftlistmodel.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/nwtextmessage.h"
+#include <QMainWindow>
+#include <QTextEdit>
+#include <QItemSelection>
+#include <QTimer>
 
 namespace Ui
 {
