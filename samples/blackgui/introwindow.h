@@ -8,11 +8,11 @@
 
 #include "guimodeenums.h"
 #include <QDialog>
-
+#include <QScopedPointer>
 
 namespace Ui
 {
-class CIntroWindow;
+    class CIntroWindow;
 }
 
 class CIntroWindow : public QDialog
@@ -50,7 +50,7 @@ private slots:
     void buttonClicked() const;
 
 private:
-    Ui::CIntroWindow *ui;
+    QScopedPointer<Ui::CIntroWindow> ui;
 };
 
 #endif // guard

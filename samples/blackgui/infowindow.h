@@ -7,10 +7,11 @@
 #define SAMPLE_INFOWINDOW_H
 
 #include <QWizardPage>
+#include <QScopedPointer>
 
 namespace Ui
 {
-class InfoWindow;
+    class InfoWindow;
 }
 
 class CInfoWindow : public QWizardPage
@@ -37,7 +38,7 @@ public:
     void setInfoMessage(const QString &message, int displayTimeMs = 4000);
 
 private:
-    Ui::InfoWindow *ui;
+    QScopedPointer<Ui::InfoWindow> ui;
 };
 
 #endif // guard

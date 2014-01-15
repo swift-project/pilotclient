@@ -27,10 +27,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_dBusConnection("dummy"), m_coreRuntime(nullptr),
     m_atcListOnline(nullptr), m_atcListBooked(nullptr),
     m_trafficServerList(nullptr), m_aircraftsInRange(nullptr),
-    m_contextApplication(nullptr),
-    m_contextNetwork(nullptr), m_contextVoice(nullptr),
-    m_contextSettings(nullptr),
-    m_ownAircraft(), m_voiceRoomCom1(), m_voiceRoomCom2(),
+    m_contextApplication(nullptr), m_contextNetwork(nullptr), m_contextVoice(nullptr), m_contextSettings(nullptr),
     m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr),
     m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
     m_contextMenuAudio(nullptr)
@@ -51,7 +48,6 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
 MainWindow::~MainWindow()
 {
     this->gracefulShutdown();
-    delete ui;
 }
 
 /*

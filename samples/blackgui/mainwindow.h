@@ -97,7 +97,7 @@ protected:
     };
 
 private:
-    Ui::MainWindow *ui;
+    QScopedPointer<Ui::MainWindow> ui;
     CInfoWindow *m_infoWindow;
     bool m_init;
     GuiModes::WindowMode m_windowMode;
@@ -106,7 +106,7 @@ private:
     bool m_contextNetworkAvailable;
     bool m_contextVoiceAvailable;
     QDBusConnection m_dBusConnection;
-    BlackCore::CCoreRuntime *m_coreRuntime; /*!< runtime, if working with local core */
+    QScopedPointer<BlackCore::CCoreRuntime> m_coreRuntime; /*!< runtime, if working with local core */
     BlackGui::CAtcListModel *m_atcListOnline;
     BlackGui::CAtcListModel *m_atcListBooked;
     BlackGui::CServerListModel *m_trafficServerList;

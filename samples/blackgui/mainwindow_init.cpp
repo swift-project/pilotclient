@@ -96,7 +96,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     }
     else
     {
-        this->m_coreRuntime = new CCoreRuntime(false, this);
+        this->m_coreRuntime.reset(new CCoreRuntime(false, this));
         this->m_contextNetwork = this->m_coreRuntime->getIContextNetwork();
         this->m_contextVoice = this->m_coreRuntime->getIContextVoice();
         this->m_contextSettings = this->m_coreRuntime->getIContextSettings();
