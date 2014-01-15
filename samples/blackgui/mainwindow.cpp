@@ -224,6 +224,8 @@ void MainWindow::displayStatusMessage(const CStatusMessage &message)
 {
     this->ui->sb_MainStatusBar->showMessage(message.getMessage(), 3000);
     this->ui->te_StatusMessages->insertPlainText(message.toQString(true).append("\n"));
+    if (message.getSeverity() == CStatusMessage::SeverityError) this->displayOverlayInfo(message);
+
 }
 
 /*
@@ -411,4 +413,13 @@ void MainWindow::displayOverlayInfo(const QString &message)
     {
         this->m_infoWindow->setInfoMessage(message);
     }
+}
+
+/*
+ * Info window by
+ */
+void MainWindow::displayOverlayInfo(const CStatusMessage &message)
+{
+    this->displayOverlayInfo(message.getMessage());
+    // further code goes here, such as marking errors as red ...
 }

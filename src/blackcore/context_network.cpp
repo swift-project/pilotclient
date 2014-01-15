@@ -248,7 +248,8 @@ namespace BlackCore
         // send as message
         QString m("connection status changed ");
         m.append(this->m_network->connectionStatusToString(from)).append(" ").append(this->m_network->connectionStatusToString(to));
-        msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, m));
+        msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork,
+                                      to == INetwork::DisconnectedError ? CStatusMessage::SeverityError : CStatusMessage::SeverityInfo, m));
         emit this->statusMessage(msgs[0]);
 
         // send as own signal

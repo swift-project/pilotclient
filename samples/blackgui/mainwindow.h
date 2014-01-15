@@ -234,6 +234,12 @@ private:
     void displayOverlayInfo(const QString &message = "");
 
     /*!
+    * \brief Overlay info by status message
+    * \param message
+    */
+    void displayOverlayInfo(const BlackMisc::CStatusMessage &message);
+
+    /*!
      * \brief Is given main page selected?
      * \param mainPage
      * \return
