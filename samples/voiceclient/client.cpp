@@ -190,13 +190,13 @@ void Client::connectionStatusDisconnected()
 
 void Client::audioStartedStream(const BlackCore::IVoice::ComUnit comUnit)
 {
-    std::cout << "Started stream in room index " << static_cast<int32_t>(comUnit) << std::endl;
+    std::cout << "Started stream in room index " << static_cast<qint32>(comUnit) << std::endl;
     printLinePrefix();
 }
 
 void Client::audioStoppedStream(const BlackCore::IVoice::ComUnit comUnit)
 {
-    std::cout << "Stopped stream in room index " << static_cast<int32_t>(comUnit) << std::endl;
+    std::cout << "Stopped stream in room index " << static_cast<qint32>(comUnit) << std::endl;
     printLinePrefix();
 }
 

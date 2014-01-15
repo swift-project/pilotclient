@@ -146,7 +146,7 @@ namespace BlackCore
                     pos.lon = m_ownAircraft.longitude().value(CAngleUnit::deg());
                     pos.groundSpeed = m_ownAircraft.getGroundSpeed().value(CSpeedUnit::kts());
                     pos.rating = Cvatlib_Network::pilotRating_Unknown;
-                    pos.xpdrCode = static_cast<int16_t>(m_ownAircraft.getTransponderCode());
+                    pos.xpdrCode = static_cast<qint16>(m_ownAircraft.getTransponderCode());
                     pos.xpdrMode = Cvatlib_Network::xpndrMode_Standby;
                     switch (m_ownAircraft.getTransponderMode())
                     {

@@ -28,7 +28,7 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CAudioDevice::CAudioDevice(DeviceType type, const int16_t index, const QString &name) :
+        CAudioDevice::CAudioDevice(DeviceType type, const qint16 index, const QString &name) :
             m_type(type), m_deviceIndex(index),
             m_deviceName(name), m_hostName(CAudioDevice::hostName())
         {

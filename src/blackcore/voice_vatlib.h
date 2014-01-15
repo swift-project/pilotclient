@@ -55,7 +55,7 @@ namespace BlackCore
         virtual void runMicTest();
 
         virtual float inputSquelch() const;
-        virtual int32_t micTestResult() const;
+        virtual qint32 micTestResult() const;
         virtual QString micTestResultAsString() const;
 
 
@@ -89,7 +89,7 @@ namespace BlackCore
          * \param comUnit
          * \param volumne
          */
-        virtual void setRoomOutputVolume(const ComUnit comUnit, const int32_t volumne);
+        virtual void setRoomOutputVolume(const ComUnit comUnit, const qint32 volumne);
 
         /*!
          * \brief Start transmitting ("talk")
@@ -158,7 +158,7 @@ namespace BlackCore
          * \brief Voice room index
          * \return
          */
-        int32_t temporaryUserRoomIndex() const
+        qint32 temporaryUserRoomIndex() const
         {
             return m_temporaryUserRoomIndex;
         }
@@ -196,7 +196,7 @@ namespace BlackCore
     private:
 
         // shimlib callbacks
-        static void onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, int32_t roomIndex, void *cbVar);
+        static void onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, qint32 roomIndex, void *cbVar);
         static void onRoomUserReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar);
         static void onInputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar);
         static void onOutputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar);
@@ -302,8 +302,8 @@ namespace BlackCore
         // Need to keep the roomIndex?
         // KB: I would remove this approach, it is potentially unsafe
         //     Maybe just use 2 "wrapper" callbacks, which then set explicitly the voice room (it is only 2 methods)
-        int32_t m_temporaryUserRoomIndex; /*!< temp. storage of voice room, in order to retrieve it in static callback */
-        const static int32_t InvalidRoomIndex = -1; /*! marks invalid room */
+        qint32 m_temporaryUserRoomIndex; /*!< temp. storage of voice room, in order to retrieve it in static callback */
+        const static qint32 InvalidRoomIndex = -1; /*! marks invalid room */
 
     };
 
