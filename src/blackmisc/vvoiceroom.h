@@ -28,7 +28,7 @@ namespace BlackMisc
              * Default constructor.
              */
             CVoiceRoom() :
-                m_hostname(""), m_channel(""), m_connected(false), m_audioPlaying(false) {}
+                m_connected(false), m_audioPlaying(false) {}
 
             /*!
              * Constructor.
