@@ -291,6 +291,12 @@ namespace BlackCore
     void CNetworkVatlib::setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
     {
         m_ownAircraft = aircraft;
+
+        if (! m_updateTimer.isActive())
+        {
+            m_updateTimer.start(c_updateIntervalMsec);
+        }
+
     }
 
     void CNetworkVatlib::setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
