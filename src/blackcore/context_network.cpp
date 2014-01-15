@@ -8,6 +8,7 @@
 #include "blackmisc/avatcstationlist.h"
 #include "blackcore/context_settings_interface.h"
 #include <QtXml/QDomElement>
+#include <QNetworkReply>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -33,70 +34,25 @@ namespace BlackCore
 
         // 3. Init network access driver for XML data (bookings)
         this->m_networkManager = new QNetworkAccessManager(this);
-        this->connect(this->m_networkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(psAtcBookingsRead(QNetworkReply *)));
         this->m_atcBookingTimer = new QTimer(this);
-        this->connect(this->m_atcBookingTimer, SIGNAL(timeout()), this, SLOT(readAtcBookingsFromSource()));
+        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CContextNetwork::psAtcBookingsRead);
+        this->connect(this->m_atcBookingTimer, &QTimer::timeout, this, &CContextNetwork::readAtcBookingsFromSource);
         this->m_atcBookingTimer->start(15 * 1000);
 
-
-
         // 4. connect signals and slots
-        bool connect;
-        connect = this->connect(this->m_network, SIGNAL(connectionStatusChanged(INetwork::ConnectionStatus, INetwork::ConnectionStatus)),
-                                this, SLOT(psFsdConnectionStatusChanged(INetwork::ConnectionStatus, INetwork::ConnectionStatus)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect connectionStatusChanged");
-
-        connect = this->connect(this->m_network, SIGNAL(atcPositionUpdate(BlackMisc::Aviation::CCallsign, BlackMisc::PhysicalQuantities::CFrequency, BlackMisc::Geo::CCoordinateGeodetic, BlackMisc::PhysicalQuantities::CLength)),
-                                this, SLOT(psFsdAtcPositionUpdate(BlackMisc::Aviation::CCallsign, BlackMisc::PhysicalQuantities::CFrequency, BlackMisc::Geo::CCoordinateGeodetic, BlackMisc::PhysicalQuantities::CLength)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect atcPositionUpdate");
-
-        connect = this->connect(this->m_network, SIGNAL(atisQueryReplyReceived(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CInformationMessage)),
-                                this, SLOT(psFsdAtisQueryReceived(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CInformationMessage)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect atis");
-
-        connect = this->connect(this->m_network, SIGNAL(atisQueryVoiceRoomReplyReceived(BlackMisc::Aviation::CCallsign, QString)),
-                                this, SLOT(psFsdAtisVoiceRoomQueryReceived(BlackMisc::Aviation::CCallsign, QString)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect atis voice room");
-
-        connect = this->connect(this->m_network, SIGNAL(atisQueryLogoffTimeReplyReceived(BlackMisc::Aviation::CCallsign, QString)),
-                                this, SLOT(psFsdAtisLogoffTimeQueryReceived(BlackMisc::Aviation::CCallsign, QString)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect atis logoff time");
-
-        connect = this->connect(this->m_network, SIGNAL(metarReceived(QString)),
-                                this, SLOT(psFsdMetarReceived(QString)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect metar");
-
-        connect = this->connect(this->m_network, SIGNAL(nameQueryReplyReceived(BlackMisc::Aviation::CCallsign, QString)),
-                                this, SLOT(psFsdNameQueryReplyReceived(BlackMisc::Aviation::CCallsign, QString)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect name reply");
-
-        connect = this->connect(this->m_network, SIGNAL(aircraftInfoReceived(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcao)),
-                                this, SLOT(psFsdAircraftInfoReceived(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftIcao)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect aircraft info");
-
-        connect = this->connect(this->m_network, SIGNAL(pilotDisconnected(BlackMisc::Aviation::CCallsign)),
-                                this, SLOT(psFsdPilotDisconnected(BlackMisc::Aviation::CCallsign)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect pilot disconnected");
-
-        connect = this->connect(this->m_network, SIGNAL(aircraftPositionUpdate(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CTransponder)),
-                                this, SLOT(psFsdAircraftPositionUpdate(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation, BlackMisc::Aviation::CTransponder)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect aircraft position update");
-
-        connect = this->connect(this->m_network, SIGNAL(frequencyQueryReplyReceived(BlackMisc::Aviation::CCallsign, BlackMisc::PhysicalQuantities::CFrequency)),
-                                this, SLOT(psFsdFrequencyReceived(BlackMisc::Aviation::CCallsign, BlackMisc::PhysicalQuantities::CFrequency)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect frequency update");
-
-        connect = this->connect(this->m_network, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)),
-                                this, SLOT(psFsdTextMessageReceived(BlackMisc::Network::CTextMessageList)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect text message");
-
-
-        // relay status message
-        connect = this->connect(this->m_network, SIGNAL(statusMessage(BlackMisc::CStatusMessage)),
-                                this, SIGNAL(statusMessage(BlackMisc::CStatusMessage)));
-        Q_ASSERT_X(connect, "CContextNetwork", "Cannot connect status message");
-        Q_UNUSED(connect); // no warning in release mode
-
+        this->connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::psFsdConnectionStatusChanged);
+        this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CContextNetwork::psFsdAtcPositionUpdate);
+        this->connect(this->m_network, &INetwork::atisQueryReplyReceived, this, &CContextNetwork::psFsdAtisQueryReceived);
+        this->connect(this->m_network, &INetwork::atisQueryVoiceRoomReplyReceived, this, &CContextNetwork::psFsdAtisVoiceRoomQueryReceived);
+        this->connect(this->m_network, &INetwork::atisQueryLogoffTimeReplyReceived, this, &CContextNetwork::psFsdAtisLogoffTimeQueryReceived);
+        this->connect(this->m_network, &INetwork::metarReceived, this, &CContextNetwork::psFsdMetarReceived);
+        this->connect(this->m_network, &INetwork::nameQueryReplyReceived, this, &CContextNetwork::psFsdNameQueryReplyReceived);
+        this->connect(this->m_network, &INetwork::aircraftInfoReceived, this, &CContextNetwork::psFsdAircraftInfoReceived);
+        this->connect(this->m_network, &INetwork::pilotDisconnected, this, &CContextNetwork::psFsdPilotDisconnected);
+        this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CContextNetwork::psFsdAircraftPositionUpdate);
+        this->connect(this->m_network, &INetwork::frequencyQueryReplyReceived, this, &CContextNetwork::psFsdFrequencyReceived);
+        this->connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::psFsdTextMessageReceived);
+        this->connect(this->m_network, &INetwork::statusMessage, this, &CContextNetwork::statusMessage);
     }
 
     /*
