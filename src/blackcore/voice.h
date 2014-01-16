@@ -108,7 +108,7 @@ namespace BlackCore
         /*!
           \return Result of the mic test.
         */
-        virtual int32_t micTestResult() const = 0;
+        virtual qint32 micTestResult() const = 0;
 
         //! micTestResult
         /*!
@@ -166,7 +166,7 @@ namespace BlackCore
          * \param comUnit
          * \param volumne
          */
-        virtual void setRoomOutputVolume(const ComUnit comUnit, const int32_t volumne) = 0;
+        virtual void setRoomOutputVolume(const ComUnit comUnit, const qint32 volumne) = 0;
 
         /*!
          * \brief Start transmitting

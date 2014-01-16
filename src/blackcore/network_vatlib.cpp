@@ -146,7 +146,7 @@ namespace BlackCore
                     pos.lon = m_ownAircraft.longitude().value(CAngleUnit::deg());
                     pos.groundSpeed = m_ownAircraft.getGroundSpeed().value(CSpeedUnit::kts());
                     pos.rating = Cvatlib_Network::pilotRating_Unknown;
-                    pos.xpdrCode = static_cast<int16_t>(m_ownAircraft.getTransponderCode());
+                    pos.xpdrCode = static_cast<qint16>(m_ownAircraft.getTransponderCode());
                     pos.xpdrMode = Cvatlib_Network::xpndrMode_Standby;
                     switch (m_ownAircraft.getTransponderMode())
                     {
@@ -724,7 +724,7 @@ namespace BlackCore
         case Cvatlib_Network::error_Registered:
         case Cvatlib_Network::error_InvalidControl:         msg = "Server: "; msg.append(cbvar_cast(cbvar)->fromFSD(msgData)); break;
 
-        default:                                            qFatal("VATSIM shim library: %s (error %d)", msg, type); goto terminate;
+        default:                                            qFatal("VATSIM shim library: %s (error %d)", qPrintable(msg), type); goto terminate;
         }
 
         emit cbvar_cast(cbvar)->statusMessage(BlackMisc::CStatusMessage(BlackMisc::CStatusMessage::TypeTrafficNetwork, BlackMisc::CStatusMessage::SeverityInfo, msg));

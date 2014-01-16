@@ -154,10 +154,10 @@ namespace BlackCore
             // valid state, update
             CVoiceRoom com1 = this->m_voiceRooms[0];
             CVoiceRoom com2 = this->m_voiceRooms[1];
-            com1.setConnected(m_voice->IsRoomConnected(static_cast<int32_t>(COM1)));
-            com2.setConnected(m_voice->IsRoomConnected(static_cast<int32_t>(COM2)));
-            com1.setAudioPlaying(com1.isConnected() ? m_voice->IsAudioPlaying(static_cast<int32_t>(COM1)) : false);
-            com2.setAudioPlaying(com2.isConnected() ? m_voice->IsAudioPlaying(static_cast<int32_t>(COM2)) : false);
+            com1.setConnected(m_voice->IsRoomConnected(static_cast<qint32>(COM1)));
+            com2.setConnected(m_voice->IsRoomConnected(static_cast<qint32>(COM2)));
+            com1.setAudioPlaying(com1.isConnected() ? m_voice->IsAudioPlaying(static_cast<qint32>(COM1)) : false);
+            com2.setAudioPlaying(com2.isConnected() ? m_voice->IsAudioPlaying(static_cast<qint32>(COM2)) : false);
             this->setVoiceRoomForUnit(COM1, com1);
             this->setVoiceRoomForUnit(COM2, com2);
         }
@@ -170,10 +170,10 @@ namespace BlackCore
     void CVoiceVatlib::switchAudioOutput(const ComUnit comUnit, bool enable)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<int32_t>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
+        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
         try
         {
-            m_voice->SetOutoutState(static_cast<int32_t>(comUnit), 0, enable);
+            m_voice->SetOutoutState(static_cast<qint32>(comUnit), 0, enable);
             this->m_outputEnabled[comUnit] = enable;
         }
         catch (...)
@@ -233,7 +233,7 @@ namespace BlackCore
     /*
      * Mic test
      */
-    int32_t CVoiceVatlib::micTestResult() const
+    qint32 CVoiceVatlib::micTestResult() const
     {
         return m_micTestResult;
     }
@@ -283,7 +283,7 @@ namespace BlackCore
     void CVoiceVatlib::joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<int32_t>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
+        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
 
         if (!voiceRoom.isValid())
         {
@@ -299,7 +299,7 @@ namespace BlackCore
             vr.setConnected(true);
             this->setVoiceRoomForUnit(comUnit, vr);
             QString serverSpec = voiceRoom.getVoiceRoomUrl();
-            m_voice->JoinRoom(static_cast<int32_t>(comUnit), m_aircraftCallsign.toQString().toLatin1().constData(), serverSpec.toLatin1().constData());
+            m_voice->JoinRoom(static_cast<qint32>(comUnit), m_aircraftCallsign.toQString().toLatin1().constData(), serverSpec.toLatin1().constData());
         }
         catch (...)
         {
@@ -316,11 +316,11 @@ namespace BlackCore
         if (!vr.isConnected()) return;
 
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<int32_t>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
+        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
 
         try
         {
-            m_voice->LeaveRoom(static_cast<int32_t>(comUnit));
+            m_voice->LeaveRoom(static_cast<qint32>(comUnit));
             vr.setConnected(false);
             this->setVoiceRoomForUnit(comUnit, vr);
         }
@@ -342,14 +342,14 @@ namespace BlackCore
     /*
      * Room output volume as per COM unit
      */
-    void CVoiceVatlib::setRoomOutputVolume(const ComUnit comUnit, const int32_t volumne)
+    void CVoiceVatlib::setRoomOutputVolume(const ComUnit comUnit, const qint32 volumne)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<int32_t>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
+        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
 
         try
         {
-            m_voice->SetRoomVolume(static_cast<int32_t>(comUnit), volumne);
+            m_voice->SetRoomVolume(static_cast<qint32>(comUnit), volumne);
         }
         catch (...)
         {
@@ -363,11 +363,11 @@ namespace BlackCore
     void CVoiceVatlib::startTransmitting(const ComUnit comUnit)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<int32_t>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
+        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
 
         try
         {
-            m_voice->SetMicState(static_cast<int32_t>(comUnit), true);
+            m_voice->SetMicState(static_cast<qint32>(comUnit), true);
         }
         catch (...)
         {
@@ -381,10 +381,10 @@ namespace BlackCore
     void CVoiceVatlib::stopTransmitting(const ComUnit comUnit)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<int32_t>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
+        Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
         try
         {
-            m_voice->SetMicState(static_cast<int32_t>(comUnit), false);
+            m_voice->SetMicState(static_cast<qint32>(comUnit), false);
         }
         catch (...)
         {
@@ -504,15 +504,15 @@ namespace BlackCore
         try
         {
             // Paranoia...
-            if (!m_voice->IsRoomConnected(static_cast<int32_t>(comUnit)))
+            if (!m_voice->IsRoomConnected(static_cast<qint32>(comUnit)))
                 return;
 
             // Store the room index for the slot (called in static callback)
-            m_temporaryUserRoomIndex = static_cast<int32_t>(comUnit);
+            m_temporaryUserRoomIndex = static_cast<qint32>(comUnit);
 
             // Callbacks completed when function is called, after the method is done
             // m_voiceRoomCallsignsUpdate is filled with the latest callsigns
-            m_voice->GetRoomUserList(static_cast<int32_t>(comUnit), onRoomUserReceived, this);
+            m_voice->GetRoomUserList(static_cast<qint32>(comUnit), onRoomUserReceived, this);
             m_temporaryUserRoomIndex = CVoiceVatlib::InvalidRoomIndex; // reset
 
             // we have all current users in m_voi
@@ -560,7 +560,7 @@ namespace BlackCore
     /*
      * Room status update
      */
-    void CVoiceVatlib::onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, int32_t roomIndex, void *cbVar)
+    void CVoiceVatlib::onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, qint32 roomIndex, void *cbVar)
     {
         Q_UNUSED(obj)
         ComUnit comUnit = static_cast<ComUnit>(roomIndex);

@@ -13,10 +13,6 @@
 #include "valueobject.h"
 #include <QString>
 
-#ifdef Q_OS_WIN
-typedef short int16_t;
-#endif
-
 namespace BlackMisc
 {
     namespace Voice
@@ -50,7 +46,7 @@ namespace BlackMisc
             /*!
              * Constructor.
              */
-            CAudioDevice(DeviceType type, const int16_t index, const QString &getName);
+            CAudioDevice(DeviceType type, const qint16 index, const QString &getName);
 
             /*!
              * \brief QVariant, required for DBus QVariant lists
@@ -65,7 +61,7 @@ namespace BlackMisc
              * Get the device index
              * \return
              */
-            int16_t getIndex() const { return m_deviceIndex; }
+            qint16 getIndex() const { return m_deviceIndex; }
 
             /*!
              * Get the device name
@@ -113,13 +109,13 @@ namespace BlackMisc
              * \brief Device type
              * \return
              */
-            static int16_t defaultDevice() {return -1;}
+            static qint16 defaultDevice() {return -1;}
 
             /*!
              * \brief Device type
              * \return
              */
-            static int16_t invalidDevice() {return -2;}
+            static qint16 invalidDevice() {return -2;}
 
         protected:
 
@@ -148,7 +144,7 @@ namespace BlackMisc
              * The managing class needs to take care, that indexes are valid.
              */
             DeviceType m_type;
-            int16_t m_deviceIndex;
+            qint16 m_deviceIndex;
             QString m_deviceName;
             QString m_hostName;
 
