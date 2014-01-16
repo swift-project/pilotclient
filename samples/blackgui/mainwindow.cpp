@@ -45,10 +45,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
 /*
  * Destructor
  */
-MainWindow::~MainWindow()
-{
-    this->gracefulShutdown();
-}
+MainWindow::~MainWindow() {}
 
 /*
  * Graceful shutdown
@@ -57,37 +54,44 @@ void MainWindow::gracefulShutdown()
 {
     if (!this->m_init) return;
     this->m_init = false;
+    if (this->m_infoWindow)
+    {
+        this->m_infoWindow->close();
+        this->m_infoWindow = nullptr;
+    }
 
     // if we have a context, we shut some things down
     if (this->m_contextNetworkAvailable)
     {
-        this->m_contextNetwork->disconnectFromNetwork();
-    }
-
-    if (this->m_contextVoiceAvailable)
-    {
-        this->m_contextVoice->leaveAllVoiceRooms();
+        if (this->m_contextNetwork->isConnected())
+        {
+            if (this->m_contextVoiceAvailable)
+            {
+                this->m_contextVoice->leaveAllVoiceRooms();
+            }
+            this->m_contextNetwork->disconnectFromNetwork();
+        }
     }
 
     if (this->m_timerUpdateAircraftsInRange)
     {
-        this->m_timerUpdateAircraftsInRange->disconnect(this);
         this->m_timerUpdateAircraftsInRange->stop();
+        this->m_timerUpdateAircraftsInRange->disconnect(this);
     }
     if (this->m_timerUpdateAtcStationsOnline)
     {
-        this->m_timerUpdateAtcStationsOnline->disconnect(this);
         this->m_timerUpdateAtcStationsOnline->stop();
+        this->m_timerUpdateAtcStationsOnline->disconnect(this);
     }
     if (this->m_timerContextWatchdog)
     {
-        this->m_timerContextWatchdog->disconnect(this);
         this->m_timerContextWatchdog->stop();
+        this->m_timerContextWatchdog->disconnect(this);
     }
     if (this->m_timerCollectedCockpitUpdates)
     {
-        this->m_timerCollectedCockpitUpdates->disconnect(this);
         this->m_timerCollectedCockpitUpdates->stop();
+        this->m_timerCollectedCockpitUpdates->disconnect(this);
     }
 }
 
