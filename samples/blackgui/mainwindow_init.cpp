@@ -184,8 +184,10 @@ void MainWindow::initGuiSignals()
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainWeather, SIGNAL(released()), this, SLOT(setMainPage()));
     Q_ASSERT(connected);
-    this->connect(this->ui->pb_MainKeypadOpacity050, &QPushButton::clicked, this, &MainWindow::changeWindowOpacity);
-    this->connect(this->ui->pb_MainKeypadOpacity100, &QPushButton::clicked, this, &MainWindow::changeWindowOpacity);
+    connected = this->connect(this->ui->pb_MainKeypadOpacity050, SIGNAL(clicked()), this, SLOT(changeWindowOpacity()));
+    Q_ASSERT(connected);
+    connected = this->connect(this->ui->pb_MainKeypadOpacity100, SIGNAL(clicked()), this, SLOT(changeWindowOpacity()));
+    Q_ASSERT(connected);
 
     // Sound buttons
     this->connect(this->ui->pb_SoundMute, &QPushButton::clicked, this, &MainWindow::audioVolumes);

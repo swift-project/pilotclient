@@ -391,7 +391,9 @@ void MainWindow::changeWindowOpacity(int opacity)
             return;
     }
     qreal o = opacity / 100.0;
+    o = o < 0.3 ? 0.3 : o;
     QWidget::setWindowOpacity(o);
+    this->ui->hs_SettingsGuiOpacity->setValue(o * 100.0);
 }
 
 /*
