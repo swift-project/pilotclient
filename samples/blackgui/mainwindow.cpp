@@ -27,10 +27,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_dBusConnection("dummy"), m_coreRuntime(nullptr),
     m_atcListOnline(nullptr), m_atcListBooked(nullptr),
     m_trafficServerList(nullptr), m_aircraftsInRange(nullptr),
-    m_contextApplication(nullptr),
-    m_contextNetwork(nullptr), m_contextVoice(nullptr),
-    m_contextSettings(nullptr),
-    m_ownAircraft(), m_voiceRoomCom1(), m_voiceRoomCom2(),
+    m_contextApplication(nullptr), m_contextNetwork(nullptr), m_contextVoice(nullptr), m_contextSettings(nullptr),
     m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr),
     m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
     m_contextMenuAudio(nullptr)
@@ -48,11 +45,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
 /*
  * Destructor
  */
-MainWindow::~MainWindow()
-{
-    this->gracefulShutdown();
-    delete ui;
-}
+MainWindow::~MainWindow() {}
 
 /*
  * Graceful shutdown
@@ -61,37 +54,44 @@ void MainWindow::gracefulShutdown()
 {
     if (!this->m_init) return;
     this->m_init = false;
+    if (this->m_infoWindow)
+    {
+        this->m_infoWindow->close();
+        this->m_infoWindow = nullptr;
+    }
 
     // if we have a context, we shut some things down
     if (this->m_contextNetworkAvailable)
     {
-        this->m_contextNetwork->disconnectFromNetwork();
-    }
-
-    if (this->m_contextVoiceAvailable)
-    {
-        this->m_contextVoice->leaveAllVoiceRooms();
+        if (this->m_contextNetwork->isConnected())
+        {
+            if (this->m_contextVoiceAvailable)
+            {
+                this->m_contextVoice->leaveAllVoiceRooms();
+            }
+            this->m_contextNetwork->disconnectFromNetwork();
+        }
     }
 
     if (this->m_timerUpdateAircraftsInRange)
     {
-        this->m_timerUpdateAircraftsInRange->disconnect(this);
         this->m_timerUpdateAircraftsInRange->stop();
+        this->m_timerUpdateAircraftsInRange->disconnect(this);
     }
     if (this->m_timerUpdateAtcStationsOnline)
     {
-        this->m_timerUpdateAtcStationsOnline->disconnect(this);
         this->m_timerUpdateAtcStationsOnline->stop();
+        this->m_timerUpdateAtcStationsOnline->disconnect(this);
     }
     if (this->m_timerContextWatchdog)
     {
-        this->m_timerContextWatchdog->disconnect(this);
         this->m_timerContextWatchdog->stop();
+        this->m_timerContextWatchdog->disconnect(this);
     }
     if (this->m_timerCollectedCockpitUpdates)
     {
-        this->m_timerCollectedCockpitUpdates->disconnect(this);
         this->m_timerCollectedCockpitUpdates->stop();
+        this->m_timerCollectedCockpitUpdates->disconnect(this);
     }
 }
 
@@ -228,6 +228,8 @@ void MainWindow::displayStatusMessage(const CStatusMessage &message)
 {
     this->ui->sb_MainStatusBar->showMessage(message.getMessage(), 3000);
     this->ui->te_StatusMessages->insertPlainText(message.toQString(true).append("\n"));
+    if (message.getSeverity() == CStatusMessage::SeverityError) this->displayOverlayInfo(message);
+
 }
 
 /*
@@ -393,7 +395,9 @@ void MainWindow::changeWindowOpacity(int opacity)
             return;
     }
     qreal o = opacity / 100.0;
+    o = o < 0.3 ? 0.3 : o;
     QWidget::setWindowOpacity(o);
+    this->ui->hs_SettingsGuiOpacity->setValue(o * 100.0);
 }
 
 /*
@@ -415,4 +419,13 @@ void MainWindow::displayOverlayInfo(const QString &message)
     {
         this->m_infoWindow->setInfoMessage(message);
     }
+}
+
+/*
+ * Info window by
+ */
+void MainWindow::displayOverlayInfo(const CStatusMessage &message)
+{
+    this->displayOverlayInfo(message.getMessage());
+    // further code goes here, such as marking errors as red ...
 }

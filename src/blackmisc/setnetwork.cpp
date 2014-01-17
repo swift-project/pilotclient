@@ -35,6 +35,33 @@ namespace BlackMisc
         }
 
         /*
+         * metaTypeId
+         */
+        int CSettingsNetwork::getMetaTypeId() const
+        {
+            return qMetaTypeId<CSettingsNetwork>();
+        }
+
+        /*
+         * is a
+         */
+        bool CSettingsNetwork::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CSettingsNetwork>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        int CSettingsNetwork::compareImpl(const CValueObject &/*otherBase*/) const
+        {
+            qFatal("not implemented");
+            return 0;
+        }
+
+        /*
          * Marshall to DBus
          */
         void CSettingsNetwork::marshallToDbus(QDBusArgument &argument) const

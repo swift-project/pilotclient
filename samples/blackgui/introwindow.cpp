@@ -17,10 +17,7 @@ CIntroWindow::CIntroWindow(QWidget *parent) :
 /*
  * Destructor
  */
-CIntroWindow::~CIntroWindow()
-{
-    delete ui;
-}
+CIntroWindow::~CIntroWindow() { }
 
 /*
  * Window mode
@@ -52,9 +49,12 @@ GuiModes::CoreMode CIntroWindow::getCoreMode() const
 void CIntroWindow::buttonClicked() const
 {
     QObject *sender = QObject::sender();
-    if (sender == this->ui->pb_ModelDb) {
+    if (sender == this->ui->pb_ModelDb)
+    {
         QDesktopServices::openUrl(QUrl("http://vatrep.vatsim-germany.org/page/index.php", QUrl::TolerantMode));
-    } else if (sender == this->ui->pb_WebSite) {
+    }
+    else if (sender == this->ui->pb_WebSite)
+    {
         QDesktopServices::openUrl(QUrl("https://dev.vatsim-germany.org/", QUrl::TolerantMode));
     }
 }

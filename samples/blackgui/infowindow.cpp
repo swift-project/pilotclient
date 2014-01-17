@@ -16,10 +16,7 @@ CInfoWindow::CInfoWindow(QWidget *parent) :
 /*
  * Destructor
  */
-CInfoWindow::~CInfoWindow()
-{
-    delete ui;
-}
+CInfoWindow::~CInfoWindow() { }
 
 /*
  * Info message for some time

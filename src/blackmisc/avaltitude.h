@@ -40,6 +40,21 @@ namespace BlackMisc
             virtual QString convertToQString(bool i18n) const;
 
             /*!
+             * \copydoc CValueObject::getMetaTypeId
+             */
+            virtual int getMetaTypeId() const;
+
+            /*!
+             * \copydoc CValueObject::isA
+             */
+            virtual bool isA(int metaTypeId) const;
+
+            /*!
+             * \copydoc CValueObject::compareImpl
+             */
+            virtual int compareImpl(const CValueObject &other) const;
+
+            /*!
              * \brief Stream to DBus <<
              * \param argument
              */
@@ -121,17 +136,6 @@ namespace BlackMisc
             {
                 return m_datum;
             }
-
-            /*!
-             * \copydoc BlackObject::compare
-             */
-            virtual int compare(const QVariant &qv) const;
-
-            /*!
-             * \todo this is a hack, to avoid hiding inherited names in CPhysicalQuantity
-             * (see Effective C++ item 33) CPhysicalQuantity::compare is the real culprit
-             */
-            int compare(const CLength &other) const { return static_cast<const CLength *>(this)->compare(other); }
 
             /*!
              * \brief Register metadata

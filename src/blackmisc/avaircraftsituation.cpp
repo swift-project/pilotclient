@@ -24,6 +24,33 @@ namespace BlackMisc
         }
 
         /*
+         * metaTypeId
+         */
+        int CAircraftSituation::getMetaTypeId() const
+        {
+            return qMetaTypeId<CAircraftSituation>();
+        }
+
+        /*
+         * is a
+         */
+        bool CAircraftSituation::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CAircraftSituation>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        int CAircraftSituation::compareImpl(const CValueObject &/*otherBase*/) const
+        {
+            qFatal("not implemented");
+            return 0;
+        }
+
+        /*
          * Marshall to DBus
          */
         void CAircraftSituation::marshallToDbus(QDBusArgument &argument) const

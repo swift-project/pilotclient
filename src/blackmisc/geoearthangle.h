@@ -46,6 +46,21 @@ namespace BlackMisc
             }
 
             /*!
+             * \copydoc CValueObject::getMetaTypeId
+             */
+            virtual int getMetaTypeId() const;
+
+            /*!
+             * \copydoc CValueObject::isA
+             */
+            virtual bool isA(int metaTypeId) const;
+
+            /*!
+             * \copydoc CValueObject::compareImpl
+             */
+            virtual int compareImpl(const CValueObject &other) const;
+
+            /*!
              * \brief Stream to DBus <<
              * \param argument
              */
@@ -74,7 +89,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator==(const LATorLON &latOrLon) const
+            bool operator==(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator ==(latOrLon);
             }
@@ -84,7 +99,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator!=(const LATorLON &latOrLon) const
+            bool operator!=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator !=(latOrLon);
             }
@@ -116,7 +131,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator >(const LATorLON &latOrLon) const
+            bool operator >(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >(latOrLon);
             }
@@ -126,7 +141,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator <(const LATorLON &latOrLon) const
+            bool operator <(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >(latOrLon);
             }
@@ -136,7 +151,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator <=(const LATorLON &latOrLon) const
+            bool operator <=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator <=(latOrLon);
             }
@@ -146,7 +161,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            bool operator >=(const LATorLON &latOrLon) const
+            bool operator >=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >=(latOrLon);
             }
@@ -156,7 +171,7 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            LATorLON operator +(const LATorLON &latOrLon) const
+            LATorLON operator +(const CEarthAngle &latOrLon) const
             {
                 LATorLON l(*this);
                 l += latOrLon;
@@ -168,26 +183,12 @@ namespace BlackMisc
              * \param latOrLon
              * \return
              */
-            LATorLON operator -(const LATorLON &latOrLon) const
+            LATorLON operator -(const CEarthAngle &latOrLon) const
             {
                 LATorLON l(*this);
                 l -= latOrLon;
                 return l;
             }
-
-            /*!
-             * \brief To angle
-             * \return
-             */
-            BlackMisc::PhysicalQuantities::CAngle toAngle() const
-            {
-                return BlackMisc::PhysicalQuantities::CAngle(static_cast<BlackMisc::PhysicalQuantities::CAngle>(*this));
-            }
-
-            /*!
-             * Compare
-             */
-            int compare(const QVariant &qv) const;
 
             /*!
              * Register metadata

@@ -10,6 +10,7 @@
 #include "vaudiodevice.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QtNetwork/QHostInfo>
+#include <tuple>
 
 namespace BlackMisc
 {
@@ -88,6 +89,39 @@ namespace BlackMisc
             s.append(this->hostName());
             s.append("]");
             return s;
+        }
+
+        /*
+         * metaTypeId
+         */
+        int CAudioDevice::getMetaTypeId() const
+        {
+            return qMetaTypeId<CAudioDevice>();
+        }
+
+        /*
+         * is a
+         */
+        bool CAudioDevice::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CAudioDevice>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        int CAudioDevice::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CAudioDevice &>(otherBase);
+
+            const auto lhs = std::tie(this->m_type, this->m_deviceIndex, this->m_deviceName, this->m_hostName);
+            const auto rhs = std::tie(other.m_type, other.m_deviceIndex, other.m_deviceName, other.m_hostName);
+
+            if (lhs < rhs) { return -1; }
+            if (lhs > rhs) { return 1; }
+            return 0;
         }
 
         /*

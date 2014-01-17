@@ -26,6 +26,38 @@ namespace BlackMisc
         }
 
         /*
+         * metaTypeId
+         */
+        int CCoordinateGeodetic::getMetaTypeId() const
+        {
+            return qMetaTypeId<CCoordinateGeodetic>();
+        }
+
+        /*
+         * is a
+         */
+        bool CCoordinateGeodetic::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CCoordinateGeodetic>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        int CCoordinateGeodetic::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CCoordinateGeodetic &>(otherBase);
+
+            int cmp = compare(this->m_latitude, other.m_latitude);
+            if (cmp) { return cmp; }
+            cmp = compare(this->m_longitude, other.m_longitude);
+            if (cmp) { return cmp; }
+            return compare(this->m_height, other.m_height);
+        }
+
+        /*
          * Marshall to Dbus
          */
         void CCoordinateGeodetic::marshallToDbus(QDBusArgument &argument) const

@@ -21,6 +21,16 @@ namespace BlackMisc
         }
 
         /*
+         * Copy constructor
+         * (The implicitly generated copy constructor would suffice, but for what seems to be a bug in MSVC2010 template instantiation)
+         */
+        template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(const CPhysicalQuantity &other) :
+            m_value(other.m_value), m_unit(other.m_unit)
+        {
+            // void
+        }
+
+        /*
          * Equal operator ==
          */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const CPhysicalQuantity<MU, PQ> &other) const
@@ -266,22 +276,33 @@ namespace BlackMisc
         }
 
         /*
-         * Compare
+         * metaTypeId
          */
-        template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::compare(const QVariant &qv) const
+        template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::getMetaTypeId() const
         {
-            Q_ASSERT(qv.canConvert<PQ>());
-            Q_ASSERT(!qv.isNull() && qv.isValid());
-            return this->compare(qv.value<PQ>());
+            return qMetaTypeId<PQ>();
+        }
+
+        /*
+         * is a
+         */
+        template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<PQ>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
         }
 
         /*
          * Compare
          */
-        template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::compare(const PQ &other) const
+        template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::compareImpl(const CValueObject &otherBase) const
         {
-            if (other == (*this)) return 0;
-            return ((*this) < other) ? -1 : 1;
+            const auto &other = static_cast<const CPhysicalQuantity &>(otherBase);
+
+            if (*this < other) { return -1; }
+            else if (*this > other) { return 1; }
+            else { return 0; }
         }
 
         // see here for the reason of thess forward instantiations

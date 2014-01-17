@@ -87,11 +87,21 @@ namespace BlackMisc
     /*
      * Compare
      */
-    int CValueObject::compare(const QVariant & /** qv **/) const
+    int compare(const CValueObject &v1, const CValueObject &v2)
     {
-        // not all classes have to implement this
-        qFatal("Property by index as string not implemented");
-        return -1; // avoid compiler warning
+        if (v1.isA(v2.getMetaTypeId()))
+        {
+            return v2.compareImpl(v1) * -1;
+        }
+        else if (v2.isA(v1.getMetaTypeId()))
+        {
+            return v1.compareImpl(v2);
+        }
+        else
+        {
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Attempt to compare between instances of unrelated classes");
+            return 0;
+        }
     }
 
     /*!

@@ -22,14 +22,12 @@ namespace BlackCore
         // create some dummy settings
         // this would actually be reading the settings from disk ..
 
-        this->m_settingsNetwork.setCurrentNetworkServer(
-            CServer("Testserver", "Client project testserver", "vatsim-germany.org", 6809,
-                    CUser("guest", "Guest Client project", "", "guest")));
+        this->m_settingsNetwork.setCurrentNetworkServer(CServer("Testserver", "Client project testserver", "vatsim-germany.org", 6809, CUser("guest", "Guest Client project", "", "guest")));
         this->m_settingsNetwork.addTrafficNetworkServer(this->m_settingsNetwork.getCurrentNetworkServer());
-        this->m_settingsNetwork.addTrafficNetworkServer(
-            CServer("Europe C2", "Real VATSIM Server", "88.198.19.202", 6809,
-                    CUser("vatsimid", "Black Client", "", "vatsimpw"))
-        );
+        this->m_settingsNetwork.addTrafficNetworkServer(CServer("Europe C2", "VATSIM Server", "88.198.19.202", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
+        this->m_settingsNetwork.addTrafficNetworkServer(CServer("Europe CC", "VATSIM Server", "5.9.155.43", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
+        this->m_settingsNetwork.addTrafficNetworkServer(CServer("UK", "VATSIM Server", "109.169.48.148", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
+        this->m_settingsNetwork.addTrafficNetworkServer(CServer("USA-W", "VATSIM Server", "64.151.108.52", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
     }
 
     /*

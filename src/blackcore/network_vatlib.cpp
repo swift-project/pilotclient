@@ -120,7 +120,7 @@ namespace BlackCore
     {
         try
         {
-            if (m_net->IsValid() && m_net->IsSessionExists())
+            if (m_net->IsValid() && m_net->IsSessionExists() && isConnected())
             {
                 if (this->m_loginMode == LoginAsObserver)
                 {
@@ -271,6 +271,10 @@ namespace BlackCore
                                          info);
             }
             m_net->ConnectAndLogon();
+            if (! m_updateTimer.isActive())
+            {
+                m_updateTimer.start(c_updateIntervalMsec);
+            }
         }
         catch (...)
         {
@@ -283,6 +287,7 @@ namespace BlackCore
     {
         try
         {
+            m_updateTimer.stop();
             m_net->LogoffAndDisconnect(c_logoffTimeoutSec);
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
@@ -297,21 +302,11 @@ namespace BlackCore
     {
         m_ownAircraft.setPosition(position);
         m_ownAircraft.setAltitude(altitude);
-
-        if (! m_updateTimer.isActive())
-        {
-            m_updateTimer.start(c_updateIntervalMsec);
-        }
     }
 
     void CNetworkVatlib::setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
     {
         m_ownAircraft.setSituation(situation);
-
-        if (! m_updateTimer.isActive())
-        {
-            m_updateTimer.start(c_updateIntervalMsec);
-        }
     }
 
     void CNetworkVatlib::setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,

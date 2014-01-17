@@ -9,9 +9,9 @@
 
 #include "vvoiceroom.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-
 #include <QChar>
 #include <QStringList>
+#include <tuple>
 
 namespace BlackMisc
 {
@@ -83,6 +83,39 @@ namespace BlackMisc
             s.append(this ->isConnected() ? " connected" : " unconnected");
             if (this->m_audioPlaying) s.append(" playing");
             return s;
+        }
+
+        /*
+         * metaTypeId
+         */
+        int CVoiceRoom::getMetaTypeId() const
+        {
+            return qMetaTypeId<CVoiceRoom>();
+        }
+
+        /*
+         * is a
+         */
+        bool CVoiceRoom::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CVoiceRoom>()) { return true; }
+
+            return CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        int CVoiceRoom::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CVoiceRoom &>(otherBase);
+
+            const auto lhs = std::tie(m_hostname, m_channel, m_connected, m_audioPlaying);
+            const auto rhs = std::tie(other.m_hostname, other.m_channel, other.m_connected, other.m_audioPlaying);
+
+            if (lhs < rhs) { return -1; }
+            if (lhs > rhs) { return 1; }
+            return 0;
         }
 
         /*

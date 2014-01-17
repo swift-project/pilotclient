@@ -1,5 +1,6 @@
 #include "nwuser.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include <tuple>
 
 namespace BlackMisc
 {
@@ -17,6 +18,39 @@ namespace BlackMisc
                 s = s.append(" (").append(this->m_id).append(')');
             }
             return s;
+        }
+
+        /*
+         * metaTypeId
+         */
+        int CUser::getMetaTypeId() const
+        {
+            return qMetaTypeId<CUser>();
+        }
+
+        /*
+         * is a
+         */
+        bool CUser::isA(int metaTypeId) const
+        {
+            if (metaTypeId == qMetaTypeId<CUser>()) { return true; }
+
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        /*
+         * Compare
+         */
+        int CUser::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CUser &>(otherBase);
+
+            const auto lhs = std::tie(this->m_id, this->m_realname, this->m_email, this->m_password);
+            const auto rhs = std::tie(other.m_id, other.m_realname, other.m_email, other.m_password);
+
+            if (lhs < rhs) { return -1; }
+            if (lhs > rhs) { return 1; }
+            return 0;
         }
 
         /*

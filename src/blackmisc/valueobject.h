@@ -141,6 +141,15 @@ namespace BlackMisc
          */
         friend bool operator!=(const CValueObject &uc, const CValueMap &valueMap);
 
+        /*!
+         * Compares two instances of related classes
+         * and returns an integer less than, equal to, or greater than zero
+         * if v1 is less than, equal to, or greater than v2.
+         * \return
+         * \pre The runtime types of the two objects must be the same or related by inheritance.
+         */
+        friend int compare(const CValueObject &v1, const CValueObject &v2);
+
     public:
         /*!
          * \brief Virtual destructor
@@ -178,15 +187,6 @@ namespace BlackMisc
          * \return
          */
         virtual uint getValueHash() const = 0;
-
-        /*!
-         * Compares with QVariant with this object
-         * and returns an integer less than, equal to, or greater than zero
-         * if this is less than, equal to, or greater than QVariant.
-         * \remarks allows sorting among QVariants, not all classes implement this
-         * \return
-         */
-        virtual int compare(const QVariant &qv) const;
 
         /*!
          * \brief Virtual method to return QVariant, used with DBUS QVariant lists
@@ -256,6 +256,30 @@ namespace BlackMisc
          * \return
          */
         virtual QString convertToQString(bool i18n = false) const = 0;
+
+        /*!
+         * \brief Returns the Qt meta type ID of this object.
+         * \return
+         */
+        virtual int getMetaTypeId() const = 0;
+
+        /*!
+         * \brief Returns true if this object is an instance of the class with the given meta type ID,
+         *        or one of its subclasses.
+         * \param metaTypeId
+         * \return
+         */
+        virtual bool isA(int metaTypeId) const { Q_UNUSED(metaTypeId); return false; }
+
+        /*!
+         * \brief Compare this value with another value of the same type
+         * \param other
+         * \return Less than, equal to, or greater than zero if this is
+         *         less than, equal to, or greather than other.
+         * \pre Other must have the same runtime type as the this object.
+         * \remark It is usually safer to use the friend function compare() instead.
+         */
+        virtual int compareImpl(const CValueObject &other) const = 0;
 
         /*!
          * \brief Marshall to DBus

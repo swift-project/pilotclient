@@ -279,11 +279,6 @@ namespace BlackMisc
             virtual uint getValueHash() const;
 
             /*!
-             * \copydoc BlackObject::compare
-             */
-            virtual int compare(const QVariant &qv) const;
-
-            /*!
              * \brief Register metadata
              */
             static void registerMetadata();
@@ -336,6 +331,21 @@ namespace BlackMisc
              * \return
              */
             virtual QString convertToQString(bool i18n = false) const;
+
+            /*!
+             * \copydoc CValueObject::getMetaTypeId
+             */
+            virtual int getMetaTypeId() const;
+
+            /*!
+             * \copydoc CValueObject::isA
+             */
+            virtual bool isA(int metaTypeId) const;
+
+            /*!
+             * \copydoc CValueObject::compareImpl
+             */
+            virtual int compareImpl(const CValueObject &other) const;
 
             /*!
              * \brief Stream to DBus <<

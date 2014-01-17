@@ -96,7 +96,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     }
     else
     {
-        this->m_coreRuntime = new CCoreRuntime(false, this);
+        this->m_coreRuntime.reset(new CCoreRuntime(false, this));
         this->m_contextNetwork = this->m_coreRuntime->getIContextNetwork();
         this->m_contextVoice = this->m_coreRuntime->getIContextVoice();
         this->m_contextSettings = this->m_coreRuntime->getIContextSettings();
@@ -114,44 +114,18 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->m_resPixmapVoiceHigh = QPixmap(":/blackgui/icons/audiovolumehigh.png");
     this->m_resPixmapVoiceMuted = QPixmap(":/blackgui/icons/audiovolumemuted.png");
 
-    // relay status messages
+    // signal / slots
     bool connect;
-    connect = this->connect(this->m_contextNetwork, SIGNAL(statusMessage(BlackMisc::CStatusMessage)),
-                            this, SLOT(displayStatusMessage(BlackMisc::CStatusMessage)));
-    Q_ASSERT_X(connect, "init", "cannot connect status message");
-
-    connect = this->connect(this->m_contextNetwork, SIGNAL(connectionTerminated()),
-                            this, SLOT(connectionTerminated()));
-    Q_ASSERT_X(connect, "init", "cannot connect terminating");
-
-    connect = this->connect(this->m_contextNetwork, SIGNAL(connectionStatusChanged(uint, uint)),
-                            this, SLOT(connectionStatusChanged(uint, uint)));
-    Q_ASSERT_X(connect, "init", "cannot connect change connection status");
-
-    connect = this->connect(this->m_contextSettings, SIGNAL(changedNetworkSettings()),
-                            this, SLOT(changedNetworkSettings()));
-    Q_ASSERT_X(connect, "init", "cannot connect change network status");
-
-    connect = this->connect(this->m_contextNetwork, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)),
-                            this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
-    Q_ASSERT_X(connect, "init", "cannot connect text message received");
-
-    connect = this->connect(this->m_timerUpdateAircraftsInRange, SIGNAL(timeout()),
-                            this, SLOT(timerBasedUpdates()));
-    Q_ASSERT_X(connect, "init", "cannot connect timer");
-
-    connect = this->connect(this->m_timerUpdateAtcStationsOnline, SIGNAL(timeout()),
-                            this, SLOT(timerBasedUpdates()));
-    Q_ASSERT_X(connect, "init", "cannot connect timer");
-
-    connect = this->connect(this->m_timerContextWatchdog, SIGNAL(timeout()),
-                            this, SLOT(timerBasedUpdates()));
-    Q_ASSERT_X(connect, "init", "cannot connect timer (watchdog)");
-
-    connect = this->connect(this->m_timerCollectedCockpitUpdates, SIGNAL(timeout()),
-                            this, SLOT(sendCockpitUpdates()));
-    Q_ASSERT_X(connect, "init", "cannot connect timer (cockpit updates)");
-    Q_UNUSED(connect);
+    this->connect(this->m_contextNetwork, &IContextNetwork::statusMessage, this, &MainWindow::displayStatusMessage);
+    this->connect(this->m_contextNetwork, &IContextNetwork::connectionTerminated, this, &MainWindow::connectionTerminated);
+    this->connect(this->m_contextNetwork, &IContextNetwork::connectionStatusChanged, this, &MainWindow::connectionStatusChanged);
+    this->connect(this->m_contextSettings, &IContextSettings::changedNetworkSettings, this, &MainWindow::changedNetworkSettings);
+    connect = this->connect(this->m_contextNetwork, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
+    Q_ASSERT(connect);
+    this->connect(this->m_timerUpdateAircraftsInRange, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
+    this->connect(this->m_timerUpdateAtcStationsOnline, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
+    this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
+    this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
 
     // start timers
     this->m_timerUpdateAircraftsInRange->start(10 * 1000);
@@ -210,8 +184,10 @@ void MainWindow::initGuiSignals()
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainWeather, SIGNAL(released()), this, SLOT(setMainPage()));
     Q_ASSERT(connected);
-    this->connect(this->ui->pb_MainKeypadOpacity050, &QPushButton::clicked, this, &MainWindow::changeWindowOpacity);
-    this->connect(this->ui->pb_MainKeypadOpacity100, &QPushButton::clicked, this, &MainWindow::changeWindowOpacity);
+    connected = this->connect(this->ui->pb_MainKeypadOpacity050, SIGNAL(clicked()), this, SLOT(changeWindowOpacity()));
+    Q_ASSERT(connected);
+    connected = this->connect(this->ui->pb_MainKeypadOpacity100, SIGNAL(clicked()), this, SLOT(changeWindowOpacity()));
+    Q_ASSERT(connected);
 
     // Sound buttons
     this->connect(this->ui->pb_SoundMute, &QPushButton::clicked, this, &MainWindow::audioVolumes);

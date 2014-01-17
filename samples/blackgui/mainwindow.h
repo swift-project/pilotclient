@@ -10,22 +10,22 @@
 #pragma push_macro("interface")
 #undef interface
 
-#include <QMainWindow>
-#include <QTextEdit>
-#include <QItemSelection>
-#include <QTimer>
-#include "blackgui/atcstationlistmodel.h"
-#include "blackgui/serverlistmodel.h"
-#include "blackgui/aircraftlistmodel.h"
-#include "blackmisc/statusmessage.h"
-#include "blackmisc/nwtextmessage.h"
+#include "infowindow.h"
+#include "guimodeenums.h"
 #include "blackcore/context_voice.h"
 #include "blackcore/context_network_interface.h"
 #include "blackcore/context_settings_interface.h"
 #include "blackcore/context_application_interface.h"
 #include "blackcore/coreruntime.h"
-#include "infowindow.h"
-#include "guimodeenums.h"
+#include "blackgui/atcstationlistmodel.h"
+#include "blackgui/serverlistmodel.h"
+#include "blackgui/aircraftlistmodel.h"
+#include "blackmisc/statusmessage.h"
+#include "blackmisc/nwtextmessage.h"
+#include <QMainWindow>
+#include <QTextEdit>
+#include <QItemSelection>
+#include <QTimer>
 
 namespace Ui
 {
@@ -97,7 +97,7 @@ protected:
     };
 
 private:
-    Ui::MainWindow *ui;
+    QScopedPointer<Ui::MainWindow> ui;
     CInfoWindow *m_infoWindow;
     bool m_init;
     GuiModes::WindowMode m_windowMode;
@@ -106,7 +106,7 @@ private:
     bool m_contextNetworkAvailable;
     bool m_contextVoiceAvailable;
     QDBusConnection m_dBusConnection;
-    BlackCore::CCoreRuntime *m_coreRuntime; /*!< runtime, if working with local core */
+    QScopedPointer<BlackCore::CCoreRuntime> m_coreRuntime; /*!< runtime, if working with local core */
     BlackGui::CAtcListModel *m_atcListOnline;
     BlackGui::CAtcListModel *m_atcListBooked;
     BlackGui::CServerListModel *m_trafficServerList;
@@ -130,6 +130,7 @@ private:
     QPixmap m_resPixmapVoiceMuted;
     QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
     QMenu *m_contextMenuAudio; /*! Audio context menu */
+    QString m_transponderResetValue; /*! Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas */
 
     /*!
      * \brief GUI status update
@@ -232,6 +233,12 @@ private:
      * \brief Display the overlay window
      */
     void displayOverlayInfo(const QString &message = "");
+
+    /*!
+    * \brief Overlay info by status message
+    * \param message
+    */
+    void displayOverlayInfo(const BlackMisc::CStatusMessage &message);
 
     /*!
      * \brief Is given main page selected?
@@ -415,14 +422,9 @@ private slots:
     void audioDeviceSelected(int index);
 
     /*!
-     * \brief Reset transponder to standby
+     * \brief Reset transponder to Standby / Charly
      */
-    void resetTransponderModerToStandby();
-
-    /*!
-     * \brief Reset transponder to Charly
-     */
-    void resetTransponderModerToCharly();
+    void resetTransponderMode();
 
     /*!
      * \brief Override voice room (allows to set an arbitrary voice room for testing purposes)
