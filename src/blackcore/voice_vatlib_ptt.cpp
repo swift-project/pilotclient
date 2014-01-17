@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "voice_vatlib.h"
+#include <QDebug>
 
 using namespace BlackMisc::Voice;
 
@@ -19,29 +20,31 @@ namespace BlackCore
     /*
      * Keyboard handling itself
      */
-    LRESULT CALLBACK CVoiceVatlib::CKeyboard::keyboardProcedure(int nCode, WPARAM wParam, LPARAM /** lParam **/)
+    LRESULT CALLBACK CVoiceVatlib::CKeyboard::keyboardProcedure(int nCode, WPARAM wParam, LPARAM lParam)
     {
+        if (nCode < 0)  // do not process message
+            return CallNextHookEx(CVoiceVatlib::CKeyboard::s_keyboardHook, nCode, wParam, lParam);
+
         // precheck
-        if (!CVoiceVatlib::CKeyboard::s_keyboardHook || !CVoiceVatlib::CKeyboard::s_voice) return false;
+        if (!CVoiceVatlib::CKeyboard::s_keyboardHook || !CVoiceVatlib::CKeyboard::s_voice)
+            return CallNextHookEx(CVoiceVatlib::CKeyboard::s_keyboardHook, nCode, wParam, lParam);
 
         // Check for a key down press
         if (nCode == HC_ACTION)
         {
+            KBDLLHOOKSTRUCT *pKeyboard = (KBDLLHOOKSTRUCT *)lParam;
             // http://msdn.microsoft.com/en-us/library/windows/desktop/ms644967(v=vs.85).aspx
             // http://stackoverflow.com/questions/18917716/windows-how-to-query-state-of-modifier-keys-within-low-level-keyboard-hook
             if (wParam == WM_KEYDOWN)
             {
-                // KBDLLHOOKSTRUCT *pKeyboard = (KBDLLHOOKSTRUCT *)lParam;
-                // CTRL
-                if (GetAsyncKeyState(VK_CONTROL) & 0x8000) CVoiceVatlib::CKeyboard::s_voice->m_pushToTalk = true;
+                if (pKeyboard->vkCode == VK_LCONTROL) CVoiceVatlib::CKeyboard::s_voice->m_pushToTalk = true;
             }
             else if (wParam == WM_KEYUP)
             {
-                // KBDLLHOOKSTRUCT *pKeyboard = (KBDLLHOOKSTRUCT *)lParam;
-                if (GetAsyncKeyState(VK_CONTROL) & 0x8000) CVoiceVatlib::CKeyboard::s_voice->m_pushToTalk = false;
+                if (pKeyboard->vkCode == VK_LCONTROL) CVoiceVatlib::CKeyboard::s_voice->m_pushToTalk = false;
             }
         }
-        return false; // not processed flag
+        return CallNextHookEx(CVoiceVatlib::CKeyboard::s_keyboardHook, nCode, wParam, lParam); ; // not processed flag
     }
 
     /*
