@@ -660,8 +660,7 @@ namespace BlackMiscTest
                 value.addValue(CAtcStation::IndexBookedUntil, QDateTime::currentDateTimeUtc().addDays(2));
                 qDebug() << "  condition" << condition;
                 qDebug() << "  values" << value;
-                qint32 c = dataContextInterface.updateOnlineControllers(condition, value);
-                qDebug() << c << "values changed in online controllers";
+                dataContextInterface.updateOnlineControllers(condition, value);
             }
 
             // display current status

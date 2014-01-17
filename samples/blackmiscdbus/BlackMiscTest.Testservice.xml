@@ -22,7 +22,7 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::PhysicalQuantities::CSpeed"/>
     </method>
     <method name="receiveComUnit">
-      <arg name="comUnit" type="(s(dd(s))(dd(s))i)" direction="in"/>
+      <arg name="comUnit" type="(s(dd(s))(dd(s))iiib)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CComSystem"/>
     </method>
     <method name="receiveAltitude">
@@ -66,21 +66,21 @@
       <arg name="lengthsVariantList" type="av" direction="in"/>
     </method>
     <method name="receiveAtcStation">
-      <arg name="station" type="((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))b((iii)(iiii)i)((iii)(iiii)i))" direction="in"/>
+      <arg name="station" type="((ss)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))(ssbb))" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CAtcStation"/>
     </method>
     <method name="pingAtcStation">
-      <arg type="((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))b((iii)(iiii)i)((iii)(iiii)i))" direction="out"/>
+      <arg type="((ss)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))(ssbb))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CAtcStation"/>
-      <arg name="station" type="((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))b((iii)(iiii)i)((iii)(iiii)i))" direction="in"/>
+      <arg name="station" type="((ss)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))(ssbb))" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CAtcStation"/>
     </method>
     <method name="receiveCallsign">
-      <arg name="callsign" type="(s)" direction="in"/>
+      <arg name="callsign" type="(ss)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CCallsign"/>
     </method>
     <method name="getAtcStationList">
-      <arg type="(a((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)))" direction="out"/>
+      <arg type="(a((ss)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))(ssbb)))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CAtcStationList"/>
       <arg name="number" type="i" direction="in"/>
     </method>
@@ -89,7 +89,7 @@
       <arg name="number" type="i" direction="in"/>
     </method>
     <method name="receiveAtcStationList">
-      <arg name="AtcStationList" type="(a((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)))" direction="in"/>
+      <arg name="AtcStationList" type="(a((ss)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))(ssbb)))" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CAtcStationList"/>
     </method>
     <method name="receiveValueMap">
@@ -97,9 +97,9 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::CValueMap"/>
     </method>
     <method name="pingAtcStationList">
-      <arg type="(a((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)))" direction="out"/>
+      <arg type="(a((ss)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))(ssbb)))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CAtcStationList"/>
-      <arg name="AtcStationList" type="(a((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)))" direction="in"/>
+      <arg name="AtcStationList" type="(a((ss)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))(ssbb)))" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CAtcStationList"/>
     </method>
     <method name="getSpeed">
@@ -107,7 +107,7 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::PhysicalQuantities::CSpeed"/>
     </method>
     <method name="getAtcStation">
-      <arg type="((s)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))b((iii)(iiii)i)((iii)(iiii)i))" direction="out"/>
+      <arg type="((ss)(dd(s))(ssss)((dd(s))(dd(s))(dd(s)))(dd(s))(dd(s))b((iii)(iiii)i)((iii)(iiii)i)(si((iii)(iiii)i))(si((iii)(iiii)i))(ssbb))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CAtcStation"/>
     </method>
   </interface>

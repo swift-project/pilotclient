@@ -49,8 +49,8 @@ int main(int argc, char *argv[])
         useSessionBusForServer = false;
         if (cmdlineArgs.length() > 2)
         {
-            ip = cmdlineArgs.at(1);
-            port = cmdlineArgs.at(2);
+            ip = cmdlineArgs.at(cmdlineArgs.length() - 2);
+            port = cmdlineArgs.at(cmdlineArgs.length() - 1);
         }
     }
     QString addressTcp = QString("tcp:host=%1,port=%2").arg(ip).arg(port);
