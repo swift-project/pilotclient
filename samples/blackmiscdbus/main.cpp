@@ -33,28 +33,81 @@ int main(int argc, char *argv[])
     }
 
     // some runtime settings
+    QString ip = "192.168.0.133";
+    QString port = "45000";
     const QString executable = QString(cmdlineArgs.at(0)); // used as command to fork myself
     const bool clientFlag = cmdlineArgs.contains("client", Qt::CaseInsensitive);
-    const bool useSessionBusForServer = cmdlineArgs.contains("session", Qt::CaseInsensitive); // flag for session bus
-    QString address(useSessionBusForServer ? "session" : "tcp:host=192.168.0.133,port=45000"); // testing with real transfer
-    // loopback 127.0.0.1
+    bool useSessionBusForServer;
+    if (cmdlineArgs.contains("session", Qt::CaseInsensitive))
+    {
+        // session mode
+        useSessionBusForServer = true;
+    }
+    else
+    {
+        // TCP/IP mode
+        useSessionBusForServer = false;
+        if (cmdlineArgs.length() > 2)
+        {
+            ip = cmdlineArgs.at(1);
+            port = cmdlineArgs.at(2);
+        }
+    }
+    QString addressTcp = QString("tcp:host=%1,port=%2").arg(ip).arg(port);
+    QString address(useSessionBusForServer ? "session" : addressTcp); // testing with real transfer
 
     // Create a Testservice instance and register it with the session bus only if
     // the service isn't already available.
     if (!clientFlag)
     {
         // Configure tests
-        qDebug() << "1 .. Run testservice to test data transfer" << address;
-        qDebug() << "1sb. Run testservice via session bus";
-        qDebug() << "2 .. Data context example (via TCP)" << address;
-        qDebug() << "2sb. Data context example (via session bus)";
-        qDebug() << "3 .. Data context example, only server (via TCP)" << address;
-        qDebug() << "3sb. Data context example, only server (via session bus)";
+    Menu:
 
+        qDebug() << "1 .. Run testservice to test data transfer" << addressTcp;
+        qDebug() << "1sb. Run testservice via session bus";
+        qDebug() << "2 .. Data context example (via TCP)" << addressTcp;
+        qDebug() << "2sb. Data context example (via session bus)";
+        qDebug() << "3 .. Data context example, only server (via TCP)" << addressTcp;
+        qDebug() << "3sb. Data context example, only server (via session bus)";
+        qDebug() << "----- Change address / port (no validation, do before starting server)";
+        qDebug() << "loop Address to loopback, 127.0.0.1";
+        qDebug() << "ip   some IP address, e.g 192.168.100.100";
+        qDebug() << "port some port, e.g 12345";
+        qDebug() << "-----";
         qDebug() << "x .. Bye";
         QTextStream qtin(stdin);
-        QString mode = qtin.readLine().toLower();
-        bool startServer = !mode.startsWith('3');
+        QString mode = qtin.readLine().toLower().trimmed();
+
+        if (mode.startsWith("l"))
+        {
+            ip = "127.0.0.1";
+            addressTcp = QString("tcp:host=%1,port=%2").arg(ip).arg(port);
+            goto Menu;
+        }
+        if (mode.startsWith("i"))
+        {
+            QStringList p = mode.split(QRegExp("\\s"));
+            if (p.length() > 1)
+            {
+                ip = p.at(1);
+                addressTcp = QString("tcp:host=%1,port=%2").arg(ip).arg(port);
+            }
+            goto Menu;
+        }
+        if (mode.startsWith("p"))
+        {
+            QStringList p = mode.split(QRegExp("\\s"));
+            if (p.length() > 1)
+            {
+                port = p.at(1);
+                addressTcp = QString("tcp:host=%1,port=%2").arg(ip).arg(port);
+            }
+            goto Menu;
+        }
+
+        // start DBus
+        address = QString(useSessionBusForServer ? "session" : addressTcp); // testing with real transfer
+        bool startClient = !mode.startsWith('3');
         if (mode.contains("sb", Qt::CaseInsensitive)) address = "session";
         if (mode.startsWith("1"))
         {
@@ -71,6 +124,8 @@ int main(int argc, char *argv[])
 
         // I know I am in the "server process here", so I can safely create a CDBusServer
         // this runs in the original process and can be directly debugged
+        qDebug();
+        qDebug("--------------------------------------------------------");
         BlackCore::CDBusServer *dBusServer = new BlackCore::CDBusServer(useSessionBusForServer ? "session" : address);
         qDebug() << "server" << dBusServer->address() << "connected:" << dBusServer->isConnected();
 
@@ -78,9 +133,16 @@ int main(int argc, char *argv[])
         QStringList args;
         args << "client";
         args << mode;
-        if (address == "session") args << address;
-
-        if (startServer) BlackMiscTest::ServiceTool::startNewProcess(executable, args, &a);
+        if (address == "session")
+        {
+            args << address; // set session as cmd arg
+        }
+        else
+        {
+            args << ip;
+            args << port;
+        }
+        if (startClient) BlackMiscTest::ServiceTool::startNewProcess(executable, args, &a);
 
         // run tests
         if (mode == "testservice")
