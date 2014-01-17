@@ -5,6 +5,10 @@
       <arg name="message" type="(sii((iii)(iiii)i))" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::CStatusMessage"/>
     </signal>
+    <signal name="statusMessages">
+      <arg name="messages" type="(a(sii((iii)(iiii)i)))" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::CStatusMessageList"/>
+    </signal>
     <signal name="changedAtcStationsOnline">
     </signal>
     <signal name="changedAtcStationsBooked">

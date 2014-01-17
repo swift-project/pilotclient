@@ -39,6 +39,8 @@ namespace BlackCore
         connection.connect(serviceName, IContextNetwork::ServicePath(), IContextNetwork::InterfaceName(),
                            "statusMessage", this, SIGNAL(statusMessage(BlackMisc::CStatusMessage)));
         connection.connect(serviceName, IContextNetwork::ServicePath(), IContextNetwork::InterfaceName(),
+                           "statusMessages", this, SIGNAL(statusMessages(BlackMisc::CStatusMessageList)));
+        connection.connect(serviceName, IContextNetwork::ServicePath(), IContextNetwork::InterfaceName(),
                            "textMessagesReceived", this, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)));
     }
 

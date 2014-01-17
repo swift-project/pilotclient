@@ -117,6 +117,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     // signal / slots
     bool connect;
     this->connect(this->m_contextNetwork, &IContextNetwork::statusMessage, this, &MainWindow::displayStatusMessage);
+    this->connect(this->m_contextNetwork, &IContextNetwork::statusMessages, this, &MainWindow::displayStatusMessages);
     this->connect(this->m_contextNetwork, &IContextNetwork::connectionTerminated, this, &MainWindow::connectionTerminated);
     this->connect(this->m_contextNetwork, &IContextNetwork::connectionStatusChanged, this, &MainWindow::connectionStatusChanged);
     this->connect(this->m_contextSettings, &IContextSettings::changedNetworkSettings, this, &MainWindow::changedNetworkSettings);
