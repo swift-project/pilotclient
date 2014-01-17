@@ -256,7 +256,6 @@ namespace BlackMisc
 
             /*!
              * \brief Stream from DBus
-             * \param argument
              */
             virtual void unmarshallFromDbus(const QDBusArgument &)
             {

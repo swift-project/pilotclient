@@ -42,8 +42,6 @@ class MainWindow : public QMainWindow
 public:
     /*!
      * \brief Constructor
-     * \param windowMode
-     * \param parent
      */
     explicit MainWindow(GuiModes::WindowMode windowMode, QWidget *parent = nullptr);
 
@@ -54,7 +52,6 @@ public:
 
     /*!
      * \brief Init data
-     * \param coreMode
      */
     void init(GuiModes::CoreMode coreMode);
 
@@ -66,19 +63,16 @@ public:
 protected:
     /*!
      * \brief Close event, e.g. when window is closed
-     * \param event
      */
     void closeEvent(QCloseEvent *event);
 
     /*!
      * \brief Mouse moving, required for frameless window
-     * \param event
      */
     void mouseMoveEvent(QMouseEvent *event);
 
     /*!
      * \brief Mouse press, required for frameless window
-     * \param event
      */
     void mousePressEvent(QMouseEvent *event);
 
@@ -138,8 +132,8 @@ private:
     void updateGuiStatusInformation();
 
     /*!
-     * \brief Update the selected server textboxs
-     * \param server
+     * \brief Update the selected server textboxes
+     * \param server to be displayed
      */
     void updateGuiSelectedServerTextboxes(const BlackMisc::Network::CServer &server);
 
@@ -417,7 +411,7 @@ private slots:
 
     /*!
      * \brief Audio device selected
-     * \param index
+     * \param index audio device index (COM1, COM2)
      */
     void audioDeviceSelected(int index);
 

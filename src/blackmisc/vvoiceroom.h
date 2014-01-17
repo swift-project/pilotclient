@@ -62,25 +62,22 @@ namespace BlackMisc
 
             /*!
              * Get the voice room
-             * \return
              */
             const QString &getChannel() const { return m_channel; }
 
             /*!
-             * Set the host name
-             * \param
+             * \brief Set the host name
              */
             void setHostName(const QString &hostName) { m_hostname = hostName; }
 
             /*!
-             * Set the voice channel
-             * \param
+             * \brief Set the voice channel
              */
             void setChannel(const QString &channel) { m_channel = channel; }
 
             /*!
              * \brief Server URL
-             * \param noProtocol
+             * \param noProtocol either with (pseudo) protocol prefix or without
              * \return
              */
             QString getVoiceRoomUrl(bool noProtocol = true) const;
@@ -146,14 +143,14 @@ namespace BlackMisc
             static void registerMetadata();
 
             /*!
-             * \brief Protocol
+             * \brief Protocol prefix
              * \return
              */
             static const QString &protocol() { static QString p("vvl"); return p; }
 
             /*!
              * \brief Protocol
-             * \return
+             * \return with protocol prefix or without
              */
             static const QString &protocolComplete() { static QString p("vvl://"); return p; }
 

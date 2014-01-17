@@ -158,46 +158,38 @@ namespace BlackMisc
 
         /*!
          * \brief Cast as QString
-         * \bool i18n
          */
         QString toQString(bool i18n = false) const;
 
         /*!
          * \brief Cast to pretty-printed QString
-         * \return
          */
         virtual QString toFormattedQString(bool i18n = false) const;
 
         /*!
          * \brief To std string
-         * \param i18n
-         * \return
          */
         std::string toStdString(bool i18n = false) const;
 
         /*!
          * \brief Update by variant map
-         * \param valueMap
-         * \return
          */
         int apply(const BlackMisc::CValueMap &valueMap);
 
         /*!
          * \brief Value hash, allows comparisons between QVariants
-         * \return
          */
         virtual uint getValueHash() const = 0;
 
         /*!
-         * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-         * \return
+         * \brief Virtual method to return QVariant, used with DBus QVariant lists
          */
         virtual QVariant toQVariant() const = 0;
 
         /*!
          * \brief Set property by index
          * \remarks Intentionally not abstract, avoiding all classes need to implement this method
-         * \param index
+         * \param index as used in Qt table views
          * \return
          */
         virtual void setPropertyByIndex(const QVariant &variant, int index);
@@ -205,7 +197,7 @@ namespace BlackMisc
         /*!
          * \brief Property by index
          * \remarks Intentionally not abstract, avoiding all classes need to implement this method
-         * \param index
+         * \param index as used in Qt table views
          * \return
          */
         virtual QVariant propertyByIndex(int index) const;
@@ -213,8 +205,7 @@ namespace BlackMisc
         /*!
          * \brief Property by index as String
          * \remarks Intentionally not abstract, avoiding all classes need to implement this method
-
-         * \param index
+         * \param index as used in Qt table views
          * \param i18n
          * \return
          */
@@ -222,8 +213,6 @@ namespace BlackMisc
 
         /*!
          * \brief The stored object as CValueObject
-         * \param qv
-         * \return
          */
         static const CValueObject *fromQVariant(const QVariant &qv);
 
@@ -240,13 +229,11 @@ namespace BlackMisc
 
         /*!
          * \brief Copy assignment operator =
-         * \return
          */
         CValueObject &operator=(const CValueObject &) { return *this; }
 
         /*!
          * \brief String for streaming operators
-         * \return
          */
         virtual QString stringForStreaming() const;
 
@@ -283,13 +270,11 @@ namespace BlackMisc
 
         /*!
          * \brief Marshall to DBus
-         * \param argument
          */
         virtual void marshallToDbus(QDBusArgument &) const = 0;
 
         /*!
          * \brief Unmarshall from DBus
-         * \param argument
          */
         virtual void unmarshallFromDbus(const QDBusArgument &) = 0;
 

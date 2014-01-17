@@ -137,12 +137,20 @@ namespace BlackMisc
         }
 
     public: // CValueObject overrides
+        /*!
+         * \copydoc CValueObject::toQVariant()
+         */
         virtual QVariant toQVariant() const { return QVariant::fromValue(derived()); }
 
-        // comparing containers by hash will only compare their addresses
+        /*!
+         * \brief Comparing containers by hash will only compare their addresses
+         */
         virtual uint getValueHash() const { return qHash(&derived()); }
 
     protected: // CValueObject overrides
+        /*!
+         * \copydoc CValueObject::convertToQString()
+         */
         virtual QString convertToQString(bool i18n = false) const
         {
             QString str;
