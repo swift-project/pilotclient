@@ -22,7 +22,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     QMainWindow(parent, windowMode == GuiModes::WindowFrameless ? (Qt::Window | Qt::FramelessWindowHint) : Qt::Tool),
     ui(new Ui::MainWindow),
     m_infoWindow(nullptr),
-    m_windowMode(windowMode), m_init(false), m_coreMode(GuiModes::CoreExternal),
+    m_init(false), m_windowMode(windowMode), m_coreMode(GuiModes::CoreExternal),
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextVoiceAvailable(false),
     m_dBusConnection("dummy"), m_coreRuntime(nullptr),
     m_atcListOnline(nullptr), m_atcListBooked(nullptr),

@@ -106,10 +106,16 @@ namespace BlackCore
     signals:
 
         /*!
-         * \brief ATC station list has been changed
+         * \brief Send status messages
          * \param message
          */
         void statusMessage(const BlackMisc::CStatusMessage &message);
+
+        /*!
+         * \brief Send status messages
+         * \param messages
+         */
+        void statusMessages(const BlackMisc::CStatusMessageList &messages);
 
         /*!
          * \brief List has been changed
@@ -137,8 +143,6 @@ namespace BlackCore
          * \param to
          */
         // If I use the enum, adaptor / interface are not created correctly
-
-
         void connectionStatusChanged(uint from, uint to);
 
         /*!

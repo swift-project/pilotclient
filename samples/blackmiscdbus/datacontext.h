@@ -82,7 +82,7 @@ namespace BlackMiscTest
         /*!
          * \brief Default constructor
          */
-        CDataContext(QObject *parent = 0) : QObject(parent) {}
+        CDataContext(QObject *parent = nullptr) : QObject(parent) {}
 
         /*!
          * \brief ctor for Qt meta system

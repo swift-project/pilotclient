@@ -31,8 +31,8 @@ namespace BlackCore
     CNetworkVatlib::CNetworkVatlib(CNetworkVatlib::LoginMode loginMode, QObject *parent)
         : INetwork(parent),
           m_net(Cvatlib_Network::Create()),
-          m_status(Cvatlib_Network::connStatus_Idle),
           m_loginMode(loginMode),
+          m_status(Cvatlib_Network::connStatus_Idle),
           m_fsdTextCodec(QTextCodec::codecForName("latin1"))
     {
         try

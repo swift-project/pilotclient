@@ -37,7 +37,7 @@ namespace BlackMisc
              * \brief Default constructor
              */
             CModulator() :
-                CAvionicsBase("default"), m_volumeInput(0), m_volumeOutput(0), m_digits(2) {}
+                CAvionicsBase("default"), m_volumeInput(0), m_volumeOutput(0), m_enabled(true), m_digits(2) {}
 
             /*!
              * \brief Constructor
@@ -47,7 +47,7 @@ namespace BlackMisc
              * \param digits
              */
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits) :
-                CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_volumeInput(0), m_volumeOutput(0), m_digits(digits), m_enabled(true) {}
+                CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_volumeInput(0), m_volumeOutput(0), m_enabled(true), m_digits(digits) {}
 
             /*!
              * \brief String for converter

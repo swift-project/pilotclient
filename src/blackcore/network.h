@@ -64,11 +64,20 @@ namespace BlackCore
             Connected
         };
 
-        QString connectionStatusToString(ConnectionStatus status) const
+        static const QString connectionStatusToString(ConnectionStatus status)
         {
-            int index = metaObject()->indexOfEnumerator("ConnectionStatus");
-            QMetaEnum metaEnum = metaObject()->enumerator(index);
-            return metaEnum.valueToKey(status);
+            // the version with metaObject, metaObject()->indexOfEnumerator does not work anymore
+            // an interface cannot be used with Q_DECLAREMETATYPE
+            switch (status)
+            {
+            case Disconnected: return "disconnected";
+            case DisconnectedError: return "disconnectedError";
+            case Connecting: return "connecting";
+            case Connected: return "connected";
+            default: break;
+            }
+            qFatal("Missing value");
+            return ""; // just for compiler warning
         }
 
         virtual bool isConnected() const = 0;
@@ -101,7 +110,7 @@ namespace BlackCore
         virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
         virtual void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
         virtual void setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
-            const BlackMisc::Aviation::CTransponder &xpdr) = 0;
+                                            const BlackMisc::Aviation::CTransponder &transponder) = 0;
 
         // Weather / flight plan
         virtual void requestMetar(const QString &airportICAO) = 0;
