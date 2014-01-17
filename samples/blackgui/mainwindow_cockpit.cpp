@@ -40,7 +40,16 @@ void MainWindow::cockpitValuesChanged()
     else if (sender == this->ui->pb_CockpitIdent)
     {
         // trigger the real button
-        this->ui->cb_CockpitTransponderMode->setCurrentText("I");
+        if (this->ui->cb_CockpitTransponderMode->currentText() == "I")
+        {
+            this->ui->pb_CockpitIdent->setStyleSheet("");
+            this->resetTransponderMode();
+        }
+        else
+        {
+            this->ui->pb_CockpitIdent->setStyleSheet("background: red");
+            this->ui->cb_CockpitTransponderMode->setCurrentText("I"); // trigger real button and whole process
+        }
         return;
     }
 
@@ -138,19 +147,16 @@ void MainWindow::updateCockpitFromContext()
 }
 
 /*
- * Reset transponder mode to Standby
+ * Reset transponder mode to Standby / Charly
  */
-void MainWindow::resetTransponderModerToStandby()
+void MainWindow::resetTransponderMode()
 {
-    this->ui->cb_CockpitTransponderMode->setCurrentText("S");
-}
-
-/*
- * Reset transponder mode to Standby
- */
-void MainWindow::resetTransponderModerToCharly()
-{
-    this->ui->cb_CockpitTransponderMode->setCurrentText("C");
+    this->ui->pb_CockpitIdent->setStyleSheet("");
+    if (this->ui->cb_CockpitTransponderMode->currentText() == "I")
+    {
+        // only reset if still "I"
+        this->ui->cb_CockpitTransponderMode->setCurrentText(this->m_transponderResetValue);
+    }
 }
 
 /*
@@ -185,10 +191,16 @@ void MainWindow::sendCockpitUpdates()
     {
         // ident shall be sent for some time, then reset
         transponder.setTransponderMode(CTransponder::StateIdent);
+        this->ui->pb_CockpitIdent->setStyleSheet("background: red");
         if (this->m_ownAircraft.getTransponderMode() == CTransponder::ModeS)
-            QTimer::singleShot(5000, this, SLOT(resetTransponderModerToStandby()));
+        {
+            this->m_transponderResetValue = "S";
+        }
         else
-            QTimer::singleShot(5000, this, SLOT(resetTransponderModerToCharly()));
+        {
+            this->m_transponderResetValue = "C";
+        }
+        QTimer::singleShot(5000, this, SLOT(resetTransponderMode()));
     }
 
     //
@@ -198,7 +210,6 @@ void MainWindow::sendCockpitUpdates()
     com1.setFrequencyStandbyMHz(this->ui->ds_CockpitCom1Standby->value());
     com2.setFrequencyActiveMHz(this->ui->ds_CockpitCom2Active->value());
     com2.setFrequencyStandbyMHz(this->ui->ds_CockpitCom2Standby->value());
-
 
     //
     // Send to context

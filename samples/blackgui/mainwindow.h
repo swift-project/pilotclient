@@ -130,6 +130,7 @@ private:
     QPixmap m_resPixmapVoiceMuted;
     QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
     QMenu *m_contextMenuAudio; /*! Audio context menu */
+    QString m_transponderResetValue; /*! Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas */
 
     /*!
      * \brief GUI status update
@@ -421,14 +422,9 @@ private slots:
     void audioDeviceSelected(int index);
 
     /*!
-     * \brief Reset transponder to standby
+     * \brief Reset transponder to Standby / Charly
      */
-    void resetTransponderModerToStandby();
-
-    /*!
-     * \brief Reset transponder to Charly
-     */
-    void resetTransponderModerToCharly();
+    void resetTransponderMode();
 
     /*!
      * \brief Override voice room (allows to set an arbitrary voice room for testing purposes)
