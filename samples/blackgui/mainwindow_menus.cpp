@@ -69,10 +69,12 @@ void MainWindow::audioIconContextMenu(const QPoint &position)
     if (!this->m_contextMenuAudio)
     {
         this->m_contextMenuAudio = new QMenu(this);
+#if defined(Q_OS_WIN)
         if (QSysInfo::WindowsVersion && QSysInfo::WV_NT_based)
         {
             this->m_contextMenuAudio->addAction("Mixer");
         }
+#endif
     }
 
     QAction *selectedItem = this->m_contextMenuAudio->exec(globalPosition);

@@ -13,7 +13,7 @@ namespace BlackCore
 
     CVoiceVatlib *CVoiceVatlib::CKeyboard::s_voice = nullptr;
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
 
     HHOOK CVoiceVatlib::CKeyboard::s_keyboardHook = nullptr;
 
@@ -72,6 +72,8 @@ namespace BlackCore
         }
     }
 
+#else
+    void CVoiceVatlib::handlePushToTalk() {}
 #endif
 
 } // namespace

@@ -13,7 +13,10 @@
 #include <QMap>
 #include <QSet>
 #include <QString>
+
+#if defined(Q_OS_WIN)
 #include <Windows.h>
+#endif
 
 namespace BlackCore
 {
