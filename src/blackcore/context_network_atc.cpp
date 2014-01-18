@@ -155,7 +155,7 @@ namespace BlackCore
     {
         // this->log(Q_FUNC_INFO, callsign.toQString(), atisMessage);
 
-        CValueMap vm(CAtcStation::IndexAtisMessage, atisMessage.toQVariant());
+        CValueMap vm(CAtcStation::IndexAtis, atisMessage.toQVariant());
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
     }
