@@ -208,8 +208,7 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->le_CommandLineInput, &QLineEdit::returnPressed, this, &MainWindow::commandEntered);
 
     // cockpit
-    connected = this->connect(this->ui->cb_CockpitTransponderMode, SIGNAL(currentIndexChanged(QString)),
-                              this, SLOT(cockpitValuesChanged()));
+    connected = this->connect(this->ui->cb_CockpitTransponderMode, SIGNAL(currentIndexChanged(QString)), this, SLOT(cockpitValuesChanged()));
     Q_ASSERT(connected);
     this->connect(this->ui->ds_CockpitCom1Active, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->ds_CockpitCom2Active, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
