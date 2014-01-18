@@ -26,7 +26,7 @@ namespace BlackCore
     using namespace BlackMisc::Aviation;
     using namespace BlackMisc::Network;
 
-    void exceptionDispatcher(const char* caller);
+    void exceptionDispatcher(const char *caller);
 
     CNetworkVatlib::CNetworkVatlib(CNetworkVatlib::LoginMode loginMode, QObject *parent)
         : INetwork(parent),
@@ -310,7 +310,7 @@ namespace BlackCore
     }
 
     void CNetworkVatlib::setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
-        const BlackMisc::Aviation::CTransponder &xpdr)
+            const BlackMisc::Aviation::CTransponder &xpdr)
     {
         m_ownAircraft.setCom1System(com1);
         m_ownAircraft.setCom1System(com2);
@@ -411,7 +411,7 @@ namespace BlackCore
         try
         {
             m_net->ReplyToInfoQuery(Cvatlib_Network::infoQuery_Freq, toFSD(callsign),
-                toFSD(QString::number(m_ownAircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3)));
+                                    toFSD(QString::number(m_ownAircraft.getCom1System().getFrequencyActive().value(CFrequencyUnit::MHz()), 'f', 3)));
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
@@ -658,7 +658,7 @@ namespace BlackCore
 
     void CNetworkVatlib::onAtisReplyReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::atisLineType lineType, const char *data, void *cbvar)
     {
-        auto &atis = cbvar_cast(cbvar)->m_atisParts[cbvar_cast(cbvar)->fromFSD(callsign)];
+        auto &atis = cbvar_cast(cbvar)->m_atisParts[cbvar_cast(cbvar)->fromFSD(callsign)]; // also inserts in map if not already in
 
         if (lineType == Cvatlib_Network::atisLineType_VoiceRoom)
         {
@@ -687,7 +687,9 @@ namespace BlackCore
                 if (test.startsWith("z") && test.length() == 2) return; // z1, z2, ..
                 if (test.length() == 1) return; // sometimes just z
 
-                atis.appendMessage("\n" + cbvar_cast(cbvar)->fromFSD(data));
+                // append
+                if (!atis.isEmpty()) atis.appendMessage("\n");
+                atis.appendMessage(fixed);
             }
         }
     }

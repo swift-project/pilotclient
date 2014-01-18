@@ -251,8 +251,6 @@ namespace BlackCore
 
         /*!
          * \brief ATIS received
-         * \param callsign
-         * \param atisMessage
          */
         void psFsdAtisQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
 
