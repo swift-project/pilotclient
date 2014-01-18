@@ -105,7 +105,7 @@ namespace BlackCore
         QByteArray toFSD(QString qstr) const;
         QByteArray toFSD(const BlackMisc::Aviation::CCallsign &callsign) const;
         QString fromFSD(const char *cstr) const;
-        bool isDisconnected() const { return m_status == Cvatlib_Network::connStatus_Idle || m_status == Cvatlib_Network::connStatus_Disconnected; }
+        bool isDisconnected() const { return m_status != Cvatlib_Network::connStatus_Connecting && m_status != Cvatlib_Network::connStatus_Connected; }
 
     private slots:
         void process();
