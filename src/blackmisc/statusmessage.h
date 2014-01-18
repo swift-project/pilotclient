@@ -2,6 +2,7 @@
 #define BLACKMISC_STATUSMESSAGE_H
 
 #include "valueobject.h"
+#include <QDateTime>
 
 namespace BlackMisc
 {

@@ -16,8 +16,6 @@ int main(int argc, char *argv[])
 
     BlackMisc::CApplicationContext ctx;
     BlackMisc::IContext::setInstance(ctx);
-    BlackMisc::CDebug debug;
-    ctx.setObject(debug);
     BlackCore::CNetworkVatlib net;
     ctx.setObject<BlackCore::INetwork>(net);
 

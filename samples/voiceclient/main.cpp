@@ -16,7 +16,6 @@ using namespace BlackMisc::Voice;
 int main(int argc, char *argv[])
 {
     QCoreApplication app (argc, argv);
-    BlackMisc::IContext::getInstance().setObject(*new BlackMisc::CDebug());
     BlackMisc::IContext::getInstance().setObject<BlackCore::IVoice>(*new BlackCore::CVoiceVatlib());
 
     Client client;

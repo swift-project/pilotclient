@@ -7,7 +7,6 @@
 #define BLACKMISCTEST_SAMPLESPHYSICALQUANTITIES_H
 
 #include "blackmisc/pqconstants.h"
-#include "blackmisc/debug.h"
 #include <QDebug>
 
 namespace BlackMiscTest {

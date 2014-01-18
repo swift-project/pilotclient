@@ -15,6 +15,7 @@
 #include "avheading.h"
 #include "pqspeed.h"
 #include "valueobject.h"
+#include <QDateTime>
 
 namespace BlackMisc
 {

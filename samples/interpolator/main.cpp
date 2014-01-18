@@ -7,7 +7,6 @@
 #include "blackmisc/pqangle.h"
 #include "blackcore/interpolator.h"
 #include "blackmisc/context.h"
-#include "blackmisc/debug.h"
 #include <QCoreApplication>
 #include <QElapsedTimer>
 #include <iostream>
@@ -25,8 +24,6 @@ int main(int argc, char *argv[])
 
     BlackMisc::CApplicationContext ctx;
     BlackMisc::IContext::setInstance(ctx);
-    BlackMisc::CDebug debug;
-    ctx.setObject(debug);
 
     QElapsedTimer timer;
 

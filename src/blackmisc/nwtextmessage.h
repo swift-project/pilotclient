@@ -13,6 +13,7 @@
 #include "pqfrequency.h"
 #include "avcallsign.h"
 #include "valueobject.h"
+#include <QDateTime>
 
 namespace BlackMisc
 {

@@ -1,7 +1,6 @@
 #include "blackcore/pluginmgr.h"
 #include "blackmisc/plugins.h"
 #include "blackmisc/context.h"
-#include "blackmisc/debug.h"
 #include <QCoreApplication>
 #include <iostream>
 #include <vector>
@@ -12,8 +11,6 @@ int main(int argc, char *argv[])
 
     BlackMisc::CApplicationContext ctx;
     BlackMisc::IContext::setInstance(ctx);
-    BlackMisc::CDebug debug;
-    ctx.setObject(debug);
 
     {
         const QString pluginPath = "../../build/bin";

@@ -7,7 +7,6 @@
 #define BLACKMISC_PQBASE_H
 
 #include "blackmisc/valueobject.h"
-#include "blackmisc/debug.h"
 #include "blackmisc/mathematics.h"
 #include <QCoreApplication>
 #include <QtDBus/QDBusArgument>

@@ -14,7 +14,6 @@
 
 #include <QtCore/qglobal.h>
 
-#include <blackmisc/debug.h>
 #include "driver_fsx.h"
 
 extern "C"

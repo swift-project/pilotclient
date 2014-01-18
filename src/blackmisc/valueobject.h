@@ -1,7 +1,6 @@
 #ifndef BLACKMISC_VALUEOBJECT_H
 #define BLACKMISC_VALUEOBJECT_H
 
-#include "blackmisc/debug.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>
 #include <QtGlobal>
@@ -67,18 +66,6 @@ namespace BlackMisc
         {
             stream << uc.stringForStreaming();
             return stream;
-        }
-
-        /*!
-         * \brief Stream operator << for log messages
-         * \param log
-         * \param uc
-         * \return
-         */
-        friend CLogMessage operator<<(CLogMessage log, const CValueObject &uc)
-        {
-            log << uc.stringForStreaming();
-            return log;
         }
 
         /*!

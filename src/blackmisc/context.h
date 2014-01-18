@@ -6,7 +6,6 @@
 #ifndef BLACKMISC_CONTEXT_H
 #define BLACKMISC_CONTEXT_H
 
-#include "blackmisc/debug.h"
 #include <QMetaType>
 #include <QObject>
 #include <QMap>
@@ -161,25 +160,6 @@ namespace BlackMisc
          * \return
          */
         virtual const QString &getApplicationName() const = 0;
-
-        /*!
-         * Return the CDebug object.
-         * \return
-         * \throw std::logic_error The requested object is not present.
-         */
-        CDebug &getDebug()
-        {
-            return getObject<CDebug>();
-        }
-
-        /*!
-         * Set the CDebug object.
-         * \param debug
-         */
-        void setDebug(CDebug &debug)
-        {
-            setObject(debug);
-        }
     };
 
     /*!
