@@ -14,7 +14,10 @@
 #include <QSet>
 #include <QString>
 
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <Windows.h>
 #endif
 

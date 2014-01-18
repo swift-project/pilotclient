@@ -8,8 +8,10 @@
 #include <QCoreApplication>
 #include <stdexcept>
 
-
 #ifdef Q_OS_WIN
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <Windows.h>
 #endif
 
