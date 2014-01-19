@@ -38,6 +38,7 @@ namespace BlackCore
     class INetwork : public QObject
     {
         Q_OBJECT
+        Q_ENUMS(ConnectionStatus)
 
     protected:
         /*!
@@ -64,20 +65,11 @@ namespace BlackCore
             Connected
         };
 
-        static const QString connectionStatusToString(ConnectionStatus status)
+        static QString connectionStatusToString(ConnectionStatus status)
         {
-            // the version with metaObject, metaObject()->indexOfEnumerator does not work anymore
-            // an interface cannot be used with Q_DECLAREMETATYPE
-            switch (status)
-            {
-            case Disconnected: return "disconnected";
-            case DisconnectedError: return "disconnectedError";
-            case Connecting: return "connecting";
-            case Connected: return "connected";
-            default: break;
-            }
-            qFatal("Missing value");
-            return ""; // just for compiler warning
+            int index = staticMetaObject.indexOfEnumerator("ConnectionStatus");
+            QMetaEnum metaEnum = staticMetaObject.enumerator(index);
+            return metaEnum.valueToKey(status);
         }
 
         virtual bool isConnected() const = 0;
