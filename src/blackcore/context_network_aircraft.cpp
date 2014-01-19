@@ -62,7 +62,7 @@ namespace BlackCore
             this->m_aircraftsInRange.push_back(aircraft);
             emit this->m_network->sendFrequencyQuery(callsign);
             emit this->m_network->sendNameQuery(callsign);
-            emit this->m_network->requestAircraftInfo(callsign);
+            emit this->m_network->sendAircraftInfoQuery(callsign);
             emit this->changedAircraftsInRange();
         }
         else

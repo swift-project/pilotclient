@@ -15,23 +15,24 @@ Client::Client(BlackMisc::IContext &ctx)
     connect(m_net, &INetwork::atcPositionUpdate,                this, &Client::atcPositionUpdate);
     connect(m_net, &INetwork::atcDisconnected,                  this, &Client::atcDisconnected);
     connect(m_net, &INetwork::connectionStatusChanged,          this, &Client::connectionStatusChanged);
-    connect(m_net, &INetwork::ipQueryReplyReceived,             this, &Client::ipQueryReplyReceived);
-    connect(m_net, &INetwork::frequencyQueryReplyReceived,      this, &Client::freqQueryReplyReceived);
-    connect(m_net, &INetwork::serverQueryReplyReceived,         this, &Client::serverQueryReplyReceived);
-    connect(m_net, &INetwork::atcQueryReplyReceived,            this, &Client::atcQueryReplyReceived);
-    connect(m_net, &INetwork::atisQueryReplyReceived,           this, &Client::atisQueryReplyReceived);
-    connect(m_net, &INetwork::nameQueryReplyReceived,           this, &Client::nameQueryReplyReceived);
-    connect(m_net, &INetwork::capabilitiesQueryReplyReceived,   this, &Client::capabilitiesQueryReplyReceived);
+    connect(m_net, &INetwork::ipReplyReceived,                  this, &Client::ipReplyReceived);
+    connect(m_net, &INetwork::frequencyReplyReceived,           this, &Client::freqReplyReceived);
+    connect(m_net, &INetwork::serverReplyReceived,              this, &Client::serverReplyReceived);
+    connect(m_net, &INetwork::atcReplyReceived,                 this, &Client::atcReplyReceived);
+    connect(m_net, &INetwork::atisReplyReceived,                this, &Client::atisReplyReceived);
+    connect(m_net, &INetwork::nameReplyReceived,                this, &Client::nameReplyReceived);
+    connect(m_net, &INetwork::capabilitiesReplyReceived,        this, &Client::capabilitiesReplyReceived);
     connect(m_net, &INetwork::kicked,                           this, &Client::kicked);
-    connect(m_net, &INetwork::metarReceived,                    this, &Client::metarReceived);
+    connect(m_net, &INetwork::metarReplyReceived,               this, &Client::metarReplyReceived);
     connect(m_net, &INetwork::pilotDisconnected,                this, &Client::pilotDisconnected);
-    connect(m_net, &INetwork::aircraftInfoReceived,             this, &Client::aircraftInfoReceived);
-    connect(m_net, &INetwork::pong,                             this, &Client::pong);
+    connect(m_net, &INetwork::aircraftInfoReplyReceived,        this, &Client::aircraftInfoReplyReceived);
+    connect(m_net, &INetwork::pongReceived,                     this, &Client::pongReceived);
     connect(m_net, &INetwork::textMessagesReceived,             this, &Client::textMessagesReceived);
 
-    connect(this, &Client::setServer,                           m_net, &INetwork::setServer);
-    connect(this, &Client::setCallsign,                         m_net, &INetwork::setCallsign);
-    connect(this, &Client::setRealName,                         m_net, &INetwork::setRealName);
+    connect(this, &Client::presetServer,                        m_net, &INetwork::presetServer);
+    connect(this, &Client::presetCallsign,                      m_net, &INetwork::presetCallsign);
+    connect(this, &Client::presetIcaoCodes,                     m_net, &INetwork::presetIcaoCodes);
+    connect(this, &Client::presetLoginMode,                     m_net, &INetwork::presetLoginMode);
     connect(this, &Client::initiateConnection,                  m_net, &INetwork::initiateConnection);
     connect(this, &Client::terminateConnection,                 m_net, &INetwork::terminateConnection);
     connect(this, &Client::sendTextMessages,                    m_net, &INetwork::sendTextMessages);
@@ -42,22 +43,23 @@ Client::Client(BlackMisc::IContext &ctx)
     connect(this, &Client::sendAtisQuery,                       m_net, &INetwork::sendAtisQuery);
     connect(this, &Client::sendNameQuery,                       m_net, &INetwork::sendNameQuery);
     connect(this, &Client::sendCapabilitiesQuery,               m_net, &INetwork::sendCapabilitiesQuery);
-    connect(this, &Client::requestPlaneInfo,                    m_net, &INetwork::requestAircraftInfo);
+    connect(this, &Client::sendAircraftInfoQuery,               m_net, &INetwork::sendAircraftInfoQuery);
     connect(this, &Client::setOwnAircraft,                      m_net, &INetwork::setOwnAircraft);
     connect(this, &Client::setOwnAircraftPosition,              m_net, &INetwork::setOwnAircraftPosition);
     connect(this, &Client::setOwnAircraftSituation,             m_net, &INetwork::setOwnAircraftSituation);
     connect(this, &Client::setOwnAircraftAvionics,              m_net, &INetwork::setOwnAircraftAvionics);
-    connect(this, &Client::ping,                                m_net, &INetwork::ping);
-    connect(this, &Client::requestMetar,                        m_net, &INetwork::requestMetar);
-    connect(this, &Client::requestWeatherData,                  m_net, &INetwork::requestWeatherData);
+    connect(this, &Client::sendPing,                            m_net, &INetwork::sendPing);
+    connect(this, &Client::sendMetarQuery,                      m_net, &INetwork::sendMetarQuery);
+    connect(this, &Client::sendWeatherDataQuery,                m_net, &INetwork::sendWeatherDataQuery);
 
     using namespace std::placeholders;
     m_commands["help"]              = std::bind(&Client::help, this, _1);
     m_commands["echo"]              = std::bind(&Client::echo, this, _1);
     m_commands["exit"]              = std::bind(&Client::exit, this, _1);
-    m_commands["setserver"]         = std::bind(&Client::setServerCmd, this, _1);
-    m_commands["setcallsign"]       = std::bind(&Client::setCallsignCmd, this, _1);
-    m_commands["setrealname"]       = std::bind(&Client::setRealNameCmd, this, _1);
+    m_commands["setserver"]         = std::bind(&Client::presetServerCmd, this, _1);
+    m_commands["setcallsign"]       = std::bind(&Client::presetCallsignCmd, this, _1);
+    m_commands["icaocodes"]         = std::bind(&Client::presetIcaoCodesCmd, this, _1);
+    m_commands["loginmode"]         = std::bind(&Client::presetLoginModeCmd, this, _1);
     m_commands["initconnect"]       = std::bind(&Client::initiateConnectionCmd, this, _1);
     m_commands["termconnect"]       = std::bind(&Client::terminateConnectionCmd, this, _1);
     m_commands["privmsg"]           = std::bind(&Client::sendPrivateTextMessageCmd, this, _1);
@@ -69,14 +71,14 @@ Client::Client(BlackMisc::IContext &ctx)
     m_commands["atis"]              = std::bind(&Client::sendAtisQueryCmd, this, _1);
     m_commands["name"]              = std::bind(&Client::sendNameQueryCmd, this, _1);
     m_commands["caps"]              = std::bind(&Client::sendCapabilitiesQueryCmd, this, _1);
-    m_commands["aircraftinfo"]      = std::bind(&Client::requestAircraftInfoCmd, this, _1);
+    m_commands["aircraftinfo"]      = std::bind(&Client::sendAircraftInfoQueryCmd, this, _1);
     m_commands["setaircraft"]       = std::bind(&Client::setOwnAircraftCmd, this, _1);
     m_commands["setposition"]       = std::bind(&Client::setOwnAircraftPositionCmd, this, _1);
     m_commands["setsituation"]      = std::bind(&Client::setOwnAircraftSituationCmd, this, _1);
     m_commands["setavionics"]       = std::bind(&Client::setOwnAircraftAvionicsCmd, this, _1);
-    m_commands["ping"]              = std::bind(&Client::pingCmd, this, _1);
-    m_commands["metar"]             = std::bind(&Client::requestMetarCmd, this, _1);
-    m_commands["weather"]           = std::bind(&Client::requestWeatherDataCmd, this, _1);
+    m_commands["ping"]              = std::bind(&Client::sendPingCmd, this, _1);
+    m_commands["metar"]             = std::bind(&Client::sendMetarQueryCmd, this, _1);
+    m_commands["weather"]           = std::bind(&Client::sendWeatherDataQueryCmd, this, _1);
 }
 
 void Client::command(QString line)
@@ -121,26 +123,44 @@ void Client::exit(QTextStream &)
     emit quit();
 }
 
-void Client::setServerCmd(QTextStream &args)
+void Client::presetServerCmd(QTextStream &args)
 {
     QString hostname;
     quint16 port;
     QString username;
     QString password;
     args >> hostname >> port >> username >> password;
-    emit setServer(BlackMisc::Network::CServer("", "", hostname, port, BlackMisc::Network::CUser(username, "", "", password)));
+    args.skipWhiteSpace();
+    emit presetServer(BlackMisc::Network::CServer("", "", hostname, port, BlackMisc::Network::CUser(username, args.readAll(), "", password)));
 }
 
-void Client::setCallsignCmd(QTextStream &args)
+void Client::presetCallsignCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
-    emit setCallsign(callsign);
+    emit presetCallsign(callsign);
 }
 
-void Client::setRealNameCmd(QTextStream &args)
+void Client::presetIcaoCodesCmd(QTextStream &args)
 {
-    emit setRealName(args.readAll());
+    QString acTypeICAO;
+    QString descriptionICAO;
+    QString airlineICAO;
+    QString livery;
+    QString color;
+    args >> acTypeICAO >> descriptionICAO >> airlineICAO >> livery >> color;
+    emit presetIcaoCodes(BlackMisc::Aviation::CAircraftIcao(acTypeICAO, descriptionICAO, airlineICAO, livery, color));
+}
+
+void Client::presetLoginModeCmd(QTextStream &args)
+{
+    QString modeString;
+    args >> modeString;
+    BlackCore::INetwork::LoginMode mode;
+    if (modeString == "normal") { mode = BlackCore::INetwork::LoginNormal; }
+    if (modeString == "observer") { mode = BlackCore::INetwork::LoginAsObserver; }
+    if (modeString == "stealth") { mode = BlackCore::INetwork::LoginStealth; }
+    emit presetLoginMode(mode);
 }
 
 void Client::initiateConnectionCmd(QTextStream &)
@@ -223,19 +243,15 @@ void Client::sendCapabilitiesQueryCmd(QTextStream &args)
     emit sendCapabilitiesQuery(callsign);
 }
 
-void Client::requestAircraftInfoCmd(QTextStream &args)
+void Client::sendAircraftInfoQueryCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
-    emit requestPlaneInfo(callsign);
+    emit sendAircraftInfoQuery(callsign);
 }
 
 void Client::setOwnAircraftCmd(QTextStream &args)
 {
-    QString callsign;
-    QString acTypeICAO;
-    QString airlineICAO;
-    QString livery;
     double lat;
     double lon;
     double alt;
@@ -243,15 +259,23 @@ void Client::setOwnAircraftCmd(QTextStream &args)
     double pitch;
     double bank;
     double gs;
-    args >> callsign >> acTypeICAO >> airlineICAO >> livery >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs;
-    emit setOwnAircraft(BlackMisc::Aviation::CAircraft(callsign, BlackMisc::Network::CUser(), BlackMisc::Aviation::CAircraftSituation(
+    double com1;
+    double com2;
+    int xpdrCode;
+    QString xpdrMode;
+    args >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs >> com1 >> com2 >> xpdrCode >> xpdrMode;
+    BlackMisc::Aviation::CAircraft aircraft("", BlackMisc::Network::CUser(), BlackMisc::Aviation::CAircraftSituation(
         BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
         BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
         BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
         BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
         BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
         BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
-    )));
+    ));
+    aircraft.setCom1System(BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())));
+    aircraft.setCom2System(BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())));
+    aircraft.setTransponder(BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode));
+    emit setOwnAircraft(aircraft);
 }
 
 void Client::setOwnAircraftPositionCmd(QTextStream &args)
@@ -298,25 +322,25 @@ void Client::setOwnAircraftAvionicsCmd(QTextStream &args)
     );
 }
 
-void Client::pingCmd(QTextStream &args)
+void Client::sendPingCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
-    emit ping(callsign);
+    emit sendPing(callsign);
 }
 
-void Client::requestMetarCmd(QTextStream &args)
+void Client::sendMetarQueryCmd(QTextStream &args)
 {
     QString airportICAO;
     args >> airportICAO;
-    emit requestMetar(airportICAO);
+    emit sendMetarQuery(airportICAO);
 }
 
-void Client::requestWeatherDataCmd(QTextStream &args)
+void Client::sendWeatherDataQueryCmd(QTextStream &args)
 {
     QString airportICAO;
     args >> airportICAO;
-    emit requestWeatherData(airportICAO);
+    emit sendWeatherDataQuery(airportICAO);
 }
 
 /****************************************************************************/
@@ -352,37 +376,37 @@ void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldSt
     }
 }
 
-void Client::ipQueryReplyReceived(const QString &ip)
+void Client::ipReplyReceived(const QString &ip)
 {
     std::cout << "IP_REPLY " << ip.toStdString() << std::endl;
 }
 
-void Client::freqQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq)
+void Client::freqReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq)
 {
     std::cout << "FREQ_REPLY " << callsign << " " << freq << std::endl;
 }
 
-void Client::serverQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname)
+void Client::serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname)
 {
     std::cout << "SERVER_REPLY " << callsign << " " << hostname.toStdString() << std::endl;
 }
 
-void Client::atcQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC)
+void Client::atcReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC)
 {
     std::cout << "ATC_REPLY " << callsign << (isATC ? " yes" : " no") << std::endl;
 }
 
-void Client::atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis)
+void Client::atisReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis)
 {
     std::cout << "ATIS_REPLY " << callsign << " " << atis << std::endl;
 }
 
-void Client::nameQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname)
+void Client::nameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname)
 {
     std::cout << "NAME_REPLY " << callsign << " " << realname.toStdString() << std::endl;
 }
 
-void Client::capabilitiesQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags)
+void Client::capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags)
 {
     std::cout << "CAPS_REPLY " << callsign << " " << flags << std::endl;
 }
@@ -392,7 +416,7 @@ void Client::kicked(const QString &msg)
     std::cout << "KICKED " << msg.toStdString() << std::endl;
 }
 
-void Client::metarReceived(const QString &data)
+void Client::metarReplyReceived(const QString &data)
 {
     std::cout << "METAR " << data.toStdString() << std::endl;
 }
@@ -402,12 +426,12 @@ void Client::pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
     std::cout << "PILOT_DISCONNECTED " << callsign << std::endl;
 }
 
-void Client::aircraftInfoReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData)
+void Client::aircraftInfoReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData)
 {
     std::cout << "PLANE_INFO_REPLY " << callsign << " " << icaoData.toStdString();
 }
 
-void Client::pong(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime)
+void Client::pongReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime)
 {
     std::cout << "PONG " << callsign << " " << elapsedTime << std::endl;
 }

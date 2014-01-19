@@ -63,7 +63,7 @@ namespace BlackCore
         if (metar.isEmpty() || metar.timeDiffReceivedMs() > 10 * 1000)
         {
             // outdated, or not in cache at all
-            this->m_network->requestMetar(airportIcaoCode.trimmed().toUpper());
+            this->m_network->sendMetarQuery(airportIcaoCode.trimmed().toUpper());
 
             // with this little trick we try to make an asynchronous signal / slot
             // based approach a synchronous return value
