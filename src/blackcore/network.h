@@ -89,6 +89,11 @@ namespace BlackCore
             return metaEnum.valueToKey(status);
         }
 
+        static bool isErrorStatus(ConnectionStatus status)
+        {
+            return status == DisconnectedError;
+        }
+
         virtual bool isConnected() const = 0;
 
     public slots:

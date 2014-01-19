@@ -101,7 +101,7 @@ namespace BlackCore
         {
             if (m_net->IsValid() && m_net->IsNetworkConnected())
             {
-                m_net->LogoffAndDisconnect(0);
+                m_net->LogoffAndDisconnect(0); // emits a connectionStatusChanged signal
             }
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
@@ -171,6 +171,34 @@ namespace BlackCore
             }
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+    }
+
+    INetwork::ConnectionStatus convertConnectionStatus(Cvatlib_Network::connStatus status)
+    {
+        switch (status)
+        {
+        case Cvatlib_Network::connStatus_Idle:          return INetwork::Disconnected;
+        case Cvatlib_Network::connStatus_Connecting:    return INetwork::Connecting;
+        case Cvatlib_Network::connStatus_Connected:     return INetwork::Connected;
+        case Cvatlib_Network::connStatus_Disconnected:  return INetwork::Disconnected;
+        case Cvatlib_Network::connStatus_Error:         return INetwork::DisconnectedError;
+        }
+        qFatal("unrecognised connection status");
+        return INetwork::DisconnectedError;
+    }
+
+    void CNetworkVatlib::changeConnectionStatus(Cvatlib_Network::connStatus status)
+    {
+        if (m_status != status)
+        {
+            qSwap(m_status, status);
+            emit connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status));
+
+            if (isDisconnected())
+            {
+                m_updateTimer.stop();
+            }
+        }
     }
 
     QByteArray CNetworkVatlib::toFSD(QString qstr) const
@@ -286,15 +314,22 @@ namespace BlackCore
                                          toFSD(m_server.getUser().getPassword()),
                                          info);
             }
-            m_net->ConnectAndLogon();
-            if (! m_updateTimer.isActive())
+
+            if (m_net->ConnectAndLogon())
             {
-                m_updateTimer.start(c_updateIntervalMsec);
+                if (! m_updateTimer.isActive())
+                {
+                    m_updateTimer.start(c_updateIntervalMsec);
+                }
+            }
+            else
+            {
+                changeConnectionStatus(Cvatlib_Network::connStatus_Error);
             }
         }
         catch (...)
         {
-            m_status = Cvatlib_Network::connStatus_Idle;
+            changeConnectionStatus(Cvatlib_Network::connStatus_Error);
             exceptionDispatcher(Q_FUNC_INFO);
         }
     }
@@ -304,7 +339,11 @@ namespace BlackCore
         try
         {
             m_updateTimer.stop();
-            m_net->LogoffAndDisconnect(c_logoffTimeoutSec);
+
+            if (m_net && m_net->IsValid() && m_net->IsNetworkConnected())
+            {
+                m_net->LogoffAndDisconnect(c_logoffTimeoutSec);
+            }
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
@@ -539,24 +578,9 @@ namespace BlackCore
         return static_cast<CNetworkVatlib *>(cbvar);
     }
 
-    CNetworkVatlib::ConnectionStatus convertConnectionStatus(Cvatlib_Network::connStatus status)
+    void CNetworkVatlib::onConnectionStatusChanged(Cvatlib_Network *, Cvatlib_Network::connStatus, Cvatlib_Network::connStatus newStatus, void *cbvar)
     {
-        switch (status)
-        {
-        case Cvatlib_Network::connStatus_Idle:          return CNetworkVatlib::Disconnected;
-        case Cvatlib_Network::connStatus_Connecting:    return CNetworkVatlib::Connecting;
-        case Cvatlib_Network::connStatus_Connected:     return CNetworkVatlib::Connected;
-        case Cvatlib_Network::connStatus_Disconnected:  return CNetworkVatlib::Disconnected;
-        case Cvatlib_Network::connStatus_Error:         return CNetworkVatlib::DisconnectedError;
-        }
-        qFatal("unrecognised connection status");
-        return CNetworkVatlib::DisconnectedError;
-    }
-
-    void CNetworkVatlib::onConnectionStatusChanged(Cvatlib_Network *, Cvatlib_Network::connStatus oldStatus, Cvatlib_Network::connStatus newStatus, void *cbvar)
-    {
-        cbvar_cast(cbvar)->m_status = newStatus;
-        emit cbvar_cast(cbvar)->connectionStatusChanged(convertConnectionStatus(oldStatus), convertConnectionStatus(newStatus));
+        cbvar_cast(cbvar)->changeConnectionStatus(newStatus);
     }
 
     void CNetworkVatlib::onTextMessageReceived(Cvatlib_Network *, const char *from, const char *to, const char *msg, void *cbvar)
@@ -636,6 +660,7 @@ namespace BlackCore
     void CNetworkVatlib::onKicked(Cvatlib_Network *, const char *reason, void *cbvar)
     {
         emit cbvar_cast(cbvar)->kicked(cbvar_cast(cbvar)->fromFSD(reason));
+        emit cbvar_cast(cbvar)->terminate();
     }
 
     void CNetworkVatlib::onPong(Cvatlib_Network *, const char *callsign, INT elapsedTime, void *cbvar)
