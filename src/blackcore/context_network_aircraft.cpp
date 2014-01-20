@@ -47,7 +47,7 @@ namespace BlackCore
     /*
      * Aircraft update received
      */
-    void CContextNetwork::psFsdAircraftPositionUpdate(const CCallsign &callsign, const CAircraftSituation &situation, const CTransponder &transponder)
+    void CContextNetwork::psFsdAircraftUpdateReceived(const CCallsign &callsign, const CAircraftSituation &situation, const CTransponder &transponder)
     {
         // this->log(Q_FUNC_INFO, callsign.toQString(), situation.toQString(), transponder.toQString());
         CAircraftList list = this->m_aircraftsInRange.findByCallsign(callsign);

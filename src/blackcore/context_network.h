@@ -44,10 +44,11 @@ namespace BlackCore
 
         /*!
          * \brief Register myself in DBus
-         * \param server
+         * \param server    DBus server
          */
         void registerWithDBus(CDBusServer *server)
         {
+            Q_ASSERT(server);
             server->addObject(IContextNetwork::ServicePath(), this);
         }
 
@@ -62,7 +63,6 @@ namespace BlackCore
 
         /*!
          * \brief Using local objects?
-         * \return
          */
         virtual bool usingLocalObjects() const { return true; }
 
@@ -70,7 +70,6 @@ namespace BlackCore
 
         /*!
          * \brief Read ATC bookings
-         * \return
          */
         virtual void readAtcBookingsFromSource() const;
 
@@ -110,71 +109,68 @@ namespace BlackCore
 
         /*!
          * \brief Connect to Network
-         * \return
+         * \return  a message list showing the connection situation
          */
         virtual BlackMisc::CStatusMessageList connectToNetwork();
 
         /*!
          * \brief Disconnect from network
-         * \return
+         * \return  a message list showing the disconnection situation
          */
         virtual BlackMisc::CStatusMessageList disconnectFromNetwork();
 
         /*!
          * \brief Network connected?
-         * \return
          */
         virtual bool isConnected() const;
 
         /*!
          * \brief Set own aircraft
-         * \param aircraft
+         * \param aircraft my own aircraft
          * \return
          */
         virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
 
         /*!
          * \brief Update own position
-         * \param position
-         * \param altitude
+         * \param position  own position
+         * \param altitude  own altitude
          */
         virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
 
         /*!
          * \brief Update own situation
-         * \param situation
+         * \param situation own situation
          */
         virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         /*!
          * \brief Update own cockpit
-         * \param com1
-         * \param com2
-         * \param transponder
+         * \param com1  my COM1 unit
+         * \param com2  my COM2 unit
+         * \param transponder   my transponder
          */
         virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder);
 
         /*!
          * \brief Get own aircraft
-         * \return
          */
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
         /*!
          * \brief Text messages (also private chat messages)
-         * \param textMessage
          */
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages);
 
         /*!
          * \brief Request METAR
-         * \param airportIcaoCode
+         * \param airportIcaoCode   e.g. EDDF, KLAX
          */
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode);
 
         /*!
-         * \brief Selected COM1/2 frequencies as voice rooms, "" means no resolution
-         * \return
+         * \brief Selected COM1/2 frequencies as voice rooms
+         * \return  COM1/2 voice rooms
          */
         virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
 
@@ -192,20 +188,17 @@ namespace BlackCore
         QDateTime m_atcBookingsUpdateTimestamp;
 
         /*!
-         * \brief Replace value by new values, but keep object itself intact
-         * \param newStations
+         * \brief Replace value by new values
          */
         void setAtcStationsBooked(const BlackMisc::Aviation::CAtcStationList &newStations);
 
         /*!
-         * \brief Replace value by new values, but keep object itself intact
-         * \param newStations
+         * \brief Replace value by new values
          */
         void setAtcStationsOnline(const BlackMisc::Aviation::CAtcStationList &newStations);
 
         /*!
          * \brief The "central" ATC list with online ATC controllers
-         * \return
          */
         BlackMisc::Aviation::CAtcStationList &atcStationsOnline()
         {
@@ -214,7 +207,6 @@ namespace BlackCore
 
         /*!
          * \brief ATC list, with booked controllers
-         * \return
          */
         BlackMisc::Aviation::CAtcStationList &atcStationsBooked()
         {
@@ -229,23 +221,19 @@ namespace BlackCore
     private slots:
         /*!
          * \brief Connection status changed
-         * \param from
-         * \param to
+         * \param from  old status
+         * \param to    new status
          */
         void psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
 
         /*!
          * \brief ATC position update
-         * \param callsign
-         * \param frequency
-         * \param position
-         * \param range
          */
         void psFsdAtcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
 
         /*!
          * \brief Controller disconnected
-         * \param callsign
+         * \param callsign  callsign of controller
          */
         void psFsdAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
 
@@ -256,71 +244,56 @@ namespace BlackCore
 
         /*!
          * \brief ATIS received (voice room part)
-         * \param callsign
-         * \param url
+         * \param callsign  station callsign
+         * \param url       voice room's URL
          */
         void psFsdAtisVoiceRoomQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
 
         /*!
          * \brief ATIS received (logoff time part)
-         * \param callsign
-         * \param zuluTime
+         * \param callsign  station callsign
+         * \param zuluTime  UTC time, when controller will logoff
          */
         void psFsdAtisLogoffTimeQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
 
         /*!
          * \brief METAR received
-         * \param metarMessage
          */
         void psFsdMetarReceived(const QString &metarMessage);
 
         /*!
-         * \brief Realnname recevied
-         * \param callsign
-         * \param realname
+         * \brief Realname recevied
          */
         void psFsdNameQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
 
         /*!
          * \brief Plane info received
-         * \param callsign
-         * \param icaoData
          */
         void psFsdAircraftInfoReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
 
         /*!
-         * \brief Aircraft position update
-         * \param callsign
-         * \param situation
-         * \param transponder
+         * \brief Aircraft position update received
          */
-        void psFsdAircraftPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+        void psFsdAircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
 
         /*!
          * \brief Pilot disconnected
-         * \param callsign
          */
         void psFsdPilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
 
         /*!
          * \brief Frequency received
-         * \param callsign
-         * \param frequency
          */
         void psFsdFrequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
 
         /*!
-         * \brief Radio text message received
-         * \param callsign
-         * \param message
-         * \param frequencies
+         * \brief Radio text messages received
          */
         void psFsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
 
         /*!
          * \brief Bookings via XML read
-         * \param nwReply
-         * TODO: encapsulate reading from WWW in some class
+         * \todo encapsulate reading from WWW in some class
          */
         void psAtcBookingsRead(QNetworkReply *nwReply);
     };
