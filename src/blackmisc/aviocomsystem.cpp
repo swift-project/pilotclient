@@ -40,6 +40,7 @@ namespace BlackMisc
         void CComSystem::setFrequencyActiveMHz(double frequencyMHz)
         {
             CFrequency f(frequencyMHz, CFrequencyUnit::MHz());
+            if (f == this->getFrequencyActive()) return; // save all the comparisons / rounding
             CComSystem::roundTo25KHz(f);
             this->CModulator::setFrequencyActive(f);
             this->validate(true);
@@ -48,6 +49,7 @@ namespace BlackMisc
         void CComSystem::setFrequencyStandbyMHz(double frequencyMHz)
         {
             CFrequency f(frequencyMHz, CFrequencyUnit::MHz());
+            if (f == this->getFrequencyStandby()) return; // save all the comparisons / rounding
             CComSystem::roundTo25KHz(f);
             this->CModulator::setFrequencyStandby(f);
             this->validate(true);
@@ -60,7 +62,12 @@ namespace BlackMisc
         {
             double f = frequency.valueRounded(CFrequencyUnit::kHz(), 0);
             quint32 d = static_cast<quint32>(f / 25.0);
-            frequency.setCurrentUnitValue(d * (25.0 / 1000.0));
+            frequency.switchUnit(CFrequencyUnit::MHz());
+            double f0 = frequency.valueRounded(CFrequencyUnit::MHz(), 3);
+            double f1 = CMath::round(d * (25.0 / 1000.0), 3);
+            double f2 = CMath::round((d + 1) * (25.0 / 1000.0), 3);
+            bool down = qAbs(f1 - f0) < qAbs(f2 - f0); // which is the closest value
+            frequency.setCurrentUnitValue(down ? f1 : f2);
         }
     } // namespace
 }
