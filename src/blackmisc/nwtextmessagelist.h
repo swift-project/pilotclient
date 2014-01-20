@@ -34,50 +34,36 @@ namespace BlackMisc
 
             /*!
              * \brief Constructor, single private message
-             * \param message
-             * \param recipientCallsign
              */
             CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &recipientCallsign);
 
             /*!
              * \brief Constructor, single private message
-             * \param message
-             * \param senderCallsign
-             * \param recipientCallsign
              */
             CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign);
 
             /*!
              * \brief Constructor, single radio message
-             * \param message
-             * \param frequency
-             * \param sender
              */
             CTextMessageList(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &senderCallsign = BlackMisc::Aviation::CCallsign());
 
             /*!
              * \brief Constructor, single message
-             * \param message
              */
             CTextMessageList(const CTextMessage &message);
 
             /*!
              * \brief Constructor, multi-frequency radio messages
-             * \param message
-             * \param frequencies
-             * \param sender
              */
             CTextMessageList(const QString &message, const QList<BlackMisc::PhysicalQuantities::CFrequency> &frequencies, const BlackMisc::Aviation::CCallsign &sender = BlackMisc::Aviation::CCallsign());
 
             /*!
              * \brief Construct from a base class object.
-             * \param other
              */
             CTextMessageList(const CSequence<CTextMessage> &other);
 
             /*!
              * \brief QVariant, required for DBus QVariant lists
-             * \return
              */
             virtual QVariant toQVariant() const
             {
@@ -86,7 +72,6 @@ namespace BlackMisc
 
             /*!
              * \brief Private messages
-             * \return
              */
             CTextMessageList getPrivateMessages() const;
 
@@ -98,20 +83,16 @@ namespace BlackMisc
 
             /*!
              * \brief Public messages
-             * \return
              */
             CTextMessageList getRadioMessages() const;
 
             /*!
              * \brief Contains radio messages?
-             * \return
              */
             bool containsRadioMessages() const;
 
             /*!
              * \brief Find by frequency
-             * \param frequency
-             * \return
              */
             CTextMessageList findByFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const;
 

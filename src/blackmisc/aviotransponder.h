@@ -375,22 +375,17 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Value hash
-             * \return
+             * \copydoc CValueObject::getValueHash()
              */
             virtual uint getValueHash() const;
 
             /*!
              * \brief Is valid transponder code?
-             * \param transponderCode
-             * \return
              */
             static bool isValidTransponderCode(const QString &transponderCode);
 
             /*!
              * \brief Is valid transponder code?
-             * \param transponderCode
-             * \return
              */
             static bool isValidTransponderCode(qint32 transponderMode);
 

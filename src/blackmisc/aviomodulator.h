@@ -302,13 +302,11 @@ namespace BlackMisc
 
             /*!
              * \brief Enabled?
-             * \return
              */
             bool isEnabled() const { return this->m_enabled;}
 
             /*!
              * \brief Enabled?
-             * \param
              */
             void setEnabled(bool enable) { this->m_enabled = enable;}
 

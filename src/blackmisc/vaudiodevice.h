@@ -142,25 +142,33 @@ namespace BlackMisc
             virtual int compareImpl(const CValueObject &other) const;
 
             /*!
-             * \brief Stream to DBus <<
-             * \param argument
+             * \copydoc CValueObject::marshallToDbus()
              */
             virtual void marshallToDbus(QDBusArgument &argument) const;
 
             /*!
-             * \brief Stream from DBus >>
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus()
              */
             virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
         protected:
             /*!
+             * \brief Device type, @see CAudioDevice::DeviceType
+             */
+            DeviceType m_type;
+            /*!
              * deviceIndex is the number is the reference for the VVL. The device is selected by this index.
              * The managing class needs to take care, that indexes are valid.
              */
-            DeviceType m_type;
             qint16 m_deviceIndex;
+            /*!
+             * \brief Device name
+             */
             QString m_deviceName;
+            /*!
+             * We use a DBus based system. Hence an audio device can reside on a different
+             * computer, this here is its name
+             */
             QString m_hostName;
 
         private:

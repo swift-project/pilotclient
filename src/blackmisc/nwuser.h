@@ -46,8 +46,7 @@ namespace BlackMisc
             {}
 
             /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant()
              */
             virtual QVariant toQVariant() const
             {
@@ -62,73 +61,61 @@ namespace BlackMisc
 
             /*!
              * \brief setRealName
-             * \param realname
              */
             void setRealName(const QString &realname) { m_realname = realname.trimmed(); }
 
             /*!
              * Get password
-             * \return
              */
             QString getPassword() const { return m_password; }
 
             /*!
              * Set password
-             * \param
              */
             void setPassword(const QString &pw) { m_password = pw.trimmed(); }
 
             /*!
              * \brief Valid user object?
-             * \return
              */
             bool isValid() const { return !this->m_realname.isEmpty() &&  !this->m_id.isEmpty(); }
 
             /*!
              * \brief Valid credentials?
-             * \return
              */
             bool hasValidCredentials() const { return this->isValid() && !this->m_password.isEmpty(); }
 
             /*!
              * \brief Valid real name?
-             * \return
              */
             bool hasValidRealName() const { return !this->m_realname.isEmpty(); }
 
             /*!
              * \brief Valid id?
-             * \return
              */
             bool hasValidId() const { return !this->m_id.isEmpty(); }
 
             /*!
              * Get email.
-             * \return
              */
             QString getEmail() const { return m_email; }
 
             /*!
              * Set email.
-             * \param
              */
             void setEmail(const QString &email) { m_email = email.trimmed(); }
 
             /*!
              * Get id.
-             * \return
              */
             QString getId() const { return m_id; }
 
             /*!
              * \brief Valid email?
-             * \return
              */
             bool hasValidEmail() const { return !this->m_email.isEmpty(); }
 
             /*!
              * \brief Set id
-             * \param realname
              */
             void setId(const QString &id) { m_id = id.trimmed(); }
 

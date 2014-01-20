@@ -361,26 +361,23 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CTime bookedWhen() const;
 
             /*!
-             * \brief Get atis
+             * \brief Get ATIS
              * \return
              */
             const CInformationMessage &getAtis() const { return m_atis; }
 
             /*!
              * \brief Set ATIS
-             * \param msg
              */
             void setAtis(const CInformationMessage &atis) { this->m_atis = atis;}
 
             /*!
              * \brief Set ATIS Message
-             * \param atis
              */
             void setAtisMessage(const QString &atis) { this->m_atis.setMessage(atis); }
 
             /*!
              * \brief Get METAR
-             * \return
              */
             const CInformationMessage &getMetar() const { return m_metar; }
 

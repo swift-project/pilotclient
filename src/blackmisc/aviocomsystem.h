@@ -58,13 +58,11 @@ namespace BlackMisc
 
             /*!
              * \brief Copy constructor
-             * \param other
              */
             CComSystem(const CComSystem &other) : CModulator(other) {}
 
             /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
             virtual QVariant toQVariant() const
             {
@@ -72,7 +70,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Value hash
+             * \copydoc CValueObject::getValueHash
              * \return
              */
             virtual uint getValueHash() const
@@ -82,10 +80,6 @@ namespace BlackMisc
 
             /*!
              * \brief Constructor
-             * \param name
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \param digits
              */
             CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
                 CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits)
@@ -95,13 +89,13 @@ namespace BlackMisc
 
             /*!
              * \brief Set active frequency
-             * \param frequencyMHz
+             * \remarks will be rounded to 25KHz
              */
             void setFrequencyActiveMHz(double frequencyMHz);
 
             /*!
              * \brief Set standby frequency
-             * \param frequencyMHz
+             * \remarks will be rounded to 25KHz
              */
             void setFrequencyStandbyMHz(double frequencyMHz);
 
@@ -317,8 +311,6 @@ namespace BlackMisc
 
             /*!
              * \brief Valid civil aviation frequency?
-             * \param f
-             * \return
              */
             static bool isValidCivilAviationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
@@ -328,8 +320,6 @@ namespace BlackMisc
 
             /*!
              * \brief Valid military aviation frequency?
-             * \param f
-             * \return
              */
             static bool isValidMilitaryFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
@@ -338,9 +328,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Round to 25KHz
-             * \param f
-             * \return
+             * \brief Round to 25KHz, set MHz as unit
              */
             static void roundTo25KHz(BlackMisc::PhysicalQuantities::CFrequency &frequency);
 

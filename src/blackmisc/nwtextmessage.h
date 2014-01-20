@@ -32,9 +32,6 @@ namespace BlackMisc
 
             /*!
              * Constructor, radio message
-             * \param message
-             * \param frequency
-             * \param senderCallsign
              */
             CTextMessage(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &senderCallsign = BlackMisc::Aviation::CCallsign())
                 : m_message(message), m_received(QDateTime::currentDateTimeUtc()), m_senderCallsign(senderCallsign), m_frequency(frequency)
@@ -44,16 +41,12 @@ namespace BlackMisc
 
             /*!
              * Constructor, private message
-             * \param message
-             * \param senderCallsign
-             * \param recipientCallsign
              */
             CTextMessage(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign = BlackMisc::Aviation::CCallsign())
                 : m_message(message), m_received(QDateTime::currentDateTimeUtc()), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(-1.0, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()) {}
 
             /*!
              * \brief QVariant, required for DBus QVariant lists
-             * \return
              */
             virtual QVariant toQVariant() const
             {
@@ -62,7 +55,6 @@ namespace BlackMisc
 
             /*!
              * Get callsign (from)
-             * \return
              */
             const BlackMisc::Aviation::CCallsign &getSenderCallsign() const
             {
@@ -71,7 +63,6 @@ namespace BlackMisc
 
             /*!
              * Set callsign (from)
-             * \param
              */
             void setSenderCallsign(const BlackMisc::Aviation::CCallsign &callsign)
             {
@@ -80,7 +71,6 @@ namespace BlackMisc
 
             /*!
              * Get callsign (to)
-             * \return
              */
             const BlackMisc::Aviation::CCallsign &getRecipientCallsign() const
             {
@@ -89,35 +79,29 @@ namespace BlackMisc
 
             /*!
              * Set callsign (to)
-             * \param
              */
             void setRecipientCallsign(const BlackMisc::Aviation::CCallsign &callsign)
             {
                 m_recipientCallsign = callsign;
             }
 
-            /*
-             * Send to frequency?
-             * \param frequency
-             * \return
+            /*!
+             * Send to particular frequency?
              */
             bool isSendToFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const;
 
             /*!
              * Send to UNICOM?
-             * \return
              */
             bool isSendToUnicom() const;
 
             /*!
              * \brief Valid receviver?
-             * \return
              */
             bool hasValidRecipient() const;
 
             /*!
              * Get message
-             * \return
              */
             const QString &getMessage() const
             {
@@ -126,7 +110,6 @@ namespace BlackMisc
 
             /*!
              * Empty message
-             * \return
              */
             bool isEmpty() const
             {
@@ -135,7 +118,6 @@ namespace BlackMisc
 
             /*!
              * Set message
-             * \param
              */
             void setMessage(const QString &message)
             {
@@ -144,7 +126,6 @@ namespace BlackMisc
 
             /*!
              * Get frequency
-             * \return
              */
             const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const
             {
@@ -153,7 +134,6 @@ namespace BlackMisc
 
             /*!
              * Set frequency
-             * \param
              */
             void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
             {
@@ -162,25 +142,21 @@ namespace BlackMisc
 
             /*!
              * \brief Is private message?
-             * \return
              */
             bool isPrivateMessage() const;
 
             /*!
              * \brief Is radio message?
-             * \return
              */
             bool isRadioMessage() const;
 
             /*!
              * \brief Initial message of server?
-             * \return
              */
             bool isServerMessage() const;
 
             /*!
              * \brief Received (hh mm ss)
-             * \return
              */
             QString receivedTime() const
             {
@@ -191,9 +167,9 @@ namespace BlackMisc
             /*!
              * Whole message as formatted string.
              * Used to display message in a console window.
-             * \param withSender
-             * \param withRecipient
-             * \param separator
+             * \param withSender        include sender information in string?
+             * \param withRecipient     include recipient information in string?
+             * \param separator         values separated by given value
              * \return
              */
             QString asString(bool withSender, bool withRecipient, const QString separator = ", ") const;
@@ -205,20 +181,16 @@ namespace BlackMisc
 
             /*!
              * \brief Equal operator ==
-             * \param other
-             * @return
              */
             bool operator ==(const CTextMessage &other) const;
 
             /*!
-             * \brief Unequal operator ==
-             * \param other
-             * @return
+             * \brief Unequal operator !=
              */
             bool operator !=(const CTextMessage &other) const;
 
             /*!
-             * \brief Value hash
+             * \copydoc CValueObject::getValueHash()
              */
             virtual uint getValueHash() const;
 
@@ -229,9 +201,7 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Rounded value as string
-             * \param i18n
-             * \return
+             * \copydoc CValueObject::convertToQString
              */
             virtual QString convertToQString(bool i18n = false) const;
 
@@ -251,14 +221,12 @@ namespace BlackMisc
             virtual int compareImpl(const CValueObject &other) const;
 
             /*!
-             * \brief Stream to DBus <<
-             * \param argument
+             * \copydoc CValueObject::marshallToDbus
              */
             virtual void marshallToDbus(QDBusArgument &argument) const;
 
             /*!
-             * \brief Stream from DBus >>
-             * \param argument
+             * \copydoc CValueObject::unmarshallFomDbus
              */
             virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
