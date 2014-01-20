@@ -54,6 +54,7 @@ void MainWindow::cockpitValuesChanged()
     }
 
     // this will call send cockpit updates with all changes made
+    // send cockpit updates
     this->m_timerCollectedCockpitUpdates->stop();
     this->m_timerCollectedCockpitUpdates->start(1000); // start
     this->m_timerCollectedCockpitUpdates->setSingleShot(true);
@@ -78,22 +79,7 @@ void MainWindow::updateCockpitFromContext()
     const CComSystem com2 = this->m_ownAircraft.getCom2System();
     const CTransponder transponder = this->m_ownAircraft.getTransponder();
 
-    double freq = com1.getFrequencyActive().valueRounded(3);
-    if (freq != this->ui->ds_CockpitCom1Active->value())
-        this->ui->ds_CockpitCom1Active->setValue(freq);
-
-    freq = com2.getFrequencyActive().valueRounded(3);
-    if (freq != this->ui->ds_CockpitCom2Active->value())
-        this->ui->ds_CockpitCom2Active->setValue(freq);
-
-    freq = com1.getFrequencyStandby().valueRounded(3);
-    if (freq != this->ui->ds_CockpitCom1Standby->value())
-        this->ui->ds_CockpitCom1Standby->setValue(freq);
-
-    freq = com2.getFrequencyStandby().valueRounded(3);
-    if (freq != this->ui->ds_CockpitCom2Standby->value())
-        this->ui->ds_CockpitCom2Standby->setValue(freq);
-
+    this->roundComFrequencyDisplays(com1, com2);
     qint32 tc = transponder.getTransponderCode();
     if (tc != static_cast<qint32>(this->ui->ds_CockpitTransponder->value()))
         this->ui->ds_CockpitTransponder->setValue(tc);
@@ -144,6 +130,30 @@ void MainWindow::updateCockpitFromContext()
         else
             this->ui->le_CockpitVoiceRoomCom2->setText("");
     }
+}
+
+/*
+ * Round the com frequency displays
+ */
+void MainWindow::roundComFrequencyDisplays(const CComSystem &com1, const CComSystem &com2)
+{
+    // do not just set! Leads to unwanted signals fired
+    double freq = com1.getFrequencyActive().valueRounded(3);
+    if (freq != this->ui->ds_CockpitCom1Active->value())
+        this->ui->ds_CockpitCom1Active->setValue(freq);
+
+    freq = com2.getFrequencyActive().valueRounded(3);
+    if (freq != this->ui->ds_CockpitCom2Active->value())
+        this->ui->ds_CockpitCom2Active->setValue(freq);
+
+    freq = com1.getFrequencyStandby().valueRounded(3);
+    if (freq != this->ui->ds_CockpitCom1Standby->value())
+
+        this->ui->ds_CockpitCom1Standby->setValue(freq);
+
+    freq = com2.getFrequencyStandby().valueRounded(3);
+    if (freq != this->ui->ds_CockpitCom2Standby->value())
+        this->ui->ds_CockpitCom2Standby->setValue(freq);
 }
 
 /*
@@ -210,6 +220,7 @@ void MainWindow::sendCockpitUpdates()
     com1.setFrequencyStandbyMHz(this->ui->ds_CockpitCom1Standby->value());
     com2.setFrequencyActiveMHz(this->ui->ds_CockpitCom2Active->value());
     com2.setFrequencyStandbyMHz(this->ui->ds_CockpitCom2Standby->value());
+    this->roundComFrequencyDisplays(com1, com2);
 
     //
     // Send to context

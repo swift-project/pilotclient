@@ -177,6 +177,13 @@ private:
     bool isCockpitUpdatePending() const;
 
     /*!
+     * \brief Round the com frequency display
+     * \param com1
+     * \param com2
+     */
+    void roundComFrequencyDisplays(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+
+    /*!
      * \brief Add new text message tab
      * \param tabName
      * \return
