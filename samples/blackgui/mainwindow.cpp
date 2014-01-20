@@ -54,6 +54,8 @@ void MainWindow::gracefulShutdown()
 {
     if (!this->m_init) return;
     this->m_init = false;
+
+    // close info window
     if (this->m_infoWindow)
     {
         this->m_infoWindow->close();
@@ -280,15 +282,13 @@ void MainWindow::timerBasedUpdates()
     {
         int t = this->ui->hs_SettingsGuiAtcRefreshTime->value() * 1000;
         this->m_timerUpdateAtcStationsOnline->start(t);
-        if (ui->tv_AtcStationsOnline->isVisible())
-            this->reloadAtcStationsOnline();
+        this->reloadAtcStationsOnline();
     }
     if (sender == this->m_timerUpdateAircraftsInRange)
     {
         int t = this->ui->hs_SettingsGuiAircraftRefreshTime->value() * 1000;
         this->m_timerUpdateAircraftsInRange->start(t);
-        if (ui->tv_AircraftsInRange->isVisible())
-            this->reloadAircraftsInRange();
+        this->reloadAircraftsInRange();
     }
     else if (sender == this->m_timerContextWatchdog)
     {
