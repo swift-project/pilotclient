@@ -9,6 +9,8 @@
 #include "voice.h"
 #include "../blackmisc/vaudiodevicelist.h"
 #include "../blackmisc/nwuserlist.h"
+#include "../blackmisc/avcallsignlist.h"
+
 #include <QScopedPointer>
 #include <QMap>
 #include <QSet>
@@ -118,7 +120,6 @@ namespace BlackCore
 
         /*!
          * \brief Voice rooms, const version with no updates
-         * \return
          */
         virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const
         {
@@ -126,15 +127,11 @@ namespace BlackCore
         }
 
         /*!
-         * \brief Get voice room callsings
-         * \param comUnit
+         * \brief Get voice room callsigns
+         * \param comUnit COM1/2
          * \return
          */
-        virtual QSet<QString> getVoiceRoomCallsings(const ComUnit comUnit) const
-        {
-            if (!this->m_voiceRoomCallsigns.contains(comUnit)) return QSet<QString>();
-            return this->m_voiceRoomCallsigns[comUnit];
-        }
+        virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns(const ComUnit comUnit) const;
 
         /*!
           * \brief Switch audio output
@@ -209,7 +206,7 @@ namespace BlackCore
 
         BlackMisc::Voice::CVoiceRoom voiceRoomForUnit(const ComUnit comUnit) const;
         void setVoiceRoomForUnit(const IVoice::ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom);
-        void addUserInRoom(const ComUnit comUnit, const QString &callsign);
+        void addTemporaryCallsignForRoom(const ComUnit comUnit, const BlackMisc::Aviation::CCallsign &callsign);
         void removeUserFromRoom(const ComUnit comUnit, const QString &callsign);
         void exceptionDispatcher(const char *caller);
         void enableAudio(const ComUnit comUnit);
@@ -301,8 +298,8 @@ namespace BlackCore
         bool m_pushToTalk; /*!< flag, PTT pressed */
         float m_inputSquelch;
         Cvatlib_Voice_Simple::agc m_micTestResult;
-        QMap < ComUnit, QSet<QString> > m_voiceRoomCallsigns; /*!< voice room callsigns */
-        QSet<QString> m_temporaryVoiceRoomCallsigns; /*!< temp. storage of voice rooms during update */
+        QMap <ComUnit, BlackMisc::Aviation::CCallsignList> m_voiceRoomCallsigns; /*!< voice room callsigns */
+        BlackMisc::Aviation::CCallsignList m_temporaryVoiceRoomCallsigns; /*!< temp. storage of voice rooms during update */
         QMap<ComUnit, bool> m_outputEnabled; /*!< output enabled, basically a mute flag */
 
         // Need to keep the roomIndex?

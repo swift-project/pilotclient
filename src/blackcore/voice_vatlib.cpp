@@ -165,6 +165,16 @@ namespace BlackCore
     }
 
     /*
+     * Voice room callsigns
+     */
+    CCallsignList CVoiceVatlib::getVoiceRoomCallsigns(const IVoice::ComUnit comUnit) const
+    {
+        CCallsignList callsigns;
+        if (!this->m_voiceRoomCallsigns.contains(comUnit)) return callsigns;
+        return this->m_voiceRoomCallsigns[comUnit];
+    }
+
+    /*
      * Enable audio
      */
     void CVoiceVatlib::switchAudioOutput(const ComUnit comUnit, bool enable)
@@ -504,19 +514,18 @@ namespace BlackCore
         try
         {
             // Paranoia...
-            if (!m_voice->IsRoomConnected(static_cast<qint32>(comUnit)))
-                return;
+            if (!m_voice->IsRoomConnected(static_cast<qint32>(comUnit))) return;
 
             // Store the room index for the slot (called in static callback)
             m_temporaryUserRoomIndex = static_cast<qint32>(comUnit);
 
-            // Callbacks completed when function is called, after the method is done
-            // m_voiceRoomCallsignsUpdate is filled with the latest callsigns
+            // Callbacks already completed when function GetRoomUserList returns,
+            // thereafter m_voiceRoomCallsignsUpdate is filled with the latest callsigns
             m_voice->GetRoomUserList(static_cast<qint32>(comUnit), onRoomUserReceived, this);
             m_temporaryUserRoomIndex = CVoiceVatlib::InvalidRoomIndex; // reset
 
             // we have all current users in m_voi
-            foreach(QString callsign, m_voiceRoomCallsigns.value(comUnit))
+            foreach(CCallsign callsign, m_voiceRoomCallsigns.value(comUnit))
             {
                 if (!m_temporaryVoiceRoomCallsigns.contains(callsign))
                 {
@@ -525,7 +534,7 @@ namespace BlackCore
                 }
             }
 
-            foreach(QString callsign, m_temporaryVoiceRoomCallsigns)
+            foreach(CCallsign callsign, m_temporaryVoiceRoomCallsigns)
             {
                 if (!m_voiceRoomCallsigns.value(comUnit).contains(callsign))
                 {
@@ -584,7 +593,7 @@ namespace BlackCore
         ComUnit comUnit = static_cast<ComUnit>(voiceClientVatlib->temporaryUserRoomIndex());
 
         // add user
-        voiceClientVatlib->addUserInRoom(comUnit, callsign);
+        voiceClientVatlib->addTemporaryCallsignForRoom(comUnit, CCallsign(callsign));
     }
 
     /*
@@ -624,11 +633,11 @@ namespace BlackCore
     }
 
     /*
-     * User in room
+     * Add temp.callsign for room
      */
-    void CVoiceVatlib::addUserInRoom(const ComUnit /** comUnit **/, const QString &callsign)
+    void CVoiceVatlib::addTemporaryCallsignForRoom(const ComUnit /** comUnit **/, const CCallsign &callsign)
     {
-        m_temporaryVoiceRoomCallsigns.insert(callsign);
+        m_temporaryVoiceRoomCallsigns.push_back(callsign);
     }
 
     /*

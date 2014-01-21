@@ -7,7 +7,7 @@
 #define BLACKCORE_VOICE_H
 
 #include "../blackmisc/context.h"
-#include "../blackmisc/avcallsign.h"
+#include "../blackmisc/avcallsignlist.h"
 #include "../blackmisc/nwuserlist.h"
 #include "../blackmisc/vvoiceroomlist.h"
 #include "../blackmisc/vaudiodevicelist.h"
@@ -86,73 +86,67 @@ namespace BlackCore
          * SETUP TESTS
          * *********************************************/
 
-        //! runSquelchTest
         /*!
-          \brief Runs a 5 seconds test, measuring your background noise.
-        */
+         * \brief Runs a 5 seconds test, measuring your background noise.
+         */
         virtual void runSquelchTest() = 0;
 
-        //! runMicTest
         /*!
-          \brief Runs a 5 seconds test, measuring the qualitiy of your mic input
-        */
+         * \brief Runs a 5 seconds test, measuring the qualitiy of your mic input
+         */
         virtual void runMicTest() = 0;
 
-        //! inputSquelch
         /*!
-          \return Value of the measured squelch
-        */
+         * \brief Value of the measured squelch
+         * \return
+         */
         virtual float inputSquelch() const = 0;
 
-        //! micTestResult
         /*!
-          \return Result of the mic test.
-        */
+         * \brief Result of the mic test.
+         * \return
+         */
         virtual qint32 micTestResult() const = 0;
 
-        //! micTestResult
         /*!
-          \return Result of the mic test as human readable string
-        */
+         * \brief Result of the mic test as human readable string
+         * \return
+         */
         virtual QString micTestResultAsString() const = 0;
 
     public slots:
 
-        //! setInputDevice
         /*!
-          \param input device
-        */
+         * \brief Input device to be used
+         */
         virtual void setInputDevice(const BlackMisc::Voice::CAudioDevice &device) = 0;
 
-        //! setOutputDevice
         /*!
-          \param output device
-        */
+         * \brief Output device to be used
+         */
         virtual void setOutputDevice(const BlackMisc::Voice::CAudioDevice &device) = 0;
 
         /*!
          * Get COM1/2 voice rooms, which then allows to retrieve information
-         * such as connection status etc.
-         * \return
+         * such as audio status etc.
          */
         virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() = 0;
 
         /*!
          * Get COM1/2 voice rooms, const and with no status update
-         * \return
          */
         virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const = 0;
 
         /*!
          * \brief Join voice room
-         * \param comUnit
+         * \param comUnit   COM1/2
          * \param voiceRoom
          */
         virtual void joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom) = 0;
 
         /*!
          * \brief Leave voice room
-         * \param comUnit
+         * \param comUnit   COM1/2
          */
         virtual void leaveVoiceRoom(const ComUnit comUnit) = 0;
 
@@ -185,7 +179,7 @@ namespace BlackCore
          * \param comUnit
          * \return
          */
-        virtual QSet<QString> getVoiceRoomCallsings(const ComUnit comUnit) const = 0;
+        virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns(const ComUnit comUnit) const = 0;
 
     signals:
         // Signals regarding the voice server connection
@@ -198,8 +192,14 @@ namespace BlackCore
         void disconnected(const ComUnit comUnit);
 
         // Signals about users joining and leaving
-        void userJoinedRoom(const QString &callsign);
-        void userLeftRoom(const QString &callsign);
+        /*!
+         * \brief User with callsign joined room
+         */
+        void userJoinedRoom(const BlackMisc::Aviation::CCallsign &callsign);
+        /*!
+         * \brief User with callsign left room
+         */
+        void userLeftRoom(const BlackMisc::Aviation::CCallsign &callsign);
 
         // Audio signals
         void audioStarted(const ComUnit comUnit);
@@ -208,10 +208,19 @@ namespace BlackCore
         void globalAudioStopped();
 
         // Test signals
+        /*!
+         * \brief Squelch test completed
+         */
         void squelchTestFinished();
+        /*!
+         * \brief Microphone test completed
+         */
         void micTestFinished();
 
         // non protocol related signals
+        /*!
+         * \brief Exception
+         */
         void exception(const QString &message, bool fatal = false); // let remote places know there was an exception
     };
 
