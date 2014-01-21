@@ -49,8 +49,8 @@ private slots:
     void connectionStatusDisconnected();
     void audioStartedStream(const BlackCore::IVoice::ComUnit comUnit);
     void audioStoppedStream(const BlackCore::IVoice::ComUnit comUnit);
-    void userJoinedRoom(const QString &callsign);
-    void userLeftRoom(const QString &callsign);
+    void userJoinedRoom(const BlackMisc::Aviation::CCallsign &callsign);
+    void userLeftRoom(const BlackMisc::Aviation::CCallsign &callsign);
 
 private:
     QMap<QString, std::function<void(QTextStream &)>> m_commands;

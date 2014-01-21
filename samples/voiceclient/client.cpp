@@ -5,8 +5,11 @@
 
 #include "client.h"
 #include "blackmisc/vaudiodevicelist.h"
+#include "blackmisc/avcallsignlist.h"
 
 using namespace BlackMisc::Voice;
+using namespace BlackMisc::Aviation;
+
 
 /*
  * Client
@@ -156,10 +159,10 @@ void Client::outputDevicesCmd(QTextStream & /** args **/)
 void Client::listCallsignsCmd(QTextStream &args)
 {
     Q_UNUSED(args)
-    QSet<QString> users = m_voiceClient->getVoiceRoomCallsings(BlackCore::IVoice::COM1);
-    foreach(QString user, users)
+    CCallsignList callsigns = m_voiceClient->getVoiceRoomCallsigns(BlackCore::IVoice::COM1);
+    foreach(CCallsign callsign, callsigns)
     {
-        std::cout << " " << user.toStdString() << std::endl;
+        std::cout << " " << callsign.toStdString() << std::endl;
     }
     printLinePrefix();
 }
@@ -200,13 +203,13 @@ void Client::audioStoppedStream(const BlackCore::IVoice::ComUnit comUnit)
     printLinePrefix();
 }
 
-void Client::userJoinedRoom(const QString &callsign)
+void Client::userJoinedRoom(const CCallsign &callsign)
 {
     std::cout << callsign.toStdString() << " joined the voice room." << std::endl;
     printLinePrefix();
 }
 
-void Client::userLeftRoom(const QString &callsign)
+void Client::userLeftRoom(const CCallsign &callsign)
 {
     std::cout << callsign.toStdString() << " left the voice room." << std::endl;
     printLinePrefix();
