@@ -14,6 +14,7 @@
 #include "blackmisc/aviotransponder.h"
 #include "blackmisc/avtrack.h"
 #include "blackmisc/avcallsign.h"
+#include "blackmisc/avcallsignlist.h"
 #include "blackmisc/avatcstation.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraft.h"
