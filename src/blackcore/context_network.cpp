@@ -49,7 +49,7 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::nameQueryReplyReceived, this, &CContextNetwork::psFsdNameQueryReplyReceived);
         this->connect(this->m_network, &INetwork::aircraftInfoReceived, this, &CContextNetwork::psFsdAircraftInfoReceived);
         this->connect(this->m_network, &INetwork::pilotDisconnected, this, &CContextNetwork::psFsdPilotDisconnected);
-        this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CContextNetwork::psFsdAircraftPositionUpdate);
+        this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CContextNetwork::psFsdAircraftUpdateReceived);
         this->connect(this->m_network, &INetwork::frequencyQueryReplyReceived, this, &CContextNetwork::psFsdFrequencyReceived);
         this->connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::psFsdTextMessageReceived);
         this->connect(this->m_network, &INetwork::statusMessage, this, &CContextNetwork::statusMessage);
