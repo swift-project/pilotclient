@@ -39,10 +39,9 @@ namespace BlackCore
     public:
 
         /*!
-         * \brief With link to server
-         * \param server
+         * \brief Constructor
          */
-        CContextVoice(CCoreRuntime *parent);
+        CContextVoice(CCoreRuntime *runtime);
 
         /*!
          * \brief Destructor
@@ -51,7 +50,7 @@ namespace BlackCore
 
         /*!
          * \brief Register myself in DBus
-         * \param server
+         * \param server DBus server
          */
         void registerWithDBus(CDBusServer *server)
         {
@@ -60,7 +59,6 @@ namespace BlackCore
 
         /*!
          * \brief Runtime
-         * \return
          */
         const CCoreRuntime *getRuntime() const
         {
@@ -69,42 +67,46 @@ namespace BlackCore
 
         /*!
          * \brief Using local objects?
-         * \return
          */
         virtual bool usingLocalObjects() const { return true; }
 
     public slots:
         /*!
-         * Get voice rooms for COM1, COM2, but not with the latest status
-         * \return
+         * \copydoc IContextVoice::getComVoiceRooms()
          */
         virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const;
 
         /*!
-         * Get voice rooms for COM1, COM2: From this connection status
-         * etc. can be obtained
-         * \return
+         * \copydoc IContextVoice::getComVoiceRoomsWithAudioStatus()
          */
         virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus();
 
         /*!
-         * \brief Set voice rooms
-         * \param voiceRoomCom1
-         * \param voiceRoomCom2
+         * \copydoc IContextVoice::setComVoiceRooms()
          */
         virtual void setComVoiceRooms(const BlackMisc::Voice::CVoiceRoom &voiceRoomCom1, const BlackMisc::Voice::CVoiceRoom &voiceRoomCom2);
 
         /*!
-         * \brief COM1 room user's callsigns
+         * \copydoc IContextVoice::getCom1RoomCallsigns()
          * \return
          */
-        virtual QList<BlackMisc::Aviation::CCallsign> getCom1RoomCallsigns() const;
+        virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const;
 
         /*!
-         * \brief COM2 room user's callsigns
+         * \copydoc IContextVoice::getCom2RoomCallsigns()
          * \return
          */
-        virtual QList<BlackMisc::Aviation::CCallsign> getCom2RoomCallsigns() const;
+        virtual BlackMisc::Aviation::CCallsignList getCom2RoomCallsigns() const;
+
+        /*!
+         * \copydoc IContextVoice::getCom1RoomUsers()
+         */
+        virtual BlackMisc::Network::CUserList getCom1RoomUsers() const;
+
+        /*!
+         * \copydoc IContextVoice::getCom2RoomUsers()
+         */
+        virtual BlackMisc::Network::CUserList getCom2RoomUsers() const;
 
         /*!
          * Leave all voice rooms
@@ -113,39 +115,37 @@ namespace BlackCore
 
         /*!
          * \brief Audio devices
-         * \return
+         * \return all input/output devices
          */
         virtual BlackMisc::Voice::CAudioDeviceList getAudioDevices() const;
 
         /*!
          * \brief Set current audio device
-         * \param audioDevice
+         * \return get input and output device
          */
         virtual BlackMisc::Voice::CAudioDeviceList getCurrentAudioDevices() const;
 
         /*!
          * \brief Set current audio device
-         * \param audioDevice
          */
         virtual void setCurrentAudioDevice(const BlackMisc::Voice::CAudioDevice &audioDevice);
 
         /*!
-         * \brief Set volumes, also allows to mute
-         * \param com1
-         * \param com2
+         * \brief Set volumes via com units, also allows to mute
+         * \see BlackMisc::Aviation::CComSystem::setVolumeInput()
+         * \see BlackMisc::Aviation::CComSystem::setVolumeOutput()
          */
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
         /*!
          * \brief Is muted?
-         * \return
          */
         virtual bool isMuted() const;
 
     private:
-        CVoiceVatlib *m_voice;
-        BlackMisc::Voice::CAudioDevice m_currentInputDevice;
-        BlackMisc::Voice::CAudioDevice m_currentOutputDevice;
+        CVoiceVatlib *m_voice; //!< underlying voice lib
+        BlackMisc::Voice::CAudioDevice m_currentInputDevice; //!< input device
+        BlackMisc::Voice::CAudioDevice m_currentOutputDevice; //!< current output device
     };
 }
 

@@ -4,7 +4,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "context_voice.h"
+#include "context_network.h"
 #include "coreruntime.h"
+
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -16,9 +18,11 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextVoice::CContextVoice(CCoreRuntime *parent) :
-        IContextVoice(parent), m_voice(nullptr), m_currentInputDevice(), m_currentOutputDevice()
+    CContextVoice::CContextVoice(CCoreRuntime *runtime) :
+        IContextVoice(runtime), m_voice(nullptr), m_currentInputDevice(), m_currentOutputDevice()
     {
+        Q_ASSERT(runtime);
+
         // 1. Init by "network driver"
         this->m_voice = new CVoiceVatlib(this);
         this->m_currentInputDevice = this->m_voice->defaultAudioInputDevice();
@@ -145,30 +149,43 @@ namespace BlackCore
     /*
      * Room 1 callsigns
      */
-    QList<CCallsign> CContextVoice::getCom1RoomCallsigns() const
+    CCallsignList CContextVoice::getCom1RoomCallsigns() const
     {
         Q_ASSERT(this->m_voice);
-        QSet<QString> signs = this->m_voice->getVoiceRoomCallsings(IVoice::COM1);
-        QList<CCallsign> callsigns;
-        foreach(QString sign, signs)
-        {
-            callsigns.append(sign);
-        }
-        return callsigns;
+        return this->m_voice->getVoiceRoomCallsigns(IVoice::COM1);
     }
 
     /*
      * Room 2 callsigns
      */
-    QList<CCallsign> CContextVoice::getCom2RoomCallsigns() const
+    CCallsignList CContextVoice::getCom2RoomCallsigns() const
     {
         Q_ASSERT(this->m_voice);
-        QSet<QString> signs = this->m_voice->getVoiceRoomCallsings(IVoice::COM2);
-        QList<CCallsign> callsigns;
-        foreach(QString sign, signs)
-        {
-            callsigns.append(sign);
-        }
-        return callsigns;
+        return this->m_voice->getVoiceRoomCallsigns(IVoice::COM2);
     }
+
+    /*
+     * Room 1 users
+     */
+    Network::CUserList CContextVoice::getCom1RoomUsers() const
+    {
+        Q_ASSERT(this->m_voice);
+        Q_ASSERT(this->getRuntime());
+        Q_ASSERT(this->getRuntime()->getIContextNetwork());
+        return this->getRuntime()->getIContextNetwork()->
+               getUsersForCallsigns(this->getCom1RoomCallsigns());
+    }
+
+    /*
+     * Room 1 users
+     */
+    Network::CUserList CContextVoice::getCom2RoomUsers() const
+    {
+        Q_ASSERT(this->m_voice);
+        Q_ASSERT(this->getRuntime());
+        Q_ASSERT(this->getRuntime()->getIContextNetwork());
+        return this->getRuntime()->getIContextNetwork()->
+               getUsersForCallsigns(this->getCom2RoomCallsigns());
+    }
+
 } // namespace

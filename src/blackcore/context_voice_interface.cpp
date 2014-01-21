@@ -39,19 +39,35 @@ namespace BlackCore
     }
 
     /*
-     * COM1 users
+     * COM1 callsigns
      */
-    QList<BlackMisc::Aviation::CCallsign> IContextVoice::getCom1RoomCallsigns() const
+    BlackMisc::Aviation::CCallsignList IContextVoice::getCom1RoomCallsigns() const
     {
-        return this->m_dBusInterface->callDBusRet<QList<BlackMisc::Aviation::CCallsign> >(QLatin1Literal("getCom1RoomCallsigns"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignList>(QLatin1Literal("getCom1RoomCallsigns"));
     }
 
     /*
-     * COM2 users
+     * COM2 callsigns
      */
-    QList<BlackMisc::Aviation::CCallsign> IContextVoice::getCom2RoomCallsigns() const
+    BlackMisc::Aviation::CCallsignList IContextVoice::getCom2RoomCallsigns() const
     {
-        return this->m_dBusInterface->callDBusRet<QList<BlackMisc::Aviation::CCallsign> >(QLatin1Literal("getCom2RoomCallsigns"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignList>(QLatin1Literal("getCom2RoomCallsigns"));
+    }
+
+    /*
+     * COM1 callsigns
+     */
+    BlackMisc::Network::CUserList IContextVoice::getCom1RoomUsers() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getCom1RoomUsers"));
+    }
+
+    /*
+     * COM2 callsigns
+     */
+    BlackMisc::Network::CUserList IContextVoice::getCom2RoomUsers() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getCom2RoomUsers"));
     }
 
     /*
