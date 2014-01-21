@@ -11,8 +11,9 @@
 #include "blackcore/coreruntime.h"
 #include "blackcore/context_network_interface.h"
 #include "blackmisc/avallclasses.h"
-#include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/nwuserlist.h"
+
 #include <QTimer>
 #include <QNetworkAccessManager>
 
@@ -173,6 +174,16 @@ namespace BlackCore
          * \return  COM1/2 voice rooms
          */
         virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
+
+        /*!
+         * \brief Get all users
+         */
+        virtual BlackMisc::Network::CUserList getUsers() const;
+
+        /*!
+         * \brief All users with callsign, e.g. for voice room resolution
+         */
+        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
 
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;

@@ -103,6 +103,43 @@ namespace BlackCore
     }
 
     /*
+     * All users
+     */
+    CUserList CContextNetwork::getUsers() const
+    {
+        CUserList users;
+        foreach(CAtcStation station, this->m_atcStationsOnline)
+        {
+            users.push_back(station.getController());
+        }
+        foreach(CAircraft aircraft, this->m_aircraftsInRange)
+        {
+            users.push_back(aircraft.getPilot());
+        }
+        return users;
+    }
+
+    /*
+     * Users with callsigns
+     */
+    CUserList CContextNetwork::getUsersForCallsigns(const CCallsignList &callsigns) const
+    {
+        CUserList users;
+        if (callsigns.isEmpty()) return users;
+        foreach(CAtcStation station, this->m_atcStationsOnline)
+        {
+            if (callsigns.contains(station.getCallsign()))
+                users.push_back(station.getController());
+        }
+        foreach(CAircraft aircraft, this->m_aircraftsInRange)
+        {
+            if (callsigns.contains(aircraft.getCallsign()))
+                users.push_back(aircraft.getPilot());
+        }
+        return users;
+    }
+
+    /*
      * ATC Position update
      */
     void CContextNetwork::psFsdAtcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
