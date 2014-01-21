@@ -122,9 +122,7 @@ namespace BlackCore
         virtual bool isConnected() const;
 
         /*!
-         * \brief Set own aircraft
-         * \param aircraft my own aircraft
-         * \return
+         * \copydoc IContextNetwork::setOwnAircraft()
          */
         virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
 
@@ -172,12 +170,12 @@ namespace BlackCore
         virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
 
         /*!
-         * \brief Get all users
+         * \copydoc IContextNetwork::getUsers()
          */
         virtual BlackMisc::Network::CUserList getUsers() const;
 
         /*!
-         * \brief All users with callsign, e.g. for voice room resolution
+         * \copydoc IContextNetwork::getUsersForCallsigns
          */
         virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
 

@@ -10,6 +10,7 @@
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/nwtextmessagelist.h"
+#include "blackmisc/nwuserlist.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackcore/network_vatlib.h"
 #include "blackmisc/vvoiceroomlist.h"
@@ -139,15 +140,14 @@ namespace BlackCore
 
         /*!
          * \brief Connection status changed
-         * \param from
-         * \param to
+         * \param from  old status
+         * \param to    new status
+         * \remarks If I use the enum, adaptor / interface are not created correctly
          */
-        // If I use the enum, adaptor / interface are not created correctly
         void connectionStatusChanged(uint from, uint to);
 
         /*!
          * \brief Text messages (also private chat messages)
-         * \param textMessage
          */
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
@@ -160,94 +160,89 @@ namespace BlackCore
         virtual void readAtcBookingsFromSource() const;
 
         /*!
-         * \brief The "central" ATC list with online ATC controllers
-         * \return
+         * \brief The ATC list with online ATC controllers
+         * \remarks If I make this &getAtcStations XML is not generated correctly
          */
-        // If I make this &getAtcStations XML is not generated correctly
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const;
 
         /*!
          * \brief ATC list, with booked controllers
-         * \return
          */
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const;
 
         /*!
          * \brief Aircraft list
-         * \return
          */
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const;
 
         /*!
+         * \brief Get all users
+         */
+        virtual BlackMisc::Network::CUserList getUsers() const;
+
+        /*!
+         * \brief All users with callsign, e.g. for voice room resolution
+         */
+        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
+
+        /*!
          * \brief Get own aircraft
-         * \return
          */
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
         /*!
          * \brief Connect to Network
-         * \return
+         * \return messages gererated during connecting
          */
         virtual BlackMisc::CStatusMessageList connectToNetwork();
 
         /*!
          * \brief Disconnect from network
-         * \return
+         * \return messages gererated during disconnecting
          */
         virtual BlackMisc::CStatusMessageList disconnectFromNetwork();
 
         /*!
          * \brief Network connected?
-         * \return
          */
         virtual bool isConnected() const;
 
         /*!
          * Set own aircraft
          * \param aircraft
-         * \return
+         * \return message list, as aircraft can only be set prior connecting
          */
         virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
 
         /*!
          * \brief Own position, be aware height is terrain height
-         * \param Position
-         * \param altitude
-         * \return
          */
         virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
 
         /*!
          * \brief Complete situation update
-         * \param Situation
-         * \return
          */
         virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         /*!
          * \brief Update own cockpit
-         * \param com1
-         * \param com2
-         * \param transponder
          */
         virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder);
 
         /*!
          * \brief Text messages (radio and private chat messages)
-         * \param textMessage
          */
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages);
 
         /*!
          * \brief Get METAR, if not available request it
-         * \param airportIcaoCode
+         * \param airportIcaoCode such as EDDF, KLAX
          * \return
          */
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode);
 
         /*!
          * \brief Use the selected COM1/2 frequencies, and get the corresponding voice room for it
-         * \return
          */
         virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
     };

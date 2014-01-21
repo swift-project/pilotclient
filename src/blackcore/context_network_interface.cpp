@@ -45,126 +45,6 @@ namespace BlackCore
     }
 
     /*
-     * Relay to DBus
-     */
-    void IContextNetwork::readAtcBookingsFromSource() const
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("readAtcBookingsFromSource"));
-    }
-
-    /*
-     * Relay to DBus
-     */
-    const BlackMisc::Aviation::CAtcStationList IContextNetwork::getAtcStationsOnline() const
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getAtcStationsOnline"));
-    }
-
-    /*
-     * Relay to DBus
-     */
-    const BlackMisc::Aviation::CAtcStationList IContextNetwork::getAtcStationsBooked() const
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getAtcStationsBooked"));
-    }
-
-    /*
-     * Relay to DBus
-     */
-    const BlackMisc::Aviation::CAircraftList IContextNetwork::getAircraftsInRange() const
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraftList>(QLatin1Literal("getAircraftsInRange"));
-    }
-
-    /*
-     * Relay to DBus
-     */
-    BlackMisc::Aviation::CAircraft IContextNetwork::getOwnAircraft() const
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraft>(QLatin1Literal("getOwnAircraft"));
-    }
-
-    /*
-     * Relay to DBus
-     */
-    BlackMisc::CStatusMessageList IContextNetwork::connectToNetwork()
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("connectToNetwork"));
-    }
-
-    /*
-     * Relay to DBus
-     */
-    BlackMisc::CStatusMessageList IContextNetwork::disconnectFromNetwork()
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("disconnectFromNetwork"));
-    }
-
-    /*
-     * Relay to DBus
-     */
-    bool IContextNetwork::isConnected() const
-    {
-        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isConnected"));
-    }
-
-    /*
-     * Relay to DBus
-     */
-    BlackMisc::CStatusMessageList IContextNetwork::setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("setOwnAircraft"), aircraft);
-    }
-
-    /*
-     * Relay to DBus
-     */
-    void IContextNetwork::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnPosition"), position, altitude);
-    }
-
-    /*
-     * Relay to DBus
-     */
-    void IContextNetwork::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnSituation"), situation);
-    }
-
-    /*
-     * Relay to DBus
-     */
-    void IContextNetwork::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnCockpit"), com1, com2, transponder);
-    }
-
-    /*
-     * Relay to DBus
-     */
-    void IContextNetwork::sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("sendTextMessages"), textMessages);
-    }
-
-    /*
-     * Relay to DBus
-     */
-    BlackMisc::Aviation::CInformationMessage IContextNetwork::getMetar(const QString &airportIcaoCode)
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CInformationMessage>(QLatin1Literal("getMetar"), airportIcaoCode);
-    }
-
-    /*
-     * Relay to DBus
-     */
-    BlackMisc::Voice::CVoiceRoomList IContextNetwork::getSelectedVoiceRooms() const
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Voice::CVoiceRoomList>(QLatin1Literal("getSelectedVoiceRooms"));
-    }
-
-    /*
      * Logging
      */
     void IContextNetwork::log(const QString &method, const QString &m1, const QString &m2, const QString &m3, const QString &m4) const
@@ -179,6 +59,91 @@ namespace BlackCore
             qDebug() << "   LOG: " << method << m1 << m2 << m3;
         else
             qDebug() << "   LOG: " << method << m1 << m2 << m3 << m4;
+    }
+
+    void IContextNetwork::readAtcBookingsFromSource() const
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("readAtcBookingsFromSource"));
+    }
+
+    const BlackMisc::Aviation::CAtcStationList IContextNetwork::getAtcStationsOnline() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getAtcStationsOnline"));
+    }
+
+    const BlackMisc::Aviation::CAtcStationList IContextNetwork::getAtcStationsBooked() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getAtcStationsBooked"));
+    }
+
+    const BlackMisc::Aviation::CAircraftList IContextNetwork::getAircraftsInRange() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraftList>(QLatin1Literal("getAircraftsInRange"));
+    }
+
+    BlackMisc::Network::CUserList IContextNetwork::getUsers() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getUsers"));
+    }
+
+    BlackMisc::Network::CUserList IContextNetwork::getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getUsersForCallsigns"), callsigns);
+    }
+
+    BlackMisc::Voice::CVoiceRoomList IContextNetwork::getSelectedVoiceRooms() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Voice::CVoiceRoomList>(QLatin1Literal("getSelectedVoiceRooms"));
+    }
+
+    BlackMisc::Aviation::CAircraft IContextNetwork::getOwnAircraft() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraft>(QLatin1Literal("getOwnAircraft"));
+    }
+
+    BlackMisc::CStatusMessageList IContextNetwork::connectToNetwork()
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("connectToNetwork"));
+    }
+
+    BlackMisc::CStatusMessageList IContextNetwork::disconnectFromNetwork()
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("disconnectFromNetwork"));
+    }
+
+    bool IContextNetwork::isConnected() const
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isConnected"));
+    }
+
+    BlackMisc::CStatusMessageList IContextNetwork::setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("setOwnAircraft"), aircraft);
+    }
+
+    void IContextNetwork::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnPosition"), position, altitude);
+    }
+
+    void IContextNetwork::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnSituation"), situation);
+    }
+
+    void IContextNetwork::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnCockpit"), com1, com2, transponder);
+    }
+
+    void IContextNetwork::sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("sendTextMessages"), textMessages);
+    }
+
+    BlackMisc::Aviation::CInformationMessage IContextNetwork::getMetar(const QString &airportIcaoCode)
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CInformationMessage>(QLatin1Literal("getMetar"), airportIcaoCode);
     }
 
 } // namespace
