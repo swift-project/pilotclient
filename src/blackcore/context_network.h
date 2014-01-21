@@ -10,7 +10,7 @@
 #include "blackcore/network_vatlib.h"
 #include "blackcore/coreruntime.h"
 #include "blackcore/context_network_interface.h"
-#include "blackmisc/avallclasses.h"
+#include "blackmisc/avcallsignlist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/nwuserlist.h"
 
@@ -76,10 +76,8 @@ namespace BlackCore
 
         /*!
          * \brief The "central" ATC list with online ATC controllers
-         * \return
+         * \todo If I make this &getAtcStations XML is not generated correctly, needs to be crosschecked with the latest version of Qt
          */
-        // If I make this &getAtcStations XML is not generated correctly
-        // needs to be crosschecked with the latest version of Qt
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const
         {
             // this->log(Q_FUNC_INFO);
@@ -88,9 +86,8 @@ namespace BlackCore
 
         /*!
          * \brief ATC list, with booked controllers
-         * \return
+         * \todo If I make this &getAtcStations XML is not generated correctly
          */
-        // If I make this &getAtcStations XML is not generated correctly
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const
         {
             // this->log(Q_FUNC_INFO);
@@ -101,7 +98,6 @@ namespace BlackCore
          * \brief Aircraft list
          * \return
          */
-        // If I make this &getAtcStations XML is not generated correctly
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const
         {
             // this->log(Q_FUNC_INFO);
