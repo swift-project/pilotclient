@@ -156,21 +156,17 @@ namespace BlackCore
         virtual void leaveAllVoiceRooms() = 0;
 
         /*!
-         * \brief Set room output volume
-         * \param comUnit
-         * \param volumne
+         * \brief Set room output volume for COM unit
          */
         virtual void setRoomOutputVolume(const ComUnit comUnit, const qint32 volumne) = 0;
 
         /*!
          * \brief Start transmitting
-         * \param comUnit
          */
         virtual void startTransmitting(const ComUnit comUnit) = 0;
 
         /*!
          * \brief Stop transmitting
-         * \param comUnit
          */
         virtual void stopTransmitting(const ComUnit comUnit) = 0;
 
@@ -202,7 +198,13 @@ namespace BlackCore
         void userLeftRoom(const BlackMisc::Aviation::CCallsign &callsign);
 
         // Audio signals
+        /*!
+         * \brief Audio for given unit started
+         */
         void audioStarted(const ComUnit comUnit);
+        /*!
+         * \brief Audio for given unit stopped
+         */
         void audioStopped(const ComUnit comUnit);
         void globalAudioStarted();
         void globalAudioStopped();

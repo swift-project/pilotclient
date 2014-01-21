@@ -11,6 +11,7 @@
 #include "blackmisc/vvoiceroomlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/aviocomsystem.h"
+#include "blackmisc/avcallsignlist.h"
 #include "blackcore/voice_vatlib.h"
 #include <QObject>
 #include <QDBusAbstractInterface>
@@ -103,21 +104,18 @@ namespace BlackCore
 
         /*!
          * Get voice rooms for COM1, COM2:
-         * From this connection status etc. can be obtained
-         * \return
+         * From this connection audio status can be obtained
          */
         virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus();
 
         /*!
-         * Get voice rooms for COM1, COM2, but not with the latest status
-         * \return
+         * Get voice rooms for COM1, COM2, but without latest audio status
+         * \return all voice rooms
          */
         virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const;
 
         /*!
          * \brief Set voice rooms
-         * \param voiceRoomCom1
-         * \param voiceRoomCom2
          */
         virtual void setComVoiceRooms(const BlackMisc::Voice::CVoiceRoom &voiceRoomCom1, const BlackMisc::Voice::CVoiceRoom &voiceRoomCom2);
 
@@ -127,45 +125,49 @@ namespace BlackCore
         virtual void leaveAllVoiceRooms();
 
         /*!
-         * \brief COM1 room users
-         * \return
+         * \brief COM1 room users callsigns
          */
-        virtual QList<BlackMisc::Aviation::CCallsign> getCom1RoomCallsigns() const;
+        virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const;
+
+        /*!
+         * \brief COM2 room users callsigns
+         */
+        virtual BlackMisc::Aviation::CCallsignList getCom2RoomCallsigns() const;
+
+        /*!
+         * \brief COM1 room users
+         */
+        virtual BlackMisc::Network::CUserList getCom1RoomUsers() const;
 
         /*!
          * \brief COM2 room users
-         * \return
          */
-        virtual QList<BlackMisc::Aviation::CCallsign> getCom2RoomCallsigns() const;
+        virtual BlackMisc::Network::CUserList getCom2RoomUsers() const;
 
         /*!
          * \brief Audio devices
-         * \return
          */
         virtual BlackMisc::Voice::CAudioDeviceList getAudioDevices() const;
 
         /*!
-         * \brief Set current audio device
-         * \param audioDevice
+         * \brief Get current audio device
+         * \return input and output devices
          */
         virtual BlackMisc::Voice::CAudioDeviceList getCurrentAudioDevices() const;
 
         /*!
          * \brief Set current audio device
-         * \param audioDevice
+         * \param audioDevice can be input or audio device
          */
         virtual void setCurrentAudioDevice(const BlackMisc::Voice::CAudioDevice &audioDevice);
 
         /*!
-         * \brief Set volumnes
-         * \param com1
-         * \param com2
+         * \brief Set volumnes for COM1/2
          */
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
         /*!
          * \brief Is muted?
-         * \return
          */
         virtual bool isMuted() const;
 
