@@ -121,20 +121,16 @@ namespace BlackMisc
 
             /*!
              * \brief Equal operator ==
-             * \param other
-             * @return
              */
             bool operator ==(const CUser &other) const;
 
             /*!
-             * \brief Unequal operator ==
-             * \param other
-             * @return
+             * \brief Unequal operator !=
              */
             bool operator !=(const CUser &other) const;
 
             /*!
-             * \brief Value hash
+             * \copydoc CValueObject::getValueHash()
              */
             virtual uint getValueHash() const;
 
@@ -144,23 +140,19 @@ namespace BlackMisc
             static void registerMetadata();
 
             /*!
-             * This another user exchange missing data
-             * This user has priority and overrides first
+             * This and another user exchange missing data.
+             * This user has priority and overrides first.
              * \param otherUser
              */
             void syncronizeData(CUser &otherUser);
 
             /*!
-             * \brief Property by index
-             * \param index
-             * \return
+             * \copydoc CValueObject::propertyByIndex(int)
              */
             QVariant propertyByIndex(int index) const;
 
             /*!
-             * \brief Property by index
-             * \param variant
-             * \param index
+             * \copydoc CValueObject::propertyByIndex(const QVariant, int)
              */
             void propertyByIndex(const QVariant &variant, int index);
 
