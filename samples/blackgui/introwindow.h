@@ -22,7 +22,7 @@ class CIntroWindow : public QDialog
 public:
     /*!
      * \brief Constructor
-     * \param parent
+     * \param parent widget
      */
     explicit CIntroWindow(QWidget *parent = nullptr);
 
@@ -33,13 +33,13 @@ public:
 
     /*!
      * \brief Selected window mode
-     * \return
+     * \see GuiModes::WindowMode
      */
     GuiModes::WindowMode getWindowMode() const;
 
     /*!
      * \brief Get core mode
-     * \return
+     * \see GuiModes::CoreMode
      */
     GuiModes::CoreMode getCoreMode() const;
 
