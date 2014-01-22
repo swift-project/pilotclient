@@ -4,12 +4,10 @@
 #include <QDBusAbstractInterface>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
-
+#include <QObject>
 
 namespace BlackMisc
 {
-
-#include <QObject>
 
     /*!
      * Used for hand written interface based on virtual methods.
