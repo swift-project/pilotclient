@@ -18,16 +18,16 @@ namespace BlackMisc
     namespace Voice
     {
         CVoiceRoom::CVoiceRoom(const QString &serverUrl, bool connected) :
-            m_hostname(""), m_channel(""), m_connected(connected), m_audioPlaying(false)
+            m_connected(connected), m_audioPlaying(false)
         {
             if (serverUrl.contains("/"))
             {
                 QString url = serverUrl.trimmed().toLower();
                 url.replace(CVoiceRoom::protocolComplete(), "");
                 url.replace(CVoiceRoom::protocol(), "");
-                QStringList splittedSpec = serverUrl.split("/");
-                m_hostname = splittedSpec.at(0);
-                m_channel = splittedSpec.at(1);
+                QStringList splitParts = serverUrl.split("/");
+                m_hostname = splitParts.at(0);
+                m_channel = splitParts.at(1);
             }
         }
 

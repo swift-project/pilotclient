@@ -36,7 +36,7 @@ namespace BlackMisc
              * \param channel
              */
             CVoiceRoom(const QString &hostname, const QString &channel) :
-                m_hostname(hostname), m_channel(channel), m_audioPlaying(false) {}
+                m_hostname(hostname), m_channel(channel), m_connected(false), m_audioPlaying(false) {}
 
             /*!
              * Constructor.
