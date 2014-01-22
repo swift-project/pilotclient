@@ -22,14 +22,14 @@ namespace BlackGui
     {
 
     protected:
-        ListType m_list;
-        CColumns m_columns;
-        int m_sortedColumn;
-        Qt::SortOrder m_sortOrder;
+        ListType m_list;    //!< used container
+        CColumns m_columns; //!< columns metadata
+        int m_sortedColumn; //!< current sort column
+        Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
 
         /*!
          * \brief Constructor
-         * \param translationContext
+         * \param translationContext    I18N context
          * \param parent
          */
         CListModelBase(const QString &translationContext, QObject *parent = nullptr)
@@ -40,9 +40,9 @@ namespace BlackGui
 
         /*!
          * \brief Sort list by given order
-         * \param list
-         * \param column
-         * \param order
+         * \param list      used list
+         * \param column    column inder
+         * \param order     sort order (asccending / descending)
          * \return
          */
         ListType sortListByColumn(const ListType &list, int column, Qt::SortOrder order);
@@ -55,17 +55,12 @@ namespace BlackGui
         virtual ~CListModelBase() {}
 
         /*!
-         * \brief Column count
-         * \return
+         * \copydoc QAbstractListModel::columnCount()
          */
         virtual int columnCount(const QModelIndex &modelIndex) const;
 
         /*!
-         * \brief Header data
-         * \param section
-         * \param orientation
-         * \param role
-         * \return
+         * \copydoc QAbstractItemModel::headerData()
          */
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
@@ -76,8 +71,8 @@ namespace BlackGui
         virtual int columnToPropertyIndex(int column) const;
 
         /*!
-         * \brief Set column for sort
-         * \param column
+         * \brief Set sort column
+         * \param column column index
          */
         virtual void setSortColumn(int column)
         {
@@ -86,7 +81,7 @@ namespace BlackGui
 
         /*!
          * \brief Set column for sort
-         * \param
+         * \param propertyIndex index of column to be sorted by
          */
         virtual void setSortColumnByPropertyIndex(int propertyIndex)
         {
@@ -103,7 +98,7 @@ namespace BlackGui
         }
 
         /*!
-         * \brief Has valid sort column
+         * \brief Has valid sort column?
          * \return
          */
         virtual bool hasValidSortColumn() const
@@ -121,23 +116,19 @@ namespace BlackGui
         }
 
         /*!
-         * \brief data
-         * \param index
-         * \param role
-         * \return
+         * \copydoc QAbstractListModel::data()
          */
         virtual QVariant data(const QModelIndex &index, int role) const;
 
         /*!
-         * \brief Row count
-         * \return
+         * \copydoc QAbstractListModel::rowCount()
          */
         virtual int rowCount(const QModelIndex &index = QModelIndex()) const;
 
         /*!
-         * \brief Update
+         * \brief Update by new list
          * \param list
-         * \return
+         * \return new list size
          */
         virtual int update(const ListType &list);
 
@@ -160,9 +151,7 @@ namespace BlackGui
         }
 
         /*!
-         * \brief sort
-         * \param column
-         * \param order
+         * \copydoc QAbstractListModel::sort()
          */
         virtual void sort(int column, Qt::SortOrder order);
 
