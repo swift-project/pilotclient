@@ -20,6 +20,7 @@
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/serverlistmodel.h"
 #include "blackgui/aircraftlistmodel.h"
+#include "blackgui/userlistmodel.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/nwtextmessage.h"
 #include <QMainWindow>
@@ -84,10 +85,11 @@ protected:
         MainPageStatus = 0,
         MainPageAtc = 1,
         MainPageAircrafts = 2,
-        MainPageCockpit = 3,
-        MainPageTextMessages = 4,
-        MainPageFlightplan = 5,
-        MainPageSettings = 6
+        MainPageUsers = 3,
+        MainPageCockpit = 4,
+        MainPageTextMessages = 5,
+        MainPageFlightplan = 6,
+        MainPageSettings = 7
     };
 
 private:
@@ -101,10 +103,16 @@ private:
     bool m_contextVoiceAvailable;
     QDBusConnection m_dBusConnection;
     QScopedPointer<BlackCore::CCoreRuntime> m_coreRuntime; /*!< runtime, if working with local core */
+    // the table view models
+    // normal pointers, asl these will be deleted by parent
     BlackGui::CAtcListModel *m_atcListOnline;
     BlackGui::CAtcListModel *m_atcListBooked;
     BlackGui::CServerListModel *m_trafficServerList;
     BlackGui::CAircraftListModel *m_aircraftsInRange;
+    BlackGui::CUserListModel *m_allUsers;
+    BlackGui::CUserListModel *m_usersVoiceCom1;
+    BlackGui::CUserListModel *m_usersVoiceCom2;
+    // contexts
     BlackCore::IContextApplication *m_contextApplication; /*!< overall application state */
     BlackCore::IContextNetwork *m_contextNetwork;
     BlackCore::IContextVoice *m_contextVoice;
@@ -177,21 +185,19 @@ private:
     bool isCockpitUpdatePending() const;
 
     /*!
-     * \brief Round the com frequency display
-     * \param com1
-     * \param com2
+     * \brief Round the COM frequency display
      */
     void roundComFrequencyDisplays(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
     /*!
      * \brief Add new text message tab
-     * \param tabName
+     * \param tabName   name of the new tab, usually the channel name
      * \return
      */
     QWidget *addNewTextMessageTab(const QString &tabName);
 
     /*!
-     * \brief Find text message tab by name
+     * \brief Find text message tab by its name
      * \param name
      * \return
      */
@@ -213,7 +219,6 @@ private:
 
     /*!
      * \brief Audio device lists
-     * \return
      */
     void setAudioDeviceLists();
 
@@ -224,8 +229,8 @@ private:
 
     /*!
      * \brief Position of own plane for testing
-     * \param wgsLatitude
-     * \param wgsLongitude
+     * \param wgsLatitude   WGS latitude
+     * \param wgsLongitude  WGS longitude
      * \param altitude
      */
     void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude);
@@ -236,21 +241,21 @@ private:
     void displayOverlayInfo(const QString &message = "");
 
     /*!
-    * \brief Overlay info by status message
+    * \brief Overlay info displaying status message
     * \param message
     */
     void displayOverlayInfo(const BlackMisc::CStatusMessage &message);
 
     /*!
      * \brief Is given main page selected?
-     * \param mainPage
+     * \param mainPage  index to be checked
      * \return
      */
     bool isMainPageSelected(MainPageIndex mainPage) const;
 
     /*!
-     * \brief For this text message's receiver, is the current tab selected
-     * \param textMessage
+     * \brief For this text message's receipient, is the current tab selected?
+     * \param textMessage   to be checked
      * \return
      */
     bool isCorrespondingTextMessageTabSelected(BlackMisc::Network::CTextMessage textMessage) const;

@@ -58,28 +58,65 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     if (this->m_aircraftsInRange != nullptr) this->m_aircraftsInRange->deleteLater();
     this->m_aircraftsInRange = new CAircraftListModel(this);
 
+    if (this->m_allUsers != nullptr) this->m_allUsers->deleteLater();
+    this->m_allUsers = new CUserListModel(this);
+
+    if (this->m_usersVoiceCom1 != nullptr) this->m_usersVoiceCom1->deleteLater();
+    this->m_usersVoiceCom1 = new CUserListModel(this);
+
+    if (this->m_usersVoiceCom2 != nullptr) this->m_usersVoiceCom2->deleteLater();
+    this->m_usersVoiceCom2 = new CUserListModel(this);
+
     // set sort order and models
     // enable first, otherwise order in the model will be reset
+    this->ui->tv_SettingsTnServers->setModel(this->m_trafficServerList);
+
+
     this->ui->tv_AtcStationsOnline->setSortingEnabled(true);
     this->ui->tv_AtcStationsOnline->setModel(this->m_atcListOnline);
+    this->m_atcListBooked->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAtcStation::IndexDistance);
     if (this->m_atcListOnline->hasValidSortColumn())
         this->ui->tv_AtcStationsOnline->horizontalHeader()->setSortIndicator(this->m_atcListOnline->getSortColumn(), this->m_atcListOnline->getSortOrder());
 
-    this->m_atcListBooked->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAtcStation::IndexBookedFrom);
     this->ui->tv_AtcStationsBooked->setSortingEnabled(true);
     this->ui->tv_AtcStationsBooked->setModel(this->m_atcListBooked);
+    this->m_atcListBooked->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAtcStation::IndexBookedFrom);
     if (this->m_atcListBooked->hasValidSortColumn())
         this->ui->tv_AtcStationsBooked->horizontalHeader()->setSortIndicator(this->m_atcListBooked->getSortColumn(), this->m_atcListBooked->getSortOrder());
 
     this->ui->tv_AircraftsInRange->setSortingEnabled(true);
     this->ui->tv_AircraftsInRange->setModel(this->m_aircraftsInRange);
+    this->m_atcListBooked->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAircraft::IndexDistance);
     if (this->m_aircraftsInRange->hasValidSortColumn())
         this->ui->tv_AircraftsInRange->horizontalHeader()->setSortIndicator(this->m_aircraftsInRange->getSortColumn(), this->m_aircraftsInRange->getSortOrder());
-
-    this->ui->tv_SettingsTnServers->setModel(this->m_trafficServerList);
     this->ui->tv_AircraftsInRange->resizeColumnsToContents();
     this->ui->tv_AircraftsInRange->resizeRowsToContents();
 
+    this->ui->tv_AllUsers->setSortingEnabled(true);
+    this->ui->tv_AllUsers->setModel(this->m_allUsers);
+    this->m_allUsers->setSortColumnByPropertyIndex(BlackMisc::Network::CUser::IndexRealName);
+    if (this->m_allUsers->hasValidSortColumn())
+        this->ui->tv_AllUsers->horizontalHeader()->setSortIndicator(this->m_allUsers->getSortColumn(), this->m_allUsers->getSortOrder());
+    this->ui->tv_AllUsers->resizeColumnsToContents();
+    this->ui->tv_AllUsers->resizeRowsToContents();
+
+    this->ui->tv_CockpitVoiceRoom1->setSortingEnabled(true);
+    this->ui->tv_CockpitVoiceRoom1->setModel(this->m_usersVoiceCom1);
+    this->m_usersVoiceCom1->setSortColumnByPropertyIndex(BlackMisc::Network::CUser::IndexRealName);
+    if (this->m_usersVoiceCom1->hasValidSortColumn())
+        this->ui->tv_CockpitVoiceRoom1->horizontalHeader()->setSortIndicator(this->m_usersVoiceCom1->getSortColumn(), this->m_usersVoiceCom1->getSortOrder());
+    this->ui->tv_CockpitVoiceRoom1->resizeColumnsToContents();
+    this->ui->tv_CockpitVoiceRoom1->resizeRowsToContents();
+
+    this->ui->tv_CockpitVoiceRoom2->setSortingEnabled(true);
+    this->ui->tv_CockpitVoiceRoom2->setModel(this->m_usersVoiceCom2);
+    this->m_usersVoiceCom2->setSortColumnByPropertyIndex(BlackMisc::Network::CUser::IndexRealName);
+    if (this->m_usersVoiceCom1->hasValidSortColumn())
+        this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setSortIndicator(this->m_usersVoiceCom2->getSortColumn(), this->m_usersVoiceCom2->getSortOrder());
+    this->ui->tv_CockpitVoiceRoom2->resizeColumnsToContents();
+    this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
+
+    // timer
     if (this->m_timerUpdateAircraftsInRange == nullptr) this->m_timerUpdateAircraftsInRange = new QTimer(this);
     if (this->m_timerUpdateAtcStationsOnline == nullptr) this->m_timerUpdateAtcStationsOnline = new QTimer(this);
     if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
@@ -180,6 +217,8 @@ void MainWindow::initGuiSignals()
     connected = this->connect(this->ui->pb_MainSettings, SIGNAL(released()), this, SLOT(setMainPage()));
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainStatus, SIGNAL(released()), this, SLOT(setMainPage()));
+    Q_ASSERT(connected);
+    connected = this->connect(this->ui->pb_MainUsers, SIGNAL(released()), this, SLOT(setMainPage()));
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainTextMessages, SIGNAL(released()), this, SLOT(setMainPage()));
     Q_ASSERT(connected);

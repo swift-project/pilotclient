@@ -22,14 +22,19 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     QMainWindow(parent, windowMode == GuiModes::WindowFrameless ? (Qt::Window | Qt::FramelessWindowHint) : Qt::Tool),
     ui(new Ui::MainWindow),
     m_infoWindow(nullptr),
-    m_init(false), m_windowMode(windowMode), m_coreMode(GuiModes::CoreExternal),
-    m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextVoiceAvailable(false),
-    m_dBusConnection("dummy"), m_coreRuntime(nullptr),
-    m_atcListOnline(nullptr), m_atcListBooked(nullptr),
-    m_trafficServerList(nullptr), m_aircraftsInRange(nullptr),
+    m_init(false), m_windowMode(windowMode),
+    // core
+    m_coreMode(GuiModes::CoreExternal), m_coreAvailable(false),
+    // misc
+    m_contextNetworkAvailable(false), m_contextVoiceAvailable(false), m_dBusConnection("dummy"), m_coreRuntime(nullptr),
+    // table view models
+    m_atcListOnline(nullptr), m_atcListBooked(nullptr), m_trafficServerList(nullptr), m_aircraftsInRange(nullptr),
+    m_allUsers(nullptr), m_usersVoiceCom1(nullptr), m_usersVoiceCom2(nullptr),
+    // contexts
     m_contextApplication(nullptr), m_contextNetwork(nullptr), m_contextVoice(nullptr), m_contextSettings(nullptr),
-    m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr),
-    m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
+    // timers
+    m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
+    // context menus
     m_contextMenuAudio(nullptr)
 {
     if (windowMode == GuiModes::WindowFrameless)
@@ -150,6 +155,8 @@ void MainWindow::setMainPage(bool start)
         this->ui->sw_MainMiddle->setCurrentIndex(MainPageAircrafts);
     else if (sender == this->ui->pb_MainCockpit)
         this->ui->sw_MainMiddle->setCurrentIndex(MainPageCockpit);
+    else if (sender == this->ui->pb_MainUsers)
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageUsers);
     else if (sender == this->ui->pb_MainTextMessages)
         this->ui->sw_MainMiddle->setCurrentIndex(MainPageTextMessages);
     else if (sender == this->ui->pb_MainFlightplan)

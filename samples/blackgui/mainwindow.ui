@@ -388,7 +388,7 @@ QSizeGrip {
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="pg_StatusPage">
           <property name="sizePolicy">
@@ -818,6 +818,19 @@ QSizeGrip {
               <bool>false</bool>
              </attribute>
             </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="pg_Users">
+          <layout class="QVBoxLayout" name="vl_Users">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="margin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QTableView" name="tv_AllUsers"/>
            </item>
           </layout>
          </widget>
@@ -2320,7 +2333,7 @@ QSizeGrip {
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="pb_MainUsers">
             <property name="text">
              <string>Users</string>
             </property>
@@ -2457,6 +2470,87 @@ QSizeGrip {
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>cb_StatusWithDBus</tabstop>
+  <tabstop>le_StatusNetworkContext</tabstop>
+  <tabstop>le_StatusVoiceContext</tabstop>
+  <tabstop>te_StatusMessages</tabstop>
+  <tabstop>le_CommandLineInput</tabstop>
+  <tabstop>tw_AtcStations</tabstop>
+  <tabstop>tv_AtcStationsOnline</tabstop>
+  <tabstop>te_AtcStationsOnlineInfo</tabstop>
+  <tabstop>le_AtcStationsOnlineMetar</tabstop>
+  <tabstop>pb_AtcStationsLoadMetar</tabstop>
+  <tabstop>pb_AtcStationsAtisReload</tabstop>
+  <tabstop>tv_AtcStationsBooked</tabstop>
+  <tabstop>pb_ReloadAtcStationsBooked</tabstop>
+  <tabstop>tv_AircraftsInRange</tabstop>
+  <tabstop>pb_CockpitToggleCom1</tabstop>
+  <tabstop>ds_CockpitCom1Active</tabstop>
+  <tabstop>ds_CockpitCom1Standby</tabstop>
+  <tabstop>di_CockpitCom1Volume</tabstop>
+  <tabstop>pb_CockpitToggleCom2</tabstop>
+  <tabstop>ds_CockpitCom2Active</tabstop>
+  <tabstop>ds_CockpitCom2Standby</tabstop>
+  <tabstop>di_CockpitCom2Volume</tabstop>
+  <tabstop>pb_CockpitSelcalTest</tabstop>
+  <tabstop>cb_CockpitSelcal1</tabstop>
+  <tabstop>cb_CockpitSelcal2</tabstop>
+  <tabstop>ds_CockpitTransponder</tabstop>
+  <tabstop>cb_CockpitTransponderMode</tabstop>
+  <tabstop>le_CockpitVoiceRoomCom1</tabstop>
+  <tabstop>cb_CockpitVoiceRoom1Override</tabstop>
+  <tabstop>le_CockpitVoiceRoomCom2</tabstop>
+  <tabstop>cb_CockpitVoiceRoom2Override</tabstop>
+  <tabstop>tv_CockpitVoiceRoom1</tabstop>
+  <tabstop>tv_CockpitVoiceRoom2</tabstop>
+  <tabstop>tw_TextMessages</tabstop>
+  <tabstop>te_TextMessagesAll</tabstop>
+  <tabstop>te_TextMessagesUnicom</tabstop>
+  <tabstop>te_TextMessagesCOM1</tabstop>
+  <tabstop>te_TextMessagesCOM2</tabstop>
+  <tabstop>tb_Settings</tabstop>
+  <tabstop>tv_SettingsTnServers</tabstop>
+  <tabstop>le_SettingsTnCsName</tabstop>
+  <tabstop>le_SettingsTnCsDescription</tabstop>
+  <tabstop>le_SettingsTnCsAddress</tabstop>
+  <tabstop>le_SettingsTnCsPort</tabstop>
+  <tabstop>le_SettingsTnCsRealName</tabstop>
+  <tabstop>le_SettingsTnCsNetworkId</tabstop>
+  <tabstop>le_SettingsTnCsPassword</tabstop>
+  <tabstop>pb_SettingsTnSaveServer</tabstop>
+  <tabstop>pb_SettingsTnRemoveServer</tabstop>
+  <tabstop>pb_SettingsTnCurrentServer</tabstop>
+  <tabstop>le_SettingsAircraftCallsign</tabstop>
+  <tabstop>le_SettingsIcaoTypeDesignator</tabstop>
+  <tabstop>le_SettingsIcaoAirline</tabstop>
+  <tabstop>le_SettingsIcaoType</tabstop>
+  <tabstop>lbl_SettingsStealthMode</tabstop>
+  <tabstop>lbl_SettingsObserver</tabstop>
+  <tabstop>cb_VoiceInputDevice</tabstop>
+  <tabstop>cb_VoiceOutputDevice</tabstop>
+  <tabstop>pb_VoiceStartMicTest</tabstop>
+  <tabstop>pb_VoiceStartSquelchTest</tabstop>
+  <tabstop>hs_SettingsGuiOpacity</tabstop>
+  <tabstop>hs_SettingsGuiAircraftRefreshTime</tabstop>
+  <tabstop>hs_SettingsGuiAtcRefreshTime</tabstop>
+  <tabstop>pb_MainConnect</tabstop>
+  <tabstop>pb_MainStatus</tabstop>
+  <tabstop>pb_MainWeather</tabstop>
+  <tabstop>pb_MainFlightplan</tabstop>
+  <tabstop>pb_MainAtc</tabstop>
+  <tabstop>pb_MainAircrafts</tabstop>
+  <tabstop>pb_MainUsers</tabstop>
+  <tabstop>pb_CockpitIdent</tabstop>
+  <tabstop>pb_MainCockpit</tabstop>
+  <tabstop>pb_MainTextMessages</tabstop>
+  <tabstop>pb_Mappings</tabstop>
+  <tabstop>pb_MainSettings</tabstop>
+  <tabstop>pb_MainKeypadOpacity100</tabstop>
+  <tabstop>pb_MainKeypadOpacity050</tabstop>
+  <tabstop>pb_SoundMute</tabstop>
+  <tabstop>pb_SoundMaxVolume</tabstop>
+ </tabstops>
  <resources>
   <include location="../../src/blackgui/blackgui.qrc"/>
  </resources>
