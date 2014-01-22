@@ -60,11 +60,11 @@ namespace BlackMisc
     /*
      * By index as string
      */
-    QString CValueObject::propertyByIndexAsString(int /** index **/, bool /** i18n **/) const
+    QString CValueObject::propertyByIndexAsString(int index, bool i18n) const
     {
-        // not all classes have to implement this
-        qFatal("Property by index as string not implemented");
-        return QString("boom"); // avoid compiler warning
+        // default implementation, requires propertyByIndex
+        QVariant qv = this->propertyByIndex(index);
+        return BlackMisc::qVariantToString(qv, i18n);
     }
 
     /*
