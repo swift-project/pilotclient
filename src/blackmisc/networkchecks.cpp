@@ -53,7 +53,7 @@ namespace BlackMisc
     {
         if (!CNetworkChecks::hasConnectedInterface(false))
         {
-            message = QCoreApplication::translate("BlackMisc", "No connected network interface");
+            message = QObject::tr("No connected network interface", "BlackMisc");
             return false;
         }
 
@@ -63,12 +63,12 @@ namespace BlackMisc
         socket.connectToHost(hostAddress, port);
         if (!socket.waitForConnected(timeoutMs))
         {
-            message = QCoreApplication::translate("BlackMisc", "Connection failed : %1").arg(socket.errorString());
+            message = QObject::tr("Connection failed : %1", "BlackMisc").arg(socket.errorString());
             connected = false;
         }
         else
         {
-            message = QCoreApplication::translate("BlackMisc", "OK, connected");
+            message = QObject::tr("OK, connected", "BlackMisc");
             connected = true;
         }
         socket.close();
