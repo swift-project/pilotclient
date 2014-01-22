@@ -122,6 +122,7 @@ private:
     BlackMisc::Voice::CVoiceRoom m_voiceRoomCom2;
     QTimer *m_timerUpdateAtcStationsOnline; /*!< timer for update of stations */
     QTimer *m_timerUpdateAircraftsInRange; /*!< timer for update of aircrafts */
+    QTimer *m_timerUpdateUsers; /*!< timer dor update of users */
     QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
     QTimer *m_timerContextWatchdog; /*!< core available? */
     QPixmap m_resPixmapConnectionConnected;
@@ -265,6 +266,17 @@ private:
      */
     void initContextMenus();
 
+    /*!
+     * \brief Start all update timers
+     */
+    void startUpdateTimers();
+
+    /*!
+     * \brief Stop all update timers
+     * \param disconnect also disconnect signal/slots
+     */
+    void stopUpdateTimers(bool disconnect = false);
+
 private slots:
 
     //
@@ -285,6 +297,11 @@ private slots:
      * \brief Reload aircrafts in range
      */
     void reloadAircraftsInRange();
+
+    /*!
+     * \brief Reload all (online) users
+     */
+    void reloadAllUsers();
 
     /*!
      * \brief Reload own aircraft

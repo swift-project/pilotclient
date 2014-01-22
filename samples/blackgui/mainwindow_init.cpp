@@ -119,6 +119,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     // timer
     if (this->m_timerUpdateAircraftsInRange == nullptr) this->m_timerUpdateAircraftsInRange = new QTimer(this);
     if (this->m_timerUpdateAtcStationsOnline == nullptr) this->m_timerUpdateAtcStationsOnline = new QTimer(this);
+    if (this->m_timerUpdateUsers == nullptr) this->m_timerUpdateUsers = new QTimer(this);
     if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
     if (this->m_timerCollectedCockpitUpdates == nullptr) this->m_timerCollectedCockpitUpdates = new QTimer(this);
 
@@ -162,12 +163,11 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     Q_ASSERT(connect);
     this->connect(this->m_timerUpdateAircraftsInRange, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateAtcStationsOnline, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
+    this->connect(this->m_timerUpdateUsers, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
 
-    // start timers
-    this->m_timerUpdateAircraftsInRange->start(10 * 1000);
-    this->m_timerUpdateAtcStationsOnline->start(10 * 1000);
+    // start timers, update timers will be started when network is connected
     this->m_timerContextWatchdog->start(2 * 1000);
 
     // init availability
@@ -313,6 +313,33 @@ void MainWindow::initialDataReads()
     {
         // connection is already established
         this->reloadAircraftsInRange();
+        this->reloadAllUsers();
+        this->reloadAtcStationsOnline();
         this->updateGuiStatusInformation();
     }
 }
+
+/*
+ * Start update timers
+ */
+void MainWindow::startUpdateTimers()
+{
+    this->m_timerUpdateAircraftsInRange->start(this->ui->hs_SettingsGuiAircraftRefreshTime->value() * 1000);
+    this->m_timerUpdateAtcStationsOnline->start(this->ui->hs_SettingsGuiAtcRefreshTime->value() * 1000);
+    this->m_timerUpdateUsers->start(this->ui->hs_SettingsGuiUserRefreshTime->value() * 1000);
+}
+
+/*
+ * Stop udate timers
+ */
+void MainWindow::stopUpdateTimers(bool disconnect)
+{
+    this->m_timerUpdateAircraftsInRange->stop();
+    this->m_timerUpdateAtcStationsOnline->stop();
+    this->m_timerUpdateUsers->stop();
+    if (!disconnect) return;
+    this->disconnect(this->m_timerUpdateAircraftsInRange);
+    this->disconnect(this->m_timerUpdateAtcStationsOnline);
+    this->disconnect(this->m_timerUpdateUsers);
+}
+

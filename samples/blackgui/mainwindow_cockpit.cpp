@@ -3,6 +3,7 @@
 #include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
+#include "blackmisc/vvoiceroom.h"
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -13,6 +14,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Math;
+using namespace BlackMisc::Voice;
 
 /*
  * Cockpit values
@@ -107,28 +109,40 @@ void MainWindow::updateCockpitFromContext()
     //
     // Voice room override
     //
-    if (!this->ui->cb_CockpitVoiceRoom1Override->isChecked())
+    if (this->m_contextVoiceAvailable)
     {
-        if (!this->ui->cb_CockpitVoiceRoom1Override->isChecked() && this->m_voiceRoomCom1.isValid())
+        bool com1Connected = this->m_voiceRoomCom1.isConnected();
+        bool com2Connected = this->m_voiceRoomCom2.isConnected();
+        Q_ASSERT(this->m_usersVoiceCom1);
+        Q_ASSERT(this->m_usersVoiceCom2);
+
+        this->m_usersVoiceCom1->update(this->m_contextVoice->getCom1RoomUsers());
+        this->ui->tv_CockpitVoiceRoom1->resizeColumnsToContents();
+        this->ui->tv_CockpitVoiceRoom1->resizeRowsToContents();
+
+        this->m_usersVoiceCom2->update(this->m_contextVoice->getCom2RoomUsers());
+        this->ui->tv_CockpitVoiceRoom2->resizeColumnsToContents();
+        this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
+
+        // display URL if not override mode
+        if (!this->ui->cb_CockpitVoiceRoom1Override->isChecked())
         {
-            QString s(this->m_voiceRoomCom1.isConnected() ? "*" : "");
-            s.append(this->m_voiceRoomCom1.getVoiceRoomUrl());
+            // no override
+            QString s = com1Connected ?
+                        QString("*%1").arg(this->m_voiceRoomCom1.getVoiceRoomUrl()) :
+                        "";
             this->ui->le_CockpitVoiceRoomCom1->setText(s);
         }
-        else
-            this->ui->le_CockpitVoiceRoomCom1->setText("");
-    }
 
-    if (!this->ui->cb_CockpitVoiceRoom2Override->isChecked())
-    {
-        if (this->m_voiceRoomCom2.isValid())
+        // display URL if not override mode
+        if (!this->ui->cb_CockpitVoiceRoom2Override->isChecked())
         {
-            QString s(this->m_voiceRoomCom2.isConnected() ? "*" : "");
-            s.append(this->m_voiceRoomCom2.getVoiceRoomUrl());
+            // no overrride
+            QString s = com2Connected ?
+                        QString("*%1").arg(this->m_voiceRoomCom2.getVoiceRoomUrl()) :
+                        "";
             this->ui->le_CockpitVoiceRoomCom2->setText(s);
         }
-        else
-            this->ui->le_CockpitVoiceRoomCom2->setText("");
     }
 }
 
@@ -259,11 +273,11 @@ void MainWindow::voiceRoomOverride()
     this->ui->le_CockpitVoiceRoomCom2->setReadOnly(!this->ui->cb_CockpitVoiceRoom2Override->isChecked());
     if (this->ui->cb_CockpitVoiceRoom1Override->isChecked())
     {
-        this->m_voiceRoomCom1 = this->ui->cb_CockpitVoiceRoom1Override->text().trimmed();
+        this->m_voiceRoomCom1 = CVoiceRoom(this->ui->cb_CockpitVoiceRoom1Override->text().trimmed());
     }
 
     if (this->ui->cb_CockpitVoiceRoom2Override->isChecked())
     {
-        this->m_voiceRoomCom2 = this->ui->cb_CockpitVoiceRoom2Override->text().trimmed();
+        this->m_voiceRoomCom2 = CVoiceRoom(this->ui->cb_CockpitVoiceRoom2Override->text().trimmed());
     }
 }

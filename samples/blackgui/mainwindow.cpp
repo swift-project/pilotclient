@@ -33,7 +33,8 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     // contexts
     m_contextApplication(nullptr), m_contextNetwork(nullptr), m_contextVoice(nullptr), m_contextSettings(nullptr),
     // timers
-    m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
+    m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerUpdateUsers(nullptr),
+    m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
     // context menus
     m_contextMenuAudio(nullptr)
 {
@@ -67,29 +68,8 @@ void MainWindow::gracefulShutdown()
         this->m_infoWindow = nullptr;
     }
 
-    // if we have a context, we shut some things down
-    if (this->m_contextNetworkAvailable)
-    {
-        if (this->m_contextNetwork->isConnected())
-        {
-            if (this->m_contextVoiceAvailable)
-            {
-                this->m_contextVoice->leaveAllVoiceRooms();
-            }
-            this->m_contextNetwork->disconnectFromNetwork();
-        }
-    }
-
-    if (this->m_timerUpdateAircraftsInRange)
-    {
-        this->m_timerUpdateAircraftsInRange->stop();
-        this->m_timerUpdateAircraftsInRange->disconnect(this);
-    }
-    if (this->m_timerUpdateAtcStationsOnline)
-    {
-        this->m_timerUpdateAtcStationsOnline->stop();
-        this->m_timerUpdateAtcStationsOnline->disconnect(this);
-    }
+    // shut down all timers
+    this->stopUpdateTimers(true);
     if (this->m_timerContextWatchdog)
     {
         this->m_timerContextWatchdog->stop();
@@ -99,6 +79,21 @@ void MainWindow::gracefulShutdown()
     {
         this->m_timerCollectedCockpitUpdates->stop();
         this->m_timerCollectedCockpitUpdates->disconnect(this);
+    }
+
+    // if we have a context, we shut some things down
+    if (this->m_contextNetworkAvailable)
+    {
+        if (this->m_contextNetwork->isConnected())
+        {
+            if (this->m_contextVoiceAvailable)
+            {
+                this->m_contextVoice->leaveAllVoiceRooms();
+                this->m_contextVoice->disconnect(this); // break down signal / slots
+            }
+            this->m_contextNetwork->disconnectFromNetwork();
+            this->m_contextNetwork->disconnect(this); // avoid any status update signals, etc.
+        }
     }
 }
 
@@ -266,17 +261,12 @@ void MainWindow::connectionTerminated()
 */
 void MainWindow::connectionStatusChanged(uint /** from **/, uint to)
 {
-    // CContextNetwork::ConnectionStatus statusFrom = static_cast<CContextNetwork::ConnectionStatus>(from);
-    INetwork::ConnectionStatus statusTo = static_cast<INetwork::ConnectionStatus>(to);
-
-    // always
     this->updateGuiStatusInformation();
-
-    if (statusTo == INetwork::Connected)
-    {
-        QTimer::singleShot(5 * 1000, this, SLOT(reloadAircraftsInRange()));
-        QTimer::singleShot(5 * 1000, this, SLOT(reloadAtcStationsOnline()));
-    }
+    INetwork::ConnectionStatus newStatus = static_cast<INetwork::ConnectionStatus>(to);
+    if (newStatus == INetwork::Connected)
+        this->startUpdateTimers();
+    else if (newStatus == INetwork::Disconnected || newStatus == INetwork::DisconnectedError)
+        this->stopUpdateTimers();
 }
 
 /*
@@ -291,11 +281,17 @@ void MainWindow::timerBasedUpdates()
         this->m_timerUpdateAtcStationsOnline->start(t);
         this->reloadAtcStationsOnline();
     }
-    if (sender == this->m_timerUpdateAircraftsInRange)
+    else if (sender == this->m_timerUpdateAircraftsInRange)
     {
         int t = this->ui->hs_SettingsGuiAircraftRefreshTime->value() * 1000;
         this->m_timerUpdateAircraftsInRange->start(t);
         this->reloadAircraftsInRange();
+    }
+    else if (sender == this->m_timerUpdateUsers)
+    {
+        int t = this->ui->hs_SettingsGuiUserRefreshTime->value() * 1000;
+        this->m_timerUpdateUsers->start(t);
+        this->reloadAllUsers();
     }
     else if (sender == this->m_timerContextWatchdog)
     {
@@ -435,4 +431,15 @@ void MainWindow::displayOverlayInfo(const CStatusMessage &message)
 {
     this->displayOverlayInfo(message.getMessage());
     // further code goes here, such as marking errors as red ...
+}
+
+/*
+ * Read users
+ */
+void MainWindow::reloadAllUsers()
+{
+    if (!this->isContextNetworkAvailableCheck()) return;
+    this->m_allUsers->update(this->m_contextNetwork->getUsers());
+    this->ui->tv_AllUsers->resizeColumnsToContents();
+    this->ui->tv_AllUsers->resizeRowsToContents();
 }

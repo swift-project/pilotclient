@@ -45,10 +45,10 @@ bool MainWindow::reloadOwnAircraft()
         if (selectedRooms.size() == 2)
         {
             this->m_voiceRoomCom1 = this->ui->cb_CockpitVoiceRoom1Override->isChecked() ?
-                                    this->ui->le_CockpitVoiceRoomCom1->text().trimmed() :
+                                    CVoiceRoom(this->ui->le_CockpitVoiceRoomCom1->text().trimmed()) :
                                     selectedRooms[0];
             this->m_voiceRoomCom2 = this->ui->cb_CockpitVoiceRoom2Override->isChecked() ?
-                                    this->ui->le_CockpitVoiceRoomCom2->text().trimmed() :
+                                    CVoiceRoom(this->ui->le_CockpitVoiceRoomCom2->text().trimmed()) :
                                     selectedRooms[1];
         }
     }

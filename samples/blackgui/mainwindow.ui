@@ -388,7 +388,7 @@ QSizeGrip {
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>7</number>
          </property>
          <widget class="QWidget" name="pg_StatusPage">
           <property name="sizePolicy">
@@ -830,7 +830,17 @@ QSizeGrip {
             <number>0</number>
            </property>
            <item>
-            <widget class="QTableView" name="tv_AllUsers"/>
+            <widget class="QTableView" name="tv_AllUsers">
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -1364,10 +1374,30 @@ QSizeGrip {
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QTableView" name="tv_CockpitVoiceRoom1"/>
+              <widget class="QTableView" name="tv_CockpitVoiceRoom1">
+               <property name="selectionMode">
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectRows</enum>
+               </property>
+               <attribute name="verticalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+              </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QTableView" name="tv_CockpitVoiceRoom2"/>
+              <widget class="QTableView" name="tv_CockpitVoiceRoom2">
+               <property name="selectionMode">
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectRows</enum>
+               </property>
+               <attribute name="verticalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+              </widget>
              </item>
             </layout>
            </item>
@@ -2004,6 +2034,35 @@ QSizeGrip {
                    </property>
                    <property name="value">
                     <number>100</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="lbl_SettingsGuiUserRefreshTime">
+                   <property name="text">
+                    <string>User refresh time (5-30s)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QSlider" name="hs_SettingsGuiUserRefreshTime">
+                   <property name="minimum">
+                    <number>5</number>
+                   </property>
+                   <property name="maximum">
+                    <number>30</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>5</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>5</number>
+                   </property>
+                   <property name="value">
+                    <number>10</number>
                    </property>
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
