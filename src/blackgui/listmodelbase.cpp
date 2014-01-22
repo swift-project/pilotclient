@@ -7,6 +7,7 @@
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraftlist.h"
 #include "blackmisc/nwserverlist.h"
+#include "blackmisc/nwuserlist.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackGui
@@ -125,7 +126,7 @@ namespace BlackGui
         if (list.size() < 2) return list; // nothing to do
         int propertyIndex = this->m_columns.columnToPropertyIndex(column);
         Q_ASSERT(propertyIndex >= 0);
-        if (propertyIndex < 0) return list;
+        if (propertyIndex < 0) return list; // at release build do nothing
 
         // sort the values
         return list.sorted
@@ -145,8 +146,9 @@ namespace BlackGui
     // see here for the reason of thess forward instantiations
     // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
     template class CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
-    template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>;
     template class CListModelBase<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
+    template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>;
+    template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>;
 
 
 } // namespace
