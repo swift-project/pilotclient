@@ -44,6 +44,7 @@ void BlackMisc::Aviation::registerMetadata()
     CHeading::registerMetadata();
     CTrack::registerMetadata();
     CCallsign::registerMetadata();
+    CCallsignList::registerMetadata();
     CAtcStation::registerMetadata();
     CInformationMessage::registerMetadata();
     CAtcStationList::registerMetadata();
