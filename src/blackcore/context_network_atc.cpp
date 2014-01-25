@@ -122,7 +122,7 @@ namespace BlackCore
             this->m_atcStationsOnline.push_back(station);
             emit this->changedAtcStationsOnline();
             emit this->m_network->sendAtisQuery(callsign); // request ATIS
-            emit this->m_network->sendNameQuery(callsign);
+            emit this->m_network->sendRealNameQuery(callsign);
             emit this->m_network->sendServerQuery(callsign);
         }
         else

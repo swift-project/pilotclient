@@ -43,7 +43,7 @@ namespace BlackCore
         virtual void terminateConnection();
         virtual void sendPing(const BlackMisc::Aviation::CCallsign &callsign);
 
-        virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void sendIpQuery();
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign);
 
@@ -56,7 +56,7 @@ namespace BlackCore
 
         // Aircraft
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void sendAircraftInfoQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
         virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);

@@ -46,8 +46,8 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::atisVoiceRoomReplyReceived, this, &CContextNetwork::psFsdAtisVoiceRoomQueryReceived);
         this->connect(this->m_network, &INetwork::atisLogoffTimeReplyReceived, this, &CContextNetwork::psFsdAtisLogoffTimeQueryReceived);
         this->connect(this->m_network, &INetwork::metarReplyReceived, this, &CContextNetwork::psFsdMetarReceived);
-        this->connect(this->m_network, &INetwork::nameReplyReceived, this, &CContextNetwork::psFsdNameQueryReplyReceived);
-        this->connect(this->m_network, &INetwork::aircraftInfoReplyReceived, this, &CContextNetwork::psFsdAircraftInfoReceived);
+        this->connect(this->m_network, &INetwork::realNameReplyReceived, this, &CContextNetwork::psFsdRealNameReplyReceived);
+        this->connect(this->m_network, &INetwork::icaoCodesReplyReceived, this, &CContextNetwork::psFsdIcaoCodesReceived);
         this->connect(this->m_network, &INetwork::pilotDisconnected, this, &CContextNetwork::psFsdPilotDisconnected);
         this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CContextNetwork::psFsdAircraftPositionUpdate);
         this->connect(this->m_network, &INetwork::frequencyReplyReceived, this, &CContextNetwork::psFsdFrequencyReceived);
@@ -261,7 +261,7 @@ namespace BlackCore
     /*
      * Name query
      */
-    void CContextNetwork::psFsdNameQueryReplyReceived(const CCallsign &callsign, const QString &realname)
+    void CContextNetwork::psFsdRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
         // this->log(Q_FUNC_INFO, callsign.toQString(), realname);
         if (realname.isEmpty()) return;

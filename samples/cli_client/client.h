@@ -43,9 +43,9 @@ private: //commands
     void sendServerQueryCmd(QTextStream &args);
     void sendAtcQueryCmd(QTextStream &args);
     void sendAtisQueryCmd(QTextStream &args);
-    void sendNameQueryCmd(QTextStream &args);
+    void sendRealNameQueryCmd(QTextStream &args);
     void sendCapabilitiesQueryCmd(QTextStream &args);
-    void sendAircraftInfoQueryCmd(QTextStream &args);
+    void sendIcaoCodesQueryCmd(QTextStream &args);
     void setOwnAircraftCmd(QTextStream &args);
     void setOwnAircraftPositionCmd(QTextStream &args);
     void setOwnAircraftSituationCmd(QTextStream &args);
@@ -69,9 +69,9 @@ signals: //to send to INetwork
     void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign);
-    void sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
+    void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign);
-    void sendAircraftInfoQuery(const BlackMisc::Aviation::CCallsign &callsign);
+    void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
     void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
     void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
@@ -91,12 +91,12 @@ public slots: //to receive from INetwork
     void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);
     void atcReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC);
     void atisReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
-    void nameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
+    void realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
     void capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
     void kicked(const QString &msg);
     void metarReplyReceived(const QString &data);
     void pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-    void aircraftInfoReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
+    void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
     void pongReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);
     void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
 

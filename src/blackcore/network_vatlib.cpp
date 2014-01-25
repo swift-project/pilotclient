@@ -455,7 +455,7 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign)
+    void CNetworkVatlib::sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
 
@@ -496,7 +496,7 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::sendAircraftInfoQuery(const BlackMisc::Aviation::CCallsign &callsign)
+    void CNetworkVatlib::sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
 
@@ -698,7 +698,7 @@ namespace BlackCore
         case Cvatlib_Network::infoQuery_Freq:   emit cbvar_cast(cbvar)->frequencyReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
         case Cvatlib_Network::infoQuery_Server: emit cbvar_cast(cbvar)->serverReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
         case Cvatlib_Network::infoQuery_ATC:    emit cbvar_cast(cbvar)->atcReplyReceived(cbvar_cast(cbvar)->fromFSD(data2), *data == 'Y'); break;
-        case Cvatlib_Network::infoQuery_Name:   emit cbvar_cast(cbvar)->nameReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case Cvatlib_Network::infoQuery_Name:   emit cbvar_cast(cbvar)->realNameReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
         case Cvatlib_Network::infoQuery_IP:     emit cbvar_cast(cbvar)->ipReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
         }
     }
@@ -834,7 +834,7 @@ namespace BlackCore
             else if (key == net->acinfo_Livery)     { icao.setLivery(*keysValues); }
             keysValues++;
         }
-        emit cbvar_cast(cbvar)->aircraftInfoReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), icao);
+        emit cbvar_cast(cbvar)->icaoCodesReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), icao);
     }
 
 } // namespace

@@ -106,7 +106,7 @@ namespace BlackCore
         virtual void terminateConnection() = 0;
         virtual void sendPing(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
-        virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
         virtual void sendIpQuery() = 0;
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
@@ -119,7 +119,7 @@ namespace BlackCore
 
         // Aircraft
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-        virtual void sendAircraftInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
         virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
         virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
@@ -145,7 +145,7 @@ namespace BlackCore
 
         // Aircraft
         void pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-        void aircraftInfoReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao);
+        void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao);
         void aircraftPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation,
                                     const BlackMisc::Aviation::CTransponder &transponder);
         // TODO void aircraftInterimPositionUpdate(...);
@@ -159,8 +159,8 @@ namespace BlackCore
         void capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
         void ipReplyReceived(const QString &ip);
         void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);
-        void nameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
 
+        void realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
         // Text messages
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
 
