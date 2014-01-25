@@ -31,6 +31,16 @@ namespace BlackCore
     /*!
      * Interface for a connection to a multi-user flight simulation and ATC network.
      *
+     * The connection can be in one of three essential states: disconnected, connecting, and
+     * connected. (There is a fourth state, disconnected due to error, which is a substate of
+     * disconnected.) Some slots may only be called when connected, and some may only be called
+     * when disconnected; there is a naming convention to highlight this fact using prefixes:
+     * "preset" slots are only callable when disconnected, "send" slots are only callable when
+     * connected, and "set" slots are callable in any state.
+     *
+     * Slots with the word "query" in their names are handled asynchronously, with one or more
+     * "reply" signals being sent in response to each invokation of a query slot.
+     *
      * \warning If an INetwork signal is connected to a slot, and that slot emits a signal
      *          which is connected to an INetwork slot, then at least one of those connections
      *          must be a Qt::QueuedConnection.
@@ -42,14 +52,19 @@ namespace BlackCore
 
     protected:
         /*!
-         * \brief Constructor
-         * \param parent
+         * Constructor
          */
         INetwork(QObject *parent = nullptr) : QObject(parent) {}
 
     public:
+        /*!
+         * Destructor.
+         */
         virtual ~INetwork() {}
 
+        /*!
+         * Flags for capabilities bitfield.
+         */
         enum
         {
             AcceptsAtisResponses        = 1 << 0,
@@ -57,14 +72,30 @@ namespace BlackCore
             SupportsModelDescriptions   = 1 << 2
         };
 
-        enum ConnectionStatus
+        /*!
+         * Login modes
+         */
+        enum LoginMode
         {
-            Disconnected = 0,
-            DisconnectedError,
-            Connecting,
-            Connected
+            LoginNormal = 0,    //!< Normal login
+            LoginAsObserver,    //!< Login as observer
+            LoginStealth        //!< Login stealth mode
         };
 
+        /*!
+         * Status of the connection.
+         */
+        enum ConnectionStatus
+        {
+            Disconnected = 0,   //!< Not connected
+            DisconnectedError,  //!< Disconnected due to socket error
+            Connecting,         //!< Connection initiated but not established
+            Connected           //!< Connection established
+        };
+
+        /*!
+         * Convert a ConnectionStatus to a string.
+         */
         static QString connectionStatusToString(ConnectionStatus status)
         {
             int index = staticMetaObject.indexOfEnumerator("ConnectionStatus");
@@ -72,79 +103,340 @@ namespace BlackCore
             return metaEnum.valueToKey(status);
         }
 
+        /*!
+         * Returns true if the given ConnectionStatus represents an error state.
+         */
+        static bool isErrorStatus(ConnectionStatus status)
+        {
+            return status == DisconnectedError;
+        }
+
+        /*!
+         * Returns true if the current ConnectionStatus is a connected state.
+         */
         virtual bool isConnected() const = 0;
 
     public slots:
-        // Network
-        virtual void setServer(const BlackMisc::Network::CServer &server) = 0;
-        virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-        virtual void setRealName(const QString &name) = 0;
-        virtual void initiateConnection() = 0;
-        virtual void terminateConnection() = 0;
-        virtual void ping(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        ////////////////////////////////////////////////////////////////
+        //! \name Network slots
+        //! @{
+        ////////////////////////////////////////////////////////////////
 
-        virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+        /*!
+         * Set the server which will be connected to.
+         * \pre Network must be disconnected when calling this function.
+         */
+        virtual void presetServer(const BlackMisc::Network::CServer &server) = 0;
+
+        /*!
+         * Set our own callsign before connecting.
+         * \pre Network must be disconnected when calling this function.
+         */
+        virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        /*!
+         * Set our own aircraft ICAO codes before connecting.
+         * \pre Network must be disconnected when calling this function.
+         */
+        virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao) = 0;
+
+        /*!
+         * Select a login mode before connecting.
+         * \pre Network must be disconnected when calling this function.
+         */
+        virtual void presetLoginMode(LoginMode mode) = 0;
+
+        /*!
+         * Initiate a connection to the network server.
+         * \pre Network must be disconnected when calling this function.
+         * \post Connection status changes from Disconnected to either Connecting or DisconnectedError.
+         */
+        virtual void initiateConnection() = 0;
+
+        /*!
+         * Ask the connection to the network server to terminate itself.
+         * \pre It is not legal to call this function when already disconnected.
+         * \post Connection status changes to Disconnected, but maybe not immediately.
+         */
+        virtual void terminateConnection() = 0;
+
+        /*!
+         * Send a ping message to a user with a specific callsign.
+         * \pre Network must be connected when calling this function.
+         * \sa pongReceived
+         */
+        virtual void sendPing(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        /*!
+         * Send a message querying the real name of the user with a specific callsign.
+         * \pre Network must be connected when calling this function.
+         * \sa realNameReplyReceived
+         */
+        virtual void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        /*!
+         * Send a message querying our own IP address as reported by the server.
+         * \pre Network must be connected when calling this function.
+         * \sa ipReplyReceived
+         */
         virtual void sendIpQuery() = 0;
+
+        /*!
+         * Send a message querying which server the user with a specific callsign is connected to.
+         * \pre Network must be connected when calling this function.
+         * \sa serverReplyReceived
+         */
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
-        // Text messages
-        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) = 0;
+        /*!
+         * Send one or more text messages.
+         * \pre Network must be connected when calling this function.
+         */
+        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) = 0;
 
-        // ATC
+        //! @}
+        ////////////////////////////////////////////////////////////////
+        //! \name ATC slots
+        //! @{
+        ////////////////////////////////////////////////////////////////
+
+        /*!
+         * Send a message querying whether or not the user with a specific callsign is an ATC station.
+         * \pre Network must be connected when calling this function.
+         * \sa atcReplyReceived
+         */
         virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        /*!
+         * Send a message querying the ATIS for the ATC station with a specific callsign.
+         * \pre Network must be connected when calling this function.
+         * \sa atisReplyReceived
+         * \sa atisVoiceRoomReplyReceived
+         * \sa atisLogoffTimeReplyReceived
+         */
         virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
-        // Aircraft
+        // TODO virtual void sendFlightPlan(...) = 0;
+
+        //! @}
+        ////////////////////////////////////////////////////////////////
+        //! \name Aircraft slots
+        //! @{
+        ////////////////////////////////////////////////////////////////
+
+        /*!
+         * Send a message querying the capabilities of the client software of the user with a specific callsign.
+         * \pre Network must be connected when calling this function.
+         * \sa capabilitiesReplyReceived
+         */
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
-        virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        /*!
+         * Send a message querying the ICAO codes of the aircraft of the user with a specific callsign.
+         * \pre Network must be connected when calling this function.
+         * \sa icaoCodesReplyReceived
+         */
+        virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        /*!
+         * Send a message querying the COM frequency of the user with a specific callsign.
+         * \pre Network must be connected when calling this function.
+         * \sa frequencyReplyReceived
+         */
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        /*!
+         * Set our own aircraft data.
+         * \param aircraft Only the situation and avionics parts are used. Callsign, user, and ICAO code parts are ignored.
+         */
         virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
+
+        /*!
+         * Set the position and altitude of our own aircraft.
+         */
         virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
+
+        /*!
+         * Set the position, altitude, orientation, and miscellaneous state of our own aircraft.
+         */
         virtual void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
+
+        /*!
+         * Set the COM frequencies and transponder code and mode of our own aircraft.
+         */
         virtual void setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
                                             const BlackMisc::Aviation::CTransponder &transponder) = 0;
 
-        // Weather / flight plan
-        virtual void requestMetar(const QString &airportICAO) = 0;
-        virtual void requestWeatherData(const QString &airportICAO) = 0;
-        // TODO virtual void sendFlightPlan(...) = 0;
+        //! @}
+        ////////////////////////////////////////////////////////////////
+        //! \name Weather slots
+        //! @{
+        ////////////////////////////////////////////////////////////////
+
+        /*!
+         * Send a message querying the METAR for the airport with a specific ICAO code.
+         * \pre Network must be connected when calling this function.
+         * \sa metarReplyReceived
+         */
+        virtual void sendMetarQuery(const QString &airportICAO) = 0;
+
+        /*!
+         * Send a message querying the weather data for the airport with a specific ICAO code.
+         * \pre Network must be connected when calling this function.
+         * \sa temperatureDataReplyReceived
+         * \sa windDataReplyReceived
+         * \sa cloudDataReplyReceived
+         */
+        virtual void sendWeatherDataQuery(const QString &airportICAO) = 0;
 
     signals:
-        // ATC
+        //! @}
+        ////////////////////////////////////////////////////////////////
+        //! \name ATC signals
+        //! @{
+        ////////////////////////////////////////////////////////////////
+
+        /*!
+         * We received a notification of the state of an ATC station on the network.
+         */
         void atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
                                const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
-        void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-        void atcQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC);
-        void atisQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
-        void atisQueryVoiceRoomReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
-        void atisQueryLogoffTimeReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
-        void metarReceived(const QString &data);
 
-        // Aircraft
+        /*!
+         * We received a notification that an ATC station has disconnected from the network.
+         */
+        void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
+
+        /*!
+         * We received a reply to one of our queries.
+         * \sa sendAtcQuery
+         */
+        void atcReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC);
+
+        /*!
+         * We received a reply to one of our ATIS queries.
+         * \sa sendAtisQuery
+         */
+        void atisReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
+
+        /*!
+         * We received a reply to one of our ATIS queries, containing the controller's voice room URL.
+         * \sa sendAtisQuery
+         */
+        void atisVoiceRoomReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
+
+        /*!
+         * We received a reply to one of our ATIS queries, containing the controller's planned logoff time.
+         * \sa sendAtisQuery
+         */
+        void atisLogoffTimeReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
+
+        /*!
+         * We received a reply to one of our METAR queries.
+         * \sa sendMetarQuery
+         */
+        void metarReplyReceived(const QString &data);
+
+        //! @}
+        ////////////////////////////////////////////////////////////////
+        //! \name Aircraft signals
+        //! @{
+        ////////////////////////////////////////////////////////////////
+
+        /*!
+         * We received a notification that a pilot has disconnected from the network.
+         */
         void pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-        void aircraftInfoReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao);
+
+        /*!
+         * We received a reply to one of our queries.
+         * \sa sendIcaoCodesQuery
+         */
+        void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icao);
+
+        /*!
+         * We received a notification of the state of another aircraft on the network.
+         */
         void aircraftPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation,
                                     const BlackMisc::Aviation::CTransponder &transponder);
+
+        /*!
+         * We received a reply to one of our queries.
+         * \sa sendFrequencyQuery
+         */
+        void frequencyReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
+
         // TODO void aircraftInterimPositionUpdate(...);
-        void frequencyQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
 
-        // Connection / Network in general
+        //! @}
+        ////////////////////////////////////////////////////////////////
+        //! \name Network signals
+        //! @{
+        ////////////////////////////////////////////////////////////////
+
+        /*!
+         * We sent a message about the status of the network connection, for the attention of the user.
+         */
         void statusMessage(const BlackMisc::CStatusMessage &message);
-        void kicked(const QString &msg);
-        void connectionStatusChanged(ConnectionStatus oldStatus, ConnectionStatus newStatus);
-        void pong(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);
-        void capabilitiesQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
-        void ipQueryReplyReceived(const QString &ip);
-        void serverQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);
-        void nameQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
 
-        // Text messages
+        /*!
+         * We were kicked from the network. (A connectionStatusChanged signal will also be sent.)
+         */
+        void kicked(const QString &msg);
+
+        /*!
+         * The status of our connection has changed.
+         */
+        void connectionStatusChanged(ConnectionStatus oldStatus, ConnectionStatus newStatus);
+
+        /*!
+         * We received a reply to one of our pings.
+         * \sa sendPing
+         */
+        void pongReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);
+
+        /*!
+         * We received a reply to one of our queries.
+         * \param flags A combination of capabilities flags.
+         * \sa sendCapabilitiesQuery
+         */
+        void capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
+
+        /*!
+         * We received a reply to one of our queries.
+         * \param ip Our IP address, as seen by the server.
+         * \sa sendIpQuery
+         */
+        void ipReplyReceived(const QString &ip);
+
+        /*!
+         * We received a reply to one of our queries.
+         * \sa sendServerQuery
+         */
+        void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);
+
+        /*!
+         * We received a reply to one of our queries.
+         * \sa sendRealNameQuery
+         */
+        void realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
+
+        /*!
+         * We received one or more text messages from another user.
+         */
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
 
-        // Weather
-        // TODO void temperatureDataReceived(...);
-        // TODO void windDataReceived(...);
-        // TODO void cloudDataReceived(...);
+        //! @}
+        ////////////////////////////////////////////////////////////////
+        //! \name Weather signals
+        //! @{
+        ////////////////////////////////////////////////////////////////
+
+        // TODO void temperatureDataReplyReceived(...);
+        // TODO void windDataReplyReceived(...);
+        // TODO void cloudDataReplyReceived(...);
+
+        //! @}
     };
 
 } // namespace

@@ -27,7 +27,7 @@ namespace BlackCore
     {
 
         // 1. Init by "network driver"
-        this->m_network = new CNetworkVatlib(CNetworkVatlib::LoginNormal, this);
+        this->m_network = new CNetworkVatlib(this);
 
         // 2. Init own aircraft
         this->initOwnAircraft();
@@ -42,15 +42,15 @@ namespace BlackCore
         // 4. connect signals and slots
         this->connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::psFsdConnectionStatusChanged);
         this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CContextNetwork::psFsdAtcPositionUpdate);
-        this->connect(this->m_network, &INetwork::atisQueryReplyReceived, this, &CContextNetwork::psFsdAtisQueryReceived);
-        this->connect(this->m_network, &INetwork::atisQueryVoiceRoomReplyReceived, this, &CContextNetwork::psFsdAtisVoiceRoomQueryReceived);
-        this->connect(this->m_network, &INetwork::atisQueryLogoffTimeReplyReceived, this, &CContextNetwork::psFsdAtisLogoffTimeQueryReceived);
-        this->connect(this->m_network, &INetwork::metarReceived, this, &CContextNetwork::psFsdMetarReceived);
-        this->connect(this->m_network, &INetwork::nameQueryReplyReceived, this, &CContextNetwork::psFsdNameQueryReplyReceived);
-        this->connect(this->m_network, &INetwork::aircraftInfoReceived, this, &CContextNetwork::psFsdAircraftInfoReceived);
+        this->connect(this->m_network, &INetwork::atisReplyReceived, this, &CContextNetwork::psFsdAtisQueryReceived);
+        this->connect(this->m_network, &INetwork::atisVoiceRoomReplyReceived, this, &CContextNetwork::psFsdAtisVoiceRoomQueryReceived);
+        this->connect(this->m_network, &INetwork::atisLogoffTimeReplyReceived, this, &CContextNetwork::psFsdAtisLogoffTimeQueryReceived);
+        this->connect(this->m_network, &INetwork::metarReplyReceived, this, &CContextNetwork::psFsdMetarReceived);
+        this->connect(this->m_network, &INetwork::realNameReplyReceived, this, &CContextNetwork::psFsdRealNameReplyReceived);
+        this->connect(this->m_network, &INetwork::icaoCodesReplyReceived, this, &CContextNetwork::psFsdIcaoCodesReceived);
         this->connect(this->m_network, &INetwork::pilotDisconnected, this, &CContextNetwork::psFsdPilotDisconnected);
         this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CContextNetwork::psFsdAircraftUpdateReceived);
-        this->connect(this->m_network, &INetwork::frequencyQueryReplyReceived, this, &CContextNetwork::psFsdFrequencyReceived);
+        this->connect(this->m_network, &INetwork::frequencyReplyReceived, this, &CContextNetwork::psFsdFrequencyReceived);
         this->connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::psFsdTextMessageReceived);
         this->connect(this->m_network, &INetwork::statusMessage, this, &CContextNetwork::statusMessage);
     }
@@ -107,8 +107,10 @@ namespace BlackCore
         }
         else
         {
-            this->m_ownAircraft.setPilot(currentServer.getUser());
-            this->m_network->setServer(currentServer);
+            this->m_ownAircraft.setPilot(currentServer.getUser()); // still needed?
+            this->m_network->presetServer(currentServer);
+            this->m_network->presetCallsign(this->m_ownAircraft.getCallsign());
+            this->m_network->presetIcaoCodes(this->m_ownAircraft.getIcaoInfo());
             this->m_network->setOwnAircraft(this->m_ownAircraft);
             this->m_network->initiateConnection();
             QString msg = "Connection pending ";
@@ -259,7 +261,7 @@ namespace BlackCore
     /*
      * Name query
      */
-    void CContextNetwork::psFsdNameQueryReplyReceived(const CCallsign &callsign, const QString &realname)
+    void CContextNetwork::psFsdRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
         // this->log(Q_FUNC_INFO, callsign.toQString(), realname);
         if (realname.isEmpty()) return;

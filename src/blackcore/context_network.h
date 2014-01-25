@@ -271,12 +271,12 @@ namespace BlackCore
         /*!
          * \brief Realname recevied
          */
-        void psFsdNameQueryReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
+        void psFsdRealNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
 
         /*!
-         * \brief Plane info received
+         * \brief Plane ICAO codes received
          */
-        void psFsdAircraftInfoReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
+        void psFsdIcaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
 
         /*!
          * \brief Aircraft position update received

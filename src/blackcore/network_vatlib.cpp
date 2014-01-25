@@ -28,19 +28,29 @@ namespace BlackCore
 
     void exceptionDispatcher(const char *caller);
 
-    CNetworkVatlib::CNetworkVatlib(CNetworkVatlib::LoginMode loginMode, QObject *parent)
+    CNetworkVatlib::CNetworkVatlib(QObject *parent)
         : INetwork(parent),
-          m_net(Cvatlib_Network::Create()),
-          m_loginMode(loginMode),
+          m_loginMode(LoginNormal),
           m_status(Cvatlib_Network::connStatus_Idle),
           m_fsdTextCodec(QTextCodec::codecForName("latin1"))
     {
+        connect(this, &CNetworkVatlib::terminate, this, &INetwork::terminateConnection, Qt::QueuedConnection);
+
+        Q_ASSERT_X(m_fsdTextCodec, "CNetworkVatlib", "Missing default wire text encoding");
+        //TODO reinit m_fsdTextCodec from WireTextEncoding config setting if present
+
+        connect(&m_processingTimer, SIGNAL(timeout()), this, SLOT(process()));
+        connect(&m_updateTimer, SIGNAL(timeout()), this, SLOT(update()));
+        m_processingTimer.start(c_processingIntervalMsec);
+    }
+
+    void CNetworkVatlib::initializeSession()
+    {
+        Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "attempted to reinitialize session while still connected");
+
         try
         {
-            connect(this, SIGNAL(terminate()), this, SLOT(terminateConnection()), Qt::QueuedConnection);
-
-            Q_ASSERT_X(m_fsdTextCodec, "CNetworkVatlib", "Missing default wire text encoding");
-            //TODO reinit m_fsdTextCodec from WireTextEncoding config setting if present
+            m_net.reset(Cvatlib_Network::Create());
 
             QString capabilities;
             capabilities += m_net->capability_AtcInfo;
@@ -49,7 +59,7 @@ namespace BlackCore
             capabilities += "=1:";
             capabilities += m_net->capability_ModelDesc;
             capabilities += "=1";
-            if (loginMode == LoginStealth)
+            if (m_loginMode == LoginStealth)
             {
                 capabilities += "STEALTH"; // TODO  m_net->capability_Stealth
                 capabilities += "=1";
@@ -79,21 +89,19 @@ namespace BlackCore
             m_net->InstallOnCloudDataReceivedEvent(onCloudDataReceived, this);
             m_net->InstallOnPilotInfoRequestReceivedEvent(onPilotInfoRequestReceived, this);
             m_net->InstallOnPilotInfoReceivedEvent(onPilotInfoReceived, this);
-
-            connect(&m_processingTimer, SIGNAL(timeout()), this, SLOT(process()));
-            connect(&m_updateTimer, SIGNAL(timeout()), this, SLOT(update()));
-            m_processingTimer.start(c_processingIntervalMsec);
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
     CNetworkVatlib::~CNetworkVatlib()
     {
+        if (!m_net) { return; }
+
         try
         {
-            if (m_net->IsNetworkConnected())
+            if (m_net->IsValid() && m_net->IsNetworkConnected())
             {
-                m_net->LogoffAndDisconnect(0);
+                m_net->LogoffAndDisconnect(0); // emits a connectionStatusChanged signal
             }
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
@@ -106,6 +114,8 @@ namespace BlackCore
 
     void CNetworkVatlib::process()
     {
+        if (!m_net) { return; }
+
         try
         {
             if (m_net->IsValid() && m_net->IsSessionExists())
@@ -118,6 +128,8 @@ namespace BlackCore
 
     void CNetworkVatlib::update()
     {
+        if (!m_net) { return; }
+
         try
         {
             if (m_net->IsValid() && m_net->IsSessionExists() && isConnected())
@@ -161,6 +173,34 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
+    INetwork::ConnectionStatus convertConnectionStatus(Cvatlib_Network::connStatus status)
+    {
+        switch (status)
+        {
+        case Cvatlib_Network::connStatus_Idle:          return INetwork::Disconnected;
+        case Cvatlib_Network::connStatus_Connecting:    return INetwork::Connecting;
+        case Cvatlib_Network::connStatus_Connected:     return INetwork::Connected;
+        case Cvatlib_Network::connStatus_Disconnected:  return INetwork::Disconnected;
+        case Cvatlib_Network::connStatus_Error:         return INetwork::DisconnectedError;
+        }
+        qFatal("unrecognised connection status");
+        return INetwork::DisconnectedError;
+    }
+
+    void CNetworkVatlib::changeConnectionStatus(Cvatlib_Network::connStatus status)
+    {
+        if (m_status != status)
+        {
+            qSwap(m_status, status);
+            emit connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status));
+
+            if (isDisconnected())
+            {
+                m_updateTimer.stop();
+            }
+        }
+    }
+
     QByteArray CNetworkVatlib::toFSD(QString qstr) const
     {
         return m_fsdTextCodec->fromUnicode(qstr);
@@ -174,11 +214,6 @@ namespace BlackCore
     QString CNetworkVatlib::fromFSD(const char *cstr) const
     {
         return m_fsdTextCodec->toUnicode(cstr);
-    }
-
-    bool CNetworkVatlib::isConnected() const
-    {
-        return m_status == Cvatlib_Network::connStatus_Connected;
     }
 
     void exceptionDispatcher(const char *caller)
@@ -210,26 +245,30 @@ namespace BlackCore
     /**********************************             INetwork slots            ************************************/
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
 
-    void CNetworkVatlib::setServer(const CServer &server)
+    void CNetworkVatlib::presetServer(const CServer &server)
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change server details while still connected");
-        this->m_server = server;
+        m_server = server;
     }
 
-    void CNetworkVatlib::setCallsign(const BlackMisc::Aviation::CCallsign &callsign)
+    void CNetworkVatlib::presetCallsign(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change callsign while still connected");
-
-        m_ownAircraft.setCallsign(callsign);
+        m_callsign = callsign;
     }
 
-    void CNetworkVatlib::setRealName(const QString &name)
+    void CNetworkVatlib::presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao)
     {
-        Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change name while still connected");
+        Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change ICAO codes while still connected");
+        m_icaoCodes = icao;
+    }
 
-        auto pilot = m_ownAircraft.getPilot();
-        pilot.setRealName(name);
-        m_ownAircraft.setPilot(pilot);
+    void CNetworkVatlib::presetLoginMode(LoginMode mode)
+    {
+        Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change login mode while still connected");
+        m_loginMode = mode;
+
+        m_net.reset(nullptr);
     }
 
     void CNetworkVatlib::initiateConnection()
@@ -238,12 +277,17 @@ namespace BlackCore
 
         try
         {
-            m_status = Cvatlib_Network::connStatus_Connecting; // paranoia
+            if (!m_net)
+            {
+                initializeSession();
+            }
+
+            changeConnectionStatus(Cvatlib_Network::connStatus_Connecting); // paranoia
 
             QByteArray callsign = toFSD(m_loginMode == LoginAsObserver ?
-                                        m_ownAircraft.getCallsign().getAsObserverCallsignString() :
-                                        m_ownAircraft.getCallsign().asString());
-            QByteArray name = toFSD(m_ownAircraft.getPilot().getRealName());
+                                        m_callsign.getAsObserverCallsignString() :
+                                        m_callsign.asString());
+            QByteArray name = toFSD(m_server.getUser().getRealName());
 
             if (this->m_loginMode == LoginAsObserver)
             {
@@ -270,15 +314,22 @@ namespace BlackCore
                                          toFSD(m_server.getUser().getPassword()),
                                          info);
             }
-            m_net->ConnectAndLogon();
-            if (! m_updateTimer.isActive())
+
+            if (m_net->ConnectAndLogon())
             {
-                m_updateTimer.start(c_updateIntervalMsec);
+                if (! m_updateTimer.isActive())
+                {
+                    m_updateTimer.start(c_updateIntervalMsec);
+                }
+            }
+            else
+            {
+                changeConnectionStatus(Cvatlib_Network::connStatus_Error);
             }
         }
         catch (...)
         {
-            m_status = Cvatlib_Network::connStatus_Idle;
+            changeConnectionStatus(Cvatlib_Network::connStatus_Error);
             exceptionDispatcher(Q_FUNC_INFO);
         }
     }
@@ -288,7 +339,11 @@ namespace BlackCore
         try
         {
             m_updateTimer.stop();
-            m_net->LogoffAndDisconnect(c_logoffTimeoutSec);
+
+            if (m_net && m_net->IsValid() && m_net->IsNetworkConnected())
+            {
+                m_net->LogoffAndDisconnect(c_logoffTimeoutSec);
+            }
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
@@ -319,6 +374,8 @@ namespace BlackCore
 
     void CNetworkVatlib::sendTextMessages(const BlackMisc::Network::CTextMessageList &messages)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         if (messages.isEmpty()) return;
         try
         {
@@ -345,6 +402,8 @@ namespace BlackCore
 
     void CNetworkVatlib::sendIpQuery()
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->SendInfoQuery(Cvatlib_Network::infoQuery_IP, "SERVER");
@@ -354,6 +413,8 @@ namespace BlackCore
 
     void CNetworkVatlib::sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->SendInfoQuery(Cvatlib_Network::infoQuery_Freq, toFSD(callsign));
@@ -363,6 +424,8 @@ namespace BlackCore
 
     void CNetworkVatlib::sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->SendInfoQuery(Cvatlib_Network::infoQuery_Server, toFSD(callsign));
@@ -372,6 +435,8 @@ namespace BlackCore
 
     void CNetworkVatlib::sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->SendInfoQuery(Cvatlib_Network::infoQuery_ATC, toFSD(callsign));
@@ -381,6 +446,8 @@ namespace BlackCore
 
     void CNetworkVatlib::sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->SendInfoQuery(Cvatlib_Network::infoQuery_ATIS, toFSD(callsign));
@@ -388,8 +455,10 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign)
+    void CNetworkVatlib::sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->SendInfoQuery(Cvatlib_Network::infoQuery_Name, toFSD(callsign));
@@ -399,6 +468,8 @@ namespace BlackCore
 
     void CNetworkVatlib::sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->SendInfoQuery(Cvatlib_Network::infoQuery_Capabilities, toFSD(callsign));
@@ -406,7 +477,7 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign)
+    void CNetworkVatlib::replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) // private
     {
         try
         {
@@ -416,7 +487,7 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign)
+    void CNetworkVatlib::replyToNameQuery(const BlackMisc::Aviation::CCallsign &callsign) // private
     {
         try
         {
@@ -425,8 +496,10 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::requestAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign)
+    void CNetworkVatlib::sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->RequestPlaneInfo(toFSD(callsign));
@@ -434,25 +507,25 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign)
+    void CNetworkVatlib::sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign) // private
     {
         try
         {
-            const QByteArray acTypeICAObytes = toFSD(m_ownAircraft.getIcaoInfo().getDesignator());
-            const QByteArray airlineICAObytes = toFSD(m_ownAircraft.getIcaoInfo().getAirline());
-            const QByteArray liverybytes = toFSD(m_ownAircraft.getIcaoInfo().getLivery());
+            const QByteArray acTypeICAObytes = toFSD(m_icaoCodes.getDesignator());
+            const QByteArray airlineICAObytes = toFSD(m_icaoCodes.getAirline());
+            const QByteArray liverybytes = toFSD(m_icaoCodes.getLivery());
             std::vector<const char *> keysValues;
-            if (!m_ownAircraft.getIcaoInfo().getDesignator().isEmpty())
+            if (!m_icaoCodes.getDesignator().isEmpty())
             {
                 keysValues.push_back(m_net->acinfo_Equipment);
                 keysValues.push_back(acTypeICAObytes);
             }
-            if (m_ownAircraft.getIcaoInfo().hasAirline())
+            if (m_icaoCodes.hasAirline())
             {
                 keysValues.push_back(m_net->acinfo_Airline);
                 keysValues.push_back(airlineICAObytes);
             }
-            if (m_ownAircraft.getIcaoInfo().hasLivery())
+            if (m_icaoCodes.hasLivery())
             {
                 keysValues.push_back(m_net->acinfo_Livery);
                 keysValues.push_back(liverybytes);
@@ -463,8 +536,10 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::ping(const BlackMisc::Aviation::CCallsign &callsign)
+    void CNetworkVatlib::sendPing(const BlackMisc::Aviation::CCallsign &callsign)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->PingUser(toFSD(callsign));
@@ -472,8 +547,10 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::requestMetar(const QString &airportICAO)
+    void CNetworkVatlib::sendMetarQuery(const QString &airportICAO)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->RequestMetar(toFSD(airportICAO));
@@ -481,8 +558,10 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::requestWeatherData(const QString &airportICAO)
+    void CNetworkVatlib::sendWeatherDataQuery(const QString &airportICAO)
     {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
         try
         {
             m_net->RequestWeatherData(toFSD(airportICAO));
@@ -499,24 +578,9 @@ namespace BlackCore
         return static_cast<CNetworkVatlib *>(cbvar);
     }
 
-    CNetworkVatlib::ConnectionStatus convertConnectionStatus(Cvatlib_Network::connStatus status)
+    void CNetworkVatlib::onConnectionStatusChanged(Cvatlib_Network *, Cvatlib_Network::connStatus, Cvatlib_Network::connStatus newStatus, void *cbvar)
     {
-        switch (status)
-        {
-        case Cvatlib_Network::connStatus_Idle:          return CNetworkVatlib::Disconnected;
-        case Cvatlib_Network::connStatus_Connecting:    return CNetworkVatlib::Connecting;
-        case Cvatlib_Network::connStatus_Connected:     return CNetworkVatlib::Connected;
-        case Cvatlib_Network::connStatus_Disconnected:  return CNetworkVatlib::Disconnected;
-        case Cvatlib_Network::connStatus_Error:         return CNetworkVatlib::DisconnectedError;
-        }
-        qFatal("unrecognised connection status");
-        return CNetworkVatlib::DisconnectedError;
-    }
-
-    void CNetworkVatlib::onConnectionStatusChanged(Cvatlib_Network *, Cvatlib_Network::connStatus oldStatus, Cvatlib_Network::connStatus newStatus, void *cbvar)
-    {
-        cbvar_cast(cbvar)->m_status = newStatus;
-        emit cbvar_cast(cbvar)->connectionStatusChanged(convertConnectionStatus(oldStatus), convertConnectionStatus(newStatus));
+        cbvar_cast(cbvar)->changeConnectionStatus(newStatus);
     }
 
     void CNetworkVatlib::onTextMessageReceived(Cvatlib_Network *, const char *from, const char *to, const char *msg, void *cbvar)
@@ -596,16 +660,17 @@ namespace BlackCore
     void CNetworkVatlib::onKicked(Cvatlib_Network *, const char *reason, void *cbvar)
     {
         emit cbvar_cast(cbvar)->kicked(cbvar_cast(cbvar)->fromFSD(reason));
+        emit cbvar_cast(cbvar)->terminate();
     }
 
     void CNetworkVatlib::onPong(Cvatlib_Network *, const char *callsign, INT elapsedTime, void *cbvar)
     {
-        emit cbvar_cast(cbvar)->pong(cbvar_cast(cbvar)->fromFSD(callsign), CTime(elapsedTime, CTimeUnit::s()));
+        emit cbvar_cast(cbvar)->pongReceived(cbvar_cast(cbvar)->fromFSD(callsign), CTime(elapsedTime, CTimeUnit::s()));
     }
 
     void CNetworkVatlib::onMetarReceived(Cvatlib_Network *, const char *data, void *cbvar)
     {
-        emit cbvar_cast(cbvar)->metarReceived(cbvar_cast(cbvar)->fromFSD(data));
+        emit cbvar_cast(cbvar)->metarReplyReceived(cbvar_cast(cbvar)->fromFSD(data));
     }
 
     void CNetworkVatlib::onInfoQueryRequestReceived(Cvatlib_Network *, const char *callsignString, Cvatlib_Network::infoQuery type, const char *, void *cbvar)
@@ -630,11 +695,11 @@ namespace BlackCore
     {
         switch (type)
         {
-        case Cvatlib_Network::infoQuery_Freq:   emit cbvar_cast(cbvar)->frequencyQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
-        case Cvatlib_Network::infoQuery_Server: emit cbvar_cast(cbvar)->serverQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-        case Cvatlib_Network::infoQuery_ATC:    emit cbvar_cast(cbvar)->atcQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(data2), *data == 'Y'); break;
-        case Cvatlib_Network::infoQuery_Name:   emit cbvar_cast(cbvar)->nameQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
-        case Cvatlib_Network::infoQuery_IP:     emit cbvar_cast(cbvar)->ipQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
+        case Cvatlib_Network::infoQuery_Freq:   emit cbvar_cast(cbvar)->frequencyReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), CFrequency(cbvar_cast(cbvar)->fromFSD(data).toFloat(), CFrequencyUnit::MHz())); break;
+        case Cvatlib_Network::infoQuery_Server: emit cbvar_cast(cbvar)->serverReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case Cvatlib_Network::infoQuery_ATC:    emit cbvar_cast(cbvar)->atcReplyReceived(cbvar_cast(cbvar)->fromFSD(data2), *data == 'Y'); break;
+        case Cvatlib_Network::infoQuery_Name:   emit cbvar_cast(cbvar)->realNameReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data)); break;
+        case Cvatlib_Network::infoQuery_IP:     emit cbvar_cast(cbvar)->ipReplyReceived(cbvar_cast(cbvar)->fromFSD(data)); break;
         }
     }
 
@@ -653,7 +718,7 @@ namespace BlackCore
             }
             keysValues += 2;
         }
-        emit cbvar_cast(cbvar)->capabilitiesQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), flags);
+        emit cbvar_cast(cbvar)->capabilitiesReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), flags);
     }
 
     void CNetworkVatlib::onAtisReplyReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::atisLineType lineType, const char *data, void *cbvar)
@@ -662,17 +727,17 @@ namespace BlackCore
 
         if (lineType == Cvatlib_Network::atisLineType_VoiceRoom)
         {
-            emit cbvar_cast(cbvar)->atisQueryVoiceRoomReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data));
+            emit cbvar_cast(cbvar)->atisVoiceRoomReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data));
         }
         if (lineType == Cvatlib_Network::atisLineType_ZuluLogoff)
         {
-            emit cbvar_cast(cbvar)->atisQueryLogoffTimeReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data));
+            emit cbvar_cast(cbvar)->atisLogoffTimeReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(data));
         }
 
         if (lineType == Cvatlib_Network::atisLineType_LineCount)
         {
             atis.setType(CInformationMessage::ATIS);
-            emit cbvar_cast(cbvar)->atisQueryReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), atis);
+            emit cbvar_cast(cbvar)->atisReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), atis);
             cbvar_cast(cbvar)->m_atisParts.remove(cbvar_cast(cbvar)->fromFSD(callsign));
         }
         else
@@ -734,7 +799,7 @@ namespace BlackCore
 
     terminate:
         emit cbvar_cast(cbvar)->statusMessage(BlackMisc::CStatusMessage(BlackMisc::CStatusMessage::TypeTrafficNetwork, BlackMisc::CStatusMessage::SeverityError, msg));
-        emit cbvar_cast(cbvar)->terminate();
+        emit cbvar_cast(cbvar)->terminate(); // private, will be handled during the next pass of the Qt event loop
     }
 
     void CNetworkVatlib::onWindDataReceived(Cvatlib_Network *, Cvatlib_Network::WindLayer /** layers **/[4], void * /** cbvar **/)
@@ -769,7 +834,7 @@ namespace BlackCore
             else if (key == net->acinfo_Livery)     { icao.setLivery(*keysValues); }
             keysValues++;
         }
-        emit cbvar_cast(cbvar)->aircraftInfoReceived(cbvar_cast(cbvar)->fromFSD(callsign), icao);
+        emit cbvar_cast(cbvar)->icaoCodesReplyReceived(cbvar_cast(cbvar)->fromFSD(callsign), icao);
     }
 
 } // namespace

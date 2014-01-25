@@ -19,7 +19,7 @@ namespace BlackCore
     /*
      * Aircraft info received
      */
-    void CContextNetwork::psFsdAircraftInfoReceived(const CCallsign &callsign, const CAircraftIcao &icaoData)
+    void CContextNetwork::psFsdIcaoCodesReceived(const CCallsign &callsign, const CAircraftIcao &icaoData)
     {
         // this->log(Q_FUNC_INFO, callsign.toQString(), icaoData.toQString());
         CAircraftList aircraftsWithCallsign = this->m_aircraftsInRange.findByCallsign(callsign);
@@ -32,7 +32,7 @@ namespace BlackCore
             aircraft.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
             this->m_aircraftsInRange.push_back(aircraft);
             emit this->m_network->sendFrequencyQuery(callsign);
-            emit this->m_network->sendNameQuery(callsign);
+            emit this->m_network->sendRealNameQuery(callsign);
             emit this->changedAircraftsInRange();
         }
         else
@@ -61,8 +61,8 @@ namespace BlackCore
             aircraft.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
             this->m_aircraftsInRange.push_back(aircraft);
             emit this->m_network->sendFrequencyQuery(callsign);
-            emit this->m_network->sendNameQuery(callsign);
-            emit this->m_network->requestAircraftInfo(callsign);
+            emit this->m_network->sendRealNameQuery(callsign);
+            emit this->m_network->sendIcaoCodesQuery(callsign);
             emit this->changedAircraftsInRange();
         }
         else

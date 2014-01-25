@@ -29,14 +29,12 @@ namespace BlackMisc
     public:
         /*!
          * \brief Return a copy containing only those elements for which a given predicate returns true.
-         * \param p
-         * \return
          */
         template <class Predicate>
         C<T> findBy(Predicate p) const
         {
             C<T> result = derived();
-            result.erase(std::remove_if(result.begin(), result.end(), [ = ](const T & value) { return !p(value); }), result.end());
+            result.erase(std::remove_if(result.begin(), result.end(), [ = ](const T &value) { return !p(value); }), result.end());
             return result;
         }
 
@@ -44,7 +42,6 @@ namespace BlackMisc
          * \brief Return a copy containing only those elements matching a particular key/value pair.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
-         * \return
          */
         template <class K1, class V1>
         C<T> findBy(K1 key1, V1 value1) const
@@ -58,7 +55,6 @@ namespace BlackMisc
          * \param value1 Will be compared to the return value of key1.
          * \param key2 A pointer to a member function of T.
          * \param value2 Will be compared to the return value of key2.
-         * \return
          */
         template <class K1, class V1, class K2, class V2>
         C<T> findBy(K1 key1, V1 value1, K2 key2, V2 value2) const
@@ -74,7 +70,6 @@ namespace BlackMisc
          * \param value2 Will be compared to the return value of key2.
          * \param key3 A pointer to a member function of T.
          * \param value3 Will be compared to the return value of key3.
-         * \return
          */
         template <class K1, class V1, class K2, class V2, class K3, class V3>
         C<T> findBy(K1 key1, V1 value1, K2 key2, V2 value2, K3 key3, V3 value3) const
@@ -84,12 +79,19 @@ namespace BlackMisc
 
         /*!
          * \brief Return a copy containing only those elements matching a given value map.
-         * \param valueMap
-         * \return
          */
         C<T> findBy(const CValueMap &valueMap) const
         {
-            return findBy([ & ](const T & value) { return value == valueMap; });
+            return findBy([ & ](const T &value) { return value == valueMap; });
+        }
+
+        /*!
+         * \brief Return true if there is an element for which a given predicate returns true
+         */
+        template <class Predicate>
+        bool contains(Predicate p) const
+        {
+            return std::any_of(derived().begin(), derived().end(), p);
         }
 
         /*!
@@ -99,60 +101,18 @@ namespace BlackMisc
          */
         bool contains(const T &object) const
         {
-            return std::binary_search(derived().begin(), derived().end(), object);
+            return std::find(derived().begin(), derived().end(), object) != derived().end();
         }
 
         /*!
-         * \brief Return true if there is an element for which a given predicate returns true
-         * \param p
-         * \return
-         */
-        template <class Predicate>
-        bool contains(Predicate p) const
-        {
-            return std::any_of(derived().begin(), derived().end(), p);
-        }
-
-        /*!
-         * \brief Return true if there is an element matching a particular key/value pair.
+         * \brief Return a copy containing only those elements matching a particular key/value pair.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
-         * \return
          */
         template <class K1, class V1>
         bool contains(K1 key1, V1 value1) const
         {
             return contains(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
-        }
-
-        /*!
-         * \brief Remove given object
-         * \param object remove this object from in container
-         */
-        void remove(const T &object)
-        {
-            std::remove(derived().begin(), derived().end(), object);
-        }
-
-        /*!
-         * \brief Remove elements for which a given predicate returns true.
-         * \param p
-         */
-        template <class Predicate>
-        void removeIf(Predicate p)
-        {
-            std::remove_if(derived().begin(), derived().end(), p);
-        }
-
-        /*!
-         * \brief Remove elements matching a particular key/value pair.
-         * \param key1 A pointer to a member function of T.
-         * \param value1 Will be compared to the return value of key1.
-         */
-        template <class K1, class V1>
-        void removeIf(K1 key1, V1 value1)
-        {
-            removeIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
         }
 
     public: // CValueObject overrides
@@ -174,7 +134,7 @@ namespace BlackMisc
         {
             QString str;
             // qualifying stringify with this-> to workaround bug in GCC 4.7.2 http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56402
-            std::for_each(derived().begin(), derived().end(), [ & ](const T & value) { str += (str.isEmpty() ? "{" : ",") + this->stringify(value, i18n); });
+            std::for_each(derived().begin(), derived().end(), [ & ](const T &value) { str += (str.isEmpty() ? "{" : ",") + this->stringify(value, i18n); });
             if (str.isEmpty()) { str = "{"; }
             return str += "}";
         }
@@ -212,7 +172,7 @@ namespace BlackMisc
         virtual void marshallToDbus(QDBusArgument &argument) const
         {
             argument.beginArray(qMetaTypeId<T>());
-            std::for_each(derived().begin(), derived().end(), [ & ](const T & value) { argument << value; });
+            std::for_each(derived().begin(), derived().end(), [ & ](const T &value) { argument << value; });
             argument.endArray();
         }
 

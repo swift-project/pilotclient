@@ -27,40 +27,36 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-        enum LoginMode
-        {
-            LoginNormal = 0,
-            LoginAsObserver,
-            LoginStealth
-        };
-
-        CNetworkVatlib(LoginMode loginMode = LoginNormal, QObject *parent = nullptr);
+        CNetworkVatlib(QObject *parent = nullptr);
         virtual ~CNetworkVatlib();
 
-        bool isConnected() const;
+        bool isConnected() const { return m_status == Cvatlib_Network::connStatus_Connected; }
 
     public: // INetwork slots overrides
 
         // Network
-        virtual void setServer(const BlackMisc::Network::CServer &server);
-        virtual void setCallsign(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void setRealName(const QString &name);
+        virtual void presetServer(const BlackMisc::Network::CServer &server);
+        virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao);
+        virtual void presetLoginMode(LoginMode mode);
         virtual void initiateConnection();
         virtual void terminateConnection();
+        virtual void sendPing(const BlackMisc::Aviation::CCallsign &callsign);
+
+        virtual void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void sendIpQuery();
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void sendNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void ping(const BlackMisc::Aviation::CCallsign &callsign);
-
-        // Weather
-        virtual void requestWeatherData(const QString &airportICAO);
 
         // Text messages
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages);
 
+        // ATC
+        virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign);
+
         // Aircraft
-        virtual void requestAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
         virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
         virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
@@ -68,10 +64,9 @@ namespace BlackCore
         virtual void setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
             const BlackMisc::Aviation::CTransponder &xpdr);
 
-        // ATC
-        virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign);
-        virtual void requestMetar(const QString &airportICAO);
+        // Weather
+        virtual void sendMetarQuery(const QString &airportICAO);
+        virtual void sendWeatherDataQuery(const QString &airportICAO);
 
     private slots:
         void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
@@ -105,6 +100,8 @@ namespace BlackCore
         QByteArray toFSD(QString qstr) const;
         QByteArray toFSD(const BlackMisc::Aviation::CCallsign &callsign) const;
         QString fromFSD(const char *cstr) const;
+        void initializeSession();
+        void changeConnectionStatus(Cvatlib_Network::connStatus newStatus);
         bool isDisconnected() const { return m_status != Cvatlib_Network::connStatus_Connecting && m_status != Cvatlib_Network::connStatus_Connected; }
 
     private slots:
@@ -127,7 +124,9 @@ namespace BlackCore
         LoginMode m_loginMode;
         Cvatlib_Network::connStatus m_status;
         BlackMisc::Network::CServer m_server;
-        BlackMisc::Aviation::CAircraft m_ownAircraft;
+        BlackMisc::Aviation::CCallsign m_callsign;
+        BlackMisc::Aviation::CAircraftIcao m_icaoCodes;
+        BlackMisc::Aviation::CAircraft m_ownAircraft; // not using callsign, user, or icao parts of this member because they can't be changed when connected
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CInformationMessage> m_atisParts;
 
         QTimer m_processingTimer;

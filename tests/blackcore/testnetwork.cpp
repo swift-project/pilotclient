@@ -15,38 +15,42 @@ using namespace BlackMisc::PhysicalQuantities;
 
 void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
 {
+    QString string = net->connectionStatusToString(INetwork::Connected);
+    QVERIFY(string == "Connected");
+
     Expect e(net);
 
     EXPECT_UNIT(e)
-    .send(&INetwork::setServer, CServer("", "", "vatsim-germany.org", 6809, CUser("guest", "", "", "guest")))
-    .send(&INetwork::setCallsign, "BLACK")
+    .send(&INetwork::presetServer, CServer("", "", "vatsim-germany.org", 6809, CUser("guest", "", "", "guest")))
+    .send(&INetwork::presetCallsign, "BLACK")
+    .send(&INetwork::presetIcaoCodes, CAircraftIcao("C172", "P1L", "YYY", "YYY", "white"))
     .send(&INetwork::initiateConnection)
     .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
     {
         QVERIFY(newStatus == INetwork::Connecting);
         qDebug() << "CONNECTING";
-    }
-    ).expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
+    })
+    .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
     {
         QVERIFY(newStatus == INetwork::Connected);
         qDebug() << "CONNECTED";
-    }
-    ).wait(10);
+    })
+    .wait(10);
 
     EXPECT_UNIT(e)
-    .send(&INetwork::ping, "server")
-    .expect(&INetwork::pong, [](CCallsign callsign, PhysicalQuantities::CTime elapsedTime)
+    .send(&INetwork::sendPing, "server")
+    .expect(&INetwork::pongReceived, [](CCallsign callsign, PhysicalQuantities::CTime elapsedTime)
     {
         qDebug() << "PONG" << callsign << elapsedTime;
-    }
-    ).wait(10);
+    })
+    .wait(10);
 
     EXPECT_UNIT(e)
     .send(&INetwork::terminateConnection)
-    .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus s)
+    .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
     {
-        QVERIFY(s == INetwork::Disconnected);
+        QVERIFY(newStatus == INetwork::Disconnected);
         qDebug() << "DISCONNECTED";
-    }
-    ).wait(10);
+    })
+    .wait(10);
 }
