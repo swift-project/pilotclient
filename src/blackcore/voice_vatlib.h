@@ -66,60 +66,49 @@ namespace BlackCore
         virtual qint32 micTestResult() const;
         virtual QString micTestResultAsString() const;
 
-
     public slots:
         /*!
-         * \brief ATC station callsign, used for voice room designator
-         * \param callsign
+         * \copydoc IVoice::setMyAircraftCallsign()
          */
         virtual void setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
         /*!
-         * \brief Join a given voice room
-         * \param comUnit
-         * \param voiceRoom
+         * \copydoc IVoice::joinVoiceRoom()
          */
         virtual void joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom);
 
         /*!
-         * \brief Leave voice room
-         * \param comUnit
+         * \copydoc IVoice::leaveVoiceRoom()
          */
         virtual void leaveVoiceRoom(const ComUnit comUnit);
 
         /*!
-         * \brief Leave all voice rooms
+         * \copydoc IVoice::leaveAllVoiceRooms()
          */
         virtual void leaveAllVoiceRooms();
 
         /*!
-         * \brief Room output volume as per COM unit
-         * \param comUnit
-         * \param volumne
+         * \copydoc IVoice::setRoomOutputVolume()
          */
         virtual void setRoomOutputVolume(const ComUnit comUnit, const qint32 volumne);
 
         /*!
-         * \brief Start transmitting ("talk")
-         * \param comUnit
+         * \copydoc IVoice::startTransmitting()
          */
         virtual void startTransmitting(const ComUnit comUnit);
 
         /*!
-         * \brief Stop transmitting ("talk")
-         * \param comUnit
+         * \copydoc IVoice::stopTransmitting()
          */
         virtual void stopTransmitting(const ComUnit comUnit);
 
         /*!
-         * Get COM1/2 voice rooms, which then allows to retrieve information
-         * such as connection status etc.
-         * \return
+         * \copydoc IVoice::getComVoiceRoomsWithAudioStatus()
          */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus();
+        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const;
 
         /*!
-         * \brief Voice rooms, const version with no updates
+         * \copydoc IVoice::getComVoiceRooms()
          */
         virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const
         {
@@ -127,17 +116,15 @@ namespace BlackCore
         }
 
         /*!
-         * \brief Get voice room callsigns
-         * \param comUnit COM1/2
-         * \return
+         * \copydoc IVoice::getVoiceRoomCallsigns()
          */
         virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns(const ComUnit comUnit) const;
 
         /*!
-          * \brief Switch audio output
-          * \param comUnit
-          * \param enable
-          */
+         * \brief Switch audio output, enable or disable given COM unit.
+         * \param comUnit
+         * \param enable   enable or disable output
+         */
         virtual void switchAudioOutput(const ComUnit comUnit, bool enable);
 
         /*!

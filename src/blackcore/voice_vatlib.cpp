@@ -145,10 +145,10 @@ namespace BlackCore
     /*
      * Get voice rooms, with the latest status updated
      */
-    BlackMisc::Voice::CVoiceRoomList CVoiceVatlib::getComVoiceRoomsWithAudioStatus()
+    BlackMisc::Voice::CVoiceRoomList CVoiceVatlib::getComVoiceRoomsWithAudioStatus() const
     {
         Q_ASSERT_X(m_voiceRooms.size() == 2, "CVoiceClientVatlib", "Wrong numer of COM voice rooms");
-
+        CVoiceRoomList voiceRooms;
         if (m_voice->IsValid() && m_voice->IsSetup())
         {
             // valid state, update
@@ -158,10 +158,16 @@ namespace BlackCore
             com2.setConnected(m_voice->IsRoomConnected(static_cast<qint32>(COM2)));
             com1.setAudioPlaying(com1.isConnected() ? m_voice->IsAudioPlaying(static_cast<qint32>(COM1)) : false);
             com2.setAudioPlaying(com2.isConnected() ? m_voice->IsAudioPlaying(static_cast<qint32>(COM2)) : false);
-            this->setVoiceRoomForUnit(COM1, com1);
-            this->setVoiceRoomForUnit(COM2, com2);
+            voiceRooms.push_back(com1);
+            voiceRooms.push_back(com2);
         }
-        return this->m_voiceRooms;
+        else
+        {
+            CVoiceRoom def;
+            voiceRooms.push_back(def);
+            voiceRooms.push_back(def);
+        }
+        return voiceRooms;
     }
 
     /*
@@ -524,7 +530,7 @@ namespace BlackCore
             m_voice->GetRoomUserList(static_cast<qint32>(comUnit), onRoomUserReceived, this);
             m_temporaryUserRoomIndex = CVoiceVatlib::InvalidRoomIndex; // reset
 
-            // we have all current users in m_voi
+            // we have all current users in m_temporaryVoiceRoomCallsigns
             foreach(CCallsign callsign, m_voiceRoomCallsigns.value(comUnit))
             {
                 if (!m_temporaryVoiceRoomCallsigns.contains(callsign))
@@ -588,11 +594,19 @@ namespace BlackCore
         QString callsign = QString(name);
         if (callsign.isEmpty()) return;
 
-        // add user
+        // add callsign
         CVoiceVatlib *voiceClientVatlib = cbvar_cast_voice(cbVar);
         ComUnit comUnit = static_cast<ComUnit>(voiceClientVatlib->temporaryUserRoomIndex());
 
         // add user
+        // callsign might contain: VATSIM id, user name
+        if (callsign.contains(" "))
+        {
+            QStringList parts = callsign.split(" ");
+            callsign = parts[0];
+            // I throw away VATSIM id here, maybe we could use it
+        }
+
         voiceClientVatlib->addTemporaryCallsignForRoom(comUnit, CCallsign(callsign));
     }
 
@@ -637,6 +651,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::addTemporaryCallsignForRoom(const ComUnit /** comUnit **/, const CCallsign &callsign)
     {
+        if (m_temporaryVoiceRoomCallsigns.contains(callsign)) return;
         m_temporaryVoiceRoomCallsigns.push_back(callsign);
     }
 

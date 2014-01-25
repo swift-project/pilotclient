@@ -130,7 +130,7 @@ namespace BlackCore
          * Get COM1/2 voice rooms, which then allows to retrieve information
          * such as audio status etc.
          */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() = 0;
+        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const = 0;
 
         /*!
          * Get COM1/2 voice rooms, const and with no status update
