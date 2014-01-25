@@ -46,27 +46,21 @@ namespace BlackMisc
 
             /*!
              * \brief Copy constructor.
-             * \param other
              */
             ConstForwardIterator(const ConstForwardIterator &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
 
             /*!
              * \brief Move constructor.
-             * \param other
              */
             ConstForwardIterator(ConstForwardIterator &&other) : m_pimpl(other.m_pimpl.take()) {}
 
             /*!
              * \brief Copy assignment.
-             * \param other
-             * \return
              */
             ConstForwardIterator &operator =(const ConstForwardIterator &other) { m_pimpl.reset(other.pimpl() ? other.pimpl()->clone() : nullptr); return *this; }
 
             /*!
              * \brief Move assignment.
-             * \param other
-             * \return
              */
             ConstForwardIterator &operator =(ConstForwardIterator &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
@@ -74,20 +68,17 @@ namespace BlackMisc
              * \brief Create a new iterator with a specific implementation type.
              * \tparam C Becomes the iterator's implementation type.
              * \param c Initial value for the iterator. The value is copied.
-             * \return
              */
             template <class I> static ConstForwardIterator fromImpl(I i) { return ConstForwardIterator(new Pimpl<I>(std::move(i))); }
 
             /*!
              * \brief Returns a reference to the object pointed to.
-             * \return
              * \pre The iterator must be initialized and valid.
              */
             const_reference operator *() const { Q_ASSERT(m_pimpl); return **pimpl(); }
 
             /*!
              * \brief Arrow operator provides access to members of the object pointed to.
-             * \return
              * \pre The iterator must be initialized and valid.
              */
             const_pointer operator ->() const { Q_ASSERT(m_pimpl); return &**pimpl(); }
@@ -108,7 +99,6 @@ namespace BlackMisc
 
             /*!
              * \brief Advance the iterator by a certain amount.
-             * \param n
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
@@ -116,7 +106,6 @@ namespace BlackMisc
 
             /*!
              * \brief Advance the iterator by a certain amount.
-             * \param n
              * \return Copy of the iterator in its new position.
              * \pre The iterator must be initialized and valid.
              */
@@ -124,23 +113,18 @@ namespace BlackMisc
 
             /*!
              * \brief Test for equality.
-             * \param other
-             * \return
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             bool operator ==(const ConstForwardIterator &other) const { return (pimpl() && other.pimpl()) ? *pimpl() == *other.pimpl() : pimpl() == other.pimpl(); }
 
             /*!
              * \brief Test for inequality.
-             * \param other
-             * \return
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             bool operator !=(const ConstForwardIterator &other) const { return !(*this == other); }
 
             /*!
              * \brief Return opaque pointer to underlying implementation iterator object.
-             * \return
              * \pre The iterator must have been initialized.
              * \todo Returning by void* is rotten, but GCC gives a very cryptic error if I make it a function template with a cast inside.
              */
@@ -210,27 +194,21 @@ namespace BlackMisc
 
             /*!
              * \brief Copy constructor.
-             * \param other
              */
             ConstBidirectionalIterator(const ConstBidirectionalIterator &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
 
             /*!
              * \brief Move constructor.
-             * \param other
              */
             ConstBidirectionalIterator(ConstBidirectionalIterator &&other) : m_pimpl(other.m_pimpl.take()) {}
 
             /*!
              * \brief Copy assignment.
-             * \param other
-             * \return
              */
             ConstBidirectionalIterator &operator =(const ConstBidirectionalIterator &other) { m_pimpl.reset(other.pimpl() ? other.pimpl()->clone() : nullptr); return *this; }
 
             /*!
              * \brief Move assignment.
-             * \param other
-             * \return
              */
             ConstBidirectionalIterator &operator =(ConstBidirectionalIterator &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
@@ -238,20 +216,17 @@ namespace BlackMisc
              * \brief Create a new iterator with a specific implementation type.
              * \tparam C Becomes the iterator's implementation type.
              * \param c Initial value for the iterator. The value is copied.
-             * \return
              */
             template <class I> static ConstBidirectionalIterator fromImpl(I i) { return ConstBidirectionalIterator(new Pimpl<I>(std::move(i))); }
 
             /*!
              * \brief Returns a reference to the object pointed to.
-             * \return
              * \pre The iterator must be initialized and valid.
              */
             const_reference operator *() const { Q_ASSERT(m_pimpl); return **pimpl(); }
 
             /*!
              * \brief Arrow operator provides access to members of the object pointed to.
-             * \return
              * \pre The iterator must be initialized and valid.
              */
             const_pointer operator ->() const { Q_ASSERT(m_pimpl); return &**pimpl(); }
@@ -286,7 +261,6 @@ namespace BlackMisc
 
             /*!
              * \brief Advance the iterator by a certain amount.
-             * \param n
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
@@ -294,7 +268,6 @@ namespace BlackMisc
 
             /*!
              * \brief Advance the iterator by a certain amount.
-             * \param n
              * \return Copy of the iterator in its new position.
              * \pre The iterator must be initialized and valid.
              */
@@ -302,7 +275,6 @@ namespace BlackMisc
 
             /*!
              * \brief Backtrack the iterator by a certain amount.
-             * \param n
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
@@ -310,7 +282,6 @@ namespace BlackMisc
 
             /*!
              * \brief Backtrack the iterator by a certain amount.
-             * \param n
              * \return Copy of the iterator in its new position.
              * \pre The iterator must be initialized and valid.
              */
@@ -318,39 +289,30 @@ namespace BlackMisc
 
             /*!
              * \brief Return the distance between two iterators.
-             * \param other
-             * \return
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             difference_type operator -(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() - *other.pimpl(); }
 
             /*!
              * \brief Test for equality.
-             * \param other
-             * \return
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             bool operator ==(const ConstBidirectionalIterator &other) const { return (pimpl() && other.pimpl()) ? *pimpl() == *other.pimpl() : pimpl() == other.pimpl(); }
 
             /*!
              * \brief Test for inequality.
-             * \param other
-             * \return
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             bool operator !=(const ConstBidirectionalIterator &other) const { return !(*this == other); }
 
             /*!
              * \brief For sorting.
-             * \param other
-             * \return
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             bool operator <(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() < *other.pimpl(); }
 
             /*!
              * \brief Return opaque pointer to underlying implementation iterator object.
-             * \return
              * \pre The iterator must have been initialized.
              * \todo Returning by void* is rotten, but GCC gives a very cryptic error if I make it a function template with a cast inside.
              */
@@ -428,27 +390,21 @@ namespace BlackMisc
 
             /*!
              * \brief Copy constructor.
-             * \param other
              */
             BidirectionalIterator(const BidirectionalIterator &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
 
             /*!
              * \brief Move constructor.
-             * \param other
              */
             BidirectionalIterator(BidirectionalIterator &&other) : m_pimpl(other.m_pimpl.take()) {}
 
             /*!
              * \brief Copy assignment.
-             * \param other
-             * \return
              */
             BidirectionalIterator &operator =(const BidirectionalIterator &other) { m_pimpl.reset(other.pimpl() ? other.pimpl()->clone() : nullptr); return *this; }
 
             /*!
              * \brief Move assignment.
-             * \param other
-             * \return
              */
             BidirectionalIterator &operator =(BidirectionalIterator &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
@@ -456,34 +412,29 @@ namespace BlackMisc
              * \brief Create a new iterator with a specific implementation type.
              * \tparam C Becomes the iterator's implementation type.
              * \param c Initial value for the iterator. The value is copied.
-             * \return
              */
             template <class I> static BidirectionalIterator fromImpl(I i) { return BidirectionalIterator(new Pimpl<I>(std::move(i))); }
 
             /*!
              * \brief Returns a reference to the object pointed to.
-             * \return
              * \pre The iterator must be initialized and valid.
              */
             const_reference operator *() const { Q_ASSERT(m_pimpl); return **pimpl(); }
 
             /*!
              * \brief Returns a reference to the object pointed to.
-             * \return
              * \pre The iterator must be initialized and valid.
              */
             reference operator *() { Q_ASSERT(m_pimpl); return **pimpl(); }
 
             /*!
              * \brief Arrow operator provides access to members of the object pointed to.
-             * \return
              * \pre The iterator must be initialized and valid.
              */
             const_pointer operator ->() const { Q_ASSERT(m_pimpl); return &**pimpl(); }
 
             /*!
              * \brief Arrow operator provides access to members of the object pointed to.
-             * \return
              * \pre The iterator must be initialized and valid.
              */
             pointer operator ->() { Q_ASSERT(m_pimpl); return &**pimpl(); }
@@ -518,7 +469,6 @@ namespace BlackMisc
 
             /*!
              * \brief Advance the iterator by a certain amount.
-             * \param n
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
@@ -526,7 +476,6 @@ namespace BlackMisc
 
             /*!
              * \brief Advance the iterator by a certain amount.
-             * \param n
              * \return Copy of the iterator in its new position.
              * \pre The iterator must be initialized and valid.
              */
@@ -534,7 +483,6 @@ namespace BlackMisc
 
             /*!
              * \brief Backtrack the iterator by a certain amount.
-             * \param n
              * \return Reference to the iterator at the new position.
              * \pre The iterator must be initialized and valid.
              */
@@ -542,7 +490,6 @@ namespace BlackMisc
 
             /*!
              * \brief Backtrack the iterator by a certain amount.
-             * \param n
              * \return Copy of the iterator in its new position.
              * \pre The iterator must be initialized and valid.
              */
@@ -550,39 +497,30 @@ namespace BlackMisc
 
             /*!
              * \brief Return the distance between two iterators.
-             * \param other
-             * \return
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             difference_type operator -(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() - *other.pimpl(); }
 
             /*!
              * \brief Test for equality.
-             * \param other
-             * \return
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             bool operator ==(const BidirectionalIterator &other) const { return (pimpl() && other.pimpl()) ? *pimpl() == *other.pimpl() : pimpl() == other.pimpl(); }
 
             /*!
              * \brief Test for inequality.
-             * \param other
-             * \return
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             bool operator !=(const BidirectionalIterator &other) const { return !(*this == other); }
 
             /*!
              * \brief For sorting.
-             * \param other
-             * \return
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
             bool operator <(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() < *other.pimpl(); }
 
             /*!
              * \brief Return opaque pointer to underlying implementation iterator object.
-             * \return
              * \pre The iterator must have been initialized.
              * \todo Returning by void* is rotten, but GCC gives a very cryptic error if I make it a function template with a cast inside.
              */

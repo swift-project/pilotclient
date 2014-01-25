@@ -29,8 +29,6 @@ namespace BlackMisc
     public:
         /*!
          * \brief Return a copy containing only those elements for which a given predicate returns true.
-         * \param p
-         * \return
          */
         template <class Predicate>
         C<T> findBy(Predicate p) const
@@ -44,7 +42,6 @@ namespace BlackMisc
          * \brief Return a copy containing only those elements matching a particular key/value pair.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
-         * \return
          */
         template <class K1, class V1>
         C<T> findBy(K1 key1, V1 value1) const
@@ -58,7 +55,6 @@ namespace BlackMisc
          * \param value1 Will be compared to the return value of key1.
          * \param key2 A pointer to a member function of T.
          * \param value2 Will be compared to the return value of key2.
-         * \return
          */
         template <class K1, class V1, class K2, class V2>
         C<T> findBy(K1 key1, V1 value1, K2 key2, V2 value2) const
@@ -74,7 +70,6 @@ namespace BlackMisc
          * \param value2 Will be compared to the return value of key2.
          * \param key3 A pointer to a member function of T.
          * \param value3 Will be compared to the return value of key3.
-         * \return
          */
         template <class K1, class V1, class K2, class V2, class K3, class V3>
         C<T> findBy(K1 key1, V1 value1, K2 key2, V2 value2, K3 key3, V3 value3) const
@@ -84,8 +79,6 @@ namespace BlackMisc
 
         /*!
          * \brief Return a copy containing only those elements matching a given value map.
-         * \param valueMap
-         * \return
          */
         C<T> findBy(const CValueMap &valueMap) const
         {
@@ -94,8 +87,6 @@ namespace BlackMisc
 
         /*!
          * \brief Return true if there is an element for which a given predicate returns true
-         * \param p
-         * \return
          */
         template <class Predicate>
         bool contains(Predicate p) const
@@ -107,7 +98,6 @@ namespace BlackMisc
          * \brief Return a copy containing only those elements matching a particular key/value pair.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
-         * \return
          */
         template <class K1, class V1>
         bool contains(K1 key1, V1 value1) const
@@ -117,7 +107,6 @@ namespace BlackMisc
 
         /*!
          * \brief Remove elements for which a given predicate returns true.
-         * \param p
          */
         template <class Predicate>
         void removeIf(Predicate p)

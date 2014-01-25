@@ -52,27 +52,21 @@ namespace BlackMisc
 
         /*!
          * \brief Copy constructor.
-         * \param other
          */
         CSequence(const CSequence &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
 
         /*!
          * \brief Move constructor.
-         * \param other
          */
         CSequence(CSequence &&other) : m_pimpl(other.m_pimpl.take()) {}
 
         /*!
          * \brief Copy assignment.
-         * \param other
-         * \return
          */
         CSequence &operator =(const CSequence &other) { m_pimpl.reset(other.pimpl() ? other.pimpl()->clone() : nullptr); return *this; }
 
         /*!
          * \brief Move assignment.
-         * \param other
-         * \return
          */
         CSequence &operator =(CSequence &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
@@ -80,7 +74,6 @@ namespace BlackMisc
          * \brief Create a new sequence with a specific implementation type.
          * \tparam C Becomes the sequence's implementation type.
          * \param c Initial value for the sequence; default is empty, but it could contain elements if desired. The value is copied.
-         * \return
          */
         template <class C> static CSequence fromImpl(C c = C()) { return CSequence(new Pimpl<C>(std::move(c))); }
 
@@ -92,112 +85,93 @@ namespace BlackMisc
 
         /*!
          * \brief Like changeImpl, but uses the implementation type of another sequence.
-         * \param other
          * \pre The other sequence must be initialized.
          */
         void useImplOf(const CSequence &other) { PimplPtr p = other.pimpl()->cloneEmpty(); for (auto i = cbegin(); i != cend(); ++i) p->push_back(*i); m_pimpl.reset(p.take()); }
 
         /*!
          * \brief Returns iterator at the beginning of the sequence.
-         * \return
          */
         iterator begin() { return pimpl() ? pimpl()->begin() : iterator(); }
 
         /*!
          * \brief Returns iterator at the beginning of the sequence.
-         * \return
          */
         const_iterator begin() const { return pimpl() ? pimpl()->begin() : const_iterator(); }
 
         /*!
          * \brief Returns iterator at the beginning of the sequence.
-         * \return
          */
         const_iterator cbegin() const { return pimpl() ? pimpl()->cbegin() : const_iterator(); }
 
         /*!
          * \brief Returns iterator one past the end of the sequence.
-         * \return
          */
         iterator end() { return pimpl() ? pimpl()->end() : iterator(); }
 
         /*!
          * \brief Returns iterator one past the end of the sequence.
-         * \return
          */
         const_iterator end() const { return pimpl() ? pimpl()->end() : const_iterator(); }
 
         /*!
          * \brief Returns iterator one past the end of the sequence.
-         * \return
          */
         const_iterator cend() const { return pimpl() ? pimpl()->cend() : const_iterator(); }
 
         /*!
          * \brief Swap this sequence with another.
-         * \param other
          */
         void swap(CSequence &other) { m_pimpl.swap(other.m_pimpl); }
 
         /*!
          * \brief Access an element by its index.
-         * \param index
-         * \return
          * \pre The sequence must be initialized and the index in bounds.
          */
         reference operator [](size_type index) { Q_ASSERT(pimpl()); return pimpl()->operator [](index); }
 
         /*!
          * \brief Access an element by its index.
-         * \param index
-         * \return
          * \pre The sequence must be initialized and the index in bounds.
          */
         const_reference operator [](size_type index) const { Q_ASSERT(pimpl()); return pimpl()->operator [](index); }
 
         /*!
          * \brief Access the first element.
-         * \return
          * \pre The sequence must not be empty.
          */
         reference front() { Q_ASSERT(!empty()); return pimpl()->front(); }
 
         /*!
          * \brief Access the first element.
-         * \return
          * \pre The sequence must not be empty.
          */
         const_reference front() const { Q_ASSERT(!empty()); return pimpl()->front(); }
 
         /*!
          * \brief Access the last element.
-         * \return
          * \pre The sequence must not be empty.
          */
         reference back() { Q_ASSERT(!empty()); return pimpl()->back(); }
 
         /*!
          * \brief Access the last element.
-         * \return
          * \pre The sequence must not be empty.
          */
         const_reference back() const { Q_ASSERT(!empty()); return pimpl()->back(); }
 
         /*!
          * \brief Returns number of elements in the sequence.
-         * \return
          */
         size_type size() const { return pimpl() ? pimpl()->size() : 0; }
 
         /*!
          * \brief Returns true if the sequence is empty.
-         * \return
          */
         bool empty() const { return pimpl() ? pimpl()->empty() : true; }
 
         /*!
          * \brief Synonym for empty.
-         * \return
          */
         bool isEmpty() const { return empty(); }
 
@@ -208,8 +182,6 @@ namespace BlackMisc
 
         /*!
          * \brief Inserts an element into the sequence.
-         * \param before
-         * \param value
          * \return An iterator to the position where value was inserted.
          * \pre The sequence must be initialized.
          */
@@ -217,14 +189,12 @@ namespace BlackMisc
 
         /*!
          * \brief Appends an element at the end of the sequence.
-         * \param value
          * \pre The sequence must be initialized.
          */
         void push_back(const T &value) { Q_ASSERT(pimpl()); pimpl()->push_back(value); }
 
         /*!
          * \brief Synonym for push_back.
-         * \param value
          * \pre The sequence must be initialized.
          */
         void insert(const T &value) { push_back(value); }
@@ -237,7 +207,6 @@ namespace BlackMisc
 
         /*!
          * \brief Remove the element pointed to by the given iterator.
-         * \param pos
          * \return An iterator to the position of the next element after the one removed.
          * \pre The sequence must be initialized.
          */
@@ -245,8 +214,6 @@ namespace BlackMisc
 
         /*!
          * \brief Remove the range of elements between two iterators.
-         * \param it1
-         * \param it2
          * \return An iterator to the position of the next element after the one removed.
          * \pre The sequence must be initialized.
          */
@@ -254,8 +221,6 @@ namespace BlackMisc
 
         /*!
          * \brief Modify by applying a value map to each element for which a given predicate returns true.
-         * \param p
-         * \param newValues
          */
         template <class Predicate>
         void applyIf(Predicate p, const CValueMap &newValues)
@@ -267,7 +232,6 @@ namespace BlackMisc
          * \brief Modify by applying a value map to each element matching a particular key/value pair.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
-         * \param newValues
          */
         template <class K1, class V1>
         void applyIf(K1 key1, V1 value1, const CValueMap &newValues)
@@ -277,8 +241,6 @@ namespace BlackMisc
 
         /*!
          * \brief Modify by applying a value map to each element matching a given value map.
-         * \param pattern
-         * \param newValues
          */
         void applyIf(const CValueMap &pattern, const CValueMap &newValues)
         {
@@ -287,8 +249,6 @@ namespace BlackMisc
 
         /*!
          * \brief Replace elements for which a given predicate returns true.
-         * \param p
-         * \param replacement
          */
         template <class Predicate>
         void replaceIf(Predicate p, const T &replacement)
@@ -300,7 +260,6 @@ namespace BlackMisc
          * \brief Replace elements matching a particular key/value pair.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
-         * \param replacement
          */
         template <class K1, class V1>
         void replaceIf(K1 key1, V1 value1, const T &replacement)
@@ -310,8 +269,6 @@ namespace BlackMisc
 
         /*!
          * \brief Replace elements for which a given predicate returns true. If there is no match, push the new element on the end.
-         * \param p
-         * \param replacement
          */
         template <class Predicate>
         void replaceOrAdd(Predicate p, const T &replacement)
@@ -324,7 +281,6 @@ namespace BlackMisc
          * \brief Replace elements matching a particular key/value pair. If there is no match, push the new element on the end.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
-         * \param replacement
          */
         template <class K1, class V1>
         void replaceOrAdd(K1 key1, V1 value1, const T &replacement)
@@ -335,7 +291,6 @@ namespace BlackMisc
 
         /*!
          * \brief In-place sort by a given comparator predicate.
-         * \param p
          */
         template <class Predicate> void sort(Predicate p)
         {
@@ -374,8 +329,6 @@ namespace BlackMisc
 
         /*!
          * \brief Return a copy sorted by a given comparator predicate.
-         * \param p
-         * \return
          */
         template <class Predicate>
         CSequence sorted(Predicate p) const
@@ -388,7 +341,6 @@ namespace BlackMisc
         /*!
          * \brief Return a copy sorted by a particular key.
          * \param key1 A pointer to a member function of T.
-         * \return
          */
         template <class K1>
         CSequence sortedBy(K1 key1) const
@@ -400,7 +352,6 @@ namespace BlackMisc
          * \brief Return a copy sorted by some particular keys.
          * \param key1 A pointer to a member function of T.
          * \param key2 A pointer to a member function of T.
-         * \return
          */
         template <class K1, class K2>
         CSequence sortedBy(K1 key1, K2 key2) const
@@ -413,7 +364,6 @@ namespace BlackMisc
          * \param key1 A pointer to a member function of T.
          * \param key2 A pointer to a member function of T.
          * \param key3 A pointer to a member function of T.
-         * \return
          */
         template <class K1, class K2, class K3>
         CSequence sortedBy(K1 key1, K2 key2, K3 key3) const
@@ -423,16 +373,12 @@ namespace BlackMisc
 
         /*!
          * \brief Test for equality.
-         * \param other
-         * \return
          * \todo Improve inefficient implementation.
          */
         bool operator ==(const CSequence &other) const { return (empty() && other.empty()) ? true : (size() != other.size() ? false : *pimpl() == *other.pimpl()); }
 
         /*!
          * \brief Test for inequality.
-         * \param other
-         * \return
          * \todo Improve inefficient implementation.
          */
         bool operator !=(const CSequence &other) const { return !(*this == other); }

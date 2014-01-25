@@ -52,27 +52,21 @@ namespace BlackMisc
 
         /*!
          * \brief Copy constructor.
-         * \param other
          */
         CCollection(const CCollection &other) : m_pimpl(other.pimpl() ? other.pimpl()->clone() : nullptr) {}
 
         /*!
          * \brief Move constructor.
-         * \param other
          */
         CCollection(CCollection &&other) : m_pimpl(other.m_pimpl.take()) {}
 
         /*!
          * \brief Copy assignment.
-         * \param other
-         * \return
          */
         CCollection &operator =(const CCollection &other) { m_pimpl.reset(other.pimpl() ? other.pimpl()->clone() : nullptr); return *this; }
 
         /*!
          * \brief Move assignment.
-         * \param other
-         * \return
          */
         CCollection &operator =(CCollection && other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
@@ -80,7 +74,6 @@ namespace BlackMisc
          * \brief Create a new collection with a specific implementation type.
          * \tparam C Becomes the collection's implementation type.
          * \param c Initial value for the collection; default is empty, but it could contain elements if desired. The value is copied.
-         * \return
          */
         template <class C> static CCollection fromImpl(C c = C()) { return CCollection(new Pimpl<C>(std::move(c))); }
 
@@ -92,68 +85,57 @@ namespace BlackMisc
 
         /*!
          * \brief Like changeImpl, but uses the implementation type of another collection.
-         * \param other
          * \pre The other collection must be initialized.
          */
         void useImplOf(const CCollection &other) { PimplPtr p = other.pimpl()->cloneEmpty(); for (auto i = cbegin(); i != cend(); ++i) p->insert(*i); m_pimpl.reset(p.take()); }
 
         /*!
          * \brief Returns iterator at the beginning of the collection.
-         * \return
          */
         iterator begin() { return pimpl() ? pimpl()->begin() : iterator(); }
 
         /*!
          * \brief Returns iterator at the beginning of the collection.
-         * \return
          */
         const_iterator begin() const { return pimpl() ? pimpl()->begin() : const_iterator(); }
 
         /*!
          * \brief Returns iterator at the beginning of the collection.
-         * \return
          */
         const_iterator cbegin() const { return pimpl() ? pimpl()->cbegin() : const_iterator(); }
 
         /*!
          * \brief Returns iterator one past the end of the collection.
-         * \return
          */
         iterator end() { return pimpl() ? pimpl()->end() : iterator(); }
 
         /*!
          * \brief Returns iterator one past the end of the collection.
-         * \return
          */
         const_iterator end() const { return pimpl() ? pimpl()->end() : const_iterator(); }
 
         /*!
          * \brief Returns iterator one past the end of the collection.
-         * \return
          */
         const_iterator cend() const { return pimpl() ? pimpl()->cend() : const_iterator(); }
 
         /*!
          * \brief Swap this collection with another.
-         * \param other
          */
         void swap(CCollection &other) { m_pimpl.swap(other.m_pimpl); }
 
         /*!
          * \brief Returns number of elements in the collection.
-         * \return
          */
         size_type size() const { return pimpl() ? pimpl()->size() : 0; }
 
         /*!
          * \brief Returns true if the collection is empty.
-         * \return
          */
         bool empty() const { return pimpl() ? pimpl()->empty() : true; }
 
         /*!
          * \brief Synonym for empty.
-         * \return
          */
         bool isEmpty() const { return empty(); }
 
@@ -164,7 +146,6 @@ namespace BlackMisc
 
         /*!
          * \brief Inserts an element into the collection.
-         * \param value
          * \return An iterator to the position where value was inserted.
          * \pre The collection must be initialized.
          */
@@ -172,7 +153,6 @@ namespace BlackMisc
 
         /*!
          * \brief Synonym for insert.
-         * \param value
          * \return An iterator to the position where value was inserted.
          * \pre The collection must be initialized.
          */
@@ -180,7 +160,6 @@ namespace BlackMisc
 
         /*!
          * \brief Remove the element pointed to by the given iterator.
-         * \param pos
          * \return An iterator to the position of the next element after the one removed.
          * \pre The collection must be initialized.
          */
@@ -188,8 +167,6 @@ namespace BlackMisc
 
         /*!
          * \brief Remove the range of elements between two iterators.
-         * \param it1
-         * \param it2
          * \return An iterator to the position of the next element after the one removed.
          * \pre The sequence must be initialized.
          */
@@ -197,16 +174,12 @@ namespace BlackMisc
 
         /*!
          * \brief Test for equality.
-         * \param other
-         * \return
          * \todo Improve inefficient implementation.
          */
         bool operator ==(const CCollection &other) const { return (empty() && other.empty()) ? true : (size() != other.size() ? false : *pimpl() == *other.pimpl()); }
 
         /*!
          * \brief Test for inequality.
-         * \param other
-         * \return
          * \todo Improve inefficient implementation.
          */
         bool operator !=(const CCollection &other) const { return !(*this == other); }
