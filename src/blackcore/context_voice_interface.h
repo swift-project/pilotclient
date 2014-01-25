@@ -60,7 +60,7 @@ namespace BlackCore
          * \param connection
          * \param parent
          */
-        IContextVoice(const QString &serviceName, QDBusConnection &connection, QObject *parent = 0);
+        IContextVoice(const QString &serviceName, QDBusConnection &connection, QObject *parent = nullptr);
 
         /*!
          * Destructor
@@ -106,13 +106,27 @@ namespace BlackCore
          * Get voice rooms for COM1, COM2:
          * From this connection audio status can be obtained
          */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus();
+        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const;
 
         /*!
          * Get voice rooms for COM1, COM2, but without latest audio status
          * \return all voice rooms
          */
         virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const;
+
+        /*!
+         * \brief COM 1 voice room
+         * \param withAudioStatus   update audio status
+         * \return
+         */
+        virtual BlackMisc::Voice::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const;
+
+        /*!
+         * \brief COM 2 voice room
+         * \param withAudioStatus   update audio status
+         * \return
+         */
+        virtual BlackMisc::Voice::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const;
 
         /*!
          * \brief Set voice rooms
@@ -162,7 +176,9 @@ namespace BlackCore
         virtual void setCurrentAudioDevice(const BlackMisc::Voice::CAudioDevice &audioDevice);
 
         /*!
-         * \brief Set volumnes for COM1/2
+         * \brief Set volumes via com units, also allows to mute
+         * \see BlackMisc::Aviation::CComSystem::setVolumeInput()
+         * \see BlackMisc::Aviation::CComSystem::setVolumeOutput()
          */
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 

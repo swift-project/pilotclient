@@ -40,10 +40,34 @@ namespace BlackCore
     /*
      * Voice rooms for COM
      */
-    CVoiceRoomList CContextVoice::getComVoiceRoomsWithAudioStatus()
+    CVoiceRoomList CContextVoice::getComVoiceRoomsWithAudioStatus() const
     {
         Q_ASSERT(this->m_voice);
         return this->m_voice->getComVoiceRoomsWithAudioStatus();
+    }
+
+    /*
+     * Voice rooms for COM
+     */
+    CVoiceRoom CContextVoice::getCom1VoiceRoom(bool withAudioStatus) const
+    {
+        Q_ASSERT(this->m_voice);
+        if (withAudioStatus)
+            return this->m_voice->getComVoiceRoomsWithAudioStatus()[0];
+        else
+            return this->m_voice->getComVoiceRooms()[1];
+    }
+
+    /*
+     * Voice rooms for COM
+     */
+    CVoiceRoom CContextVoice::getCom2VoiceRoom(bool withAudioStatus) const
+    {
+        Q_ASSERT(this->m_voice);
+        if (withAudioStatus)
+            return this->m_voice->getComVoiceRoomsWithAudioStatus()[1];
+        else
+            return this->m_voice->getComVoiceRooms()[1];
     }
 
     /*

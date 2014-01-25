@@ -55,7 +55,7 @@ namespace BlackCore
     }
 
     /*
-     * COM1 callsigns
+     * COM1 users
      */
     BlackMisc::Network::CUserList IContextVoice::getCom1RoomUsers() const
     {
@@ -63,7 +63,7 @@ namespace BlackCore
     }
 
     /*
-     * COM2 callsigns
+     * COM2 users
      */
     BlackMisc::Network::CUserList IContextVoice::getCom2RoomUsers() const
     {
@@ -79,7 +79,7 @@ namespace BlackCore
     }
 
     /*
-     * Set current audio device
+     * Get current audio devices
      */
     BlackMisc::Voice::CAudioDeviceList IContextVoice::getCurrentAudioDevices() const
     {
@@ -87,19 +87,35 @@ namespace BlackCore
     }
 
     /*
-     * Relay to DBus
+     * Voice rooms, with audio status
      */
-    CVoiceRoomList IContextVoice::getComVoiceRoomsWithAudioStatus()
+    CVoiceRoomList IContextVoice::getComVoiceRoomsWithAudioStatus() const
     {
         return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1Literal("getComVoiceRoomsWithAudioStatus"));
     }
 
     /*
-     * Relay to DBus
+     * Voice rooms, without audio status
      */
     CVoiceRoomList IContextVoice::getComVoiceRooms() const
     {
         return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1Literal("getComVoiceRooms"));
+    }
+
+    /*
+     * Voice room
+     */
+    CVoiceRoom IContextVoice::getCom1VoiceRoom(bool withAudioStatus) const
+    {
+        return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1Literal("getCom1VoiceRoom"), withAudioStatus);
+    }
+
+    /*
+     * Voice room
+     */
+    CVoiceRoom IContextVoice::getCom2VoiceRoom(bool withAudioStatus) const
+    {
+        return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1Literal("getCom2VoiceRoom"), withAudioStatus);
     }
 
     /*

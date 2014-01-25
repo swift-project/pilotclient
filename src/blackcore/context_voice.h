@@ -79,7 +79,17 @@ namespace BlackCore
         /*!
          * \copydoc IContextVoice::getComVoiceRoomsWithAudioStatus()
          */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus();
+        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const;
+
+        /*!
+         * \copydoc IContextVoice::getCom1VoiceRoom
+         */
+        virtual BlackMisc::Voice::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const;
+
+        /*!
+         * \copydoc IContextVoice::getCom2VoiceRoom
+         */
+        virtual BlackMisc::Voice::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const;
 
         /*!
          * \copydoc IContextVoice::setComVoiceRooms()
@@ -88,13 +98,11 @@ namespace BlackCore
 
         /*!
          * \copydoc IContextVoice::getCom1RoomCallsigns()
-         * \return
          */
         virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const;
 
         /*!
          * \copydoc IContextVoice::getCom2RoomCallsigns()
-         * \return
          */
         virtual BlackMisc::Aviation::CCallsignList getCom2RoomCallsigns() const;
 
@@ -109,36 +117,32 @@ namespace BlackCore
         virtual BlackMisc::Network::CUserList getCom2RoomUsers() const;
 
         /*!
-         * Leave all voice rooms
+         * \copydoc IContextVoice::leaveAllVoiceRooms
          */
         virtual void leaveAllVoiceRooms();
 
         /*!
-         * \brief Audio devices
-         * \return all input/output devices
+         * \copydoc IContextVoice::getAudioDevices()
          */
         virtual BlackMisc::Voice::CAudioDeviceList getAudioDevices() const;
 
         /*!
-         * \brief Set current audio device
-         * \return get input and output device
+         * \copydoc IContextVoice::getCurrentAudioDevices()
          */
         virtual BlackMisc::Voice::CAudioDeviceList getCurrentAudioDevices() const;
 
         /*!
-         * \brief Set current audio device
+         * \copydoc IContextVoice::setCurrentAudioDevice()
          */
         virtual void setCurrentAudioDevice(const BlackMisc::Voice::CAudioDevice &audioDevice);
 
         /*!
-         * \brief Set volumes via com units, also allows to mute
-         * \see BlackMisc::Aviation::CComSystem::setVolumeInput()
-         * \see BlackMisc::Aviation::CComSystem::setVolumeOutput()
+         * \copydoc IContextVoice::setVolumes()
          */
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
         /*!
-         * \brief Is muted?
+         * \copydoc IContextVoice::isMuted()
          */
         virtual bool isMuted() const;
 
