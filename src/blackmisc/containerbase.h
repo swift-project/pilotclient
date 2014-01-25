@@ -95,6 +95,16 @@ namespace BlackMisc
         }
 
         /*!
+         * \brief Return true if there is an element equal to given object
+         * \param object is this object in container?
+         * \return
+         */
+        bool contains(const T &object) const
+        {
+            return std::find(derived().begin(), derived().end(), object) != derived().end();
+        }
+
+        /*!
          * \brief Return a copy containing only those elements matching a particular key/value pair.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.

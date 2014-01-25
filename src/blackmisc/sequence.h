@@ -268,6 +268,22 @@ namespace BlackMisc
         }
 
         /*!
+         * \brief Remove the given object, if it is contained.
+         */
+        void remove(const T &object)
+        {
+            std::remove(begin(), end(), object);
+        }
+
+        /*!
+         * \brief Replace elements matching the given element with a replacement.
+         */
+        void replace(const T &original, const T &replacement)
+        {
+            std::replace(begin(), end(), original, replacement);
+        }
+
+        /*!
          * \brief Replace elements for which a given predicate returns true.
          */
         template <class Predicate>
@@ -294,6 +310,15 @@ namespace BlackMisc
         void replaceOrAdd(Predicate p, const T &replacement)
         {
             if (this->contains(p)) { replaceIf(p, replacement); }
+            else { push_back(replacement); }
+        }
+
+        /*!
+         * \brief Replace elements matching the given element. If there is no match, push the new element on the end.
+         */
+        void replaceOrAdd(const T &original, const T &replacement)
+        {
+            if (this->contains(original)) { replace(original, replacement); }
             else { push_back(replacement); }
         }
 
