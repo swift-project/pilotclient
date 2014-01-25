@@ -144,6 +144,9 @@ namespace BlackMiscTest
         CAircraftIcao icao2(icao1);
         QVERIFY2(icao1 == icao2, "ICAOs shall be equal");
 
+        CCallsign call1("EDDS_N_APP");
+        CCallsign call2("eddsnapp");
+        QVERIFY2(call1 == call2, "Callsigns shall be equal");
     }
 
 } // namespace
