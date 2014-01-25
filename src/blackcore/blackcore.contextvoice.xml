@@ -9,6 +9,16 @@
       <arg type="(a(ssbb))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Voice::CVoiceRoomList"/>
     </method>
+    <method name="getCom1VoiceRoom">
+      <arg type="(ssbb)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Voice::CVoiceRoom"/>
+      <arg name="withAudioStatus" type="b" direction="in"/>
+    </method>
+    <method name="getCom2VoiceRoom">
+      <arg type="(ssbb)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Voice::CVoiceRoom"/>
+      <arg name="withAudioStatus" type="b" direction="in"/>
+    </method>
     <method name="setComVoiceRooms">
       <arg name="voiceRoomCom1" type="(ssbb)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Voice::CVoiceRoom"/>
@@ -16,6 +26,22 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="BlackMisc::Voice::CVoiceRoom"/>
     </method>
     <method name="leaveAllVoiceRooms">
+    </method>
+    <method name="getCom1RoomCallsigns">
+      <arg type="(a(ss))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CCallsignList"/>
+    </method>
+    <method name="getCom2RoomCallsigns">
+      <arg type="(a(ss))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Aviation::CCallsignList"/>
+    </method>
+    <method name="getCom1RoomUsers">
+      <arg type="(a(ssss(ss)))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Network::CUserList"/>
+    </method>
+    <method name="getCom2RoomUsers">
+      <arg type="(a(ssss(ss)))" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Network::CUserList"/>
     </method>
     <method name="getAudioDevices">
       <arg type="(a(unss))" direction="out"/>

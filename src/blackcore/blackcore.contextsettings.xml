@@ -4,7 +4,7 @@
     <signal name="changedNetworkSettings">
     </signal>
     <method name="getNetworkSettings">
-      <arg type="((sssi(ssss))(a(sssi(ssss))))" direction="out"/>
+      <arg type="((sssi(ssss(ss)))(a(sssi(ssss(ss)))))" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="BlackMisc::Settings::CSettingsNetwork"/>
     </method>
     <method name="value">
