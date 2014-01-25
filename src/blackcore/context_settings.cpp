@@ -17,7 +17,7 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextSettings::CContextSettings(CCoreRuntime *parent) : IContextSettings(parent), m_settingsNetwork()
+    CContextSettings::CContextSettings(CCoreRuntime *runtime) : IContextSettings(runtime), m_settingsNetwork()
     {
         // create some dummy settings
         // this would actually be reading the settings from disk ..

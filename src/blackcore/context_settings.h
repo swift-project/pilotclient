@@ -31,9 +31,9 @@ namespace BlackCore
 
         /*!
          * Context
-         * \param parent
+         * \param runtime
          */
-        CContextSettings(CCoreRuntime *parent);
+        CContextSettings(CCoreRuntime *runtime);
 
         /*!
          * Destructor
@@ -60,16 +60,12 @@ namespace BlackCore
 
     public slots:
         /*!
-         * \brief Network settings
-         * \return
+         * \copydoc IContextSettings::getNetworkSettings()
          */
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const;
 
         /*!
-         * \brief Validate
-         * \param path
-         * \param value
-         * \return
+         * \copydoc IContextSettings::value()
          */
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value);
 

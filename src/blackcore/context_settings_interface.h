@@ -35,7 +35,6 @@ namespace BlackCore
 
         /*!
          * \brief Service name
-         * \return
          */
         static const QString &InterfaceName()
         {
@@ -45,7 +44,6 @@ namespace BlackCore
 
         /*!
          * \brief Service path
-         * \return
          */
         static const QString &ServicePath()
         {
@@ -54,8 +52,8 @@ namespace BlackCore
         }
 
         /*!
-         * \brief Path
-         * \return
+         * \brief Path for network settings
+         * \remark no to be confused with DBus paths
          */
         static const QString &PathNetworkSettings()
         {
@@ -65,11 +63,8 @@ namespace BlackCore
 
         /*!
          * \brief DBus version constructor
-         * \param serviceName
-         * \param connection
-         * \param parent
          */
-        IContextSettings(const QString &serviceName, QDBusConnection &connection, QObject *parent = 0);
+        IContextSettings(const QString &serviceName, QDBusConnection &connection, QObject *parent = nullptr);
 
         /*!
          * Destructor
@@ -104,30 +99,24 @@ namespace BlackCore
 
         /*!
          * \brief Network settings
-         * \return
          */
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const;
 
         /*!
          * \brief Handle value
-         * \param path
-         * \param command
+         * \param path      where value belongs to
+         * \param command   what to do with value
          * \param value
-         * \return
+         * \return          messages generated during handling
          */
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value);
 
         /*!
-         * Basically an unwanted signature as this is different from the "local" signature and
+         * \brief DBus version of value method.
+         * \remarks Basically an unwanted signature as this is different from the "local" signature and
          * contains explicit DBus types (a: QDbusArgument, b: type for conversion).
          * If this can be removed, fine.
          *
-         * \brief value
-         * \param path
-         * \param command
-         * \param value
-         * \param unifiedBlackMetaType
-         * \return
          */
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, QDBusVariant value, int unifiedBlackMetaType);
     };
