@@ -9,7 +9,8 @@
 
 #ifndef BLACKMISC_USER_H
 #define BLACKMISC_USER_H
-#include "valueobject.h"
+
+#include "avcallsign.h"
 
 namespace BlackMisc
 {
@@ -30,7 +31,8 @@ namespace BlackMisc
                 IndexEmail,
                 IndexId,
                 IndexPassword,
-                IndexRealName
+                IndexRealName,
+                IndexCallsign
             };
 
             /*!
@@ -95,6 +97,11 @@ namespace BlackMisc
             bool hasValidId() const { return !this->m_id.isEmpty(); }
 
             /*!
+             * Has associated callsign?
+             */
+            bool hasValidCallsign() const { return !m_callsign.isEmpty(); }
+
+            /*!
              * Get email.
              */
             QString getEmail() const { return m_email; }
@@ -105,19 +112,30 @@ namespace BlackMisc
             void setEmail(const QString &email) { m_email = email.trimmed(); }
 
             /*!
-             * Get id.
-             */
-            QString getId() const { return m_id; }
-
-            /*!
              * \brief Valid email?
              */
             bool hasValidEmail() const { return !this->m_email.isEmpty(); }
 
             /*!
+             * Get id.
+             */
+            QString getId() const { return m_id; }
+
+            /*!
              * \brief Set id
              */
             void setId(const QString &id) { m_id = id.trimmed(); }
+
+            /*!
+             * Get associated callsign.
+             */
+            BlackMisc::Aviation::CCallsign getCallsign() const { return m_callsign; }
+
+            /*!
+             * \brief Set associated callsign
+             * \param callsign
+             */
+            void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_callsign = callsign; }
 
             /*!
              * \brief Equal operator ==
@@ -196,6 +214,7 @@ namespace BlackMisc
             QString m_realname;
             QString m_email;
             QString m_password;
+            BlackMisc::Aviation::CCallsign m_callsign;
         };
     } // namespace
 } // namespace

@@ -62,6 +62,7 @@ namespace BlackMisc
             argument << this->m_realname;
             argument << this->m_email;
             argument << this->m_password;
+            argument << this->m_callsign;
         }
 
         /*
@@ -73,6 +74,7 @@ namespace BlackMisc
             argument >> this->m_realname;
             argument >> this->m_email;
             argument >> this->m_password;
+            argument >> this->m_callsign;
         }
 
         /*
@@ -83,7 +85,8 @@ namespace BlackMisc
             if (this == &other) return true;
             return (this->m_id == other.m_id &&
                     this->m_realname == other.m_realname &&
-                    this->m_email == other.m_email);
+                    this->m_email == other.m_email &&
+                    this->m_callsign == other.m_callsign);
         }
 
         /*
@@ -107,6 +110,11 @@ namespace BlackMisc
                 otherUser.setEmail(this->getEmail());
             else if (otherUser.hasValidEmail())
                 this->setEmail(otherUser.getEmail());
+
+            if (this->hasValidCallsign())
+                otherUser.setCallsign(this->getCallsign());
+            else if (otherUser.hasValidCallsign())
+                this->setCallsign(otherUser.getCallsign());
         }
 
         /*
@@ -126,6 +134,7 @@ namespace BlackMisc
             hashs << qHash(this->m_id);
             hashs << qHash(this->m_realname);
             hashs << qHash(this->m_email);
+            hashs << qHash(this->m_callsign.getValueHash());
             return BlackMisc::calculateHash(hashs, "CUser");
         }
 
@@ -153,6 +162,8 @@ namespace BlackMisc
                 return QVariant(this->m_password);
             case IndexRealName:
                 return QVariant(this->m_realname);
+            case IndexCallsign:
+                return this->m_callsign.toQVariant();
             default:
                 break;
             }
@@ -180,6 +191,9 @@ namespace BlackMisc
                 break;
             case IndexRealName:
                 this->setRealName(variant.value<QString>());
+                break;
+            case IndexCallsign:
+                this->setCallsign(variant.value<BlackMisc::Aviation::CCallsign>());
                 break;
             default:
                 Q_ASSERT_X(false, "CUser", "index unknown (setter)");

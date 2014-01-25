@@ -40,7 +40,6 @@ namespace BlackMisc
 
             /*!
              * \brief QVariant, required for DBus QVariant lists
-             * \return
              */
             virtual QVariant toQVariant() const
             {
@@ -49,80 +48,67 @@ namespace BlackMisc
 
             /*!
              * Get callsign.
-             * \return
              */
             const CCallsign &getCallsign() const { return m_callsign; }
 
             /*!
              * Get callsign.
-             * \return
              */
             QString getCallsignAsString() const { return m_callsign.asString(); }
 
             /*!
              * Set callsign
-             * \param callsign
              */
-            void setCallsign(const CCallsign &callsign) { this->m_callsign = callsign; }
+            void setCallsign(const CCallsign &callsign) { this->m_callsign = callsign; this->m_pilot.setCallsign(callsign); }
 
             /*!
              * Get situation.
-             * \return
              */
             const CAircraftSituation &getSituation() const { return m_situation; }
 
             /*!
              * Set situation.
-             * \param
              */
             void setSituation(const CAircraftSituation &situation) { m_situation = situation; }
 
             /*!
              * Get user
-             * \return
              */
             const BlackMisc::Network::CUser &getPilot() const { return m_pilot; }
 
             /*!
              * \brief Set user
-             * \param password
              */
-            void setPilot(const BlackMisc::Network::CUser &user) { m_pilot = user; }
+            void setPilot(const BlackMisc::Network::CUser &user) { m_pilot = user; this->m_pilot.setCallsign(this->m_callsign);}
 
             /*!
              * Get ICAO info
-             * \return
              */
             const CAircraftIcao &getIcaoInfo() const { return m_icao; }
 
             /*!
              * \brief Set ICAO info
-             * \param icao
              */
             void setIcaoInfo(const CAircraftIcao &icao) { m_icao = icao; }
 
             /*!
              * Get the distance to own plane
-             * \return
              */
             const BlackMisc::PhysicalQuantities::CLength &getDistanceToPlane() const { return m_distanceToPlane; }
 
             /*!
              * Set distance to own plane
-             * \param range
              */
             void setDistanceToPlane(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToPlane = distance; }
 
             /*!
              * \brief Valid distance?
-             * \return
              */
             bool hasValidDistance() const { return !this->m_distanceToPlane.isNegativeWithEpsilonConsidered();}
 
             /*!
              * \brief Calculcate distance to plane, set it, and also return it
-             * \param position
-             * \return
+             * \param position calculated from this postion to my own aircraft
              */
             const BlackMisc::PhysicalQuantities::CLength &calculcateDistanceToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
@@ -134,73 +120,61 @@ namespace BlackMisc
 
             /*!
              * \brief Set position
-             * \param position
              */
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_situation.setPosition(position); }
 
             /*!
              * \brief Get altitude
-             * \return
              */
             const BlackMisc::Aviation::CAltitude &getAltitude() const { return this->m_situation.getAltitude(); }
 
             /*!
              * \brief Set altitude
-             * \param altitude
              */
             void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { this->m_situation.setAltitude(altitude); }
 
             /*!
              * \brief Get groundspeed
-             * \return
              */
             const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return this->m_situation.getGroundSpeed(); }
 
             /*!
              * \brief Get latitude
-             * \return
              */
             virtual const BlackMisc::Geo::CLatitude &latitude() const { return this->m_situation.latitude(); }
 
             /*!
              * \brief Get longitude
-             * \return
              */
             virtual const BlackMisc::Geo::CLongitude &longitude() const { return this->m_situation.longitude(); }
 
             /*!
-             * \brief Get height
-             * \return
+             * \brief Get height (height of current position)
              */
             const BlackMisc::PhysicalQuantities::CLength &getHeight() const { return this->m_situation.getHeight(); }
 
             /*!
              * \brief Get heading
-             * \return
              */
             const BlackMisc::Aviation::CHeading &getHeading() const { return this->m_situation.getHeading(); }
 
             /*!
              * \brief Get pitch
-             * \return
              */
             const BlackMisc::PhysicalQuantities::CAngle &getPitch() const { return this->m_situation.getPitch(); }
 
             /*!
              * \brief Get bank
-             * \return
              */
             const BlackMisc::PhysicalQuantities::CAngle &getBank() const { return this->m_situation.getBank(); }
 
             /*!
              * \brief Get COM1 system
-             * \return
              */
             const BlackMisc::Aviation::CComSystem &getCom1System() const { return this->m_com1system; }
 
             /*!
              * \brief Get COM2 system
-             * \return
              */
             const BlackMisc::Aviation::CComSystem &getCom2System() const { return this->m_com2system; }
 
@@ -216,7 +190,6 @@ namespace BlackMisc
 
             /*!
              * \brief Get transponder
-             * \return
              */
             const BlackMisc::Aviation::CTransponder &getTransponder() const { return this->m_transponder; }
 
@@ -227,25 +200,21 @@ namespace BlackMisc
 
             /*!
              * \brief Get transponder code
-             * \return
              */
             QString getTransponderCodeFormatted() const { return this->m_transponder.getTransponderCodeFormatted(); }
 
             /*!
              * \brief Get transponder code
-             * \return
              */
             qint32 getTransponderCode() const { return this->m_transponder.getTransponderCode(); }
 
             /*!
              * \brief Get transponder mode
-             * \return
              */
             BlackMisc::Aviation::CTransponder::TransponderMode getTransponderMode() const { return this->m_transponder.getTransponderMode(); }
 
             /*!
-             * \brief Is valid for login
-             * \return
+             * \brief Is valid for login?
              */
             bool isValidForLogin() const;
 
@@ -261,8 +230,6 @@ namespace BlackMisc
 
             /*!
              * \brief Equal operator ==
-             * \param other
-             * \return
              */
             bool operator ==(const CAircraft &other) const;
 
@@ -303,32 +270,23 @@ namespace BlackMisc
             };
 
             /*!
-             * \brief Property by index
-             * \param index
-             * \return
+             * \copydoc CValueObject::propertyByIndex()
              */
             virtual QVariant propertyByIndex(int index) const;
 
             /*!
-             * \brief Property by index as string
-             * \param index
-             * \param i18n
-             * \return
+             * \copydoc CValueObject::propertyByIndexAsString()
              */
             virtual QString propertyByIndexAsString(int index, bool i18n) const;
 
             /*!
-             * \brief Property by index (setter)
-             * \param variant
-             * \param index
+             * \copydoc CValueObject::setPropertyByIndex()
              */
             virtual void setPropertyByIndex(const QVariant &variant, int index);
 
         protected:
             /*!
-             * \brief Rounded value as string
-             * \param i18n
-             * \return
+             * \copydoc CValueObject::convertToQString()
              */
             virtual QString convertToQString(bool i18n = false) const;
 
@@ -348,14 +306,12 @@ namespace BlackMisc
             virtual int compareImpl(const CValueObject &other) const;
 
             /*!
-             * \brief Stream to DBus <<
-             * \param argument
+             * \copydoc CValueObject::marshallToDbus()
              */
             virtual void marshallToDbus(QDBusArgument &argument) const;
 
             /*!
-             * \brief Stream from DBus >>
-             * \param argument
+             * \copydoc CValueObject::marshallFromDbus()
              */
             virtual void unmarshallFromDbus(const QDBusArgument &argument);
 

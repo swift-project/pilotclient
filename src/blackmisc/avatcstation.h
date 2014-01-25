@@ -63,27 +63,17 @@ namespace BlackMisc
             };
 
             /*!
-             * Default constructor.
+             * \brief Default constructor.
              */
             CAtcStation();
 
             /*!
              * \brief Simplified constructor
-             * \param callsign
              */
             CAtcStation(const QString &callsign);
 
             /*!
-             * \brief ATC station
-             * \param callsign
-             * \param controllerName
-             * \param freq
-             * \param pos
-             * \param range
-             * \param isOnline
-             * \param bookedFromUtc
-             * \param bookedUntilUtc
-             * \param atis
+             * \brief ATC station constructor
              */
             CAtcStation(const CCallsign &callsign, const BlackMisc::Network::CUser &controller,
                         const BlackMisc::PhysicalQuantities::CFrequency &frequency,
@@ -92,8 +82,7 @@ namespace BlackMisc
                         const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant()
              */
             virtual QVariant toQVariant() const
             {
@@ -102,21 +91,16 @@ namespace BlackMisc
 
             /*!
              * \brief Equal operator ==
-             * \param other
-             * @return
              */
             bool operator ==(const CAtcStation &other) const;
 
             /*!
              * \brief Unequal operator ==
-             * \param other
-             * @return
              */
             bool operator !=(const CAtcStation &other) const;
 
             /*!
              * \brief Has booking times?
-             * \return
              */
             bool hasBookingTimes() const
             {
@@ -125,7 +109,6 @@ namespace BlackMisc
 
             /*!
              * \brief Has ATIS?
-             * \return
              */
             bool hasAtis() const
             {
@@ -134,7 +117,6 @@ namespace BlackMisc
 
             /*!
              * \brief Has Metar?
-             * \return
              */
             bool hasMetar() const
             {
@@ -148,16 +130,14 @@ namespace BlackMisc
             const CCallsign &getCallsign() const { return m_callsign; }
 
             /*!
-             * Get callsign.
-             * \return
+             * Get callsign as string.
              */
             QString getCallsignAsString() const { return m_callsign.asString(); }
 
             /*!
              * Set callsign
-             * \param callsign
              */
-            void setCallsign(const CCallsign &callsign) { this->m_callsign = callsign; }
+            void setCallsign(const CCallsign &callsign) { this->m_callsign = callsign; this->m_controller.setCallsign(callsign);}
 
             /*!
              * Get controller
@@ -181,7 +161,7 @@ namespace BlackMisc
              * Set controller
              * \param controller
              */
-            void setController(const BlackMisc::Network::CUser &controller) { this->m_controller = controller; }
+            void setController(const BlackMisc::Network::CUser &controller) { this->m_controller = controller; this->m_controller.setCallsign(this->m_callsign); }
 
             /*!
              * Set controller's name
@@ -191,37 +171,31 @@ namespace BlackMisc
 
             /*!
              * Set controller's id
-             * \param controllerId
              */
             void setControllerId(const QString &controllerId) { this->m_controller.setId(controllerId); }
 
             /*!
              * \brief Has valid realname?
-             * \return
              */
             bool hasValidRealName() const { return this->m_controller.hasValidRealName(); }
 
             /*!
              * \brief Has valid id?
-             * \return
              */
             bool hasValidId() const { return this->m_controller.hasValidId(); }
 
             /*!
              * Get frequency.
-             * \return
              */
             const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }
 
             /*!
              * Set frequency
-             * \param frequency
              */
             void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) { this->m_frequency = frequency; }
 
             /*!
              * Get the position of the center of the controller's area of visibility.
-             * \return
              */
             const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return m_position; }
 
@@ -252,19 +226,16 @@ namespace BlackMisc
 
             /*!
              * Get the distance to own plane
-             * \return
              */
             const BlackMisc::PhysicalQuantities::CLength &getDistanceToPlane() const { return m_distanceToPlane; }
 
             /*!
              * Set distance to own plane
-             * \param range
              */
             void setDistanceToPlane(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToPlane = distance; }
 
             /*!
              * \brief Valid distance?
-             * \return
              */
             bool hasValidDistance() const { return !this->m_distanceToPlane.isNegativeWithEpsilonConsidered();}
 
