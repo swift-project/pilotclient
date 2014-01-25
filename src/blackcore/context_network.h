@@ -10,6 +10,7 @@
 #include "blackcore/network_vatlib.h"
 #include "blackcore/coreruntime.h"
 #include "blackcore/context_network_interface.h"
+#include "blackcore/context_settings_interface.h"
 #include "blackmisc/avcallsignlist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/nwuserlist.h"
@@ -34,7 +35,6 @@ namespace BlackCore
     public:
         /*!
          * \brief With link to server
-         * \param server
          */
         CContextNetwork(CCoreRuntime *runtime);
 
@@ -127,45 +127,37 @@ namespace BlackCore
         virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
 
         /*!
-         * \brief Update own position
-         * \param position  own position
-         * \param altitude  own altitude
+         * \copydoc IContextNetwork::updateOwnPosition()
          */
         virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
 
         /*!
-         * \brief Update own situation
-         * \param situation own situation
+         * \copydoc IContextNetwork::updateOwnSituation()
          */
         virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         /*!
-         * \brief Update own cockpit
-         * \param com1  my COM1 unit
-         * \param com2  my COM2 unit
-         * \param transponder   my transponder
+         * \copydoc IContextNetwork::updateOwnCockpit()
          */
         virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder);
 
         /*!
-         * \brief Get own aircraft
+         * \copydoc IContextNetwork::getOwnAircraft()
          */
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
         /*!
-         * \brief Text messages (also private chat messages)
+         * \copydoc IContextNetwork::sendTextMessages()
          */
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages);
 
         /*!
-         * \brief Request METAR
-         * \param airportIcaoCode   e.g. EDDF, KLAX
+         * \copydoc IContextNetwork::getMetar()
          */
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode);
 
         /*!
-         * \brief Selected COM1/2 frequencies as voice rooms
-         * \return  COM1/2 voice rooms
+         * \copydoc IContextNetwork::getSelectedVoiceRooms()
          */
         virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
 
@@ -222,6 +214,16 @@ namespace BlackCore
          * \brief Init my very onw aircraft
          */
         void initOwnAircraft();
+
+        /*!
+         * \brief Get network settings
+         */
+        BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const
+        {
+            Q_ASSERT(this->getRuntime());
+            Q_ASSERT(this->getRuntime()->getIContextSettings());
+            return this->getRuntime()->getIContextSettings()->getNetworkSettings();
+        }
 
     private slots:
         /*!

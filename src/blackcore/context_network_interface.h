@@ -198,7 +198,7 @@ namespace BlackCore
 
         /*!
          * \brief Disconnect from network
-         * \return messages gererated during disconnecting
+         * \return messages generated during disconnecting
          */
         virtual BlackMisc::CStatusMessageList disconnectFromNetwork();
 

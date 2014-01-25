@@ -30,7 +30,7 @@ namespace BlackCore
      */
     void CContextNetwork::readAtcBookingsFromSource() const
     {
-        QUrl url("http://vatbook.euroutepro.com/xml2.php");
+        QUrl url(this->getNetworkSettings().getBookingServiceUrl());
         QNetworkRequest request(url);
         this->m_networkManager->get(request);
     }
@@ -108,13 +108,16 @@ namespace BlackCore
     CUserList CContextNetwork::getUsers() const
     {
         CUserList users;
+        CUser user;
         foreach(CAtcStation station, this->m_atcStationsOnline)
         {
-            users.push_back(station.getController());
+            user = station.getController();
+            users.push_back(user);
         }
         foreach(CAircraft aircraft, this->m_aircraftsInRange)
         {
-            users.push_back(aircraft.getPilot());
+            user = aircraft.getPilot();
+            users.push_back(user);
         }
         return users;
     }
@@ -126,15 +129,36 @@ namespace BlackCore
     {
         CUserList users;
         if (callsigns.isEmpty()) return users;
+        CCallsignList searchList(callsigns);
+        CUser user;
+        CCallsign callsign;
         foreach(CAtcStation station, this->m_atcStationsOnline)
         {
-            if (callsigns.contains(station.getCallsign()))
-                users.push_back(station.getController());
+            callsign = station.getCallsign();
+            if (callsigns.contains(callsign))
+            {
+                user = station.getController();
+                users.push_back(user);
+                searchList.remove(callsign);
+            }
         }
         foreach(CAircraft aircraft, this->m_aircraftsInRange)
         {
-            if (callsigns.contains(aircraft.getCallsign()))
-                users.push_back(aircraft.getPilot());
+            callsign = aircraft.getCallsign();
+            if (callsigns.contains(callsign))
+            {
+                user = aircraft.getPilot();
+                users.push_back(user);
+                searchList.remove(callsign);
+            }
+        }
+
+        // we might have unsresolved callsigns
+        foreach(CCallsign unresolved, searchList)
+        {
+            user = CUser();
+            user.setCallsign(unresolved);
+            users.push_back(user);
         }
         return users;
     }
