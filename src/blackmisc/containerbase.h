@@ -36,7 +36,7 @@ namespace BlackMisc
         C<T> findBy(Predicate p) const
         {
             C<T> result = derived();
-            result.erase(std::remove_if(result.begin(), result.end(), [ = ](const T &value) { return !p(value); }), result.end());
+            result.erase(std::remove_if(result.begin(), result.end(), [ = ](const T & value) { return !p(value); }), result.end());
             return result;
         }
 
@@ -89,7 +89,7 @@ namespace BlackMisc
          */
         C<T> findBy(const CValueMap &valueMap) const
         {
-            return findBy([ & ](const T &value) { return value == valueMap; });
+            return findBy([ & ](const T & value) { return value == valueMap; });
         }
 
         /*!
@@ -123,6 +123,15 @@ namespace BlackMisc
         bool contains(K1 key1, V1 value1) const
         {
             return contains(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
+        }
+
+        /*!
+         * \brief Remove given object
+         * \param object remove this object from in container
+         */
+        void remove(const T &object)
+        {
+            std::remove(derived().begin(), derived().end(), object);
         }
 
         /*!
@@ -165,7 +174,7 @@ namespace BlackMisc
         {
             QString str;
             // qualifying stringify with this-> to workaround bug in GCC 4.7.2 http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56402
-            std::for_each(derived().begin(), derived().end(), [ & ](const T &value) { str += (str.isEmpty() ? "{" : ",") + this->stringify(value, i18n); });
+            std::for_each(derived().begin(), derived().end(), [ & ](const T & value) { str += (str.isEmpty() ? "{" : ",") + this->stringify(value, i18n); });
             if (str.isEmpty()) { str = "{"; }
             return str += "}";
         }
@@ -203,7 +212,7 @@ namespace BlackMisc
         virtual void marshallToDbus(QDBusArgument &argument) const
         {
             argument.beginArray(qMetaTypeId<T>());
-            std::for_each(derived().begin(), derived().end(), [ & ](const T &value) { argument << value; });
+            std::for_each(derived().begin(), derived().end(), [ & ](const T & value) { argument << value; });
             argument.endArray();
         }
 
