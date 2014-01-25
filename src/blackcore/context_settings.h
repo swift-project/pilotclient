@@ -58,16 +58,17 @@ namespace BlackCore
             return static_cast<CCoreRuntime *>(this->parent());
         }
 
+        /*!
+         * \copydoc IContextSettings::value()
+         */
+        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value);
+
     public slots:
         /*!
          * \copydoc IContextSettings::getNetworkSettings()
          */
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const;
 
-        /*!
-         * \copydoc IContextSettings::value()
-         */
-        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value);
 
     private:
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;

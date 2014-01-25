@@ -41,7 +41,7 @@ namespace BlackCore
     }
 
     /*
-     * Relay to DBus
+     * Relay to DBus, but make this no slot
      */
     BlackMisc::CStatusMessageList IContextSettings::value(const QString &path, const QString &command, const QVariant &value)
     {
@@ -65,6 +65,5 @@ namespace BlackCore
         // of the concrete implementation in context_settings
         return this->value(path, command, qv);
     }
-
 
 } // namespace

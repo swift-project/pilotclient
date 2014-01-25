@@ -71,6 +71,19 @@ namespace BlackCore
          */
         ~IContextSettings() {}
 
+
+        /*!
+         * \brief Handle value
+         * \param path      where value belongs to
+         * \param command   what to do with value
+         * \param value
+         * \return          messages generated during handling
+         * \remarks Do not make this a slot, no DBus XML signature shall be created. The QVariant
+         *  will be send a tailored value method using QDBusVariant
+         *  @see value(const QString &, const QString &, QDBusVariant, int)
+         */
+        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value);
+
     private:
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
@@ -86,7 +99,7 @@ namespace BlackCore
          * \brief IContextSettings
          * \param parent
          */
-        IContextSettings(QObject *parent = 0) : QObject(parent), m_dBusInterface(0) {}
+        IContextSettings(QObject *parent = nullptr) : QObject(parent), m_dBusInterface(nullptr) {}
 
     signals:
 
@@ -102,14 +115,6 @@ namespace BlackCore
          */
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const;
 
-        /*!
-         * \brief Handle value
-         * \param path      where value belongs to
-         * \param command   what to do with value
-         * \param value
-         * \return          messages generated during handling
-         */
-        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value);
 
         /*!
          * \brief DBus version of value method.
