@@ -57,8 +57,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant()
              */
             virtual QVariant toQVariant() const
             {
@@ -73,9 +72,14 @@ namespace BlackMisc
 
             /*!
              * Selected traffic network server
-             * \return
              */
             BlackMisc::Network::CServer getCurrentNetworkServer() const { return m_trafficNetworkServerCurrent; }
+
+            /*!
+             * \brief URL of booking service
+             * \return
+             */
+            QString getBookingServiceUrl() const { return "http://vatbook.euroutepro.com/xml2.php"; }
 
             /*!
              * Selected traffic network server
@@ -86,31 +90,21 @@ namespace BlackMisc
 
             /*!
              * Traffic network server objects
-             * \return
              */
             void addTrafficNetworkServer(const BlackMisc::Network::CServer &server) { m_trafficNetworkServers.push_back(server); }
 
             /*!
              * \brief Equal operator ==
-             * \param other
-             * @return
              */
             bool operator ==(const CSettingsNetwork &other) const;
 
             /*!
-             * \brief Unequal operator ==
-             * \param other
-             * @return
+             * \brief Unequal operator !=
              */
             bool operator !=(const CSettingsNetwork &other) const;
 
             /*!
-             * \brief Value
-             * \param path
-             * \param command
-             * \param value
-             * \param changedFlag
-             * \return
+             * \copydoc BlackCore::IContextSettings
              */
             virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value, bool &changedFlag);
 
