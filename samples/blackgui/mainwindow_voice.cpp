@@ -142,6 +142,6 @@ void MainWindow::audioVolumes()
 
     // update own aircraft, also set volume/mute in voice
     this->m_ownAircraft.setCom1System(com1);
-    this->m_ownAircraft.setCom1System(com2);
-    this->m_contextVoice->setVolumes(this->m_ownAircraft.getCom1System(), this->m_ownAircraft.getCom1System());
+    this->m_ownAircraft.setCom2System(com2);
+    this->m_contextVoice->setVolumes(this->m_ownAircraft.getCom1System(), this->m_ownAircraft.getCom2System());
 }

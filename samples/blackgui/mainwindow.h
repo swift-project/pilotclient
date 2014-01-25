@@ -118,8 +118,6 @@ private:
     BlackCore::IContextVoice *m_contextVoice;
     BlackCore::IContextSettings *m_contextSettings;
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
-    BlackMisc::Voice::CVoiceRoom m_voiceRoomCom1;
-    BlackMisc::Voice::CVoiceRoom m_voiceRoomCom2;
     QTimer *m_timerUpdateAtcStationsOnline; /*!< timer for update of stations */
     QTimer *m_timerUpdateAircraftsInRange; /*!< timer for update of aircrafts */
     QTimer *m_timerUpdateUsers; /*!< timer dor update of users */
@@ -450,9 +448,10 @@ private slots:
     void resetTransponderMode();
 
     /*!
-     * \brief Override voice room (allows to set an arbitrary voice room for testing purposes)
+     * Set voice rooms, also
+     * allows to set an arbitrary voice room for testing purposes
      */
-    void voiceRoomOverride();
+    void setAudioVoiceRooms();
 
     /*!
      * \brief Audio volume handling and mute

@@ -111,15 +111,19 @@ void MainWindow::updateCockpitFromContext()
     //
     if (this->m_contextVoiceAvailable)
     {
-        bool com1Connected = this->m_voiceRoomCom1.isConnected();
-        bool com2Connected = this->m_voiceRoomCom2.isConnected();
+        // get all rooms, it is important to get the rooms from voice context here
+        // these are the ones featuring the real audio status
+        CVoiceRoomList rooms = this->m_contextVoice->getComVoiceRoomsWithAudioStatus();
+        Q_ASSERT(rooms.size() == 2);
         Q_ASSERT(this->m_usersVoiceCom1);
         Q_ASSERT(this->m_usersVoiceCom2);
+        bool com1Connected = rooms[0].isConnected();
+        bool com2Connected = rooms[1].isConnected();
 
+        // update views
         this->m_usersVoiceCom1->update(this->m_contextVoice->getCom1RoomUsers());
         this->ui->tv_CockpitVoiceRoom1->resizeColumnsToContents();
         this->ui->tv_CockpitVoiceRoom1->resizeRowsToContents();
-
         this->m_usersVoiceCom2->update(this->m_contextVoice->getCom2RoomUsers());
         this->ui->tv_CockpitVoiceRoom2->resizeColumnsToContents();
         this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
@@ -129,7 +133,7 @@ void MainWindow::updateCockpitFromContext()
         {
             // no override
             QString s = com1Connected ?
-                        QString("*%1").arg(this->m_voiceRoomCom1.getVoiceRoomUrl()) :
+                        QString("*%1").arg(rooms[0].getVoiceRoomUrl()) :
                         "";
             this->ui->le_CockpitVoiceRoomCom1->setText(s);
         }
@@ -139,7 +143,7 @@ void MainWindow::updateCockpitFromContext()
         {
             // no overrride
             QString s = com2Connected ?
-                        QString("*%1").arg(this->m_voiceRoomCom2.getVoiceRoomUrl()) :
+                        QString("*%1").arg(rooms[0].getVoiceRoomUrl()) :
                         "";
             this->ui->le_CockpitVoiceRoomCom2->setText(s);
         }
@@ -256,28 +260,44 @@ void MainWindow::sendCockpitUpdates()
     // Now with the new voice room data, really set the
     // voice rooms in the context
     //
-    if (changedCockpit && this->m_contextVoiceAvailable)
-    {
-        // set voice rooms here, this allows to use local/remote
-        // voice context
-        this->m_contextVoice->setComVoiceRooms(this->m_voiceRoomCom1, this->m_voiceRoomCom2);
-    }
+    if (changedCockpit) this->setAudioVoiceRooms();
 }
 
 /*
  * Voice room override
  */
-void MainWindow::voiceRoomOverride()
+void MainWindow::setAudioVoiceRooms()
 {
+    if (!this->m_contextVoiceAvailable) return;
+    if (!this->m_contextNetworkAvailable) return;
+
+    // make fields readonly if not overriding
     this->ui->le_CockpitVoiceRoomCom1->setReadOnly(!this->ui->cb_CockpitVoiceRoom1Override->isChecked());
     this->ui->le_CockpitVoiceRoomCom2->setReadOnly(!this->ui->cb_CockpitVoiceRoom2Override->isChecked());
+
+    CVoiceRoom room1;
+    CVoiceRoom room2;
+    CVoiceRoomList selectedVoiceRooms = this->m_contextNetwork->getSelectedVoiceRooms();
+    Q_ASSERT(selectedVoiceRooms.size() == 2);
+
     if (this->ui->cb_CockpitVoiceRoom1Override->isChecked())
+        room1 = CVoiceRoom(this->ui->le_CockpitVoiceRoomCom1->text().trimmed());
+    else
     {
-        this->m_voiceRoomCom1 = CVoiceRoom(this->ui->cb_CockpitVoiceRoom1Override->text().trimmed());
+        room1 = selectedVoiceRooms[0];
+        room1.setAudioPlaying(true);
+        this->ui->le_CockpitVoiceRoomCom1->setText(room1.getVoiceRoomUrl());
     }
 
     if (this->ui->cb_CockpitVoiceRoom2Override->isChecked())
+        room2 = CVoiceRoom(this->ui->le_CockpitVoiceRoomCom1->text().trimmed());
+    else
     {
-        this->m_voiceRoomCom2 = CVoiceRoom(this->ui->cb_CockpitVoiceRoom2Override->text().trimmed());
+        room2 = selectedVoiceRooms[1];
+        room2.setAudioPlaying(true);
+        this->ui->le_CockpitVoiceRoomCom2->setText(room2.getVoiceRoomUrl());
     }
+
+    // set the real voice rooms for audio output
+    this->m_contextVoice->setComVoiceRooms(room1, room2);
 }

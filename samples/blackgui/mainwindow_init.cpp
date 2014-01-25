@@ -255,10 +255,10 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->ds_CockpitCom2Standby, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->ds_CockpitTransponder, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
 
-    this->connect(this->ui->cb_CockpitVoiceRoom1Override, &QCheckBox::clicked, this, &MainWindow::voiceRoomOverride);
-    this->connect(this->ui->cb_CockpitVoiceRoom2Override, &QCheckBox::clicked, this, &MainWindow::voiceRoomOverride);
-    this->connect(this->ui->le_CockpitVoiceRoomCom1, &QLineEdit::returnPressed, this, &MainWindow::voiceRoomOverride);
-    this->connect(this->ui->le_CockpitVoiceRoomCom2, &QLineEdit::returnPressed, this, &MainWindow::voiceRoomOverride);
+    this->connect(this->ui->cb_CockpitVoiceRoom1Override, &QCheckBox::clicked, this, &MainWindow::setAudioVoiceRooms);
+    this->connect(this->ui->cb_CockpitVoiceRoom2Override, &QCheckBox::clicked, this, &MainWindow::setAudioVoiceRooms);
+    this->connect(this->ui->le_CockpitVoiceRoomCom1, &QLineEdit::returnPressed, this, &MainWindow::setAudioVoiceRooms);
+    this->connect(this->ui->le_CockpitVoiceRoomCom2, &QLineEdit::returnPressed, this, &MainWindow::setAudioVoiceRooms);
     this->connect(this->ui->pb_CockpitToggleCom1, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->pb_CockpitToggleCom2, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->pb_CockpitIdent, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);

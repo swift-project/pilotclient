@@ -34,6 +34,15 @@ void MainWindow::reloadAtcStationsOnline()
     this->m_atcListOnline->update(this->m_contextNetwork->getAtcStationsOnline());
     this->ui->tv_AtcStationsOnline->resizeColumnsToContents();
     this->ui->tv_AtcStationsOnline->resizeRowsToContents();
+
+    if (!this->m_contextNetwork->isConnected())
+    {
+        // clear metar/ATIS
+        this->ui->te_AtcStationsOnlineInfo->clear();
+    }
+
+    // after reloading, update cockpit based on better information
+    this->updateCockpitFromContext();
 }
 
 /*

@@ -32,32 +32,17 @@ bool MainWindow::reloadOwnAircraft()
 {
     if (!this->isContextNetworkAvailableCheck()) return false;
     if (this->isCockpitUpdatePending()) return false;
+
+    // check for changed aircraft
+    bool changed = false;
     CAircraft loadedAircraft = this->m_contextNetwork->getOwnAircraft();
-
-    // changed aircraft
-    if (loadedAircraft == this->m_ownAircraft) return false;
-    this->m_ownAircraft = loadedAircraft;
-
-    // update voice rooms
-    if (this->m_contextVoiceAvailable)
+    if (loadedAircraft != this->m_ownAircraft)
     {
-        CVoiceRoomList selectedRooms = this->m_contextNetwork->getSelectedVoiceRooms();
-        if (selectedRooms.size() == 2)
-        {
-            this->m_voiceRoomCom1 = this->ui->cb_CockpitVoiceRoom1Override->isChecked() ?
-                                    CVoiceRoom(this->ui->le_CockpitVoiceRoomCom1->text().trimmed()) :
-                                    selectedRooms[0];
-            this->m_voiceRoomCom2 = this->ui->cb_CockpitVoiceRoom2Override->isChecked() ?
-                                    CVoiceRoom(this->ui->le_CockpitVoiceRoomCom2->text().trimmed()) :
-                                    selectedRooms[1];
-        }
+        this->m_ownAircraft = loadedAircraft;
+        this->updateCockpitFromContext();
+        changed = true;
     }
-
-    //
-    this->updateCockpitFromContext();
-
-    // something has changed
-    return true;
+    return changed;
 }
 
 /*
