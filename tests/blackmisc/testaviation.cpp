@@ -9,7 +9,7 @@
 #include "blackmisc/avinformationmessage.h"
 #include "blackmisc/avaircraftsituation.h"
 #include "blackmisc/avaircrafticao.h"
-#include "blackmisc/avcallsign.h"
+#include "blackmisc/avcallsignlist.h"
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/aviotransponder.h"
@@ -103,6 +103,13 @@ namespace BlackMiscTest
         CCallsign cs3("EDDmapp");
         QVERIFY2(cs1 == cs2, "Callsigns shall be equal");
         QVERIFY2(cs1 != cs3, "Callsigns shall not be equal");
+
+        CCallsignList list;
+        list.push_back(cs1);
+        QVERIFY2(list.size() == 1, "List shall be 1");
+        list.remove(cs1);
+        QVERIFY2(cs1 == cs1, "Callsign is the same, shall be equal");
+        QVERIFY2(list.size() == 0, "List shall be 0 after removal");
     }
 
     /*

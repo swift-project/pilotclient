@@ -3,8 +3,9 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "blackmisc/avatcstation.h"
 #include "testvariantandmap.h"
+#include "blackmisc/avatcstation.h"
+#include "blackmisc/valuemap.h"
 #include <QList>
 #include <QString>
 #include <vector>
