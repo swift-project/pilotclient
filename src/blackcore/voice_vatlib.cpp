@@ -535,7 +535,7 @@ namespace BlackCore
             {
                 if (!m_temporaryVoiceRoomCallsigns.contains(callsign))
                 {
-                    // He is has left
+                    // User has left
                     emit userLeftRoom(callsign);
                 }
             }
