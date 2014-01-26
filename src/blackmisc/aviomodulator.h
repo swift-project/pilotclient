@@ -205,20 +205,17 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Stream to DBus <<
-             * \param argument
+             * \copydoc CValueObject::marshallFromDbus()
              */
             virtual void marshallToDbus(QDBusArgument &argument) const;
 
             /*!
-             * \brief Stream from DBus >>
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus()
              */
             virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
             /*!
-             * \brief Value hash
-             * \return
+             * \copydoc CValueObject::getValueHash()
              */
             virtual uint getValueHash() const;
 

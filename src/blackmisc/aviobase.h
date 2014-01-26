@@ -79,8 +79,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Stream to DBus <<
-             * \param argument
+             * \copydoc CValueObject::marshallToDbus()
              */
             virtual void marshallToDbus(QDBusArgument &argument) const
             {
@@ -88,8 +87,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Stream from DBus >>
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus()
              */
             virtual void unmarshallFromDbus(const QDBusArgument &argument)
             {

@@ -10,15 +10,15 @@
 #ifndef BLACKMISC_ATCSTATION_H
 #define BLACKMISC_ATCSTATION_H
 
-#include "valuemap.h"
+#include "vvoiceroom.h"
+#include "aviocomsystem.h"
+#include "avinformationmessage.h"
+#include "avcallsign.h"
+#include "nwuser.h"
+#include "coordinategeodetic.h"
 #include "pqfrequency.h"
 #include "pqlength.h"
 #include "pqtime.h"
-#include "nwuser.h"
-#include "vvoiceroom.h"
-#include "coordinategeodetic.h"
-#include "avcallsign.h"
-#include "avinformationmessage.h"
 #include <QDateTime>
 #include <QMap>
 #include <functional>
@@ -318,6 +318,14 @@ namespace BlackMisc
              * \return
              */
             bool isBookedNow() const;
+
+            /*!
+             * \brief Tuned in within 25KHz channel spacing
+             */
+            bool isComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const
+            {
+                return comUnit.isActiveFrequencyWithin25kHzChannel(this->getFrequency());
+            }
 
             /*!
              * When booked, 0 means now,

@@ -49,22 +49,21 @@ namespace BlackMisc
 
             /*!
              * \brief Find 0..n stations by callsign
-             * \param callsign
-             * \return
              */
             CAtcStationList findByCallsign(const CCallsign &callsign) const;
 
             /*!
              * \brief Find 0..n stations within range of given coordinate
-             * \param coordinate
-             * \param range
-             * \return
              */
             CAtcStationList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
             /*!
-             * \brief Update distances to own plane
-             * \param position
+             * \brief Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
+             */
+            CAtcStationList findIfComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const;
+
+            /*!
+             * \brief Update distances to coordinate, usually own aircraft's position
              */
             void calculateDistancesToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 

@@ -56,11 +56,22 @@ namespace BlackMisc
         }
 
         /*
+         * Find if on frequency of COM unit
+         */
+        CAtcStationList CAtcStationList::findIfComUnitTunedIn25KHz(const CComSystem &comUnit) const
+        {
+            return this->findBy([&](const CAtcStation & atcStation)
+            {
+                return atcStation.isComUnitTunedIn25KHz(comUnit);
+            });
+        }
+
+        /*
          * Distances to own plane
          */
         void CAtcStationList::calculateDistancesToPlane(const Geo::CCoordinateGeodetic &position)
         {
-            std::for_each(this->begin(), this->end(), [ & ](CAtcStation &station)
+            std::for_each(this->begin(), this->end(), [ & ](CAtcStation & station)
             {
                 station.calculcateDistanceToPlane(position);
             });

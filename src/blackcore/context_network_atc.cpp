@@ -87,13 +87,10 @@ namespace BlackCore
      */
     CVoiceRoomList CContextNetwork::getSelectedVoiceRooms() const
     {
-        CFrequency com1 = this->m_ownAircraft.getCom1System().getFrequencyActive();
-        CFrequency com2 = this->m_ownAircraft.getCom2System().getFrequencyActive();
-
-        CAtcStationList stationsCom1 = this->m_atcStationsOnline.findBy(&CAtcStation::getFrequency, com1);
-        CAtcStationList stationsCom2 = this->m_atcStationsOnline.findBy(&CAtcStation::getFrequency, com2);
+        CAtcStationList stationsCom1 = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(this->m_ownAircraft.getCom1System());
+        CAtcStationList stationsCom2 = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(this->m_ownAircraft.getCom2System());
         stationsCom1.sortBy(&CAtcStation::getDistanceToPlane);
-        stationsCom1.sortBy(&CAtcStation::getDistanceToPlane);
+        stationsCom2.sortBy(&CAtcStation::getDistanceToPlane);
 
         CVoiceRoom vr;
         CVoiceRoomList rooms;

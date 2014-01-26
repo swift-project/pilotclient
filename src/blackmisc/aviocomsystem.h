@@ -18,7 +18,20 @@ namespace BlackMisc
          */
         class CComSystem : public CModulator<CComSystem>
         {
+        public:
+            /*!
+             * Channel spacing frequency
+             */
+            enum ChannelSpacing
+            {
+                ChannelSpacing50KHz,
+                ChannelSpacing25KHz,
+                ChannelSpacing8_33KHz
+            };
+
         private:
+            ChannelSpacing m_channelSpacing;
+
             /*!
              * \brief Constructor
              * \param validate
@@ -29,10 +42,16 @@ namespace BlackMisc
              *
              */
             CComSystem(bool validate, const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits = 3):
-                CModulator(name, activeFrequency, standbyFrequency, digits)
+                CModulator(name, activeFrequency, standbyFrequency, digits), m_channelSpacing(ChannelSpacing25KHz)
             {
                 this->validate(validate);
             }
+
+            /*!
+             * \brief Give me channel spacing in KHz
+             * \remarks Just a helper method, that is why no CFrequency is returned
+             */
+            static double channelSpacingToFrequencyKHz(ChannelSpacing channelSpacing);
 
         protected:
             /*!
@@ -50,16 +69,35 @@ namespace BlackMisc
              */
             bool validate(bool strict = true) const;
 
+            /*!
+             * \copydoc CValueObject::marshallFromDbus()
+             */
+            virtual void marshallToDbus(QDBusArgument &argument) const;
+
+            /*!
+             * \copydoc CValueObject::unmarshallFromDbus()
+             */
+            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+
         public:
             /*!
              * Default constructor
              */
-            CComSystem() : CModulator() {}
+            CComSystem() : CModulator(), m_channelSpacing(ChannelSpacing25KHz) {}
+
+            /*!
+             * \brief Constructor
+             */
+            CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
+                CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits), m_channelSpacing(ChannelSpacing25KHz)
+            {
+                this->validate(true);
+            }
 
             /*!
              * \brief Copy constructor
              */
-            CComSystem(const CComSystem &other) : CModulator(other) {}
+            CComSystem(const CComSystem &other) : CModulator(other), m_channelSpacing(other.m_channelSpacing) {}
 
             /*!
              * \copydoc CValueObject::toQVariant
@@ -79,25 +117,33 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Constructor
-             */
-            CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
-                CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits)
-            {
-                this->validate(true);
-            }
-
-            /*!
              * \brief Set active frequency
-             * \remarks will be rounded to 25KHz
+             * \remarks will be rounded to channel spacing
+             * \see ChannelSpacing
              */
             void setFrequencyActiveMHz(double frequencyMHz);
 
             /*!
              * \brief Set standby frequency
-             * \remarks will be rounded to 25KHz
+             * \remarks will be rounded to channel spacing
              */
             void setFrequencyStandbyMHz(double frequencyMHz);
+
+            /*!
+             * \brief Is active frequency within 8.3383kHz channel?
+             */
+            bool isActiveFrequencyWithin8_33kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency)
+            {
+                return CComSystem::isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing8_33KHz);
+            }
+
+            /*!
+             * \brief Is active frequency within 25kHz channel?
+             */
+            bool isActiveFrequencyWithin25kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const
+            {
+                return CComSystem::isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing25KHz);
+            }
 
             /*!
              * \brief Set UNICOM frequency as active
@@ -119,8 +165,6 @@ namespace BlackMisc
 
             /*!
              * \brief operator ==
-             * \param other
-             * \return
              */
             bool operator ==(const CComSystem &other) const
             {
@@ -129,8 +173,6 @@ namespace BlackMisc
 
             /*!
              * \brief operator !=
-             * \param other
-             * \return
              */
             bool operator !=(const CComSystem &other) const
             {
@@ -328,9 +370,15 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Round to 25KHz, set MHz as unit
+             * \brief Round to channel spacing, set MHz as unit
+             * \see ChannelSpacing
              */
-            static void roundTo25KHz(BlackMisc::PhysicalQuantities::CFrequency &frequency);
+            static void roundToChannelSpacing(BlackMisc::PhysicalQuantities::CFrequency &frequency, ChannelSpacing channelSpacing);
+
+            /*!
+             * \brief Is compareFrequency within channel spacing of setFrequency
+             */
+            static bool isWithinChannelSpacing(const BlackMisc::PhysicalQuantities::CFrequency &setFrequency, const BlackMisc::PhysicalQuantities::CFrequency &compareFrequency, ChannelSpacing channelSpacing);
 
         };
 
