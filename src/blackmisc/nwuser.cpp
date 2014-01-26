@@ -11,11 +11,15 @@ namespace BlackMisc
          */
         QString CUser::convertToQString(bool /** i18n **/) const
         {
-            if (this->m_realname.isEmpty()) return "Unknown??";
+            if (this->m_realname.isEmpty()) return "<no realname>";
             QString s = this->m_realname;
-            if (this->m_id >= 0)
+            if (this->hasValidId())
             {
-                s = s.append(" (").append(this->m_id).append(')');
+                s.append(" (").append(this->m_id).append(')');
+            }
+            if (this->hasValidCallsign())
+            {
+                s.append(this->getCallsign().getStringAsSet());
             }
             return s;
         }
