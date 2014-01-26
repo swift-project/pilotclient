@@ -163,6 +163,14 @@ QPlainTextEdit {
 	border-radius: 5px;
 }
 
+QGroupBox {
+	border: 1px solid green;
+}
+
+QRadioButton {
+	font: 10px;
+}
+
 QComboBox {
 	border: 1px solid green;
 	border-radius: 5px;
@@ -268,7 +276,7 @@ QScrollBar::add-line:vertical {
      subcontrol-origin: margin;
  }
 
- QScrollBar::sub-line:vertical {
+QScrollBar::sub-line:vertical {
      border: 2px solid gray;
      background: blue;
      height: 5px;
@@ -344,7 +352,16 @@ QSizeGrip {
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
      <number>2</number>
     </property>
     <item>
@@ -362,7 +379,16 @@ QSizeGrip {
        <property name="spacing">
         <number>0</number>
        </property>
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -401,7 +427,16 @@ QSizeGrip {
            <property name="spacing">
             <number>2</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>2</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>2</number>
+           </property>
+           <property name="bottomMargin">
             <number>2</number>
            </property>
            <item>
@@ -508,7 +543,16 @@ QSizeGrip {
            <property name="spacing">
             <number>0</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -547,7 +591,16 @@ QSizeGrip {
                <property name="spacing">
                 <number>2</number>
                </property>
-               <property name="margin">
+               <property name="leftMargin">
+                <number>2</number>
+               </property>
+               <property name="topMargin">
+                <number>2</number>
+               </property>
+               <property name="rightMargin">
+                <number>2</number>
+               </property>
+               <property name="bottomMargin">
                 <number>2</number>
                </property>
                <item>
@@ -809,7 +862,16 @@ QSizeGrip {
            <property name="spacing">
             <number>0</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -826,7 +888,16 @@ QSizeGrip {
            <property name="spacing">
             <number>0</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -849,7 +920,16 @@ QSizeGrip {
            <property name="spacing">
             <number>5</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>2</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="rightMargin">
+            <number>2</number>
+           </property>
+           <property name="bottomMargin">
             <number>2</number>
            </property>
            <item>
@@ -1311,7 +1391,16 @@ QSizeGrip {
                 <property name="spacing">
                  <number>2</number>
                 </property>
-                <property name="margin">
+                <property name="leftMargin">
+                 <number>2</number>
+                </property>
+                <property name="topMargin">
+                 <number>2</number>
+                </property>
+                <property name="rightMargin">
+                 <number>2</number>
+                </property>
+                <property name="bottomMargin">
                  <number>2</number>
                 </property>
                 <item>
@@ -1345,7 +1434,16 @@ QSizeGrip {
                 <property name="spacing">
                  <number>2</number>
                 </property>
-                <property name="margin">
+                <property name="leftMargin">
+                 <number>2</number>
+                </property>
+                <property name="topMargin">
+                 <number>2</number>
+                </property>
+                <property name="rightMargin">
+                 <number>2</number>
+                </property>
+                <property name="bottomMargin">
                  <number>2</number>
                 </property>
                 <item>
@@ -1408,7 +1506,16 @@ QSizeGrip {
            <property name="spacing">
             <number>0</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -1565,7 +1672,16 @@ QSizeGrip {
            <property name="spacing">
             <number>0</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
           </layout>
@@ -1575,7 +1691,16 @@ QSizeGrip {
            <property name="spacing">
             <number>0</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -1591,7 +1716,16 @@ QSizeGrip {
                <property name="spacing">
                 <number>2</number>
                </property>
-               <property name="margin">
+               <property name="leftMargin">
+                <number>1</number>
+               </property>
+               <property name="topMargin">
+                <number>1</number>
+               </property>
+               <property name="rightMargin">
+                <number>1</number>
+               </property>
+               <property name="bottomMargin">
                 <number>1</number>
                </property>
                <item>
@@ -1615,7 +1749,16 @@ QSizeGrip {
                  <property name="fieldGrowthPolicy">
                   <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
                  </property>
-                 <property name="margin">
+                 <property name="leftMargin">
+                  <number>6</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>6</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>6</number>
+                 </property>
+                 <property name="bottomMargin">
                   <number>6</number>
                  </property>
                  <item row="0" column="0">
@@ -1764,6 +1907,9 @@ QSizeGrip {
               <layout class="QVBoxLayout" name="verticalLayout_5">
                <item>
                 <layout class="QFormLayout" name="fl_SettingsAircraft">
+                 <property name="fieldGrowthPolicy">
+                  <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+                 </property>
                  <item row="0" column="0">
                   <widget class="QLabel" name="lbl_SettingsAircraftCallsign">
                    <property name="text">
@@ -1811,22 +1957,41 @@ QSizeGrip {
                  <item row="4" column="0">
                   <widget class="QLabel" name="lbl_SettingsModes">
                    <property name="text">
-                    <string>Modes</string>
+                    <string>Login modes</string>
                    </property>
                   </widget>
                  </item>
                  <item row="4" column="1">
-                  <widget class="QCheckBox" name="lbl_SettingsStealthMode">
-                   <property name="text">
-                    <string>Stealth mode</string>
+                  <widget class="QGroupBox" name="gb_LoginModes">
+                   <property name="title">
+                    <string/>
                    </property>
-                  </widget>
-                 </item>
-                 <item row="5" column="1">
-                  <widget class="QCheckBox" name="lbl_SettingsObserver">
-                   <property name="text">
-                    <string>Observer</string>
-                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout">
+                    <item>
+                     <widget class="QRadioButton" name="rb_SetttingsNormalLoginMode">
+                      <property name="text">
+                       <string>Normal</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="rb_SettingsLoginStealthMode">
+                      <property name="text">
+                       <string>Stealth mode</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="rb_SettingsLoginObserver">
+                      <property name="text">
+                       <string>Observer</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </widget>
                  </item>
                 </layout>
@@ -1907,7 +2072,16 @@ QSizeGrip {
                     <property name="spacing">
                      <number>0</number>
                     </property>
-                    <property name="margin">
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
                      <number>0</number>
                     </property>
                     <item>
@@ -2584,8 +2758,6 @@ QSizeGrip {
   <tabstop>le_SettingsIcaoTypeDesignator</tabstop>
   <tabstop>le_SettingsIcaoAirline</tabstop>
   <tabstop>le_SettingsIcaoType</tabstop>
-  <tabstop>lbl_SettingsStealthMode</tabstop>
-  <tabstop>lbl_SettingsObserver</tabstop>
   <tabstop>cb_VoiceInputDevice</tabstop>
   <tabstop>cb_VoiceOutputDevice</tabstop>
   <tabstop>pb_VoiceStartMicTest</tabstop>

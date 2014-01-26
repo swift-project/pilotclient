@@ -143,6 +143,7 @@ namespace BlackCore
          * \param from  old status
          * \param to    new status
          * \remarks If I use the enum, adaptor / interface are not created correctly
+         * \see INetwork::ConnectionStatus
          */
         void connectionStatusChanged(uint from, uint to);
 
@@ -193,8 +194,9 @@ namespace BlackCore
         /*!
          * \brief Connect to Network
          * \return messages gererated during connecting
+         * \see INetwork::LoginMode
          */
-        virtual BlackMisc::CStatusMessageList connectToNetwork();
+        virtual BlackMisc::CStatusMessageList connectToNetwork(uint loginMode);
 
         /*!
          * \brief Disconnect from network

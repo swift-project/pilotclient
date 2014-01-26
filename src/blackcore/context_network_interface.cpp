@@ -101,9 +101,9 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraft>(QLatin1Literal("getOwnAircraft"));
     }
 
-    BlackMisc::CStatusMessageList IContextNetwork::connectToNetwork()
+    BlackMisc::CStatusMessageList IContextNetwork::connectToNetwork(uint loginMode)
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("connectToNetwork"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("connectToNetwork"), loginMode);
     }
 
     BlackMisc::CStatusMessageList IContextNetwork::disconnectFromNetwork()

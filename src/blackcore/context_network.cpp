@@ -91,7 +91,7 @@ namespace BlackCore
     /*
      * Connect to network
      */
-    CStatusMessageList CContextNetwork::connectToNetwork()
+    CStatusMessageList CContextNetwork::connectToNetwork(uint loginMode)
     {
         // this->log(Q_FUNC_INFO);
         CStatusMessageList msgs;
@@ -107,8 +107,10 @@ namespace BlackCore
         }
         else
         {
+            INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
             this->m_ownAircraft.setPilot(currentServer.getUser()); // still needed?
             this->m_network->presetServer(currentServer);
+            this->m_network->presetLoginMode(mode);
             this->m_network->presetCallsign(this->m_ownAircraft.getCallsign());
             this->m_network->presetIcaoCodes(this->m_ownAircraft.getIcaoInfo());
             this->m_network->setOwnAircraft(this->m_ownAircraft);

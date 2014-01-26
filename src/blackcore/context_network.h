@@ -70,12 +70,12 @@ namespace BlackCore
     public slots:
 
         /*!
-         * \brief Read ATC bookings
+         * \copydoc IContextNetwork::readAtcBookingsFromSource()
          */
         virtual void readAtcBookingsFromSource() const;
 
         /*!
-         * \brief The "central" ATC list with online ATC controllers
+         * \copydoc IContextNetwork::getAtcStationsOnline()
          * \todo If I make this &getAtcStations XML is not generated correctly, needs to be crosschecked with the latest version of Qt
          */
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const
@@ -85,7 +85,7 @@ namespace BlackCore
         }
 
         /*!
-         * \brief ATC list, with booked controllers
+         * \copydoc IContextNetwork::getAtcStationsBooked()
          * \todo If I make this &getAtcStations XML is not generated correctly
          */
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const
@@ -95,8 +95,7 @@ namespace BlackCore
         }
 
         /*!
-         * \brief Aircraft list
-         * \return
+         * \copydoc IContextNetwork::getAircraftsInRange()
          */
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const
         {
@@ -105,19 +104,17 @@ namespace BlackCore
         }
 
         /*!
-         * \brief Connect to Network
-         * \return  a message list showing the connection situation
+         * \copydoc IContextNetwork::connectToNetwork()
          */
-        virtual BlackMisc::CStatusMessageList connectToNetwork();
+        virtual BlackMisc::CStatusMessageList connectToNetwork(uint mode);
 
         /*!
-         * \brief Disconnect from network
-         * \return  a message list showing the disconnection situation
+         * \copydoc IContextNetwork::disconnectFromNetwork()
          */
         virtual BlackMisc::CStatusMessageList disconnectFromNetwork();
 
         /*!
-         * \brief Network connected?
+         * \copydoc IContextNetwork::isConnected()
          */
         virtual bool isConnected() const;
 

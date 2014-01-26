@@ -195,7 +195,18 @@ void MainWindow::toggleNetworkConnection()
         }
 
         // Login is based on setting current server
-        msgs = this->m_contextNetwork->connectToNetwork();
+        INetwork::LoginMode mode = INetwork::LoginNormal;
+        if (this->ui->rb_SettingsLoginStealthMode->isChecked())
+        {
+            mode = INetwork::LoginStealth;
+            this->displayStatusMessage(CStatusMessage::getInfoMessage("login in stealth mode"));
+        }
+        else if (this->ui->rb_SettingsLoginObserver->isChecked())
+        {
+            mode = INetwork::LoginAsObserver;
+            this->displayStatusMessage(CStatusMessage::getInfoMessage("login in observer mode"));
+        }
+        msgs = this->m_contextNetwork->connectToNetwork(static_cast<uint>(mode));
     }
     else
     {
