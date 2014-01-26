@@ -54,26 +54,22 @@ namespace BlackMisc
             const QString &getAddress() const { return m_address; }
 
             /*!
-             * \brief Set address
-             * \param realname
+             * \brief Set address (e.g. myserver.foo.com)
              */
             void setAddress(const QString &address) { m_address = address; }
 
             /*!
              * Get user
-             * \return
              */
             const CUser &getUser() const { return m_user; }
 
             /*!
              * \brief Set user
-             * \param password
              */
             void setUser(const CUser &user) { m_user = user; }
 
             /*!
              * Get name
-             * \return
              */
             const QString &getName() const { return m_name; }
 
@@ -85,50 +81,41 @@ namespace BlackMisc
 
             /*!
              * Get description
-             * \return
              */
             const QString &getDescription() const { return m_description; }
 
             /*!
              * \brief Set description
-             * \param description
              */
             void setDescription(const QString &description) { m_description = description; }
 
             /*!
              * Get port
-             * \return
              */
             qint32 getPort() const { return m_port; }
 
             /*!
              * \brief Set port
-             * \param port
              */
             void setPort(qint32 port) { m_port = port; }
 
             /*!
-             * \brief Is valid for login
-             * \return
+             * \brief Is valid for login?
              */
             bool isValidForLogin() const;
 
             /*!
              * \brief Equal operator ==
-             * \param other
-             * \return
              */
             bool operator ==(const CServer &other) const;
 
             /*!
-             * \brief Unequal operator ==
-             * \param other
-             * \return
+             * \brief Unequal operator !=
              */
             bool operator !=(const CServer &other) const;
 
             /*!
-             * \brief Value hash
+             * \copydoc CValueObject::getValueHash()
              */
             virtual uint getValueHash() const;
 
@@ -152,32 +139,23 @@ namespace BlackMisc
             };
 
             /*!
-             * \brief Property by index
-             * \param index
-             * \return
+             * \copydoc CValueObject::propertyByIndex(int)
              */
             QVariant propertyByIndex(int index) const;
 
             /*!
-             * \brief Property by index as string
-             * \param index
-             * \param i18n
-             * \return
-             */
-            QString propertyByIndexAsString(int index, bool i18n) const;
-
-            /*!
-             * \brief Property by index (setter)
-             * \param variant
-             * \param index
+             * \copydoc CValueObject::propertyByIndex(const QVariant &, int index)
              */
             void propertyByIndex(const QVariant &variant, int index);
 
+            /*!
+             * \copydoc CValueObject::propertyByIndexAsString()
+             */
+            QString propertyByIndexAsString(int index, bool i18n) const;
+
         protected:
             /*!
-             * \brief Rounded value as string
-             * \param i18n
-             * \return
+             * \copydoc CValueObject::convertToQString()
              */
             virtual QString convertToQString(bool i18n = false) const;
 

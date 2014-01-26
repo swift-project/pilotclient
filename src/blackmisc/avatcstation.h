@@ -285,20 +285,17 @@ namespace BlackMisc
 
             /*!
              * Set booked from
-             * \param until
              */
             void setBookedFromUtc(const QDateTime &from) { this->m_bookedFromUtc = from; }
 
             /*!
              * Booked date/time if any.
              * This represents the closest booking within a time frame as there can be multiple bookings.
-             * \return
              */
             const QDateTime &getBookedUntilUtc() const { return m_bookedUntilUtc; }
 
             /*!
              * \brief Has valid booking times?
-             * \return
              */
             bool hasValidBookingTimes() const
             {
@@ -354,19 +351,16 @@ namespace BlackMisc
 
             /*!
              * \brief Set METAR
-             * \param msg
              */
             void setMetar(const CInformationMessage &metar) { this->m_metar = metar;}
 
             /*!
              * \brief Set METAR Message
-             * \param msg
              */
             void setMetarMessage(const QString &metar) { this->m_metar.setMessage(metar); }
 
             /*!
              * Set booked until
-             * \param until
              */
             void setBookedUntilUtc(const QDateTime &until) { this->m_bookedUntilUtc = until; }
 
@@ -389,30 +383,22 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Hash value
-             * \return
+             * \copydoc CValueObject::getValueHash()
              */
             virtual uint getValueHash() const;
 
             /*!
-             * \brief Property by index
-             * \param index
-             * \return
+             * \coypdoc CValueObject::propertyByIndex()
              */
             virtual QVariant propertyByIndex(int index) const;
 
             /*!
-             * \brief Property by index (setting)
-             * \param variant
-             * \return
+             * \copydoc CValueObject::setPropertyByIndex(const QVariant &, int)
              */
             virtual void setPropertyByIndex(const QVariant &variant, int index);
 
             /*!
-             * \brief Property by index as String
-             * \param index
-             * \param i18n
-             * \return
+             * \copydoc CValueObject::propertyByIndexAsString()
              */
             virtual QString propertyByIndexAsString(int index, bool i18n = false) const;
 
@@ -445,14 +431,12 @@ namespace BlackMisc
             virtual int compareImpl(const CValueObject &other) const;
 
             /*!
-             * \brief Stream to DBus <<
-             * \param argument
+             * \copydoc CValueObject::marshallToDbus()
              */
             virtual void marshallToDbus(QDBusArgument &argument) const;
 
             /*!
-             * \brief Stream from DBus >>
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus()
              */
             virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
