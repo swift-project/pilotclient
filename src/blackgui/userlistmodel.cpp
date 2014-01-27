@@ -16,7 +16,7 @@ namespace BlackGui
         this->m_columns.addColumn(CUser::IndexRealName, "realname");
         this->m_columns.addColumn(CUser::IndexCallsign, "callsign");
         this->m_columns.addColumn(CUser::IndexId, "userid");
-        this->m_columns.addColumn(CUser::IndexEmail, "email");
+        // this->m_columns.addColumn(CUser::IndexEmail, "email");
 
         // force strings for translation in resource files
         (void)QT_TRANSLATE_NOOP("ViewUserList", "callsign");
