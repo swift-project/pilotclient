@@ -276,6 +276,11 @@ private:
      */
     void stopUpdateTimers(bool disconnect = false);
 
+    /*!
+     * \brief Currently selected SELCAL code
+     */
+    QString getSelcalCode() const;
+
 private slots:
 
     //
@@ -470,6 +475,10 @@ private slots:
      */
     void audioIconContextMenu(const QPoint &position);
 
+    /*!
+     * \brief Test SELCAL (code valid? play tone)
+     */
+    void testSelcal();
 };
 
 #pragma pop_macro("interface")

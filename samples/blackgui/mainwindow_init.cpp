@@ -1,9 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackcore/coreruntime.h"
+#include "blackgui/atcstationlistmodel.h"
+#include "blackmisc/avselcal.h"
 #include <QSortFilterProxyModel>
 #include <QSizeGrip>
 #include <QHBoxLayout>
@@ -118,6 +119,10 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->ui->tv_CockpitVoiceRoom2->resizeColumnsToContents();
     this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
     this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setStretchLastSection(true);
+
+    // SELCAL pairs in cockpit
+    this->ui->cb_CockpitSelcal1->addItems(BlackMisc::Aviation::CSelcal::codePairs());
+    this->ui->cb_CockpitSelcal2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
 
     // timer
     if (this->m_timerUpdateAircraftsInRange == nullptr) this->m_timerUpdateAircraftsInRange = new QTimer(this);
@@ -265,6 +270,7 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->pb_CockpitToggleCom1, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->pb_CockpitToggleCom2, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->pb_CockpitIdent, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
+    this->connect(this->ui->pb_CockpitSelcalTest, &QPushButton::clicked, this, &MainWindow::testSelcal);
 
     // voice
     connected = this->connect(this->ui->cb_VoiceInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));

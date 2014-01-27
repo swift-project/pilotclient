@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "blacksound/soundgenerator.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
@@ -15,6 +16,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Voice;
+using namespace BlackSound;
 
 /*
  * Cockpit values
@@ -303,4 +305,28 @@ void MainWindow::setAudioVoiceRooms()
 
     // set the real voice rooms for audio output
     this->m_contextVoice->setComVoiceRooms(room1, room2);
+}
+
+/*
+ * Test SELCAL code
+ */
+void MainWindow::testSelcal()
+{
+    QString selcal = this->getSelcalCode();
+    if (!CSelcal::isValidCode(selcal))
+    {
+        this->displayStatusMessage(
+            CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityWarning, "invalid SELCAL codde"));
+        return;
+    }
+    CSoundGenerator::playSelcal(90, CSelcal(selcal));
+}
+
+/*
+ * SELCAL value selected
+ */
+QString MainWindow::getSelcalCode() const
+{
+    QString selcal = this->ui->cb_CockpitSelcal1->currentText().append(this->ui->cb_CockpitSelcal2->currentText());
+    return selcal;
 }
