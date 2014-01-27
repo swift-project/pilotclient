@@ -107,9 +107,18 @@ namespace BlackMiscTest
         CCallsignList list;
         list.push_back(cs1);
         QVERIFY2(list.size() == 1, "List shall be 1");
+        QVERIFY2(list.contains(cs1), "Callsign is in list");
+        QVERIFY2(list.contains(cs2), "Callsign is in list");
         list.remove(cs1);
         QVERIFY2(cs1 == cs1, "Callsign is the same, shall be equal");
         QVERIFY2(list.size() == 0, "List shall be 0 after removal");
+        list.push_back(cs1);
+        if (!list.contains(cs2)) list.push_back(cs2);
+        QVERIFY2(list.size() == 1, "Duplicates shall not be added");
+        list.push_back(cs3);
+        QVERIFY2(list.size() == 2, "2 different callsigns");
+        list.remove(cs1);
+        QVERIFY2(list.size() == 1, "Only left in list");
     }
 
     /*
