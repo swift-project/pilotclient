@@ -414,7 +414,7 @@ QSizeGrip {
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>7</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="pg_StatusPage">
           <property name="sizePolicy">
@@ -1299,28 +1299,18 @@ QSizeGrip {
                </item>
               </widget>
              </item>
-             <item row="2" column="4">
-              <spacer name="vs_CockpitSelcal">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>32</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
              <item row="3" column="4">
               <spacer name="vs_CockpitTransponder">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
-                 <height>32</height>
+                 <height>28</height>
                 </size>
                </property>
               </spacer>
@@ -1380,6 +1370,22 @@ QSizeGrip {
                 <double>7000.000000000000000</double>
                </property>
               </widget>
+             </item>
+             <item row="2" column="4">
+              <spacer name="vs_CockpitSelcal">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>28</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </item>

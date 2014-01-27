@@ -453,4 +453,5 @@ void MainWindow::reloadAllUsers()
     this->m_allUsers->update(this->m_contextNetwork->getUsers());
     this->ui->tv_AllUsers->resizeColumnsToContents();
     this->ui->tv_AllUsers->resizeRowsToContents();
+    this->ui->tv_AllUsers->horizontalHeader()->setStretchLastSection(true);
 }

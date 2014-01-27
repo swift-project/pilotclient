@@ -99,6 +99,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
         this->ui->tv_AllUsers->horizontalHeader()->setSortIndicator(this->m_allUsers->getSortColumn(), this->m_allUsers->getSortOrder());
     this->ui->tv_AllUsers->resizeColumnsToContents();
     this->ui->tv_AllUsers->resizeRowsToContents();
+    this->ui->tv_AllUsers->horizontalHeader()->setStretchLastSection(true);
 
     this->ui->tv_CockpitVoiceRoom1->setSortingEnabled(true);
     this->ui->tv_CockpitVoiceRoom1->setModel(this->m_usersVoiceCom1);
@@ -107,6 +108,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
         this->ui->tv_CockpitVoiceRoom1->horizontalHeader()->setSortIndicator(this->m_usersVoiceCom1->getSortColumn(), this->m_usersVoiceCom1->getSortOrder());
     this->ui->tv_CockpitVoiceRoom1->resizeColumnsToContents();
     this->ui->tv_CockpitVoiceRoom1->resizeRowsToContents();
+    this->ui->tv_CockpitVoiceRoom1->horizontalHeader()->setStretchLastSection(true);
 
     this->ui->tv_CockpitVoiceRoom2->setSortingEnabled(true);
     this->ui->tv_CockpitVoiceRoom2->setModel(this->m_usersVoiceCom2);
@@ -115,6 +117,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
         this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setSortIndicator(this->m_usersVoiceCom2->getSortColumn(), this->m_usersVoiceCom2->getSortOrder());
     this->ui->tv_CockpitVoiceRoom2->resizeColumnsToContents();
     this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
+    this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setStretchLastSection(true);
 
     // timer
     if (this->m_timerUpdateAircraftsInRange == nullptr) this->m_timerUpdateAircraftsInRange = new QTimer(this);

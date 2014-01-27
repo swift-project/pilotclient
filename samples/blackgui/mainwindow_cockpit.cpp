@@ -124,9 +124,12 @@ void MainWindow::updateCockpitFromContext()
         this->m_usersVoiceCom1->update(this->m_contextVoice->getCom1RoomUsers());
         this->ui->tv_CockpitVoiceRoom1->resizeColumnsToContents();
         this->ui->tv_CockpitVoiceRoom1->resizeRowsToContents();
+        this->ui->tv_CockpitVoiceRoom1->horizontalHeader()->setStretchLastSection(true);
+
         this->m_usersVoiceCom2->update(this->m_contextVoice->getCom2RoomUsers());
         this->ui->tv_CockpitVoiceRoom2->resizeColumnsToContents();
         this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
+        this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setStretchLastSection(true);
 
         // display URL if not override mode
         if (!this->ui->cb_CockpitVoiceRoom1Override->isChecked())
