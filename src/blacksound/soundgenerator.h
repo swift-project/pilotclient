@@ -6,6 +6,7 @@
 #ifndef BLACKSOUND_SOUNDGENERATOR_H
 #define BLACKSOUND_SOUNDGENERATOR_H
 
+#include "blackmisc/avselcal.h"
 #include <QIODevice>
 #include <QAudioFormat>
 #include <QAudioDeviceInfo>
@@ -117,6 +118,15 @@ namespace BlackSound
          * \param device    device to be used
          */
         static void playSignal(qint32 volume, const QList<Tone> &tones, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
+
+        /*!
+         * \brief Play SELCAL tone
+         * \param volume    0-100
+         * \param selcal
+         * \param device    device to be used
+         * \see BlackMisc::Aviation::CSelcal
+         */
+        static void playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
 
     signals:
         /*!
