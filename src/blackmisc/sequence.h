@@ -253,7 +253,7 @@ namespace BlackMisc
         template <class Predicate>
         void removeIf(Predicate p)
         {
-            std::remove_if(begin(), end(), p);
+            erase(std::remove_if(begin(), end(), p), end());
         }
 
         /*!
@@ -272,7 +272,7 @@ namespace BlackMisc
          */
         void remove(const T &object)
         {
-            std::remove(begin(), end(), object);
+            erase(std::remove(begin(), end(), object), end());
         }
 
         /*!
