@@ -24,12 +24,19 @@ namespace BlackSound
         struct Tone
         {
             int m_frequencyHz;
+            int m_secondaryFrequencyHz;
             qint64 m_durationMs;
 
             /*!
              * \brief Play frequency f for t milliseconds
              */
-            Tone(int frequencyHz, qint64 durationMs) : m_frequencyHz(frequencyHz), m_durationMs(durationMs) {}
+            Tone(int frequencyHz, qint64 durationMs) : m_frequencyHz(frequencyHz), m_secondaryFrequencyHz(0), m_durationMs(durationMs) {}
+
+            /*!
+             * \brief Play 2 frequencies f for t milliseconds
+             */
+            Tone(int frequencyHz, int secondaryFrequencyHz, qint64 durationMs) : m_frequencyHz(frequencyHz), m_secondaryFrequencyHz(secondaryFrequencyHz), m_durationMs(durationMs) {}
+
         };
 
         /*!

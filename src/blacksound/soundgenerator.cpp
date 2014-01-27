@@ -63,22 +63,31 @@ namespace BlackSound
 
             while (lengthPerTone)
             {
-                const qreal x = qSin(2 * M_PI * t.m_frequencyHz * qreal(sampleIndexPerTone % format.sampleRate()) / format.sampleRate());
+                // http://hyperphysics.phy-astr.gsu.edu/hbase/audio/sumdif.html
+                // http://math.stackexchange.com/questions/164369/how-do-you-calculate-the-frequency-perceived-by-humans-of-two-sinusoidal-waves-a
+                const double pseudoTime = double(sampleIndexPerTone % format.sampleRate()) / format.sampleRate();
+                const double amplitude = t.m_secondaryFrequencyHz == 0 ?
+                                         qSin(2 * M_PI * t.m_frequencyHz * pseudoTime) :
+                                         qSin(M_PI * (t.m_frequencyHz + t.m_secondaryFrequencyHz) * pseudoTime) *
+                                         qCos(M_PI * (t.m_frequencyHz - t.m_secondaryFrequencyHz) * pseudoTime);
+                // the combination of two frequencies actually would have 2*amplitude,
+                // but I have to normalize with amplitude -1 -> +1
+
                 for (int i = 0; i < format.channelCount(); ++i)
                 {
                     if (format.sampleSize() == 8 && format.sampleType() == QAudioFormat::UnSignedInt)
                     {
-                        const quint8 value = static_cast<quint8>((1.0 + x) / 2 * 255);
+                        const quint8 value = static_cast<quint8>((1.0 + amplitude) / 2 * 255);
                         *reinterpret_cast<quint8 *>(bufferPointer) = value;
                     }
                     else if (format.sampleSize() == 8 && format.sampleType() == QAudioFormat::SignedInt)
                     {
-                        const qint8 value = static_cast<qint8>(x * 127);
+                        const qint8 value = static_cast<qint8>(amplitude * 127);
                         *reinterpret_cast<quint8 *>(bufferPointer) = value;
                     }
                     else if (format.sampleSize() == 16 && format.sampleType() == QAudioFormat::UnSignedInt)
                     {
-                        quint16 value = static_cast<quint16>((1.0 + x) / 2 * 65535);
+                        quint16 value = static_cast<quint16>((1.0 + amplitude) / 2 * 65535);
                         if (format.byteOrder() == QAudioFormat::LittleEndian)
                             qToLittleEndian<quint16>(value, bufferPointer);
                         else
@@ -86,7 +95,7 @@ namespace BlackSound
                     }
                     else if (format.sampleSize() == 16 && format.sampleType() == QAudioFormat::SignedInt)
                     {
-                        qint16 value = static_cast<qint16>(x * 32767);
+                        qint16 value = static_cast<qint16>(amplitude * 32767);
                         if (format.byteOrder() == QAudioFormat::LittleEndian)
                             qToLittleEndian<qint16>(value, bufferPointer);
                         else
@@ -171,7 +180,7 @@ namespace BlackSound
         connect(generator, &CSoundGenerator::stopped, audioOutput, &QAudioOutput::stop);
         connect(generator, &CSoundGenerator::stopped, audioOutput, &QAudioOutput::deleteLater);
 
-        qreal vol = volume / 100.0;
+        double vol = volume / 100.0;
         audioOutput->setVolume(vol);
         generator->start();
         audioOutput->start(generator);
