@@ -129,20 +129,13 @@ namespace BlackCore
         CCallsignList searchList(callsigns);
         CUser user;
         CCallsign callsign;
-        foreach(CAtcStation station, this->m_atcStationsOnline)
-        {
-            callsign = station.getCallsign();
-            if (callsigns.contains(callsign))
-            {
-                user = station.getController();
-                users.push_back(user);
-                searchList.remove(callsign);
-            }
-        }
+
+        // do aircrafts first, this will handle most callsigns
         foreach(CAircraft aircraft, this->m_aircraftsInRange)
         {
+            if (searchList.isEmpty()) break;
             callsign = aircraft.getCallsign();
-            if (callsigns.contains(callsign))
+            if (searchList.contains(callsign))
             {
                 user = aircraft.getPilot();
                 users.push_back(user);
@@ -150,11 +143,23 @@ namespace BlackCore
             }
         }
 
-        // we might have unsresolved callsigns
-        foreach(CCallsign unresolved, searchList)
+        foreach(CAtcStation station, this->m_atcStationsOnline)
+        {
+            if (searchList.isEmpty()) break;
+            callsign = station.getCallsign();
+            if (searchList.contains(callsign))
+            {
+                user = station.getController();
+                users.push_back(user);
+                searchList.remove(callsign);
+            }
+        }
+
+        // we might have unresolved callsigns
+        foreach(CCallsign callsign, searchList)
         {
             user = CUser();
-            user.setCallsign(unresolved);
+            user.setCallsign(callsign);
             users.push_back(user);
         }
         return users;
