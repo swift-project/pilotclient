@@ -86,7 +86,7 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Return true if there is an element for which a given predicate returns true
+         * \brief Return true if there is an element for which a given predicate returns true.
          */
         template <class Predicate>
         bool contains(Predicate p) const
@@ -96,8 +96,6 @@ namespace BlackMisc
 
         /*!
          * \brief Return true if there is an element equal to given object
-         * \param object is this object in container?
-         * \return
          */
         bool contains(const T &object) const
         {

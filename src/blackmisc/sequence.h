@@ -249,6 +249,7 @@ namespace BlackMisc
 
         /*!
          * \brief Remove elements for which a given predicate returns true.
+         * \pre The sequence must be initialized.
          */
         template <class Predicate>
         void removeIf(Predicate p)
@@ -269,6 +270,7 @@ namespace BlackMisc
 
         /*!
          * \brief Remove the given object, if it is contained.
+         * \pre The sequence must be initialized.
          */
         void remove(const T &object)
         {
@@ -305,6 +307,7 @@ namespace BlackMisc
 
         /*!
          * \brief Replace elements for which a given predicate returns true. If there is no match, push the new element on the end.
+         * \pre The sequence must be initialized.
          */
         template <class Predicate>
         void replaceOrAdd(Predicate p, const T &replacement)
@@ -315,6 +318,7 @@ namespace BlackMisc
 
         /*!
          * \brief Replace elements matching the given element. If there is no match, push the new element on the end.
+         * \pre The sequence must be initialized.
          */
         void replaceOrAdd(const T &original, const T &replacement)
         {
@@ -326,6 +330,7 @@ namespace BlackMisc
          * \brief Replace elements matching a particular key/value pair. If there is no match, push the new element on the end.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
+         * \pre The sequence must be initialized.
          */
         template <class K1, class V1>
         void replaceOrAdd(K1 key1, V1 value1, const T &replacement)
