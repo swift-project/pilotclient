@@ -28,6 +28,18 @@ namespace BlackMisc
     {
     public:
         /*!
+         * \brief Return a new container of a different type, containing the same elements as this one.
+         * \tparam Other the type of the new container.
+         * \param other an optional initial value for the new container; will be copied.
+         */
+        template <template <class> class Other>
+        Other<T> to(Other<T> other = Other<T>()) const
+        {
+            for (auto it = derived().cbegin(); it != derived().cend(); ++it) { other.push_back(*it); }
+            return other;
+        }
+
+        /*!
          * \brief Return a copy containing only those elements for which a given predicate returns true.
          */
         template <class Predicate>
