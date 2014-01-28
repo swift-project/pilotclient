@@ -110,12 +110,12 @@ namespace BlackMisc
         iterator end() { return pimpl() ? pimpl()->end() : iterator(); }
 
         /*!
-         * \brief Returns iterator one past the end of the collection.
+         * \brief Returns const iterator one past the end of the collection.
          */
         const_iterator end() const { return pimpl() ? pimpl()->end() : const_iterator(); }
 
         /*!
-         * \brief Returns iterator one past the end of the collection.
+         * \brief Returns const iterator one past the end of the collection.
          */
         const_iterator cend() const { return pimpl() ? pimpl()->cend() : const_iterator(); }
 
@@ -176,6 +176,7 @@ namespace BlackMisc
          * \brief Efficient find method using the find of the implementation container. Typically O(log n).
          * \return An iterator to the position of the found element, or the end iterator if not found.
          * \pre The sequence must be initialized.
+         * \warning Take care that the returned non-const iterator is not compared with a const iterator.
          */
         iterator find(const T &value) { Q_ASSERT(pimpl()); return pimpl()->find(value); }
 

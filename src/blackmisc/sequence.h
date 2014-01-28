@@ -95,12 +95,12 @@ namespace BlackMisc
         iterator begin() { return pimpl() ? pimpl()->begin() : iterator(); }
 
         /*!
-         * \brief Returns iterator at the beginning of the sequence.
+         * \brief Returns const iterator at the beginning of the sequence.
          */
         const_iterator begin() const { return pimpl() ? pimpl()->begin() : const_iterator(); }
 
         /*!
-         * \brief Returns iterator at the beginning of the sequence.
+         * \brief Returns const iterator at the beginning of the sequence.
          */
         const_iterator cbegin() const { return pimpl() ? pimpl()->cbegin() : const_iterator(); }
 
@@ -110,12 +110,12 @@ namespace BlackMisc
         iterator end() { return pimpl() ? pimpl()->end() : iterator(); }
 
         /*!
-         * \brief Returns iterator one past the end of the sequence.
+         * \brief Returns const iterator one past the end of the sequence.
          */
         const_iterator end() const { return pimpl() ? pimpl()->end() : const_iterator(); }
 
         /*!
-         * \brief Returns iterator one past the end of the sequence.
+         * \brief Returns const iterator one past the end of the sequence.
          */
         const_iterator cend() const { return pimpl() ? pimpl()->cend() : const_iterator(); }
 
@@ -221,8 +221,14 @@ namespace BlackMisc
 
         /*!
          * \brief Return an iterator to the first element equal to the given object, or the end iterator if not found. O(n).
+         * \warning Take care that the returned non-const iterator is not compared with a const iterator.
          */
-        iterator find(const T &object) const { return std::find(begin(), end(), object); }
+        iterator find(const T &object) { return std::find(begin(), end(), object); }
+
+        /*!
+         * \brief Return an iterator to the first element equal to the given object, or the end iterator if not found. O(n).
+         */
+        const_iterator find(const T &object) const { return std::find(cbegin(), cend(), object); }
 
         /*!
          * \brief Modify by applying a value map to each element for which a given predicate returns true.
