@@ -220,6 +220,11 @@ namespace BlackMisc
         iterator erase(iterator it1, iterator it2) { Q_ASSERT(pimpl()); return pimpl()->erase(it1, it2); }
 
         /*!
+         * \brief Return an iterator to the first element equal to the given object, or the end iterator if not found. O(n).
+         */
+        iterator find(const T &object) const { return std::find(begin(), end(), object); }
+
+        /*!
          * \brief Modify by applying a value map to each element for which a given predicate returns true.
          */
         template <class Predicate>

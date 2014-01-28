@@ -152,7 +152,7 @@ namespace BlackMisc
                 virtual PimplBase *clone() const { return new Pimpl(*this); }
                 virtual const_reference operator *() const { return *m_impl; }
                 virtual void operator ++() { ++m_impl; }
-                virtual void operator +=(difference_type n) { m_impl += n; }
+                virtual void operator +=(difference_type n) { std::advance(m_impl, n); }
                 virtual bool operator ==(const PimplBase &other) const { return m_impl == static_cast<const Pimpl&>(other).m_impl; }
                 virtual void *impl() { return &m_impl; }
             private:

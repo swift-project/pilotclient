@@ -173,6 +173,20 @@ namespace BlackMisc
         iterator erase(iterator it1, iterator it2) { Q_ASSERT(pimpl()); return pimpl()->erase(it1, it2); }
 
         /*!
+         * \brief Efficient find method using the find of the implementation container. Typically O(log n).
+         * \return An iterator to the position of the found element, or the end iterator if not found.
+         * \pre The sequence must be initialized.
+         */
+        iterator find(const T &value) { Q_ASSERT(pimpl()); return pimpl()->find(value); }
+
+        /*!
+         * \brief Efficient find method using the find of the implementation container. Typically O(log n).
+         * \return An iterator to the position of the found element, or the end iterator if not found.
+         * \pre The sequence must be initialized.
+         */
+        const_iterator find(const T &value) const { Q_ASSERT(pimpl()); return pimpl()->find(value); }
+
+        /*!
          * \brief Test for equality.
          * \todo Improve inefficient implementation.
          */
@@ -203,16 +217,9 @@ namespace BlackMisc
             virtual iterator insert(const T &value) = 0;
             virtual iterator erase(iterator pos) = 0;
             virtual iterator erase(iterator it1, iterator it2) = 0;
+            virtual iterator find(const T &value) = 0;
+            virtual const_iterator find(const T &value) const = 0;
             virtual bool operator ==(const PimplBase &other) const = 0;
-        protected:
-            // using SFINAE to choose whether to implement insert() in terms of either push_back() or insert(), depending on which is available
-            // https://groups.google.com/forum/#!original/comp.lang.c++.moderated/T3x6lvmvvkQ/mfY5VTDJ--UJ
-            class yes { char x; }; class no { yes x[2]; }; template <class X, X V> struct typecheck {};
-            struct base { void push_back(); }; template <class C> struct derived : public C, public base {};
-            static yes hasPushHelper(...); template <class D> static no hasPushHelper(D *, typecheck<void (base::*)(), &D::push_back> * = 0);
-            template <class C> struct hasPush : public std::integral_constant<bool, sizeof(hasPushHelper((derived<C>*)0)) == sizeof(yes)> {};
-            template <class C> static iterator insertImpl(typename std::enable_if< hasPush<C>::value, C>::type &c, const T &value) { c.push_back(value); return iterator::fromImpl(c.end() - 1); }
-            template <class C> static iterator insertImpl(typename std::enable_if < !hasPush<C>::value, C >::type &c, const T &value) { return iterator::fromImpl(c.insert(value)); }
         };
 
         template <class C> class Pimpl : public PimplBase
@@ -231,13 +238,18 @@ namespace BlackMisc
             size_type size() const { return m_impl.size(); }
             bool empty() const { return m_impl.empty(); }
             void clear() { m_impl.clear(); }
-            iterator insert(const T &value) { return PimplBase::insertImpl<C>(m_impl, value); }
+            iterator insert(const T &value) { return iterator::fromImpl(insertHelper(m_impl.insert(value))); }
             iterator erase(iterator pos) { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(pos.getImpl()))); }
             //iterator erase(iterator it1, iterator it2) { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()), *static_cast<const typename C::iterator*>(it2.getImpl()))); }
             iterator erase(iterator it1, iterator it2) { while (it1 != it2) { it1 = iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()))); } return it1; }
+            iterator find(const T &value) { return iterator::fromImpl(m_impl.find(value)); }
+            const_iterator find(const T &value) const { return const_iterator::fromImpl(m_impl.find(value)); }
             bool operator ==(const PimplBase &other) const { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.insert(*i); return m_impl == copy.m_impl; }
         private:
             C m_impl;
+            // insertHelper: QSet::insert returns an iterator, but std::set::insert returns a std::pair<interator, bool>
+            template <class I> static I insertHelper(I i) { return i; }
+            template <class I> static I insertHelper(std::pair<I, bool> p) { return p.first; }
         };
 
         typedef QScopedPointer<PimplBase> PimplPtr;

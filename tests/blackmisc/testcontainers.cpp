@@ -7,8 +7,10 @@
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include <QList>
-#include <QString>
+#include <QVector>
+#include <QSet>
 #include <vector>
+#include <set>
 
 using namespace BlackMisc;
 
@@ -19,9 +21,9 @@ namespace BlackMiscTest
     {
         CCollection<int> c1;
         QVERIFY2(c1.empty(), "Uninitialized collection is empty");
-        auto c2 = CCollection<int>::fromImpl(QList<int>());
+        auto c2 = CCollection<int>::fromImpl(QSet<int>());
         QVERIFY2(c1 == c2, "Uninitialized and empty collections are equal");
-        c1.changeImpl(std::vector<int>());
+        c1.changeImpl(std::set<int>());
         QVERIFY2(c1 == c2, "Two empty collections are equal");
         c1.insert(1);
         QVERIFY2(c1 != c2, "Different collections are not equal");

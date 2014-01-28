@@ -95,11 +95,11 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Return true if there is an element equal to given object
+         * \brief Return true if there is an element equal to given object. Uses the most efficient implementation available.
          */
         bool contains(const T &object) const
         {
-            return std::find(derived().begin(), derived().end(), object) != derived().end();
+            return derived().find(object) != derived().end();
         }
 
         /*!
