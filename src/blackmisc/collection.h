@@ -187,6 +187,12 @@ namespace BlackMisc
         const_iterator find(const T &value) const { Q_ASSERT(pimpl()); return pimpl()->find(value); }
 
         /*!
+         * \brief Efficient remove using the find and erase of the implementation container. Typically O(log n).
+         * \pre The sequence must be initialized.
+         */
+        void remove(const T &object) { auto it = find(object); if (it != end()) { erase(pos); } }
+
+        /*!
          * \brief Test for equality.
          * \todo Improve inefficient implementation.
          */

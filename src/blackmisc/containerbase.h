@@ -113,6 +113,30 @@ namespace BlackMisc
             return contains(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
         }
 
+        /*!
+         * \brief Remove elements for which a given predicate returns true.
+         * \pre The sequence must be initialized.
+         */
+        template <class Predicate>
+        void removeIf(Predicate p)
+        {
+            for (auto it = derived().begin(); it != derived().end(); ++it)
+            {
+                if (p(*it)) { it = derived().erase(it); }
+            }
+        }
+
+        /*!
+         * \brief Remove elements matching a particular key/value pair.
+         * \param key1 A pointer to a member function of T.
+         * \param value1 Will be compared to the return value of key1.
+         */
+        template <class K1, class V1>
+        void removeIf(K1 key1, V1 value1)
+        {
+            removeIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
+        }
+
     public: // CValueObject overrides
         /*!
          * \copydoc CValueObject::toQVariant()

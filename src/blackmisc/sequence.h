@@ -253,27 +253,6 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Remove elements for which a given predicate returns true.
-         * \pre The sequence must be initialized.
-         */
-        template <class Predicate>
-        void removeIf(Predicate p)
-        {
-            erase(std::remove_if(begin(), end(), p), end());
-        }
-
-        /*!
-         * \brief Remove elements matching a particular key/value pair.
-         * \param key1 A pointer to a member function of T.
-         * \param value1 Will be compared to the return value of key1.
-         */
-        template <class K1, class V1>
-        void removeIf(K1 key1, V1 value1)
-        {
-            removeIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
-        }
-
-        /*!
          * \brief Remove the given object, if it is contained.
          * \pre The sequence must be initialized.
          */
