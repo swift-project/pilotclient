@@ -191,7 +191,7 @@ namespace BlackMisc
          * \brief Efficient remove using the find and erase of the implementation container. Typically O(log n).
          * \pre The sequence must be initialized.
          */
-        void remove(const T &object) { auto it = find(object); if (it != end()) { erase(pos); } }
+        void remove(const T &object) { auto it = find(object); if (it != end()) { erase(it); } }
 
         /*!
          * \brief Test for equality.
