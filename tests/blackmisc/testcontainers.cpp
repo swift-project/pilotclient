@@ -62,7 +62,7 @@ namespace BlackMiscTest
         s1 = s2;
         QVERIFY2(s1 == s2, "Copied sequence is equal");
 
-        QVERIFY2(s1[0] = 1, "Subscripted element mutation");
+        QVERIFY2((s1[0] = 1), "Subscripted element mutation");
         QVERIFY2(s1[0] == 1, "Subscripted element has expected value");
         QVERIFY2(s1.back() == 1, "Last element has expected value");
     }
