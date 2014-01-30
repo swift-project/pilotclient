@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "blacksound/soundgenerator.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
@@ -16,7 +15,6 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Voice;
-using namespace BlackSound;
 
 /*
  * Cockpit values
@@ -153,6 +151,10 @@ void MainWindow::updateCockpitFromContext()
             this->ui->le_CockpitVoiceRoomCom2->setText(s);
         }
     }
+
+    // update some other GUI elements
+    this->ui->tw_TextMessages->setTabToolTip(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM1), com1.getFrequencyActive().valueRoundedWithUnit(3));
+    this->ui->tw_TextMessages->setTabToolTip(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM2), com2.getFrequencyActive().valueRoundedWithUnit(3));
 }
 
 /*
@@ -312,14 +314,22 @@ void MainWindow::setAudioVoiceRooms()
  */
 void MainWindow::testSelcal()
 {
-    QString selcal = this->getSelcalCode();
-    if (!CSelcal::isValidCode(selcal))
+    QString selcalCode = this->getSelcalCode();
+    if (!CSelcal::isValidCode(selcalCode))
     {
         this->displayStatusMessage(
             CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityWarning, "invalid SELCAL codde"));
         return;
     }
-    CSoundGenerator::playSelcal(90, CSelcal(selcal));
+    if (this->m_contextVoiceAvailable)
+    {
+        CSelcal selcal(selcalCode);
+        this->m_contextVoice->playSelcalTone(selcal);
+    }
+    else
+    {
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "No audi available"));
+    }
 }
 
 /*

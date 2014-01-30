@@ -121,6 +121,8 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setStretchLastSection(true);
 
     // SELCAL pairs in cockpit
+    this->ui->cb_CockpitSelcal1->clear();
+    this->ui->cb_CockpitSelcal2->clear();
     this->ui->cb_CockpitSelcal1->addItems(BlackMisc::Aviation::CSelcal::codePairs());
     this->ui->cb_CockpitSelcal2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
 
@@ -273,9 +275,9 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->pb_CockpitSelcalTest, &QPushButton::clicked, this, &MainWindow::testSelcal);
 
     // voice
-    connected = this->connect(this->ui->cb_VoiceInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
+    connected = this->connect(this->ui->cb_SettingsAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
     Q_ASSERT(connected);
-    connected = this->connect(this->ui->cb_VoiceOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
+    connected = this->connect(this->ui->cb_SettingsAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
     Q_ASSERT(connected);
 
     // ATC

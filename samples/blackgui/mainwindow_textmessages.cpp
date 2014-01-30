@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "blacksound/soundgenerator.h"
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -9,6 +10,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
+using namespace BlackMisc::Voice;
 
 /*
  * Text messages received or send, append to GUI
@@ -18,6 +20,25 @@ void MainWindow::appendTextMessagesToGui(const CTextMessageList &messages, bool 
     if (messages.isEmpty()) return;
     foreach(CTextMessage message, messages)
     {
+        const QString currentSelcal = this->getSelcalCode();
+        if (CSelcal::isValidCode(currentSelcal) && message.isSelcalMessageFor(currentSelcal))
+        {
+            if (this->m_ownAircraft.isActiveFrequencyWithin25kHzChannel(message.getFrequency()))
+            {
+                // this is SELCAL for me
+                if (this->m_contextVoiceAvailable)
+                {
+                    CAudioDevice dev = this->m_contextVoice->getCurrentAudioDevices().getOutputDevices()[0];
+                    BlackSound::CSoundGenerator::playSelcal(90, CSelcal(currentSelcal), dev);
+                }
+                else
+                {
+                    this->displayOverlayInfo("SELCAL received");
+                }
+            }
+            continue; // not displayed
+        }
+
         bool relevantForMe = false;
         QString m = message.asString(true, true, "\t");
         m = message.asString(true, false, "\t");
@@ -92,7 +113,6 @@ bool MainWindow::isCorrespondingTextMessageTabSelected(CTextMessage textMessage)
         return false;
     }
 }
-
 
 /*
  * Add new text message tab

@@ -167,6 +167,23 @@ QGroupBox {
 	border: 1px solid green;
 }
 
+QToolBox {
+	border: none;
+}
+
+QToolBox::tab {
+	border: 1px solid green;
+	border-radius: 6px;
+    min-width: 30px;
+    padding: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+QToolBox::tab::selected {
+	background-color: rgba(0, 0, 255, 128);
+}
+
 QRadioButton {
 	font: 10px;
 }
@@ -414,7 +431,7 @@ QSizeGrip {
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="pg_StatusPage">
           <property name="sizePolicy">
@@ -425,7 +442,7 @@ QSizeGrip {
           </property>
           <layout class="QVBoxLayout" name="vl_Status">
            <property name="spacing">
-            <number>2</number>
+            <number>4</number>
            </property>
            <property name="leftMargin">
             <number>2</number>
@@ -512,19 +529,92 @@ QSizeGrip {
             </layout>
            </item>
            <item>
-            <widget class="QPlainTextEdit" name="te_StatusMessages">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+            <widget class="QToolBox" name="tb_StatusPage">
+             <property name="currentIndex">
+              <number>0</number>
              </property>
-             <property name="lineWrapMode">
-              <enum>QPlainTextEdit::NoWrap</enum>
+             <property name="tabSpacing">
+              <number>3</number>
              </property>
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
+             <widget class="QWidget" name="pg_StatusPageMessages">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>326</width>
+                <height>267</height>
+               </rect>
+              </property>
+              <attribute name="label">
+               <string>Messages</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="vl_StatusPageMessages">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QTableView" name="tv_StatusMessages"/>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="pg_StatusPageConsole">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>90</width>
+                <height>55</height>
+               </rect>
+              </property>
+              <attribute name="label">
+               <string>Console</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="vl_StatusPageConsole">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QPlainTextEdit" name="te_StatusMessages">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="lineWrapMode">
+                  <enum>QPlainTextEdit::NoWrap</enum>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </widget>
            </item>
           </layout>
@@ -1252,26 +1342,6 @@ QSizeGrip {
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <item>
-                <property name="text">
-                 <string>AB</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>AC</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>AD</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>AE</string>
-                </property>
-               </item>
               </widget>
              </item>
              <item row="2" column="3">
@@ -1282,21 +1352,6 @@ QSizeGrip {
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <item>
-                <property name="text">
-                 <string>AB</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>AC</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>AD</string>
-                </property>
-               </item>
               </widget>
              </item>
              <item row="3" column="4">
@@ -2004,7 +2059,7 @@ QSizeGrip {
                </item>
               </layout>
              </widget>
-             <widget class="QWidget" name="tb_SettingsVoice">
+             <widget class="QWidget" name="tb_SettingsAudio">
               <attribute name="title">
                <string>Voice</string>
               </attribute>
@@ -2016,7 +2071,7 @@ QSizeGrip {
                 <number>2</number>
                </property>
                <item>
-                <layout class="QFormLayout" name="fl_SettingsVoice">
+                <layout class="QFormLayout" name="fl_SettingsAudio">
                  <property name="fieldGrowthPolicy">
                   <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
                  </property>
@@ -2033,27 +2088,27 @@ QSizeGrip {
                   <number>2</number>
                  </property>
                  <item row="0" column="0">
-                  <widget class="QLabel" name="lbl_VoiceInputDevice">
+                  <widget class="QLabel" name="lbl_SettingsAudioInputDevice">
                    <property name="text">
                     <string>In</string>
                    </property>
                   </widget>
                  </item>
                  <item row="0" column="1">
-                  <widget class="QComboBox" name="cb_VoiceInputDevice"/>
+                  <widget class="QComboBox" name="cb_SettingsAudioInputDevice"/>
                  </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="lbl_VoiceOutputDevice">
+                  <widget class="QLabel" name="lbl_SettingsAudioOutputDevice">
                    <property name="text">
                     <string>Out</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QComboBox" name="cb_VoiceOutputDevice"/>
+                  <widget class="QComboBox" name="cb_SettingsAudioOutputDevice"/>
                  </item>
                  <item row="2" column="1">
-                  <spacer name="vs_VoiceDevicesToTests">
+                  <spacer name="vs_SettingsAudioVoiceTests">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -2066,7 +2121,7 @@ QSizeGrip {
                   </spacer>
                  </item>
                  <item row="3" column="0">
-                  <widget class="QLabel" name="lbl_VoiceTests">
+                  <widget class="QLabel" name="lbl_SettingsAudioVoiceTests">
                    <property name="text">
                     <string>Tests</string>
                    </property>
@@ -2713,7 +2768,6 @@ QSizeGrip {
   <tabstop>cb_StatusWithDBus</tabstop>
   <tabstop>le_StatusNetworkContext</tabstop>
   <tabstop>le_StatusVoiceContext</tabstop>
-  <tabstop>te_StatusMessages</tabstop>
   <tabstop>le_CommandLineInput</tabstop>
   <tabstop>tw_AtcStations</tabstop>
   <tabstop>tv_AtcStationsOnline</tabstop>
@@ -2764,8 +2818,8 @@ QSizeGrip {
   <tabstop>le_SettingsIcaoTypeDesignator</tabstop>
   <tabstop>le_SettingsIcaoAirline</tabstop>
   <tabstop>le_SettingsIcaoType</tabstop>
-  <tabstop>cb_VoiceInputDevice</tabstop>
-  <tabstop>cb_VoiceOutputDevice</tabstop>
+  <tabstop>cb_SettingsAudioInputDevice</tabstop>
+  <tabstop>cb_SettingsAudioOutputDevice</tabstop>
   <tabstop>pb_VoiceStartMicTest</tabstop>
   <tabstop>pb_VoiceStartSquelchTest</tabstop>
   <tabstop>hs_SettingsGuiOpacity</tabstop>
