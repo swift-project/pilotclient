@@ -3,6 +3,7 @@
 #include "blackmisc/pqconstants.h"
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avcallsign.h"
+#include "blackmisc/avselcal.h"
 
 using namespace BlackMisc::Aviation;
 
@@ -177,6 +178,49 @@ namespace BlackMisc
         void CTextMessage::toggleSenderRecipient()
         {
             qSwap(this->m_senderCallsign, this->m_recipientCallsign);
+        }
+
+        /*
+         * Find out if this is a SELCAL message
+         */
+        bool CTextMessage::isSelcalMessage() const
+        {
+            // some first level checks, before really parsing the message
+            if (this->isEmpty()) return false;
+            if (this->isPrivateMessage()) return false;
+            if (this->m_message.length() > 15 || this->m_message.length() < 10) return false; // SELCAL AB-CD -> 12, I allow some more characters as I do not know wheter in real life it exactly matches
+            return this->getSelcalCode().length() == 4;
+        }
+
+        /*
+         *  Matching given SELCAL code
+         */
+        bool CTextMessage::isSelcalMessageFor(const QString &selcal) const
+        {
+            if (!CSelcal::isValidCode(selcal)) return false;
+            return selcal.toUpper() ==  this->getSelcalCode();
+        }
+
+        /*
+         * SELCAL code, 4 letters
+         */
+        QString CTextMessage::getSelcalCode() const
+        {
+            // http://forums.vatsim.net/viewtopic.php?f=8&t=63467#p458062
+            // When the ATC client sends a selcal, it goes out as a text message
+            // on their primary frequency, formatted like so:
+            // SELCAL AB-CD
+
+            const QString invalid;
+
+            // some first level checks, before really parsing the message
+            if (this->isEmpty()) return invalid;
+            if (this->isPrivateMessage()) return invalid;
+            if (this->m_message.length() > 15 || this->m_message.length() < 10) return invalid; // SELCAL AB-CD -> 12, I allow some more characters as I do not know wheter in real life it exactly matches
+            QString candidate = this->m_message.toUpper().remove(QRegExp("[^A-Z]")); // SELCALABCD
+            if (candidate.length() != 10) return invalid;
+            if (!candidate.startsWith("SELCAL")) return invalid;
+            return candidate.right(4);
         }
 
         /*

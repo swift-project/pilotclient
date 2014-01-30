@@ -46,14 +46,6 @@ namespace BlackMisc
                 : m_message(message), m_received(QDateTime::currentDateTimeUtc()), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(-1.0, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()) {}
 
             /*!
-             * \brief QVariant, required for DBus QVariant lists
-             */
-            virtual QVariant toQVariant() const
-            {
-                return QVariant::fromValue(*this);
-            }
-
-            /*!
              * Get callsign (from)
              */
             const BlackMisc::Aviation::CCallsign &getSenderCallsign() const
@@ -180,6 +172,22 @@ namespace BlackMisc
             void toggleSenderRecipient();
 
             /*!
+             * \brief Is this a text message encapsulating a SELCAL
+             * \see http://forums.vatsim.net/viewtopic.php?f=8&t=63467
+             */
+            bool isSelcalMessage() const;
+
+            /*!
+             * \brief Is this a text message encapsulating a SELCAL for given code
+             */
+            bool isSelcalMessageFor(const QString &selcal) const;
+
+            /*!
+             * \brief Get SELCAL code (if applicable, e.g. ABCD), otherwise ""
+             */
+            QString getSelcalCode() const;
+
+            /*!
              * \brief Equal operator ==
              */
             bool operator ==(const CTextMessage &other) const;
@@ -193,6 +201,14 @@ namespace BlackMisc
              * \copydoc CValueObject::getValueHash()
              */
             virtual uint getValueHash() const;
+
+            /*!
+             * \copydoc CValueObject::toQVariant()
+             */
+            virtual QVariant toQVariant() const
+            {
+                return QVariant::fromValue(*this);
+            }
 
             /*!
              * \brief Register metadata
