@@ -23,7 +23,9 @@ namespace BlackMisc
             TypeValidation,
             TypeTrafficNetwork,
             TypeSettings,
-            TypeCore
+            TypeCore,
+            TypeAudio,
+            TypeGui
         };
 
         enum StatusSeverity
