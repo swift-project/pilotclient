@@ -3,7 +3,6 @@
 QT       += network dbus gui multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-
 TARGET = blacksound
 TEMPLATE = lib
 CONFIG += staticlib c++11
