@@ -28,6 +28,18 @@ namespace BlackMisc
     {
     public:
         /*!
+         * \brief Return a new container of a different type, containing the same elements as this one.
+         * \tparam Other the type of the new container.
+         * \param other an optional initial value for the new container; will be copied.
+         */
+        template <template <class> class Other>
+        Other<T> to(Other<T> other = Other<T>()) const
+        {
+            for (auto it = derived().cbegin(); it != derived().cend(); ++it) { other.push_back(*it); }
+            return other;
+        }
+
+        /*!
          * \brief Return a copy containing only those elements for which a given predicate returns true.
          */
         template <class Predicate>
@@ -86,22 +98,20 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Return true if there is an element for which a given predicate returns true
+         * \brief Return true if there is an element for which a given predicate returns true.
          */
         template <class Predicate>
         bool contains(Predicate p) const
         {
-            return std::any_of(derived().begin(), derived().end(), p);
+            return std::any_of(derived().cbegin(), derived().cend(), p);
         }
 
         /*!
-         * \brief Return true if there is an element equal to given object
-         * \param object is this object in container?
-         * \return
+         * \brief Return true if there is an element equal to given object. Uses the most efficient implementation available.
          */
         bool contains(const T &object) const
         {
-            return std::find(derived().begin(), derived().end(), object) != derived().end();
+            return derived().find(object) != derived().cend();
         }
 
         /*!
@@ -113,6 +123,30 @@ namespace BlackMisc
         bool contains(K1 key1, V1 value1) const
         {
             return contains(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
+        }
+
+        /*!
+         * \brief Remove elements for which a given predicate returns true.
+         * \pre The sequence must be initialized.
+         */
+        template <class Predicate>
+        void removeIf(Predicate p)
+        {
+            for (auto it = derived().begin(); it != derived().end(); ++it)
+            {
+                if (p(*it)) { it = derived().erase(it); }
+            }
+        }
+
+        /*!
+         * \brief Remove elements matching a particular key/value pair.
+         * \param key1 A pointer to a member function of T.
+         * \param value1 Will be compared to the return value of key1.
+         */
+        template <class K1, class V1>
+        void removeIf(K1 key1, V1 value1)
+        {
+            removeIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
         }
 
     public: // CValueObject overrides
@@ -134,7 +168,7 @@ namespace BlackMisc
         {
             QString str;
             // qualifying stringify with this-> to workaround bug in GCC 4.7.2 http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56402
-            std::for_each(derived().begin(), derived().end(), [ & ](const T &value) { str += (str.isEmpty() ? "{" : ",") + this->stringify(value, i18n); });
+            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T &value) { str += (str.isEmpty() ? "{" : ",") + this->stringify(value, i18n); });
             if (str.isEmpty()) { str = "{"; }
             return str += "}";
         }
@@ -161,7 +195,7 @@ namespace BlackMisc
             //const auto &o = static_cast<const CContainerBase &>(other);
             //if (derived().size() < o.derived().size()) { return -1; }
             //if (derived().size() > o.derived().size()) { return 1; }
-            //for (auto i1 = derived().begin(), i2 = o.derived().begin(); i1 != derived().end() && i2 != o.derived().end(); ++i1, ++i2)
+            //for (auto i1 = derived().cbegin(), i2 = o.derived().cbegin(); i1 != derived().cend() && i2 != o.derived().cend(); ++i1, ++i2)
             //{
             //    if (*i1 < *i2) { return -1; }
             //    if (*i1 > *i2) { return 1; }
@@ -172,7 +206,7 @@ namespace BlackMisc
         virtual void marshallToDbus(QDBusArgument &argument) const
         {
             argument.beginArray(qMetaTypeId<T>());
-            std::for_each(derived().begin(), derived().end(), [ & ](const T &value) { argument << value; });
+            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T &value) { argument << value; });
             argument.endArray();
         }
 

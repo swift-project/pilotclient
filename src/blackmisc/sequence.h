@@ -95,12 +95,12 @@ namespace BlackMisc
         iterator begin() { return pimpl() ? pimpl()->begin() : iterator(); }
 
         /*!
-         * \brief Returns iterator at the beginning of the sequence.
+         * \brief Returns const iterator at the beginning of the sequence.
          */
         const_iterator begin() const { return pimpl() ? pimpl()->begin() : const_iterator(); }
 
         /*!
-         * \brief Returns iterator at the beginning of the sequence.
+         * \brief Returns const iterator at the beginning of the sequence.
          */
         const_iterator cbegin() const { return pimpl() ? pimpl()->cbegin() : const_iterator(); }
 
@@ -110,12 +110,12 @@ namespace BlackMisc
         iterator end() { return pimpl() ? pimpl()->end() : iterator(); }
 
         /*!
-         * \brief Returns iterator one past the end of the sequence.
+         * \brief Returns const iterator one past the end of the sequence.
          */
         const_iterator end() const { return pimpl() ? pimpl()->end() : const_iterator(); }
 
         /*!
-         * \brief Returns iterator one past the end of the sequence.
+         * \brief Returns const iterator one past the end of the sequence.
          */
         const_iterator cend() const { return pimpl() ? pimpl()->cend() : const_iterator(); }
 
@@ -220,6 +220,17 @@ namespace BlackMisc
         iterator erase(iterator it1, iterator it2) { Q_ASSERT(pimpl()); return pimpl()->erase(it1, it2); }
 
         /*!
+         * \brief Return an iterator to the first element equal to the given object, or the end iterator if not found. O(n).
+         * \warning Take care that the returned non-const iterator is not compared with a const iterator.
+         */
+        iterator find(const T &object) { return std::find(begin(), end(), object); }
+
+        /*!
+         * \brief Return an iterator to the first element equal to the given object, or the end iterator if not found. O(n).
+         */
+        const_iterator find(const T &object) const { return std::find(cbegin(), cend(), object); }
+
+        /*!
          * \brief Modify by applying a value map to each element for which a given predicate returns true.
          */
         template <class Predicate>
@@ -248,27 +259,8 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Remove elements for which a given predicate returns true.
-         */
-        template <class Predicate>
-        void removeIf(Predicate p)
-        {
-            erase(std::remove_if(begin(), end(), p), end());
-        }
-
-        /*!
-         * \brief Remove elements matching a particular key/value pair.
-         * \param key1 A pointer to a member function of T.
-         * \param value1 Will be compared to the return value of key1.
-         */
-        template <class K1, class V1>
-        void removeIf(K1 key1, V1 value1)
-        {
-            removeIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
-        }
-
-        /*!
          * \brief Remove the given object, if it is contained.
+         * \pre The sequence must be initialized.
          */
         void remove(const T &object)
         {
@@ -305,6 +297,7 @@ namespace BlackMisc
 
         /*!
          * \brief Replace elements for which a given predicate returns true. If there is no match, push the new element on the end.
+         * \pre The sequence must be initialized.
          */
         template <class Predicate>
         void replaceOrAdd(Predicate p, const T &replacement)
@@ -315,6 +308,7 @@ namespace BlackMisc
 
         /*!
          * \brief Replace elements matching the given element. If there is no match, push the new element on the end.
+         * \pre The sequence must be initialized.
          */
         void replaceOrAdd(const T &original, const T &replacement)
         {
@@ -326,6 +320,7 @@ namespace BlackMisc
          * \brief Replace elements matching a particular key/value pair. If there is no match, push the new element on the end.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
+         * \pre The sequence must be initialized.
          */
         template <class K1, class V1>
         void replaceOrAdd(K1 key1, V1 value1, const T &replacement)
