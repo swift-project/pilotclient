@@ -188,7 +188,6 @@ namespace BlackMisc
              */
             void setCom2System(const CComSystem &comSystem) { this->m_com2system = comSystem; }
 
-
             /*!
              * \brief Is any (COM1/2) active frequency within 8.3383kHz channel?
              */
@@ -196,6 +195,15 @@ namespace BlackMisc
             {
                 return this->m_com1system.isActiveFrequencyWithin8_33kHzChannel(comFrequency) ||
                        this->m_com2system.isActiveFrequencyWithin8_33kHzChannel(comFrequency);
+            }
+
+            /*!
+             * \brief Is any (COM1/2) active frequency within 25kHz channel?
+             */
+            bool isActiveFrequencyWithin25kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency)
+            {
+                return this->m_com1system.isActiveFrequencyWithin25kHzChannel(comFrequency) ||
+                       this->m_com2system.isActiveFrequencyWithin25kHzChannel(comFrequency);
             }
 
             /*!
