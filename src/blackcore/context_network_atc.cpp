@@ -105,15 +105,14 @@ namespace BlackCore
     CUserList CContextNetwork::getUsers() const
     {
         CUserList users;
-        CUser user;
         foreach(CAtcStation station, this->m_atcStationsOnline)
         {
-            user = station.getController();
+            CUser user = station.getController();
             users.push_back(user);
         }
         foreach(CAircraft aircraft, this->m_aircraftsInRange)
         {
-            user = aircraft.getPilot();
+            CUser user = aircraft.getPilot();
             users.push_back(user);
         }
         return users;
@@ -127,17 +126,15 @@ namespace BlackCore
         CUserList users;
         if (callsigns.isEmpty()) return users;
         CCallsignList searchList(callsigns);
-        CUser user;
-        CCallsign callsign;
 
         // do aircrafts first, this will handle most callsigns
         foreach(CAircraft aircraft, this->m_aircraftsInRange)
         {
             if (searchList.isEmpty()) break;
-            callsign = aircraft.getCallsign();
+            CCallsign callsign = aircraft.getCallsign();
             if (searchList.contains(callsign))
             {
-                user = aircraft.getPilot();
+                CUser user = aircraft.getPilot();
                 users.push_back(user);
                 searchList.remove(callsign);
             }
@@ -146,10 +143,10 @@ namespace BlackCore
         foreach(CAtcStation station, this->m_atcStationsOnline)
         {
             if (searchList.isEmpty()) break;
-            callsign = station.getCallsign();
+            CCallsign callsign = station.getCallsign();
             if (searchList.contains(callsign))
             {
-                user = station.getController();
+                CUser user = station.getController();
                 users.push_back(user);
                 searchList.remove(callsign);
             }
@@ -158,7 +155,7 @@ namespace BlackCore
         // we might have unresolved callsigns
         foreach(CCallsign callsign, searchList)
         {
-            user = CUser();
+            CUser user;
             user.setCallsign(callsign);
             users.push_back(user);
         }
