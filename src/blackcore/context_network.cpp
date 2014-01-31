@@ -5,6 +5,7 @@
 
 #include "context_network.h"
 #include "coreruntime.h"
+#include "blackmisc/networkchecks.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackcore/context_settings_interface.h"
 #include <QtXml/QDomElement>
@@ -107,17 +108,26 @@ namespace BlackCore
         }
         else
         {
-            INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
-            this->m_ownAircraft.setPilot(currentServer.getUser()); // still needed?
-            this->m_network->presetServer(currentServer);
-            this->m_network->presetLoginMode(mode);
-            this->m_network->presetCallsign(this->m_ownAircraft.getCallsign());
-            this->m_network->presetIcaoCodes(this->m_ownAircraft.getIcaoInfo());
-            this->m_network->setOwnAircraft(this->m_ownAircraft);
-            this->m_network->initiateConnection();
-            QString msg = "Connection pending ";
-            msg.append(" ").append(currentServer.getAddress()).append(" ").append(QString::number(currentServer.getPort()));
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, msg));
+            QString msg;
+            if (CNetworkChecks::canConnect(currentServer, msg, 2000))
+            {
+                INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
+                this->m_ownAircraft.setPilot(currentServer.getUser()); // still needed?
+                this->m_network->presetServer(currentServer);
+                this->m_network->presetLoginMode(mode);
+                this->m_network->presetCallsign(this->m_ownAircraft.getCallsign());
+                this->m_network->presetIcaoCodes(this->m_ownAircraft.getIcaoInfo());
+                this->m_network->setOwnAircraft(this->m_ownAircraft);
+                this->m_network->initiateConnection();
+                msg = "Connection pending ";
+                msg.append(" ").append(currentServer.getAddress()).append(" ").append(QString::number(currentServer.getPort()));
+                msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, msg));
+            }
+            else
+            {
+                // I cannot connect, add error message
+                msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, msg));
+            }
         }
         return msgs;
     }
