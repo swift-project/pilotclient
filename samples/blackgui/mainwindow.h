@@ -80,6 +80,7 @@ protected:
     /*!
      * \brief Main page indexes
      * \remarks keep the values in sync with the real tab indexes
+     */
     enum MainPageIndex
     {
         MainPageStatus = 0,
