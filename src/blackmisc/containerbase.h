@@ -132,9 +132,10 @@ namespace BlackMisc
         template <class Predicate>
         void removeIf(Predicate p)
         {
-            for (auto it = derived().begin(); it != derived().end(); ++it)
+            for (auto it = derived().begin(); it != derived().end(); )
             {
                 if (p(*it)) { it = derived().erase(it); }
+                else { ++it; }
             }
         }
 
