@@ -15,11 +15,12 @@ LIBS    += -L../../lib -lblackcore -lblackmisc -lblacksound
 LIBS	+= -lvatlib
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
-                                     ../../lib/blackcore.lib \
-                                     ../../lib/blacksound.lib
+                                     ../../lib/blacksound.lib \
+                                     ../../lib/blackcore.lib
 else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
-                                     ../../lib/libblackcore.a \
-                                     ../../lib/libblacksound.a
+                                     ../../lib/libblacksound.a \
+                                     ../../lib/libblackcore.a
+
 DESTDIR = ../../bin
 
 HEADERS += *.h
