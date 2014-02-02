@@ -348,15 +348,6 @@ QVariant BlackMisc::complexQtTypeFromDbusArgument(const QDBusArgument &argument,
 #ifdef Q_CC_MSVC
 #include <crtdbg.h>
 
-// surpress some GCC warnings, if someone finds
-// a better solution for this, feel free
-#if defined(__GCC__) || defined(__MINGW32__) || defined(__MINGW64__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-value"
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#endif
-
 /*
  * Heap size of an object
  */
@@ -391,17 +382,15 @@ size_t BlackMisc::heapSizeOf(const QMetaObject &metaObject)
     _CrtMemDifference(&diff, &oldState, &newState);
     return diff.lSizes[_NORMAL_BLOCK];
 }
-#if defined(__GCC__) || defined(__MINGW32__) || defined(__MINGW64__)
-#pragma GCC diagnostic pop
-#endif
 
-#else //!Q_OS_WIN32
+#else //!Q_CC_MSVC
+
 /*
  * Heap size of an object
  */
 size_t BlackMisc::heapSizeOf(const QMetaType &)
 {
-    qDebug() << "heapSizeOf not supported on this OS";
+    qDebug() << "heapSizeOf not supported by your compiler toolchain";
     return 0;
 }
 /*
@@ -409,10 +398,11 @@ size_t BlackMisc::heapSizeOf(const QMetaType &)
  */
 size_t BlackMisc::heapSizeOf(const QMetaObject &)
 {
-    qDebug() << "heapSizeOf not supported on this OS";
+    qDebug() << "heapSizeOf not supported by your compiler toolchain";
     return 0;
 }
-#endif //!Q_OS_WIN32
+
+#endif //!Q_CC_MSVC
 
 /*
  * Dump all user types
