@@ -121,7 +121,7 @@ namespace BlackCore
         {
             if (!m_voice->SetInputDevice(device.getIndex()))
             {
-                qWarning() << "SetInputDevice() failed";
+                qWarning() << "Setting input device failed";
             }
             if (!m_voice->IsInputDeviceAlive())
             {
@@ -149,10 +149,11 @@ namespace BlackCore
 
         try
         {
+            // there is no return value here: https://dev.vatsim-germany.org/issues/115
             m_voice->SetOutputDevice(0, device.getIndex());
             if (!m_voice->IsOutputDeviceAlive(0))
             {
-                qWarning() << "Input device hit a fatal error";
+                qWarning() << "Output device hit a fatal error";
             }
             this->m_currentOutputDevice = device;
         }
