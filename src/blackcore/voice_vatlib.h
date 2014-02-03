@@ -7,6 +7,7 @@
 #define BLACKCORE_VOICE_VATLIB_H
 
 #include "voice.h"
+#include "../blacksound/soundgenerator.h"
 #include "../blackmisc/vaudiodevicelist.h"
 #include "../blackmisc/nwuserlist.h"
 #include "../blackmisc/avcallsignlist.h"
@@ -294,6 +295,7 @@ namespace BlackCore
 #endif
 
         QScopedPointer<Cvatlib_Voice_Simple, Cvatlib_Voice_Simple_Deleter> m_voice;
+        QScopedPointer<QAudioOutput> m_audioOutput;
         BlackMisc::Aviation::CCallsign m_aircraftCallsign; /*!< own callsign to join voice rooms */
         BlackMisc::Voice::CVoiceRoomList m_voiceRooms;
         BlackMisc::Voice::CAudioDeviceList m_devices; /*!< in and output devices */
