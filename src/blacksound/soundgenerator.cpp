@@ -44,7 +44,7 @@ namespace BlackSound
 
     void CSoundGenerator::stop(bool destructor)
     {
-        this->m_audioOutput->setVolume(0);
+        // this->m_audioOutput->setVolume(0); // Bug or feature, killing the applicaions volume?
         this->m_audioOutput->stop();
         if (this->isOpen())
         {
@@ -234,34 +234,36 @@ namespace BlackSound
 
     }
 
-    void CSoundGenerator::playSignal(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
+    CSoundGenerator *CSoundGenerator::playSignal(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
     {
-        if (tones.isEmpty()) return; // that was easy
-        if (volume < 1) return;
         CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CSoundGenerator::SingleWithAutomaticDeletion);
-        if (generator->singleCyleDurationMs() < 10) return; // unable to hear
+        if (tones.isEmpty()) return generator; // that was easy
+        if (volume < 1) return generator;
+        if (generator->singleCyleDurationMs() < 10) return generator; // unable to hear
 
         // top and clean uo when done
         generator->start(volume);
+        return generator;
     }
 
-    void CSoundGenerator::playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device)
+    CSoundGenerator *CSoundGenerator::playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device)
     {
-        if (volume < 1) return;
-        if (!selcal.isValid()) return;
-        QList<CFrequency> frequencies = selcal.getFrequencies();
-        Q_ASSERT(frequencies.size() == 4);
-        Tone t1(frequencies.at(0).value(CFrequencyUnit::Hz()), frequencies.at(1).value(CFrequencyUnit::Hz()), 1000);
-        Tone t2(0, 200);
-        Tone t3(frequencies.at(2).value(CFrequencyUnit::Hz()), frequencies.at(3).value(CFrequencyUnit::Hz()), 1000);
         QList<CSoundGenerator::Tone> tones;
-        tones << t1 << t2 << t3;
-        CSoundGenerator::playSignal(volume, tones, device);
+        if (selcal.isValid())
+        {
+            QList<CFrequency> frequencies = selcal.getFrequencies();
+            Q_ASSERT(frequencies.size() == 4);
+            Tone t1(frequencies.at(0).value(CFrequencyUnit::Hz()), frequencies.at(1).value(CFrequencyUnit::Hz()), 1000);
+            Tone t2(0, 200);
+            Tone t3(frequencies.at(2).value(CFrequencyUnit::Hz()), frequencies.at(3).value(CFrequencyUnit::Hz()), 1000);
+            tones << t1 << t2 << t3;
+        }
+        return CSoundGenerator::playSignal(volume, tones, device);
     }
 
-    void CSoundGenerator::playSelcal(qint32 volume, const CSelcal &selcal, const CAudioDevice &audioDevice)
+    CSoundGenerator *CSoundGenerator::playSelcal(qint32 volume, const CSelcal &selcal, const CAudioDevice &audioDevice)
     {
-        CSoundGenerator::playSelcal(volume, selcal, CSoundGenerator::findClosestOutputDevice(audioDevice));
+        return CSoundGenerator::playSelcal(volume, selcal, CSoundGenerator::findClosestOutputDevice(audioDevice));
     }
 
 } // namespace

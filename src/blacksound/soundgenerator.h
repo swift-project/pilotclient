@@ -77,9 +77,26 @@ namespace BlackSound
         CSoundGenerator(const QList<Tone> &tones, PlayMode mode, QObject *parent = nullptr);
 
         /*!
+         * \brief Constructor for dummy device
+         * \param device
+         * \param format
+         * \param parent
+         */
+        CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, QObject *parent);
+
+        /*!
          * Destructor
          */
         ~CSoundGenerator();
+
+        /*!
+         * \brief Set volume
+         * \param volume 0..100
+         */
+        void setVolume(int volume)
+        {
+            this->m_audioOutput->setVolume(qreal(volume / 100.0));
+        }
 
         /*!
          * \brief Close device, buffer stays intact
@@ -141,26 +158,29 @@ namespace BlackSound
          * \param volume    0-100
          * \param tones     list of tones
          * \param device    device to be used
+         * \return
          */
-        static void playSignal(qint32 volume, const QList<Tone> &tones, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
+        static CSoundGenerator *playSignal(qint32 volume, const QList<Tone> &tones, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
 
         /*!
          * \brief Play SELCAL tone
          * \param volume    0-100
          * \param selcal
          * \param device    device to be used
+         * \return
          * \see BlackMisc::Aviation::CSelcal
          */
-        static void playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
+        static CSoundGenerator *playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
 
         /*!
          * \brief Play SELCAL tone
          * \param volume    0-100
          * \param selcal
          * \param audioDevice device to be used
+         * \return
          * \see BlackMisc::Aviation::CSelcal
          */
-        static void playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::Voice::CAudioDevice &audioDevice);
+        static CSoundGenerator *playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::Voice::CAudioDevice &audioDevice);
 
         /*!
          * \brief One cycle of tones takes t milliseconds
@@ -193,7 +213,7 @@ namespace BlackSound
     private:
         QList<Tone> m_tones; /*! tones to be played */
         qint64 m_position; /*!< position in buffer */
-        bool m_playMode; /*!< end data provisioning after playing all tones, play endless loop */
+        PlayMode m_playMode; /*!< end data provisioning after playing all tones, play endless loop */
         bool m_endReached; /*!< indicates end in combination with single play */
         qint64 m_oneCycleDurationMs; /*!< how long is one cycle of tones */
         QByteArray m_buffer; /*!< generated buffer for data */
