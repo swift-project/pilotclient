@@ -343,6 +343,8 @@ namespace BlackCore
 
             if (m_net && m_net->IsValid() && m_net->IsNetworkConnected())
             {
+                // I let others know we are going down
+                emit this->connectionStatusChanged(convertConnectionStatus(m_status), Disconnecting);
                 m_net->LogoffAndDisconnect(c_logoffTimeoutSec);
             }
         }
@@ -788,7 +790,7 @@ namespace BlackCore
         case Cvatlib_Network::error_NoFP:                   msg = "Server: no flight plan"; break;
         case Cvatlib_Network::error_NoWeather:              msg = "Server: requested weather profile does not exist"; break;
 
-            // we have no idea what these mean
+        // we have no idea what these mean
         case Cvatlib_Network::error_Registered:
         case Cvatlib_Network::error_InvalidControl:         msg = "Server: "; msg.append(cbvar_cast(cbvar)->fromFSD(msgData)); break;
 

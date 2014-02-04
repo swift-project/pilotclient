@@ -88,6 +88,7 @@ namespace BlackCore
         enum ConnectionStatus
         {
             Disconnected = 0,   //!< Not connected
+            Disconnecting,      //!< In transition to disconnected
             DisconnectedError,  //!< Disconnected due to socket error
             Connecting,         //!< Connection initiated but not established
             Connected           //!< Connection established
