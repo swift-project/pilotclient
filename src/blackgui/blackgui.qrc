@@ -10,11 +10,5 @@
         <file>icons/close.png</file>
         <file>icons/aircraftdeparture.png</file>
         <file>icons/apronsmall.jpg</file>
-        <file>iconsQt/critical.png</file>
-        <file>iconsQt/ico_note.png</file>
-        <file>iconsQt/ico_note_attention.png</file>
-        <file>iconsQt/question.png</file>
-        <file>iconsQt/warning.png</file>
-        <file>iconsQt/information.png</file>
     </qresource>
 </RCC>

@@ -1,5 +1,3 @@
-# quick is required for metadata registration
-
 QT       += network dbus gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
