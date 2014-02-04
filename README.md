@@ -24,4 +24,5 @@ Doxygen Documentation
 ---------------------
 Doxygen documentation is generated automatically. Please note it will take a bit of time on git push.
 Documentation is available at: https://dev.vatsim-germany.org/vatpilotclient/doc/
+Doxygen documentation generation log is available at: https://dev.vatsim-germany.org/vatpilotclient/doxygen.log
 The trailing / is mandatory.
