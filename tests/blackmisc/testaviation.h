@@ -30,6 +30,7 @@ namespace BlackMiscTest
          * \brief Basic unit tests for physical units
          */
         void headingBasics();
+
         /*!
          * \brief COM and NAV units
          */
@@ -41,9 +42,9 @@ namespace BlackMiscTest
         void transponder();
 
         /*!
-         * \brief Callsigns
+         * \brief Callsigns // callsign containers
          */
-        void callsign();
+        void callsignWithContainers();
 
         /*!
          * \brief Testing copying and equality of objects

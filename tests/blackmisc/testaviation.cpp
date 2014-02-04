@@ -96,7 +96,7 @@ namespace BlackMiscTest
     /*
      * Callsign
      */
-    void CTestAviation::callsign()
+    void CTestAviation::callsignWithContainers()
     {
         CCallsign cs1("EDDm_twr");
         CCallsign cs2("EDDmtwr");

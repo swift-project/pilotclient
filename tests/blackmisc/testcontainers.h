@@ -25,4 +25,4 @@ namespace BlackMiscTest
 
 } //namespace BlackMiscTest
 
-#endif //BLACKMISCTEST_TESTCONTAINERS_H
+#endif // guard
