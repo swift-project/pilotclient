@@ -21,10 +21,11 @@
 #include "blackgui/serverlistmodel.h"
 #include "blackgui/aircraftlistmodel.h"
 #include "blackgui/userlistmodel.h"
-#include "blackmisc/statusmessage.h"
+#include "blackgui/statusmessagelistmodel.h"
 #include "blackmisc/nwtextmessage.h"
 #include <QMainWindow>
 #include <QTextEdit>
+#include <QTableView>
 #include <QItemSelection>
 #include <QTimer>
 
@@ -105,7 +106,8 @@ private:
     QDBusConnection m_dBusConnection;
     QScopedPointer<BlackCore::CCoreRuntime> m_coreRuntime; /*!< runtime, if working with local core */
     // the table view models
-    // normal pointers, asl these will be deleted by parent
+    // normal pointers, as these will be deleted by parent
+    BlackGui::CStatusMessageListModel *m_statusMessageList;
     BlackGui::CAtcListModel *m_atcListOnline;
     BlackGui::CAtcListModel *m_atcListBooked;
     BlackGui::CServerListModel *m_trafficServerList;
@@ -113,6 +115,7 @@ private:
     BlackGui::CUserListModel *m_allUsers;
     BlackGui::CUserListModel *m_usersVoiceCom1;
     BlackGui::CUserListModel *m_usersVoiceCom2;
+
     // contexts
     BlackCore::IContextApplication *m_contextApplication; /*!< overall application state */
     BlackCore::IContextNetwork *m_contextNetwork;
@@ -121,7 +124,7 @@ private:
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
     QTimer *m_timerUpdateAtcStationsOnline; /*!< timer for update of stations */
     QTimer *m_timerUpdateAircraftsInRange; /*!< timer for update of aircrafts */
-    QTimer *m_timerUpdateUsers; /*!< timer dor update of users */
+    QTimer *m_timerUpdateUsers; /*!< timer for update of users */
     QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
     QTimer *m_timerContextWatchdog; /*!< core available? */
     QPixmap m_resPixmapConnectionConnected;
@@ -131,7 +134,8 @@ private:
     QPixmap m_resPixmapVoiceLow;
     QPixmap m_resPixmapVoiceMuted;
     QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
-    QMenu *m_contextMenuAudio; /*! Audio context menu */
+    QMenu *m_contextMenuAudio; /*! audio context menu */
+    QMenu *m_contextMenuStatusMessageList; /*! context menu for status message list */
     QString m_transponderResetValue; /*! Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas */
 
     /*!
@@ -474,6 +478,9 @@ private slots:
      * \brief Context menu for audio
      */
     void audioIconContextMenu(const QPoint &position);
+
+    //! \brief Context menu for message list
+    void messageListContextMenu(const QPoint &position);
 
     /*!
      * \brief Test SELCAL (code valid? play tone)

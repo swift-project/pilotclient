@@ -28,6 +28,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     // misc
     m_contextNetworkAvailable(false), m_contextVoiceAvailable(false), m_dBusConnection("dummy"), m_coreRuntime(nullptr),
     // table view models
+    m_statusMessageList(nullptr),
     m_atcListOnline(nullptr), m_atcListBooked(nullptr), m_trafficServerList(nullptr), m_aircraftsInRange(nullptr),
     m_allUsers(nullptr), m_usersVoiceCom1(nullptr), m_usersVoiceCom2(nullptr),
     // contexts
@@ -36,7 +37,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerUpdateUsers(nullptr),
     m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
     // context menus
-    m_contextMenuAudio(nullptr)
+    m_contextMenuAudio(nullptr), m_contextMenuStatusMessageList(nullptr)
 {
     if (windowMode == GuiModes::WindowFrameless)
     {
@@ -242,9 +243,10 @@ bool MainWindow::isContextVoiceAvailableCheck()
 void MainWindow::displayStatusMessage(const CStatusMessage &message)
 {
     this->ui->sb_MainStatusBar->showMessage(message.getMessage(), 3000);
-    this->ui->te_StatusMessages->insertPlainText(message.toQString(true).append("\n"));
+    this->m_statusMessageList->insert(message);
+    this->ui->tv_StatusMessages->resizeColumnsToContents();
+    this->ui->tv_StatusMessages->resizeRowsToContents();
     if (message.getSeverity() == CStatusMessage::SeverityError) this->displayOverlayInfo(message);
-
 }
 
 /*

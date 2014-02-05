@@ -565,7 +565,17 @@ QSizeGrip {
                 <number>0</number>
                </property>
                <item>
-                <widget class="QTableView" name="tv_StatusMessages"/>
+                <widget class="QTableView" name="tv_StatusMessages">
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::SingleSelection</enum>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
+                 </property>
+                 <attribute name="verticalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -574,8 +584,8 @@ QSizeGrip {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>90</width>
-                <height>55</height>
+                <width>326</width>
+                <height>267</height>
                </rect>
               </property>
               <attribute name="label">
@@ -598,7 +608,7 @@ QSizeGrip {
                 <number>0</number>
                </property>
                <item>
-                <widget class="QPlainTextEdit" name="te_StatusMessages">
+                <widget class="QPlainTextEdit" name="te_StatusPageConsole">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                    <horstretch>0</horstretch>
@@ -1980,8 +1990,14 @@ QSizeGrip {
                  </item>
                  <item row="0" column="1">
                   <widget class="QLineEdit" name="le_SettingsAircraftCallsign">
+                   <property name="inputMethodHints">
+                    <set>Qt::ImhLatinOnly|Qt::ImhUppercaseOnly</set>
+                   </property>
                    <property name="text">
                     <string>BLACK</string>
+                   </property>
+                   <property name="maxLength">
+                    <number>20</number>
                    </property>
                   </widget>
                  </item>
@@ -1993,7 +2009,11 @@ QSizeGrip {
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLineEdit" name="le_SettingsIcaoTypeDesignator"/>
+                  <widget class="QLineEdit" name="le_SettingsIcaoTypeDesignator">
+                   <property name="inputMethodHints">
+                    <set>Qt::ImhUppercaseOnly</set>
+                   </property>
+                  </widget>
                  </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="lbl_SettingsIcaoAirline">
@@ -2061,7 +2081,7 @@ QSizeGrip {
              </widget>
              <widget class="QWidget" name="tb_SettingsAudio">
               <attribute name="title">
-               <string>Voice</string>
+               <string>Audio</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_14">
                <property name="leftMargin">

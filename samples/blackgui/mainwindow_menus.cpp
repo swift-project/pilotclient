@@ -54,21 +54,24 @@ void MainWindow::menuClicked()
 void MainWindow::initContextMenus()
 {
     this->ui->lbl_VoiceStatus->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this->ui->lbl_VoiceStatus, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(audioIconContextMenu(const QPoint &)));
+    connect(this->ui->lbl_VoiceStatus, &QLabel::customContextMenuRequested, this, &MainWindow::audioIconContextMenu);
+    this->ui->tv_StatusMessages->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this->ui->tv_StatusMessages, &QTableView::customContextMenuRequested, this, &MainWindow::messageListContextMenu);
 }
 
 /*
- * Reload settings
+ * Audio context menu
  */
 void MainWindow::audioIconContextMenu(const QPoint &position)
 {
-    // for most widgets
+    // position for most widgets
     QPoint globalPosition = this->ui->lbl_VoiceStatus->mapToGlobal(position);
 
     if (!this->m_contextMenuAudio)
     {
         this->m_contextMenuAudio = new QMenu(this);
+        this->m_contextMenuAudio->addAction("Toogle mute");
+
 #if defined(Q_OS_WIN)
         if (QSysInfo::WindowsVersion && QSysInfo::WV_NT_based)
         {
@@ -82,7 +85,40 @@ void MainWindow::audioIconContextMenu(const QPoint &position)
     {
         // http://forum.technical-assistance.co.uk/sndvol32exe-command-line-parameters-vt1348.html
         const QList<QAction *> actions = this->m_contextMenuAudio->actions();
-        QStringList parameterlist;
-        if (selectedItem == actions.at(0)) QProcess::startDetached("SndVol.exe", parameterlist);
+        if (selectedItem == actions.at(0)) this->ui->pb_SoundMute->click();
+        else if (actions.size() > 1 && selectedItem == actions.at(1))
+        {
+            QStringList parameterlist;
+            QProcess::startDetached("SndVol.exe", parameterlist);
+        }
+    }
+}
+
+
+/*
+ * Message list context menu
+ */
+void MainWindow::messageListContextMenu(const QPoint &position)
+{
+    // position for most widgets
+    QPoint globalPosition = this->ui->tv_StatusMessages->mapToGlobal(position);
+
+    if (!this->m_contextMenuStatusMessageList)
+    {
+        this->m_contextMenuStatusMessageList = new QMenu(this);
+        this->m_contextMenuStatusMessageList->addAction("Clear");
+    }
+
+    QAction *selectedItem = this->m_contextMenuStatusMessageList->exec(globalPosition);
+    if (selectedItem)
+    {
+        // http://forum.technical-assistance.co.uk/sndvol32exe-command-line-parameters-vt1348.html
+        const QList<QAction *> actions = this->m_contextMenuStatusMessageList->actions();
+        if (selectedItem == actions.at(0))
+        {
+            this->m_statusMessageList->clear();
+            this->ui->tv_StatusMessages->resizeColumnsToContents();
+            this->ui->tv_StatusMessages->horizontalHeader()->setStretchLastSection(true);
+        }
     }
 }

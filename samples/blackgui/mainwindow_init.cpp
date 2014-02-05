@@ -47,6 +47,9 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     }
 
     // init models, the delete allows to re-init
+    if (this->m_statusMessageList != nullptr) this->m_statusMessageList->deleteLater();
+    this->m_statusMessageList = new CStatusMessageListModel(this);
+
     if (this->m_atcListBooked != nullptr) this->m_atcListBooked->deleteLater();
     this->m_atcListBooked = new CAtcListModel(this);
 
@@ -72,6 +75,11 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     // enable first, otherwise order in the model will be reset
     this->ui->tv_SettingsTnServers->setModel(this->m_trafficServerList);
 
+    this->ui->tv_StatusMessages->setSortingEnabled(true);
+    this->ui->tv_StatusMessages->setModel(this->m_statusMessageList);
+    this->m_statusMessageList->setSortColumnByPropertyIndex(BlackMisc::CStatusMessage::IndexTimestamp);
+    if (this->m_statusMessageList->hasValidSortColumn())
+        this->ui->tv_StatusMessages->horizontalHeader()->setSortIndicator(this->m_statusMessageList->getSortColumn(), this->m_statusMessageList->getSortOrder());
 
     this->ui->tv_AtcStationsOnline->setSortingEnabled(true);
     this->ui->tv_AtcStationsOnline->setModel(this->m_atcListOnline);
