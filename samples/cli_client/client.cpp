@@ -363,6 +363,7 @@ void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldSt
     switch (newStatus)
     {
     case BlackCore::INetwork::Disconnected:         std::cout << "CONN_STATUS_DISCONNECTED"; break;
+    case BlackCore::INetwork::Disconnecting:        std::cout << "CONN_STATUS_DISCONNECTING"; break;
     case BlackCore::INetwork::DisconnectedError:    std::cout << "CONN_STATUS_DISCONNECTED_ERROR"; break;
     case BlackCore::INetwork::Connecting:           std::cout << "CONN_STATUS_CONNECTING"; break;
     case BlackCore::INetwork::Connected:            std::cout << "CONN_STATUS_CONNECTED"; break;
@@ -370,6 +371,7 @@ void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldSt
     switch (oldStatus)
     {
     case BlackCore::INetwork::Disconnected:         std::cout << " (was CONN_STATUS_DISCONNECTED)\n"; break;
+    case BlackCore::INetwork::Disconnecting:        std::cout << " (was CONN_STATUS_DISCONNECTING)\n"; break;
     case BlackCore::INetwork::DisconnectedError:    std::cout << " (was CONN_STATUS_DISCONNECTED_ERROR)\n"; break;
     case BlackCore::INetwork::Connecting:           std::cout << " (was CONN_STATUS_CONNECTING)\n"; break;
     case BlackCore::INetwork::Connected:            std::cout << " (was CONN_STATUS_CONNECTED)\n"; break;

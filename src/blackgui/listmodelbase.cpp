@@ -4,6 +4,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "listmodelbase.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraftlist.h"
 #include "blackmisc/nwserverlist.h"
@@ -104,6 +105,39 @@ namespace BlackGui
     }
 
     /*
+     * Push back
+     */
+    template <typename ObjectType, typename ListType>
+    void CListModelBase<ObjectType, ListType>::push_back(const ObjectType &object)
+    {
+        beginInsertRows(QModelIndex(), this->m_list.size(), this->m_list.size());
+        this->m_list.push_back(object);
+        endInsertRows();
+    }
+
+    /*
+     * Push back
+     */
+    template <typename ObjectType, typename ListType>
+    void CListModelBase<ObjectType, ListType>::insert(const ObjectType &object)
+    {
+        beginInsertRows(QModelIndex(), 0, 0);
+        this->m_list.insert(this->m_list.begin(), object);
+        endInsertRows();
+    }
+
+    /*
+     * Clear
+     */
+    template <typename ObjectType, typename ListType>
+    void CListModelBase<ObjectType, ListType>::clear()
+    {
+        beginResetModel();
+        this->m_list.clear();
+        endResetModel();
+    }
+
+    /*
      * Sort
      */
     template <typename ObjectType, typename ListType> void CListModelBase<ObjectType, ListType>::sort(int column, Qt::SortOrder order)
@@ -145,6 +179,7 @@ namespace BlackGui
 
     // see here for the reason of thess forward instantiations
     // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
+    template class CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
     template class CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
     template class CListModelBase<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
     template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>;

@@ -9,6 +9,7 @@
 
 using namespace BlackMisc::Voice;
 using namespace BlackMisc::Network;
+using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
@@ -28,6 +29,14 @@ namespace BlackCore
     void IContextVoice::relaySignals(const QString & /** serviceName **/, QDBusConnection & /** connection **/)
     {
         // void
+    }
+
+    /*
+     * Own aircraft
+     */
+    void IContextVoice::setOwnAircraft(const CAircraft &ownAircraft)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("setOwnAircraft"), ownAircraft);
     }
 
     /*
@@ -87,6 +96,14 @@ namespace BlackCore
     }
 
     /*
+     * Set current audio device
+     */
+    void IContextVoice::setCurrentAudioDevice(const CAudioDevice &audioDevice)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("setCurrentAudioDevice"), audioDevice);
+    }
+
+    /*
      * Voice rooms, with audio status
      */
     CVoiceRoomList IContextVoice::getComVoiceRoomsWithAudioStatus() const
@@ -127,11 +144,27 @@ namespace BlackCore
     }
 
     /*
-     * Set current audio device
+     * Play SELCAL tone
      */
-    void IContextVoice::setCurrentAudioDevice(const CAudioDevice &audioDevice)
+    void IContextVoice::playSelcalTone(const CSelcal &selcal) const
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("setCurrentAudioDevice"), audioDevice);
+        this->m_dBusInterface->callDBus(QLatin1Literal("playSelcalTone"), selcal);
+    }
+
+    /*
+     * MIC test
+     */
+    void IContextVoice::runMicrophoneTest() const
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("runMicrophoneTest"));
+    }
+
+    /*
+     * MIC test
+     */
+    void IContextVoice::runSquelchTest() const
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("runSquelchTest"));
     }
 
     /*

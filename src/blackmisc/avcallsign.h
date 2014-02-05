@@ -31,7 +31,7 @@ namespace BlackMisc
              * Constructor.
              */
             CCallsign(const QString &callsign, const QString &callsignPronounced = "")
-                : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign)), m_callsignPronounced(callsignPronounced)
+                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_callsignPronounced(callsignPronounced.trimmed())
             {}
 
             /*!
@@ -49,6 +49,12 @@ namespace BlackMisc
             virtual QVariant toQVariant() const
             {
                 return QVariant::fromValue(*this);
+            }
+
+            //! \copydoc CValueObject::toIcon()
+            virtual const QPixmap &toIcon() const override
+            {
+                return CCallsign::convertToIcon(*this);
             }
 
             /*!
@@ -167,6 +173,9 @@ namespace BlackMisc
              * \return
              */
             static QString unifyCallsign(const QString &callsign);
+
+            //! \representing icon
+            static const QPixmap &convertToIcon(const CCallsign &callsign);
 
         private:
             QString m_callsignAsSet;

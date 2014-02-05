@@ -247,6 +247,11 @@ namespace BlackCore
          * \brief Use the selected COM1/2 frequencies, and get the corresponding voice room for it
          */
         virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
+
+        /*!
+         * \brief Use the selected COM1/2 frequencies, and get the corresponding ATC stations for it
+         */
+        virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const;
     };
 }
 

@@ -10,8 +10,7 @@
 #include "blackmisc/vaudiodevicelist.h"
 #include "blackmisc/vvoiceroomlist.h"
 #include "blackmisc/nwuserlist.h"
-#include "blackmisc/aviocomsystem.h"
-#include "blackmisc/avcallsignlist.h"
+#include "blackmisc/avaircraft.h"
 #include "blackcore/voice_vatlib.h"
 #include <QObject>
 #include <QDBusAbstractInterface>
@@ -103,6 +102,13 @@ namespace BlackCore
     public slots:
 
         /*!
+         * Set my own identity for the voice rooms.
+         * \remarks Actually at this time the callsign alone was sufficient. But I pass the
+         *          whole aircraft object so further information are present if needed any time later.
+         */
+        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAiricraft);
+
+        /*!
          * Get voice rooms for COM1, COM2:
          * From this connection audio status can be obtained
          */
@@ -186,6 +192,21 @@ namespace BlackCore
          * \brief Is muted?
          */
         virtual bool isMuted() const;
+
+        /*!
+         * \brief Play SELCAL tone
+         */
+        virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const;
+
+        /*!
+         * \brief Microphone test
+         */
+        virtual void runMicrophoneTest() const;
+
+        /*!
+         * \brief Microphone test
+         */
+        virtual void runSquelchTest() const;
 
     };
 }

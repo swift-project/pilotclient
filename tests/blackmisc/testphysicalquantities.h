@@ -24,7 +24,7 @@ public:
      * \brief Standard test case constructor
      * \param parent
      */
-    explicit CTestPhysicalQuantities(QObject *parent = 0) : QObject(parent) {}
+    explicit CTestPhysicalQuantities(QObject *parent = nullptr) : QObject(parent) {}
 
 private slots:
     /*!

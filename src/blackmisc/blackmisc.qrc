@@ -1,7 +1,24 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/blackmisc">
         <file>translations/blackmisc_i18n_de.qm</file>
         <file>translations/blackmisc_i18n_fr.qm</file>
         <file>translations/blackmisc_i18n_en.qm</file>
+        <file>icons/critical.png</file>
+        <file>icons/ico_note.png</file>
+        <file>icons/ico_note_attention.png</file>
+        <file>icons/information.png</file>
+        <file>icons/question.png</file>
+        <file>icons/warning.png</file>
+        <file>icons/C1.png</file>
+        <file>icons/C3.png</file>
+        <file>icons/I1.png</file>
+        <file>icons/I3.png</file>
+        <file>icons/MNT.png</file>
+        <file>icons/OBS.png</file>
+        <file>icons/S1.png</file>
+        <file>icons/S2.png</file>
+        <file>icons/S3.png</file>
+        <file>icons/SUP.png</file>
+        <file>icons/aeropuerto.png</file>
     </qresource>
 </RCC>

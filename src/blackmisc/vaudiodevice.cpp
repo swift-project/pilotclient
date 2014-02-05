@@ -20,7 +20,7 @@ namespace BlackMisc
          * Constructor
          */
         CAudioDevice::CAudioDevice() :
-            m_type(Unknown), m_deviceIndex(invalidDevice()),
+            m_type(Unknown), m_deviceIndex(invalidDeviceIndex()),
             m_deviceName(""), m_hostName(CAudioDevice::hostName())
         {
             // void

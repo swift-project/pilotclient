@@ -23,7 +23,9 @@ namespace BlackMisc
             TypeValidation,
             TypeTrafficNetwork,
             TypeSettings,
-            TypeCore
+            TypeCore,
+            TypeAudio,
+            TypeGui
         };
 
         enum StatusSeverity
@@ -31,6 +33,19 @@ namespace BlackMisc
             SeverityInfo,
             SeverityWarning,
             SeverityError
+        };
+
+        /*!
+         * \brief Properties by index
+         */
+        enum ColumnIndex
+        {
+            IndexType,
+            IndexTypeAsString,
+            IndexSeverity,
+            IndexSeverityAsString,
+            IndexMessage,
+            IndexTimestamp
         };
 
     private:
@@ -96,6 +111,24 @@ namespace BlackMisc
             return QVariant::fromValue(*this);
         }
 
+        //! \brief Type as string
+        const QString &getTypeAsString() const;
+
+        //! \brief representing icon
+        virtual const QPixmap &toIcon() const override { return CStatusMessage::convertToIcon(*this); }
+
+        //! \brief Type as string
+        const QString &getSeverityAsString() const;
+
+        //! \copydoc CValueObject::propertyByIndex(int)
+        QVariant propertyByIndex(int index) const;
+
+        //! \copydoc CValueObject::propertyByIndex(const QVariant, int)
+        void propertyByIndex(const QVariant &variant, int index);
+
+        //! \copydoc CValueObject::propertyByIndexAsString
+        QString propertyByIndexAsString(int index, bool i18n) const;
+
         /*!
          * \brief Equal operator ==
          * \param other
@@ -128,6 +161,9 @@ namespace BlackMisc
          * \return
          */
         static CStatusMessage getInfoMessage(const QString &message);
+
+        //! \representing icon
+        static const QPixmap &convertToIcon(const CStatusMessage &statusMessage);
 
     protected:
         /*!

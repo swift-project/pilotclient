@@ -26,6 +26,9 @@ namespace BlackGui
          * \brief Destructor
          */
         virtual ~CUserListModel() {}
+
+        //! \copydoc CListModelBase::data
+        QVariant data(const QModelIndex &modelIndex, int role = Qt::DisplayRole) const;
     };
 }
 #endif // guard

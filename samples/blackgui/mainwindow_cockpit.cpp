@@ -77,7 +77,7 @@ void MainWindow::updateCockpitFromContext()
 {
     // update GUI elements
     // avoid unnecessary change events as far as possible
-    const CComSystem com1 = this->m_ownAircraft.getCom1System();
+    const CComSystem com1 = this->m_ownAircraft.getCom1System(); // aircraft just updated or set from context
     const CComSystem com2 = this->m_ownAircraft.getCom2System();
     const CTransponder transponder = this->m_ownAircraft.getTransponder();
 
@@ -106,6 +106,21 @@ void MainWindow::updateCockpitFromContext()
         break;
     }
 
+    if (this->m_contextNetworkAvailable)
+    {
+        CAtcStationList selectedStations = this->m_contextNetwork->getSelectedAtcStations();
+        CAtcStation com1Station = selectedStations[0];
+        CAtcStation com2Station = selectedStations[1];
+        if (com1Station.getCallsign().isEmpty())
+            this->ui->lbl_CockpitCom1->setToolTip("");
+        else
+            this->ui->lbl_CockpitCom1->setToolTip(com1Station.getCallsign().getStringAsSet());
+        if (com2Station.getCallsign().isEmpty())
+            this->ui->lbl_CockpitCom2->setToolTip("");
+        else
+            this->ui->lbl_CockpitCom2->setToolTip(com2Station.getCallsign().getStringAsSet());
+    }
+
     //
     // Voice room override
     //
@@ -117,8 +132,11 @@ void MainWindow::updateCockpitFromContext()
         Q_ASSERT(rooms.size() == 2);
         Q_ASSERT(this->m_usersVoiceCom1);
         Q_ASSERT(this->m_usersVoiceCom2);
-        bool com1Connected = rooms[0].isConnected();
-        bool com2Connected = rooms[1].isConnected();
+
+        CVoiceRoom room1 = rooms[0];
+        CVoiceRoom room2 = rooms[1];
+        bool com1Connected = room1.isConnected();
+        bool com2Connected = room2.isConnected();
 
         // update views
         this->m_usersVoiceCom1->update(this->m_contextVoice->getCom1RoomUsers());
@@ -136,7 +154,7 @@ void MainWindow::updateCockpitFromContext()
         {
             // no override
             QString s = com1Connected ?
-                        QString("*%1").arg(rooms[0].getVoiceRoomUrl()) :
+                        QString("*%1").arg(room1.getVoiceRoomUrl()) :
                         "";
             this->ui->le_CockpitVoiceRoomCom1->setText(s);
         }
@@ -146,11 +164,15 @@ void MainWindow::updateCockpitFromContext()
         {
             // no overrride
             QString s = com2Connected ?
-                        QString("*%1").arg(rooms[0].getVoiceRoomUrl()) :
+                        QString("*%1").arg(room2.getVoiceRoomUrl()) :
                         "";
             this->ui->le_CockpitVoiceRoomCom2->setText(s);
         }
     }
+
+    // update some other GUI elements
+    this->ui->tw_TextMessages->setTabToolTip(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM1), com1.getFrequencyActive().valueRoundedWithUnit(3));
+    this->ui->tw_TextMessages->setTabToolTip(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM2), com2.getFrequencyActive().valueRoundedWithUnit(3));
 }
 
 /*
@@ -303,4 +325,36 @@ void MainWindow::setAudioVoiceRooms()
 
     // set the real voice rooms for audio output
     this->m_contextVoice->setComVoiceRooms(room1, room2);
+}
+
+/*
+ * Test SELCAL code
+ */
+void MainWindow::testSelcal()
+{
+    QString selcalCode = this->getSelcalCode();
+    if (!CSelcal::isValidCode(selcalCode))
+    {
+        this->displayStatusMessage(
+            CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityWarning, "invalid SELCAL codde"));
+        return;
+    }
+    if (this->m_contextVoiceAvailable)
+    {
+        CSelcal selcal(selcalCode);
+        this->m_contextVoice->playSelcalTone(selcal);
+    }
+    else
+    {
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "No audi available"));
+    }
+}
+
+/*
+ * SELCAL value selected
+ */
+QString MainWindow::getSelcalCode() const
+{
+    QString selcal = this->ui->cb_CockpitSelcal1->currentText().append(this->ui->cb_CockpitSelcal2->currentText());
+    return selcal;
 }

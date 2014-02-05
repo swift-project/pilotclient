@@ -21,11 +21,13 @@
 #include "blackgui/serverlistmodel.h"
 #include "blackgui/aircraftlistmodel.h"
 #include "blackgui/userlistmodel.h"
-#include "blackmisc/statusmessage.h"
+#include "blackgui/statusmessagelistmodel.h"
 #include "blackmisc/nwtextmessage.h"
 #include <QMainWindow>
 #include <QTextEdit>
+#include <QTableView>
 #include <QItemSelection>
+#include <QLabel>
 #include <QTimer>
 
 namespace Ui
@@ -98,14 +100,11 @@ private:
     CInfoWindow *m_infoWindow;
     bool m_init;
     GuiModes::WindowMode m_windowMode;
-    GuiModes::CoreMode m_coreMode;
-    bool m_coreAvailable;
-    bool m_contextNetworkAvailable;
-    bool m_contextVoiceAvailable;
     QDBusConnection m_dBusConnection;
-    QScopedPointer<BlackCore::CCoreRuntime> m_coreRuntime; /*!< runtime, if working with local core */
+
     // the table view models
-    // normal pointers, asl these will be deleted by parent
+    // normal pointers, as these will be deleted by parent
+    BlackGui::CStatusMessageListModel *m_statusMessageList;
     BlackGui::CAtcListModel *m_atcListOnline;
     BlackGui::CAtcListModel *m_atcListBooked;
     BlackGui::CServerListModel *m_trafficServerList;
@@ -113,7 +112,13 @@ private:
     BlackGui::CUserListModel *m_allUsers;
     BlackGui::CUserListModel *m_usersVoiceCom1;
     BlackGui::CUserListModel *m_usersVoiceCom2;
+
     // contexts
+    GuiModes::CoreMode m_coreMode;
+    bool m_coreAvailable;
+    bool m_contextNetworkAvailable;
+    bool m_contextVoiceAvailable;
+    QScopedPointer<BlackCore::CCoreRuntime> m_coreRuntime; /*!< runtime, if working with local core */
     BlackCore::IContextApplication *m_contextApplication; /*!< overall application state */
     BlackCore::IContextNetwork *m_contextNetwork;
     BlackCore::IContextVoice *m_contextVoice;
@@ -121,18 +126,33 @@ private:
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
     QTimer *m_timerUpdateAtcStationsOnline; /*!< timer for update of stations */
     QTimer *m_timerUpdateAircraftsInRange; /*!< timer for update of aircrafts */
-    QTimer *m_timerUpdateUsers; /*!< timer dor update of users */
+    QTimer *m_timerUpdateUsers; /*!< timer for update of users */
     QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
     QTimer *m_timerContextWatchdog; /*!< core available? */
+    QTimer *m_timerStatusBar; /*!< cleaning up status bar */
+    QTimer *m_timerAudioTests; /*!< cleaning up status bar */
+
+    // pixmaps
     QPixmap m_resPixmapConnectionConnected;
     QPixmap m_resPixmapConnectionDisconnected;
     QPixmap m_resPixmapConnectionConnecting;
     QPixmap m_resPixmapVoiceHigh;
     QPixmap m_resPixmapVoiceLow;
     QPixmap m_resPixmapVoiceMuted;
+
+    // frameless window
     QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
-    QMenu *m_contextMenuAudio; /*! Audio context menu */
-    QString m_transponderResetValue; /*! Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas */
+
+    // context menus
+    QMenu *m_contextMenuAudio; /*!< audio context menu */
+    QMenu *m_contextMenuStatusMessageList; /*!< context menu for status message list */
+
+    // cockpit
+    QString m_transponderResetValue; /*!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas */
+
+    // status bar
+    QLabel *m_statusBarIcon; /*!< status bar icon */
+    QLabel *m_statusBarLabel; /*!< status bar label */
 
     /*!
      * \brief GUI status update
@@ -275,6 +295,16 @@ private:
      * \param disconnect also disconnect signal/slots
      */
     void stopUpdateTimers(bool disconnect = false);
+
+    /*!
+     * \brief Currently selected SELCAL code
+     */
+    QString getSelcalCode() const;
+
+    /*!
+     * \brief Audio test updates (timer) for progressbar and fetching results
+     */
+    void audioTestUpdate();
 
 private slots:
 
@@ -470,6 +500,16 @@ private slots:
      */
     void audioIconContextMenu(const QPoint &position);
 
+    //! \brief Context menu for message list
+    void messageListContextMenu(const QPoint &position);
+
+    /*!
+     * \brief Test SELCAL (code valid? play tone)
+     */
+    void testSelcal();
+
+    //! \brief start the MIC tests (Squelch)
+    void startAudioTest();
 };
 
 #pragma pop_macro("interface")

@@ -96,11 +96,11 @@ namespace BlackMiscTest
     /*
      * Callsign
      */
-    void CTestAviation::callsign()
+    void CTestAviation::callsignWithContainers()
     {
         CCallsign cs1("EDDm_twr");
         CCallsign cs2("EDDmtwr");
-        CCallsign cs3("EDDmapp");
+        CCallsign cs3("EDDmapp", "München Radar");
         QVERIFY2(cs1 == cs2, "Callsigns shall be equal");
         QVERIFY2(cs1 != cs3, "Callsigns shall not be equal");
 
@@ -118,7 +118,9 @@ namespace BlackMiscTest
         list.push_back(cs3);
         QVERIFY2(list.size() == 2, "2 different callsigns");
         list.remove(cs1);
-        QVERIFY2(list.size() == 1, "Only left in list");
+        QVERIFY2(list.size() == 1, "Only one should be left in list");
+        list.removeIf(&CCallsign::getCallsignPronounced, "München Radar");
+        QVERIFY2(list.size() == 0, "Last should be gone");
     }
 
     /*

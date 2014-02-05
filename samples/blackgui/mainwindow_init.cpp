@@ -1,9 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackcore/coreruntime.h"
+#include "blackgui/atcstationlistmodel.h"
+#include "blackmisc/avselcal.h"
 #include <QSortFilterProxyModel>
 #include <QSizeGrip>
 #include <QHBoxLayout>
@@ -46,6 +47,9 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     }
 
     // init models, the delete allows to re-init
+    if (this->m_statusMessageList != nullptr) this->m_statusMessageList->deleteLater();
+    this->m_statusMessageList = new CStatusMessageListModel(this);
+
     if (this->m_atcListBooked != nullptr) this->m_atcListBooked->deleteLater();
     this->m_atcListBooked = new CAtcListModel(this);
 
@@ -71,6 +75,11 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     // enable first, otherwise order in the model will be reset
     this->ui->tv_SettingsTnServers->setModel(this->m_trafficServerList);
 
+    this->ui->tv_StatusMessages->setSortingEnabled(true);
+    this->ui->tv_StatusMessages->setModel(this->m_statusMessageList);
+    this->m_statusMessageList->setSortColumnByPropertyIndex(BlackMisc::CStatusMessage::IndexTimestamp);
+    if (this->m_statusMessageList->hasValidSortColumn())
+        this->ui->tv_StatusMessages->horizontalHeader()->setSortIndicator(this->m_statusMessageList->getSortColumn(), this->m_statusMessageList->getSortOrder());
 
     this->ui->tv_AtcStationsOnline->setSortingEnabled(true);
     this->ui->tv_AtcStationsOnline->setModel(this->m_atcListOnline);
@@ -119,12 +128,19 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
     this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setStretchLastSection(true);
 
-    // timer
+    // SELCAL pairs in cockpit
+    this->ui->cb_CockpitSelcal1->clear();
+    this->ui->cb_CockpitSelcal2->clear();
+    this->ui->cb_CockpitSelcal1->addItems(BlackMisc::Aviation::CSelcal::codePairs());
+    this->ui->cb_CockpitSelcal2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
+
+    // timers
     if (this->m_timerUpdateAircraftsInRange == nullptr) this->m_timerUpdateAircraftsInRange = new QTimer(this);
     if (this->m_timerUpdateAtcStationsOnline == nullptr) this->m_timerUpdateAtcStationsOnline = new QTimer(this);
     if (this->m_timerUpdateUsers == nullptr) this->m_timerUpdateUsers = new QTimer(this);
     if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
     if (this->m_timerCollectedCockpitUpdates == nullptr) this->m_timerCollectedCockpitUpdates = new QTimer(this);
+    if (this->m_timerAudioTests == nullptr) this->m_timerAudioTests = new QTimer(this);
 
     // context
     if (this->m_coreMode != GuiModes::CoreInGuiProcess)
@@ -155,7 +171,21 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->m_resPixmapVoiceHigh = QPixmap(":/blackgui/icons/audiovolumehigh.png");
     this->m_resPixmapVoiceMuted = QPixmap(":/blackgui/icons/audiovolumemuted.png");
 
-    // signal / slots
+    // status bar
+    if (!this->m_statusBarLabel)
+    {
+        // also subject of style sheet
+        this->m_statusBarIcon = new QLabel(this);
+        this->m_statusBarLabel = new QLabel(this);
+        this->m_timerStatusBar = new QTimer(this);
+        this->m_statusBarLabel->setMinimumHeight(16);
+        connect(this->m_timerStatusBar, &QTimer::timeout, this->m_statusBarIcon, &QLabel::clear);
+        connect(this->m_timerStatusBar, &QTimer::timeout, this->m_statusBarLabel, &QLabel::clear);
+        this->ui->sb_MainStatusBar->addWidget(this->m_statusBarIcon, 0);
+        this->ui->sb_MainStatusBar->addWidget(this->m_statusBarLabel, 1);
+    }
+
+    // signal / slots contexts / timers
     bool connect;
     this->connect(this->m_contextNetwork, &IContextNetwork::statusMessage, this, &MainWindow::displayStatusMessage);
     this->connect(this->m_contextNetwork, &IContextNetwork::statusMessages, this, &MainWindow::displayStatusMessages);
@@ -169,6 +199,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->connect(this->m_timerUpdateUsers, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
+    this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
 
     // start timers, update timers will be started when network is connected
     this->m_timerContextWatchdog->start(2 * 1000);
@@ -178,6 +209,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
 
     // voice panel
     this->setAudioDeviceLists();
+    this->ui->prb_SettingsAudioTestProgress->setVisible(false);
 
     // data
     this->initialDataReads();
@@ -265,12 +297,15 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->pb_CockpitToggleCom1, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->pb_CockpitToggleCom2, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->pb_CockpitIdent, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
+    this->connect(this->ui->pb_CockpitSelcalTest, &QPushButton::clicked, this, &MainWindow::testSelcal);
 
     // voice
-    connected = this->connect(this->ui->cb_VoiceInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
+    connected = this->connect(this->ui->cb_SettingsAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
     Q_ASSERT(connected);
-    connected = this->connect(this->ui->cb_VoiceOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
+    connected = this->connect(this->ui->cb_SettingsAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
     Q_ASSERT(connected);
+    this->connect(this->ui->pb_SettingsAudioMicrophoneTest, &QPushButton::clicked, this, &MainWindow::startAudioTest);
+    this->connect(this->ui->pb_SettingsAudioSquelchTest, &QPushButton::clicked, this, &MainWindow::startAudioTest);
 
     // ATC
     connected = this->connect(this->ui->le_AtcStationsOnlineMetar, SIGNAL(returnPressed()), this, SLOT(getMetar()));
@@ -340,6 +375,7 @@ void MainWindow::stopUpdateTimers(bool disconnect)
     this->m_timerUpdateAircraftsInRange->stop();
     this->m_timerUpdateAtcStationsOnline->stop();
     this->m_timerUpdateUsers->stop();
+    this->m_timerAudioTests->stop();
     if (!disconnect) return;
     this->disconnect(this->m_timerUpdateAircraftsInRange);
     this->disconnect(this->m_timerUpdateAtcStationsOnline);

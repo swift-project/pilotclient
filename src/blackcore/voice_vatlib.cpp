@@ -18,6 +18,7 @@ namespace BlackCore
     CVoiceVatlib::CVoiceVatlib(QObject *parent) :
         IVoice(parent),
         m_voice(Cvatlib_Voice_Simple::Create()),
+        m_audioOutput(new QAudioOutput()),
         m_keyboardPtt(new CKeyboard(nullptr)),
         m_pushToTalk(false),
         m_inputSquelch(-1),
@@ -43,6 +44,9 @@ namespace BlackCore
             this->m_voiceRooms.push_back(CVoiceRoom()); // COM2
             this->m_outputEnabled.insert(COM1, true);
             this->m_outputEnabled.insert(COM2, true);
+            this->m_currentInputDevice = this->defaultAudioInputDevice();
+            this->m_currentOutputDevice = this->defaultAudioOutputDevice();
+            this->m_audioOutput->setVolume(1.0);
 
             // do processing
             this->startTimer(100);
@@ -75,7 +79,7 @@ namespace BlackCore
     const BlackMisc::Voice::CAudioDevice CVoiceVatlib::defaultAudioInputDevice() const
     {
         // Constructor creates already a default device
-        return BlackMisc::Voice::CAudioDevice(BlackMisc::Voice::CAudioDevice::InputDevice, BlackMisc::Voice::CAudioDevice::defaultDevice(), "default");
+        return BlackMisc::Voice::CAudioDevice(BlackMisc::Voice::CAudioDevice::InputDevice, BlackMisc::Voice::CAudioDevice::defaultDeviceIndex(), "default");
     }
 
     /*
@@ -84,7 +88,23 @@ namespace BlackCore
     const BlackMisc::Voice::CAudioDevice CVoiceVatlib::defaultAudioOutputDevice() const
     {
         // Constructor creates already a default device
-        return BlackMisc::Voice::CAudioDevice(BlackMisc::Voice::CAudioDevice::OutputDevice, BlackMisc::Voice::CAudioDevice::defaultDevice(), "default");
+        return BlackMisc::Voice::CAudioDevice(BlackMisc::Voice::CAudioDevice::OutputDevice, BlackMisc::Voice::CAudioDevice::defaultDeviceIndex(), "default");
+    }
+
+    /*
+     * Current output device
+     */
+    CAudioDevice CVoiceVatlib::getCurrentOutputDevice() const
+    {
+        return m_currentOutputDevice;
+    }
+
+    /*
+     * Current input device
+     */
+    CAudioDevice CVoiceVatlib::getCurrentInputDevice() const
+    {
+        return m_currentInputDevice;
     }
 
     /*
@@ -103,12 +123,13 @@ namespace BlackCore
         {
             if (!m_voice->SetInputDevice(device.getIndex()))
             {
-                qWarning() << "SetInputDevice() failed";
+                qWarning() << "Setting input device failed";
             }
             if (!m_voice->IsInputDeviceAlive())
             {
                 qWarning() << "Input device hit a fatal error";
             }
+            this->m_currentInputDevice = device;
         }
         catch (...)
         {
@@ -130,11 +151,13 @@ namespace BlackCore
 
         try
         {
+            // there is no return value here: https://dev.vatsim-germany.org/issues/115
             m_voice->SetOutputDevice(0, device.getIndex());
             if (!m_voice->IsOutputDeviceAlive(0))
             {
-                qWarning() << "Input device hit a fatal error";
+                qWarning() << "Output device hit a fatal error";
             }
+            this->m_currentOutputDevice = device;
         }
         catch (...)
         {
@@ -221,7 +244,7 @@ namespace BlackCore
     /*
      * Start microphone test
      */
-    void CVoiceVatlib::runMicTest()
+    void CVoiceVatlib::runMicrophoneTest()
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
@@ -358,14 +381,14 @@ namespace BlackCore
     /*
      * Room output volume as per COM unit
      */
-    void CVoiceVatlib::setRoomOutputVolume(const ComUnit comUnit, const qint32 volumne)
+    void CVoiceVatlib::setRoomOutputVolume(const ComUnit comUnit, const qint32 volume)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceClientVatlib", "Room index out of bounds!");
 
         try
         {
-            m_voice->SetRoomVolume(static_cast<qint32>(comUnit), volumne);
+            m_voice->SetRoomVolume(static_cast<qint32>(comUnit), volume);
         }
         catch (...)
         {

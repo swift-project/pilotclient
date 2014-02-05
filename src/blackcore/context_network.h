@@ -158,6 +158,9 @@ namespace BlackCore
          */
         virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
 
+        //! \copydoc IContextNetwork::getSelectedAtcStations
+        virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const;
+
         /*!
          * \copydoc IContextNetwork::getUsers()
          */

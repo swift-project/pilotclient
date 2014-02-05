@@ -32,7 +32,8 @@ namespace BlackMisc
                 IndexId,
                 IndexPassword,
                 IndexRealName,
-                IndexCallsign
+                IndexCallsign,
+                IndexCallsignIcon
             };
 
             /*!
@@ -136,6 +137,12 @@ namespace BlackMisc
              * \param callsign
              */
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_callsign = callsign; }
+
+            //! \copydoc CValueObject::toIcon()
+            virtual const QPixmap &toIcon() const override
+            {
+                return this->getCallsign().toIcon();
+            }
 
             /*!
              * \brief Equal operator ==

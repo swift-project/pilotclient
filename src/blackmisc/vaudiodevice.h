@@ -105,17 +105,23 @@ namespace BlackMisc
              */
             static void registerMetadata();
 
-            /*!
-             * \brief Device type
-             * \return
-             */
-            static qint16 defaultDevice() {return -1;}
+            //! \brief Device index for default device
+            static qint16 defaultDeviceIndex() {return -1;}
 
-            /*!
-             * \brief Device type
-             * \return
-             */
-            static qint16 invalidDevice() {return -2;}
+            //! \brief Invalid device index
+            static qint16 invalidDeviceIndex() {return -2;}
+
+            //! \brief default output device
+            static CAudioDevice getDefaultOutputDevice()
+            {
+                return CAudioDevice(OutputDevice, defaultDeviceIndex(), "default");
+            }
+
+            //! \brief default input device
+            static CAudioDevice getDefaultInputDevice()
+            {
+                return CAudioDevice(InputDevice, defaultDeviceIndex(), "default");
+            }
 
         protected:
 

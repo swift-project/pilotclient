@@ -96,6 +96,11 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Voice::CVoiceRoomList>(QLatin1Literal("getSelectedVoiceRooms"));
     }
 
+    BlackMisc::Aviation::CAtcStationList IContextNetwork::getSelectedAtcStations() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getSelectedAtcStations"));
+    }
+
     BlackMisc::Aviation::CAircraft IContextNetwork::getOwnAircraft() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraft>(QLatin1Literal("getOwnAircraft"));

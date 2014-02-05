@@ -1,6 +1,6 @@
 include (../../externals.pri)
 
-QT       += core dbus network
+QT       += core dbus network multimedia
 QT       -= gui
 
 TARGET = sample_voice_client
@@ -15,12 +15,13 @@ INCLUDEPATH += . ../../src
 SOURCES += *.cpp
 HEADERS += *.h
 
-LIBS    += -L../../lib -lblackcore -lblackmisc
+LIBS    += -L../../lib -lblackcore -lblackmisc -lblacksound
 LIBS	+= -lvatlib
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
-                                     ../../lib/blackcore.lib
+                                     ../../lib/blackcore.lib \
+                                     ../../lib/blacksound.lib
 else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
-                                     ../../lib/libblackcore.a
-
+                                     ../../lib/libblackcore.a \
+                                     ../../lib/libblacksound.a
 DESTDIR = ../../bin

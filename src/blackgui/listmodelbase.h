@@ -155,6 +155,14 @@ namespace BlackGui
          */
         virtual void sort(int column, Qt::SortOrder order);
 
+        //! \brief Similar to ListType::push_back
+        virtual void push_back(const ObjectType &object);
+
+        //! \brief Similar to ListType::insert here inserts at first position
+        virtual void insert(const ObjectType &object);
+
+        //! \brief clear the list
+        virtual void clear();
     };
 }
 #endif // guard

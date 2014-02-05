@@ -7,6 +7,7 @@
 #define BLACKCORE_VOICE_VATLIB_H
 
 #include "voice.h"
+#include "../blacksound/soundgenerator.h"
 #include "../blackmisc/vaudiodevicelist.h"
 #include "../blackmisc/nwuserlist.h"
 #include "../blackmisc/avcallsignlist.h"
@@ -51,8 +52,6 @@ namespace BlackCore
         virtual const BlackMisc::Voice::CAudioDeviceList &audioDevices() const ;
         virtual const BlackMisc::Voice::CAudioDevice defaultAudioInputDevice() const;
         virtual const BlackMisc::Voice::CAudioDevice defaultAudioOutputDevice() const;
-        virtual void setInputDevice(const BlackMisc::Voice::CAudioDevice &device);
-        virtual void setOutputDevice(const BlackMisc::Voice::CAudioDevice &device);
 
         /************************************************
          * SETUP TESTS
@@ -121,9 +120,27 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns(const ComUnit comUnit) const;
 
         /*!
-         * \brief Switch audio output, enable or disable given COM unit.
-         * \param comUnit
-         * \param enable   enable or disable output
+         * \copydoc IVoice::setInputDevice
+         */
+        virtual void setInputDevice(const BlackMisc::Voice::CAudioDevice &device);
+
+        /*!
+         * \copydoc IVoice::setOutputDevice
+         */
+        virtual void setOutputDevice(const BlackMisc::Voice::CAudioDevice &device);
+
+        /*!
+         * \brief Current input device
+         */
+        virtual BlackMisc::Voice::CAudioDevice getCurrentInputDevice() const;
+
+        /*!
+         * \brief Current output device
+         */
+        virtual BlackMisc::Voice::CAudioDevice getCurrentOutputDevice() const;
+
+        /*!
+         * \copydoc IVoice::switchAudioOutput
          */
         virtual void switchAudioOutput(const ComUnit comUnit, bool enable);
 
@@ -278,9 +295,12 @@ namespace BlackCore
 #endif
 
         QScopedPointer<Cvatlib_Voice_Simple, Cvatlib_Voice_Simple_Deleter> m_voice;
+        QScopedPointer<QAudioOutput> m_audioOutput;
         BlackMisc::Aviation::CCallsign m_aircraftCallsign; /*!< own callsign to join voice rooms */
         BlackMisc::Voice::CVoiceRoomList m_voiceRooms;
         BlackMisc::Voice::CAudioDeviceList m_devices; /*!< in and output devices */
+        BlackMisc::Voice::CAudioDevice m_currentOutputDevice;
+        BlackMisc::Voice::CAudioDevice m_currentInputDevice;
         QScopedPointer<CKeyboard> m_keyboardPtt; /*!< handler for PTT */
         bool m_pushToTalk; /*!< flag, PTT pressed */
         float m_inputSquelch;

@@ -85,17 +85,30 @@ namespace BlackCore
     /*
      * Selected voice rooms
      */
-    CVoiceRoomList CContextNetwork::getSelectedVoiceRooms() const
+    CAtcStationList CContextNetwork::getSelectedAtcStations() const
     {
         CAtcStationList stationsCom1 = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(this->m_ownAircraft.getCom1System());
         CAtcStationList stationsCom2 = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(this->m_ownAircraft.getCom2System());
         stationsCom1.sortBy(&CAtcStation::getDistanceToPlane);
         stationsCom2.sortBy(&CAtcStation::getDistanceToPlane);
 
-        CVoiceRoom vr;
+        CAtcStation s;
+        CAtcStationList stations;
+        stations.push_back(stationsCom1.isEmpty() ? s : stationsCom1[0]);
+        stations.push_back(stationsCom2.isEmpty() ? s : stationsCom2[0]);
+        return stations;
+    }
+
+    /*
+     * Selected voice rooms
+     */
+    CVoiceRoomList CContextNetwork::getSelectedVoiceRooms() const
+    {
+        CAtcStationList stations = this->getSelectedAtcStations();
+        Q_ASSERT(stations.size() == 2);
         CVoiceRoomList rooms;
-        rooms.push_back(stationsCom1.isEmpty() ? vr : stationsCom1[0].getVoiceRoom());
-        rooms.push_back(stationsCom2.isEmpty() ? vr : stationsCom2[0].getVoiceRoom());
+        rooms.push_back(stations[0].getVoiceRoom());
+        rooms.push_back(stations[1].getVoiceRoom());
         return rooms;
     }
 
@@ -181,9 +194,13 @@ namespace BlackCore
             station.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
             this->m_atcStationsOnline.push_back(station);
             emit this->changedAtcStationsOnline();
-            emit this->m_network->sendAtisQuery(callsign); // request ATIS
-            emit this->m_network->sendRealNameQuery(callsign);
-            emit this->m_network->sendServerQuery(callsign);
+
+            if (this->isConnected())
+            {
+                emit this->m_network->sendAtisQuery(callsign); // request ATIS
+                emit this->m_network->sendRealNameQuery(callsign);
+                emit this->m_network->sendServerQuery(callsign);
+            }
         }
         else
         {

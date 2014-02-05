@@ -42,6 +42,38 @@ namespace BlackMisc
         }
 
         /*
+         * Iconify
+         */
+        const QPixmap &CCallsign::convertToIcon(const CCallsign &callsign)
+        {
+            static const QPixmap app(QPixmap(":/blackmisc/icons/question.png").scaledToWidth(16, Qt::SmoothTransformation));
+            static const QPixmap gnd(QPixmap(":/blackmisc/icons/question.png").scaledToWidth(16, Qt::SmoothTransformation));
+            static const QPixmap del(QPixmap(":/blackmisc/icons/question.png").scaledToWidth(16, Qt::SmoothTransformation));
+            static const QPixmap twr(QPixmap(":/blackmisc/icons/question.png").scaledToWidth(16, Qt::SmoothTransformation));
+            static const QPixmap pilot(QPixmap(":/blackmisc/icons/aeropuerto.png").scaledToWidth(16, Qt::SmoothTransformation));
+            static const QPixmap sup(":/blackmisc/icons/SUP.png");
+            static const QPixmap unknown(QPixmap(":/blackmisc/icons/question.png").scaledToWidth(16, Qt::SmoothTransformation));
+
+            QString t = callsign.asString().toUpper();
+            if (t.length() < 3) return unknown;
+            t = t.right(3);
+
+            if (callsign.getStringAsSet().contains("_"))
+            {
+                if ("APP" == t) return app;
+                if ("GND" == t) return gnd;
+                if ("TWR" == t) return twr;
+                if ("DEL" == t) return del;
+                if ("SUP" == t) return sup;
+                return unknown;
+            }
+            else
+            {
+                return pilot;
+            }
+        }
+
+        /*
          * Callsign as Observer
          */
         QString CCallsign::getAsObserverCallsignString() const

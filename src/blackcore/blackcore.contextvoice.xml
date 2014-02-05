@@ -56,13 +56,17 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Voice::CAudioDevice"/>
     </method>
     <method name="setVolumes">
-      <arg name="com1" type="(s(dd(s))(dd(s))iiib)" direction="in"/>
+      <arg name="com1" type="(s(dd(s))(dd(s))iiibu)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CComSystem"/>
-      <arg name="com2" type="(s(dd(s))(dd(s))iiib)" direction="in"/>
+      <arg name="com2" type="(s(dd(s))(dd(s))iiibu)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="BlackMisc::Aviation::CComSystem"/>
     </method>
     <method name="isMuted">
       <arg type="b" direction="out"/>
+    </method>
+    <method name="playSelcalTone">
+      <arg name="selcal" type="(s)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="BlackMisc::Aviation::CSelcal"/>
     </method>
   </interface>
 </node>

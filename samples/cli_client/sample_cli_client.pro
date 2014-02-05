@@ -1,7 +1,6 @@
 include (../../externals.pri)
 
 QT       += core dbus network
-QT       -= gui
 
 TARGET = sample_cli_client
 TEMPLATE = app
