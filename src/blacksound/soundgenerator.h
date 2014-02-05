@@ -75,18 +75,18 @@ namespace BlackSound
         /*!
          * \copydoc QIODevice::readData()
          */
-        qint64 readData(char *data, qint64 maxlen);
+        virtual qint64 readData(char *data, qint64 maxlen);
 
         /*!
          * \copydoc QIODevice::writeData()
          * \remarks NOT(!) used here
          */
-        qint64 writeData(const char *data, qint64 len);
+        virtual qint64 writeData(const char *data, qint64 len);
 
         /*!
          * \copydoc QIODevice::bytesAvailable()
          */
-        qint64 bytesAvailable() const;
+        virtual qint64 bytesAvailable() const;
 
         /*!
          * \copydoc QIODevice::seek()
@@ -102,14 +102,6 @@ namespace BlackSound
         virtual bool atEnd() const
         {
             return this->m_endReached ? true : QIODevice::atEnd();
-        }
-
-        /*!
-         * \brief One cycle of tones takes t milliseconds
-         */
-        qint64 oneCycleDurationMs() const
-        {
-            return this->m_oneCycleDurationMs;
         }
 
         /*!
@@ -138,6 +130,14 @@ namespace BlackSound
          * \brief Generate tone data in internal buffer
          */
         void generateData(const QAudioFormat &format, const QList<Tone> &tones);
+
+        /*!
+         * \brief One cycle of tones takes t milliseconds
+         */
+        qint64 oneCycleDurationMs() const
+        {
+            return this->m_oneCycleDurationMs;
+        }
 
     private:
         qint64 m_position; /*!< position in buffer */
