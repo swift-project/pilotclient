@@ -4,6 +4,9 @@
 #include <qendian.h>
 #include <QAudioOutput>
 
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
+
 namespace BlackSound
 {
     CSoundGenerator::CSoundGenerator(const QAudioFormat &format, const QList<Tone> &tones, bool singlePlay, QObject *parent)
@@ -66,10 +69,15 @@ namespace BlackSound
                 // http://hyperphysics.phy-astr.gsu.edu/hbase/audio/sumdif.html
                 // http://math.stackexchange.com/questions/164369/how-do-you-calculate-the-frequency-perceived-by-humans-of-two-sinusoidal-waves-a
                 const double pseudoTime = double(sampleIndexPerTone % format.sampleRate()) / format.sampleRate();
-                const double amplitude = t.m_secondaryFrequencyHz == 0 ?
-                                         qSin(2 * M_PI * t.m_frequencyHz * pseudoTime) :
-                                         qSin(M_PI * (t.m_frequencyHz + t.m_secondaryFrequencyHz) * pseudoTime) *
-                                         qCos(M_PI * (t.m_frequencyHz - t.m_secondaryFrequencyHz) * pseudoTime);
+                double amplitude = 0; // silence
+                if (t.m_frequencyHz > 10)
+                {
+                    amplitude = t.m_secondaryFrequencyHz == 0 ?
+                                qSin(2 * M_PI * t.m_frequencyHz * pseudoTime) :
+                                qSin(M_PI * (t.m_frequencyHz + t.m_secondaryFrequencyHz) * pseudoTime) *
+                                qCos(M_PI * (t.m_frequencyHz - t.m_secondaryFrequencyHz) * pseudoTime);
+                }
+
                 // the combination of two frequencies actually would have 2*amplitude,
                 // but I have to normalize with amplitude -1 -> +1
 
@@ -184,6 +192,20 @@ namespace BlackSound
         audioOutput->setVolume(vol);
         generator->start();
         audioOutput->start(generator);
+    }
+
+    void CSoundGenerator::playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device)
+    {
+        if (volume < 1) return;
+        if (!selcal.isValid()) return;
+        QList<CFrequency> frequencies = selcal.getFrequencies();
+        Q_ASSERT(frequencies.size() == 4);
+        Tone t1(frequencies.at(0).value(CFrequencyUnit::Hz()), frequencies.at(1).value(CFrequencyUnit::Hz()), 1000);
+        Tone t2(0, 200);
+        Tone t3(frequencies.at(2).value(CFrequencyUnit::Hz()), frequencies.at(3).value(CFrequencyUnit::Hz()), 1000);
+        QList<CSoundGenerator::Tone> tones;
+        tones << t1 << t2 << t3;
+        CSoundGenerator::playSignal(volume, tones, device);
     }
 
 } // namespace
