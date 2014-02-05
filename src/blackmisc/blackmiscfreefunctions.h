@@ -30,7 +30,6 @@ namespace BlackMisc
      */
     namespace PhysicalQuantities
     {
-
         /*!
          * \brief Register all metadata for PQs
          */
@@ -43,7 +42,6 @@ namespace BlackMisc
      */
     namespace Aviation
     {
-
         /*!
          * \brief Register metadata for aviation
          */
@@ -103,14 +101,14 @@ namespace BlackMisc
     void registerMetadata();
 
     /*!
-     * Deals with the issue that the BlackMisc metatype does not always start with
-     * the same id, e.g. with GUI enabled:
+     * Deals with the issue, that the BlackMisc metatypes do not always start with
+     * the same id, but dependent on enabled Qt modules. E.g. with GUI enabled:
      * type: 1024 name: QPaintBufferCacheEntry
      * type: 1025 .... some classes I cannot foresee
      * type: 1027 name: BlackMisc::CValueMap
      *
      * This is important when marshalling Variants via DBus among different
-     * binaries, as the offset has to be considered
+     * binaries, as an offset has to be considered
      *
      * \return
      */
@@ -123,8 +121,6 @@ namespace BlackMisc
 
     /*!
      * \brief Compare 2 QVariants
-     * \param v1
-     * \param v2
      */
     bool equalQVariants(const QVariant &v1, const QVariant &v2);
 
@@ -132,13 +128,13 @@ namespace BlackMisc
      * \brief Compare QVariants
      * \param v1
      * \param v2
-     * \return
+     * \return same return values as in QString::compare()
      */
     int compareQVariants(const QVariant &v1, const QVariant &v2);
 
     /*!
-     * \brief QVariant to string, allows to stringify CValueObject
-     * \param qv
+     * \brief QVariant to QString, allows to stringify CValueObject
+     * \param qv    QVariant containing any CValueObject
      * \param i18n
      * \return
      */
@@ -156,23 +152,24 @@ namespace BlackMisc
     /*!
      * Convert a QDBusArgument back to a concrete type if required
      * This is a workaround if a QVariant is sent via DBus, QDBusArgument is
-     * received and Qt is nor able to get the original QVariant back
-     * \param argument
-     * \param type
-     * \return
+     * received and Qt is not able to get the original QVariant back
+     * \param argument  send via DBus
+     * \param type      Metatype
+     * \return          QVariant generated from the above
+     * \todo To be removed if a better solution is found
      */
-    // TODO: To be removed if a better solution is found
     QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
 
     /*!
-     * \brief displayAllUserTypes
+     * \brief Display all user metatypes
+     * \remarks Used in order to debug code, do not remove
      */
     void displayAllUserMetatypesTypes();
 
     /*!
-     * \brief Add several hash values
+     * \brief Calculate a single hash value based on a list of individual hash values
      * \param values
-     * \param classTypeId
+     * \param classTypeId   add a hash value for class name on top
      * \return
      */
     uint calculateHash(const QList<uint> &values, const char *className);

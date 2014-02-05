@@ -171,49 +171,29 @@ namespace BlackMisc
              */
             void syncronizeData(CUser &otherUser);
 
-            /*!
-             * \copydoc CValueObject::propertyByIndex(int)
-             */
+            //! \copydoc CValueObject::propertyByIndex(int)
             QVariant propertyByIndex(int index) const;
 
-            /*!
-             * \copydoc CValueObject::propertyByIndex(const QVariant, int)
-             */
+            //! \copydoc CValueObject::propertyByIndex(const QVariant, int)
             void propertyByIndex(const QVariant &variant, int index);
 
         protected:
-            /*!
-             * \brief Rounded value as string
-             * \param i18n
-             * \return
-             */
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const;
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
+            //! \copydoc CValueObject::getMetaTypeId
             virtual int getMetaTypeId() const;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
+            //! \copydoc CValueObject::isA
             virtual bool isA(int metaTypeId) const;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
+            //! \copydoc CValueObject::compareImpl
             virtual int compareImpl(const CValueObject &other) const;
 
-            /*!
-             * \brief Stream to DBus <<
-             * \param argument
-             */
+            //! \copydoc CValueObject::marshallToDbus
             virtual void marshallToDbus(QDBusArgument &argument) const;
 
-            /*!
-             * \brief Stream from DBus >>
-             * \param argument
-             */
+            //! \copydoc CValueObject::unmarshallFromDbus
             virtual void unmarshallFromDbus(const QDBusArgument &argument);
 
         private:

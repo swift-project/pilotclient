@@ -65,7 +65,7 @@ namespace BlackMiscTest
          * \param variant
          * \param localMetyType, works only in the same binary
          */
-        void receiveVariant(const QDBusVariant &variant, int localMetyType);
+        void receiveVariant(const QDBusVariant &variant, int localMetaType);
 
         /*!
          * \brief Receive speed

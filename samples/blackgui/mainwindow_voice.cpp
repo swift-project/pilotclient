@@ -132,7 +132,7 @@ void MainWindow::audioVolumes()
         return;
     }
 
-    // mute / umute
+    // mute / unmute
     com1.setEnabled(!muted);
     com2.setEnabled(!muted);
     this->ui->pb_SoundMute->setText(muted ? "Unmute" : "Mute");

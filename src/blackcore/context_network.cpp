@@ -173,7 +173,7 @@ namespace BlackCore
         CStatusMessageList msgs;
         if (this->m_network->isConnected())
         {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "Cannot set plane info, network already connected"));
+            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "Cannot set aircraft info, network already connected"));
         }
         else
         {

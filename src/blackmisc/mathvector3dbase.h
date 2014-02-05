@@ -276,9 +276,6 @@ namespace BlackMisc
 
             /*!
              * \brief Operator to support commutative multiplication
-             * \param factor
-             * \param otherVector
-             * \return
              */
             friend ImplVector operator *(double factor, const ImplVector &other)
             {

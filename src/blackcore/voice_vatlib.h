@@ -27,7 +27,7 @@
 namespace BlackCore
 {
     /*!
-     * Vatlib implementation of the IVoiceClient interface.
+     * Vatlib implementation of the IVoice interface.
      */
     class CVoiceVatlib : public IVoice
     {
@@ -49,20 +49,49 @@ namespace BlackCore
         // TODO: Vatlib supports multiple output devices. That basically means, you could connect
         // to different voice rooms and send their audio to different devices, e.g. ATIS to loudspeakers
         // and ATC to headspeakers. Is not important to implement that now, if ever.
+
+        /*!
+         * \copydoc IVoice::audioDevices()
+         */
         virtual const BlackMisc::Voice::CAudioDeviceList &audioDevices() const ;
+
+        /*!
+         * \copydoc IVoice::defaultAudioInputDevice()
+         */
         virtual const BlackMisc::Voice::CAudioDevice defaultAudioInputDevice() const;
+
+        /*!
+         * \copydoc IVoice::defaultAudioOutputDevice()
+         */
         virtual const BlackMisc::Voice::CAudioDevice defaultAudioOutputDevice() const;
 
         /************************************************
          * SETUP TESTS
          * *********************************************/
 
-        // Mic tests
+        /*!
+         * \copydoc IVoice::runSquelchTest
+         */
         virtual void runSquelchTest();
+
+        /*!
+         * \copydoc IVoice::runMicTest
+         */
         virtual void runMicTest();
 
+        /*!
+         * \copydoc IVoice::inputSquelch
+         */
         virtual float inputSquelch() const;
+
+        /*!
+         * \copydoc IVoice::micTestResult()
+         */
         virtual qint32 micTestResult() const;
+
+        /*!
+         * \copydoc IVoice::micTestResultAsString
+         */
         virtual QString micTestResultAsString() const;
 
     public slots:
@@ -145,7 +174,7 @@ namespace BlackCore
         virtual void switchAudioOutput(const ComUnit comUnit, bool enable);
 
         /*!
-         * \brief Muted?
+         * \copydoc IVoice::isMuted
          */
         virtual bool isMuted() const
         {
@@ -197,7 +226,9 @@ namespace BlackCore
         void onEndFindSquelch();
         void onEndMicTest();
 
-        // slot to handle users
+        /*!
+         * \brief User (identified by callsign) joined or left voice room
+         */
         void onUserJoinedLeft(const ComUnit comUnit);
 
     private:

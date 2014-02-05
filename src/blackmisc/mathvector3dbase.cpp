@@ -179,8 +179,7 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Stream to DBus
-         * \param argument
+         * \copydoc CValueObject::getValueHash()
          */
         template <class ImplVector> uint CVector3DBase<ImplVector>::getValueHash() const
         {

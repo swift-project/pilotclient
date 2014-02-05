@@ -138,37 +138,25 @@ namespace BlackCore
          */
         virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder);
 
-        /*!
-         * \copydoc IContextNetwork::getOwnAircraft()
-         */
+        //! \copydoc IContextNetwork::getOwnAircraft()
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
-        /*!
-         * \copydoc IContextNetwork::sendTextMessages()
-         */
+        //! \copydoc IContextNetwork::sendTextMessages()
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages);
 
-        /*!
-         * \copydoc IContextNetwork::getMetar()
-         */
+        //! \copydoc IContextNetwork::getMetar()
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode);
 
-        /*!
-         * \copydoc IContextNetwork::getSelectedVoiceRooms()
-         */
+        //! \copydoc IContextNetwork::getSelectedVoiceRooms()
         virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
 
         //! \copydoc IContextNetwork::getSelectedAtcStations
         virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const;
 
-        /*!
-         * \copydoc IContextNetwork::getUsers()
-         */
+        //! \copydoc IContextNetwork::getUsers()
         virtual BlackMisc::Network::CUserList getUsers() const;
 
-        /*!
-         * \copydoc IContextNetwork::getUsersForCallsigns
-         */
+        //! \copydoc IContextNetwork::getUsersForCallsigns
         virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
 
     private:

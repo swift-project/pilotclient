@@ -121,8 +121,8 @@ namespace BlackMisc
         static void registerMetadata();
 
     protected:
-        QMap<int, QVariant> m_values; /*!< values */
-        bool m_wildcard;
+        QMap<int, QVariant> m_values; //!< values
+        bool m_wildcard; //!< wildcard
 
         /*!
          * \brief Meaningful string representation

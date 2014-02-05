@@ -48,8 +48,9 @@ namespace BlackCore
 
     public:
 
-        //! ComUnit
-        /*! IVoiceClient currently supports two different com units */
+        /*!
+         * \brief IVoice currently supports two different com units
+         */
         enum ComUnit
         {
             COM1 = 0,   /*!< ComUnit 1 */
@@ -85,7 +86,7 @@ namespace BlackCore
 
         /************************************************
          * SETUP TESTS
-         * *********************************************/
+         ***********************************************/
 
         /*!
          * \brief Runs a 5 seconds test, measuring your background noise.
@@ -183,7 +184,6 @@ namespace BlackCore
 
         /*!
          * \brief Get voice room callsings
-         * \param comUnit
          * \return
          */
         virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns(const ComUnit comUnit) const = 0;
@@ -225,11 +225,20 @@ namespace BlackCore
          * \brief Audio for given unit started
          */
         void audioStarted(const ComUnit comUnit);
+
         /*!
          * \brief Audio for given unit stopped
          */
         void audioStopped(const ComUnit comUnit);
+
+        /*!
+         * \brief Audio started
+         */
         void globalAudioStarted();
+
+        /*!
+         * \brief Audio stopped
+         */
         void globalAudioStopped();
 
         // Test signals
@@ -237,6 +246,7 @@ namespace BlackCore
          * \brief Squelch test completed
          */
         void squelchTestFinished();
+
         /*!
          * \brief Microphone test completed
          */

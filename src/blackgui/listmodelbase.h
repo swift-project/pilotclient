@@ -150,9 +150,7 @@ namespace BlackGui
             }
         }
 
-        /*!
-         * \copydoc QAbstractListModel::sort()
-         */
+        //! \copydoc QAbstractListModel::sort()
         virtual void sort(int column, Qt::SortOrder order);
 
         //! \brief Similar to ListType::push_back

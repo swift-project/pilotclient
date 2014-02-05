@@ -20,37 +20,25 @@ namespace BlackMisc
     class CStatusMessageList : public CSequence<CStatusMessage>
     {
     public:
-        /*!
-         * \brief StatusMessage
-         */
+        //! \brief Constructor
         CStatusMessageList() {}
 
-        /*!
-         * \brief Find by type
-         * \param type
-         * \return
-         */
+        //! \brief Construct from a base class object.
+        CStatusMessageList(const CSequence<CStatusMessage> &other);
+
+        //! \brief Find by type
         CStatusMessageList findByType(CStatusMessage::StatusType type) const;
 
-        /*!
-         * \brief Find by type
-         * \param type
-         * \return
-         */
+        //! \brief Find by severity
         CStatusMessageList findBySeverity(CStatusMessage::StatusSeverity severity) const;
 
-        /*!
-         * \brief As QVariant
-         * \return
-         */
+        //! \copydoc CValueObject::asQVariant
         virtual QVariant asQVariant() const
         {
             return QVariant::fromValue(*this);
         }
 
-        /*!
-         * \brief Register metadata of unit and quantity
-         */
+        //! \brief Register metadata of unit and quantity
         static void registerMetadata();
 
     };

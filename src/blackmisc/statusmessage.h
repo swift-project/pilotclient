@@ -14,7 +14,7 @@ namespace BlackMisc
     {
     public:
         /*!
-         * \brief The StatusType enum
+         * \brief Status types
          */
         enum StatusType
         {
@@ -28,6 +28,9 @@ namespace BlackMisc
             TypeGui
         };
 
+        /*!
+         * \brief Status severities
+         */
         enum StatusSeverity
         {
             SeverityInfo,
@@ -55,58 +58,35 @@ namespace BlackMisc
         QDateTime m_timestamp;
 
     public:
-        /*!
-         * \brief StatusMessage
-         */
-        CStatusMessage() :
-            m_type(TypeUnknown), m_severity(SeverityInfo) {}
+        //! \brief Constructor
+        CStatusMessage() : m_type(TypeUnknown), m_severity(SeverityInfo) {}
 
-        /*!
-         * \brief StatusMessage
-         * \param type
-         * \param severity
-         * \param message
-         */
+        //! \brief Constructor
         CStatusMessage(StatusType type, StatusSeverity severity, const QString &message);
 
-        /*!
-         * \brief Status type
-         * \return
-         */
+        //! \brief Status type
         StatusType getType() const
         {
             return this->m_type;
         }
 
-        /*!
-         * \brief Status severity
-         * \return
-         */
+        //! \brief Status severity
         StatusSeverity getSeverity() const
         {
             return this->m_severity;
         }
 
-        /*!
-         * \brief Message
-         * \return
-         */
+        //! \brief Message
         QString getMessage() const
         {
             return this->m_message;
         }
 
-        /*!
-         * \brief Value hash
-         * \return
-         */
+        //! \copydoc CValueObject::getValueHash()
         virtual uint getValueHash() const;
 
-        /*!
-         * \brief As QVariant
-         * \return
-         */
-        QVariant toQVariant() const
+        //! \copydoc CValueObject::toQVariant()
+        virtual QVariant toQVariant() const override
         {
             return QVariant::fromValue(*this);
         }
@@ -121,86 +101,51 @@ namespace BlackMisc
         const QString &getSeverityAsString() const;
 
         //! \copydoc CValueObject::propertyByIndex(int)
-        QVariant propertyByIndex(int index) const;
+        virtual QVariant propertyByIndex(int index) const override;
 
         //! \copydoc CValueObject::propertyByIndex(const QVariant, int)
-        void propertyByIndex(const QVariant &variant, int index);
+        virtual void setPropertyByIndex(const QVariant &variant, int index) override;
 
         //! \copydoc CValueObject::propertyByIndexAsString
-        QString propertyByIndexAsString(int index, bool i18n) const;
+        virtual QString propertyByIndexAsString(int index, bool i18n) const override;
 
-        /*!
-         * \brief Equal operator ==
-         * \param other
-         * @return
-         */
+        //! \brief Equal operator ==
         bool operator ==(const CStatusMessage &other) const;
 
-        /*!
-         * \brief Unequal operator ==
-         * \param other
-         * @return
-         */
+        //! \brief Unequal operator !=
         bool operator !=(const CStatusMessage &other) const;
 
-        /*!
-         * \brief Register metadata
-         */
+        //! \brief Register metadata
         static void registerMetadata();
 
-        /*!
-         * \brief Validation error
-         * \param message
-         * \return
-         */
+        //! \brief Validation error
         static CStatusMessage getValidationError(const QString &message);
 
-        /*!
-         * \brief Unspecific info message
-         * \param message
-         * \return
-         */
+        //! \brief Unspecific info message
         static CStatusMessage getInfoMessage(const QString &message);
 
         //! \representing icon
         static const QPixmap &convertToIcon(const CStatusMessage &statusMessage);
 
     protected:
-        /*!
-         * \brief Marshall to DBus
-         * \param argument
-         */
-        virtual void marshallToDbus(QDBusArgument &arg) const;
+        //! \copydoc CValueObject::marshallToDbus
+        virtual void marshallToDbus(QDBusArgument &arg) const override;
 
-        /*!
-         * \brief Unmarshall from DBus
-         * \param argument
-         */
-        virtual void unmarshallFromDbus(const QDBusArgument &arg);
+        //! \copydoc CValueObject::unmarshallFromDbus
+        virtual void unmarshallFromDbus(const QDBusArgument &arg) override;
 
-        /*!
-         * \brief Convert to String
-         * \param i18n
-         * \return
-         */
-        virtual QString convertToQString(bool i18n = false) const;
+        //! \copydoc CValueObject::convertToQString
+        virtual QString convertToQString(bool i18n = false) const override;
 
-        /*!
-         * \copydoc CValueObject::getMetaTypeId
-         */
-        virtual int getMetaTypeId() const;
+        //! \copydoc CValueObject::getMetaTypeId
+        virtual int getMetaTypeId() const override;
 
-        /*!
-         * \copydoc CValueObject::isA
-         */
-        virtual bool isA(int metaTypeId) const;
+        //! \copydoc CValueObject::isA
+        virtual bool isA(int metaTypeId) const override;
 
-        /*!
-         * \copydoc CValueObject::compareImpl
-         */
-        virtual int compareImpl(const CValueObject &other) const;
+        //! \copydoc CValueObject::compareImpl
+        virtual int compareImpl(const CValueObject &other) const override;
     };
-
 }
 
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)

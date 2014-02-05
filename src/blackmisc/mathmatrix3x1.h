@@ -44,7 +44,6 @@ namespace BlackMisc
 
             /*!
              * \brief Copy constructor
-             * \param otherMatrix
              */
             CMatrix3x1(const CMatrix3x1 &other) : CMatrixBase(other) {}
 

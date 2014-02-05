@@ -16,15 +16,10 @@ namespace BlackGui
 
     public:
 
-        /*!
-         * \brief Constructor
-         * \param parent
-         */
+        //! \brief Constructor
         explicit CUserListModel(QObject *parent = nullptr);
 
-        /*!
-         * \brief Destructor
-         */
+        //! \brief Destructor
         virtual ~CUserListModel() {}
 
         //! \copydoc CListModelBase::data

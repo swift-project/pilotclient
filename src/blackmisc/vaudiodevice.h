@@ -75,34 +75,19 @@ namespace BlackMisc
              */
             DeviceType getType() const { return m_type; }
 
-            /*!
-             * \brief Valid audio device object?
-             * \return
-             */
+            //! \brief Valid audio device object?
             bool isValid() const { return m_deviceIndex >= -1 && !m_deviceName.isEmpty(); }
 
-            /*!
-             * \brief Equal operator ==
-             * \param other
-             * @return
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CAudioDevice &other) const;
 
-            /*!
-             * \brief Unequal operator ==
-             * \param other
-             * @return
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CAudioDevice &other) const;
 
-            /*!
-             * \brief Value hash
-             */
+            //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const;
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
             //! \brief Device index for default device

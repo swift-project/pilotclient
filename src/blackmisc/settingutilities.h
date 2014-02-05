@@ -7,6 +7,9 @@ namespace BlackMisc
 {
     namespace Settings
     {
+        /*!
+         * \brief Helper / utility methods for settings
+         */
         class CSettingUtilities
         {
         private:

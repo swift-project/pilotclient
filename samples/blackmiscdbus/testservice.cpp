@@ -36,10 +36,10 @@ namespace BlackMiscTest
     /*
      * Receive variant
      */
-    void Testservice::receiveVariant(const QDBusVariant &variant, int localMetyType)
+    void Testservice::receiveVariant(const QDBusVariant &variant, int localMetaType)
     {
         QVariant qv = variant.variant();
-        QVariant qvF = BlackMisc::fixQVariantFromDbusArgument(qv, localMetyType);
+        QVariant qvF = BlackMisc::fixQVariantFromDbusArgument(qv, localMetaType);
         QString s = BlackMisc::qVariantToString(qvF, true);
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received variant:" << s;
     }

@@ -152,8 +152,8 @@ namespace BlackMisc
                 c++;
             }
 
-            // normally 1 expected, as I should find one online station
-            // for this booking
+            // normally 1 expected, as I should find
+            // only one online station for this booking
             return c;
         }
 

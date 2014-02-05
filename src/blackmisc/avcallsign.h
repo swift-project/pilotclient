@@ -42,11 +42,8 @@ namespace BlackMisc
                 : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign))
             {}
 
-            /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
-             */
-            virtual QVariant toQVariant() const
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -57,73 +54,56 @@ namespace BlackMisc
                 return CCallsign::convertToIcon(*this);
             }
 
-            /*!
-             * \brief Is empty?
-             * \return
-             */
+            //! \brief Is empty?
             bool isEmpty() const { return this->m_callsignAsSet.isEmpty(); }
 
             /*!
              * Get callsign.
-             * \return
              */
             const QString &asString() const { return this->m_callsign; }
 
             /*!
              * Get callsign.
-             * \return
              */
             const QString &getStringAsSet() const { return this->m_callsignAsSet; }
 
             /*!
              * \brief Get callsign pronounced
-             * \return
              */
             const QString &getCallsignPronounced() const { return this->m_callsignPronounced; }
 
             /*!
              * \brief Get ICAO code, if this makes sense (EDDF_TWR -> EDDF)
-             * \return
              */
             QString getIcaoCode() const { return m_callsign.left(4).toUpper(); }
 
             /*!
              * \brief Makes this callsign looking like an observer callsign (DAMBZ -> DAMBZ_OBS)
-             * \return
              */
             QString getAsObserverCallsignString() const;
 
             /*!
              * \brief Equals callsign string?
-             * \param callsignString
-             * \return
              */
             bool equalsString(const QString &callsignString) const;
 
             /*!
              * \brief Equal operator ==
-             * \param other
-             * \return
              */
             bool operator ==(const CCallsign &other) const;
 
             /*!
-             * \brief Unequal operator ==
-             * \param other
-             * \return
+             * \brief Unequal operator !=
              */
             bool operator !=(const CCallsign &other) const;
 
             /*!
              * \brief Less than operator < for sorting
-             * \param other
-             * \return
              */
             bool operator <(const CCallsign &other) const;
 
             /*!
-             * \brief Value hash
-             * \return
+             * \brief CValueObject::getValueHash()
              */
             virtual uint getValueHash() const;
 
@@ -134,9 +114,7 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Rounded value as string
-             * \param i18n
-             * \return
+             * \copydoc CValueObject::convertToQString()
              */
             virtual QString convertToQString(bool i18n = false) const;
 
@@ -156,14 +134,12 @@ namespace BlackMisc
             virtual int compareImpl(const CValueObject &other) const;
 
             /*!
-             * \brief Stream to DBus <<
-             * \param argument
+             * \copydoc CValueObject::marshallToDbus()
              */
             virtual void marshallToDbus(QDBusArgument &argument) const;
 
             /*!
-             * \brief Stream from DBus >>
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus()
              */
             virtual void unmarshallFromDbus(const QDBusArgument &argument);
 

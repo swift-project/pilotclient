@@ -167,7 +167,6 @@ private:
 
     /*!
      * \brief Selected server from textboxes
-     * \return
      */
     BlackMisc::Network::CServer selectedServerFromTextboxes() const;
 
@@ -183,13 +182,11 @@ private:
 
     /*!
      * \brief Context network availability check, otherwise status message
-     * \return
      */
     bool isContextNetworkAvailableCheck();
 
     /*!
      * \brief Context voice availability check, otherwise status message
-     * \return
      */
     bool isContextVoiceAvailableCheck();
 
@@ -200,7 +197,6 @@ private:
 
     /*!
      * \brief Pending cockpit update operation
-     * \return
      */
     bool isCockpitUpdatePending() const;
 
@@ -226,14 +222,13 @@ private:
     /*!
      * \brief Private channel text message
      * \param textMessage
-     * \param sending
+     * \param sending   sending or receiving
      */
     void addPrivateChannelTextMessage(const BlackMisc::Network::CTextMessage &textMessage, bool sending = false);
 
     /*!
      * Stub for sending a text message (eihter radio or private message).
      * Sets sender / receiver depending on frequency / channel situation.
-     * \return
      */
     BlackMisc::Network::CTextMessage getTextMessageStubForChannel();
 
@@ -262,7 +257,6 @@ private:
 
     /*!
     * \brief Overlay info displaying status message
-    * \param message
     */
     void displayOverlayInfo(const BlackMisc::CStatusMessage &message);
 
@@ -338,22 +332,16 @@ private slots:
      */
     bool reloadOwnAircraft();
 
-    /*!
-     * \brief Display status message
-     * \param message
-     */
-    void displayStatusMessage(const BlackMisc::CStatusMessage &message);
+    //! \brief Display status message
+    void displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
 
-    /*!
-     * \brief Display status messages
-     * \param messages
-     */
+    //! \brief Display status messages
     void displayStatusMessages(const BlackMisc::CStatusMessageList &messages);
 
     /*!
      * \brief Connection status changed
-     * \param from
-     * \param to
+     * \param from  old status, as uint so it is compliant with DBus
+     * \param to    new status, as uint so it is compliant with DBus
      */
     void connectionStatusChanged(uint from, uint to);
 
@@ -484,9 +472,7 @@ private slots:
      */
     void setAudioVoiceRooms();
 
-    /*!
-     * \brief Audio volume handling and mute
-     */
+    //! \brief Audio volume handling and mute
     void audioVolumes();
 
     /*!
@@ -495,17 +481,13 @@ private slots:
      */
     void changeWindowOpacity(int opacity = -1);
 
-    /*!
-     * \brief Context menu for audio
-     */
+    //! \brief Context menu for audio
     void audioIconContextMenu(const QPoint &position);
 
     //! \brief Context menu for message list
     void messageListContextMenu(const QPoint &position);
 
-    /*!
-     * \brief Test SELCAL (code valid? play tone)
-     */
+    //! \brief Test SELCAL (code valid? play tone)
     void testSelcal();
 
     //! \brief start the MIC tests (Squelch)
