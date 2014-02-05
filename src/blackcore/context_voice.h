@@ -146,10 +146,14 @@ namespace BlackCore
          */
         virtual bool isMuted() const;
 
+        /*!
+         * \brief Play selcal tone
+         * \param selcal
+         */
+        virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const;
+
     private:
         CVoiceVatlib *m_voice; //!< underlying voice lib
-        BlackMisc::Voice::CAudioDevice m_currentInputDevice; //!< input device
-        BlackMisc::Voice::CAudioDevice m_currentOutputDevice; //!< current output device
     };
 }
 

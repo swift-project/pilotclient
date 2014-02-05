@@ -2,7 +2,7 @@ include (../../externals.pri)
 
 # GUI is required for the matrix classes
 # Network for host info etc.
-QT       += network dbus xml
+QT       += network dbus xml multimedia
 
 TARGET = blackcore
 TEMPLATE = lib
@@ -23,6 +23,7 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
 # !! Make sure the plugin is available as release build and known QT_PLUGIN_PATH
 QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
 DBUS_ADAPTORS += blackcore.contextnetwork.xml
+DBUS_ADAPTORS += blackcore.contextvoice.xml
 DBUS_ADAPTORS += blackcore.contextsettings.xml
 DBUS_ADAPTORS += blackcore.contextapplication.xml
 
@@ -34,8 +35,8 @@ DEFINES += LOG_IN_FILE
 HEADERS += *.h
 SOURCES += *.cpp
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
+win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blacksound.lib
+else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../libblacksound.a
 
 DESTDIR = ../../lib
 

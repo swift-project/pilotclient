@@ -8,6 +8,7 @@
 
 #include "../blackmisc/context.h"
 #include "../blackmisc/avcallsignlist.h"
+#include "../blackmisc/avselcal.h"
 #include "../blackmisc/nwuserlist.h"
 #include "../blackmisc/vvoiceroomlist.h"
 #include "../blackmisc/vaudiodevicelist.h"
@@ -117,14 +118,24 @@ namespace BlackCore
     public slots:
 
         /*!
-         * \brief Input device to be used
+         * \brief Current input device
          */
-        virtual void setInputDevice(const BlackMisc::Voice::CAudioDevice &device) = 0;
+        virtual BlackMisc::Voice::CAudioDevice getCurrentInputDevice() const = 0;
+
+        /*!
+         * \brief Current output device
+         */
+        virtual BlackMisc::Voice::CAudioDevice getCurrentOutputDevice() const = 0;
 
         /*!
          * \brief Output device to be used
          */
         virtual void setOutputDevice(const BlackMisc::Voice::CAudioDevice &device) = 0;
+
+        /*!
+         * \brief Input device to be used
+         */
+        virtual void setInputDevice(const BlackMisc::Voice::CAudioDevice &device) = 0;
 
         /*!
          * Get COM1/2 voice rooms, which then allows to retrieve information
@@ -176,6 +187,18 @@ namespace BlackCore
          * \return
          */
         virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns(const ComUnit comUnit) const = 0;
+
+        /*!
+         * \brief Is muted?
+         */
+        virtual bool isMuted() const = 0;
+
+        /*!
+         * \brief Switch audio output, enable or disable given COM unit.
+         * \param comUnit
+         * \param enable   enable or disable output
+         */
+        virtual void switchAudioOutput(const ComUnit comUnit, bool enable) = 0;
 
     signals:
         // Signals regarding the voice server connection

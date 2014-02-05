@@ -187,6 +187,10 @@ namespace BlackCore
          */
         virtual bool isMuted() const;
 
+        /*!
+         * \brief Play SELCAL tone
+         */
+        virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const;
     };
 }
 

@@ -43,6 +43,8 @@ namespace BlackCore
             this->m_voiceRooms.push_back(CVoiceRoom()); // COM2
             this->m_outputEnabled.insert(COM1, true);
             this->m_outputEnabled.insert(COM2, true);
+            this->m_currentInputDevice = this->defaultAudioInputDevice();
+            this->m_currentOutputDevice = this->defaultAudioOutputDevice();
 
             // do processing
             this->startTimer(100);
@@ -88,6 +90,22 @@ namespace BlackCore
     }
 
     /*
+     * Current output device
+     */
+    CAudioDevice CVoiceVatlib::getCurrentOutputDevice() const
+    {
+        return m_currentOutputDevice;
+    }
+
+    /*
+     * Current input device
+     */
+    CAudioDevice CVoiceVatlib::getCurrentInputDevice() const
+    {
+        return m_currentInputDevice;
+    }
+
+    /*
      * Set input device
      */
     void CVoiceVatlib::setInputDevice(const BlackMisc::Voice::CAudioDevice &device)
@@ -109,6 +127,7 @@ namespace BlackCore
             {
                 qWarning() << "Input device hit a fatal error";
             }
+            this->m_currentInputDevice = device;
         }
         catch (...)
         {
@@ -135,6 +154,7 @@ namespace BlackCore
             {
                 qWarning() << "Input device hit a fatal error";
             }
+            this->m_currentOutputDevice = device;
         }
         catch (...)
         {

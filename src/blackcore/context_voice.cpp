@@ -6,7 +6,7 @@
 #include "context_voice.h"
 #include "context_network.h"
 #include "coreruntime.h"
-
+#include "../blacksound/soundgenerator.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -18,15 +18,12 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextVoice::CContextVoice(CCoreRuntime *runtime) :
-        IContextVoice(runtime), m_voice(nullptr), m_currentInputDevice(), m_currentOutputDevice()
+    CContextVoice::CContextVoice(CCoreRuntime *runtime) : IContextVoice(runtime), m_voice(nullptr)
     {
         Q_ASSERT(runtime);
 
         // 1. Init by "network driver"
         this->m_voice = new CVoiceVatlib(this);
-        this->m_currentInputDevice = this->m_voice->defaultAudioInputDevice();
-        this->m_currentOutputDevice = this->m_voice->defaultAudioOutputDevice();
     }
 
     /*
@@ -104,8 +101,8 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         CAudioDeviceList devices;
-        devices.push_back(this->m_currentInputDevice);
-        devices.push_back(this->m_currentOutputDevice);
+        devices.push_back(this->m_voice->getCurrentInputDevice());
+        devices.push_back(this->m_voice->getCurrentOutputDevice());
         return devices;
     }
 
@@ -119,12 +116,10 @@ namespace BlackCore
         if (audioDevice.getType() == CAudioDevice::InputDevice)
         {
             this->m_voice->setInputDevice(audioDevice);
-            this->m_currentInputDevice = audioDevice;
         }
         else
         {
             this->m_voice->setOutputDevice(audioDevice);
-            this->m_currentOutputDevice = audioDevice;
         }
     }
 
@@ -201,7 +196,7 @@ namespace BlackCore
     }
 
     /*
-     * Room 1 users
+     * Room 2 users
      */
     Network::CUserList CContextVoice::getCom2RoomUsers() const
     {
@@ -212,4 +207,13 @@ namespace BlackCore
                getUsersForCallsigns(this->getCom2RoomCallsigns());
     }
 
+    /*
+     * SELCAL tone
+     */
+    void CContextVoice::playSelcalTone(const CSelcal &selcal) const
+    {
+        Q_ASSERT(this->m_voice);
+        CAudioDevice outputDevice = m_voice->getCurrentOutputDevice();
+        BlackSound::CSoundGenerator::playSelcal(90, selcal, outputDevice);
+    }
 } // namespace
