@@ -31,7 +31,7 @@ namespace BlackMisc
              * Constructor.
              */
             CCallsign(const QString &callsign, const QString &callsignPronounced = "")
-                : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign)), m_callsignPronounced(callsignPronounced)
+                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_callsignPronounced(callsignPronounced.trimmed())
             {}
 
             /*!
