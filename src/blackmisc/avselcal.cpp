@@ -62,7 +62,7 @@ namespace BlackMisc
          */
         const QString &CSelcal::validCharacters()
         {
-            static const QString valid = "ABCDEFGHJKLMPQQRS";
+            static const QString valid = "ABCDEFGHJKLMPQRS";
             return valid;
         }
 
@@ -79,7 +79,7 @@ namespace BlackMisc
          */
         bool CSelcal::isValidCode(const QString &code)
         {
-            if (code.length() != 4) return true;
+            if (code.length() != 4) return false;
             int p1, p2, p3, p4;
             if ((p1 = CSelcal::validCharacters().indexOf(code.at(0))) < 0) return false;
             if ((p2 = CSelcal::validCharacters().indexOf(code.at(1))) < 0) return false;
