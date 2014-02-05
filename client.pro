@@ -7,6 +7,7 @@ include (externals.pri)
 WITH_BLACKMISC = ON
 WITH_BLACKCORE = ON
 WITH_BLACKGUI = ON
+WITH_BLACKSOUND = ON
 WITH_SAMPLES = ON
 WITH_UNITTESTS = ON
 
@@ -26,6 +27,10 @@ equals(WITH_BLACKCORE, ON) {
 
 equals(WITH_BLACKGUI, ON) {
     SUBDIRS += src/blackgui
+}
+
+equals(WITH_BLACKSOUND, ON) {
+    SUBDIRS += src/blacksound
 }
 
 equals(WITH_DRIVER_FSX, ON) {
