@@ -35,6 +35,15 @@ namespace BlackCore
     }
 
     /*
+     * Own aircraft
+     */
+    void CContextVoice::setOwnAircraft(const CAircraft &ownAircraft)
+    {
+        Q_ASSERT(this->m_voice);
+        this->m_voice->setMyAircraftCallsign(ownAircraft.getCallsign());
+    }
+
+    /*
      * Voice rooms for COM
      */
     CVoiceRoomList CContextVoice::getComVoiceRoomsWithAudioStatus() const
@@ -216,4 +225,24 @@ namespace BlackCore
         CAudioDevice outputDevice = m_voice->getCurrentOutputDevice();
         BlackSound::CSoundGenerator::playSelcal(90, selcal, outputDevice);
     }
+
+    /*
+     * Mic test.
+     */
+    void CContextVoice::runMicrophoneTest() const
+    {
+        Q_ASSERT(this->m_voice);
+        this->m_voice->runMicrophoneTest();
+    }
+
+    /*
+     * Squelch test.
+     */
+    void CContextVoice::runSquelchTest() const
+    {
+        Q_ASSERT(this->m_voice);
+        this->m_voice->runSquelchTest();
+    }
+
+
 } // namespace

@@ -72,6 +72,11 @@ namespace BlackCore
 
     public slots:
         /*!
+         * \copydoc IContextVoice::setOwnAircraft
+         */
+        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft);
+
+        /*!
          * \copydoc IContextVoice::getComVoiceRooms()
          */
         virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const;
@@ -147,10 +152,20 @@ namespace BlackCore
         virtual bool isMuted() const;
 
         /*!
-         * \brief Play selcal tone
-         * \param selcal
+         * \copydoc IContextVoice::playSelcalTone()
          */
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const;
+
+        /*!
+         * \copydoc IContextVoice::runMicrophoneTest()
+         */
+        virtual void runMicrophoneTest() const;
+
+        /*!
+         * \copydoc IContextVoice::runSquelchTest()
+         */
+        virtual void runSquelchTest() const;
+
 
     private:
         CVoiceVatlib *m_voice; //!< underlying voice lib

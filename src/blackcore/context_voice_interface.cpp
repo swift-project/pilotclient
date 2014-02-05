@@ -32,6 +32,14 @@ namespace BlackCore
     }
 
     /*
+     * Own aircraft
+     */
+    void IContextVoice::setOwnAircraft(const CAircraft &ownAircraft)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("setOwnAircraft"), ownAircraft);
+    }
+
+    /*
      * Leave all voice rooms
      */
     void IContextVoice::leaveAllVoiceRooms()
@@ -141,6 +149,22 @@ namespace BlackCore
     void IContextVoice::playSelcalTone(const CSelcal &selcal) const
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("playSelcalTone"), selcal);
+    }
+
+    /*
+     * MIC test
+     */
+    void IContextVoice::runMicrophoneTest() const
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("runMicrophoneTest"));
+    }
+
+    /*
+     * MIC test
+     */
+    void IContextVoice::runSquelchTest() const
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("runSquelchTest"));
     }
 
     /*

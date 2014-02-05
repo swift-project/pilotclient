@@ -244,7 +244,7 @@ namespace BlackCore
     /*
      * Start microphone test
      */
-    void CVoiceVatlib::runMicTest()
+    void CVoiceVatlib::runMicrophoneTest()
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceClientVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 

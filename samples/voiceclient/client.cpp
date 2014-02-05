@@ -105,7 +105,7 @@ void Client::micTestCmd(QTextStream & /** args **/)
 {
     std::cout << "Running mic test. Speak normally for 5 seconds..." << std::endl;
     printLinePrefix();
-    m_voiceClient->runMicTest();
+    m_voiceClient->runMicrophoneTest();
 }
 
 void Client::setCallsignCmd(QTextStream &args)

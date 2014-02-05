@@ -95,7 +95,7 @@ namespace BlackCore
         /*!
          * \brief Runs a 5 seconds test, measuring the qualitiy of your mic input
          */
-        virtual void runMicTest() = 0;
+        virtual void runMicrophoneTest() = 0;
 
         /*!
          * \brief Value of the measured squelch
