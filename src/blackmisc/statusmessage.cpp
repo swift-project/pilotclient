@@ -93,9 +93,9 @@ namespace BlackMisc
      */
     const QPixmap &CStatusMessage::convertToIcon(const CStatusMessage &statusMessage)
     {
-        static QPixmap w(QPixmap(":/blackmisc/icons/warning.png").scaledToWidth(16, Qt::SmoothTransformation));
-        static QPixmap e(QPixmap(":/blackmisc/icons/critical.png").scaledToWidth(16, Qt::SmoothTransformation));
-        static QPixmap i(QPixmap(":/blackmisc/icons/information.png").scaledToWidth(16, Qt::SmoothTransformation));
+        static const QPixmap w(QPixmap(":/blackmisc/icons/warning.png").scaledToWidth(16, Qt::SmoothTransformation));
+        static const QPixmap e(QPixmap(":/blackmisc/icons/critical.png").scaledToWidth(16, Qt::SmoothTransformation));
+        static const QPixmap i(QPixmap(":/blackmisc/icons/information.png").scaledToWidth(16, Qt::SmoothTransformation));
         switch (statusMessage.getSeverity())
         {
         case SeverityInfo: return i;

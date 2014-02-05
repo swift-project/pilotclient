@@ -51,6 +51,12 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
+            //! \copydoc CValueObject::toIcon()
+            virtual const QPixmap &toIcon() const override
+            {
+                return CCallsign::convertToIcon(*this);
+            }
+
             /*!
              * \brief Is empty?
              * \return
@@ -167,6 +173,9 @@ namespace BlackMisc
              * \return
              */
             static QString unifyCallsign(const QString &callsign);
+
+            //! \representing icon
+            static const QPixmap &convertToIcon(const CCallsign &callsign);
 
         private:
             QString m_callsignAsSet;

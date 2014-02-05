@@ -168,6 +168,8 @@ namespace BlackMisc
                 return QVariant(this->m_realname);
             case IndexCallsign:
                 return this->m_callsign.toQVariant();
+            case IndexCallsignIcon:
+                return this->m_callsign.toIcon();
             default:
                 break;
             }
