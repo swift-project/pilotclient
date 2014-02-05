@@ -31,8 +31,12 @@ namespace BlackCore
             aircraft.setIcaoInfo(icaoData);
             aircraft.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
             this->m_aircraftsInRange.push_back(aircraft);
-            emit this->m_network->sendFrequencyQuery(callsign);
-            emit this->m_network->sendRealNameQuery(callsign);
+            if (this->isConnected())
+            {
+                // emit only if still connected
+                emit this->m_network->sendFrequencyQuery(callsign);
+                emit this->m_network->sendRealNameQuery(callsign);
+            }
             emit this->changedAircraftsInRange();
         }
         else
@@ -60,9 +64,14 @@ namespace BlackCore
             aircraft.setTransponder(transponder);
             aircraft.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
             this->m_aircraftsInRange.push_back(aircraft);
-            emit this->m_network->sendFrequencyQuery(callsign);
-            emit this->m_network->sendRealNameQuery(callsign);
-            emit this->m_network->sendIcaoCodesQuery(callsign);
+
+            if (this->isConnected())
+            {
+                // only emit if still connected
+                emit this->m_network->sendFrequencyQuery(callsign);
+                emit this->m_network->sendRealNameQuery(callsign);
+                emit this->m_network->sendIcaoCodesQuery(callsign);
+            }
             emit this->changedAircraftsInRange();
         }
         else
