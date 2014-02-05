@@ -134,12 +134,13 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->ui->cb_CockpitSelcal1->addItems(BlackMisc::Aviation::CSelcal::codePairs());
     this->ui->cb_CockpitSelcal2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
 
-    // timer
+    // timers
     if (this->m_timerUpdateAircraftsInRange == nullptr) this->m_timerUpdateAircraftsInRange = new QTimer(this);
     if (this->m_timerUpdateAtcStationsOnline == nullptr) this->m_timerUpdateAtcStationsOnline = new QTimer(this);
     if (this->m_timerUpdateUsers == nullptr) this->m_timerUpdateUsers = new QTimer(this);
     if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
     if (this->m_timerCollectedCockpitUpdates == nullptr) this->m_timerCollectedCockpitUpdates = new QTimer(this);
+    if (this->m_timerAudioTests == nullptr) this->m_timerAudioTests = new QTimer(this);
 
     // context
     if (this->m_coreMode != GuiModes::CoreInGuiProcess)
@@ -184,7 +185,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
         this->ui->sb_MainStatusBar->addWidget(this->m_statusBarLabel, 1);
     }
 
-    // signal / slots
+    // signal / slots contexts / timers
     bool connect;
     this->connect(this->m_contextNetwork, &IContextNetwork::statusMessage, this, &MainWindow::displayStatusMessage);
     this->connect(this->m_contextNetwork, &IContextNetwork::statusMessages, this, &MainWindow::displayStatusMessages);
@@ -198,6 +199,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->connect(this->m_timerUpdateUsers, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
+    this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
 
     // start timers, update timers will be started when network is connected
     this->m_timerContextWatchdog->start(2 * 1000);
@@ -207,6 +209,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
 
     // voice panel
     this->setAudioDeviceLists();
+    this->ui->prb_SettingsAudioTestProgress->setVisible(false);
 
     // data
     this->initialDataReads();
@@ -301,6 +304,8 @@ void MainWindow::initGuiSignals()
     Q_ASSERT(connected);
     connected = this->connect(this->ui->cb_SettingsAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
     Q_ASSERT(connected);
+    this->connect(this->ui->pb_SettingsAudioMicrophoneTest, &QPushButton::clicked, this, &MainWindow::startAudioTest);
+    this->connect(this->ui->pb_SettingsAudioSquelchTest, &QPushButton::clicked, this, &MainWindow::startAudioTest);
 
     // ATC
     connected = this->connect(this->ui->le_AtcStationsOnlineMetar, SIGNAL(returnPressed()), this, SLOT(getMetar()));
@@ -370,6 +375,7 @@ void MainWindow::stopUpdateTimers(bool disconnect)
     this->m_timerUpdateAircraftsInRange->stop();
     this->m_timerUpdateAtcStationsOnline->stop();
     this->m_timerUpdateUsers->stop();
+    this->m_timerAudioTests->stop();
     if (!disconnect) return;
     this->disconnect(this->m_timerUpdateAircraftsInRange);
     this->disconnect(this->m_timerUpdateAtcStationsOnline);

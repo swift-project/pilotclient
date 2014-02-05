@@ -38,9 +38,19 @@ QWidget {
 	color: white; /** font **/
 }
 
-QStatusBar {
-	background-color: darkslategray;
-}
+ QProgressBar {
+     border: 1px solid green;
+     border-radius: 5px;
+     text-align: center;
+	padding: 0px;
+	height: 16px;
+ }
+
+ QProgressBar::chunk {
+     background-color: darkblue;
+     width: 10px;
+     margin: 0.5px;
+ }
 
 #wi_CentralWidgetOutside {
 	/** there is no opacity with background image, so we need semitransparent images **/
@@ -443,7 +453,7 @@ QStatusBar QLabel {
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>7</number>
          </property>
          <widget class="QWidget" name="pg_StatusPage">
           <property name="sizePolicy">
@@ -553,8 +563,8 @@ QStatusBar QLabel {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>326</width>
-                <height>267</height>
+                <width>86</width>
+                <height>59</height>
                </rect>
               </property>
               <attribute name="label">
@@ -1789,7 +1799,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QTabWidget" name="tb_Settings">
              <property name="currentIndex">
-              <number>0</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tb_SettingsTrafficNetwork">
               <attribute name="title">
@@ -2160,7 +2170,7 @@ QStatusBar QLabel {
                   </widget>
                  </item>
                  <item row="3" column="1">
-                  <widget class="QWidget" name="wi_VoiceTests" native="true">
+                  <widget class="QWidget" name="wi_SettingsAudioTests" native="true">
                    <layout class="QHBoxLayout" name="horizontalLayout">
                     <property name="spacing">
                      <number>0</number>
@@ -2178,35 +2188,60 @@ QStatusBar QLabel {
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="QPushButton" name="pb_VoiceStartMicTest">
-                      <property name="maximumSize">
-                       <size>
-                        <width>125</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Start MIC test</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pb_VoiceStartSquelchTest">
-                      <property name="maximumSize">
-                       <size>
-                        <width>125</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="autoFillBackground">
-                       <bool>false</bool>
-                      </property>
-                      <property name="text">
-                       <string>Start Squelch test</string>
-                      </property>
-                     </widget>
+                     <layout class="QHBoxLayout" name="hl_SettingsAudioTests">
+                      <item>
+                       <widget class="QPushButton" name="pb_SettingsAudioSquelchTest">
+                        <property name="maximumSize">
+                         <size>
+                          <width>16777215</width>
+                          <height>16777215</height>
+                         </size>
+                        </property>
+                        <property name="autoFillBackground">
+                         <bool>false</bool>
+                        </property>
+                        <property name="text">
+                         <string>Start squelch test</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QPushButton" name="pb_SettingsAudioMicrophoneTest">
+                        <property name="maximumSize">
+                         <size>
+                          <width>16777215</width>
+                          <height>16777215</height>
+                         </size>
+                        </property>
+                        <property name="text">
+                         <string>Start microphone test</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </item>
                    </layout>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="lbl_SettingsAudioTestActionAndResult">
+                   <property name="text">
+                    <string>Result</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QLineEdit" name="le_SettingsAudioTestActionAndResult">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QProgressBar" name="prb_SettingsAudioTestProgress">
+                   <property name="value">
+                    <number>0</number>
+                   </property>
                   </widget>
                  </item>
                 </layout>
@@ -2852,8 +2887,6 @@ QStatusBar QLabel {
   <tabstop>le_SettingsIcaoType</tabstop>
   <tabstop>cb_SettingsAudioInputDevice</tabstop>
   <tabstop>cb_SettingsAudioOutputDevice</tabstop>
-  <tabstop>pb_VoiceStartMicTest</tabstop>
-  <tabstop>pb_VoiceStartSquelchTest</tabstop>
   <tabstop>hs_SettingsGuiOpacity</tabstop>
   <tabstop>hs_SettingsGuiAircraftRefreshTime</tabstop>
   <tabstop>hs_SettingsGuiAtcRefreshTime</tabstop>

@@ -35,7 +35,8 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_contextApplication(nullptr), m_contextNetwork(nullptr), m_contextVoice(nullptr), m_contextSettings(nullptr),
     // timers
     m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerUpdateUsers(nullptr),
-    m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr), m_timerStatusBar(nullptr),
+    m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
+    m_timerStatusBar(nullptr), m_timerAudioTests(nullptr),
     // context menus
     m_contextMenuAudio(nullptr), m_contextMenuStatusMessageList(nullptr),
     // status bar
@@ -190,12 +191,15 @@ void MainWindow::toggleNetworkConnection()
     this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(this->m_resPixmapConnectionConnecting);
     if (!this->m_contextNetwork->isConnected())
     {
-        QString cs = this->ui->le_SettingsAircraftCallsign->text();
-        if (cs.isEmpty())
+        if (this->m_ownAircraft.getCallsign().isEmpty())
         {
             this->displayStatusMessage(CStatusMessage::getValidationError("missing callsign"));
             return;
         }
+
+        // send latest aircraft to network/voice
+        this->m_contextNetwork->setOwnAircraft(this->m_ownAircraft);
+        if (this->m_contextVoiceAvailable) this->m_contextVoice->setOwnAircraft(this->m_ownAircraft);
 
         // Login is based on setting current server
         INetwork::LoginMode mode = INetwork::LoginNormal;
@@ -209,6 +213,7 @@ void MainWindow::toggleNetworkConnection()
             mode = INetwork::LoginAsObserver;
             this->displayStatusMessage(CStatusMessage::getInfoMessage("login in observer mode"));
         }
+
         msgs = this->m_contextNetwork->connectToNetwork(static_cast<uint>(mode));
     }
     else

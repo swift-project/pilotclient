@@ -129,7 +129,8 @@ private:
     QTimer *m_timerUpdateUsers; /*!< timer for update of users */
     QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
     QTimer *m_timerContextWatchdog; /*!< core available? */
-    QTimer *m_timerStatusBar;
+    QTimer *m_timerStatusBar; /*!< cleaning up status bar */
+    QTimer *m_timerAudioTests; /*!< cleaning up status bar */
 
     // pixmaps
     QPixmap m_resPixmapConnectionConnected;
@@ -299,6 +300,11 @@ private:
      * \brief Currently selected SELCAL code
      */
     QString getSelcalCode() const;
+
+    /*!
+     * \brief Audio test updates (timer) for progressbar and fetching results
+     */
+    void audioTestUpdate();
 
 private slots:
 
@@ -501,6 +507,9 @@ private slots:
      * \brief Test SELCAL (code valid? play tone)
      */
     void testSelcal();
+
+    //! \brief start the MIC tests (Squelch)
+    void startAudioTest();
 };
 
 #pragma pop_macro("interface")

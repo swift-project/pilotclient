@@ -145,3 +145,56 @@ void MainWindow::audioVolumes()
     this->m_ownAircraft.setCom2System(com2);
     this->m_contextVoice->setVolumes(this->m_ownAircraft.getCom1System(), this->m_ownAircraft.getCom2System());
 }
+
+/*
+ * Start the voice tests
+ */
+void MainWindow::startAudioTest()
+{
+    if (!this->m_contextVoiceAvailable)
+    {
+        CStatusMessage m(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "voice context not available");
+        this->displayStatusMessage(m);
+        return;
+    }
+    if (this->m_timerAudioTests->isActive())
+    {
+        CStatusMessage m(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "test running, wait until completed");
+        this->displayStatusMessage(m);
+        return;
+    }
+
+    QObject *sender = QObject::sender();
+    this->m_timerAudioTests->start(625); // I let this run for 10*625ms, so there is enough overhead to really complete it
+    this->ui->prb_SettingsAudioTestProgress->setValue(0);
+    if (sender == this->ui->pb_SettingsAudioMicrophoneTest)
+    {
+        this->m_contextVoice->runMicrophoneTest();
+        this->ui->le_SettingsAudioTestActionAndResult->setText("Speak normally for 5 seconds");
+    }
+    else if (sender == this->ui->pb_SettingsAudioSquelchTest)
+    {
+        this->m_contextVoice->runSquelchTest();
+        this->ui->le_SettingsAudioTestActionAndResult->setText("Silence for 5 seconds");
+    }
+    this->ui->prb_SettingsAudioTestProgress->setVisible(true);
+}
+
+/*
+ * Start the voice tests
+ */
+void MainWindow::audioTestUpdate()
+{
+    int v = this->ui->prb_SettingsAudioTestProgress->value();
+    if (v < 100)
+    {
+        this->ui->prb_SettingsAudioTestProgress->setValue(v + 10);
+    }
+    else
+    {
+        // fetch results
+        // TODO
+        this->m_timerAudioTests->stop();
+        this->ui->prb_SettingsAudioTestProgress->setVisible(false);
+    }
+}
