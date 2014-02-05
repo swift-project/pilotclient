@@ -89,6 +89,23 @@ namespace BlackMisc
     }
 
     /*
+     *  Pixmap
+     */
+    const QPixmap &CStatusMessage::convertToIcon(const CStatusMessage &statusMessage)
+    {
+        static QPixmap w(QPixmap(":/blackmisc/icons/warning.png").scaledToWidth(16, Qt::SmoothTransformation));
+        static QPixmap e(QPixmap(":/blackmisc/icons/critical.png").scaledToWidth(16, Qt::SmoothTransformation));
+        static QPixmap i(QPixmap(":/blackmisc/icons/information.png").scaledToWidth(16, Qt::SmoothTransformation));
+        switch (statusMessage.getSeverity())
+        {
+        case SeverityInfo: return i;
+        case SeverityWarning: return w;
+        case SeverityError: return e;
+        default: return i;
+        }
+    }
+
+    /*
      * Hash
      */
     uint CStatusMessage::getValueHash() const
@@ -260,7 +277,7 @@ namespace BlackMisc
     /*
      * Set property as index
      */
-    void CStatusMessage::propertyByIndex(const QVariant &variant, int index)
+    void CStatusMessage::setPropertyByIndex(const QVariant &variant, int index)
     {
         switch (index)
         {

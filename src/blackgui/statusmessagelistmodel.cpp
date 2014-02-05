@@ -36,22 +36,12 @@ namespace BlackGui
     {
         // shortcut, fast check
         if (role != Qt::DisplayRole && role != Qt::DecorationRole) return CListModelBase::data(modelIndex, role);
-
-        static QPixmap w(QPixmap(":/blackgui/iconsQt/warning.png").scaledToWidth(16, Qt::SmoothTransformation));
-        static QPixmap e(QPixmap(":/blackgui/iconsQt/critical.png").scaledToWidth(16, Qt::SmoothTransformation));
-        static QPixmap i(QPixmap(":/blackgui/iconsQt/information.png").scaledToWidth(16, Qt::SmoothTransformation));
-
         if (this->columnToPropertyIndex(modelIndex.column()) == CStatusMessage::IndexSeverity)
         {
             if (role == Qt::DecorationRole)
             {
                 CStatusMessage msg = this->at(modelIndex);
-                switch (msg.getSeverity())
-                {
-                case CStatusMessage::SeverityError: return e;
-                case CStatusMessage::SeverityWarning: return w;
-                default: return i;
-                }
+                return msg.toIcon();
             }
             else if (role == Qt::DisplayRole)
             {

@@ -6,6 +6,7 @@
 #include <QtGlobal>
 #include <QDataStream>
 #include <QDebug>
+#include <QPixmap>
 #include <type_traits>
 #include <iostream>
 
@@ -172,6 +173,12 @@ namespace BlackMisc
          * \brief Virtual method to return QVariant, used with DBus QVariant lists
          */
         virtual QVariant toQVariant() const = 0;
+
+        /*!
+         * \brief As icon, not implement by all classes
+         * \return
+         */
+        virtual const QPixmap &toIcon() const { static const QPixmap p; return p; }
 
         /*!
          * \brief Set property by index

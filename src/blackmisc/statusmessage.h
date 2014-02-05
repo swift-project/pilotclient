@@ -114,6 +114,9 @@ namespace BlackMisc
         //! \brief Type as string
         const QString &getTypeAsString() const;
 
+        //! \brief representing icon
+        virtual const QPixmap &toIcon() const override { return CStatusMessage::convertToIcon(*this); }
+
         //! \brief Type as string
         const QString &getSeverityAsString() const;
 
@@ -158,6 +161,9 @@ namespace BlackMisc
          * \return
          */
         static CStatusMessage getInfoMessage(const QString &message);
+
+        //! \representing icon
+        static const QPixmap &convertToIcon(const CStatusMessage &statusMessage);
 
     protected:
         /*!
