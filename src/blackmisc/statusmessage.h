@@ -35,6 +35,19 @@ namespace BlackMisc
             SeverityError
         };
 
+        /*!
+         * \brief Properties by index
+         */
+        enum ColumnIndex
+        {
+            IndexType,
+            IndexTypeAsString,
+            IndexSeverity,
+            IndexSeverityAsString,
+            IndexMessage,
+            IndexTimestamp
+        };
+
     private:
         StatusType m_type;
         StatusSeverity m_severity;
@@ -97,6 +110,21 @@ namespace BlackMisc
         {
             return QVariant::fromValue(*this);
         }
+
+        //! \brief Type as string
+        const QString &getTypeAsString() const;
+
+        //! \brief Type as string
+        const QString &getSeverityAsString() const;
+
+        //! \copydoc CValueObject::propertyByIndex(int)
+        QVariant propertyByIndex(int index) const;
+
+        //! \copydoc CValueObject::propertyByIndex(const QVariant, int)
+        void propertyByIndex(const QVariant &variant, int index);
+
+        //! \copydoc CValueObject::propertyByIndexAsString
+        QString propertyByIndexAsString(int index, bool i18n) const;
 
         /*!
          * \brief Equal operator ==

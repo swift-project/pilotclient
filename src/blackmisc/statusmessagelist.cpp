@@ -9,6 +9,13 @@
 namespace BlackMisc
 {
     /*
+     * Construct from base class object
+     */
+    CStatusMessageList::CStatusMessageList(const CSequence<CStatusMessage> &other) :
+        CSequence<CStatusMessage>(other)
+    { }
+
+    /*
      * Messages by type
      */
     CStatusMessageList CStatusMessageList::findByType(CStatusMessage::StatusType type) const
@@ -45,6 +52,10 @@ namespace BlackMisc
      */
     void CStatusMessageList::registerMetadata()
     {
+        qRegisterMetaType<BlackMisc::CSequence<CStatusMessage>>();
+        qDBusRegisterMetaType<BlackMisc::CSequence<CStatusMessage>>();
+        qRegisterMetaType<BlackMisc::CCollection<CStatusMessage>>();
+        qDBusRegisterMetaType<BlackMisc::CCollection<CStatusMessage>>();
         qRegisterMetaType<CStatusMessageList>();
         qDBusRegisterMetaType<CStatusMessageList>();
     }
