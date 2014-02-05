@@ -23,21 +23,23 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     ui(new Ui::MainWindow),
     m_infoWindow(nullptr),
     m_init(false), m_windowMode(windowMode),
-    // core
-    m_coreMode(GuiModes::CoreExternal), m_coreAvailable(false),
     // misc
-    m_contextNetworkAvailable(false), m_contextVoiceAvailable(false), m_dBusConnection("dummy"), m_coreRuntime(nullptr),
+    m_dBusConnection("dummy"),
     // table view models
     m_statusMessageList(nullptr),
     m_atcListOnline(nullptr), m_atcListBooked(nullptr), m_trafficServerList(nullptr), m_aircraftsInRange(nullptr),
     m_allUsers(nullptr), m_usersVoiceCom1(nullptr), m_usersVoiceCom2(nullptr),
-    // contexts
+    // contexts and runtime
+    m_coreMode(GuiModes::CoreExternal),
+    m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextVoiceAvailable(false),
     m_contextApplication(nullptr), m_contextNetwork(nullptr), m_contextVoice(nullptr), m_contextSettings(nullptr),
     // timers
     m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerUpdateUsers(nullptr),
-    m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
+    m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr), m_timerStatusBar(nullptr),
     // context menus
-    m_contextMenuAudio(nullptr), m_contextMenuStatusMessageList(nullptr)
+    m_contextMenuAudio(nullptr), m_contextMenuStatusMessageList(nullptr),
+    // status bar
+    m_statusBarIcon(nullptr), m_statusBarLabel(nullptr)
 {
     if (windowMode == GuiModes::WindowFrameless)
     {
@@ -211,6 +213,8 @@ void MainWindow::toggleNetworkConnection()
     }
     else
     {
+        // disconnect from network
+        this->stopUpdateTimers(); // stop update timers, to avoid updates during disconnecting (a short time frame)
         if (this->m_contextVoiceAvailable) this->m_contextVoice->leaveAllVoiceRooms();
         msgs = this->m_contextNetwork->disconnectFromNetwork();
     }
@@ -240,13 +244,18 @@ bool MainWindow::isContextVoiceAvailableCheck()
 /*
  * Display a status message
  */
-void MainWindow::displayStatusMessage(const CStatusMessage &message)
+void MainWindow::displayStatusMessage(const CStatusMessage &statusMessage)
 {
-    this->ui->sb_MainStatusBar->showMessage(message.getMessage(), 3000);
-    this->m_statusMessageList->insert(message);
+    this->ui->sb_MainStatusBar->show();
+    this->m_timerStatusBar->start(3000);
+    this->m_statusBarIcon->setPixmap(statusMessage.toIcon());
+    this->m_statusBarLabel->setText(statusMessage.getMessage());
+
+    // list
+    this->m_statusMessageList->insert(statusMessage);
     this->ui->tv_StatusMessages->resizeColumnsToContents();
     this->ui->tv_StatusMessages->resizeRowsToContents();
-    if (message.getSeverity() == CStatusMessage::SeverityError) this->displayOverlayInfo(message);
+    if (statusMessage.getSeverity() == CStatusMessage::SeverityError) this->displayOverlayInfo(statusMessage);
 }
 
 /*
@@ -278,7 +287,7 @@ void MainWindow::connectionStatusChanged(uint /** from **/, uint to)
     INetwork::ConnectionStatus newStatus = static_cast<INetwork::ConnectionStatus>(to);
     if (newStatus == INetwork::Connected)
         this->startUpdateTimers();
-    else if (newStatus == INetwork::Disconnected || newStatus == INetwork::DisconnectedError)
+    else if (newStatus == INetwork::Disconnecting || newStatus == INetwork::Disconnected || newStatus == INetwork::DisconnectedError)
         this->stopUpdateTimers();
 }
 
@@ -352,7 +361,7 @@ void MainWindow::middlePanelChanged(int /* index */)
 */
 void MainWindow::updateGuiStatusInformation()
 {
-    const QString now = QDateTime::currentDateTimeUtc().toString("yyyy - MM - dd HH: mm: ss");
+    const QString now = QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
     QString network("unavailable");
     if (this->m_contextNetworkAvailable)
     {

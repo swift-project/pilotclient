@@ -338,7 +338,19 @@ QSizeGrip {
      image: url(:/blackgui/icons/resize.png);
      width: 16px;
      height: 16px;
- }</string>
+ }
+
+QStatusBar {
+    background: darkslategray;
+}
+
+ QStatusBar::item {
+    border: none;
+ }
+
+QStatusBar QLabel {
+     border: none;
+}</string>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
@@ -584,8 +596,8 @@ QSizeGrip {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>326</width>
-                <height>267</height>
+                <width>90</width>
+                <height>55</height>
                </rect>
               </property>
               <attribute name="label">

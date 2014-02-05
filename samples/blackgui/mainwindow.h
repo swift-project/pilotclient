@@ -27,6 +27,7 @@
 #include <QTextEdit>
 #include <QTableView>
 #include <QItemSelection>
+#include <QLabel>
 #include <QTimer>
 
 namespace Ui
@@ -99,12 +100,8 @@ private:
     CInfoWindow *m_infoWindow;
     bool m_init;
     GuiModes::WindowMode m_windowMode;
-    GuiModes::CoreMode m_coreMode;
-    bool m_coreAvailable;
-    bool m_contextNetworkAvailable;
-    bool m_contextVoiceAvailable;
     QDBusConnection m_dBusConnection;
-    QScopedPointer<BlackCore::CCoreRuntime> m_coreRuntime; /*!< runtime, if working with local core */
+
     // the table view models
     // normal pointers, as these will be deleted by parent
     BlackGui::CStatusMessageListModel *m_statusMessageList;
@@ -117,6 +114,11 @@ private:
     BlackGui::CUserListModel *m_usersVoiceCom2;
 
     // contexts
+    GuiModes::CoreMode m_coreMode;
+    bool m_coreAvailable;
+    bool m_contextNetworkAvailable;
+    bool m_contextVoiceAvailable;
+    QScopedPointer<BlackCore::CCoreRuntime> m_coreRuntime; /*!< runtime, if working with local core */
     BlackCore::IContextApplication *m_contextApplication; /*!< overall application state */
     BlackCore::IContextNetwork *m_contextNetwork;
     BlackCore::IContextVoice *m_contextVoice;
@@ -127,16 +129,29 @@ private:
     QTimer *m_timerUpdateUsers; /*!< timer for update of users */
     QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
     QTimer *m_timerContextWatchdog; /*!< core available? */
+    QTimer *m_timerStatusBar;
+
+    // pixmaps
     QPixmap m_resPixmapConnectionConnected;
     QPixmap m_resPixmapConnectionDisconnected;
     QPixmap m_resPixmapConnectionConnecting;
     QPixmap m_resPixmapVoiceHigh;
     QPixmap m_resPixmapVoiceLow;
     QPixmap m_resPixmapVoiceMuted;
+
+    // frameless window
     QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
-    QMenu *m_contextMenuAudio; /*! audio context menu */
-    QMenu *m_contextMenuStatusMessageList; /*! context menu for status message list */
-    QString m_transponderResetValue; /*! Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas */
+
+    // context menus
+    QMenu *m_contextMenuAudio; /*!< audio context menu */
+    QMenu *m_contextMenuStatusMessageList; /*!< context menu for status message list */
+
+    // cockpit
+    QString m_transponderResetValue; /*!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas */
+
+    // status bar
+    QLabel *m_statusBarIcon; /*!< status bar icon */
+    QLabel *m_statusBarLabel; /*!< status bar label */
 
     /*!
      * \brief GUI status update

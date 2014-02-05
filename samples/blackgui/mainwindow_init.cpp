@@ -170,6 +170,20 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->m_resPixmapVoiceHigh = QPixmap(":/blackgui/icons/audiovolumehigh.png");
     this->m_resPixmapVoiceMuted = QPixmap(":/blackgui/icons/audiovolumemuted.png");
 
+    // status bar
+    if (!this->m_statusBarLabel)
+    {
+        // also subject of style sheet
+        this->m_statusBarIcon = new QLabel(this);
+        this->m_statusBarLabel = new QLabel(this);
+        this->m_timerStatusBar = new QTimer(this);
+        this->m_statusBarLabel->setMinimumHeight(16);
+        connect(this->m_timerStatusBar, &QTimer::timeout, this->m_statusBarIcon, &QLabel::clear);
+        connect(this->m_timerStatusBar, &QTimer::timeout, this->m_statusBarLabel, &QLabel::clear);
+        this->ui->sb_MainStatusBar->addWidget(this->m_statusBarIcon, 0);
+        this->ui->sb_MainStatusBar->addWidget(this->m_statusBarLabel, 1);
+    }
+
     // signal / slots
     bool connect;
     this->connect(this->m_contextNetwork, &IContextNetwork::statusMessage, this, &MainWindow::displayStatusMessage);
