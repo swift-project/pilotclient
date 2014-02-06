@@ -95,11 +95,19 @@ protected:
         MainPageSettings = 7
     };
 
+    enum AudioTest
+    {
+        NoAudioTest,
+        SquelchTest,
+        MicrophoneTest
+    };
+
 private:
     QScopedPointer<Ui::MainWindow> ui;
     CInfoWindow *m_infoWindow;
     bool m_init;
     GuiModes::WindowMode m_windowMode;
+    AudioTest m_audioTestRunning;
     QDBusConnection m_dBusConnection;
 
     // the table view models

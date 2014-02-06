@@ -26,9 +26,10 @@ namespace BlackCore
     /*
      * Workaround for signals, not working without, but why?
      */
-    void IContextVoice::relaySignals(const QString & /** serviceName **/, QDBusConnection & /** connection **/)
+    void IContextVoice::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
-        // void
+        connection.connect(serviceName, IContextVoice::ServicePath(), IContextVoice::InterfaceName(),
+                           "audioTestCompleted", this, SIGNAL(audioTestCompleted()));
     }
 
     /*
@@ -154,17 +155,33 @@ namespace BlackCore
     /*
      * MIC test
      */
-    void IContextVoice::runMicrophoneTest() const
+    void IContextVoice::runMicrophoneTest()
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("runMicrophoneTest"));
     }
 
     /*
-     * MIC test
+     * Mic test
      */
-    void IContextVoice::runSquelchTest() const
+    void IContextVoice::runSquelchTest()
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("runSquelchTest"));
+    }
+
+    /*
+     *  Test result
+     */
+    QString IContextVoice::getMicrophoneTestResult() const
+    {
+        return this->m_dBusInterface->callDBusRet<QString>(QLatin1Literal("getMicrophoneTestResult"));
+    }
+
+    /*
+     * Squelch value
+     */
+    double IContextVoice::getSquelchValue() const
+    {
+        return this->m_dBusInterface->callDBusRet<double>(QLatin1Literal("getSquelchValue"));
     }
 
     /*

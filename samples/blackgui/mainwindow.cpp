@@ -22,7 +22,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     QMainWindow(parent, windowMode == GuiModes::WindowFrameless ? (Qt::Window | Qt::FramelessWindowHint) : Qt::Tool),
     ui(new Ui::MainWindow),
     m_infoWindow(nullptr),
-    m_init(false), m_windowMode(windowMode),
+    m_init(false), m_windowMode(windowMode), m_audioTestRunning(NoAudioTest),
     // misc
     m_dBusConnection("dummy"),
     // table view models

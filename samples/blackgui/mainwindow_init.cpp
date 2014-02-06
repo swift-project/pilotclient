@@ -200,6 +200,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
     this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
+    connect = this->connect(this->m_contextVoice, &IContextVoice::audioTestCompleted, this, &MainWindow::audioTestUpdate);
 
     // start timers, update timers will be started when network is connected
     this->m_timerContextWatchdog->start(2 * 1000);

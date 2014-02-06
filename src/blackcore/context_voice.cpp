@@ -22,8 +22,12 @@ namespace BlackCore
     {
         Q_ASSERT(runtime);
 
-        // 1. Init by "network driver"
+        // 1. Init by "voice driver"
         this->m_voice = new CVoiceVatlib(this);
+
+        // 2. Signal / slots
+        connect(this->m_voice, &CVoiceVatlib::micTestFinished, this, &CContextVoice::audioTestCompleted);
+        connect(this->m_voice, &CVoiceVatlib::squelchTestFinished, this, &CContextVoice::audioTestCompleted);
     }
 
     /*
@@ -229,7 +233,7 @@ namespace BlackCore
     /*
      * Mic test.
      */
-    void CContextVoice::runMicrophoneTest() const
+    void CContextVoice::runMicrophoneTest()
     {
         Q_ASSERT(this->m_voice);
         this->m_voice->runMicrophoneTest();
@@ -238,10 +242,28 @@ namespace BlackCore
     /*
      * Squelch test.
      */
-    void CContextVoice::runSquelchTest() const
+    void CContextVoice::runSquelchTest()
     {
         Q_ASSERT(this->m_voice);
         this->m_voice->runSquelchTest();
+    }
+
+    /*
+     * Microphone test
+     */
+    QString CContextVoice::getMicrophoneTestResult() const
+    {
+        Q_ASSERT(this->m_voice);
+        return this->m_voice->micTestResultAsString();
+    }
+
+    /*
+     * Squelch value
+     */
+    double CContextVoice::getSquelchValue() const
+    {
+        Q_ASSERT(this->m_voice);
+        return static_cast<double>(this->m_voice->inputSquelch());
     }
 
 

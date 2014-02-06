@@ -201,13 +201,28 @@ namespace BlackCore
         /*!
          * \brief Microphone test
          */
-        virtual void runMicrophoneTest() const;
+        virtual void runMicrophoneTest();
 
         /*!
          * \brief Microphone test
          */
-        virtual void runSquelchTest() const;
+        virtual void runSquelchTest();
 
+        /*!
+         * \brief Get the microphone test result
+         */
+        virtual QString getMicrophoneTestResult() const;
+
+        /*!
+         * \brief Get the squelch value
+         */
+        virtual double getSquelchValue() const;
+
+    signals:
+        /*!
+         * \brief Audio test has been completed
+         */
+        void audioTestCompleted();
     };
 }
 

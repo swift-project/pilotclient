@@ -165,19 +165,24 @@ void MainWindow::startAudioTest()
     }
 
     QObject *sender = QObject::sender();
-    this->m_timerAudioTests->start(625); // I let this run for 10*625ms, so there is enough overhead to really complete it
+    this->m_timerAudioTests->start(600); // I let this run for <x>ms, so there is enough overhead to really complete it
     this->ui->prb_SettingsAudioTestProgress->setValue(0);
+    this->ui->pte_SettingsAudioTestActionAndResult->clear();
     if (sender == this->ui->pb_SettingsAudioMicrophoneTest)
     {
+        this->m_audioTestRunning = MicrophoneTest;
         this->m_contextVoice->runMicrophoneTest();
-        this->ui->le_SettingsAudioTestActionAndResult->setText("Speak normally for 5 seconds");
+        this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText("Speak normally for 5 seconds");
     }
     else if (sender == this->ui->pb_SettingsAudioSquelchTest)
     {
+        this->m_audioTestRunning = SquelchTest;
         this->m_contextVoice->runSquelchTest();
-        this->ui->le_SettingsAudioTestActionAndResult->setText("Silence for 5 seconds");
+        this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText("Silence for 5 seconds");
     }
     this->ui->prb_SettingsAudioTestProgress->setVisible(true);
+    this->ui->pb_SettingsAudioMicrophoneTest->setEnabled(false);
+    this->ui->pb_SettingsAudioSquelchTest->setEnabled(false);
 }
 
 /*
@@ -186,15 +191,39 @@ void MainWindow::startAudioTest()
 void MainWindow::audioTestUpdate()
 {
     int v = this->ui->prb_SettingsAudioTestProgress->value();
-    if (v < 100)
+    QObject *sender = this->sender();
+
+    if (v < 100 && (sender == m_timerAudioTests))
     {
+        // timer update, increasing progress
         this->ui->prb_SettingsAudioTestProgress->setValue(v + 10);
     }
     else
     {
-        // fetch results
-        // TODO
         this->m_timerAudioTests->stop();
+        this->ui->prb_SettingsAudioTestProgress->setValue(100);
+        if (sender == m_timerAudioTests) return; // just timer update
+
+        // getting here we assume the audio test finished signal
+        // fetch results
+        this->ui->pte_SettingsAudioTestActionAndResult->clear();
+        if (this->m_contextVoiceAvailable)
+        {
+            if (this->m_audioTestRunning == SquelchTest)
+            {
+                double s = this->m_contextVoice->getSquelchValue();
+                this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText(QString::number(s));
+            }
+            else if (this->m_audioTestRunning == MicrophoneTest)
+            {
+                QString m = this->m_contextVoice->getMicrophoneTestResult();
+                this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText(m);
+            }
+        }
+        this->m_audioTestRunning = NoAudioTest;
+        this->m_timerAudioTests->stop();
+        this->ui->pb_SettingsAudioMicrophoneTest->setEnabled(true);
+        this->ui->pb_SettingsAudioSquelchTest->setEnabled(true);
         this->ui->prb_SettingsAudioTestProgress->setVisible(false);
     }
 }

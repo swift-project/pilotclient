@@ -159,12 +159,22 @@ namespace BlackCore
         /*!
          * \copydoc IContextVoice::runMicrophoneTest()
          */
-        virtual void runMicrophoneTest() const;
+        virtual void runMicrophoneTest();
 
         /*!
          * \copydoc IContextVoice::runSquelchTest()
          */
-        virtual void runSquelchTest() const;
+        virtual void runSquelchTest();
+
+        /*!
+         * \copydoc IContextVoice::getMicrophoneTestResult()
+         */
+        virtual QString getMicrophoneTestResult() const;
+
+        /*!
+         * \copydoc IContextVoice::getSquelchValue()
+         */
+        virtual double getSquelchValue() const;
 
     private:
         CVoiceVatlib *m_voice; //!< underlying voice lib
