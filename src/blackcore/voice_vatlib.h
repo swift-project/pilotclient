@@ -40,9 +40,7 @@ namespace BlackCore
          */
         CVoiceVatlib(QObject *parent = nullptr);
 
-        /*!
-         * \brief Destructor
-         */
+        //! \brief Destructor
         virtual ~CVoiceVatlib();
 
         // Hardware devices
@@ -50,133 +48,85 @@ namespace BlackCore
         // to different voice rooms and send their audio to different devices, e.g. ATIS to loudspeakers
         // and ATC to headspeakers. Is not important to implement that now, if ever.
 
-        /*!
-         * \copydoc IVoice::audioDevices()
-         */
-        virtual const BlackMisc::Voice::CAudioDeviceList &audioDevices() const ;
+        //! \copydoc IVoice::audioDevices()
+        virtual const BlackMisc::Voice::CAudioDeviceList &audioDevices() const override;
 
-        /*!
-         * \copydoc IVoice::defaultAudioInputDevice()
-         */
-        virtual const BlackMisc::Voice::CAudioDevice defaultAudioInputDevice() const;
+        //! \copydoc IVoice::defaultAudioInputDevice()
+        virtual const BlackMisc::Voice::CAudioDevice defaultAudioInputDevice() const override;
 
-        /*!
-         * \copydoc IVoice::defaultAudioOutputDevice()
-         */
-        virtual const BlackMisc::Voice::CAudioDevice defaultAudioOutputDevice() const;
+        //! \copydoc IVoice::defaultAudioOutputDevice()
+        virtual const BlackMisc::Voice::CAudioDevice defaultAudioOutputDevice() const override;
 
         /************************************************
          * SETUP TESTS
-         * *********************************************/
+         ***********************************************/
 
-        /*!
-         * \copydoc IVoice::runSquelchTest
-         */
-        virtual void runSquelchTest();
+        //! \copydoc IVoice::runSquelchTest
+        virtual void runSquelchTest() override;
 
-        /*!
-         * \copydoc IVoice::runMicTest
-         */
-        virtual void runMicrophoneTest();
+        //! \copydoc IVoice::runMicTest
+        virtual void runMicrophoneTest() override;
 
-        /*!
-         * \copydoc IVoice::inputSquelch
-         */
-        virtual float inputSquelch() const;
+        //! \copydoc IVoice::inputSquelch
+        virtual float inputSquelch() const override;
 
-        /*!
-         * \copydoc IVoice::micTestResult()
-         */
-        virtual qint32 micTestResult() const;
+        //! \copydoc IVoice::micTestResult()
+        virtual qint32 micTestResult() const override;
 
-        /*!
-         * \copydoc IVoice::micTestResultAsString
-         */
-        virtual QString micTestResultAsString() const;
+        //! \copydoc IVoice::micTestResultAsString
+        virtual QString micTestResultAsString() const override;
 
     public slots:
-        /*!
-         * \copydoc IVoice::setMyAircraftCallsign()
-         */
-        virtual void setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+        //! \copydoc IVoice::setMyAircraftCallsign()
+        virtual void setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-        /*!
-         * \copydoc IVoice::joinVoiceRoom()
-         */
-        virtual void joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom);
+        //! \copydoc IVoice::joinVoiceRoom()
+        virtual void joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom) override;
 
-        /*!
-         * \copydoc IVoice::leaveVoiceRoom()
-         */
-        virtual void leaveVoiceRoom(const ComUnit comUnit);
+        //! \copydoc IVoice::leaveVoiceRoom()
+        virtual void leaveVoiceRoom(const ComUnit comUnit) override;
 
-        /*!
-         * \copydoc IVoice::leaveAllVoiceRooms()
-         */
-        virtual void leaveAllVoiceRooms();
+        //! \copydoc IVoice::leaveAllVoiceRooms()
+        virtual void leaveAllVoiceRooms() override;
 
-        /*!
-         * \copydoc IVoice::setRoomOutputVolume()
-         */
-        virtual void setRoomOutputVolume(const ComUnit comUnit, const qint32 volumne);
+        //! \copydoc IVoice::setRoomOutputVolume()
+        virtual void setRoomOutputVolume(const ComUnit comUnit, const qint32 volumne) override;
 
-        /*!
-         * \copydoc IVoice::startTransmitting()
-         */
-        virtual void startTransmitting(const ComUnit comUnit);
+        //! \copydoc IVoice::startTransmitting()
+        virtual void startTransmitting(const ComUnit comUnit) override;
 
-        /*!
-         * \copydoc IVoice::stopTransmitting()
-         */
-        virtual void stopTransmitting(const ComUnit comUnit);
+        //! \copydoc IVoice::stopTransmitting()
+        virtual void stopTransmitting(const ComUnit comUnit) override;
 
-        /*!
-         * \copydoc IVoice::getComVoiceRoomsWithAudioStatus()
-         */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const;
+        //! \copydoc IVoice::getComVoiceRoomsWithAudioStatus()
+        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
 
-        /*!
-         * \copydoc IVoice::getComVoiceRooms()
-         */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const
+        //! \copydoc IVoice::getComVoiceRooms()
+        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const override
         {
             return this->m_voiceRooms;
         }
 
-        /*!
-         * \copydoc IVoice::getVoiceRoomCallsigns()
-         */
-        virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns(const ComUnit comUnit) const;
+        //! \copydoc IVoice::getVoiceRoomCallsigns()
+        virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns(const ComUnit comUnit) const override;
 
-        /*!
-         * \copydoc IVoice::setInputDevice
-         */
-        virtual void setInputDevice(const BlackMisc::Voice::CAudioDevice &device);
+        //! \copydoc IVoice::setInputDevice
+        virtual void setInputDevice(const BlackMisc::Voice::CAudioDevice &device) override;
 
-        /*!
-         * \copydoc IVoice::setOutputDevice
-         */
-        virtual void setOutputDevice(const BlackMisc::Voice::CAudioDevice &device);
+        //! \copydoc IVoice::setOutputDevice
+        virtual void setOutputDevice(const BlackMisc::Voice::CAudioDevice &device) override;
 
-        /*!
-         * \brief Current input device
-         */
-        virtual BlackMisc::Voice::CAudioDevice getCurrentInputDevice() const;
+        //! \copydoc IVoice::getCurrentInputDevice()
+        virtual BlackMisc::Voice::CAudioDevice getCurrentInputDevice() const override;
 
-        /*!
-         * \brief Current output device
-         */
-        virtual BlackMisc::Voice::CAudioDevice getCurrentOutputDevice() const;
+        //! \copydoc IVoice::getCurrentOutputDevice()
+        virtual BlackMisc::Voice::CAudioDevice getCurrentOutputDevice() const override;
 
-        /*!
-         * \copydoc IVoice::switchAudioOutput
-         */
-        virtual void switchAudioOutput(const ComUnit comUnit, bool enable);
+        //! \copydoc IVoice::switchAudioOutput
+        virtual void switchAudioOutput(const ComUnit comUnit, bool enable) override;
 
-        /*!
-         * \copydoc IVoice::isMuted
-         */
-        virtual bool isMuted() const
+        //! \copydoc IVoice::isMuted
+        virtual bool isMuted() const override
         {
             if (this->m_outputEnabled.isEmpty()) return false;
             bool enabled = this->m_outputEnabled[COM1] || this->m_outputEnabled[COM2];

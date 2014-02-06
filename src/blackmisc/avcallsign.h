@@ -150,7 +150,7 @@ namespace BlackMisc
              */
             static QString unifyCallsign(const QString &callsign);
 
-            //! \representing icon
+            //! \brief representing icon
             static const QPixmap &convertToIcon(const CCallsign &callsign);
 
         private:

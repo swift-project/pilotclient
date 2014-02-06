@@ -46,7 +46,7 @@ namespace BlackMisc
         C<T> findBy(Predicate p) const
         {
             C<T> result = derived();
-            result.erase(std::remove_if(result.begin(), result.end(), [ = ](const T &value) { return !p(value); }), result.end());
+            result.erase(std::remove_if(result.begin(), result.end(), [ = ](const T & value) { return !p(value); }), result.end());
             return result;
         }
 
@@ -94,7 +94,7 @@ namespace BlackMisc
          */
         C<T> findBy(const CValueMap &valueMap) const
         {
-            return findBy([ & ](const T &value) { return value == valueMap; });
+            return findBy([ & ](const T & value) { return value == valueMap; });
         }
 
         /*!
@@ -132,7 +132,7 @@ namespace BlackMisc
         template <class Predicate>
         void removeIf(Predicate p)
         {
-            for (auto it = derived().begin(); it != derived().end(); )
+            for (auto it = derived().begin(); it != derived().end();)
             {
                 if (p(*it)) { it = derived().erase(it); }
                 else { ++it; }
@@ -150,49 +150,39 @@ namespace BlackMisc
             removeIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
         }
 
-    public: // CValueObject overrides
-        /*!
-         * \copydoc CValueObject::toQVariant()
-         */
-        virtual QVariant toQVariant() const { return QVariant::fromValue(derived()); }
+    public:
+        //! \copydoc CValueObject::toQVariant()
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(derived()); }
 
-        /*!
-         * \brief Comparing containers by hash will only compare their addresses
-         */
-        virtual uint getValueHash() const { return qHash(&derived()); }
+        //! copydoc CValueObject::getValueHash
+        virtual uint getValueHash() const override { return qHash(&derived()); }
 
     protected: // CValueObject overrides
-        /*!
-         * \copydoc CValueObject::convertToQString()
-         */
-        virtual QString convertToQString(bool i18n = false) const
+        //! \copydoc CValueObject::convertToQString()
+        virtual QString convertToQString(bool i18n = false) const override
         {
             QString str;
             // qualifying stringify with this-> to workaround bug in GCC 4.7.2 http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56402
-            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T &value) { str += (str.isEmpty() ? "{" : ",") + this->stringify(value, i18n); });
+            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T & value) { str += (str.isEmpty() ? "{" : ",") + this->stringify(value, i18n); });
             if (str.isEmpty()) { str = "{"; }
             return str += "}";
         }
 
-        /*!
-         * \copydoc CValueObject::getMetaTypeId
-         */
-        virtual int getMetaTypeId() const { return qMetaTypeId<C<T>>(); }
+        //! \copydoc CValueObject::getMetaTypeId
+        virtual int getMetaTypeId() const override { return qMetaTypeId<C<T>>(); }
 
-        /*!
-         * \copydoc CValueObject::isA
-         */
-        virtual bool isA(int metaTypeId) const
+        //! \copydoc CValueObject::isA override
+        virtual bool isA(int metaTypeId) const override
         {
             if (metaTypeId == qMetaTypeId<C<T>>()) { return true; }
             return CValueObject::isA(metaTypeId);
         }
 
-        /*!
-         * \copydoc CValueObject::compareImpl
-         */
-        virtual int compareImpl(const CValueObject &/*other*/) const
+        //! \copydoc CValueObject::compareImpl()
+        virtual int compareImpl(const CValueObject &other) const override
         {
+            Q_UNUSED(other);
+
             //const auto &o = static_cast<const CContainerBase &>(other);
             //if (derived().size() < o.derived().size()) { return -1; }
             //if (derived().size() > o.derived().size()) { return 1; }
@@ -204,14 +194,16 @@ namespace BlackMisc
             return 0;
         }
 
-        virtual void marshallToDbus(QDBusArgument &argument) const
+        //! \copydoc CValueObject::marshallToDbus
+        virtual void marshallToDbus(QDBusArgument &argument) const override
         {
             argument.beginArray(qMetaTypeId<T>());
-            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T &value) { argument << value; });
+            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T & value) { argument << value; });
             argument.endArray();
         }
 
-        virtual void unmarshallFromDbus(const QDBusArgument &argument)
+        //! \copydoc CValueObject::unmarshallFromDbus
+        virtual void unmarshallFromDbus(const QDBusArgument &argument) override
         {
             argument.beginArray();
             while (!argument.atEnd()) { T value; argument >> value; derived().insert(value); }

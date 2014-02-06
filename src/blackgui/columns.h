@@ -50,35 +50,19 @@ namespace BlackGui
          */
         QString columnToName(int column) const;
 
-        /*!
-         * \brief Column to property index
-         * \param index
-         */
+        //! \brief Column to property index
         int columnToPropertyIndex(int column) const;
 
-        /*!
-         * \brief Property index to column
-         * \param propertyIndex
-         * \return
-         */
+        //! \brief Property index to column
         int propertyIndexToColumn(int propertyIndex) const;
 
-        /*!
-         * \brief Column index to property index
-         * \param index
-         */
+        //! \brief Column index to property index
         int indexToPropertyIndex(int index) const;
 
-        /*!
-         * \brief Column index to name
-         * \param index
-         */
+        //! \brief Column index to name
         int nameToPropertyIndex(const QString &name) const;
 
-        /*!
-         * \brief Size (number of columns)
-         * \return
-         */
+        //! \brief Size (number of columns)
         int size() const;
 
         /*!

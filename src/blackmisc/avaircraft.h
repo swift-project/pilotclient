@@ -287,20 +287,14 @@ namespace BlackMisc
                 IndexIcao
             };
 
-            /*!
-             * \copydoc CValueObject::propertyByIndex()
-             */
-            virtual QVariant propertyByIndex(int index) const;
+            //! \copydoc CValueObject::propertyByIndex()
+            virtual QVariant propertyByIndex(int index) const override;
 
-            /*!
-             * \copydoc CValueObject::propertyByIndexAsString()
-             */
-            virtual QString propertyByIndexAsString(int index, bool i18n) const;
+            //! \copydoc CValueObject::propertyByIndexAsString()
+            virtual QString propertyByIndexAsString(int index, bool i18n) const override;
 
-            /*!
-             * \copydoc CValueObject::setPropertyByIndex()
-             */
-            virtual void setPropertyByIndex(const QVariant &variant, int index);
+            //! \copydoc CValueObject::setPropertyByIndex(variant, index)
+            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
 
         protected:
             /*!
@@ -342,7 +336,6 @@ namespace BlackMisc
             BlackMisc::Aviation::CTransponder m_transponder;
             CAircraftIcao m_icao;
             BlackMisc::PhysicalQuantities::CLength m_distanceToPlane;
-
 
         };
     } // namespace

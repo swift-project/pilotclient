@@ -81,128 +81,79 @@ namespace BlackMisc
                         bool isOnline = false, const QDateTime &bookedFromUtc = QDateTime(),  const QDateTime &bookedUntilUtc = QDateTime(),
                         const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
-            /*!
-             * \copydoc CValueObject::toQVariant()
-             */
+            //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Equal operator ==
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CAtcStation &other) const;
 
-            /*!
-             * \brief Unequal operator ==
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CAtcStation &other) const;
 
-            /*!
-             * \brief Has booking times?
-             */
+            //! \brief Has booking times?
             bool hasBookingTimes() const
             {
                 return !(this->m_bookedFromUtc.isNull() && this->m_bookedUntilUtc.isNull());
             }
 
-            /*!
-             * \brief Has ATIS?
-             */
+            //! \brief Has ATIS?
             bool hasAtis() const
             {
                 return this->m_atis.hasMessage();
             }
 
-            /*!
-             * \brief Has Metar?
-             */
+            //! \brief Has METAR?
             bool hasMetar() const
             {
                 return this->m_metar.hasMessage();
             }
 
-            /*!
-             * Get callsign.
-             * \return
-             */
+            //! Get callsign.
             const CCallsign &getCallsign() const { return m_callsign; }
 
-            /*!
-             * Get callsign as string.
-             */
+            //! Get callsign as string.
             QString getCallsignAsString() const { return m_callsign.asString(); }
 
-            /*!
-             * Set callsign
-             */
+            //! Set callsign
             void setCallsign(const CCallsign &callsign) { this->m_callsign = callsign; this->m_controller.setCallsign(callsign);}
 
-            /*!
-             * Get controller
-             * \return
-             */
+            //! Get controller
             const BlackMisc::Network::CUser &getController() const { return m_controller; }
 
-            /*!
-             * Get controller name.
-             * \return
-             */
+            //! Get controller name.
             QString getControllerRealName() const { return m_controller.getRealName(); }
 
-            /*!
-             * Get controller name.
-             * \return
-             */
+            //! Get controller name.
             QString getControllerId() const { return m_controller.getId(); }
 
-            /*!
-             * Set controller
-             * \param controller
-             */
+            //! Set controller
             void setController(const BlackMisc::Network::CUser &controller) { this->m_controller = controller; this->m_controller.setCallsign(this->m_callsign); }
 
-            /*!
-             * Set controller's name
-             * \param controllerName
-             */
+            //! Set controller's name
             void setControllerRealName(const QString &controllerName) { this->m_controller.setRealName(controllerName); }
 
-            /*!
-             * Set controller's id
-             */
+            //! Set controller's id
             void setControllerId(const QString &controllerId) { this->m_controller.setId(controllerId); }
 
-            /*!
-             * \brief Has valid realname?
-             */
+            //! \brief Has valid realname?
             bool hasValidRealName() const { return this->m_controller.hasValidRealName(); }
 
-            /*!
-             * \brief Has valid id?
-             */
+            //! \brief Has valid id?
             bool hasValidId() const { return this->m_controller.hasValidId(); }
 
-            /*!
-             * Get frequency.
-             */
+            //! Get frequency.
             const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }
 
-            /*!
-             * Set frequency
-             */
+            //! Set frequency
             void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) { this->m_frequency = frequency; }
 
-            /*!
-             * Get the position of the center of the controller's area of visibility.
-             */
+            //! Get the position of the center of the controller's area of visibility.
             const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return m_position; }
 
-            /*!
-             * Set position
-             * \param position
-             */
+            //! Set position
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
             /*!
@@ -212,80 +163,50 @@ namespace BlackMisc
              */
             void syncronizeControllerData(CAtcStation &otherStation);
 
-            /*!
-             * Get the radius of the controller's area of visibility.
-             * \return
-             */
+            //! \brief Get the radius of the controller's area of visibility.
             const BlackMisc::PhysicalQuantities::CLength &getRange() const { return m_range; }
 
-            /*!
-             * Set range
-             * \param range
-             */
+            //! \brief Set range
             void setRange(const BlackMisc::PhysicalQuantities::CLength &range) { this->m_range = range; }
 
-            /*!
-             * Get the distance to own plane
-             */
+            //! Get the distance to own plane
             const BlackMisc::PhysicalQuantities::CLength &getDistanceToPlane() const { return m_distanceToPlane; }
 
-            /*!
-             * Set distance to own plane
-             */
+            //! Set distance to own plane
             void setDistanceToPlane(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToPlane = distance; }
 
-            /*!
-             * \brief Valid distance?
-             */
+            //! \brief Valid distance?
             bool hasValidDistance() const { return !this->m_distanceToPlane.isNegativeWithEpsilonConsidered();}
 
             /*!
              * \brief Calculcate distance to plane, set it, and also return it
-             * \param position
+             * \param position other position
              * \return
              */
             const BlackMisc::PhysicalQuantities::CLength &calculcateDistanceToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
-            /*!
-             * \brief Is station online (or just booked)
-             * \return
-             */
+            //! \brief Is station online (or just booked)?
             bool isOnline() const { return m_isOnline; }
 
-            /*!
-             * Set online
-             * \param online
-             */
+            //! Set online
             void setOnline(bool online) { this->m_isOnline = online; }
 
-            /*!
-             * \brief Get voice room
-             * \return
-             */
+            //! \brief Get voice room
             const BlackMisc::Voice::CVoiceRoom &getVoiceRoom() const { return this->m_voiceRoom; }
 
-            /*!
-             * \brief Set voice room
-             * \param
-             */
+            //! \brief Set voice room
             void setVoiceRoom(const BlackMisc::Voice::CVoiceRoom &voiceRoom) { this->m_voiceRoom = voiceRoom; }
 
-            /*!
-             * \brief Valid voice room?
-             * \return
-             */
+            //! \brief Valid voice room?
             bool hasValidVoiceRoom() const { return this->m_voiceRoom.isValid(); }
 
             /*!
              * Booked date/time if any.
              * This represents the closest booking within a time frame as there can be multiple bookings.
-             * \return
              */
             const QDateTime &getBookedFromUtc() const { return m_bookedFromUtc; }
 
-            /*!
-             * Set booked from
-             */
+            //! Set booked from
             void setBookedFromUtc(const QDateTime &from) { this->m_bookedFromUtc = from; }
 
             /*!
@@ -294,34 +215,24 @@ namespace BlackMisc
              */
             const QDateTime &getBookedUntilUtc() const { return m_bookedUntilUtc; }
 
-            /*!
-             * \brief Has valid booking times?
-             */
+            //! \brief Has valid booking times?
             bool hasValidBookingTimes() const
             {
                 return !this->m_bookedFromUtc.isNull() && this->m_bookedFromUtc.isValid() &&
                        !this->m_bookedUntilUtc.isNull() && this->m_bookedUntilUtc.isValid();
             }
 
-            /*!
-             * \brief Transfer booking times
-             * \param otherStation
-             */
+            //! \brief Transfer booking times
             void setBookedFromUntil(const CAtcStation &otherStation)
             {
                 this->setBookedFromUtc(otherStation.getBookedFromUtc());
                 this->setBookedUntilUtc(otherStation.getBookedUntilUtc());
             }
 
-            /*!
-             * \brief Booked now
-             * \return
-             */
+            //! \brief Booked now?
             bool isBookedNow() const;
 
-            /*!
-             * \brief Tuned in within 25KHz channel spacing
-             */
+            //! \brief Tuned in within 25KHz channel spacing
             bool isComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const
             {
                 return comUnit.isActiveFrequencyWithin25kHzChannel(this->getFrequency());
@@ -336,117 +247,72 @@ namespace BlackMisc
              */
             BlackMisc::PhysicalQuantities::CTime bookedWhen() const;
 
-            /*!
-             * \brief Get ATIS
-             * \return
-             */
+            //! \brief Get ATIS
             const CInformationMessage &getAtis() const { return m_atis; }
 
-            /*!
-             * \brief Set ATIS
-             */
+            //! \brief Set ATIS
             void setAtis(const CInformationMessage &atis) { this->m_atis = atis;}
 
-            /*!
-             * \brief Set ATIS Message
-             */
+            //! \brief Set ATIS Message
             void setAtisMessage(const QString &atis) { this->m_atis.setMessage(atis); }
 
-            /*!
-             * \brief Get METAR
-             */
+            //! \brief Get METAR
             const CInformationMessage &getMetar() const { return m_metar; }
 
-            /*!
-             * \brief Set METAR
-             */
+            //! \brief Set METAR
             void setMetar(const CInformationMessage &metar) { this->m_metar = metar;}
 
-            /*!
-             * \brief Set METAR Message
-             */
+            //! \brief Set METAR Message
             void setMetarMessage(const QString &metar) { this->m_metar.setMessage(metar); }
 
-            /*!
-             * Set booked until
-             */
+            //! Set booked until
             void setBookedUntilUtc(const QDateTime &until) { this->m_bookedUntilUtc = until; }
 
-            /*!
-             * \brief Latitude
-             * \return
-             */
-            virtual const BlackMisc::Geo::CLatitude &latitude() const
+            //! \brief Latitude
+            virtual const BlackMisc::Geo::CLatitude &latitude() const override
             {
                 return this->getPosition().latitude();
             }
 
-            /*!
-             * \brief Longitude
-             * \return
-             */
-            virtual const BlackMisc::Geo::CLongitude &longitude() const
+            //! \brief Longitude
+            virtual const BlackMisc::Geo::CLongitude &longitude() const override
             {
                 return this->getPosition().longitude();
             }
 
-            /*!
-             * \copydoc CValueObject::getValueHash()
-             */
-            virtual uint getValueHash() const;
+            //! \copydoc CValueObject::getValueHash()
+            virtual uint getValueHash() const override;
 
-            /*!
-             * \coypdoc CValueObject::propertyByIndex()
-             */
-            virtual QVariant propertyByIndex(int index) const;
+            //! \copydoc CValueObject::propertyByIndex()
+            virtual QVariant propertyByIndex(int index) const override;
 
-            /*!
-             * \copydoc CValueObject::setPropertyByIndex(const QVariant &, int)
-             */
-            virtual void setPropertyByIndex(const QVariant &variant, int index);
+            //! \copydoc CValueObject::setPropertyByIndex(variant, index)
+            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
 
-            /*!
-             * \copydoc CValueObject::propertyByIndexAsString()
-             */
-            virtual QString propertyByIndexAsString(int index, bool i18n = false) const;
+            //! \copydoc CValueObject::propertyByIndexAsString()
+            virtual QString propertyByIndexAsString(int index, bool i18n = false) const override;
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
         protected:
-            /*!
-             * \brief Meaningful string representation
-             * \param i18n
-             * \return
-             */
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const;
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
-            virtual int getMetaTypeId() const;
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
-            virtual bool isA(int metaTypeId) const;
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
-            virtual int compareImpl(const CValueObject &other) const;
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
-            /*!
-             * \copydoc CValueObject::marshallToDbus()
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            //! \copydoc CValueObject::marshallToDbus()
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \copydoc CValueObject::unmarshallFromDbus()
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            //! \copydoc CValueObject::unmarshallFromDbus()
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             CCallsign m_callsign;

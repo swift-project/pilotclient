@@ -46,12 +46,7 @@ namespace BlackMisc
             return textStream;
         }
 
-        /*!
-         * \brief Operator << when there is no debug stream
-         * \param nodebug
-         * \param uc
-         * \return
-         */
+        //! \brief Operator << when there is no debug stream
         friend QNoDebug operator<<(QNoDebug nodebug, const CValueObject & /* uc */)
         {
             return nodebug;
@@ -81,52 +76,22 @@ namespace BlackMisc
             return ostr;
         }
 
-        /*!
-         * \brief Unmarshalling operator >>, DBus to object
-         * \param argument
-         * \param uc
-         * \return
-         */
+        //! \brief Unmarshalling operator >>, DBus to object
         friend const QDBusArgument &operator>>(const QDBusArgument &argument, CValueObject &uc);
 
-        /*!
-         * \brief Marshalling operator <<, object to DBus
-         * \param argument
-         * \param pq
-         * \return
-         */
+        //! \brief Marshalling operator <<, object to DBus
         friend QDBusArgument &operator<<(QDBusArgument &argument, const CValueObject &uc);
 
-        /*!
-         * \brief Operator == with value map
-         * \param valueMap
-         * \param uc
-         * \return
-         */
+        //! \brief Operator == with value map
         friend bool operator==(const CValueMap &valueMap, const CValueObject &uc);
 
-        /*!
-         * \brief Operator != with value map
-         * \param valueMap
-         * \param uc
-         * \return
-         */
+        //! \brief Operator != with value map
         friend bool operator!=(const CValueMap &valueMap, const CValueObject &uc);
 
-        /*!
-         * \brief Operator == with value map
-         * \param uc
-         * \param valueMap
-         * \return
-         */
+        //! \brief Operator == with value map
         friend bool operator==(const CValueObject &uc, const CValueMap &valueMap);
 
-        /*!
-         * \brief Operator != with value map
-         * \param uc
-         * \param valueMap
-         * \return
-         */
+        //! \brief Operator != with value map
         friend bool operator!=(const CValueObject &uc, const CValueMap &valueMap);
 
         /*!

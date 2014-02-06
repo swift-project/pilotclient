@@ -124,7 +124,7 @@ namespace BlackMisc
         //! \brief Unspecific info message
         static CStatusMessage getInfoMessage(const QString &message);
 
-        //! \representing icon
+        //! \brief representing icon
         static const QPixmap &convertToIcon(const CStatusMessage &statusMessage);
 
     protected:

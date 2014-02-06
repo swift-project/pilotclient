@@ -166,7 +166,6 @@ namespace BlackCore
          */
         virtual void runSquelchTest() const;
 
-
     private:
         CVoiceVatlib *m_voice; //!< underlying voice lib
     };
