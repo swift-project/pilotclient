@@ -77,7 +77,7 @@ namespace BlackCore
         /*!
          * \copydoc IVoice::runMicTest
          */
-        virtual void runMicTest();
+        virtual void runMicrophoneTest();
 
         /*!
          * \copydoc IVoice::inputSquelch
