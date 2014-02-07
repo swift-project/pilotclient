@@ -33,14 +33,10 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-        /*!
-         * \brief With link to server
-         */
+        //! \brief Constructor, with link to runtime
         CContextNetwork(CCoreRuntime *runtime);
 
-        /*!
-         * \brief Destructor
-         */
+        //! \brief Destructor
         virtual ~CContextNetwork();
 
         /*!
@@ -53,32 +49,25 @@ namespace BlackCore
             server->addObject(IContextNetwork::ServicePath(), this);
         }
 
-        /*!
-         * \brief Runtime
-         * \return
-         */
+        //! \brief Runtime
         const CCoreRuntime *getRuntime() const
         {
             return static_cast<CCoreRuntime *>(this->parent());
         }
 
-        /*!
-         * \brief Using local objects?
-         */
-        virtual bool usingLocalObjects() const { return true; }
+        //! \brief Using local objects?
+        virtual bool usingLocalObjects() const override { return true; }
 
     public slots:
 
-        /*!
-         * \copydoc IContextNetwork::readAtcBookingsFromSource()
-         */
+        //! \copydoc IContextNetwork::readAtcBookingsFromSource()
         virtual void readAtcBookingsFromSource();
 
         /*!
          * \copydoc IContextNetwork::getAtcStationsOnline()
          * \todo If I make this &getAtcStations XML is not generated correctly, needs to be crosschecked with the latest version of Qt
          */
-        virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const
+        virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override
         {
             // this->log(Q_FUNC_INFO);
             return m_atcStationsOnline;
@@ -88,82 +77,66 @@ namespace BlackCore
          * \copydoc IContextNetwork::getAtcStationsBooked()
          * \todo If I make this &getAtcStations XML is not generated correctly
          */
-        virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const
+        virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override
         {
             // this->log(Q_FUNC_INFO);
             return m_atcStationsBooked;
         }
 
-        /*!
-         * \copydoc IContextNetwork::getAircraftsInRange()
-         */
-        virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const
+        //! \copydoc IContextNetwork::getAircraftsInRange()
+        virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const override
         {
             // this->log(Q_FUNC_INFO);
             return m_aircraftsInRange;
         }
 
-        /*!
-         * \copydoc IContextNetwork::connectToNetwork()
-         */
-        virtual BlackMisc::CStatusMessageList connectToNetwork(uint mode);
+        //! \copydoc IContextNetwork::connectToNetwork()
+        virtual BlackMisc::CStatusMessageList connectToNetwork(uint mode) override;
 
-        /*!
-         * \copydoc IContextNetwork::disconnectFromNetwork()
-         */
-        virtual BlackMisc::CStatusMessageList disconnectFromNetwork();
+        //! \copydoc IContextNetwork::disconnectFromNetwork()
+        virtual BlackMisc::CStatusMessageList disconnectFromNetwork() override;
 
-        /*!
-         * \copydoc IContextNetwork::isConnected()
-         */
-        virtual bool isConnected() const;
+        //! \copydoc IContextNetwork::isConnected()
+        virtual bool isConnected() const override;
 
-        /*!
-         * \copydoc IContextNetwork::setOwnAircraft()
-         */
-        virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
+        //! \copydoc IContextNetwork::setOwnAircraft()
+        virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) override;
 
-        /*!
-         * \copydoc IContextNetwork::updateOwnPosition()
-         */
-        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
+        //! \copydoc IContextNetwork::updateOwnPosition()
+        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
 
-        /*!
-         * \copydoc IContextNetwork::updateOwnSituation()
-         */
-        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+        //! \copydoc IContextNetwork::updateOwnSituation()
+        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
 
-        /*!
-         * \copydoc IContextNetwork::updateOwnCockpit()
-         */
-        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder);
+        //! \copydoc IContextNetwork::updateOwnCockpit()
+        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder) override;
 
         //! \copydoc IContextNetwork::getOwnAircraft()
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const;
+        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
 
         //! \copydoc IContextNetwork::sendTextMessages()
-        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages);
+        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
 
         //! \copydoc IContextNetwork::getMetar()
-        virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode);
+        virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode) override;
 
         //! \copydoc IContextNetwork::getSelectedVoiceRooms()
-        virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
+        virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const override;
 
         //! \copydoc IContextNetwork::getSelectedAtcStations
-        virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const;
+        virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const override;
 
         //! \copydoc IContextNetwork::getUsers()
-        virtual BlackMisc::Network::CUserList getUsers() const;
+        virtual BlackMisc::Network::CUserList getUsers() const override;
 
         //! \copydoc IContextNetwork::getUsersForCallsigns
-        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
+        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override;
 
         //! \copydoc IContextNetwork::requestDataUpdates
-        virtual void requestDataUpdates();
+        virtual void requestDataUpdates()override;
 
         //! \copydoc IContextNetwork::requestAtisUpdates
-        virtual void requestAtisUpdates();
+        virtual void requestAtisUpdates() override;
 
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
@@ -179,40 +152,28 @@ namespace BlackCore
         QTimer *m_dataUpdateTimer; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
         QDateTime m_atcBookingsUpdateTimestamp;
 
-        /*!
-         * \brief Replace value by new values
-         */
+        //! \brief Replace value by new values
         void setAtcStationsBooked(const BlackMisc::Aviation::CAtcStationList &newStations);
 
-        /*!
-         * \brief Replace value by new values
-         */
+        //! \brief Replace value by new values
         void setAtcStationsOnline(const BlackMisc::Aviation::CAtcStationList &newStations);
 
-        /*!
-         * \brief The "central" ATC list with online ATC controllers
-         */
+        //! \brief The "central" ATC list with online ATC controllers
         BlackMisc::Aviation::CAtcStationList &atcStationsOnline()
         {
             return m_atcStationsOnline;
         }
 
-        /*!
-         * \brief ATC list, with booked controllers
-         */
+        //! \brief ATC list, with booked controllers
         BlackMisc::Aviation::CAtcStationList &atcStationsBooked()
         {
             return m_atcStationsBooked;
         }
 
-        /*!
-         * \brief Init my very onw aircraft
-         */
+        //! \brief Init my very onw aircraft
         void initOwnAircraft();
 
-        /*!
-         * \brief Get network settings
-         */
+        //! \brief Get network settings
         BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const
         {
             Q_ASSERT(this->getRuntime());
@@ -222,15 +183,13 @@ namespace BlackCore
 
     private slots:
         /*!
-         * \brief Connection status changed
+         * \brief Connection status changed?
          * \param from  old status
          * \param to    new status
          */
         void psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
 
-        /*!
-         * \brief ATC position update
-         */
+        //! \brief ATC position update
         void psFsdAtcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
 
         /*!
@@ -239,9 +198,7 @@ namespace BlackCore
          */
         void psFsdAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
 
-        /*!
-         * \brief ATIS received
-         */
+        //! \brief ATIS received
         void psFsdAtisQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
 
         /*!
@@ -258,39 +215,25 @@ namespace BlackCore
          */
         void psFsdAtisLogoffTimeQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
 
-        /*!
-         * \brief METAR received
-         */
+        //! \brief METAR received
         void psFsdMetarReceived(const QString &metarMessage);
 
-        /*!
-         * \brief Realname recevied
-         */
+        //! \brief Realname recevied
         void psFsdRealNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
 
-        /*!
-         * \brief Plane ICAO codes received
-         */
+        //! \brief Plane ICAO codes received
         void psFsdIcaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
 
-        /*!
-         * \brief Aircraft position update received
-         */
+        //! \brief Aircraft position update received
         void psFsdAircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
 
-        /*!
-         * \brief Pilot disconnected
-         */
+        //! \brief Pilot disconnected
         void psFsdPilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
 
-        /*!
-         * \brief Frequency received
-         */
+        //! \brief Frequency received
         void psFsdFrequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
 
-        /*!
-         * \brief Radio text messages received
-         */
+        //! \brief Radio text messages received
         void psFsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
 
         /*!
@@ -300,7 +243,6 @@ namespace BlackCore
         void psAtcBookingsRead(QNetworkReply *nwReply);
 
     };
-
 }
 
 #endif // guard
