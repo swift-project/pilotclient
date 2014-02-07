@@ -8,6 +8,7 @@
 
 #include "blackmisc/avselcal.h"
 #include "blackmisc/vaudiodevice.h"
+#include "blackmisc/pqtime.h"
 
 #include <QIODevice>
 #include <QAudioFormat>
@@ -41,19 +42,29 @@ namespace BlackSound
          */
         struct Tone
         {
+            friend class CSoundGenerator;
+
+        private:
             int m_frequencyHz; /*!< first tone's frequency, use 0 for silence */
             int m_secondaryFrequencyHz; /*!< second tone's frequency, or 0 */
             qint64 m_durationMs; /*!< How long to play */
 
+        public:
             /*!
              * \brief Play frequency f for t milliseconds
              */
-            Tone(int frequencyHz, qint64 durationMs) : m_frequencyHz(frequencyHz), m_secondaryFrequencyHz(0), m_durationMs(durationMs) {}
+            Tone(const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::PhysicalQuantities::CTime &duration) :
+                m_frequencyHz(static_cast<int>(frequency.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::Hz()))),
+                m_secondaryFrequencyHz(0),
+                m_durationMs(static_cast<qint64>(duration.valueRounded(BlackMisc::PhysicalQuantities::CTimeUnit::ms()))) {}
 
             /*!
              * \brief Play 2 frequencies f for t milliseconds
              */
-            Tone(int frequencyHz, int secondaryFrequencyHz, qint64 durationMs) : m_frequencyHz(frequencyHz), m_secondaryFrequencyHz(secondaryFrequencyHz), m_durationMs(durationMs) {}
+            Tone(const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::PhysicalQuantities::CFrequency &secondaryFrequency, const BlackMisc::PhysicalQuantities::CTime &duration) :
+                m_frequencyHz(static_cast<int>(frequency.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::Hz()))),
+                m_secondaryFrequencyHz(static_cast<int>(secondaryFrequency.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::Hz()))),
+                m_durationMs(static_cast<qint64>(duration.valueRounded(BlackMisc::PhysicalQuantities::CTimeUnit::ms()))) {}
         };
 
         /*!
@@ -185,9 +196,9 @@ namespace BlackSound
         /*!
          * \brief One cycle of tones takes t milliseconds
          */
-        qint64 oneCycleDurationMs() const
+        BlackMisc::PhysicalQuantities::CTime oneCycleDurationMs() const
         {
-            return this->m_oneCycleDurationMs;
+            return BlackMisc::PhysicalQuantities::CTime(this->m_oneCycleDurationMs, BlackMisc::PhysicalQuantities::CTimeUnit::ms());
         }
 
     signals:

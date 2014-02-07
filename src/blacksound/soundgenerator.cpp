@@ -80,10 +80,10 @@ namespace BlackSound
 
         foreach(Tone t, this->m_tones)
         {
-            qint64 lengthPerTone = this->m_audioFormat.sampleRate() * bytesForAllChannels * t.m_durationMs / 1000;
+            qint64 bytesPerTone = this->m_audioFormat.sampleRate() * bytesForAllChannels * t.m_durationMs / 1000;
             int sampleIndexPerTone = 0;
 
-            while (lengthPerTone)
+            while (bytesPerTone)
             {
                 // http://hyperphysics.phy-astr.gsu.edu/hbase/audio/sumdif.html
                 // http://math.stackexchange.com/questions/164369/how-do-you-calculate-the-frequency-perceived-by-humans-of-two-sinusoidal-waves-a
@@ -130,7 +130,7 @@ namespace BlackSound
                     }
 
                     bufferPointer += bytesPerSample;
-                    lengthPerTone -= bytesPerSample;
+                    bytesPerTone -= bytesPerSample;
                 }
                 ++sampleIndexPerTone;
             }
@@ -253,9 +253,10 @@ namespace BlackSound
         {
             QList<CFrequency> frequencies = selcal.getFrequencies();
             Q_ASSERT(frequencies.size() == 4);
-            Tone t1(frequencies.at(0).value(CFrequencyUnit::Hz()), frequencies.at(1).value(CFrequencyUnit::Hz()), 1000);
-            Tone t2(0, 200);
-            Tone t3(frequencies.at(2).value(CFrequencyUnit::Hz()), frequencies.at(3).value(CFrequencyUnit::Hz()), 1000);
+            const BlackMisc::PhysicalQuantities::CTime oneSec(1000.0, BlackMisc::PhysicalQuantities::CTimeUnit::ms());
+            Tone t1(frequencies.at(0), frequencies.at(1), oneSec);
+            Tone t2(CFrequency(), oneSec / 5.0);
+            Tone t3(frequencies.at(2), frequencies.at(3), oneSec);
             tones << t1 << t2 << t3;
         }
         return CSoundGenerator::playSignal(volume, tones, device);
