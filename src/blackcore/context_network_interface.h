@@ -158,7 +158,7 @@ namespace BlackCore
          * \brief Read ATC bookings
          * \return
          */
-        virtual void readAtcBookingsFromSource() const;
+        virtual void readAtcBookingsFromSource();
 
         /*!
          * \brief The ATC list with online ATC controllers

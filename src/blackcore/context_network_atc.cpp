@@ -28,9 +28,14 @@ namespace BlackCore
     /*
      * Read bookings
      */
-    void CContextNetwork::readAtcBookingsFromSource() const
+    void CContextNetwork::readAtcBookingsFromSource()
     {
+        const int updateTime = 60 * 1000; // 1min
+        if (!(this->m_atcBookingTimer->interval() == updateTime)) this->m_atcBookingTimer->setInterval(updateTime); // 1min
+
         QUrl url(this->getNetworkSettings().getBookingServiceUrl());
+        if (url.isEmpty()) return;
+
         QNetworkRequest request(url);
         this->m_networkManager->get(request);
     }

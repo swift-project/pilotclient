@@ -72,7 +72,7 @@ namespace BlackCore
         /*!
          * \copydoc IContextNetwork::readAtcBookingsFromSource()
          */
-        virtual void readAtcBookingsFromSource() const;
+        virtual void readAtcBookingsFromSource();
 
         /*!
          * \copydoc IContextNetwork::getAtcStationsOnline()

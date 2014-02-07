@@ -61,7 +61,7 @@ namespace BlackCore
             qDebug() << "   LOG: " << method << m1 << m2 << m3 << m4;
     }
 
-    void IContextNetwork::readAtcBookingsFromSource() const
+    void IContextNetwork::readAtcBookingsFromSource()
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("readAtcBookingsFromSource"));
     }

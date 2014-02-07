@@ -38,7 +38,7 @@ namespace BlackCore
         this->m_atcBookingTimer = new QTimer(this);
         this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CContextNetwork::psAtcBookingsRead);
         this->connect(this->m_atcBookingTimer, &QTimer::timeout, this, &CContextNetwork::readAtcBookingsFromSource);
-        this->m_atcBookingTimer->start(15 * 1000);
+        this->m_atcBookingTimer->start(10 * 1000); // will be reset in method to a longer time
 
         // 4. connect signals and slots
         this->connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::psFsdConnectionStatusChanged);
