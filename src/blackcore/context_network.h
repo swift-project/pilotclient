@@ -159,6 +159,12 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getUsersForCallsigns
         virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
 
+        //! \copydoc IContextNetwork::requestDataUpdates
+        virtual void requestDataUpdates();
+
+        //! \copydoc IContextNetwork::requestAtisUpdates
+        virtual void requestAtisUpdates();
+
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
@@ -169,7 +175,8 @@ namespace BlackCore
 
         // for reading XML
         QNetworkAccessManager *m_networkManager;
-        QTimer *m_atcBookingTimer;
+        QTimer *m_atcBookingTimer; //!< ATC stations bookings
+        QTimer *m_dataUpdateTimer; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
         QDateTime m_atcBookingsUpdateTimestamp;
 
         /*!
@@ -291,6 +298,7 @@ namespace BlackCore
          * \todo encapsulate reading from WWW in some class
          */
         void psAtcBookingsRead(QNetworkReply *nwReply);
+
     };
 
 }

@@ -252,6 +252,16 @@ namespace BlackCore
          * \brief Use the selected COM1/2 frequencies, and get the corresponding ATC stations for it
          */
         virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const;
+
+        /*!
+         * \brief Request data updates (pilot' frequencies, ATIS, ..)
+         */
+        virtual void requestDataUpdates();
+
+        /*!
+         * \brief Request ATIS updates (for all stations)
+         */
+        virtual void requestAtisUpdates();
     };
 }
 

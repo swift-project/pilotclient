@@ -33,12 +33,17 @@ namespace BlackCore
         // 2. Init own aircraft
         this->initOwnAircraft();
 
-        // 3. Init network access driver for XML data (bookings)
+        // 3a. Init network access driver for XML data (bookings)
         this->m_networkManager = new QNetworkAccessManager(this);
         this->m_atcBookingTimer = new QTimer(this);
         this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CContextNetwork::psAtcBookingsRead);
         this->connect(this->m_atcBookingTimer, &QTimer::timeout, this, &CContextNetwork::readAtcBookingsFromSource);
         this->m_atcBookingTimer->start(10 * 1000); // will be reset in method to a longer time
+
+        // 3b. Update timer for data
+        this->m_dataUpdateTimer = new QTimer(this);
+        this->connect(this->m_dataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
+        this->m_dataUpdateTimer->start(30 * 1000);
 
         // 4. connect signals and slots
         this->connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::psFsdConnectionStatusChanged);

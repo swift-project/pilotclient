@@ -41,6 +41,35 @@ namespace BlackCore
     }
 
     /*
+     * Update data
+     */
+    void CContextNetwork::requestDataUpdates()
+    {
+        Q_ASSERT(this->m_network);
+        if (!this->isConnected()) return;
+        this->requestAtisUpdates();
+
+        // other updates
+        foreach(CAircraft aircraft, this->m_aircraftsInRange)
+        {
+            this->m_network->sendFrequencyQuery(aircraft.getCallsign());
+        }
+    }
+
+    /*
+     * Request new ATIS data
+     */
+    void CContextNetwork::requestAtisUpdates()
+    {
+        Q_ASSERT(this->m_network);
+        if (!this->isConnected()) return;
+        foreach(CAtcStation station, this->m_atcStationsOnline)
+        {
+            this->m_network->sendAtisQuery(station.getCallsign());
+        }
+    }
+
+    /*
      * Booked stations
      */
     void CContextNetwork::setAtcStationsBooked(const BlackMisc::Aviation::CAtcStationList &newStations)
