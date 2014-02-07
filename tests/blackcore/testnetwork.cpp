@@ -49,6 +49,11 @@ void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
     .send(&INetwork::terminateConnection)
     .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
     {
+        QVERIFY(newStatus == INetwork::Disconnecting);
+        qDebug() << "DISCONNECTING";
+    })
+    .expect(&INetwork::connectionStatusChanged, [](INetwork::ConnectionStatus, INetwork::ConnectionStatus newStatus)
+    {
         QVERIFY(newStatus == INetwork::Disconnected);
         qDebug() << "DISCONNECTED";
     })
