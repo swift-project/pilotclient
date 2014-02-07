@@ -17,7 +17,7 @@ namespace BlackMisc
     namespace Aviation
     {
         /*!
-         * Value object encapsulating information for ICAO classification
+         * Value object for ICAO classification
          */
         class CAircraftIcao : public BlackMisc::CValueObject
         {
@@ -37,99 +37,54 @@ namespace BlackMisc
              */
             CAircraftIcao(const QString &icao, const QString &type, const QString &airline, const QString &livery, const QString &color)
                 : m_designator(icao.trimmed().toUpper()), m_type(type.trimmed().toUpper()), m_airline(airline.trimmed().toUpper()),
-                m_livery(livery.trimmed().toUpper()), m_color(color.trimmed().toUpper()) {}
+                  m_livery(livery.trimmed().toUpper()), m_color(color.trimmed().toUpper()) {}
 
-            /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
-             */
-            virtual QVariant toQVariant() const
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * Get ICAO designator, e.g. "B737"
-             * \return
-             */
+            //! Get ICAO designator, e.g. "B737"
             const QString &getDesignator() const { return m_designator; }
 
-            /*!
-             * Set callsign
-             * \param callsign
-             */
+            //! Set callsign
             void setDesignator(const QString &icaoDesignator) { this->m_designator = icaoDesignator.trimmed().toUpper(); }
 
-            /*!
-             * \brief Get airline
-             * \return
-             */
+            //! \brief Get airline
             const QString &getAirline() const { return this->m_airline; }
 
-            /*!
-             * \brief Set airline
-             * \param airline
-             */
+            //! \brief Set airline
             void setAirline(const QString &airline) { this->m_airline = airline.trimmed().toUpper(); }
 
-            /*!
-             * \brief Airline?
-             * \return
-             */
+            //! \brief Airline available?
             bool hasAirline() const { return !this->m_airline.isEmpty(); }
 
-            /*!
-             * \brief Get livery
-             * \return
-             */
+            //! \brief Get livery
             const QString &getLivery() const { return this->m_livery; }
 
-            /*!
-             * \brief Set airline
-             * \param livery
-             */
+            //! \brief Set livery
             void setLivery(const QString &livery) { this->m_livery = livery.trimmed().toUpper(); }
 
-            /*!
-             * \brief Livery?
-             * \return
-             */
+            //! \brief has livery?
             bool hasLivery() const { return !this->m_livery.isEmpty(); }
 
-            /*!
-             * \brief Get livery or color
-             * \return
-             */
+            //! \brief Get livery or color
             const QString &getLiveryOrColor() const { return this->hasLivery() ? this->m_livery : this->m_color; }
 
-            /*!
-             * \brief Get color
-             * \return
-             */
+            //! \brief Get color
             const QString &getColor() const { return this->m_color; }
 
-            /*!
-             * \brief Set color
-             * \param color
-             */
+            //! \brief Set color
             void setColor(const QString &color) { this->m_color = color.trimmed().toUpper(); }
 
-            /*!
-             * \brief Color?
-             * \return
-             */
+            //! \brief Color available?
             bool hasColor() const { return !this->m_color.isEmpty(); }
 
-            /*!
-             * \brief Get type
-             * \return
-             */
+            //! \brief Get type
             const QString &getType() const { return this->m_type; }
 
-            /*!
-             * \brief Get engine type
-             * \return
-             */
+            //! \brief Get engine type
             QString getEngineType() const
             {
                 if (this->m_type.length() != 3) return "";
@@ -137,39 +92,24 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief As string for GUI representation
-             * \return
+             * \brief As string for GUI representation by index
+             * \remarks Different from toQString()
              */
             QString asString() const;
 
-            /*!
-             * \brief Set type
-             * \param type
-             */
+            //! \brief Set type
             void setType(const QString &type) { this->m_type = type.trimmed().toUpper(); }
 
-            /*!
-             * \brief Equal operator ==
-             * \param other
-             * @return
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CAircraftIcao &other) const;
 
-            /*!
-             * \brief Unequal operator ==
-             * \param other
-             * @return
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CAircraftIcao &other) const;
 
-            /*!
-             * \brief Value hash
-             */
-            virtual uint getValueHash() const;
+            //! \brief Value hash
+            virtual uint getValueHash() const override;
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
             /*!
@@ -184,62 +124,33 @@ namespace BlackMisc
                 IndexAsString
             };
 
-            /*!
-             * \brief Property by index
-             * \param index
-             * \return
-             */
-            virtual QVariant propertyByIndex(int index) const;
+            //! \copydoc CValueObject::propertyByIndex
+            virtual QVariant propertyByIndex(int index) const override;
 
-            /*!
-             * \brief Property by index as string
-             * \param index
-             * \param i18n
-             * \return
-             */
-            virtual QString propertyByIndexAsString(int index, bool i18n) const;
+            //! \copydoc CValueObject::propertyByIndex(index, i18n)
+            virtual QString propertyByIndexAsString(int index, bool i18n) const override;
 
-            /*!
-             * \brief Property by index (setter)
-             * \param variant
-             * \param index
-             */
-            virtual void setPropertyByIndex(const QVariant &variant, int index);
+            //! \copydoc CValueObject::setPropertyByIndex(variant, index)
+            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
 
         protected:
-            /*!
-             * \brief Rounded value as string
-             * \param i18n
-             * \return
-             */
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const;
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
-            virtual int getMetaTypeId() const;
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
-            virtual bool isA(int metaTypeId) const;
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
-            virtual int compareImpl(const CValueObject &other) const;
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
-            /*!
-             * \brief Stream to DBus <<
-             * \param argument
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            //! \copydoc CValueObject::marshallToDbus
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \brief Stream from DBus >>
-             * \param argument
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            //! \copydoc CValueObject::unmarshallFromDbus
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             QString m_designator;

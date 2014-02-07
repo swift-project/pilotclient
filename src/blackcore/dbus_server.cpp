@@ -146,14 +146,6 @@ namespace BlackCore
     }
 
     /*
-     * Print last error message
-     */
-    void CDBusServer::printError() const
-    {
-        qWarning() << m_busServer.lastError().name();
-    }
-
-    /*
      * Last error
      */
     QDBusError CDBusServer::lastError() const

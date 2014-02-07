@@ -65,10 +65,7 @@ namespace BlackMisc
              */
             CCoordinateNed(double north, double east, double down) : CVector3DBase(north, east, down), m_referencePosition(), m_hasReferencePosition(false) {}
 
-            /*!
-             * \brief Copy constructor
-             * \param otherNed
-             */
+            //! \brief Copy constructor
             CCoordinateNed(const CCoordinateNed &other) :
                 CVector3DBase(other), m_referencePosition(other.m_referencePosition), m_hasReferencePosition(other.m_hasReferencePosition) {}
 

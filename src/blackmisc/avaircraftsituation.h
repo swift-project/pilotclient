@@ -27,32 +27,19 @@ namespace BlackMisc
         class CAircraftSituation : public BlackMisc::CValueObject, public BlackMisc::Geo::ICoordinateGeodetic
         {
         public:
-            /*!
-             * Default constructor.
-             */
+            //! \brief Default constructor.
             CAircraftSituation() : m_timestamp(QDateTime::currentDateTimeUtc()) {}
 
-            /*!
-             * Constructor.
-             * \param position
-             * \param altitude
-             * \param heading
-             * \param pitch
-             * \param bank
-             * \param gs
-             * \param parent
-             */
+            //! \brief Comprehensive Constructor
             CAircraftSituation(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude,
                                const BlackMisc::Aviation::CHeading &heading = BlackMisc::Aviation::CHeading(),
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = BlackMisc::PhysicalQuantities::CAngle(),
                                const BlackMisc::PhysicalQuantities::CAngle &bank = BlackMisc::PhysicalQuantities::CAngle(),
                                const BlackMisc::PhysicalQuantities::CSpeed &gs = BlackMisc::PhysicalQuantities::CSpeed())
                 : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch), m_bank(bank), m_groundspeed(gs),
-                m_timestamp(QDateTime::currentDateTimeUtc()) {}
+                  m_timestamp(QDateTime::currentDateTimeUtc()) {}
 
-            /*!
-             * \brief Properties by index
-             */
+            //! \brief Properties by index
             enum ColumnIndex
             {
                 IndexPosition = 1000, // used, so it can be chained in aircraft
@@ -68,198 +55,102 @@ namespace BlackMisc
                 IndexTimeStampFormatted
             };
 
-            /*!
-             * \brief Property by index
-             * \param index
-             * \return
-             */
-            virtual QVariant propertyByIndex(int index) const;
+            //! \copydoc CValueObject::propertyByIndex(index)
+            virtual QVariant propertyByIndex(int index) const override;
 
-            /*!
-             * \brief Property by index as string
-             * \param index
-             * \param i18n
-             * \return
-             */
-            virtual QString propertyByIndexAsString(int index, bool i18n) const;
+            //! \copydoc CValueObject::propertyByIndexAsString
+            virtual QString propertyByIndexAsString(int index, bool i18n) const override;
 
-            /*!
-             * \brief Property by index
-             * \param variant
-             * \param index
-             */
-            virtual void setPropertyByIndex(const QVariant &variant, int index);
+            //! \copydoc CValueObject::setPropertyByIndex(variant,index)
+            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
 
-            /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
-             */
-            virtual QVariant toQVariant() const
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Get position
-             * \return
-             */
+            //! \brief Get position
             const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return this->m_position; }
 
-            /*!
-             * \brief Set position
-             * \param position
-             */
+            //! \brief Set position
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
-            /*!
-             * \brief Get latitude
-             * \return
-             */
+            //! \copydoc ICoordinateGeodetic::latitude()
             virtual const BlackMisc::Geo::CLatitude &latitude() const { return this->m_position.latitude(); }
 
-            /*!
-             * \brief Get longitude
-             * \return
-             */
+            //! \copydoc ICoordinateGeodetic::longitude()
             virtual const BlackMisc::Geo::CLongitude &longitude() const { return this->m_position.longitude(); }
 
-            /*!
-             * \brief Get height
-             * \return
-             */
+            //! \copydoc CCoordinateGeodetic::height
             const BlackMisc::PhysicalQuantities::CLength &getHeight() const { return this->m_position.height(); }
 
-            /*!
-             * \brief Set height
-             * \param
-             */
+            //! \brief Set height
             void setHeight(const BlackMisc::PhysicalQuantities::CLength &height) { this->m_position.setHeight(height); }
 
-            /*!
-             * \brief Get heading
-             * \return
-             */
+            //! \brief Get heading
             const BlackMisc::Aviation::CHeading &getHeading() const { return this->m_heading; }
 
-            /*!
-             * \brief Set heading
-             * \param
-             */
+            //! \brief Set heading
             void setHeading(const BlackMisc::Aviation::CHeading &heading) { this->m_heading = heading; }
 
-            /*!
-             * \brief Get altitude (true)
-             * \return
-             */
+            //! \brief Get altitude (true)
             const BlackMisc::Aviation::CAltitude &getAltitude() const { return this->m_altitude; }
 
-            /*!
-             * \brief Set altitude
-             * \param
-             */
+            //! \brief Set altitude
             void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { this->m_altitude = altitude; }
 
-            /*!
-             * \brief Get pitch
-             * \return
-             */
+            //! \brief Get pitch
             const BlackMisc::PhysicalQuantities::CAngle &getPitch() const { return this->m_pitch; }
 
-            /*!
-             * \brief Set pitch
-             * \param
-             */
+            //! \brief Set pitch
             void setPitch(const BlackMisc::PhysicalQuantities::CAngle &pitch) { this->m_pitch = pitch; }
 
-            /*!
-             * \brief Get bank
-             * \return
-             */
+            //! Get bank (angle)
             const BlackMisc::PhysicalQuantities::CAngle &getBank() const { return this->m_bank; }
 
-            /*!
-             * \brief Set bank
-             * \param
-             */
+            //! \brief Set bank (angle)
             void setBank(const BlackMisc::PhysicalQuantities::CAngle &bank) { this->m_bank = bank; }
 
-            /*!
-             * \brief Get groundspeed
-             * \return
-             */
+            //! \brief Get groundspeed
             const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return this->m_groundspeed; }
 
-            /*!
-             * \brief Set groundspeed
-             * \param
-             */
+            //! \brief Set groundspeed
             void setGroundspeed(const BlackMisc::PhysicalQuantities::CSpeed &groundspeed) { this->m_groundspeed = groundspeed; }
 
-            /*!
-             * \brief Timestamp
-             * \return
-             */
+            //! \brief Timestamp
             const QDateTime &getTimestamp() const { return this->m_timestamp;}
 
-            /*!
-             * \brief Equal operator ==
-             * \param other
-             * @return
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CAircraftSituation &other) const;
 
-            /*!
-             * \brief Unequal operator ==
-             * \param other
-             * @return
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CAircraftSituation &other) const;
 
-            /*!
-             * \brief Value hash
-             */
+            //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const;
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
-
         protected:
-            /*!
-             * \brief Rounded value as string
-             * \param i18n
-             * \return
-             */
-            virtual QString convertToQString(bool i18n = false) const;
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override;
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
-            virtual int getMetaTypeId() const;
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
-            virtual bool isA(int metaTypeId) const;
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
-            virtual int compareImpl(const CValueObject &other) const;
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
-            /*!
-             * \brief Stream to DBus <<
-             * \param argument
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            //! \copydoc CValueObject::marshallToDbus
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \brief Stream from DBus >>
-             * \param argument
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            //! \copydoc CValueObject::unmarshallFromDbus
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BlackMisc::Geo::CCoordinateGeodetic m_position;

@@ -84,14 +84,13 @@ namespace BlackCore
         IContextApplication(QObject *parent = nullptr) : QObject(parent), m_dBusInterface(nullptr) {}
 
     signals:
-        /*!
-         * \brief Status message
-         * \param message
-         */
+        //! \brief Status message
         void statusMessage(const BlackMisc::CStatusMessage &message);
 
-
+        //! Widget GUI is about to start
         void widgetGuiStarting() const;
+
+        //! Widget GUI is about to terminate
         void widgetGuiTerminating() const;
 
     public slots:

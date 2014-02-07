@@ -30,6 +30,7 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_DBUSERVER_SERVICENAME)
 
     public:
+        //! \brief Service name of DBus serve
         static const QString ServiceName;
 
         /*!
@@ -73,23 +74,11 @@ namespace BlackCore
         }
 
     public:
-        /*!
-         * \brief Constructor
-         * \param parent
-         */
-        CDBusServer(const QString &address, QObject *parent = 0);
+        //! \brief Constructor
+        CDBusServer(const QString &address, QObject *parent = nullptr);
 
-        /*!
-         * \brief Adds a QObject to be exposed to DBus
-         * \param name
-         * \param object
-         */
+        //!! \brief Adds a QObject to be exposed to DBus
         void addObject(const QString &name, QObject *object);
-
-        /*!
-         * \brief printError
-         */
-        void printError() const;
 
         /*!
          * \brief Last error

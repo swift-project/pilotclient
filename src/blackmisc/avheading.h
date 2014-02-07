@@ -32,29 +32,17 @@ namespace BlackMisc
             ReferenceNorth m_north; //!< magnetic or true?
 
         protected:
-            /*!
-             * \brief Specific stream operation for heading
-             * \param i18n
-             * \return
-             */
-            virtual QString convertToQString(bool i18n = false) const;
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override;
 
-            /*!
-             * \brief Stream to DBus <<
-             * \param argument
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            //! \copydoc CValueObject::marshallToDbus
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \brief Stream from DBus >>
-             * \param argument
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            //! \copydoc CValueObject::unmarshallFromDbus
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         public:
-            /*!
-             * \brief Default constructor: 0 heading true
-             */
+            //! \brief Default constructor: 0 heading true
             CHeading() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
             /*!
@@ -65,57 +53,31 @@ namespace BlackMisc
              */
             CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
 
-            /*!
-             * \brief Constructor by CAngle
-             * \param north
-             * \param magnetic
-             */
+            //! \brief Constructor by CAngle
             CHeading(CAngle heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
 
-            /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
-             */
-            virtual QVariant toQVariant() const
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Equal operator ==
-             * \param other
-             * @return
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CHeading &other) const;
 
-            /*!
-             * \brief Unequal operator ==
-             * \param other
-             * @return
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CHeading &other) const;
 
-            /*!
-             * \brief Magnetic heading?
-             * \return
-             */
+            //! \brief Magnetic heading?
             bool isMagneticHeading() const { return Magnetic == this->m_north; }
 
-            /*!
-             * \brief True heading?
-             * \return
-             */
+            //! \brief True heading?
             bool isTrueHeading() const { return True == this->m_north; }
 
-            /*!
-             * \brief Get reference north (magnetic or true)
-             * \return
-             */
+            //! \brief Get reference north (magnetic or true)
             ReferenceNorth getReferenceNorth() const { return m_north; }
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
         };
 

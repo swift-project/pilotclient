@@ -124,7 +124,7 @@ namespace BlackMisc
     /*
      * Compare with value map
      */
-    bool operator==(const CValueMap &valueMap, const CValueObject &uc)
+    bool operator==(const CValueMap &valueMap, const CValueObject &valueObject)
     {
         if (valueMap.isEmpty()) return valueMap.isWildcard();
         QMap<int, QVariant>::const_iterator it;
@@ -132,7 +132,7 @@ namespace BlackMisc
         for (it = map.begin(); it != map.end(); ++it)
         {
             // QVariant cannot be compared directly
-            QVariant p = uc.propertyByIndex(it.key()); // from value object
+            QVariant p = valueObject.propertyByIndex(it.key()); // from value object
             QVariant v = it.value(); // from map
             if (!BlackMisc::equalQVariants(p, v)) return false;
         }
@@ -142,34 +142,34 @@ namespace BlackMisc
     /*
      * Compare with value map
      */
-    bool operator!=(const CValueMap &valueMap, const CValueObject &uc)
+    bool operator!=(const CValueMap &valueMap, const CValueObject &valueObject)
     {
-        return !(valueMap == uc);
+        return !(valueMap == valueObject);
     }
 
     /*
      * Compare with value map
      */
-    bool operator==(const CValueObject &uc, const CValueMap &valueMap)
+    bool operator==(const CValueObject &valueObject, const CValueMap &valueMap)
     {
-        return valueMap == uc;
+        return valueMap == valueObject;
     }
 
     /*
      * Compare with value map
      */
-    bool operator!=(const CValueObject &uc, const CValueMap &valueMap)
+    bool operator!=(const CValueObject &valueObject, const CValueMap &valueMap)
     {
-        return !(valueMap == uc);
+        return !(valueMap == valueObject);
     }
 
     /*
      * from DBus
      */
-    const QDBusArgument &operator>>(const QDBusArgument &argument, CValueObject &uc)
+    const QDBusArgument &operator>>(const QDBusArgument &argument, CValueObject &valueObject)
     {
         argument.beginStructure();
-        uc.unmarshallFromDbus(argument);
+        valueObject.unmarshallFromDbus(argument);
         argument.endStructure();
         return argument;
     }
@@ -177,10 +177,10 @@ namespace BlackMisc
     /*
      * to DBus
      */
-    QDBusArgument &operator<<(QDBusArgument &argument, const CValueObject &uc)
+    QDBusArgument &operator<<(QDBusArgument &argument, const CValueObject &valueObject)
     {
         argument.beginStructure();
-        uc.marshallToDbus(argument);
+        valueObject.marshallToDbus(argument);
         argument.endStructure();
         return argument;
     }

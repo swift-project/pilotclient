@@ -46,21 +46,27 @@ namespace BlackMisc
             return textStream;
         }
 
-        //! \brief Operator << when there is no debug stream
-        friend QNoDebug operator<<(QNoDebug nodebug, const CValueObject & /* uc */)
+        /*!
+         * \brief Operator << when there is no debug stream
+         * \param nodebug
+         * \param valueObject
+         * \return
+         */
+        friend QNoDebug operator<<(QNoDebug nodebug, const CValueObject &valueObject)
         {
+            Q_UNUSED(valueObject);
             return nodebug;
         }
 
         /*!
          * \brief Stream operator << for QDataStream
          * \param stream
-         * \param uc
+         * \param valueObject
          * \return
          */
-        friend QDataStream &operator<<(QDataStream &stream, const CValueObject &uc)
+        friend QDataStream &operator<<(QDataStream &stream, const CValueObject &valueObject)
         {
-            stream << uc.stringForStreaming();
+            stream << valueObject.stringForStreaming();
             return stream;
         }
 
@@ -76,23 +82,55 @@ namespace BlackMisc
             return ostr;
         }
 
-        //! \brief Unmarshalling operator >>, DBus to object
-        friend const QDBusArgument &operator>>(const QDBusArgument &argument, CValueObject &uc);
+        /*!
+         * \brief Unmarshalling operator >>, DBus to object
+         * \param argument
+         * \param valueObject
+         * \return
+         */
+        friend const QDBusArgument &operator>>(const QDBusArgument &argument, CValueObject &valueObject);
 
-        //! \brief Marshalling operator <<, object to DBus
-        friend QDBusArgument &operator<<(QDBusArgument &argument, const CValueObject &uc);
+        /*!
+         * \brief Marshalling operator <<, object to DBus
+         * \param argument
+         * \param valueObject
+         * \return
+         */
+        friend QDBusArgument &operator<<(QDBusArgument &argument, const CValueObject &valueObject);
+
+        /*!
+         * \brief Operator == with value map
+         * \param valueMap
+         * \param valueObject
+         * \return
+         */
+        friend bool operator==(const CValueMap &valueMap, const CValueObject &valueObject);
+
+        /*!
+         * \brief Operator != with value map
+         * \param valueMap
+         * \param valueObject
+         * \return
+         */
+        friend bool operator!=(const CValueMap &valueMap, const CValueObject &valueObject);
 
         //! \brief Operator == with value map
-        friend bool operator==(const CValueMap &valueMap, const CValueObject &uc);
 
-        //! \brief Operator != with value map
-        friend bool operator!=(const CValueMap &valueMap, const CValueObject &uc);
+        /*!
+         * \brief operator == with value map
+         * \param valueObject
+         * \param valueMap
+         * \return
+         */
+        friend bool operator==(const CValueObject &valueObject, const CValueMap &valueMap);
 
-        //! \brief Operator == with value map
-        friend bool operator==(const CValueObject &uc, const CValueMap &valueMap);
-
-        //! \brief Operator != with value map
-        friend bool operator!=(const CValueObject &uc, const CValueMap &valueMap);
+        /*!
+         * \brief Operator != with value map
+         * \param valueObject
+         * \param valueMap
+         * \return
+         */
+        friend bool operator!=(const CValueObject &valueObject, const CValueMap &valueMap);
 
         /*!
          * Compares two instances of related classes
@@ -249,13 +287,13 @@ namespace BlackMisc
      * <a href="https://dev.vatsim-germany.org/boards/15/topics/26?r=865#message-865">Forum</a>
      *
      * \param argument
-     * \param uc
+     * \param valueObject
      * \return
      */
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QDBusArgument>::type const &
-    operator>>(const QDBusArgument &argument, T &uc)
+    operator>>(const QDBusArgument &argument, T &valueObject)
     {
-        return argument >> static_cast<CValueObject &>(uc);
+        return argument >> static_cast<CValueObject &>(valueObject);
     }
 
     /*!
@@ -268,55 +306,59 @@ namespace BlackMisc
      * <a href="https://dev.vatsim-germany.org/boards/15/topics/26?r=865#message-865">Forum</a>
      *
      * \param argument
-     * \param uc
+     * \param valueObject
      * \return
      */
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QDBusArgument>::type &
-    operator<<(QDBusArgument &argument, const T &uc)
+    operator<<(QDBusArgument &argument, const T &valueObject)
     {
-        return argument << static_cast<CValueObject const &>(uc);
+        return argument << static_cast<CValueObject const &>(valueObject);
     }
 
     /*!
-     * Allow comparison with QVariant, e.g.
-     * QVariant == CFrequency ?
+     * Allow comparison with QVariant, e.g. QVariant == CFrequency ?
+     * \param variant
+     * \param valueObject
      */
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
-    operator==(const QVariant &variant, const T &uc)
+    operator==(const QVariant &variant, const T &valueObject)
     {
         if (!variant.canConvert<T>()) return false;
         T vuc = variant.value<T>();
-        return vuc == uc;
+        return vuc == valueObject;
     }
 
     /*!
-     * Allow comparison with QVariant, e.g.
-     * QVariant != CFrequency ?
+     * \brief Allow comparison with QVariant, e.g. QVariant != CFrequency ?
+     * \param variant
+     * \param valueObject
      */
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
-    operator!=(const QVariant &variant, const T &uc)
+    operator!=(const QVariant &variant, const T &valueObject)
     {
-        return !(variant == uc);
+        return !(variant == valueObject);
     }
 
     /*!
-     * Allow comparison with QVariant, e.g.
-     * QVariant == CFrequency ?
+     * \brief Allow comparison with QVariant, e.g. QVariant == CFrequency ?
+     * \param valueObject
+     * \param variant
      */
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
-    operator==(const T &uc, const QVariant &variant)
+    operator==(const T &valueObject, const QVariant &variant)
     {
-        return variant == uc;
+        return variant == valueObject;
     }
 
     /*!
-     * Allow comparison with QVariant, e.g.
-     * QVariant != CFrequency ?
+     * \brief Allow comparison with QVariant, e.g. QVariant != CFrequency ?
+     * \param valueObject
+     * \param variant
      */
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
-    operator!=(const T &uc, const QVariant &variant)
+    operator!=(const T &valueObject, const QVariant &variant)
     {
-        return variant != uc;
+        return variant != valueObject;
     }
 
     /*!

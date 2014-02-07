@@ -371,7 +371,9 @@ namespace BlackMisc
 
             /*!
              * Convert from other unit to this unit.
-             * \param
+             * \param value other value
+             * \param unit  other unit
+             * \return
              */
             double convertFrom(double value, const CMeasurementUnit &unit) const;
 

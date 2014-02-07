@@ -78,7 +78,7 @@ namespace BlackMisc
         }
 
         /*
-         * Equal?
+         * As string?
          */
         QString CAircraftIcao::asString() const
         {

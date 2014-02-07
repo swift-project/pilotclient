@@ -152,7 +152,7 @@ namespace BlackCore
         /*!
          * \brief Room status update, used in callback
          * \param comUnit
-         * \param upd
+         * \param roomStatus
          */
         void changeRoomStatus(ComUnit comUnit, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus);
 

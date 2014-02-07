@@ -169,7 +169,7 @@ namespace BlackMisc
     /*!
      * \brief Calculate a single hash value based on a list of individual hash values
      * \param values
-     * \param classTypeId   add a hash value for class name on top
+     * \param className   add a hash value for class name on top
      * \return
      */
     uint calculateHash(const QList<uint> &values, const char *className);

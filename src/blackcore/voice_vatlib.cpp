@@ -586,8 +586,10 @@ namespace BlackCore
     /**********************************           shimlib callbacks           ************************************/
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
 
-    /*
-     * Cast
+    /*!
+     * \brief Cast from *void to *CVoiceVatlib
+     * \param cbvar
+     * \return
      */
     CVoiceVatlib *cbvar_cast_voice(void *cbvar)
     {

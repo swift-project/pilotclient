@@ -94,7 +94,7 @@ namespace BlackMisc
         template <class T> bool hasObject(const QString &name = T::staticMetaObject.className()) const
         {
             QObject *qobj = getQObjectNothrow(name);
-            return qobj && qobject_cast<T*>(qobj);
+            return qobj && qobject_cast<T *>(qobj);
         }
 
         /*!
@@ -109,7 +109,6 @@ namespace BlackMisc
          * Removes an object pointer, given by its name.
          * You usually use the type-safe removeObject method instead.
          * \param name
-         * \param object
          */
         virtual void removeQObject(const QString &name) = 0;
 
@@ -127,7 +126,7 @@ namespace BlackMisc
          */
         QObject *getQObjectNothrow(const QString &name)
         {
-            return const_cast<QObject *>(static_cast<const IContext*>(this)->getQObjectNothrow(name));
+            return const_cast<QObject *>(static_cast<const IContext *>(this)->getQObjectNothrow(name));
         }
 
         /*!
