@@ -324,7 +324,7 @@ namespace BlackMisc
              * \param column
              * \return
              */
-            double getElement(size_t row, size_t column) const;
+            double getElement(int row, int column) const;
 
             /*!
              * \brief Get element
@@ -332,7 +332,7 @@ namespace BlackMisc
              * \param column
              * \param value
              */
-            void setElement(size_t row, size_t column, double value);
+            void setElement(int row, int column, double value);
 
             /*!
              * \brief Get element by operator () modifying
@@ -340,7 +340,7 @@ namespace BlackMisc
              * \param column
              * \return
              */
-            double &operator()(size_t row, size_t column)
+            double &operator()(int row, int column)
             {
                 this->checkRange(row, column);
                 return this->m_matrix(row, column);
@@ -352,7 +352,7 @@ namespace BlackMisc
              * \param column
              * \return
              */
-            double operator()(size_t row, size_t column) const
+            double operator()(int row, int column) const
             {
                 return this->getElement(row, column);
             }
@@ -369,7 +369,7 @@ namespace BlackMisc
              * \param column
              * \throws std::range_error if index out of bounds
              */
-            void checkRange(size_t row, size_t column) const;
+            void checkRange(int row, int column) const;
         };
 
     } // namespace

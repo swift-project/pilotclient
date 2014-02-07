@@ -45,7 +45,7 @@ namespace BlackCore
             Return the total number of plugins loaded so far.
             \return
         */
-        size_t getPluginCount() const
+        int getPluginCount() const
         {
             return m_plugins.size();
         }
@@ -55,14 +55,14 @@ namespace BlackCore
             \param index the plugin's index in the vector of plugins.
             \return
         */
-        const QString getName(size_t index) const;
+        const QString getName(int index) const;
 
         /*!
             Return the description of a plugin.
             \param index the plugin's index in the vector of plugins.
             \return
         */
-        const QString getDescription(size_t index) const;
+        const QString getDescription(int index) const;
 
         /*!
             Construct a plugin.
@@ -70,14 +70,14 @@ namespace BlackCore
             \return a pointer to the newly created plugin.
             \warning You must release this pointer with IPluginFactory::destroy().
         */
-        BlackMisc::IPlugin *constructPlugin(size_t index);
+        BlackMisc::IPlugin *constructPlugin(int index);
 
         /*!
             Direct access to the factory. You don't usually need this.
             \param index
             \return
         */
-        BlackMisc::IPluginFactory *getFactory(size_t index)
+        BlackMisc::IPluginFactory *getFactory(int index)
         {
             return const_cast<BlackMisc::IPluginFactory*>(static_cast<const CPluginManager*>(this)->getFactory(index));
         }
@@ -87,7 +87,7 @@ namespace BlackCore
             \param index
             \return
         */
-        const BlackMisc::IPluginFactory *getFactory(size_t index) const
+        const BlackMisc::IPluginFactory *getFactory(int index) const
         {
             return getEntry(index).factory;
         }
@@ -97,7 +97,7 @@ namespace BlackCore
             \param index
             \return
         */
-        QPluginLoader *getLoader(size_t index)
+        QPluginLoader *getLoader(int index)
         {
             return const_cast<QPluginLoader*>(static_cast<const CPluginManager*>(this)->getLoader(index));
         }
@@ -107,7 +107,7 @@ namespace BlackCore
             \param index
             \return
         */
-        const QPluginLoader *getLoader(size_t index) const
+        const QPluginLoader *getLoader(int index) const
         {
             return getEntry(index).loader.data();
         }
@@ -123,12 +123,12 @@ namespace BlackCore
 
         QVector<PluginEntry> m_plugins;
 
-        PluginEntry &getEntry(size_t index)
+        PluginEntry &getEntry(int index)
         {
             return const_cast<PluginEntry&>(static_cast<const CPluginManager*>(this)->getEntry(index));
         }
 
-        const PluginEntry &getEntry(size_t index) const;
+        const PluginEntry &getEntry(int index) const;
     };
 
 } // namespace BlackCore

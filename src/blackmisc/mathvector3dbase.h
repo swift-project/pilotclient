@@ -71,7 +71,7 @@ namespace BlackMisc
              * \param row
              * \return Mutable reference
              */
-            double &getElement(size_t row);
+            double &getElement(int row);
 
             /*!
              * \brief String for converter
@@ -152,28 +152,28 @@ namespace BlackMisc
              * \param row
              * \return
              */
-            double getElement(size_t row) const;
+            double getElement(int row) const;
 
             /*!
              * \brief Set element
              * \param row
              * \param value
              */
-            void setElement(size_t row, double value);
+            void setElement(int row, double value);
 
             /*!
              * \brief Operator []
              * \param row
              * \return
              */
-            double operator[](size_t row) const { return this->getElement(row); }
+            double operator[](int row) const { return this->getElement(row); }
 
             /*!
              * \brief Operator []
              * \param row
              * \return Mutable reference
              */
-            double &operator[](size_t row) { return this->getElement(row); }
+            double &operator[](int row) { return this->getElement(row); }
 
             /*!
              * \brief Equal operator ==

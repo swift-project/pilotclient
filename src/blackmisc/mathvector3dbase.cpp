@@ -81,7 +81,7 @@ namespace BlackMisc
         /*
          * Element (return by reference)
          */
-        template <class ImplVector> double &CVector3DBase<ImplVector>::getElement(size_t row)
+        template <class ImplVector> double &CVector3DBase<ImplVector>::getElement(int row)
         {
             switch (row)
             {
@@ -100,7 +100,7 @@ namespace BlackMisc
         /*
          * Element
          */
-        template <class ImplVector> double CVector3DBase<ImplVector>::getElement(size_t row) const
+        template <class ImplVector> double CVector3DBase<ImplVector>::getElement(int row) const
         {
             return const_cast<CVector3DBase<ImplVector>*>(this)->getElement(row);
         }
@@ -108,7 +108,7 @@ namespace BlackMisc
         /*
          * Set given element
          */
-        template <class ImplVector> void CVector3DBase<ImplVector>::setElement(size_t row, double value)
+        template <class ImplVector> void CVector3DBase<ImplVector>::setElement(int row, double value)
         {
             switch (row)
             {
