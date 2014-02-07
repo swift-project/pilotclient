@@ -317,6 +317,7 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->tw_AtcStations, &QTabWidget::currentChanged, this, &MainWindow::atcStationTabChanged);
     this->connect(this->ui->pb_ReloadAtcStationsBooked, &QPushButton::clicked, this, &MainWindow::reloadAtcStationsBooked);
     this->connect(this->ui->tv_AtcStationsOnline, &QTableView::clicked, this, &MainWindow::onlineAtcStationSelected);
+    this->connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &MainWindow::requestAtis);
 
     // Settings server
     this->connect(this->ui->pb_SettingsTnCurrentServer, &QPushButton::released, this, &MainWindow::alterTrafficServer);

@@ -448,6 +448,9 @@ private slots:
      */
     void getMetar(const QString &airportIcaoCode = "");
 
+    //! \brief Request new ATIS
+    void requestAtis();
+
     /*!
      * \brief Close text message tab
      */

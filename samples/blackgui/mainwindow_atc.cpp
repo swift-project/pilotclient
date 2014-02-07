@@ -63,7 +63,6 @@ void MainWindow::onlineAtcStationSelected(QModelIndex index)
         if (!infoMessage.isEmpty()) infoMessage.append("\n\n");
         infoMessage.append(stationClicked.getMetar().getMessage());
     }
-
     this->ui->te_AtcStationsOnlineInfo->setText(infoMessage);
 }
 
@@ -81,6 +80,16 @@ void MainWindow::getMetar(const QString &airportIcaoCode)
     if (metar.getType() != CInformationMessage::METAR) return;
     if (metar.isEmpty()) return;
     this->ui->te_AtcStationsOnlineInfo->setText(metar.getMessage());
+}
+
+/*
+ * Get METAR
+ */
+void MainWindow::requestAtis()
+{
+    if (!this->isContextNetworkAvailableCheck()) return;
+    if (!this->m_contextNetwork->isConnected()) return;
+    this->m_contextNetwork->requestAtisUpdates();
 }
 
 /*
