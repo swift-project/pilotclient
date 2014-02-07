@@ -93,8 +93,8 @@ namespace BlackMisc
          */
         template <class T> bool hasObject(const QString &name = T::staticMetaObject.className()) const
         {
-            QObject *qobj = getQObjectNothrow(name);
-            return qobj && qobject_cast<T *>(qobj);
+            const QObject *qobj = getQObjectNothrow(name);
+            return qobj && qobject_cast<const T *>(qobj);
         }
 
         /*!
