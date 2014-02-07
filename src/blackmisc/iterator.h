@@ -309,7 +309,12 @@ namespace BlackMisc
              * \brief For sorting.
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
+            //! @{
             bool operator <(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() < *other.pimpl(); }
+            bool operator >(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() > *other.pimpl(); }
+            bool operator <=(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() <= *other.pimpl(); }
+            bool operator >=(const ConstBidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() >= *other.pimpl(); }
+            //! @}
 
             /*!
              * \brief Return opaque pointer to underlying implementation iterator object.
@@ -332,6 +337,9 @@ namespace BlackMisc
                 virtual difference_type operator -(const PimplBase &) const = 0;
                 virtual bool operator ==(const PimplBase &) const = 0;
                 virtual bool operator <(const PimplBase &) const = 0;
+                virtual bool operator >(const PimplBase &) const = 0;
+                virtual bool operator <=(const PimplBase &) const = 0;
+                virtual bool operator >=(const PimplBase &) const = 0;
                 virtual void *impl() = 0;
             };
 
@@ -350,6 +358,9 @@ namespace BlackMisc
                 virtual difference_type operator -(const PimplBase &other) const { return m_impl - static_cast<const Pimpl&>(other).m_impl; }
                 virtual bool operator ==(const PimplBase &other) const { return m_impl == static_cast<const Pimpl&>(other).m_impl; }
                 virtual bool operator <(const PimplBase &other) const { return m_impl < static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator >(const PimplBase &other) const { return m_impl > static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator <=(const PimplBase &other) const { return m_impl <= static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator >=(const PimplBase &other) const { return m_impl >= static_cast<const Pimpl&>(other).m_impl; }
                 virtual void *impl() { return &m_impl; }
             private:
                 I m_impl;
@@ -517,7 +528,12 @@ namespace BlackMisc
              * \brief For sorting.
              * \pre Both iterators must originate from the same collection, and not mix begin/end with cbegin/cend.
              */
+            //! @{
             bool operator <(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() < *other.pimpl(); }
+            bool operator >(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() > *other.pimpl(); }
+            bool operator <=(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() <= *other.pimpl(); }
+            bool operator >=(const BidirectionalIterator &other) const { Q_ASSERT(m_pimpl && other.m_pimpl); return *pimpl() >= *other.pimpl(); }
+            //! @}
 
             /*!
              * \brief Return opaque pointer to underlying implementation iterator object.
@@ -541,6 +557,9 @@ namespace BlackMisc
                 virtual difference_type operator -(const PimplBase &) const = 0;
                 virtual bool operator ==(const PimplBase &) const = 0;
                 virtual bool operator <(const PimplBase &) const = 0;
+                virtual bool operator >(const PimplBase &) const = 0;
+                virtual bool operator <=(const PimplBase &) const = 0;
+                virtual bool operator >=(const PimplBase &) const = 0;
                 virtual void *impl() = 0;
             };
 
@@ -560,6 +579,9 @@ namespace BlackMisc
                 virtual difference_type operator -(const PimplBase &other) const { return m_impl - static_cast<const Pimpl&>(other).m_impl; }
                 virtual bool operator ==(const PimplBase &other) const { return m_impl == static_cast<const Pimpl&>(other).m_impl; }
                 virtual bool operator <(const PimplBase &other) const { return m_impl < static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator >(const PimplBase &other) const { return m_impl > static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator <=(const PimplBase &other) const { return m_impl <= static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator >=(const PimplBase &other) const { return m_impl >= static_cast<const Pimpl&>(other).m_impl; }
                 virtual void *impl() { return &m_impl; }
             private:
                 I m_impl;
