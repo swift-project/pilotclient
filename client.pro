@@ -21,16 +21,16 @@ equals(WITH_BLACKMISC, ON) {
     SUBDIRS += src/blackmisc_cpp2xml
 }
 
+equals(WITH_BLACKSOUND, ON) {
+    SUBDIRS += src/blacksound
+}
+
 equals(WITH_BLACKCORE, ON) {
     SUBDIRS += src/blackcore
 }
 
 equals(WITH_BLACKGUI, ON) {
     SUBDIRS += src/blackgui
-}
-
-equals(WITH_BLACKSOUND, ON) {
-    SUBDIRS += src/blacksound
 }
 
 equals(WITH_DRIVER_FSX, ON) {
