@@ -155,13 +155,19 @@ void MainWindow::updateCockpitFromContext()
         this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
         this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setStretchLastSection(true);
 
+        // highlite voice room according to status
+        QString vrStyle1;
+        QString vrStyle2;
+        if (!room1.getVoiceRoomUrl(true).isEmpty()) vrStyle1 = com1Connected ? "background: green" : "background: red";
+        if (!room2.getVoiceRoomUrl(true).isEmpty()) vrStyle2 = com2Connected ? "background: green" : "background: red";
+        this->ui->le_CockpitVoiceRoomCom1->setStyleSheet(vrStyle1);
+        this->ui->le_CockpitVoiceRoomCom2->setStyleSheet(vrStyle2);
+
         // display URL if not override mode
         if (!this->ui->cb_CockpitVoiceRoom1Override->isChecked())
         {
             // no override
-            QString s = com1Connected ?
-                        QString("*%1").arg(room1.getVoiceRoomUrl()) :
-                        "";
+            QString s = room1.getVoiceRoomUrl();
             this->ui->le_CockpitVoiceRoomCom1->setText(s);
         }
 
@@ -169,9 +175,7 @@ void MainWindow::updateCockpitFromContext()
         if (!this->ui->cb_CockpitVoiceRoom2Override->isChecked())
         {
             // no overrride
-            QString s = com2Connected ?
-                        QString("*%1").arg(room2.getVoiceRoomUrl()) :
-                        "";
+            QString s = room2.getVoiceRoomUrl();
             this->ui->le_CockpitVoiceRoomCom2->setText(s);
         }
     }
