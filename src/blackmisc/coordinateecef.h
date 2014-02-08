@@ -114,8 +114,9 @@ namespace BlackMisc
              * \brief String for converter
              * \return
              */
-            virtual QString convertToQString() const
+            virtual QString convertToQString(bool i18n = false) const override
             {
+                Q_UNUSED(i18n)
                 QString s = "ECEF: {x %1, y %2, z %3}";
                 s = s.arg(QString::number(this->x(), 'f', 6)).
                     arg(QString::number(this->y(), 'f', 6)).

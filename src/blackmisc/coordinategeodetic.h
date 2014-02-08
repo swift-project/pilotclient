@@ -80,7 +80,7 @@ namespace BlackMisc
              * \param i18n
              * \return
              */
-            virtual QString convertToQString(bool i18n = false) const;
+            virtual QString convertToQString(bool i18n = false) const override;
 
             /*!
              * \copydoc CValueObject::getMetaTypeId

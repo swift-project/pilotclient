@@ -27,8 +27,9 @@ namespace BlackMisc
              * \brief String for converter
              * \return
              */
-            virtual QString convertToQString() const
+            virtual QString convertToQString(bool i18n = false) const override
             {
+                Q_UNUSED(i18n)
                 QString s = "NED: {N %1, E %2, D %3}";
                 s = s.arg(QString::number(this->north(), 'f', 6)).
                     arg(QString::number(this->east(), 'f', 6)).

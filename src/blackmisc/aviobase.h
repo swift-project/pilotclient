@@ -33,7 +33,7 @@ namespace BlackMisc
              * \brief Are the set values valid / in range
              * \return
              */
-            virtual bool validValues()
+            virtual bool validValues() const
             {
                 return true;
             }
