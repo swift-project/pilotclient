@@ -65,3 +65,7 @@ linux-g++-32 {
 linux-g++-64 {
     LIBS *= -L$$EXTERNALDIR/linux64/lib
 }
+
+macx-clang {
+    LIBS *= -L$$EXTERNALDIR/macx-clang64/lib
+}
