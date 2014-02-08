@@ -24,7 +24,8 @@ namespace BlackCore
      * Init this context
      */
     CContextNetwork::CContextNetwork(CCoreRuntime *runtime) :
-        IContextNetwork(runtime), m_network(nullptr)
+        IContextNetwork(runtime), m_network(nullptr), m_networkManager(nullptr),
+        m_atcBookingTimer(nullptr), m_dataUpdateTimer(nullptr)
     {
 
         // 1. Init by "network driver"
