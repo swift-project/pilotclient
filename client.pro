@@ -30,18 +30,6 @@ equals(WITH_BLACKGUI, ON) {
     SUBDIRS += src/blackgui
 }
 
-equals(WITH_DRIVER_FSX, ON) {
-    SUBDIRS += src/driver/fsx/driver_fsx.pro
-}
-
-equals(WITH_DRIVER_FS9, ON) {
-    SUBDIRS += src/driver/fs9/driver_fs9.pro
-}
-
-equals(WITH_DRIVER_XPLANE, ON) {
-    SUBDIRS += src/driver/xplane/driver_xplane.pro
-}
-
 equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/cli_client/sample_cli_client.pro
     SUBDIRS += samples/interpolator/sample_interpolator.pro
