@@ -151,14 +151,14 @@ namespace BlackMisc
         }
 
     public:
-        //! \copydoc CValueObject::toQVariant()
+        //! \copydoc BlackMisc::CValueObject::toQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(derived()); }
 
-        //! copydoc CValueObject::getValueHash
+        //! \copydoc BlackMisc::CValueObject::getValueHash
         virtual uint getValueHash() const override { return qHash(&derived()); }
 
     protected: // CValueObject overrides
-        //! \copydoc CValueObject::convertToQString()
+        //! \copydoc BlackMisc::CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override
         {
             QString str;
@@ -168,17 +168,17 @@ namespace BlackMisc
             return str += "}";
         }
 
-        //! \copydoc CValueObject::getMetaTypeId
+        //! \copydoc BlackMisc::CValueObject::getMetaTypeId
         virtual int getMetaTypeId() const override { return qMetaTypeId<C<T>>(); }
 
-        //! \copydoc CValueObject::isA override
+        //! \copydoc BlackMisc::CValueObject::isA
         virtual bool isA(int metaTypeId) const override
         {
             if (metaTypeId == qMetaTypeId<C<T>>()) { return true; }
             return CValueObject::isA(metaTypeId);
         }
 
-        //! \copydoc CValueObject::compareImpl()
+        //! \copydoc BlackMisc::CValueObject::compareImpl
         virtual int compareImpl(const CValueObject &other) const override
         {
             Q_UNUSED(other);
@@ -194,7 +194,7 @@ namespace BlackMisc
             return 0;
         }
 
-        //! \copydoc CValueObject::marshallToDbus
+        //! \copydoc BlackMisc::CValueObject::marshallToDbus
         virtual void marshallToDbus(QDBusArgument &argument) const override
         {
             argument.beginArray(qMetaTypeId<T>());
@@ -202,7 +202,7 @@ namespace BlackMisc
             argument.endArray();
         }
 
-        //! \copydoc CValueObject::unmarshallFromDbus
+        //! \copydoc BlackMisc::CValueObject::unmarshallFromDbus
         virtual void unmarshallFromDbus(const QDBusArgument &argument) override
         {
             argument.beginArray();
