@@ -16,7 +16,7 @@ namespace BlackMisc
         /*
          * Get element by column / row
          */
-        template<class ImplMatrix, int Rows, int Columns> double CMatrixBase<ImplMatrix, Rows, Columns>::getElement(size_t row, size_t column) const
+        template<class ImplMatrix, int Rows, int Columns> double CMatrixBase<ImplMatrix, Rows, Columns>::getElement(int row, int column) const
         {
             this->checkRange(row, column);
             return this->m_matrix(row, column);
@@ -25,7 +25,7 @@ namespace BlackMisc
         /*
          * Set element by column / row
          */
-        template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setElement(size_t row, size_t column, double value)
+        template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::setElement(int row, int column, double value)
         {
             this->checkRange(row, column);
             this->m_matrix(row, column) = value;
@@ -34,7 +34,7 @@ namespace BlackMisc
         /*
          * Check range
          */
-        template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::checkRange(size_t row, size_t column) const
+        template<class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::checkRange(int row, int column) const
         {
             bool valid = (row < Rows && column < Columns);
             Q_ASSERT_X(valid, "getElement()", "Row or column invalid");

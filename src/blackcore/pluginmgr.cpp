@@ -63,7 +63,7 @@ namespace BlackCore
         }
     }
 
-    const CPluginManager::PluginEntry &CPluginManager::getEntry(size_t index) const
+    const CPluginManager::PluginEntry &CPluginManager::getEntry(int index) const
     {
         Q_ASSERT_X(index < getPluginCount(), "Plugin manager", "Plugin index out of bounds");
 
@@ -80,17 +80,17 @@ namespace BlackCore
         return entry;
     }
 
-    const QString CPluginManager::getName(size_t index) const
+    const QString CPluginManager::getName(int index) const
     {
         return getFactory(index)->getName();
     }
 
-    const QString CPluginManager::getDescription(size_t index) const
+    const QString CPluginManager::getDescription(int index) const
     {
         return getFactory(index)->getDescription();
     }
 
-    BlackMisc::IPlugin *CPluginManager::constructPlugin(size_t index)
+    BlackMisc::IPlugin *CPluginManager::constructPlugin(int index)
     {
         BlackMisc::IPlugin *plugin = getFactory(index)->create(BlackMisc::IContext::getInstance());
         if (! plugin->isValid())

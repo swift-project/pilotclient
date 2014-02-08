@@ -11,9 +11,6 @@ WITH_BLACKSOUND = ON
 WITH_SAMPLES = ON
 WITH_UNITTESTS = ON
 
-#WITH_DRIVER_FSX = ON
-#WITH_DRIVER_FS9 = ON
-#WITH_DRIVER_XPLANE = ON
 #WITH_DOXYGEN = ON
 
 equals(WITH_BLACKMISC, ON) {
@@ -31,18 +28,6 @@ equals(WITH_BLACKCORE, ON) {
 
 equals(WITH_BLACKGUI, ON) {
     SUBDIRS += src/blackgui
-}
-
-equals(WITH_DRIVER_FSX, ON) {
-    SUBDIRS += src/driver/fsx/driver_fsx.pro
-}
-
-equals(WITH_DRIVER_FS9, ON) {
-    SUBDIRS += src/driver/fs9/driver_fs9.pro
-}
-
-equals(WITH_DRIVER_XPLANE, ON) {
-    SUBDIRS += src/driver/xplane/driver_xplane.pro
 }
 
 equals(WITH_SAMPLES, ON) {

@@ -402,7 +402,7 @@ namespace BlackCore
                 // I could send the same message to n frequencies in one step
                 // if this is really required, I need to group by message
                 // currently I send individual messages
-                std::vector<INT> freqsVec;
+                QVector<INT> freqsVec;
                 freqsVec.push_back(message.getFrequency().value(CFrequencyUnit::kHz()));
                 m_net->SendRadioTextMessage(freqsVec.size(), freqsVec.data(), toFSD(message.getMessage()));
             }
