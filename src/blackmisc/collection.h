@@ -234,24 +234,24 @@ namespace BlackMisc
         public:
             static_assert(std::is_same<T, typename C::value_type>::value, "CCollection must be initialized from a container with the same value_type.");
             Pimpl(C &&c) : m_impl(std::move(c)) {}
-            PimplBase *clone() const { return new Pimpl(*this); }
-            PimplBase *cloneEmpty() const { return new Pimpl(C()); }
-            iterator begin() { return iterator::fromImpl(m_impl.begin()); }
-            const_iterator begin() const { return const_iterator::fromImpl(m_impl.cbegin()); }
-            const_iterator cbegin() const { return const_iterator::fromImpl(m_impl.cbegin()); }
-            iterator end() { return iterator::fromImpl(m_impl.end()); }
-            const_iterator end() const { return const_iterator::fromImpl(m_impl.cend()); }
-            const_iterator cend() const { return const_iterator::fromImpl(m_impl.cend()); }
-            size_type size() const { return m_impl.size(); }
-            bool empty() const { return m_impl.empty(); }
-            void clear() { m_impl.clear(); }
-            iterator insert(const T &value) { return iterator::fromImpl(insertHelper(m_impl.insert(value))); }
-            iterator erase(iterator pos) { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(pos.getImpl()))); }
-            //iterator erase(iterator it1, iterator it2) { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()), *static_cast<const typename C::iterator*>(it2.getImpl()))); }
-            iterator erase(iterator it1, iterator it2) { while (it1 != it2) { it1 = iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()))); } return it1; }
-            iterator find(const T &value) { return iterator::fromImpl(m_impl.find(value)); }
-            const_iterator find(const T &value) const { return const_iterator::fromImpl(m_impl.find(value)); }
-            bool operator ==(const PimplBase &other) const { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.insert(*i); return m_impl == copy.m_impl; }
+            PimplBase *clone() const override { return new Pimpl(*this); }
+            PimplBase *cloneEmpty() const override { return new Pimpl(C()); }
+            iterator begin() override { return iterator::fromImpl(m_impl.begin()); }
+            const_iterator begin() const override { return const_iterator::fromImpl(m_impl.cbegin()); }
+            const_iterator cbegin() const override { return const_iterator::fromImpl(m_impl.cbegin()); }
+            iterator end() override { return iterator::fromImpl(m_impl.end()); }
+            const_iterator end() const override { return const_iterator::fromImpl(m_impl.cend()); }
+            const_iterator cend() const override { return const_iterator::fromImpl(m_impl.cend()); }
+            size_type size() const override { return m_impl.size(); }
+            bool empty() const override { return m_impl.empty(); }
+            void clear() override { m_impl.clear(); }
+            iterator insert(const T &value) override { return iterator::fromImpl(insertHelper(m_impl.insert(value))); }
+            iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(pos.getImpl()))); }
+            //iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()), *static_cast<const typename C::iterator*>(it2.getImpl()))); }
+            iterator erase(iterator it1, iterator it2) override { while (it1 != it2) { it1 = iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()))); } return it1; }
+            iterator find(const T &value) override { return iterator::fromImpl(m_impl.find(value)); }
+            const_iterator find(const T &value) const override { return const_iterator::fromImpl(m_impl.find(value)); }
+            bool operator ==(const PimplBase &other) const override { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.insert(*i); return m_impl == copy.m_impl; }
         private:
             C m_impl;
             // insertHelper: QSet::insert returns an iterator, but std::set::insert returns a std::pair<interator, bool>

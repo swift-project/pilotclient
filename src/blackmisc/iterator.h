@@ -149,12 +149,12 @@ namespace BlackMisc
                 static_assert(std::is_same<T, typename std::iterator_traits<I>::value_type>::value,
                     "ConstForwardIterator must be initialized from an iterator with the same value_type.");
                 Pimpl(I &&i) : m_impl(std::move(i)) {}
-                virtual PimplBase *clone() const { return new Pimpl(*this); }
-                virtual const_reference operator *() const { return *m_impl; }
-                virtual void operator ++() { ++m_impl; }
-                virtual void operator +=(difference_type n) { std::advance(m_impl, n); }
-                virtual bool operator ==(const PimplBase &other) const { return m_impl == static_cast<const Pimpl&>(other).m_impl; }
-                virtual void *impl() { return &m_impl; }
+                virtual PimplBase *clone() const override { return new Pimpl(*this); }
+                virtual const_reference operator *() const override { return *m_impl; }
+                virtual void operator ++() override { ++m_impl; }
+                virtual void operator +=(difference_type n) override { std::advance(m_impl, n); }
+                virtual bool operator ==(const PimplBase &other) const override { return m_impl == static_cast<const Pimpl&>(other).m_impl; }
+                virtual void *impl() override { return &m_impl; }
             private:
                 I m_impl;
             };
@@ -349,19 +349,19 @@ namespace BlackMisc
                 static_assert(std::is_same<T, typename std::iterator_traits<I>::value_type>::value,
                     "ConstBidirectionalIterator must be initialized from an iterator with the same value_type.");
                 Pimpl(I &&i) : m_impl(std::move(i)) {}
-                virtual PimplBase *clone() const { return new Pimpl(*this); }
-                virtual const_reference operator *() const { return *m_impl; }
-                virtual void operator ++() { ++m_impl; }
-                virtual void operator --() { --m_impl; }
-                virtual void operator +=(difference_type n) { m_impl += n; }
-                virtual void operator -=(difference_type n) { m_impl -= n; }
-                virtual difference_type operator -(const PimplBase &other) const { return m_impl - static_cast<const Pimpl&>(other).m_impl; }
-                virtual bool operator ==(const PimplBase &other) const { return m_impl == static_cast<const Pimpl&>(other).m_impl; }
-                virtual bool operator <(const PimplBase &other) const { return m_impl < static_cast<const Pimpl&>(other).m_impl; }
-                virtual bool operator >(const PimplBase &other) const { return m_impl > static_cast<const Pimpl&>(other).m_impl; }
-                virtual bool operator <=(const PimplBase &other) const { return m_impl <= static_cast<const Pimpl&>(other).m_impl; }
-                virtual bool operator >=(const PimplBase &other) const { return m_impl >= static_cast<const Pimpl&>(other).m_impl; }
-                virtual void *impl() { return &m_impl; }
+                virtual PimplBase *clone() const override { return new Pimpl(*this); }
+                virtual const_reference operator *() const override { return *m_impl; }
+                virtual void operator ++() override { ++m_impl; }
+                virtual void operator --() override { --m_impl; }
+                virtual void operator +=(difference_type n) override { m_impl += n; }
+                virtual void operator -=(difference_type n) override { m_impl -= n; }
+                virtual difference_type operator -(const PimplBase &other) const override { return m_impl - static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator ==(const PimplBase &other) const override { return m_impl == static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator <(const PimplBase &other) const override { return m_impl < static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator >(const PimplBase &other) const override { return m_impl > static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator <=(const PimplBase &other) const override { return m_impl <= static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator >=(const PimplBase &other) const override { return m_impl >= static_cast<const Pimpl&>(other).m_impl; }
+                virtual void *impl() override { return &m_impl; }
             private:
                 I m_impl;
             };
@@ -569,20 +569,20 @@ namespace BlackMisc
                 static_assert(std::is_same<T, typename std::iterator_traits<I>::value_type>::value,
                     "BidirectionalIterator must be initialized from an iterator with the same value_type.");
                 Pimpl(I &&i) : m_impl(std::move(i)) {}
-                virtual PimplBase *clone() const { return new Pimpl(*this); }
-                virtual const_reference operator *() const { return *m_impl; }
-                virtual reference operator *() { return *m_impl; }
-                virtual void operator ++() { ++m_impl; }
-                virtual void operator --() { --m_impl; }
-                virtual void operator +=(difference_type n) { m_impl += n; }
-                virtual void operator -=(difference_type n) { m_impl -= n; }
-                virtual difference_type operator -(const PimplBase &other) const { return m_impl - static_cast<const Pimpl&>(other).m_impl; }
-                virtual bool operator ==(const PimplBase &other) const { return m_impl == static_cast<const Pimpl&>(other).m_impl; }
-                virtual bool operator <(const PimplBase &other) const { return m_impl < static_cast<const Pimpl&>(other).m_impl; }
-                virtual bool operator >(const PimplBase &other) const { return m_impl > static_cast<const Pimpl&>(other).m_impl; }
-                virtual bool operator <=(const PimplBase &other) const { return m_impl <= static_cast<const Pimpl&>(other).m_impl; }
-                virtual bool operator >=(const PimplBase &other) const { return m_impl >= static_cast<const Pimpl&>(other).m_impl; }
-                virtual void *impl() { return &m_impl; }
+                virtual PimplBase *clone() const override { return new Pimpl(*this); }
+                virtual const_reference operator *() const override { return *m_impl; }
+                virtual reference operator *() override { return *m_impl; }
+                virtual void operator ++() override { ++m_impl; }
+                virtual void operator --() override { --m_impl; }
+                virtual void operator +=(difference_type n) override { m_impl += n; }
+                virtual void operator -=(difference_type n) override { m_impl -= n; }
+                virtual difference_type operator -(const PimplBase &other) const override { return m_impl - static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator ==(const PimplBase &other) const override { return m_impl == static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator <(const PimplBase &other) const override { return m_impl < static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator >(const PimplBase &other) const override { return m_impl > static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator <=(const PimplBase &other) const override { return m_impl <= static_cast<const Pimpl&>(other).m_impl; }
+                virtual bool operator >=(const PimplBase &other) const override { return m_impl >= static_cast<const Pimpl&>(other).m_impl; }
+                virtual void *impl() override { return &m_impl; }
             private:
                 I m_impl;
             };
