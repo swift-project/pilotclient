@@ -19,6 +19,8 @@ namespace BlackCore
  */
 CInterpolator::CInterpolator() : m_state_begin(0), m_state_end(0)
 {
+    Q_UNUSED(m_valid)
+    Q_UNUSED(m_timeBegin)
     m_time.start();
 }
 
