@@ -23,42 +23,58 @@ namespace BlackMisc
         namespace Private
         {
 
-            //! \internal
+            //! For internal use of BlackMisc::Predicates
             template <class...> struct MemberEqual;
 
+            //! For internal use of BlackMisc::Predicates
             template <class T, class M, class V> struct MemberEqual<T, M, V>
             {
+                //! \brief
+                //! @{
                 M m;
                 V v;
                 MemberEqual(M m_, V v_) : m(m_), v(v_) {}
                 bool operator()(const T &obj) const { return (obj.*m)() == v; }
+                //! @}
             };
 
+            //! For internal use of BlackMisc::Predicates
             template <class T, class M, class V, class... Tail> struct MemberEqual<T, M, V, Tail...>
             {
+                //! \brief
+                //! @{
                 MemberEqual<T, M, V> head;
                 MemberEqual<T, Tail...> tail;
                 MemberEqual(M m, V v, Tail... tail_) : head(m, v), tail(tail_...) {}
                 bool operator()(const T &obj) const { return head(obj) && tail(obj); }
+                //! @}
             };
 
-            //! \internal
+            //! For internal use of BlackMisc::Predicates
             template <class...> struct MemberLess;
 
+            //! For internal use of BlackMisc::Predicates
             template <class T, class M> struct MemberLess<T, M>
             {
+                //! \brief
+                //! @{
                 M m;
                 MemberLess(M m_) : m(m_) {}
                 bool operator()(const T &a, const T &b) const { return (a.*m)() < (b.*m)(); }
                 bool isStable(const T &a, const T &b) const { return (a.*m)() != (b.*m)(); }
+                //! @}
             };
 
+            //! For internal use of BlackMisc::Predicates
             template <class T, class M, class... Tail> struct MemberLess<T, M, Tail...>
             {
+                //! \brief
+                //! @{
                 MemberLess<T, M> head;
                 MemberLess<T, Tail...> tail;
                 MemberLess(M m, Tail... tail_) : head(m), tail(tail_...) {}
                 bool operator()(const T &a, const T &b) const { return head.isStable(a, b) ? head(a, b) : tail(a, b); }
+                //! @}
             };
 
         } //namespace Private

@@ -243,6 +243,7 @@ namespace BlackMisc
          * \brief Modify by applying a value map to each element matching a particular key/value pair.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
+         * \param newValues Values from this map will be put into each matching element.
          */
         template <class K1, class V1>
         void applyIf(K1 key1, V1 value1, const CValueMap &newValues)
@@ -288,6 +289,7 @@ namespace BlackMisc
          * \brief Replace elements matching a particular key/value pair.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
+         * \param replacement All matching elements will be replaced by copies of this one.
          */
         template <class K1, class V1>
         void replaceIf(K1 key1, V1 value1, const T &replacement)
@@ -320,6 +322,7 @@ namespace BlackMisc
          * \brief Replace elements matching a particular key/value pair. If there is no match, push the new element on the end.
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
+         * \param replacement All matching elements will be replaced by copies of this one, or a copy will be added.
          * \pre The sequence must be initialized.
          */
         template <class K1, class V1>

@@ -66,8 +66,8 @@ namespace BlackMisc
 
             /*!
              * \brief Create a new iterator with a specific implementation type.
-             * \tparam C Becomes the iterator's implementation type.
-             * \param c Initial value for the iterator. The value is copied.
+             * \tparam I Becomes the iterator's implementation type.
+             * \param i Initial value for the iterator. The value is copied.
              */
             template <class I> static ConstForwardIterator fromImpl(I i) { return ConstForwardIterator(new Pimpl<I>(std::move(i))); }
 
@@ -214,8 +214,8 @@ namespace BlackMisc
 
             /*!
              * \brief Create a new iterator with a specific implementation type.
-             * \tparam C Becomes the iterator's implementation type.
-             * \param c Initial value for the iterator. The value is copied.
+             * \tparam I Becomes the iterator's implementation type.
+             * \param i Initial value for the iterator. The value is copied.
              */
             template <class I> static ConstBidirectionalIterator fromImpl(I i) { return ConstBidirectionalIterator(new Pimpl<I>(std::move(i))); }
 
@@ -421,8 +421,8 @@ namespace BlackMisc
 
             /*!
              * \brief Create a new iterator with a specific implementation type.
-             * \tparam C Becomes the iterator's implementation type.
-             * \param c Initial value for the iterator. The value is copied.
+             * \tparam I Becomes the iterator's implementation type.
+             * \param i Initial value for the iterator. The value is copied.
              */
             template <class I> static BidirectionalIterator fromImpl(I i) { return BidirectionalIterator(new Pimpl<I>(std::move(i))); }
 

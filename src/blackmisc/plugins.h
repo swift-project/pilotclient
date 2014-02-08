@@ -92,6 +92,7 @@ namespace BlackMisc
     */
     struct TPluginDeleter
     {
+        //! Delete a plugin
         static void cleanup(IPlugin *plugin)
         {
             if (plugin) {
