@@ -39,6 +39,8 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_timerStatusBar(nullptr), m_timerAudioTests(nullptr),
     // context menus
     m_contextMenuAudio(nullptr), m_contextMenuStatusMessageList(nullptr),
+    // cockpit
+    m_inputFocusedWidget(nullptr),
     // status bar
     m_statusBarIcon(nullptr), m_statusBarLabel(nullptr)
 {

@@ -81,10 +81,16 @@ void MainWindow::updateCockpitFromContext()
     const CComSystem com2 = this->m_ownAircraft.getCom2System();
     const CTransponder transponder = this->m_ownAircraft.getTransponder();
 
-    this->roundComFrequencyDisplays(com1, com2);
-    qint32 tc = transponder.getTransponderCode();
-    if (tc != static_cast<qint32>(this->ui->ds_CockpitTransponder->value()))
-        this->ui->ds_CockpitTransponder->setValue(tc);
+    // update the frequencies
+    this->updateComFrequencyDisplays(com1, com2);
+
+    if (this->m_inputFocusedWidget != this->ui->ds_CockpitTransponder)
+    {
+        // update transponder if this is not input focused
+        qint32 tc = transponder.getTransponderCode();
+        if (tc != static_cast<qint32>(this->ui->ds_CockpitTransponder->value()))
+            this->ui->ds_CockpitTransponder->setValue(tc);
+    }
 
     QString tm = this->ui->cb_CockpitTransponderMode->currentText().trimmed().toUpper();
     switch (transponder.getTransponderMode())
@@ -178,25 +184,38 @@ void MainWindow::updateCockpitFromContext()
 /*
  * Round the com frequency displays
  */
-void MainWindow::roundComFrequencyDisplays(const CComSystem &com1, const CComSystem &com2)
+void MainWindow::updateComFrequencyDisplays(const CComSystem &com1, const CComSystem &com2)
 {
     // do not just set! Leads to unwanted signals fired
-    double freq = com1.getFrequencyActive().valueRounded(3);
-    if (freq != this->ui->ds_CockpitCom1Active->value())
-        this->ui->ds_CockpitCom1Active->setValue(freq);
+    // only update if not focused
 
-    freq = com2.getFrequencyActive().valueRounded(3);
-    if (freq != this->ui->ds_CockpitCom2Active->value())
-        this->ui->ds_CockpitCom2Active->setValue(freq);
+    if (this->m_inputFocusedWidget != ui->ds_CockpitCom1Active)
+    {
+        double freq = com1.getFrequencyActive().valueRounded(3);
+        if (freq != this->ui->ds_CockpitCom1Active->value())
+            this->ui->ds_CockpitCom1Active->setValue(freq);
+    }
 
-    freq = com1.getFrequencyStandby().valueRounded(3);
-    if (freq != this->ui->ds_CockpitCom1Standby->value())
+    if (this->m_inputFocusedWidget != ui->ds_CockpitCom2Active)
+    {
+        double freq = com2.getFrequencyActive().valueRounded(3);
+        if (freq != this->ui->ds_CockpitCom2Active->value())
+            this->ui->ds_CockpitCom2Active->setValue(freq);
+    }
 
-        this->ui->ds_CockpitCom1Standby->setValue(freq);
+    if (this->m_inputFocusedWidget != ui->ds_CockpitCom1Standby)
+    {
+        double freq = com1.getFrequencyStandby().valueRounded(3);
+        if (freq != this->ui->ds_CockpitCom1Standby->value())
+            this->ui->ds_CockpitCom1Standby->setValue(freq);
+    }
 
-    freq = com2.getFrequencyStandby().valueRounded(3);
-    if (freq != this->ui->ds_CockpitCom2Standby->value())
-        this->ui->ds_CockpitCom2Standby->setValue(freq);
+    if (this->m_inputFocusedWidget != ui->ds_CockpitCom2Standby)
+    {
+        double freq = com2.getFrequencyStandby().valueRounded(3);
+        if (freq != this->ui->ds_CockpitCom2Standby->value())
+            this->ui->ds_CockpitCom2Standby->setValue(freq);
+    }
 }
 
 /*
@@ -263,7 +282,7 @@ void MainWindow::sendCockpitUpdates()
     com1.setFrequencyStandbyMHz(this->ui->ds_CockpitCom1Standby->value());
     com2.setFrequencyActiveMHz(this->ui->ds_CockpitCom2Active->value());
     com2.setFrequencyStandbyMHz(this->ui->ds_CockpitCom2Standby->value());
-    this->roundComFrequencyDisplays(com1, com2);
+    this->updateComFrequencyDisplays(com1, com2);
 
     //
     // Send to context
@@ -357,4 +376,13 @@ QString MainWindow::getSelcalCode() const
 {
     QString selcal = this->ui->cb_CockpitSelcal1->currentText().append(this->ui->cb_CockpitSelcal2->currentText());
     return selcal;
+}
+
+/*
+ * Current input focus
+ */
+void MainWindow::inputFocusChanged(QWidget *oldWidget, QWidget *newWidget)
+{
+    Q_UNUSED(oldWidget);
+    this->m_inputFocusedWidget = newWidget;
 }

@@ -157,6 +157,7 @@ private:
 
     // cockpit
     QString m_transponderResetValue; /*!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas */
+    QWidget *m_inputFocusedWidget; /*!< currently used widget for input, mainly used with cockpit */
 
     // status bar
     QLabel *m_statusBarIcon; /*!< status bar icon */
@@ -208,10 +209,8 @@ private:
      */
     bool isCockpitUpdatePending() const;
 
-    /*!
-     * \brief Round the COM frequency display
-     */
-    void roundComFrequencyDisplays(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+    //! \brief Update the COM frequency displays
+    void updateComFrequencyDisplays(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
     /*!
      * \brief Add new text message tab
@@ -360,14 +359,10 @@ private slots:
      */
     void appendTextMessagesToGui(const BlackMisc::Network::CTextMessageList &messages, bool sending = false);
 
-    /*!
-     * \brief Reload settings
-     */
+    //!\brief Reload settings
     void reloadSettings();
 
-    /*!
-     * \brief Send cockpit updates
-     */
+    //! \brief Send cockpit updates
     void sendCockpitUpdates();
 
     //
@@ -500,6 +495,11 @@ private slots:
 
     //! \brief start the MIC tests (Squelch)
     void startAudioTest();
+
+    //! \brief inputFocusChanged
+    //! \sa QApplication::focusChanged
+    void inputFocusChanged(QWidget *oldWidget, QWidget *newWidget);
+
 };
 
 #pragma pop_macro("interface")
