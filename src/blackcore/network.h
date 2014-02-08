@@ -117,12 +117,6 @@ namespace BlackCore
          */
         virtual bool isConnected() const = 0;
 
-    signals:
-        /*!
-         * \brief Connection has been terminated
-         */
-        void terminate();
-
     public slots:
         ////////////////////////////////////////////////////////////////
         //! \name Network slots
@@ -404,11 +398,9 @@ namespace BlackCore
 
         /*!
          * We received a reply to one of our queries.
-         * \param callsign capabilities for this callsign
-         * \param flags A combination of capabilities flags.
          * \sa sendCapabilitiesQuery
          */
-        void capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
+        void capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 capabilitiesFlags);
 
         /*!
          * We received a reply to one of our queries.

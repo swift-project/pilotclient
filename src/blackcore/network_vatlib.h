@@ -22,7 +22,7 @@
 namespace BlackCore
 {
     /*!
-     * \brief Our implementation for the VATSIM protocol
+     * \brief Implementation of INetwork using the vatlib shim
      */
     class CNetworkVatlib : public INetwork
     {
@@ -35,10 +35,10 @@ namespace BlackCore
         //! \brief Destructor
         virtual ~CNetworkVatlib();
 
-        //! \brief Is connected?
-        bool isConnected() const { return m_status == Cvatlib_Network::connStatus_Connected; }
+        //! \copydoc INetwork::isConnected()
+        virtual bool isConnected() const override { return m_status == Cvatlib_Network::connStatus_Connected; }
 
-        // INetwork slots overrides
+        // Network slots
         virtual void presetServer(const BlackMisc::Network::CServer &server) override;
         virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao) override;
@@ -46,20 +46,18 @@ namespace BlackCore
         virtual void initiateConnection() override;
         virtual void terminateConnection() override;
         virtual void sendPing(const BlackMisc::Aviation::CCallsign &callsign) override;
-
-        // queries
         virtual void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendIpQuery() override;
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-        // Text messages
+        // Text message slots
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) override;
 
-        // ATC
+        // ATC slots
         virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
-        virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
 
-        // Aircraft
+        // Aircraft slots
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -70,7 +68,7 @@ namespace BlackCore
                                             const BlackMisc::Aviation::CComSystem &com2,
                                             const BlackMisc::Aviation::CTransponder &xpdr) override;
 
-        // Weather
+        // Weather slots
         virtual void sendMetarQuery(const QString &airportICAO) override;
         virtual void sendWeatherDataQuery(const QString &airportICAO) override;
 
@@ -113,6 +111,13 @@ namespace BlackCore
     private slots:
         void process();
         void update();
+
+    signals:
+        /*!
+         * Used internally to terminate the connection from within a callback
+         * \internal
+         */
+        void terminate();
 
     public:
         //! Deletion policy for QScopedPointer

@@ -26,10 +26,8 @@ namespace BlackCore
     using namespace BlackMisc::Aviation;
     using namespace BlackMisc::Network;
 
-    //! \brief dispatch exception
     void exceptionDispatcher(const char *caller);
 
-    //! \brief Constructor
     CNetworkVatlib::CNetworkVatlib(QObject *parent)
         : INetwork(parent),
           m_loginMode(LoginNormal),
@@ -176,11 +174,6 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    /*!
-     * \brief Convert connection status (from Cvatlib_Network to INetwork)
-     * \param status
-     * \return
-     */
     INetwork::ConnectionStatus convertConnectionStatus(Cvatlib_Network::connStatus status)
     {
         switch (status)
@@ -583,11 +576,6 @@ namespace BlackCore
     /**********************************           shimlib callbacks           ************************************/
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
 
-    /*!
-     * \brief Cast from *void to *CNetworkVatlib
-     * \param cbvar
-     * \return
-     */
     CNetworkVatlib *cbvar_cast(void *cbvar)
     {
         return static_cast<CNetworkVatlib *>(cbvar);
