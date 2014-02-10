@@ -20,4 +20,11 @@ else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
 HEADERS += *.h
 SOURCES += *.cpp
 DESTDIR = ../../lib
-OTHER_FILES +=
+OTHER_FILES += ./sounds/*.wav sounds/readme.txt
+RESOURCES +=
+
+# requires install step
+install_sounds.path = $$OUT_PWD/../../bin/sounds
+install_sounds.files = sounds/*
+INSTALLS += install_sounds
+
