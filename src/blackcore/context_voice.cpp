@@ -231,6 +231,15 @@ namespace BlackCore
     }
 
     /*
+     * Notification
+     */
+    void CContextVoice::playNotification(uint notification) const
+    {
+        Q_ASSERT(this->m_voice);
+        BlackSound::CSoundGenerator::playNotificationSound(90, static_cast<BlackSound::CSoundGenerator::Notification>(notification));
+    }
+
+    /*
      * Mic test.
      */
     void CContextVoice::runMicrophoneTest()
@@ -265,6 +274,5 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         return static_cast<double>(this->m_voice->inputSquelch());
     }
-
 
 } // namespace

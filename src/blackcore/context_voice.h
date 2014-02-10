@@ -157,6 +157,11 @@ namespace BlackCore
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const;
 
         /*!
+         * \copydoc IContextVoice::playNotification()
+         */
+        virtual void playNotification(uint notification) const;
+
+        /*!
          * \copydoc IContextVoice::runMicrophoneTest()
          */
         virtual void runMicrophoneTest();

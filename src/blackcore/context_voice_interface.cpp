@@ -153,6 +153,14 @@ namespace BlackCore
     }
 
     /*
+     * Notification sound
+     */
+    void IContextVoice::playNotification(uint notification) const
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("playNotification"), notification);
+    }
+
+    /*
      * MIC test
      */
     void IContextVoice::runMicrophoneTest()
