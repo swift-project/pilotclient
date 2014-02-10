@@ -38,14 +38,10 @@ namespace BlackCore
 
     public:
 
-        /*!
-         * \brief Constructor
-         */
+        //! \brief Constructor
         CContextVoice(CCoreRuntime *runtime);
 
-        /*!
-         * \brief Destructor
-         */
+        //! \brief Destructor
         virtual ~CContextVoice();
 
         /*!
@@ -57,129 +53,81 @@ namespace BlackCore
             server->addObject(IContextVoice::ServicePath(), this);
         }
 
-        /*!
-         * \brief Runtime
-         */
+        //! \brief Runtime
         const CCoreRuntime *getRuntime() const
         {
             return static_cast<CCoreRuntime *>(this->parent());
         }
 
-        /*!
-         * \brief Using local objects?
-         */
+        //! \brief Using local objects?
         virtual bool usingLocalObjects() const { return true; }
 
     public slots:
-        /*!
-         * \copydoc IContextVoice::setOwnAircraft
-         */
-        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft);
+        //! \copydoc IContextVoice::setOwnAircraft
+        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft) override;
 
-        /*!
-         * \copydoc IContextVoice::getComVoiceRooms()
-         */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const;
+        //! \copydoc IContextVoice::getComVoiceRooms()
+        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const override;
 
-        /*!
-         * \copydoc IContextVoice::getComVoiceRoomsWithAudioStatus()
-         */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const;
+        //! \copydoc IContextVoice::getComVoiceRoomsWithAudioStatus()
+        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
 
-        /*!
-         * \copydoc IContextVoice::getCom1VoiceRoom
-         */
-        virtual BlackMisc::Voice::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const;
+        //! \copydoc IContextVoice::getCom1VoiceRoom
+        virtual BlackMisc::Voice::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const override;
 
-        /*!
-         * \copydoc IContextVoice::getCom2VoiceRoom
-         */
-        virtual BlackMisc::Voice::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const;
+        //! \copydoc IContextVoice::getCom2VoiceRoom
+        virtual BlackMisc::Voice::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const override;
 
-        /*!
-         * \copydoc IContextVoice::setComVoiceRooms()
-         */
-        virtual void setComVoiceRooms(const BlackMisc::Voice::CVoiceRoom &voiceRoomCom1, const BlackMisc::Voice::CVoiceRoom &voiceRoomCom2);
+        //! \copydoc IContextVoice::setComVoiceRooms()
+        virtual void setComVoiceRooms(const BlackMisc::Voice::CVoiceRoom &voiceRoomCom1, const BlackMisc::Voice::CVoiceRoom &voiceRoomCom2) override;
 
-        /*!
-         * \copydoc IContextVoice::getCom1RoomCallsigns()
-         */
-        virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const;
+        //! \copydoc IContextVoice::getCom1RoomCallsigns()
+        virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const override;
 
-        /*!
-         * \copydoc IContextVoice::getCom2RoomCallsigns()
-         */
-        virtual BlackMisc::Aviation::CCallsignList getCom2RoomCallsigns() const;
+        //! \copydoc IContextVoice::getCom2RoomCallsigns()
+        virtual BlackMisc::Aviation::CCallsignList getCom2RoomCallsigns() const override;
 
-        /*!
-         * \copydoc IContextVoice::getCom1RoomUsers()
-         */
-        virtual BlackMisc::Network::CUserList getCom1RoomUsers() const;
+        //! \copydoc IContextVoice::getCom1RoomUsers()
+        virtual BlackMisc::Network::CUserList getCom1RoomUsers() const override;
 
-        /*!
-         * \copydoc IContextVoice::getCom2RoomUsers()
-         */
-        virtual BlackMisc::Network::CUserList getCom2RoomUsers() const;
+        //! \copydoc IContextVoice::getCom2RoomUsers()
+        virtual BlackMisc::Network::CUserList getCom2RoomUsers() const override;
 
-        /*!
-         * \copydoc IContextVoice::leaveAllVoiceRooms
-         */
-        virtual void leaveAllVoiceRooms();
+        //! \copydoc IContextVoice::leaveAllVoiceRooms
+        virtual void leaveAllVoiceRooms() override;
 
-        /*!
-         * \copydoc IContextVoice::getAudioDevices()
-         */
-        virtual BlackMisc::Voice::CAudioDeviceList getAudioDevices() const;
+        //! \copydoc IContextVoice::getAudioDevices()
+        virtual BlackMisc::Voice::CAudioDeviceList getAudioDevices() const override;
 
-        /*!
-         * \copydoc IContextVoice::getCurrentAudioDevices()
-         */
-        virtual BlackMisc::Voice::CAudioDeviceList getCurrentAudioDevices() const;
+        //! \copydoc IContextVoice::getCurrentAudioDevices()
+        virtual BlackMisc::Voice::CAudioDeviceList getCurrentAudioDevices() const override;
 
-        /*!
-         * \copydoc IContextVoice::setCurrentAudioDevice()
-         */
-        virtual void setCurrentAudioDevice(const BlackMisc::Voice::CAudioDevice &audioDevice);
+        //! \copydoc IContextVoice::setCurrentAudioDevice()
+        virtual void setCurrentAudioDevice(const BlackMisc::Voice::CAudioDevice &audioDevice) override;
 
-        /*!
-         * \copydoc IContextVoice::setVolumes()
-         */
-        virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+        //! \copydoc IContextVoice::setVolumes()
+        virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2) override;
 
-        /*!
-         * \copydoc IContextVoice::isMuted()
-         */
-        virtual bool isMuted() const;
+        //! \copydoc IContextVoice::isMuted()
+        virtual bool isMuted() const override;
 
-        /*!
-         * \copydoc IContextVoice::playSelcalTone()
-         */
-        virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const;
+        //! \copydoc IContextVoice::playSelcalTone()
+        virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override;
 
-        /*!
-         * \copydoc IContextVoice::playNotification()
-         */
-        virtual void playNotification(uint notification) const;
+        //! \copydoc IContextVoice::playNotification()
+        virtual void playNotification(uint notification) const override;
 
-        /*!
-         * \copydoc IContextVoice::runMicrophoneTest()
-         */
-        virtual void runMicrophoneTest();
+        //! \copydoc IContextVoice::runMicrophoneTest()
+        virtual void runMicrophoneTest() override;
 
-        /*!
-         * \copydoc IContextVoice::runSquelchTest()
-         */
-        virtual void runSquelchTest();
+        //! \copydoc IContextVoice::runSquelchTest()
+        virtual void runSquelchTest() override;
 
-        /*!
-         * \copydoc IContextVoice::getMicrophoneTestResult()
-         */
-        virtual QString getMicrophoneTestResult() const;
+        //! \copydoc IContextVoice::getMicrophoneTestResult()
+        virtual QString getMicrophoneTestResult() const override;
 
-        /*!
-         * \copydoc IContextVoice::getSquelchValue()
-         */
-        virtual double getSquelchValue() const;
+        //! \copydoc IContextVoice::getSquelchValue()
+        virtual double getSquelchValue() const override;
 
     private:
         CVoiceVatlib *m_voice; //!< underlying voice lib

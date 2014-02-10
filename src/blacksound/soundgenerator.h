@@ -230,7 +230,7 @@ namespace BlackSound
         /*!
          * \brief Play sound, open device
          * \param volume 0..100
-         * \param pull, if false push mode
+         * \param pull if false push mode
          */
         void start(int volume, bool pull = true);
 

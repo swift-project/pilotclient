@@ -186,8 +186,8 @@ namespace BlackMisc
         /*!
          * \brief Set property by index
          * \remarks Intentionally not abstract, avoiding all classes need to implement this method
+         * \param variant
          * \param index as used in Qt table views
-         * \return
          */
         virtual void setPropertyByIndex(const QVariant &variant, int index);
 
