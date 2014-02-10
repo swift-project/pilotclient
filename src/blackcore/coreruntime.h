@@ -12,10 +12,12 @@ class CContextNetwork;
 class CContextVoice;
 class CContextSettings;
 class CContextApplication;
+class CContextSimulator;
 class IContextNetwork;
 class IContextVoice;
 class IContextSettings;
 class IContextApplication;
+class IContextSimulator;
 
 /*!
  * \brief The CCoreRuntime class
@@ -31,6 +33,8 @@ private:
     CContextVoice *m_contextVoice;
     CContextSettings *m_contextSettings;
     CContextApplication *m_contextApplication;
+    CContextSimulator *m_contextSimulator;
+
 
     /*!
      * \brief Init
@@ -107,6 +111,18 @@ public:
      * \return
      */
     IContextApplication *getIContextApplication();
+
+    /*!
+     * \brief Context for simulator
+     * \return
+     */
+    const IContextSimulator *getIContextSimulator() const;
+
+    /*!
+     * \brief Simulator
+     * \return
+     */
+    IContextSimulator *getIContextSimulator();
 
 };
 }

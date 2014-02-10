@@ -5,6 +5,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_voice.h"
+#include "blackcore/context_simulator_impl.h"
 
 namespace BlackCore
 {
@@ -14,7 +15,8 @@ namespace BlackCore
 CCoreRuntime::CCoreRuntime(bool withDbus, QObject *parent) :
     QObject(parent), m_init(false), m_dbusServer(nullptr),
     m_contextNetwork(nullptr), m_contextVoice(nullptr),
-    m_contextSettings(nullptr), m_contextApplication(nullptr)
+    m_contextSettings(nullptr), m_contextApplication(nullptr),
+    m_contextSimulator(nullptr)
 {
     this->init(withDbus);
 }
@@ -46,6 +48,9 @@ void CCoreRuntime::init(bool withDbus)
 
     this->m_contextVoice = new CContextVoice(this);
     if (withDbus) this->m_contextVoice->registerWithDBus(this->m_dbusServer);
+
+    this->m_contextSimulator = new CContextSimulator(this);
+    if (withDbus) this->m_contextSimulator->registerWithDBus(this->m_dbusServer);
 
     // flag
     m_init = true;
@@ -89,5 +94,15 @@ const IContextApplication *CCoreRuntime::getIContextApplication() const
 IContextApplication *CCoreRuntime::getIContextApplication()
 {
     return this->m_contextApplication;
+}
+
+const IContextSimulator *CCoreRuntime::getIContextSimulator() const
+{
+    return this->m_contextSimulator;
+}
+
+IContextSimulator *CCoreRuntime::getIContextSimulator()
+{
+    return this->m_contextSimulator;
 }
 }
