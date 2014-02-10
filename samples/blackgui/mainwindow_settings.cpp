@@ -26,6 +26,10 @@ void MainWindow::reloadSettings()
     this->m_trafficServerList->update(nws.getTrafficNetworkServers());
     this->ui->tv_SettingsTnServers->resizeColumnsToContents();
     this->ui->tv_SettingsTnServers->resizeRowsToContents();
+
+    // fake setting for sound notifications
+    this->ui->cb_SettingsAudioPlayNotificationSounds->setChecked(true);
+    this->ui->cb_SettingsAudioNotificationTextMessage->setChecked(true);
 }
 
 /*

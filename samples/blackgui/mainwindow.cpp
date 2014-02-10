@@ -215,7 +215,6 @@ void MainWindow::toggleNetworkConnection()
             mode = INetwork::LoginAsObserver;
             this->displayStatusMessage(CStatusMessage::getInfoMessage("login in observer mode"));
         }
-
         msgs = this->m_contextNetwork->connectToNetwork(static_cast<uint>(mode));
     }
     else
@@ -296,6 +295,22 @@ void MainWindow::connectionStatusChanged(uint /** from **/, uint to)
         this->startUpdateTimers();
     else if (newStatus == INetwork::Disconnecting || newStatus == INetwork::Disconnected || newStatus == INetwork::DisconnectedError)
         this->stopUpdateTimers();
+
+    // sounds
+    switch (newStatus)
+    {
+    case INetwork::Connected:
+        this->playNotifcationSound(BlackSound::CSoundGenerator::NotificationLogin);
+        break;
+    case INetwork::Disconnected:
+        this->playNotifcationSound(BlackSound::CSoundGenerator::NotificationLogoff);
+        break;
+    case INetwork::DisconnectedError:
+        this->playNotifcationSound(BlackSound::CSoundGenerator::NotificationError);
+        break;
+    default:
+        break;
+    }
 }
 
 /*

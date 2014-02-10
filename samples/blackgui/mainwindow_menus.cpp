@@ -53,8 +53,10 @@ void MainWindow::menuClicked()
  */
 void MainWindow::initContextMenus()
 {
-    this->ui->lbl_VoiceStatus->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this->ui->lbl_VoiceStatus, &QLabel::customContextMenuRequested, this, &MainWindow::audioIconContextMenu);
+    this->ui->lbl_StatusVoiceStatus->setContextMenuPolicy(Qt::CustomContextMenu);
+    this->ui->lbl_CockpitVoiceStatus->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this->ui->lbl_StatusVoiceStatus, &QLabel::customContextMenuRequested, this, &MainWindow::audioIconContextMenu);
+    connect(this->ui->lbl_CockpitVoiceStatus, &QLabel::customContextMenuRequested, this, &MainWindow::audioIconContextMenu);
     this->ui->tv_StatusMessages->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this->ui->tv_StatusMessages, &QTableView::customContextMenuRequested, this, &MainWindow::messageListContextMenu);
 }
@@ -65,7 +67,9 @@ void MainWindow::initContextMenus()
 void MainWindow::audioIconContextMenu(const QPoint &position)
 {
     // position for most widgets
-    QPoint globalPosition = this->ui->lbl_VoiceStatus->mapToGlobal(position);
+    QWidget *sender = qobject_cast<QWidget *>(QWidget::sender());
+    Q_ASSERT(sender);
+    QPoint globalPosition = sender->mapToGlobal(position);
 
     if (!this->m_contextMenuAudio)
     {

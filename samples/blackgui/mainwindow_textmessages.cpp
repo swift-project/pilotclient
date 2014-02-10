@@ -153,6 +153,9 @@ void MainWindow::addPrivateChannelTextMessage(const CTextMessage &textMessage, b
     Q_ASSERT(textEdit != nullptr);
     if (textEdit == nullptr) return; // do not crash, though this situation could not happen
     textEdit->append(textMessage.asString(true, false, "\t"));
+
+    // sound
+    this->playNotifcationSound(BlackSound::CSoundGenerator::NotificationTextMessage);
 }
 
 /*

@@ -34,7 +34,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
         QPushButton *closeIcon = new QPushButton(this);
         closeIcon->setStyleSheet("margin: 0; padding: 0; background: transparent;");
         closeIcon->setIcon(QIcon(":/blackgui/icons/close.png"));
-        QObject::connect(closeIcon, SIGNAL(clicked()), this, SLOT(close()));
+        QObject::connect(closeIcon, &QPushButton::clicked, this, &QMainWindow::close);
         menuBarLayout->addWidget(this->ui->mb_MainMenuBar, 0, Qt::AlignTop | Qt::AlignLeft);
         menuBarLayout->addWidget(closeIcon, 0, Qt::AlignTop | Qt::AlignRight);
         this->ui->vl_CentralWidgetOutside->insertLayout(0, menuBarLayout, 0);

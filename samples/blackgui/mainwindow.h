@@ -307,6 +307,11 @@ private:
      */
     void audioTestUpdate();
 
+    /*!
+     * \brief Play notifcation sound
+     */
+    void playNotifcationSound(BlackSound::CSoundGenerator::Notification notification) const;
+
 private slots:
 
     //

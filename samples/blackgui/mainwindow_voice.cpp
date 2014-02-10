@@ -4,10 +4,12 @@
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_voice.h"
+#include "blacksound/soundgenerator.h"
 
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackGui;
+using namespace BlackSound;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Voice;
 using namespace BlackMisc::Aviation;
@@ -136,7 +138,8 @@ void MainWindow::audioVolumes()
     com1.setEnabled(!muted);
     com2.setEnabled(!muted);
     this->ui->pb_SoundMute->setText(muted ? "Unmute" : "Mute");
-    this->ui->lbl_VoiceStatus->setPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
+    this->ui->lbl_StatusVoiceStatus->setPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
+    this->ui->lbl_CockpitVoiceStatus->setPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
     this->ui->pb_SoundMute->setStyleSheet(muted ? "background-color: red;" : "");
     if (muted) this->displayOverlayInfo("Sound is muted!");
 
@@ -226,4 +229,15 @@ void MainWindow::audioTestUpdate()
         this->ui->pb_SettingsAudioSquelchTest->setEnabled(true);
         this->ui->prb_SettingsAudioTestProgress->setVisible(false);
     }
+}
+
+/*
+ * Notification
+ */
+void MainWindow::playNotifcationSound(CSoundGenerator::Notification notification) const
+{
+    if (!this->m_contextVoiceAvailable) return;
+    if (!this->ui->cb_SettingsAudioPlayNotificationSounds->isChecked()) return;
+    if (notification == CSoundGenerator::NotificationTextMessage && !this->ui->cb_SettingsAudioNotificationTextMessage->isChecked()) return;
+    this->m_contextVoice->playNotification(static_cast<uint>(notification));
 }
