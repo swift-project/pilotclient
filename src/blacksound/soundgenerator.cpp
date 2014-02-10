@@ -2,8 +2,12 @@
 #include <math.h>
 #include <qmath.h>
 #include <qendian.h>
+#include <QMultimedia>
 #include <QAudioOutput>
-#include <QtConcurrent/QtConcurrent>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
+#include <QTimer>
+#include <QUrl>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -14,7 +18,8 @@ namespace BlackSound
     CSoundGenerator::CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, PlayMode mode, QObject *parent)
         :   QIODevice(parent),
             m_tones(tones), m_position(0), m_playMode(mode), m_endReached(false), m_oneCycleDurationMs(calculateDurationMs(tones)),
-            m_device(device), m_audioFormat(format), m_audioOutput(new QAudioOutput(format))
+            m_device(device), m_audioFormat(format), m_audioOutput(new QAudioOutput(format)),
+            m_pushTimer(nullptr), m_pushModeIODevice(nullptr), m_ownThread(nullptr)
     {
         Q_ASSERT(tones.size() > 0);
     }
@@ -23,7 +28,8 @@ namespace BlackSound
         :   QIODevice(parent),
             m_tones(tones), m_position(0), m_playMode(mode), m_endReached(false), m_oneCycleDurationMs(calculateDurationMs(tones)),
             m_device(QAudioDeviceInfo::defaultOutputDevice()), m_audioFormat(CSoundGenerator::defaultAudioFormat()),
-            m_audioOutput(new QAudioOutput(CSoundGenerator::defaultAudioFormat()))
+            m_audioOutput(new QAudioOutput(CSoundGenerator::defaultAudioFormat())),
+            m_pushTimer(nullptr), m_pushModeIODevice(nullptr), m_ownThread(nullptr)
     {
         Q_ASSERT(tones.size() > 0);
     }
@@ -31,33 +37,97 @@ namespace BlackSound
     CSoundGenerator::~CSoundGenerator()
     {
         this->stop(true);
+        if (this->m_ownThread) this->m_ownThread->deleteLater();
     }
 
-    void CSoundGenerator::start(int volume)
+    void CSoundGenerator::start(int volume, bool pull)
     {
-        if (volume < 1) return;
         if (this->m_buffer.isEmpty()) this->generateData();
         this->open(QIODevice::ReadOnly);
         this->m_audioOutput->setVolume(qreal(0.01 * volume));
-        this->m_audioOutput->start(this); // pull
+
+        if (pull)
+        {
+            // For an output device, the QAudioOutput class will pull data from the QIODevice
+            // (using QIODevice::read()) when more audio data is required.
+            this->m_audioOutput->start(this); // pull
+        }
+        else
+        {
+            // In push mode, the audio device provides a QIODevice instance that can be
+            // written or read to as needed. Typically this results in simpler code but more buffering, which may affect latency.
+            if (!this->m_pushTimer)
+            {
+                this->m_pushTimer = new QTimer(this);
+                bool connect = this->connect(this->m_pushTimer, &QTimer::timeout, this, &CSoundGenerator::pushTimerExpired);
+                Q_ASSERT(connect);
+                this->m_pushTimer->start(20);
+            }
+            this->m_pushModeIODevice = this->m_audioOutput->start(); // push, IO device not owned
+        }
+    }
+
+    void CSoundGenerator::startInOwnThread(int volume)
+    {
+        this->m_ownThread = new QThread(); // deleted by signals, hence no parent
+        this->moveToThread(this->m_ownThread);
+        connect(this, &CSoundGenerator::startThread, this, &CSoundGenerator::start);
+        connect(this, &CSoundGenerator::stopping, this->m_ownThread, &QThread::quit);
+
+        // in auto delete mode force deleteLater when thread is finished
+        if (this->m_playMode == SingleWithAutomaticDeletion)
+            connect(this->m_ownThread, &QThread::finished, this, &CSoundGenerator::deleteLater);
+
+        // start thread and begin processing by calling start via signal startThread
+        this->m_ownThread->start();
+        emit startThread(volume, false); // this signal will trigger start in own thread
     }
 
     void CSoundGenerator::stop(bool destructor)
     {
         // this->m_audioOutput->setVolume(0); // Bug or feature, killing the applicaions volume?
-        this->m_audioOutput->stop();
         if (this->isOpen())
         {
             // 1. isOpen avoids redundant signals
             // 2. OK in destructor, see http://stackoverflow.com/a/14024955/356726
-            emit this->stopped();
             this->close(); // close IO Device
+            this->m_audioOutput->stop();
+            if (this->m_pushTimer) this->m_pushTimer->stop();
+            emit this->stopped();
         }
         this->m_position = 0;
         if (destructor) return;
 
         // trigger own termination
-        if (this->m_playMode == SingleWithAutomaticDeletion) this->deleteLater();
+        if (this->m_playMode == SingleWithAutomaticDeletion)
+        {
+            emit this->stopping();
+            if (!this->m_ownThread) this->deleteLater(); // with own thread, thread signal will call deleteLater
+        }
+    }
+
+    void CSoundGenerator::pushTimerExpired()
+    {
+        if (this->m_pushModeIODevice && !this->m_endReached && this->m_audioOutput->state() != QAudio::StoppedState)
+        {
+            int chunks = this->m_audioOutput->bytesFree() / this->m_audioOutput->periodSize();
+            while (chunks)
+            {
+                // periodSize-> Returns the period size in bytes.
+                const qint64 len = this->read(m_buffer.data(), this->m_audioOutput->periodSize());
+                if (len)
+                    this->m_pushModeIODevice->write(m_buffer.data(), len);
+                if (len != this->m_audioOutput->periodSize())
+                    break;
+                --chunks;
+            }
+        }
+        else
+        {
+            if (this->m_pushTimer) this->m_pushTimer->stop();
+            this->m_pushTimer->disconnect(this);
+            if (this->m_playMode == SingleWithAutomaticDeletion) this->stop();
+        }
     }
 
     void CSoundGenerator::generateData()
@@ -91,14 +161,14 @@ namespace BlackSound
                 double amplitude = 0; // silence
                 if (t.m_frequencyHz > 10)
                 {
+                    // the combination of two frequencies actually would have 2*amplitude,
+                    // but I have to normalize with amplitude -1 -> +1
+
                     amplitude = t.m_secondaryFrequencyHz == 0 ?
                                 qSin(2 * M_PI * t.m_frequencyHz * pseudoTime) :
                                 qSin(M_PI * (t.m_frequencyHz + t.m_secondaryFrequencyHz) * pseudoTime) *
                                 qCos(M_PI * (t.m_frequencyHz - t.m_secondaryFrequencyHz) * pseudoTime);
                 }
-
-                // the combination of two frequencies actually would have 2*amplitude,
-                // but I have to normalize with amplitude -1 -> +1
 
                 for (int i = 0; i < this->m_audioFormat.channelCount(); ++i)
                 {
@@ -178,7 +248,6 @@ namespace BlackSound
     {
         Q_UNUSED(data);
         Q_UNUSED(len);
-
         return 0;
     }
 
@@ -241,12 +310,24 @@ namespace BlackSound
         if (volume < 1) return generator;
         if (generator->singleCyleDurationMs() < 10) return generator; // unable to hear
 
-        // top and clean uo when done
+        // play, and maybe clean up when done
         generator->start(volume);
         return generator;
     }
 
-    CSoundGenerator *CSoundGenerator::playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device)
+    CSoundGenerator *CSoundGenerator::playSignalInBackground(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
+    {
+        CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CSoundGenerator::SingleWithAutomaticDeletion);
+        if (tones.isEmpty()) return generator; // that was easy
+        if (volume < 1) return generator;
+        if (generator->singleCyleDurationMs() < 10) return generator; // unable to hear
+
+        // play, and maybe clean up when done
+        generator->startInOwnThread(volume);
+        return generator;
+    }
+
+    void CSoundGenerator::playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device)
     {
         QList<CSoundGenerator::Tone> tones;
         if (selcal.isValid())
@@ -259,12 +340,36 @@ namespace BlackSound
             Tone t3(frequencies.at(2), frequencies.at(3), oneSec);
             tones << t1 << t2 << t3;
         }
-        return CSoundGenerator::playSignal(volume, tones, device);
+        CSoundGenerator::playSignalInBackground(volume, tones, device);
     }
 
-    CSoundGenerator *CSoundGenerator::playSelcal(qint32 volume, const CSelcal &selcal, const CAudioDevice &audioDevice)
+    void CSoundGenerator::playSelcal(qint32 volume, const CSelcal &selcal, const CAudioDevice &audioDevice)
     {
-        return CSoundGenerator::playSelcal(volume, selcal, CSoundGenerator::findClosestOutputDevice(audioDevice));
+        CSoundGenerator::playSelcal(volume, selcal, CSoundGenerator::findClosestOutputDevice(audioDevice));
+    }
+
+    void CSoundGenerator::playNotificationSound(qint32 volume, CSoundGenerator::Notification notification)
+    {
+        static QMediaPlayer *mediaPlayer = new QMediaPlayer();
+        if (mediaPlayer->state() == QMediaPlayer::PlayingState) return;
+        QMediaPlaylist *playlist = mediaPlayer->playlist();
+        if (!playlist || playlist->isEmpty())
+        {
+            // order here is crucial, needs to be the same as in CSoundGenerator::Notification
+            if (!playlist) playlist = new QMediaPlaylist(mediaPlayer);
+            bool success = true;
+            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/sounds/error.wav"))) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/sounds/login.wav"))) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/sounds/logoff.wav"))) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/sounds/privatemessage.wav"))) && success;
+            Q_ASSERT(success);
+            playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
+            mediaPlayer->setPlaylist(playlist);
+        }
+        int index = static_cast<int>(notification);
+        playlist->setCurrentIndex(index);
+        mediaPlayer->setVolume(volume); // 0-100
+        mediaPlayer->play();
     }
 
 } // namespace

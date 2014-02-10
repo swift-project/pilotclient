@@ -11,6 +11,7 @@
 #include "blackmisc/pqtime.h"
 
 #include <QIODevice>
+#include <QThread>
 #include <QAudioFormat>
 #include <QAudioOutput>
 #include <QAudioDeviceInfo>
@@ -38,6 +39,17 @@ namespace BlackSound
         };
 
         /*!
+         * \brief Play notification
+         */
+        enum Notification
+        {
+            NotificationError = 0,
+            NotificationLogin,
+            NotificationLogoff,
+            NotificationTextMessage,
+        };
+
+        /*!
          * \brief Tone to be played
          */
         struct Tone
@@ -47,7 +59,7 @@ namespace BlackSound
         private:
             int m_frequencyHz; /*!< first tone's frequency, use 0 for silence */
             int m_secondaryFrequencyHz; /*!< second tone's frequency, or 0 */
-            qint64 m_durationMs; /*!< How long to play */
+            qint64 m_durationMs; /*!< How long to play (duration) */
 
         public:
             /*!
@@ -88,14 +100,6 @@ namespace BlackSound
         CSoundGenerator(const QList<Tone> &tones, PlayMode mode, QObject *parent = nullptr);
 
         /*!
-         * \brief Constructor for dummy device
-         * \param device
-         * \param format
-         * \param parent
-         */
-        CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, QObject *parent);
-
-        /*!
          * Destructor
          */
         ~CSoundGenerator();
@@ -115,30 +119,30 @@ namespace BlackSound
         void stop(bool destructor = false);
 
         /*!
-         * \brief sDuration of one cycle
+         * \brief duration of one cycle
          */
         qint64 singleCyleDurationMs() const { return calculateDurationMs(this->m_tones); }
 
         /*!
          * \copydoc QIODevice::readData()
          */
-        virtual qint64 readData(char *data, qint64 maxlen);
+        virtual qint64 readData(char *data, qint64 maxlen) override;
 
         /*!
          * \copydoc QIODevice::writeData()
          * \remarks NOT(!) used here
          */
-        virtual qint64 writeData(const char *data, qint64 len);
+        virtual qint64 writeData(const char *data, qint64 len) override;
 
         /*!
          * \copydoc QIODevice::bytesAvailable()
          */
-        virtual qint64 bytesAvailable() const;
+        virtual qint64 bytesAvailable() const override;
 
         /*!
          * \copydoc QIODevice::seek()
          */
-        virtual bool seek(qint64 pos)
+        virtual bool seek(qint64 pos) override
         {
             return this->m_endReached ? false : QIODevice::seek(pos);
         }
@@ -146,7 +150,7 @@ namespace BlackSound
         /*!
          * \copydoc QIODevice::atEnd()
          */
-        virtual bool atEnd() const
+        virtual bool atEnd() const override
         {
             return this->m_endReached ? true : QIODevice::atEnd();
         }
@@ -169,29 +173,43 @@ namespace BlackSound
          * \param volume    0-100
          * \param tones     list of tones
          * \param device    device to be used
-         * \return
+         * \return generator used, important with SingleWithAutomaticDeletion automatically deleted
          */
         static CSoundGenerator *playSignal(qint32 volume, const QList<Tone> &tones, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
+
+        /*!
+         * \brief Play signal of tones once
+         * \param volume    0-100
+         * \param tones     list of tones
+         * \param device    device to be used
+         * \return generator used, important with SingleWithAutomaticDeletion automatically deleted
+         */
+        static CSoundGenerator *playSignalInBackground(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device);
 
         /*!
          * \brief Play SELCAL tone
          * \param volume    0-100
          * \param selcal
          * \param device    device to be used
-         * \return
          * \see BlackMisc::Aviation::CSelcal
          */
-        static CSoundGenerator *playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
+        static void playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice());
 
         /*!
          * \brief Play SELCAL tone
          * \param volume    0-100
          * \param selcal
          * \param audioDevice device to be used
-         * \return
          * \see BlackMisc::Aviation::CSelcal
          */
-        static CSoundGenerator *playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::Voice::CAudioDevice &audioDevice);
+        static void playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::Voice::CAudioDevice &audioDevice);
+
+        /*!
+         * \brief Play notification
+         * \param volume    0-100
+         * \param notification
+         */
+        static void playNotificationSound(qint32 volume, Notification notification);
 
         /*!
          * \brief One cycle of tones takes t milliseconds
@@ -212,8 +230,34 @@ namespace BlackSound
         /*!
          * \brief Play sound, open device
          * \param volume 0..100
+         * \param pull, if false push mode
          */
-        void start(int volume);
+        void start(int volume, bool pull = true);
+
+        /*!
+         * \brief Play sound in own thread, open device
+         * \remarks always push mode
+         * \param volume 0..100
+         */
+        void startInOwnThread(int volume);
+
+    signals:
+        /*!
+         * \brief Used to start in own thread
+         * \param volume 0..100
+         * \param pull
+         * \remarks only works with push, but signature has to be identical with CSoundGenerator::start
+         */
+        void startThread(int volume, bool pull);
+
+        //! \brief Generator is stopping
+        void stopping();
+
+    private slots:
+        /*!
+         * \brief Push mode, timer expired
+         */
+        void pushTimerExpired();
 
     private:
         /*!
@@ -231,6 +275,9 @@ namespace BlackSound
         QAudioDeviceInfo m_device; /*!< audio device */
         QAudioFormat m_audioFormat; /*!< used format */
         QScopedPointer<QAudioOutput> m_audioOutput;
+        QTimer *m_pushTimer; /*!< Push mode timer */
+        QIODevice *m_pushModeIODevice; /*!< IO device when used in push mode */
+        QThread *m_ownThread;
 
         /*!
          * \brief Duration of these tones
