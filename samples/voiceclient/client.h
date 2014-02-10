@@ -45,8 +45,9 @@ public slots:
     void onMicTestFinished();
 private slots:
 
-    void connectionStatusConnected(const BlackCore::IVoice::ComUnit comUnit);
-    void connectionStatusDisconnected();
+    void connectionStatusChanged(BlackCore::IVoice::ComUnit comUnit,
+                                   BlackCore::IVoice::ConnectionStatus oldStatus,
+                                   BlackCore::IVoice::ConnectionStatus newStatus);
     void audioStartedStream(const BlackCore::IVoice::ComUnit comUnit);
     void audioStoppedStream(const BlackCore::IVoice::ComUnit comUnit);
     void userJoinedRoom(const BlackMisc::Aviation::CCallsign &callsign);

@@ -21,8 +21,7 @@ Client::Client(QObject *parent) :
     using namespace BlackCore;
     connect(m_voiceClient, &IVoice::squelchTestFinished,                  this, &Client::onSquelchTestFinished);
     connect(m_voiceClient, &IVoice::micTestFinished,                      this, &Client::onMicTestFinished);
-    connect(m_voiceClient, &IVoice::connected,                            this, &Client::connectionStatusConnected);
-    connect(m_voiceClient, &IVoice::disconnected,                         this, &Client::connectionStatusDisconnected);
+    connect(m_voiceClient, &IVoice::connectionStatusChanged,              this, &Client::connectionStatusChanged);
     connect(m_voiceClient, &IVoice::audioStarted,                         this, &Client::audioStartedStream);
     connect(m_voiceClient, &IVoice::audioStopped,                         this, &Client::audioStoppedStream);
     connect(m_voiceClient, &IVoice::userJoinedRoom,                       this, &Client::userJoinedRoom);
@@ -179,15 +178,31 @@ void Client::onMicTestFinished()
     printLinePrefix();
 }
 
-void Client::connectionStatusConnected(const BlackCore::IVoice::ComUnit /** comUnit **/)
+void Client::connectionStatusChanged(BlackCore::IVoice::ComUnit /** comUnit **/,
+                                       BlackCore::IVoice::ConnectionStatus /** oldStatus **/,
+                                       BlackCore::IVoice::ConnectionStatus newStatus)
 {
-    std::cout << "CONN_STATUS_CONNECTED" << std::endl;
-    printLinePrefix();
-}
-
-void Client::connectionStatusDisconnected()
-{
-    std::cout << "CONN_STATUS_DISCONNECTED" << std::endl;
+    switch (newStatus)
+    {
+    case BlackCore::IVoice::Disconnected:
+        std::cout << "CONN_STATUS_DISCONNECTED" << std::endl;
+        break;
+    case BlackCore::IVoice::Disconnecting:
+        std::cout << "CONN_STATUS_DISCONNECTING" << std::endl;
+        break;
+    case BlackCore::IVoice::DisconnectedError:
+        std::cout << "CONN_STATUS_DISCONNECTED_ERROR" << std::endl;
+        break;
+    case BlackCore::IVoice::Connecting:
+        std::cout << "CONN_STATUS_CONNECTING" << std::endl;
+        break;
+    case BlackCore::IVoice::Connected:
+        std::cout << "CONN_STATUS_CONNECTED" << std::endl;
+        break;
+    case BlackCore::IVoice::ConnectingFailed:
+        std::cout << "CONN_STATUS_CONNECTING_FAILED" << std::endl;
+        break;
+    }
     printLinePrefix();
 }
 

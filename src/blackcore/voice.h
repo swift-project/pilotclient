@@ -212,14 +212,9 @@ namespace BlackCore
         virtual void switchAudioOutput(const ComUnit comUnit, bool enable) = 0;
 
     signals:
-        // Signals regarding the voice server connection
-        void notConnected(const ComUnit comUnit);
-        void connecting(const ComUnit comUnit);
-        void connected(const ComUnit comUnit);
-        void connectionFailed(const ComUnit comUnit);
-        void kicked(const ComUnit comUnit);
-        void disconnecting(const ComUnit comUnit);
-        void disconnected(const ComUnit comUnit);
+
+        //! The status of a room has changed.
+        void connectionStatusChanged(ComUnit comUnit, ConnectionStatus oldStatus, ConnectionStatus newStatus);
 
         // Signals about users joining and leaving
         /*!
