@@ -57,6 +57,17 @@ namespace BlackCore
             COM2        /*!< ComUnit 2 */
         };
 
+        //! Com status
+        enum ConnectionStatus
+        {
+            Disconnected = 0,   //!< Not connected
+            Disconnecting,      //!< In transition to disconnected
+            DisconnectedError,  //!< Disconnected due to socket error
+            Connecting,         //!< Connection initiated but not established
+            Connected,          //!< Connection established
+            ConnectingFailed,   //!< Failed to connect
+        };
+
         //! Virtual destructor.
         virtual ~IVoice() {}
 
