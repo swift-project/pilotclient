@@ -196,6 +196,7 @@ namespace BlackCore
         void exceptionDispatcher(const char *caller);
         void enableAudio(const ComUnit comUnit);
         void handlePushToTalk();
+        void changeConnectionStatus(ComUnit comUnit, ConnectionStatus newStatus);
 
         /*!
          * \brief Deleter
@@ -289,6 +290,7 @@ namespace BlackCore
         QMap <ComUnit, BlackMisc::Aviation::CCallsignList> m_voiceRoomCallsigns; /*!< voice room callsigns */
         BlackMisc::Aviation::CCallsignList m_temporaryVoiceRoomCallsigns; /*!< temp. storage of voice rooms during update */
         QMap<ComUnit, bool> m_outputEnabled; /*!< output enabled, basically a mute flag */
+        QMap<ComUnit, ConnectionStatus> m_connectionStatus;  /*!< holds connection status for each com unit */
 
         // Need to keep the roomIndex?
         // KB: I would remove this approach, it is potentially unsafe

@@ -38,7 +38,6 @@ namespace BlackCore
             // setOutputDevice(defaultAudioOutputDevice());
 
             connect(this, &CVoiceVatlib::userJoinedLeft, this, &CVoiceVatlib::onUserJoinedLeft, Qt::QueuedConnection);
-            connect(this, &CVoiceVatlib::connected, this, &CVoiceVatlib::onUserJoinedLeft, Qt::QueuedConnection);
 
             this->m_voiceRooms.push_back(CVoiceRoom()); // COM1
             this->m_voiceRooms.push_back(CVoiceRoom()); // COM2
@@ -336,6 +335,7 @@ namespace BlackCore
             vr = voiceRoom;
             vr.setConnected(true);
             this->setVoiceRoomForUnit(comUnit, vr);
+            changeConnectionStatus(comUnit, Connecting);
             QString serverSpec = voiceRoom.getVoiceRoomUrl();
             m_voice->JoinRoom(static_cast<qint32>(comUnit), m_aircraftCallsign.toQString().toLatin1().constData(), serverSpec.toLatin1().constData());
         }
@@ -361,6 +361,7 @@ namespace BlackCore
             m_voice->LeaveRoom(static_cast<qint32>(comUnit));
             vr.setConnected(false);
             this->setVoiceRoomForUnit(comUnit, vr);
+            changeConnectionStatus(comUnit, Disconnecting);
         }
         catch (...)
         {
@@ -443,21 +444,21 @@ namespace BlackCore
             switchAudioOutput(comUnit, this->m_outputEnabled[comUnit]);
             vr.setConnected(true);
             this->setVoiceRoomForUnit(comUnit, vr);
-            emit connected(comUnit);
+            changeConnectionStatus(comUnit, Connected);
+            emit userJoinedLeft(comUnit);
             break;
         case Cvatlib_Voice_Simple::roomStatusUpdate_JoinFail:
             vr.setConnected(false);
             this->setVoiceRoomForUnit(comUnit, vr);
-            emit connectionFailed(comUnit);
+            changeConnectionStatus(comUnit, ConnectingFailed);
             break;
         case Cvatlib_Voice_Simple::roomStatusUpdate_UnexpectedDisconnectOrKicked:
             vr.setConnected(false);
             this->setVoiceRoomForUnit(comUnit, vr);
-            emit kicked(comUnit);
+            changeConnectionStatus(comUnit, DisconnectedError);
             break;
         case Cvatlib_Voice_Simple::roomStatusUpdate_LeaveComplete:
             m_voiceRoomCallsigns.clear();
-            emit disconnected(comUnit);
             break;
         case Cvatlib_Voice_Simple::roomStatusUpdate_UserJoinsLeaves:
             // FIXME: We cannot call GetRoomUserList because vatlib is not reentrent safe.
@@ -714,6 +715,17 @@ namespace BlackCore
             msg.append("unknown exception");
             emit this->exception(msg, true);
             qFatal("Unknown exception caught in %s", caller);
+        }
+    }
+
+    // Change voice room status and emit signal
+    void CVoiceVatlib::changeConnectionStatus(ComUnit comUnit, ConnectionStatus newStatus)
+    {
+        ConnectionStatus currentStatus = m_connectionStatus.value(comUnit);
+        if (newStatus != currentStatus)
+        {
+            m_connectionStatus.insert(comUnit, newStatus);
+            emit connectionStatusChanged(comUnit, currentStatus, newStatus);
         }
     }
 
