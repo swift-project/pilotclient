@@ -57,19 +57,17 @@ namespace BlackCore
             return static_cast<CCoreRuntime *>(this->parent());
         }
 
-        /*!
-         * \brief Using local objects?
-         * \return
-         */
+        //! \copydoc IContextSimulator::usingLocalObjects()
         virtual bool usingLocalObjects() const override { return true; }
 
         virtual BlackMisc::Aviation::CAircraft ownAircraft() const override;
 
     public slots:
-
+        //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
 
     private slots:
+        //! \copydoc IContextSimulator::updateOwnAircraft()
         virtual void updateOwnAircraft();
 
         /*!
