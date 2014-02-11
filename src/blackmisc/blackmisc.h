@@ -50,8 +50,8 @@
  */
 
 /*!
- * \internal
  * \namespace BlackMisc::Predicates::Private
+ * \private
  */
 
 /*!

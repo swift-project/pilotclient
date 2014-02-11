@@ -113,11 +113,7 @@ namespace BlackCore
         void update();
 
     signals:
-        /*!
-         * Used internally to terminate the connection from within a callback
-         * \internal
-         */
-        void terminate();
+        void terminate(); //!< \private
 
     public:
         //! Deletion policy for QScopedPointer
