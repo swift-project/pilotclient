@@ -9,12 +9,15 @@
 #include <QTimer>
 #include <QUrl>
 
+
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Voice;
 
 namespace BlackSound
 {
+    QDateTime CSoundGenerator::selcalStarted  = QDateTime::currentDateTimeUtc();
+
     CSoundGenerator::CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, PlayMode mode, QObject *parent)
         :   QIODevice(parent),
             m_tones(tones), m_position(0), m_playMode(mode), m_endReached(false), m_oneCycleDurationMs(calculateDurationMs(tones)),
@@ -71,7 +74,9 @@ namespace BlackSound
     {
         this->m_ownThread = new QThread(); // deleted by signals, hence no parent
         this->moveToThread(this->m_ownThread);
-        connect(this, &CSoundGenerator::startThread, this, &CSoundGenerator::start);
+        // connect(this, &CSoundGenerator::startThread, this, &CSoundGenerator::start);
+
+        connect(this->m_ownThread, &QThread::started, this, [ = ]() { this->start(volume, false); });
         connect(this, &CSoundGenerator::stopping, this->m_ownThread, &QThread::quit);
 
         // in auto delete mode force deleteLater when thread is finished
@@ -80,7 +85,6 @@ namespace BlackSound
 
         // start thread and begin processing by calling start via signal startThread
         this->m_ownThread->start();
-        emit startThread(volume, false); // this signal will trigger start in own thread
     }
 
     void CSoundGenerator::stop(bool destructor)
@@ -261,7 +265,7 @@ namespace BlackSound
         QAudioFormat format;
         format.setSampleRate(44100);
         format.setChannelCount(1);
-        format.setSampleSize(16);
+        format.setSampleSize(16); // 8 or 16 works
         format.setCodec("audio/pcm");
         format.setByteOrder(QAudioFormat::LittleEndian);
         format.setSampleType(QAudioFormat::SignedInt);
@@ -345,6 +349,8 @@ namespace BlackSound
 
     void CSoundGenerator::playSelcal(qint32 volume, const CSelcal &selcal, const CAudioDevice &audioDevice)
     {
+        if (CSoundGenerator::selcalStarted.msecsTo(QDateTime::currentDateTimeUtc()) < 2500) return; // simple check not to play 2 SELCAL at the same time
+        CSoundGenerator::selcalStarted = QDateTime::currentDateTimeUtc();
         CSoundGenerator::playSelcal(volume, selcal, CSoundGenerator::findClosestOutputDevice(audioDevice));
     }
 

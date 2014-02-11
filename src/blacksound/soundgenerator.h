@@ -12,6 +12,7 @@
 
 #include <QIODevice>
 #include <QThread>
+#include <QDateTime>
 #include <QAudioFormat>
 #include <QAudioOutput>
 #include <QAudioDeviceInfo>
@@ -242,13 +243,6 @@ namespace BlackSound
         void startInOwnThread(int volume);
 
     signals:
-        /*!
-         * \brief Used to start in own thread
-         * \param volume 0..100
-         * \param pull
-         * \remarks only works with push, but signature has to be identical with CSoundGenerator::start
-         */
-        void startThread(int volume, bool pull);
 
         //! \brief Generator is stopping
         void stopping();
@@ -278,6 +272,7 @@ namespace BlackSound
         QTimer *m_pushTimer; /*!< Push mode timer */
         QIODevice *m_pushModeIODevice; /*!< IO device when used in push mode */
         QThread *m_ownThread;
+        static QDateTime selcalStarted;
 
         /*!
          * \brief Duration of these tones
