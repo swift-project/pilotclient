@@ -5,7 +5,11 @@ CONFIG -= qt
 DOXYFILE = Doxyfile.qmake
 
 DOXY_INPUT = .
-win32: {
+win32-g++ {
+	doxy.commands = set DOXY_SRC_ROOT=$$PWD\\..\\src & \
+			doxygen $$PWD/$$DOXYFILE
+}
+else:win32 {
 	doxy.commands = set DOXY_SRC_ROOT=$$PWD\\..\\src & \
 			doxygen $$PWD\\$$DOXYFILE
 }
