@@ -23,8 +23,5 @@ DESTDIR = ../../lib
 OTHER_FILES += ./sounds/*.wav sounds/readme.txt
 RESOURCES +=
 
-# requires install step
-install_sounds.path = $$OUT_PWD/../../bin/sounds
-install_sounds.files = sounds/*
-INSTALLS += install_sounds
-
+win32: QMAKE_POST_LINK = copy sounds/* $$OUT_PWD/../../bin/sounds
+else: QMAKE_POST_LINK = cp sounds/* $$OUT_PWD/../../bin/sounds
