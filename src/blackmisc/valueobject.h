@@ -1,6 +1,7 @@
 #ifndef BLACKMISC_VALUEOBJECT_H
 #define BLACKMISC_VALUEOBJECT_H
 
+#include "tuple.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>
 #include <QtGlobal>

@@ -55,6 +55,11 @@
  */
 
 /*!
+ * \namespace BlackMisc::Private
+ * \private
+ */
+
+/*!
  * \namespace BlackMisc::Iterators
  * \brief Iterator classes for the containers.
  */
