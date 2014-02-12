@@ -49,12 +49,7 @@ namespace BlackMisc
         {
             const auto &other = static_cast<const CUser &>(otherBase);
 
-            const auto lhs = std::tie(this->m_id, this->m_realname, this->m_email, this->m_password);
-            const auto rhs = std::tie(other.m_id, other.m_realname, other.m_email, other.m_password);
-
-            if (lhs < rhs) { return -1; }
-            if (lhs > rhs) { return 1; }
-            return 0;
+            return compare(TupleConverter<CUser>::toTuple(*this), TupleConverter<CUser>::toTuple(other));
         }
 
         /*
@@ -62,11 +57,7 @@ namespace BlackMisc
          */
         void CUser::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_id;
-            argument << this->m_realname;
-            argument << this->m_email;
-            argument << this->m_password;
-            argument << this->m_callsign;
+            argument << TupleConverter<CUser>::toTuple(*this);
         }
 
         /*
@@ -74,11 +65,7 @@ namespace BlackMisc
          */
         void CUser::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_id;
-            argument >> this->m_realname;
-            argument >> this->m_email;
-            argument >> this->m_password;
-            argument >> this->m_callsign;
+            argument >> TupleConverter<CUser>::toTuple(*this);
         }
 
         /*
@@ -87,10 +74,7 @@ namespace BlackMisc
         bool CUser::operator ==(const CUser &other) const
         {
             if (this == &other) return true;
-            return (this->m_id == other.m_id &&
-                    this->m_realname == other.m_realname &&
-                    this->m_email == other.m_email &&
-                    this->m_callsign == other.m_callsign);
+            return TupleConverter<CUser>::toTuple(*this) == TupleConverter<CUser>::toTuple(other);
         }
 
         /*
@@ -134,12 +118,7 @@ namespace BlackMisc
          */
         uint CUser::getValueHash() const
         {
-            QList<uint> hashs;
-            hashs << qHash(this->m_id);
-            hashs << qHash(this->m_realname);
-            hashs << qHash(this->m_email);
-            hashs << qHash(this->m_callsign.getValueHash());
-            return BlackMisc::calculateHash(hashs, "CUser");
+            return qHash(TupleConverter<CUser>::toTuple(*this));
         }
 
         /*

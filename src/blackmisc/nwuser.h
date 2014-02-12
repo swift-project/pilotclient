@@ -14,8 +14,10 @@
 
 namespace BlackMisc
 {
+
     namespace Network
     {
+
         /*!
          * Value object encapsulating information of a user.
          */
@@ -154,14 +156,19 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CUser)
             QString m_id;
             QString m_realname;
             QString m_email;
             QString m_password;
             BlackMisc::Aviation::CCallsign m_callsign;
         };
+
     } // namespace
+
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CUser, (o.m_id, o.m_realname, o.m_email, o.m_password, o.m_callsign))
 Q_DECLARE_METATYPE(BlackMisc::Network::CUser)
+
 #endif // guard

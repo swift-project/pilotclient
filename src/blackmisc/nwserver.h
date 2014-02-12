@@ -172,6 +172,7 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CServer)
             QString m_name;
             QString m_description;
             QString m_address;
@@ -181,6 +182,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CServer, (o.m_name, o.m_description, o.m_address, o.m_port, o.m_user))
 Q_DECLARE_METATYPE(BlackMisc::Network::CServer)
 
 #endif // guard

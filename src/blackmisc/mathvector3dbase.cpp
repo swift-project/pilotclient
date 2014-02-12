@@ -52,12 +52,7 @@ namespace BlackMisc
         {
             const auto &other = static_cast<const CVector3DBase &>(otherBase);
 
-            const auto lhs = std::tie(this->m_i, this->m_j, this->m_k);
-            const auto rhs = std::tie(other.m_i, other.m_j, other.m_k);
-
-            if (lhs < rhs) { return -1; }
-            if (lhs > rhs) { return 1; }
-            return 0;
+            return compare(TupleConverter<CVector3DBase>::toTuple(*this), TupleConverter<CVector3DBase>::toTuple(other));
         }
 
         /*
@@ -162,9 +157,7 @@ namespace BlackMisc
          */
         template <class ImplVector> void CVector3DBase<ImplVector>::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_i;
-            argument << this->m_j;
-            argument << this->m_k;
+            argument << TupleConverter<CVector3DBase>::toTuple(*this);
         }
 
         /*!
@@ -173,9 +166,7 @@ namespace BlackMisc
          */
         template <class ImplVector> void CVector3DBase<ImplVector>::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_i;
-            argument >> this->m_j;
-            argument >> this->m_k;
+            argument >> TupleConverter<CVector3DBase>::toTuple(*this);
         }
 
         /*!

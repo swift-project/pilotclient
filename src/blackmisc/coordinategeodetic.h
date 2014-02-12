@@ -70,6 +70,7 @@ namespace BlackMisc
         class CCoordinateGeodetic : public CValueObject, public ICoordinateGeodetic
         {
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)
             BlackMisc::Geo::CLatitude m_latitude; //!< Latitude
             BlackMisc::Geo::CLongitude m_longitude; //!< Longitude
             BlackMisc::PhysicalQuantities::CLength m_height; //!< height
@@ -236,6 +237,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Geo::CCoordinateGeodetic, (o.m_latitude, o.m_longitude, o.m_height))
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodetic)
 
 #endif // guard

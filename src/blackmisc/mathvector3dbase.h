@@ -23,6 +23,8 @@ namespace BlackMisc
         template <class ImplVector> class CVector3DBase : public CValueObject
         {
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CVector3DBase)
+
             /*!
              * \brief Easy access to derived class (CRTP template parameter)
              * \return
@@ -365,5 +367,7 @@ namespace BlackMisc
 
     } // namespace
 } // namespace
+
+BLACK_DECLARE_TUPLE_CONVERSION_TEMPLATE(BlackMisc::Math::CVector3DBase, (o.m_i, o.m_j, o.m_k))
 
 #endif // guard

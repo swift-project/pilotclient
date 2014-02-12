@@ -153,6 +153,7 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcao)
             QString m_designator;
             QString m_type;
             QString m_airline;
@@ -162,6 +163,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcao, (o.m_designator, o.m_type, o.m_airline, o.m_livery, o.m_color))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftIcao)
 
 #endif // guard

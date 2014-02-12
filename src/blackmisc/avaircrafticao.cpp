@@ -45,12 +45,7 @@ namespace BlackMisc
         {
             const auto &other = static_cast<const CAircraftIcao &>(otherBase);
 
-            const auto lhs = std::tie(this->m_designator, this->m_color, this->m_airline, this->m_livery);
-            const auto rhs = std::tie(other.m_designator, other.m_color, other.m_airline, other.m_livery);
-
-            if (lhs < rhs) { return -1; }
-            if (lhs > rhs) { return 1; }
-            return 0;
+            return compare(TupleConverter<CAircraftIcao>::toTuple(*this), TupleConverter<CAircraftIcao>::toTuple(other));
         }
 
         /*
@@ -58,11 +53,7 @@ namespace BlackMisc
          */
         void CAircraftIcao::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_designator;
-            argument << this->m_airline;
-            argument << this->m_livery;
-            argument << this->m_type;
-            argument << this->m_color;
+            argument << TupleConverter<CAircraftIcao>::toTuple(*this);
         }
 
         /*
@@ -70,11 +61,7 @@ namespace BlackMisc
          */
         void CAircraftIcao::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_designator;
-            argument >> this->m_airline;
-            argument >> this->m_livery;
-            argument >> this->m_type;
-            argument >> this->m_color;
+            argument >> TupleConverter<CAircraftIcao>::toTuple(*this);
         }
 
         /*
@@ -100,7 +87,7 @@ namespace BlackMisc
         bool CAircraftIcao::operator ==(const CAircraftIcao &other) const
         {
             if (this == &other) return true;
-            return compare(*this, other) == 0;
+            return TupleConverter<CAircraftIcao>::toTuple(*this) == TupleConverter<CAircraftIcao>::toTuple(other);
         }
 
         /*
@@ -116,12 +103,7 @@ namespace BlackMisc
          */
         uint CAircraftIcao::getValueHash() const
         {
-            QList<uint> hashs;
-            hashs << qHash(this->m_designator);
-            hashs << qHash(this->m_airline);
-            hashs << qHash(this->m_type);
-            hashs << qHash(this->m_color);
-            return BlackMisc::calculateHash(hashs, "CAircraftIcao");
+            return qHash(TupleConverter<CAircraftIcao>::toTuple(*this));
         }
 
         /*

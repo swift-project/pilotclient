@@ -44,12 +44,7 @@ namespace BlackMisc
         {
             const auto &other = static_cast<const CServer &>(otherBase);
 
-            const auto lhs = std::tie(this->m_name, this->m_description, this->m_address, this->m_port);
-            const auto rhs = std::tie(other.m_name, other.m_description, other.m_address, other.m_port);
-
-            if (lhs < rhs) { return -1; }
-            if (lhs > rhs) { return 1; }
-            return compare(this->m_user, other.m_user);
+            return compare(TupleConverter<CServer>::toTuple(*this), TupleConverter<CServer>::toTuple(other));
         }
 
         /*
@@ -57,11 +52,7 @@ namespace BlackMisc
          */
         void CServer::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_name;
-            argument << this->m_description;
-            argument << this->m_address;
-            argument << this->m_port;
-            argument << this->m_user;
+            argument << TupleConverter<CServer>::toTuple(*this);
         }
 
         /*
@@ -69,11 +60,7 @@ namespace BlackMisc
          */
         void CServer::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_name;
-            argument >> this->m_description;
-            argument >> this->m_address;
-            argument >> this->m_port;
-            argument >> this->m_user;
+            argument >> TupleConverter<CServer>::toTuple(*this);
         }
 
         /*
@@ -90,7 +77,7 @@ namespace BlackMisc
         bool CServer::operator ==(const CServer &other) const
         {
             if (this == &other) return true;
-            return compare(*this, other) == 0;
+            return TupleConverter<CServer>::toTuple(*this) == TupleConverter<CServer>::toTuple(other);
         }
 
         /*
@@ -106,12 +93,7 @@ namespace BlackMisc
          */
         uint CServer::getValueHash() const
         {
-            QList<uint> hashs;
-            hashs << qHash(this->m_name);
-            hashs << qHash(this->m_address);
-            hashs << qHash(this->m_port);
-            hashs << qHash(this->m_user.getValueHash());
-            return BlackMisc::calculateHash(hashs, "CServer");
+            return qHash(TupleConverter<CServer>::toTuple(*this));
         }
 
         /*

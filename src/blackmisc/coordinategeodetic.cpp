@@ -50,11 +50,7 @@ namespace BlackMisc
         {
             const auto &other = static_cast<const CCoordinateGeodetic &>(otherBase);
 
-            int cmp = compare(this->m_latitude, other.m_latitude);
-            if (cmp) { return cmp; }
-            cmp = compare(this->m_longitude, other.m_longitude);
-            if (cmp) { return cmp; }
-            return compare(this->m_height, other.m_height);
+            return compare(TupleConverter<CCoordinateGeodetic>::toTuple(*this), TupleConverter<CCoordinateGeodetic>::toTuple(other));
         }
 
         /*
@@ -62,9 +58,7 @@ namespace BlackMisc
          */
         void CCoordinateGeodetic::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_latitude;
-            argument << this->m_longitude;
-            argument << this->m_height;
+            argument << TupleConverter<CCoordinateGeodetic>::toTuple(*this);
         }
 
         /*
@@ -72,9 +66,7 @@ namespace BlackMisc
          */
         void CCoordinateGeodetic::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_latitude;
-            argument >> this->m_longitude;
-            argument >> this->m_height;
+            argument >> TupleConverter<CCoordinateGeodetic>::toTuple(*this);
         }
 
         /*
@@ -83,9 +75,7 @@ namespace BlackMisc
         bool CCoordinateGeodetic::operator ==(const CCoordinateGeodetic &other) const
         {
             if (this == &other) return true;
-            return this->m_height == other.m_height &&
-                   this->m_latitude == other.m_latitude &&
-                   this->m_longitude == other.m_longitude;
+            return TupleConverter<CCoordinateGeodetic>::toTuple(*this) == TupleConverter<CCoordinateGeodetic>::toTuple(other);
         }
 
         /*
@@ -110,11 +100,7 @@ namespace BlackMisc
          */
         uint CCoordinateGeodetic::getValueHash() const
         {
-            QList<uint> hashs;
-            hashs << this->m_latitude.getValueHash();
-            hashs << this->m_longitude.getValueHash();
-            hashs << this->m_height.getValueHash();
-            return BlackMisc::calculateHash(hashs, "CCoordinateGeodetic");
+            return qHash(TupleConverter<CCoordinateGeodetic>::toTuple(*this));
         }
 
         /*
