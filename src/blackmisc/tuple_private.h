@@ -13,6 +13,7 @@
 
 #include <QtGlobal>
 #include <QDBusArgument>
+#include <QHash>
 #include <tuple>
 #include <type_traits>
 
@@ -24,39 +25,40 @@ namespace BlackMisc
     namespace Private
     {
 
+        // Using SFINAE to help detect missing BLACK_ENABLE_TUPLE_CONVERSION macro in static_assert
         //! \private
+        //! @{
+        std::false_type hasEnabledTupleConversionHelper(...);
+
         template <class T>
         typename T::EnabledTupleConversion hasEnabledTupleConversionHelper(T *);
 
-        //! \private
-        std::false_type hasEnabledTupleConversionHelper(...);
-
-        //! \private
         template <class T>
         struct HasEnabledTupleConversion
         {
             typedef decltype(hasEnabledTupleConversionHelper(static_cast<T *>(nullptr))) type;
         };
+        //! @}
 
+        // Using tag dispatch to select which implementation of compare() to use
         //! \private
+        //! @{
         template <class T>
-        int compareHelper(const T &a, const T &b, std::true_type isCValueObject)
+        int compareHelper(const T &a, const T &b, std::true_type isCValueObjectTag)
         {
-            Q_UNUSED(isCValueObject);
+            Q_UNUSED(isCValueObjectTag);
             return compare(a, b);
         }
 
-        //! \private
         template <class T>
-        int compareHelper(const T &a, const T &b, std::false_type isCValueObject)
+        int compareHelper(const T &a, const T &b, std::false_type isCValueObjectTag)
         {
-            Q_UNUSED(isCValueObject);
+            Q_UNUSED(isCValueObjectTag);
             if (a < b) { return -1; }
             if (a > b) { return 1; }
             return 0;
         }
 
-        //! \private
         template <int N, class Tu>
         int compareHelper(const Tu &a, const Tu &b)
         {
@@ -65,14 +67,17 @@ namespace BlackMisc
                 typename std::decay<
                     typename std::tuple_element<N, Tu>::type
                 >::type
-            >::type isCValueObject;
+            >::type isCValueObjectTag;
 
-            return compareHelper(std::get<N>(a), std::get<N>(b), isCValueObject());
+            return compareHelper(std::get<N>(a), std::get<N>(b), isCValueObjectTag());
         }
+        //! @}
 
 #ifdef Q_COMPILER_VARIADIC_TEMPLATES
 
+        // Applying operations to all elements in a tuple, using recursion
         //! \private
+        //! @{
         template <int N>
         struct TupleHelper
         {
@@ -103,7 +108,6 @@ namespace BlackMisc
             }
         };
 
-        //! \private
         template <>
         struct TupleHelper<0>
         {
@@ -116,6 +120,7 @@ namespace BlackMisc
             template <class Tu>
             static uint hash(const Tu &) { return 0; }
         };
+        //! @}
 
 #endif // Q_COMPILER_VARIADIC_TEMPLATES
 
