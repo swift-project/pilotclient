@@ -23,9 +23,8 @@ DESTDIR = ../../lib
 OTHER_FILES += ./sounds/*.wav sounds/readme.txt
 RESOURCES +=
 
-win32 {
-# I have to replace / with \ , without xcopy the directory is not created
-    PWD_OUT_WIN = \"$$shell_path($$OUT_PWD/../../bin/sounds/)\"
-    PWD_WIN = \"$$shell_path($$PWD/sounds/*.*)\"
-    QMAKE_POST_LINK = xcopy $$PWD_WIN $$PWD_OUT_WIN /y
-} else: QMAKE_POST_LINK = cp sounds/* $$OUT_PWD/../../bin/sounds
+win32:isEmpty(MINGW_IN_SHELL):  COPY = xcopy /yi
+else:                           COPY = cp -r
+
+QMAKE_POST_LINK += $$COPY $$shell_path($$PWD/sounds) \
+                          $$shell_path($$OUT_PWD/../../bin/sounds)
