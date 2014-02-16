@@ -31,10 +31,9 @@ namespace BlackMisc
             CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
 
             /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }

@@ -55,10 +55,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Are the set values valid / in range?
-             * \return
+             * \copydoc CAvionicsBase::validValues
              */
-            bool validValues() const;
+            virtual bool validValues() const override;
 
             /*!
              * \brief Validate values by assert and exception
@@ -72,12 +71,12 @@ namespace BlackMisc
             /*!
              * \copydoc CValueObject::marshallFromDbus()
              */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
             /*!
              * \copydoc CValueObject::unmarshallFromDbus()
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         public:
             /*!
@@ -102,16 +101,15 @@ namespace BlackMisc
             /*!
              * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
             /*!
              * \copydoc CValueObject::getValueHash
-             * \return
              */
-            virtual uint getValueHash() const
+            virtual uint getValueHash() const override
             {
                 return CModulator::getValueHash();
             }

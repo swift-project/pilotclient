@@ -15,9 +15,9 @@ public:
 
     virtual ~CPlugin();
 
-    virtual bool isValid() const { return m_ctorOK; }
+    virtual bool isValid() const override { return m_ctorOK; }
 
-    virtual BlackMisc::IPluginFactory &getFactory() { return m_factory; }
+    virtual BlackMisc::IPluginFactory &getFactory() override { return m_factory; }
 
 private:
     bool m_ctorOK;

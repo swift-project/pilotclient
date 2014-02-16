@@ -82,7 +82,7 @@ namespace BlackMisc
                         const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
             //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -268,13 +268,13 @@ namespace BlackMisc
             //! Set booked until
             void setBookedUntilUtc(const QDateTime &until) { this->m_bookedUntilUtc = until; }
 
-            //! \brief Latitude
+            //! \copydoc ICoordinateGeodetic::latitude
             virtual const BlackMisc::Geo::CLatitude &latitude() const override
             {
                 return this->getPosition().latitude();
             }
 
-            //! \brief Longitude
+            //! \copydoc ICoordinateGeodetic::longitude
             virtual const BlackMisc::Geo::CLongitude &longitude() const override
             {
                 return this->getPosition().longitude();
@@ -297,7 +297,7 @@ namespace BlackMisc
 
         protected:
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const;
+            virtual QString convertToQString(bool i18n = false) const override;
 
             //! \copydoc CValueObject::getMetaTypeId
             virtual int getMetaTypeId() const override;

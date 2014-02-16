@@ -38,10 +38,9 @@ namespace BlackMisc
         CValueMap(int index, const QVariant &value);
 
         /*!
-         * \brief QVariant, required for DBus QVariant lists
-         * \return
+         * \copydoc CValueObject::toQVariant
          */
-        virtual QVariant toQVariant() const
+        virtual QVariant toQVariant() const override
         {
             return QVariant::fromValue(*this);
         }
@@ -111,9 +110,9 @@ namespace BlackMisc
         const QMap<int, QVariant> &map() const { return this->m_values; }
 
         /*!
-         * \brief Value hash
+         * \copydoc CValueObject::getValueHash
          */
-        virtual uint getValueHash() const;
+        virtual uint getValueHash() const override;
 
         /*!
          * \brief Metadata
@@ -125,38 +124,34 @@ namespace BlackMisc
         bool m_wildcard; //!< wildcard
 
         /*!
-         * \brief Meaningful string representation
-         * \param i18n
-         * \return
+         * \copydoc CValueObject::convertToQString
          */
-        virtual QString convertToQString(bool i18n = false) const;
+        virtual QString convertToQString(bool i18n = false) const override;
 
         /*!
          * \copydoc CValueObject::getMetaTypeId
          */
-        virtual int getMetaTypeId() const;
+        virtual int getMetaTypeId() const override;
 
         /*!
          * \copydoc CValueObject::isA
          */
-        virtual bool isA(int metaTypeId) const;
+        virtual bool isA(int metaTypeId) const override;
 
         /*!
          * \copydoc CValueObject::compareImpl
          */
-        virtual int compareImpl(const CValueObject &other) const;
+        virtual int compareImpl(const CValueObject &other) const override;
 
         /*!
-         * \brief Stream to DBus <<
-         * \param argument
+         * \copydoc CValueObject::marshallToDbus
          */
-        virtual void marshallToDbus(QDBusArgument &argument) const;
+        virtual void marshallToDbus(QDBusArgument &argument) const override;
 
         /*!
-         * \brief Stream from DBus >>
-         * \param argument
+         * \copydoc CValueObject::unmarshallFromDbus
          */
-        virtual void unmarshallFromDbus(const QDBusArgument &argument);
+        virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
     };
 }
 

@@ -34,22 +34,19 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Specific stream operation for Track
-             * \return
+             * \copydoc CValueObject::convertToQString
              */
-            virtual QString convertToQString(bool i18n = false) const;
+            virtual QString convertToQString(bool i18n = false) const override;
 
             /*!
-             * \brief Stream to DBus <<
-             * \param argument
+             * \copydoc CValueObject::marshallToDbus
              */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
             /*!
-             * \brief Stream from DBus >>
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         public:
             /*!
@@ -73,10 +70,9 @@ namespace BlackMisc
             CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : BlackMisc::PhysicalQuantities::CAngle(track), m_north(north) {}
 
             /*!
-             * \brief As QVariant
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }

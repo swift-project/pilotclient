@@ -75,39 +75,23 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CLength m_height; //!< height
 
         protected:
-            /*!
-             * \brief String for converter
-             * \param i18n
-             * \return
-             */
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
-            virtual int getMetaTypeId() const;
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
-            virtual bool isA(int metaTypeId) const;
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
-            virtual int compareImpl(const CValueObject &other) const;
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
-            /*!
-             * \brief Stream to DBus
-             * \param argument
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            //! \copydoc CValueObject::marshallToDbus
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \brief Stream from DBus
-             * \param argument
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            //! \copydoc CValueObject::unmarshallFromDbus
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         public:
             /*!
@@ -134,26 +118,23 @@ namespace BlackMisc
                 m_latitude(latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_longitude(longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_height(heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m()) {}
 
             /*!
-             * \brief Latitude
-             * \return
+             * \copydoc ICoordinateGeodetic::latitude
              */
-            const CLatitude &latitude() const
+            virtual const CLatitude &latitude() const override
             {
                 return this->m_latitude;
             }
 
             /*!
-             * \brief Longitude
-             * \return
+             * \copydoc ICoordinateGeodetic::longitude
              */
-            const CLongitude &longitude() const
+            virtual const CLongitude &longitude() const override
             {
                 return this->m_longitude;
             }
 
             /*!
              * \brief Height
-             * \return
              */
             const BlackMisc::PhysicalQuantities::CLength &height() const
             {
@@ -161,10 +142,9 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -234,9 +214,9 @@ namespace BlackMisc
             bool operator !=(const CCoordinateGeodetic &other) const;
 
             /*!
-             * \brief value Hash
+             * \copydoc CValueObject::getValueHash
              */
-            virtual uint getValueHash() const;
+            virtual uint getValueHash() const override;
 
             /*!
              * Register metadata

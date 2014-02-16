@@ -172,12 +172,12 @@ namespace BlackMisc
          */
         CApplicationContext();
 
-        virtual const QObject *getQObjectNothrow(const QString &) const;
-        virtual void setQObject(QString, QObject &);
-        virtual void removeQObject(const QString &);
-        virtual void setApplicationName(QString appName) { m_appName = appName; }
-        virtual void setDefaultApplicationName();
-        virtual const QString &getApplicationName() const { return m_appName; }
+        virtual const QObject *getQObjectNothrow(const QString &) const override;
+        virtual void setQObject(QString, QObject &) override;
+        virtual void removeQObject(const QString &) override;
+        virtual void setApplicationName(QString appName) override { m_appName = appName; }
+        virtual void setDefaultApplicationName() override;
+        virtual const QString &getApplicationName() const override { return m_appName; }
 
     private:
         QMap<QString, QObject *> m_map;

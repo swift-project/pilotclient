@@ -103,9 +103,9 @@ namespace BlackMisc
             bool operator <(const CCallsign &other) const;
 
             /*!
-             * \brief CValueObject::getValueHash()
+             * \copydoc CValueObject::getValueHash()
              */
-            virtual uint getValueHash() const;
+            virtual uint getValueHash() const override;
 
             /*!
              * \brief Register metadata
@@ -113,35 +113,23 @@ namespace BlackMisc
             static void registerMetadata();
 
         protected:
-            /*!
-             * \copydoc CValueObject::convertToQString()
-             */
-            virtual QString convertToQString(bool i18n = false) const;
+            //! \copydoc CValueObject::convertToQString()
+            virtual QString convertToQString(bool i18n = false) const override;
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
-            virtual int getMetaTypeId() const;
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
-            virtual bool isA(int metaTypeId) const;
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
-            virtual int compareImpl(const CValueObject &other) const;
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
-            /*!
-             * \copydoc CValueObject::marshallToDbus()
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            //! \copydoc CValueObject::marshallToDbus()
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \copydoc CValueObject::unmarshallFromDbus()
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            //! \copydoc CValueObject::unmarshallFromDbus()
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
             /*!
              * \brief Unify the callsign

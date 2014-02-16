@@ -31,10 +31,9 @@ namespace BlackMisc
             CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }

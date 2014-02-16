@@ -55,10 +55,9 @@ namespace BlackMisc
                     CAngleUnit::sexagesimalDegMin()) {}
 
             /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }

@@ -73,39 +73,23 @@ namespace BlackMisc
              */
             double &getElement(int row);
 
-            /*!
-             * \brief String for converter
-             * \param i18n
-             * \return
-             */
-            virtual QString convertToQString(bool i18n = false) const;
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override;
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
-            virtual int getMetaTypeId() const;
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
-            virtual bool isA(int metaTypeId) const;
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
-            virtual int compareImpl(const CValueObject &other) const;
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
-            /*!
-             * \brief Unmarshall from Dbus
-             * \param argument
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            //! \copydoc CValueObject::unmarshallFromDbus
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
-            /*!
-             * \brief Marshall to Dbus
-             * \param argument
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            //! \copydoc CValueObject::marshallToDbus
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
         public:
             // getter and setters are implemented in the derived classes
@@ -338,10 +322,9 @@ namespace BlackMisc
             CMatrix3x1 toMatrix3x1() const;
 
             /*!
-             * \brief Value hash
-             * \return
+             * \copydoc CValueObject::getValueHash
              */
-            virtual uint getValueHash() const;
+            virtual uint getValueHash() const override;
 
             /*!
              * \brief length / magnitude

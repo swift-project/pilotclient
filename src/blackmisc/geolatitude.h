@@ -49,10 +49,9 @@ namespace BlackMisc
             CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }

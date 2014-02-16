@@ -83,7 +83,7 @@ namespace BlackMisc
         }
 
         //! \copydoc CValueObject::getValueHash()
-        virtual uint getValueHash() const;
+        virtual uint getValueHash() const override;
 
         //! \copydoc CValueObject::toQVariant()
         virtual QVariant toQVariant() const override

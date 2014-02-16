@@ -56,8 +56,8 @@ namespace BlackMisc
              */
             struct NilConverter : public Converter
             {
-                virtual double toDefault(double) const { return 0.0; }
-                virtual double fromDefault(double) const { return 0.0; }
+                virtual double toDefault(double) const override { return 0.0; }
+                virtual double fromDefault(double) const override { return 0.0; }
             };
 
             /*!
@@ -65,8 +65,8 @@ namespace BlackMisc
              */
             struct IdentityConverter : public Converter
             {
-                virtual double toDefault(double factor) const { return factor; }
-                virtual double fromDefault(double factor) const { return factor; }
+                virtual double toDefault(double factor) const override { return factor; }
+                virtual double fromDefault(double factor) const override { return factor; }
             };
 
             /*!
@@ -76,8 +76,8 @@ namespace BlackMisc
             template <class Policy>
             struct LinearConverter : public Converter
             {
-                virtual double toDefault(double factor) const { return factor * Policy::factor(); }
-                virtual double fromDefault(double factor) const { return factor / Policy::factor(); }
+                virtual double toDefault(double factor) const override { return factor * Policy::factor(); }
+                virtual double fromDefault(double factor) const override { return factor / Policy::factor(); }
             };
 
             /*!
@@ -87,8 +87,8 @@ namespace BlackMisc
             template <class Policy>
             struct AffineConverter : public Converter
             {
-                virtual double toDefault(double factor) const { return (factor - Policy::offset()) * Policy::factor(); }
-                virtual double fromDefault(double factor) const { return factor / Policy::factor() + Policy::offset(); }
+                virtual double toDefault(double factor) const override { return (factor - Policy::offset()) * Policy::factor(); }
+                virtual double fromDefault(double factor) const override { return factor / Policy::factor() + Policy::offset(); }
             };
 
             /*!
@@ -99,14 +99,14 @@ namespace BlackMisc
             template <class FactorPolicy, class SubdivPolicy>
             struct SubdivisionConverter : public Converter
             {
-                virtual double toDefault(double factor) const
+                virtual double toDefault(double factor) const override
                 {
                     using BlackMisc::Math::CMath;
                     double part2 = CMath::fract(factor) * SubdivPolicy::fraction();
                     factor = CMath::trunc(factor) + part2 / SubdivPolicy::subfactor();
                     return factor * FactorPolicy::factor();
                 }
-                virtual double fromDefault(double factor) const
+                virtual double fromDefault(double factor) const override
                 {
                     using BlackMisc::Math::CMath;
                     factor /= FactorPolicy::factor();
@@ -123,7 +123,7 @@ namespace BlackMisc
             template <class FactorPolicy, class SubdivPolicy>
             struct SubdivisionConverter2 : public Converter
             {
-                virtual double toDefault(double factor) const
+                virtual double toDefault(double factor) const override
                 {
                     using BlackMisc::Math::CMath;
                     double part2 = CMath::fract(factor) * SubdivPolicy::fraction();
@@ -131,7 +131,7 @@ namespace BlackMisc
                     factor = CMath::trunc(factor) + (CMath::trunc(part2) + part3 / SubdivPolicy::subfactor()) / SubdivPolicy::subfactor();
                     return factor * FactorPolicy::factor();
                 }
-                virtual double fromDefault(double factor) const
+                virtual double fromDefault(double factor) const override
                 {
                     using BlackMisc::Math::CMath;
                     factor /= FactorPolicy::factor();
@@ -218,53 +218,35 @@ namespace BlackMisc
                 : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(new Converter)
             {}
 
-            /*!
-             * \brief String for streaming operators is full name
-             * \return
-             */
-            virtual QString stringForStreaming() const
+            //! \copydoc CValueObject::stringForStreaming
+            virtual QString stringForStreaming() const override
             {
                 return this->getName(false);
             }
 
-            /*!
-             * \brief Name as stringification
-             * \param i18n
-             * \return
-             */
-            virtual QString convertToQString(bool i18n = false) const
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override
             {
                 return this->getSymbol(i18n);
             }
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
-            virtual int getMetaTypeId() const;
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
-            virtual bool isA(int metaTypeId) const;
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
-            virtual int compareImpl(const CValueObject &other) const;
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
-            /*!
-             * \brief Stream to DBus
-             * \param argument
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const
+            //! \copydoc CValueObject::marshallToDbus
+            virtual void marshallToDbus(QDBusArgument &argument) const override
             {
                 argument << this->m_symbol;
             }
 
-            /*!
-             * \brief Stream from DBus
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &)
+            //! \copydoc CValueObject::unmarshallFromDbus
+            virtual void unmarshallFromDbus(const QDBusArgument &) override
             {
                 // the concrete implementations will override this default
                 // this is required so I can also stream None
@@ -280,10 +262,9 @@ namespace BlackMisc
             {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 // used with None!
                 return QVariant::fromValue(*this);
@@ -324,10 +305,9 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Value hash
-             * \return
+             * \copydoc CValueObject::getValueHash
              */
-            virtual uint getValueHash() const
+            virtual uint getValueHash() const override
             {
                 return qHash(this->getName());
             }

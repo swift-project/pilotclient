@@ -24,8 +24,7 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief String for converter
-             * \return
+             * \copydoc CValueObject::convertToQString
              */
             virtual QString convertToQString(bool i18n = false) const override
             {
@@ -84,10 +83,9 @@ namespace BlackMisc
             CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D &vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
             /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }

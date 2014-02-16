@@ -50,10 +50,9 @@ namespace BlackMisc
             CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -156,10 +155,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Stream from DBus
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 QString unitName;
                 argument >> unitName;
@@ -188,10 +186,9 @@ namespace BlackMisc
             CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -203,13 +200,9 @@ namespace BlackMisc
             static const CAngleUnit &defaultUnit() { return deg(); }
 
             /*!
-             * \brief Override for sexagesimal degrees.
-             * \param value
-             * \param digits
-             * \param i18n
-             * \return
+             * \copydoc CMeasurementUnit::makeRoundedQStringWithUnit
              */
-            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
+            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const override;
 
             /*!
              * \brief Radians
@@ -274,10 +267,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Stream from DBus
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 QString unitName;
                 argument >> unitName;
@@ -305,10 +297,9 @@ namespace BlackMisc
             CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -378,10 +369,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Stream from DBus
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 QString unitName;
                 argument >> unitName;
@@ -410,10 +400,9 @@ namespace BlackMisc
             CMassUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -494,10 +483,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Stream from DBus
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 QString unitName;
                 argument >> unitName;
@@ -528,10 +516,9 @@ namespace BlackMisc
             CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -633,10 +620,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Stream from DBus
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 QString unitName;
                 argument >> unitName;
@@ -673,10 +659,9 @@ namespace BlackMisc
             CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -735,10 +720,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Stream from DBus
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 QString unitName;
                 argument >> unitName;
@@ -769,10 +753,9 @@ namespace BlackMisc
             CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -864,10 +847,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Stream from DBus
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 QString unitName;
                 argument >> unitName;
@@ -898,10 +880,9 @@ namespace BlackMisc
             CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -913,13 +894,9 @@ namespace BlackMisc
             static const CTimeUnit &defaultUnit() { return s(); }
 
             /*!
-             * \brief Override for subdivisional units.
-             * \param value
-             * \param digits
-             * \param i18n
-             * \return
+             * \copydoc CMeasurementUnit::makeRoundedQStringWithUnit
              */
-            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
+            virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const override;
 
             /*!
              * \brief Second s
@@ -1025,10 +1002,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Stream from DBus
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 QString unitName;
                 argument >> unitName;
@@ -1056,10 +1032,9 @@ namespace BlackMisc
             CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -1107,10 +1082,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Stream from DBus
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 QString unitName;
                 argument >> unitName;

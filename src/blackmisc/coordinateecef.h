@@ -38,10 +38,9 @@ namespace BlackMisc
             explicit CCoordinateEcef(const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()) {}
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -111,8 +110,7 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief String for converter
-             * \return
+             * \copydoc CValueObject::convertToQString
              */
             virtual QString convertToQString(bool i18n = false) const override
             {

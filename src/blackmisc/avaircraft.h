@@ -39,9 +39,9 @@ namespace BlackMisc
                 : m_callsign(callsign), m_pilot(user), m_situation(situation), m_distanceToPlane(-1.0, BlackMisc::PhysicalQuantities::CLengthUnit::NM()) {}
 
             /*!
-             * \brief QVariant, required for DBus QVariant lists
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -139,17 +139,17 @@ namespace BlackMisc
             const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return this->m_situation.getGroundSpeed(); }
 
             /*!
-             * \brief Get latitude
+             * \copydoc ICoordinateGeodetic::latitude
              */
-            virtual const BlackMisc::Geo::CLatitude &latitude() const { return this->m_situation.latitude(); }
+            virtual const BlackMisc::Geo::CLatitude &latitude() const override { return this->m_situation.latitude(); }
 
             /*!
-             * \brief Get longitude
+             * \copydoc ICoordinateGeodetic::longitude
              */
-            virtual const BlackMisc::Geo::CLongitude &longitude() const { return this->m_situation.longitude(); }
+            virtual const BlackMisc::Geo::CLongitude &longitude() const override { return this->m_situation.longitude(); }
 
             /*!
-             * \brief Get height (height of current position)
+             * \copydoc CCoordinateGeodetic::height
              */
             const BlackMisc::PhysicalQuantities::CLength &getHeight() const { return this->m_situation.getHeight(); }
 
@@ -259,9 +259,9 @@ namespace BlackMisc
             bool operator !=(const CAircraft &other) const;
 
             /*!
-             * \brief Value hash
+             * \copydoc CValueObject::getValueHash
              */
-            virtual uint getValueHash() const;
+            virtual uint getValueHash() const override;
 
             /*!
              * \brief Register metadata
@@ -297,35 +297,23 @@ namespace BlackMisc
             virtual void setPropertyByIndex(const QVariant &variant, int index) override;
 
         protected:
-            /*!
-             * \copydoc CValueObject::convertToQString()
-             */
-            virtual QString convertToQString(bool i18n = false) const;
+            //! \copydoc CValueObject::convertToQString()
+            virtual QString convertToQString(bool i18n = false) const override;
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
-            virtual int getMetaTypeId() const;
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
-            virtual bool isA(int metaTypeId) const;
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
-            virtual int compareImpl(const CValueObject &other) const;
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
-            /*!
-             * \copydoc CValueObject::marshallToDbus()
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            //! \copydoc CValueObject::marshallToDbus()
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \copydoc CValueObject::marshallFromDbus()
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            //! \copydoc CValueObject::marshallFromDbus()
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             CCallsign m_callsign;

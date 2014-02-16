@@ -35,45 +35,29 @@ namespace BlackMisc
              */
             CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CAngle(angle) {}
 
-            /*!
-             * \brief String representation
-             * \param i18n
-             * \return
-             */
-            virtual QString convertToQString(bool i18n = false) const
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override
             {
                 return this->valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CAngleUnit::deg(), 6, i18n);
             }
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
-            virtual int getMetaTypeId() const;
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
-            virtual bool isA(int metaTypeId) const;
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
-            virtual int compareImpl(const CValueObject &other) const;
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
-            /*!
-             * \brief Stream to DBus <<
-             * \param argument
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const
+            //! \copydoc CValueObject::marshallToDbus
+            virtual void marshallToDbus(QDBusArgument &argument) const override
             {
                 this->CAngle::marshallToDbus(argument);
             }
 
-            /*!
-             * \brief Stream from DBus >>
-             * \param argument
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            //! \copydoc CValueObject::unmarshallFromDbus
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 this->CAngle::unmarshallFromDbus(argument);
             }

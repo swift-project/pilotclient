@@ -66,10 +66,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Are the set values valid / in range?
-             * \return
+             * \copydoc CAvionicsBase::validValues
              */
-            bool validValues() const;
+            virtual bool validValues() const override;
 
             /*!
              * \brief Default value
@@ -90,23 +89,19 @@ namespace BlackMisc
             bool validate(bool strict = true) const;
 
             /*!
-             * \brief Meaningful string representation
-             * \param i18n
-             * \return
+             * \copydoc CValueObject::convertToQString
              */
-            virtual QString convertToQString(bool i18n = false) const;
+            virtual QString convertToQString(bool i18n = false) const override;
 
             /*!
-             * \brief Stream to DBus <<
-             * \param argument
+             * \copydoc CValueObject::marshallToDbus
              */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
             /*!
-             * \brief Stream from DBus >>
-             * \param argument
+             * \copydoc CValueObject::unmarshallFromDbus
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         public:
             /*!
@@ -178,10 +173,9 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
@@ -377,7 +371,7 @@ namespace BlackMisc
             /*!
              * \copydoc CValueObject::getValueHash()
              */
-            virtual uint getValueHash() const;
+            virtual uint getValueHash() const override;
 
             /*!
              * \brief Is valid transponder code?

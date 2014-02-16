@@ -40,10 +40,9 @@ namespace BlackMisc
             CVector3D(const CVector3D &other) : CVector3DBase(other) {}
 
             /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }

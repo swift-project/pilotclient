@@ -135,7 +135,7 @@ namespace BlackMisc
 
         protected:
             //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const;
+            virtual QString convertToQString(bool i18n = false) const override;
 
             //! \copydoc CValueObject::getMetaTypeId
             virtual int getMetaTypeId() const override;

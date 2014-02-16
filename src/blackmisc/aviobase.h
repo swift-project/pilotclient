@@ -61,17 +61,17 @@ namespace BlackMisc
             /*!
              * \copydoc CValueObject::getMetaTypeId
              */
-            virtual int getMetaTypeId() const { return 0; }
+            virtual int getMetaTypeId() const override { return 0; }
 
             /*!
              * \copydoc CValueObject::isA
              */
-            virtual bool isA(int metaTypeId) const { return this->CValueObject::isA(metaTypeId); }
+            virtual bool isA(int metaTypeId) const override { return this->CValueObject::isA(metaTypeId); }
 
             /*!
              * \copydoc CValueObject::compareImpl
              */
-            virtual int compareImpl(const CValueObject &other) const
+            virtual int compareImpl(const CValueObject &other) const override
             {
                 Q_UNUSED(other);
                 qFatal("not implemented");
@@ -81,7 +81,7 @@ namespace BlackMisc
             /*!
              * \copydoc CValueObject::marshallToDbus()
              */
-            virtual void marshallToDbus(QDBusArgument &argument) const
+            virtual void marshallToDbus(QDBusArgument &argument) const override
             {
                 argument << this->m_name;
             }
@@ -89,7 +89,7 @@ namespace BlackMisc
             /*!
              * \copydoc CValueObject::unmarshallFromDbus()
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument)
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
                 argument >> this->m_name;
             }

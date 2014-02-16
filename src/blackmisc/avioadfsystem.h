@@ -48,10 +48,9 @@ namespace BlackMisc
 
         protected:
             /*!
-             * \brief Are the set values valid / in range?
-             * \return
+             * \copydoc CAvionicsBase::validValues
              */
-            bool validValues() const
+            virtual bool validValues() const override
             {
                 if (this->isDefaultValue()) return true; // special case
                 return
@@ -102,10 +101,9 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Virtual method to return QVariant, used with DBUS QVariant lists
-             * \return
+             * \copydoc CValueObject::toQVariant
              */
-            virtual QVariant toQVariant() const
+            virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }

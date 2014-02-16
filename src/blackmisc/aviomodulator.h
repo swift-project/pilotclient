@@ -50,11 +50,9 @@ namespace BlackMisc
                 CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_volumeInput(0), m_volumeOutput(0), m_enabled(true), m_digits(digits) {}
 
             /*!
-             * \brief String for converter
-             * \param i18n
-             * \return
+             * \copydoc CValueObject::convertToQString
              */
-            virtual QString convertToQString(bool i18n = false) const
+            virtual QString convertToQString(bool i18n = false) const override
             {
                 QString s(this->getName());
                 s.append(" Active: ").append(this->m_frequencyActive.valueRoundedWithUnit(3, i18n));
@@ -207,17 +205,17 @@ namespace BlackMisc
             /*!
              * \copydoc CValueObject::marshallFromDbus()
              */
-            virtual void marshallToDbus(QDBusArgument &argument) const;
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
             /*!
              * \copydoc CValueObject::unmarshallFromDbus()
              */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument);
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
             /*!
              * \copydoc CValueObject::getValueHash()
              */
-            virtual uint getValueHash() const;
+            virtual uint getValueHash() const override;
 
         public:
             /*!

@@ -77,10 +77,10 @@ namespace BlackMisc
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
             //! \copydoc ICoordinateGeodetic::latitude()
-            virtual const BlackMisc::Geo::CLatitude &latitude() const { return this->m_position.latitude(); }
+            virtual const BlackMisc::Geo::CLatitude &latitude() const override { return this->m_position.latitude(); }
 
             //! \copydoc ICoordinateGeodetic::longitude()
-            virtual const BlackMisc::Geo::CLongitude &longitude() const { return this->m_position.longitude(); }
+            virtual const BlackMisc::Geo::CLongitude &longitude() const override { return this->m_position.longitude(); }
 
             //! \copydoc CCoordinateGeodetic::height
             const BlackMisc::PhysicalQuantities::CLength &getHeight() const { return this->m_position.height(); }
@@ -128,7 +128,7 @@ namespace BlackMisc
             bool operator !=(const CAircraftSituation &other) const;
 
             //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const;
+            virtual uint getValueHash() const override;
 
             //! \brief Register metadata
             static void registerMetadata();
