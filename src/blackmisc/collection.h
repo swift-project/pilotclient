@@ -42,7 +42,7 @@ namespace BlackMisc
         typedef typename Iterators::ConstForwardIterator<T> const_iterator;
         typedef const_iterator iterator; // can't modify elements in-place
         typedef ptrdiff_t difference_type;
-        typedef int size_type;
+        typedef intptr_t size_type;
         //! @}
 
         /*!

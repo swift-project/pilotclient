@@ -42,7 +42,7 @@ namespace BlackMisc
         typedef typename Iterators::ConstBidirectionalIterator<T> const_iterator;
         typedef typename Iterators::BidirectionalIterator<T> iterator;
         typedef ptrdiff_t difference_type;
-        typedef int size_type;
+        typedef intptr_t size_type;
         //! @}
 
         /*!
