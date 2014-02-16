@@ -154,7 +154,7 @@ namespace BlackMisc
         /*
          * Property by index (setter)
          */
-        void CServer::propertyByIndex(const QVariant &variant, int index)
+        void CServer::setPropertyByIndex(const QVariant &variant, int index)
         {
             switch (index)
             {

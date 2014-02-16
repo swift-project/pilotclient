@@ -182,7 +182,7 @@ namespace BlackMisc
         /*
          * Set property as index
          */
-        void CUser::propertyByIndex(const QVariant &variant, int index)
+        void CUser::setPropertyByIndex(const QVariant &variant, int index)
         {
             switch (index)
             {

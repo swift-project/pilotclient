@@ -141,12 +141,12 @@ namespace BlackMisc
             /*!
              * \copydoc CValueObject::propertyByIndex(int)
              */
-            QVariant propertyByIndex(int index) const;
+            QVariant propertyByIndex(int index) const override;
 
             /*!
-             * \copydoc CValueObject::propertyByIndex(const QVariant &, int index)
+             * \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
              */
-            void propertyByIndex(const QVariant &variant, int index);
+            void setPropertyByIndex(const QVariant &variant, int index) override;
 
             /*!
              * \copydoc CValueObject::propertyByIndexAsString()

@@ -172,10 +172,10 @@ namespace BlackMisc
             void syncronizeData(CUser &otherUser);
 
             //! \copydoc CValueObject::propertyByIndex(int)
-            QVariant propertyByIndex(int index) const;
+            virtual QVariant propertyByIndex(int index) const override;
 
-            //! \copydoc CValueObject::propertyByIndex(const QVariant, int)
-            void propertyByIndex(const QVariant &variant, int index);
+            //! \copydoc CValueObject::setPropertyByIndex(const QVariant, int)
+            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
 
         protected:
             //! \copydoc CValueObject::convertToQString
