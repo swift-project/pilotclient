@@ -18,11 +18,11 @@ namespace BlackGui
     /*!
      * \brief List model
      */
-    template <typename ObjectType, typename ListType> class CListModelBase : public QAbstractListModel
+    template <typename ObjectType, typename ContainerType> class CListModelBase : public QAbstractListModel
     {
 
     protected:
-        ListType m_list;    //!< used container
+        ContainerType m_container;    //!< used container
         CColumns m_columns; //!< columns metadata
         int m_sortedColumn; //!< current sort column
         Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
@@ -45,7 +45,7 @@ namespace BlackGui
          * \param order     sort order (asccending / descending)
          * \return
          */
-        ListType sortListByColumn(const ListType &list, int column, Qt::SortOrder order);
+        ContainerType sortListByColumn(const ContainerType &list, int column, Qt::SortOrder order);
 
     public:
 
@@ -115,22 +115,34 @@ namespace BlackGui
             return this->m_sortOrder;
         }
 
-        /*!
-         * \copydoc QAbstractListModel::data()
-         */
+        //! \brief Used container data
+        virtual const ContainerType &getContainer() const
+        {
+            return this->m_container;
+        }
+
+        //! \copydoc QAbstractListModel::data()
         virtual QVariant data(const QModelIndex &index, int role) const;
 
-        /*!
-         * \copydoc QAbstractListModel::rowCount()
-         */
+        //! \copydoc QAbstractListModel::rowCount()
         virtual int rowCount(const QModelIndex &index = QModelIndex()) const;
+
+        //! \copydoc QAbstractTableModel::flags
+        Qt::ItemFlags flags(const QModelIndex &index) const override;
 
         /*!
          * \brief Update by new list
          * \param list
          * \return new list size
          */
-        virtual int update(const ListType &list);
+        virtual int update(const ContainerType &list);
+
+        /*!
+         * \brief Update single element
+         * \param index
+         * \param object
+         */
+        virtual void update(const QModelIndex &index, const ObjectType &object);
 
         /*!
          * \brief Object at row position
@@ -139,24 +151,24 @@ namespace BlackGui
          */
         virtual const ObjectType &at(const QModelIndex &index) const
         {
-            if (index.row() < 0 || index.row() >= this->m_list.size())
+            if (index.row() < 0 || index.row() >= this->m_container.size())
             {
                 const static ObjectType def;
                 return def;
             }
             else
             {
-                return this->m_list[index.row()];
+                return this->m_container[index.row()];
             }
         }
 
         //! \copydoc QAbstractListModel::sort()
         virtual void sort(int column, Qt::SortOrder order);
 
-        //! \brief Similar to ListType::push_back
+        //! \brief Similar to ContainerType::push_back
         virtual void push_back(const ObjectType &object);
 
-        //! \brief Similar to ListType::insert here inserts at first position
+        //! \brief Similar to ContainerType::insert here inserts at first position
         virtual void insert(const ObjectType &object);
 
         //! \brief clear the list
