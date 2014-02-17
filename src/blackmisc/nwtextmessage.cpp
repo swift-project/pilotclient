@@ -54,6 +54,12 @@ namespace BlackMisc
         {
             const auto &other = static_cast<const CTextMessage &>(otherBase);
 
+            int result;
+            if ((result = compare(this->m_senderCallsign, other.m_senderCallsign))) { return result; }
+            if ((result = compare(this->m_recipientCallsign, other.m_recipientCallsign))) { return result; }
+            if ((result = compare(this->m_frequency, other.m_frequency))) { return result; }
+            if (this->m_received < other.m_received) { return -1; }
+            if (this->m_received > other.m_received) { return 1; }
             return this->m_message.compare(other.m_message);
         }
 
@@ -229,7 +235,7 @@ namespace BlackMisc
         bool CTextMessage::operator ==(const CTextMessage &other) const
         {
             if (this == &other) return true;
-            return this->getValueHash() == other.getValueHash();
+            return compare(*this, other);
         }
 
         /*

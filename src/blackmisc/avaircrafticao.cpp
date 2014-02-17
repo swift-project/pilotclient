@@ -100,7 +100,7 @@ namespace BlackMisc
         bool CAircraftIcao::operator ==(const CAircraftIcao &other) const
         {
             if (this == &other) return true;
-            return this->getValueHash() == other.getValueHash();
+            return compare(*this, other) == 0;
         }
 
         /*

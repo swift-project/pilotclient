@@ -44,9 +44,19 @@ namespace BlackMisc
         /*
          * Compare
          */
-        int CAircraftSituation::compareImpl(const CValueObject &/*otherBase*/) const
+        int CAircraftSituation::compareImpl(const CValueObject &otherBase) const
         {
-            qFatal("not implemented");
+            const auto &other = static_cast<const CAircraftSituation &>(otherBase);
+
+            int result;
+            if ((result = compare(this->m_position, other.m_position))) { return result; }
+            if ((result = compare(this->m_altitude, other.m_altitude))) { return result; }
+            if ((result = compare(this->m_heading, other.m_heading))) { return result; }
+            if ((result = compare(this->m_pitch, other.m_pitch))) { return result; }
+            if ((result = compare(this->m_bank, other.m_bank))) { return result; }
+            if ((result = compare(this->m_groundspeed, other.m_groundspeed))) { return result; }
+            if (this->m_timestamp < other.m_timestamp) { return -1; }
+            if (this->m_timestamp > other.m_timestamp) { return 1; }
             return 0;
         }
 
@@ -84,7 +94,7 @@ namespace BlackMisc
         bool CAircraftSituation::operator ==(const CAircraftSituation &other) const
         {
             if (this == &other) return true;
-            return this->getValueHash() == other.getValueHash();
+            return compare(*this, other) == 0;
         }
 
         /*

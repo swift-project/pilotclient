@@ -55,9 +55,13 @@ namespace BlackMisc
         /*
          * Compare
          */
-        int CSettingsNetwork::compareImpl(const CValueObject &/*otherBase*/) const
+        int CSettingsNetwork::compareImpl(const CValueObject &otherBase) const
         {
-            qFatal("not implemented");
+            const auto &other = static_cast<const CSettingsNetwork &>(otherBase);
+
+            int result;
+            if ((result = compare(this->m_trafficNetworkServerCurrent, other.m_trafficNetworkServerCurrent))) { return result; }
+            if ((result = compare(this->m_trafficNetworkServers, other.m_trafficNetworkServers))) { return result; }
             return 0;
         }
 
@@ -85,7 +89,7 @@ namespace BlackMisc
         bool CSettingsNetwork::operator ==(const CSettingsNetwork &other) const
         {
             if (this == &other) return true;
-            return this->getValueHash() == other.getValueHash();
+            return compare(*this, other) == 0;
         }
 
         /*
