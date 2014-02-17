@@ -90,7 +90,15 @@ namespace BlackMisc
     namespace Voice
     {
         /*!
-         * \brief Registe metadata for settings
+         * \brief Register metadata for voice
+         */
+        void registerMetadata();
+    }
+
+    namespace Hardware
+    {
+        /*!
+         * \brief Register metadata for Hardware
          */
         void registerMetadata();
     }

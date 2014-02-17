@@ -10,6 +10,7 @@
 #include "geoallclasses.h"
 #include "networkallclasses.h"
 #include "settingsallclasses.h"
+#include "hwallclasses.h"
 #include "valuemap.h"
 #include "statusmessagelist.h"
 #include "voiceallclasses.h"
@@ -111,6 +112,15 @@ void BlackMisc::Voice::registerMetadata()
 }
 
 /*
+ * Metadata for Hardware
+ */
+void BlackMisc::Hardware::registerMetadata()
+{
+    CKeyboardKey::registerMetadata();
+    CKeyboardKeyList::registerMetadata();
+}
+
+/*
  * Metadata for Blackmisc
  */
 void BlackMisc::registerMetadata()
@@ -130,6 +140,7 @@ void BlackMisc::registerMetadata()
     Network::registerMetadata();
     Settings::registerMetadata();
     Voice::registerMetadata();
+    Hardware::registerMetadata();
 }
 
 /*
@@ -184,6 +195,7 @@ int BlackMisc:: compareQVariants(const QVariant &v1, const QVariant &v2)
     switch (v1.type())
     {
     case QMetaType::QString:
+    case QMetaType::QChar:
         {
             QString s1 = v1.value<QString>();
             QString s2 = v2.value<QString>();
