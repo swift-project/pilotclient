@@ -16,16 +16,16 @@ namespace BlackGui
      */
     CAircraftListModel::CAircraftListModel(QObject *parent) : CListModelBase("ViewAircraftList", parent)
     {
-        this->m_columns.addColumn(CAircraft::IndexCallsign, "callsign");
-        this->m_columns.addColumn(CAircraft::IndexPilotRealName, "pilotrealname");
-        this->m_columns.addColumn(CAircraft::IndexDistance, "distance", Qt::AlignRight | Qt::AlignVCenter);
-        this->m_columns.addColumn(CAircraft::IndexFrequencyCom1, "frequency", Qt::AlignRight | Qt::AlignVCenter);
-        this->m_columns.addColumn(CAircraftIcao::IndexAsString, "model");
-        this->m_columns.addColumn(CAircraft::IndexTansponderFormatted, "transponder");
-        this->m_columns.addColumn(CAircraftSituation::IndexPositionLatitude, "latitude", Qt::AlignRight | Qt::AlignVCenter);
-        this->m_columns.addColumn(CAircraftSituation::IndexPositionLongitude, "longitude", Qt::AlignRight  | Qt::AlignVCenter);
-        this->m_columns.addColumn(CAircraftSituation::IndexAltitude, "altitude", Qt::AlignRight  | Qt::AlignVCenter);
-        this->m_columns.addColumn(CAircraftSituation::IndexGroundspeed, "groundspeed", Qt::AlignRight  | Qt::AlignVCenter);
+        this->m_columns.addColumn(CColumn("callsign", CAircraft::IndexCallsign));
+        this->m_columns.addColumn(CColumn("pilotrealname", CAircraft::IndexPilotRealName));
+        this->m_columns.addColumn(CColumn("distance", CAircraft::IndexDistance, Qt::AlignRight | Qt::AlignVCenter));
+        this->m_columns.addColumn(CColumn("frequency", CAircraft::IndexFrequencyCom1, Qt::AlignRight | Qt::AlignVCenter));
+        this->m_columns.addColumn(CColumn("model", CAircraftIcao::IndexAsString));
+        this->m_columns.addColumn(CColumn("transponder", CAircraft::IndexTansponderFormatted));
+        this->m_columns.addColumn(CColumn("latitude", CAircraftSituation::IndexPositionLatitude, Qt::AlignRight | Qt::AlignVCenter));
+        this->m_columns.addColumn(CColumn("longitude", CAircraftSituation::IndexPositionLongitude, Qt::AlignRight  | Qt::AlignVCenter));
+        this->m_columns.addColumn(CColumn("altitude", CAircraftSituation::IndexAltitude, Qt::AlignRight  | Qt::AlignVCenter));
+        this->m_columns.addColumn(CColumn("groundspeed", CAircraftSituation::IndexGroundspeed, Qt::AlignRight  | Qt::AlignVCenter));
 
         // default sort order
         this->setSortColumnByPropertyIndex(CAircraft::IndexDistance);

@@ -15,14 +15,14 @@ namespace BlackGui
      */
     CAtcListModel::CAtcListModel(QObject *parent) : CListModelBase("ViewAtcList", parent)
     {
-        this->m_columns.addColumn(CAtcStation::IndexCallsignAsStringAsSet, "callsign");
-        this->m_columns.addColumn(CAtcStation::IndexDistance, "distance", Qt::AlignRight  | Qt::AlignVCenter);
-        this->m_columns.addColumn(CAtcStation::IndexFrequency, "frequency", Qt::AlignRight  | Qt::AlignVCenter);
-        this->m_columns.addColumn(CAtcStation::IndexControllerRealName, "controllername");
-        this->m_columns.addColumn(CAtcStation::IndexIsOnline, "online");
-        this->m_columns.addColumn(CAtcStation::IndexBookedFrom, "bookedfrom");
-        this->m_columns.addColumn(CAtcStation::IndexBookedUntil, "bookeduntil");
-        this->m_columns.addColumn(CAtcStation::IndexVoiceRoomUrl, "voiceroomurl");
+        this->m_columns.addColumn(CColumn("callsign", CAtcStation::IndexCallsignAsStringAsSet));
+        this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexDistance,  Qt::AlignRight  | Qt::AlignVCenter));
+        this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency,  Qt::AlignRight  | Qt::AlignVCenter));
+        this->m_columns.addColumn(CColumn("controllername", CAtcStation::IndexControllerRealName));
+        this->m_columns.addColumn(CColumn("online", CAtcStation::IndexIsOnline));
+        this->m_columns.addColumn(CColumn("bookedfrom", CAtcStation::IndexBookedFrom));
+        this->m_columns.addColumn(CColumn("bookeduntil", CAtcStation::IndexBookedUntil));
+        this->m_columns.addColumn(CColumn("voiceroomurl", CAtcStation::IndexVoiceRoomUrl));
 
 
         // default sort order

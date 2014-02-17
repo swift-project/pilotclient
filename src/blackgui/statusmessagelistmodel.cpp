@@ -14,10 +14,10 @@ namespace BlackGui
     CStatusMessageListModel::CStatusMessageListModel(QObject *parent) :
         CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>("ViewStatusMessageList", parent)
     {
-        this->m_columns.addColumn(CStatusMessage::IndexTimestamp, "time");
-        this->m_columns.addColumn(CStatusMessage::IndexSeverity, "", Qt::AlignCenter);
-        this->m_columns.addColumn(CStatusMessage::IndexMessage, "message");
-        this->m_columns.addColumn(CStatusMessage::IndexTypeAsString, "type");
+        this->m_columns.addColumn(CColumn("time", CStatusMessage::IndexTimestamp));
+        this->m_columns.addColumn(CColumn("", CStatusMessage::IndexSeverity, Qt::AlignCenter));
+        this->m_columns.addColumn(CColumn("message", CStatusMessage::IndexMessage));
+        this->m_columns.addColumn(CColumn("type", CStatusMessage::IndexTypeAsString));
 
         this->m_sortedColumn = CStatusMessage::IndexTimestamp;
         this->m_sortOrder = Qt::DescendingOrder;

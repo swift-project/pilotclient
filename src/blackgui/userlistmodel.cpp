@@ -13,10 +13,10 @@ namespace BlackGui
     CUserListModel::CUserListModel(QObject *parent) :
         CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>("ViewUserList", parent)
     {
-        this->m_columns.addColumn(CUser::IndexCallsignIcon, "");
-        this->m_columns.addColumn(CUser::IndexRealName, "realname");
-        this->m_columns.addColumn(CUser::IndexCallsign, "callsign");
-        this->m_columns.addColumn(CUser::IndexId, "userid");
+        this->m_columns.addColumn(CColumn("", CUser::IndexCallsignIcon));
+        this->m_columns.addColumn(CColumn("realname", CUser::IndexRealName));
+        this->m_columns.addColumn(CColumn("callsign", CUser::IndexCallsign));
+        this->m_columns.addColumn(CColumn("userid", CUser::IndexId));
         // this->m_columns.addColumn(CUser::IndexEmail, "email");
 
         // force strings for translation in resource files
