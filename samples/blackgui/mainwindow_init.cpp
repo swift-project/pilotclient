@@ -4,6 +4,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/coreruntime.h"
 #include "blackgui/atcstationlistmodel.h"
+#include "blackgui/keyboardkeylistmodel.h"
 #include "blackmisc/avselcal.h"
 #include <QSortFilterProxyModel>
 #include <QSizeGrip>
@@ -50,30 +51,33 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     if (this->m_statusMessageList != nullptr) this->m_statusMessageList->deleteLater();
     this->m_statusMessageList = new CStatusMessageListModel(this);
 
-    if (this->m_atcListBooked != nullptr) this->m_atcListBooked->deleteLater();
-    this->m_atcListBooked = new CAtcListModel(this);
+    if (this->m_modelAtcListBooked != nullptr) this->m_modelAtcListBooked->deleteLater();
+    this->m_modelAtcListBooked = new CAtcListModel(this);
 
-    if (this->m_atcListOnline != nullptr) this->m_atcListOnline->deleteLater();
-    this->m_atcListOnline = new CAtcListModel(this);
+    if (this->m_modelAtcListOnline != nullptr) this->m_modelAtcListOnline->deleteLater();
+    this->m_modelAtcListOnline = new CAtcListModel(this);
 
-    if (this->m_trafficServerList != nullptr) this->m_trafficServerList->deleteLater();
-    this->m_trafficServerList = new CServerListModel(this);
+    if (this->m_modelTrafficServerList != nullptr) this->m_modelTrafficServerList->deleteLater();
+    this->m_modelTrafficServerList = new CServerListModel(this);
 
-    if (this->m_aircraftsInRange != nullptr) this->m_aircraftsInRange->deleteLater();
-    this->m_aircraftsInRange = new CAircraftListModel(this);
+    if (this->m_modelAircraftsInRange != nullptr) this->m_modelAircraftsInRange->deleteLater();
+    this->m_modelAircraftsInRange = new CAircraftListModel(this);
 
-    if (this->m_allUsers != nullptr) this->m_allUsers->deleteLater();
-    this->m_allUsers = new CUserListModel(this);
+    if (this->m_modelAllUsers != nullptr) this->m_modelAllUsers->deleteLater();
+    this->m_modelAllUsers = new CUserListModel(this);
 
-    if (this->m_usersVoiceCom1 != nullptr) this->m_usersVoiceCom1->deleteLater();
-    this->m_usersVoiceCom1 = new CUserListModel(this);
+    if (this->m_modelUsersVoiceCom1 != nullptr) this->m_modelUsersVoiceCom1->deleteLater();
+    this->m_modelUsersVoiceCom1 = new CUserListModel(this);
 
-    if (this->m_usersVoiceCom2 != nullptr) this->m_usersVoiceCom2->deleteLater();
-    this->m_usersVoiceCom2 = new CUserListModel(this);
+    if (this->m_modelUsersVoiceCom2 != nullptr) this->m_modelUsersVoiceCom2->deleteLater();
+    this->m_modelUsersVoiceCom2 = new CUserListModel(this);
+
+    if (this->m_modelSettingsHotKeys != nullptr) this->m_modelSettingsHotKeys->deleteLater();
+    this->m_modelSettingsHotKeys = new CKeyboardKeyListModel(this);
 
     // set sort order and models
     // enable first, otherwise order in the model will be reset
-    this->ui->tv_SettingsTnServers->setModel(this->m_trafficServerList);
+    this->ui->tv_SettingsTnServers->setModel(this->m_modelTrafficServerList);
 
     this->ui->tv_StatusMessages->setSortingEnabled(true);
     this->ui->tv_StatusMessages->setModel(this->m_statusMessageList);
@@ -82,51 +86,61 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
         this->ui->tv_StatusMessages->horizontalHeader()->setSortIndicator(this->m_statusMessageList->getSortColumn(), this->m_statusMessageList->getSortOrder());
 
     this->ui->tv_AtcStationsOnline->setSortingEnabled(true);
-    this->ui->tv_AtcStationsOnline->setModel(this->m_atcListOnline);
-    this->m_atcListBooked->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAtcStation::IndexDistance);
-    if (this->m_atcListOnline->hasValidSortColumn())
-        this->ui->tv_AtcStationsOnline->horizontalHeader()->setSortIndicator(this->m_atcListOnline->getSortColumn(), this->m_atcListOnline->getSortOrder());
+    this->ui->tv_AtcStationsOnline->setModel(this->m_modelAtcListOnline);
+    this->m_modelAtcListBooked->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAtcStation::IndexDistance);
+    if (this->m_modelAtcListOnline->hasValidSortColumn())
+        this->ui->tv_AtcStationsOnline->horizontalHeader()->setSortIndicator(this->m_modelAtcListOnline->getSortColumn(), this->m_modelAtcListOnline->getSortOrder());
 
     this->ui->tv_AtcStationsBooked->setSortingEnabled(true);
-    this->ui->tv_AtcStationsBooked->setModel(this->m_atcListBooked);
-    this->m_atcListBooked->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAtcStation::IndexBookedFrom);
-    if (this->m_atcListBooked->hasValidSortColumn())
-        this->ui->tv_AtcStationsBooked->horizontalHeader()->setSortIndicator(this->m_atcListBooked->getSortColumn(), this->m_atcListBooked->getSortOrder());
+    this->ui->tv_AtcStationsBooked->setModel(this->m_modelAtcListBooked);
+    this->m_modelAtcListBooked->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAtcStation::IndexBookedFrom);
+    if (this->m_modelAtcListBooked->hasValidSortColumn())
+        this->ui->tv_AtcStationsBooked->horizontalHeader()->setSortIndicator(this->m_modelAtcListBooked->getSortColumn(), this->m_modelAtcListBooked->getSortOrder());
 
     this->ui->tv_AircraftsInRange->setSortingEnabled(true);
-    this->ui->tv_AircraftsInRange->setModel(this->m_aircraftsInRange);
-    this->m_atcListBooked->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAircraft::IndexDistance);
-    if (this->m_aircraftsInRange->hasValidSortColumn())
-        this->ui->tv_AircraftsInRange->horizontalHeader()->setSortIndicator(this->m_aircraftsInRange->getSortColumn(), this->m_aircraftsInRange->getSortOrder());
+    this->ui->tv_AircraftsInRange->setModel(this->m_modelAircraftsInRange);
+    this->m_modelAtcListBooked->setSortColumnByPropertyIndex(BlackMisc::Aviation::CAircraft::IndexDistance);
+    if (this->m_modelAircraftsInRange->hasValidSortColumn())
+        this->ui->tv_AircraftsInRange->horizontalHeader()->setSortIndicator(this->m_modelAircraftsInRange->getSortColumn(), this->m_modelAircraftsInRange->getSortOrder());
     this->ui->tv_AircraftsInRange->resizeColumnsToContents();
     this->ui->tv_AircraftsInRange->resizeRowsToContents();
 
     this->ui->tv_AllUsers->setSortingEnabled(true);
-    this->ui->tv_AllUsers->setModel(this->m_allUsers);
-    this->m_allUsers->setSortColumnByPropertyIndex(BlackMisc::Network::CUser::IndexRealName);
-    if (this->m_allUsers->hasValidSortColumn())
-        this->ui->tv_AllUsers->horizontalHeader()->setSortIndicator(this->m_allUsers->getSortColumn(), this->m_allUsers->getSortOrder());
+    this->ui->tv_AllUsers->setModel(this->m_modelAllUsers);
+    this->m_modelAllUsers->setSortColumnByPropertyIndex(BlackMisc::Network::CUser::IndexRealName);
+    if (this->m_modelAllUsers->hasValidSortColumn())
+        this->ui->tv_AllUsers->horizontalHeader()->setSortIndicator(this->m_modelAllUsers->getSortColumn(), this->m_modelAllUsers->getSortOrder());
     this->ui->tv_AllUsers->resizeColumnsToContents();
     this->ui->tv_AllUsers->resizeRowsToContents();
     this->ui->tv_AllUsers->horizontalHeader()->setStretchLastSection(true);
 
     this->ui->tv_CockpitVoiceRoom1->setSortingEnabled(true);
-    this->ui->tv_CockpitVoiceRoom1->setModel(this->m_usersVoiceCom1);
-    this->m_usersVoiceCom1->setSortColumnByPropertyIndex(BlackMisc::Network::CUser::IndexRealName);
-    if (this->m_usersVoiceCom1->hasValidSortColumn())
-        this->ui->tv_CockpitVoiceRoom1->horizontalHeader()->setSortIndicator(this->m_usersVoiceCom1->getSortColumn(), this->m_usersVoiceCom1->getSortOrder());
+    this->ui->tv_CockpitVoiceRoom1->setModel(this->m_modelUsersVoiceCom1);
+    this->m_modelUsersVoiceCom1->setSortColumnByPropertyIndex(BlackMisc::Network::CUser::IndexRealName);
+    if (this->m_modelUsersVoiceCom1->hasValidSortColumn())
+        this->ui->tv_CockpitVoiceRoom1->horizontalHeader()->setSortIndicator(this->m_modelUsersVoiceCom1->getSortColumn(), this->m_modelUsersVoiceCom1->getSortOrder());
     this->ui->tv_CockpitVoiceRoom1->resizeColumnsToContents();
     this->ui->tv_CockpitVoiceRoom1->resizeRowsToContents();
     this->ui->tv_CockpitVoiceRoom1->horizontalHeader()->setStretchLastSection(true);
 
     this->ui->tv_CockpitVoiceRoom2->setSortingEnabled(true);
-    this->ui->tv_CockpitVoiceRoom2->setModel(this->m_usersVoiceCom2);
-    this->m_usersVoiceCom2->setSortColumnByPropertyIndex(BlackMisc::Network::CUser::IndexRealName);
-    if (this->m_usersVoiceCom1->hasValidSortColumn())
-        this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setSortIndicator(this->m_usersVoiceCom2->getSortColumn(), this->m_usersVoiceCom2->getSortOrder());
+    this->ui->tv_CockpitVoiceRoom2->setModel(this->m_modelUsersVoiceCom2);
+    this->m_modelUsersVoiceCom2->setSortColumnByPropertyIndex(BlackMisc::Network::CUser::IndexRealName);
+    if (this->m_modelUsersVoiceCom1->hasValidSortColumn())
+        this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setSortIndicator(this->m_modelUsersVoiceCom2->getSortColumn(), this->m_modelUsersVoiceCom2->getSortOrder());
     this->ui->tv_CockpitVoiceRoom2->resizeColumnsToContents();
     this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
     this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setStretchLastSection(true);
+
+    this->ui->tv_SettingsMiscHotkeys->setSortingEnabled(true);
+    this->ui->tv_SettingsMiscHotkeys->setModel(this->m_modelSettingsHotKeys);
+    this->m_modelSettingsHotKeys->setSortColumnByPropertyIndex(BlackMisc::Hardware::CKeyboardKey::IndexFunctionAsString);
+    if (this->m_modelSettingsHotKeys->hasValidSortColumn())
+        this->ui->tv_SettingsMiscHotkeys->horizontalHeader()->setSortIndicator(this->m_modelSettingsHotKeys->getSortColumn(), this->m_modelSettingsHotKeys->getSortOrder());
+    this->ui->tv_SettingsMiscHotkeys->resizeColumnsToContents();
+    this->ui->tv_SettingsMiscHotkeys->resizeRowsToContents();
+    this->ui->tv_SettingsMiscHotkeys->horizontalHeader()->setStretchLastSection(true);
+    this->ui->tv_SettingsMiscHotkeys->setItemDelegate(new BlackGui::CKeyboardKeyItemDelegate(this->ui->tv_SettingsMiscHotkeys));
 
     // SELCAL pairs in cockpit
     this->ui->cb_CockpitSelcal1->clear();
@@ -191,7 +205,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->connect(this->m_contextNetwork, &IContextNetwork::statusMessages, this, &MainWindow::displayStatusMessages);
     this->connect(this->m_contextNetwork, &IContextNetwork::connectionTerminated, this, &MainWindow::connectionTerminated);
     this->connect(this->m_contextNetwork, &IContextNetwork::connectionStatusChanged, this, &MainWindow::connectionStatusChanged);
-    this->connect(this->m_contextSettings, &IContextSettings::changedNetworkSettings, this, &MainWindow::changedNetworkSettings);
+    this->connect(this->m_contextSettings, &IContextSettings::changedSettings, this, &MainWindow::changedSettings);
     connect = this->connect(this->m_contextNetwork, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
     Q_ASSERT(connect);
     this->connect(this->m_timerUpdateAircraftsInRange, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
@@ -327,6 +341,11 @@ void MainWindow::initGuiSignals()
 
     // Settings
     this->connect(this->ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &MainWindow::changeWindowOpacity);
+
+    // Settings hotkeys
+    this->connect(this->ui->pb_SettingsMiscCancel, &QPushButton::clicked, this, &MainWindow::reloadSettings);
+    this->connect(this->ui->pb_SettingsMiscSave, &QPushButton::clicked, this, &MainWindow::saveHotkeys);
+    this->connect(this->ui->pb_SettingsMiscRemove, &QPushButton::clicked, this, &MainWindow::clearHotkey);
 
     // no warnings in release build
     Q_UNUSED(connected);

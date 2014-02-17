@@ -22,6 +22,7 @@
 #include "blackgui/aircraftlistmodel.h"
 #include "blackgui/userlistmodel.h"
 #include "blackgui/statusmessagelistmodel.h"
+#include "blackgui/keyboardkeylistmodel.h"
 #include "blackmisc/nwtextmessage.h"
 #include <QMainWindow>
 #include <QTextEdit>
@@ -113,13 +114,14 @@ private:
     // the table view models
     // normal pointers, as these will be deleted by parent
     BlackGui::CStatusMessageListModel *m_statusMessageList;
-    BlackGui::CAtcListModel *m_atcListOnline;
-    BlackGui::CAtcListModel *m_atcListBooked;
-    BlackGui::CServerListModel *m_trafficServerList;
-    BlackGui::CAircraftListModel *m_aircraftsInRange;
-    BlackGui::CUserListModel *m_allUsers;
-    BlackGui::CUserListModel *m_usersVoiceCom1;
-    BlackGui::CUserListModel *m_usersVoiceCom2;
+    BlackGui::CAtcListModel *m_modelAtcListOnline;
+    BlackGui::CAtcListModel *m_modelAtcListBooked;
+    BlackGui::CServerListModel *m_modelTrafficServerList;
+    BlackGui::CAircraftListModel *m_modelAircraftsInRange;
+    BlackGui::CUserListModel *m_modelAllUsers;
+    BlackGui::CUserListModel *m_modelUsersVoiceCom1;
+    BlackGui::CUserListModel *m_modelUsersVoiceCom2;
+    BlackGui::CKeyboardKeyListModel *m_modelSettingsHotKeys;
 
     // contexts
     GuiModes::CoreMode m_coreMode;
@@ -423,7 +425,7 @@ private slots:
     /*!
      * \brief Network settings have been changed
      */
-    void changedNetworkSettings();
+    void changedSettings();
 
     /*!
      * \brief Update timer
@@ -504,10 +506,15 @@ private slots:
     //! \brief start the MIC tests (Squelch)
     void startAudioTest();
 
-    //! \brief inputFocusChanged
+    //! \brief Input focus changed, used to detect whether an input control has focus
     //! \sa QApplication::focusChanged
     void inputFocusChanged(QWidget *oldWidget, QWidget *newWidget);
 
+    //! Save the Hotkeys
+    void saveHotkeys();
+
+    //! Clear single hotkey
+    void clearHotkey();
 };
 
 #pragma pop_macro("interface")

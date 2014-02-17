@@ -27,8 +27,8 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_dBusConnection("dummy"),
     // table view models
     m_statusMessageList(nullptr),
-    m_atcListOnline(nullptr), m_atcListBooked(nullptr), m_trafficServerList(nullptr), m_aircraftsInRange(nullptr),
-    m_allUsers(nullptr), m_usersVoiceCom1(nullptr), m_usersVoiceCom2(nullptr),
+    m_modelAtcListOnline(nullptr), m_modelAtcListBooked(nullptr), m_modelTrafficServerList(nullptr), m_modelAircraftsInRange(nullptr),
+    m_modelAllUsers(nullptr), m_modelUsersVoiceCom1(nullptr), m_modelUsersVoiceCom2(nullptr), m_modelSettingsHotKeys(nullptr),
     // contexts and runtime
     m_coreMode(GuiModes::CoreExternal),
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextVoiceAvailable(false),
@@ -108,8 +108,9 @@ void MainWindow::gracefulShutdown()
  */
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    Q_UNUSED(event);
     this->gracefulShutdown();
-    QMainWindow::closeEvent(event);
+    // if (this->sender() != this) QMainWindow::closeEvent(event);
     QApplication::exit();
 }
 
@@ -372,7 +373,7 @@ void MainWindow::middlePanelChanged(int /* index */)
 
         if (this->ui->sw_MainMiddle->currentWidget() == this->ui->pg_AircraftsInRange)
         {
-            if (this->m_aircraftsInRange->rowCount() < 1)
+            if (this->m_modelAircraftsInRange->rowCount() < 1)
                 this->reloadAircraftsInRange();
         }
     }
@@ -483,7 +484,7 @@ void MainWindow::displayOverlayInfo(const CStatusMessage &message)
 void MainWindow::reloadAllUsers()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_allUsers->update(this->m_contextNetwork->getUsers());
+    this->m_modelAllUsers->update(this->m_contextNetwork->getUsers());
     this->ui->tv_AllUsers->resizeColumnsToContents();
     this->ui->tv_AllUsers->resizeRowsToContents();
     this->ui->tv_AllUsers->horizontalHeader()->setStretchLastSection(true);

@@ -3,6 +3,7 @@
 #include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
+#include "blackmisc/hwkeyboardkey.h"
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -22,10 +23,15 @@ void MainWindow::reloadSettings()
     CSettingsNetwork nws = this->m_contextSettings->getNetworkSettings();
 
     // update servers
-    this->m_trafficServerList->setSelectedServer(nws.getCurrentNetworkServer());
-    this->m_trafficServerList->update(nws.getTrafficNetworkServers());
+    this->m_modelTrafficServerList->setSelectedServer(nws.getCurrentNetworkServer());
+    this->m_modelTrafficServerList->update(nws.getTrafficNetworkServers());
     this->ui->tv_SettingsTnServers->resizeColumnsToContents();
     this->ui->tv_SettingsTnServers->resizeRowsToContents();
+
+    // update hot keys
+    this->m_modelSettingsHotKeys->update(this->m_contextSettings->getHotkeys());
+    this->ui->tv_SettingsMiscHotkeys->resizeColumnsToContents();
+    this->ui->tv_SettingsMiscHotkeys->resizeRowsToContents();
 
     // fake setting for sound notifications
     this->ui->cb_SettingsAudioPlayNotificationSounds->setChecked(true);
@@ -37,7 +43,7 @@ void MainWindow::reloadSettings()
  */
 void MainWindow::networkServerSelected(QModelIndex index)
 {
-    const CServer clickedServer = this->m_trafficServerList->at(index);
+    const CServer clickedServer = this->m_modelTrafficServerList->at(index);
     this->updateGuiSelectedServerTextboxes(clickedServer);
 }
 
@@ -54,7 +60,7 @@ void MainWindow::alterTrafficServer()
         return;
     }
 
-    const QString path = CSettingUtilities::appendPaths(IContextSettings::PathNetworkSettings(), CSettingsNetwork::PathTrafficServer());
+    const QString path = CSettingUtilities::appendPaths(IContextSettings::PathNetworkSettings(), CSettingsNetwork::ValueTrafficServer());
     QObject *sender = QObject::sender();
     CStatusMessageList msgs;
     if (sender == this->ui->pb_SettingsTnCurrentServer)
@@ -75,9 +81,9 @@ void MainWindow::alterTrafficServer()
 }
 
 /*
- * Network settings did changed
+ * Settings did changed
  */
-void MainWindow::changedNetworkSettings()
+void MainWindow::changedSettings()
 {
     this->reloadSettings();
 }
@@ -117,4 +123,26 @@ CServer MainWindow::selectedServerFromTextboxes() const
     server.setUser(user);
 
     return server;
+}
+
+/*
+ * Save the hotkeys
+ */
+void MainWindow::saveHotkeys()
+{
+    const QString path = CSettingUtilities::appendPaths(IContextSettings::PathRoot(), IContextSettings::PathHotkeys());
+    CStatusMessageList msgs = this->m_contextSettings->value(path, CSettingUtilities::CmdUpdate(), this->m_modelSettingsHotKeys->getContainer().toQVariant());
+
+    // status messages
+    this->displayStatusMessages(msgs);
+}
+
+void MainWindow::clearHotkey()
+{
+    QModelIndex i = this->ui->tv_SettingsMiscHotkeys->currentIndex();
+    if (i.row() < 0 || i.row() >= this->m_modelSettingsHotKeys->rowCount()) return;
+    BlackMisc::Hardware::CKeyboardKey key = this->m_modelSettingsHotKeys->at(i);
+    BlackMisc::Hardware::CKeyboardKey defKey;
+    defKey.setFunction(key.getFunction());
+    this->m_modelSettingsHotKeys->update(i, defKey);
 }

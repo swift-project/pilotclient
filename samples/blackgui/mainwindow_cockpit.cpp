@@ -136,8 +136,8 @@ void MainWindow::updateCockpitFromContext()
         // these are the ones featuring the real audio status
         CVoiceRoomList rooms = this->m_contextVoice->getComVoiceRoomsWithAudioStatus();
         Q_ASSERT(rooms.size() == 2);
-        Q_ASSERT(this->m_usersVoiceCom1);
-        Q_ASSERT(this->m_usersVoiceCom2);
+        Q_ASSERT(this->m_modelUsersVoiceCom1);
+        Q_ASSERT(this->m_modelUsersVoiceCom2);
 
         CVoiceRoom room1 = rooms[0];
         CVoiceRoom room2 = rooms[1];
@@ -145,12 +145,12 @@ void MainWindow::updateCockpitFromContext()
         bool com2Connected = room2.isConnected();
 
         // update views
-        this->m_usersVoiceCom1->update(this->m_contextVoice->getCom1RoomUsers());
+        this->m_modelUsersVoiceCom1->update(this->m_contextVoice->getCom1RoomUsers());
         this->ui->tv_CockpitVoiceRoom1->resizeColumnsToContents();
         this->ui->tv_CockpitVoiceRoom1->resizeRowsToContents();
         this->ui->tv_CockpitVoiceRoom1->horizontalHeader()->setStretchLastSection(true);
 
-        this->m_usersVoiceCom2->update(this->m_contextVoice->getCom2RoomUsers());
+        this->m_modelUsersVoiceCom2->update(this->m_contextVoice->getCom2RoomUsers());
         this->ui->tv_CockpitVoiceRoom2->resizeColumnsToContents();
         this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
         this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setStretchLastSection(true);

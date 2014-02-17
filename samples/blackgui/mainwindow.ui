@@ -564,7 +564,7 @@ QStatusBar QLabel {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>86</width>
+                <width>90</width>
                 <height>59</height>
                </rect>
               </property>
@@ -1800,7 +1800,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QTabWidget" name="tb_Settings">
              <property name="currentIndex">
-              <number>0</number>
+              <number>4</number>
              </property>
              <widget class="QWidget" name="tb_SettingsTrafficNetwork">
               <attribute name="title">
@@ -2306,6 +2306,22 @@ QStatusBar QLabel {
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="1">
+                  <widget class="QSlider" name="hs_SettingsGuiOpacity">
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>10</number>
+                   </property>
+                   <property name="value">
+                    <number>100</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="lbl_SettingsGuiAircraftRefreshTime">
                    <property name="text">
@@ -2367,22 +2383,6 @@ QStatusBar QLabel {
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QSlider" name="hs_SettingsGuiOpacity">
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                   <property name="singleStep">
-                    <number>10</number>
-                   </property>
-                   <property name="value">
-                    <number>100</number>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="3" column="0">
                   <widget class="QLabel" name="lbl_SettingsGuiUserRefreshTime">
                    <property name="text">
@@ -2413,6 +2413,71 @@ QStatusBar QLabel {
                   </widget>
                  </item>
                 </layout>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tb_SettingsMisc">
+              <attribute name="title">
+               <string>Misc</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="vl_SettingsMisc">
+               <property name="spacing">
+                <number>3</number>
+               </property>
+               <property name="leftMargin">
+                <number>2</number>
+               </property>
+               <property name="topMargin">
+                <number>2</number>
+               </property>
+               <property name="rightMargin">
+                <number>2</number>
+               </property>
+               <property name="bottomMargin">
+                <number>2</number>
+               </property>
+               <item>
+                <widget class="QTableView" name="tv_SettingsMiscHotkeys">
+                 <property name="cornerButtonEnabled">
+                  <bool>true</bool>
+                 </property>
+                 <attribute name="verticalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="fr_SettingsMisc">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_2">
+                  <item>
+                   <widget class="QPushButton" name="pb_SettingsMiscSave">
+                    <property name="text">
+                     <string>Save</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pb_SettingsMiscRemove">
+                    <property name="text">
+                     <string>Remove</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pb_SettingsMiscCancel">
+                    <property name="text">
+                     <string>Cancel</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
                </item>
               </layout>
              </widget>

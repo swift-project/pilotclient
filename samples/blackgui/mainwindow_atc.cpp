@@ -20,7 +20,7 @@ using namespace BlackMisc::Settings;
 void MainWindow::reloadAtcStationsBooked()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_atcListBooked->update(this->m_contextNetwork->getAtcStationsBooked());
+    this->m_modelAtcListBooked->update(this->m_contextNetwork->getAtcStationsBooked());
     this->ui->tv_AtcStationsBooked->resizeColumnsToContents();
     this->ui->tv_AtcStationsBooked->resizeRowsToContents();
 }
@@ -31,7 +31,7 @@ void MainWindow::reloadAtcStationsBooked()
 void MainWindow::reloadAtcStationsOnline()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_atcListOnline->update(this->m_contextNetwork->getAtcStationsOnline());
+    this->m_modelAtcListOnline->update(this->m_contextNetwork->getAtcStationsOnline());
     this->ui->tv_AtcStationsOnline->resizeColumnsToContents();
     this->ui->tv_AtcStationsOnline->resizeRowsToContents();
 
@@ -51,7 +51,7 @@ void MainWindow::reloadAtcStationsOnline()
 void MainWindow::onlineAtcStationSelected(QModelIndex index)
 {
     this->ui->te_AtcStationsOnlineInfo->setText(""); // reset
-    const CAtcStation stationClicked = this->m_atcListOnline->at(index);
+    const CAtcStation stationClicked = this->m_modelAtcListOnline->at(index);
     QString infoMessage;
 
     if (stationClicked.hasAtis())
@@ -101,7 +101,7 @@ void MainWindow::atcStationTabChanged(int /** tabIndex **/)
     {
         if (this->ui->tw_AtcStations->currentWidget() == this->ui->tb_AtcStationsBooked)
         {
-            if (this->m_atcListBooked->rowCount() < 1)
+            if (this->m_modelAtcListBooked->rowCount() < 1)
                 this->reloadAtcStationsBooked();
         }
         else if (this->ui->tw_AtcStations->currentWidget() == this->ui->tb_AtcStationsOnline)
