@@ -200,7 +200,7 @@ namespace BlackMisc
             argument << static_cast<qint32>(this->m_transponderMode);
         }
 
-        /*!
+        /*
          * Stream from DBus >>
          */
         void CTransponder::unmarshallFromDbus(const QDBusArgument &argument)
