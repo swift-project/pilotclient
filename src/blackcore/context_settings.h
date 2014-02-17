@@ -9,8 +9,8 @@
 #include "blackcore/coreruntime.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_settings_interface.h"
-#include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/hwkeyboardkeylist.h"
 #include <QObject>
 
 #define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "blackcore.contextsettings"
@@ -29,50 +29,37 @@ namespace BlackCore
 
     public:
 
-        /*!
-         * Context
-         * \param runtime
-         */
+        //! \brief Constructor
         CContextSettings(CCoreRuntime *runtime);
 
-        /*!
-         * Destructor
-         */
+        //! Destructor
         virtual ~CContextSettings() {}
 
-        /*!
-         * \brief Register myself in DBus
-         * \param server
-         */
+        //! \brief Register myself in DBus
         void registerWithDBus(CDBusServer *server)
         {
             server->addObject(IContextSettings::ServicePath(), this);
         }
 
-        /*!
-         * \brief Runtime
-         * \return
-         */
+        //! \brief Runtime
         const CCoreRuntime *getRuntime() const
         {
             return static_cast<CCoreRuntime *>(this->parent());
         }
 
-        /*!
-         * \copydoc IContextSettings::value()
-         */
+        //! \copydoc IContextSettings::value()
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value);
 
     public slots:
-        /*!
-         * \copydoc IContextSettings::getNetworkSettings()
-         */
+        //! \copydoc IContextSettings::getNetworkSettings()
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const;
 
+        //! \copydoc IContextSettings::getHotkeys()
+        virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const;
 
     private:
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
-
+        BlackMisc::Hardware::CKeyboardKeyList m_hotkeys;
     };
 }
 

@@ -41,6 +41,14 @@ namespace BlackCore
     }
 
     /*
+     * Relay tp DBus
+     */
+    BlackMisc::Hardware::CKeyboardKeyList IContextSettings::getHotkeys() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Hardware::CKeyboardKeyList>(QLatin1Literal("getHotkeys"));
+    }
+
+    /*
      * Relay to DBus, but make this no slot
      */
     BlackMisc::CStatusMessageList IContextSettings::value(const QString &path, const QString &command, const QVariant &value)

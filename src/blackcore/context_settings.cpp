@@ -7,9 +7,10 @@
 #include "coreruntime.h"
 #include "blackmisc/settingutilities.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Network;
-using namespace BlackMisc;
+using namespace BlackMisc::Hardware;
 
 namespace BlackCore
 {
@@ -17,7 +18,7 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextSettings::CContextSettings(CCoreRuntime *runtime) : IContextSettings(runtime), m_settingsNetwork()
+    CContextSettings::CContextSettings(CCoreRuntime *runtime) : IContextSettings(runtime)
     {
         // create some dummy settings
         // this would actually be reading the settings from disk ..
@@ -28,6 +29,17 @@ namespace BlackCore
         this->m_settingsNetwork.addTrafficNetworkServer(CServer("Europe CC", "VATSIM Server", "5.9.155.43", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
         this->m_settingsNetwork.addTrafficNetworkServer(CServer("UK", "VATSIM Server", "109.169.48.148", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
         this->m_settingsNetwork.addTrafficNetworkServer(CServer("USA-W", "VATSIM Server", "64.151.108.52", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
+
+        // hotkeys
+        this->m_hotkeys.initAsHotkeyList();
+    }
+
+    /*
+     * Hotkeys
+     */
+    Hardware::CKeyboardKeyList CContextSettings::getHotkeys() const
+    {
+        return this->m_hotkeys;
     }
 
     /*
@@ -45,15 +57,40 @@ namespace BlackCore
     {
         Q_ASSERT(path.length() > 3);
         Q_ASSERT(path.indexOf('/') >= 0);
+
+        BlackMisc::CStatusMessageList msgs;
+        if (path.contains(IContextSettings::PathRoot()))
+        {
+            if (path.contains(IContextSettings::PathHotkeys()))
+            {
+                if (command == CSettingUtilities::CmdUpdate())
+                {
+                    BlackMisc::Hardware::CKeyboardKeyList hotkeys = value.value<BlackMisc::Hardware::CKeyboardKeyList>();
+                    this->m_hotkeys = hotkeys;
+                    emit this->changedSettings();
+                    msgs.push_back(CStatusMessage::getInfoMessage("set hotkeys"));
+                    return msgs;
+                }
+            }
+        }
+
+        // next level
         QString nextLevelPath = CSettingUtilities::removeLeadingPath(path);
-        BlackMisc::CStatusMessageList msgs = CSettingUtilities::wrongPathMessages(path);
         bool changed = false;
         if (path.startsWith(IContextSettings::PathNetworkSettings()))
         {
             msgs = this->m_settingsNetwork.value(nextLevelPath, command, value, changed);
-            if (changed) emit this->changedNetworkSettings();
+            if (changed)
+            {
+                emit this->changedNetworkSettings();
+                emit this->changedSettings();
+            }
+        }
+        else
+        {
+            // wrong path
+            msgs  = CSettingUtilities::wrongPathMessages(path);
         }
         return msgs;
     }
-
 } // namespace

@@ -50,7 +50,7 @@ namespace BlackMisc
              * \brief Path
              * \return
              */
-            static const QString &PathTrafficServer()
+            static const QString &ValueTrafficServer()
             {
                 static const QString cmd("trafficserver");
                 return cmd;
@@ -66,7 +66,6 @@ namespace BlackMisc
 
             /*!
              * Traffic network server objects
-             * \return
              */
             BlackMisc::Network::CServerList getTrafficNetworkServers() const { return m_trafficNetworkServers; }
 
@@ -77,7 +76,6 @@ namespace BlackMisc
 
             /*!
              * \brief URL of booking service
-             * \return
              */
             QString getBookingServiceUrl() const { return "http://vatbook.euroutepro.com/xml2.php"; }
 

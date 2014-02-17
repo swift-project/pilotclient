@@ -127,7 +127,7 @@ namespace BlackMisc
             // TODO: This needs to be refactored to a smarter way to delegate commands
             changedFlag = false;
             CStatusMessageList msgs;
-            if (path == CSettingsNetwork::PathTrafficServer())
+            if (path == CSettingsNetwork::ValueTrafficServer())
             {
                 const CServer server = value.value<CServer>();
                 if (command == CSettingsNetwork::CmdSetCurrentServer())

@@ -10,6 +10,7 @@
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/setnetwork.h"
+#include "blackmisc/hwkeyboardkeylist.h"
 #include <QObject>
 #include <QVariant>
 #include <QDBusAbstractInterface>
@@ -53,11 +54,31 @@ namespace BlackCore
 
         /*!
          * \brief Path for network settings
-         * \remark no to be confused with DBus paths
+         * \remarks no to be confused with DBus paths
          */
         static const QString &PathNetworkSettings()
         {
             static QString s("network");
+            return s;
+        }
+
+        /*!
+         * \brief Path for network settings
+         * \remarks no to be confused with DBus paths
+         */
+        static const QString &PathRoot()
+        {
+            static QString s("root");
+            return s;
+        }
+
+        /*!
+         * \brief Path for hotkeys
+         * \remarks no to be confused with DBus paths
+         */
+        static const QString &PathHotkeys()
+        {
+            static QString s("hotkeys");
             return s;
         }
 
@@ -102,26 +123,25 @@ namespace BlackCore
         IContextSettings(QObject *parent = nullptr) : QObject(parent), m_dBusInterface(nullptr) {}
 
     signals:
+        //! \brief Settings have been changed
+        void changedSettings();
 
-        /*!
-         * \brief Settings have been changed
-         */
+        //! \brief Network settings have been changed
         void changedNetworkSettings();
 
     public slots:
 
-        /*!
-         * \brief Network settings
-         */
+        //! \brief Network settings
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const;
 
+        //! \brief Hotkeys
+        virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const;
 
         /*!
          * \brief DBus version of value method.
          * \remarks Basically an unwanted signature as this is different from the "local" signature and
          * contains explicit DBus types (a: QDbusArgument, b: type for conversion).
          * If this can be removed, fine.
-         *
          */
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, QDBusVariant value, int unifiedBlackMetaType);
     };
