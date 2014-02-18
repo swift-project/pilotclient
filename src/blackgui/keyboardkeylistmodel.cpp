@@ -45,14 +45,28 @@ namespace BlackGui
     {
         if (role == Qt::EditRole)
         {
-            if (index.row() >= this->m_container.size()) return true;
-            CKeyboardKey key = this->m_container[index.row()];
-            int propertyIndex = this->columnToPropertyIndex(index.column());
-            key.setPropertyByIndex(value, propertyIndex);
-            key.cleanup();
-            this->m_container[index.row()] = key;
+            int pi = this->indexToPropertyIndex(index);
+            if (pi == CKeyboardKey::IndexModifier1 || pi == CKeyboardKey::IndexModifier2 || pi == CKeyboardKey::IndexModifier1AsString || pi == CKeyboardKey::IndexModifier2AsString)
+            {
+                if (index.row() >= this->m_container.size()) return true;
+                CKeyboardKey key = this->m_container[index.row()];
+                key.setPropertyByIndex(value, pi);
+                key.cleanup();
+                this->m_container[index.row()] = key;
+                return true;
+            }
+            else if (pi == CKeyboardKey::IndexKey || pi == CKeyboardKey::IndexKeyAsString || pi == CKeyboardKey::IndexKeyAsStringRepresentation)
+            {
+                Q_ASSERT(value.canConvert<CKeyboardKey>());
+                if (index.row() >= this->m_container.size()) return true;
+                CKeyboardKey key = this->m_container[index.row()];
+                key.setPropertyByIndex(value, CKeyboardKey::IndexKeyObject);
+                key.cleanup();
+                this->m_container[index.row()] = key;
+                return true;
+            }
         }
-        return true;
+        return CListModelBase::setData(index, value, role);
     }
 
     QWidget *CKeyboardKeyItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -62,7 +76,7 @@ namespace BlackGui
 
         if (index.row() < model->rowCount())
         {
-            int pi = model->columnToPropertyIndex(index.column());
+            int pi = model->indexToPropertyIndex(index);
             if (pi == CKeyboardKey::IndexModifier1 || pi == CKeyboardKey::IndexModifier2 || pi == CKeyboardKey::IndexModifier1AsString || pi == CKeyboardKey::IndexModifier2AsString)
             {
                 CKeyboardKey key = model->at(index);
@@ -75,7 +89,7 @@ namespace BlackGui
             else if (pi == CKeyboardKey::IndexKey || pi == CKeyboardKey::IndexKeyAsString || pi == CKeyboardKey::IndexKeyAsStringRepresentation)
             {
                 CKeyboardKey key = model->at(index);
-                CKeyboardLineEdit *edit = new CKeyboardLineEdit(parent);
+                CKeyboardLineEdit *edit = new CKeyboardLineEdit(key, parent);
                 edit->setText(key.getKeyAsString());
                 return edit;
             }
@@ -88,12 +102,18 @@ namespace BlackGui
         QItemDelegate::setEditorData(editor, index);
     }
 
-    void CKeyboardKeyItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index)
+    void CKeyboardKeyItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-        QItemDelegate::setModelData(editor, model, index);
+        // with our own line edit we have a special treatment
+        // otherwise (comboboxes) standard handling via QItemDelegate
+        CKeyboardLineEdit *lineEdit = qobject_cast<CKeyboardLineEdit *>(editor);
+        if (lineEdit)
+            model->setData(index, lineEdit->getKey().toQVariant() , Qt::EditRole);
+        else
+            QItemDelegate::setModelData(editor, model, index);
     }
 
-    void CKeyboardKeyItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index)
+    void CKeyboardKeyItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
         QItemDelegate::updateEditorGeometry(editor, option, index);
     }
@@ -113,6 +133,11 @@ namespace BlackGui
 
     void CKeyboardLineEdit::keyPressEvent(QKeyEvent *event)
     {
+        const Qt::Key k = static_cast<Qt::Key>(event->key());
+        if (k == Qt::Key_Shift || k == Qt::Key_Control || k == Qt::Key_Meta || k == Qt::Key_Alt || k == Qt::Key_CapsLock || k == Qt::Key_NumLock || k == Qt::Key_ScrollLock) return;
+        this->m_key.setKey(event->key());
+        this->m_key.setNativeScanCode(event->nativeScanCode());
+        this->m_key.setNativeVirtualKey(event->nativeVirtualKey());
         this->setText(CKeyboardKey::toStringRepresentation(event->key()));
     }
 

@@ -31,7 +31,7 @@ namespace BlackGui
         void initAsHotkeyList() { this->m_container.initAsHotkeyList(); }
 
         //! \copydoc QAbstractTableModel::setData
-        bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     };
 
     /*!
@@ -43,25 +43,24 @@ namespace BlackGui
 
     public:
         //! \brief Constructor
-        explicit CKeyboardKeyItemDelegate(QObject *parent = nullptr) : QItemDelegate(parent) {}
+        explicit CKeyboardKeyItemDelegate(QObject *parent = nullptr) :
+            QItemDelegate(parent) {}
 
         //! \copydoc QItemDelegate::createEditor
-        QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+        virtual QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
         //! \copydoc QItemDelegate::setEditorData
-        void setEditorData(QWidget *editor, const QModelIndex &index) const override;
+        virtual void setEditorData(QWidget *editor, const QModelIndex &index) const override;
 
         //! \copydoc QItemDelegate::setModelData
-        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index);
+        virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 
         //! \copydoc QItemDelegate::updateEditorGeometry
-        void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index);
+        virtual void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
         //! \brief correspondig model
         const CKeyboardKeyListModel *model() const;
-
     };
-
 
     /*!
      * \brief Special edit widget for key sequence
@@ -72,12 +71,18 @@ namespace BlackGui
 
     public:
         //! Constructor
-        CKeyboardLineEdit(QWidget *parent = nullptr) : QLineEdit(parent) { }
+        CKeyboardLineEdit(BlackMisc::Hardware::CKeyboardKey &key, QWidget *parent = nullptr) :
+            QLineEdit(parent), m_key(key) { }
+
+        //! \brief get key
+        BlackMisc::Hardware::CKeyboardKey getKey() const { return this->m_key; }
 
     protected:
         //! \brief Overriding and handling key press
         virtual void keyPressEvent(QKeyEvent *event) override;
 
+    private:
+        BlackMisc::Hardware::CKeyboardKey m_key;
     };
 }
 #endif // guard
