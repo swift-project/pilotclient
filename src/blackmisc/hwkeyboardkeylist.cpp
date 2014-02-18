@@ -38,11 +38,11 @@ namespace BlackMisc
         void CKeyboardKeyList::initAsHotkeyList()
         {
             this->clear();
-            this->push_back(CKeyboardKey(QChar::Null, CKeyboardKey::ModifierNone, CKeyboardKey::ModifierNone, CKeyboardKey::HotkeyPtt));
-            this->push_back(CKeyboardKey(QChar::Null, CKeyboardKey::ModifierNone, CKeyboardKey::ModifierNone, CKeyboardKey::HotkeyOpacity50));
-            this->push_back(CKeyboardKey(QChar::Null, CKeyboardKey::ModifierNone, CKeyboardKey::ModifierNone, CKeyboardKey::HotkeyOpacity100));
-            this->push_back(CKeyboardKey(QChar::Null, CKeyboardKey::ModifierNone, CKeyboardKey::ModifierNone, CKeyboardKey::HotkeyToggleCom1));
-            this->push_back(CKeyboardKey(QChar::Null, CKeyboardKey::ModifierNone, CKeyboardKey::ModifierNone, CKeyboardKey::HotkeyToggleCom2));
+            this->push_back(CKeyboardKey(CKeyboardKey::HotkeyPtt));
+            this->push_back(CKeyboardKey(CKeyboardKey::HotkeyOpacity50));
+            this->push_back(CKeyboardKey(CKeyboardKey::HotkeyOpacity100));
+            this->push_back(CKeyboardKey(CKeyboardKey::HotkeyToggleCom1));
+            this->push_back(CKeyboardKey(CKeyboardKey::HotkeyToggleCom2));
         }
 
     } // namespace

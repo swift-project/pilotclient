@@ -12,17 +12,22 @@ namespace BlackMisc
     namespace Hardware
     {
         CKeyboardKey::CKeyboardKey() :
-            m_key(0), m_modifier1(ModifierNone), m_modifier2(ModifierNone), m_function(HotkeyNone), m_pressed(false)
+            m_qtKey(0), m_nativeScanCode(0), m_nativeVirtualKey(0), m_modifier1(ModifierNone), m_modifier2(ModifierNone), m_function(HotkeyNone), m_pressed(false)
         {}
 
-        CKeyboardKey::CKeyboardKey(int keyCode, Modifier modifier1, Modifier modifier2, const HotkeyFunction &function, bool isPressed) :
-            m_key(keyCode), m_modifier1(modifier1), m_modifier2(modifier2), m_function(function), m_pressed(isPressed)
+        CKeyboardKey::CKeyboardKey(HotkeyFunction function) :
+            m_qtKey(0), m_nativeScanCode(0), m_nativeVirtualKey(0), m_modifier1(ModifierNone), m_modifier2(ModifierNone), m_function(function), m_pressed(false)
+        {}
+
+
+        CKeyboardKey::CKeyboardKey(int keyCode, quint32 nativeScanCode, quint32 nativeVirtualKey, Modifier modifier1, Modifier modifier2, const HotkeyFunction &function, bool isPressed) :
+            m_qtKey(keyCode), m_nativeScanCode(nativeScanCode), m_nativeVirtualKey(nativeVirtualKey), m_modifier1(modifier1), m_modifier2(modifier2), m_function(function), m_pressed(isPressed)
         {}
 
         uint CKeyboardKey::getValueHash() const
         {
             QList<uint> hashs;
-            hashs << qHash(this->m_key);
+            hashs << qHash(this->m_qtKey);
             hashs << qHash(this->m_function);
             hashs << qHash(static_cast<uint>(this->m_modifier1));
             hashs << qHash(static_cast<uint>(this->m_modifier2));
@@ -39,7 +44,7 @@ namespace BlackMisc
         {
             QString s = this->getModifier1AsString();
             s.append(" ").append(this->getModifier2AsString()).append(" ");
-            if (this->m_key != 0) this->getKeyAsStringRepresentation();
+            if (this->m_qtKey != 0) this->getKeyAsStringRepresentation();
             return s.trimmed();
         }
 
@@ -56,14 +61,16 @@ namespace BlackMisc
         int CKeyboardKey::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CKeyboardKey &>(otherBase);
-            QString k1(this->m_key);
+            QString k1(this->m_qtKey);
             QString k2(other.getKey());
             return k1.compare(k2);
         }
 
         void CKeyboardKey::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_key;
+            argument << this->m_qtKey;
+            argument << this->m_nativeScanCode;
+            argument << this->m_nativeVirtualKey;
             argument << static_cast<uint>(this->m_modifier1);
             argument << static_cast<uint>(this->m_modifier2);
             argument << static_cast<uint>(this->m_function);
@@ -72,8 +79,10 @@ namespace BlackMisc
 
         void CKeyboardKey::unmarshallFromDbus(const QDBusArgument &argument)
         {
+            argument >> this->m_qtKey;
+            argument >> this->m_nativeScanCode;
+            argument >> this->m_nativeVirtualKey;
             uint c;
-            argument >> this->m_key;
             argument >> c;
             this->m_modifier1 = static_cast<Modifier>(c);
             argument >> c;
@@ -201,14 +210,14 @@ namespace BlackMisc
         void CKeyboardKey::setKey(const QString &key)
         {
             if (key.isEmpty())
-                this->m_key = 0;
+                this->m_qtKey = 0;
             else if (key.contains(QRegExp("\\((\\d+)\\)")))
             {
                 QString code = key.mid(key.indexOf("(") + 1).replace(")", "");
                 if (code.isEmpty())
-                    this->m_key = 0;
+                    this->m_qtKey = 0;
                 else
-                    this->m_key = code.toInt();
+                    this->m_qtKey = code.toInt();
             }
             else
                 this->setKey(key.at(0));
@@ -217,9 +226,9 @@ namespace BlackMisc
         void CKeyboardKey::setKey(const QChar key)
         {
             if (key.isNull())
-                this->m_key = 0;
+                this->m_qtKey = 0;
             else
-                this->m_key = key.digitValue();
+                this->m_qtKey = key.digitValue();
         }
 
         QString CKeyboardKey::getFunctionAsString() const
@@ -245,6 +254,17 @@ namespace BlackMisc
             (void)QT_TRANSLATE_NOOP("Hotkey", "Toggle COM2");
         }
 
+        void CKeyboardKey::setKeyObject(const CKeyboardKey &key)
+        {
+            this->m_function = key.m_function;
+            this->m_modifier1 = key.m_modifier1;
+            this->m_modifier2 = key.m_modifier2;
+            this->m_nativeScanCode = key.m_nativeScanCode;
+            this->m_nativeVirtualKey = key.m_nativeVirtualKey;
+            this->m_qtKey = key.m_qtKey;
+            this->m_pressed = key.m_pressed;
+        }
+
         QVariant CKeyboardKey::propertyByIndex(int index) const
         {
             switch (index)
@@ -262,9 +282,9 @@ namespace BlackMisc
             case IndexModifier2AsString:
                 return QVariant(this->getModifier2AsString());
             case IndexKey:
-                return QVariant(this->m_key);
+                return QVariant(this->m_qtKey);
             case IndexKeyAsString:
-                return QVariant(QString(QChar(this->m_key)));
+                return QVariant(QString(QChar(this->m_qtKey)));
             case IndexKeyAsStringRepresentation:
                 return QVariant(this->getKeyAsStringRepresentation());
             case IndexIsPressed:
@@ -282,7 +302,7 @@ namespace BlackMisc
         {
             if (key == 0) return "";
             QString ks = QKeySequence(key).toString();
-            ks.append('(').append(QString::number(key)).append(')');
+            // ks.append('(').append(QString::number(key)).append(')');
             return ks;
         }
 
@@ -315,6 +335,9 @@ namespace BlackMisc
                 break;
             case IndexModifier2AsString:
                 this->setModifier2(variant.value<QString>());
+                break;
+            case IndexKeyObject:
+                this->setKeyObject(variant.value<BlackMisc::Hardware::CKeyboardKey>());
                 break;
             default:
                 Q_ASSERT_X(false, "CKeyboardKey", "index unknown (setter)");

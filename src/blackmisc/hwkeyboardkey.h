@@ -37,7 +37,8 @@ namespace BlackMisc
                 IndexModifier2AsString,
                 IndexFunction,
                 IndexFunctionAsString,
-                IndexIsPressed
+                IndexIsPressed,
+                IndexKeyObject, // just for updates
             };
 
             //! \brief Function
@@ -71,8 +72,11 @@ namespace BlackMisc
             //! \brief Default constructor
             CKeyboardKey();
 
+            //! \brief Constructor by function
+            CKeyboardKey(HotkeyFunction function);
+
             //! \brief Constructor
-            CKeyboardKey(int keyCode, Modifier modifier1 = ModifierNone, Modifier modifier2 = ModifierNone, const HotkeyFunction &function = HotkeyNone, bool isPressed = false);
+            CKeyboardKey(int keyCode, quint32 nativeScanCode, quint32 nativeVirtualKey, Modifier modifier1 = ModifierNone, Modifier modifier2 = ModifierNone, const HotkeyFunction &function = HotkeyNone, bool isPressed = false);
 
             //! \brief Destructor
             ~CKeyboardKey() {}
@@ -102,22 +106,40 @@ namespace BlackMisc
             void setPressed(bool isPressed) { this->m_pressed = isPressed; }
 
             //! \brief Get key code
-            QChar getKey() const { return QChar(this->m_key); }
+            QChar getKey() const { return QChar(this->m_qtKey); }
 
             //! \brief Get key code
             QString getKeyAsString() const { return QString(this->getKey()); }
 
             //! \brief Get key code
-            QString getKeyAsStringRepresentation() const { return CKeyboardKey::toStringRepresentation(this->m_key); }
+            QString getKeyAsStringRepresentation() const { return CKeyboardKey::toStringRepresentation(this->m_qtKey); }
 
             //! \brief As Qt::Key
-            Qt::Key getKeyAsQtKey() const { return static_cast<Qt::Key>(this->m_key);}
+            Qt::Key getKeyAsQtKey() const { return static_cast<Qt::Key>(this->m_qtKey);}
 
             //! \brief Set key code
             void setKey(const QString &key);
 
             //! \brief Set key code
             void setKey(const QChar key);
+
+            //! \brief Set key code
+            void setKey(const Qt::Key key) { this->m_qtKey = static_cast<int>(key); }
+
+            //! \brief Set key code
+            void setKey(int key) { this->m_qtKey = key; }
+
+            //! \brief Native scan code
+            void setNativeScanCode(quint32 scanCode) { this->m_nativeScanCode = scanCode; }
+
+            //! \brief Native virtual key
+            void setNativeVirtualKey(quint32 virtualKey) { this->m_nativeVirtualKey = virtualKey; }
+
+            //! \brief Native scan code
+            quint32 getNativeScanCode() const { return this->m_nativeScanCode; }
+
+            //! \brief Native virtual key
+            quint32 getNativeVirtualKey() const { return this->m_nativeVirtualKey; }
 
             //! \brief number of modifiers
             int numberOfModifiers() const;
@@ -152,7 +174,7 @@ namespace BlackMisc
             //! \brief with key?
             bool hasKey() const
             {
-                return !this->m_key == 0;
+                return !this->m_qtKey == 0;
             }
 
             //! \brief Key + modifier?
@@ -166,6 +188,9 @@ namespace BlackMisc
 
             //! \brief Function (optional)
             QString getFunctionAsString() const;
+
+            //! \brief Set key object
+            void setKeyObject(const BlackMisc::Hardware::CKeyboardKey &key);
 
             //! \brief Set function
             void setFunction(const HotkeyFunction &function) { this->m_function = function; }
@@ -215,7 +240,9 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
-            int m_key;
+            int m_qtKey; //!< code similar to Qt::Key
+            quint32 m_nativeScanCode; //!< native scan code, QKeyEvent::nativeScanCode
+            quint32 m_nativeVirtualKey; //!< virtual key code
             Modifier m_modifier1;
             Modifier m_modifier2;
             HotkeyFunction m_function;
