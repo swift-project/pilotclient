@@ -126,6 +126,14 @@ namespace BlackMisc
             PQ &switchUnit(const MU &newUnit);
 
             /*!
+             * Is quantity null?
+             */
+            bool isNull() const
+            {
+                return this->m_unit.isNull();
+            }
+
+            /*!
              * \brief Value in given unit
              */
             double value(const MU &unit) const;

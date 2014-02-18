@@ -37,6 +37,10 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
+            CLengthUnit(const QString &name, const QString &symbol, std::nullptr_t) :
+                CMeasurementUnit(name, symbol, nullptr)
+            {}
+
             struct NauticalMilesToMeters    { static double factor() { return 1852.0;    } };
             struct FeetToMeters             { static double factor() { return    0.3048; } };
             struct MilesToMeters            { static double factor() { return 1609.344;  } };
@@ -61,6 +65,15 @@ namespace BlackMisc
              * \brief Default unit
              */
             static const CLengthUnit &defaultUnit() { return m(); }
+
+            /*!
+             * \brief Null unit
+             */
+            static const CLengthUnit &nullUnit()
+            {
+                static CLengthUnit nu("null", "null", nullptr);
+                return nu;
+            }
 
             /*!
              * \brief Meter m
@@ -133,6 +146,7 @@ namespace BlackMisc
                 static QList<CLengthUnit> u;
                 if (u.isEmpty())
                 {
+                    u.append(CLengthUnit::nullUnit());
                     u.append(CLengthUnit::cm());
                     u.append(CLengthUnit::ft());
                     u.append(CLengthUnit::km());
@@ -167,6 +181,10 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
+            CAngleUnit(const QString &name, const QString &symbol, std::nullptr_t) :
+                CMeasurementUnit(name, symbol, nullptr)
+            {}
+
             struct RadiansToDegrees { static double factor() { return 180.0 / M_PI; } };
             typedef One DegreesToDegrees;
 
@@ -188,6 +206,15 @@ namespace BlackMisc
              * \brief Default unit
              */
             static const CAngleUnit &defaultUnit() { return deg(); }
+
+            /*!
+             * \brief Null unit
+             */
+            static const CAngleUnit &nullUnit()
+            {
+                static CAngleUnit nu("null", "null", nullptr);
+                return nu;
+            }
 
             /*!
              * \copydoc CMeasurementUnit::makeRoundedQStringWithUnit
@@ -242,6 +269,7 @@ namespace BlackMisc
                 static QList<CAngleUnit> u;
                 if (u.isEmpty())
                 {
+                    u.append(CAngleUnit::nullUnit());
                     u.append(CAngleUnit::deg());
                     u.append(CAngleUnit::rad());
                     u.append(CAngleUnit::sexagesimalDeg());
@@ -273,6 +301,10 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
+            CFrequencyUnit(const QString &name, const QString &symbol, std::nullptr_t) :
+                CMeasurementUnit(name, symbol, nullptr)
+            {}
+
             typedef One HertzToHertz;
 
         public:
@@ -293,6 +325,15 @@ namespace BlackMisc
              * \brief Default unit
              */
             static const CFrequencyUnit &defaultUnit() { return Hz(); }
+
+            /*!
+             * \brief Null unit
+             */
+            static const CFrequencyUnit &nullUnit()
+            {
+                static CFrequencyUnit nu("null", "null", nullptr);
+                return nu;
+            }
 
             /*!
              * \brief Hertz
@@ -338,6 +379,7 @@ namespace BlackMisc
                 static QList<CFrequencyUnit> u;
                 if (u.isEmpty())
                 {
+                    u.append(CFrequencyUnit::nullUnit());
                     u.append(CFrequencyUnit::GHz());
                     u.append(CFrequencyUnit::Hz());
                     u.append(CFrequencyUnit::kHz());
@@ -369,6 +411,10 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
+            CMassUnit(const QString &name, const QString &symbol, std::nullptr_t) :
+                CMeasurementUnit(name, symbol, nullptr)
+            {}
+
             typedef Milli<One> GramsToKilograms;
             struct PoundsToKilograms { static double factor() { return 0.45359237; } };
 
@@ -390,6 +436,15 @@ namespace BlackMisc
              * \brief Default unit
              */
             static const CMassUnit &defaultUnit() { return kg(); }
+
+            /*!
+             * \brief Null unit
+             */
+            static const CMassUnit &nullUnit()
+            {
+                static CMassUnit nu("null", "null", nullptr);
+                return nu;
+            }
 
             /*!
              * \brief Kilogram, SI base unit
@@ -444,6 +499,7 @@ namespace BlackMisc
                 static QList<CMassUnit> u;
                 if (u.isEmpty())
                 {
+                    u.append(CMassUnit::nullUnit());
                     u.append(CMassUnit::g());
                     u.append(CMassUnit::kg());
                     u.append(CMassUnit::lb());
@@ -476,6 +532,10 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
+            CPressureUnit(const QString &name, const QString &symbol, std::nullptr_t) :
+                CMeasurementUnit(name, symbol, nullptr)
+            {}
+
             typedef Centi<One> PascalsToHectopascals;
             struct PsiToHectopascals            { static double factor() { return  68.948;      } };
             struct InchesToHectopascals         { static double factor() { return  33.86389;    } };
@@ -499,6 +559,15 @@ namespace BlackMisc
              * \brief Default unit
              */
             static const CPressureUnit &defaultUnit() { return hPa(); }
+
+            /*!
+             * \brief Null unit
+             */
+            static const CPressureUnit &nullUnit()
+            {
+                static CPressureUnit nu("null", "null", nullptr);
+                return nu;
+            }
 
             /*!
              * \brief Pascal
@@ -571,6 +640,7 @@ namespace BlackMisc
                 static QList<CPressureUnit> u;
                 if (u.isEmpty())
                 {
+                    u.append(CPressureUnit::nullUnit());
                     u.append(CPressureUnit::bar());
                     u.append(CPressureUnit::hPa());
                     u.append(CPressureUnit::inHg());
@@ -604,6 +674,10 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
+            CTemperatureUnit(const QString &name, const QString &symbol, std::nullptr_t) :
+                CMeasurementUnit(name, symbol, nullptr)
+            {}
+
             struct KelvinToCentigrade
             {
                 static double factor() { return 1.0; }
@@ -633,6 +707,15 @@ namespace BlackMisc
              * \brief Default unit
              */
             static const CTemperatureUnit &defaultUnit() { return C(); }
+
+            /*!
+             * \brief Null unit
+             */
+            static const CTemperatureUnit &nullUnit()
+            {
+                static CTemperatureUnit nu("null", "null", nullptr);
+                return nu;
+            }
 
             /*!
              * \brief Kelvin
@@ -669,6 +752,7 @@ namespace BlackMisc
                 static QList<CTemperatureUnit> u;
                 if (u.isEmpty())
                 {
+                    u.append(CTemperatureUnit::nullUnit());
                     u.append(CTemperatureUnit::C());
                     u.append(CTemperatureUnit::F());
                     u.append(CTemperatureUnit::K());
@@ -699,6 +783,10 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
+            CSpeedUnit(const QString &name, const QString &symbol, std::nullptr_t) :
+                CMeasurementUnit(name, symbol, nullptr)
+            {}
+
             struct KnotsToMps       { static double factor() { return 1852.0    / 3600.0; } };
             struct KphToMps         { static double factor() { return    1.0    /    3.6; } };
             struct FtPerSecToMps    { static double factor() { return    0.3048         ; } };
@@ -722,6 +810,15 @@ namespace BlackMisc
              * Default unit
              */
             static const CSpeedUnit &defaultUnit() { return m_s(); }
+
+            /*!
+             * Null unit
+             */
+            static const CSpeedUnit &nullUnit()
+            {
+                static CSpeedUnit nu("null", "null", nullptr);
+                return nu;
+            }
 
             /*!
              * \brief Meter/second m/s
@@ -785,6 +882,7 @@ namespace BlackMisc
                 static QList<CSpeedUnit> u;
                 if (u.isEmpty())
                 {
+                    u.append(CSpeedUnit::nullUnit());
                     u.append(CSpeedUnit::ft_min());
                     u.append(CSpeedUnit::ft_s());
                     u.append(CSpeedUnit::km_h());
@@ -818,6 +916,10 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
+            CTimeUnit(const QString &name, const QString &symbol, std::nullptr_t) :
+                CMeasurementUnit(name, symbol, nullptr)
+            {}
+
             typedef One SecondsToSeconds;
             struct DaysToSeconds    { static double factor() { return 60.0 * 60.0 * 24.0;   } };
             struct HoursToSeconds   { static double factor() { return 60.0 * 60.0;          } };
@@ -841,6 +943,15 @@ namespace BlackMisc
              * Default unit
              */
             static const CTimeUnit &defaultUnit() { return s(); }
+
+            /*!
+             * Null unit
+             */
+            static const CTimeUnit &nullUnit()
+            {
+                static CTimeUnit nu("null", "null", nullptr);
+                return nu;
+            }
 
             /*!
              * \copydoc CMeasurementUnit::makeRoundedQStringWithUnit
@@ -933,6 +1044,7 @@ namespace BlackMisc
                 static QList<CTimeUnit> u;
                 if (u.isEmpty())
                 {
+                    u.append(CTimeUnit::nullUnit());
                     u.append(CTimeUnit::d());
                     u.append(CTimeUnit::h());
                     u.append(CTimeUnit::min());
@@ -965,6 +1077,10 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
+            CAccelerationUnit(const QString &name, const QString &symbol, std::nullptr_t) :
+                CMeasurementUnit(name, symbol, nullptr)
+            {}
+
             struct FeetToMeters { static double factor() { return 0.3048; } };
 
         public:
@@ -985,6 +1101,15 @@ namespace BlackMisc
              * Default unit
              */
             static const CAccelerationUnit &defaultUnit() { return m_s2(); }
+
+            /*!
+             * Null unit
+             */
+            static const CAccelerationUnit &nullUnit()
+            {
+                static CAccelerationUnit nu("null", "null", nullptr);
+                return nu;
+            }
 
             /*!
              * \brief Meter/second^2 (m/s^2)
@@ -1012,6 +1137,7 @@ namespace BlackMisc
                 static QList<CAccelerationUnit> u;
                 if (u.isEmpty())
                 {
+                    u.append(CAccelerationUnit::nullUnit());
                     u.append(CAccelerationUnit::ft_s2());
                     u.append(CAccelerationUnit::m_s2());
                 }

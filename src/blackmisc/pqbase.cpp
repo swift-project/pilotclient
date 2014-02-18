@@ -39,8 +39,7 @@ namespace BlackMisc
          */
         double CMeasurementUnit::convertFrom(double value, const CMeasurementUnit &unit) const
         {
-            Q_ASSERT(this->m_converter);
-            Q_ASSERT(unit.m_converter);
+            if (this->isNull() || unit.isNull()) return -1; // models the previous behaviour of using -1 as a sentinel value
             if (this->m_converter == unit.m_converter) return value;
             return this->m_converter->fromDefault(unit.m_converter->toDefault(value));
         }

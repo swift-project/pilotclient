@@ -16,6 +16,7 @@
 #include <QSharedData>
 #include <QSharedDataPointer>
 #include <QHash>
+#include <cstddef>
 
 namespace BlackMisc
 {
@@ -214,6 +215,13 @@ namespace BlackMisc
                 : m_name(name), m_symbol(symbol), m_epsilon(epsilon), m_displayDigits(displayDigits), m_converter(new Converter)
             {}
 
+            /*!
+             * Construct a null unit
+             */
+            CMeasurementUnit(const QString &name, const QString &symbol, std::nullptr_t)
+                : m_name(name), m_symbol(symbol), m_epsilon(0.0), m_displayDigits(0)
+            {}
+
             //! \copydoc CValueObject::stringForStreaming
             virtual QString stringForStreaming() const override
             {
@@ -346,6 +354,14 @@ namespace BlackMisc
             {
                 if (value == 0) return true;
                 return abs(value) <= this->m_epsilon;
+            }
+
+            /*!
+             * \brief Is unit null?
+             */
+            bool isNull() const
+            {
+                return this->m_converter.data() == nullptr;
             }
 
             // --------------------------------------------------------------------
