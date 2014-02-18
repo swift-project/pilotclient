@@ -17,7 +17,7 @@ namespace BlackMisc
          * Constructor
          */
         CAtcStation::CAtcStation()  :
-            m_distanceToPlane(-1.0, CLengthUnit::NM()), m_isOnline(false), m_atis(CInformationMessage::ATIS), m_metar(CInformationMessage::METAR)
+            m_distanceToPlane(0, CLengthUnit::nullUnit()), m_isOnline(false), m_atis(CInformationMessage::ATIS), m_metar(CInformationMessage::METAR)
         {
             // void
         }
@@ -26,7 +26,7 @@ namespace BlackMisc
          * Constructor
          */
         CAtcStation::CAtcStation(const QString &callsign)  :
-            m_callsign(callsign), m_distanceToPlane(-1.0, CLengthUnit::NM()), m_isOnline(false), m_atis(CInformationMessage::ATIS), m_metar(CInformationMessage::METAR)
+            m_callsign(callsign), m_distanceToPlane(0, CLengthUnit::nullUnit()), m_isOnline(false), m_atis(CInformationMessage::ATIS), m_metar(CInformationMessage::METAR)
         {
             // void
         }
@@ -37,7 +37,7 @@ namespace BlackMisc
         CAtcStation::CAtcStation(const CCallsign &callsign, const CUser &controller, const CFrequency &frequency, const CCoordinateGeodetic &pos, const CLength &range, bool isOnline,
                                  const QDateTime &bookedFromUtc, const QDateTime &bookedUntilUtc, const CInformationMessage &atis, const CInformationMessage &metar) :
             m_callsign(callsign), m_controller(controller), m_frequency(frequency), m_position(pos),
-            m_range(range), m_distanceToPlane(-1.0, CLengthUnit::NM()), m_isOnline(isOnline),
+            m_range(range), m_distanceToPlane(0, CLengthUnit::nullUnit()), m_isOnline(isOnline),
             m_bookedFromUtc(bookedFromUtc), m_bookedUntilUtc(bookedUntilUtc), m_atis(atis), m_metar(metar)
         {
             // void

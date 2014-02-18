@@ -28,7 +28,7 @@ namespace BlackMisc
             /*!
              * Default constructor.
              */
-            CTextMessage() : m_received(QDateTime::currentDateTimeUtc()), m_frequency(-1.0, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()) {}
+            CTextMessage() : m_received(QDateTime::currentDateTimeUtc()), m_frequency(0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()) {}
 
             /*!
              * Constructor, radio message
@@ -43,7 +43,7 @@ namespace BlackMisc
              * Constructor, private message
              */
             CTextMessage(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign = BlackMisc::Aviation::CCallsign())
-                : m_message(message), m_received(QDateTime::currentDateTimeUtc()), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(-1.0, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()) {}
+                : m_message(message), m_received(QDateTime::currentDateTimeUtc()), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()) {}
 
             /*!
              * Get callsign (from)
