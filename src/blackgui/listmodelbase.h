@@ -71,6 +71,14 @@ namespace BlackGui
         virtual int columnToPropertyIndex(int column) const;
 
         /*!
+         * \brief Index to property index
+         * \param index
+         */
+        virtual int indexToPropertyIndex(const QModelIndex &index) const {
+            return this->columnToPropertyIndex(index.column());
+        }
+
+        /*!
          * \brief Set sort column
          * \param column column index
          */
