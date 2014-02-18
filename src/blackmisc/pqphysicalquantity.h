@@ -36,7 +36,6 @@ namespace BlackMisc
 
             /*!
              * \brief Easy access to derived class (CRTP template parameter)
-             * \return
              */
             PQ const *derived() const
             {
@@ -45,7 +44,6 @@ namespace BlackMisc
 
             /*!
              * \brief Easy access to derived class (CRTP template parameter)
-             * \return
              */
             PQ *derived()
             {
@@ -55,14 +53,11 @@ namespace BlackMisc
         protected:
             /*!
              * \brief Constructor with double
-             * \param value
-             * \param unit
              */
             CPhysicalQuantity(double value, const MU &unit);
 
             /*!
              * \brief Copy constructor
-             * \param other
              */
             CPhysicalQuantity(const CPhysicalQuantity &other);
 
@@ -94,7 +89,6 @@ namespace BlackMisc
 
             /*!
              * \brief Unit
-             * \return
              */
             MU getUnit() const
             {
@@ -103,7 +97,6 @@ namespace BlackMisc
 
             /*!
              * \brief Simply set unit, do no calclulate conversion
-             * \param unit
              * \sa switchUnit
              */
             void setUnit(const MU &unit)
@@ -113,7 +106,6 @@ namespace BlackMisc
 
             /*!
              * \brief Set unit by string
-             * \param unitName
              */
             void setUnitByString(const QString &unitName)
             {
@@ -122,7 +114,6 @@ namespace BlackMisc
 
             /*!
              * \brief Unit
-             * \return
              */
             QString getUnitSymbol() const
             {
@@ -131,21 +122,16 @@ namespace BlackMisc
 
             /*!
              * \brief Change unit, and convert value to maintain the same quantity
-             * \param newUnit
-             * \return
              */
             PQ &switchUnit(const MU &newUnit);
 
             /*!
              * \brief Value in given unit
-             * \param unit
-             * \return
              */
             double value(const MU &unit) const;
 
             /*!
              * \brief Value in current unit
-             * \return
              */
             double value() const
             {
@@ -154,7 +140,6 @@ namespace BlackMisc
 
             /*!
              * \brief Set value in current unit
-             * \param value
              */
             void setCurrentUnitValue(double value)
             {
@@ -163,16 +148,11 @@ namespace BlackMisc
 
             /*!
              * \brief Rounded value in given unit
-             * \param unit
-             * \param digits
-             * \return
              */
             double valueRounded(const MU &unit, int digits = -1) const;
 
             /*!
              * \brief Rounded value in current unit
-             * \param digits
-             * \return
              */
             double valueRounded(int digits = -1) const
             {
@@ -181,18 +161,11 @@ namespace BlackMisc
 
             /*!
              * \brief Value to QString with the given unit, e.g. "5.00m"
-             * \param unit
-             * \param digits
-             * \param i18n
-             * \return
              */
             QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
 
             /*!
              * \brief Value to QString with the current unit, e.g. "5.00m"
-             * \param digits
-             * \param i18n
-             * \return
              */
             QString valueRoundedWithUnit(int digits = -1, bool i18n = false) const
             {
@@ -201,48 +174,36 @@ namespace BlackMisc
 
             /*!
              * \brief Change value without changing unit
-             * \param value
              */
             void setValueSameUnit(double value);
 
             /*!
              * \brief Add to the value in the current unit.
-             * \param value
              */
             void addValueSameUnit(double value);
 
             /*!
              * \brief Substract from the value in the current unit.
-             * \param value
              */
             void substractValueSameUnit(double value);
 
             /*!
             * \brief Multiply operator *=
-            * \param multiply
-            * \return
             */
             CPhysicalQuantity &operator *=(double multiply);
 
             /*!
              * \brief Divide operator /=
-             * \param divide
-             * \return
              */
             CPhysicalQuantity &operator /=(double divide);
 
             /*!
              * \brief Operator *
-             * \param multiply
-             * \return
              */
             PQ operator *(double multiply) const;
 
             /*!
              * \brief Operator to support commutative multiplication
-             * \param factor
-             * \param other
-             * \return
              */
             friend PQ operator *(double factor, const PQ &other)
             {
@@ -251,84 +212,61 @@ namespace BlackMisc
 
             /*!
              * \brief Operator /
-             * \param divide
-             * \return
              */
             PQ operator /(double divide) const;
 
             /*!
              * \brief Equal operator ==
-             * \param other
-             * \return
              */
             bool operator==(const CPhysicalQuantity &other) const;
 
             /*!
              * \brief Not equal operator !=
-             * \param other
-             * \return
              */
             bool operator!=(const CPhysicalQuantity &other) const;
 
             /*!
              * \brief Plus operator +=
-             * \param other
-             * \return
              */
             CPhysicalQuantity &operator +=(const CPhysicalQuantity &other);
 
             /*!
              * \brief Minus operator-=
-             * \param other
-             * \return
              */
             CPhysicalQuantity &operator -=(const CPhysicalQuantity &other);
 
             /*!
              * \brief Greater operator >
-             * \param other
-             * \return
              */
             bool operator >(const CPhysicalQuantity &other) const;
 
             /*!
              * \brief Less operator <
-             * \param other
-             * \return
              */
             bool operator <(const CPhysicalQuantity &other) const;
 
             /*!
              * \brief Less equal operator <=
-             * \param other
-             * \return
              */
             bool operator <=(const CPhysicalQuantity &other) const;
 
             /*!
              * \brief Greater equal operator >=
-             * \param other
-             * \return
              */
             bool operator >=(const CPhysicalQuantity &other) const;
 
             /*!
              * \brief Plus operator +
-             * \param other
-             * \return
              */
             PQ operator +(const PQ &other) const;
 
             /*!
              * \brief Minus operator -
-             * \param other
-             * \return
              */
             PQ operator -(const PQ &other) const;
 
             /*!
              * \brief Quantity value <= epsilon
-             * \return
              */
             bool isZeroEpsilonConsidered() const
             {
@@ -337,7 +275,6 @@ namespace BlackMisc
 
             /*!
              * \brief Value >= 0 epsilon considered
-             * \return
              */
             bool isPositiveWithEpsilonConsidered() const
             {
@@ -346,7 +283,6 @@ namespace BlackMisc
 
             /*!
              * \brief Value <= 0 epsilon considered
-             * \return
              */
             bool isNegativeWithEpsilonConsidered() const
             {

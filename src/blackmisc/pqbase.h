@@ -208,10 +208,6 @@ namespace BlackMisc
         protected:
             /*!
              * Construct a unit with custom conversion
-             * \param name
-             * \param symbol
-             * \param displayDigits
-             * \param epsilon
              */
             template <class Converter>
             CMeasurementUnit(const QString &name, const QString &symbol, const Converter &, int displayDigits, double epsilon)
@@ -272,22 +268,16 @@ namespace BlackMisc
 
             /*!
              * \brief Equal operator ==
-             * \param other
-             * \return
              */
             bool operator == (const CMeasurementUnit &other) const;
 
             /*!
              * \brief Unequal operator !=
-             * \param other
-             * \return
              */
             bool operator != (const CMeasurementUnit &other) const;
 
             /*!
              * \brief Name such as "meter"
-             * \param i18n
-             * \return
              */
             QString getName(bool i18n = false) const
             {
@@ -296,8 +286,6 @@ namespace BlackMisc
 
             /*!
              * \brief Unit name such as "m"
-             * \param i18n
-             * \return
              */
             QString getSymbol(bool i18n = false) const
             {
@@ -314,34 +302,22 @@ namespace BlackMisc
 
             /*!
              * \brief Rounded value
-             * \param value
-             * \param digits
-             * \return
              */
             double roundValue(double value, int digits = -1) const;
 
             /*!
              * Rounded string utility method, virtual so units can have
              * specialized formatting
-             * \param value
-             * \param digits
-             * \param i18n
-             * \return
              */
             virtual QString makeRoundedQString(double value, int digits = -1, bool i18n = false) const;
 
             /*!
              * \brief Value rounded with unit, e.g. "5.00m", "30kHz"
-             * \param value
-             * \param digits
-             * \param i18n
-             * \return
              */
             virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
 
             /*!
              * \brief Threshold for rounding
-             * \return
              */
             double getEpsilon() const
             {
@@ -350,7 +326,6 @@ namespace BlackMisc
 
             /*!
              * \brief getDisplayDigits
-             * \return
              */
             int getDisplayDigits() const
             {
@@ -361,14 +336,11 @@ namespace BlackMisc
              * Convert from other unit to this unit.
              * \param value other value
              * \param unit  other unit
-             * \return
              */
             double convertFrom(double value, const CMeasurementUnit &unit) const;
 
             /*!
              * \brief Is given value <= epsilon?
-             * \param value
-             * \return
              */
             bool isEpsilon(double value) const
             {
@@ -384,7 +356,6 @@ namespace BlackMisc
              * \brief Unit from symbol
              * \param symbol must be a valid unit symbol (without i18n) or empty string (empty means default unit)
              * \param strict strict check means if unit is not found, program terminates
-             * \return
              */
             template <class U> static const U &unitFromSymbol(const QString &symbol, bool strict = true)
             {
@@ -401,7 +372,6 @@ namespace BlackMisc
             /*!
              * \brief Valid unit symbol
              * \param symbol must be a valid unit symbol (without i18n) or empty string (empty means default unit)
-             * \return
              */
             template <class U> static bool isValidUnitSymbol(const QString &symbol)
             {
@@ -416,7 +386,6 @@ namespace BlackMisc
 
             /*!
              * \brief Dimensionless unit
-             * \return
              */
             static CMeasurementUnit &None()
             {
