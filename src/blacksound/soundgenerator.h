@@ -9,13 +9,14 @@
 #include "blackmisc/avselcal.h"
 #include "blackmisc/vaudiodevice.h"
 #include "blackmisc/pqtime.h"
-
+#include "blackmisc/filedeleter.h"
 #include <QIODevice>
 #include <QThread>
 #include <QDateTime>
 #include <QAudioFormat>
 #include <QAudioOutput>
 #include <QAudioDeviceInfo>
+#include <QMediaPlayer>
 
 namespace BlackSound
 {
@@ -188,6 +189,14 @@ namespace BlackSound
         static CSoundGenerator *playSignalInBackground(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device);
 
         /*!
+         * \brief Record the tones to a wav file, then play the wav file
+         * \param volume    0-100
+         * \param tones     list of tones
+         * \param device    device to be used
+         */
+        static void playSignalRecorded(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device);
+
+        /*!
          * \brief Play SELCAL tone
          * \param volume    0-100
          * \param selcal
@@ -219,6 +228,14 @@ namespace BlackSound
         {
             return BlackMisc::PhysicalQuantities::CTime(this->m_oneCycleDurationMs, BlackMisc::PhysicalQuantities::CTimeUnit::ms());
         }
+
+        /*!
+         * \brief Play given file
+         * \param volume    0-100
+         * \param file
+         * \param removeFileAfterPlaying delete the file, after it has been played
+         */
+        static void playFile(qint32 volume, const QString &file, bool removeFileAfterPlaying);
 
     signals:
         /*!
@@ -272,12 +289,61 @@ namespace BlackSound
         QTimer *m_pushTimer; /*!< Push mode timer */
         QIODevice *m_pushModeIODevice; /*!< IO device when used in push mode */
         QThread *m_ownThread;
-        static QDateTime selcalStarted;
+        static QDateTime s_selcalStarted;
+        static BlackMisc::CFileDeleter s_fileDeleter;
 
-        /*!
-         * \brief Duration of these tones
-         */
+        //! \brief Header for saving .wav files
+        struct chunk
+        {
+            char        id[4];
+            quint32     size;
+        };
+
+        //! \brief Header for saving .wav files
+        struct RiffHeader
+        {
+            chunk       descriptor;     // "RIFF"
+            char        type[4];        // "WAVE"
+        };
+
+        //! \brief Header for saving .wav files
+        struct WaveHeader
+        {
+            chunk       descriptor;
+            quint16     audioFormat;
+            quint16     numChannels;
+            quint32     sampleRate;
+            quint32     byteRate;
+            quint16     blockAlign;
+            quint16     bitsPerSample;
+        };
+
+        //! \brief Header for saving .wav files
+        struct DataHeader
+        {
+            chunk       descriptor;
+        };
+
+        //! \brief Header for saving .wav files
+        struct CombinedHeader
+        {
+            RiffHeader  riff;
+            WaveHeader  wave;
+            DataHeader  data;
+        };
+
+        //! \brief "My" media player
+        static QMediaPlayer *mediaPlayer()
+        {
+            static QMediaPlayer *mediaPlayer = new QMediaPlayer();
+            return mediaPlayer;
+        }
+
+        //! \brief Duration of these tones
         static qint64 calculateDurationMs(const QList<Tone> &tones);
+
+        //! \brief save buffer to wav file
+        bool saveToWavFile(const QString &fileName) const;
 
     };
 } //namespace

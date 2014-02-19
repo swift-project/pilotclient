@@ -1,4 +1,5 @@
 #include "soundgenerator.h"
+#include <QtCore/qendian.h>
 #include <math.h>
 #include <qmath.h>
 #include <qendian.h>
@@ -8,7 +9,8 @@
 #include <QMediaPlaylist>
 #include <QTimer>
 #include <QUrl>
-
+#include <QFile>
+#include <QDir>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -16,7 +18,8 @@ using namespace BlackMisc::Voice;
 
 namespace BlackSound
 {
-    QDateTime CSoundGenerator::selcalStarted  = QDateTime::currentDateTimeUtc();
+    QDateTime CSoundGenerator::s_selcalStarted  = QDateTime::currentDateTimeUtc();
+    BlackMisc::CFileDeleter CSoundGenerator::s_fileDeleter = BlackMisc::CFileDeleter();
 
     CSoundGenerator::CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, PlayMode mode, QObject *parent)
         :   QIODevice(parent),
@@ -211,6 +214,54 @@ namespace BlackSound
         }
     }
 
+    bool CSoundGenerator::saveToWavFile(const QString &fileName) const
+    {
+        QFile file(fileName);
+        bool success = file.open(QIODevice::WriteOnly);
+        if (!success) return false;
+
+        CombinedHeader header;
+        size_t headerLength = sizeof(CombinedHeader);
+        memset(&header, 0, headerLength);
+
+        // RIFF header
+        if (m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
+            memcpy(&header.riff.descriptor.id[0], "RIFF", 4);
+        else
+            memcpy(&header.riff.descriptor.id[0], "RIFX", 4);
+
+        qToLittleEndian<quint32>(quint32(m_buffer.size() + headerLength - 8),
+                                 reinterpret_cast<unsigned char *>(&header.riff.descriptor.size));
+        memcpy(&header.riff.type[0], "WAVE", 4);
+
+        // WAVE header
+        memcpy(&header.wave.descriptor.id[0], "fmt ", 4);
+        qToLittleEndian<quint32>(quint32(16),
+                                 reinterpret_cast<unsigned char *>(&header.wave.descriptor.size));
+        qToLittleEndian<quint16>(quint16(1),
+                                 reinterpret_cast<unsigned char *>(&header.wave.audioFormat));
+        qToLittleEndian<quint16>(quint16(m_audioFormat.channelCount()),
+                                 reinterpret_cast<unsigned char *>(&header.wave.numChannels));
+        qToLittleEndian<quint32>(quint32(m_audioFormat.sampleRate()),
+                                 reinterpret_cast<unsigned char *>(&header.wave.sampleRate));
+        qToLittleEndian<quint32>(quint32(m_audioFormat.sampleRate() * m_audioFormat.channelCount() * m_audioFormat.sampleSize() / 8),
+                                 reinterpret_cast<unsigned char *>(&header.wave.byteRate));
+        qToLittleEndian<quint16>(quint16(m_audioFormat.channelCount() * m_audioFormat.sampleSize() / 8),
+                                 reinterpret_cast<unsigned char *>(&header.wave.blockAlign));
+        qToLittleEndian<quint16>(quint16(m_audioFormat.sampleSize()),
+                                 reinterpret_cast<unsigned char *>(&header.wave.bitsPerSample));
+
+        // DATA header
+        memcpy(&header.data.descriptor.id[0], "data", 4);
+        qToLittleEndian<quint32>(quint32(this->m_buffer.size()),
+                                 reinterpret_cast<unsigned char *>(&header.data.descriptor.size));
+
+        success = file.write(reinterpret_cast<const char *>(&header), headerLength) == headerLength;
+        success = success && file.write(this->m_buffer) == this->m_buffer.size();
+        file.close();
+        return success;
+    }
+
     qint64 CSoundGenerator::calculateDurationMs(const QList<CSoundGenerator::Tone> &tones)
     {
         if (tones.isEmpty()) return 0;
@@ -331,6 +382,24 @@ namespace BlackSound
         return generator;
     }
 
+    void CSoundGenerator::playSignalRecorded(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
+    {
+        if (tones.isEmpty()) return; // that was easy
+        if (volume < 1) return;
+
+        CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CSoundGenerator::SingleWithAutomaticDeletion);
+        if (generator->singleCyleDurationMs() > 10)
+        {
+            // play, and maybe clean up when done
+            QString fileName = QString("blacksound").append(QString::number(QDateTime::currentMSecsSinceEpoch())).append(".wav");
+            fileName = QDir::temp().filePath(fileName);
+            generator->generateData();
+            generator->saveToWavFile(fileName);
+            CSoundGenerator::playFile(volume, fileName, true);
+        }
+        generator->deleteLater();
+    }
+
     void CSoundGenerator::playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, QAudioDeviceInfo device)
     {
         QList<CSoundGenerator::Tone> tones;
@@ -345,18 +414,19 @@ namespace BlackSound
             tones << t1 << t2 << t3;
         }
         CSoundGenerator::playSignalInBackground(volume, tones, device);
+        // CSoundGenerator::playSignalRecorded(volume, tones, device);
     }
 
     void CSoundGenerator::playSelcal(qint32 volume, const CSelcal &selcal, const CAudioDevice &audioDevice)
     {
-        if (CSoundGenerator::selcalStarted.msecsTo(QDateTime::currentDateTimeUtc()) < 2500) return; // simple check not to play 2 SELCAL at the same time
-        CSoundGenerator::selcalStarted = QDateTime::currentDateTimeUtc();
+        if (CSoundGenerator::s_selcalStarted.msecsTo(QDateTime::currentDateTimeUtc()) < 2500) return; // simple check not to play 2 SELCAL at the same time
+        CSoundGenerator::s_selcalStarted = QDateTime::currentDateTimeUtc();
         CSoundGenerator::playSelcal(volume, selcal, CSoundGenerator::findClosestOutputDevice(audioDevice));
     }
 
     void CSoundGenerator::playNotificationSound(qint32 volume, CSoundGenerator::Notification notification)
     {
-        static QMediaPlayer *mediaPlayer = new QMediaPlayer();
+        QMediaPlayer *mediaPlayer = CSoundGenerator::mediaPlayer();
         if (mediaPlayer->state() == QMediaPlayer::PlayingState) return;
         QMediaPlaylist *playlist = mediaPlayer->playlist();
         if (!playlist || playlist->isEmpty())
@@ -378,4 +448,17 @@ namespace BlackSound
         mediaPlayer->play();
     }
 
+    void CSoundGenerator::playFile(qint32 volume, const QString &file, bool removeFileAfterPlaying)
+    {
+        if (!QFile::exists(file)) return;
+
+        QMediaPlayer *mediaPlayer = CSoundGenerator::mediaPlayer();
+        QMediaResource mediaResource(QUrl(file), "audio");
+        QMediaContent media(mediaResource);
+        mediaPlayer->setMedia(media);
+        mediaPlayer->setVolume(volume); // 0-100
+        mediaPlayer->play();
+        // I cannot delete the file here, only after it has been played
+        if (removeFileAfterPlaying) CSoundGenerator::s_fileDeleter.addFileForDeletion(file);
+    }
 } // namespace
