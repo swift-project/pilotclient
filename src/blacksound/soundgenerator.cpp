@@ -19,7 +19,6 @@ using namespace BlackMisc::Voice;
 namespace BlackSound
 {
     QDateTime CSoundGenerator::s_selcalStarted  = QDateTime::currentDateTimeUtc();
-    BlackMisc::CFileDeleter CSoundGenerator::s_fileDeleter = BlackMisc::CFileDeleter();
 
     CSoundGenerator::CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, PlayMode mode, QObject *parent)
         :   QIODevice(parent),
@@ -459,6 +458,6 @@ namespace BlackSound
         mediaPlayer->setVolume(volume); // 0-100
         mediaPlayer->play();
         // I cannot delete the file here, only after it has been played
-        if (removeFileAfterPlaying) CSoundGenerator::s_fileDeleter.addFileForDeletion(file);
+        if (removeFileAfterPlaying) BlackMisc::CFileDeleter::addFileForDeletion(file);
     }
 } // namespace

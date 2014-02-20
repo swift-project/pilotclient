@@ -290,7 +290,6 @@ namespace BlackSound
         QIODevice *m_pushModeIODevice; /*!< IO device when used in push mode */
         QThread *m_ownThread;
         static QDateTime s_selcalStarted;
-        static BlackMisc::CFileDeleter s_fileDeleter;
 
         //! \brief Header for saving .wav files
         struct chunk

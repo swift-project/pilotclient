@@ -10,25 +10,25 @@ namespace BlackMisc
     /*!
      * \brief Utility class, deleting files when it is destroyed
      */
-    class CFileDeleter : public QObject
+    class CFileDeleter
     {
-        Q_OBJECT
 
     private:
         QStringList m_fileNames;
 
-    public:
-        /*!
-         * \brief File deleter
-         * \param parent
-         */
-        explicit CFileDeleter(QObject *parent = nullptr) : QObject(parent) {}
+        //! \brief File deleter
+        CFileDeleter() {}
 
         //! \brief add given file for deletion
-        void addFileForDeletion(const QString &file)
-        {
-            if (!this->m_fileNames.contains(file)) this->m_fileNames.append(file);
-        }
+        void addFile(const QString &file);
+
+    public:
+
+        //! \brief file deleter
+        static CFileDeleter &fileDeleter() { static CFileDeleter f; return f;}
+
+        //! \brief add a file (name)
+        static void addFileForDeletion(const QString &file);
 
         //! \brief Destructor
         ~CFileDeleter();
