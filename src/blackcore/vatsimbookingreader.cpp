@@ -15,7 +15,7 @@ namespace BlackCore
     {
         this->m_networkManager = new QNetworkAccessManager(this);
         this->m_updateTimer = new QTimer(this);
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimBookingReader::readFinished);
+        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimBookingReader::loadFinished);
         this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimBookingReader::read);
     }
 
@@ -39,9 +39,8 @@ namespace BlackCore
 
     /*
      * Bookings read from XML
-     * TODO: encapsulate reading from WWW in some class
      */
-    void CVatsimBookingReader::readFinished(QNetworkReply *nwReply)
+    void CVatsimBookingReader::loadFinished(QNetworkReply *nwReply)
     {
         if (nwReply->error() == QNetworkReply::NoError)
         {

@@ -41,7 +41,7 @@ namespace BlackCore
 
     private slots:
         //! \brief Bookings have been read
-        void readFinished(QNetworkReply *nwReply);
+        void loadFinished(QNetworkReply *nwReply);
 
     private:
         QString m_serviceUrl; /*!< URL of the service */
