@@ -26,18 +26,27 @@ namespace BlackCore
 {
 
     /*
-     * Read bookings
+     *  Reload bookings
      */
     void CContextNetwork::readAtcBookingsFromSource()
     {
-        const int updateTime = 60 * 1000; // 1min
-        if (!(this->m_atcBookingTimer->interval() == updateTime)) this->m_atcBookingTimer->setInterval(updateTime); // 1min
+        Q_ASSERT(this->m_bookingReader);
+        this->m_bookingReader->read();
+    }
 
-        QUrl url(this->getNetworkSettings().getBookingServiceUrl());
-        if (url.isEmpty()) return;
-
-        QNetworkRequest request(url);
-        this->m_networkManager->get(request);
+    /*
+     * Update bookings
+     */
+    void CContextNetwork::psReceivedBookings(CAtcStationList bookedStations)
+    {
+        const int interval = 60 * 1000;
+        if (this->m_bookingReader->interval() < interval) this->m_bookingReader->setInterval(interval);
+        this->m_atcStationsBooked.clear();
+        foreach(CAtcStation bookedStation, bookedStations)
+        {
+            this->m_atcStationsOnline.mergeWithBooking(bookedStation);
+            this->m_atcStationsBooked.push_back(bookedStation);
+        }
     }
 
     /*
@@ -322,85 +331,4 @@ namespace BlackCore
         this->m_metarCache.insert(icaoCode, metar);
     }
 
-    /*
-     * Bookings read from XML
-     * TODO: encapsulate reading from WWW in some class
-     */
-    void CContextNetwork::psAtcBookingsRead(QNetworkReply *nwReply)
-    {
-        if (nwReply->error() == QNetworkReply::NoError)
-        {
-            QString xmlData = nwReply->readAll();
-            QDomDocument doc;
-
-            if (doc.setContent(xmlData))
-            {
-                QDomNode atc = doc.elementsByTagName("atcs").at(0);
-                QDomNodeList bookingNodes = atc.toElement().elementsByTagName("booking");
-                int size = bookingNodes.size();
-                CSequence<CAtcStation> stations;
-                for (int i = 0; i < size; i++)
-                {
-                    QDomNode bookingNode = bookingNodes.at(i);
-                    QDomNodeList bookingNodeValues = bookingNode.childNodes();
-                    CAtcStation bookedStation;
-                    CUser user;
-                    for (int v = 0; v < bookingNodeValues.size(); v++)
-                    {
-                        QDomNode bookingNodeValue = bookingNodeValues.at(v);
-                        QString name = bookingNodeValue.nodeName().toLower();
-                        QString value = bookingNodeValue.toElement().text();
-                        if (name == "id")
-                        {
-                            // could be used as unique key
-                        }
-                        else if (name == "callsign")
-                        {
-                            bookedStation.setCallsign(CCallsign(value));
-                        }
-                        else if (name == "name")
-                        {
-                            user.setRealName(value);
-                        }
-                        else if (name == "cid")
-                        {
-                            user.setId(value);
-                        }
-                        else if (name == "time_end")
-                        {
-                            QDateTime t = QDateTime::fromString(value, "yyyy-MM-dd HH:mm:ss");
-                            bookedStation.setBookedUntilUtc(t);
-                        }
-                        else if (name == "time_start")
-                        {
-                            QDateTime t = QDateTime::fromString(value, "yyyy-MM-dd HH:mm:ss");
-                            bookedStation.setBookedFromUtc(t);
-                        }
-                    }
-                    // time checks
-                    QDateTime now = QDateTime::currentDateTimeUtc();
-                    if (now.msecsTo(bookedStation.getBookedUntilUtc()) < (1000 * 60 * 15)) continue; // until n mins in past
-                    if (now.msecsTo(bookedStation.getBookedFromUtc()) > (1000 * 60 * 60 * 24)) continue; // to far in the future, n hours
-
-                    // booking does not have position, so distance cannot be calculated
-                    // bookedStation.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
-
-                    bookedStation.setController(user);
-
-                    // consolidate and append
-                    this->m_atcStationsOnline.mergeWithBooking(bookedStation);
-                    stations.push_back(bookedStation);
-                }
-                nwReply->close();
-                nwReply->deleteLater();
-
-                // set the new values
-                if (this->getAtcStationsBooked() != stations)
-                {
-                    this->atcStationsBooked() = stations;
-                    emit this->changedAtcStationsBooked();
-                }
-            } // node
-        } // content
-    } // method
 } // namespace

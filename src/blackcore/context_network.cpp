@@ -24,9 +24,10 @@ namespace BlackCore
      * Init this context
      */
     CContextNetwork::CContextNetwork(CCoreRuntime *runtime) :
-        IContextNetwork(runtime), m_network(nullptr), m_networkManager(nullptr),
-        m_atcBookingTimer(nullptr), m_dataUpdateTimer(nullptr)
+        IContextNetwork(runtime), m_network(nullptr), m_bookingReader(nullptr), m_dataUpdateTimer(nullptr)
     {
+        Q_ASSERT(this->getRuntime());
+        Q_ASSERT(this->getRuntime()->getIContextSettings());
 
         // 1. Init by "network driver"
         this->m_network = new CNetworkVatlib(this);
@@ -34,12 +35,10 @@ namespace BlackCore
         // 2. Init own aircraft
         this->initOwnAircraft();
 
-        // 3a. Init network access driver for XML data (bookings)
-        this->m_networkManager = new QNetworkAccessManager(this);
-        this->m_atcBookingTimer = new QTimer(this);
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CContextNetwork::psAtcBookingsRead);
-        this->connect(this->m_atcBookingTimer, &QTimer::timeout, this, &CContextNetwork::readAtcBookingsFromSource);
-        this->m_atcBookingTimer->start(10 * 1000); // will be reset in method to a longer time
+        // 3a. Init VATSIM bookings
+        this->m_bookingReader = new CVatsimBookingReader(this->getRuntime()->getIContextSettings()->getNetworkSettings().getBookingServiceUrl(), this);
+        this->connect(this->m_bookingReader, &CVatsimBookingReader::bookingsRead, this, &CContextNetwork::psReceivedBookings);
+        this->m_bookingReader->setInterval(10 * 1000); // first read
 
         // 3b. Update timer for data
         this->m_dataUpdateTimer = new QTimer(this);

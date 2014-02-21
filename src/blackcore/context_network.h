@@ -9,6 +9,7 @@
 #include "blackcore/dbus_server.h"
 #include "blackcore/network_vatlib.h"
 #include "blackcore/coreruntime.h"
+#include "blackcore/vatsimbookingreader.h"
 #include "blackcore/context_network_interface.h"
 #include "blackcore/context_settings_interface.h"
 #include "blackmisc/avcallsignlist.h"
@@ -61,7 +62,7 @@ namespace BlackCore
     public slots:
 
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()
-        virtual void readAtcBookingsFromSource();
+        virtual void readAtcBookingsFromSource() override;
 
         /*!
          * \copydoc IContextNetwork::getAtcStationsOnline()
@@ -147,10 +148,8 @@ namespace BlackCore
         QMap<QString, BlackMisc::Aviation::CInformationMessage> m_metarCache /*!< Keep METARs for a while */;
 
         // for reading XML
-        QNetworkAccessManager *m_networkManager;
-        QTimer *m_atcBookingTimer; //!< ATC stations bookings
+        CVatsimBookingReader *m_bookingReader;
         QTimer *m_dataUpdateTimer; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
-        QDateTime m_atcBookingsUpdateTimestamp;
 
         //! \brief Replace value by new values
         void setAtcStationsBooked(const BlackMisc::Aviation::CAtcStationList &newStations);
@@ -182,6 +181,9 @@ namespace BlackCore
         }
 
     private slots:
+        //! \brief ATC bookings received
+        void psReceivedBookings(BlackMisc::Aviation::CAtcStationList bookedStations);
+
         /*!
          * \brief Connection status changed?
          * \param from  old status
@@ -235,13 +237,6 @@ namespace BlackCore
 
         //! \brief Radio text messages received
         void psFsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
-
-        /*!
-         * \brief Bookings via XML read
-         * \todo encapsulate reading from WWW in some class
-         */
-        void psAtcBookingsRead(QNetworkReply *nwReply);
-
     };
 }
 

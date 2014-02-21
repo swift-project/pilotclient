@@ -155,8 +155,7 @@ namespace BlackCore
     public slots:
 
         /*!
-         * \brief Read ATC bookings
-         * \return
+         * \brief Reload bookings from booking service
          */
         virtual void readAtcBookingsFromSource();
 
