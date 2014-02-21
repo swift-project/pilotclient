@@ -37,20 +37,14 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
 
     public:
-        /*!
-         * \brief Service name
-         * \return
-         */
+        //! \brief Service name
         static const QString &InterfaceName()
         {
             static QString s(BLACKCORE_CONTEXTNETWORK_INTERFACENAME);
             return s;
         }
 
-        /*!
-         * \brief Service path
-         * \return
-         */
+        //! \brief Service path
         static const QString &ServicePath()
         {
             static QString s(BLACKCORE_CONTEXTNETWORK_SERVICEPATH);
@@ -63,35 +57,22 @@ namespace BlackCore
          * \param connection
          * \param parent
          */
-        IContextNetwork(const QString &serviceName, QDBusConnection &connection, QObject *parent = 0);
+        IContextNetwork(const QString &serviceName, QDBusConnection &connection, QObject *parent = nullptr);
 
-        /*!
-         * Destructor
-         */
+        //! Destructor
         ~IContextNetwork() {}
 
-
-        /*!
-         * \brief Using local objects?
-         * \return
-         */
+        //! \brief Using local objects?
         virtual bool usingLocalObjects() const { return false; }
 
     private:
-        BlackMisc::CGenericDBusInterface *m_dBusInterface;
+        BlackMisc::CGenericDBusInterface *m_dBusInterface; /*!< DBus interface */
 
-        /*!
-         * Relay connection signals to local signals
-         * No idea why this has to be wired and is not done automatically
-         * \param connection
-         */
+        //! \brief Relay connection signals to local signals.
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
 
     protected:
-        /*!
-         * \brief IContextNetwork
-         * \param parent
-         */
+        //! \brief Constructor
         IContextNetwork(QObject *parent = nullptr) : QObject(parent), m_dBusInterface(0) {}
 
         /*!
@@ -106,36 +87,22 @@ namespace BlackCore
 
     signals:
 
-        /*!
-         * \brief Send status messages
-         * \param message
-         */
+        //! \brief Send status message
         void statusMessage(const BlackMisc::CStatusMessage &message);
 
-        /*!
-         * \brief Send status messages
-         * \param messages
-         */
+        //! \brief Send status messages
         void statusMessages(const BlackMisc::CStatusMessageList &messages);
 
-        /*!
-         * \brief List has been changed
-         */
+        //! \brief ATC station (online) list has been changed
         void changedAtcStationsOnline();
 
-        /*!
-         * \brief ATC station list has been changed
-         */
+        //! \brief ATC station (booked) list has been changed
         void changedAtcStationsBooked();
 
-        /*!
-         * \brief Aircraft list has been changed
-         */
+        //! \brief Aircraft list has been changed
         void changedAircraftsInRange();
 
-        /*!
-         * \brief Terminated connection
-         */
+        //! \brief Terminated connection
         void connectionTerminated();
 
         /*!
@@ -147,9 +114,7 @@ namespace BlackCore
          */
         void connectionStatusChanged(uint from, uint to);
 
-        /*!
-         * \brief Text messages (also private chat messages)
-         */
+        //! \brief Text messages (also private chat messages)
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
     public slots:
@@ -165,29 +130,19 @@ namespace BlackCore
          */
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const;
 
-        /*!
-         * \brief ATC list, with booked controllers
-         */
+        //! \brief ATC list, with booked controllers
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const;
 
-        /*!
-         * \brief Aircraft list
-         */
+        //! \brief Aircraft list
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const;
 
-        /*!
-         * \brief Get all users
-         */
+        //! \brief Get all users
         virtual BlackMisc::Network::CUserList getUsers() const;
 
-        /*!
-         * \brief All users with callsign, e.g. for voice room resolution
-         */
+        //! \brief Users for given callsigns, e.g. for voice room resolution
         virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
 
-        /*!
-         * \brief Get own aircraft
-         */
+        //! \brief Get own aircraft
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
         /*!
@@ -203,9 +158,7 @@ namespace BlackCore
          */
         virtual BlackMisc::CStatusMessageList disconnectFromNetwork();
 
-        /*!
-         * \brief Network connected?
-         */
+        //! \brief Network connected?
         virtual bool isConnected() const;
 
         /*!
@@ -215,24 +168,16 @@ namespace BlackCore
          */
         virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
 
-        /*!
-         * \brief Own position, be aware height is terrain height
-         */
+        //! \brief Own position, be aware height is terrain height
         virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
 
-        /*!
-         * \brief Complete situation update
-         */
+        //! \brief Complete situation update
         virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
-        /*!
-         * \brief Update own cockpit
-         */
+        //! \brief Update own cockpit
         virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder);
 
-        /*!
-         * \brief Text messages (radio and private chat messages)
-         */
+        //! \brief Text messages (radio and private chat messages)
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages);
 
         /*!
@@ -242,24 +187,16 @@ namespace BlackCore
          */
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode);
 
-        /*!
-         * \brief Use the selected COM1/2 frequencies, and get the corresponding voice room for it
-         */
+        //! \brief Use the selected COM1/2 frequencies, and get the corresponding voice room for it
         virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
 
-        /*!
-         * \brief Use the selected COM1/2 frequencies, and get the corresponding ATC stations for it
-         */
+        //! \brief Use the selected COM1/2 frequencies, and get the corresponding ATC stations for it
         virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const;
 
-        /*!
-         * \brief Request data updates (pilot' frequencies, ATIS, ..)
-         */
+        //! \brief Request data updates (pilot's frequencies, ATIS, ..)
         virtual void requestDataUpdates();
 
-        /*!
-         * \brief Request ATIS updates (for all stations)
-         */
+        //! \brief Request ATIS updates (for all stations)
         virtual void requestAtisUpdates();
     };
 }

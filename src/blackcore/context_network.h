@@ -23,9 +23,7 @@
 
 namespace BlackCore
 {
-    /*!
-     * \brief Network context
-     */
+    //! \brief Network context
     class CContextNetwork : public IContextNetwork
     {
         // Register by same name, make signals sender independent
