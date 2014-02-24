@@ -18,7 +18,7 @@ namespace BlackMisc
         void CCallsign::marshallToDbus(QDBusArgument &argument) const
         {
             argument << this->m_callsignAsSet;
-            argument << this->m_callsignPronounced;
+            argument << this->m_telephonyDesignator;
         }
 
         /*
@@ -27,7 +27,7 @@ namespace BlackMisc
         void CCallsign::unmarshallFromDbus(const QDBusArgument &argument)
         {
             argument >> this->m_callsignAsSet;
-            argument >> this->m_callsignPronounced;
+            argument >> this->m_telephonyDesignator;
             this->m_callsign = CCallsign::unifyCallsign(this->m_callsignAsSet);
         }
 

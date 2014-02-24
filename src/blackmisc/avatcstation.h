@@ -34,9 +34,7 @@ namespace BlackMisc
         {
 
         public:
-            /*!
-             * \brief Properties by index
-             */
+            //! \brief Properties by index
             enum ColumnIndex
             {
                 IndexCallsign = 0,
@@ -62,19 +60,13 @@ namespace BlackMisc
                 IndexVoiceRoomUrl
             };
 
-            /*!
-             * \brief Default constructor.
-             */
+            //! \brief Default constructor.
             CAtcStation();
 
-            /*!
-             * \brief Simplified constructor
-             */
+            //! \brief Simplified constructor
             CAtcStation(const QString &callsign);
 
-            /*!
-             * \brief ATC station constructor
-             */
+            //! \brief ATC station constructor
             CAtcStation(const CCallsign &callsign, const BlackMisc::Network::CUser &controller,
                         const BlackMisc::PhysicalQuantities::CFrequency &frequency,
                         const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range,
@@ -143,6 +135,9 @@ namespace BlackMisc
 
             //! \brief Has valid id?
             bool hasValidId() const { return this->m_controller.hasValidId(); }
+
+            //! \brief Valid COM frequency
+            bool hasValidFrequency() const { return BlackMisc::Aviation::CComSystem::isValidCivilAviationFrequency(this->getFrequency()); }
 
             //! Get frequency.
             const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }

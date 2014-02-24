@@ -119,7 +119,7 @@ namespace BlackMiscTest
         QVERIFY2(list.size() == 2, "2 different callsigns");
         list.remove(cs1);
         QVERIFY2(list.size() == 1, "Only one should be left in list");
-        list.removeIf(&CCallsign::getCallsignPronounced, "München Radar");
+        list.removeIf(&CCallsign::getTelephonyDesignator, "München Radar");
         QVERIFY2(list.size() == 0, "Last should be gone");
     }
 

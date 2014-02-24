@@ -30,8 +30,8 @@ namespace BlackMisc
             /*!
              * Constructor.
              */
-            CCallsign(const QString &callsign, const QString &callsignPronounced = "")
-                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_callsignPronounced(callsignPronounced.trimmed())
+            CCallsign(const QString &callsign, const QString &telephonyDesignator = "")
+                : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_telephonyDesignator(telephonyDesignator.trimmed())
             {}
 
             /*!
@@ -57,59 +57,37 @@ namespace BlackMisc
             //! \brief Is empty?
             bool isEmpty() const { return this->m_callsignAsSet.isEmpty(); }
 
-            /*!
-             * Get callsign.
-             */
+            //! \brief Get callsign.
             const QString &asString() const { return this->m_callsign; }
 
-            /*!
-             * Get callsign.
-             */
+            //! \brief Get callsign.
             const QString &getStringAsSet() const { return this->m_callsignAsSet; }
 
-            /*!
-             * \brief Get callsign pronounced
-             */
-            const QString &getCallsignPronounced() const { return this->m_callsignPronounced; }
+            //! \brief Get callsign telephony designator (how callsign is pronounced)
+            const QString &getTelephonyDesignator() const { return this->m_telephonyDesignator; }
 
-            /*!
-             * \brief Get ICAO code, if this makes sense (EDDF_TWR -> EDDF)
-             */
+            //! \brief Get ICAO code, if this makes sense (EDDF_TWR -> EDDF)
             QString getIcaoCode() const { return m_callsign.left(4).toUpper(); }
 
-            /*!
-             * \brief Makes this callsign looking like an observer callsign (DAMBZ -> DAMBZ_OBS)
-             */
+            //! \brief Makes this callsign looking like an observer callsign (DAMBZ -> DAMBZ_OBS)
             QString getAsObserverCallsignString() const;
 
-            /*!
-             * \brief Equals callsign string?
-             */
+            //! \brief Equals callsign string?
             bool equalsString(const QString &callsignString) const;
 
-            /*!
-             * \brief Equal operator ==
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CCallsign &other) const;
 
-            /*!
-             * \brief Unequal operator !=
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CCallsign &other) const;
 
-            /*!
-             * \brief Less than operator < for sorting
-             */
+            //! \brief Less than operator < for sorting
             bool operator <(const CCallsign &other) const;
 
-            /*!
-             * \copydoc CValueObject::getValueHash()
-             */
+            //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
         protected:
@@ -144,7 +122,7 @@ namespace BlackMisc
         private:
             QString m_callsignAsSet;
             QString m_callsign;
-            QString m_callsignPronounced;
+            QString m_telephonyDesignator;
         };
     } // namespace
 } // namespace

@@ -36,106 +36,71 @@ namespace BlackMisc
                 IndexCallsignIcon
             };
 
-            /*!
-             * Default constructor.
-             */
+            //! \brief Default constructor.
             CUser() {}
 
-            /*!
-             * Constructor.
-             */
-            CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "")
-                : m_id(id), m_realname(realname), m_email(email), m_password(password)
+            //! \brief Constructor.
+            CUser(const QString &id, const QString &realname, const BlackMisc::Aviation::CCallsign &callsign)
+                : m_id(id), m_realname(realname), m_callsign(callsign)
             {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant()
-             */
+            //! \brief Constructor.
+            CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "", const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign())
+                : m_id(id), m_realname(realname), m_email(email), m_password(password), m_callsign(callsign)
+            {}
+
+            //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * Get full name.
-             * \return
-             */
+            //! Get full name.
             QString getRealName() const { return m_realname; }
 
-            /*!
-             * \brief setRealName
-             */
+            //! \brief setRealName
             void setRealName(const QString &realname) { m_realname = realname.trimmed(); }
 
-            /*!
-             * Get password
-             */
+            //! Get password
             QString getPassword() const { return m_password; }
 
-            /*!
-             * Set password
-             */
+            //! Set password
             void setPassword(const QString &pw) { m_password = pw.trimmed(); }
 
-            /*!
-             * \brief Valid user object?
-             */
+            //! \brief Valid user object?
             bool isValid() const { return !this->m_realname.isEmpty() &&  !this->m_id.isEmpty(); }
 
-            /*!
-             * \brief Valid credentials?
-             */
+            //! \brief Valid credentials?
             bool hasValidCredentials() const { return this->isValid() && !this->m_password.isEmpty(); }
 
-            /*!
-             * \brief Valid real name?
-             */
+            //! \brief Valid real name?
             bool hasValidRealName() const { return !this->m_realname.isEmpty(); }
 
-            /*!
-             * \brief Valid id?
-             */
+            //! \brief Valid id?
             bool hasValidId() const { return !this->m_id.isEmpty(); }
 
-            /*!
-             * Has associated callsign?
-             */
+            //! \brief Has associated callsign?
             bool hasValidCallsign() const { return !m_callsign.isEmpty(); }
 
-            /*!
-             * Get email.
-             */
+            //! \brief Get email.
             QString getEmail() const { return m_email; }
 
-            /*!
-             * Set email.
-             */
+            //! \brief Set email.
             void setEmail(const QString &email) { m_email = email.trimmed(); }
 
-            /*!
-             * \brief Valid email?
-             */
+            //! \brief Valid email?
             bool hasValidEmail() const { return !this->m_email.isEmpty(); }
 
-            /*!
-             * Get id.
-             */
+            //! \brief Get id.
             QString getId() const { return m_id; }
 
-            /*!
-             * \brief Set id
-             */
+            //! \brief Set id
             void setId(const QString &id) { m_id = id.trimmed(); }
 
-            /*!
-             * Get associated callsign.
-             */
+            //! \brief Get associated callsign.
             BlackMisc::Aviation::CCallsign getCallsign() const { return m_callsign; }
 
-            /*!
-             * \brief Set associated callsign
-             * \param callsign
-             */
+            //! \brief Set associated callsign
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_callsign = callsign; }
 
             //! \copydoc CValueObject::toIcon()
@@ -144,24 +109,16 @@ namespace BlackMisc
                 return this->getCallsign().toIcon();
             }
 
-            /*!
-             * \brief Equal operator ==
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CUser &other) const;
 
-            /*!
-             * \brief Unequal operator !=
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CUser &other) const;
 
-            /*!
-             * \copydoc CValueObject::getValueHash()
-             */
+            //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
             /*!
@@ -207,6 +164,4 @@ namespace BlackMisc
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Network::CUser)
-
-
 #endif // guard

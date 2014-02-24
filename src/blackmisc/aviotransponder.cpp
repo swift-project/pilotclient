@@ -29,7 +29,8 @@ namespace BlackMisc
             bool valid = this->validValues();
             if (!strict) return valid;
             Q_ASSERT_X(valid, "CTransponder::validate", "illegal values");
-            if (!valid) throw std::range_error("Illegal values in CTransponder::validate");
+            if (!valid)
+                throw std::range_error("Illegal values in CTransponder::validate");
             return true;
         }
 
