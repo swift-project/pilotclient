@@ -163,7 +163,7 @@ namespace BlackMisc
         {
             QString str;
             // qualifying stringify with this-> to workaround bug in GCC 4.7.2 http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56402
-            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T & value) { str += (str.isEmpty() ? "{" : ",") + this->stringify(value, i18n); });
+            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T & value) { str += (str.isEmpty() ? "{" : ", ") + this->stringify(value, i18n); });
             if (str.isEmpty()) { str = "{"; }
             return str += "}";
         }
