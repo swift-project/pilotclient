@@ -121,8 +121,8 @@ namespace BlackMisc
         //! \brief Validation error
         static CStatusMessage getValidationError(const QString &message);
 
-        //! \brief Unspecific info message
-        static CStatusMessage getInfoMessage(const QString &message);
+        //! \brief (Unspecific) Info message
+        static CStatusMessage getInfoMessage(const QString &message, StatusType type = CStatusMessage::TypeUnspecific);
 
         //! \brief representing icon
         static const QPixmap &convertToIcon(const CStatusMessage &statusMessage);

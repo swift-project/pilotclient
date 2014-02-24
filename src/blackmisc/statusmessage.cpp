@@ -83,9 +83,9 @@ namespace BlackMisc
     /*
      * Validation Unspecific info message
      */
-    CStatusMessage CStatusMessage::getInfoMessage(const QString &message)
+    CStatusMessage CStatusMessage::getInfoMessage(const QString &message, StatusType type)
     {
-        return CStatusMessage(CStatusMessage::TypeUnspecific, CStatusMessage::SeverityInfo, message);
+        return CStatusMessage(type, CStatusMessage::SeverityInfo, message);
     }
 
     /*
