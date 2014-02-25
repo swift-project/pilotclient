@@ -51,8 +51,7 @@ namespace BlackCore
 
     signals:
         //! \brief Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
-        void bookingsRead(BlackMisc::Aviation::CAtcStationList &bookings);
+        void dataRead(BlackMisc::Aviation::CAtcStationList bookedStations);
     };
 }
-
 #endif // guard

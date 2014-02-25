@@ -99,7 +99,7 @@ namespace BlackCore
                     bookedStations.push_back(bookedStation);
                 }
                 m_updateTimestamp = QDateTime::currentDateTimeUtc();
-                emit this->bookingsRead(bookedStations);
+                emit this->dataRead(bookedStations);
                 nwReply->close();
                 nwReply->deleteLater();
 
