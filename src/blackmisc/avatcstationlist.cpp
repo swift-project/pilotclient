@@ -5,7 +5,9 @@
 
 #include "avatcstationlist.h"
 #include "predicates.h"
+
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {
@@ -84,6 +86,7 @@ namespace BlackMisc
         {
             int c = 0;
             bookedAtcStation.setOnline(false); // reset
+            if (this->isEmpty()) return 0;
 
             for (auto i = this->begin(); i != this->end(); ++i)
             {
@@ -157,5 +160,39 @@ namespace BlackMisc
             return c;
         }
 
+
+        /*
+         * Merge with VATSIM data file
+         */
+        int CAtcStationList::updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const
+        {
+            if (this->isEmpty()) return 0;
+            if (stationToBeUpdated.hasValidRealName() && stationToBeUpdated.hasValidId() && stationToBeUpdated.hasValidFrequency()) return 0;
+
+            int c = 0;
+            for (auto i = this->begin(); i != this->end(); ++i)
+            {
+                CAtcStation currentDataFileStation = *i;
+                if (currentDataFileStation.getCallsign() != stationToBeUpdated.getCallsign()) continue;
+
+                if (!stationToBeUpdated.hasValidRealName() || !stationToBeUpdated.hasValidId())
+                {
+                    CUser user = stationToBeUpdated.getController();
+                    if (!stationToBeUpdated.hasValidRealName()) user.setRealName(currentDataFileStation.getControllerRealName());
+                    if (!stationToBeUpdated.hasValidId()) user.setId(currentDataFileStation.getControllerId());
+                    stationToBeUpdated.setController(user);
+                }
+
+                if (!stationToBeUpdated.hasValidFrequency())
+                {
+                    stationToBeUpdated.setFrequency(currentDataFileStation.getFrequency());
+                }
+                c++;
+            }
+
+            // normally 1 expected, as I should find
+            // only one online station for this booking
+            return c;
+        }
     } // namespace
 } // namespace

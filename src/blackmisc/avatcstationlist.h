@@ -22,62 +22,45 @@ namespace BlackMisc
     namespace Aviation
     {
         /*!
-         * Value object encapsulating a list of ATC stations.
+         * Value object for a list of ATC stations.
          */
         class CAtcStationList : public CSequence<CAtcStation>
         {
         public:
-            /*!
-             * \brief Empty constructor.
-             */
+            //! \brief Default constructor.
             CAtcStationList();
 
-            /*!
-             * \brief Construct from a base class object.
-             * \param other
-             */
+            //! \brief Construct from a base class object.
             CAtcStationList(const CSequence<CAtcStation> &other);
 
-            /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
-             */
+            //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Find 0..n stations by callsign
-             */
+            //! \brief Find 0..n stations by callsign
             CAtcStationList findByCallsign(const CCallsign &callsign) const;
 
-            /*!
-             * \brief Find 0..n stations within range of given coordinate
-             */
+            //! \brief Find 0..n stations within range of given coordinate
             CAtcStationList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
-            /*!
-             * \brief Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
-             */
+            //! \brief Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
             CAtcStationList findIfComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const;
 
-            /*!
-             * \brief Update distances to coordinate, usually own aircraft's position
-             */
+            //! \brief Update distances to coordinate, usually own aircraft's position
             void calculateDistancesToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
-            /*!
-             * \brief Merge with ATC station representing booking information
-             * \param bookedAtcStation
-             * \return
-             */
+            //! \brief Merge with ATC station representing booking information
+            //! \remarks Can be used if the stored data in this list are online ATC stations
             int mergeWithBooking(CAtcStation &bookedAtcStation);
+
+            //! \brief Merge with the data from the VATSIM data file
+            //! \remarks Can be used if the stored data in this list are VATSIM data file stations
+            int updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const;
         };
 
     } //namespace

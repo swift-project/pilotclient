@@ -4,8 +4,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "avaircraftlist.h"
+#include "nwuser.h"
 #include "predicates.h"
+
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Network;
 
 namespace BlackMisc
 {
@@ -55,5 +58,30 @@ namespace BlackMisc
             });
         }
 
+        /*
+         * Merge with aircraft
+         */
+        int CAircraftList::updateFromVatsimDataFileAircraft(CAircraft &aircraftToBeUpdated) const
+        {
+            if (this->isEmpty()) return 0;
+            if (aircraftToBeUpdated.hasValidRealName() && aircraftToBeUpdated.hasValidId()) return 0;
+
+            int c = 0;
+            for (auto i = this->begin(); i != this->end(); ++i)
+            {
+                CAircraft currentDataFileAircraft = *i;
+                if (currentDataFileAircraft.getCallsign() != aircraftToBeUpdated.getCallsign()) continue;
+
+                CUser user = aircraftToBeUpdated.getPilot();
+                if (!aircraftToBeUpdated.hasValidRealName()) user.setRealName(currentDataFileAircraft.getPilotRealname());
+                if (!aircraftToBeUpdated.hasValidId()) user.setId(currentDataFileAircraft.getPilotId());
+                aircraftToBeUpdated.setPilot(user);
+                c++;
+            }
+
+            // normally 1 expected, as I should find
+            // only one online station for this booking
+            return c;
+        }
     } // namespace
 } // namespace
