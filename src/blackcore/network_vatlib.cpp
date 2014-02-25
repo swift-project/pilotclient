@@ -643,7 +643,19 @@ namespace BlackCore
             mode = CTransponder::ModeC;
             break;
         }
-        CTransponder transponder(tn, pos.xpdrCode, mode);
+
+        // I did have a situation where I got wrong transponger codes (KB)
+        // So I now check for a valid code in order to detect such codes
+        CTransponder transponder(tn, 0, mode);
+        if (CTransponder::isValidTransponderCode(pos.xpdrCode))
+        {
+            transponder = CTransponder(tn, pos.xpdrCode, mode);
+        }
+        else
+        {
+            // TODO: how do with log this
+            qDebug() << "Wrong transponder code" << pos.xpdrMode << callsign;
+        }
         emit cbvar_cast(cbvar)->aircraftPositionUpdate(callsign, situation, transponder);
     }
 
