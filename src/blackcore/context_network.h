@@ -10,6 +10,7 @@
 #include "blackcore/network_vatlib.h"
 #include "blackcore/coreruntime.h"
 #include "blackcore/vatsimbookingreader.h"
+#include "blackcore/vatsimdatafilereader.h"
 #include "blackcore/context_network_interface.h"
 #include "blackcore/context_settings_interface.h"
 #include "blackmisc/avcallsignlist.h"
@@ -145,8 +146,9 @@ namespace BlackCore
         BlackMisc::Aviation::CAircraft m_ownAircraft;
         QMap<QString, BlackMisc::Aviation::CInformationMessage> m_metarCache /*!< Keep METARs for a while */;
 
-        // for reading XML
-        CVatsimBookingReader *m_bookingReader;
+        // for reading XML and VATSIM data files
+        CVatsimBookingReader *m_vatsimBookingReader;
+        CVatsimDataFileReader *m_vatsimDataFileReader;
         QTimer *m_dataUpdateTimer; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
         //! \brief Replace value by new values
@@ -181,6 +183,9 @@ namespace BlackCore
     private slots:
         //! \brief ATC bookings received
         void psReceivedBookings(BlackMisc::Aviation::CAtcStationList bookedStations);
+
+        //! \brief Data file has been read
+        void psDataFileRead();
 
         /*!
          * \brief Connection status changed?

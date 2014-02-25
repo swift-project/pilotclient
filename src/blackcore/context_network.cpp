@@ -24,7 +24,7 @@ namespace BlackCore
      * Init this context
      */
     CContextNetwork::CContextNetwork(CCoreRuntime *runtime) :
-        IContextNetwork(runtime), m_network(nullptr), m_bookingReader(nullptr), m_dataUpdateTimer(nullptr)
+        IContextNetwork(runtime), m_network(nullptr), m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getIContextSettings());
@@ -35,17 +35,24 @@ namespace BlackCore
         // 2. Init own aircraft
         this->initOwnAircraft();
 
-        // 3a. Init VATSIM bookings
-        this->m_bookingReader = new CVatsimBookingReader(this->getRuntime()->getIContextSettings()->getNetworkSettings().getBookingServiceUrl(), this);
-        this->connect(this->m_bookingReader, &CVatsimBookingReader::bookingsRead, this, &CContextNetwork::psReceivedBookings);
-        this->m_bookingReader->setInterval(10 * 1000); // first read
+        // 3. Init VATSIM bookings
+        this->m_vatsimBookingReader = new CVatsimBookingReader(this->getRuntime()->getIContextSettings()->getNetworkSettings().getBookingServiceUrl(), this);
+        this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CContextNetwork::psReceivedBookings);
+        this->m_vatsimBookingReader->setInterval(10 * 1000); // first read
 
-        // 3b. Update timer for data
+        // 4. VATSIM data file
+        QStringList dataFileUrls;
+        dataFileUrls << "http://info.vroute.net/vatsim-data.txt";
+        this->m_vatsimDataFileReader = new CVatsimDataFileReader(dataFileUrls, this);
+        this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CContextNetwork::psDataFileRead);
+        this->m_vatsimDataFileReader->setInterval(5 * 1000); // first read
+
+        // 5. Update timer for data
         this->m_dataUpdateTimer = new QTimer(this);
         this->connect(this->m_dataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
         this->m_dataUpdateTimer->start(30 * 1000);
 
-        // 4. connect signals and slots
+        // 6. connect signals and slots
         this->connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::psFsdConnectionStatusChanged);
         this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CContextNetwork::psFsdAtcPositionUpdate);
         this->connect(this->m_network, &INetwork::atisReplyReceived, this, &CContextNetwork::psFsdAtisQueryReceived);
@@ -289,6 +296,15 @@ namespace BlackCore
 
         vm = CValueMap(CAircraft::IndexPilotRealName, realname);
         this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
+    }
+
+    /*
+     * Data file has been read
+     */
+    void CContextNetwork::psDataFileRead()
+    {
+        const int interval = 60 * 1000;
+        if (this->m_vatsimDataFileReader->interval() < interval) this->m_vatsimDataFileReader->setInterval(interval);
     }
 
 } // namespace

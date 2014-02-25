@@ -63,6 +63,7 @@ namespace BlackCore
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
             aircraft.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
+            this->m_vatsimDataFileReader->getAircrafts().updateFromVatsimDataFileAircraft(aircraft);
             this->m_aircraftsInRange.push_back(aircraft);
 
             if (this->isConnected())

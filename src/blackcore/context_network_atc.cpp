@@ -30,8 +30,8 @@ namespace BlackCore
      */
     void CContextNetwork::readAtcBookingsFromSource()
     {
-        Q_ASSERT(this->m_bookingReader);
-        this->m_bookingReader->read();
+        Q_ASSERT(this->m_vatsimBookingReader);
+        this->m_vatsimBookingReader->read();
     }
 
     /*
@@ -40,11 +40,15 @@ namespace BlackCore
     void CContextNetwork::psReceivedBookings(CAtcStationList bookedStations)
     {
         const int interval = 60 * 1000;
-        if (this->m_bookingReader->interval() < interval) this->m_bookingReader->setInterval(interval);
+        if (this->m_vatsimBookingReader->interval() < interval) this->m_vatsimBookingReader->setInterval(interval);
         this->m_atcStationsBooked.clear();
         foreach(CAtcStation bookedStation, bookedStations)
         {
+            // complete by VATSIM data file data
+            this->m_vatsimDataFileReader->getAtcStations().updateFromVatsimDataFileStation(bookedStation);
+            // exchange booking and online data
             this->m_atcStationsOnline.mergeWithBooking(bookedStation);
+            // into list
             this->m_atcStationsBooked.push_back(bookedStation);
         }
     }
@@ -235,6 +239,7 @@ namespace BlackCore
             station.setPosition(position);
             station.setOnline(true);
             station.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
+            this->m_vatsimDataFileReader->getAtcStations().updateFromVatsimDataFileStation(station); // prefill
             this->m_atcStationsOnline.push_back(station);
             emit this->changedAtcStationsOnline();
 
