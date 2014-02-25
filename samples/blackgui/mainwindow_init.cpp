@@ -79,11 +79,15 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     // enable first, otherwise order in the model will be reset
     this->ui->tv_SettingsTnServers->setModel(this->m_modelTrafficServerList);
 
+    // enable sorting first, otherwise order in the model will be reset
+    this->ui->tv_SettingsTnServers->setModel(this->m_trafficServerList);
+    this->ui->tv_SettingsTnServers->horizontalHeader()->setStretchLastSection(true);
     this->ui->tv_StatusMessages->setSortingEnabled(true);
     this->ui->tv_StatusMessages->setModel(this->m_statusMessageList);
     this->m_statusMessageList->setSortColumnByPropertyIndex(BlackMisc::CStatusMessage::IndexTimestamp);
     if (this->m_statusMessageList->hasValidSortColumn())
         this->ui->tv_StatusMessages->horizontalHeader()->setSortIndicator(this->m_statusMessageList->getSortColumn(), this->m_statusMessageList->getSortOrder());
+    this->ui->tv_StatusMessages->horizontalHeader()->setStretchLastSection(true);
 
     this->ui->tv_AtcStationsOnline->setSortingEnabled(true);
     this->ui->tv_AtcStationsOnline->setModel(this->m_modelAtcListOnline);
@@ -360,8 +364,8 @@ void MainWindow::initialDataReads()
     this->m_coreAvailable = (this->m_contextNetwork->usingLocalObjects() || (this->m_contextApplication->ping(t) == t));
     if (!this->m_coreAvailable)
     {
-        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError,
-                                   "No initial data read as network context is not available"));
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityError,
+                                   "no initial data read as network context is not available"));
         return;
     }
 
@@ -377,6 +381,8 @@ void MainWindow::initialDataReads()
         this->reloadAtcStationsOnline();
         this->updateGuiStatusInformation();
     }
+
+    this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "initial data read"));
 }
 
 /*
@@ -403,4 +409,3 @@ void MainWindow::stopUpdateTimers(bool disconnect)
     this->disconnect(this->m_timerUpdateAtcStationsOnline);
     this->disconnect(this->m_timerUpdateUsers);
 }
-
