@@ -76,11 +76,8 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->m_modelSettingsHotKeys = new CKeyboardKeyListModel(this);
 
     // set sort order and models
-    // enable first, otherwise order in the model will be reset
-    this->ui->tv_SettingsTnServers->setModel(this->m_modelTrafficServerList);
-
     // enable sorting first, otherwise order in the model will be reset
-    this->ui->tv_SettingsTnServers->setModel(this->m_trafficServerList);
+    this->ui->tv_SettingsTnServers->setModel(this->m_modelTrafficServerList);
     this->ui->tv_SettingsTnServers->horizontalHeader()->setStretchLastSection(true);
     this->ui->tv_StatusMessages->setSortingEnabled(true);
     this->ui->tv_StatusMessages->setModel(this->m_statusMessageList);
