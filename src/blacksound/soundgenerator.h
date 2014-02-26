@@ -9,7 +9,6 @@
 #include "blackmisc/avselcal.h"
 #include "blackmisc/vaudiodevice.h"
 #include "blackmisc/pqtime.h"
-#include "blackmisc/filedeleter.h"
 #include <QIODevice>
 #include <QThread>
 #include <QDateTime>

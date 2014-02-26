@@ -1,4 +1,5 @@
-#include "soundgenerator.h"
+#include "blacksound/soundgenerator.h"
+#include "blackmisc/filedeleter.h"
 #include <QtCore/qendian.h>
 #include <math.h>
 #include <qmath.h>
