@@ -344,6 +344,12 @@ namespace BlackSound
         //! \brief save buffer to wav file
         bool saveToWavFile(const QString &fileName) const;
 
+        /*!
+         * \brief Write amplitude to buffer
+         * \param amplitude value -1 .. 1
+         * \param bufferPointer current buffer pointer
+         */
+        void writeAmplitudeToBuffer(const double amplitude, unsigned char *bufferPointer);
     };
 } //namespace
 

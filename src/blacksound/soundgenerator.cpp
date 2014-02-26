@@ -157,14 +157,14 @@ namespace BlackSound
         foreach(Tone t, this->m_tones)
         {
             qint64 bytesPerTone = this->m_audioFormat.sampleRate() * bytesForAllChannels * t.m_durationMs / 1000;
+            qint64 last0AmplitudeSample = bytesPerTone; // last sample when amplitude was 0
             int sampleIndexPerTone = 0;
-
             while (bytesPerTone)
             {
                 // http://hyperphysics.phy-astr.gsu.edu/hbase/audio/sumdif.html
                 // http://math.stackexchange.com/questions/164369/how-do-you-calculate-the-frequency-perceived-by-humans-of-two-sinusoidal-waves-a
                 const double pseudoTime = double(sampleIndexPerTone % this->m_audioFormat.sampleRate()) / this->m_audioFormat.sampleRate();
-                double amplitude = 0; // silence
+                double amplitude = 0.0; // amplitude -1 -> +1 , 0 is silence
                 if (t.m_frequencyHz > 10)
                 {
                     // the combination of two frequencies actually would have 2*amplitude,
@@ -176,40 +176,75 @@ namespace BlackSound
                                 qCos(M_PI * (t.m_frequencyHz - t.m_secondaryFrequencyHz) * pseudoTime);
                 }
 
+                // avoid overflow
+                Q_ASSERT(amplitude <= 1.0 && amplitude >= -1.0);
+                if (amplitude < -1.0)
+                    amplitude = -1.0;
+                else if (amplitude > 1.0)
+                    amplitude = 1.0;
+                else if (qAbs(amplitude) < double(1.0 / 65535))
+                {
+                    amplitude = 0;
+                    last0AmplitudeSample = bytesPerTone;
+                }
+
+                // generate this for all channels, usually 1 channel
                 for (int i = 0; i < this->m_audioFormat.channelCount(); ++i)
                 {
-                    if (this->m_audioFormat.sampleSize() == 8 && this->m_audioFormat.sampleType() == QAudioFormat::UnSignedInt)
-                    {
-                        const quint8 value = static_cast<quint8>((1.0 + amplitude) / 2 * 255);
-                        *reinterpret_cast<quint8 *>(bufferPointer) = value;
-                    }
-                    else if (this->m_audioFormat.sampleSize() == 8 && this->m_audioFormat.sampleType() == QAudioFormat::SignedInt)
-                    {
-                        const qint8 value = static_cast<qint8>(amplitude * 127);
-                        *reinterpret_cast<quint8 *>(bufferPointer) = value;
-                    }
-                    else if (this->m_audioFormat.sampleSize() == 16 && this->m_audioFormat.sampleType() == QAudioFormat::UnSignedInt)
-                    {
-                        quint16 value = static_cast<quint16>((1.0 + amplitude) / 2 * 65535);
-                        if (this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
-                            qToLittleEndian<quint16>(value, bufferPointer);
-                        else
-                            qToBigEndian<quint16>(value, bufferPointer);
-                    }
-                    else if (this->m_audioFormat.sampleSize() == 16 && this->m_audioFormat.sampleType() == QAudioFormat::SignedInt)
-                    {
-                        qint16 value = static_cast<qint16>(amplitude * 32767);
-                        if (this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
-                            qToLittleEndian<qint16>(value, bufferPointer);
-                        else
-                            qToBigEndian<qint16>(value, bufferPointer);
-                    }
-
+                    this->writeAmplitudeToBuffer(amplitude, bufferPointer);
                     bufferPointer += bytesPerSample;
                     bytesPerTone -= bytesPerSample;
                 }
                 ++sampleIndexPerTone;
             }
+
+            // fixes the range from the last 0 pass through
+            if (last0AmplitudeSample > 0)
+            {
+                bufferPointer -= last0AmplitudeSample;
+                while (last0AmplitudeSample)
+                {
+                    double amplitude = 0.0; // amplitude -1 -> +1 , 0 is silence
+
+                    // generate this for all channels, usually 1 channel
+                    for (int i = 0; i < this->m_audioFormat.channelCount(); ++i)
+                    {
+                        this->writeAmplitudeToBuffer(amplitude, bufferPointer);
+                        bufferPointer += bytesPerSample;
+                        last0AmplitudeSample -= bytesPerSample;
+                    }
+                }
+            }
+        }
+    }
+
+    void CSoundGenerator::writeAmplitudeToBuffer(const double amplitude, unsigned char *bufferPointer)
+    {
+        if (this->m_audioFormat.sampleSize() == 8 && this->m_audioFormat.sampleType() == QAudioFormat::UnSignedInt)
+        {
+            const quint8 value = static_cast<quint8>((1.0 + amplitude) / 2 * 255);
+            *reinterpret_cast<quint8 *>(bufferPointer) = value;
+        }
+        else if (this->m_audioFormat.sampleSize() == 8 && this->m_audioFormat.sampleType() == QAudioFormat::SignedInt)
+        {
+            const qint8 value = static_cast<qint8>(amplitude * 127);
+            *reinterpret_cast<quint8 *>(bufferPointer) = value;
+        }
+        else if (this->m_audioFormat.sampleSize() == 16 && this->m_audioFormat.sampleType() == QAudioFormat::UnSignedInt)
+        {
+            quint16 value = static_cast<quint16>((1.0 + amplitude) / 2 * 65535);
+            if (this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
+                qToLittleEndian<quint16>(value, bufferPointer);
+            else
+                qToBigEndian<quint16>(value, bufferPointer);
+        }
+        else if (this->m_audioFormat.sampleSize() == 16 && this->m_audioFormat.sampleType() == QAudioFormat::SignedInt)
+        {
+            qint16 value = static_cast<qint16>(amplitude * 32767);
+            if (this->m_audioFormat.byteOrder() == QAudioFormat::LittleEndian)
+                qToLittleEndian<qint16>(value, bufferPointer);
+            else
+                qToBigEndian<qint16>(value, bufferPointer);
         }
     }
 
@@ -450,7 +485,6 @@ namespace BlackSound
     void CSoundGenerator::playFile(qint32 volume, const QString &file, bool removeFileAfterPlaying)
     {
         if (!QFile::exists(file)) return;
-
         QMediaPlayer *mediaPlayer = CSoundGenerator::mediaPlayer();
         QMediaResource mediaResource(QUrl(file), "audio");
         QMediaContent media(mediaResource);
