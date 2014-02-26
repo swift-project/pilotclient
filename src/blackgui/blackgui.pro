@@ -9,6 +9,8 @@ CONFIG += staticlib c++11
 INCLUDEPATH += ..
 DEPENDPATH += . ..
 
+LIBS    += -L../../lib -lblackmisc
+
 # PRECOMPILED_HEADER = stdpch.h
 precompile_header:!isEmpty(PRECOMPILED_HEADER) {
     DEFINES += USING_PCH

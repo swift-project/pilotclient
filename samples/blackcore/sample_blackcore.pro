@@ -8,10 +8,10 @@ TEMPLATE = app
 CONFIG   += console c++11
 CONFIG   -= app_bundle
 
-DEPENDPATH += . ../../src/blackmisc ../../src/blackcore ../../src/blacksound
+DEPENDPATH += . ../../src/blackmisc ../../src/blacksound ../../src/blackcore
 INCLUDEPATH += . ../../src
 
-LIBS    += -L../../lib -lblackcore -lblackmisc -lblacksound
+LIBS    += -L../../lib  -lblackcore -lblacksound -lblackmisc
 LIBS	+= -lvatlib
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \

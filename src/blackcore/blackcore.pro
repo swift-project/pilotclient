@@ -11,7 +11,7 @@ CONFIG += staticlib c++11
 INCLUDEPATH += ..
 DEPENDPATH += . ..
 
-LIBS    += -L../../lib -lblackmisc -lblacksound
+LIBS    += -L../../lib -lblacksound -lblackmisc
 
 # linux-g++* { QMAKE_CXXFLAGS += -std=c++0x }
 # PRECOMPILED_HEADER = stdpch.h

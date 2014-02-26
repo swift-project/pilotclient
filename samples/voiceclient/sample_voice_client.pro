@@ -15,7 +15,7 @@ INCLUDEPATH += . ../../src
 SOURCES += *.cpp
 HEADERS += *.h
 
-LIBS    += -L../../lib -lblackcore -lblackmisc -lblacksound
+LIBS    += -L../../lib -lblackcore -lblacksound -lblackmisc
 LIBS	+= -lvatlib
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \

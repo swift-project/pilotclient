@@ -11,22 +11,22 @@ HEADERS += *.h
 FORMS   += *.ui
 CONFIG  += c++11
 
-DEPENDPATH += . ../../src/blackmisc ../../src/blackcore ../../src/blackgui ../../src/blacksound
+DEPENDPATH += . ../../src/blackmisc ../../src/blackgui ../../src/blacksound ../../src/blackcore
 INCLUDEPATH += . ../../src
 
 DESTDIR = ../../bin
 
-LIBS    += -L../../lib -lblackcore -lblackmisc -lblackgui -lblacksound
+LIBS    += -L../../lib -lblackcore -lblackgui -lblacksound -lblackmisc
 LIBS	+= -lvatlib
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
-                                     ../../lib/blackcore.lib \
                                      ../../lib/blackgui.lib \
-                                     ../../lib/blacksound.lib
+                                     ../../lib/blacksound.lib \
+                                     ../../lib/blackcore.lib
 
 else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
-                                     ../../lib/libblackcore.a \
                                      ../../lib/libblackgui.a \
-                                     ../../lib/libblacksound.a
+                                     ../../lib/libblacksound.a \
+                                     ../../lib/libblackcore.a
 
 OTHER_FILES += *.qss
