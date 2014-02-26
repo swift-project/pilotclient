@@ -24,7 +24,10 @@ int main(int argc, char *argv[])
     QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
     qDebug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
     QTranslator translator;
-    translator.load("blackmisc_i18n_de", ":blackmisc/translations/");
+    if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/"))
+    {
+        qDebug() << "Translator loaded";
+    }
 
     // app
     QApplication a(argc, argv);

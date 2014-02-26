@@ -17,16 +17,18 @@ using namespace BlackMiscTest;
 int main(int argc, char *argv[])
 {
     BlackMisc::initResources();
-    QFile file(":/translations/blackmisc_i18n_de.qm");
+    QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
     qDebug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
-
     QTranslator translator;
-    translator.load("blackmisc_i18n_de", ":/translations/");
+    bool t = translator.load("blackmisc_i18n_de", ":blackmisc/translations/");
+    qDebug() << (t ? "Translator loaded" : "Translator not loaded");
+
     QCoreApplication a(argc, argv);
 
     qDebug() << "Use I18N version, y? n?";
     int yn = getchar();
-    bool t = (yn == 'y' || yn == 'Y') ? a.installTranslator(&translator) : false;
+    t = (yn == 'y' || yn == 'Y');
+    t =  t ? a.installTranslator(&translator) : false;
     qDebug() << (t ? "Installed translator" : "No translator ");
 
     CSamplesPhysicalQuantities::samples();
