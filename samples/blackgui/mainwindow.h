@@ -16,6 +16,7 @@
 #include "blackcore/context_network_interface.h"
 #include "blackcore/context_settings_interface.h"
 #include "blackcore/context_application_interface.h"
+#include "blackcore/context_simulator.h"
 #include "blackcore/coreruntime.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/serverlistmodel.h"
@@ -93,7 +94,8 @@ protected:
         MainPageCockpit = 4,
         MainPageTextMessages = 5,
         MainPageFlightplan = 6,
-        MainPageSettings = 7
+        MainPageSettings = 7,
+        MainPageSimulator = 8
     };
 
     enum AudioTest
@@ -133,6 +135,7 @@ private:
     BlackCore::IContextNetwork *m_contextNetwork;
     BlackCore::IContextVoice *m_contextVoice;
     BlackCore::IContextSettings *m_contextSettings;
+    BlackCore::IContextSimulator *m_contextSimulator;
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
     QTimer *m_timerUpdateAtcStationsOnline; /*!< timer for update of stations */
     QTimer *m_timerUpdateAircraftsInRange; /*!< timer for update of aircrafts */
@@ -141,6 +144,7 @@ private:
     QTimer *m_timerContextWatchdog; /*!< core available? */
     QTimer *m_timerStatusBar; /*!< cleaning up status bar */
     QTimer *m_timerAudioTests; /*!< cleaning up status bar */
+    QTimer *m_timerSimulator; /*!< update simulator data */
 
     // pixmaps
     QPixmap m_resPixmapConnectionConnected;
@@ -313,6 +317,9 @@ private:
      * \brief Play notifcation sound
      */
     void playNotifcationSound(BlackSound::CSoundGenerator::Notification notification) const;
+	
+	//! \brief Update simulator page with latest user aircraft data
+    void updateSimulatorData();
 
 private slots:
 
@@ -371,6 +378,8 @@ private slots:
 
     //! \brief Send cockpit updates
     void sendCockpitUpdates();
+
+    void simulatorAvailable();
 
     //
     // GUI related slots

@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
+#include "blackcore/context_simulator_impl.h"
+#include "blackcore/context_simulator_proxy.h"
 #include "blackcore/coreruntime.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/keyboardkeylistmodel.h"
@@ -156,6 +158,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
     if (this->m_timerCollectedCockpitUpdates == nullptr) this->m_timerCollectedCockpitUpdates = new QTimer(this);
     if (this->m_timerAudioTests == nullptr) this->m_timerAudioTests = new QTimer(this);
+    if (this->m_timerSimulator == nullptr) this->m_timerSimulator = new QTimer(this);
 
     // context
     if (this->m_coreMode != GuiModes::CoreInGuiProcess)
@@ -165,6 +168,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
         this->m_contextVoice = new BlackCore::IContextVoice(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextSettings = new BlackCore::IContextSettings(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextApplication = new BlackCore::IContextApplication(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
+        this->m_contextSimulator = new BlackCore::CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
     }
     else
     {
@@ -173,6 +177,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
         this->m_contextVoice = this->m_coreRuntime->getIContextVoice();
         this->m_contextSettings = this->m_coreRuntime->getIContextSettings();
         this->m_contextApplication = this->m_coreRuntime->getIContextApplication();
+        this->m_contextSimulator = this->m_coreRuntime->getIContextSimulator();
     }
 
     // wire GUI signals
@@ -209,12 +214,14 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->connect(this->m_contextSettings, &IContextSettings::changedSettings, this, &MainWindow::changedSettings);
     connect = this->connect(this->m_contextNetwork, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
     Q_ASSERT(connect);
+    this->connect(this->m_contextSimulator, &IContextSimulator::connectionChanged, this, &MainWindow::simulatorAvailable);
     this->connect(this->m_timerUpdateAircraftsInRange, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateAtcStationsOnline, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateUsers, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
     this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
+    this->connect(this->m_timerSimulator, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     connect = this->connect(this->m_contextVoice, &IContextVoice::audioTestCompleted, this, &MainWindow::audioTestUpdate);
 
     // start timers, update timers will be started when network is connected
@@ -239,6 +246,9 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     // do this as last statement, so it can be used as flag
     // whether init has been completed
     this->m_init = true;
+
+    // TODO remove later
+    simulatorAvailable();
 }
 
 //
@@ -266,6 +276,8 @@ void MainWindow::initGuiSignals()
     connected = this->connect(this->ui->pb_MainFlightplan, SIGNAL(released()), this, SLOT(setMainPage()));
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainSettings, SIGNAL(released()), this, SLOT(setMainPage()));
+    Q_ASSERT(connected);
+    connected = this->connect(this->ui->pb_MainSimulator, SIGNAL(released()), this, SLOT(setMainPage()));
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainStatus, SIGNAL(released()), this, SLOT(setMainPage()));
     Q_ASSERT(connected);

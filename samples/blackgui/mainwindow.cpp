@@ -3,6 +3,7 @@
 #include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
+#include "blackmisc/avaircraft.h"
 #include <QMouseEvent>
 
 using namespace BlackCore;
@@ -33,10 +34,11 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_coreMode(GuiModes::CoreExternal),
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextVoiceAvailable(false),
     m_contextApplication(nullptr), m_contextNetwork(nullptr), m_contextVoice(nullptr), m_contextSettings(nullptr),
+    m_contextSimulator(nullptr),
     // timers
     m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerUpdateUsers(nullptr),
     m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
-    m_timerStatusBar(nullptr), m_timerAudioTests(nullptr),
+    m_timerStatusBar(nullptr), m_timerAudioTests(nullptr), m_timerSimulator(nullptr),
     // context menus
     m_contextMenuAudio(nullptr), m_contextMenuStatusMessageList(nullptr),
     // cockpit
@@ -165,6 +167,8 @@ void MainWindow::setMainPage(bool start)
         this->ui->sw_MainMiddle->setCurrentIndex(MainPageFlightplan);
     else if (sender == this->ui->pb_MainSettings)
         this->ui->sw_MainMiddle->setCurrentIndex(MainPageSettings);
+    else if (sender == this->ui->pb_MainSimulator)
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageSimulator);
 }
 
 /*
@@ -314,6 +318,11 @@ void MainWindow::connectionStatusChanged(uint /** from **/, uint to)
     }
 }
 
+void MainWindow::simulatorAvailable()
+{
+    m_timerSimulator->start(500);
+}
+
 /*
 * Timer event
 */
@@ -342,6 +351,10 @@ void MainWindow::timerBasedUpdates()
     {
         this->setContextAvailability();
         this->updateGuiStatusInformation();
+    }
+    else if (sender == this->m_timerSimulator)
+    {
+        updateSimulatorData();
     }
 
     // own aircraft
@@ -488,4 +501,28 @@ void MainWindow::reloadAllUsers()
     this->ui->tv_AllUsers->resizeColumnsToContents();
     this->ui->tv_AllUsers->resizeRowsToContents();
     this->ui->tv_AllUsers->horizontalHeader()->setStretchLastSection(true);
+}
+
+void MainWindow::updateSimulatorData()
+{
+    if (m_contextSimulator->isConnected())
+        ui->le_SimulatorStatus->setText("Connected");
+    else
+        ui->le_SimulatorStatus->setText("Not connected");
+
+    CAircraft ownAircraft = m_contextSimulator->ownAircraft();
+    ui->le_SimulatorLatitude->setText(ownAircraft.getSituation().latitude().toFormattedQString());
+    ui->le_SimulatorLongitude->setText(ownAircraft.getSituation().longitude().toFormattedQString());
+    ui->le_SimulatorAltitude->setText(ownAircraft.getSituation().getAltitude().toFormattedQString());
+    ui->le_SimulatorPitch->setText(ownAircraft.getSituation().getPitch().toFormattedQString());
+    ui->le_SimulatorBank->setText(ownAircraft.getSituation().getBank().toFormattedQString());
+    ui->le_SimulatorHeading->setText(ownAircraft.getSituation().getHeading().toFormattedQString());
+    ui->le_SimulatorGroundSpeed->setText(ownAircraft.getSituation().getGroundSpeed().toFormattedQString());
+
+
+    ui->le_SimulatorCom1Active->setText(ownAircraft.getCom1System().getFrequencyActive().toFormattedQString());
+    ui->le_SimulatorCom1Standby->setText(ownAircraft.getCom1System().getFrequencyStandby().toFormattedQString());
+    ui->le_SimulatorCom2Active->setText(ownAircraft.getCom2System().getFrequencyActive().toFormattedQString());
+    ui->le_SimulatorCom2Standby->setText(ownAircraft.getCom2System().getFrequencyStandby().toFormattedQString());
+    ui->le_SimulatorTransponder->setText(ownAircraft.getTransponderCodeFormatted());
 }

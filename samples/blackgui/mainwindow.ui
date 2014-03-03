@@ -554,7 +554,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QToolBox" name="tb_StatusPage">
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <property name="tabSpacing">
               <number>3</number>
@@ -2485,6 +2485,190 @@ QStatusBar QLabel {
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="pg_Simulator">
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="3" column="0">
+            <widget class="QLabel" name="lbl_OwnAircraftSituationLongitude">
+             <property name="text">
+              <string>Longitude</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lbl_SimulatorStatus">
+             <property name="text">
+              <string>Status</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="lbl_OwnAircraftSituationBank">
+             <property name="text">
+              <string>Bank</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lbl_OwnAircraftSituationLatitude">
+             <property name="text">
+              <string>Latitude</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="lbl_SimulatorGroundSpeed">
+             <property name="text">
+              <string>Ground Speed</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="lbl_SimulatorHeading">
+             <property name="text">
+              <string>Heading</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="lbl_SimulatorOnGround">
+             <property name="text">
+              <string>On ground</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="lbl_OwnAircraftSituationAltitude">
+             <property name="text">
+              <string>Altitude</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="lbl_OwnAircraftSituationPitch">
+             <property name="text">
+              <string>Pitch</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="le_SimulatorStatus">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="le_SimulatorLatitude">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="le_SimulatorLongitude">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="le_SimulatorAltitude">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="le_SimulatorPitch">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QLineEdit" name="le_SimulatorCom1Active">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="lbl_SimulatorCom1Standby">
+             <property name="text">
+              <string>COM1 Standby</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="lbl_SimulatorCom1Active">
+             <property name="text">
+              <string>COM1 Active</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="lbl_SimulatorCom2Active">
+             <property name="text">
+              <string>COM2 Active</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="0">
+            <widget class="QLabel" name="lbl_SimulatorCom2Standby">
+             <property name="text">
+              <string>COM2 Standby</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="1">
+            <widget class="QLineEdit" name="le_SimulatorCom1Standby"/>
+           </item>
+           <item row="12" column="1">
+            <widget class="QLineEdit" name="le_SimulatorCom2Active"/>
+           </item>
+           <item row="13" column="1">
+            <widget class="QLineEdit" name="le_SimulatorCom2Standby"/>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="le_SimulatorBank">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="le_SimulatorHeading">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="le_SimulatorGroundSpeed">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="le_SimulatorOnGround">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="1">
+            <widget class="QLineEdit" name="le_SimulatorTransponder"/>
+           </item>
+           <item row="14" column="0">
+            <widget class="QLabel" name="lbl_SimulatorTransponder">
+             <property name="text">
+              <string>Transponder</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
        <item>
@@ -2810,6 +2994,13 @@ QStatusBar QLabel {
            <widget class="QPushButton" name="pb_CockpitIdent">
             <property name="text">
              <string>Ident</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QPushButton" name="pb_MainSimulator">
+            <property name="text">
+             <string>Simulator</string>
             </property>
            </widget>
           </item>
