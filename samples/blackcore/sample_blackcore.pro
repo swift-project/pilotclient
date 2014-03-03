@@ -12,7 +12,7 @@ DEPENDPATH += . ../../src/blackmisc ../../src/blacksound ../../src/blackcore
 INCLUDEPATH += . ../../src
 
 LIBS    += -L../../lib  -lblackcore -lblacksound -lblackmisc
-LIBS	+= -lvatlib
+LIBS	+= -lvatlib -lSimConnect
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
                                      ../../lib/blacksound.lib \

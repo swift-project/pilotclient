@@ -11,7 +11,7 @@ CONFIG += staticlib c++11
 INCLUDEPATH += ..
 DEPENDPATH += . ..
 
-LIBS    += -L../../lib -lblacksound -lblackmisc
+LIBS    += -L../../lib -lblacksound -lblackmisc -lSimConnect
 
 # linux-g++* { QMAKE_CXXFLAGS += -std=c++0x }
 # PRECOMPILED_HEADER = stdpch.h
@@ -36,6 +36,10 @@ DEFINES += LOG_IN_FILE
 
 HEADERS += *.h
 SOURCES += *.cpp
+
+HEADERS += $$PWD/fsx/*.h
+SOURCES += $$PWD/fsx/*.cpp
+
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blacksound.lib
 else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../lib/libblacksound.a

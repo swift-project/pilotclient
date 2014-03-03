@@ -18,6 +18,7 @@ DESTDIR = ../../bin
 
 LIBS    += -L../../lib -lblackcore -lblackgui -lblacksound -lblackmisc
 LIBS	+= -lvatlib
+LIBS    += -lSimConnect
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
                                      ../../lib/blackgui.lib \
