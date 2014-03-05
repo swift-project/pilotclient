@@ -16,7 +16,7 @@ WITH_UNITTESTS = ON
 
 equals(WITH_BLACKMISC, ON) {
     SUBDIRS += src/blackmisc
-    SUBDIRS += src/blackmisc_cpp2xml
+#    SUBDIRS += src/blackmisc_cpp2xml
 }
 
 equals(WITH_BLACKSOUND, ON) {
@@ -48,6 +48,7 @@ equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/blackmisc/sample_blackmisc.pro
     SUBDIRS += samples/voiceclient/sample_voice_client.pro
     SUBDIRS += samples/blacksim/sample_blacksim.pro
+    SUBDIRS += samples/hotkey/sample_hotkey.pro
 }
 
 equals(WITH_UNITTESTS, ON) {
