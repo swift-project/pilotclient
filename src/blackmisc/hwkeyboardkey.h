@@ -195,15 +195,10 @@ namespace BlackMisc
                 return this->m_modifier1 != ModifierNone || this->m_modifier2 != ModifierNone;
             }
 
-            //! \brief Modifier?
-            bool hasModifier() const
-            {
-                return this->m_modifier1 != ModifierNone || this->m_modifier2 != ModifierNone;
-            }
-
             /*!
-             * \brief Do we have this Modifier?
+             * \brief Do we have this modifier?
              * \param modifier
+             * \return
              */
             bool hasModifier(Modifier modifier) const
             {

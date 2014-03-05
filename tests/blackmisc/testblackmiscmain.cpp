@@ -9,6 +9,7 @@
 #include "testgeo.h"
 #include "testcontainers.h"
 #include "testvariantandmap.h"
+#include "testhardware.h"
 #include "testblackmiscmain.h"
 
 namespace BlackMiscTest
@@ -26,13 +27,14 @@ namespace BlackMiscTest
             CTestGeo geoTests;
             CTestContainers containerTests;
             CTestVariantAndValueMap variantAndValueMap;
+            CTestHardware hardwareTests;
             status |= QTest::qExec(&pqBaseTests, argc, argv);
             status |= QTest::qExec(&avBaseTests, argc, argv);
             status |= QTest::qExec(&vmTests, argc, argv);
             status |= QTest::qExec(&geoTests, argc, argv);
             status |= QTest::qExec(&containerTests, argc, argv);
             status |= QTest::qExec(&variantAndValueMap, argc, argv);
-
+            status |= QTest::qExec(&hardwareTests, argc, argv);
         }
         return status;
     }
