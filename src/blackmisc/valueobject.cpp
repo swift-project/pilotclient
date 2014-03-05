@@ -54,7 +54,7 @@ namespace BlackMisc
     {
         // not all classes have to implement this
         qFatal("Property by index not implemented");
-        return QVariant("boom"); // avoid compiler warning
+        return QVariant("propertyByIndex not implemented"); // avoid compiler warning
     }
 
     /*
