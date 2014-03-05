@@ -52,6 +52,8 @@ void CCoreRuntime::init(bool withDbus)
     this->m_contextSimulator = new CContextSimulator(this);
     if (withDbus) this->m_contextSimulator->registerWithDBus(this->m_dbusServer);
 
+    m_contextAudio->init();
+
     // flag
     m_init = true;
 }

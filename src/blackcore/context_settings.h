@@ -6,10 +6,14 @@
 #ifndef BLACKCORE_CONTEXTSETTINGS_H
 #define BLACKCORE_CONTEXTSETTINGS_H
 
+#include "blackcore/coreruntime.h"
+#include "blackcore/dbus_server.h"
+#include "blackcore/keyboard.h"
+#include "blackmisc/hwkeyboardkeylist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/setnetwork.h"
-#include "blackmisc/hwkeyboardkeylist.h"
+
 
 #include <QObject>
 #include <QVariant>
@@ -29,6 +33,12 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSETTINGS_INTERFACENAME)
 
     public:
+
+        enum SettingsType
+        {
+            SettingsHotKeys,
+            SettingsNetwork
+        };
 
         /*!
          * \brief Service name
@@ -103,7 +113,7 @@ namespace BlackCore
 
     signals:
         //! \brief Settings have been changed
-        void changedSettings();
+        void changedSettings(SettingsType type);
 
         //! \brief Network settings have been changed
         void changedNetworkSettings();

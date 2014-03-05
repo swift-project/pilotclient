@@ -68,7 +68,8 @@ namespace BlackCore
                 {
                     BlackMisc::Hardware::CKeyboardKeyList hotkeys = value.value<BlackMisc::Hardware::CKeyboardKeyList>();
                     this->m_hotkeys = hotkeys;
-                    emit this->changedSettings();
+                    emit this->changedSettings(SettingsHotKeys);
+
                     msgs.push_back(CStatusMessage::getInfoMessage("set hotkeys"));
                     return msgs;
                 }
@@ -84,7 +85,7 @@ namespace BlackCore
             if (changed)
             {
                 emit this->changedNetworkSettings();
-                emit this->changedSettings();
+                emit this->changedSettings(SettingsNetwork);
             }
         }
         else

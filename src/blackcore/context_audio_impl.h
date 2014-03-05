@@ -7,9 +7,11 @@
 #define BLACKCORE_CONTEXTAUDIO_IMPL_H
 
 #include "context_audio.h"
+#include "context_settings.h"
 #include "coreruntime.h"
 #include "dbus_server.h"
 #include "voice_vatlib.h"
+#include "blackcore/keyboard.h"
 
 namespace BlackCore
 {
@@ -51,6 +53,9 @@ namespace BlackCore
 
         //! \copydoc IContextAudio::usingLocalObjects()
         virtual bool usingLocalObjects() const override { return true; }
+
+        //! \brief Initialize voice context
+        void init();
 
     public slots:
         //! \copydoc IContextAudio::setOwnAircraft()
@@ -118,6 +123,9 @@ namespace BlackCore
 
         //! \copydoc IContextAudio::getSquelchValue()
         virtual double getSquelchValue() const override;
+
+    private slots:
+        void settingsChanged(IContextSettings::SettingsType type);
 
     private:
         CVoiceVatlib *m_voice; //!< underlying voice lib
