@@ -7,6 +7,7 @@ include (externals.pri)
 WITH_BLACKMISC = ON
 WITH_BLACKCORE = ON
 WITH_BLACKGUI = ON
+WITH_BLACKSIM = ON
 WITH_BLACKSOUND = ON
 WITH_SAMPLES = ON
 WITH_UNITTESTS = ON
@@ -30,6 +31,10 @@ equals(WITH_BLACKGUI, ON) {
     SUBDIRS += src/blackgui
 }
 
+equals(WITH_BLACKSIM, ON) {
+    SUBDIRS += src/blacksim
+}
+
 equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/cli_client/sample_cli_client.pro
     SUBDIRS += samples/interpolator/sample_interpolator.pro
@@ -42,6 +47,7 @@ equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/blackcore/sample_blackcore.pro
     SUBDIRS += samples/blackmisc/sample_blackmisc.pro
     SUBDIRS += samples/voiceclient/sample_voice_client.pro
+    SUBDIRS += samples/blacksim/sample_blacksim.pro
 }
 
 equals(WITH_UNITTESTS, ON) {
