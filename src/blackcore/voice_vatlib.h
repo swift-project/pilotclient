@@ -133,6 +133,12 @@ namespace BlackCore
             return !enabled;
         }
 
+        /*!
+         * \brief Starts or stops voice transmission
+         * \param value
+         */
+        void handlePushToTalk(bool value = false);
+
         /************************************************
          * NON API METHODS:
          * The following methods are not part of the
@@ -195,7 +201,6 @@ namespace BlackCore
         void removeUserFromRoom(const ComUnit comUnit, const QString &callsign);
         void exceptionDispatcher(const char *caller);
         void enableAudio(const ComUnit comUnit);
-        void handlePushToTalk();
         void changeConnectionStatus(ComUnit comUnit, ConnectionStatus newStatus);
 
         /*!
@@ -213,69 +218,6 @@ namespace BlackCore
             }
         };
 
-#ifdef Q_OS_WIN
-
-        /*!
-         * \brief Keyboard PTT handling class
-         */
-        class CKeyboard
-        {
-        public:
-            // Keyboard hook
-            static HHOOK s_keyboardHook;
-            static CVoiceVatlib *s_voice;
-            static LRESULT CALLBACK keyboardProcedure(int nCode, WPARAM wParam, LPARAM lParam);
-
-            /*!
-             * \brief Constructor, keyboard handling
-             */
-            CKeyboard(CVoiceVatlib *vatlib)
-            {
-                CVoiceVatlib::CKeyboard::s_voice = vatlib;
-                CVoiceVatlib::CKeyboard::s_keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, CVoiceVatlib::CKeyboard::keyboardProcedure, GetModuleHandle(NULL), 0);
-            }
-
-            /*!
-             * Destructor
-             */
-            ~CKeyboard()
-            {
-                if (!CVoiceVatlib::CKeyboard::s_keyboardHook) return;
-                UnhookWindowsHookEx(CVoiceVatlib::CKeyboard::s_keyboardHook);
-                CVoiceVatlib::CKeyboard::s_keyboardHook = nullptr;
-                CVoiceVatlib::CKeyboard::s_voice = nullptr;
-            }
-        };
-
-#else
-
-        /*!
-         * \brief Keyboard PTT handling class
-         */
-        class CKeyboard
-        {
-        public:
-            static CVoiceVatlib *s_voice;
-
-            /*!
-             * \brief Constructor, keyboard handling
-             */
-            CKeyboard(CVoiceVatlib *vatlib)
-            {
-                CVoiceVatlib::CKeyboard::s_voice = vatlib;
-            }
-
-            /*!
-             * Destructor
-             */
-            ~CKeyboard()
-            {
-                // void
-            }
-        };
-
-#endif
-
         QScopedPointer<Cvatlib_Voice_Simple, Cvatlib_Voice_Simple_Deleter> m_voice;
         QScopedPointer<QAudioOutput> m_audioOutput;
         BlackMisc::Aviation::CCallsign m_aircraftCallsign; /*!< own callsign to join voice rooms */
@@ -283,8 +225,6 @@ namespace BlackCore
         BlackMisc::Audio::CAudioDeviceList m_devices; /*!< in and output devices */
         BlackMisc::Audio::CAudioDevice m_currentOutputDevice;
         BlackMisc::Audio::CAudioDevice m_currentInputDevice;
-        QScopedPointer<CKeyboard> m_keyboardPtt; /*!< handler for PTT */
-        bool m_pushToTalk; /*!< flag, PTT pressed */
         float m_inputSquelch;
         Cvatlib_Voice_Simple::agc m_micTestResult;
         QMap <ComUnit, BlackMisc::Aviation::CCallsignList> m_voiceRoomCallsigns; /*!< voice room callsigns */

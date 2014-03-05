@@ -14,6 +14,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
+using namespace BlackMisc::Hardware;
 
 namespace BlackCore
 {
@@ -21,10 +22,14 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextAudio::CContextAudio(QObject *parent) : IContextAudio(parent), m_voice(nullptr)
+    CContextAudio::CContextAudio(QObject *parent) : 
+	IContextAudio(parent), 
+	m_voice(nullptr),
+	m_keyboard(nullptr)
     {
         // 1. Init by "voice driver"
         this->m_voice = new CVoiceVatlib(this);
+        m_keyboard = IKeyboard::getInstance();
 
         // 2. Signal / slots
         connect(this->m_voice, &CVoiceVatlib::micTestFinished, this, &CContextAudio::audioTestCompleted);

@@ -121,6 +121,10 @@ namespace BlackCore
 
     private:
         CVoiceVatlib *m_voice; //!< underlying voice lib
+        IKeyboard *m_keyboard;
+        IKeyboard::RegistrationHandle m_handlePtt;
+        IContextSettings *m_contextSettings;
+
     };
 }
 

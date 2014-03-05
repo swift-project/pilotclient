@@ -19,8 +19,6 @@ namespace BlackCore
         IVoice(parent),
         m_voice(Cvatlib_Voice_Simple::Create()),
         m_audioOutput(new QAudioOutput()),
-        m_keyboardPtt(new CKeyboard(nullptr)),
-        m_pushToTalk(false),
         m_inputSquelch(-1),
         m_micTestResult(Cvatlib_Voice_Simple::agc_Ok),
         m_temporaryUserRoomIndex(CVoiceVatlib::InvalidRoomIndex)
@@ -49,9 +47,6 @@ namespace BlackCore
 
             // do processing
             this->startTimer(100);
-
-            // as last thing enable keyboard handling
-            this->m_keyboardPtt.data()->s_voice = this;
         }
         catch (...)
         {
@@ -491,7 +486,6 @@ namespace BlackCore
         try
         {
             this->m_voice->DoProcessing();
-            this->handlePushToTalk();
         }
         catch (...)
         {
