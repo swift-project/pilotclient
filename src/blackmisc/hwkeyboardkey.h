@@ -131,6 +131,20 @@ namespace BlackMisc
             //! \brief Native virtual key
             quint32 getNativeVirtualKey() const { return this->m_nativeVirtualKey; }
 
+            /*!
+             * \brief Add modifier
+             * \param modifier
+             * \return True if modifier was added
+             */
+            bool addModifier(const Modifier &modifier);
+
+            /*!
+             * \brief add modifier
+             * \param modifier
+             * \return True if modifier was added
+             */
+            bool addModifier(const QString &modifier);
+
             //! \brief number of modifiers
             int numberOfModifiers() const;
 
@@ -149,16 +163,51 @@ namespace BlackMisc
             //! \brief Modifier 2
             QString getModifier2AsString() const { return modifierToString(this->m_modifier2); }
 
+            /*!
+             * \brief Remove modifier from key
+             * \param modifier
+             * \return True if modifier was removed
+             */
+            bool removeModifier(const Modifier &modifier);
+
+            /*!
+             * \brief Remove modifier from key
+             * \param modifier
+             * \return True if modifier was removed
+             */
+            bool removeModifier(const QString &modifier);
+
             //! \brief Set modifier 1
             void setModifier1(const QString &modifier) { this->m_modifier1 = modifierFromString(modifier); }
 
+            //! \brief Set modifier 1
+            void setModifier1(const Modifier &modifier) { this->m_modifier1 = modifier; }
+
             //! \brief Set modifier 2
             void setModifier2(const QString &modifier) { this->m_modifier2 = modifierFromString(modifier); }
+
+            //! \brief Set modifier 2
+            void setModifier2(const Modifier &modifier) { this->m_modifier2 = modifier; }
 
             //! \brief Modifier?
             bool hasModifier() const
             {
                 return this->m_modifier1 != ModifierNone || this->m_modifier2 != ModifierNone;
+            }
+
+            //! \brief Modifier?
+            bool hasModifier() const
+            {
+                return this->m_modifier1 != ModifierNone || this->m_modifier2 != ModifierNone;
+            }
+
+            /*!
+             * \brief Do we have this Modifier?
+             * \param modifier
+             */
+            bool hasModifier(Modifier modifier) const
+            {
+                return m_modifier1 == modifier || m_modifier2 == modifier;
             }
 
             //! \brief with key?

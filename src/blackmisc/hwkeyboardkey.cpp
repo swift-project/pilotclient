@@ -223,6 +223,56 @@ namespace BlackMisc
                 m_qtKey = static_cast<Qt::Key>(sequence[0]);
             }
         }
+
+        bool CKeyboardKey::addModifier(const Modifier &modifier)
+        {
+            bool added = false;
+
+            // Don't add the same modifier twice
+            if (hasModifier(modifier))
+                return false;
+
+            if (m_modifier1 == ModifierNone)
+            {
+                m_modifier1 = modifier;
+                added = true;
+            }
+            else if (m_modifier2 == ModifierNone)
+            {
+                m_modifier2 = modifier;
+                added = true;
+            }
+
+            return added;
+        }
+
+        bool CKeyboardKey::addModifier(const QString &modifier)
+        {
+            return addModifier(modifierFromString(modifier));
+        }
+
+        bool CKeyboardKey::removeModifier(const Modifier &modifier)
+        {
+            bool removed = false;
+
+            if (m_modifier1 == modifier)
+            {
+                m_modifier1 = ModifierNone;
+                removed = true;
+            }
+            if (m_modifier2 == modifier)
+            {
+                m_modifier2 = ModifierNone;
+                removed = true;
+            }
+            cleanup();
+
+            return removed;
+        }
+
+        bool CKeyboardKey::removeModifier(const QString &modifier)
+        {
+            return removeModifier(modifierFromString(modifier));
         }
 
         QString CKeyboardKey::getFunctionAsString() const
