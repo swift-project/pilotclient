@@ -12,16 +12,16 @@ namespace BlackMisc
     namespace Hardware
     {
         CKeyboardKey::CKeyboardKey() :
-            m_qtKey(0), m_nativeScanCode(0), m_nativeVirtualKey(0), m_modifier1(ModifierNone), m_modifier2(ModifierNone), m_function(HotkeyNone), m_pressed(false)
+            m_qtKey(Qt::Key_unknown), m_nativeVirtualKey(0), m_modifier1(ModifierNone), m_modifier2(ModifierNone), m_function(HotkeyNone)
         {}
 
         CKeyboardKey::CKeyboardKey(HotkeyFunction function) :
-            m_qtKey(0), m_nativeScanCode(0), m_nativeVirtualKey(0), m_modifier1(ModifierNone), m_modifier2(ModifierNone), m_function(function), m_pressed(false)
+            m_qtKey(Qt::Key_unknown), m_nativeVirtualKey(0), m_modifier1(ModifierNone), m_modifier2(ModifierNone), m_function(function)
         {}
 
 
-        CKeyboardKey::CKeyboardKey(int keyCode, quint32 nativeScanCode, quint32 nativeVirtualKey, Modifier modifier1, Modifier modifier2, const HotkeyFunction &function, bool isPressed) :
-            m_qtKey(keyCode), m_nativeScanCode(nativeScanCode), m_nativeVirtualKey(nativeVirtualKey), m_modifier1(modifier1), m_modifier2(modifier2), m_function(function), m_pressed(isPressed)
+        CKeyboardKey::CKeyboardKey(Qt::Key keyCode, quint32 nativeVirtualKey, Modifier modifier1, Modifier modifier2, const HotkeyFunction &function) :
+            m_qtKey(keyCode), m_nativeVirtualKey(nativeVirtualKey), m_modifier1(modifier1), m_modifier2(modifier2), m_function(function)
         {}
 
         void CKeyboardKey::registerMetadata()
@@ -34,7 +34,7 @@ namespace BlackMisc
         {
             QString s = this->getModifier1AsString();
             s.append(" ").append(this->getModifier2AsString()).append(" ");
-            if (this->m_qtKey != 0) this->getKeyAsStringRepresentation();
+            if (this->m_qtKey != 0) s.append(" ").append(this->getKeyAsStringRepresentation());
             return s.trimmed();
         }
 
@@ -207,25 +207,22 @@ namespace BlackMisc
         void CKeyboardKey::setKey(const QString &key)
         {
             if (key.isEmpty())
-                this->m_qtKey = 0;
-            else if (key.contains(QRegExp("\\((\\d+)\\)")))
-            {
-                QString code = key.mid(key.indexOf("(") + 1).replace(")", "");
-                if (code.isEmpty())
-                    this->m_qtKey = 0;
-                else
-                    this->m_qtKey = code.toInt();
-            }
-            else
-                this->setKey(key.at(0));
+                this->m_qtKey = Qt::Key_unknown;
+
+            QKeySequence sequence(key);
+            m_qtKey = static_cast<Qt::Key>(sequence[0]);
         }
 
-        void CKeyboardKey::setKey(const QChar key)
+        void CKeyboardKey::setKey(const QChar &key)
         {
             if (key.isNull())
-                this->m_qtKey = 0;
+                this->m_qtKey = Qt::Key_unknown;
             else
-                this->m_qtKey = key.digitValue();
+            {
+                QKeySequence sequence(key);
+                m_qtKey = static_cast<Qt::Key>(sequence[0]);
+            }
+        }
         }
 
         QString CKeyboardKey::getFunctionAsString() const
@@ -256,10 +253,8 @@ namespace BlackMisc
             this->m_function = key.m_function;
             this->m_modifier1 = key.m_modifier1;
             this->m_modifier2 = key.m_modifier2;
-            this->m_nativeScanCode = key.m_nativeScanCode;
             this->m_nativeVirtualKey = key.m_nativeVirtualKey;
             this->m_qtKey = key.m_qtKey;
-            this->m_pressed = key.m_pressed;
         }
 
         QVariant CKeyboardKey::propertyByIndex(int index) const
@@ -284,8 +279,6 @@ namespace BlackMisc
                 return QVariant(QString(QChar(this->m_qtKey)));
             case IndexKeyAsStringRepresentation:
                 return QVariant(this->getKeyAsStringRepresentation());
-            case IndexIsPressed:
-                return QVariant(this->m_pressed);
             default:
                 break;
             }
@@ -324,9 +317,6 @@ namespace BlackMisc
                         this->setKey(variant.value<QString>());
                     break;
                 }
-            case IndexIsPressed:
-                this->setPressed(variant.value<bool>());
-                break;
             case IndexModifier1AsString:
                 this->setModifier1(variant.value<QString>());
                 break;

@@ -135,8 +135,7 @@ namespace BlackGui
     {
         const Qt::Key k = static_cast<Qt::Key>(event->key());
         if (k == Qt::Key_Shift || k == Qt::Key_Control || k == Qt::Key_Meta || k == Qt::Key_Alt || k == Qt::Key_CapsLock || k == Qt::Key_NumLock || k == Qt::Key_ScrollLock) return;
-        this->m_key.setKey(event->key());
-        this->m_key.setNativeScanCode(event->nativeScanCode());
+        this->m_key.setKey(k);
         this->m_key.setNativeVirtualKey(event->nativeVirtualKey());
         this->setText(CKeyboardKey::toStringRepresentation(event->key()));
     }

@@ -37,7 +37,6 @@ namespace BlackMisc
                 IndexModifier2AsString,
                 IndexFunction,
                 IndexFunctionAsString,
-                IndexIsPressed,
                 IndexKeyObject, // just for updates
             };
 
@@ -76,7 +75,7 @@ namespace BlackMisc
             CKeyboardKey(HotkeyFunction function);
 
             //! \brief Constructor
-            CKeyboardKey(int keyCode, quint32 nativeScanCode, quint32 nativeVirtualKey, Modifier modifier1 = ModifierNone, Modifier modifier2 = ModifierNone, const HotkeyFunction &function = HotkeyNone, bool isPressed = false);
+            CKeyboardKey(Qt::Key keyCode, quint32 nativeVirtualKey, Modifier modifier1 = ModifierNone, Modifier modifier2 = ModifierNone, const HotkeyFunction &function = HotkeyNone);
 
             //! \brief Destructor
             ~CKeyboardKey() {}
@@ -102,14 +101,8 @@ namespace BlackMisc
             //! \brief <
             bool operator<(CKeyboardKey const &other) const;
 
-            //! \brief key pressed?
-            bool isPressed() const { return this->m_pressed; }
-
-            //! \brief Set key pressed
-            void setPressed(bool isPressed) { this->m_pressed = isPressed; }
-
             //! \brief Get key code
-            QChar getKey() const { return QChar(this->m_qtKey); }
+            Qt::Key getKey() const { return this->m_qtKey; }
 
             //! \brief Get key code
             QString getKeyAsString() const { return QString(this->getKey()); }
@@ -124,22 +117,16 @@ namespace BlackMisc
             void setKey(const QString &key);
 
             //! \brief Set key code
-            void setKey(const QChar key);
+            void setKey(const QChar &key);
 
             //! \brief Set key code
-            void setKey(const Qt::Key key) { this->m_qtKey = static_cast<int>(key); }
+            void setKey(const Qt::Key key) { this->m_qtKey = key; }
 
             //! \brief Set key code
-            void setKey(int key) { this->m_qtKey = key; }
-
-            //! \brief Native scan code
-            void setNativeScanCode(quint32 scanCode) { this->m_nativeScanCode = scanCode; }
+            void setKey(int key) { this->m_qtKey = static_cast<Qt::Key>(key); }
 
             //! \brief Native virtual key
             void setNativeVirtualKey(quint32 virtualKey) { this->m_nativeVirtualKey = virtualKey; }
-
-            //! \brief Native scan code
-            quint32 getNativeScanCode() const { return this->m_nativeScanCode; }
 
             //! \brief Native virtual key
             quint32 getNativeVirtualKey() const { return this->m_nativeVirtualKey; }
@@ -177,7 +164,7 @@ namespace BlackMisc
             //! \brief with key?
             bool hasKey() const
             {
-                return !this->m_qtKey == 0;
+                return !(this->m_qtKey == Qt::Key_unknown);
             }
 
             //! \brief Key + modifier?
@@ -244,19 +231,17 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CKeyboardKey)
-            int m_qtKey; //!< code similar to Qt::Key
-            quint32 m_nativeScanCode; //!< native scan code, QKeyEvent::nativeScanCode
+            Qt::Key m_qtKey; //!< code similar to Qt::Key
             quint32 m_nativeVirtualKey; //!< virtual key code
             Modifier m_modifier1;
             Modifier m_modifier2;
             HotkeyFunction m_function;
-            bool m_pressed;
 
         };
     } // class
 } // BlackMisc
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Hardware::CKeyboardKey, (o.m_qtKey, o.m_nativeScanCode, o.m_nativeVirtualKey, o.m_modifier1, o.m_modifier2, o.m_function, o.m_pressed))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Hardware::CKeyboardKey, (o.m_qtKey, o.m_nativeVirtualKey, o.m_modifier1, o.m_modifier2, o.m_function, o.m_pressed))
 Q_DECLARE_METATYPE(BlackMisc::Hardware::CKeyboardKey)
 
 #endif // guard
