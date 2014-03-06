@@ -15,8 +15,7 @@ namespace BlackSim
          * Constructor
          */
         CAircraftMapping::CAircraftMapping() :
-            m_mappingId(CAircraftMapping::InvalidId), m_proposalId(CAircraftMapping::InvalidId), m_fsAircraftKey(), m_icaoAircraftDesignator(), m_icaoAirlineDesignator(),
-            m_icaoAircraftType(), m_icaoWakeTurbulenceCategory(), m_painting(), m_lastChanged(-1), m_simulator(BlackSim::CSimulator::UnspecifiedSim())
+            m_mappingId(CAircraftMapping::InvalidId), m_proposalId(CAircraftMapping::InvalidId), m_lastChanged(-1), m_simulator(BlackSim::CSimulator::UnspecifiedSim())
         {
             // void
         }
@@ -43,7 +42,12 @@ namespace BlackSim
             if (this == &otherMapping) return true;
             return
                 this->m_mappingId == otherMapping.m_mappingId &&
-                this->m_proposalId == otherMapping.m_proposalId;
+                this->m_proposalId == otherMapping.m_proposalId &&
+                this->m_changed == otherMapping.m_changed &&
+                this->m_icaoAircraftDesignator == otherMapping.m_icaoAircraftDesignator &&
+                this->m_icaoAircraftType == otherMapping.m_icaoAircraftType &&
+                this->m_icaoAirlineDesignator == otherMapping.m_icaoAirlineDesignator &&
+                this->m_icaoWakeTurbulenceCategory == otherMapping.m_icaoWakeTurbulenceCategory;
         }
 
         /*
