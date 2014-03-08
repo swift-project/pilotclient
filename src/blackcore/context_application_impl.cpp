@@ -3,12 +3,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "context_application.h"
+#include "context_application_impl.h"
 #include "coreruntime.h"
 #include "blackmisc/settingutilities.h"
 
-using namespace BlackMisc::Settings;
-using namespace BlackMisc::Network;
 using namespace BlackMisc;
 
 namespace BlackCore
@@ -17,7 +15,7 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextApplication::CContextApplication(CCoreRuntime *parent) : IContextApplication(parent)
+    CContextApplication::CContextApplication(QObject *parent) : IContextApplication(parent)
     {
         // void
     }

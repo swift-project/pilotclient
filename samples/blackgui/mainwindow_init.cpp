@@ -4,6 +4,8 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_simulator_impl.h"
 #include "blackcore/context_simulator_proxy.h"
+#include "blackcore/context_application_impl.h"
+#include "blackcore/context_application_proxy.h"
 #include "blackcore/coreruntime.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/keyboardkeylistmodel.h"
@@ -167,7 +169,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
         this->m_contextNetwork = new BlackCore::IContextNetwork(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextVoice = new BlackCore::IContextVoice(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextSettings = new BlackCore::IContextSettings(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
-        this->m_contextApplication = new BlackCore::IContextApplication(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
+        this->m_contextApplication = new BlackCore::CContextApplicationProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextSimulator = new BlackCore::CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
     }
     else

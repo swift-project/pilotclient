@@ -3,7 +3,10 @@
 #include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
+#include "blackcore/context_application.h"
+
 #include "blackmisc/avaircraft.h"
+
 #include <QMouseEvent>
 
 using namespace BlackCore;

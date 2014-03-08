@@ -6,59 +6,65 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_H
 #define BLACKCORE_CONTEXTAPPLICATION_H
 
-#include "blackcore/dbus_server.h"
-#include "blackcore/context_application_interface.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackcore/coreruntime.h"
 #include <QObject>
 
-#define BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME "blackcore.contextapplication"
+#define BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextApplication"
+#define BLACKCORE_CONTEXTAPPLICATION_OBJECTPATH "/Application"
 
 namespace BlackCore
 {
-    class CCoreRuntime;
 
     /*!
-     * \brief Application context
+     * \brief Application context interface
      */
-    class CContextApplication : public IContextApplication
+    class IContextApplication : public QObject
     {
-        // Register by same name, make signals sender independent
-        // http://dbus.freedesktop.org/doc/dbus-faq.html#idp48032144
-        Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
         Q_OBJECT
+        Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
 
     public:
 
         /*!
-         * Context
-         * \param parent
+         * \brief Service name
+         * \return
          */
-        CContextApplication(CCoreRuntime *parent);
+        static const QString &InterfaceName()
+        {
+            static QString s(BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME);
+            return s;
+        }
+
+        /*!
+         * \brief Service path
+         * \return
+         */
+        static const QString &ObjectPath()
+        {
+            static QString s(BLACKCORE_CONTEXTAPPLICATION_OBJECTPATH);
+            return s;
+        }
+
+        /*!
+          * \brief DBus version constructor
+          * \param parent
+          */
+        IContextApplication(QObject *parent = nullptr) : QObject(parent) {}
 
         /*!
          * Destructor
          */
-        virtual ~CContextApplication() {}
+        virtual ~IContextApplication() {}
 
-        /*!
-         * \brief Register myself in DBus
-         * \param server
-         */
-        void registerWithDBus(CDBusServer *server)
-        {
-            server->addObject(IContextApplication::ServicePath(), this);
-        }
+    signals:
+        //! \brief Status message
+        void statusMessage(const BlackMisc::CStatusMessage &message);
 
-        /*!
-         * \brief Runtime
-         * \return
-         */
-        const CCoreRuntime *getRuntime() const
-        {
-            return static_cast<CCoreRuntime *>(this->parent());
-        }
+        //! Widget GUI is about to start
+        void widgetGuiStarting() const;
+
+        //! Widget GUI is about to terminate
+        void widgetGuiTerminating() const;
 
     public slots:
 
@@ -67,7 +73,7 @@ namespace BlackCore
          * \param token
          * \return
          */
-        qint64 ping(qint64 token) const;
+        virtual qint64 ping(qint64 token) const = 0;
 
     };
 }
