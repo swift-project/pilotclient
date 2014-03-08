@@ -130,11 +130,11 @@ void MainWindow::updateCockpitFromContext()
     //
     // Voice room override
     //
-    if (this->m_contextVoiceAvailable)
+    if (this->m_contextAudioAvailable)
     {
         // get all rooms, it is important to get the rooms from voice context here
         // these are the ones featuring the real audio status
-        CVoiceRoomList rooms = this->m_contextVoice->getComVoiceRoomsWithAudioStatus();
+        CVoiceRoomList rooms = this->m_contextAudio->getComVoiceRoomsWithAudioStatus();
         Q_ASSERT(rooms.size() == 2);
         Q_ASSERT(this->m_modelUsersVoiceCom1);
         Q_ASSERT(this->m_modelUsersVoiceCom2);
@@ -145,12 +145,12 @@ void MainWindow::updateCockpitFromContext()
         bool com2Connected = room2.isConnected();
 
         // update views
-        this->m_modelUsersVoiceCom1->update(this->m_contextVoice->getCom1RoomUsers());
+        this->m_modelUsersVoiceCom1->update(this->m_contextAudio->getCom1RoomUsers());
         this->ui->tv_CockpitVoiceRoom1->resizeColumnsToContents();
         this->ui->tv_CockpitVoiceRoom1->resizeRowsToContents();
         this->ui->tv_CockpitVoiceRoom1->horizontalHeader()->setStretchLastSection(true);
 
-        this->m_modelUsersVoiceCom2->update(this->m_contextVoice->getCom2RoomUsers());
+        this->m_modelUsersVoiceCom2->update(this->m_contextAudio->getCom2RoomUsers());
         this->ui->tv_CockpitVoiceRoom2->resizeColumnsToContents();
         this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
         this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setStretchLastSection(true);
@@ -316,7 +316,7 @@ void MainWindow::sendCockpitUpdates()
  */
 void MainWindow::setAudioVoiceRooms()
 {
-    if (!this->m_contextVoiceAvailable) return;
+    if (!this->m_contextAudioAvailable) return;
     if (!this->m_contextNetworkAvailable) return;
 
     // make fields readonly if not overriding
@@ -347,7 +347,7 @@ void MainWindow::setAudioVoiceRooms()
     }
 
     // set the real voice rooms for audio output
-    this->m_contextVoice->setComVoiceRooms(room1, room2);
+    this->m_contextAudio->setComVoiceRooms(room1, room2);
 }
 
 /*
@@ -362,10 +362,10 @@ void MainWindow::testSelcal()
             CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityWarning, "invalid SELCAL codde"));
         return;
     }
-    if (this->m_contextVoiceAvailable)
+    if (this->m_contextAudioAvailable)
     {
         CSelcal selcal(selcalCode);
-        this->m_contextVoice->playSelcalTone(selcal);
+        this->m_contextAudio->playSelcalTone(selcal);
     }
     else
     {

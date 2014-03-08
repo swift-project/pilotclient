@@ -3,7 +3,7 @@
 #include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
-#include "blackcore/context_voice.h"
+#include "blackcore/context_audio.h"
 #include "blacksound/soundgenerator.h"
 
 using namespace BlackCore;
@@ -23,11 +23,11 @@ using namespace BlackMisc::Math;
  */
 void MainWindow::setAudioDeviceLists()
 {
-    if (!this->isContextVoiceAvailableCheck()) return;
+    if (!this->isContextAudioAvailableCheck()) return;
     this->ui->cb_SettingsAudioOutputDevice->clear();
     this->ui->cb_SettingsAudioInputDevice->clear();
 
-    foreach(CAudioDevice device, this->m_contextVoice->getAudioDevices())
+    foreach(CAudioDevice device, this->m_contextAudio->getAudioDevices())
     {
         if (device.getType() == CAudioDevice::InputDevice)
         {
@@ -39,7 +39,7 @@ void MainWindow::setAudioDeviceLists()
         }
     }
 
-    foreach(CAudioDevice device, this->m_contextVoice->getCurrentAudioDevices())
+    foreach(CAudioDevice device, this->m_contextAudio->getCurrentAudioDevices())
     {
         if (device.getType() == CAudioDevice::InputDevice)
         {
@@ -58,9 +58,9 @@ void MainWindow::setAudioDeviceLists()
 void MainWindow::audioDeviceSelected(int index)
 {
     if (!this->m_init) return; // not during init
-    if (!this->isContextVoiceAvailableCheck()) return;
+    if (!this->isContextAudioAvailableCheck()) return;
     if (index < 0)return;
-    CAudioDeviceList devices = this->m_contextVoice->getAudioDevices();
+    CAudioDeviceList devices = this->m_contextAudio->getAudioDevices();
     if (devices.isEmpty()) return;
     CAudioDevice selectedDevice;
     QObject *sender = QObject::sender();
@@ -69,14 +69,14 @@ void MainWindow::audioDeviceSelected(int index)
         CAudioDeviceList inputDevices = devices.getInputDevices();
         if (index >= inputDevices.size()) return;
         selectedDevice = inputDevices[index];
-        this->m_contextVoice->setCurrentAudioDevice(selectedDevice);
+        this->m_contextAudio->setCurrentAudioDevice(selectedDevice);
     }
     else if (sender == this->ui->cb_SettingsAudioOutputDevice)
     {
         CAudioDeviceList outputDevices = devices.getOutputDevices();
         if (index >= outputDevices.size()) return;
         selectedDevice = outputDevices[index];
-        this->m_contextVoice->setCurrentAudioDevice(selectedDevice);
+        this->m_contextAudio->setCurrentAudioDevice(selectedDevice);
     }
 }
 
@@ -85,7 +85,7 @@ void MainWindow::audioDeviceSelected(int index)
  */
 void MainWindow::audioVolumes()
 {
-    if (!this->m_contextVoiceAvailable)
+    if (!this->m_contextAudioAvailable)
     {
         this->ui->pb_SoundMute->setEnabled(false);
         this->ui->pb_SoundMaxVolume->setEnabled(false);
@@ -103,7 +103,7 @@ void MainWindow::audioVolumes()
 
     if (sender == this->ui->pb_SoundMute)
     {
-        if (this->m_contextVoice->isMuted())
+        if (this->m_contextAudio->isMuted())
         {
             // muted right now, now unmute
             muted = false;
@@ -146,7 +146,7 @@ void MainWindow::audioVolumes()
     // update own aircraft, also set volume/mute in voice
     this->m_ownAircraft.setCom1System(com1);
     this->m_ownAircraft.setCom2System(com2);
-    this->m_contextVoice->setVolumes(this->m_ownAircraft.getCom1System(), this->m_ownAircraft.getCom2System());
+    this->m_contextAudio->setVolumes(this->m_ownAircraft.getCom1System(), this->m_ownAircraft.getCom2System());
 }
 
 /*
@@ -154,7 +154,7 @@ void MainWindow::audioVolumes()
  */
 void MainWindow::startAudioTest()
 {
-    if (!this->m_contextVoiceAvailable)
+    if (!this->m_contextAudioAvailable)
     {
         CStatusMessage m(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "voice context not available");
         this->displayStatusMessage(m);
@@ -174,13 +174,13 @@ void MainWindow::startAudioTest()
     if (sender == this->ui->pb_SettingsAudioMicrophoneTest)
     {
         this->m_audioTestRunning = MicrophoneTest;
-        this->m_contextVoice->runMicrophoneTest();
+        this->m_contextAudio->runMicrophoneTest();
         this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText("Speak normally for 5 seconds");
     }
     else if (sender == this->ui->pb_SettingsAudioSquelchTest)
     {
         this->m_audioTestRunning = SquelchTest;
-        this->m_contextVoice->runSquelchTest();
+        this->m_contextAudio->runSquelchTest();
         this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText("Silence for 5 seconds");
     }
     this->ui->prb_SettingsAudioTestProgress->setVisible(true);
@@ -210,16 +210,16 @@ void MainWindow::audioTestUpdate()
         // getting here we assume the audio test finished signal
         // fetch results
         this->ui->pte_SettingsAudioTestActionAndResult->clear();
-        if (this->m_contextVoiceAvailable)
+        if (this->m_contextAudioAvailable)
         {
             if (this->m_audioTestRunning == SquelchTest)
             {
-                double s = this->m_contextVoice->getSquelchValue();
+                double s = this->m_contextAudio->getSquelchValue();
                 this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText(QString::number(s));
             }
             else if (this->m_audioTestRunning == MicrophoneTest)
             {
-                QString m = this->m_contextVoice->getMicrophoneTestResult();
+                QString m = this->m_contextAudio->getMicrophoneTestResult();
                 this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText(m);
             }
         }
@@ -236,8 +236,8 @@ void MainWindow::audioTestUpdate()
  */
 void MainWindow::playNotifcationSound(CSoundGenerator::Notification notification) const
 {
-    if (!this->m_contextVoiceAvailable) return;
+    if (!this->m_contextAudioAvailable) return;
     if (!this->ui->cb_SettingsAudioPlayNotificationSounds->isChecked()) return;
     if (notification == CSoundGenerator::NotificationTextMessage && !this->ui->cb_SettingsAudioNotificationTextMessage->isChecked()) return;
-    this->m_contextVoice->playNotification(static_cast<uint>(notification));
+    this->m_contextAudio->playNotification(static_cast<uint>(notification));
 }

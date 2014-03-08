@@ -3,8 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "blackcore/context_voice_interface.h"
-#include <QObject>
+#include "context_audio_proxy.h"
 #include <QDBusConnection>
 
 using namespace BlackMisc::Audio;
@@ -17,25 +16,27 @@ namespace BlackCore
     /*
      * Constructor for DBus
      */
-    IContextVoice::IContextVoice(const QString &serviceName, QDBusConnection &connection, QObject *parent) : QObject(parent), m_dBusInterface(0)
+    CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent) : IContextAudio(parent), m_dBusInterface(nullptr)
     {
-        this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(serviceName , IContextVoice::ServicePath(), IContextVoice::InterfaceName(), connection, this);
+        this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
+            serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+            connection, this);
         this->relaySignals(serviceName, connection);
     }
 
     /*
      * Workaround for signals, not working without, but why?
      */
-    void IContextVoice::relaySignals(const QString &serviceName, QDBusConnection &connection)
+    void CContextAudioProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
-        connection.connect(serviceName, IContextVoice::ServicePath(), IContextVoice::InterfaceName(),
+        connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                            "audioTestCompleted", this, SIGNAL(audioTestCompleted()));
     }
 
     /*
      * Own aircraft
      */
-    void IContextVoice::setOwnAircraft(const CAircraft &ownAircraft)
+    void CContextAudioProxy::setOwnAircraft(const CAircraft &ownAircraft)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("setOwnAircraft"), ownAircraft);
     }
@@ -43,7 +44,7 @@ namespace BlackCore
     /*
      * Leave all voice rooms
      */
-    void IContextVoice::leaveAllVoiceRooms()
+    void CContextAudioProxy::leaveAllVoiceRooms()
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("leaveAllVoiceRooms"));
     }
@@ -51,7 +52,7 @@ namespace BlackCore
     /*
      * COM1 callsigns
      */
-    BlackMisc::Aviation::CCallsignList IContextVoice::getCom1RoomCallsigns() const
+    BlackMisc::Aviation::CCallsignList CContextAudioProxy::getCom1RoomCallsigns() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignList>(QLatin1Literal("getCom1RoomCallsigns"));
     }
@@ -59,7 +60,7 @@ namespace BlackCore
     /*
      * COM2 callsigns
      */
-    BlackMisc::Aviation::CCallsignList IContextVoice::getCom2RoomCallsigns() const
+    BlackMisc::Aviation::CCallsignList CContextAudioProxy::getCom2RoomCallsigns() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CCallsignList>(QLatin1Literal("getCom2RoomCallsigns"));
     }
@@ -67,7 +68,7 @@ namespace BlackCore
     /*
      * COM1 users
      */
-    BlackMisc::Network::CUserList IContextVoice::getCom1RoomUsers() const
+    BlackMisc::Network::CUserList CContextAudioProxy::getCom1RoomUsers() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getCom1RoomUsers"));
     }
@@ -75,7 +76,7 @@ namespace BlackCore
     /*
      * COM2 users
      */
-    BlackMisc::Network::CUserList IContextVoice::getCom2RoomUsers() const
+    BlackMisc::Network::CUserList CContextAudioProxy::getCom2RoomUsers() const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getCom2RoomUsers"));
     }
@@ -83,7 +84,7 @@ namespace BlackCore
     /*
      * Audio devices
      */
-    CAudioDeviceList IContextVoice::getAudioDevices() const
+    CAudioDeviceList CContextAudioProxy::getAudioDevices() const
     {
         return this->m_dBusInterface->callDBusRet<CAudioDeviceList>(QLatin1Literal("getAudioDevices"));
     }
@@ -91,7 +92,7 @@ namespace BlackCore
     /*
      * Get current audio devices
      */
-    BlackMisc::Audio::CAudioDeviceList IContextVoice::getCurrentAudioDevices() const
+    BlackMisc::Audio::CAudioDeviceList CContextAudioProxy::getCurrentAudioDevices() const
     {
         return this->m_dBusInterface->callDBusRet<CAudioDeviceList>(QLatin1Literal("getCurrentAudioDevices"));
     }
@@ -99,7 +100,7 @@ namespace BlackCore
     /*
      * Set current audio device
      */
-    void IContextVoice::setCurrentAudioDevice(const CAudioDevice &audioDevice)
+    void CContextAudioProxy::setCurrentAudioDevice(const CAudioDevice &audioDevice)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("setCurrentAudioDevice"), audioDevice);
     }
@@ -107,7 +108,7 @@ namespace BlackCore
     /*
      * Voice rooms, with audio status
      */
-    CVoiceRoomList IContextVoice::getComVoiceRoomsWithAudioStatus() const
+    CVoiceRoomList CContextAudioProxy::getComVoiceRoomsWithAudioStatus() const
     {
         return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1Literal("getComVoiceRoomsWithAudioStatus"));
     }
@@ -115,7 +116,7 @@ namespace BlackCore
     /*
      * Voice rooms, without audio status
      */
-    CVoiceRoomList IContextVoice::getComVoiceRooms() const
+    CVoiceRoomList CContextAudioProxy::getComVoiceRooms() const
     {
         return this->m_dBusInterface->callDBusRet<CVoiceRoomList>(QLatin1Literal("getComVoiceRooms"));
     }
@@ -123,7 +124,7 @@ namespace BlackCore
     /*
      * Voice room
      */
-    CVoiceRoom IContextVoice::getCom1VoiceRoom(bool withAudioStatus) const
+    CVoiceRoom CContextAudioProxy::getCom1VoiceRoom(bool withAudioStatus) const
     {
         return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1Literal("getCom1VoiceRoom"), withAudioStatus);
     }
@@ -131,7 +132,7 @@ namespace BlackCore
     /*
      * Voice room
      */
-    CVoiceRoom IContextVoice::getCom2VoiceRoom(bool withAudioStatus) const
+    CVoiceRoom CContextAudioProxy::getCom2VoiceRoom(bool withAudioStatus) const
     {
         return this->m_dBusInterface->callDBusRet<CVoiceRoom>(QLatin1Literal("getCom2VoiceRoom"), withAudioStatus);
     }
@@ -139,7 +140,7 @@ namespace BlackCore
     /*
      * Set voice rooms
      */
-    void IContextVoice::setComVoiceRooms(const BlackMisc::Audio::CVoiceRoom &voiceRoomCom1, const BlackMisc::Audio::CVoiceRoom &voiceRoomCom2)
+    void CContextAudioProxy::setComVoiceRooms(const BlackMisc::Audio::CVoiceRoom &voiceRoomCom1, const BlackMisc::Audio::CVoiceRoom &voiceRoomCom2)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("setComVoiceRooms"), voiceRoomCom1, voiceRoomCom2);
     }
@@ -147,7 +148,7 @@ namespace BlackCore
     /*
      * Play SELCAL tone
      */
-    void IContextVoice::playSelcalTone(const CSelcal &selcal) const
+    void CContextAudioProxy::playSelcalTone(const CSelcal &selcal) const
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("playSelcalTone"), selcal);
     }
@@ -155,7 +156,7 @@ namespace BlackCore
     /*
      * Notification sound
      */
-    void IContextVoice::playNotification(uint notification) const
+    void CContextAudioProxy::playNotification(uint notification) const
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("playNotification"), notification);
     }
@@ -163,7 +164,7 @@ namespace BlackCore
     /*
      * MIC test
      */
-    void IContextVoice::runMicrophoneTest()
+    void CContextAudioProxy::runMicrophoneTest()
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("runMicrophoneTest"));
     }
@@ -171,7 +172,7 @@ namespace BlackCore
     /*
      * Mic test
      */
-    void IContextVoice::runSquelchTest()
+    void CContextAudioProxy::runSquelchTest()
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("runSquelchTest"));
     }
@@ -179,7 +180,7 @@ namespace BlackCore
     /*
      *  Test result
      */
-    QString IContextVoice::getMicrophoneTestResult() const
+    QString CContextAudioProxy::getMicrophoneTestResult() const
     {
         return this->m_dBusInterface->callDBusRet<QString>(QLatin1Literal("getMicrophoneTestResult"));
     }
@@ -187,7 +188,7 @@ namespace BlackCore
     /*
      * Squelch value
      */
-    double IContextVoice::getSquelchValue() const
+    double CContextAudioProxy::getSquelchValue() const
     {
         return this->m_dBusInterface->callDBusRet<double>(QLatin1Literal("getSquelchValue"));
     }
@@ -195,7 +196,7 @@ namespace BlackCore
     /*
      * Volumes, by COM systems
      */
-    void IContextVoice::setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2)
+    void CContextAudioProxy::setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("setVolumes"), com1, com2);
     }
@@ -203,7 +204,7 @@ namespace BlackCore
     /*
      * Muted?
      */
-    bool IContextVoice::isMuted() const
+    bool CContextAudioProxy::isMuted() const
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isMuted"));
     }
@@ -211,7 +212,7 @@ namespace BlackCore
     /*
      * Logging
      */
-    void IContextVoice::log(const QString &method, const QString &m1, const QString &m2, const QString &m3, const QString &m4) const
+    void CContextAudioProxy::log(const QString &method, const QString &m1, const QString &m2, const QString &m3, const QString &m4) const
     {
         if (m1.isEmpty())
             qDebug() << "   LOG: " << method;

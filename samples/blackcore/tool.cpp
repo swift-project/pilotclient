@@ -1,7 +1,7 @@
 #include "tool.h"
 #include "blackcore/coreruntime.h"
 #include "blackcore/context_network.h"
-#include "blackcore/context_voice.h"
+#include "blackcore/context_audio.h"
 #include "blackmisc/valuemap.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/pqallquantities.h"
@@ -43,7 +43,7 @@ namespace BlackMiscTest
         while (line != "x")
         {
             const BlackCore::IContextNetwork *networkContext = core->getIContextNetwork();
-            const BlackCore::IContextVoice *voiceContext = core->getIContextVoice();
+            const BlackCore::IContextAudio *audioContext = core->getIContextAudio();
 
             // display current status
             qDebug() << "-------------";
@@ -95,7 +95,7 @@ namespace BlackMiscTest
             {
                 qDebug() << "-------------";
                 qDebug() << "voice rooms";
-                qDebug() << voiceContext->getComVoiceRooms();
+                qDebug() << audioContext->getComVoiceRooms();
             }
 
         }

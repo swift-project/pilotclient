@@ -6,6 +6,8 @@
 #include "blackcore/context_simulator_proxy.h"
 #include "blackcore/context_application_impl.h"
 #include "blackcore/context_application_proxy.h"
+#include "blackcore/context_audio_impl.h"
+#include "blackcore/context_audio_proxy.h"
 #include "blackcore/coreruntime.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/keyboardkeylistmodel.h"
@@ -167,8 +169,8 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     {
         this->m_dBusConnection = QDBusConnection::sessionBus();
         this->m_contextNetwork = new BlackCore::IContextNetwork(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
-        this->m_contextVoice = new BlackCore::IContextVoice(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextSettings = new BlackCore::IContextSettings(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
+        this->m_contextAudio = new BlackCore::CContextAudioProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextApplication = new BlackCore::CContextApplicationProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextSimulator = new BlackCore::CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
     }
@@ -176,7 +178,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     {
         this->m_coreRuntime.reset(new CCoreRuntime(false, this));
         this->m_contextNetwork = this->m_coreRuntime->getIContextNetwork();
-        this->m_contextVoice = this->m_coreRuntime->getIContextVoice();
+        this->m_contextAudio = this->m_coreRuntime->getIContextAudio();
         this->m_contextSettings = this->m_coreRuntime->getIContextSettings();
         this->m_contextApplication = this->m_coreRuntime->getIContextApplication();
         this->m_contextSimulator = this->m_coreRuntime->getIContextSimulator();
@@ -224,7 +226,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
     this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
     this->connect(this->m_timerSimulator, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
-    connect = this->connect(this->m_contextVoice, &IContextVoice::audioTestCompleted, this, &MainWindow::audioTestUpdate);
+    connect = this->connect(this->m_contextAudio, &IContextAudio::audioTestCompleted, this, &MainWindow::audioTestUpdate);
 
     // start timers, update timers will be started when network is connected
     this->m_timerContextWatchdog->start(2 * 1000);

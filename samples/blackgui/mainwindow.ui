@@ -523,7 +523,7 @@ QStatusBar QLabel {
               </widget>
              </item>
              <item row="1" column="3">
-              <widget class="QLineEdit" name="le_StatusVoiceContext">
+              <widget class="QLineEdit" name="le_StatusAudioContext">
                <property name="readOnly">
                 <bool>true</bool>
                </property>
@@ -3131,7 +3131,7 @@ QStatusBar QLabel {
  <tabstops>
   <tabstop>cb_StatusWithDBus</tabstop>
   <tabstop>le_StatusNetworkContext</tabstop>
-  <tabstop>le_StatusVoiceContext</tabstop>
+  <tabstop>le_StatusAudioContext</tabstop>
   <tabstop>tv_StatusMessages</tabstop>
   <tabstop>le_CommandLineInput</tabstop>
   <tabstop>tw_AtcStations</tabstop>

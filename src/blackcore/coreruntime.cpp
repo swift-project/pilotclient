@@ -1,10 +1,10 @@
 #include "blackcore/coreruntime.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/nwserver.h"
-#include "blackcore/context_application.h"
+#include "blackcore/context_application_impl.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
-#include "blackcore/context_voice.h"
+#include "blackcore/context_audio_impl.h"
 #include "blackcore/context_simulator_impl.h"
 
 namespace BlackCore
@@ -14,7 +14,7 @@ namespace BlackCore
  */
 CCoreRuntime::CCoreRuntime(bool withDbus, QObject *parent) :
     QObject(parent), m_init(false), m_dbusServer(nullptr),
-    m_contextNetwork(nullptr), m_contextVoice(nullptr),
+    m_contextNetwork(nullptr), m_contextAudio(nullptr),
     m_contextSettings(nullptr), m_contextApplication(nullptr),
     m_contextSimulator(nullptr)
 {
@@ -46,8 +46,8 @@ void CCoreRuntime::init(bool withDbus)
     this->m_contextApplication = new CContextApplication(this);
     if (withDbus) this->m_contextApplication->registerWithDBus(this->m_dbusServer);
 
-    this->m_contextVoice = new CContextVoice(this);
-    if (withDbus) this->m_contextVoice->registerWithDBus(this->m_dbusServer);
+    this->m_contextAudio = new CContextAudio(this);
+    if (withDbus) this->m_contextAudio->registerWithDBus(this->m_dbusServer);
 
     this->m_contextSimulator = new CContextSimulator(this);
     if (withDbus) this->m_contextSimulator->registerWithDBus(this->m_dbusServer);
@@ -66,14 +66,14 @@ const IContextNetwork *CCoreRuntime::getIContextNetwork() const
     return this->m_contextNetwork;
 }
 
-IContextVoice *CCoreRuntime::getIContextVoice()
+IContextAudio *CCoreRuntime::getIContextAudio()
 {
-    return this->m_contextVoice;
+    return this->m_contextAudio;
 }
 
-const IContextVoice *CCoreRuntime::getIContextVoice() const
+const IContextAudio *CCoreRuntime::getIContextAudio() const
 {
-    return this->m_contextVoice;
+    return this->m_contextAudio;
 }
 
 IContextSettings *CCoreRuntime::getIContextSettings()

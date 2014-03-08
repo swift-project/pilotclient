@@ -12,7 +12,7 @@
 
 #include "infowindow.h"
 #include "guimodeenums.h"
-#include "blackcore/context_voice.h"
+#include "blackcore/context_audio.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings_interface.h"
 #include "blackcore/context_application.h"
@@ -25,6 +25,7 @@
 #include "blackgui/statusmessagelistmodel.h"
 #include "blackgui/keyboardkeylistmodel.h"
 #include "blackmisc/nwtextmessage.h"
+#include "blacksound/soundgenerator.h"
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QTableView>
@@ -129,11 +130,11 @@ private:
     GuiModes::CoreMode m_coreMode;
     bool m_coreAvailable;
     bool m_contextNetworkAvailable;
-    bool m_contextVoiceAvailable;
+    bool m_contextAudioAvailable;
     QScopedPointer<BlackCore::CCoreRuntime> m_coreRuntime; /*!< runtime, if working with local core */
     BlackCore::IContextApplication *m_contextApplication; /*!< overall application state */
     BlackCore::IContextNetwork *m_contextNetwork;
-    BlackCore::IContextVoice *m_contextVoice;
+    BlackCore::IContextAudio *m_contextAudio;
     BlackCore::IContextSettings *m_contextSettings;
     BlackCore::IContextSimulator *m_contextSimulator;
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
@@ -203,7 +204,7 @@ private:
     /*!
      * \brief Context voice availability check, otherwise status message
      */
-    bool isContextVoiceAvailableCheck();
+    bool isContextAudioAvailableCheck();
 
     /*!
      * \brief Own cockpit, update from context

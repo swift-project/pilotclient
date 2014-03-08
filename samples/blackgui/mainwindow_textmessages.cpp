@@ -26,9 +26,9 @@ void MainWindow::appendTextMessagesToGui(const CTextMessageList &messages, bool 
             if (this->m_ownAircraft.isActiveFrequencyWithin25kHzChannel(message.getFrequency()))
             {
                 // this is SELCAL for me
-                if (this->m_contextVoiceAvailable)
+                if (this->m_contextAudioAvailable)
                 {
-                    CAudioDevice dev = this->m_contextVoice->getCurrentAudioDevices().getOutputDevices()[0];
+                    CAudioDevice dev = this->m_contextAudio->getCurrentAudioDevices().getOutputDevices()[0];
                     BlackSound::CSoundGenerator::playSelcal(90, CSelcal(currentSelcal), dev);
                 }
                 else

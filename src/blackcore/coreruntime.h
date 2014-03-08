@@ -9,12 +9,12 @@ namespace BlackCore
 // https://dev.vatsim-germany.org/boards/22/topics/1350?r=1359#message-1359
 class CDBusServer;
 class CContextNetwork;
-class CContextVoice;
+class CContextAudio;
 class CContextSettings;
 class CContextApplication;
 class CContextSimulator;
 class IContextNetwork;
-class IContextVoice;
+class IContextAudio;
 class IContextSettings;
 class IContextApplication;
 class IContextSimulator;
@@ -30,7 +30,7 @@ private:
     bool m_init; /*!< flag */
     CDBusServer *m_dbusServer;
     CContextNetwork *m_contextNetwork;
-    CContextVoice *m_contextVoice;
+    CContextAudio *m_contextAudio;
     CContextSettings *m_contextSettings;
     CContextApplication *m_contextApplication;
     CContextSimulator *m_contextSimulator;
@@ -79,13 +79,13 @@ public:
      * \brief Context for network
      * \return
      */
-    IContextVoice *getIContextVoice();
+    IContextAudio *getIContextAudio();
 
     /*!
      * \brief Context for network
      * \return
      */
-    const IContextVoice *getIContextVoice() const;
+    const IContextAudio *getIContextAudio() const;
 
 
     /*!

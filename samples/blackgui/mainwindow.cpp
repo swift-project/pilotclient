@@ -35,8 +35,8 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_modelAllUsers(nullptr), m_modelUsersVoiceCom1(nullptr), m_modelUsersVoiceCom2(nullptr), m_modelSettingsHotKeys(nullptr),
     // contexts and runtime
     m_coreMode(GuiModes::CoreExternal),
-    m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextVoiceAvailable(false),
-    m_contextApplication(nullptr), m_contextNetwork(nullptr), m_contextVoice(nullptr), m_contextSettings(nullptr),
+    m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextAudioAvailable(false),
+    m_contextApplication(nullptr), m_contextNetwork(nullptr), m_contextAudio(nullptr), m_contextSettings(nullptr),
     m_contextSimulator(nullptr),
     // timers
     m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerUpdateUsers(nullptr),
@@ -97,10 +97,10 @@ void MainWindow::gracefulShutdown()
     {
         if (this->m_contextNetwork->isConnected())
         {
-            if (this->m_contextVoiceAvailable)
+            if (this->m_contextAudioAvailable)
             {
-                this->m_contextVoice->leaveAllVoiceRooms();
-                this->m_contextVoice->disconnect(this); // break down signal / slots
+                this->m_contextAudio->leaveAllVoiceRooms();
+                this->m_contextAudio->disconnect(this); // break down signal / slots
             }
             this->m_contextNetwork->disconnectFromNetwork();
             this->m_contextNetwork->disconnect(this); // avoid any status update signals, etc.
@@ -209,7 +209,7 @@ void MainWindow::toggleNetworkConnection()
 
         // send latest aircraft to network/voice
         this->m_contextNetwork->setOwnAircraft(this->m_ownAircraft);
-        if (this->m_contextVoiceAvailable) this->m_contextVoice->setOwnAircraft(this->m_ownAircraft);
+        if (this->m_contextAudioAvailable) this->m_contextAudio->setOwnAircraft(this->m_ownAircraft);
 
         // Login is based on setting current server
         INetwork::LoginMode mode = INetwork::LoginNormal;
@@ -229,7 +229,7 @@ void MainWindow::toggleNetworkConnection()
     {
         // disconnect from network
         this->stopUpdateTimers(); // stop update timers, to avoid updates during disconnecting (a short time frame)
-        if (this->m_contextVoiceAvailable) this->m_contextVoice->leaveAllVoiceRooms();
+        if (this->m_contextAudioAvailable) this->m_contextAudio->leaveAllVoiceRooms();
         msgs = this->m_contextNetwork->disconnectFromNetwork();
     }
     if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
@@ -246,11 +246,11 @@ bool MainWindow::isContextNetworkAvailableCheck()
 }
 
 /*
- * Is the voice context available?
+ * Is the audio context available?
  */
-bool MainWindow::isContextVoiceAvailableCheck()
+bool MainWindow::isContextAudioAvailableCheck()
 {
-    if (this->m_contextVoiceAvailable) return true;
+    if (this->m_contextAudioAvailable) return true;
     this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError, "Voice context not available"));
     return false;
 }
@@ -375,7 +375,7 @@ void MainWindow::setContextAvailability()
     qint64 t = QDateTime::currentMSecsSinceEpoch();
     this->m_coreAvailable = this->m_contextApplication->ping(t) == t;
     this->m_contextNetworkAvailable = this->m_coreAvailable || this->m_contextNetwork->usingLocalObjects();
-    this->m_contextVoiceAvailable = this->m_coreAvailable || this->m_contextVoice->usingLocalObjects();
+    this->m_contextAudioAvailable = this->m_coreAvailable || this->m_contextAudio->usingLocalObjects();
 }
 
 /*
@@ -409,9 +409,9 @@ void MainWindow::updateGuiStatusInformation()
 
     // handle voice, mute
     QString voice("unavailable");
-    if (this->m_contextVoiceAvailable)
+    if (this->m_contextAudioAvailable)
     {
-        voice = this->m_contextVoice->usingLocalObjects() ? "local" : now;
+        voice = this->m_contextAudio->usingLocalObjects() ? "local" : now;
         this->ui->pb_SoundMute->setEnabled(true);
     }
     else
@@ -422,7 +422,7 @@ void MainWindow::updateGuiStatusInformation()
 
     // update status fields
     this->ui->le_StatusNetworkContext->setText(network);
-    this->ui->le_StatusVoiceContext->setText(voice);
+    this->ui->le_StatusAudioContext->setText(voice);
     this->ui->cb_StatusWithDBus->setCheckState(this->m_coreMode ? Qt::Checked : Qt::Unchecked);
 
     // Connected button

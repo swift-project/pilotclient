@@ -3,10 +3,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "context_voice.h"
+#include "context_audio_impl.h"
 #include "context_network.h"
-#include "coreruntime.h"
-#include "../blacksound/soundgenerator.h"
+
+#include "blacksound/soundgenerator.h"
+
+#include <QTimer>
+
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -18,22 +21,20 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextVoice::CContextVoice(CCoreRuntime *runtime) : IContextVoice(runtime), m_voice(nullptr)
+    CContextAudio::CContextAudio(QObject *parent) : IContextAudio(parent), m_voice(nullptr)
     {
-        Q_ASSERT(runtime);
-
         // 1. Init by "voice driver"
         this->m_voice = new CVoiceVatlib(this);
 
         // 2. Signal / slots
-        connect(this->m_voice, &CVoiceVatlib::micTestFinished, this, &CContextVoice::audioTestCompleted);
-        connect(this->m_voice, &CVoiceVatlib::squelchTestFinished, this, &CContextVoice::audioTestCompleted);
+        connect(this->m_voice, &CVoiceVatlib::micTestFinished, this, &CContextAudio::audioTestCompleted);
+        connect(this->m_voice, &CVoiceVatlib::squelchTestFinished, this, &CContextAudio::audioTestCompleted);
     }
 
     /*
      * Cleanup
      */
-    CContextVoice::~CContextVoice()
+    CContextAudio::~CContextAudio()
     {
         this->leaveAllVoiceRooms();
     }
@@ -41,7 +42,7 @@ namespace BlackCore
     /*
      * Own aircraft
      */
-    void CContextVoice::setOwnAircraft(const CAircraft &ownAircraft)
+    void CContextAudio::setOwnAircraft(const CAircraft &ownAircraft)
     {
         Q_ASSERT(this->m_voice);
         this->m_voice->setMyAircraftCallsign(ownAircraft.getCallsign());
@@ -50,7 +51,7 @@ namespace BlackCore
     /*
      * Voice rooms for COM
      */
-    CVoiceRoomList CContextVoice::getComVoiceRoomsWithAudioStatus() const
+    CVoiceRoomList CContextAudio::getComVoiceRoomsWithAudioStatus() const
     {
         Q_ASSERT(this->m_voice);
         return this->m_voice->getComVoiceRoomsWithAudioStatus();
@@ -59,7 +60,7 @@ namespace BlackCore
     /*
      * Voice rooms for COM
      */
-    CVoiceRoom CContextVoice::getCom1VoiceRoom(bool withAudioStatus) const
+    CVoiceRoom CContextAudio::getCom1VoiceRoom(bool withAudioStatus) const
     {
         Q_ASSERT(this->m_voice);
         if (withAudioStatus)
@@ -71,7 +72,7 @@ namespace BlackCore
     /*
      * Voice rooms for COM
      */
-    CVoiceRoom CContextVoice::getCom2VoiceRoom(bool withAudioStatus) const
+    CVoiceRoom CContextAudio::getCom2VoiceRoom(bool withAudioStatus) const
     {
         Q_ASSERT(this->m_voice);
         if (withAudioStatus)
@@ -83,7 +84,7 @@ namespace BlackCore
     /*
      * Voice rooms for COM (const)
      */
-    CVoiceRoomList CContextVoice::getComVoiceRooms() const
+    CVoiceRoomList CContextAudio::getComVoiceRooms() const
     {
         Q_ASSERT(this->m_voice);
         return this->m_voice->getComVoiceRooms();
@@ -92,7 +93,7 @@ namespace BlackCore
     /*
      * Leave all voice rooms
      */
-    void CContextVoice::leaveAllVoiceRooms()
+    void CContextAudio::leaveAllVoiceRooms()
     {
         Q_ASSERT(this->m_voice);
         this->m_voice->leaveAllVoiceRooms();
@@ -101,7 +102,7 @@ namespace BlackCore
     /*
      * Audio devices
      */
-    CAudioDeviceList CContextVoice::getAudioDevices() const
+    CAudioDeviceList CContextAudio::getAudioDevices() const
     {
         Q_ASSERT(this->m_voice);
         return this->m_voice->audioDevices();
@@ -110,7 +111,7 @@ namespace BlackCore
     /*
      * Audio default devices
      */
-    CAudioDeviceList CContextVoice::getCurrentAudioDevices() const
+    CAudioDeviceList CContextAudio::getCurrentAudioDevices() const
     {
         Q_ASSERT(this->m_voice);
         CAudioDeviceList devices;
@@ -122,7 +123,7 @@ namespace BlackCore
     /*
      * Set current device
      */
-    void CContextVoice::setCurrentAudioDevice(const CAudioDevice &audioDevice)
+    void CContextAudio::setCurrentAudioDevice(const CAudioDevice &audioDevice)
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(audioDevice.getType() != CAudioDevice::Unknown);
@@ -139,7 +140,7 @@ namespace BlackCore
     /*
      * Set volumes
      */
-    void CContextVoice::setVolumes(const CComSystem &com1, const CComSystem &com2)
+    void CContextAudio::setVolumes(const CComSystem &com1, const CComSystem &com2)
     {
         Q_ASSERT(this->m_voice);
         this->m_voice->setRoomOutputVolume(IVoice::COM1, com1.getVolumeOutput());
@@ -151,7 +152,7 @@ namespace BlackCore
     /*
      * Muted?
      */
-    bool CContextVoice::isMuted() const
+    bool CContextAudio::isMuted() const
     {
         Q_ASSERT(this->m_voice);
         return this->m_voice->isMuted();
@@ -160,7 +161,7 @@ namespace BlackCore
     /*
      * Set voice rooms
      */
-    void CContextVoice::setComVoiceRooms(const CVoiceRoom &voiceRoomCom1, const CVoiceRoom &voiceRoomCom2)
+    void CContextAudio::setComVoiceRooms(const CVoiceRoom &voiceRoomCom1, const CVoiceRoom &voiceRoomCom2)
     {
         Q_ASSERT(this->m_voice);
         CVoiceRoomList currentRooms =  this->m_voice->getComVoiceRoomsWithAudioStatus();
@@ -181,7 +182,7 @@ namespace BlackCore
     /*
      * Room 1 callsigns
      */
-    CCallsignList CContextVoice::getCom1RoomCallsigns() const
+    CCallsignList CContextAudio::getCom1RoomCallsigns() const
     {
         Q_ASSERT(this->m_voice);
         return this->m_voice->getVoiceRoomCallsigns(IVoice::COM1);
@@ -190,7 +191,7 @@ namespace BlackCore
     /*
      * Room 2 callsigns
      */
-    CCallsignList CContextVoice::getCom2RoomCallsigns() const
+    CCallsignList CContextAudio::getCom2RoomCallsigns() const
     {
         Q_ASSERT(this->m_voice);
         return this->m_voice->getVoiceRoomCallsigns(IVoice::COM2);
@@ -199,7 +200,7 @@ namespace BlackCore
     /*
      * Room 1 users
      */
-    Network::CUserList CContextVoice::getCom1RoomUsers() const
+    Network::CUserList CContextAudio::getCom1RoomUsers() const
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(this->getRuntime());
@@ -211,7 +212,7 @@ namespace BlackCore
     /*
      * Room 2 users
      */
-    Network::CUserList CContextVoice::getCom2RoomUsers() const
+    Network::CUserList CContextAudio::getCom2RoomUsers() const
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(this->getRuntime());
@@ -223,7 +224,7 @@ namespace BlackCore
     /*
      * SELCAL tone
      */
-    void CContextVoice::playSelcalTone(const CSelcal &selcal) const
+    void CContextAudio::playSelcalTone(const CSelcal &selcal) const
     {
         Q_ASSERT(this->m_voice);
         CAudioDevice outputDevice = m_voice->getCurrentOutputDevice();
@@ -233,7 +234,7 @@ namespace BlackCore
     /*
      * Notification
      */
-    void CContextVoice::playNotification(uint notification) const
+    void CContextAudio::playNotification(uint notification) const
     {
         Q_ASSERT(this->m_voice);
         BlackSound::CSoundGenerator::playNotificationSound(90, static_cast<BlackSound::CSoundGenerator::Notification>(notification));
@@ -242,7 +243,7 @@ namespace BlackCore
     /*
      * Mic test.
      */
-    void CContextVoice::runMicrophoneTest()
+    void CContextAudio::runMicrophoneTest()
     {
         Q_ASSERT(this->m_voice);
         this->m_voice->runMicrophoneTest();
@@ -251,7 +252,7 @@ namespace BlackCore
     /*
      * Squelch test.
      */
-    void CContextVoice::runSquelchTest()
+    void CContextAudio::runSquelchTest()
     {
         Q_ASSERT(this->m_voice);
         this->m_voice->runSquelchTest();
@@ -260,7 +261,7 @@ namespace BlackCore
     /*
      * Microphone test
      */
-    QString CContextVoice::getMicrophoneTestResult() const
+    QString CContextAudio::getMicrophoneTestResult() const
     {
         Q_ASSERT(this->m_voice);
         return this->m_voice->micTestResultAsString();
@@ -269,7 +270,7 @@ namespace BlackCore
     /*
      * Squelch value
      */
-    double CContextVoice::getSquelchValue() const
+    double CContextAudio::getSquelchValue() const
     {
         Q_ASSERT(this->m_voice);
         return static_cast<double>(this->m_voice->inputSquelch());
