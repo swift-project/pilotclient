@@ -2,7 +2,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/nwserver.h"
 #include "blackcore/context_application_impl.h"
-#include "blackcore/context_network.h"
+#include "blackcore/context_network_impl.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_audio_impl.h"
 #include "blackcore/context_simulator_impl.h"

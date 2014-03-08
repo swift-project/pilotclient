@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 VATSIM Community / authors
+/* Copyright (C) 2013 VATSIM Community / contributors
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -6,240 +6,174 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_H
 #define BLACKCORE_CONTEXTNETWORK_H
 
-#include "blackcore/dbus_server.h"
-#include "blackcore/network_vatlib.h"
-#include "blackcore/coreruntime.h"
-#include "blackcore/vatsimbookingreader.h"
-#include "blackcore/vatsimdatafilereader.h"
-#include "blackcore/context_network_interface.h"
-#include "blackcore/context_settings_interface.h"
-#include "blackmisc/avcallsignlist.h"
+#include "blackmisc/avallclasses.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/nwuserlist.h"
+#include "blackmisc/vvoiceroomlist.h"
+#include <QObject>
 
-#include <QTimer>
-#include <QNetworkAccessManager>
-
-#define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "blackcore.contextnetwork"
+#define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextNetwork"
+#define BLACKCORE_CONTEXTNETWORK_OBJECTPATH "/Network"
 
 namespace BlackCore
 {
-    //! \brief Network context
-    class CContextNetwork : public IContextNetwork
+
+    //! \brief Network context proxy
+    class IContextNetwork : public QObject
     {
-        // Register by same name, make signals sender independent
-        // http://dbus.freedesktop.org/doc/dbus-faq.html#idp48032144
-        Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
         Q_OBJECT
+        Q_ENUMS(ConnectionStatus)
+        Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
 
     public:
-        //! \brief Constructor, with link to runtime
-        CContextNetwork(CCoreRuntime *runtime);
+        //! \brief DBus interface name
+        static const QString &InterfaceName()
+        {
+            static QString s(BLACKCORE_CONTEXTNETWORK_INTERFACENAME);
+            return s;
+        }
 
-        //! \brief Destructor
-        virtual ~CContextNetwork();
+        //! \brief DBus object path
+        static const QString &ObjectPath()
+        {
+            static QString s(BLACKCORE_CONTEXTNETWORK_OBJECTPATH);
+            return s;
+        }
 
         /*!
-         * \brief Register myself in DBus
-         * \param server    DBus server
+         * \brief Constructor
+         * \param parent
          */
-        void registerWithDBus(CDBusServer *server)
-        {
-            Q_ASSERT(server);
-            server->addObject(IContextNetwork::ServicePath(), this);
-        }
+        IContextNetwork(QObject *parent = nullptr) : QObject(parent) {}
 
-        //! \brief Runtime
-        const CCoreRuntime *getRuntime() const
-        {
-            return static_cast<CCoreRuntime *>(this->parent());
-        }
+        //! Destructor
+        virtual ~IContextNetwork() {}
 
         //! \brief Using local objects?
-        virtual bool usingLocalObjects() const override { return true; }
+        virtual bool usingLocalObjects() const = 0;
+
+    signals:
+
+        /*!
+         * \brief Send status message
+         * \param message
+         */
+        void statusMessage(const BlackMisc::CStatusMessage &message);
+
+        /*!
+         * \brief Send status messages
+         * \param messages
+         */
+        void statusMessages(const BlackMisc::CStatusMessageList &messages);
+
+        //! \brief ATC station (online) list has been changed
+        void changedAtcStationsOnline();
+
+        //! \brief ATC station (booked) list has been changed
+        void changedAtcStationsBooked();
+
+        //! \brief Aircraft list has been changed
+        void changedAircraftsInRange();
+
+        //! \brief Terminated connection
+        void connectionTerminated();
+
+        /*!
+         * \brief Connection status changed
+         * \param from  old status
+         * \param to    new status
+         * \remarks If I use the enum, adaptor / interface are not created correctly
+         * \see INetwork::ConnectionStatus
+         */
+        void connectionStatusChanged(uint from, uint to);
+
+        /*!
+         * \brief Text messages (also private chat messages)
+         * \param textMessages message list
+         */
+        void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
     public slots:
 
-        //! \copydoc IContextNetwork::readAtcBookingsFromSource()
-        virtual void readAtcBookingsFromSource() override;
+        //! \brief Reload bookings from booking service
+        virtual void readAtcBookingsFromSource() const = 0;
 
         /*!
-         * \copydoc IContextNetwork::getAtcStationsOnline()
-         * \todo If I make this &getAtcStations XML is not generated correctly, needs to be crosschecked with the latest version of Qt
+         * \brief The ATC list with online ATC controllers
+         * \remarks If I make this &getAtcStations XML is not generated correctly
          */
-        virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override
-        {
-            // this->log(Q_FUNC_INFO);
-            return m_atcStationsOnline;
-        }
-
-        /*!
-         * \copydoc IContextNetwork::getAtcStationsBooked()
-         * \todo If I make this &getAtcStations XML is not generated correctly
-         */
-        virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override
-        {
-            // this->log(Q_FUNC_INFO);
-            return m_atcStationsBooked;
-        }
-
-        //! \copydoc IContextNetwork::getAircraftsInRange()
-        virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const override
-        {
-            // this->log(Q_FUNC_INFO);
-            return m_aircraftsInRange;
-        }
-
-        //! \copydoc IContextNetwork::connectToNetwork()
-        virtual BlackMisc::CStatusMessageList connectToNetwork(uint mode) override;
-
-        //! \copydoc IContextNetwork::disconnectFromNetwork()
-        virtual BlackMisc::CStatusMessageList disconnectFromNetwork() override;
-
-        //! \copydoc IContextNetwork::isConnected()
-        virtual bool isConnected() const override;
-
-        //! \copydoc IContextNetwork::setOwnAircraft()
-        virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) override;
-
-        //! \copydoc IContextNetwork::updateOwnPosition()
-        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
-
-        //! \copydoc IContextNetwork::updateOwnSituation()
-        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
-
-        //! \copydoc IContextNetwork::updateOwnCockpit()
-        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder) override;
-
-        //! \copydoc IContextNetwork::getOwnAircraft()
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
-
-        //! \copydoc IContextNetwork::sendTextMessages()
-        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
-
-        //! \copydoc IContextNetwork::getMetar()
-        virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode) override;
-
-        //! \copydoc IContextNetwork::getSelectedVoiceRooms()
-        virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const override;
-
-        //! \copydoc IContextNetwork::getSelectedAtcStations
-        virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const override;
-
-        //! \copydoc IContextNetwork::getUsers()
-        virtual BlackMisc::Network::CUserList getUsers() const override;
-
-        //! \copydoc IContextNetwork::getUsersForCallsigns
-        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override;
-
-        //! \copydoc IContextNetwork::requestDataUpdates
-        virtual void requestDataUpdates()override;
-
-        //! \copydoc IContextNetwork::requestAtisUpdates
-        virtual void requestAtisUpdates() override;
-
-    private:
-        BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
-        BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
-        BlackMisc::Aviation::CAircraftList m_aircraftsInRange;
-        BlackCore::INetwork *m_network;
-        BlackMisc::Aviation::CAircraft m_ownAircraft;
-        QMap<QString, BlackMisc::Aviation::CInformationMessage> m_metarCache /*!< Keep METARs for a while */;
-
-        // for reading XML and VATSIM data files
-        CVatsimBookingReader *m_vatsimBookingReader;
-        CVatsimDataFileReader *m_vatsimDataFileReader;
-        QTimer *m_dataUpdateTimer; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
-
-        //! \brief Replace value by new values
-        void setAtcStationsBooked(const BlackMisc::Aviation::CAtcStationList &newStations);
-
-        //! \brief Replace value by new values
-        void setAtcStationsOnline(const BlackMisc::Aviation::CAtcStationList &newStations);
-
-        //! \brief The "central" ATC list with online ATC controllers
-        BlackMisc::Aviation::CAtcStationList &atcStationsOnline()
-        {
-            return m_atcStationsOnline;
-        }
+        virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const = 0;
 
         //! \brief ATC list, with booked controllers
-        BlackMisc::Aviation::CAtcStationList &atcStationsBooked()
-        {
-            return m_atcStationsBooked;
-        }
+        virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const = 0 ;
 
-        //! \brief Init my very onw aircraft
-        void initOwnAircraft();
+        //! \brief Aircraft list
+        virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const = 0;
 
-        //! \brief Get network settings
-        BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const
-        {
-            Q_ASSERT(this->getRuntime());
-            Q_ASSERT(this->getRuntime()->getIContextSettings());
-            return this->getRuntime()->getIContextSettings()->getNetworkSettings();
-        }
+        //! \brief Get all users
+        virtual BlackMisc::Network::CUserList getUsers() const = 0;
 
-    private slots:
-        //! \brief ATC bookings received
-        void psReceivedBookings(BlackMisc::Aviation::CAtcStationList bookedStations);
+        //! \brief Users for given callsigns, e.g. for voice room resolution
+        virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const = 0;
 
-        //! \brief Data file has been read
-        void psDataFileRead();
+        //! \brief Get own aircraft
+        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
 
         /*!
-         * \brief Connection status changed?
-         * \param from  old status
-         * \param to    new status
+         * \brief Connect to Network
+         * \return messages gererated during connecting
+         * \see INetwork::LoginMode
          */
-        void psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
-
-        //! \brief ATC position update
-        void psFsdAtcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
+        virtual BlackMisc::CStatusMessageList connectToNetwork(uint loginMode) = 0;
 
         /*!
-         * \brief Controller disconnected
-         * \param callsign  callsign of controller
+         * \brief Disconnect from network
+         * \return messages generated during disconnecting
          */
-        void psFsdAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
+        virtual BlackMisc::CStatusMessageList disconnectFromNetwork() = 0;
 
-        //! \brief ATIS received
-        void psFsdAtisQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
+        //! \brief Network connected?
+        virtual bool isConnected() const = 0;
 
         /*!
-         * \brief ATIS received (voice room part)
-         * \param callsign  station callsign
-         * \param url       voice room's URL
+         * Set own aircraft
+         * \param aircraft
+         * \return message list, as aircraft can only be set prior connecting
          */
-        void psFsdAtisVoiceRoomQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
+        virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
+
+        //! \brief Own position, be aware height is terrain height
+        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
+
+        //! \brief Complete situation update
+        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
+
+        //! \brief Update own cockpit
+        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder) = 0;
+
+        //! \brief Text messages (radio and private chat messages)
+        virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) = 0;
 
         /*!
-         * \brief ATIS received (logoff time part)
-         * \param callsign  station callsign
-         * \param zuluTime  UTC time, when controller will logoff
+         * \brief Get METAR, if not available request it
+         * \param airportIcaoCode such as EDDF, KLAX
+         * \return
          */
-        void psFsdAtisLogoffTimeQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
+        virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode) = 0;
 
-        //! \brief METAR received
-        void psFsdMetarReceived(const QString &metarMessage);
+        //! \brief Use the selected COM1/2 frequencies, and get the corresponding voice room for it
+        virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const = 0;
 
-        //! \brief Realname recevied
-        void psFsdRealNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
+        //! \brief Use the selected COM1/2 frequencies, and get the corresponding ATC stations for it
+        virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const = 0;
 
-        //! \brief Plane ICAO codes received
-        void psFsdIcaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
+        //! \brief Request data updates (pilot's frequencies, ATIS, ..)
+        virtual void requestDataUpdates() = 0;
 
-        //! \brief Aircraft position update received
-        void psFsdAircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
-
-        //! \brief Pilot disconnected
-        void psFsdPilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-
-        //! \brief Frequency received
-        void psFsdFrequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
-
-        //! \brief Radio text messages received
-        void psFsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
+        //! \brief Request ATIS updates (for all stations)
+        virtual void requestAtisUpdates() = 0;
     };
 }
 

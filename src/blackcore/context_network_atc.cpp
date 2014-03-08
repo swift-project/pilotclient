@@ -3,10 +3,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "context_network.h"
+#include "context_network_impl.h"
+#include "vatsimbookingreader.h"
+#include "vatsimdatafilereader.h"
 #include "coreruntime.h"
+
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/predicates.h"
+
 #include <QMetaEnum>
 #include <QUrl>
 #include <QNetworkRequest>
@@ -28,7 +32,7 @@ namespace BlackCore
     /*
      *  Reload bookings
      */
-    void CContextNetwork::readAtcBookingsFromSource()
+    void CContextNetwork::readAtcBookingsFromSource() const
     {
         Q_ASSERT(this->m_vatsimBookingReader);
         this->m_vatsimBookingReader->read();

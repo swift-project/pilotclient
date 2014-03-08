@@ -3,11 +3,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "context_network.h"
+#include "context_network_impl.h"
 #include "coreruntime.h"
+#include "context_settings.h"
+#include "network_vatlib.h"
+#include "vatsimbookingreader.h"
+#include "vatsimdatafilereader.h"
+
 #include "blackmisc/networkchecks.h"
 #include "blackmisc/avatcstationlist.h"
-#include "blackcore/context_settings_interface.h"
+
 #include <QtXml/QDomElement>
 #include <QNetworkReply>
 
@@ -23,8 +28,8 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextNetwork::CContextNetwork(CCoreRuntime *runtime) :
-        IContextNetwork(runtime), m_network(nullptr), m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
+    CContextNetwork::CContextNetwork(QObject *parent) :
+        IContextNetwork(parent), m_network(nullptr), m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getIContextSettings());

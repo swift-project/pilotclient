@@ -7,7 +7,7 @@
 #define BLACKCORE_CONTEXTSIMULATOR_IMPL_H
 
 #include "blackcore/context_simulator.h"
-#include "blackcore/context_network_interface.h"
+#include "blackcore/context_network.h"
 #include "blackcore/simulator.h"
 
 #include <QTimer>
