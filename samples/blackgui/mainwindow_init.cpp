@@ -7,6 +7,8 @@
 #include "blackcore/context_simulator_proxy.h"
 #include "blackcore/context_application_impl.h"
 #include "blackcore/context_application_proxy.h"
+#include "blackcore/context_settings_impl.h"
+#include "blackcore/context_settings_proxy.h"
 #include "blackcore/context_audio_impl.h"
 #include "blackcore/context_audio_proxy.h"
 #include "blackcore/coreruntime.h"
@@ -170,8 +172,8 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     {
         this->m_dBusConnection = QDBusConnection::sessionBus();
         this->m_contextNetwork = new BlackCore::CContextNetworkProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
-        this->m_contextSettings = new BlackCore::IContextSettings(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextAudio = new BlackCore::CContextAudioProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
+        this->m_contextSettings = new BlackCore::CContextSettingsProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextApplication = new BlackCore::CContextApplicationProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
         this->m_contextSimulator = new BlackCore::CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
     }

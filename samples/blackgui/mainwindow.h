@@ -14,7 +14,7 @@
 #include "guimodeenums.h"
 #include "blackcore/context_audio.h"
 #include "blackcore/context_network.h"
-#include "blackcore/context_settings_interface.h"
+#include "blackcore/context_settings.h"
 #include "blackcore/context_application.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/coreruntime.h"

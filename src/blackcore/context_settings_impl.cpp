@@ -3,8 +3,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "context_settings.h"
+#include "context_settings_impl.h"
 #include "coreruntime.h"
+
 #include "blackmisc/settingutilities.h"
 
 using namespace BlackMisc;
@@ -18,7 +19,7 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextSettings::CContextSettings(CCoreRuntime *runtime) : IContextSettings(runtime)
+    CContextSettings::CContextSettings(QObject *parent) : IContextSettings(parent)
     {
         // create some dummy settings
         // this would actually be reading the settings from disk ..
@@ -37,7 +38,7 @@ namespace BlackCore
     /*
      * Hotkeys
      */
-    Hardware::CKeyboardKeyList CContextSettings::getHotkeys() const
+    CKeyboardKeyList CContextSettings::getHotkeys() const
     {
         return this->m_hotkeys;
     }
@@ -45,7 +46,7 @@ namespace BlackCore
     /*
      * Network settings
      */
-    BlackMisc::Settings::CSettingsNetwork CContextSettings::getNetworkSettings() const
+    CSettingsNetwork CContextSettings::getNetworkSettings() const
     {
         return this->m_settingsNetwork;
     }

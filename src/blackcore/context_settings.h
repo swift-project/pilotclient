@@ -6,60 +6,115 @@
 #ifndef BLACKCORE_CONTEXTSETTINGS_H
 #define BLACKCORE_CONTEXTSETTINGS_H
 
-#include "blackcore/coreruntime.h"
-#include "blackcore/dbus_server.h"
-#include "blackcore/context_settings_interface.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/settingutilities.h"
+#include "blackmisc/setnetwork.h"
 #include "blackmisc/hwkeyboardkeylist.h"
-#include <QObject>
 
-#define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "blackcore.contextsettings"
+#include <QObject>
+#include <QVariant>
+
+#define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextSettings"
+#define BLACKCORE_CONTEXTSETTINGS_OBJECTPATH "/Settings"
 
 namespace BlackCore
 {
+
     /*!
-     * \brief Network context
+     * \brief Context settings interface
      */
-    class CContextSettings : public IContextSettings
+    class IContextSettings : public QObject
     {
-        // Register by same name, make signals sender independent
-        // http://dbus.freedesktop.org/doc/dbus-faq.html#idp48032144
-        Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSETTINGS_INTERFACENAME)
         Q_OBJECT
+        Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSETTINGS_INTERFACENAME)
 
     public:
 
-        //! \brief Constructor
-        CContextSettings(CCoreRuntime *runtime);
-
-        //! Destructor
-        virtual ~CContextSettings() {}
-
-        //! \brief Register myself in DBus
-        void registerWithDBus(CDBusServer *server)
+        /*!
+         * \brief Service name
+         */
+        static const QString &InterfaceName()
         {
-            server->addObject(IContextSettings::ServicePath(), this);
+            static QString s(BLACKCORE_CONTEXTSETTINGS_INTERFACENAME);
+            return s;
         }
 
-        //! \brief Runtime
-        const CCoreRuntime *getRuntime() const
+        /*!
+         * \brief Service path
+         */
+        static const QString &ObjectPath()
         {
-            return static_cast<CCoreRuntime *>(this->parent());
+            static QString s(BLACKCORE_CONTEXTSETTINGS_OBJECTPATH);
+            return s;
         }
 
-        //! \copydoc IContextSettings::value()
-        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value);
+        /*!
+         * \brief Path for network settings
+         * \remarks no to be confused with DBus paths
+         */
+        static const QString &PathNetworkSettings()
+        {
+            static QString s("network");
+            return s;
+        }
+
+        /*!
+         * \brief Path for network settings
+         * \remarks no to be confused with DBus paths
+         */
+        static const QString &PathRoot()
+        {
+            static QString s("root");
+            return s;
+        }
+
+        /*!
+         * \brief Path for hotkeys
+         * \remarks no to be confused with DBus paths
+         */
+        static const QString &PathHotkeys()
+        {
+            static QString s("hotkeys");
+            return s;
+        }
+
+        /*!
+         * \brief DBus version constructor
+         */
+        IContextSettings(QObject *parent = nullptr) : QObject(parent) {}
+
+        /*!
+         * Destructor
+         */
+        virtual ~IContextSettings() {}
+
+
+        /*!
+         * \brief Handle value
+         * \param path      where value belongs to
+         * \param command   what to do with value
+         * \param value
+         * \return          messages generated during handling
+         * \remarks Do not make this a slot, no DBus XML signature shall be created. The QVariant
+         *  will be send a tailored value method using QDBusVariant
+         *  @see value(const QString &, const QString &, QDBusVariant, int)
+         */
+        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value) = 0;
+
+    signals:
+        //! \brief Settings have been changed
+        void changedSettings();
+
+        //! \brief Network settings have been changed
+        void changedNetworkSettings();
 
     public slots:
-        //! \copydoc IContextSettings::getNetworkSettings()
-        virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const;
 
-        //! \copydoc IContextSettings::getHotkeys()
-        virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const;
+        //! \brief Network settings
+        virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const = 0;
 
-    private:
-        BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
-        BlackMisc::Hardware::CKeyboardKeyList m_hotkeys;
+        //! \brief Hotkeys
+        virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const = 0;
     };
 }
 
