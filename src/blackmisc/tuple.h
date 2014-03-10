@@ -13,7 +13,7 @@
 #include "tuple_private.h"
 
 /*!
- * \defgroup Tuples
+ * \defgroup Tuples Tuples Simplified handling of class members (CValueObject) by std::tuple
  */
 
 /*!
