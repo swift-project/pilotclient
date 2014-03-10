@@ -198,4 +198,23 @@ namespace BlackMisc
 
 } // BlackMisc
 
+/*!
+ * \brief   Macro to make a ENUMs DBus streamable.
+ * \details Put this macro outside of any namespace, in the same header as the class defining the enumeration.
+ * \param   ENUM The fully qualified name of the enumeration.
+ * \hideinitializer
+ * \ingroup Tuples
+ */
+#define BLACK_DBUS_ENUM_MARSHALLING(ENUM)                                                  \
+    namespace BlackMisc                                                                    \
+    {                                                                                      \
+        inline const QDBusArgument &operator >>(const QDBusArgument &arg, ENUM &enumType)  \
+        {                                                                                  \
+            uint e;                                                                        \
+            arg >> e;                                                                      \
+            enumType = static_cast<ENUM>(e);                                               \
+            return arg;                                                                    \
+        };                                                                                 \
+    }
+
 #endif // guard
