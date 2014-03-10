@@ -15,7 +15,7 @@
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 
 namespace BlackSound
 {
@@ -122,10 +122,10 @@ namespace BlackSound
             {
                 // periodSize-> Returns the period size in bytes.
                 const qint64 len = this->read(m_buffer.data(), this->m_audioOutput->periodSize());
-                if (len)
+                if (len >= 0)
                     this->m_pushModeIODevice->write(m_buffer.data(), len);
                 if (len != this->m_audioOutput->periodSize())
-                    break;
+                    break; // not a complete period, so buffer is completely read
                 --chunks;
             }
         }
@@ -361,7 +361,7 @@ namespace BlackSound
     /*
      * BlackMisc to Qt audio device
      */
-    QAudioDeviceInfo CSoundGenerator::findClosestOutputDevice(const BlackMisc::Voice::CAudioDevice &audioDevice)
+    QAudioDeviceInfo CSoundGenerator::findClosestOutputDevice(const BlackMisc::Audio::CAudioDevice &audioDevice)
     {
         Q_ASSERT(audioDevice.getType() == CAudioDevice::OutputDevice);
         const QString lookFor = audioDevice.getName().toLower();

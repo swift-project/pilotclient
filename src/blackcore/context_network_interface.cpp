@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackcore/context_network_interface.h"
-#include "blackmisc/vvoiceroomlist.h"
+#include "blackmisc/voiceroomlist.h"
 #include <QObject>
 #include <QMetaEnum>
 #include <QDBusConnection>
@@ -91,9 +91,9 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CUserList>(QLatin1Literal("getUsersForCallsigns"), callsigns);
     }
 
-    BlackMisc::Voice::CVoiceRoomList IContextNetwork::getSelectedVoiceRooms() const
+    BlackMisc::Audio::CVoiceRoomList IContextNetwork::getSelectedVoiceRooms() const
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Voice::CVoiceRoomList>(QLatin1Literal("getSelectedVoiceRooms"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Audio::CVoiceRoomList>(QLatin1Literal("getSelectedVoiceRooms"));
     }
 
     BlackMisc::Aviation::CAtcStationList IContextNetwork::getSelectedAtcStations() const

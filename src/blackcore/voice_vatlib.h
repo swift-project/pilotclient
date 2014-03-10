@@ -8,7 +8,7 @@
 
 #include "voice.h"
 #include "../blacksound/soundgenerator.h"
-#include "../blackmisc/vaudiodevicelist.h"
+#include "../blackmisc/audiodevicelist.h"
 #include "../blackmisc/nwuserlist.h"
 #include "../blackmisc/avcallsignlist.h"
 
@@ -49,13 +49,13 @@ namespace BlackCore
         // and ATC to headspeakers. Is not important to implement that now, if ever.
 
         //! \copydoc IVoice::audioDevices()
-        virtual const BlackMisc::Voice::CAudioDeviceList &audioDevices() const override;
+        virtual const BlackMisc::Audio::CAudioDeviceList &audioDevices() const override;
 
         //! \copydoc IVoice::defaultAudioInputDevice()
-        virtual const BlackMisc::Voice::CAudioDevice defaultAudioInputDevice() const override;
+        virtual const BlackMisc::Audio::CAudioDevice defaultAudioInputDevice() const override;
 
         //! \copydoc IVoice::defaultAudioOutputDevice()
-        virtual const BlackMisc::Voice::CAudioDevice defaultAudioOutputDevice() const override;
+        virtual const BlackMisc::Audio::CAudioDevice defaultAudioOutputDevice() const override;
 
         /************************************************
          * SETUP TESTS
@@ -81,7 +81,7 @@ namespace BlackCore
         virtual void setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         //! \copydoc IVoice::joinVoiceRoom()
-        virtual void joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom) override;
+        virtual void joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Audio::CVoiceRoom &voiceRoom) override;
 
         //! \copydoc IVoice::leaveVoiceRoom()
         virtual void leaveVoiceRoom(const ComUnit comUnit) override;
@@ -99,10 +99,10 @@ namespace BlackCore
         virtual void stopTransmitting(const ComUnit comUnit) override;
 
         //! \copydoc IVoice::getComVoiceRoomsWithAudioStatus()
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
+        virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
 
         //! \copydoc IVoice::getComVoiceRooms()
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const override
+        virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const override
         {
             return this->m_voiceRooms;
         }
@@ -111,16 +111,16 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns(const ComUnit comUnit) const override;
 
         //! \copydoc IVoice::setInputDevice
-        virtual void setInputDevice(const BlackMisc::Voice::CAudioDevice &device) override;
+        virtual void setInputDevice(const BlackMisc::Audio::CAudioDevice &device) override;
 
         //! \copydoc IVoice::setOutputDevice
-        virtual void setOutputDevice(const BlackMisc::Voice::CAudioDevice &device) override;
+        virtual void setOutputDevice(const BlackMisc::Audio::CAudioDevice &device) override;
 
         //! \copydoc IVoice::getCurrentInputDevice()
-        virtual BlackMisc::Voice::CAudioDevice getCurrentInputDevice() const override;
+        virtual BlackMisc::Audio::CAudioDevice getCurrentInputDevice() const override;
 
         //! \copydoc IVoice::getCurrentOutputDevice()
-        virtual BlackMisc::Voice::CAudioDevice getCurrentOutputDevice() const override;
+        virtual BlackMisc::Audio::CAudioDevice getCurrentOutputDevice() const override;
 
         //! \copydoc IVoice::switchAudioOutput
         virtual void switchAudioOutput(const ComUnit comUnit, bool enable) override;
@@ -189,8 +189,8 @@ namespace BlackCore
         static void onInputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar);
         static void onOutputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar);
 
-        BlackMisc::Voice::CVoiceRoom voiceRoomForUnit(const ComUnit comUnit) const;
-        void setVoiceRoomForUnit(const IVoice::ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom);
+        BlackMisc::Audio::CVoiceRoom voiceRoomForUnit(const ComUnit comUnit) const;
+        void setVoiceRoomForUnit(const IVoice::ComUnit comUnit, const BlackMisc::Audio::CVoiceRoom &voiceRoom);
         void addTemporaryCallsignForRoom(const ComUnit comUnit, const BlackMisc::Aviation::CCallsign &callsign);
         void removeUserFromRoom(const ComUnit comUnit, const QString &callsign);
         void exceptionDispatcher(const char *caller);
@@ -279,10 +279,10 @@ namespace BlackCore
         QScopedPointer<Cvatlib_Voice_Simple, Cvatlib_Voice_Simple_Deleter> m_voice;
         QScopedPointer<QAudioOutput> m_audioOutput;
         BlackMisc::Aviation::CCallsign m_aircraftCallsign; /*!< own callsign to join voice rooms */
-        BlackMisc::Voice::CVoiceRoomList m_voiceRooms;
-        BlackMisc::Voice::CAudioDeviceList m_devices; /*!< in and output devices */
-        BlackMisc::Voice::CAudioDevice m_currentOutputDevice;
-        BlackMisc::Voice::CAudioDevice m_currentInputDevice;
+        BlackMisc::Audio::CVoiceRoomList m_voiceRooms;
+        BlackMisc::Audio::CAudioDeviceList m_devices; /*!< in and output devices */
+        BlackMisc::Audio::CAudioDevice m_currentOutputDevice;
+        BlackMisc::Audio::CAudioDevice m_currentInputDevice;
         QScopedPointer<CKeyboard> m_keyboardPtt; /*!< handler for PTT */
         bool m_pushToTalk; /*!< flag, PTT pressed */
         float m_inputSquelch;

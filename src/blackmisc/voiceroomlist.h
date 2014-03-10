@@ -10,7 +10,7 @@
 #ifndef BLACKMISC_VOICEROOMLIST_H
 #define BLACKMISC_VOICEROOMLIST_H
 
-#include "vvoiceroom.h"
+#include "voiceroom.h"
 #include "sequence.h"
 #include "collection.h"
 #include <QObject>
@@ -19,7 +19,7 @@
 
 namespace BlackMisc
 {
-    namespace Voice
+    namespace Audio
     {
         /*!
          * Value object encapsulating a list of voice rooms.
@@ -57,8 +57,8 @@ namespace BlackMisc
     } //namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Voice::CVoiceRoomList)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Voice::CVoiceRoom>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Voice::CVoiceRoom>)
+Q_DECLARE_METATYPE(BlackMisc::Audio::CVoiceRoomList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Audio::CVoiceRoom>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Audio::CVoiceRoom>)
 
 #endif //guard

@@ -14,6 +14,6 @@
 #include "blackmisc/networkallclasses.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/statusmessage.h"
-#include "blackmisc/voiceallclasses.h"
+#include "blackmisc/audioallclasses.h"
 
 #endif // guard

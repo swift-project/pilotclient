@@ -10,8 +10,8 @@
 #include "../blackmisc/avcallsignlist.h"
 #include "../blackmisc/avselcal.h"
 #include "../blackmisc/nwuserlist.h"
-#include "../blackmisc/vvoiceroomlist.h"
-#include "../blackmisc/vaudiodevicelist.h"
+#include "../blackmisc/voiceroomlist.h"
+#include "../blackmisc/audiodevicelist.h"
 #include <vatlib/vatlib.h>
 #include <QObject>
 #include <QSet>
@@ -81,19 +81,19 @@ namespace BlackCore
          * \brief Audio devices
          * \return
          */
-        virtual const BlackMisc::Voice::CAudioDeviceList &audioDevices() const = 0;
+        virtual const BlackMisc::Audio::CAudioDeviceList &audioDevices() const = 0;
 
         /*!
          * \brief Default input device
          * \return
          */
-        virtual const BlackMisc::Voice::CAudioDevice defaultAudioInputDevice() const = 0;
+        virtual const BlackMisc::Audio::CAudioDevice defaultAudioInputDevice() const = 0;
 
         /*!
          * \brief Default output device
          * \return
          */
-        virtual const BlackMisc::Voice::CAudioDevice defaultAudioOutputDevice() const = 0;
+        virtual const BlackMisc::Audio::CAudioDevice defaultAudioOutputDevice() const = 0;
 
         /************************************************
          * SETUP TESTS
@@ -132,40 +132,40 @@ namespace BlackCore
         /*!
          * \brief Current input device
          */
-        virtual BlackMisc::Voice::CAudioDevice getCurrentInputDevice() const = 0;
+        virtual BlackMisc::Audio::CAudioDevice getCurrentInputDevice() const = 0;
 
         /*!
          * \brief Current output device
          */
-        virtual BlackMisc::Voice::CAudioDevice getCurrentOutputDevice() const = 0;
+        virtual BlackMisc::Audio::CAudioDevice getCurrentOutputDevice() const = 0;
 
         /*!
          * \brief Output device to be used
          */
-        virtual void setOutputDevice(const BlackMisc::Voice::CAudioDevice &device) = 0;
+        virtual void setOutputDevice(const BlackMisc::Audio::CAudioDevice &device) = 0;
 
         /*!
          * \brief Input device to be used
          */
-        virtual void setInputDevice(const BlackMisc::Voice::CAudioDevice &device) = 0;
+        virtual void setInputDevice(const BlackMisc::Audio::CAudioDevice &device) = 0;
 
         /*!
          * Get COM1/2 voice rooms, which then allows to retrieve information
          * such as audio status etc.
          */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const = 0;
+        virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const = 0;
 
         /*!
          * Get COM1/2 voice rooms, const and with no status update
          */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const = 0;
+        virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const = 0;
 
         /*!
          * \brief Join voice room
          * \param comUnit   COM1/2
          * \param voiceRoom
          */
-        virtual void joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom) = 0;
+        virtual void joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Audio::CVoiceRoom &voiceRoom) = 0;
 
         /*!
          * \brief Leave voice room

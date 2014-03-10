@@ -12,7 +12,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 
 /*
  * Read aircrafts

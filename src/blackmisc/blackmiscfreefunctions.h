@@ -87,10 +87,10 @@ namespace BlackMisc
         void registerMetadata();
     }
 
-    namespace Voice
+    namespace Audio
     {
         /*!
-         * \brief Register metadata for voice
+         * \brief Register metadata for audio / voice
          */
         void registerMetadata();
     }

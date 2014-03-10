@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QTimer>
 
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 
 namespace BlackCore
@@ -67,7 +67,7 @@ namespace BlackCore
     /*
      * Devices
      */
-    const BlackMisc::Voice::CAudioDeviceList &CVoiceVatlib::audioDevices() const
+    const BlackMisc::Audio::CAudioDeviceList &CVoiceVatlib::audioDevices() const
     {
         return m_devices;
     }
@@ -75,19 +75,19 @@ namespace BlackCore
     /*
      * Default input device
      */
-    const BlackMisc::Voice::CAudioDevice CVoiceVatlib::defaultAudioInputDevice() const
+    const BlackMisc::Audio::CAudioDevice CVoiceVatlib::defaultAudioInputDevice() const
     {
         // Constructor creates already a default device
-        return BlackMisc::Voice::CAudioDevice(BlackMisc::Voice::CAudioDevice::InputDevice, BlackMisc::Voice::CAudioDevice::defaultDeviceIndex(), "default");
+        return BlackMisc::Audio::CAudioDevice(BlackMisc::Audio::CAudioDevice::InputDevice, BlackMisc::Audio::CAudioDevice::defaultDeviceIndex(), "default");
     }
 
     /*
      * Default output device
      */
-    const BlackMisc::Voice::CAudioDevice CVoiceVatlib::defaultAudioOutputDevice() const
+    const BlackMisc::Audio::CAudioDevice CVoiceVatlib::defaultAudioOutputDevice() const
     {
         // Constructor creates already a default device
-        return BlackMisc::Voice::CAudioDevice(BlackMisc::Voice::CAudioDevice::OutputDevice, BlackMisc::Voice::CAudioDevice::defaultDeviceIndex(), "default");
+        return BlackMisc::Audio::CAudioDevice(BlackMisc::Audio::CAudioDevice::OutputDevice, BlackMisc::Audio::CAudioDevice::defaultDeviceIndex(), "default");
     }
 
     /*
@@ -109,7 +109,7 @@ namespace BlackCore
     /*
      * Set input device
      */
-    void CVoiceVatlib::setInputDevice(const BlackMisc::Voice::CAudioDevice &device)
+    void CVoiceVatlib::setInputDevice(const BlackMisc::Audio::CAudioDevice &device)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         if (!device.isValid())
@@ -139,7 +139,7 @@ namespace BlackCore
     /*
      * Set output device
      */
-    void CVoiceVatlib::setOutputDevice(const BlackMisc::Voice::CAudioDevice &device)
+    void CVoiceVatlib::setOutputDevice(const BlackMisc::Audio::CAudioDevice &device)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         if (!device.isValid())
@@ -167,7 +167,7 @@ namespace BlackCore
     /*
      * Get voice rooms, with the latest status updated
      */
-    BlackMisc::Voice::CVoiceRoomList CVoiceVatlib::getComVoiceRoomsWithAudioStatus() const
+    BlackMisc::Audio::CVoiceRoomList CVoiceVatlib::getComVoiceRoomsWithAudioStatus() const
     {
         Q_ASSERT_X(m_voiceRooms.size() == 2, "CVoiceVatlib", "Wrong numer of COM voice rooms");
         CVoiceRoomList voiceRooms;
@@ -317,7 +317,7 @@ namespace BlackCore
     /*
      * Voice room
      */
-    void CVoiceVatlib::joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Voice::CVoiceRoom &voiceRoom)
+    void CVoiceVatlib::joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Audio::CVoiceRoom &voiceRoom)
     {
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
@@ -641,7 +641,7 @@ namespace BlackCore
     void CVoiceVatlib::onInputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar)
     {
         Q_UNUSED(obj)
-        BlackMisc::Voice::CAudioDevice inputDevice(BlackMisc::Voice::CAudioDevice::InputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Voice::CAudioDevice::InputDevice), QString(name));
+        BlackMisc::Audio::CAudioDevice inputDevice(BlackMisc::Audio::CAudioDevice::InputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDevice::InputDevice), QString(name));
         cbvar_cast_voice(cbVar)->m_devices.push_back(inputDevice);
     }
 
@@ -651,7 +651,7 @@ namespace BlackCore
     void CVoiceVatlib::onOutputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar)
     {
         Q_UNUSED(obj)
-        BlackMisc::Voice::CAudioDevice outputDevice(BlackMisc::Voice::CAudioDevice::OutputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Voice::CAudioDevice::OutputDevice), QString(name));
+        BlackMisc::Audio::CAudioDevice outputDevice(BlackMisc::Audio::CAudioDevice::OutputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDevice::OutputDevice), QString(name));
         cbvar_cast_voice(cbVar)->m_devices.push_back(outputDevice);
     }
 

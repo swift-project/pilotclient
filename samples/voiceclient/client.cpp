@@ -4,10 +4,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "client.h"
-#include "blackmisc/vaudiodevicelist.h"
+#include "blackmisc/audiodevicelist.h"
 #include "blackmisc/avcallsignlist.h"
 
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 
 
@@ -120,7 +120,7 @@ void Client::initiateConnectionCmd(QTextStream &args)
     QString channel;
     args >> hostname >> channel;
     std::cout << "Joining voice room: " << hostname.toStdString() << "/" << channel.toStdString() << std::endl;
-    m_voiceClient->joinVoiceRoom(BlackCore::IVoice::COM1, BlackMisc::Voice::CVoiceRoom(hostname, channel));
+    m_voiceClient->joinVoiceRoom(BlackCore::IVoice::COM1, BlackMisc::Audio::CVoiceRoom(hostname, channel));
     printLinePrefix();
 }
 
@@ -133,7 +133,7 @@ void Client::terminateConnectionCmd(QTextStream & /** args **/)
 
 void Client::inputDevicesCmd(QTextStream & /** args **/)
 {
-    foreach(BlackMisc::Voice::CAudioDevice device, this->m_voiceClient->audioDevices().getInputDevices())
+    foreach(BlackMisc::Audio::CAudioDevice device, this->m_voiceClient->audioDevices().getInputDevices())
     {
         std::cout << device.getName().toStdString() << std::endl;
     }
@@ -145,7 +145,7 @@ void Client::inputDevicesCmd(QTextStream & /** args **/)
  */
 void Client::outputDevicesCmd(QTextStream & /** args **/)
 {
-    foreach(BlackMisc::Voice::CAudioDevice device, this->m_voiceClient->audioDevices().getOutputDevices())
+    foreach(BlackMisc::Audio::CAudioDevice device, this->m_voiceClient->audioDevices().getOutputDevices())
     {
         std::cout << device.getName().toStdString() << std::endl;
     }

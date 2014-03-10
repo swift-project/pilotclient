@@ -13,7 +13,7 @@
 #include "hwallclasses.h"
 #include "valuemap.h"
 #include "statusmessagelist.h"
-#include "voiceallclasses.h"
+#include "audioallclasses.h"
 
 /*
  * Metadata for PQs
@@ -103,7 +103,7 @@ void BlackMisc::Settings::registerMetadata()
 /*
  * Metadata for Voice
  */
-void BlackMisc::Voice::registerMetadata()
+void BlackMisc::Audio::registerMetadata()
 {
     CAudioDevice::registerMetadata();
     CAudioDeviceList::registerMetadata();
@@ -139,7 +139,7 @@ void BlackMisc::registerMetadata()
     Geo::registerMetadata();
     Network::registerMetadata();
     Settings::registerMetadata();
-    Voice::registerMetadata();
+    Audio::registerMetadata();
     Hardware::registerMetadata();
 }
 

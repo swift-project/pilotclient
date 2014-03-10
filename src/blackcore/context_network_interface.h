@@ -13,7 +13,7 @@
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackcore/network_vatlib.h"
-#include "blackmisc/vvoiceroomlist.h"
+#include "blackmisc/voiceroomlist.h"
 #include <QObject>
 #include <QStringList>
 #include <QDBusAbstractInterface>
@@ -188,7 +188,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode);
 
         //! \brief Use the selected COM1/2 frequencies, and get the corresponding voice room for it
-        virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const;
+        virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const;
 
         //! \brief Use the selected COM1/2 frequencies, and get the corresponding ATC stations for it
         virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const;

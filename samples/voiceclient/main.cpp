@@ -11,7 +11,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 
 int main(int argc, char *argv[])
 {

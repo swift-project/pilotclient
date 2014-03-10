@@ -10,7 +10,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 
 namespace BlackCore
 {

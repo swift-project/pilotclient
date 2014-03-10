@@ -3,7 +3,7 @@
 #include "blackgui/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
-#include "blackmisc/vvoiceroom.h"
+#include "blackmisc/voiceroom.h"
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -14,7 +14,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Math;
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 
 /*
  * Cockpit values

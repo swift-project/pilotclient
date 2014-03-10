@@ -20,7 +20,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 
 namespace BlackCore
 {

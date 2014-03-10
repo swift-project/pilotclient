@@ -6,9 +6,9 @@
 #ifndef BLACKMISC_VOICEALLCLASSES_H
 #define BLACKMISC_VOICEALLCLASSES_H
 
-#include "blackmisc/vaudiodevice.h"
-#include "blackmisc/vaudiodevicelist.h"
-#include "blackmisc/vvoiceroom.h"
-#include "blackmisc/vvoiceroomlist.h"
+#include "blackmisc/audiodevice.h"
+#include "blackmisc/audiodevicelist.h"
+#include "blackmisc/voiceroom.h"
+#include "blackmisc/voiceroomlist.h"
 
 #endif // guard

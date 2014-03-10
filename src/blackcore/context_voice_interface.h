@@ -7,8 +7,8 @@
 #define BLACKCORE_CONTEXTVOICE_INTERFACE_H
 
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/vaudiodevicelist.h"
-#include "blackmisc/vvoiceroomlist.h"
+#include "blackmisc/audiodevicelist.h"
+#include "blackmisc/voiceroomlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/avaircraft.h"
 #include "blackcore/voice_vatlib.h"
@@ -112,32 +112,32 @@ namespace BlackCore
          * Get voice rooms for COM1, COM2:
          * From this connection audio status can be obtained
          */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const;
+        virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const;
 
         /*!
          * Get voice rooms for COM1, COM2, but without latest audio status
          * \return all voice rooms
          */
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const;
+        virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const;
 
         /*!
          * \brief COM 1 voice room
          * \param withAudioStatus   update audio status
          * \return
          */
-        virtual BlackMisc::Voice::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const;
+        virtual BlackMisc::Audio::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const;
 
         /*!
          * \brief COM 2 voice room
          * \param withAudioStatus   update audio status
          * \return
          */
-        virtual BlackMisc::Voice::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const;
+        virtual BlackMisc::Audio::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const;
 
         /*!
          * \brief Set voice rooms
          */
-        virtual void setComVoiceRooms(const BlackMisc::Voice::CVoiceRoom &voiceRoomCom1, const BlackMisc::Voice::CVoiceRoom &voiceRoomCom2);
+        virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoom &voiceRoomCom1, const BlackMisc::Audio::CVoiceRoom &voiceRoomCom2);
 
         /*!
          * Leave all voice rooms
@@ -167,19 +167,19 @@ namespace BlackCore
         /*!
          * \brief Audio devices
          */
-        virtual BlackMisc::Voice::CAudioDeviceList getAudioDevices() const;
+        virtual BlackMisc::Audio::CAudioDeviceList getAudioDevices() const;
 
         /*!
          * \brief Get current audio device
          * \return input and output devices
          */
-        virtual BlackMisc::Voice::CAudioDeviceList getCurrentAudioDevices() const;
+        virtual BlackMisc::Audio::CAudioDeviceList getCurrentAudioDevices() const;
 
         /*!
          * \brief Set current audio device
          * \param audioDevice can be input or audio device
          */
-        virtual void setCurrentAudioDevice(const BlackMisc::Voice::CAudioDevice &audioDevice);
+        virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDevice &audioDevice);
 
         /*!
          * \brief Set volumes via com units, also allows to mute

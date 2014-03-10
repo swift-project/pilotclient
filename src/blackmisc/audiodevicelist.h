@@ -10,7 +10,7 @@
 #ifndef BLACKMISC_AUDIODEVICELIST_H
 #define BLACKMISC_AUDIODEVICELIST_H
 
-#include "vaudiodevice.h"
+#include "audiodevice.h"
 #include "sequence.h"
 #include "collection.h"
 #include <QObject>
@@ -19,7 +19,7 @@
 
 namespace BlackMisc
 {
-    namespace Voice
+    namespace Audio
     {
         /*!
          * Value object encapsulating a list of audio devices.
@@ -76,8 +76,8 @@ namespace BlackMisc
     } //namespace
 } // namespace
 
-Q_DECLARE_METATYPE(BlackMisc::Voice::CAudioDeviceList)
-Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Voice::CAudioDevice>)
-Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Voice::CAudioDevice>)
+Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDeviceList)
+Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::Audio::CAudioDevice>)
+Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::Audio::CAudioDevice>)
 
 #endif //guard

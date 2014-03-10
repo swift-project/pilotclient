@@ -121,7 +121,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode) override;
 
         //! \copydoc IContextNetwork::getSelectedVoiceRooms()
-        virtual BlackMisc::Voice::CVoiceRoomList getSelectedVoiceRooms() const override;
+        virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const override;
 
         //! \copydoc IContextNetwork::getSelectedAtcStations
         virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const override;

@@ -6,7 +6,7 @@
 #include "voice_vatlib.h"
 #include <QDebug>
 
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 
 namespace BlackCore
 {

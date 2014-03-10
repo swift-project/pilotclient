@@ -11,7 +11,7 @@ using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackSound;
 using namespace BlackMisc::Network;
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;

@@ -7,7 +7,7 @@
 #include <QObject>
 #include <QDBusConnection>
 
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 
@@ -91,7 +91,7 @@ namespace BlackCore
     /*
      * Get current audio devices
      */
-    BlackMisc::Voice::CAudioDeviceList IContextVoice::getCurrentAudioDevices() const
+    BlackMisc::Audio::CAudioDeviceList IContextVoice::getCurrentAudioDevices() const
     {
         return this->m_dBusInterface->callDBusRet<CAudioDeviceList>(QLatin1Literal("getCurrentAudioDevices"));
     }
@@ -139,7 +139,7 @@ namespace BlackCore
     /*
      * Set voice rooms
      */
-    void IContextVoice::setComVoiceRooms(const BlackMisc::Voice::CVoiceRoom &voiceRoomCom1, const BlackMisc::Voice::CVoiceRoom &voiceRoomCom2)
+    void IContextVoice::setComVoiceRooms(const BlackMisc::Audio::CVoiceRoom &voiceRoomCom1, const BlackMisc::Audio::CVoiceRoom &voiceRoomCom2)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("setComVoiceRooms"), voiceRoomCom1, voiceRoomCom2);
     }
