@@ -1,12 +1,14 @@
-include (../../externals.pri)
+include (../../config.pri)
+include (../../build.pri)
 
 QT       += core dbus network
 
 TARGET = sample_cli_client
 TEMPLATE = app
 
-CONFIG   += console c++11
+CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG   += blackmisc blackcore
 
 DEPENDPATH += . ../../src
 INCLUDEPATH += . ../../src
@@ -14,12 +16,11 @@ INCLUDEPATH += . ../../src
 SOURCES += *.cpp
 HEADERS += *.h
 
-LIBS    += -L../../lib -lblackcore -lblacksound -lblackmisc
-LIBS	+= -lvatlib
-
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
                                      ../../lib/blackcore.lib
 else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
                                      ../../lib/libblackcore.a
 
 DESTDIR = ../../bin
+
+include (../../libraries.pri)

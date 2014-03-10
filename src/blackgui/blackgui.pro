@@ -1,10 +1,14 @@
+include (../../config.pri)
+include (../../build.pri)
+
 QT       += network dbus gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 
 TARGET = blackgui
 TEMPLATE = lib
-CONFIG += staticlib c++11
+CONFIG += staticlib
+CONFIG += blackmisc
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
@@ -34,3 +38,5 @@ DESTDIR = ../../lib
 OTHER_FILES +=
 
 RESOURCES += blackgui.qrc
+
+include (../../libraries.pri)

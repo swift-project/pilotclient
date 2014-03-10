@@ -1,8 +1,11 @@
+include (../../config.pri)
+include (../../build.pri)
+
 QT       += network dbus gui multimedia
 
 TARGET = blacksound
 TEMPLATE = lib
-CONFIG += staticlib c++11
+CONFIG += staticlib
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
@@ -30,3 +33,5 @@ else:                           COPY = cp -r
 
 QMAKE_POST_LINK += $$COPY $$shell_path($$PWD/sounds) \
                           $$shell_path($$OUT_PWD/../../bin/sounds)
+
+include (../../libraries.pri)

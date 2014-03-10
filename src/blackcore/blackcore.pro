@@ -1,4 +1,5 @@
-include (../../externals.pri)
+include (../../config.pri)
+include (../../build.pri)
 
 # GUI is required for the matrix classes
 # Network for host info etc.
@@ -6,12 +7,11 @@ QT       += network dbus xml multimedia
 
 TARGET = blackcore
 TEMPLATE = lib
-CONFIG += staticlib c++11
+CONFIG += staticlib
+CONFIG += blackmisc
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
-
-LIBS    += -L../../lib -lblacksound -lblackmisc -lSimConnect
 
 # linux-g++* { QMAKE_CXXFLAGS += -std=c++0x }
 # PRECOMPILED_HEADER = stdpch.h
@@ -51,3 +51,5 @@ else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../lib/libblack
 DESTDIR = ../../lib
 
 OTHER_FILES += readme.txt *.xml
+
+include (../../libraries.pri)

@@ -1,41 +1,30 @@
-TEMPLATE = subdirs
+include (config.pri)
 
+TEMPLATE = subdirs
 CONFIG += ordered
 
-include (externals.pri)
-
-WITH_BLACKMISC = ON
-WITH_BLACKCORE = ON
-WITH_BLACKGUI = ON
-WITH_BLACKSIM = ON
-WITH_BLACKSOUND = ON
-WITH_SAMPLES = ON
-WITH_UNITTESTS = ON
-
-#WITH_DOXYGEN = ON
-
-equals(WITH_BLACKMISC, ON) {
+contains(BLACK_CONFIG, BlackMisc) {
     SUBDIRS += src/blackmisc
 #    SUBDIRS += src/blackmisc_cpp2xml
 }
 
-equals(WITH_BLACKSOUND, ON) {
+contains(BLACK_CONFIG, BlackSound) {
     SUBDIRS += src/blacksound
 }
 
-equals(WITH_BLACKCORE, ON) {
+contains(BLACK_CONFIG, BlackCore) {
     SUBDIRS += src/blackcore
 }
 
-equals(WITH_BLACKGUI, ON) {
+contains(BLACK_CONFIG, BlackGui) {
     SUBDIRS += src/blackgui
 }
 
-equals(WITH_BLACKSIM, ON) {
+contains(BLACK_CONFIG, BlackSim) {
     SUBDIRS += src/blacksim
 }
 
-equals(WITH_SAMPLES, ON) {
+contains(BLACK_CONFIG, Samples) {
     SUBDIRS += samples/cli_client/sample_cli_client.pro
     SUBDIRS += samples/interpolator/sample_interpolator.pro
     SUBDIRS += samples/plugin/sample_plugin.pro
@@ -51,11 +40,11 @@ equals(WITH_SAMPLES, ON) {
     SUBDIRS += samples/hotkey/sample_hotkey.pro
 }
 
-equals(WITH_UNITTESTS, ON) {
+contains(BLACK_CONFIG, Unittests) {
     SUBDIRS += tests/blackmisc/test_blackmisc.pro
     SUBDIRS += tests/blackcore/test_blackcore.pro
 }
 
-equals(WITH_DOXYGEN, ON) {
+contains(BLACK_CONFIG, Doxygen) {
     SUBDIRS += docs/doxygen.pro
 }

@@ -1,3 +1,6 @@
+include (../../config.pri)
+include (../../build.pri)
+
 QT       += network dbus
 
 TARGET = blackmisc
@@ -24,3 +27,5 @@ HEADERS += *.h
 SOURCES += *.cpp
 DESTDIR = ../../lib
 OTHER_FILES += $$TRANSLATIONS readme.txt
+
+include (../../libraries.pri)

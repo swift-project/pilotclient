@@ -1,18 +1,17 @@
-include (../../externals.pri)
+include (../../config.pri)
+include (../../build.pri)
 
 QT       += core dbus network xml multimedia
 
 TARGET = sample_blackcore
 TEMPLATE = app
 
-CONFIG   += console c++11
+CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG   += blackmisc blacksound blackcore
 
 DEPENDPATH += . ../../src/blackmisc ../../src/blacksound ../../src/blackcore
 INCLUDEPATH += . ../../src
-
-LIBS    += -L../../lib  -lblackcore -lblacksound -lblackmisc
-LIBS	+= -lvatlib -lSimConnect
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
                                      ../../lib/blacksound.lib \
@@ -27,3 +26,5 @@ HEADERS += *.h
 SOURCES += *.cpp
 
 OTHER_FILES += readme.txt
+
+include (../../libraries.pri)

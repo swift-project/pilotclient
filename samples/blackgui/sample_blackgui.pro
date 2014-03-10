@@ -1,4 +1,5 @@
-include (../../externals.pri)
+include (../../config.pri)
+include (../../build.pri)
 
 QT       += core dbus gui network xml multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -9,16 +10,12 @@ TEMPLATE = app
 SOURCES += *.cpp
 HEADERS += *.h
 FORMS   += *.ui
-CONFIG  += c++11
+CONFIG  += blackmisc blacksound blackcore blackgui
 
 DEPENDPATH += . ../../src/blackmisc ../../src/blackgui ../../src/blacksound ../../src/blackcore
 INCLUDEPATH += . ../../src
 
 DESTDIR = ../../bin
-
-LIBS    += -L../../lib -lblackcore -lblackgui -lblacksound -lblackmisc
-LIBS	+= -lvatlib
-LIBS    += -lSimConnect
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
                                      ../../lib/blackgui.lib \
@@ -31,3 +28,5 @@ else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
                                      ../../lib/libblackcore.a
 
 OTHER_FILES += *.qss
+
+include (../../libraries.pri)
