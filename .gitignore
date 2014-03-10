@@ -77,6 +77,9 @@ ipch
 *.idb
 *.sdf
 
+# Qt Creator
+*.autosave
+
 # Mac OS X stuff
 .DS_Store
 
