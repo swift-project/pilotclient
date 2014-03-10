@@ -23,6 +23,7 @@ namespace BlackMisc
         template <class AVIO> class CModulator : public CAvionicsBase
         {
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CModulator)
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyActive; //!< active frequency
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
             qint32 m_volumeInput; //!< volume input
@@ -111,6 +112,11 @@ namespace BlackMisc
              * \return
              */
             bool operator !=(const CModulator &other) const;
+
+            /*!
+             * \copydoc CValueObject::compareImpl(otherBase)
+             */
+            virtual int compareImpl(const CValueObject &otherBase) const override;
 
             /*!
              * \brief COM1
@@ -313,5 +319,7 @@ namespace BlackMisc
 
     } // namespace
 } // namespace
+
+BLACK_DECLARE_TUPLE_CONVERSION_TEMPLATE(BlackMisc::Aviation::CModulator, (o.m_frequencyActive, o.m_frequencyStandby, o.m_volumeInput , o.m_volumeOutput, o.m_enabled))
 
 #endif // guard

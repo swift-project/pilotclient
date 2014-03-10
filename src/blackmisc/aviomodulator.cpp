@@ -41,9 +41,8 @@ namespace BlackMisc
         template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &other) const
         {
             if (this == &other) return true;
-            return (this->getName() == other.getName() &&
-                    this->m_frequencyActive == other.m_frequencyActive &&
-                    this->m_frequencyStandby == other.m_frequencyStandby);
+            if (!CAvionicsBase::operator ==(other)) return false;
+            return TupleConverter<CModulator>::toTuple(*this) == TupleConverter<CModulator>::toTuple(other);
         }
 
         /*
@@ -59,13 +58,8 @@ namespace BlackMisc
          */
         template <class AVIO> void CModulator<AVIO>::marshallToDbus(QDBusArgument &argument) const
         {
-            this->CAvionicsBase::marshallToDbus(argument);
-            argument << this->m_frequencyActive;
-            argument << this->m_frequencyStandby;
-            argument << this->m_digits;
-            argument << this->m_volumeInput;
-            argument << this->m_volumeOutput;
-            argument << this->m_enabled;
+            CAvionicsBase::marshallToDbus(argument);
+            argument << TupleConverter<CModulator>::toTuple(*this);
         }
 
         /*
@@ -73,13 +67,18 @@ namespace BlackMisc
          */
         template <class AVIO> void CModulator<AVIO>::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            this->CAvionicsBase::unmarshallFromDbus(argument);
-            argument >> this->m_frequencyActive;
-            argument >> this->m_frequencyStandby;
-            argument >> this->m_digits;
-            argument >> this->m_volumeInput;
-            argument >> this->m_volumeOutput;
-            argument >> this->m_enabled;
+            CAvionicsBase::unmarshallFromDbus(argument);
+            argument >> TupleConverter<CModulator>::toTuple(*this);
+        }
+
+        /*
+         * Compare
+         */
+        template <class AVIO> int CModulator<AVIO>::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CModulator &>(otherBase);
+            int result = compare(TupleConverter<CModulator>::toTuple(*this), TupleConverter<CModulator>::toTuple(other));
+            return result == 0 ? CAvionicsBase::compareImpl(otherBase) : result;
         }
 
         /*
@@ -88,9 +87,8 @@ namespace BlackMisc
         template <class AVIO> uint CModulator<AVIO>::getValueHash() const
         {
             QList<uint> hashs;
-            hashs << this->m_frequencyActive.getValueHash();
-            hashs << this->m_frequencyStandby.getValueHash();
-            hashs << qHash(this->m_digits);
+            hashs << CAvionicsBase::getValueHash();
+            hashs << qHash(TupleConverter<CModulator>::toTuple(*this));
             return BlackMisc::calculateHash(hashs, "CModulator");
         }
 

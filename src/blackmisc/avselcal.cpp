@@ -19,22 +19,6 @@ namespace BlackMisc
         }
 
         /*
-         * Marshall to DBus
-         */
-        void CSelcal::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << this->m_code;
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CSelcal::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> this->m_code;
-        }
-
-        /*
          * Equals code?
          */
         bool CSelcal::equalsString(const QString &code) const
@@ -146,12 +130,45 @@ namespace BlackMisc
         }
 
         /*
+         * Compare
+         */
+        int CSelcal::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CSelcal &>(otherBase);
+            return compare(TupleConverter<CSelcal>::toTuple(*this), TupleConverter<CSelcal>::toTuple(other));
+        }
+
+        /*
+         * Marshall to DBus
+         */
+        void CSelcal::marshallToDbus(QDBusArgument &argument) const
+        {
+            argument << TupleConverter<CSelcal>::toTuple(*this);
+        }
+
+        /*
+         * Unmarshall from DBus
+         */
+        void CSelcal::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            argument >> TupleConverter<CSelcal>::toTuple(*this);
+        }
+
+        /*
+         * Hash
+         */
+        uint CSelcal::getValueHash() const
+        {
+            return qHash(TupleConverter<CSelcal>::toTuple(*this));
+        }
+
+        /*
          * Equal?
          */
         bool CSelcal::operator ==(const CSelcal &other) const
         {
             if (this == &other) return true;
-            return (this->m_code.compare(other.m_code, Qt::CaseInsensitive) == 0);
+            return TupleConverter<CSelcal>::toTuple(*this) == TupleConverter<CSelcal>::toTuple(other);
         }
 
         /*
@@ -160,14 +177,6 @@ namespace BlackMisc
         bool CSelcal::operator !=(const CSelcal &other) const
         {
             return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CSelcal::getValueHash() const
-        {
-            return qHash(this->m_code);
         }
 
         /*
@@ -185,15 +194,6 @@ namespace BlackMisc
         {
             if (metaTypeId == qMetaTypeId<CSelcal>()) { return true; }
             return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CSelcal::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CSelcal &>(otherBase);
-            return this->m_code.compare(other.getCode(), Qt::CaseInsensitive);
         }
 
         /*

@@ -291,4 +291,4 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CNavSystem)
 
-#endif // BLACKMISC_AVIONAVSYSTEM_H
+#endif // guard

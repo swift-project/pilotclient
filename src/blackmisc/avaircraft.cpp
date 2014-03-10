@@ -27,14 +27,7 @@ namespace BlackMisc
          */
         void CAircraft::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_callsign;
-            argument << this->m_pilot;
-            argument << this->m_situation;
-            argument << this->m_com1system;
-            argument << this->m_com2system;
-            argument << this->m_transponder;
-            argument << this->m_icao;
-            argument << this->m_distanceToPlane;
+            argument << TupleConverter<CAircraft>::toTuple(*this);
         }
 
         /*
@@ -42,14 +35,7 @@ namespace BlackMisc
          */
         void CAircraft::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_callsign;
-            argument >> this->m_pilot;
-            argument >> this->m_situation;
-            argument >> this->m_com1system;
-            argument >> this->m_com2system;
-            argument >> this->m_transponder;
-            argument >> this->m_icao;
-            argument >> this->m_distanceToPlane;
+            argument >> TupleConverter<CAircraft>::toTuple(*this);
         }
 
         /*
@@ -97,7 +83,7 @@ namespace BlackMisc
         bool CAircraft::operator ==(const CAircraft &other) const
         {
             if (this == &other) return true;
-            return compare(*this, other) == 0;
+            return TupleConverter<CAircraft>::toTuple(*this) == TupleConverter<CAircraft>::toTuple(other);
         }
 
         /*
@@ -113,15 +99,7 @@ namespace BlackMisc
          */
         uint CAircraft::getValueHash() const
         {
-            QList<uint> hashs;
-            hashs << qHash(this->m_callsign);
-            hashs << qHash(this->m_pilot);
-            hashs << qHash(this->m_situation);
-            hashs << qHash(this->m_com1system);
-            hashs << qHash(this->m_com2system);
-            hashs << qHash(this->m_transponder);
-            hashs << qHash(this->m_icao);
-            return BlackMisc::calculateHash(hashs, "CAircraft");
+            return qHash(TupleConverter<CAircraft>::toTuple(*this));
         }
 
         /*
@@ -148,8 +126,7 @@ namespace BlackMisc
         int CAircraft::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CAircraft &>(otherBase);
-
-            return this->getCallsign().asString().compare(other.getCallsign().asString(), Qt::CaseInsensitive);
+            return compare(TupleConverter<CAircraft>::toTuple(*this), TupleConverter<CAircraft>::toTuple(other));
         }
 
         /*

@@ -22,110 +22,65 @@ namespace BlackMisc
         class CServer : public BlackMisc::CValueObject
         {
         public:
-            /*!
-             * Default constructor.
-             */
+            //! \brief Default constructor.
             CServer() : m_port(-1) {}
 
-            /*!
-             * Constructor.
-             * \param name
-             * \param description
-             * \param address
-             * \param port
-             * \param user
-             */
+            //! \brief Constructor.
             CServer(const QString &name, const QString &description, const QString &address, qint32 port, const CUser &user)
                 : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * Get address.
-             * \return
-             */
+            //! Get address.
             const QString &getAddress() const { return m_address; }
 
-            /*!
-             * \brief Set address (e.g. myserver.foo.com)
-             */
+            //! \brief Set address (e.g. myserver.foo.com)
             void setAddress(const QString &address) { m_address = address; }
 
-            /*!
-             * Get user
-             */
+            //! Get user
             const CUser &getUser() const { return m_user; }
 
-            /*!
-             * \brief Set user
-             */
+            //! \brief Set user
             void setUser(const CUser &user) { m_user = user; }
 
-            /*!
-             * Get name
-             */
+            //! \brief Get name
             const QString &getName() const { return m_name; }
 
-            /*!
-             * \brief Set name
-             * \param name
-             */
+            //! \brief Set name
             void setName(const QString &name) { m_name = name; }
 
-            /*!
-             * Get description
-             */
+            //! \brief Get description
             const QString &getDescription() const { return m_description; }
 
-            /*!
-             * \brief Set description
-             */
+            //! \brief Set description
             void setDescription(const QString &description) { m_description = description; }
 
-            /*!
-             * Get port
-             */
+            //! \brief Get port
             qint32 getPort() const { return m_port; }
 
-            /*!
-             * \brief Set port
-             */
+            //! \brief Set port
             void setPort(qint32 port) { m_port = port; }
 
-            /*!
-             * \brief Is valid for login?
-             */
+            //! \brief Is valid for login?
             bool isValidForLogin() const;
 
-            /*!
-             * \brief Equal operator ==
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CServer &other) const;
 
-            /*!
-             * \brief Unequal operator !=
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CServer &other) const;
 
-            /*!
-             * \copydoc CValueObject::getValueHash()
-             */
+            //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
-            /*!
-             * \brief Properties by index
-             */
+            //! \brief Properties by index
             enum ColumnIndex
             {
                 IndexName = 0,
@@ -137,19 +92,13 @@ namespace BlackMisc
                 IndexUserPassword
             };
 
-            /*!
-             * \copydoc CValueObject::propertyByIndex(int)
-             */
+            //! \copydoc CValueObject::propertyByIndex(int)
             QVariant propertyByIndex(int index) const override;
 
-            /*!
-             * \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
-             */
+            //! \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
             void setPropertyByIndex(const QVariant &variant, int index) override;
 
-            /*!
-             * \copydoc CValueObject::propertyByIndexAsString()
-             */
+            //! \copydoc CValueObject::propertyByIndexAsString()
             QString propertyByIndexAsString(int index, bool i18n) const;
 
         protected:

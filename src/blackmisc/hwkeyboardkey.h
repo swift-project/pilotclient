@@ -10,6 +10,7 @@
 #ifndef BLACKMISC_KEYBOARDKEY_H
 #define BLACKMISC_KEYBOARDKEY_H
 
+#include "blackmiscfreefunctions.h"
 #include "valueobject.h"
 #include <QStringList>
 #include <QKeySequence>
@@ -95,6 +96,9 @@ namespace BlackMisc
 
             //! \brief Equal?
             bool operator ==(const CKeyboardKey &other) const;
+
+            //! \brief Unequal operator !=
+            bool operator !=(const CKeyboardKey &other) const;
 
             //! \brief <
             bool operator<(CKeyboardKey const &other) const;
@@ -240,6 +244,7 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CKeyboardKey)
             int m_qtKey; //!< code similar to Qt::Key
             quint32 m_nativeScanCode; //!< native scan code, QKeyEvent::nativeScanCode
             quint32 m_nativeVirtualKey; //!< virtual key code
@@ -252,6 +257,9 @@ namespace BlackMisc
     } // class
 } // BlackMisc
 
+BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Hardware::CKeyboardKey::Modifier)
+BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Hardware::CKeyboardKey::HotkeyFunction)
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Hardware::CKeyboardKey, (o.m_qtKey, o.m_nativeScanCode, o.m_nativeVirtualKey, o.m_modifier1, o.m_modifier2, o.m_function, o.m_pressed))
 Q_DECLARE_METATYPE(BlackMisc::Hardware::CKeyboardKey)
 
 #endif // guard

@@ -5,6 +5,8 @@
 
 #ifndef BLACKMISC_AVHEADING_H
 #define BLACKMISC_AVHEADING_H
+
+#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqangle.h"
 
 namespace BlackMisc
@@ -29,17 +31,21 @@ namespace BlackMisc
             };
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CHeading)
             ReferenceNorth m_north; //!< magnetic or true?
 
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-            //! \copydoc CValueObject::marshallToDbus
+            //! \copydoc CValueObject::marshallFromDbus()
             virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            //! \copydoc CValueObject::unmarshallFromDbus
+            //! \copydoc CValueObject::unmarshallFromDbus()
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
+
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
         public:
             //! \brief Default constructor: 0 heading true
@@ -61,6 +67,9 @@ namespace BlackMisc
             {
                 return QVariant::fromValue(*this);
             }
+
+            //! \copydoc CValueObject::getValueHash
+            virtual uint getValueHash() const override;
 
             //! \brief Equal operator ==
             bool operator ==(const CHeading &other) const;
@@ -84,6 +93,8 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Aviation::CHeading::ReferenceNorth)
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CHeading, (o.m_north))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CHeading)
 
 #endif // guard

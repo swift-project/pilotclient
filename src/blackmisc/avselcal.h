@@ -136,6 +136,7 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CSelcal)
             QString m_code;
             static QList<BlackMisc::PhysicalQuantities::CFrequency> frequencyEquivalents;
             static QStringList allCodePairs;
@@ -143,6 +144,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CSelcal, (o.m_code))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CSelcal)
 
 #endif // guard

@@ -94,11 +94,8 @@ namespace BlackMisc
          */
         template <class LATorLON> int CEarthAngle<LATorLON>::compareImpl(const CValueObject &otherBase) const
         {
-            const auto &other = static_cast<const CEarthAngle &>(otherBase);
-
-            if (*this < other) { return -1; }
-            else if (*this > other) { return 1; }
-            else { return 0; }
+            const auto &other = static_cast<const CAngle &>(otherBase);
+            return CAngle::compareImpl(other);
         }
 
         // see here for the reason of thess forward instantiations

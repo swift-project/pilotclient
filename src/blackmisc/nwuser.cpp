@@ -78,6 +78,14 @@ namespace BlackMisc
         }
 
         /*
+         * Unequal?
+         */
+        bool CUser::operator !=(const CUser &other) const
+        {
+            return !((*this) == other);
+        }
+
+        /*
          * Exchange data
          */
         void CUser::syncronizeData(CUser &otherUser)
@@ -103,14 +111,6 @@ namespace BlackMisc
                 otherUser.setCallsign(this->getCallsign());
             else if (otherUser.hasValidCallsign())
                 this->setCallsign(otherUser.getCallsign());
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CUser::operator !=(const CUser &other) const
-        {
-            return !((*this) == other);
         }
 
         /*

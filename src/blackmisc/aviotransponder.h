@@ -6,6 +6,7 @@
 #ifndef BLACKMISC_AVIOTRANSPONDER_H
 #define BLACKMISC_AVIOTRANSPONDER_H
 #include "blackmisc/aviobase.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <stdexcept>
 
 namespace BlackMisc
@@ -32,6 +33,7 @@ namespace BlackMisc
             };
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CTransponder)
             qint32 m_transponderCode; //<! Transponder code
             TransponderMode m_transponderMode; //<! Transponder mode
 
@@ -88,20 +90,17 @@ namespace BlackMisc
              */
             bool validate(bool strict = true) const;
 
-            /*!
-             * \copydoc CValueObject::convertToQString
-             */
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-            /*!
-             * \copydoc CValueObject::marshallToDbus
-             */
+            //! \copydoc CValueObject::marshallFromDbus()
             virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \copydoc CValueObject::unmarshallFromDbus
-             */
+            //! \copydoc CValueObject::unmarshallFromDbus()
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
+
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
         public:
             /*!
@@ -368,9 +367,7 @@ namespace BlackMisc
                 return CTransponder::tryGetTransponder(o_transponder, "Transponder", transponderCode, mode);
             }
 
-            /*!
-             * \copydoc CValueObject::getValueHash()
-             */
+            //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
 
             /*!
@@ -393,6 +390,8 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Aviation::CTransponder::TransponderMode)
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CTransponder, (o.m_transponderCode))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTransponder)
 
-#endif // BLACKMISC_AVIOTRANSPONDER_H
+#endif // guard

@@ -280,4 +280,4 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAdfSystem)
 
-#endif // BLACKMISC_AVIOADFSYSTEM_H
+#endif // guard

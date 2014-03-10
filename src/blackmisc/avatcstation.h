@@ -10,7 +10,7 @@
 #ifndef BLACKMISC_ATCSTATION_H
 #define BLACKMISC_ATCSTATION_H
 
-#include "vvoiceroom.h"
+#include "voiceroom.h"
 #include "aviocomsystem.h"
 #include "avinformationmessage.h"
 #include "avcallsign.h"
@@ -187,10 +187,10 @@ namespace BlackMisc
             void setOnline(bool online) { this->m_isOnline = online; }
 
             //! \brief Get voice room
-            const BlackMisc::Voice::CVoiceRoom &getVoiceRoom() const { return this->m_voiceRoom; }
+            const BlackMisc::Audio::CVoiceRoom &getVoiceRoom() const { return this->m_voiceRoom; }
 
             //! \brief Set voice room
-            void setVoiceRoom(const BlackMisc::Voice::CVoiceRoom &voiceRoom) { this->m_voiceRoom = voiceRoom; }
+            void setVoiceRoom(const BlackMisc::Audio::CVoiceRoom &voiceRoom) { this->m_voiceRoom = voiceRoom; }
 
             //! \brief Valid voice room?
             bool hasValidVoiceRoom() const { return this->m_voiceRoom.isValid(); }
@@ -310,6 +310,7 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAtcStation)
             CCallsign m_callsign;
             BlackMisc::Network::CUser m_controller;
             BlackMisc::PhysicalQuantities::CFrequency m_frequency;
@@ -321,12 +322,14 @@ namespace BlackMisc
             QDateTime m_bookedUntilUtc;
             CInformationMessage m_atis;
             CInformationMessage m_metar;
-            BlackMisc::Voice::CVoiceRoom m_voiceRoom;
+            BlackMisc::Audio::CVoiceRoom m_voiceRoom;
         };
 
     } // namespace
 } // namespace
 
+// o.m_metar, o.m_voiceRoom
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAtcStation, (o.m_callsign, o.m_controller, o.m_frequency, o.m_position, o.m_range, o.m_isOnline, o.m_distanceToPlane, o.m_bookedFromUtc, o.m_bookedUntilUtc, o.m_atis))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAtcStation)
 
 #endif // guard

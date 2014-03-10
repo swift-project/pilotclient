@@ -38,9 +38,7 @@ namespace BlackMisc
         {
             const auto &other = static_cast<const CInformationMessage &>(otherBase);
 
-            if (this->m_type < other.m_type) { return -1; }
-            if (this->m_type > other.m_type) { return 1; }
-            return this->m_message.compare(other.m_message);
+            return compare(TupleConverter<CInformationMessage>::toTuple(*this), TupleConverter<CInformationMessage>::toTuple(other));
         }
 
         /*
@@ -48,9 +46,7 @@ namespace BlackMisc
          */
         void CInformationMessage::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_message;
-            argument << static_cast<int>(this->m_type);
-            argument << this->m_receivedTimestamp;
+            argument << TupleConverter<CInformationMessage>::toTuple(*this);
         }
 
         /*
@@ -58,11 +54,7 @@ namespace BlackMisc
          */
         void CInformationMessage::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            uint type;
-            argument >> this->m_message;
-            argument >> type;
-            argument >> this->m_receivedTimestamp;
-            this->m_type = static_cast<InformationType>(type);
+            argument >> TupleConverter<CInformationMessage>::toTuple(*this);
         }
 
         /*
@@ -71,9 +63,7 @@ namespace BlackMisc
         bool CInformationMessage::operator ==(const CInformationMessage &other) const
         {
             if (this == &other) return true;
-            return this->m_message == other.m_message &&
-                   this->m_receivedTimestamp == other.m_receivedTimestamp &&
-                   this->m_type == other.m_type;
+            return TupleConverter<CInformationMessage>::toTuple(*this) == TupleConverter<CInformationMessage>::toTuple(other);
         }
 
         /*
@@ -85,22 +75,20 @@ namespace BlackMisc
         }
 
         /*
+         * Hash
+         */
+        uint CInformationMessage::getValueHash() const
+        {
+            return qHash(TupleConverter<CInformationMessage>::toTuple(*this));
+        }
+
+        /*
          * Register metadata
          */
         void CInformationMessage::registerMetadata()
         {
             qRegisterMetaType<CInformationMessage>();
             qDBusRegisterMetaType<CInformationMessage>();
-        }
-
-        /*
-         * Hash
-         */
-        uint CInformationMessage::getValueHash() const
-        {
-            QList<uint> hashs;
-            hashs << qHash(this->m_message);
-            return BlackMisc::calculateHash(hashs, "CAtis");
         }
 
         /*

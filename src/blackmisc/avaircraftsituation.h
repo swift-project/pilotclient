@@ -153,6 +153,7 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftSituation)
             BlackMisc::Geo::CCoordinateGeodetic m_position;
             BlackMisc::Aviation::CAltitude m_altitude;
             BlackMisc::Aviation::CHeading m_heading;
@@ -165,6 +166,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftSituation, (o.m_position, o.m_altitude, o.m_heading, o.m_pitch, o.m_bank, o.m_groundspeed))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftSituation)
 
 #endif // guard

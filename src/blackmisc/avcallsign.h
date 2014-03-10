@@ -120,6 +120,7 @@ namespace BlackMisc
             static const QPixmap &convertToIcon(const CCallsign &callsign);
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CCallsign)
             QString m_callsignAsSet;
             QString m_callsign;
             QString m_telephonyDesignator;
@@ -127,6 +128,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CCallsign, (o.m_callsign, o.m_callsignAsSet, o.m_telephonyDesignator))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsign)
 
 #endif // guard

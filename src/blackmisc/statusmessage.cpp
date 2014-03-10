@@ -47,20 +47,7 @@ namespace BlackMisc
     bool CStatusMessage::isA(int metaTypeId) const
     {
         if (metaTypeId == qMetaTypeId<CStatusMessage>()) { return true; }
-
         return this->CValueObject::isA(metaTypeId);
-    }
-
-    /*
-     * Compare
-     */
-    int CStatusMessage::compareImpl(const CValueObject &otherBase) const
-    {
-        const auto &other = static_cast<const CStatusMessage &>(otherBase);
-
-        if (this->m_type < other.m_type) { return -1; }
-        if (this->m_type > other.m_type) { return 1; }
-        return this->m_message.compare(other.m_message);
     }
 
     /*
@@ -103,19 +90,6 @@ namespace BlackMisc
         case SeverityError: return e;
         default: return i;
         }
-    }
-
-    /*
-     * Hash
-     */
-    uint CStatusMessage::getValueHash() const
-    {
-        QList<uint> hashs;
-        hashs << qHash(static_cast<qint32>(this->m_type));
-        hashs << qHash(static_cast<qint32>(this->m_severity));
-        hashs << qHash(this->m_message);
-        hashs << qHash(this->m_timestamp);
-        return BlackMisc::calculateHash(hashs, "CStatusMessage");
     }
 
     /*
@@ -202,14 +176,45 @@ namespace BlackMisc
     }
 
     /*
-     * Equal
+     * Compare
+     */
+    int CStatusMessage::compareImpl(const CValueObject &otherBase) const
+    {
+        const auto &other = static_cast<const CStatusMessage &>(otherBase);
+        return compare(TupleConverter<CStatusMessage>::toTuple(*this), TupleConverter<CStatusMessage>::toTuple(other));
+    }
+
+    /*
+     * Marshall to DBus
+     */
+    void CStatusMessage::marshallToDbus(QDBusArgument &argument) const
+    {
+        argument << TupleConverter<CStatusMessage>::toTuple(*this);
+    }
+
+    /*
+     * Unmarshall from DBus
+     */
+    void CStatusMessage::unmarshallFromDbus(const QDBusArgument &argument)
+    {
+        argument >> TupleConverter<CStatusMessage>::toTuple(*this);
+    }
+
+    /*
+     * Hash
+     */
+    uint CStatusMessage::getValueHash() const
+    {
+        return qHash(TupleConverter<CStatusMessage>::toTuple(*this));
+    }
+
+    /*
+     * Equal?
      */
     bool CStatusMessage::operator ==(const CStatusMessage &other) const
     {
-        return this->m_severity == other.m_severity &&
-               this->m_type == other.m_type &&
-               this->m_timestamp == other.m_timestamp &&
-               this->m_message == other.m_message;
+        if (this == &other) return true;
+        return TupleConverter<CStatusMessage>::toTuple(*this) == TupleConverter<CStatusMessage>::toTuple(other);
     }
 
     /*
@@ -218,32 +223,6 @@ namespace BlackMisc
     bool CStatusMessage::operator !=(const CStatusMessage &other) const
     {
         return !(other == (*this));
-    }
-
-    /*
-     * To DBus
-     */
-    void CStatusMessage::marshallToDbus(QDBusArgument &arg) const
-    {
-        arg << this->m_message;
-        arg << static_cast<qint32>(this->m_type);
-        arg << static_cast<qint32>(this->m_severity);
-        arg << this->m_timestamp;
-    }
-
-    /*
-     * From DBus
-     */
-    void CStatusMessage::unmarshallFromDbus(const QDBusArgument &arg)
-    {
-        qint32 type;
-        qint32 severity;
-        arg >> this->m_message;
-        arg >> type;
-        arg >> severity;
-        arg >> m_timestamp;
-        this->m_type = static_cast<StatusType>(type);
-        this->m_severity = static_cast<StatusSeverity>(severity);
     }
 
     /*

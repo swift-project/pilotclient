@@ -8,6 +8,7 @@
 #include "blackmisc/mathvector3d.h"
 #include "blackmisc/mathmatrix3x3.h"
 #include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
@@ -19,13 +20,21 @@ namespace BlackMisc
         class CCoordinateNed : public BlackMisc::Math::CVector3DBase<CCoordinateNed>
         {
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateNed)
             CCoordinateGeodetic m_referencePosition; //!< geodetic reference position
             bool m_hasReferencePosition; //!< valid reference position?
 
         protected:
-            /*!
-             * \copydoc CValueObject::convertToQString
-             */
+            //! \copydoc CValueObject::marshallFromDbus()
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
+
+            //! \copydoc CValueObject::unmarshallFromDbus()
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
+
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
+
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override
             {
                 Q_UNUSED(i18n)
@@ -82,26 +91,21 @@ namespace BlackMisc
              */
             CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D &vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
+
+            //! \copydoc CValueObject::getValueHash
+            virtual uint getValueHash() const override;
 
             /*!
              * \brief Equal operator ==
              * \param other
              * \return
              */
-            bool operator ==(const CCoordinateNed &other) const
-            {
-                if (this == &other) return true;
-                return this->m_hasReferencePosition == other.m_hasReferencePosition &&
-                       this->m_referencePosition == other.m_referencePosition &&
-                       this->CVector3DBase::operator== (other);
-            }
+            bool operator ==(const CCoordinateNed &other) const;
 
             /*!
              * \brief Unequal operator !=
@@ -208,6 +212,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Geo::CCoordinateNed, (o.m_referencePosition, o.m_hasReferencePosition))
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateNed)
 
 #endif // guard

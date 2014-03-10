@@ -235,6 +235,7 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CTextMessage)
             QString m_message;
             QDateTime m_received;
             BlackMisc::Aviation::CCallsign m_senderCallsign;
@@ -244,6 +245,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CTextMessage, (o.m_message, o.m_received, o.m_senderCallsign, o.m_recipientCallsign, o.m_frequency))
 Q_DECLARE_METATYPE(BlackMisc::Network::CTextMessage)
 
 #endif // guard

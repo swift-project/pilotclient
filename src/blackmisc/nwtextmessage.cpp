@@ -48,46 +48,6 @@ namespace BlackMisc
         }
 
         /*
-         * Compare
-         */
-        int CTextMessage::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CTextMessage &>(otherBase);
-
-            int result;
-            if ((result = compare(this->m_senderCallsign, other.m_senderCallsign))) { return result; }
-            if ((result = compare(this->m_recipientCallsign, other.m_recipientCallsign))) { return result; }
-            if ((result = compare(this->m_frequency, other.m_frequency))) { return result; }
-            if (this->m_received < other.m_received) { return -1; }
-            if (this->m_received > other.m_received) { return 1; }
-            return this->m_message.compare(other.m_message);
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CTextMessage::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << this->m_senderCallsign;
-            argument << this->m_recipientCallsign;
-            argument << this->m_message;
-            argument << this->m_frequency;
-            argument << this->m_received;
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CTextMessage::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> this->m_senderCallsign;
-            argument >> this->m_recipientCallsign;
-            argument >> this->m_message;
-            argument >> this->m_frequency;
-            argument >> this->m_received;
-        }
-
-        /*
          * Private message?
          */
         bool CTextMessage::isPrivateMessage() const
@@ -230,12 +190,45 @@ namespace BlackMisc
         }
 
         /*
+         * Compare
+         */
+        int CTextMessage::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CTextMessage &>(otherBase);
+            return compare(TupleConverter<CTextMessage>::toTuple(*this), TupleConverter<CTextMessage>::toTuple(other));
+        }
+
+        /*
+         * Marshall to DBus
+         */
+        void CTextMessage::marshallToDbus(QDBusArgument &argument) const
+        {
+            argument << TupleConverter<CTextMessage>::toTuple(*this);
+        }
+
+        /*
+         * Unmarshall from DBus
+         */
+        void CTextMessage::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            argument >> TupleConverter<CTextMessage>::toTuple(*this);
+        }
+
+        /*
+         * Hash
+         */
+        uint CTextMessage::getValueHash() const
+        {
+            return qHash(TupleConverter<CTextMessage>::toTuple(*this));
+        }
+
+        /*
          * Equal?
          */
         bool CTextMessage::operator ==(const CTextMessage &other) const
         {
             if (this == &other) return true;
-            return compare(*this, other);
+            return TupleConverter<CTextMessage>::toTuple(*this) == TupleConverter<CTextMessage>::toTuple(other);
         }
 
         /*
@@ -244,20 +237,6 @@ namespace BlackMisc
         bool CTextMessage::operator !=(const CTextMessage &other) const
         {
             return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CTextMessage::getValueHash() const
-        {
-            QList<uint> hashs;
-            hashs << qHash(this->m_senderCallsign.getValueHash());
-            hashs << qHash(this->m_recipientCallsign.getValueHash());
-            hashs << qHash(this->m_frequency.getValueHash());
-            hashs << qHash(this->m_message);
-            hashs << qHash(this->m_received);
-            return BlackMisc::calculateHash(hashs, "CTextMessage");
         }
 
         /*

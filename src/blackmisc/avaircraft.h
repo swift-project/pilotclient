@@ -31,7 +31,7 @@ namespace BlackMisc
             CAircraft() : m_distanceToPlane(-1.0, BlackMisc::PhysicalQuantities::CLengthUnit::NM()) {}
 
             //! \brief Constructor.
-            CAircraft(const QString &callsign, const BlackMisc::Network::CUser &user, const CAircraftSituation &situation)
+            CAircraft(const CCallsign &callsign, const BlackMisc::Network::CUser &user, const CAircraftSituation &situation)
                 : m_callsign(callsign), m_pilot(user), m_situation(situation), m_distanceToPlane(-1.0, BlackMisc::PhysicalQuantities::CLengthUnit::NM()) {}
 
             //! \copydoc CValueObject::toQVariant
@@ -235,6 +235,7 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAircraft)
             CCallsign m_callsign;
             BlackMisc::Network::CUser m_pilot;
             CAircraftSituation m_situation;
@@ -248,6 +249,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraft, (o.m_callsign, o.m_pilot, o.m_situation, o.m_com1system, o.m_com2system, o.m_transponder, o.m_icao, o.m_distanceToPlane))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraft)
 
 #endif // guard

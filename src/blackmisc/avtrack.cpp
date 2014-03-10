@@ -31,31 +31,49 @@ namespace BlackMisc
         }
 
         /*
-         * Marshall to DBus
+         * Marshall
          */
         void CTrack::marshallToDbus(QDBusArgument &argument) const
         {
-            this->CAngle::marshallToDbus(argument);
-            argument << qint32(this->m_north);
+            CAngle::marshallToDbus(argument);
+            argument << TupleConverter<CTrack>::toTuple(*this);
         }
 
         /*
-         * Unmarshall from DBus
+         * Unmarshall
          */
         void CTrack::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            this->CAngle::unmarshallFromDbus(argument);
-            qint32 north;
-            argument >> north;
-            this->m_north = static_cast<ReferenceNorth>(north);
+            CAngle::unmarshallFromDbus(argument);
+            argument >> TupleConverter<CTrack>::toTuple(*this);
         }
 
         /*
-         * Equal?
+         * Hash
          */
+        uint CTrack::getValueHash() const
+        {
+            QList<uint> hashs;
+            hashs << CAngle::getValueHash();
+            hashs << qHash(TupleConverter<CTrack>::toTuple(*this));
+            return BlackMisc::calculateHash(hashs, "CTrack");
+        }
+
+        /*
+         * Compare
+         */
+        int CTrack::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CTrack &>(otherBase);
+            int result = compare(TupleConverter<CTrack>::toTuple(*this), TupleConverter<CTrack>::toTuple(other));
+            return result == 0 ? CAngle::compareImpl(otherBase) : result;
+        }
+
         bool CTrack::operator ==(const CTrack &other) const
         {
-            return other.m_north == this->m_north && this->CAngle::operator ==(other);
+            if (this == &other) return true;
+            if (!CAngle::operator ==(other)) return false;
+            return TupleConverter<CTrack>::toTuple(*this) == TupleConverter<CTrack>::toTuple(other);
         }
 
         /*

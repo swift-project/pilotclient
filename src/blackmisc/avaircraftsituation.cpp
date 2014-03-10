@@ -48,16 +48,7 @@ namespace BlackMisc
         {
             const auto &other = static_cast<const CAircraftSituation &>(otherBase);
 
-            int result;
-            if ((result = compare(this->m_position, other.m_position))) { return result; }
-            if ((result = compare(this->m_altitude, other.m_altitude))) { return result; }
-            if ((result = compare(this->m_heading, other.m_heading))) { return result; }
-            if ((result = compare(this->m_pitch, other.m_pitch))) { return result; }
-            if ((result = compare(this->m_bank, other.m_bank))) { return result; }
-            if ((result = compare(this->m_groundspeed, other.m_groundspeed))) { return result; }
-            if (this->m_timestamp < other.m_timestamp) { return -1; }
-            if (this->m_timestamp > other.m_timestamp) { return 1; }
-            return 0;
+            return compare(TupleConverter<CAircraftSituation>::toTuple(*this), TupleConverter<CAircraftSituation>::toTuple(other));
         }
 
         /*
@@ -65,13 +56,7 @@ namespace BlackMisc
          */
         void CAircraftSituation::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_position;
-            argument << this->m_altitude;
-            argument << this->m_heading;
-            argument << this->m_pitch;
-            argument << this->m_bank;
-            argument << this->m_groundspeed;
-            argument << this->m_timestamp;
+            argument << TupleConverter<CAircraftSituation>::toTuple(*this);
         }
 
         /*
@@ -79,13 +64,7 @@ namespace BlackMisc
          */
         void CAircraftSituation::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_position;
-            argument >> this->m_altitude;
-            argument >> this->m_heading;
-            argument >> this->m_pitch;
-            argument >> this->m_bank;
-            argument >> this->m_groundspeed;
-            argument >> this->m_timestamp;
+            argument >> TupleConverter<CAircraftSituation>::toTuple(*this);
         }
 
         /*
@@ -94,7 +73,7 @@ namespace BlackMisc
         bool CAircraftSituation::operator ==(const CAircraftSituation &other) const
         {
             if (this == &other) return true;
-            return compare(*this, other) == 0;
+            return TupleConverter<CAircraftSituation>::toTuple(*this) == TupleConverter<CAircraftSituation>::toTuple(other);
         }
 
         /*
@@ -110,14 +89,7 @@ namespace BlackMisc
          */
         uint CAircraftSituation::getValueHash() const
         {
-            QList<uint> hashs;
-            hashs << qHash(this->m_position);
-            hashs << qHash(this->m_altitude);
-            hashs << qHash(this->m_heading);
-            hashs << qHash(this->m_groundspeed);
-            hashs << qHash(this->m_pitch);
-            hashs << qHash(this->m_bank);
-            return BlackMisc::calculateHash(hashs, "CAircraftSituation");
+            return qHash(TupleConverter<CAircraftSituation>::toTuple(*this));
         }
 
         /*

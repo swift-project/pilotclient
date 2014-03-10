@@ -6,13 +6,13 @@
 #ifndef BLACKMISC_AVIOCOMSYSTEM_H
 #define BLACKMISC_AVIOCOMSYSTEM_H
 #include "blackmisc/aviomodulator.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <stdexcept>
 
 namespace BlackMisc
 {
     namespace Aviation
     {
-
         /*!
          * \brief COM system (aka "radio")
          */
@@ -30,6 +30,7 @@ namespace BlackMisc
             };
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CComSystem)
             ChannelSpacing m_channelSpacing;
 
             /*!
@@ -54,9 +55,7 @@ namespace BlackMisc
             static double channelSpacingToFrequencyKHz(ChannelSpacing channelSpacing);
 
         protected:
-            /*!
-             * \copydoc CAvionicsBase::validValues
-             */
+            //! \copydoc CAvionicsBase::validValues
             virtual bool validValues() const override;
 
             /*!
@@ -68,50 +67,30 @@ namespace BlackMisc
              */
             bool validate(bool strict = true) const;
 
-            /*!
-             * \copydoc CValueObject::marshallFromDbus()
-             */
+            //! \copydoc CValueObject::marshallFromDbus()
             virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \copydoc CValueObject::unmarshallFromDbus()
-             */
+            //! \copydoc CValueObject::unmarshallFromDbus()
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
+
         public:
-            /*!
-             * Default constructor
-             */
+            //! \brief Default constructor
             CComSystem() : CModulator(), m_channelSpacing(ChannelSpacing25KHz) {}
 
-            /*!
-             * \brief Constructor
-             */
+            //! \brief Constructor
             CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
                 CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits), m_channelSpacing(ChannelSpacing25KHz)
             {
                 this->validate(true);
             }
 
-            /*!
-             * \brief Copy constructor
-             */
-            CComSystem(const CComSystem &other) : CModulator(other), m_channelSpacing(other.m_channelSpacing) {}
-
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
-            }
-
-            /*!
-             * \copydoc CValueObject::getValueHash
-             */
-            virtual uint getValueHash() const override
-            {
-                return CModulator::getValueHash();
             }
 
             /*!
@@ -161,21 +140,18 @@ namespace BlackMisc
                 this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
             }
 
+            //! \copydoc CValueObject::getValueHash
+            virtual uint getValueHash() const override;
+
             /*!
              * \brief operator ==
              */
-            bool operator ==(const CComSystem &other) const
-            {
-                return this->CModulator::operator ==(other);
-            }
+            bool operator ==(const CComSystem &other) const;
 
             /*!
              * \brief operator !=
              */
-            bool operator !=(const CComSystem &other) const
-            {
-                return this->CModulator::operator !=(other);
-            }
+            bool operator !=(const CComSystem &other) const;
 
             /*!
              * Try to get a COM unit with given name and frequency. Returns true in case an object
@@ -383,6 +359,8 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
+BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Aviation::CComSystem::ChannelSpacing)
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CComSystem, (o.m_channelSpacing))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem)
 
 #endif // include guard

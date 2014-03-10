@@ -192,37 +192,42 @@ namespace BlackMisc
         }
 
         /*
-         * Stream to DBus <<
+         * Marshall
          */
         void CTransponder::marshallToDbus(QDBusArgument &argument) const
         {
-            this->CAvionicsBase::marshallToDbus(argument);
-            argument << this->m_transponderCode;
-            argument << static_cast<qint32>(this->m_transponderMode);
+            CAvionicsBase::marshallToDbus(argument);
+            argument << TupleConverter<CTransponder>::toTuple(*this);
         }
 
         /*
-         * Stream from DBus >>
+         * Unmarshall
          */
         void CTransponder::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            this->CAvionicsBase::unmarshallFromDbus(argument);
-            qint32 tm;
-            argument >> this->m_transponderCode;
-            argument >> tm;
-            this->m_transponderMode = static_cast<TransponderMode>(tm);
+            CAvionicsBase::unmarshallFromDbus(argument);
+            argument >> TupleConverter<CTransponder>::toTuple(*this);
         }
 
         /*
-         * Value hash
+         * Hash
          */
         uint CTransponder::getValueHash() const
         {
             QList<uint> hashs;
-            hashs << qHash(this->m_name);
-            hashs << qHash(this->m_transponderCode);
-            hashs << qHash(this->m_transponderMode);
+            hashs << CAvionicsBase::getValueHash();
+            hashs << qHash(TupleConverter<CTransponder>::toTuple(*this));
             return BlackMisc::calculateHash(hashs, "CTransponder");
+        }
+
+        /*
+         * Compare
+         */
+        int CTransponder::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CTransponder &>(otherBase);
+            int result = compare(TupleConverter<CTransponder>::toTuple(*this), TupleConverter<CTransponder>::toTuple(other));
+            return result == 0 ? CAvionicsBase::compareImpl(otherBase) : result;
         }
 
         /*

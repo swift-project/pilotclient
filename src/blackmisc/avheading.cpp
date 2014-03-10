@@ -32,31 +32,49 @@ namespace BlackMisc
         }
 
         /*
-         * Marshall to DBus
+         * Marshall
          */
         void CHeading::marshallToDbus(QDBusArgument &argument) const
         {
-            this->CAngle::marshallToDbus(argument);
-            argument << qint32(this->m_north);
+            CAngle::marshallToDbus(argument);
+            argument << TupleConverter<CHeading>::toTuple(*this);
         }
 
         /*
-         * Unmarshall from DBus
+         * Unmarshall
          */
         void CHeading::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            this->CAngle::unmarshallFromDbus(argument);
-            qint32 north;
-            argument >> north;
-            this->m_north = static_cast<ReferenceNorth>(north);
+            CAngle::unmarshallFromDbus(argument);
+            argument >> TupleConverter<CHeading>::toTuple(*this);
         }
 
         /*
-         * Equal?
+         * Hash
          */
+        uint CHeading::getValueHash() const
+        {
+            QList<uint> hashs;
+            hashs << CAngle::getValueHash();
+            hashs << qHash(TupleConverter<CHeading>::toTuple(*this));
+            return BlackMisc::calculateHash(hashs, "CHeading");
+        }
+
+        /*
+         * Compare
+         */
+        int CHeading::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CHeading &>(otherBase);
+            int result = compare(TupleConverter<CHeading>::toTuple(*this), TupleConverter<CHeading>::toTuple(other));
+            return result == 0 ? CAngle::compareImpl(otherBase) : result;
+        }
+
         bool CHeading::operator ==(const CHeading &other) const
         {
-            return other.m_north == this->m_north && this->CAngle::operator ==(other);
+            if (this == &other) return true;
+            if (!CAngle::operator ==(other)) return false;
+            return TupleConverter<CHeading>::toTuple(*this) == TupleConverter<CHeading>::toTuple(other);
         }
 
         /*

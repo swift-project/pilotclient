@@ -51,8 +51,59 @@ namespace BlackMisc
             CFrequency f(frequencyMHz, CFrequencyUnit::MHz());
             if (f == this->getFrequencyStandby()) return; // save all the comparisons / rounding
             CComSystem::roundToChannelSpacing(f, this->m_channelSpacing);
-            this->CModulator::setFrequencyStandby(f);
+            CModulator::setFrequencyStandby(f);
             this->validate(true);
+        }
+
+        /*
+         * Marshall
+         */
+        void CComSystem::marshallToDbus(QDBusArgument &argument) const
+        {
+            CModulator::marshallToDbus(argument);
+            argument << TupleConverter<CComSystem>::toTuple(*this);
+        }
+
+        /*
+         * Unmarshall
+         */
+        void CComSystem::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            CModulator::unmarshallFromDbus(argument);
+            argument >> TupleConverter<CComSystem>::toTuple(*this);
+        }
+
+        /*
+         * Hash
+         */
+        uint CComSystem::getValueHash() const
+        {
+            QList<uint> hashs;
+            hashs << CModulator::getValueHash();
+            hashs << qHash(TupleConverter<CComSystem>::toTuple(*this));
+            return BlackMisc::calculateHash(hashs, "CComSystem");
+        }
+
+        /*
+         * Compare
+         */
+        int CComSystem::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CComSystem &>(otherBase);
+            int result = compare(TupleConverter<CComSystem>::toTuple(*this), TupleConverter<CComSystem>::toTuple(other));
+            return result == 0 ? CModulator::compareImpl(otherBase) : result;
+        }
+
+        bool CComSystem::operator ==(const CComSystem &other) const
+        {
+            if (this == &other) return true;
+            if (!CModulator::operator ==(other)) return false;
+            return TupleConverter<CComSystem>::toTuple(*this) == TupleConverter<CComSystem>::toTuple(other);
+        }
+
+        bool CComSystem::operator !=(const CComSystem &other) const
+        {
+            return !((*this) == other);
         }
 
         /*
@@ -97,27 +148,5 @@ namespace BlackMisc
             default: qFatal("Wrong channel spacing"); return 0.0; // return just supressing compiler warning
             }
         }
-
-        /*
-         * Marshall
-         */
-        void CComSystem::marshallToDbus(QDBusArgument &argument) const
-        {
-            CModulator::marshallToDbus(argument);
-            argument << static_cast<uint>(this->m_channelSpacing);
-        }
-
-        /*
-         * Unmarshall
-         */
-        void CComSystem::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            CModulator::unmarshallFromDbus(argument);
-            uint cs;
-            argument >> cs;
-            this->m_channelSpacing = static_cast<ChannelSpacing>(cs);
-        }
-
-
     } // namespace
-}
+} // namespace

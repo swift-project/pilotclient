@@ -37,63 +37,43 @@ namespace BlackMisc
              */
             explicit CCoordinateEcef(const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief x
-             * \return
-             */
+            //! \brief x
             double x() const
             {
                 return this->m_i;
             }
 
-            /*!
-             * \brief y
-             * \return
-             */
+            //! \brief y
             double y() const
             {
                 return this->m_j;
             }
 
-            /*!
-             * \brief z
-             * \return
-             */
+            //! \brief z
             double z() const
             {
                 return this->m_k;
             }
 
-            /*!
-             * \brief Set x
-             * \param x
-             */
+            //! \brief Set x
             void setX(double x)
             {
                 this->m_i = x;
             }
 
-            /*!
-             * \brief Set y
-             * \param y
-             */
+            //! \brief Set y
             void setY(double y)
             {
                 this->m_j = y;
             }
 
-            /*!
-             * \brief Set z
-             * \param z
-             */
+            //! \brief Set z
             void setZ(double z)
             {
                 this->m_k = z;
@@ -109,9 +89,7 @@ namespace BlackMisc
             }
 
         protected:
-            /*!
-             * \copydoc CValueObject::convertToQString
-             */
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override
             {
                 Q_UNUSED(i18n)

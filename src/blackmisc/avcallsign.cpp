@@ -13,25 +13,6 @@ namespace BlackMisc
         }
 
         /*
-         * Marshall to DBus
-         */
-        void CCallsign::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << this->m_callsignAsSet;
-            argument << this->m_telephonyDesignator;
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CCallsign::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> this->m_callsignAsSet;
-            argument >> this->m_telephonyDesignator;
-            this->m_callsign = CCallsign::unifyCallsign(this->m_callsignAsSet);
-        }
-
-        /*
          * Unify the callsign
          */
         QString CCallsign::unifyCallsign(const QString &callsign)
@@ -97,12 +78,39 @@ namespace BlackMisc
         }
 
         /*
+         * Compare
+         */
+        int CCallsign::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CCallsign &>(otherBase);
+
+            return compare(TupleConverter<CCallsign>::toTuple(*this), TupleConverter<CCallsign>::toTuple(other));
+        }
+
+        /*
+         * Marshall to DBus
+         */
+        void CCallsign::marshallToDbus(QDBusArgument &argument) const
+        {
+            argument << TupleConverter<CCallsign>::toTuple(*this);
+        }
+
+        /*
+         * Unmarshall from DBus
+         */
+        void CCallsign::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            argument >> TupleConverter<CCallsign>::toTuple(*this);
+        }
+
+        /*
          * Equal?
          */
         bool CCallsign::operator ==(const CCallsign &other) const
         {
             if (this == &other) return true;
-            return other.asString() == this->asString();
+            // intentionally not via Tupel converter, compare on string only
+            return this->asString().compare(other.asString(), Qt::CaseInsensitive) == 0;
         }
 
         /*
@@ -114,19 +122,19 @@ namespace BlackMisc
         }
 
         /*
+         * Hash
+         */
+        uint CCallsign::getValueHash() const
+        {
+            return qHash(TupleConverter<CCallsign>::toTuple(*this));
+        }
+
+        /*
          * Less than?
          */
         bool CCallsign::operator <(const CCallsign &other) const
         {
             return this->m_callsign < other.m_callsign;
-        }
-
-        /*
-         * Hash
-         */
-        uint CCallsign::getValueHash() const
-        {
-            return qHash(this->m_callsign);
         }
 
         /*
@@ -145,16 +153,6 @@ namespace BlackMisc
             if (metaTypeId == qMetaTypeId<CCallsign>()) { return true; }
 
             return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CCallsign::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CCallsign &>(otherBase);
-
-            return this->m_callsign.compare(other.asString(), Qt::CaseInsensitive);
         }
 
         /*

@@ -16,101 +16,71 @@ namespace BlackMisc
     namespace Aviation
     {
 
-        /*!
-         * \brief Base class for avionics
-         */
+        //! \brief Base class for avionics
         class CAvionicsBase : public BlackMisc::CValueObject
         {
         protected:
             QString m_name; //!< name of the unit
 
-            /*!
-             * \brief Constructor
-             */
+            //! \brief Constructor
             CAvionicsBase(const QString &name) : m_name(name) {}
 
-            /*!
-             * \brief Are the set values valid / in range
-             * \return
-             */
+            //! \brief Are set values valid?
             virtual bool validValues() const
             {
                 return true;
             }
 
-            /*!
-             * \brief Set name
-             * \param name
-             */
+            //! \brief Set name
             void setName(const QString &name)
             {
                 this->m_name = name;
             }
 
-            /*!
-             * \brief operator ==
-             * \param other
-             * \return
-             */
-            bool operator ==(const CAvionicsBase &other) const
+            //! \brief operator ==
+            bool operator ==(const CAvionicsBase &other) const;
+
+            //! \brief operator !=
+            bool operator !=(const CAvionicsBase &other) const
             {
-                if (this == &other) return true;
-                return this->m_name == other.m_name;
+                return !(other == (*this));
             }
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
+            //! \copydoc CValueObject::getMetaTypeId
             virtual int getMetaTypeId() const override { return 0; }
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
+            //! \copydoc CValueObject::isA
             virtual bool isA(int metaTypeId) const override { return this->CValueObject::isA(metaTypeId); }
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
-            virtual int compareImpl(const CValueObject &other) const override
-            {
-                Q_UNUSED(other);
-                qFatal("not implemented");
-                return 0;
-            }
+            //! \copydoc CValueObject::compareImpl(otherBase)
+            virtual int compareImpl(const CValueObject &otherBase) const override;
 
-            /*!
-             * \copydoc CValueObject::marshallToDbus()
-             */
-            virtual void marshallToDbus(QDBusArgument &argument) const override
-            {
-                argument << this->m_name;
-            }
+            //! \copydoc CValueObject::marshallToDbus()
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \copydoc CValueObject::unmarshallFromDbus()
-             */
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
-            {
-                argument >> this->m_name;
-            }
+            //! \copydoc CValueObject::unmarshallFromDbus()
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
+
+            //! \copydoc CValueObject::getValueHash()
+            virtual uint getValueHash() const override;
 
         public:
-            /*!
-             * \brief Virtual destructor
-             */
+            //! \brief Virtual destructor
             virtual ~CAvionicsBase() {}
 
-            /*!
-             * \brief Name
-             * \return
-             */
+            //! \brief Name
             QString getName() const
             {
                 return this->m_name;
             }
+
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAvionicsBase)
         };
 
     } // namespace
 } // namespace
+
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAvionicsBase, (o.m_name))
 
 #endif // guard

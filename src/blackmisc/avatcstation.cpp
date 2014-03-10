@@ -1,12 +1,12 @@
 #include "avatcstation.h"
 #include "aviocomsystem.h"
-#include "vvoiceroom.h"
+#include "voiceroom.h"
 #include "blackmiscfreefunctions.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
-using namespace BlackMisc::Voice;
+using namespace BlackMisc::Audio;
 
 namespace BlackMisc
 {
@@ -148,44 +148,6 @@ namespace BlackMisc
         }
 
         /*
-         * Marshall to DBus
-         */
-        void CAtcStation::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << this->m_callsign;
-            argument << this->m_frequency;
-            argument << this->m_controller;
-            argument << this->m_position;
-            argument << this->m_range;
-            argument << this->m_distanceToPlane;
-            argument << this->m_isOnline;
-            argument << this->m_bookedFromUtc;
-            argument << this->m_bookedUntilUtc;
-            argument << this->m_atis;
-            argument << this->m_metar;
-            argument << this->m_voiceRoom;
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAtcStation::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> this->m_callsign;
-            argument >> this->m_frequency;
-            argument >> this->m_controller;
-            argument >> this->m_position;
-            argument >> this->m_range;
-            argument >> this->m_distanceToPlane;
-            argument >> this->m_isOnline;
-            argument >> this->m_bookedFromUtc;
-            argument >> this->m_bookedUntilUtc;
-            argument >> this->m_atis;
-            argument >> this->m_metar;
-            argument >> this->m_voiceRoom;
-        }
-
-        /*
          * Register metadata
          */
         void CAtcStation::registerMetadata()
@@ -195,24 +157,46 @@ namespace BlackMisc
         }
 
         /*
+         * Compare
+         */
+        int CAtcStation::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CAtcStation &>(otherBase);
+
+            return compare(TupleConverter<CAtcStation>::toTuple(*this), TupleConverter<CAtcStation>::toTuple(other));
+        }
+
+        /*
+         * Marshall to DBus
+         */
+        void CAtcStation::marshallToDbus(QDBusArgument &argument) const
+        {
+            argument << TupleConverter<CAtcStation>::toTuple(*this);
+        }
+
+        /*
+         * Unmarshall from DBus
+         */
+        void CAtcStation::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            argument >> TupleConverter<CAtcStation>::toTuple(*this);
+        }
+
+        /*
          * Equal?
          */
         bool CAtcStation::operator ==(const CAtcStation &other) const
         {
             if (this == &other) return true;
+            return TupleConverter<CAtcStation>::toTuple(*this) == TupleConverter<CAtcStation>::toTuple(other);
+        }
 
-            if (other.getCallsign() != this->getCallsign() ||
-                    other.getRange() != this->getRange() ||
-                    other.getFrequency() != this->getFrequency() ||
-                    other.getPosition() != this->getPosition()) return false;
-
-            if (other.getController() != this->getController()) return false;
-            if (other.getAtis() != this->getAtis()) return false;
-            if (other.getMetar() != this->getMetar()) return false;
-            if (other.getVoiceRoom() != this->getVoiceRoom()) return false;
-
-            return this->getBookedFromUtc() == other.getBookedFromUtc() &&
-                   this->getBookedUntilUtc() == other.getBookedUntilUtc();
+        /*
+         * Hash
+         */
+        uint CAtcStation::getValueHash() const
+        {
+            return qHash(TupleConverter<CAtcStation>::toTuple(*this));
         }
 
         /*
@@ -281,27 +265,6 @@ namespace BlackMisc
                 diffMs = m_bookedUntilUtc.msecsTo(now);
                 return CTime(-diffMs / 1000.0, CTimeUnit::s());
             }
-        }
-
-        /*
-         * Hash
-         */
-        uint CAtcStation::getValueHash() const
-        {
-            QList<uint> hashs;
-            hashs << this->m_callsign.getValueHash();
-            hashs << this->m_frequency.getValueHash();
-            hashs << this->m_controller.getValueHash();
-            hashs << this->m_position.getValueHash();
-            hashs << this->m_range.getValueHash();
-            hashs << this->m_distanceToPlane.getValueHash();
-            hashs << this->m_metar.getValueHash();
-            hashs << this->m_atis.getValueHash();
-            hashs << this->m_voiceRoom.getValueHash();
-            hashs << qHash(this->m_isOnline ? 1 : 3);
-            hashs << qHash(this->m_bookedFromUtc);
-            hashs << qHash(this->m_bookedUntilUtc);
-            return BlackMisc::calculateHash(hashs, "CAtcStation");
         }
 
         /*
@@ -445,16 +408,6 @@ namespace BlackMisc
             if (metaTypeId == qMetaTypeId<CAtcStation>()) { return true; }
 
             return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CAtcStation::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAtcStation &>(otherBase);
-
-            return this->getCallsign().asString().compare(other.getCallsign().asString(), Qt::CaseInsensitive);
         }
 
         /*

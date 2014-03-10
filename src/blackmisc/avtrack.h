@@ -5,6 +5,8 @@
 
 #ifndef BLACKMISC_AVTRACK_H
 #define BLACKMISC_AVTRACK_H
+
+#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqangle.h"
 
 namespace BlackMisc
@@ -30,23 +32,21 @@ namespace BlackMisc
             };
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CTrack)
             ReferenceNorth m_north; //!< magnetic or true?
 
         protected:
-            /*!
-             * \copydoc CValueObject::convertToQString
-             */
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-            /*!
-             * \copydoc CValueObject::marshallToDbus
-             */
+            //! \copydoc CValueObject::marshallFromDbus()
             virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \copydoc CValueObject::unmarshallFromDbus
-             */
+            //! \copydoc CValueObject::unmarshallFromDbus()
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
+
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
 
         public:
             /*!
@@ -69,63 +69,47 @@ namespace BlackMisc
              */
             CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : BlackMisc::PhysicalQuantities::CAngle(track), m_north(north) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Equal operator ==
-             * \param other
-             * \return
-             */
+            //! \copydoc CValueObject::getValueHash
+            virtual uint getValueHash() const override;
+
+            //! \brief Equal operator ==
             bool operator ==(const CTrack &other) const;
 
-            /*!
-             * \brief Unequal operator ==
-             * \param other
-             * \return
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CTrack &other) const;
 
-            /*!
-             * \brief Magnetic Track?
-             * \return
-             */
+            //! \brief Magnetic Track?
             bool isMagneticTrack() const
             {
                 return Magnetic == this->m_north;
                 (void)QT_TRANSLATE_NOOP("Aviation", "magnetic");
             }
 
-            /*!
-             * \brief True Track?
-             * \return
-             */
+            //! \brief True Track?
             bool isTrueTrack() const
             {
                 return True == this->m_north;
                 (void)QT_TRANSLATE_NOOP("Aviation", "true");
             }
 
-            /*!
-             * \brief Get reference north (magnetic or true)
-             * \return
-             */
+            //! \brief Get reference north (magnetic or true)
             ReferenceNorth getReferenceNorth() const { return m_north; }
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
         };
 
     } // namespace
 } // namespace
 
+BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Aviation::CTrack::ReferenceNorth)
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CTrack, (o.m_north))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTrack)
 
 #endif // guard

@@ -4,7 +4,6 @@
 #include <QtCore/qmath.h>
 #include "blackmisc/geoearthangle.h"
 
-
 namespace BlackMisc
 {
     namespace Geo

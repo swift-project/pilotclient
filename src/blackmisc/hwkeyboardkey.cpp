@@ -24,16 +24,6 @@ namespace BlackMisc
             m_qtKey(keyCode), m_nativeScanCode(nativeScanCode), m_nativeVirtualKey(nativeVirtualKey), m_modifier1(modifier1), m_modifier2(modifier2), m_function(function), m_pressed(isPressed)
         {}
 
-        uint CKeyboardKey::getValueHash() const
-        {
-            QList<uint> hashs;
-            hashs << qHash(this->m_qtKey);
-            hashs << qHash(this->m_function);
-            hashs << qHash(static_cast<uint>(this->m_modifier1));
-            hashs << qHash(static_cast<uint>(this->m_modifier2));
-            return BlackMisc::calculateHash(hashs, "CKeyboardKey");
-        }
-
         void CKeyboardKey::registerMetadata()
         {
             qRegisterMetaType<CKeyboardKey>();
@@ -56,40 +46,6 @@ namespace BlackMisc
         bool CKeyboardKey::isA(int metaTypeId) const
         {
             return (metaTypeId == qMetaTypeId<CKeyboardKey>());
-        }
-
-        int CKeyboardKey::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CKeyboardKey &>(otherBase);
-            QString k1(this->m_qtKey);
-            QString k2(other.getKey());
-            return k1.compare(k2);
-        }
-
-        void CKeyboardKey::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << this->m_qtKey;
-            argument << this->m_nativeScanCode;
-            argument << this->m_nativeVirtualKey;
-            argument << static_cast<uint>(this->m_modifier1);
-            argument << static_cast<uint>(this->m_modifier2);
-            argument << static_cast<uint>(this->m_function);
-            argument << this->m_pressed;
-        }
-
-        void CKeyboardKey::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> this->m_qtKey;
-            argument >> this->m_nativeScanCode;
-            argument >> this->m_nativeVirtualKey;
-            uint c;
-            argument >> c;
-            this->m_modifier1 = static_cast<Modifier>(c);
-            argument >> c;
-            this->m_modifier2 = static_cast<Modifier>(c);
-            argument >> c;
-            this->m_function = static_cast<HotkeyFunction>(c);
-            argument >> this->m_pressed;
         }
 
         QString CKeyboardKey::modifierToString(CKeyboardKey::Modifier modifier)
@@ -166,13 +122,54 @@ namespace BlackMisc
             return modifiers;
         }
 
+        /*
+         * Compare
+         */
+        int CKeyboardKey::compareImpl(const CValueObject &otherBase) const
+        {
+            const auto &other = static_cast<const CKeyboardKey &>(otherBase);
+            return compare(TupleConverter<CKeyboardKey>::toTuple(*this), TupleConverter<CKeyboardKey>::toTuple(other));
+        }
+
+        /*
+         * Marshall to DBus
+         */
+        void CKeyboardKey::marshallToDbus(QDBusArgument &argument) const
+        {
+            argument << TupleConverter<CKeyboardKey>::toTuple(*this);
+        }
+
+        /*
+         * Unmarshall from DBus
+         */
+        void CKeyboardKey::unmarshallFromDbus(const QDBusArgument &argument)
+        {
+            argument >> TupleConverter<CKeyboardKey>::toTuple(*this);
+        }
+
+        /*
+         * Hash
+         */
+        uint CKeyboardKey::getValueHash() const
+        {
+            return qHash(TupleConverter<CKeyboardKey>::toTuple(*this));
+        }
+
+        /*
+         * Equal?
+         */
         bool CKeyboardKey::operator ==(const CKeyboardKey &other) const
         {
-            return (other.getKey() != this->getKey()) &&
-                   other.isPressed() == this->isPressed() &&
-                   other.getFunction() == this->getFunction() &&
-                   other.getModifier1() == this->getModifier1() &&
-                   other.getModifier2() == this->getModifier2();
+            if (this == &other) return true;
+            return TupleConverter<CKeyboardKey>::toTuple(*this) == TupleConverter<CKeyboardKey>::toTuple(other);
+        }
+
+        /*
+         * Unequal?
+         */
+        bool CKeyboardKey::operator !=(const CKeyboardKey &other) const
+        {
+            return !((*this) == other);
         }
 
         bool CKeyboardKey::operator< (CKeyboardKey const &other) const
@@ -345,6 +342,4 @@ namespace BlackMisc
             }
         }
     } // namespace Hardware
-
-
 } // BlackMisc
