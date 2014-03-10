@@ -11,3 +11,14 @@ Set search path for plugins: env.var. QT_PLUGIN_PATH
 Done automatically (qmake), but if required manually
 Interface: qdbusxml2cpp blackbus.testservice.xml -p itestservice
 Adaptor: qdbusxml2cpp blackbus.testservice.xml -a atestservice
+
+-- Removed after changing to "handwritten" interface
+
+# Causes nmake to run qdbusxml2cpp to automatically generate the dbus adaptor and interface classes,
+# then automatically adds them to the sources to compile
+# DBUS_ADAPTORS += BlackMiscTest.Testservice.xml BlackMiscTest.Datacontext.xml
+# DBUS_INTERFACES += BlackMiscTest.Testservice.xml BlackMiscTest.Datacontext.xml
+# DBUS_INTERFACES += BlackMiscTest.Datacontext.xml
+# QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
+# QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i blackmisc/blackmiscfreefunctions.h -i blackmisc/blackmiscallvalueclasses.h
+

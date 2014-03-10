@@ -158,6 +158,13 @@ namespace BlackMiscTest
         BlackMisc::Aviation::CAtcStation pingAtcStation(const BlackMisc::Aviation::CAtcStation &station);
 
         /*!
+         * \brief Ping aircraft
+         * \param aircraft
+         * \return
+         */
+        BlackMisc::Aviation::CAircraft pingAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
+
+        /*!
          * \brief Receive callsign
          * \param callsign
          */
@@ -216,7 +223,7 @@ namespace BlackMiscTest
          * \brief Constructor
          * \param parent
          */
-        explicit Testservice(QObject *parent = 0);
+        explicit Testservice(QObject *parent = nullptr);
 
     private:
         BlackMisc::Aviation::CAtcStationList m_someAtcStations;

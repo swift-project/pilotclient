@@ -65,10 +65,6 @@ int main(int argc, char *argv[])
 
         qDebug() << "1 .. Run testservice to test data transfer" << addressTcp;
         qDebug() << "1sb. Run testservice via session bus";
-        qDebug() << "2 .. Data context example (via TCP)" << addressTcp;
-        qDebug() << "2sb. Data context example (via session bus)";
-        qDebug() << "3 .. Data context example, only server (via TCP)" << addressTcp;
-        qDebug() << "3sb. Data context example, only server (via session bus)";
         qDebug() << "----- Change address / port (no validation, do before starting server)";
         qDebug() << "loop Address to loopback, 127.0.0.1";
         qDebug() << "ip   some IP address, e.g 192.168.100.100";
@@ -107,15 +103,10 @@ int main(int argc, char *argv[])
 
         // start DBus
         address = QString(useSessionBusForServer ? "session" : addressTcp); // testing with real transfer
-        bool startClient = !mode.startsWith('3');
         if (mode.contains("sb", Qt::CaseInsensitive)) address = "session";
         if (mode.startsWith("1"))
         {
             mode = "testservice";
-        }
-        else if (mode.startsWith('2') || mode.startsWith('3'))
-        {
-            mode = "context";
         }
         else
         {
@@ -142,16 +133,12 @@ int main(int argc, char *argv[])
             args << ip;
             args << port;
         }
-        if (startClient) BlackMiscTest::ServiceTool::startNewProcess(executable, args, &a);
+        BlackMiscTest::ServiceTool::startNewProcess(executable, args, &a);
 
         // run tests
         if (mode == "testservice")
         {
             BlackMiscTest::ServiceTool::dataTransferTestServer(dBusServer);
-        }
-        else if (mode == "context")
-        {
-            BlackMiscTest::ServiceTool::contextTestServer(dBusServer);
         }
 
         // loop
@@ -166,10 +153,6 @@ int main(int argc, char *argv[])
         if (cmdlineArgs.contains("testservice", Qt::CaseInsensitive))
         {
             BlackMiscTest::ServiceTool::dataTransferTestClient(address);
-        }
-        else if (cmdlineArgs.contains("context", Qt::CaseInsensitive))
-        {
-            BlackMiscTest::ServiceTool::contextTestClient(address);
         }
 
         // loop

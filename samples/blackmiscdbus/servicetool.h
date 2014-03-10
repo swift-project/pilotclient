@@ -2,21 +2,17 @@
 #define BLACKMISCTEST_SERVICETOOL_H
 
 #include "blackcore/dbus_server.h"
-#include "datacontext.h"
-#include "dummysignalslot.h"
+#include "blackmisc/avatcstationlist.h"
 #include <QCoreApplication>
 #include <QProcess>
 #include <QDBusConnection>
 
-class DatacontextAdaptor;
-
 namespace BlackMiscTest
 {
-
     class Testservice; // forward declaration
 
     /*!
-     * \brief Supporting functions for running the tests
+     * \brief Supporting / helper functions for running the tests
      */
     class ServiceTool
     {
@@ -43,18 +39,6 @@ namespace BlackMiscTest
          * \brief Server side of data transfer test
          */
         static void dataTransferTestServer(BlackCore::CDBusServer *dBusServer);
-
-        /*!
-         * \brief Context test, server side
-         * \param dBusServer
-         */
-        static void contextTestServer(BlackCore::CDBusServer *dBusServer);
-
-        /*!
-         * \brief Context test, client side
-         * \param address
-         */
-        static void contextTestClient(const QString &address);
 
         /*!
          * \brief Start a new process
@@ -84,21 +68,6 @@ namespace BlackMiscTest
          * \return test service object
          */
         static Testservice *registerTestservice(QDBusConnection &connection, QObject *parent = 0);
-
-        /*!
-         * \brief Server loop
-         * \param server
-         * \param dataContext
-         * \param dataContextAdaptor
-         * \param dummySignalSlot
-         */
-        static void serverLoop(BlackCore::CDBusServer *server, CDataContext *dataContext, DatacontextAdaptor *dataContextAdaptor, CDummySignalSlot *dummySignalSlot);
-
-        /*!
-         * \brief Client loop
-         * \param connection
-         */
-        static void clientLoop(QDBusConnection &connection, CDummySignalSlot *dummyObjectSignalSlot);
 
         /*!
          * \brief Get a random callsign

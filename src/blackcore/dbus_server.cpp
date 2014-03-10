@@ -8,13 +8,6 @@
 
 #include "dbus_server.h"
 
-// TODO: move from dbus_dummy.cpp
-// These two header files are not really needed here. But if they are not
-// included "somewhere", they are not generated -> compiler error!
-// Possible solution: Generate them once and put them in git.
-#include "contextnetwork_adaptor.h"
-#include "contextsettings_adaptor.h"
-
 namespace BlackCore
 {
 

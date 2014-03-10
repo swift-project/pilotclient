@@ -1,10 +1,6 @@
 #include "servicetool.h"
 #include "testservice.h"
-#include "testservice_adaptor.h"
 #include "testservice_interface.h"
-#include "datacontext.h"
-#include "datacontext_interface.h"
-#include "datacontext_adaptor.h"
 #include "blackcore/dbus_server.h"
 #include "blackmisc/valuemap.h"
 #include "blackmisc/nwserver.h"
@@ -98,45 +94,6 @@ namespace BlackMiscTest
     }
 
     /*
-     * Context data transfer test server
-     */
-    void ServiceTool::contextTestServer(BlackCore::CDBusServer *dBusServer)
-    {
-        // init data context
-        CDataContext *dataContext = new CDataContext(dBusServer);
-
-        // create a object which can be connected to signals / slots
-        CDummySignalSlot *serverSignalSlot = new CDummySignalSlot("server", QCoreApplication::instance());
-
-        // Adaptor based on context objext
-        DatacontextAdaptor *dataContextAdaptor = new DatacontextAdaptor(dataContext); // needs to be created in same thread
-
-        // Run server loop:
-        // This happens in a different thread, because server needs event loop for
-        // its signal and slots
-        QtConcurrent::run(ServiceTool::serverLoop, dBusServer, dataContext, dataContextAdaptor, serverSignalSlot); // QFuture<void> future
-        qDebug() << "Server event loop, pid:" << ServiceTool::getPid();
-    }
-
-    /*
-     * Context data transfer test client
-     */
-    void ServiceTool::contextTestClient(const QString &address)
-    {
-        // create a object which can be connected to signals / slots
-        CDummySignalSlot *clientSignalSlot = new CDummySignalSlot("client", QCoreApplication::instance());
-
-        // connection
-        QDBusConnection p2pConnection = address == "session" ?
-                                        QDBusConnection::sessionBus() :
-                                        QDBusConnection::connectToPeer(address, "p2pConnection");
-
-        // run client loop
-        QtConcurrent::run(ServiceTool::clientLoop, p2pConnection, clientSignalSlot); // QFuture<void> future
-        qDebug() << "Client event loop, pid:" << ServiceTool::getPid();
-    }
-
-    /*
      * Get callsign
      */
     CCallsign ServiceTool::getRandomCallsign()
@@ -182,8 +139,6 @@ namespace BlackMiscTest
     Testservice *ServiceTool::registerTestservice(QDBusConnection &connection, QObject *parent)
     {
         Testservice *pTestservice = new Testservice(parent);  // just a QObject with signals / slots and  Q_CLASSINFO("D-Bus Interface", some service name)
-        TestserviceAdaptor *pTestserviceAdaptor = new TestserviceAdaptor(pTestservice);
-
         if (!connection.registerService(Testservice::ServiceName))
         {
             QDBusError err = connection.lastError();
@@ -194,14 +149,13 @@ namespace BlackMiscTest
             qFatal("Could not register service!");
         }
 
-        if (!connection.registerObject(Testservice::ServicePath, pTestservice))
+        if (!connection.registerObject(Testservice::ServicePath, pTestservice, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAdaptors))
         {
             qFatal("Could not register service object!");
         }
 
         qDebug() << "Registration running as pid:" << ServiceTool::getPid();
         if (pTestservice) qDebug() << "Service registered";
-        if (pTestserviceAdaptor) qDebug() << "Adaptor object registered";
 
         QString service; // service not needed
         if (connection.connect(
@@ -223,7 +177,7 @@ namespace BlackMiscTest
     void ServiceTool::sendDataToTestservice(const QDBusConnection &connection)
     {
         // on the client's side
-        BlackmisctestTestserviceInterface testserviceInterface(Testservice::ServiceName, Testservice::ServicePath, connection);
+        TestServiceInterface testserviceInterface(Testservice::ServiceName, Testservice::ServicePath, connection);
 
         CSpeed speed(200, BlackMisc::PhysicalQuantities::CSpeedUnit::km_h());
         CAltitude al(1000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
@@ -308,16 +262,23 @@ namespace BlackMiscTest
             CCallsign callsign("d-ambz");
             testserviceInterface.receiveCallsign(callsign);
             qDebug() << "Send callsign via interface" << callsign;
+
             CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(1487, CLengthUnit::ft())); // Munich
-            CAtcStation station(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
+            CAtcStation station(CCallsign("eddm_twr"), CUser("123456", "Joe Controller"),
                                 CFrequency(118.7, CFrequencyUnit::MHz()),
                                 geoPos, CLength(50, CLengthUnit::km()));
 
             testserviceInterface.receiveAtcStation(station);
-            qDebug() << "Send ATC station via interface" << station;
 
-            station = testserviceInterface.pingAtcStation(station);
-            qDebug() << "Pinged ATC station via interface" << station;
+            CAtcStation stationReceived  = testserviceInterface.pingAtcStation(station);
+            qDebug() << "Pinged ATC station via interface"
+                     << ((station == stationReceived) ? "OK" : "ERROR!") << stationReceived;
+
+            CAircraftSituation situation;
+            CAircraft aircraft(callsign, CUser("123456", "Joe Pilot"), situation);
+            CAircraft aircraftReceived = testserviceInterface.pingAircraft(aircraft);
+            qDebug() << "Pinged aircraft via interface"
+                     << ((aircraft == aircraftReceived) ? "OK" : "ERROR!") << aircraftReceived;
 
             CAtcStationList AtcStationList;
             AtcStationList.push_back(station);
@@ -462,227 +423,6 @@ namespace BlackMiscTest
             qDebug() << "Key  ....... x to exit, pid:" << ServiceTool::getPid();
             int ch = getchar();
             if (ch == 'x') loop = false;
-        }
-    }
-
-    /*
-     * Send data to testservice, this sends data to the slots on the server
-     */
-    void ServiceTool::serverLoop(BlackCore::CDBusServer *server, CDataContext *dataContext, DatacontextAdaptor *dataContextAdaptor, CDummySignalSlot *dummySignalSlot)
-    {
-        QThread::msleep(3 * 1000); // let the client conncect
-        qDebug() << "Running on server here" << ServiceTool::getPid();
-        CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(1487, CLengthUnit::ft())); // Munich
-        CAtcStation station(CCallsign("eddm_twr"), CUser("123456", "Server"),
-                            CFrequency(118.7, CFrequencyUnit::MHz()),
-                            geoPos, CLength(50, CLengthUnit::km()));
-        CAtcStationList stationList;
-        QTextStream qtin(stdin);
-        QString line;
-
-        // we can hook up signal slot
-        if (QObject::connect(dataContext, SIGNAL(fooSignal(QString)),
-                             dummySignalSlot, SLOT(slotCDummy(QString))))
-        {
-            qDebug() << "Hooked up foo signal";
-        }
-        else
-        {
-            qDebug() << "Hook up of foo signal failed!!!";
-        }
-
-        //
-        // Server loop
-        //
-        while (line != "x")
-        {
-            // set a random callsign
-            station.setCallsign(ServiceTool::getRandomCallsign());
-
-            // do what we got to do
-            if (line == "1")
-            {
-                stationList.push_back(station);
-                dataContextAdaptor->setQpAtcOnlineList(stationList);
-                dataContextAdaptor->setQpAtcBookedList(stationList);
-            }
-            else if (line == "2")
-            {
-                stationList.push_back(station);
-                dataContext->setBookedControllers(stationList);
-                dataContext->setOnlineControllers(stationList);
-            }
-            else if (line.startsWith("3"))
-            {
-                int end = (line == "3l") ? 1000 : 1;
-                for (int i = 0; i < end; i++)
-                {
-                    station.setCallsign(ServiceTool::getRandomCallsign());
-                    dataContext->onlineControllers().push_back(station); // non const version
-                }
-            }
-            else if (line == "4")
-            {
-                // Signal sending is not transparent
-                qDebug() << "emit foo signal as Qt signal";
-                emit dataContext->fooSignal(QDateTime::currentDateTime().toString());
-                // emit dataContextAdaptor->fooSignal(QDateTime::currentDateTime().toString());
-            }
-            else if (line == "5")
-            {
-                QDBusMessage signal = QDBusMessage::createSignal(
-                                          CDataContext::ServicePath,
-                                          CDataContext::ServiceName,
-                                          "fooSignal");
-                signal << QDateTime::currentDateTime().toString(); // parameter
-
-                // With server use the server's connection which is only available once a connection has been established
-                // otherwise use the given connection which allows to use this method with session/system bus
-                QDBusConnection serverConnection = server->getDbusConnections().first();
-                if (serverConnection.send(signal))
-                {
-                    qDebug() << "emit foo signal as DBus signal on server connection " << serverConnection.name();
-                }
-                else
-                {
-                    qDebug() << "some issue with DBus signal on server connection" << serverConnection.name();
-                }
-            }
-            else if (line == "6")
-            {
-                dataContext->setFooStrings(1000);
-            }
-
-            // display current status
-            qDebug() << "-------------";
-            qDebug() << "ATC booked";
-            qDebug() << dataContext->bookedControllers().toQString();
-            qDebug() << "-------------";
-            qDebug() << "ATC online";
-            qDebug() << dataContext->onlineControllers().toQString();
-            qDebug() << "-------------";
-            qDebug() << "Foos";
-            qDebug() << dataContext->fooStrings();
-            qDebug() << "-------------";
-
-            // next round? Server
-            qDebug() << "Key  x to exit";
-            qDebug() << "1 .. new list via property on adaptor";
-            qDebug() << "2 .. new list via context";
-            qDebug() << "3 .. append 1 to online controllers in context"; // add to reference
-            qDebug() << "3l . append 1000 to context";
-            qDebug() << "4 .. send Foo signal as Qt signal";
-            qDebug() << "5 .. send Foo signal as DBus signal";
-            qDebug() << "6 .. set 1000 Foo objects";
-
-            line = qtin.readLine();
-        }
-    }
-
-    /*
-     * Send data to testservice, this sends data to the slots on the server
-     */
-    void ServiceTool::clientLoop(QDBusConnection &connection, CDummySignalSlot *dummyObjectSignalSlot)
-    {
-        // Service name does not matter when using P2P, it is only required using session/system bus
-        // Using a literal here ("foo"), crashes the app
-        BlackmisctestDatacontextInterface dataContextInterface(BlackCore::CDBusServer::ServiceName, CDataContext::ServicePath, connection);
-        if (dummyObjectSignalSlot)
-        {
-            const QString signalName("fooSignal");
-            if (connection.connect(BlackCore::CDBusServer::ServiceName, CDataContext::ServicePath, CDataContext::ServiceName, signalName, dummyObjectSignalSlot, SLOT(slotCDummy(QString))))
-            {
-                qDebug() << "Hooked up foo signal on connection";
-            }
-            else
-            {
-                qDebug() << "Hook up of foo signal failed on connection!!!";
-            }
-
-
-            // we can hook up signal slot
-            if (dataContextInterface.connect(&dataContextInterface, SIGNAL(fooSignal(QString)),
-                                             dummyObjectSignalSlot, SLOT(slotCDummy(QString))))
-            {
-                qDebug() << "Hooked up foo signal on interface";
-            }
-            else
-            {
-                qDebug() << "Hook up of foo signal failed on interface!!!";
-            }
-        }
-
-        qDebug() << "Running on client here, pid:" << ServiceTool::getPid();
-        CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(1487, CLengthUnit::ft())); // Munich
-        CAtcStation station(CCallsign("eddm_twr"), CUser("654321", "client"),
-                            CFrequency(118.7, CFrequencyUnit::MHz()),
-                            geoPos, CLength(50, CLengthUnit::km()));
-        QTextStream qtin(stdin);
-        QString line;
-
-        //
-        // Server loop
-        //
-        while (line != "x")
-        {
-            // set a random callsign
-            station.setCallsign(ServiceTool::getRandomCallsign());
-
-            // do what we got to do
-            if (line == "1")
-            {
-                // retrieves all stations, add one, and sends them back
-                CAtcStationList stations = dataContextInterface.qpAtcBookedList();
-                stations.push_back(station);
-                dataContextInterface.setQpAtcBookedList(stations);
-
-                stations = dataContextInterface.qpAtcOnlineList();
-                stations.push_back(station);
-                dataContextInterface.setQpAtcOnlineList(stations);
-            }
-            else if (line == "3")
-            {
-                // this will not change anything
-                dataContextInterface.qpAtcBookedList().push_back(station);
-                dataContextInterface.qpAtcOnlineList().push_back(station);
-            }
-            else if (line == "5")
-            {
-                emit dataContextInterface.fooSignal("Directly called on interface on client");
-            }
-            else if (line.startsWith("7") && line.length() > 1)
-            {
-                CCallsign callsign(line.mid(1));
-                CValueMap condition;
-                condition.addValue(CAtcStation::IndexCallsign, callsign);
-                CValueMap value;
-                value.addValue(CAtcStation::IndexBookedFrom, QDateTime::currentDateTimeUtc().addDays(1));
-                value.addValue(CAtcStation::IndexBookedUntil, QDateTime::currentDateTimeUtc().addDays(2));
-                qDebug() << "  condition" << condition;
-                qDebug() << "  values" << value;
-                dataContextInterface.updateOnlineControllers(condition, value);
-            }
-
-            // display current status
-            qDebug() << "-------------";
-            qDebug() << "ATC booked";
-            qDebug() << dataContextInterface.qpAtcBookedList().toQString(); // as property
-            qDebug() << "-------------";
-            qDebug() << "ATC online";
-            qDebug() << dataContextInterface.qpAtcOnlineList().toQString(); // as property
-            qDebug() << "-------------";
-            qDebug() << "Foos";
-            qDebug() << dataContextInterface.qpFooStrings();
-            qDebug() << "-------------";
-
-            // next round? Client
-            qDebug() << "Key  x to exit";
-            qDebug() << "1 .. add new list via property on interface";
-            qDebug() << "3 .. append 1 to controllers in context (not expected to change anything)"; // add to reference
-            qDebug() << "5 .. foo signal directly on interface";
-            qDebug() << "7x . 7<callsign>, update if, e.g. 7EDDM_TWR";
-
-            line = qtin.readLine();
         }
     }
 } // namespace

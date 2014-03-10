@@ -250,4 +250,11 @@ namespace BlackMiscTest
         return station;
     }
 
+    /*
+     * Ping aircraft
+     */
+    BlackMisc::Aviation::CAircraft Testservice::pingAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
+    {
+        return aircraft;
+    }
 } // namespace
