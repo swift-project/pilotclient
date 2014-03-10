@@ -8,6 +8,12 @@ blackgui {
 
 blackcore {
     LIBS += -lblackcore -lvatlib
+
+    win32 {
+        contains(BLACK_CONFIG, FSX) {
+            LIBS += -lSimConnect
+        }
+    }
 }
 
 blacksound {

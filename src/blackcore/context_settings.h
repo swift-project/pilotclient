@@ -34,6 +34,7 @@ namespace BlackCore
 
     public:
 
+        //! \brief Settings type
         enum SettingsType
         {
             SettingsHotKeys,

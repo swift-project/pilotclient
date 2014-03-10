@@ -5,7 +5,10 @@
 
 #include "context_simulator_impl.h"
 #include "coreruntime.h"
-#include "fsx/simulator_fsx.h"
+
+#ifdef BLACK_WITH_FSX
+    #include "fsx/simulator_fsx.h"
+#endif
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -17,13 +20,17 @@ namespace BlackCore
     // Init this context
     CContextSimulator::CContextSimulator(QObject *parent) :
         IContextSimulator(parent),
-        m_simulator(new BlackCore::FSX::CSimulatorFSX(this)),
+        m_simulator(nullptr),
         m_updateTimer(nullptr),
         m_contextNetwork(nullptr)
-
     {
         m_updateTimer = new QTimer(this);
+
+#ifdef BLACK_WITH_FSX
+        m_simulator = new BlackCore::FSX::CSimulatorFSX(this);
         connect(m_simulator, &ISimulator::connectionChanged, this, &CContextSimulator::setConnectionStatus);
+#endif
+
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
     }
 
@@ -34,6 +41,9 @@ namespace BlackCore
 
     bool CContextSimulator::isConnected() const
     {
+        if (!m_simulator)
+            return false;
+
         return m_simulator->isConnected();
     }
 
@@ -44,6 +54,9 @@ namespace BlackCore
 
     void CContextSimulator::updateOwnAircraft()
     {
+        if (!m_simulator)
+            return;
+
         m_ownAircraft = m_simulator->getOwnAircraft();
 
         if (!m_contextNetwork)

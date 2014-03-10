@@ -21,7 +21,6 @@ isEmpty(EXTERNALDIR) {
 }
 
 # Everything is fine. Add the include path
-message("Found externals: $$EXTERNALDIR")
 INCLUDEPATH *= $$EXTERNALDIR/include
 
 # and the library path depending on the used compiler
@@ -50,11 +49,9 @@ linux-g++ {
     GCC64 = $$system($$QMAKE_CXX -Q --help=target | grep m64)
     contains(GCC64,[enabled]) {
         LIBS *= -L$$EXTERNALDIR/linux64/lib
-        message("64 bit")
     }
     else {
         LIBS *= -L$$EXTERNALDIR/linux32/lib
-        message("32 bit")
     }
 }
 

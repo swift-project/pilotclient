@@ -37,12 +37,15 @@ DEFINES += LOG_IN_FILE
 HEADERS += *.h
 SOURCES += *.cpp
 
-HEADERS += $$PWD/fsx/*.h
-SOURCES += $$PWD/fsx/*.cpp
-
 win32 {
     HEADERS += $$PWD/win/*.h
     SOURCES += $$PWD/win/*.cpp
+
+    contains(BLACK_CONFIG, FSX) {
+        DEFINES += BLACK_WITH_FSX
+        HEADERS += $$PWD/fsx/*.h
+        SOURCES += $$PWD/fsx/*.cpp
+    }
 }
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blacksound.lib
