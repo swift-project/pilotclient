@@ -7,7 +7,7 @@
 #define BLACKSIM_FSCOMMON_AIRCRAFTMAPPING_H
 
 #include "aircraftcfgentries.h"
-#include "../simulator.h"
+#include "../simulatorinfo.h"
 #include "blackmisc/valueobject.h"
 #include <QVariant>
 #include <QDateTime>
@@ -41,16 +41,17 @@ namespace BlackSim
             int compareImpl(const CValueObject &otherBase) const override;
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftMapping)
             qint32 m_mappingId; //!< Kind of primary key for this particular mapping
             qint32 m_proposalId; //!< If proposal id of the proposal
             QString m_fsAircraftKey; //!< Id by which the simulator can create the aircraft
-            QString m_icaoAircraftDesignator; //!< Aircraft designator such as B737
-            QString m_icaoAirlineDesignator; //!< Airline designator such as DLH
-            QString m_icaoAircraftType; //!< Engine, type, number of engines L2J, L1P
-            QString m_icaoWakeTurbulenceCategory; //!< Wake turbulence category H, L, M
-            QString m_painting; //!< Aircrafts painting designator, could be same as airline or specific
+            QString m_aircraftDesignator; //!< Aircraft designator such as B737
+            QString m_airlineDesignator; //!< Airline designator such as DLH
+            QString m_aircraftCombinedType; //!< Engine, type, number of engines L2J, L1P
+            QString m_wakeTurbulenceCategory; //!< Wake turbulence category H, L, M
+            QString m_aircraftColor; //!< Aircrafts painting designator, could be same as airline or specific
             QString m_lastChanged; //!< Simple timestamp as YYYYMMDDhhmmss
-            BlackSim::CSimulator m_simulator; //!< Mapping is for simulator
+            BlackSim::CSimulatorInfo m_simulatorInfo; //!< Mapping is for simulator
             bool m_changed; //! Changed flag
 
         public:
@@ -60,13 +61,13 @@ namespace BlackSim
                 IndexMappingId = 0,
                 IndexProposalId,
                 IndexAircraftKey,
-                IndexIcaoAircraftDesignator,
-                IndexIcaoAirlineDesignator,
-                IndexAircraftType,
+                IndexAircraftDesignator,
+                IndexAirlineDesignator,
+                IndexAircraftCombinedType,
                 IndexWakeTurbulenceCategory,
-                IndexPainting,
+                IndexAirlineColor,
                 IndexLastChanged,
-                IndexSimulator
+                IndexSimulatorInfo
             };
 
             //! \brief Default mapping
@@ -85,7 +86,7 @@ namespace BlackSim
              * \param lastChanged
              * \param simulator
              */
-            CAircraftMapping(qint32 mappingId, qint32 proposalId, const QString &fsAircraftKey, const QString &icaoAircraftDesignator, const QString &icaoAirline, const QString &icaoAircraftType, const QString &icaoWakeTurbulenceCategory, const QString &painting, const QString &lastChanged, CSimulator simulator);
+            CAircraftMapping(qint32 mappingId, qint32 proposalId, const QString &fsAircraftKey, const QString &icaoAircraftDesignator, const QString &icaoAirline, const QString &icaoAircraftType, const QString &icaoWakeTurbulenceCategory, const QString &painting, const QString &lastChanged, CSimulatorInfo simulator);
 
             //! \brief Virtual destructor
             virtual ~CAircraftMapping()
@@ -107,19 +108,19 @@ namespace BlackSim
             QString getFsAircraftKey() const { return this->m_fsAircraftKey; }
 
             //! \brief ICAO designator (B737)
-            QString getIcaoAircraftDesignator() const { return this->m_icaoAircraftDesignator; }
+            QString getAircraftDesignator() const { return this->m_aircraftDesignator; }
 
             //! \brief ICAO airline (DLH)
-            QString getIcaoAirline() const { return this->m_icaoAirlineDesignator; }
+            QString getAirlineDesignator() const { return this->m_airlineDesignator; }
 
             //! \brief ICAO aircraft type (L2J)
-            QString getIcaoAircraftType() const { return this->m_icaoAircraftType; }
+            QString getAircraftCombinedType() const { return this->m_aircraftCombinedType; }
 
-            //! \brief ICAO wake turbulence category
-            QString getIcaoWakeTurbulenceCategory() const { return this->m_icaoWakeTurbulenceCategory; }
+            //! \brief ICAO wake turbulence category (L,M,H)
+            QString getWakeTurbulenceCategory() const { return this->m_wakeTurbulenceCategory; }
 
             //! \brief Painting, basically the airline code for GA planes
-            QString getPainting() const { return this->m_painting; }
+            QString getAircraftColor() const { return this->m_aircraftColor; }
 
             //! \brief Last changed timestamp YYYYMMDDhhmmss
             QString getLastChanged() const { return this->m_lastChanged; }
@@ -128,7 +129,7 @@ namespace BlackSim
             QString getLastChangedFormatted() const;
 
             //! \brief Simulator
-            BlackSim::CSimulator getSimulator() const { return this->m_simulator; }
+            BlackSim::CSimulatorInfo getSimulatorInfo() const { return this->m_simulatorInfo; }
 
             //! \brief Simulator
             QString getSimulatorText() const;
@@ -156,25 +157,25 @@ namespace BlackSim
             void setFsAircraftKey(const QString &aircraftKey) { this->m_fsAircraftKey = aircraftKey; }
 
             //! \brief ICAO designator (B737)
-            void setIcaoAircraftDesignator(const QString &icaoDesignator) { this->m_icaoAircraftDesignator = icaoDesignator.toUpper(); }
+            void setAircraftDesignator(const QString &icaoDesignator) { this->m_aircraftDesignator = icaoDesignator.toUpper(); }
 
             //! \brief ICAO airline (DLH)
-            void setIcaoAirline(const QString &airline) { this->m_icaoAirlineDesignator = airline.toUpper(); }
+            void setAirlineDesignator(const QString &airline) { this->m_airlineDesignator = airline.toUpper(); }
 
             //! \brief ICAO aircraft type (L2J)
-            void setIcaoAircraftType(const QString &aircraftType) { this->m_icaoAircraftType = aircraftType.toUpper(); }
+            void setAircraftCombinedType(const QString &aircraftType) { this->m_aircraftCombinedType = aircraftType.toUpper(); }
 
             //! \brief ICAO wake turbulence category
-            void setIcaoWakeTurbulenceCategory(const QString &wtc) { this->m_icaoWakeTurbulenceCategory = wtc.toUpper(); }
+            void setWakeTurbulenceCategory(const QString &wtc) { this->m_wakeTurbulenceCategory = wtc.toUpper(); }
 
             //! \brief Painting, basically the airline code for GA planes
-            void setPainting(const QString &painting) { this->m_painting = painting; }
+            void setAircraftColor(const QString &painting) { this->m_aircraftColor = painting; }
 
             //! \brief Last changed timestamp YYYYMMDDhhmmss
             void setLastChanged(qint32 lastChanged) { this->m_lastChanged = lastChanged; }
 
             //! \brief Simulator
-            void setSimulator(BlackSim::CSimulator simulator) { this->m_simulator = simulator; }
+            void setSimulator(BlackSim::CSimulatorInfo simulator) { this->m_simulatorInfo = simulator; }
 
             //! \brief Set simulator text
             void setSimulatorText(const QString &simulator);
@@ -211,6 +212,7 @@ namespace BlackSim
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::FsCommon::CAircraftMapping, (o.m_mappingId, o.m_proposalId, o.m_fsAircraftKey, o.m_aircraftDesignator, o.m_airlineDesignator, o.m_aircraftCombinedType, o.m_wakeTurbulenceCategory, o.m_aircraftColor, o.m_lastChanged, o.m_simulatorInfo))
 Q_DECLARE_METATYPE(BlackSim::FsCommon::CAircraftMapping)
 
 #endif // guard

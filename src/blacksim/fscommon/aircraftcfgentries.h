@@ -22,6 +22,7 @@ namespace BlackSim
         class CAircraftCfgEntries: public BlackMisc::CValueObject
         {
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftCfgEntries)
             qint32 m_index; //!< current index in given config
             QString m_filePath; //!< file path of aircraft.cfg
             QString m_title; //!< Title in aircraft.cfg
@@ -76,10 +77,10 @@ namespace BlackSim
             virtual ~CAircraftCfgEntries() {}
 
             //! \brief operator ==
-            bool operator ==(const CAircraftCfgEntries &otherEntry) const;
+            bool operator ==(const CAircraftCfgEntries &other) const;
 
             //! \brief operator !=
-            bool operator !=(const CAircraftCfgEntries &otherEntry) const;
+            bool operator !=(const CAircraftCfgEntries &other) const;
 
             //! \copydoc CValueObject::propertyByIndex
             QVariant propertyByIndex(int index) const;
@@ -135,6 +136,7 @@ namespace BlackSim
     }
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::FsCommon::CAircraftCfgEntries, (o.m_index, o.m_filePath, o.m_title, o.m_atcType, o.m_atcModel, o.m_atcParkingCode))
 Q_DECLARE_METATYPE(BlackSim::FsCommon::CAircraftCfgEntries)
 
 #endif // guard

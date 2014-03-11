@@ -6,6 +6,8 @@
 #include "aircraftmapping.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
+using namespace BlackMisc;
+
 namespace BlackSim
 {
     namespace FsCommon
@@ -15,7 +17,7 @@ namespace BlackSim
          * Constructor
          */
         CAircraftMapping::CAircraftMapping() :
-            m_mappingId(CAircraftMapping::InvalidId), m_proposalId(CAircraftMapping::InvalidId), m_lastChanged(-1), m_simulator(BlackSim::CSimulator::UnspecifiedSim())
+            m_mappingId(CAircraftMapping::InvalidId), m_proposalId(CAircraftMapping::InvalidId), m_lastChanged(-1), m_simulatorInfo(BlackSim::CSimulatorInfo::UnspecifiedSim())
         {
             // void
         }
@@ -26,10 +28,10 @@ namespace BlackSim
         CAircraftMapping::CAircraftMapping(
             qint32 mappingId, qint32 proposalId, const QString &fsAircraftKey, const QString &icaoAircraftDesignator,
             const QString &icaoAirline, const QString &icaoAircraftType, const QString &icaoWakeTurbulenceCategory, const QString &painting,
-            const QString &lastChanged, BlackSim::CSimulator simulator) :
-            m_mappingId(mappingId), m_proposalId(proposalId), m_fsAircraftKey(fsAircraftKey), m_icaoAircraftDesignator(icaoAircraftDesignator),
-            m_icaoAirlineDesignator(icaoAirline), m_icaoAircraftType(icaoAircraftType), m_icaoWakeTurbulenceCategory(icaoWakeTurbulenceCategory), m_painting(painting),
-            m_lastChanged(lastChanged), m_simulator(simulator), m_changed(false)
+            const QString &lastChanged, BlackSim::CSimulatorInfo simulator) :
+            m_mappingId(mappingId), m_proposalId(proposalId), m_fsAircraftKey(fsAircraftKey), m_aircraftDesignator(icaoAircraftDesignator),
+            m_airlineDesignator(icaoAirline), m_aircraftCombinedType(icaoAircraftType), m_wakeTurbulenceCategory(icaoWakeTurbulenceCategory), m_aircraftColor(painting),
+            m_lastChanged(lastChanged), m_simulatorInfo(simulator), m_changed(false)
         {
             // void
         }
@@ -40,14 +42,7 @@ namespace BlackSim
         bool CAircraftMapping::operator ==(const CAircraftMapping &otherMapping) const
         {
             if (this == &otherMapping) return true;
-            return
-                this->m_mappingId == otherMapping.m_mappingId &&
-                this->m_proposalId == otherMapping.m_proposalId &&
-                this->m_changed == otherMapping.m_changed &&
-                this->m_icaoAircraftDesignator == otherMapping.m_icaoAircraftDesignator &&
-                this->m_icaoAircraftType == otherMapping.m_icaoAircraftType &&
-                this->m_icaoAirlineDesignator == otherMapping.m_icaoAirlineDesignator &&
-                this->m_icaoWakeTurbulenceCategory == otherMapping.m_icaoWakeTurbulenceCategory;
+            return TupleConverter<CAircraftMapping>::toTuple(*this) == TupleConverter<CAircraftMapping>::toTuple(otherMapping);
         }
 
         /*
@@ -67,7 +62,7 @@ namespace BlackSim
             QString s("{%1, %2, %3, %4, %5}");
             s = s.arg(this->m_fsAircraftKey).
                 arg(this->m_mappingId).arg(this->m_proposalId).
-                arg(this->m_icaoAircraftDesignator).arg(this->m_simulator.toQString(i18n));
+                arg(this->m_aircraftDesignator).arg(this->m_simulatorInfo.toQString(i18n));
             return s;
         }
 
@@ -80,19 +75,19 @@ namespace BlackSim
 
             if (this->m_fsAircraftKey.isEmpty())
                 msg.append("Missing sim key. ");
-            if (this->m_icaoAircraftDesignator.isEmpty())
+            if (this->m_aircraftDesignator.isEmpty())
                 msg.append("Missing designator. ");
-            if (this->m_simulator.isUnspecified())
+            if (this->m_simulatorInfo.isUnspecified())
                 msg.append("Unknown simulator. ");
 
-            if (this->m_icaoAircraftType.isEmpty())
+            if (this->m_aircraftCombinedType.isEmpty())
                 msg.append("Missing type. ");
-            else if (this->m_icaoAircraftType.length() != 3)
+            else if (this->m_aircraftCombinedType.length() != 3)
                 msg.append("Wrong type length (req.3). ");
 
-            if (this->m_icaoWakeTurbulenceCategory.isEmpty() || this->m_icaoWakeTurbulenceCategory.length() != 1)
+            if (this->m_wakeTurbulenceCategory.isEmpty() || this->m_wakeTurbulenceCategory.length() != 1)
                 msg.append("Invalid WTC. ");
-            else if (this->m_icaoWakeTurbulenceCategory != "L" && this->m_icaoWakeTurbulenceCategory != "M" && this->m_icaoWakeTurbulenceCategory != "H")
+            else if (this->m_wakeTurbulenceCategory != "L" && this->m_wakeTurbulenceCategory != "M" && this->m_wakeTurbulenceCategory != "H")
                 msg.append("Invalid WTC code. ");
 
             return msg.trimmed();
@@ -114,19 +109,7 @@ namespace BlackSim
          */
         uint CAircraftMapping::getValueHash() const
         {
-            QList<uint> hashs;
-            hashs << qHash(this->m_changed);
-            hashs << qHash(this->m_fsAircraftKey);
-            hashs << qHash(this->m_icaoAircraftDesignator);
-            hashs << qHash(this->m_icaoAircraftType);
-            hashs << qHash(this->m_icaoAirlineDesignator);
-            hashs << qHash(this->m_icaoWakeTurbulenceCategory);
-            hashs << qHash(this->m_lastChanged);
-            hashs << qHash(this->m_mappingId);
-            hashs << qHash(this->m_painting);
-            hashs << qHash(this->m_proposalId);
-            hashs << qHash(this->m_simulator);
-            return BlackMisc::calculateHash(hashs, "CAircraftMapping");
+            return qHash(TupleConverter<CAircraftMapping>::toTuple(*this));
         }
 
 
@@ -144,20 +127,20 @@ namespace BlackSim
                 return m_proposalId;
             case IndexAircraftKey:
                 return m_fsAircraftKey;
-            case IndexIcaoAircraftDesignator:
-                return m_icaoAircraftDesignator;
-            case IndexIcaoAirlineDesignator:
-                return m_icaoAirlineDesignator;
-            case IndexAircraftType:
-                return m_icaoAircraftType;
+            case IndexAircraftDesignator:
+                return m_aircraftDesignator;
+            case IndexAirlineDesignator:
+                return m_airlineDesignator;
+            case IndexAircraftCombinedType:
+                return m_aircraftCombinedType;
             case IndexWakeTurbulenceCategory:
-                return m_icaoWakeTurbulenceCategory;
-            case IndexPainting:
-                return this->m_painting;
+                return m_wakeTurbulenceCategory;
+            case IndexAirlineColor:
+                return this->m_aircraftColor;
             case IndexLastChanged:
                 return this->getLastChangedFormatted();
-            case IndexSimulator:
-                return this->m_simulator.toQVariant();
+            case IndexSimulatorInfo:
+                return this->m_simulatorInfo.toQVariant();
             default:
                 break;
             }
@@ -197,24 +180,24 @@ namespace BlackSim
                 m_fsAircraftKey = value.toString();
                 changed = true;
                 break;
-            case IndexIcaoAircraftDesignator:
-                this->setIcaoAircraftDesignator(value.toString());
+            case IndexAircraftDesignator:
+                this->setAircraftDesignator(value.toString());
                 changed = true;
                 break;
-            case IndexIcaoAirlineDesignator:
-                this->setIcaoAirline(value.toString());
+            case IndexAirlineDesignator:
+                this->setAirlineDesignator(value.toString());
                 changed = true;
                 break;
-            case IndexAircraftType:
-                this->setIcaoAircraftType(value.toString());
+            case IndexAircraftCombinedType:
+                this->setAircraftCombinedType(value.toString());
                 changed = true;
                 break;
             case IndexWakeTurbulenceCategory:
-                this->setIcaoWakeTurbulenceCategory(value.toString());
+                this->setWakeTurbulenceCategory(value.toString());
                 changed = true;
                 break;
-            case IndexPainting:
-                this->m_painting = value.toString();
+            case IndexAirlineColor:
+                this->m_aircraftColor = value.toString();
                 changed = true;
                 break;
             default:
@@ -224,37 +207,20 @@ namespace BlackSim
             if (changed) this->setChanged(changed);
         }
 
+        /*
+         * Marshall to Dbus
+         */
         void CAircraftMapping::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_changed;
-            argument << this->m_fsAircraftKey;
-            argument << this->m_icaoAircraftDesignator;
-            argument << this->m_icaoAircraftType;
-            argument << this->m_icaoAirlineDesignator;
-            argument << this->m_icaoWakeTurbulenceCategory;
-            argument << this->m_lastChanged;
-            argument << this->m_mappingId;
-            argument << this->m_painting;
-            argument << this->m_proposalId;
-            argument << this->m_simulator;
+            argument << TupleConverter<CAircraftMapping>::toTuple(*this);
         }
 
         /*
-         * Unmarshall from DBus
+         * Unmarshall from Dbus
          */
         void CAircraftMapping::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_changed;
-            argument >> this->m_fsAircraftKey;
-            argument >> this->m_icaoAircraftDesignator;
-            argument >> this->m_icaoAircraftType;
-            argument >> this->m_icaoAirlineDesignator;
-            argument >> this->m_icaoWakeTurbulenceCategory;
-            argument >> this->m_lastChanged;
-            argument >> this->m_mappingId;
-            argument >> this->m_painting;
-            argument >> this->m_proposalId;
-            argument >> this->m_simulator;
+            argument >> TupleConverter<CAircraftMapping>::toTuple(*this);
         }
 
         /*
@@ -270,14 +236,8 @@ namespace BlackSim
          */
         int CAircraftMapping::compareImpl(const CValueObject &otherBase) const
         {
-            const CAircraftMapping &other = static_cast<const CAircraftMapping &>(otherBase);
-            int result;
-            if ((result = compare(this->m_simulator, other.m_simulator))) return result;
-            if ((result = this->m_icaoAircraftDesignator.compare(other.m_icaoAircraftDesignator, Qt::CaseInsensitive))) return result;
-            if ((result = this->m_icaoAirlineDesignator.compare(other.m_icaoAirlineDesignator, Qt::CaseInsensitive))) return result;
-            if ((result = this->m_icaoAircraftType.compare(other.m_icaoAircraftType, Qt::CaseInsensitive))) return result;;
-            if ((result = this->m_icaoWakeTurbulenceCategory.compare(other.m_icaoWakeTurbulenceCategory, Qt::CaseInsensitive))) return result;;
-            return this->m_fsAircraftKey.compare(other.m_fsAircraftKey, Qt::CaseInsensitive);
+            const auto &other = static_cast<const CAircraftMapping &>(otherBase);
+            return compare(TupleConverter<CAircraftMapping>::toTuple(*this), TupleConverter<CAircraftMapping>::toTuple(other));
         }
 
         /*

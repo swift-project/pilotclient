@@ -6,6 +6,8 @@
 #include "aircraftcfgentries.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
+using namespace BlackMisc;
+
 namespace BlackSim
 {
     namespace FsCommon
@@ -24,19 +26,19 @@ namespace BlackSim
         /*
          * Operator ==
          */
-        bool CAircraftCfgEntries::operator ==(const CAircraftCfgEntries &otherEntry) const
+        bool CAircraftCfgEntries::operator ==(const CAircraftCfgEntries &other) const
         {
-            if (this == &otherEntry) return true;
-            return this->m_title == otherEntry.m_title;
+            if (this == &other) return true;
+            return TupleConverter<CAircraftCfgEntries>::toTuple(*this) == TupleConverter<CAircraftCfgEntries>::toTuple(other);
         }
 
         /*
          * Operator !=
          */
-        bool CAircraftCfgEntries::operator !=(const CAircraftCfgEntries &otherEntry) const
+        bool CAircraftCfgEntries::operator !=(const CAircraftCfgEntries &other) const
         {
-            if (this == &otherEntry) return false;
-            return !((*this) == otherEntry);
+            if (this == &other) return false;
+            return !((*this) == other);
         }
 
         /*
@@ -89,14 +91,7 @@ namespace BlackSim
          */
         uint CAircraftCfgEntries::getValueHash() const
         {
-            QList<uint> hashs;
-            hashs << qHash(this->m_atcModel);
-            hashs << qHash(this->m_atcParkingCode);
-            hashs << qHash(this->m_atcType);
-            hashs << qHash(this->m_filePath);
-            hashs << qHash(this->m_index);
-            hashs << qHash(this->m_title);
-            return BlackMisc::calculateHash(hashs, "CAircraftCfgEntries");
+            return qHash(TupleConverter<CAircraftCfgEntries>::toTuple(*this));
         }
 
         /*
@@ -114,16 +109,7 @@ namespace BlackSim
         int CAircraftCfgEntries::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CAircraftCfgEntries &>(otherBase);
-            if (this->m_index != other.m_index)
-            {
-                return (this->m_index > other.m_index) ? 1 : -1;
-            }
-            int result;
-            if ((result = this->m_atcModel.compare(other.m_atcModel, Qt::CaseInsensitive))) return result;
-            if ((result = this->m_atcParkingCode.compare(other.m_atcParkingCode, Qt::CaseInsensitive))) return result;
-            if ((result = this->m_atcType.compare(other.m_atcType, Qt::CaseInsensitive))) return result;;
-            if ((result = this->m_filePath.compare(other.m_filePath, Qt::CaseInsensitive))) return result;;
-            return this->m_title.compare(other.m_title, Qt::CaseInsensitive);
+            return compare(TupleConverter<CAircraftCfgEntries>::toTuple(*this), TupleConverter<CAircraftCfgEntries>::toTuple(other));
         }
 
         /*
@@ -139,12 +125,7 @@ namespace BlackSim
          */
         void CAircraftCfgEntries::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_atcModel;
-            argument << this->m_atcParkingCode;
-            argument << this->m_atcType;
-            argument << this->m_filePath;
-            argument << this->m_index;
-            argument << this->m_title;
+            argument << TupleConverter<CAircraftCfgEntries>::toTuple(*this);
         }
 
         /*
@@ -152,12 +133,7 @@ namespace BlackSim
          */
         void CAircraftCfgEntries::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_atcModel;
-            argument >> this->m_atcParkingCode;
-            argument >> this->m_atcType;
-            argument >> this->m_filePath;
-            argument >> this->m_index;
-            argument >> this->m_title;
+            argument >> TupleConverter<CAircraftCfgEntries>::toTuple(*this);
         }
     }
 } // namespace
