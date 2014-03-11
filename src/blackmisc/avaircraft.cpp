@@ -134,7 +134,7 @@ namespace BlackMisc
          */
         QVariant CAircraft::propertyByIndex(int index) const
         {
-            if (index >= static_cast<int>(CAircraftIcao::IndexIcaoDesignator))
+            if (index >= static_cast<int>(CAircraftIcao::IndexAircraftDesignator))
                 return this->m_icao.propertyByIndex(index);
 
             if (index >= static_cast<int>(CAircraftSituation::IndexPosition))
@@ -209,7 +209,7 @@ namespace BlackMisc
          */
         void CAircraft::setPropertyByIndex(const QVariant &variant, int index)
         {
-            if (index >= static_cast<int>(CAircraftIcao::IndexIcaoDesignator))
+            if (index >= static_cast<int>(CAircraftIcao::IndexAircraftDesignator))
                 return this->m_icao.setPropertyByIndex(variant, index);
 
             if (index >= static_cast<int>(CAircraftSituation::IndexPosition))

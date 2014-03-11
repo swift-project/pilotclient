@@ -11,12 +11,11 @@ namespace BlackMisc
          */
         QString CAircraftIcao::convertToQString(bool /** i18n **/) const
         {
-            QString s(this->m_designator);
-            s.append(" ").append(this->m_type);
-            if (this->hasAirline()) s.append(" ").append(this->m_airline);
-            if (this->hasAirline()) s.append(" ").append(this->m_airline);
+            QString s(this->m_aircraftDesignator);
+            s.append(" ").append(this->m_aircraftCombinedType);
+            if (this->hasAirlineDesignator()) s.append(" ").append(this->m_airlineDesignator);
             if (this->hasLivery()) s.append(" ").append(this->m_livery);
-            if (this->hasColor()) s.append(" ").append(this->m_color);
+            if (this->hasAircraftColor()) s.append(" ").append(this->m_aircraftColor);
             return s;
         }
 
@@ -34,7 +33,6 @@ namespace BlackMisc
         bool CAircraftIcao::isA(int metaTypeId) const
         {
             if (metaTypeId == qMetaTypeId<CAircraftIcao>()) { return true; }
-
             return this->CValueObject::isA(metaTypeId);
         }
 
@@ -44,7 +42,6 @@ namespace BlackMisc
         int CAircraftIcao::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CAircraftIcao &>(otherBase);
-
             return compare(TupleConverter<CAircraftIcao>::toTuple(*this), TupleConverter<CAircraftIcao>::toTuple(other));
         }
 
@@ -69,16 +66,16 @@ namespace BlackMisc
          */
         QString CAircraftIcao::asString() const
         {
-            if (this->m_designator.isEmpty()) return "";
-            QString s(this->m_designator);
-            if (!this->m_airline.isEmpty())
+            if (this->m_aircraftDesignator.isEmpty()) return "";
+            QString s(this->m_aircraftDesignator);
+            if (!this->m_airlineDesignator.isEmpty())
             {
-                s.append(" (").append(this->m_airline).append(")");
+                s.append(" (").append(this->m_airlineDesignator).append(")");
                 return s;
             }
-            if (!this->m_color.isEmpty())
+            if (!this->m_aircraftColor.isEmpty())
             {
-                s.append(" (").append(this->m_color).append(")");
+                s.append(" (").append(this->m_aircraftColor).append(")");
                 return s;
             }
             return s;
@@ -113,14 +110,14 @@ namespace BlackMisc
         {
             switch (index)
             {
-            case IndexIcaoDesignator:
-                return QVariant::fromValue(this->m_designator);
-            case IndexAirline:
-                return QVariant::fromValue(this->m_airline);
-            case IndexType:
-                return QVariant::fromValue(this->m_type);
-            case IndexColor:
-                return QVariant::fromValue(this->m_color);
+            case IndexAircraftDesignator:
+                return QVariant::fromValue(this->m_aircraftDesignator);
+            case IndexAirlineDesignator:
+                return QVariant::fromValue(this->m_airlineDesignator);
+            case IndexCombinedAircraftType:
+                return QVariant::fromValue(this->m_aircraftCombinedType);
+            case IndexAircraftColor:
+                return QVariant::fromValue(this->m_aircraftColor);
             case IndexAsString:
                 return QVariant::fromValue(this->asString());
             default:
@@ -148,17 +145,17 @@ namespace BlackMisc
         {
             switch (index)
             {
-            case IndexIcaoDesignator:
-                this->setDesignator(variant.value<QString>());
+            case IndexAircraftDesignator:
+                this->setAircraftDesignator(variant.value<QString>());
                 break;
-            case IndexAirline:
-                this->setAirline(variant.value<QString>());
+            case IndexAirlineDesignator:
+                this->setAirlineDesignator(variant.value<QString>());
                 break;
-            case IndexType:
-                this->setType(variant.value<QString>());
+            case IndexCombinedAircraftType:
+                this->setAircraftCombinedType(variant.value<QString>());
                 break;
-            case IndexColor:
-                this->setColor(variant.value<QString>());
+            case IndexAircraftColor:
+                this->setAircraftColor(variant.value<QString>());
                 break;
             default:
                 Q_ASSERT_X(false, "CAircraftIcao", "index unknown");

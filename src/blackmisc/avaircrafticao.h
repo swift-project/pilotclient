@@ -22,9 +22,7 @@ namespace BlackMisc
         class CAircraftIcao : public BlackMisc::CValueObject
         {
         public:
-            /*!
-             * Default constructor.
-             */
+            //! \brief Default constructor.
             CAircraftIcao() {}
 
             /*!
@@ -36,8 +34,8 @@ namespace BlackMisc
              * \param color
              */
             CAircraftIcao(const QString &icao, const QString &type, const QString &airline, const QString &livery, const QString &color)
-                : m_designator(icao.trimmed().toUpper()), m_type(type.trimmed().toUpper()), m_airline(airline.trimmed().toUpper()),
-                  m_livery(livery.trimmed().toUpper()), m_color(color.trimmed().toUpper()) {}
+                : m_aircraftDesignator(icao.trimmed().toUpper()), m_aircraftCombinedType(type.trimmed().toUpper()), m_airlineDesignator(airline.trimmed().toUpper()),
+                  m_livery(livery.trimmed().toUpper()), m_aircraftColor(color.trimmed().toUpper()) {}
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
@@ -46,19 +44,19 @@ namespace BlackMisc
             }
 
             //! Get ICAO designator, e.g. "B737"
-            const QString &getDesignator() const { return m_designator; }
+            const QString &getAircraftDesignator() const { return m_aircraftDesignator; }
 
-            //! Set callsign
-            void setDesignator(const QString &icaoDesignator) { this->m_designator = icaoDesignator.trimmed().toUpper(); }
+            //! Set ICAO designator, e.g. "B737"
+            void setAircraftDesignator(const QString &icaoDesignator) { this->m_aircraftDesignator = icaoDesignator.trimmed().toUpper(); }
 
-            //! \brief Get airline
-            const QString &getAirline() const { return this->m_airline; }
+            //! \brief Get airline, e.g. "DLH"
+            const QString &getAirlineDesignator() const { return this->m_airlineDesignator; }
 
-            //! \brief Set airline
-            void setAirline(const QString &airline) { this->m_airline = airline.trimmed().toUpper(); }
+            //! \brief Set airline, e.g. "DLH"
+            void setAirlineDesignator(const QString &icaoDesignator) { this->m_airlineDesignator = icaoDesignator.trimmed().toUpper(); }
 
             //! \brief Airline available?
-            bool hasAirline() const { return !this->m_airline.isEmpty(); }
+            bool hasAirlineDesignator() const { return !this->m_airlineDesignator.isEmpty(); }
 
             //! \brief Get livery
             const QString &getLivery() const { return this->m_livery; }
@@ -70,25 +68,25 @@ namespace BlackMisc
             bool hasLivery() const { return !this->m_livery.isEmpty(); }
 
             //! \brief Get livery or color
-            const QString &getLiveryOrColor() const { return this->hasLivery() ? this->m_livery : this->m_color; }
+            const QString &getLiveryOrColor() const { return this->hasLivery() ? this->m_livery : this->m_aircraftColor; }
 
-            //! \brief Get color
-            const QString &getColor() const { return this->m_color; }
+            //! \brief Get color (RGB hex)
+            const QString &getAircraftColor() const { return this->m_aircraftColor; }
 
-            //! \brief Set color
-            void setColor(const QString &color) { this->m_color = color.trimmed().toUpper(); }
+            //! \brief Set color (RGB hex)
+            void setAircraftColor(const QString &color) { this->m_aircraftColor = color.trimmed().toUpper(); }
 
             //! \brief Color available?
-            bool hasColor() const { return !this->m_color.isEmpty(); }
+            bool hasAircraftColor() const { return !this->m_aircraftColor.isEmpty(); }
 
-            //! \brief Get type
-            const QString &getType() const { return this->m_type; }
+            //! \brief Get type, e.g. "L2J"
+            const QString &getAircraftCombinedType() const { return this->m_aircraftCombinedType; }
 
-            //! \brief Get engine type
+            //! \brief Get engine type, e.g. "J"
             QString getEngineType() const
             {
-                if (this->m_type.length() != 3) return "";
-                return this->m_type.right(1);
+                if (this->m_aircraftCombinedType.length() != 3) return "";
+                return this->m_aircraftCombinedType.right(1);
             }
 
             /*!
@@ -98,7 +96,7 @@ namespace BlackMisc
             QString asString() const;
 
             //! \brief Set type
-            void setType(const QString &type) { this->m_type = type.trimmed().toUpper(); }
+            void setAircraftCombinedType(const QString &type) { this->m_aircraftCombinedType = type.trimmed().toUpper(); }
 
             //! \brief Equal operator ==
             bool operator ==(const CAircraftIcao &other) const;
@@ -117,10 +115,10 @@ namespace BlackMisc
              */
             enum ColumnIndex
             {
-                IndexIcaoDesignator = 2000, // used, so it can be chained in aircraft
-                IndexType,
-                IndexAirline,
-                IndexColor,
+                IndexAircraftDesignator = 2000, // used, so it can be chained in aircraft
+                IndexCombinedAircraftType,
+                IndexAirlineDesignator,
+                IndexAircraftColor,
                 IndexAsString
             };
 
@@ -154,16 +152,16 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcao)
-            QString m_designator;
-            QString m_type;
-            QString m_airline;
+            QString m_aircraftDesignator; //!< "B737"
+            QString m_aircraftCombinedType; //!< "L2J"
+            QString m_airlineDesignator; //!< "DLH"
             QString m_livery;
-            QString m_color;
+            QString m_aircraftColor; //!< RGB Hex "330044"
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcao, (o.m_designator, o.m_type, o.m_airline, o.m_livery, o.m_color))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAircraftIcao, (o.m_aircraftDesignator, o.m_aircraftCombinedType, o.m_airlineDesignator, o.m_livery, o.m_aircraftColor))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAircraftIcao)
 
 #endif // guard

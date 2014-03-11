@@ -514,16 +514,16 @@ namespace BlackCore
     {
         try
         {
-            const QByteArray acTypeICAObytes = toFSD(m_icaoCodes.getDesignator());
-            const QByteArray airlineICAObytes = toFSD(m_icaoCodes.getAirline());
+            const QByteArray acTypeICAObytes = toFSD(m_icaoCodes.getAircraftDesignator());
+            const QByteArray airlineICAObytes = toFSD(m_icaoCodes.getAirlineDesignator());
             const QByteArray liverybytes = toFSD(m_icaoCodes.getLivery());
             std::vector<const char *> keysValues;
-            if (!m_icaoCodes.getDesignator().isEmpty())
+            if (!m_icaoCodes.getAircraftDesignator().isEmpty())
             {
                 keysValues.push_back(m_net->acinfo_Equipment);
                 keysValues.push_back(acTypeICAObytes);
             }
-            if (m_icaoCodes.hasAirline())
+            if (m_icaoCodes.hasAirlineDesignator())
             {
                 keysValues.push_back(m_net->acinfo_Airline);
                 keysValues.push_back(airlineICAObytes);
@@ -844,8 +844,8 @@ namespace BlackCore
         {
             QString key(*keysValues);
             keysValues++;
-            if (key == net->acinfo_Equipment)       { icao.setDesignator(*keysValues); }
-            else if (key == net->acinfo_Airline)    { icao.setAirline(*keysValues); }
+            if (key == net->acinfo_Equipment)       { icao.setAircraftDesignator(*keysValues); }
+            else if (key == net->acinfo_Airline)    { icao.setAirlineDesignator(*keysValues); }
             else if (key == net->acinfo_Livery)     { icao.setLivery(*keysValues); }
             keysValues++;
         }
