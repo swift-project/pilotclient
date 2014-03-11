@@ -29,6 +29,7 @@ namespace BlackMiscTest
         key2.setModifier1(CKeyboardKey::ModifierAltLeft);
         key2.setModifier2(CKeyboardKey::ModifierCtrlLeft);
         key2.setFunction(CKeyboardKey::HotkeyPtt);
+        key2.setNativeVirtualKey('5');
         QVERIFY2(key == key2, "CKeyboardKey::operator== failed!");
 
         key = CKeyboardKey();

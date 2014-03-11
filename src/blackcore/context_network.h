@@ -11,7 +11,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/nwuserlist.h"
-#include "blackmisc/vvoiceroomlist.h"
+#include "blackmisc/voiceroomlist.h"
 #include <QObject>
 
 #define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextNetwork"

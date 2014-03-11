@@ -9,8 +9,8 @@
 #include "context_audio.h"
 
 #include "blackmisc/genericdbusinterface.h"
-#include "blackmisc/vaudiodevicelist.h"
-#include "blackmisc/vvoiceroomlist.h"
+#include "blackmisc/audiodevicelist.h"
+#include "blackmisc/voiceroomlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/avaircraft.h"
 
@@ -74,19 +74,19 @@ namespace BlackCore
         virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft) override;
 
         //! \copydoc IContextAudio::getComVoiceRooms()
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRooms() const override;
+        virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const override;
 
         //! \copydoc IContextAudio::getComVoiceRoomsWithAudioStatus()
-        virtual BlackMisc::Voice::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
+        virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
 
         //! \copydoc IContextAudio::getCom1VoiceRoom
-        virtual BlackMisc::Voice::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const override;
+        virtual BlackMisc::Audio::CVoiceRoom getCom1VoiceRoom(bool withAudioStatus) const override;
 
         //! \copydoc IContextAudio::getCom2VoiceRoom
-        virtual BlackMisc::Voice::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const override;
+        virtual BlackMisc::Audio::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const override;
 
         //! \copydoc IContextAudio::setComVoiceRooms()
-        virtual void setComVoiceRooms(const BlackMisc::Voice::CVoiceRoom &voiceRoomCom1, const BlackMisc::Voice::CVoiceRoom &voiceRoomCom2) override;
+        virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoom &voiceRoomCom1, const BlackMisc::Audio::CVoiceRoom &voiceRoomCom2) override;
 
         //! \copydoc IContextAudio::getCom1RoomCallsigns()
         virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const override;
@@ -104,13 +104,13 @@ namespace BlackCore
         virtual void leaveAllVoiceRooms() override;
 
         //! \copydoc IContextAudio::getAudioDevices()
-        virtual BlackMisc::Voice::CAudioDeviceList getAudioDevices() const override;
+        virtual BlackMisc::Audio::CAudioDeviceList getAudioDevices() const override;
 
         //! \copydoc IContextAudio::getCurrentAudioDevices()
-        virtual BlackMisc::Voice::CAudioDeviceList getCurrentAudioDevices() const override;
+        virtual BlackMisc::Audio::CAudioDeviceList getCurrentAudioDevices() const override;
 
         //! \copydoc IContextAudio::setCurrentAudioDevice()
-        virtual void setCurrentAudioDevice(const BlackMisc::Voice::CAudioDevice &audioDevice) override;
+        virtual void setCurrentAudioDevice(const BlackMisc::Audio::CAudioDevice &audioDevice) override;
 
         //! \copydoc IContextAudio::setVolumes()
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2) override;

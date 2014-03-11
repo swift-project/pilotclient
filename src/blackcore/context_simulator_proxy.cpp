@@ -17,7 +17,7 @@ namespace BlackCore
 {
 
     // Constructor for DBus
-    CContextSimulatorProxy::CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent) : IContextSimulator(parent), m_dBusInterface(0)
+    CContextSimulatorProxy::CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent) : IContextSimulator(parent), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
             serviceName , IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),

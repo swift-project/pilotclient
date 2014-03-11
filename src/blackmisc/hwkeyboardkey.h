@@ -285,7 +285,7 @@ namespace BlackMisc
     } // class
 } // BlackMisc
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Hardware::CKeyboardKey, (o.m_qtKey, o.m_nativeVirtualKey, o.m_modifier1, o.m_modifier2, o.m_function, o.m_pressed))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Hardware::CKeyboardKey, (o.m_qtKey, o.m_nativeVirtualKey, o.m_modifier1, o.m_modifier2, o.m_function))
 Q_DECLARE_METATYPE(BlackMisc::Hardware::CKeyboardKey)
 
 #endif // guard
