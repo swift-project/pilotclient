@@ -6,7 +6,6 @@
 #ifndef BLACKMISC_AVIOTRANSPONDER_H
 #define BLACKMISC_AVIOTRANSPONDER_H
 #include "blackmisc/aviobase.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <stdexcept>
 
 namespace BlackMisc
@@ -390,7 +389,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Aviation::CTransponder::TransponderMode)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CTransponder, (o.m_transponderCode))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTransponder)
 

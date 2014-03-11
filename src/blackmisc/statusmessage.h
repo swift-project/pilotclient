@@ -1,7 +1,6 @@
 #ifndef BLACKMISC_STATUSMESSAGE_H
 #define BLACKMISC_STATUSMESSAGE_H
 
-#include "blackmiscfreefunctions.h"
 #include "valueobject.h"
 #include <QDateTime>
 
@@ -150,8 +149,6 @@ namespace BlackMisc
     };
 }
 
-BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::CStatusMessage::StatusSeverity)
-BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::CStatusMessage::StatusType)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (o.m_type, o.m_severity, o.m_message, o.m_timestamp))
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)
 

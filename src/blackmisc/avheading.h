@@ -6,7 +6,6 @@
 #ifndef BLACKMISC_AVHEADING_H
 #define BLACKMISC_AVHEADING_H
 
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqangle.h"
 
 namespace BlackMisc
@@ -93,7 +92,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Aviation::CHeading::ReferenceNorth)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CHeading, (o.m_north))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CHeading)
 

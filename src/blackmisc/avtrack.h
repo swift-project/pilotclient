@@ -6,7 +6,6 @@
 #ifndef BLACKMISC_AVTRACK_H
 #define BLACKMISC_AVTRACK_H
 
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqangle.h"
 
 namespace BlackMisc
@@ -108,7 +107,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Aviation::CTrack::ReferenceNorth)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CTrack, (o.m_north))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTrack)
 

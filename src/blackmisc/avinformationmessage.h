@@ -10,7 +10,6 @@
 #ifndef BLACKMISC_INFORMATIONMESSAGE_H
 #define BLACKMISC_INFORMATIONMESSAGE_H
 
-#include "blackmiscfreefunctions.h"
 #include "valueobject.h"
 #include <QString>
 #include <QDateTime>
@@ -196,7 +195,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Aviation::CInformationMessage::InformationType)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CInformationMessage, (o.m_type, o.m_message, o.m_receivedTimestamp))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CInformationMessage)
 

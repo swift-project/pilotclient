@@ -298,6 +298,22 @@ namespace BlackMisc
     }
 
     /*!
+     * Non-member non-friend operator for streaming enums to QDBusArgument.
+     *
+     * \param argument
+     * \param enumType
+     * \return
+     */
+    template <class ENUM> typename std::enable_if<std::is_enum<ENUM>::value, QDBusArgument>::type const &
+    operator>>(const QDBusArgument &argument, ENUM &enumType)
+    {
+        uint e;
+        argument>> e;
+        enumType = static_cast<ENUM>(e);
+        return argument;
+    }
+
+    /*!
      * Non-member non-friend operator for streaming T objects from QDBusArgument.
      * Needed because we can't rely on the friend operator in some cases due to
      * an unrelated template for streaming Container<T> in QtDBus/qdbusargument.h

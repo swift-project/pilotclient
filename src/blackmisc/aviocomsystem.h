@@ -6,7 +6,6 @@
 #ifndef BLACKMISC_AVIOCOMSYSTEM_H
 #define BLACKMISC_AVIOCOMSYSTEM_H
 #include "blackmisc/aviomodulator.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include <stdexcept>
 
 namespace BlackMisc
@@ -359,7 +358,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Aviation::CComSystem::ChannelSpacing)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CComSystem, (o.m_channelSpacing))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem)
 

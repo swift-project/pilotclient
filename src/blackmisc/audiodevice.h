@@ -28,7 +28,7 @@ namespace BlackMisc
         public:
 
             //! \brief Type
-            enum DeviceType
+            enum DeviceType : uint
             {
                 InputDevice,
                 OutputDevice,
@@ -135,10 +135,9 @@ namespace BlackMisc
             static QString hostName();
         };
 
-    } // Voice
+    } // Audio
 } // BlackMisc
 
-BLACK_DBUS_ENUM_MARSHALLING(BlackMisc::Audio::CAudioDevice::DeviceType)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Audio::CAudioDevice, (o.m_type, o.m_deviceIndex, o.m_deviceName, o.m_hostName))
 Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDevice)
 
