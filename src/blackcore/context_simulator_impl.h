@@ -60,11 +60,12 @@ namespace BlackCore
         //! \copydoc IContextSimulator::usingLocalObjects()
         virtual bool usingLocalObjects() const override { return true; }
 
-        virtual BlackMisc::Aviation::CAircraft ownAircraft() const override;
-
     public slots:
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
+
+        //! \copydoc IContextSimulator::getOwnAircraft()
+        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
 
     private slots:
         //! \copydoc IContextSimulator::updateOwnAircraft()

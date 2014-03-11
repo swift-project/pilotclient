@@ -56,12 +56,6 @@ namespace BlackCore
          */
         virtual bool usingLocalObjects() const = 0;
 
-        /*!
-         * \brief Get user aircraft value object
-         * \return
-         */
-        virtual BlackMisc::Aviation::CAircraft ownAircraft() const = 0;
-
     signals:
         /*!
          * \brief Emitted when the simulator connection changes
@@ -73,6 +67,12 @@ namespace BlackCore
 
         //! Returns true when simulator is connected and available
         virtual bool isConnected() const = 0;
+
+        /*!
+         * \brief Get user aircraft value object
+         * \return
+         */
+        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
     };
 
 } // namespace BlackCore
