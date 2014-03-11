@@ -206,7 +206,7 @@ namespace BlackCore
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
         try
         {
-            m_voice->SetOutoutState(static_cast<qint32>(comUnit), 0, enable);
+            m_voice->SetOutputState(static_cast<qint32>(comUnit), 0, enable);
             this->m_outputEnabled[comUnit] = enable;
         }
         catch (...)
