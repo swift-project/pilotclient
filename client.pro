@@ -5,7 +5,6 @@ CONFIG += ordered
 
 contains(BLACK_CONFIG, BlackMisc) {
     SUBDIRS += src/blackmisc
-#    SUBDIRS += src/blackmisc_cpp2xml
 }
 
 contains(BLACK_CONFIG, BlackSound) {
