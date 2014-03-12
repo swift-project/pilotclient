@@ -514,7 +514,7 @@ void MainWindow::updateSimulatorData()
     else
         ui->le_SimulatorStatus->setText("Not connected");
 
-    CAircraft ownAircraft = m_contextSimulator->ownAircraft();
+    CAircraft ownAircraft = m_contextSimulator->getOwnAircraft();
     ui->le_SimulatorLatitude->setText(ownAircraft.getSituation().latitude().toFormattedQString());
     ui->le_SimulatorLongitude->setText(ownAircraft.getSituation().longitude().toFormattedQString());
     ui->le_SimulatorAltitude->setText(ownAircraft.getSituation().getAltitude().toFormattedQString());

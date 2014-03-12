@@ -33,8 +33,6 @@ namespace BlackCore
          */
         virtual bool usingLocalObjects() const override { return false; }
 
-        virtual BlackMisc::Aviation::CAircraft ownAircraft() const override;
-
     private:
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
@@ -59,8 +57,8 @@ namespace BlackCore
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
 
-        //virtual void ownAircraftUpdateReceived(BlackMisc::Aviation::CAircraft aircraft) override;
-
+        //! \copydoc IContextSimulator::getOwnAircraft()
+        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
     };
 
 } // namespace BlackCore

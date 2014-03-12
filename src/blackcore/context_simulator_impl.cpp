@@ -47,7 +47,7 @@ namespace BlackCore
         return m_simulator->isConnected();
     }
 
-    BlackMisc::Aviation::CAircraft CContextSimulator::ownAircraft() const
+    BlackMisc::Aviation::CAircraft CContextSimulator::getOwnAircraft() const
     {
         return m_ownAircraft;
     }
