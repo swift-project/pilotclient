@@ -23,3 +23,7 @@ blacksound {
 blackmisc {
     LIBS += -lblackmisc
 }
+
+blacksim {
+    LIBS += -lblacksim
+}

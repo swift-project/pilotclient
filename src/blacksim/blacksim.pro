@@ -1,13 +1,16 @@
+include (../../config.pri)
+include (../../build.pri)
+
 QT       += network dbus xml
 
 TARGET = blacksim
 TEMPLATE = lib
+
 CONFIG += staticlib c++11
+CONFIG   += blackmisc
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
-
-LIBS    += -L../../lib -lblackmisc
 
 # PRECOMPILED_HEADER = stdpch.h
 precompile_header:!isEmpty(PRECOMPILED_HEADER) {
@@ -26,3 +29,4 @@ SOURCES += $$PWD/fscommon/*.cpp
 
 DESTDIR = ../../lib
 
+include (../../libraries.pri)

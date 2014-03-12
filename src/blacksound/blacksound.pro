@@ -6,6 +6,7 @@ QT       += network dbus gui multimedia
 TARGET = blacksound
 TEMPLATE = lib
 CONFIG += staticlib
+CONFIG   += blackmisc
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
@@ -16,8 +17,6 @@ precompile_header:!isEmpty(PRECOMPILED_HEADER) {
 }
 
 DEFINES += LOG_IN_FILE
-
-LIBS    += -L../../lib -lblackmisc
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib
 else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
