@@ -6,7 +6,6 @@
 #ifndef BLACKCORETEST_TESTAVIATIONBASE_H
 #define BLACKCORETEST_TESTAVIATIONBASE_H
 
-#include "blackcore/interpolator.h"
 #include <QtTest/QtTest>
 
 namespace BlackCoreTest

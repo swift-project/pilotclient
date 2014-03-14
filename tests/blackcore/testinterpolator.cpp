@@ -4,7 +4,11 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "testinterpolator.h"
+#include "blackcore/interpolator_linear.h"
+
 using namespace BlackCore;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCoreTest
 {
@@ -14,7 +18,17 @@ namespace BlackCoreTest
  */
 void CTestInterpolator::interpolatorBasics()
 {
+    IInterpolator *interpolator = new CInterpolatorLinear();
 
+    QVERIFY2(!interpolator->hasEnoughAircraftSituations(), "Interpolator cannot have enough situations. They should be 0!");
+
+    CAircraftSituation situation;
+    interpolator->addAircraftSituation(situation);
+    QTest::qSleep(6100);
+    situation.setHeight(CLength(500, CLengthUnit::ft()));
+    interpolator->addAircraftSituation(situation);
+
+    QVERIFY2(interpolator->hasEnoughAircraftSituations(), "Interpolator should have enough situations!");
 }
 
 } // namespace
