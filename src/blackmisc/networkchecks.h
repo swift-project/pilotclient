@@ -50,6 +50,15 @@ namespace BlackMisc
          */
         static bool canConnect(const BlackMisc::Network::CServer &server, QString &message, int timeoutMs = 1500);
 
+        //! \brief Valid IPv4 address
+        static bool isValidIPv4Address(const QString &candidate);
+
+        //! \brief Valid IPv6 address
+        static bool isValidIPv6Address(const QString &candidate);
+
+        //! \brief Valid port
+        static bool isValidPort(const QString &port);
+
     };
 } // namespace
 

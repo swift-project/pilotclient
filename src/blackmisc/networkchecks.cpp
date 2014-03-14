@@ -7,6 +7,8 @@
 #include <QtNetwork/QNetworkInterface>
 #include <QtNetwork/QTcpSocket>
 #include <QCoreApplication>
+#include <QHostAddress>
+#include <QAbstractSocket>
 
 namespace BlackMisc
 {
@@ -81,5 +83,34 @@ namespace BlackMisc
     bool CNetworkChecks::canConnect(const Network::CServer &server, QString &message, int timeoutMs)
     {
         return CNetworkChecks::canConnect(server.getAddress(), server.getPort(), message, timeoutMs);
+    }
+
+    /*
+     * Valid IPv4 address
+     */
+    bool CNetworkChecks::isValidIPv4Address(const QString &candidate)
+    {
+        QHostAddress address(candidate);
+        return (QAbstractSocket::IPv4Protocol == address.protocol());
+    }
+
+    /*
+     * Valid IPv6 address
+     */
+    bool CNetworkChecks::isValidIPv6Address(const QString &candidate)
+    {
+        QHostAddress address(candidate);
+        return (QAbstractSocket::IPv6Protocol == address.protocol());
+    }
+
+    /*
+     * Valid port?
+     */
+    bool CNetworkChecks::isValidPort(const QString &port)
+    {
+        bool success;
+        int p = port.toInt(&success);
+        if (!success) return false;
+        return (p >= 1 && p <= 65535);
     }
 } // namespace
