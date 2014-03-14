@@ -7,7 +7,7 @@ TARGET = blacksim
 TEMPLATE = lib
 
 CONFIG += staticlib c++11
-CONFIG   += blackmisc
+CONFIG += blackmisc
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
@@ -24,8 +24,12 @@ else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
 
 HEADERS += *.h
 SOURCES += *.cpp
+
 HEADERS += $$PWD/fscommon/*.h
 SOURCES += $$PWD/fscommon/*.cpp
+
+HEADERS += $$PWD/fsx/*.h
+SOURCES += $$PWD/fsx/*.cpp
 
 DESTDIR = ../../lib
 
