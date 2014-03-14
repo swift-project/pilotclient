@@ -43,7 +43,8 @@ namespace BlackSim
             /*!
              * \brief Resolve SimConnect surface (based on Qt metadata).
              * \param type enum element
-             * \return enum element's name
+             * \param beautify remove _
+             * \return
              */
             static const QString simConnectSurfaceTypeToString(const DWORD type, bool beautify = true);
 
