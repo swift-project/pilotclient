@@ -5,6 +5,7 @@
 
 #include "blacksim/blacksimfreefunctions.h"
 #include "samplesfscommon.h"
+#include "samplesfsx.h"
 #include <QCoreApplication>
 
 /*!
@@ -13,7 +14,8 @@
 int main(int argc, char *argv[])
 {
     BlackSim::registerMetadata();
-    BlackSimTest::CSamplesFsCommon::samples();
+    // BlackSimTest::CSamplesFsCommon::samples();
+    BlackSimTest::CSamplesFsx::samples();
     QCoreApplication a(argc, argv);
     return a.exec();
 }
