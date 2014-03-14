@@ -30,7 +30,6 @@ namespace BlackCore
         m_simulator = new BlackCore::FSX::CSimulatorFSX(this);
         connect(m_simulator, &ISimulator::connectionChanged, this, &CContextSimulator::setConnectionStatus);
 #endif
-
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
     }
 
@@ -52,6 +51,17 @@ namespace BlackCore
         return m_ownAircraft;
     }
 
+    void CContextSimulator::init()
+    {
+        if (!m_contextNetwork)
+        {
+            m_contextNetwork = getRuntime()->getIContextNetwork();
+        }
+
+        if (m_simulator)
+            connect(m_contextNetwork, &IContextNetwork::aircraftSituationUpdate, m_simulator, &ISimulator::addAircraftSituation);
+    }
+
     void CContextSimulator::updateOwnAircraft()
     {
         if (!m_simulator)
@@ -59,10 +69,7 @@ namespace BlackCore
 
         m_ownAircraft = m_simulator->getOwnAircraft();
 
-        if (!m_contextNetwork)
-        {
-            m_contextNetwork = getRuntime()->getIContextNetwork();
-        }
+
 
         m_contextNetwork->updateOwnSituation(m_ownAircraft.getSituation());
         m_contextNetwork->updateOwnCockpit(m_ownAircraft.getCom1System(), m_ownAircraft.getCom2System(), m_ownAircraft.getTransponder());

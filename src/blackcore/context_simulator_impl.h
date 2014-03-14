@@ -57,6 +57,9 @@ namespace BlackCore
             return static_cast<CCoreRuntime *>(this->parent());
         }
 
+        //! \brief Initialze the context
+        void init();
+
         //! \copydoc IContextSimulator::usingLocalObjects()
         virtual bool usingLocalObjects() const override { return true; }
 
@@ -66,6 +69,8 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::getOwnAircraft()
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
+
+
 
     private slots:
         //! \copydoc IContextSimulator::updateOwnAircraft()
