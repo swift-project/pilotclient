@@ -13,7 +13,7 @@ namespace BlackCore
     namespace FSX
     {
         //! \brief Data struct of our own aircraft
-        struct OwnAircraft
+        struct DataDefinitionOwnAircraft
         {
             double latitude;        //!< Latitude
             double longitude;       //!< Longitude
@@ -30,6 +30,27 @@ namespace BlackCore
             double com2StandbyMHz;  //!< COM1 standby frequency
         };
 
+        //! \brief Data struct of aircraft position
+        struct DataDefinitionAircraftPosition
+        {
+            double latitude;        //!< Latitude
+            double longitude;       //!< Longitude
+            double altitude;        //!< Altitude
+            double trueHeading;     //!< True heading
+            double pitch;           //!< Pitch
+            double bank;            //!< Bank
+        };
+
+        //! \brief Data struct of aircraft position
+        struct DataDefinitionAircraftConfiguration
+        {
+            double gearCenter;          //!< Gear center
+            double gearLeft;            //!< Gear left
+            double gearRight;           //!< Gear right
+            double gearTail;            //!< Gear tail
+            double gearAux;             //!< Gear aux
+        };
+
         //! \brief Handles SimConnect data definitions
         class CSimConnectDataDefinition
         {
@@ -38,6 +59,8 @@ namespace BlackCore
             //! \brief SimConnect definiton ID's
             enum DataDefiniton {
                 DataOwnAircraft,
+                DataAircraftPosition,
+                DataAircraftConfiguration
             };
 
             //! \brief SimConnect request ID's
@@ -61,6 +84,20 @@ namespace BlackCore
              * \return
              */
             static HRESULT initOwnAircraft(const HANDLE hSimConnect);
+
+            /*!
+             * \brief Initialize data definition for remote aircrafts
+             * \param hSimConnect
+             * \return
+             */
+            static HRESULT initAircraftPosition(const HANDLE hSimConnect);
+
+            /*!
+             * \brief Initialize data definition for remote aircraft configuration
+             * \param hSimConnect
+             * \return
+             */
+            static HRESULT initAircraftConfiguration(const HANDLE hSimConnect);
         };
     }
 }

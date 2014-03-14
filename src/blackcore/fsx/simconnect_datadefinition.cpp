@@ -19,6 +19,8 @@ namespace BlackCore
         {
             HRESULT hr = S_OK;
             hr = initOwnAircraft(hSimConnect);
+            hr = initAircraftPosition(hSimConnect);
+            hr = initAircraftConfiguration(hSimConnect);
             return hr;
         }
 
@@ -39,6 +41,29 @@ namespace BlackCore
             hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataOwnAircraft, "COM STANDBY FREQUENCY:1", "MHz");
             hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataOwnAircraft, "COM STANDBY FREQUENCY:2", "MHz");
 
+            return hr;
+        }
+
+        HRESULT CSimConnectDataDefinition::initAircraftPosition(const HANDLE hSimConnect)
+        {
+            HRESULT hr = S_OK;
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Latitude", "Degrees");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Longitude", "Degrees");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Altitude", "Feet");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Heading Degrees True", "Degrees");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Pitch Degrees", "Degrees");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Bank Degrees", "Degrees");
+            return hr;
+        }
+
+        HRESULT CSimConnectDataDefinition::initAircraftConfiguration(const HANDLE hSimConnect)
+        {
+            HRESULT hr = S_OK;
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, "GEAR CENTER POSITION", "Percent Over 100");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, "GEAR LEFT POSITION", "Percent Over 100");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, "GEAR RIGHT POSITION", "Percent Over 100");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, "GEAR TAIL POSITION", "Percent Over 100");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, "GEAR AUX POSITION", "Percent Over 100");
             return hr;
         }
     }
