@@ -22,6 +22,7 @@ namespace BlackMisc
             TypeUnspecific, // intentionally set
             TypeValidation,
             TypeTrafficNetwork,
+            TypeSimulator,
             TypeSettings,
             TypeCore,
             TypeAudio,
