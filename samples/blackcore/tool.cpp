@@ -97,7 +97,7 @@ namespace BlackMiscTest
                 qDebug() << "voice rooms";
                 qDebug() << audioContext->getComVoiceRooms();
             }
-
         }
+        QCoreApplication::quit();
     }
 } // namespace
