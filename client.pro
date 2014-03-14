@@ -25,7 +25,6 @@ contains(BLACK_CONFIG, BlackSim) {
 
 contains(BLACK_CONFIG, Samples) {
     SUBDIRS += samples/cli_client/sample_cli_client.pro
-    SUBDIRS += samples/interpolator/sample_interpolator.pro
     SUBDIRS += samples/plugin/sample_plugin.pro
     SUBDIRS += samples/pluginmgr/sample_pluginmgr.pro
     SUBDIRS += samples/blackmiscvectorgeo/sample_vector_geo.pro
