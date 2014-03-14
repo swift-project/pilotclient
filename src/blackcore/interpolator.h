@@ -6,109 +6,40 @@
 #ifndef BLACKCORE_INTERPOLATOR_H
 #define BLACKCORE_INTERPOLATOR_H
 
-#include "blackmisc/coordinatetransformation.h"
-#include "blackmisc/pqspeed.h"
-#include "blackmisc/avheading.h"
-#include <QElapsedTimer>
+#include "blackmisc/avaircraftsituation.h"
 
 namespace BlackCore
 {
-
-    /*!
-     * \brief Plane's orientation
-     */
-    typedef struct
-    {
-        BlackMisc::Aviation::CHeading heading; //!< heading, honestly I think this is a track TODO
-        BlackMisc::PhysicalQuantities::CAngle pitch; //!< pitch
-        BlackMisc::PhysicalQuantities::CAngle bank; //!< bank
-
-    } TOrientation;
-
-    /*!
-     * \brief Plane's state
-     */
-    typedef struct
-    {
-        /*!
-         * \brief Reset data
-         */
-        void reset() {}
-
-        qint64 timestamp; //!< timestamp
-        TOrientation orientation; //!< orientation
-        BlackMisc::PhysicalQuantities::CSpeed groundspeed; //!< groundspeed
-        BlackMisc::Math::CVector3D velocity; //!< velocity
-        BlackMisc::Geo::CCoordinateEcef position; //!< position
-        BlackMisc::Geo::CCoordinateNed velNED; //!< NED coordinate
-
-    } TPlaneState;
-
-    /*!
-     * \brief Interpolator, calculation inbetween positions
-     */
-    class CInterpolator
+    //! \brief Interpolator, calculation inbetween positions
+    class IInterpolator
     {
     public:
-        /*!
-         * \brief Default constructor
-         */
-        CInterpolator();
+        //! \brief Default constructor
+        IInterpolator() {}
+
+        //! \brief Virtual destructor
+        virtual ~IInterpolator() {}
+
+        //! \brief Init object
+        virtual void initialize() = 0;
 
         /*!
-         * \brief Virtual destructor
+         * \brief Add new aircraft situation
+         * \param situation
          */
-        virtual ~CInterpolator();
+        virtual void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
 
         /*!
-         * \brief Init object
-         */
-        void initialize();
-
-        /*!
-         * \brief Push an update
-         * \param pos
-         * \param groundSpeed
-         * \param heading
-         * \param pitch
-         * \param bank
+         * \brief Do we have enough situations to start calculating?
          * \return
          */
-        BlackMisc::Geo::CCoordinateNed pushUpdate(const BlackMisc::Geo::CCoordinateGeodetic &pos,
-                const BlackMisc::PhysicalQuantities::CSpeed &groundSpeed,
-                const BlackMisc::Aviation::CHeading &heading,
-                const BlackMisc::PhysicalQuantities::CAngle &pitch,
-                const BlackMisc::PhysicalQuantities::CAngle &bank);
+        virtual bool hasEnoughAircraftSituations() const = 0;
 
         /*!
-         * \brief Valid state?
+         * \brief Get current aircraft situation
          * \return
          */
-        bool isValid() const;
-
-        /*!
-         * \brief Calculate current state
-         * \param state
-         * \return
-         */
-        bool stateNow(TPlaneState *state);
-
-    private:
-        BlackMisc::Math::CVector3D m_a;
-        BlackMisc::Math::CVector3D m_b;
-        QElapsedTimer m_time;
-        TPlaneState *m_state_begin;
-        TPlaneState *m_state_end;
-        bool m_valid;
-        double m_timeEnd;
-        double m_timeBegin;
-
-        /*!
-         * \brief Normalize radians
-         * \param angle
-         * \return
-         */
-        BlackMisc::PhysicalQuantities::CAngle normalizeRadians(const BlackMisc::PhysicalQuantities::CAngle &angle) const;
+        virtual BlackMisc::Aviation::CAircraftSituation getCurrentSituation() = 0;
     };
 
 } // namespace BlackCore

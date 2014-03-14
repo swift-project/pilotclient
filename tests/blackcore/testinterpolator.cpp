@@ -14,8 +14,7 @@ namespace BlackCoreTest
  */
 void CTestInterpolator::interpolatorBasics()
 {
-    CInterpolator c;
-    QVERIFY2(!c.isValid(), "Default interpolator should not be valid");
+
 }
 
 } // namespace
