@@ -4,6 +4,8 @@
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackmisc/hwkeyboardkey.h"
+#include "blackmisc/networkchecks.h"
+#include "blacksim/fsx/simconnectutilities.h"
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -13,6 +15,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
+using namespace BlackSim::Fsx;
 
 /*
  * Reload settings
@@ -145,4 +148,70 @@ void MainWindow::clearHotkey()
     BlackMisc::Hardware::CKeyboardKey defKey;
     defKey.setFunction(key.getFunction());
     this->m_modelSettingsHotKeys->update(i, defKey);
+}
+
+void MainWindow::testSimConnectConnection()
+{
+    QString address = this->ui->le_SettingsSimulatorFsxAddress->text().trimmed();
+    QString port = this->ui->le_SettingsSimulatorFsxPort->text().trimmed();
+
+    if (address.isEmpty() || port.isEmpty())
+    {
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "no address or port"));
+        return;
+    }
+    if (!CNetworkChecks::isValidIPv4Address(address))
+    {
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "IPv4 address invalid"));
+        return;
+    }
+    if (!CNetworkChecks::isValidPort(port))
+    {
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "invalid port"));
+        return;
+    }
+    quint16 p = port.toUInt();
+    QString msg;
+    if (!CNetworkChecks::canConnect(address, p, msg))
+    {
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, msg));
+        return;
+    }
+
+    msg = QString("Connected to %1:%2").arg(address).arg(port);
+    this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, msg));
+}
+
+void MainWindow::saveSimConnectCfg()
+{
+    QString address = this->ui->le_SettingsSimulatorFsxAddress->text().trimmed();
+    QString port = this->ui->le_SettingsSimulatorFsxPort->text().trimmed();
+
+    if (address.isEmpty() || port.isEmpty())
+    {
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "no address or port"));
+        return;
+    }
+    if (!CNetworkChecks::isValidIPv4Address(address))
+    {
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "IPv4 address invalid"));
+        return;
+    }
+    if (!CNetworkChecks::isValidPort(port))
+    {
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "invalid port"));
+        return;
+    }
+    quint16 p = port.toUInt();
+    QString file = CSimConnectUtilities::getLocalSimConnectCfgFilename();
+    if (CSimConnectUtilities::writeSimConnectCfg(file, address, p))
+    {
+        QString m = QString("Written ").append(file);
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, m));
+    }
+    else
+    {
+        QString m = QString("Cannot write ").append(file);
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, m));
+    }
 }

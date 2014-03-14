@@ -318,8 +318,8 @@ private:
      * \brief Play notifcation sound
      */
     void playNotifcationSound(BlackSound::CSoundGenerator::Notification notification) const;
-	
-	//! \brief Update simulator page with latest user aircraft data
+
+    //! \brief Update simulator page with latest user aircraft data
     void updateSimulatorData();
 
 private slots:
@@ -405,14 +405,10 @@ private slots:
      */
     void toggleNetworkConnection();
 
-    /*!
-     * \brief Menu item clicked
-     */
+    //! \brief Menu item clicked
     void menuClicked();
 
-    /*!
-     * \brief Terminated connection
-     */
+    //! \brief Terminated connection
     void connectionTerminated();
 
     /*!
@@ -432,9 +428,7 @@ private slots:
      */
     void alterTrafficServer();
 
-    /*!
-     * \brief Network settings have been changed
-     */
+    //! \brief Network settings have been changed
     void changedSettings();
 
     /*!
@@ -454,28 +448,19 @@ private slots:
      */
     void middlePanelChanged(int index);
 
-    /*!
-     * \brief Command entered
-     */
+    //! \brief Command entered
     void commandEntered();
 
-    /*!
-     * \brief Get METAR
-     * \param airportIcaoCode
-     */
+    //! \brief Get METAR for given ICAO airport code
     void getMetar(const QString &airportIcaoCode = "");
 
     //! \brief Request new ATIS
     void requestAtis();
 
-    /*!
-     * \brief Close text message tab
-     */
+    //! \brief Close text message tab
     void closeTextMessageTab();
 
-    /*!
-     * \brief Cockpit values changed
-     */
+    //! \brief Cockpit values changed
     void cockpitValuesChanged();
 
     /*!
@@ -484,9 +469,7 @@ private slots:
      */
     void audioDeviceSelected(int index);
 
-    /*!
-     * \brief Reset transponder to Standby / Charly
-     */
+    //! \brief Reset transponder to Standby / Charly
     void resetTransponderMode();
 
     /*!
@@ -525,6 +508,13 @@ private slots:
 
     //! Clear single hotkey
     void clearHotkey();
+
+    //! Test the SIM connect connectivity
+    void testSimConnectConnection();
+
+    //! Save a simconnect.cfg file for FSX
+    void saveSimConnectCfg();
+
 };
 
 #pragma pop_macro("interface")

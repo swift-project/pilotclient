@@ -367,6 +367,10 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->pb_SettingsMiscSave, &QPushButton::clicked, this, &MainWindow::saveHotkeys);
     this->connect(this->ui->pb_SettingsMiscRemove, &QPushButton::clicked, this, &MainWindow::clearHotkey);
 
+    // Settings simulator
+    this->connect(this->ui->pb_SettingsSimulatorFsxTestConnection, &QPushButton::clicked, this, &MainWindow::testSimConnectConnection);
+    this->connect(this->ui->pb_SettingsSimulatorFsxSaveSimconnectCfg, &QPushButton::clicked, this, &MainWindow::saveSimConnectCfg);
+
     // no warnings in release build
     Q_UNUSED(connected);
 }

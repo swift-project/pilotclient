@@ -5,9 +5,7 @@
 #include "blackcore/context_network.h"
 #include "blackcore/context_application.h"
 #include "blackcore/network.h"
-
 #include "blackmisc/avaircraft.h"
-
 #include <QMouseEvent>
 
 using namespace BlackCore;
