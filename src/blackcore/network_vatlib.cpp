@@ -178,11 +178,12 @@ namespace BlackCore
     {
         switch (status)
         {
-        case Cvatlib_Network::connStatus_Idle:          return INetwork::Disconnected;
-        case Cvatlib_Network::connStatus_Connecting:    return INetwork::Connecting;
-        case Cvatlib_Network::connStatus_Connected:     return INetwork::Connected;
-        case Cvatlib_Network::connStatus_Disconnected:  return INetwork::Disconnected;
-        case Cvatlib_Network::connStatus_Error:         return INetwork::DisconnectedError;
+        case Cvatlib_Network::connStatus_Idle:              return INetwork::Disconnected;
+        case Cvatlib_Network::connStatus_Connecting:        return INetwork::Connecting;
+        case Cvatlib_Network::connStatus_Connected:         return INetwork::Connected;
+        case Cvatlib_Network::connStatus_Disconnected:      return INetwork::Disconnected;
+        case Cvatlib_Network::connStatus_Error:             return INetwork::DisconnectedError;
+        case Cvatlib_Network::connStatus_ConnectionLost:    return INetwork::Disconnected;
         }
         qFatal("unrecognised connection status");
         return INetwork::DisconnectedError;
