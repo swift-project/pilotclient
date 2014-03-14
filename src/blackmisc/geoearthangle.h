@@ -83,7 +83,22 @@ namespace BlackMisc
                 return *this;
             }
 
-            //! \brief Greater operator >
+            /*!
+             * \brief Multiply operator *=
+             * \param multiply
+             * \return
+             */
+            CEarthAngle operator *=(double multiply)
+            {
+                this->CAngle::operator *=(multiply);
+                return *this;
+            }
+
+            /*!
+             * \brief Greater operator >
+             * \param latOrLon
+             * \return
+             */
             bool operator >(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >(latOrLon);
@@ -120,6 +135,18 @@ namespace BlackMisc
             {
                 LATorLON l(*this);
                 l -= latOrLon;
+                return l;
+            }
+
+            /*!
+             * \brief Multiply operator *
+             * \param multiply
+             * \return
+             */
+            LATorLON operator *(double multiply) const
+            {
+                LATorLON l(*this);
+                l *= multiply;
                 return l;
             }
 
