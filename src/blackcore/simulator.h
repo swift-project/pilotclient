@@ -46,6 +46,27 @@ namespace BlackCore
          */
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
 
+        /*!
+         * \brief Add new remote aircraft to the simulator
+         * \param callsign
+         * \param type
+         * \param initialSituation
+         */
+        virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &type, const BlackMisc::Aviation::CAircraftSituation &initialSituation) = 0;
+
+        /*!
+         * \brief Add new aircraft situation
+         * \param callsign
+         * \param initialSituation
+         */
+        virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) = 0;
+
+        /*!
+         * \brief Remove remote aircraft from simulator
+         * \param callsign
+         */
+        virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
     signals:
         //! \brief Emitted when the connection status has changed
         void connectionChanged(bool value);

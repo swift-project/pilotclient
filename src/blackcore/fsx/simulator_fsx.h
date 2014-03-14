@@ -6,11 +6,17 @@
 #ifndef BLACKCORE_SIMULATOR_FSX_H
 #define BLACKCORE_SIMULATOR_FSX_H
 
-#include <blackcore/simulator.h>
+#define NOMINMAX
+
 #include "simconnect_datadefinition.h"
+
+#include "blackcore/simulator.h"
+#include "blackcore/interpolator_linear.h"
 #include "blackmisc/avaircraft.h"
+#include <simconnect/SimConnect.h>
 #include <QObject>
-#include "simconnect/SimConnect.h"
+#include <QHash>
+
 #include <windows.h>
 
 namespace BlackCore
@@ -43,6 +49,15 @@ namespace BlackCore
             //! \copydoc ISimulator::getOwnAircraft()
             virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override { return m_ownAircraft; }
 
+            //! \copydoc ISimulator::addRemoteAircraft()
+            virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &type, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
+
+            //! \copydoc ISimulator::addAircraftSituation()
+            virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
+
+            //! \copydoc ISimulator::removeRemoteAircraft()
+            virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
+
             /*!
              * \brief SimConnect Callback
              * \param pData
@@ -64,7 +79,7 @@ namespace BlackCore
              * \brief Called when data about our own aircraft is received
              * \param aircraft
              */
-            void setOwnAircraft(OwnAircraft aircraft);
+            void setOwnAircraft(DataDefinitionOwnAircraft aircraft);
 
             /*!
              * \brief Set ID of a SimConnect object
@@ -89,6 +104,14 @@ namespace BlackCore
 
         private:
 
+            struct SimConnectObject
+            {
+                BlackMisc::Aviation::CCallsign m_callsign;
+                BlackCore::CInterpolatorLinear m_interpolator;
+                int m_requestId;
+                int m_objectId;
+            };
+
             /*!
              * \brief Initialize SimConnect system events
              * \return
@@ -101,11 +124,16 @@ namespace BlackCore
              */
             HRESULT initDataDefinitions();
 
+            void update();
+
             bool    m_isConnected; //!< Is sim connected
             bool    m_simRunning; //!< Sim running.
             HANDLE  m_hSimConnect; //!< Handle to SimConnect object
+            uint    m_nextObjID;
 
             BlackMisc::Aviation::CAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
+
+            QHash<BlackMisc::Aviation::CCallsign, SimConnectObject> m_simConnectObjects;
 
         };
     }

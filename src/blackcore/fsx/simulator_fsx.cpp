@@ -20,7 +20,8 @@ namespace BlackCore
             ISimulator(parent),
             m_isConnected(false),
             m_simRunning(false),
-            m_hSimConnect(nullptr)
+            m_hSimConnect(nullptr),
+            m_nextObjID(1)
         {
             QTimer::singleShot(5000, this, SLOT(checkConnection()));
         }
@@ -28,6 +29,50 @@ namespace BlackCore
         bool CSimulatorFSX::isConnected() const
         {
             return m_isConnected;
+        }
+
+        void CSimulatorFSX::addRemoteAircraft(const CCallsign &callsign, const QString &type, const CAircraftSituation &initialSituation)
+        {
+            HRESULT hr = S_OK;
+            Q_UNUSED(type);
+
+            SIMCONNECT_DATA_INITPOSITION initialPosition;
+            initialPosition.Latitude = initialSituation.latitude().value();
+            initialPosition.Longitude = initialSituation.longitude().value();
+            initialPosition.Altitude = initialSituation.getAltitude().value();
+            initialPosition.Pitch = initialSituation.getPitch().value();
+            initialPosition.Bank = initialSituation.getBank().value();
+            initialPosition.Heading = initialSituation.getHeading().value();
+            initialPosition.Airspeed = 0;
+            initialPosition.OnGround = 0;
+
+            SimConnectObject simObj;
+            simObj.m_callsign = callsign;
+            simObj.m_requestId = m_nextObjID;
+            simObj.m_objectId = 0;
+            simObj.m_interpolator.addAircraftSituation(initialSituation);
+            m_simConnectObjects.insert(callsign, simObj);
+            ++m_nextObjID;
+
+            hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, "Boeing 737-800 Paint1", callsign.toQString().left(12).toLatin1().constData(), initialPosition, simObj.m_requestId);
+        }
+
+        void CSimulatorFSX::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation & situation)
+        {
+            if (!m_simConnectObjects.contains(callsign))
+            {
+                addRemoteAircraft(callsign, "Boeing 737-800 Paint1", situation);
+                return;
+            }
+
+            SimConnectObject simObj = m_simConnectObjects.value(callsign);
+            simObj.m_interpolator.addAircraftSituation(situation);
+            m_simConnectObjects.insert(callsign, simObj);
+        }
+
+        void CSimulatorFSX::removeRemoteAircraft(const CCallsign &callsign)
+        {
+            // TODO
         }
 
         void CALLBACK CSimulatorFSX::SimConnectProc(SIMCONNECT_RECV* pData, DWORD /* cbData */, void *pContext)
@@ -94,8 +139,8 @@ namespace BlackCore
                     switch(pObjData->dwRequestID)
                     {
                     case CSimConnectDataDefinition::RequestOwnAircraft:
-                        OwnAircraft *ownAircaft;
-                        ownAircaft = (OwnAircraft*)&pObjData->dwData;
+                        DataDefinitionOwnAircraft *ownAircaft;
+                        ownAircaft = (DataDefinitionOwnAircraft*)&pObjData->dwData;
                         simulatorFsx->setOwnAircraft(*ownAircaft);
                         break;
                     }
@@ -127,7 +172,7 @@ namespace BlackCore
 
         }
 
-        void CSimulatorFSX::setOwnAircraft(OwnAircraft aircraft)
+        void CSimulatorFSX::setOwnAircraft(DataDefinitionOwnAircraft aircraft)
         {
             BlackMisc::Geo::CCoordinateGeodetic position;
             position.setLatitude(CLatitude(aircraft.latitude, CAngleUnit::deg()));
@@ -157,14 +202,41 @@ namespace BlackCore
             m_ownAircraft.setTransponder(transponder);
         }
 
-        void CSimulatorFSX::setSimconnectObjectID(DWORD /* requestID */, DWORD /* objectID */)
+        void CSimulatorFSX::setSimconnectObjectID(DWORD requestID, DWORD objectID)
         {
+            SimConnect_AIReleaseControl(m_hSimConnect, objectID, requestID);
+            SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZELAT, 1,
+                SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZEALT, 1,
+                SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZEATT, 1,
+                SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+
+            DataDefinitionAircraftConfiguration configuration;
+            configuration.gearCenter = 100.0;
+            configuration.gearLeft = 100.0;
+            configuration.gearRight = 100.0;
+            configuration.gearTail = 100.0;
+            configuration.gearAux = 100.0;
+            SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftConfiguration), &configuration);
+
+            SimConnectObject simObject;
+            foreach (simObject, m_simConnectObjects)
+            {
+                if (simObject.m_requestId == requestID)
+                {
+                    simObject.m_objectId = objectID;
+                    break;
+                }
+            }
+            m_simConnectObjects.insert(simObject.m_callsign, simObject);
 
         }
 
         void CSimulatorFSX::timerEvent(QTimerEvent* /* event */)
         {
             dispatch();
+            update();
         }
 
         void CSimulatorFSX::checkConnection()
@@ -195,6 +267,9 @@ namespace BlackCore
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_SIM_STATUS, "Sim");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_OBJECT_ADDED, "ObjectAdded");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_OBJECT_REMOVED, "ObjectRemoved");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EVENT_FREEZELAT, "FREEZE_LATITUDE_LONGITUDE_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EVENT_FREEZEALT, "FREEZE_ALTITUDE_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EVENT_FREEZEATT, "FREEZE_ATTITUDE_SET");
 
             return hr;
         }
@@ -202,6 +277,37 @@ namespace BlackCore
         HRESULT CSimulatorFSX::initDataDefinitions()
         {
             return CSimConnectDataDefinition::initDataDefinitions(m_hSimConnect);
+        }
+
+        void CSimulatorFSX::update()
+        {
+            foreach (SimConnectObject simObj, m_simConnectObjects)
+            {
+                if (simObj.m_interpolator.hasEnoughAircraftSituations())
+                {
+                    DataDefinitionAircraftPosition position;
+                    CAircraftSituation situation = simObj.m_interpolator.getCurrentSituation();
+                    position.latitude = situation.latitude().value();
+                    position.longitude = situation.longitude().value();
+                    position.altitude = situation.getAltitude().value(CLengthUnit::ft());
+                    position.pitch = situation.getPitch().value();
+                    position.bank = situation.getBank().value();
+                    position.trueHeading = situation.getHeading().value(CAngleUnit::deg());
+
+                    DataDefinitionAircraftConfiguration configuration;
+                    configuration.gearCenter = 100.0;
+                    configuration.gearLeft = 100.0;
+                    configuration.gearRight = 100.0;
+                    configuration.gearTail = 100.0;
+                    configuration.gearAux = 100.0;
+
+                    if (simObj.m_objectId != 0)
+                    {
+                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftPosition), &position);
+                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftConfiguration), &configuration);
+                    }
+                }
+            }
         }
     }
 }
