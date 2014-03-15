@@ -11,6 +11,7 @@
 #include "blackcore/simulator.h"
 
 #include <QTimer>
+#include <QDir>
 
 namespace BlackCore
 {
@@ -83,11 +84,21 @@ namespace BlackCore
         void setConnectionStatus(bool value);
 
     private:
+
+        /*!
+         * \brief Load any kind of plugins
+         * \todo Currently it goes through the plugins folder and creates an instance for any plugin it may find
+         *       In case an FSX and an X-Plane are in that folder, m_simulator will always point to X-Plane in the end.
+         */
+        void loadPlugins();
+
         BlackMisc::Aviation::CAircraft m_ownAircraft;
         BlackCore::ISimulator *m_simulator;
 
         QTimer *m_updateTimer;
         BlackCore::IContextNetwork *m_contextNetwork;
+
+        QDir m_pluginsDir;
     };
 
 } // namespace BlackCore

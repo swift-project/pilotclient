@@ -3,8 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKCORE_SIMULATOR_FSX_H
-#define BLACKCORE_SIMULATOR_FSX_H
+#ifndef BLACKSIMPLUGIN_SIMULATOR_FSX_H
+#define BLACKSIMPLUGIN_SIMULATOR_FSX_H
 
 #define NOMINMAX
 
@@ -15,14 +15,26 @@
 #include "blackmisc/avaircraft.h"
 #include <simconnect/SimConnect.h>
 #include <QObject>
+#include <QtPlugin>
 #include <QHash>
 
 #include <windows.h>
 
-namespace BlackCore
+namespace BlackSimPlugin
 {
     namespace FSX
     {
+        //! \brief Factory implementation to create CSimulatorFSX instances
+        class Q_DECL_EXPORT CSimulatorFsxFactory : public QObject, public BlackCore::ISimulatorFactory
+        {
+            Q_OBJECT
+            Q_PLUGIN_METADATA(IID "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
+            Q_INTERFACES(BlackCore::ISimulatorFactory)
+        public:
+            //! \copydoc BlackCore::ISimulatorFactory::create()
+            virtual BlackCore::ISimulator* create(QObject *parent) override;
+        };
+
         //! \brief SimConnect Event ID's
         enum EVENT_ID {
             EVENT_SIM_STATUS,
@@ -36,7 +48,7 @@ namespace BlackCore
         };
 
         //! \brief FSX Simulator Implementation
-        class CSimulatorFSX : public ISimulator
+        class CSimulatorFSX : public BlackCore::ISimulator
         {
             Q_OBJECT
         public:
@@ -140,4 +152,4 @@ namespace BlackCore
 
 } // namespace BlackCore
 
-#endif // BLACKCORE_SIMULATOR_FSX_H
+#endif // BLACKSIMPLUGIN_SIMULATOR_FSX_H

@@ -6,16 +6,22 @@
 #include "simulator_fsx.h"
 #include "simconnect_datadefinition.h"
 #include "simconnect_exception.h"
+
 #include <QTimer>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 
-namespace BlackCore
+namespace BlackSimPlugin
 {
     namespace FSX
     {
+        BlackCore::ISimulator *CSimulatorFsxFactory::create(QObject *parent)
+        {
+            return new FSX::CSimulatorFSX(parent);
+        }
+
         CSimulatorFSX::CSimulatorFSX(QObject *parent) :
             ISimulator(parent),
             m_isConnected(false),
@@ -57,7 +63,7 @@ namespace BlackCore
             hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, "Boeing 737-800 Paint1", callsign.toQString().left(12).toLatin1().constData(), initialPosition, simObj.m_requestId);
         }
 
-        void CSimulatorFSX::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation & situation)
+        void CSimulatorFSX::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
         {
             if (!m_simConnectObjects.contains(callsign))
             {
@@ -70,7 +76,7 @@ namespace BlackCore
             m_simConnectObjects.insert(callsign, simObj);
         }
 
-        void CSimulatorFSX::removeRemoteAircraft(const CCallsign &callsign)
+        void CSimulatorFSX::removeRemoteAircraft(const CCallsign &/*callsign*/)
         {
             // TODO
         }
@@ -194,7 +200,7 @@ namespace BlackCore
             com2.setFrequencyActive(CFrequency(aircraft.com2ActiveMHz, CFrequencyUnit::MHz()));
             com2.setFrequencyStandby(CFrequency(aircraft.com2StandbyMHz, CFrequencyUnit::MHz()));
 
-            CTransponder transponder("Transponder", aircraft.transponderCode, CTransponder::ModeC);
+            CTransponder transponder("Transponder", aircraft.transponderCode, CTransponder::ModeS);
 
             m_ownAircraft.setSituation(aircraftSituation);
             m_ownAircraft.setCom1System(com1);
@@ -218,7 +224,7 @@ namespace BlackCore
             configuration.gearRight = 100.0;
             configuration.gearTail = 100.0;
             configuration.gearAux = 100.0;
-            SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftConfiguration), &configuration);
+            SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, objectID, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftConfiguration), &configuration);
 
             SimConnectObject simObject;
             foreach (simObject, m_simConnectObjects)
@@ -304,6 +310,8 @@ namespace BlackCore
                     if (simObj.m_objectId != 0)
                     {
                         SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftPosition), &position);
+
+                        // With the following SimConnect call all aircrafts loose their red tag. No idea why though.
                         SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftConfiguration), &configuration);
                     }
                 }

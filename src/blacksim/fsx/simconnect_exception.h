@@ -3,12 +3,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKCORE_FSX_SIMCONNECT_EXCEPTION_H
-#define BLACKCORE_FSX_SIMCONNECT_EXCEPTION_H
+#ifndef BLACKSIMPLUGIN_FSX_SIMCONNECT_EXCEPTION_H
+#define BLACKSIMPLUGIN_FSX_SIMCONNECT_EXCEPTION_H
 
 #include "simconnect/SimConnect.h"
 
-namespace BlackCore
+namespace BlackSimPlugin
 {
     namespace FSX
     {
@@ -27,4 +27,4 @@ namespace BlackCore
     }
 }
 
-#endif // BLACKCORE_FSX_SIMCONNECT_EXCEPTION_H
+#endif // BLACKSIMPLUGIN_FSX_SIMCONNECT_EXCEPTION_H

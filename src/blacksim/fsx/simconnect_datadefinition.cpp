@@ -6,7 +6,7 @@
 #include "simconnect_datadefinition.h"
 #include "simconnect/SimConnect.h"
 
-namespace BlackCore
+namespace BlackSimPlugin
 {
     namespace FSX
     {

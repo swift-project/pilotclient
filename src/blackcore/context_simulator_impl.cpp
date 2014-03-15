@@ -5,10 +5,7 @@
 
 #include "context_simulator_impl.h"
 #include "coreruntime.h"
-
-#ifdef BLACK_WITH_FSX
-    #include "fsx/simulator_fsx.h"
-#endif
+#include <QPluginLoader>
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -26,10 +23,6 @@ namespace BlackCore
     {
         m_updateTimer = new QTimer(this);
 
-#ifdef BLACK_WITH_FSX
-        m_simulator = new BlackCore::FSX::CSimulatorFSX(this);
-        connect(m_simulator, &ISimulator::connectionChanged, this, &CContextSimulator::setConnectionStatus);
-#endif
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
     }
 
@@ -53,13 +46,16 @@ namespace BlackCore
 
     void CContextSimulator::init()
     {
+        loadPlugins();
+
         if (!m_contextNetwork)
         {
             m_contextNetwork = getRuntime()->getIContextNetwork();
         }
 
         if (m_simulator)
-            connect(m_contextNetwork, &IContextNetwork::aircraftSituationUpdate, m_simulator, &ISimulator::addAircraftSituation);
+            connect(m_contextNetwork, SIGNAL(aircraftSituationUpdate(BlackMisc::Aviation::CCallsign,BlackMisc::Aviation::CAircraftSituation)),
+                    m_simulator, SLOT(addAircraftSituation(BlackMisc::Aviation::CCallsign,BlackMisc::Aviation::CAircraftSituation)));
     }
 
     void CContextSimulator::updateOwnAircraft()
@@ -82,6 +78,32 @@ namespace BlackCore
         else
             m_updateTimer->stop();
         emit connectionChanged(value);
+    }
+
+    void CContextSimulator::loadPlugins()
+    {
+        m_pluginsDir = QDir(qApp->applicationDirPath());
+        m_pluginsDir.cd("plugins");
+
+        foreach (QString fileName, m_pluginsDir.entryList(QDir::Files))
+        {
+            QPluginLoader loader(m_pluginsDir.absoluteFilePath(fileName));
+            QObject *plugin = loader.instance();
+            if (plugin)
+            {
+                ISimulatorFactory *factory = qobject_cast<ISimulatorFactory*>(plugin);
+                if(plugin)
+                {
+                    m_simulator = factory->create(this);
+                    connect(m_simulator, SIGNAL(connectionChanged(bool)), this, SLOT(setConnectionStatus(bool)));
+                }
+
+            }
+            else
+            {
+                qDebug() << loader.errorString();
+            }
+        }
     }
 
 } // namespace BlackCore

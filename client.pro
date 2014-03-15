@@ -21,6 +21,10 @@ contains(BLACK_CONFIG, BlackGui) {
 
 contains(BLACK_CONFIG, BlackSim) {
     SUBDIRS += src/blacksim
+
+    contains(BLACK_CONFIG, FSX) {
+        SUBDIRS += src/blacksim/fsx/plugin_fsx.pro
+    }
 }
 
 contains(BLACK_CONFIG, Samples) {

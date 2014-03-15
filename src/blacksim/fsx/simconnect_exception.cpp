@@ -6,7 +6,7 @@
 #include "simconnect_exception.h"
 #include <QDebug>
 
-namespace BlackCore
+namespace BlackSimPlugin
 {
     namespace FSX
     {

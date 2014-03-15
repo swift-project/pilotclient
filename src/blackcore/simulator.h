@@ -40,6 +40,7 @@ namespace BlackCore
         //! \brief Are we connected to the simulator?
         virtual bool isConnected() const = 0;
 
+    public slots:
         /*!
          * \brief Return user aircraft object
          * \return
@@ -78,6 +79,24 @@ namespace BlackCore
         void ownAircraftReceived(BlackMisc::Aviation::CAircraft aircraft);
     };
 
+    //! \brief Factory pattern class to create instances of ISimulator
+    class ISimulatorFactory
+    {
+    public:
+
+        //! \brief Virtual destructor
+        virtual ~ISimulatorFactory() {}
+
+        /*!
+         * \brief Create a new instance
+         * \param parent
+         * \return
+         */
+        virtual ISimulator* create(QObject *parent = nullptr) = 0;
+    };
+
 } // namespace BlackCore
+
+Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
 
 #endif // BLACKCORE_SIMULATOR_H
