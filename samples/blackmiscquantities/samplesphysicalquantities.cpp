@@ -15,6 +15,13 @@ namespace BlackMiscTest
      */
     int CSamplesPhysicalQuantities::samples()
     {
+        QVariant parsedPq = CPqString::parse("100 km/h");
+        parsedPq = CPqString::parse("-33ft");
+        parsedPq = CPqString::parse("666");
+        CSpeed speedParsed = CPqString::parse<CSpeed>("111.33ft/s");
+        CFrequency frequencyParsed = CPqString::parse<CFrequency>("122.8MHz");
+        qDebug() << "parsed" << speedParsed << speedParsed.valueRoundedWithUnit(2, true) << frequencyParsed << frequencyParsed.valueRoundedWithUnit(2, true);
+
         // cases which must not work
         // CLengthUnit du1(CAngleUnit::rad());
 
