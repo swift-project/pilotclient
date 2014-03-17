@@ -30,6 +30,7 @@ void BlackMisc::PhysicalQuantities::registerMetadata()
     CSpeed::registerMetadata();
     CTemperature::registerMetadata();
     CTime::registerMetadata();
+    CPqString::registerMetadata();
 }
 
 /*

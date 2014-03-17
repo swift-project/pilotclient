@@ -21,5 +21,6 @@
 #include "blackmisc/pqtime.h"
 #include "blackmisc/pqacceleration.h"
 #include "blackmisc/pqunits.h"
+#include "blackmisc/pqstring.h"
 
 #endif // guard

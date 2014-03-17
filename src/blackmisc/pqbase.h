@@ -386,16 +386,18 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Valid unit symbol
-             * \param symbol must be a valid unit symbol (without i18n) or empty string (empty means default unit)
+             * \brief Valid unit symbol?
+             * \param symbol to be tested
+             * \param caseSensitivity check case sensitiv?
              */
-            template <class U> static bool isValidUnitSymbol(const QString &symbol)
+            template <class U> static bool isValidUnitSymbol(const QString &symbol, Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive)
             {
                 if (symbol.isEmpty()) return false;
                 const QList<U> &units = U::allUnits();
                 for (int i = 0; i < units.size(); ++i)
                 {
-                    if (units.at(i).getSymbol() == symbol) return true;
+                    if (caseSensitivity == Qt::CaseSensitive && units.at(i).getSymbol() == symbol) return true;
+                    if (units.at(i).getSymbol().compare(symbol, Qt::CaseInsensitive) == 0) return 0;
                 }
                 return false;
             }
