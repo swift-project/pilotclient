@@ -62,7 +62,7 @@ namespace BlackCore
             if (m_loginMode == LoginStealth)
             {
                 capabilities += ":";
-                capabilities += "STEALTH"; // TODO  m_net->capability_Stealth
+                capabilities += m_net->capability_Stealth;
                 capabilities += "=1";
             }
 
