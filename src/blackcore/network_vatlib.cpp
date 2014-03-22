@@ -183,23 +183,60 @@ namespace BlackCore
         case Cvatlib_Network::connStatus_Connected:         return INetwork::Connected;
         case Cvatlib_Network::connStatus_Disconnected:      return INetwork::Disconnected;
         case Cvatlib_Network::connStatus_Error:             return INetwork::DisconnectedError;
-        case Cvatlib_Network::connStatus_ConnectionLost:    return INetwork::Disconnected;
+        case Cvatlib_Network::connStatus_ConnectionFailed:  return INetwork::DisconnectedFailed;
+        case Cvatlib_Network::connStatus_ConnectionLost:    return INetwork::DisconnectedLost;
         }
         qFatal("unrecognised connection status");
         return INetwork::DisconnectedError;
     }
 
-    void CNetworkVatlib::changeConnectionStatus(Cvatlib_Network::connStatus status)
+    void CNetworkVatlib::changeConnectionStatus(Cvatlib_Network::connStatus status, QString errorMessage)
     {
         if (m_status != status)
         {
             qSwap(m_status, status);
-            emit connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status));
+            emit connectionStatusChanged(convertConnectionStatus(status), convertConnectionStatus(m_status), errorMessage);
 
             if (isDisconnected())
             {
                 m_updateTimer.stop();
             }
+        }
+    }
+
+    QString CNetworkVatlib::getSocketError() const
+    {
+        static QMap<QString, QString> errorCodes;
+        if (errorCodes.isEmpty())
+        {
+            errorCodes["ECONNABORTED"] = "Connection aborted";
+            errorCodes["ECONNREFUSED"] = "Connection refused";
+            errorCodes["ECONNRESET"] = "Connection reset";
+            errorCodes["EHOSTDOWN"] = "Host is down";
+            errorCodes["EHOSTUNREACH"] = "Host is unreachable";
+            errorCodes["ENETDOWN"] = "Network is down";
+            errorCodes["ENETRESET"] = "Connection aborted by network";
+            errorCodes["ENETUNREACH"] = "Network unreachable";
+            errorCodes["ENOTCONN"] = "The socket is not connected";
+            errorCodes["ETIMEDOUT"] = "Connection timed out";
+        }
+
+        QString err(m_net->GetNetworkErrorCode());
+        if (errorCodes.contains(err))
+        {
+            return errorCodes[err];
+        }
+        else if (err.startsWith("EUNKWN"))
+        {
+            return "Unknown error code " + err.section(' ', 1);
+        }
+        else if (err == "EOK" || err.isEmpty())
+        {
+            return "";
+        }
+        else
+        {
+            return "Unrecognized error code " + err;
         }
     }
 
@@ -326,12 +363,12 @@ namespace BlackCore
             }
             else
             {
-                changeConnectionStatus(Cvatlib_Network::connStatus_Error);
+                changeConnectionStatus(Cvatlib_Network::connStatus_Error/*, getSocketError()*/);
             }
         }
         catch (...)
         {
-            changeConnectionStatus(Cvatlib_Network::connStatus_Error);
+            changeConnectionStatus(Cvatlib_Network::connStatus_Error/*, getSocketError()*/);
             exceptionDispatcher(Q_FUNC_INFO);
         }
     }
@@ -344,7 +381,7 @@ namespace BlackCore
 
             if (m_net && m_net->IsValid() && m_net->IsNetworkConnected())
             {
-                // I let others know we are going down
+                // emit signal directly because there is no Cvatlib_Network enum for Disconnecting
                 emit this->connectionStatusChanged(convertConnectionStatus(m_status), Disconnecting);
                 m_net->LogoffAndDisconnect(c_logoffTimeoutSec);
             }
@@ -618,7 +655,16 @@ namespace BlackCore
 
     void CNetworkVatlib::onConnectionStatusChanged(Cvatlib_Network *, Cvatlib_Network::connStatus, Cvatlib_Network::connStatus newStatus, void *cbvar)
     {
-        cbvar_cast(cbvar)->changeConnectionStatus(newStatus);
+        if (newStatus == Cvatlib_Network::connStatus_Error ||
+            newStatus == Cvatlib_Network::connStatus_ConnectionFailed ||
+            newStatus == Cvatlib_Network::connStatus_ConnectionLost)
+        {
+            cbvar_cast(cbvar)->changeConnectionStatus(newStatus, cbvar_cast(cbvar)->getSocketError());
+        }
+        else
+        {
+            cbvar_cast(cbvar)->changeConnectionStatus(newStatus);
+        }
     }
 
     void CNetworkVatlib::onTextMessageReceived(Cvatlib_Network *, const char *from, const char *to, const char *msg, void *cbvar)

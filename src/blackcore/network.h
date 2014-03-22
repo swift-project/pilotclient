@@ -91,6 +91,8 @@ namespace BlackCore
             Disconnected = 0,   //!< Not connected
             Disconnecting,      //!< In transition to disconnected
             DisconnectedError,  //!< Disconnected due to socket error
+            DisconnectedFailed, //!< A connection was not established due to socket error
+            DisconnectedLost,   //!< Connection lost due to socket error
             Connecting,         //!< Connection initiated but not established
             Connected           //!< Connection established
         };
@@ -387,7 +389,7 @@ namespace BlackCore
         /*!
          * The status of our connection has changed.
          */
-        void connectionStatusChanged(ConnectionStatus oldStatus, ConnectionStatus newStatus);
+        void connectionStatusChanged(ConnectionStatus oldStatus, ConnectionStatus newStatus, QString errorMessage = "");
 
         /*!
          * We received a reply to one of our pings.
