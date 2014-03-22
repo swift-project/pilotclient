@@ -756,7 +756,6 @@ namespace BlackCore
     void CNetworkVatlib::onKicked(Cvatlib_Network *, const char *reason, void *cbvar)
     {
         emit cbvar_cast(cbvar)->kicked(cbvar_cast(cbvar)->fromFSD(reason));
-        emit cbvar_cast(cbvar)->terminate();
     }
 
     void CNetworkVatlib::onPong(Cvatlib_Network *, const char *callsign, INT elapsedTime, void *cbvar)
