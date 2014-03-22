@@ -332,12 +332,6 @@ namespace BlackCore
          */
         void atisLogoffTimeReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
 
-        /*!
-         * We received a reply to one of our METAR queries.
-         * \sa sendMetarQuery
-         */
-        void metarReplyReceived(const QString &data);
-
         //! @}
         ////////////////////////////////////////////////////////////////
         //! \name Aircraft signals
@@ -431,6 +425,12 @@ namespace BlackCore
         //! \name Weather signals
         //! @{
         ////////////////////////////////////////////////////////////////
+
+        /*!
+         * We received a reply to one of our METAR queries.
+         * \sa sendMetarQuery
+         */
+        void metarReplyReceived(const QString &data);
 
         // TODO void temperatureDataReplyReceived(...);
         // TODO void windDataReplyReceived(...);
