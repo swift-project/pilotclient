@@ -198,6 +198,12 @@ namespace BlackCore
          */
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) = 0;
 
+        /*!
+         * Send a custom packet.
+         * \pre Network must be connected when calling this function.
+         */
+        virtual void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data) = 0;
+
         //! @}
         ////////////////////////////////////////////////////////////////
         //! \name ATC slots
@@ -338,6 +344,11 @@ namespace BlackCore
          * \sa sendAtisQuery
          */
         void atisLogoffTimeReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
+
+        /*!
+         * We received a custom packet. It is the slot's responsibility to decode the data.
+         */
+        void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
         //! @}
         ////////////////////////////////////////////////////////////////

@@ -90,6 +90,7 @@ namespace BlackCore
             m_net->InstallOnCloudDataReceivedEvent(onCloudDataReceived, this);
             m_net->InstallOnPilotInfoRequestReceivedEvent(onPilotInfoRequestReceived, this);
             m_net->InstallOnPilotInfoReceivedEvent(onPilotInfoReceived, this);
+            m_net->InstallOnCustomPilotPacketReceivedEvent(onCustomPacketReceived, this);
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
@@ -250,9 +251,45 @@ namespace BlackCore
         return toFSD(callsign.getStringAsSet());
     }
 
+    std::function<const char **()> CNetworkVatlib::toFSD(QStringList qstrList) const
+    {
+        struct Closure
+        {
+            QVector<QByteArray> m_bytesVec;
+            QVector<const char *> m_cstrVec;
+            Closure(QStringList qsl, const CNetworkVatlib *creator)
+            {
+                for (auto i = qsl.begin(); i != qsl.end(); ++i)
+                {
+                    m_bytesVec.push_back(creator->toFSD(*i));
+                }
+            }
+            const char **operator ()()
+            {
+                Q_ASSERT(m_cstrVec.isEmpty());
+                for (auto i = m_bytesVec.begin(); i != m_bytesVec.end(); ++i)
+                {
+                    m_cstrVec.push_back(i->constData());
+                }
+                return const_cast<const char **>(m_cstrVec.constData());
+            }
+        };
+        return Closure(qstrList, this);
+    }
+
     QString CNetworkVatlib::fromFSD(const char *cstr) const
     {
         return m_fsdTextCodec->toUnicode(cstr);
+    }
+
+    QStringList CNetworkVatlib::fromFSD(const char **cstrArray, int size) const
+    {
+        QStringList qstrList;
+        for (int i = 0; i < size; ++i)
+        {
+            qstrList.push_back(fromFSD(cstrArray[i]));
+        }
+        return qstrList;
     }
 
     void exceptionDispatcher(const char *caller)
@@ -437,6 +474,17 @@ namespace BlackCore
                 freqsVec.push_back(message.getFrequency().value(CFrequencyUnit::kHz()));
                 m_net->SendRadioTextMessage(freqsVec.size(), freqsVec.data(), toFSD(message.getMessage()));
             }
+        }
+        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+    }
+
+    void CNetworkVatlib::sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data)
+    {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
+        try
+        {
+            m_net->SendCustomPilotPacket(toFSD(callsign), toFSD(packetId), toFSD(data)(), data.size());
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
@@ -761,6 +809,11 @@ namespace BlackCore
     void CNetworkVatlib::onPong(Cvatlib_Network *, const char *callsign, INT elapsedTime, void *cbvar)
     {
         emit cbvar_cast(cbvar)->pongReceived(cbvar_cast(cbvar)->fromFSD(callsign), CTime(elapsedTime, CTimeUnit::s()));
+    }
+
+    void CNetworkVatlib::onCustomPacketReceived(Cvatlib_Network *, const char *callsign, const char *packetId, const char **data, INT dataSize, void *cbvar)
+    {
+        emit cbvar_cast(cbvar)->customPacketReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(packetId), cbvar_cast(cbvar)->fromFSD(data, dataSize));
     }
 
     void CNetworkVatlib::onMetarReceived(Cvatlib_Network *, const char *data, void *cbvar)

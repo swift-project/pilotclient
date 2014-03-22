@@ -49,6 +49,7 @@ namespace BlackCore
         virtual void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendIpQuery() override;
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
+        virtual void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data) override;
 
         // Text message slots
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) override;
@@ -100,11 +101,15 @@ namespace BlackCore
         static void onPilotInfoRequestReceived(Cvatlib_Network *, const char *callsign, void *cbvar);
         static void onPilotInfoReceived(Cvatlib_Network *, const char *callsign, const char **keysValues, void *cbvar);
         static void onPilotPositionUpdate(Cvatlib_Network *, const char *callsign, Cvatlib_Network::PilotPosUpdate pos, void *cbvar);
+        static void onCustomPacketReceived(Cvatlib_Network *, const char *callsign, const char *packetId, const char **data, INT dataSize, void *cbvar);
 
     private:
         QByteArray toFSD(QString qstr) const;
         QByteArray toFSD(const BlackMisc::Aviation::CCallsign &callsign) const;
+        std::function<const char **()> toFSD(QStringList qstrList) const;
         QString fromFSD(const char *cstr) const;
+        QStringList fromFSD(const char **cstrArray, int size) const;
+
         void initializeSession();
         void changeConnectionStatus(Cvatlib_Network::connStatus newStatus, QString errorMessage = "");
         bool isDisconnected() const { return m_status != Cvatlib_Network::connStatus_Connecting && m_status != Cvatlib_Network::connStatus_Connected; }
