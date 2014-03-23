@@ -27,20 +27,18 @@ namespace BlackMisc
 
         // Using SFINAE to help detect missing BLACK_ENABLE_TUPLE_CONVERSION macro in static_assert
         //! \private
-        //! @{
         std::false_type hasEnabledTupleConversionHelper(...);
 
+        //! \private
         template <class T>
         typename T::EnabledTupleConversion hasEnabledTupleConversionHelper(T *);
 
-        //! \brief Tupel conversions enabled?
+        //! \private
         template <class T>
         struct HasEnabledTupleConversion
         {
-            //! \brief detect type
             typedef decltype(hasEnabledTupleConversionHelper(static_cast<T *>(nullptr))) type;
         };
-        //! @}
 
         // Using tag dispatch to select which implementation of compare() to use
         //! \private
@@ -79,7 +77,6 @@ namespace BlackMisc
 
         // Applying operations to all elements in a tuple, using recursion
         //! \private
-        //! @{
         template <int N>
         struct TupleHelper
         {
@@ -110,24 +107,19 @@ namespace BlackMisc
             }
         };
 
-        //! \brief Applying operations to all elements in a tuple, using recursion
+        //! \private
         template <>
         struct TupleHelper<0>
         {
-            //! \brief Compare,as in CValueObject::compareImpl
             template <class Tu>
             static int compare(const Tu &, const Tu &) { return 0; }
-            //! \brief marshall, as in CValueObject::marshallToDbus
             template <class Tu>
             static QDBusArgument &marshall(QDBusArgument &arg, const Tu &) { return arg; }
-            //! \brief unmarshall, as in CValueObject::unmarshallFromDbus
             template <class Tu>
             static const QDBusArgument &unmarshall(const QDBusArgument &arg, Tu &) { return arg; }
-            //! \brief hash, as in CValueObject::getHashValue
             template <class Tu>
             static uint hash(const Tu &) { return 0; }
         };
-        //! @}
 
 #endif // Q_COMPILER_VARIADIC_TEMPLATES
 
