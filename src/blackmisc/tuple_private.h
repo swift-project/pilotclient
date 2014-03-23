@@ -20,6 +20,7 @@
 #include <QString>
 #include <tuple>
 #include <type_traits>
+#include <functional>
 
 namespace BlackMisc
 {
@@ -74,6 +75,29 @@ namespace BlackMisc
             >::type isCValueObjectTag;
 
             return compareHelper(std::get<N>(a), std::get<N>(b), isCValueObjectTag());
+        }
+        //! @}
+
+        // Helper which returns a copy of its argument if it's a tuple,
+        // otherwise returns a reference to its argument.
+        //! \private
+        //! @{
+        template <class T>
+        auto tieHelper(T &obj, std::false_type isTupleTag) -> std::reference_wrapper<T>
+        {
+            Q_UNUSED(isTupleTag);
+            return obj;
+        }
+        template <class T>
+        auto tieHelper(T &obj, std::true_type isTupleTag) -> T
+        {
+            Q_UNUSED(isTupleTag);
+            return obj;
+        }
+        template <class T>
+        auto tieHelper(T &obj) -> decltype(tieHelper(obj, IsTuple<T>()))
+        {
+            return tieHelper(obj, IsTuple<T>());
         }
         //! @}
 

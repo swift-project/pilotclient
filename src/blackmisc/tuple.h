@@ -51,13 +51,13 @@
             friend class T;                                                     \
             static_assert(Private::HasEnabledTupleConversion<T>::value,         \
                           "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T); \
-            static auto toTuple(const T &o) -> decltype(std::tie MEMBERS)       \
+            static auto toTuple(const T &o) -> decltype(BlackMisc::tie MEMBERS) \
             {                                                                   \
-                return std::tie MEMBERS;                                        \
+                return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
-            static auto toTuple(T &o) -> decltype(std::tie MEMBERS)             \
+            static auto toTuple(T &o) -> decltype(BlackMisc::tie MEMBERS)       \
             {                                                                   \
-                return std::tie MEMBERS;                                        \
+                return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
             static const QStringList &jsonMembers()                             \
             {                                                                   \
@@ -80,13 +80,13 @@
             friend class T<U>;                                                  \
             static_assert(Private::HasEnabledTupleConversion<T<U>>::value,      \
                           "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T);          \
-            static auto toTuple(const T<U> &o) -> decltype(std::tie MEMBERS)    \
+            static auto toTuple(const T<U> &o) -> decltype(BlackMisc::tie MEMBERS)  \
             {                                                                   \
-                return std::tie MEMBERS;                                        \
+                return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
-            static auto toTuple(T<U> &o) -> decltype(std::tie MEMBERS)          \
+            static auto toTuple(T<U> &o) -> decltype(BlackMisc::tie MEMBERS)    \
             {                                                                   \
-                return std::tie MEMBERS;                                        \
+                return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
             static const QStringList &jsonMembers()                             \
             {                                                                   \
@@ -153,13 +153,26 @@ namespace BlackMisc
 #ifdef Q_COMPILER_VARIADIC_TEMPLATES
 
     /*!
+     * \brief   Works like std::tie but with special handling for any argument which are tuples.
+     * \details Returns a tuple of references to its arguments which can be used in the same way as
+     *          std::tie, except for arguments which are themselves tuples. Arguments which are tuples
+     *          are copied into the result tuple by value. This enables nesting of calls to tie within
+     *          other calls to tie, to workaround implementations which have a maximum tuple size.
+     */
+    template <class... Ts>
+    auto tie(Ts &&... args) -> decltype(std::make_tuple(Private::tieHelper(args)...))
+    {
+        return std::make_tuple(Private::tieHelper(args)...);
+    }
+
+    /*!
      * \brief   Lexicographical tuple comparison function which is CValueObject-aware.
      * \details Tuple members which are CValueObjects are compared using the compare() friend function of CValueObject;
      *          other tuple members are compared using operator< and operator>.
      * \ingroup Tuples
      */
     template <class... Ts>
-    int compare(std::tuple<const Ts &...> a, std::tuple<const Ts &...> b)
+    int compare(std::tuple<Ts...> a, std::tuple<Ts...> b)
     {
         return Private::TupleHelper<sizeof...(Ts)>::compare(a, b);
     }
@@ -169,7 +182,7 @@ namespace BlackMisc
      * \ingroup Tuples
      */
     template <class... Ts>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<const Ts &...> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<Ts...> tu)
     {
         return Private::TupleHelper<sizeof...(Ts)>::marshall(arg, tu);
     }
@@ -179,7 +192,7 @@ namespace BlackMisc
      * \ingroup Tuples
      */
     template <class... Ts>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<Ts &...> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<Ts...> tu)
     {
         return Private::TupleHelper<sizeof...(Ts)>::unmarshall(arg, tu);
     }
@@ -189,7 +202,7 @@ namespace BlackMisc
      * \ingroup Tuples
      */
     template <class... Ts>
-    uint qHash(std::tuple<const Ts &...> tu)
+    uint qHash(std::tuple<Ts...> tu)
     {
         return Private::TupleHelper<sizeof...(Ts)>::hash(tu);
     }
@@ -219,19 +232,99 @@ namespace BlackMisc
 
 #else // !Q_COMPILER_VARIADIC_TEMPLATES
 
+    template <class T0>
+    auto tie(T0 &&arg0)
+        -> decltype(std::make_tuple(Private::tieHelper(arg0)))
+    {
+        return std::make_tuple(Private::tieHelper(arg0));
+    }
+
+    template <class T0, class T1>
+    auto tie(T0 &&arg0, T1 &&arg1)
+        -> decltype(std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1)))
+    {
+        return std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1));
+    }
+
+    template <class T0, class T1, class T2>
+    auto tie(T0 &&arg0, T1 &&arg1, T2 &&arg2)
+        -> decltype(std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2)))
+    {
+        return std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2));
+    }
+
+    template <class T0, class T1, class T2, class T3>
+    auto tie(T0 &&arg0, T1 &&arg1, T2 &&arg2, T3 &&arg3)
+        -> decltype(std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3)))
+    {
+        return std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3));
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4>
+    auto tie(T0 &&arg0, T1 &&arg1, T2 &&arg2, T3 &&arg3, T4 &&arg4)
+        -> decltype(std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4)))
+    {
+        return std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4));
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5>
+    auto tie(T0 &&arg0, T1 &&arg1, T2 &&arg2, T3 &&arg3, T4 &&arg4, T5 &&arg5)
+        -> decltype(std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4),
+                                    Private::tieHelper(arg5)))
+    {
+        return std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4),
+                               Private::tieHelper(arg5));
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
+    auto tie(T0 &&arg0, T1 &&arg1, T2 &&arg2, T3 &&arg3, T4 &&arg4, T5 &&arg5, T6 &&arg6)
+        -> decltype(std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4),
+                                    Private::tieHelper(arg5), Private::tieHelper(arg6)))
+    {
+        return std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4),
+                               Private::tieHelper(arg5), Private::tieHelper(arg6));
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
+    auto tie(T0 &&arg0, T1 &&arg1, T2 &&arg2, T3 &&arg3, T4 &&arg4, T5 &&arg5, T6 &&arg6, T7 &&arg7)
+        -> decltype(std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4),
+                                    Private::tieHelper(arg5), Private::tieHelper(arg6), Private::tieHelper(arg7)))
+    {
+        return std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4),
+                               Private::tieHelper(arg5), Private::tieHelper(arg6), Private::tieHelper(arg7));
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
+    auto tie(T0 &&arg0, T1 &&arg1, T2 &&arg2, T3 &&arg3, T4 &&arg4, T5 &&arg5, T6 &&arg6, T7 &&arg7, T8 &&arg8)
+        -> decltype(std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4),
+                                    Private::tieHelper(arg5), Private::tieHelper(arg6), Private::tieHelper(arg7), Private::tieHelper(arg8)))
+    {
+        return std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4),
+                               Private::tieHelper(arg5), Private::tieHelper(arg6), Private::tieHelper(arg7), Private::tieHelper(arg8));
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
+    auto tie(T0 &&arg0, T1 &&arg1, T2 &&arg2, T3 &&arg3, T4 &&arg4, T5 &&arg5, T6 &&arg6, T7 &&arg7, T8 &&arg8, T9 &&arg9)
+        -> decltype(std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4),
+                                    Private::tieHelper(arg5), Private::tieHelper(arg6), Private::tieHelper(arg7), Private::tieHelper(arg8), Private::tieHelper(arg9)))
+    {
+        return std::make_tuple(Private::tieHelper(arg0), Private::tieHelper(arg1), Private::tieHelper(arg2), Private::tieHelper(arg3), Private::tieHelper(arg4),
+                               Private::tieHelper(arg5), Private::tieHelper(arg6), Private::tieHelper(arg7), Private::tieHelper(arg8), Private::tieHelper(arg9));
+    }
+
     inline int compare(std::tuple<>, std::tuple<>)
     {
         return 0;
     }
 
     template <class T0>
-    int compare(std::tuple<T0 &> a, std::tuple<T0 &> b)
+    int compare(std::tuple<T0> a, std::tuple<T0> b)
     {
         return Private::compareHelper<0>(a, b);
     }
 
     template <class T0, class T1>
-    int compare(std::tuple<T0 &, T1 &> a, std::tuple<T0 &, T1 &> b)
+    int compare(std::tuple<T0, T1> a, std::tuple<T0, T1> b)
     {
         int result;
         if ((result = Private::compareHelper<0>(a, b))) { return result; }
@@ -239,7 +332,7 @@ namespace BlackMisc
     }
 
     template <class T0, class T1, class T2>
-    int compare(std::tuple<T0 &, T1 &, T2 &> a, std::tuple<T0 &, T1 &, T2 &> b)
+    int compare(std::tuple<T0, T1, T2> a, std::tuple<T0, T1, T2> b)
     {
         int result;
         if ((result = Private::compareHelper<0>(a, b))) { return result; }
@@ -248,7 +341,7 @@ namespace BlackMisc
     }
 
     template <class T0, class T1, class T2, class T3>
-    int compare(std::tuple<T0 &, T1 &, T2 &, T3 &> a, std::tuple<T0 &, T1 &, T2 &, T3 &> b)
+    int compare(std::tuple<T0, T1, T2, T3> a, std::tuple<T0, T1, T2, T3> b)
     {
         int result;
         if ((result = Private::compareHelper<0>(a, b))) { return result; }
@@ -258,7 +351,7 @@ namespace BlackMisc
     }
 
     template <class T0, class T1, class T2, class T3, class T4>
-    int compare(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &> a, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &> b)
+    int compare(std::tuple<T0, T1, T2, T3, T4> a, std::tuple<T0, T1, T2, T3, T4> b)
     {
         int result;
         if ((result = Private::compareHelper<0>(a, b))) { return result; }
@@ -269,7 +362,7 @@ namespace BlackMisc
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5>
-    int compare(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &> a, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &> b)
+    int compare(std::tuple<T0, T1, T2, T3, T4, T5> a, std::tuple<T0, T1, T2, T3, T4, T5> b)
     {
         int result;
         if ((result = Private::compareHelper<0>(a, b))) { return result; }
@@ -281,7 +374,7 @@ namespace BlackMisc
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
-    int compare(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &> a, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &> b)
+    int compare(std::tuple<T0, T1, T2, T3, T4, T5, T6> a, std::tuple<T0, T1, T2, T3, T4, T5, T6> b)
     {
         int result;
         if ((result = Private::compareHelper<0>(a, b))) { return result; }
@@ -294,7 +387,7 @@ namespace BlackMisc
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
-    int compare(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &> a, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &> b)
+    int compare(std::tuple<T0, T1, T2, T3, T4, T5, T6, T7> a, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7> b)
     {
         int result;
         if ((result = Private::compareHelper<0>(a, b))) { return result; }
@@ -308,7 +401,7 @@ namespace BlackMisc
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
-    int compare(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &> a, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &> b)
+    int compare(std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8> a, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8> b)
     {
         int result;
         if ((result = Private::compareHelper<0>(a, b))) { return result; }
@@ -323,7 +416,7 @@ namespace BlackMisc
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
-    int compare(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &, T9 &> a, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &, T9 &> b)
+    int compare(std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> a, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> b)
     {
         int result;
         if ((result = Private::compareHelper<0>(a, b))) { return result; }
