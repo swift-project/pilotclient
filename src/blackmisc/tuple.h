@@ -49,7 +49,7 @@
         template <> class TupleConverter<T>                                     \
         {                                                                       \
             friend class T;                                                     \
-            static_assert(Private::HasEnabledTupleConversion<T>::type::value,   \
+            static_assert(Private::HasEnabledTupleConversion<T>::value,         \
                           "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T); \
             static auto toTuple(const T &o) -> decltype(std::tie MEMBERS)       \
             {                                                                   \
@@ -78,7 +78,7 @@
         template <class U> class TupleConverter<T<U>>                           \
         {                                                                       \
             friend class T<U>;                                                  \
-            static_assert(Private::HasEnabledTupleConversion<T<U>>::type::value,\
+            static_assert(Private::HasEnabledTupleConversion<T<U>>::value,      \
                           "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T);          \
             static auto toTuple(const T<U> &o) -> decltype(std::tie MEMBERS)    \
             {                                                                   \

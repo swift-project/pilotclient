@@ -41,6 +41,7 @@ namespace BlackMisc
         struct HasEnabledTupleConversion
         {
             typedef decltype(hasEnabledTupleConversionHelper(static_cast<T *>(nullptr))) type;
+            static const bool value = type::value;
         };
 
         // Using tag dispatch to select which implementation of compare() to use
