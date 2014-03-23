@@ -28,6 +28,7 @@ Client::Client(BlackMisc::IContext &ctx)
     connect(m_net, &INetwork::icaoCodesReplyReceived,           this, &Client::icaoCodesReplyReceived);
     connect(m_net, &INetwork::pongReceived,                     this, &Client::pongReceived);
     connect(m_net, &INetwork::textMessagesReceived,             this, &Client::textMessagesReceived);
+    connect(m_net, &INetwork::customPacketReceived,             this, &Client::customPacketReceived);
 
     connect(this, &Client::presetServer,                        m_net, &INetwork::presetServer);
     connect(this, &Client::presetCallsign,                      m_net, &INetwork::presetCallsign);
@@ -52,11 +53,14 @@ Client::Client(BlackMisc::IContext &ctx)
     connect(this, &Client::sendPing,                            m_net, &INetwork::sendPing);
     connect(this, &Client::sendMetarQuery,                      m_net, &INetwork::sendMetarQuery);
     connect(this, &Client::sendWeatherDataQuery,                m_net, &INetwork::sendWeatherDataQuery);
+    connect(this, &Client::sendCustomPacket,                    m_net, &INetwork::sendCustomPacket);
 
     using namespace std::placeholders;
     m_commands["help"]              = std::bind(&Client::help, this, _1);
     m_commands["echo"]              = std::bind(&Client::echo, this, _1);
     m_commands["exit"]              = std::bind(&Client::exit, this, _1);
+    m_commands["getstatusurls"]     = std::bind(&Client::getStatusUrlsCmd, this, _1);
+    m_commands["getservers"]        = std::bind(&Client::getKnownServersCmd, this, _1);
     m_commands["setserver"]         = std::bind(&Client::presetServerCmd, this, _1);
     m_commands["setcallsign"]       = std::bind(&Client::presetCallsignCmd, this, _1);
     m_commands["icaocodes"]         = std::bind(&Client::presetIcaoCodesCmd, this, _1);
@@ -81,6 +85,7 @@ Client::Client(BlackMisc::IContext &ctx)
     m_commands["ping"]              = std::bind(&Client::sendPingCmd, this, _1);
     m_commands["metar"]             = std::bind(&Client::sendMetarQueryCmd, this, _1);
     m_commands["weather"]           = std::bind(&Client::sendWeatherDataQueryCmd, this, _1);
+    m_commands["custom"]            = std::bind(&Client::sendCustomPacketCmd, this, _1);
 }
 
 void Client::command(QString line)
@@ -123,6 +128,24 @@ void Client::echo(QTextStream &line)
 void Client::exit(QTextStream &)
 {
     emit quit();
+}
+
+void Client::getStatusUrlsCmd(QTextStream &)
+{
+    auto urls = m_net->getStatusUrls();
+    for (auto i = urls.begin(); i != urls.end(); ++i)
+    {
+        std::cout << i->toString().toStdString() << std::endl;
+    }
+}
+
+void Client::getKnownServersCmd(QTextStream &)
+{
+    auto servers = m_net->getKnownServers();
+    for (auto i = servers.begin(); i != servers.end(); ++i)
+    {
+        std::cout << i->toFormattedQString().toStdString() << std::endl;
+    }
 }
 
 void Client::presetServerCmd(QTextStream &args)
@@ -377,6 +400,21 @@ void Client::sendWeatherDataQueryCmd(QTextStream &args)
     emit sendWeatherDataQuery(airportICAO);
 }
 
+void Client::sendCustomPacketCmd(QTextStream &args)
+{
+    QString callsign;
+    QString packetId;
+    args >> callsign >> packetId;
+    QStringList data;
+    while (!args.atEnd())
+    {
+        QString field;
+        args >> field;
+        data.push_back(field);
+    }
+    emit sendCustomPacket(callsign, packetId, data);
+}
+
 /****************************************************************************/
 /************      Slots to receive signals from INetwork       *************/
 /****************************************************************************/
@@ -392,13 +430,16 @@ void Client::atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
     std::cout << "ATC_DISCONNECTED " << callsign << std::endl;
 }
 
-void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus)
+void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus,
+                                     const QString &errorMessage)
 {
     switch (newStatus)
     {
     case BlackCore::INetwork::Disconnected:         std::cout << "CONN_STATUS_DISCONNECTED"; break;
     case BlackCore::INetwork::Disconnecting:        std::cout << "CONN_STATUS_DISCONNECTING"; break;
     case BlackCore::INetwork::DisconnectedError:    std::cout << "CONN_STATUS_DISCONNECTED_ERROR"; break;
+    case BlackCore::INetwork::DisconnectedFailed:   std::cout << "CONN_STATUS_DISCONNECTED_FAILED"; break;
+    case BlackCore::INetwork::DisconnectedLost:     std::cout << "CONN_STATUS_DISCONNECTED_LOST"; break;
     case BlackCore::INetwork::Connecting:           std::cout << "CONN_STATUS_CONNECTING"; break;
     case BlackCore::INetwork::Connected:            std::cout << "CONN_STATUS_CONNECTED"; break;
     }
@@ -407,8 +448,14 @@ void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldSt
     case BlackCore::INetwork::Disconnected:         std::cout << " (was CONN_STATUS_DISCONNECTED)\n"; break;
     case BlackCore::INetwork::Disconnecting:        std::cout << " (was CONN_STATUS_DISCONNECTING)\n"; break;
     case BlackCore::INetwork::DisconnectedError:    std::cout << " (was CONN_STATUS_DISCONNECTED_ERROR)\n"; break;
+    case BlackCore::INetwork::DisconnectedFailed:   std::cout << " (was CONN_STATUS_DISCONNECTED_FAILED)\n"; break;
+    case BlackCore::INetwork::DisconnectedLost:     std::cout << " (was CONN_STATUS_DISCONNECTED_LOST)\n"; break;
     case BlackCore::INetwork::Connecting:           std::cout << " (was CONN_STATUS_CONNECTING)\n"; break;
     case BlackCore::INetwork::Connected:            std::cout << " (was CONN_STATUS_CONNECTED)\n"; break;
+    }
+    if (!errorMessage.isEmpty())
+    {
+        std::cout << "REASON " << errorMessage.toStdString() << std::endl;
     }
 }
 
@@ -475,4 +522,14 @@ void Client::pongReceived(const BlackMisc::Aviation::CCallsign &callsign, const 
 void Client::textMessagesReceived(const BlackMisc::Network::CTextMessageList &list)
 {
     std::cout << "TEXT MESSAGE" << list.toStdString();
+}
+
+void Client::customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data)
+{
+    std::cout << "CUSTOM " << callsign << " " << packetId.toStdString() << " ";
+    for (auto i = data.begin(); i != data.end(); ++i)
+    {
+        std::cout << i->toStdString() << std::endl;
+    }
+    std::cout << std::endl;
 }

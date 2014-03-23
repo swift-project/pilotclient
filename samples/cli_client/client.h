@@ -30,6 +30,8 @@ private: //commands
     void help(QTextStream &args);
     void echo(QTextStream &args);
     void exit(QTextStream &args);
+    void getStatusUrlsCmd(QTextStream &args);
+    void getKnownServersCmd(QTextStream &args);
     void presetServerCmd(QTextStream &args);
     void presetCallsignCmd(QTextStream &args);
     void presetIcaoCodesCmd(QTextStream &args);
@@ -54,6 +56,7 @@ private: //commands
     void sendPingCmd(QTextStream &args);
     void sendMetarQueryCmd(QTextStream &args);
     void sendWeatherDataQueryCmd(QTextStream &args);
+    void sendCustomPacketCmd(QTextStream &args);
 
 signals: //to send to INetwork
     void presetServer(const BlackMisc::Network::CServer &server);
@@ -82,12 +85,14 @@ signals: //to send to INetwork
     void sendPing(const BlackMisc::Aviation::CCallsign &callsign);
     void sendMetarQuery(const QString &airportICAO);
     void sendWeatherDataQuery(const QString &airportICAO);
+    void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
 public slots: //to receive from INetwork
     void atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
                            const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
     void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-    void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
+    void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus,
+                                 const QString &errorMessage);
     void ipReplyReceived(const QString &ip);
     void freqReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
     void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);
@@ -101,6 +106,7 @@ public slots: //to receive from INetwork
     void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
     void pongReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);
     void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
+    void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
 private:
     QMap<QString, std::function<void(QTextStream &)>> m_commands;
