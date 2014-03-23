@@ -29,6 +29,46 @@ namespace BlackMisc
     namespace Private
     {
 
+#ifdef Q_COMPILER_VARIADIC_TEMPLATES
+
+        // Helper trait to detect whether a class is a tuple.
+        //! \private
+        //! @{
+        template <class T>
+        struct IsTuple : public std::false_type {};
+        template <class... Ts>
+        struct IsTuple<std::tuple<Ts...>> : public std::true_type {};
+        //! @}
+
+#else // !Q_COMPILER_VARIADIC_TEMPLATES
+
+        template <class T>
+        struct IsTuple : public std::false_type {};
+        template <>
+        struct IsTuple<std::tuple<>> : public std::true_type {};
+        template <class T0>
+        struct IsTuple<std::tuple<T0>> : public std::true_type {};
+        template <class T0, class T1>
+        struct IsTuple<std::tuple<T0, T1>> : public std::true_type {};
+        template <class T0, class T1, class T2>
+        struct IsTuple<std::tuple<T0, T1, T2>> : public std::true_type {};
+        template <class T0, class T1, class T2, class T3>
+        struct IsTuple<std::tuple<T0, T1, T2, T3>> : public std::true_type {};
+        template <class T0, class T1, class T2, class T3, class T4>
+        struct IsTuple<std::tuple<T0, T1, T2, T3, T4>> : public std::true_type {};
+        template <class T0, class T1, class T2, class T3, class T4, class T5>
+        struct IsTuple<std::tuple<T0, T1, T2, T3, T4, T5>> : public std::true_type {};
+        template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
+        struct IsTuple<std::tuple<T0, T1, T2, T3, T4, T5, T6>> : public std::true_type {};
+        template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
+        struct IsTuple<std::tuple<T0, T1, T2, T3, T4, T5, T6, T7>> : public std::true_type {};
+        template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
+        struct IsTuple<std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8>> : public std::true_type {};
+        template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
+        struct IsTuple<std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>> : public std::true_type {};
+
+#endif // !Q_COMPILER_VARIADIC_TEMPLATES
+
         // Using SFINAE to help detect missing BLACK_ENABLE_TUPLE_CONVERSION macro in static_assert
         //! \private
         std::false_type hasEnabledTupleConversionHelper(...);
@@ -67,12 +107,8 @@ namespace BlackMisc
         template <int N, class Tu>
         int compareHelper(const Tu &a, const Tu &b)
         {
-            typedef typename std::is_base_of <
-            CValueObject,
-            typename std::decay <
-            typename std::tuple_element<N, Tu>::type
-            >::type
-            >::type isCValueObjectTag;
+            typedef typename std::decay<typename std::tuple_element<N, Tu>::type>::type Element;
+            typedef std::integral_constant<bool, std::is_base_of<CValueObject, Element>::value || IsTuple<Element>::value> isCValueObjectTag;
 
             return compareHelper(std::get<N>(a), std::get<N>(b), isCValueObjectTag());
         }
