@@ -8,6 +8,9 @@
 #include <QDataStream>
 #include <QDebug>
 #include <QPixmap>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonValueRef>
 #include <type_traits>
 #include <iostream>
 
@@ -197,6 +200,18 @@ namespace BlackMisc
         virtual QVariant toQVariant() const = 0;
 
         /*!
+         * \brief Contribute to JSON object
+         * \return updated JSON object
+         */
+        virtual QJsonObject toJson() const { QJsonObject json; return json;}
+
+        /*!
+         * \brief Initialize from JSOn object
+         * \param json
+         */
+        virtual void fromJson(const QJsonObject &json) { Q_UNUSED(json); }
+
+        /*!
          * \brief As icon, not implement by all classes
          * \return
          */
@@ -332,6 +347,67 @@ namespace BlackMisc
     operator<<(QDBusArgument &argument, const T &valueObject)
     {
         return argument << static_cast<CValueObject const &>(valueObject);
+    }
+
+    /*!
+     * \brief Non member, non friend operator >> for JSON
+     * \param json
+     * \param valueObject
+     * \return
+     */
+    inline const QJsonObject &operator>>(const QJsonObject &json, CValueObject &valueObject)
+    {
+        valueObject.fromJson(json);
+        return json;
+    }
+
+    /*!
+     * \brief Non member, non friend operator >> for JSON
+     * \param json
+     * \param valueObject
+     * \return
+     */
+    inline const QJsonValue &operator>>(const QJsonValue &json, CValueObject &valueObject)
+    {
+        valueObject.fromJson(json.toObject());
+        return json;
+    }
+
+    /*!
+     * \brief Non member, non friend operator >> for JSON
+     * \param json
+     * \param valueObject
+     * \return
+     */
+    inline const QJsonValueRef &operator>>(const QJsonValueRef &json, CValueObject &valueObject)
+    {
+        valueObject.fromJson(json.toObject());
+        return json;
+    }
+
+    /*!
+     * \brief Non member, non friend operator >> for JSON
+     * \param json
+     * \param value
+     * \return
+     */
+    inline QJsonArray &operator<<(QJsonArray &json, const CValueObject &value)
+    {
+        json.append(value.toJson());
+        return json;
+    }
+
+    /*!
+     * \brief Non member, non friend operator >> for JSON
+     * \param json
+     * \param value
+     * \return
+     */
+    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QJsonObject>::type &
+    operator<<(QJsonObject &json, const std::pair<QString, T> &value)
+    {
+        json.insert(value.first, QJsonValue(value.second.toJson()));
+        return json;
     }
 
     /*!
