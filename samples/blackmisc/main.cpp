@@ -7,6 +7,7 @@
 #include "sampleschangeobject.h"
 #include "samplesmetadata.h"
 #include "samplescontainer.h"
+#include "samplesjson.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqallquantities.h"
 
@@ -20,8 +21,9 @@ int main(int argc, char *argv[])
 {
     BlackMisc::initResources();
     QCoreApplication a(argc, argv);
-    CSamplesChangeObject::samples();
-    CSamplesContainer::samples();
-    CSamplesMetadata::samples();
+    CSamplesJson::samples();
+//    CSamplesChangeObject::samples();
+//    CSamplesContainer::samples();
+//    CSamplesMetadata::samples();
     return a.exec();
 }

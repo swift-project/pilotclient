@@ -38,12 +38,6 @@ namespace BlackMiscTest
         qDebug() << c1;
         c1.setActiveUnicom();
         qDebug() << c1;
-
-        if (!CComSystem::tryGetComSystem(c1, "Test", -1.0))
-            qDebug() << c1 << "is reset to default as expected";
-        else
-            qDebug() << "Something is wrong here";
-
         try
         {
             // uncomment to test assert
