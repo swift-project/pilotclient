@@ -90,39 +90,39 @@ namespace BlackMisc
          */
         void CTransponder::setModeAsString(const QString &m)
         {
-            if (m == "Ident")
+            if (m.startsWith("Ident", Qt::CaseInsensitive))
             {
                 this->setTransponderMode(StateIdent);
             }
-            else if (m == "Standby")
+            else if (m.startsWith("Standby", Qt::CaseInsensitive) || m.startsWith("Stdby", Qt::CaseInsensitive))
             {
                 this->setTransponderMode(StateStandby);
             }
-            else if (m == "Mode C")
+            else if (m.startsWith("Mode C", Qt::CaseInsensitive))
             {
                 this->setTransponderMode(ModeC);
             }
-            else if (m == "Mode S")
+            else if (m.startsWith("Mode S", Qt::CaseInsensitive))
             {
                 this->setTransponderMode(ModeS);
             }
-            else if (m == "Mil.Mode 1")
+            else if (m.contains("Mode 1", Qt::CaseInsensitive))
             {
                 this->setTransponderMode(ModeMil1);
             }
-            else if (m == "Mil.Mode 2")
+            else if (m.contains("Mode 2", Qt::CaseInsensitive))
             {
                 this->setTransponderMode(ModeMil2);
             }
-            else if (m == "Mil.Mode 3")
+            else if (m.contains("Mode 3", Qt::CaseInsensitive))
             {
                 this->setTransponderMode(ModeMil3);
             }
-            else if (m == "Mil.Mode 4")
+            else if (m.contains("Mode 4", Qt::CaseInsensitive))
             {
                 this->setTransponderMode(ModeMil4);
             }
-            else if (m == "Mil.Mode 5")
+            else if (m.contains("Mode 5", Qt::CaseInsensitive))
             {
                 this->setTransponderMode(ModeMil5);
             }
