@@ -87,12 +87,13 @@ public:
     template <class F1, class F2> ExpectUnit& expect(F1 signal, F2 slot)
     {
         auto subj = subject<F1>();
+        auto next = [=]{ this->next(); };
         m_expects.push_back([=]{
             m_waitingFor = subj->metaObject()->className();
             m_waitingFor += "::";
             m_waitingFor += QMetaMethod::fromSignal(signal).name();
             m_guard += QObject::connect(subj, signal, slot);
-            m_guard += QObject::connect(subj, signal, [=]{ next(); });
+            m_guard += QObject::connect(subj, signal, next);
         });
         return *this;
     }
