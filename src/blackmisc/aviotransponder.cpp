@@ -239,5 +239,28 @@ namespace BlackMisc
             qDBusRegisterMetaType<CTransponder>();
         }
 
+        /*
+         * Members
+         */
+        const QStringList &CTransponder::jsonMembers()
+        {
+            return TupleConverter<CTransponder>::jsonMembers();
+        }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CTransponder::toJson() const
+        {
+            return BlackMisc::serializeJson(CTransponder::jsonMembers(), TupleConverter<CTransponder>::toTuple(*this));
+        }
+
+        /*
+         * From Json
+         */
+        void CTransponder::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CTransponder::jsonMembers(), TupleConverter<CTransponder>::toTuple(*this));
+        }
     } // namespace
 } // namespace

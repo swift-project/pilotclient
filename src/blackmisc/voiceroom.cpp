@@ -91,6 +91,31 @@ namespace BlackMisc
         }
 
         /*
+         * To JSON
+         */
+        QJsonObject CVoiceRoom::toJson() const
+        {
+            return BlackMisc::serializeJson(CVoiceRoom::jsonMembers(), TupleConverter<CVoiceRoom>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        void CVoiceRoom::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CVoiceRoom::jsonMembers(), TupleConverter<CVoiceRoom>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CVoiceRoom::jsonMembers()
+        {
+            return TupleConverter<CVoiceRoom>::jsonMembers();
+        }
+
+
+        /*
          * To string
          */
         QString CVoiceRoom::convertToQString(bool /* i18n */) const

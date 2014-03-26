@@ -132,6 +132,15 @@ namespace BlackSim
 
             //! \brief Register the metatypes
             static void registerMetadata();
+
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            virtual void fromJson(const QJsonObject &json) override;
+
+            //! \brief Members
+            static const QStringList &jsonMembers();
         };
     }
 } // namespace

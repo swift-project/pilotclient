@@ -92,6 +92,32 @@ namespace BlackMisc
         }
 
         /*
+         * JSON members
+         */
+        const QStringList &CInformationMessage::jsonMembers()
+        {
+            return TupleConverter<CInformationMessage>::jsonMembers();
+        }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CInformationMessage::toJson() const
+        {
+            return BlackMisc::serializeJson(CInformationMessage::jsonMembers(), TupleConverter<CInformationMessage>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        void CInformationMessage::fromJson(const QJsonObject &json)
+        {
+            this->m_message = json.value("m_message").toString();
+            this->m_type = static_cast<CInformationMessage::InformationType>(qRound(json.value("m_type").toDouble()));
+            this->m_receivedTimestamp = QDateTime::fromString(json.value("m_receivedTimestamp").toString());
+        }
+
+        /*
          * Type as string
          */
         const QString &CInformationMessage::getTypeAsString() const

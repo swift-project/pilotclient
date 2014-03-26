@@ -86,6 +86,32 @@ namespace BlackMisc
         }
 
         /*
+         * To JSON
+         */
+        QJsonObject CComSystem::toJson() const
+        {
+            QJsonObject json = BlackMisc::serializeJson(CComSystem::jsonMembers(), TupleConverter<CComSystem>::toTuple(*this));
+            return BlackMisc::Json::appendJsonObject(json, CModulator::toJson());
+        }
+
+        /*
+         * To JSON
+         */
+        void CComSystem::fromJson(const QJsonObject &json)
+        {
+            CModulator::fromJson(json);
+            BlackMisc::deserializeJson(json, CComSystem::jsonMembers(), TupleConverter<CComSystem>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CComSystem::jsonMembers()
+        {
+            return TupleConverter<CComSystem>::jsonMembers();
+        }
+
+        /*
          * Compare
          */
         int CComSystem::compareImpl(const CValueObject &otherBase) const
@@ -149,5 +175,6 @@ namespace BlackMisc
             default: qFatal("Wrong channel spacing"); return 0.0; // return just supressing compiler warning
             }
         }
+
     } // namespace
 } // namespace

@@ -89,8 +89,17 @@ namespace BlackMisc
             //! \brief Get reference north (magnetic or true)
             ReferenceNorth getReferenceNorth() const { return m_north; }
 
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
             //! \brief Register metadata
             static void registerMetadata();
+
+            //! \brief Members
+            static const QStringList &jsonMembers();
         };
 
     } // namespace

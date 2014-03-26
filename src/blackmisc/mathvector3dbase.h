@@ -14,7 +14,6 @@ namespace BlackMisc
 {
     namespace Math
     {
-
         class CMatrix3x1;
 
         /*!
@@ -25,19 +24,13 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CVector3DBase)
 
-            /*!
-             * \brief Easy access to derived class (CRTP template parameter)
-             * \return
-             */
+            //! \brief Easy access to derived class (CRTP template parameter)
             ImplVector const *derived() const
             {
                 return static_cast<ImplVector const *>(this);
             }
 
-            /*!
-             * \brief Easy access to derived class (CRTP template parameter)
-             * \return
-             */
+            //! \brief Easy access to derived class (CRTP template parameter)
             ImplVector *derived()
             {
                 return static_cast<ImplVector *>(this);
@@ -49,23 +42,13 @@ namespace BlackMisc
             double m_j; //!< Vector data j
             double m_k; //!< Vector data k
 
-            /*!
-             * \brief Default constructor
-             */
+            //! \brief Default constructor
             CVector3DBase() : m_i(0.0), m_j(0.0), m_k(0.0) {}
 
-            /*!
-             * \brief Constructor by values
-             * \param i
-             * \param j
-             * \param k
-             */
+            //! \brief Constructor by values
             CVector3DBase(double i, double j, double k) : m_i(i), m_j(j), m_k(k) {}
 
-            /*!
-             * \brief Constructor by value
-             * \param value
-             */
+            //! \brief Constructor by value
             explicit CVector3DBase(double value) : m_i(value), m_j(value), m_k(value) {}
 
             /*!
@@ -97,28 +80,19 @@ namespace BlackMisc
             // getter and setters are implemented in the derived classes
             // as they have different names (x, i, north)
 
-            /*!
-             * \brief Virtual destructor
-             */
+            //! \brief Virtual destructor
             virtual ~CVector3DBase() {}
 
-            /*!
-             * \brief Set zeros
-             */
+            //! \brief Set zeros
             void setZero();
 
-            /*!
-             * \brief Is zero
-             */
+            //! \brief Is zero?
             bool isZero() const
             {
                 return this->m_i == 0 && this->m_j == 0 && this->m_k == 0;
             }
 
-            /*!
-             * \brief Is identity matrix? Epsilon considered.
-             * \return
-             */
+            //! \brief Is zero, epsilon considered.
             bool isZeroEpsilon() const
             {
                 ImplVector v;
@@ -127,45 +101,22 @@ namespace BlackMisc
                 return v.isZero();
             }
 
-            /*!
-             * \brief Set all elements the same
-             * \param value
-             */
+            //! \brief Set all elements the same
             void fill(double value);
 
-            /*!
-             * \brief Get element
-             * \param row
-             * \return
-             */
+            //! \brief Get element
             double getElement(int row) const;
 
-            /*!
-             * \brief Set element
-             * \param row
-             * \param value
-             */
+            //! \brief Set element
             void setElement(int row, double value);
 
-            /*!
-             * \brief Operator []
-             * \param row
-             * \return
-             */
+            //! \brief Operator []
             double operator[](int row) const { return this->getElement(row); }
 
-            /*!
-             * \brief Operator []
-             * \param row
-             * \return Mutable reference
-             */
+            //! \brief Operator [], mutable reference
             double &operator[](int row) { return this->getElement(row); }
 
-            /*!
-             * \brief Equal operator ==
-             * \param other
-             * \return
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CVector3DBase &other) const
             {
                 if (this == &other) return true;
@@ -175,21 +126,13 @@ namespace BlackMisc
                     CMath::epsilonEqual(this->m_k, other.m_k, 1E-9);
             }
 
-            /*!
-             * \brief Unequal operator !=
-             * \param other
-             * \return
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CVector3DBase &other) const
             {
                 return !((*this) == other);
             }
 
-            /*!
-             * \brief Operator +=
-             * \param other
-             * \return
-             */
+            //! \brief Operator +=
             CVector3DBase &operator +=(const CVector3DBase &other)
             {
                 this->m_i += other.m_i;
@@ -198,11 +141,7 @@ namespace BlackMisc
                 return *this;
             }
 
-            /*!
-             * \brief Operator +
-             * \param other
-             * \return
-             */
+            //! \brief Operator +
             ImplVector operator +(const ImplVector &other) const
             {
                 ImplVector v = *derived();
@@ -210,11 +149,7 @@ namespace BlackMisc
                 return v;
             }
 
-            /*!
-             * \brief Operator -=
-             * \param other
-             * \return
-             */
+            //! \brief Operator -=
             CVector3DBase &operator -=(const CVector3DBase &other)
             {
                 this->m_i -= other.m_i;
@@ -223,11 +158,7 @@ namespace BlackMisc
                 return *this;
             }
 
-            /*!
-             * \brief Operator -
-             * \param other
-             * \return
-             */
+            //! \brief Operator -
             ImplVector operator -(const ImplVector &other) const
             {
                 ImplVector v = *derived();
@@ -235,11 +166,7 @@ namespace BlackMisc
                 return v;
             }
 
-            /*!
-             * \brief Multiply with scalar
-             * \param factor
-             * \return
-             */
+            //! \brief Multiply with scalar
             CVector3DBase &operator *=(double factor)
             {
                 this->m_i *= factor;
@@ -248,11 +175,7 @@ namespace BlackMisc
                 return *this;
             }
 
-            /*!
-             * \brief Multiply with scalar
-             * \param factor
-             * \return
-             */
+            //! \brief Multiply with scalar
             ImplVector operator *(double factor) const
             {
                 ImplVector v = *derived();
@@ -260,19 +183,13 @@ namespace BlackMisc
                 return v;
             }
 
-            /*!
-             * \brief Operator to support commutative multiplication
-             */
+            //! \brief Operator to support commutative multiplication
             friend ImplVector operator *(double factor, const ImplVector &other)
             {
                 return other * factor;
             }
 
-            /*!
-             * \brief Divide by scalar
-             * \param divisor
-             * \return
-             */
+            //! \brief Divide by scalar
             CVector3DBase &operator /=(double divisor)
             {
                 this->m_i /= divisor;
@@ -281,11 +198,7 @@ namespace BlackMisc
                 return *this;
             }
 
-            /*!
-             * \brief Divide by scalar
-             * \param divisor
-             * \return
-             */
+            //! \brief Divide by scalar
             ImplVector operator /(double divisor) const
             {
                 ImplVector v = *derived();
@@ -293,53 +206,32 @@ namespace BlackMisc
                 return v;
             }
 
-            /*!
-             * \brief Dot product
-             * \param other
-             * \return
-             */
+            //! \brief Dot product
             double dotProduct(const ImplVector &other) const;
 
-            /*!
-             * \brief Cross product
-             * \param other
-             * \return
-             */
+            //! \brief Cross product
             ImplVector crossProduct(const ImplVector &other) const;
 
-            /*!
-             * \brief Reciprocal value
-             * \return
-             */
+            //! \brief Reciprocal value
             ImplVector reciprocalValues() const
             {
                 ImplVector v(1 / this->m_i, 1 / this->m_j, 1 / this->m_j);
                 return v;
             }
 
-            /*!
-             * \brief Converted to matrix
-             * \return
-             */
+            //! \brief Converted to matrix
             CMatrix3x1 toMatrix3x1() const;
 
-            /*!
-             * \copydoc CValueObject::getValueHash
-             */
+            //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
-            /*!
-             * \brief length / magnitude
-             * \return
-             */
+            //! \brief length / magnitude
             double length() const
             {
                 return sqrt(this->m_i * this->m_i + this->m_j * this->m_j + this->m_k * this->m_k);
             }
 
-            /*!
-             * \brief Round this vector
-             */
+            //! \brief Round this vector
             void round()
             {
                 const double epsilon = 1E-10;
@@ -348,10 +240,7 @@ namespace BlackMisc
                 this->m_k = BlackMisc::Math::CMath::roundEpsilon(this->m_k, epsilon);
             }
 
-            /*!
-             * \brief Rounded vector
-             * \return
-             */
+            //! \brief Rounded vector
             ImplVector rounded() const
             {
                 ImplVector v = *derived();
@@ -359,9 +248,13 @@ namespace BlackMisc
                 return v;
             }
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
+            //! \brief Register metadata
             static void registerMetadata();
         };
 

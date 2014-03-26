@@ -6,6 +6,7 @@
 #include "blackmisc/mathmatrix3x3.h"
 #include "blackmisc/mathmatrix3x1.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include <QJsonArray>
 #include <typeinfo>
 
 namespace BlackMisc
@@ -222,15 +223,44 @@ namespace BlackMisc
         }
 
         /*
-             * Register metadata
-             */
+         * Register metadata
+         */
         template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::registerMetadata()
         {
             qRegisterMetaType<ImplMatrix>();
             qDBusRegisterMetaType<ImplMatrix>();
         }
 
-        // see here for the reason of thess forward instantiations
+        /*
+         * To JSON
+         */
+        template <class ImplMatrix, int Rows, int Columns> QJsonObject CMatrixBase<ImplMatrix, Rows, Columns>::toJson() const
+        {
+            QJsonObject json;
+            QJsonArray jsonArray;
+            foreach(double v, this->toList())
+            {
+                jsonArray.append(QJsonValue(v));
+            }
+            json.insert("matrix", QJsonValue(jsonArray));
+            return json;
+        }
+
+        /*
+         * From Json
+         */
+        template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::fromJson(const QJsonObject &json)
+        {
+            QJsonArray jsonArray = json.value("matrix").toArray();
+            QList<double> list;
+            for (auto i = jsonArray.begin(); i != jsonArray.end(); ++i)
+            {
+                list.append((*i).toDouble());
+            }
+            this->fromList(list);
+        }
+
+        // see here for the reason of these forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html
         template class CMatrixBase<CMatrix3x3, 3, 3>;
         template class CMatrixBase<CMatrix3x1, 3, 1>;

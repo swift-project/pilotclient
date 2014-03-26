@@ -186,8 +186,17 @@ namespace BlackMisc
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            virtual void fromJson(const QJsonObject &json) override;
+
             //! \brief Register metadata
             static void registerMetadata();
+
+            //! \brief Members
+            static const QStringList &jsonMembers();
 
             //! \brief Properties by index
             enum ColumnIndex

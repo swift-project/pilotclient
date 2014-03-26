@@ -213,10 +213,17 @@ namespace BlackMisc
             //! \brief Enabled?
             void setEnabled(bool enable) { this->m_enabled = enable;}
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            virtual void fromJson(const QJsonObject &json) override;
+
+            //! \brief Register metadata
             static void registerMetadata();
+
+            //! \brief Members
+            static const QStringList &jsonMembers();
         };
 
     } // namespace

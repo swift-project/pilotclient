@@ -99,5 +99,31 @@ namespace BlackMisc
             qDBusRegisterMetaType<CAltitude>();
         }
 
+        /*
+         * To JSON
+         */
+        QJsonObject CAltitude::toJson() const
+        {
+            QJsonObject json = BlackMisc::serializeJson(CAltitude::jsonMembers(), TupleConverter<CAltitude>::toTuple(*this));
+            return BlackMisc::Json::appendJsonObject(json, CLength::toJson());
+        }
+
+        /*
+         * To JSON
+         */
+        void CAltitude::fromJson(const QJsonObject &json)
+        {
+            CLength::fromJson(json);
+            BlackMisc::deserializeJson(json, CAltitude::jsonMembers(), TupleConverter<CAltitude>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CAltitude::jsonMembers()
+        {
+            return TupleConverter<CAltitude>::jsonMembers();
+        }
+
     } // namespace
 } // namespace

@@ -94,5 +94,30 @@ namespace BlackMisc
             qDBusRegisterMetaType<CTrack>();
         }
 
+        /*
+         * Members
+         */
+        const QStringList &CTrack::jsonMembers()
+        {
+            return TupleConverter<CTrack>::jsonMembers();
+        }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CTrack::toJson() const
+        {
+            QJsonObject json = BlackMisc::serializeJson(CTrack::jsonMembers(), TupleConverter<CTrack>::toTuple(*this));
+            return BlackMisc::Json::appendJsonObject(json, CAngle::toJson());
+        }
+
+        /*
+         * From Json
+         */
+        void CTrack::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CTrack::jsonMembers(), TupleConverter<CTrack>::toTuple(*this));
+            CAngle::fromJson(json);
+        }
     } // namespace
 } // namespace

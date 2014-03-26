@@ -30,6 +30,31 @@ namespace BlackMisc
             qDBusRegisterMetaType<CKeyboardKey>();
         }
 
+        /*
+         * Members
+         */
+        const QStringList &CKeyboardKey::jsonMembers()
+        {
+            return TupleConverter<CKeyboardKey>::jsonMembers();
+        }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CKeyboardKey::toJson() const
+        {
+            return BlackMisc::serializeJson(CKeyboardKey::jsonMembers(), TupleConverter<CKeyboardKey>::toTuple(*this));
+        }
+
+        /*
+         * From Json
+         */
+        void CKeyboardKey::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CKeyboardKey::jsonMembers(), TupleConverter<CKeyboardKey>::toTuple(*this));
+        }
+
+
         QString CKeyboardKey::convertToQString(bool /* i18n */) const
         {
             QString s = this->getModifier1AsString();

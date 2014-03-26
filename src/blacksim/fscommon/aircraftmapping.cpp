@@ -248,5 +248,30 @@ namespace BlackSim
             qRegisterMetaType<CAircraftMapping>();
             qDBusRegisterMetaType<CAircraftMapping>();
         }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CAircraftMapping::toJson() const
+        {
+            return BlackMisc::serializeJson(CAircraftMapping::jsonMembers(), TupleConverter<CAircraftMapping>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        void CAircraftMapping::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CAircraftMapping::jsonMembers(), TupleConverter<CAircraftMapping>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CAircraftMapping::jsonMembers()
+        {
+            return TupleConverter<CAircraftMapping>::jsonMembers();
+        }
+
     } // namespace
 } // namespace

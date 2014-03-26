@@ -104,6 +104,30 @@ namespace BlackMisc
         }
 
         /*
+         * To JSON
+         */
+        QJsonObject CCallsign::toJson() const
+        {
+            return BlackMisc::serializeJson(CCallsign::jsonMembers(), TupleConverter<CCallsign>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        void CCallsign::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CCallsign::jsonMembers(), TupleConverter<CCallsign>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CCallsign::jsonMembers()
+        {
+            return TupleConverter<CCallsign>::jsonMembers();
+        }
+
+        /*
          * Equal?
          */
         bool CCallsign::operator ==(const CCallsign &other) const

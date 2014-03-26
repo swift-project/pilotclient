@@ -135,5 +135,30 @@ namespace BlackSim
         {
             argument >> TupleConverter<CAircraftCfgEntries>::toTuple(*this);
         }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CAircraftCfgEntries::toJson() const
+        {
+            return BlackMisc::serializeJson(CAircraftCfgEntries::jsonMembers(), TupleConverter<CAircraftCfgEntries>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        void CAircraftCfgEntries::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CAircraftCfgEntries::jsonMembers(), TupleConverter<CAircraftCfgEntries>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CAircraftCfgEntries::jsonMembers()
+        {
+            return TupleConverter<CAircraftCfgEntries>::jsonMembers();
+        }
+
     }
 } // namespace

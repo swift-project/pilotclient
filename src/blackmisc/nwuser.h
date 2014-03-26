@@ -120,8 +120,17 @@ namespace BlackMisc
             //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
 
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
             //! \brief Register metadata
             static void registerMetadata();
+
+            //! \brief Members
+            static const QStringList &jsonMembers();
 
             /*!
              * This and another user exchange missing data.

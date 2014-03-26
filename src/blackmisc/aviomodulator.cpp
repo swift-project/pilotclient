@@ -36,6 +36,30 @@ namespace BlackMisc
         }
 
         /*
+         * To JSON
+         */
+        template <class AVIO> QJsonObject CModulator<AVIO>::toJson() const
+        {
+            return BlackMisc::serializeJson(CModulator::jsonMembers(), TupleConverter<CModulator>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        template <class AVIO> void CModulator<AVIO>::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CModulator::jsonMembers(), TupleConverter<CModulator>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        template <class AVIO> const QStringList &CModulator<AVIO>::jsonMembers()
+        {
+            return TupleConverter<CModulator>::jsonMembers();
+        }
+
+        /*
          * Equal operator ==
          */
         template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &other) const

@@ -95,5 +95,32 @@ namespace BlackMisc
             qDBusRegisterMetaType<CHeading>();
         }
 
+        /*
+         * To JSON
+         */
+        QJsonObject CHeading::toJson() const
+        {
+            QJsonObject json = BlackMisc::serializeJson(CHeading::jsonMembers(), TupleConverter<CHeading>::toTuple(*this));
+            return BlackMisc::Json::appendJsonObject(json, CAngle::toJson());
+        }
+
+        /*
+         * To JSON
+         */
+        void CHeading::fromJson(const QJsonObject &json)
+        {
+            CAngle::fromJson(json);
+            BlackMisc::deserializeJson(json, CHeading::jsonMembers(), TupleConverter<CHeading>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CHeading::jsonMembers()
+        {
+            return TupleConverter<CHeading>::jsonMembers();
+        }
+
+
     } // namespace
 } // namespace

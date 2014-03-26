@@ -214,15 +214,20 @@ namespace BlackMisc
              */
             bool operator !=(const CCoordinateGeodetic &other) const;
 
-            /*!
-             * \copydoc CValueObject::getValueHash
-             */
+            //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
-            /*!
-             * Register metadata
-             */
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
+            //! \brief Register metadata
             static void registerMetadata();
+
+            //! \brief Members
+            static const QStringList &jsonMembers();
 
             /*!
              * \brief Coordinate by WGS84 position data

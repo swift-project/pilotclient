@@ -277,6 +277,27 @@ namespace BlackMisc
         }
 
         /*
+         * JSON Object
+         */
+        template <class MU, class PQ> QJsonObject CPhysicalQuantity<MU, PQ>::toJson() const
+        {
+            QJsonObject json;
+            json.insert("value", QJsonValue(this->m_value));
+            json.insert("unit", QJsonValue(this->m_unit.getSymbol()));
+            return json;
+        }
+
+        /*
+         * JSON Object
+         */
+        template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::fromJson(const QJsonObject &json)
+        {
+            const QString unitSymbol = json.value("unit").toString();
+            this->setUnitBySymbol(unitSymbol);
+            this->m_value = json.value("value").toDouble();
+        }
+
+        /*
          * metaTypeId
          */
         template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::getMetaTypeId() const

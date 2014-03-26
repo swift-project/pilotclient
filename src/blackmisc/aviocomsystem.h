@@ -132,10 +132,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
-            /*!
-             * \brief operator !=
-             */
-            bool operator !=(const CComSystem &other) const;
+            //! \copydoc CValueObject::fromJson
+            virtual void fromJson(const QJsonObject &json) override;
 
             /*!
              * Try to get a COM unit with given name and frequency. Returns true in case an object

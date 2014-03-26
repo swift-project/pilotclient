@@ -87,8 +87,17 @@ namespace BlackMisc
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
             //! \brief Register metadata
             static void registerMetadata();
+
+            //! \copydoc TupleConverter<>::jsonMembers()
+            static const QStringList &jsonMembers();
 
             //! \brief Equal?
             bool operator ==(const CKeyboardKey &other) const;

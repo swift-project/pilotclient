@@ -104,6 +104,30 @@ namespace BlackMisc
         }
 
         /*
+         * To JSON
+         */
+        QJsonObject CCoordinateGeodetic::toJson() const
+        {
+            return BlackMisc::serializeJson(CCoordinateGeodetic::jsonMembers(), TupleConverter<CCoordinateGeodetic>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        void CCoordinateGeodetic::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CCoordinateGeodetic::jsonMembers(), TupleConverter<CCoordinateGeodetic>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CCoordinateGeodetic::jsonMembers()
+        {
+            return TupleConverter<CCoordinateGeodetic>::jsonMembers();
+        }
+
+        /*
          * From WGS84 coordinates
          */
         CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CLength height)

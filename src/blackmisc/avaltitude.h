@@ -11,7 +11,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         /*!
          * \brief Altitude as used in aviation, can be AGL or MSL altitude
          * \remarks Intentionally allowing +/- CLength , and >= / <= CLength.
@@ -29,6 +28,7 @@ namespace BlackMisc
             };
 
         private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAltitude)
             ReferenceDatum m_datum; //!< MSL or AGL?
 
         protected:
@@ -95,15 +95,23 @@ namespace BlackMisc
                 return m_datum;
             }
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
+            //! \brief Register metadata
             static void registerMetadata();
+
+            //! \copydoc TupleConverter<>::jsonMembers()
+            static const QStringList &jsonMembers();
         };
 
     } // namespace
 } // namespace
 
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAltitude, (o.m_datum))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude)
 
 #endif // guard

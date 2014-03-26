@@ -239,6 +239,12 @@ namespace BlackMisc
             //! \brief Register metadata
             static void registerMetadata();
 
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
         private:
             //! \brief Check range of row / column
             void checkRange(int row, int column) const;

@@ -6,7 +6,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         QList<CFrequency> CSelcal::frequencyEquivalents = QList<CFrequency>();
         QStringList CSelcal::allCodePairs = QStringList();
 
@@ -205,5 +204,28 @@ namespace BlackMisc
             qDBusRegisterMetaType<CSelcal>();
         }
 
+        /*
+         * Members
+         */
+        const QStringList &CSelcal::jsonMembers()
+        {
+            return TupleConverter<CSelcal>::jsonMembers();
+        }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CSelcal::toJson() const
+        {
+            return BlackMisc::serializeJson(CSelcal::jsonMembers(), TupleConverter<CSelcal>::toTuple(*this));
+        }
+
+        /*
+         * From Json
+         */
+        void CSelcal::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CSelcal::jsonMembers(), TupleConverter<CSelcal>::toTuple(*this));
+        }
     } // namespace
 } // namespace

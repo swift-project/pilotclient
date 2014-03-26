@@ -40,7 +40,9 @@ namespace BlackMisc
             m_range(range), m_distanceToPlane(0, CLengthUnit::nullUnit()), m_isOnline(isOnline),
             m_bookedFromUtc(bookedFromUtc), m_bookedUntilUtc(bookedUntilUtc), m_atis(atis), m_metar(metar)
         {
-            // void
+            // sync callsigns
+            if (!this->m_controller.hasValidCallsign() && !callsign.isEmpty())
+                this->m_controller.setCallsign(callsign);
         }
 
         /*
@@ -157,12 +159,35 @@ namespace BlackMisc
         }
 
         /*
+         * Members
+         */
+        const QStringList &CAtcStation::jsonMembers()
+        {
+            return TupleConverter<CAtcStation>::jsonMembers();
+        }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CAtcStation::toJson() const
+        {
+            return BlackMisc::serializeJson(CAtcStation::jsonMembers(), TupleConverter<CAtcStation>::toTuple(*this));
+        }
+
+        /*
+         * From Json
+         */
+        void CAtcStation::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CAtcStation::jsonMembers(), TupleConverter<CAtcStation>::toTuple(*this));
+        }
+
+        /*
          * Compare
          */
         int CAtcStation::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CAtcStation &>(otherBase);
-
             return compare(TupleConverter<CAtcStation>::toTuple(*this), TupleConverter<CAtcStation>::toTuple(other));
         }
 

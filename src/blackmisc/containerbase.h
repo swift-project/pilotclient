@@ -157,6 +157,32 @@ namespace BlackMisc
         //! \copydoc BlackMisc::CValueObject::getValueHash
         virtual uint getValueHash() const override { return qHash(&derived()); }
 
+        //! \copydoc CValueObject::toJson
+        virtual QJsonObject toJson() const override
+        {
+            QJsonArray array;
+            QJsonObject json;
+            for (auto it = derived().cbegin(); it != derived().cend(); ++it)
+            {
+                array << (*it);
+            }
+            json.insert("containerbase", array);
+            return json;
+        }
+
+        //! \copydoc CValueObject::fromJson
+        void fromJson(const QJsonObject &json) override
+        {
+            QJsonArray array = json.value("containerbase").toArray();
+            for (auto i = array.begin(); i != array.end(); ++i)
+            {
+                QJsonValueRef ref = (*i);
+                T value;
+                ref >> value;
+                derived().insert(value);
+            }
+        }
+
     protected: // CValueObject overrides
         //! \copydoc BlackMisc::CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override

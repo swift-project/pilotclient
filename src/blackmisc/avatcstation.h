@@ -287,8 +287,17 @@ namespace BlackMisc
             //! \copydoc CValueObject::propertyByIndexAsString()
             virtual QString propertyByIndexAsString(int index, bool i18n = false) const override;
 
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
             //! \brief Register metadata
             static void registerMetadata();
+
+            //! \copydoc TupleConverter<>::jsonMembers()
+            static const QStringList &jsonMembers();
 
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -329,7 +338,7 @@ namespace BlackMisc
 } // namespace
 
 // o.m_metar, o.m_voiceRoom
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAtcStation, (o.m_callsign, o.m_controller, o.m_frequency, o.m_position, o.m_range, o.m_isOnline, o.m_distanceToPlane, o.m_bookedFromUtc, o.m_bookedUntilUtc, o.m_atis))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAtcStation, (o.m_callsign, o.m_controller, o.m_frequency, o.m_position, o.m_range, o.m_isOnline, o.m_distanceToPlane, o.m_atis, o.m_bookedFromUtc, o.m_bookedUntilUtc))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAtcStation)
 
 #endif // guard

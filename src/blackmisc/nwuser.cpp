@@ -120,6 +120,30 @@ namespace BlackMisc
         }
 
         /*
+         * To JSON
+         */
+        QJsonObject CUser::toJson() const
+        {
+            return BlackMisc::serializeJson(CUser::jsonMembers(), TupleConverter<CUser>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        void CUser::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CUser::jsonMembers(), TupleConverter<CUser>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CUser::jsonMembers()
+        {
+            return TupleConverter<CUser>::jsonMembers();
+        }
+
+        /*
          * Register metadata
          */
         void CUser::registerMetadata()

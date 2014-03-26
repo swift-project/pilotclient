@@ -8,6 +8,15 @@ namespace BlackMisc
 {
     namespace Aviation
     {
+        CAircraft::CAircraft(const CCallsign &callsign, const Network::CUser &user, const CAircraftSituation &situation)
+            : m_callsign(callsign), m_pilot(user), m_situation(situation), m_distanceToPlane(-1.0, BlackMisc::PhysicalQuantities::CLengthUnit::NM())
+        {
+
+            // sync callsigns
+            if (!this->m_pilot.hasValidCallsign() && !callsign.isEmpty())
+                this->m_pilot.setCallsign(callsign);
+        }
+
         /*
          * Convert to string
          */
@@ -39,7 +48,7 @@ namespace BlackMisc
         }
 
         /*
-         * All relevant information
+         * Distance to plane
          */
         const PhysicalQuantities::CLength &CAircraft::calculcateDistanceToPlane(const Geo::CCoordinateGeodetic &position)
         {
@@ -48,7 +57,7 @@ namespace BlackMisc
         }
 
         /*
-         * All relevant information?
+         * Valid for login
          */
         bool CAircraft::isValidForLogin() const
         {
@@ -258,6 +267,31 @@ namespace BlackMisc
             qRegisterMetaType<CAircraft>();
             qDBusRegisterMetaType<CAircraft>();
         }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CAircraft::toJson() const
+        {
+            return BlackMisc::serializeJson(CAircraft::jsonMembers(), TupleConverter<CAircraft>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        void CAircraft::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CAircraft::jsonMembers(), TupleConverter<CAircraft>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CAircraft::jsonMembers()
+        {
+            return TupleConverter<CAircraft>::jsonMembers();
+        }
+
 
     } // namespace
 } // namespace

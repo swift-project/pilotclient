@@ -136,5 +136,29 @@ namespace BlackMisc
             qDBusRegisterMetaType<CAudioDevice>();
         }
 
+        /*
+         * Members
+         */
+        const QStringList &CAudioDevice::jsonMembers()
+        {
+            return TupleConverter<CAudioDevice>::jsonMembers();
+        }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CAudioDevice::toJson() const
+        {
+            return BlackMisc::serializeJson(CAudioDevice::jsonMembers(), TupleConverter<CAudioDevice>::toTuple(*this));
+        }
+
+        /*
+         * From Json
+         */
+        void CAudioDevice::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CAudioDevice::jsonMembers(), TupleConverter<CAudioDevice>::toTuple(*this));
+        }
+
     } // Voice
 } // BlackMisc

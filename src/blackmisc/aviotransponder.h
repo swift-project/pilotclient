@@ -384,8 +384,16 @@ namespace BlackMisc
              */
             static void registerMetadata();
 
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
         };
 
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
+            //! \copydoc TupleConverter<>::jsonMembers()
+            static const QStringList &jsonMembers();
+        };
     } // namespace
 } // namespace
 

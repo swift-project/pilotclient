@@ -167,8 +167,6 @@ namespace BlackMisc
             }
         }
 
-
-
         /*
          * Register metadata
          */
@@ -176,6 +174,30 @@ namespace BlackMisc
         {
             qRegisterMetaType<CServer>();
             qDBusRegisterMetaType<CServer>();
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CServer::jsonMembers()
+        {
+            return TupleConverter<CServer>::jsonMembers();
+        }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CServer::toJson() const
+        {
+            return BlackMisc::serializeJson(CServer::jsonMembers(), TupleConverter<CServer>::toTuple(*this));
+        }
+
+        /*
+         * From Json
+         */
+        void CServer::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CServer::jsonMembers(), TupleConverter<CServer>::toTuple(*this));
         }
 
     } // namespace

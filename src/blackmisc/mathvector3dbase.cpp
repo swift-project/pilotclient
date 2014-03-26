@@ -151,26 +151,24 @@ namespace BlackMisc
             return CMatrix3x1(this->m_i, this->m_j, this->m_k);
         }
 
-        /*!
-         * \brief Stream to DBus
-         * \param argument
+        /*
+         * Stream to DBus
          */
         template <class ImplVector> void CVector3DBase<ImplVector>::marshallToDbus(QDBusArgument &argument) const
         {
             argument << TupleConverter<CVector3DBase>::toTuple(*this);
         }
 
-        /*!
-         * \brief Stream from DBus
-         * \param argument
+        /*
+         * Stream from DBus
          */
         template <class ImplVector> void CVector3DBase<ImplVector>::unmarshallFromDbus(const QDBusArgument &argument)
         {
             argument >> TupleConverter<CVector3DBase>::toTuple(*this);
         }
 
-        /*!
-         * \copydoc CValueObject::getValueHash()
+        /*
+         * getValueHash()
          */
         template <class ImplVector> uint CVector3DBase<ImplVector>::getValueHash() const
         {
@@ -189,6 +187,61 @@ namespace BlackMisc
             qRegisterMetaType<ImplVector>();
             qDBusRegisterMetaType<ImplVector>();
         }
+
+        /*
+         * To JSON
+         */
+        template <class ImplVector> QJsonObject CVector3DBase<ImplVector>::toJson() const
+        {
+            QJsonObject json;
+            QJsonArray jsonArray;
+            jsonArray.append(QJsonValue(this->m_i));
+            jsonArray.append(QJsonValue(this->m_j));
+            jsonArray.append(QJsonValue(this->m_k));
+            json.insert("vector", QJsonValue(jsonArray));
+            return json;
+        }
+
+        /*
+         * From Json
+         */
+        template <class ImplVector> void CVector3DBase<ImplVector>::fromJson(const QJsonObject &json)
+        {
+            QJsonArray jsonArray = json.value("vector").toArray();
+            this->m_i = jsonArray.at(0).toDouble();
+            this->m_i = jsonArray.at(1).toDouble();
+            this->m_i = jsonArray.at(2).toDouble();
+        }
+
+        /*
+         * To JSON
+         */
+        template <class ImplMatrix, int Rows, int Columns> QJsonObject CMatrixBase<ImplMatrix, Rows, Columns>::toJson() const
+        {
+            QJsonObject json;
+            QJsonArray jsonArray;
+            foreach(double v, this->toList())
+            {
+                jsonArray.append(QJsonValue(v));
+            }
+            json.insert("matrix", QJsonValue(jsonArray));
+            return json;
+        }
+
+        /*
+         * From Json
+         */
+        template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::fromJson(const QJsonObject &json)
+        {
+            QJsonArray jsonArray = json.value("matrix").toArray();
+            QList<double> list;
+            for (auto i = jsonArray.begin(); i != jsonArray.end(); ++i)
+            {
+                list.append((*i).toDouble());
+            }
+            this->fromList(list);
+        }
+
 
         // see here for the reason of thess forward instantiations
         // http://www.parashift.com/c++-faq/separate-template-class-defn-from-decl.html

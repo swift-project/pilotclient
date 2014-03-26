@@ -172,5 +172,29 @@ namespace BlackMisc
             qDBusRegisterMetaType<CAircraftIcao>();
         }
 
+        /*
+         * To JSON
+         */
+        QJsonObject CAircraftIcao::toJson() const
+        {
+            return BlackMisc::serializeJson(CAircraftIcao::jsonMembers(), TupleConverter<CAircraftIcao>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        void CAircraftIcao::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CAircraftIcao::jsonMembers(), TupleConverter<CAircraftIcao>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CAircraftIcao::jsonMembers()
+        {
+            return TupleConverter<CAircraftIcao>::jsonMembers();
+        }
+
     } // namespace
 } // namespace

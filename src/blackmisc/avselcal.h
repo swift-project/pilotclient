@@ -81,14 +81,22 @@ namespace BlackMisc
              */
             virtual uint getValueHash() const override;
 
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
+            //! \brief Register metadata
             /*!
              * \brief Register metadata
              */
             static void registerMetadata();
 
-            /*!
-             * \brief Equals given string
-             */
+            //! \copydoc TupleConverter<>::jsonMembers()
+            static const QStringList &jsonMembers();
+
+            //! \brief Equals given string
             bool equalsString(const QString &code) const;
 
             /*!
