@@ -60,10 +60,7 @@ namespace BlackMisc
             }
 
             //! \copydoc CValueObject::getMetaTypeId
-            int getMetaTypeId() const
-            {
-                return qMetaTypeId<CPqString>();
-            }
+            int getMetaTypeId() const override;
 
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;

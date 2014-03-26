@@ -24,6 +24,14 @@ namespace BlackMisc
         }
 
         /*
+         * Meta id
+         */
+        int CPqString::getMetaTypeId() const
+        {
+            return qMetaTypeId<CPqString>();
+        }
+
+        /*
          * Compare
          */
         int CPqString::compareImpl(const CValueObject &otherBase) const
