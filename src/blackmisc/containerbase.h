@@ -13,6 +13,7 @@
 #include "valueobject.h"
 #include "valuemap.h"
 #include "predicates.h"
+#include "json.h"
 #include <algorithm>
 
 #define _SCL_SECURE_NO_WARNINGS // suppress MSVC unchecked iterator warning for std::transform
@@ -207,11 +208,9 @@ namespace BlackMisc
         //! \copydoc BlackMisc::CValueObject::compareImpl
         virtual int compareImpl(const CValueObject &other) const override
         {
-            Q_UNUSED(other);
-
-            //const auto &o = static_cast<const CContainerBase &>(other);
-            //if (derived().size() < o.derived().size()) { return -1; }
-            //if (derived().size() > o.derived().size()) { return 1; }
+            const auto &o = static_cast<const CContainerBase &>(other);
+            if (derived().size() < o.derived().size()) { return -1; }
+            if (derived().size() > o.derived().size()) { return 1; }
             //for (auto i1 = derived().cbegin(), i2 = o.derived().cbegin(); i1 != derived().cend() && i2 != o.derived().cend(); ++i1, ++i2)
             //{
             //    if (*i1 < *i2) { return -1; }
