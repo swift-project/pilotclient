@@ -17,6 +17,7 @@
 #include <QHash>
 #include <QJsonObject>
 #include <QDateTime>
+#include <QString>
 #include <tuple>
 #include <type_traits>
 
@@ -111,7 +112,6 @@ namespace BlackMisc
             template <class Tu>
             static void serializeJson(QJsonObject &json, const QStringList &members, const Tu &tu)
             {
-                // typedef typename std::remove_const < typename std::remove_reference < typename std::tuple_element < N - 1, Tu >::type >::type >::type TARGET;
                 typedef typename std::decay < typename std::tuple_element < N - 1, Tu >::type >::type TARGET;
                 json << std::pair<QString, TARGET>(members.at(N - 1), std::get < N - 1 > (tu));
                 TupleHelper < N - 1 >::serializeJson(json, members, tu);

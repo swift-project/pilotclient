@@ -31,8 +31,7 @@ namespace BlackMisc
             CAircraft() : m_distanceToPlane(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()) {}
 
             //! \brief Constructor.
-            CAircraft(const CCallsign &callsign, const BlackMisc::Network::CUser &user, const CAircraftSituation &situation)
-                : m_callsign(callsign), m_pilot(user), m_situation(situation), m_distanceToPlane(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()) {}
+            CAircraft(const CCallsign &callsign, const BlackMisc::Network::CUser &user, const CAircraftSituation &situation);
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
