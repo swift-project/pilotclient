@@ -118,43 +118,31 @@ namespace BlackMisc
             CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters) :
                 m_latitude(latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_longitude(longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_height(heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m()) {}
 
-            /*!
-             * \copydoc ICoordinateGeodetic::latitude
-             */
+            //! \copydoc ICoordinateGeodetic::latitude
             virtual const CLatitude &latitude() const override
             {
                 return this->m_latitude;
             }
 
-            /*!
-             * \copydoc ICoordinateGeodetic::longitude
-             */
+            //! \copydoc ICoordinateGeodetic::longitude
             virtual const CLongitude &longitude() const override
             {
                 return this->m_longitude;
             }
 
-            /*!
-             * \brief Height
-             */
+            //! \brief Height
             const BlackMisc::PhysicalQuantities::CLength &height() const
             {
                 return this->m_height;
             }
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Switch unit of latitude / longitude
-             * \param unit
-             * \return
-             */
+            //! \brief Switch unit of latitude / longitude
             CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit)
             {
                 this->m_latitude.switchUnit(unit);
@@ -162,56 +150,35 @@ namespace BlackMisc
                 return *this;
             }
 
-            /*!
-             * \brief Switch unit of height
-             * \param unit
-             * \return
-             */
+            //! \brief Switch unit of height
             CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit)
             {
                 this->m_height.switchUnit(unit);
                 return *this;
             }
 
-            /*!
-             * \brief Set latitude
-             * \param latitude
-             */
+            //! \brief Set latitude
             void setLatitude(const CLatitude &latitude)
             {
                 this->m_latitude = latitude;
             }
 
-            /*!
-             * \brief Set longitude
-             * \param longitude
-             */
+            //! \brief Set longitude
             void setLongitude(const CLongitude &longitude)
             {
                 this->m_longitude = longitude;
             }
 
-            /*!
-             * \brief Set height
-             * \param height
-             */
+            //! \brief Set height
             void setHeight(const BlackMisc::PhysicalQuantities::CLength &height)
             {
                 this->m_height = height;
             }
 
-            /*!
-             * \brief Equal operator ==
-             * \param other
-             * \return
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CCoordinateGeodetic &other) const;
 
-            /*!
-             * \brief Unequal operator !=
-             * \param other
-             * \return
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CCoordinateGeodetic &other) const;
 
             //! \copydoc CValueObject::getValueHash

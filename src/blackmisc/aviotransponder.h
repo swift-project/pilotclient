@@ -18,9 +18,7 @@ namespace BlackMisc
         class CTransponder : public CAvionicsBase
         {
         public:
-            /*!
-             * \brief Our transponder codes
-             */
+            //! \brief Transponder codes
             enum TransponderMode
             {
                 StateStandby = 0, // not a real mode, more a state
@@ -178,107 +176,66 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Transponder mode as string
-             * \return
-             */
+            //! \brief Transponder mode as string
             QString getModeAsString() const;
 
-            /*!
-             * \brief Transponder mode as string
-             * \param mode
-             * \throws std::range_error
-             */
+            //! \brief Transponder mode as string
             void setModeAsString(const QString &mode);
 
-            /*!
-             * \brief Transponder mode
-             * \return
-             * \throws std::range_error
-             */
+            //! \brief Transponder mode
             TransponderMode getTransponderMode() const
             {
                 return this->m_transponderMode;
             }
 
-            /*!
-             * \brief Transponder code
-             * \return
-             */
+            //! \brief Transponder code
             qint32 getTransponderCode() const
             {
                 return this->m_transponderCode;
             }
 
-            /*!
-             * \brief Transponder code
-             * \return
-             */
+            //! \brief Transponder code
             QString getTransponderCodeFormatted() const;
 
-            /*!
-             * \brief Formatted with code / mode
-             * \return
-             */
+            //! \brief Formatted with code / mode
             QString getTransponderCodeAndModeFormatted() const;
 
-
-            /*!
-             * \brief Set transponder code
-             * \param transponderCode
-             */
+            //! \brief Set transponder code
             void setTransponderCode(qint32 transponderCode)
             {
                 this->m_transponderCode = transponderCode;
                 this->validate(true);
             }
 
-            /*!
-             * \brief Set transponder code
-             * \param transponderCode
-             */
+            //! \brief Set transponder code
             void setTransponderCode(const QString &transponderCode);
 
-
-            /*!
-             * \brief Set transponder mode
-             * \param mode
-             */
+            //! \brief Set transponder mode
             void setTransponderMode(TransponderMode mode)
             {
                 this->m_transponderMode = mode ;
                 this->validate(true);
             }
 
-            /*!
-             * \brief Set emergency
-             */
+            //! \brief Set emergency
             void setEmergency()
             {
                 this->m_transponderCode = 7700;
             }
 
-            /*!
-             * \brief Set VFR
-             */
+            //! \brief Set VFR
             void setVFR()
             {
                 this->m_transponderCode = 7000;
             }
 
-            /*!
-             * \brief Set IFR
-             */
+            //! \brief Set IFR
             void setIFR()
             {
                 this->m_transponderCode = 2000;
             }
 
-            /*!
-             * \brief operator ==
-             * \param other
-             * \return
-             */
+            //! \brief operator ==
             bool operator ==(const CTransponder &other) const
             {
                 return
@@ -287,11 +244,7 @@ namespace BlackMisc
                     this->CAvionicsBase::operator ==(other);
             }
 
-            /*!
-             * \brief operator =!
-             * \param other
-             * \return
-             */
+            //! \brief operator =!
             bool operator !=(const CTransponder &other) const
             {
                 return !((*this) == other);
@@ -369,24 +322,17 @@ namespace BlackMisc
             //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
 
-            /*!
-             * \brief Is valid transponder code?
-             */
+            //! \brief Is valid transponder code?
             static bool isValidTransponderCode(const QString &transponderCode);
 
-            /*!
-             * \brief Is valid transponder code?
-             */
+            //! \brief Is valid transponder code?
             static bool isValidTransponderCode(qint32 transponderMode);
 
-            /*!
-             * \brief Register metadata of unit and quantity
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
-        };
 
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;

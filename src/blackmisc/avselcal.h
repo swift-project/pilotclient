@@ -25,14 +25,10 @@ namespace BlackMisc
         {
 
         public:
-            /*!
-             * Default constructor.
-             */
+            //! \brief Default constructor.
             CSelcal() {}
 
-            /*!
-             * Constructor.
-             */
+            //! \brief Constructor.
             CSelcal(const QString &code) : m_code(code.trimmed()) {}
 
             /*!
@@ -41,23 +37,16 @@ namespace BlackMisc
              */
             CSelcal(const char *code) : m_code(code) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Is valid?
-             * \return
-             */
+            //! \brief Is valid?
             bool isValid() const { return CSelcal::isValidCode(this->m_code); }
 
-            /*!
-             * Get SELCAL code
-             */
+            //! \brief Get SELCAL code
             const QString &getCode() const { return this->m_code; }
 
             /*!
@@ -66,19 +55,13 @@ namespace BlackMisc
              */
             QList<BlackMisc::PhysicalQuantities::CFrequency> getFrequencies() const;
 
-            /*!
-             * \brief Equal operator ==
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CSelcal &other) const;
 
-            /*!
-             * \brief Unequal operator !=
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CSelcal &other) const;
 
-            /*!
-             * \copydoc CValueObject::getValueHash
-             */
+            //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
             //! \copydoc CValueObject::toJson
@@ -88,9 +71,6 @@ namespace BlackMisc
             void fromJson(const QJsonObject &json) override;
 
             //! \brief Register metadata
-            /*!
-             * \brief Register metadata
-             */
             static void registerMetadata();
 
             //! \copydoc TupleConverter<>::jsonMembers()
@@ -99,29 +79,19 @@ namespace BlackMisc
             //! \brief Equals given string
             bool equalsString(const QString &code) const;
 
-            /*!
-             * \brief Valid SELCAL characters
-             */
+            //! \brief Valid SELCAL characters
             static const QString &validCharacters();
 
-            /*!
-             * \brief Is given character a valid SELCAL characer?
-             */
+            //! \brief Is given character a valid SELCAL characer?
             static bool isValidCharacter(QChar c);
 
-            /*!
-             * Valid SELCAL code?
-             */
+            //! \brief Valid SELCAL code?
             static bool isValidCode(const QString &code);
 
-            /*!
-             * \brief Audio frequency for character
-             */
+            //! \brief Audio frequency for character
             static const BlackMisc::PhysicalQuantities::CFrequency &audioFrequencyEquivalent(QChar c);
 
-            /*!
-             * \brief All valid code pairs: AB, AC, AD ...
-             */
+            //! \brief All valid code pairs: AB, AC, AD ...
             static const QStringList &codePairs();
 
         protected:

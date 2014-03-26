@@ -316,9 +316,7 @@ namespace BlackMisc
                 return fr >= 118.0 && fr <= 136.975;
             }
 
-            /*!
-             * \brief Valid military aviation frequency?
-             */
+            //! \brief Valid military aviation frequency?
             static bool isValidMilitaryFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
                 double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
@@ -331,13 +329,10 @@ namespace BlackMisc
              */
             static void roundToChannelSpacing(BlackMisc::PhysicalQuantities::CFrequency &frequency, ChannelSpacing channelSpacing);
 
-            /*!
-             * \brief Is compareFrequency within channel spacing of setFrequency
-             */
+            //! \brief Is compareFrequency within channel spacing of setFrequency
             static bool isWithinChannelSpacing(const BlackMisc::PhysicalQuantities::CFrequency &setFrequency, const BlackMisc::PhysicalQuantities::CFrequency &compareFrequency, ChannelSpacing channelSpacing);
 
         };
-
     } // namespace
 } // namespace
 

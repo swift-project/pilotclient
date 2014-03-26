@@ -17,22 +17,13 @@ namespace BlackMisc
         template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
         {
         protected:
-            /*!
-             * \brief Default constructor
-             */
+            //! \brief Default constructor
             CEarthAngle() : CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
 
-            /*!
-             * \brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! \brief Init by double value
             CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit) {}
 
-            /*!
-             * \brief Init by double value
-             * \param angle
-             */
+            //! \brief Init by CAngle value
             CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CAngle(angle) {}
 
             //! \copydoc CValueObject::convertToQString
@@ -63,98 +54,60 @@ namespace BlackMisc
             }
 
         public:
-            /*!
-             * \brief Virtual destructor
-             */
+            //! \brief Virtual destructor
             virtual ~CEarthAngle() {}
 
-            /*!
-             * \brief Equal operator ==
-             * \param latOrLon
-             * \return
-             */
+            //! \brief Equal operator ==
             bool operator==(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator ==(latOrLon);
             }
 
-            /*!
-             * \brief Not equal operator !=
-             * \param latOrLon
-             * \return
-             */
+            //! \brief Not equal operator !=
             bool operator!=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator !=(latOrLon);
             }
 
-            /*!
-             * \brief Plus operator +=
-             * \param latOrLon
-             * \return
-             */
+            //! \brief Plus operator +=
             CEarthAngle &operator +=(const CEarthAngle &latOrLon)
             {
                 this->CAngle::operator +=(latOrLon);
                 return *this;
             }
 
-            /*!
-             * \brief Minus operator-=
-             * \param latOrLon
-             * \return
-             */
+            //! \brief Minus operator-=
             CEarthAngle &operator -=(const CEarthAngle &latOrLon)
             {
                 this->CAngle::operator -=(latOrLon);
                 return *this;
             }
 
-            /*!
-             * \brief Greater operator >
-             * \param latOrLon
-             * \return
-             */
+            //! \brief Greater operator >
             bool operator >(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >(latOrLon);
             }
 
-            /*!
-             * \brief Less operator <
-             * \param latOrLon
-             * \return
-             */
+            //! \brief Less operator <
             bool operator <(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >(latOrLon);
             }
 
-            /*!
-             * \brief Less equal operator <=
-             * \param latOrLon
-             * \return
-             */
+            //! \brief Less equal operator <=
             bool operator <=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator <=(latOrLon);
             }
 
-            /*!
-             * \brief Greater equal operator >=
-             * \param latOrLon
-             * \return
-             */
+            //! \brief Greater equal operator >=
             bool operator >=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >=(latOrLon);
             }
 
-            /*!
-             * \brief Plus operator +
-             * \param latOrLon
-             * \return
-             */
+            //! \brief Plus operator +
             LATorLON operator +(const CEarthAngle &latOrLon) const
             {
                 LATorLON l(*this);
@@ -162,11 +115,7 @@ namespace BlackMisc
                 return l;
             }
 
-            /*!
-             * \brief Minus operator -
-             * \param latOrLon
-             * \return
-             */
+            //! \brief Minus operator -
             LATorLON operator -(const CEarthAngle &latOrLon) const
             {
                 LATorLON l(*this);
@@ -174,9 +123,7 @@ namespace BlackMisc
                 return l;
             }
 
-            /*!
-             * Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
             /*!
