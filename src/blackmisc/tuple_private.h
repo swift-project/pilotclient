@@ -11,15 +11,17 @@
 #ifndef BLACKMISC_TUPLE_PRIVATE_H
 #define BLACKMISC_TUPLE_PRIVATE_H
 
+#include "json.h"
 #include <QtGlobal>
 #include <QDBusArgument>
 #include <QHash>
+#include <QJsonObject>
+#include <QDateTime>
 #include <tuple>
 #include <type_traits>
 
 namespace BlackMisc
 {
-
     class CValueObject;
 
     namespace Private
@@ -62,11 +64,11 @@ namespace BlackMisc
         template <int N, class Tu>
         int compareHelper(const Tu &a, const Tu &b)
         {
-            typedef typename std::is_base_of<
-                CValueObject,
-                typename std::decay<
-                    typename std::tuple_element<N, Tu>::type
-                >::type
+            typedef typename std::is_base_of <
+            CValueObject,
+            typename std::decay <
+            typename std::tuple_element<N, Tu>::type
+            >::type
             >::type isCValueObjectTag;
 
             return compareHelper(std::get<N>(a), std::get<N>(b), isCValueObjectTag());
@@ -83,27 +85,43 @@ namespace BlackMisc
             template <class Tu>
             static int compare(const Tu &a, const Tu &b)
             {
-                const int head = TupleHelper<N - 1>::compare(a, b);
+                const int head = TupleHelper < N - 1 >::compare(a, b);
                 if (head) { return head; }
-                return compareHelper<N - 1>(a, b);
+                return compareHelper < N - 1 > (a, b);
             }
 
             template <class Tu>
             static QDBusArgument &marshall(QDBusArgument &arg, const Tu &tu)
             {
-                return TupleHelper<N - 1>::marshall(arg, tu) << std::get<N - 1>(tu);
+                return TupleHelper < N - 1 >::marshall(arg, tu) << std::get < N - 1 > (tu);
             }
 
             template <class Tu>
             static const QDBusArgument &unmarshall(const QDBusArgument &arg, Tu &tu)
             {
-                return TupleHelper<N - 1>::unmarshall(arg, tu) >> std::get<N - 1>(tu);
+                return TupleHelper < N - 1 >::unmarshall(arg, tu) >> std::get < N - 1 > (tu);
             }
 
             template <class Tu>
             static uint hash(const Tu &tu)
             {
-                return TupleHelper<N - 1>::hash(tu) ^ qHash(std::get<N - 1>(tu));
+                return TupleHelper < N - 1 >::hash(tu) ^ qHash(std::get < N - 1 > (tu));
+            }
+
+            template <class Tu>
+            static void serializeJson(QJsonObject &json, const QStringList &members, const Tu &tu)
+            {
+                // typedef typename std::remove_const < typename std::remove_reference < typename std::tuple_element < N - 1, Tu >::type >::type >::type TARGET;
+                typedef typename std::decay < typename std::tuple_element < N - 1, Tu >::type >::type TARGET;
+                json << std::pair<QString, TARGET>(members.at(N - 1), std::get < N - 1 > (tu));
+                TupleHelper < N - 1 >::serializeJson(json, members, tu);
+            }
+
+            template <class Tu>
+            static void deserializeJson(const QJsonObject &json, const QStringList &members, Tu &tu)
+            {
+                json.value(members.at(N - 1)) >> std::get < N - 1 > (tu);
+                TupleHelper < N - 1 >::deserializeJson(json, members, tu);
             }
         };
 
@@ -119,6 +137,20 @@ namespace BlackMisc
             static const QDBusArgument &unmarshall(const QDBusArgument &arg, Tu &) { return arg; }
             template <class Tu>
             static uint hash(const Tu &) { return 0; }
+            template <class Tu>
+            static void serializeJson(QJsonObject &json, const QStringList &members, const Tu &tu)
+            {
+                Q_UNUSED(json);
+                Q_UNUSED(members);
+                Q_UNUSED(tu);
+            }
+            template <class Tu>
+            static void deserializeJson(const QJsonObject &json, const QStringList &members, Tu &tu)
+            {
+                Q_UNUSED(json);
+                Q_UNUSED(members);
+                Q_UNUSED(tu);
+            }
         };
 
 #endif // Q_COMPILER_VARIADIC_TEMPLATES
