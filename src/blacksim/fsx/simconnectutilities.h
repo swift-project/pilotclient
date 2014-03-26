@@ -3,7 +3,15 @@
 
 #include <QString>
 #include <QMetaEnum>
+
+// apart from the below definitions, the following code is OS independent,
+// though it does not make sense to be used on non WIN machines.
+// But it allows parts as GUI to comile
+#ifdef Q_OS_WIN
 #include <windows.h>
+#else
+typedef unsigned long   DWORD;
+#endif
 
 namespace BlackSim
 {
