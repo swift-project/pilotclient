@@ -69,7 +69,6 @@ namespace BlackMiscTest
         c1 = c2;
         QVERIFY2(c1 == c2, "COM system shall be equal");
         CFrequency f(100.0, CFrequencyUnit::MHz());
-        QVERIFY2(!CComSystem::tryGetComSystem(c1, "no valid unit", f), "Expect not to get COM system");
         CNavSystem nav1;
         QVERIFY2(CNavSystem::tryGetNav1System(nav1, 110.0), "Expect NAV system");
         QVERIFY2(!CNavSystem::tryGetNav1System(nav1, 200.0), "Expect no NAV system");
@@ -85,12 +84,16 @@ namespace BlackMiscTest
         QVERIFY2(t1 == t2, "Transponders shall be equal");
         t2.setTransponderMode(CTransponder::ModeC);
         QVERIFY2(t1 != t2, "Transponders shall not be equal");
-        QVERIFY2(!CTransponder::tryGetStandardTransponder(t1, 8888, CTransponder::StateStandby), "No valid transponder");
-        QVERIFY2(!CTransponder::tryGetStandardTransponder(t1, 781, CTransponder::StateStandby), "No valid transponder");
-        QVERIFY2(!CTransponder::tryGetStandardTransponder(t1, "0781", CTransponder::StateStandby), "No valid transponder");
-        QVERIFY2(CTransponder::tryGetStandardTransponder(t1, "7211", CTransponder::StateStandby), "No valid transponder");
-        QVERIFY2(!CTransponder::tryGetStandardTransponder(t1, "schnitzel", CTransponder::StateStandby), "No valid transponder");
-
+        CTransponder tv = CTransponder(false, "transponder", 8888, CTransponder::StateStandby);
+        QVERIFY2(!tv.validValues(), "No valid transponder");
+        tv = CTransponder(false, "transponder", 781, CTransponder::StateStandby);
+        QVERIFY2(!tv.validValues(), "No valid transponder");
+        tv = CTransponder(false, "transponder", "0781", CTransponder::StateStandby);
+        QVERIFY2(!tv.validValues(), "No valid transponder");
+        tv = CTransponder(false, "transponder", "7211", CTransponder::StateStandby);
+        QVERIFY2(tv.validValues(), "No valid transponder");
+        tv = CTransponder(false, "transponder", "schnitzel", CTransponder::StateStandby);
+        QVERIFY2(!tv.validValues(), "No valid transponder");
     }
 
     /*

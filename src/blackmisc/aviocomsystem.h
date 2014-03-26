@@ -135,181 +135,52 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
 
-            /*!
-             * Try to get a COM unit with given name and frequency. Returns true in case an object
-             * has been sucessfully created, otherwise returns a default object.
-             * \param[out] o_comSystem
-             * \param name
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
-            static bool tryGetComSystem(CComSystem &o_comSystem, const QString &name, double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                o_comSystem = CComSystem(false, name, BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
-                bool s;
-                if (!(s = o_comSystem.validate(false))) o_comSystem = CComSystem(); // reset to default
-                return s;
-            }
+            //! \brief Members
+            static const QStringList &jsonMembers();
 
-            /*!
-             * Try to get a COM unit with given name and frequency. Returns true in case an object
-             * has been sucessfully created, otherwise returns a default object.
-             * \param[out] o_comSystem
-             * \param name
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
-            static bool tryGetComSystem(CComSystem &o_comSystem, const QString &name, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                o_comSystem = CComSystem(false, name, activeFrequency, standbyFrequency);
-                bool s;
-                if (!(s = o_comSystem.validate(false))) o_comSystem = CComSystem(); // reset to default
-                return s;
-            }
+            //! \brief operator ==
+            bool operator ==(const CComSystem &other) const;
 
-            /*!
-             * \brief COM1 unit
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
+            //! \brief operator !=
+            bool operator !=(const CComSystem &other) const;
+
+            //! \brief COM1 unit
             static CComSystem getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
             {
                 return CComSystem(CModulator::NameCom1(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
             }
 
-            /*!
-             * \brief COM1 unit
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
+            //! \brief COM1 unit
             static CComSystem getCom1System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
             {
                 return CComSystem(CModulator::NameCom1(), activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
             }
 
-            /*!
-             * \brief Try to get COM unit
-             * \param[out] o_comSystem
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
-            static bool tryGetCom1Unit(CComSystem &o_comSystem, double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                return CComSystem::tryGetComSystem(o_comSystem, CModulator::NameCom1(), activeFrequencyMHz, standbyFrequencyMHz);
-            }
-
-            /*!
-             * \brief Try to get COM unit
-             * \param[out] o_comSystem
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
-            static bool tryGetCom1Unit(CComSystem &o_comSystem, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                return CComSystem::tryGetComSystem(o_comSystem, CModulator::NameCom1(), activeFrequency, standbyFrequency);
-            }
-
-            /*!
-             * \brief COM2 unit
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
+            //! \brief COM2 unit
             static CComSystem getCom2System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
             {
                 return CComSystem(CModulator::NameCom2(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
             }
 
-            /*!
-             * \brief COM2 unit
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
+            //! \brief COM2 unit
             static CComSystem getCom2System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
             {
                 return CComSystem(CModulator::NameCom2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
             }
 
-            /*!
-             * \brief Try to get COM unit
-             * \param[out] o_comSystem
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
-            static bool tryGetCom2System(CComSystem &o_comSystem, double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                return CComSystem::tryGetComSystem(o_comSystem, CModulator::NameCom2(), activeFrequencyMHz, standbyFrequencyMHz);
-            }
-
-            /*!
-             * \brief Try to get COM unit
-             * \param[out] o_comSystem
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
-            static bool tryGetCom2System(CComSystem &o_comSystem, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                return CComSystem::tryGetComSystem(o_comSystem, CModulator::NameCom2(), activeFrequency, standbyFrequency);
-            }
-
-            /*!
-             * \brief COM3 unit
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
+            //! \brief COM3 unit
             static CComSystem getCom3System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
             {
                 return CComSystem(CModulator::NameCom3(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
             }
 
-            /*!
-             * \brief COM3 unit
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
+            //! \brief COM3 unit
             static CComSystem getCom3System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
             {
                 return CComSystem(CModulator::NameCom3(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
             }
 
-            /*!
-             * \brief Try to get COM unit
-             * \param[out] o_comSystem
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
-            static bool tryGetCom3System(CComSystem &o_comSystem, double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                return CComSystem::tryGetComSystem(o_comSystem, CModulator::NameCom3(), activeFrequencyMHz, standbyFrequencyMHz);
-            }
-
-            /*!
-             * \brief Try to get COM unit
-             * \param[out] o_comSystem
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
-            static bool tryGetCom3System(CComSystem &o_comSystem, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                return CComSystem::tryGetComSystem(o_comSystem, CModulator::NameCom3(), activeFrequency, standbyFrequency);
-            }
-
-            /*!
-             * \brief Valid civil aviation frequency?
-             */
+            //! \brief Valid civil aviation frequency?
             static bool isValidCivilAviationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
                 double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);

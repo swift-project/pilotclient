@@ -71,13 +71,15 @@ namespace BlackMiscTest
         CValueMap vmWildcard(true);
         CValueMap vmNoWildcard(false);
         CValueMap vm;
-        vm.addValue(CAtcStation::IndexController, CUser("123456", "Joe Doe"));
+
+        // remark: Shortcoming here, as the callsign will automatically set for user in station
+        // I have to set this as well, otherwise, not match.
+        vm.addValue(CAtcStation::IndexController, CUser("123456", "Joe Doe", CCallsign("EDDMTWR")));
 
         // compare
         QVERIFY2(vmWildcard == station1, "Station should be equal to wildcard");
         QVERIFY2(station1 != vmNoWildcard, "Station should not be equal to empty list");
         QVERIFY2(station1 == vm, "Controller should match");
-
     }
 
 } //namespace BlackMiscTest

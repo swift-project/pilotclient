@@ -177,7 +177,8 @@ bool BlackMisc::equalQVariants(const QVariant &v1, const QVariant &v2)
     const CValueObject *cs2 = CValueObject::fromQVariant(v2);
     if (cs1 && cs2)
     {
-        return compare(*cs1, *cs2) == 0;
+        int c = compare(*cs1, *cs2);
+        return c == 0;
     }
     return  false;
 }
