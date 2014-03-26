@@ -10,7 +10,7 @@ namespace BlackSim
     namespace Fsx
     {
         //! \brief Utilities for SimConnect
-        class CSimConnectUtilities : QObject
+        class CSimConnectUtilities : public QObject
         {
             Q_OBJECT
             Q_ENUMS(SIMCONNECT_EXCEPTION)
