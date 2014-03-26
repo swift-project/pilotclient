@@ -82,9 +82,9 @@ namespace BlackMisc
          */
         int CCallsign::compareImpl(const CValueObject &otherBase) const
         {
+            // intentionally compare on string only!
             const auto &other = static_cast<const CCallsign &>(otherBase);
-
-            return compare(TupleConverter<CCallsign>::toTuple(*this), TupleConverter<CCallsign>::toTuple(other));
+            return this->m_callsign.compare(other.m_callsign, Qt::CaseInsensitive);
         }
 
         /*
