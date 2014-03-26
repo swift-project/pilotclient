@@ -25,12 +25,6 @@ namespace BlackMisc
             //! \brief Constructor
             CAvionicsBase(const QString &name) : m_name(name) {}
 
-            //! \brief Are set values valid?
-            virtual bool validValues() const
-            {
-                return true;
-            }
-
             //! \brief Set name
             void setName(const QString &name)
             {
@@ -72,6 +66,12 @@ namespace BlackMisc
             QString getName() const
             {
                 return this->m_name;
+            }
+
+            //! \brief Are set values valid?
+            virtual bool validValues() const
+            {
+                return true;
             }
 
         private:

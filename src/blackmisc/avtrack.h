@@ -48,24 +48,13 @@ namespace BlackMisc
             virtual int compareImpl(const CValueObject &other) const override;
 
         public:
-            /*!
-             * \brief Default constructor: 0 Track magnetic
-             */
+            //! \brief Default constructor: 0 Track magnetic
             CTrack() : BlackMisc::PhysicalQuantities::CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
-            /*!
-             * \brief Constructor
-             * \param value
-             * \param north
-             * \param unit
-             */
+            //! \brief Constructor
             CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_north(north) {}
 
-            /*!
-             * \brief Constructor by CAngle
-             * \param track
-             * \param north
-             */
+            //! \brief Constructor by CAngle
             CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : BlackMisc::PhysicalQuantities::CAngle(track), m_north(north) {}
 
             //! \copydoc CValueObject::toQVariant

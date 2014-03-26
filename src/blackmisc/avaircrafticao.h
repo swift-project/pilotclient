@@ -27,14 +27,14 @@ namespace BlackMisc
 
             /*!
              * Constructor.
-             * \param icao
-             * \param type
-             * \param airline
-             * \param livery
-             * \param color
+             * \param icao "B737"
+             * \param combinedType "L2J"
+             * \param airline "DLH"
+             * \param livery "FREIGHT"
+             * \param color "CCFFDD" (RGB)
              */
-            CAircraftIcao(const QString &icao, const QString &type, const QString &airline, const QString &livery, const QString &color)
-                : m_aircraftDesignator(icao.trimmed().toUpper()), m_aircraftCombinedType(type.trimmed().toUpper()), m_airlineDesignator(airline.trimmed().toUpper()),
+            CAircraftIcao(const QString &icao, const QString &combinedType, const QString &airline, const QString &livery, const QString &color)
+                : m_aircraftDesignator(icao.trimmed().toUpper()), m_aircraftCombinedType(combinedType.trimmed().toUpper()), m_airlineDesignator(airline.trimmed().toUpper()),
                   m_livery(livery.trimmed().toUpper()), m_aircraftColor(color.trimmed().toUpper()) {}
 
             //! \copydoc CValueObject::toQVariant

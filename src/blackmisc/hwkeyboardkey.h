@@ -18,9 +18,7 @@ namespace BlackMisc
 {
     namespace Hardware
     {
-        /*!
-         * \brief Value object representing a keyboard key.
-         */
+        //! \brief Value object representing a keyboard key.
         class CKeyboardKey : public CValueObject
         {
         public:
@@ -195,11 +193,7 @@ namespace BlackMisc
                 return this->m_modifier1 != ModifierNone || this->m_modifier2 != ModifierNone;
             }
 
-            /*!
-             * \brief Do we have this modifier?
-             * \param modifier
-             * \return
-             */
+            //! \brief Do we have this modifier?
             bool hasModifier(Modifier modifier) const
             {
                 return m_modifier1 == modifier || m_modifier2 == modifier;

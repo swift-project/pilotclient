@@ -15,29 +15,20 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        /*!
-         * Value object encapsulating information of a callsign.
-         */
+        //! \brief Value object encapsulating information of a callsign.
         class CCallsign : public BlackMisc::CValueObject
         {
 
         public:
-            /*!
-             * Default constructor.
-             */
+            //! \brief Default constructor.
             CCallsign() {}
 
-            /*!
-             * Constructor.
-             */
+            //! \brief Constructor
             CCallsign(const QString &callsign, const QString &telephonyDesignator = "")
                 : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_telephonyDesignator(telephonyDesignator.trimmed())
             {}
 
-            /*!
-             * Constructor.
-             * Needed to disambiguate implicit conversion from string literal.
-             */
+            //! \brief Constructor, needed to disambiguate implicit conversion from string literal.
             CCallsign(const char *callsign)
                 : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign))
             {}
@@ -112,7 +103,7 @@ namespace BlackMisc
             /*!
              * \brief Unify the callsign
              * \param callsign
-             * \return
+             * \return unified callsign
              */
             static QString unifyCallsign(const QString &callsign);
 

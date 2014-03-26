@@ -92,47 +92,34 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Set active frequency
-             * \remarks will be rounded to channel spacing
-             * \see ChannelSpacing
-             */
+            //! \brief Set active frequency
+            //! \remarks will be rounded to channel spacing
             void setFrequencyActiveMHz(double frequencyMHz);
 
-            /*!
-             * \brief Set standby frequency
-             * \remarks will be rounded to channel spacing
-             */
+            //! \brief Set standby frequency
+            //! \remarks will be rounded to channel spacing
             void setFrequencyStandbyMHz(double frequencyMHz);
 
-            /*!
-             * \brief Is active frequency within 8.3383kHz channel?
-             */
+            //! \brief Is active frequency within 8.3383kHz channel?
             bool isActiveFrequencyWithin8_33kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency)
             {
                 return CComSystem::isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing8_33KHz);
             }
 
-            /*!
-             * \brief Is active frequency within 25kHz channel?
-             */
+            //! \brief Is active frequency within 25kHz channel?
             bool isActiveFrequencyWithin25kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const
             {
                 return CComSystem::isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing25KHz);
             }
 
-            /*!
-             * \brief Set UNICOM frequency as active
-             */
+            //! \brief Set UNICOM frequency as active
             void setActiveUnicom()
             {
                 this->toggleActiveStandby();
                 this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyUnicom());
             }
 
-            /*!
-             * \brief Set International Air Distress 121.5MHz
-             */
+            //! \brief Set International Air Distress 121.5MHz
             void setActiveInternationalAirDistress()
             {
                 this->toggleActiveStandby();
@@ -142,10 +129,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
-            /*!
-             * \brief operator ==
-             */
-            bool operator ==(const CComSystem &other) const;
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
 
             /*!
              * \brief operator !=

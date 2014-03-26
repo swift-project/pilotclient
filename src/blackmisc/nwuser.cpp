@@ -19,7 +19,7 @@ namespace BlackMisc
             }
             if (this->hasValidCallsign())
             {
-                s.append(this->getCallsign().getStringAsSet());
+                s.append(' ').append(this->getCallsign().getStringAsSet());
             }
             return s;
         }
@@ -38,7 +38,6 @@ namespace BlackMisc
         bool CUser::isA(int metaTypeId) const
         {
             if (metaTypeId == qMetaTypeId<CUser>()) { return true; }
-
             return this->CValueObject::isA(metaTypeId);
         }
 
@@ -48,7 +47,6 @@ namespace BlackMisc
         int CUser::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CUser &>(otherBase);
-
             return compare(TupleConverter<CUser>::toTuple(*this), TupleConverter<CUser>::toTuple(other));
         }
 

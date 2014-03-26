@@ -63,9 +63,7 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! \brief Default constructor
             CMatrixBase() : m_matrix() {}
 
             /*!
@@ -77,65 +75,39 @@ namespace BlackMisc
                 this->fill(fillValue);
             }
 
-            /*!
-             * \brief Virtual destructor
-             */
+            //! \brief Virtual destructor
             virtual ~CMatrixBase() {}
 
-            /*!
-             * \brief List of values
-             * \return
-             */
+            //! \brief List of values
             QList<double> toList() const;
 
-            /*!
-             * \copydoc CValueObject::getValueHash
-             */
-            virtual uint getValueHash() const override;
-
-            /*!
-             * \brief List of values
-             * \return
-             */
+            //! \brief List of values
             void fromList(const QList<double> &list);
 
-            /*!
-             * \brief Equal operator ==
-             * \param other
-             * \return
-             */
+            //! \copydoc CValueObject::getValueHash
+            virtual uint getValueHash() const override;
+
+            //! \brief Equal operator ==
             bool operator ==(const ImplMatrix &other) const
             {
                 if (this == &other) return true;
                 return this->m_matrix == other.m_matrix;
             }
 
-            /*!
-             * \brief Unequal operator !=
-             * \param other
-             * \return
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const ImplMatrix &other) const
             {
                 return !((*this) == other);
             }
 
-            /*!
-             * \brief Operator *=
-             * \param factor
-             * \return
-             */
+            //! \brief Operator *=
             CMatrixBase &operator *=(double factor)
             {
                 this->m_matrix *= factor;
                 return *this;
             }
 
-            /*!
-             * \brief Operator *
-             * \param factor
-             * \return
-             */
+            //! \brief Operator *
             ImplMatrix operator *(double factor) const
             {
                 ImplMatrix m = *derived();
@@ -143,33 +115,20 @@ namespace BlackMisc
                 return m;
             }
 
-            /*!
-             * \brief Operator to support commutative scalar multiplication
-             * \param factor
-             * \param other
-             * \return
-             */
+            //! \brief Operator to support commutative scalar multiplication
             friend ImplMatrix operator *(double factor, const ImplMatrix &other)
             {
                 return other * factor;
             }
 
-            /*!
-             * \brief Operator /=
-             * \param factor
-             * \return
-             */
+            //! \brief Operator /=
             CMatrixBase &operator /=(double factor)
             {
                 this->m_matrix /= factor;
                 return *this;
             }
 
-            /*!
-             * \brief Operator /
-             * \param factor
-             * \return
-             */
+            //! \brief Operator /
             ImplMatrix operator /(double factor) const
             {
                 ImplMatrix m = *derived();
@@ -177,22 +136,14 @@ namespace BlackMisc
                 return m;
             }
 
-            /*!
-             * \brief Operator +=
-             * \param other
-             * \return
-             */
+            //! \brief Operator +=
             CMatrixBase &operator +=(const CMatrixBase &other)
             {
                 this->m_matrix += other.m_matrix;
                 return *this;
             }
 
-            /*!
-             * \brief Operator +
-             * \param other
-             * \return
-             */
+            //! \brief Operator +
             ImplMatrix operator +(const ImplMatrix &other) const
             {
                 ImplMatrix m = *derived();
@@ -200,22 +151,14 @@ namespace BlackMisc
                 return m;
             }
 
-            /*!
-             * \brief Operator -=
-             * \param other
-             * \return
-             */
+            //! \brief Operator -=
             CMatrixBase &operator -=(const CMatrixBase &other)
             {
                 this->m_matrix -= other.m_matrix;
                 return *this;
             }
 
-            /*!
-             * \brief Operator -
-             * \param other
-             * \return
-             */
+            //! \brief Operator -
             ImplMatrix operator -(const ImplMatrix &other) const
             {
                 ImplMatrix m = *derived();
@@ -223,19 +166,13 @@ namespace BlackMisc
                 return m;
             }
 
-            /*!
-             * \brief Is identity matrix?
-             * \return
-             */
+            //! \brief Is identity matrix?
             bool isIdentity() const
             {
                 return this->m_matrix.isIdentity();
             }
 
-            /*!
-             * \brief Is identity matrix? Epsilon considered.
-             * \return
-             */
+            //! \brief Is identity matrix? Epsilon considered.
             bool isIdentityEpsilon() const
             {
                 ImplMatrix m = *derived();
@@ -243,35 +180,19 @@ namespace BlackMisc
                 return m.isIdentity();
             }
 
-            /*!
-             * \brief Set as identity matrix
-             * \return
-             */
+            //! \brief Set as identity matrix
             void setToIdentity()
             {
                 this->m_matrix.setToIdentity();
             }
 
-            /*!
-             * \brief All values to zero
-             */
+            //! \brief All values to zero
             void setZero() { this->m_matrix.fill(0.0); }
 
-            /*!
-             * \brief Is zero
-             * \return
-             */
+            //! \brief Is zero?
             bool isZero() const;
 
-            /*!
-             * \brief Each cell gets a unique index (used primarily for testing)
-             */
-            void setCellIndex();
-
-            /*!
-             * \brief Is identity matrix? Epsilon considered.
-             * \return
-             */
+            //! \brief Is zero matrix? Epsilon considered.
             bool isZeroEpsilon() const
             {
                 ImplMatrix m = *derived();
@@ -279,21 +200,16 @@ namespace BlackMisc
                 return m.isZero();
             }
 
-            /*!
-             * \brief Set all elements the same
-             * \param value
-             */
+            //! \brief Each cell gets a unique index (used primarily for testing)
+            void setCellIndex();
+
+            //! \brief Set all elements the same
             void fill(double value) { this->m_matrix.fill(value); }
 
-            /*!
-             * \brief Round all values
-             */
+            //! \brief Round all values
             void round();
 
-            /*!
-             * \brief Return a rounded matrix
-             * \return
-             */
+            //! \brief Return a rounded matrix
             ImplMatrix roundedMatrix() const
             {
                 ImplMatrix m = *derived();
@@ -301,57 +217,30 @@ namespace BlackMisc
                 return m;
             }
 
-            /*!
-             * \brief Get element
-             * \param row
-             * \param column
-             * \return
-             */
+            //! \brief Get element
             double getElement(int row, int column) const;
 
-            /*!
-             * \brief Get element
-             * \param row
-             * \param column
-             * \param value
-             */
+            //! \brief Set element
             void setElement(int row, int column, double value);
 
-            /*!
-             * \brief Get element by operator () modifying
-             * \param row
-             * \param column
-             * \return
-             */
+            //! \brief Get element by operator () modifying
             double &operator()(int row, int column)
             {
                 this->checkRange(row, column);
                 return this->m_matrix(row, column);
             }
 
-            /*!
-             * \brief Get element by operator () read only
-             * \param row
-             * \param column
-             * \return
-             */
+            //! \brief Get element by operator () read only
             double operator()(int row, int column) const
             {
                 return this->getElement(row, column);
             }
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
         private:
-            /*!
-             * \brief Check range of row / column
-             * \param row
-             * \param column
-             * \throws std::range_error if index out of bounds
-             */
+            //! \brief Check range of row / column
             void checkRange(int row, int column) const;
         };
 

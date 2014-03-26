@@ -29,67 +29,45 @@ namespace BlackMisc
             double m_value; //!< numeric part
             MU m_unit; //!< unit part
 
-            /*!
-             * Which subclass of CMeasurementUnit does this quantity use?
-             */
+            //! \brief Which subclass of CMeasurementUnit is used?
             typedef MU UnitClass;
 
-            /*!
-             * \brief Easy access to derived class (CRTP template parameter)
-             */
+            //! \brief Easy access to derived class (CRTP template parameter)
             PQ const *derived() const
             {
                 return static_cast<PQ const *>(this);
             }
 
-            /*!
-             * \brief Easy access to derived class (CRTP template parameter)
-             */
+            //! \brief Easy access to derived class (CRTP template parameter)
             PQ *derived()
             {
                 return static_cast<PQ *>(this);
             }
 
         protected:
-            /*!
-             * \brief Constructor with double
-             */
+            //! \brief Constructor with double
             CPhysicalQuantity(double value, const MU &unit);
 
-            /*!
-             * \brief Copy constructor
-             */
+            //! \brief Copy constructor
             CPhysicalQuantity(const CPhysicalQuantity &other);
 
-            /*!
-             * \copydoc CValueObject::convertToQString
-             */
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
+            //! \copydoc CValueObject::getMetaTypeId
             virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
+            //! \copydoc CValueObject::isA
             virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
+            //! \copydoc CValueObject::compareImpl
             virtual int compareImpl(const CValueObject &other) const override;
 
         public:
-            /*!
-             * \brief Virtual destructor
-             */
+            //! \brief Virtual destructor
             virtual ~CPhysicalQuantity() {}
 
-            /*!
-             * \brief Unit
-             */
+            //! \brief Unit
             MU getUnit() const
             {
                 return this->m_unit;
@@ -104,217 +82,145 @@ namespace BlackMisc
                 this->m_unit = unit;
             }
 
-            /*!
-             * \brief Set unit by string
-             */
-            void setUnitByString(const QString &unitName)
+            //! \brief Set unit by string
+            void setUnitBySymbol(const QString &unitName)
             {
                 this->m_unit = CMeasurementUnit::unitFromSymbol<MU>(unitName);
             }
 
-            /*!
-             * \brief Unit
-             */
+            //! \brief Unit
             QString getUnitSymbol() const
             {
                 return this->m_unit.getSymbol(true);
             }
 
-            /*!
-             * \brief Change unit, and convert value to maintain the same quantity
-             */
+            //! \brief Change unit, and convert value to maintain the same quantity
             PQ &switchUnit(const MU &newUnit);
 
-            /*!
-             * Is quantity null?
-             */
+            //! Is quantity null?
             bool isNull() const
             {
                 return this->m_unit.isNull();
             }
 
-            /*!
-             * \brief Value in given unit
-             */
+            //! \brief Value in given unit
             double value(const MU &unit) const;
 
-            /*!
-             * \brief Value in current unit
-             */
+            //! \brief Value in current unit
             double value() const
             {
                 return this->m_value;
             }
 
-            /*!
-             * \brief Set value in current unit
-             */
+            //! \brief Set value in current unit
             void setCurrentUnitValue(double value)
             {
                 this->m_value = value;
             }
 
-            /*!
-             * \brief Rounded value in given unit
-             */
+            //! \brief Rounded value in given unit
             double valueRounded(const MU &unit, int digits = -1) const;
 
-            /*!
-             * \brief Rounded value in current unit
-             */
+            //! \brief Rounded value in current unit
             double valueRounded(int digits = -1) const
             {
                 return this->valueRounded(this->m_unit, digits);
             }
 
-            /*!
-             * \brief Value to QString with the given unit, e.g. "5.00m"
-             */
+            //! \brief Value to QString with the given unit, e.g. "5.00m"
             QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
 
-            /*!
-             * \brief Value to QString with the current unit, e.g. "5.00m"
-             */
+            //! \brief Value to QString with the current unit, e.g. "5.00m"
             QString valueRoundedWithUnit(int digits = -1, bool i18n = false) const
             {
                 return this->valueRoundedWithUnit(this->m_unit, digits, i18n);
             }
 
-            /*!
-             * \brief Change value without changing unit
-             */
+            //! \brief Change value without changing unit
             void setValueSameUnit(double value);
 
-            /*!
-             * \brief Add to the value in the current unit.
-             */
+            //! \brief Add to the value in the current unit.
             void addValueSameUnit(double value);
 
-            /*!
-             * \brief Substract from the value in the current unit.
-             */
+            //! \brief Substract from the value in the current unit.
             void substractValueSameUnit(double value);
 
-            /*!
-            * \brief Multiply operator *=
-            */
+            //! \brief Multiply operator *=
             CPhysicalQuantity &operator *=(double multiply);
 
-            /*!
-             * \brief Divide operator /=
-             */
+            //! \brief Divide operator /=
             CPhysicalQuantity &operator /=(double divide);
 
-            /*!
-             * \brief Operator *
-             */
+            //! \brief Operator *
             PQ operator *(double multiply) const;
 
-            /*!
-             * \brief Operator to support commutative multiplication
-             */
+            //! \brief Operator to support commutative multiplication
             friend PQ operator *(double factor, const PQ &other)
             {
                 return other * factor;
             }
 
-            /*!
-             * \brief Operator /
-             */
+            //! \brief Operator /
             PQ operator /(double divide) const;
 
-            /*!
-             * \brief Equal operator ==
-             */
+            //! \brief Equal operator ==
             bool operator==(const CPhysicalQuantity &other) const;
 
-            /*!
-             * \brief Not equal operator !=
-             */
+            //! \brief Not equal operator !=
             bool operator!=(const CPhysicalQuantity &other) const;
 
-            /*!
-             * \brief Plus operator +=
-             */
+            //! \brief Plus operator +=
             CPhysicalQuantity &operator +=(const CPhysicalQuantity &other);
 
-            /*!
-             * \brief Minus operator-=
-             */
+            //! \brief Minus operator-=
             CPhysicalQuantity &operator -=(const CPhysicalQuantity &other);
 
-            /*!
-             * \brief Greater operator >
-             */
+            //! \brief Greater operator >
             bool operator >(const CPhysicalQuantity &other) const;
 
-            /*!
-             * \brief Less operator <
-             */
+            //! \brief Less operator <
             bool operator <(const CPhysicalQuantity &other) const;
 
-            /*!
-             * \brief Less equal operator <=
-             */
+            //! \brief Less equal operator <=
             bool operator <=(const CPhysicalQuantity &other) const;
 
-            /*!
-             * \brief Greater equal operator >=
-             */
+            //! \brief Greater equal operator >=
             bool operator >=(const CPhysicalQuantity &other) const;
 
-            /*!
-             * \brief Plus operator +
-             */
+            //! \brief Plus operator +
             PQ operator +(const PQ &other) const;
 
-            /*!
-             * \brief Minus operator -
-             */
+            //! \brief Minus operator -
             PQ operator -(const PQ &other) const;
 
-            /*!
-             * \brief Quantity value <= epsilon
-             */
+            //! \brief Quantity value <= epsilon
             bool isZeroEpsilonConsidered() const
             {
                 return this->m_unit.isEpsilon(this->m_value);
             }
 
-            /*!
-             * \brief Value >= 0 epsilon considered
-             */
+            //! \brief Value >= 0 epsilon considered
             bool isPositiveWithEpsilonConsidered() const
             {
                 return !this->isZeroEpsilonConsidered() && this->m_value > 0;
             }
 
-            /*!
-             * \brief Value <= 0 epsilon considered
-             */
+            //! \brief Value <= 0 epsilon considered
             bool isNegativeWithEpsilonConsidered() const
             {
                 return !this->isZeroEpsilonConsidered() && this->m_value < 0;
             }
 
-            /*!
-             * \copydoc CValueObject::marshallToDbus
-             */
+            //! \copydoc CValueObject::marshallToDbus
             virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \copydoc CValueObject::unmarshallFromDbus
-             */
+            //! \copydoc CValueObject::unmarshallFromDbus
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
-            /*!
-             * \copydoc CValueObject::getValueHash
-             */
+            //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
-            /*!
-             * \brief Register metadata of unit and quantity
-             */
+            //! \brief Register metadata of unit and quantity
             static void registerMetadata();
         };
 

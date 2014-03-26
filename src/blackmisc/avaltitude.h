@@ -32,40 +32,26 @@ namespace BlackMisc
             ReferenceDatum m_datum; //!< MSL or AGL?
 
         protected:
-            /*!
-             * \copydoc CValueObject::convertToQString
-             */
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n) const override;
 
-            /*!
-             * \copydoc CValueObject::getMetaTypeId
-             */
+            //! \copydoc CValueObject::getMetaTypeId
             virtual int getMetaTypeId() const override;
 
-            /*!
-             * \copydoc CValueObject::isA
-             */
+            //! \copydoc CValueObject::isA
             virtual bool isA(int metaTypeId) const override;
 
-            /*!
-             * \copydoc CValueObject::compareImpl
-             */
+            //! \copydoc CValueObject::compareImpl
             virtual int compareImpl(const CValueObject &other) const override;
 
-            /*!
-             * \copydoc CValueObject::marshallToDbus
-             */
+            //! \copydoc CValueObject::marshallToDbus
             virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-            /*!
-             * \copydoc CValueObject::unmarshallFromDbus
-             */
+            //! \copydoc CValueObject::unmarshallFromDbus
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         public:
-            /*!
-             * \brief Default constructor: 0 Altitude true
-             */
+            //! \brief Default constructor: 0 Altitude true
             CAltitude() : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
 
             /*!
@@ -76,57 +62,34 @@ namespace BlackMisc
              */
             CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : BlackMisc::PhysicalQuantities::CLength(value, unit), m_datum(datum) {}
 
-            /*!
-             * \brief Constructor by CLength
-             * \param altitude
-             * \param datum
-             */
+            //! \brief Constructor by CLength
             CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, ReferenceDatum datum) : BlackMisc::PhysicalQuantities::CLength(altitude), m_datum(datum) {}
 
-            /*!
-             * \brief Equal operator ==
-             * \param other
-             * @return
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CAltitude &other) const;
 
-            /*!
-             * \brief Unequal operator ==
-             * \param other
-             * @return
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CAltitude &other) const;
 
-            /*!
-             * \brief AGL Above ground level?
-             * \return
-             */
+            //! \brief AGL Above ground level?
             bool isAboveGroundLevel() const
             {
                 return AboveGround == this->m_datum;
             }
 
-            /*!
-             * \brief MSL Mean sea level?
-             * \return
-             */
+            //! \brief MSL Mean sea level?
             bool isMeanSeaLevel() const
             {
                 return MeanSeaLevel == this->m_datum;
             }
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Get reference datum (MSL or AGL)
-             * \return
-             */
+            //! \brief Get reference datum (MSL or AGL)
             ReferenceDatum getReferenceDatum() const
             {
                 return m_datum;
