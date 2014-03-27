@@ -45,7 +45,7 @@ namespace BlackMisc
              * \brief Validate values by assert and exception
              * \param strict
              * \throws std::range_error
-             * \remarks Cannot be virtualsince already used in constructor
+             * \remarks Cannot be virtual since already used in constructor
              * \return
              */
             bool validate(bool strict = true) const;
@@ -64,7 +64,7 @@ namespace BlackMisc
 
         public:
             //! \brief Default constructor
-            CTransponder() : CAvionicsBase("transponder"), m_transponderCode(0), m_transponderMode(ModeS) {}
+            CTransponder() : CAvionicsBase("transponder"), m_transponderCode(0), m_transponderMode(StateStandby) {}
 
             //! \brief Copy constructor
             CTransponder(const CTransponder &other) : CAvionicsBase(other.getName()),
@@ -133,16 +133,25 @@ namespace BlackMisc
             }
 
             //! \brief Transponder mode as string
-            QString getModeAsString() const;
+            QString getModeAsString() const
+            {
+                return CTransponder::modeAsString(this->getTransponderMode());
+            }
 
             //! \brief Transponder mode as string
-            void setModeAsString(const QString &mode);
+            void setModeAsString(const QString &mode)
+            {
+                this->setTransponderMode(CTransponder::modeFromString(mode));
+            }
 
             //! \brief Transponder mode
             TransponderMode getTransponderMode() const
             {
                 return this->m_transponderMode;
             }
+
+            //! \brief Transponder mode as string
+            static const QString &modeAsString(TransponderMode mode);
 
             //! \brief Transponder code
             qint32 getTransponderCode() const
@@ -165,6 +174,9 @@ namespace BlackMisc
 
             //! \brief Set transponder code
             void setTransponderCode(const QString &transponderCode);
+
+            //! \brief Mode from string
+            static TransponderMode modeFromString(const QString &modeString);
 
             //! \brief Set transponder mode
             void setTransponderMode(TransponderMode mode)

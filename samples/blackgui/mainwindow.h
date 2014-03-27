@@ -18,6 +18,7 @@
 #include "blackcore/context_application.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/coreruntime.h"
+#include "blackgui/transpondermodeselector.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/serverlistmodel.h"
 #include "blackgui/aircraftlistmodel.h"

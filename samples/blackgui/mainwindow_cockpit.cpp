@@ -42,15 +42,15 @@ void MainWindow::cockpitValuesChanged()
     else if (sender == this->ui->pb_CockpitIdent)
     {
         // trigger the real button
-        if (this->ui->cb_CockpitTransponderMode->currentText() == "I")
+        if (this->ui->cbp_CockpitTransponderMode->isIdentSelected())
         {
             this->ui->pb_CockpitIdent->setStyleSheet("");
-            this->resetTransponderMode();
+            this->ui->cbp_CockpitTransponderMode->resetTransponderMode();
         }
         else
         {
             this->ui->pb_CockpitIdent->setStyleSheet("background: red");
-            this->ui->cb_CockpitTransponderMode->setCurrentText("I"); // trigger real button and whole process
+            this->ui->cbp_CockpitTransponderMode->setSelectedTransponderModeStateIdent(); // trigger real button and whole process
         }
         return;
     }
@@ -92,25 +92,7 @@ void MainWindow::updateCockpitFromContext()
             this->ui->ds_CockpitTransponder->setValue(tc);
     }
 
-    QString tm = this->ui->cb_CockpitTransponderMode->currentText().trimmed().toUpper();
-    switch (transponder.getTransponderMode())
-    {
-    case CTransponder::StateStandby:
-    case CTransponder::ModeS:
-        if (tm != "S")
-            this->ui->cb_CockpitTransponderMode->setCurrentText("S");
-        break;
-    case CTransponder::ModeC:
-        if (tm != "C")
-            this->ui->cb_CockpitTransponderMode->setCurrentText("C");
-        break;
-    case CTransponder::StateIdent:
-        if (tm != "I")
-            this->ui->cb_CockpitTransponderMode->setCurrentText("I");
-        break;
-    default:
-        break;
-    }
+    this->ui->cbp_CockpitTransponderMode->setSelectedTransponderMode(transponder.getTransponderMode());
 
     if (this->m_contextNetworkAvailable)
     {
@@ -228,11 +210,6 @@ void MainWindow::updateComFrequencyDisplays(const CComSystem &com1, const CComSy
 void MainWindow::resetTransponderMode()
 {
     this->ui->pb_CockpitIdent->setStyleSheet("");
-    if (this->ui->cb_CockpitTransponderMode->currentText() == "I")
-    {
-        // only reset if still "I"
-        this->ui->cb_CockpitTransponderMode->setCurrentText(this->m_transponderResetValue);
-    }
 }
 
 /*
@@ -258,25 +235,11 @@ void MainWindow::sendCockpitUpdates()
         this->ui->ds_CockpitTransponder->setValue(transponder.getTransponderCode());
     }
 
-    QString tm = this->ui->cb_CockpitTransponderMode->currentText().toUpper();
-    if (tm == "S")
-        transponder.setTransponderMode(CTransponder::ModeS);
-    else if (tm == "C")
-        transponder.setTransponderMode(CTransponder::ModeC);
-    else if (tm == "I")
+    transponder.setTransponderMode(this->ui->cbp_CockpitTransponderMode->getSelectedTransponderMode());
+    if (this->ui->cbp_CockpitTransponderMode->isIdentSelected())
     {
         // ident shall be sent for some time, then reset
-        transponder.setTransponderMode(CTransponder::StateIdent);
         this->ui->pb_CockpitIdent->setStyleSheet("background: red");
-        if (this->m_ownAircraft.getTransponderMode() == CTransponder::ModeS)
-        {
-            this->m_transponderResetValue = "S";
-        }
-        else
-        {
-            this->m_transponderResetValue = "C";
-        }
-        QTimer::singleShot(5000, this, SLOT(resetTransponderMode()));
     }
 
     //

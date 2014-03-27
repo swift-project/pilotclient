@@ -317,7 +317,7 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->le_CommandLineInput, &QLineEdit::returnPressed, this, &MainWindow::commandEntered);
 
     // cockpit
-    connected = this->connect(this->ui->cb_CockpitTransponderMode, SIGNAL(currentIndexChanged(QString)), this, SLOT(cockpitValuesChanged()));
+    connected = this->connect(this->ui->cbp_CockpitTransponderMode, SIGNAL(currentIndexChanged(QString)), this, SLOT(cockpitValuesChanged()));
     Q_ASSERT(connected);
     this->connect(this->ui->ds_CockpitCom1Active, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->ds_CockpitCom2Active, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
@@ -333,6 +333,7 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->pb_CockpitToggleCom2, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->pb_CockpitIdent, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
     this->connect(this->ui->pb_CockpitSelcalTest, &QPushButton::clicked, this, &MainWindow::testSelcal);
+    this->connect(this->ui->cbp_CockpitTransponderMode, &CTransponderModeSelector::identEnded, this, &MainWindow::resetTransponderMode);
     this->connect(qApp, &QApplication::focusChanged, this, &MainWindow::inputFocusChanged);
 
     // voice

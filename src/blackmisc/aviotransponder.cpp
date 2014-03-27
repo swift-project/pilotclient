@@ -47,89 +47,18 @@ namespace BlackMisc
         /*
          * Mode as readable string
          */
-        QString CTransponder::getModeAsString() const
+        CTransponder::TransponderMode CTransponder::modeFromString(const QString &modeString)
         {
-            QString m;
-            switch (this->getTransponderMode())
-            {
-            case StateIdent:
-                m = "Ident";
-                break;
-            case StateStandby:
-                m = "Standby";
-                break;
-            case ModeC:
-                m = "Mode C";
-                break;
-            case ModeS:
-                m = "Mode S";
-                break;
-            case ModeMil1:
-                m = "Mil.Mode 1";
-                break;
-            case ModeMil2:
-                m = "Mil.Mode 2";
-                break;
-            case ModeMil3:
-                m = "Mil.Mode 3";
-                break;
-            case ModeMil4:
-                m = "Mil.Mode 4";
-                break;
-            case ModeMil5:
-                m = "Mil.Mode 5";
-                break;
-            default:
-                throw std::range_error("Illegal Transponder Mode");
-            }
-            return m;
-        }
-
-        /*
-         * Mode as readable string
-         */
-        void CTransponder::setModeAsString(const QString &m)
-        {
-            if (m.startsWith("Ident", Qt::CaseInsensitive))
-            {
-                this->setTransponderMode(StateIdent);
-            }
-            else if (m.startsWith("Standby", Qt::CaseInsensitive) || m.startsWith("Stdby", Qt::CaseInsensitive))
-            {
-                this->setTransponderMode(StateStandby);
-            }
-            else if (m.startsWith("Mode C", Qt::CaseInsensitive))
-            {
-                this->setTransponderMode(ModeC);
-            }
-            else if (m.startsWith("Mode S", Qt::CaseInsensitive))
-            {
-                this->setTransponderMode(ModeS);
-            }
-            else if (m.contains("Mode 1", Qt::CaseInsensitive))
-            {
-                this->setTransponderMode(ModeMil1);
-            }
-            else if (m.contains("Mode 2", Qt::CaseInsensitive))
-            {
-                this->setTransponderMode(ModeMil2);
-            }
-            else if (m.contains("Mode 3", Qt::CaseInsensitive))
-            {
-                this->setTransponderMode(ModeMil3);
-            }
-            else if (m.contains("Mode 4", Qt::CaseInsensitive))
-            {
-                this->setTransponderMode(ModeMil4);
-            }
-            else if (m.contains("Mode 5", Qt::CaseInsensitive))
-            {
-                this->setTransponderMode(ModeMil5);
-            }
-            else
-            {
-                throw std::range_error("Illegal Transponder Mode");
-            }
+            if (modeString.startsWith("Ident", Qt::CaseInsensitive)) return StateIdent;
+            if (modeString.startsWith("Standby", Qt::CaseInsensitive) || modeString.startsWith("Stdby", Qt::CaseInsensitive)) return StateStandby;
+            if (modeString.startsWith("Mode C", Qt::CaseInsensitive)) return ModeC;
+            if (modeString.startsWith("Mode S", Qt::CaseInsensitive)) return ModeS;
+            if (modeString.contains("Mode 1", Qt::CaseInsensitive)) return ModeMil1;
+            if (modeString.contains("Mode 2", Qt::CaseInsensitive)) return ModeMil2;
+            if (modeString.contains("Mode 3", Qt::CaseInsensitive)) return ModeMil3;
+            if (modeString.contains("Mode 4", Qt::CaseInsensitive)) return ModeMil4;
+            if (modeString.contains("Mode 5", Qt::CaseInsensitive)) return ModeMil5;
+            return StateStandby;
         }
 
         /*
@@ -237,6 +166,47 @@ namespace BlackMisc
         {
             qRegisterMetaType<CTransponder>();
             qDBusRegisterMetaType<CTransponder>();
+        }
+
+        /*
+         * Mode as readable string
+         */
+        const QString &CTransponder::modeAsString(CTransponder::TransponderMode mode)
+        {
+            static QString m;
+            switch (mode)
+            {
+            case StateIdent:
+                m = "Ident";
+                break;
+            case StateStandby:
+                m = "Standby";
+                break;
+            case ModeC:
+                m = "Mode C";
+                break;
+            case ModeS:
+                m = "Mode S";
+                break;
+            case ModeMil1:
+                m = "Mil.Mode 1";
+                break;
+            case ModeMil2:
+                m = "Mil.Mode 2";
+                break;
+            case ModeMil3:
+                m = "Mil.Mode 3";
+                break;
+            case ModeMil4:
+                m = "Mil.Mode 4";
+                break;
+            case ModeMil5:
+                m = "Mil.Mode 5";
+                break;
+            default:
+                qFatal("Illegal Transponder Mode");
+            }
+            return m;
         }
 
         /*

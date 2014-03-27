@@ -454,7 +454,7 @@ QStatusBar QLabel {
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>7</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="pg_StatusPage">
           <property name="sizePolicy">
@@ -1388,7 +1388,7 @@ QStatusBar QLabel {
               </widget>
              </item>
              <item row="3" column="3">
-              <widget class="QComboBox" name="cb_CockpitTransponderMode">
+              <widget class="BlackGui::CTransponderModeSelector" name="cbp_CockpitTransponderMode">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                  <horstretch>0</horstretch>
@@ -1401,21 +1401,6 @@ QStatusBar QLabel {
                  <height>16777215</height>
                 </size>
                </property>
-               <item>
-                <property name="text">
-                 <string>S</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>C</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>I</string>
-                </property>
-               </item>
               </widget>
              </item>
              <item row="3" column="2">
@@ -1800,7 +1785,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QTabWidget" name="Simulator">
              <property name="currentIndex">
-              <number>3</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tb_SettingsTrafficNetwork">
               <attribute name="title">
@@ -3195,6 +3180,13 @@ QStatusBar QLabel {
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::CTransponderModeSelector</class>
+   <extends>QComboBox</extends>
+   <header>blackgui/transpondermodeselector.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>cb_StatusWithDBus</tabstop>
   <tabstop>le_StatusNetworkContext</tabstop>
@@ -3223,7 +3215,7 @@ QStatusBar QLabel {
   <tabstop>cb_CockpitSelcal1</tabstop>
   <tabstop>cb_CockpitSelcal2</tabstop>
   <tabstop>ds_CockpitTransponder</tabstop>
-  <tabstop>cb_CockpitTransponderMode</tabstop>
+  <tabstop>cbp_CockpitTransponderMode</tabstop>
   <tabstop>le_CockpitVoiceRoomCom1</tabstop>
   <tabstop>cb_CockpitVoiceRoom1Override</tabstop>
   <tabstop>le_CockpitVoiceRoomCom2</tabstop>
