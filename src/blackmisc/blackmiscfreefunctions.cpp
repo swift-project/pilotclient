@@ -55,6 +55,7 @@ void BlackMisc::Aviation::registerMetadata()
     CAircraftSituation::registerMetadata();
     CAircraftIcao::registerMetadata();
     CSelcal::registerMetadata();
+    CFlightPlan::registerMetadata();
 }
 
 /*

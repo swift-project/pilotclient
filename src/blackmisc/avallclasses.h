@@ -21,5 +21,6 @@
 #include "blackmisc/avaircraftlist.h"
 #include "blackmisc/avinformationmessage.h"
 #include "blackmisc/avselcal.h"
+#include "blackmisc/avflightplan.h"
 
 #endif // guard
