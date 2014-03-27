@@ -628,14 +628,14 @@ namespace BlackCore
 
         QString tn("transponder ");
         tn.append(callsign.asString());
-        CTransponder::TransponderMode mode = CTransponder::ModeS;
+        CTransponder::TransponderMode mode = CTransponder::StateStandby;
         switch (pos.xpdrMode)
         {
         case Cvatlib_Network::xpndrMode_Normal:
             mode = CTransponder::ModeC;
             break;
         case Cvatlib_Network::xpndrMode_Standby:
-            mode = CTransponder::ModeS;
+            mode = CTransponder::StateStandby;
             break;
         case Cvatlib_Network::xpndrMode_Ident:
             mode = CTransponder::StateIdent;

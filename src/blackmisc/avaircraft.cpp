@@ -81,7 +81,7 @@ namespace BlackMisc
          */
         void CAircraft::initTransponder()
         {
-            CTransponder xpdr("TRANSPONDER", 7000, CTransponder::ModeS);
+            CTransponder xpdr("TRANSPONDER", 7000, CTransponder::StateStandby);
             this->setTransponder(xpdr);
         }
 
