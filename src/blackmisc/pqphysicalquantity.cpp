@@ -36,6 +36,7 @@ namespace BlackMisc
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const CPhysicalQuantity<MU, PQ> &other) const
         {
             if (this == &other) return true;
+            if (this->isNull() && other.isNull()) return true; // preliminary fix
             double diff = std::abs(this->m_value - other.value(this->m_unit));
             return diff <= this->m_unit.getEpsilon();
         }

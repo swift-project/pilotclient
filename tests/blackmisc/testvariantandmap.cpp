@@ -6,6 +6,7 @@
 #include "testvariantandmap.h"
 #include "blackmisc/avatcstation.h"
 #include "blackmisc/valuemap.h"
+#include "blackmisc/tuple.h"
 #include <QList>
 #include <QString>
 #include <vector>
@@ -39,8 +40,16 @@ namespace BlackMiscTest
                              geoPos, CLength(100, CLengthUnit::km()), false, dtFrom2, dtUntil2);
 
         // compare
+        CLength l1(0, CLengthUnit::nullUnit());
+        CLength l2(0, CLengthUnit::nullUnit());
+        QVERIFY2(l1 == l2, "Null lengths should be equal");
+
         QVariant station1qv = QVariant::fromValue(station1);
         QVERIFY2(station1 == station1, "Station should be equal");
+
+        QVERIFY(station1.getController() == station2.getController());
+        QVERIFY(station1.getDistanceToPlane() == station2.getDistanceToPlane());
+
         QVERIFY2(station1 == station2, "Station should be equal");
         QVERIFY2(station1 != station3, "Station should not be equal");
         QVERIFY2(station1qv == station1, "Station should be equal (QVariant)");
