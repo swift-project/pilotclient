@@ -17,5 +17,5 @@ int main(int argc, char *argv[])
     CBlackCoreTestMain::unitMain(argc, argv);
 
     // bye
-    return a.exec();
+    return 0;
 }
