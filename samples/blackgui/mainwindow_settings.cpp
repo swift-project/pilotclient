@@ -26,7 +26,7 @@ void MainWindow::reloadSettings()
     CSettingsNetwork nws = this->m_contextSettings->getNetworkSettings();
 
     // update servers
-    this->m_modelTrafficServerList->setSelectedServer(nws.getCurrentNetworkServer());
+    this->m_modelTrafficServerList->setSelectedServer(nws.getCurrentTrafficNetworkServer());
     this->m_modelTrafficServerList->update(nws.getTrafficNetworkServers());
     this->ui->tv_SettingsTnServers->resizeColumnsToContents();
     this->ui->tv_SettingsTnServers->resizeRowsToContents();
@@ -63,7 +63,7 @@ void MainWindow::alterTrafficServer()
         return;
     }
 
-    const QString path = CSettingUtilities::appendPaths(IContextSettings::PathNetworkSettings(), CSettingsNetwork::ValueTrafficServer());
+    const QString path = CSettingUtilities::appendPaths(IContextSettings::PathNetworkSettings(), CSettingsNetwork::ValueTrafficServers());
     QObject *sender = QObject::sender();
     CStatusMessageList msgs;
     if (sender == this->ui->pb_SettingsTnCurrentServer)

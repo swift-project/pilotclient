@@ -20,100 +20,62 @@ namespace BlackMisc
 {
     namespace Settings
     {
-        /*!
-         * Value object encapsulating information of a server
-         */
+        //! Value object encapsulating information of a server
         class CSettingsNetwork : public BlackMisc::CValueObject
         {
         public:
-            /*!
-             * Default constructor.
-             */
+            //! \brief Default constructor.
             CSettingsNetwork();
 
-            /*!
-             * Destructor.
-             */
+            //! \brief Destructor.
             virtual ~CSettingsNetwork() {}
 
-            /*!
-             * \brief Update
-             * \return
-             */
+            //! \brief Update
             static const QString &CmdSetCurrentServer()
             {
                 static const QString cmd("currenttrafficserver");
                 return cmd;
             }
 
-            /*!
-             * \brief Path
-             * \return
-             */
-            static const QString &ValueTrafficServer()
+            //! \brief Path
+            static const QString &ValueTrafficServers()
             {
-                static const QString cmd("trafficserver");
-                return cmd;
+                static const QString value("trafficservers");
+                return value;
             }
 
-            /*!
-             * \copydoc CValueObject::toQVariant()
-             */
+            //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * Traffic network server objects
-             */
+            //! \brief Value object, traffic network server objects
             BlackMisc::Network::CServerList getTrafficNetworkServers() const { return m_trafficNetworkServers; }
 
-            /*!
-             * Selected traffic network server
-             */
-            BlackMisc::Network::CServer getCurrentNetworkServer() const { return m_trafficNetworkServerCurrent; }
+            //! \brief Selected traffic network server
+            BlackMisc::Network::CServer getCurrentTrafficNetworkServer() const { return m_trafficNetworkServerCurrent; }
 
-            /*!
-             * \brief URL of booking service
-             */
-            QString getBookingServiceUrl() const { return "http://vatbook.euroutepro.com/xml2.php"; }
+            //! \brief URL of booking service
 
-            /*!
-             * Selected traffic network server
-             * \param currentServer
-             * \return
-             */
+            //! \brief Selected traffic network server
             bool setCurrentNetworkServer(const BlackMisc::Network::CServer &currentServer);
 
-            /*!
-             * Traffic network server objects
-             */
+            //! \brief Traffic network server objects
             void addTrafficNetworkServer(const BlackMisc::Network::CServer &server) { m_trafficNetworkServers.push_back(server); }
 
-            /*!
-             * \brief Equal operator ==
-             */
+            //! \brief Equal operator ==
             bool operator ==(const CSettingsNetwork &other) const;
 
-            /*!
-             * \brief Unequal operator !=
-             */
+            //! \brief Unequal operator !=
             bool operator !=(const CSettingsNetwork &other) const;
 
-            /*!
-             * \copydoc BlackCore::IContextSettings
-             */
+            //! \copydoc BlackCore::IContextSettings
             virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value, bool &changedFlag);
 
-            /*!
-             * \copydoc CValueObject::getValueHash
-             */
+            //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
-            /*!
-             * \brief Register metadata
-             */
             static void registerMetadata();
 
         protected:

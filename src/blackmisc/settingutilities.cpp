@@ -40,12 +40,8 @@ namespace BlackMisc
             return path.mid(sl + 1);
         }
 
-        /*!
-         * \brief Append paths
-         * \param part1
-         * \param part2
-         * \param part3
-         * \return
+        /*
+         * Append paths
          */
         QString CSettingUtilities::appendPaths(const QString &part1, const QString &part2, const QString &part3)
         {

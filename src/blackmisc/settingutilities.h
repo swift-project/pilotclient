@@ -7,9 +7,7 @@ namespace BlackMisc
 {
     namespace Settings
     {
-        /*!
-         * \brief Helper / utility methods for settings
-         */
+        //! \brief Helper / utility methods for settings
         class CSettingUtilities
         {
         private:
@@ -17,74 +15,44 @@ namespace BlackMisc
 
         public:
 
-            /*!
-             * \brief Validate
-             * \return
-             */
+            //! \brief Command validate
             static const QString &CmdValidate()
             {
                 static const QString cmd("validate");
                 return cmd;
             }
 
-            /*!
-             * \brief Update
-             * \return
-             */
+            //! Command Update
             static const QString &CmdUpdate()
             {
                 static const QString cmd("update");
                 return cmd;
             }
 
-            /*!
-             * \brief Remove
-             * \return
-             */
+            //! Command Remove
             static const QString &CmdRemove()
             {
                 static const QString cmd("remove");
                 return cmd;
             }
 
-            /*!
-             * \brief Add
-             * \return
-             */
+            //! Command Add
             static const QString &CmdAdd()
             {
                 static const QString cmd("add");
                 return cmd;
             }
 
-            /*!
-             * \brief Wrong path message
-             * \param path
-             * \return
-             */
+            //! \brief Wrong path message
             static BlackMisc::CStatusMessage wrongPathMessage(const QString &path = "");
 
-            /*!
-             * \brief Wrong path messages
-             * \param path
-             * \return
-             */
+            //! \brief Wrong path messages
             static BlackMisc::CStatusMessageList wrongPathMessages(const QString &path = "");
 
-            /*!
-             * \brief Remove leading path
-             * \param path
-             * \return
-             */
+            //! \brief Remove leading path
             static QString removeLeadingPath(const QString &path);
 
-            /*!
-             * \brief Append paths
-             * \param part1
-             * \param part2
-             * \param part3
-             * \return
-             */
+            //! \brief Append setting paths
             static QString appendPaths(const QString &part1, const QString &part2, const QString &part3 = "");
 
         };
