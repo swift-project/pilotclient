@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDockWindow</class>
+ <widget class="QMainWindow" name="CDockWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>323</width>
+    <height>332</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Triangular</enum>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="qw_DockWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>100</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>323</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QDockWidget" name="dw_Edit">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>40</height>
+    </size>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="qw_Edit">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_11"/>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="dw_ComPanel">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#qw_ComPanel {
+	background: #89a3ae;
+}
+
+QLineEdit {
+    background: transparent;
+	text-align: right;
+}
+
+#qw_ComPanelCom1Active,  
+#qw_ComPanelCom2Active,
+#qw_ComPanelTransponderTop,
+#qw_ComPanelCom1Standby,  
+#qw_ComPanelCom2Standby
+{
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+#qw_ComPanelCom1Active,  
+#qw_ComPanelCom2Active,
+#qw_ComPanelTransponderTop
+{
+	background: #262727;
+}
+
+#qw_ComPanelCom1Standby,  
+#qw_ComPanelCom2Standby
+{
+	background: #265168;
+}
+
+#qw_ComPanelCom1Active QLineEdit,
+#qw_ComPanelCom2Active QLineEdit,
+#qw_ComPanelTransponderTop QLineEdit 
+{
+	font: 16px bold &quot;Arial&quot;;
+	color: lightgreen;
+	padding-left: 2px;
+}
+
+#qw_ComPanelCom1Active QLabel,
+#qw_ComPanelCom2Active QLabel,
+#qw_ComPanelTransponderTop QLabel
+{
+	color: white;
+	padding-left: 2px;
+}
+
+#qw_ComPanelCom1Standby QLineEdit,
+#qw_ComPanelCom2Standby QLineEdit
+{
+	font: 14px &quot;Arial&quot;;
+	color: white;
+	padding-left: 2px;
+}
+
+#qw_ComPanelCom1Standby QLabel,
+#qw_ComPanelCom2Standby QLabel
+{
+	color: white;
+	padding-left: 2px;
+}
+</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="qw_ComPanel">
+    <layout class="QVBoxLayout" name="vl_ComPanel">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <layout class="QGridLayout" name="gl_ComPanel">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <property name="horizontalSpacing">
+        <number>4</number>
+       </property>
+       <property name="verticalSpacing">
+        <number>2</number>
+       </property>
+       <item row="1" column="0">
+        <widget class="QWidget" name="qw_ComPanelCom1Standby" native="true">
+         <layout class="QGridLayout" name="gl_ComPanelCom1Standby">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_ComPanelCom1Standby">
+            <property name="text">
+             <string>standby:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="3">
+           <widget class="QLineEdit" name="le_ComPanelCom1Standby">
+            <property name="inputMask">
+             <string>DDD.990</string>
+            </property>
+            <property name="text">
+             <string>123.750</string>
+            </property>
+            <property name="maxLength">
+             <number>7</number>
+            </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pb_ComPanelCom1Toggle">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>15</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QWidget" name="qw_ComPanelCom2Standby" native="true">
+         <layout class="QGridLayout" name="gl_ComPanelCom2Standby">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_ComAndTransponderCom2Standby">
+            <property name="text">
+             <string>standby:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="3">
+           <widget class="QLineEdit" name="le_ComPanelCom2Standby">
+            <property name="inputMask">
+             <string>DDD.990</string>
+            </property>
+            <property name="text">
+             <string>123.750</string>
+            </property>
+            <property name="maxLength">
+             <number>7</number>
+            </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pb_ComPanelCom2Toggle">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>15</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QWidget" name="qw_ComPanelTransponderTop" native="true">
+         <layout class="QGridLayout" name="gl_ComPanelTransponderTop">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_ComPanelTransponder">
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="text">
+             <string>XPDR:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLineEdit" name="le_ComPanelTransponder">
+            <property name="inputMask">
+             <string>9999</string>
+            </property>
+            <property name="text">
+             <string>7000</string>
+            </property>
+            <property name="maxLength">
+             <number>4</number>
+            </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QWidget" name="qw_ComPanelCom1Active" native="true">
+         <layout class="QGridLayout" name="gl_ComPanelCom1Active">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_ComAndTransponderCom1Active">
+            <property name="text">
+             <string>COM1:</string>
+            </property>
+            <property name="buddy">
+             <cstring>qw_ComPanelCom1Active</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QLineEdit" name="le_ComPanelCom1Active">
+            <property name="inputMask">
+             <string>DDD.990</string>
+            </property>
+            <property name="text">
+             <string>123.750</string>
+            </property>
+            <property name="maxLength">
+             <number>7</number>
+            </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QFrame" name="qf_ComPanelCom1ActiveValid">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="1" rowspan="2">
+        <widget class="QWidget" name="gw_ComPanelMiddleConsole" native="true">
+         <layout class="QGridLayout" name="gl_ComPanelMiddleConsole">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="1" column="0" alignment="Qt::AlignHCenter">
+           <widget class="QLabel" name="lbl_ComPanelMute">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../src/blackgui/blackgui.qrc">:/blackgui/icons/audiovolumelow.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_ComanelLoginStatus">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../../src/blackgui/blackgui.qrc">:/blackgui/icons/loginred.png</pixmap>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QWidget" name="qw_ComPanelCom2Active" native="true">
+         <layout class="QGridLayout" name="gl_ComPanelCom2Active">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="1">
+           <widget class="QFrame" name="qf_ComPanelCom2ActiveValid">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="lbl_ComAndTransponderCom2Active">
+            <property name="text">
+             <string>COM2:</string>
+            </property>
+            <property name="buddy">
+             <cstring>qw_ComPanelCom2Active</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QLineEdit" name="le_ComPanelCom2Active">
+            <property name="inputMask">
+             <string>DDD.990</string>
+            </property>
+            <property name="text">
+             <string>128.800</string>
+            </property>
+            <property name="maxLength">
+             <number>7</number>
+            </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QWidget" name="qw_ComPanelTransponderModes" native="true">
+         <layout class="QGridLayout" name="gl_ComPanelTransponderModes">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="horizontalSpacing">
+           <number>2</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="pb_ComPanelStandby">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>15</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="pb_ComPanelCharly">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>15</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="pb_ComPanelIdent">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>15</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../../src/blackgui/blackgui.qrc"/>
+ </resources>
+ <connections/>
+</ui>
