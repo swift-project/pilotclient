@@ -30,7 +30,14 @@ RESOURCES +=
 win32:isEmpty(MINGW_IN_SHELL):  COPY = xcopy /yi
 else:                           COPY = cp -r
 
-QMAKE_POST_LINK += $$COPY $$shell_path($$PWD/sounds) \
+win32 {
+    QMAKE_POST_LINK += $$COPY $$shell_path($$PWD/sounds) \
                           $$shell_path($$OUT_PWD/../../bin/sounds)
+}
+else {
+    QMAKE_POST_LINK += mkdir -p $$shell_path($$OUT_PWD/../../bin) && \
+                          $$COPY $$shell_path($$PWD/sounds) \
+                          $$shell_path($$OUT_PWD/../../bin)
+}
 
 include (../../libraries.pri)
