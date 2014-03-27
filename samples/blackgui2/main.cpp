@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
     intro.close();
 
     // Window
+    Q_UNUSED(coreMode);
     CDockWindow dockWindow(windowMode);
     dockWindow.show();
     return a.exec();
