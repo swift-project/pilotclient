@@ -9,6 +9,7 @@ TEMPLATE = app
 CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += blackmisc
+CONFIG   += testcase
 
 DEPENDPATH += . ../../src
 INCLUDEPATH += . ../../src
