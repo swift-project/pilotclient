@@ -56,6 +56,7 @@ namespace BlackCore
         // ATC slots
         virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
+        virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;
 
         // Aircraft slots
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;

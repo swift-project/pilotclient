@@ -459,6 +459,40 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
+    void CNetworkVatlib::sendFlightPlan(const CFlightPlan &flightPlan)
+    {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
+        try
+        {
+            Cvatlib_Network::FlightPlan vatlibFP;
+            QByteArray acType, altApt, cruiseAlt, depApt, destApt, remarks, route;
+            vatlibFP.acType = acType = toFSD(flightPlan.getEquipmentIcao());
+            vatlibFP.altApt = altApt = toFSD(flightPlan.getAlternateAirportIcao());
+            vatlibFP.cruiseAlt = cruiseAlt = toFSD(QByteArray::number(flightPlan.getCruiseAltitude().value(CLengthUnit::ft()), 'f', 0));
+            vatlibFP.depApt = depApt = toFSD(flightPlan.getOriginAirportIcao());
+            vatlibFP.depTimeActual = flightPlan.getTakeoffTimeActual().toUTC().toString("hhmm").toInt();
+            vatlibFP.depTimePlanned = flightPlan.getTakeoffTimePlanned().toUTC().toString("hhmm").toInt();
+            vatlibFP.destApt = destApt = toFSD(flightPlan.getDestinationAirportIcao());
+            vatlibFP.enrouteHrs = flightPlan.getEnrouteTime().valueRounded(CTimeUnit::h(), 0);
+            vatlibFP.enrouteMins = int(flightPlan.getEnrouteTime().valueRounded(CTimeUnit::hrmin(), 0)) % 60;
+            vatlibFP.fuelHrs = flightPlan.getFuelTime().valueRounded(CTimeUnit::h(), 0);
+            vatlibFP.fuelMins = int(flightPlan.getFuelTime().valueRounded(CTimeUnit::hrmin(), 0)) % 60;
+            vatlibFP.remarks = remarks = toFSD(QString(flightPlan.getRemarks()).replace(":", ";"));
+            vatlibFP.route = route = toFSD(QString(flightPlan.getRoute()).replace(" ", "."));
+            vatlibFP.trueCruiseSpeed = flightPlan.getCruiseTrueAirspeed().valueRounded(CSpeedUnit::kts());
+            switch (flightPlan.getFlightRules())
+            {
+            default:
+            case CFlightPlan::IFR:  vatlibFP.fpRules = Cvatlib_Network::fpRuleType_IFR; break;
+            case CFlightPlan::VFR:  vatlibFP.fpRules = Cvatlib_Network::fpRuleType_VFR; break;
+            case CFlightPlan::SVFR: vatlibFP.fpRules = Cvatlib_Network::fpRuleType_SVFR; break;
+            }
+            m_net->SendFlightPlan(vatlibFP);
+        }
+        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+    }
+
     void CNetworkVatlib::sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");

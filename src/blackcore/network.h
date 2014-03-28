@@ -19,6 +19,7 @@
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avinformationmessage.h"
+#include "blackmisc/avflightplan.h"
 #include <QObject>
 #include <QString>
 #include <QMap>
@@ -217,7 +218,11 @@ namespace BlackCore
          */
         virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
-        // TODO virtual void sendFlightPlan(...) = 0;
+        /*!
+         * Send a message to file a flight plan.
+         * \pre Network must be connected when calling this function.
+         */
+        virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) = 0;
 
         //! @}
         ////////////////////////////////////////////////////////////////

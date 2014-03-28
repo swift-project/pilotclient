@@ -43,6 +43,7 @@ private: //commands
     void sendServerQueryCmd(QTextStream &args);
     void sendAtcQueryCmd(QTextStream &args);
     void sendAtisQueryCmd(QTextStream &args);
+    void sendFlightPlanCmd(QTextStream &args);
     void sendRealNameQueryCmd(QTextStream &args);
     void sendCapabilitiesQueryCmd(QTextStream &args);
     void sendIcaoCodesQueryCmd(QTextStream &args);
@@ -69,6 +70,7 @@ signals: //to send to INetwork
     void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign);
+    void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &fp);
     void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign);

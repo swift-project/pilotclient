@@ -41,6 +41,7 @@ Client::Client(BlackMisc::IContext &ctx)
     connect(this, &Client::sendServerQuery,                     m_net, &INetwork::sendServerQuery);
     connect(this, &Client::sendAtcQuery,                        m_net, &INetwork::sendAtcQuery);
     connect(this, &Client::sendAtisQuery,                       m_net, &INetwork::sendAtisQuery);
+    connect(this, &Client::sendFlightPlan,                      m_net, &INetwork::sendFlightPlan);
     connect(this, &Client::sendRealNameQuery,                   m_net, &INetwork::sendRealNameQuery);
     connect(this, &Client::sendCapabilitiesQuery,               m_net, &INetwork::sendCapabilitiesQuery);
     connect(this, &Client::sendIcaoCodesQuery,                  m_net, &INetwork::sendIcaoCodesQuery);
@@ -69,6 +70,7 @@ Client::Client(BlackMisc::IContext &ctx)
     m_commands["server"]            = std::bind(&Client::sendServerQueryCmd, this, _1);
     m_commands["atc"]               = std::bind(&Client::sendAtcQueryCmd, this, _1);
     m_commands["atis"]              = std::bind(&Client::sendAtisQueryCmd, this, _1);
+    m_commands["flightplan"]        = std::bind(&Client::sendFlightPlanCmd, this, _1);
     m_commands["name"]              = std::bind(&Client::sendRealNameQueryCmd, this, _1);
     m_commands["caps"]              = std::bind(&Client::sendCapabilitiesQueryCmd, this, _1);
     m_commands["icao"]              = std::bind(&Client::sendIcaoCodesQueryCmd, this, _1);
@@ -206,6 +208,38 @@ void Client::sendFreqQueryCmd(QTextStream &args)
     QString callsign;
     args >> callsign;
     emit sendFreqQuery(callsign);
+}
+
+void Client::sendFlightPlanCmd(QTextStream &args)
+{
+    QString equipmentIcao;
+    QString originAirportIcao;
+    QString destinationAirportIcao;
+    QString alternateAirportIcao;
+    QString takeoffTimePlanned;
+    QString takeoffTimeActual;
+    int enrouteTime;
+    int fuelTime;
+    int cruiseAltitude;
+    int cruiseTrueAirspeed;
+    QString flightRulesString;
+    QString route;
+    args >> equipmentIcao >> originAirportIcao >> destinationAirportIcao >> alternateAirportIcao >> takeoffTimePlanned >> takeoffTimeActual
+        >> enrouteTime >> fuelTime >> cruiseAltitude >> cruiseTrueAirspeed >> flightRulesString >> route;
+
+    BlackMisc::Aviation::CFlightPlan::FlightRules flightRules;
+    if (flightRulesString == "IFR") { flightRules = BlackMisc::Aviation::CFlightPlan::IFR; }
+    else if (flightRulesString == "SVFR") { flightRules = BlackMisc::Aviation::CFlightPlan::SVFR; }
+    else { flightRules = BlackMisc::Aviation::CFlightPlan::VFR; }
+
+    BlackMisc::Aviation::CFlightPlan fp(equipmentIcao, originAirportIcao, destinationAirportIcao, alternateAirportIcao,
+        QDateTime::fromString(takeoffTimePlanned, "hhmm"), QDateTime::fromString(takeoffTimeActual, "hhmm"),
+        BlackMisc::PhysicalQuantities::CTime(enrouteTime, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()),
+        BlackMisc::PhysicalQuantities::CTime(fuelTime, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()),
+        BlackMisc::Aviation::CAltitude(cruiseAltitude, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+        BlackMisc::PhysicalQuantities::CSpeed(cruiseTrueAirspeed, BlackMisc::PhysicalQuantities::CSpeedUnit::kts()),
+        flightRules, route, args.readAll());
+    emit sendFlightPlan(fp);
 }
 
 void Client::sendServerQueryCmd(QTextStream &args)
