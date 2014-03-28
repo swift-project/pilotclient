@@ -7,6 +7,115 @@
 
 namespace BlackMisc
 {
+
+    const QJsonValue &operator >>(const QJsonValue &json, int &value)
+    {
+        value = json.toInt();
+        return json;
+    }
+
+    const QJsonValue &operator >>(const QJsonValue &json, qlonglong &value)
+    {
+        value = static_cast<qlonglong>(json.toInt());
+        return json;
+    }
+
+    const QJsonValue &operator >>(const QJsonValue &json, qulonglong &value)
+    {
+        value = static_cast<qulonglong>(json.toInt());
+        return json;
+    }
+
+    const QJsonValue &operator >>(const QJsonValue &json, uint &value)
+    {
+        value = static_cast<uint>(json.toInt());
+        return json;
+    }
+
+    const QJsonValue &operator >>(const QJsonValue &json, qint16 &value)
+    {
+        value = static_cast<qint16>(json.toInt());
+        return json;
+    }
+
+    const QJsonValue &operator >>(const QJsonValue &json, QString &value)
+    {
+        value = json.toString();
+        return json;
+    }
+
+    const QJsonValue &operator >>(const QJsonValue &json, double &value)
+    {
+        value = json.toDouble();
+        return json;
+    }
+
+    const QJsonValue &operator >>(const QJsonValue &json, bool &value)
+    {
+        value = json.toBool();
+        return json;
+    }
+
+    const QJsonValue &operator >>(const QJsonValue &json, QDateTime &value)
+    {
+        value = QDateTime::fromString(json.toString());
+        return json;
+    }
+
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, int &value)
+    {
+        value = json.toInt();
+        return json;
+    }
+
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, qlonglong &value)
+    {
+        value = static_cast<qlonglong>(json.toInt());
+        return json;
+    }
+
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, qulonglong &value)
+    {
+        value = static_cast<qulonglong>(json.toInt());
+        return json;
+    }
+
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, uint &value)
+    {
+        value = static_cast<uint>(json.toInt());
+        return json;
+    }
+
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, qint16 &value)
+    {
+        value = static_cast<qint16>(json.toInt());
+        return json;
+    }
+
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, QString &value)
+    {
+        value = json.toString();
+        return json;
+    }
+
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, double &value)
+    {
+        value = json.toDouble();
+        return json;
+    }
+
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, bool &value)
+    {
+        value = json.toBool();
+        return json;
+    }
+
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, QDateTime &value)
+    {
+        value = QDateTime::fromString(json.toString());
+        return json;
+    }
+
     QJsonArray &operator<<(QJsonArray &json, const int value)
     {
         json.append(QJsonValue(value));

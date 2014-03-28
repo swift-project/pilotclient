@@ -25,71 +25,27 @@
 namespace BlackMisc
 {
     //! \name Streaming operators for QJsonValue (to value)
-    //! \remarks JSONVALUE: QJsonValue / QJsonValueRef
-
-    template<class JSONVALUE> typename
-    std::enable_if < std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value, JSONVALUE >::type
-    const &operator>>(const JSONVALUE &json, int &value)
-    {
-        value = json.toInt();
-        return json;
-    }
-    template<class JSONVALUE> typename
-    std::enable_if < std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value, JSONVALUE >::type
-    const &operator>>(const JSONVALUE &json, qlonglong &value)
-    {
-        value = static_cast<qlonglong>(json.toInt());
-        return json;
-    }
-    template<class JSONVALUE> typename
-    std::enable_if < std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value, JSONVALUE >::type
-    const &operator>>(const JSONVALUE &json, qulonglong &value)
-    {
-        value = static_cast<qulonglong>(json.toInt());
-        return json;
-    }
-    template<class JSONVALUE> typename
-    std::enable_if < std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value, JSONVALUE >::type
-    const &operator>>(const JSONVALUE &json, uint &value)
-    {
-        value = static_cast<uint>(json.toInt());
-        return json;
-    }
-    template<class JSONVALUE> typename
-    std::enable_if < std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value, JSONVALUE >::type
-    const &operator>>(const JSONVALUE &json, qint16 &value)
-    {
-        value = static_cast<qint16>(json.toInt());
-        return json;
-    }
-    template<class JSONVALUE> typename
-    std::enable_if < std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value, JSONVALUE >::type
-    const &operator>>(const JSONVALUE &json, QString &value)
-    {
-        value = json.toString();
-        return json;
-    }
-    template<class JSONVALUE> typename
-    std::enable_if < std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value, JSONVALUE >::type
-    const &operator>>(const JSONVALUE &json, double &value)
-    {
-        value = json.toDouble();
-        return json;
-    }
-    template<class JSONVALUE> typename
-    std::enable_if < std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value, JSONVALUE >::type
-    const &operator>>(const JSONVALUE &json, bool &value)
-    {
-        value = json.toBool();
-        return json;
-    }
-    template<class JSONVALUE> typename
-    std::enable_if < std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value, JSONVALUE >::type
-    const &operator>>(const JSONVALUE &json, QDateTime &value)
-    {
-        value = QDateTime::fromString(json.toString());
-        return json;
-    }
+    //! \ingroup JSON
+    //! @{
+    const QJsonValue &operator >>(const QJsonValue &json, int &value);
+    const QJsonValue &operator >>(const QJsonValue &json, qlonglong &value);
+    const QJsonValue &operator >>(const QJsonValue &json, qulonglong &value);
+    const QJsonValue &operator >>(const QJsonValue &json, uint &value);
+    const QJsonValue &operator >>(const QJsonValue &json, qint16 &value);
+    const QJsonValue &operator >>(const QJsonValue &json, QString &value);
+    const QJsonValue &operator >>(const QJsonValue &json, double &value);
+    const QJsonValue &operator >>(const QJsonValue &json, bool &value);
+    const QJsonValue &operator >>(const QJsonValue &json, QDateTime &value);
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, int &value);
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, qlonglong &value);
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, qulonglong &value);
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, uint &value);
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, qint16 &value);
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, QString &value);
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, double &value);
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, bool &value);
+    const QJsonValueRef &operator >>(const QJsonValueRef &json, QDateTime &value);
+    //! @}
 
     //! \brief Specialized JSON serialization for enum
     //! \remarks needs to be in global namespace
@@ -104,9 +60,19 @@ namespace BlackMisc
 
     //! \brief Specialized JSON deserialization for enum
     //! \ingroup JSON
-    template<class JSONVALUE, class ENUM> typename
-    std::enable_if < std::is_enum<ENUM>::value  &&(std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value), JSONVALUE >::type
-    const &operator>>(const JSONVALUE &json, ENUM &value)
+    template<class ENUM> typename
+    std::enable_if<std::is_enum<ENUM>::value, QJsonValue>::type
+    const &operator>>(const QJsonValue &json, ENUM &value)
+    {
+        value = static_cast<ENUM>(json.toInt());
+        return json;
+    }
+
+    //! \brief Specialized JSON deserialization for enum
+    //! \ingroup JSON
+    template<class ENUM> typename
+    std::enable_if<std::is_enum<ENUM>::value, QJsonValueRef>::type
+    const &operator>>(const QJsonValueRef &json, ENUM &value)
     {
         value = static_cast<ENUM>(json.toInt());
         return json;
