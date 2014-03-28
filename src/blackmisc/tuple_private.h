@@ -112,8 +112,7 @@ namespace BlackMisc
             template <class Tu>
             static void serializeJson(QJsonObject &json, const QStringList &members, const Tu &tu)
             {
-                typedef typename std::decay < typename std::tuple_element < N - 1, Tu >::type >::type TARGET;
-                json << std::pair<QString, TARGET>(members.at(N - 1), std::get < N - 1 > (tu));
+                json << std::make_pair(members.at(N - 1), std::get < N - 1 > (tu));
                 TupleHelper < N - 1 >::serializeJson(json, members, tu);
             }
 
@@ -138,19 +137,9 @@ namespace BlackMisc
             template <class Tu>
             static uint hash(const Tu &) { return 0; }
             template <class Tu>
-            static void serializeJson(QJsonObject &json, const QStringList &members, const Tu &tu)
-            {
-                Q_UNUSED(json);
-                Q_UNUSED(members);
-                Q_UNUSED(tu);
-            }
+            static void serializeJson(QJsonObject &, const QStringList &, const Tu &) {}
             template <class Tu>
-            static void deserializeJson(const QJsonObject &json, const QStringList &members, Tu &tu)
-            {
-                Q_UNUSED(json);
-                Q_UNUSED(members);
-                Q_UNUSED(tu);
-            }
+            static void deserializeJson(const QJsonObject &, const QStringList &, Tu &) {}
         };
 
 #endif // Q_COMPILER_VARIADIC_TEMPLATES

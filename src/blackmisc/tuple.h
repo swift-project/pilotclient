@@ -135,13 +135,6 @@ namespace BlackMisc
             Q_UNUSED(object);
             return std::tuple<>();
         }
-        static const QStringList members()
-        {
-            static_assert(std::is_void<T>::value, // always false; is_void<> trick is just to make the condition dependent on the template parameter T
-                          "Missing BLACK_DECLARE_TUPLE_CONVERSION macro for T");
-            static QStringList members;
-            return members;
-        }
         static const QStringList jsonMembers()
         {
             static_assert(std::is_void<T>::value, // always false; is_void<> trick is just to make the condition dependent on the template parameter T
@@ -203,7 +196,7 @@ namespace BlackMisc
 
     /*!
      * \brief   Convert to a JSON object
-     * \ingroup Tupels
+     * \ingroup Tuples
      */
     template <class... Ts>
     QJsonObject serializeJson(const QStringList &members, std::tuple<const Ts &...> tu)
@@ -215,7 +208,7 @@ namespace BlackMisc
 
     /*!
      * Convert from JSON to object
-     * \ingroup Tupels
+     * \ingroup Tuples
      */
     template <class... Ts>
     void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<Ts &...> tu)
@@ -485,11 +478,8 @@ namespace BlackMisc
                >> std::get<5>(tu) >> std::get<6>(tu) >> std::get<7>(tu) >> std::get<8>(tu) >> std::get<9>(tu);
     }
 
-    inline void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<> tu)
+    inline void deserializeJson(const QJsonObject &, const QStringList &, std::tuple<>)
     {
-        Q_UNUSED(json);
-        Q_UNUSED(members);
-        Q_UNUSED(tu);
     }
 
     template <class T0>
@@ -667,9 +657,8 @@ namespace BlackMisc
                qHash(std::get<5>(tu)) ^ qHash(std::get<6>(tu)) ^ qHash(std::get<7>(tu)) ^ qHash(std::get<8>(tu)) ^ qHash(std::get<9>(tu));
     }
 
-    inline QJsonObject serializeJson(const QStringList &members, std::tuple<>)
+    inline QJsonObject serializeJson(const QStringList &, std::tuple<>)
     {
-        Q_UNUSED(members);
         QJsonObject json;
         return json;
     }

@@ -18,18 +18,15 @@
 #include <QStringList>
 #include <utility>
 
+/*!
+ * \defgroup JSON Streaming operators for JSON
+ */
+
 namespace BlackMisc
 {
-    /**
-     * \defgroup JSON Streaming operators for JSON
-     * @{
-     */
-
-    // -> streaming for CValueObject in valueobject.h
     //! \name Streaming operators for QJsonValue (to value)
     //! \remarks JSONVALUE: QJsonValue / QJsonValueRef
 
-    //@{
     template<class JSONVALUE> typename
     std::enable_if < std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value, JSONVALUE >::type
     const &operator>>(const JSONVALUE &json, int &value)
@@ -93,10 +90,10 @@ namespace BlackMisc
         value = QDateTime::fromString(json.toString());
         return json;
     }
-    //@}
 
     //! \brief Specialized JSON serialization for enum
     //! \remarks needs to be in global namespace
+    //! \ingroup JSON
     template<class ENUM> typename
     std::enable_if<std::is_enum<ENUM>::value, QJsonObject>::type
     &operator<<(QJsonObject &json, std::pair<QString, ENUM> value)
@@ -106,6 +103,7 @@ namespace BlackMisc
     }
 
     //! \brief Specialized JSON deserialization for enum
+    //! \ingroup JSON
     template<class JSONVALUE, class ENUM> typename
     std::enable_if < std::is_enum<ENUM>::value  &&(std::is_same<JSONVALUE, QJsonValue>::value || std::is_same<JSONVALUE, QJsonValueRef>::value), JSONVALUE >::type
     const &operator>>(const JSONVALUE &json, ENUM &value)
@@ -115,7 +113,8 @@ namespace BlackMisc
     }
 
     //! \name Streaming operators for QJsonArray (from value)
-    //@{
+    //! \ingroup JSON
+    //! @{
     QJsonArray &operator<<(QJsonArray &json, const int value);
     QJsonArray &operator<<(QJsonArray &json, const std::pair<QString, qint16> &value);
     QJsonArray &operator<<(QJsonArray &json, const qlonglong value);
@@ -125,10 +124,11 @@ namespace BlackMisc
     QJsonArray &operator<<(QJsonArray &json, const double value);
     QJsonArray &operator<<(QJsonArray &json, const bool value);
     QJsonArray &operator<<(QJsonArray &json, const QDateTime &value);
-    //@}
+    //! @}
 
     //! \name Streaming operators for QJsonObject (from value)
-    //@{
+    //! \ingroup JSON
+    //! @{
     QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, int> &value);
     QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, qint16> &value);
     QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, qlonglong> &value);
@@ -138,13 +138,12 @@ namespace BlackMisc
     QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, double> &value);
     QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, bool> &value);
     QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, QDateTime> &value);
-    //@}
-
     //! @}
 
     namespace Json
     {
         //! \brief Append to first JSON object (concatenate)
+        //! \ingroup JSON
         inline QJsonObject &appendJsonObject(QJsonObject &target, const QJsonObject &toBeAppended)
         {
             if (toBeAppended.isEmpty()) return target;
