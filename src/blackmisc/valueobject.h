@@ -2,6 +2,7 @@
 #define BLACKMISC_VALUEOBJECT_H
 
 #include "tuple.h"
+#include "json.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>
 #include <QtGlobal>

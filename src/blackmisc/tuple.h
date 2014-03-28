@@ -11,7 +11,6 @@
 #define BLACKMISC_TUPLE_H
 
 #include "tuple_private.h"
-#include "json.h"
 
 /*!
  * \defgroup Tuples Tuples Simplified handling of class members (CValueObject) by std::tuple

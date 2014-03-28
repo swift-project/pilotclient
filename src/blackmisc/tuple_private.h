@@ -11,13 +11,13 @@
 #ifndef BLACKMISC_TUPLE_PRIVATE_H
 #define BLACKMISC_TUPLE_PRIVATE_H
 
-#include "json.h"
 #include <QtGlobal>
 #include <QDBusArgument>
 #include <QHash>
 #include <QJsonObject>
 #include <QDateTime>
 #include <QString>
+#include <QJsonArray>
 #include <QDebug>
 #include <tuple>
 #include <type_traits>
