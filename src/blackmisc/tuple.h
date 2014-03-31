@@ -212,7 +212,7 @@ namespace BlackMisc
      * \ingroup Tuples
      */
     template <class... Ts>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const Ts &...> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<Ts...> tu)
     {
         QJsonObject json;
         Private::TupleHelper<sizeof...(Ts)>::serializeJson(json, members, tu);
@@ -224,7 +224,7 @@ namespace BlackMisc
      * \ingroup Tuples
      */
     template <class... Ts>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<Ts &...> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<Ts...> tu)
     {
         Private::TupleHelper<sizeof...(Ts)>::deserializeJson(json, members, tu);
     }
@@ -312,572 +312,415 @@ namespace BlackMisc
                                Private::tieHelper(arg5), Private::tieHelper(arg6), Private::tieHelper(arg7), Private::tieHelper(arg8), Private::tieHelper(arg9));
     }
 
-    inline int compare(std::tuple<>, std::tuple<>)
+    inline int compare(std::tuple<> a, std::tuple<> b)
     {
-        return 0;
+        return Private::TupleHelper<0>::compare(a, b);
     }
 
     template <class T0>
     int compare(std::tuple<T0> a, std::tuple<T0> b)
     {
-        return Private::compareHelper<0>(a, b);
+        return Private::TupleHelper<1>::compare(a, b);
     }
 
     template <class T0, class T1>
     int compare(std::tuple<T0, T1> a, std::tuple<T0, T1> b)
     {
-        int result;
-        if ((result = Private::compareHelper<0>(a, b))) { return result; }
-        return Private::compareHelper<1>(a, b);
+        return Private::TupleHelper<2>::compare(a, b);
     }
 
     template <class T0, class T1, class T2>
     int compare(std::tuple<T0, T1, T2> a, std::tuple<T0, T1, T2> b)
     {
-        int result;
-        if ((result = Private::compareHelper<0>(a, b))) { return result; }
-        if ((result = Private::compareHelper<1>(a, b))) { return result; }
-        return Private::compareHelper<2>(a, b);
+        return Private::TupleHelper<3>::compare(a, b);
     }
 
     template <class T0, class T1, class T2, class T3>
     int compare(std::tuple<T0, T1, T2, T3> a, std::tuple<T0, T1, T2, T3> b)
     {
-        int result;
-        if ((result = Private::compareHelper<0>(a, b))) { return result; }
-        if ((result = Private::compareHelper<1>(a, b))) { return result; }
-        if ((result = Private::compareHelper<2>(a, b))) { return result; }
-        return Private::compareHelper<3>(a, b);
+        return Private::TupleHelper<4>::compare(a, b);
     }
 
     template <class T0, class T1, class T2, class T3, class T4>
     int compare(std::tuple<T0, T1, T2, T3, T4> a, std::tuple<T0, T1, T2, T3, T4> b)
     {
-        int result;
-        if ((result = Private::compareHelper<0>(a, b))) { return result; }
-        if ((result = Private::compareHelper<1>(a, b))) { return result; }
-        if ((result = Private::compareHelper<2>(a, b))) { return result; }
-        if ((result = Private::compareHelper<3>(a, b))) { return result; }
-        return Private::compareHelper<4>(a, b);
+        return Private::TupleHelper<5>::compare(a, b);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5>
     int compare(std::tuple<T0, T1, T2, T3, T4, T5> a, std::tuple<T0, T1, T2, T3, T4, T5> b)
     {
-        int result;
-        if ((result = Private::compareHelper<0>(a, b))) { return result; }
-        if ((result = Private::compareHelper<1>(a, b))) { return result; }
-        if ((result = Private::compareHelper<2>(a, b))) { return result; }
-        if ((result = Private::compareHelper<3>(a, b))) { return result; }
-        if ((result = Private::compareHelper<4>(a, b))) { return result; }
-        return Private::compareHelper<5>(a, b);
+        return Private::TupleHelper<6>::compare(a, b);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
     int compare(std::tuple<T0, T1, T2, T3, T4, T5, T6> a, std::tuple<T0, T1, T2, T3, T4, T5, T6> b)
     {
-        int result;
-        if ((result = Private::compareHelper<0>(a, b))) { return result; }
-        if ((result = Private::compareHelper<1>(a, b))) { return result; }
-        if ((result = Private::compareHelper<2>(a, b))) { return result; }
-        if ((result = Private::compareHelper<3>(a, b))) { return result; }
-        if ((result = Private::compareHelper<4>(a, b))) { return result; }
-        if ((result = Private::compareHelper<5>(a, b))) { return result; }
-        return Private::compareHelper<6>(a, b);
+        return Private::TupleHelper<7>::compare(a, b);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
     int compare(std::tuple<T0, T1, T2, T3, T4, T5, T6, T7> a, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7> b)
     {
-        int result;
-        if ((result = Private::compareHelper<0>(a, b))) { return result; }
-        if ((result = Private::compareHelper<1>(a, b))) { return result; }
-        if ((result = Private::compareHelper<2>(a, b))) { return result; }
-        if ((result = Private::compareHelper<3>(a, b))) { return result; }
-        if ((result = Private::compareHelper<4>(a, b))) { return result; }
-        if ((result = Private::compareHelper<5>(a, b))) { return result; }
-        if ((result = Private::compareHelper<6>(a, b))) { return result; }
-        return Private::compareHelper<7>(a, b);
+        return Private::TupleHelper<8>::compare(a, b);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
     int compare(std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8> a, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8> b)
     {
-        int result;
-        if ((result = Private::compareHelper<0>(a, b))) { return result; }
-        if ((result = Private::compareHelper<1>(a, b))) { return result; }
-        if ((result = Private::compareHelper<2>(a, b))) { return result; }
-        if ((result = Private::compareHelper<3>(a, b))) { return result; }
-        if ((result = Private::compareHelper<4>(a, b))) { return result; }
-        if ((result = Private::compareHelper<5>(a, b))) { return result; }
-        if ((result = Private::compareHelper<6>(a, b))) { return result; }
-        if ((result = Private::compareHelper<7>(a, b))) { return result; }
-        return Private::compareHelper<8>(a, b);
+        return Private::TupleHelper<9>::compare(a, b);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
     int compare(std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> a, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> b)
     {
-        int result;
-        if ((result = Private::compareHelper<0>(a, b))) { return result; }
-        if ((result = Private::compareHelper<1>(a, b))) { return result; }
-        if ((result = Private::compareHelper<2>(a, b))) { return result; }
-        if ((result = Private::compareHelper<3>(a, b))) { return result; }
-        if ((result = Private::compareHelper<4>(a, b))) { return result; }
-        if ((result = Private::compareHelper<5>(a, b))) { return result; }
-        if ((result = Private::compareHelper<6>(a, b))) { return result; }
-        if ((result = Private::compareHelper<7>(a, b))) { return result; }
-        if ((result = Private::compareHelper<8>(a, b))) { return result; }
-        return Private::compareHelper<9>(a, b);
+        return Private::TupleHelper<10>::compare(a, b);
     }
 
-    inline QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<>)
+    inline QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<> tu)
     {
-        return arg;
+        return Private::TupleHelper<0>::marshall(arg, tu);
     }
 
     template <class T0>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0 &> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0> tu)
     {
-        return arg << std::get<0>(tu);
+        return Private::TupleHelper<1>::marshall(arg, tu);
     }
 
     template <class T0, class T1>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0 &, T1 &> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0, T1> tu)
     {
-        return arg << std::get<0>(tu) << std::get<1>(tu);
+        return Private::TupleHelper<2>::marshall(arg, tu);
     }
 
     template <class T0, class T1, class T2>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0, T1, T2> tu)
     {
-        return arg << std::get<0>(tu) << std::get<1>(tu) << std::get<2>(tu);
+        return Private::TupleHelper<3>::marshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0, T1, T2, T3> tu)
     {
-        return arg << std::get<0>(tu) << std::get<1>(tu) << std::get<2>(tu) << std::get<3>(tu);
+        return Private::TupleHelper<4>::marshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4> tu)
     {
-        return arg << std::get<0>(tu) << std::get<1>(tu) << std::get<2>(tu) << std::get<3>(tu) << std::get<4>(tu);
+        return Private::TupleHelper<5>::marshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5> tu)
     {
-        return arg << std::get<0>(tu) << std::get<1>(tu) << std::get<2>(tu) << std::get<3>(tu) << std::get<4>(tu)
-               << std::get<5>(tu);
+        return Private::TupleHelper<6>::marshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5, T6> tu)
     {
-        return arg << std::get<0>(tu) << std::get<1>(tu) << std::get<2>(tu) << std::get<3>(tu) << std::get<4>(tu)
-               << std::get<5>(tu) << std::get<6>(tu);
+        return Private::TupleHelper<7>::marshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7> tu)
     {
-        return arg << std::get<0>(tu) << std::get<1>(tu) << std::get<2>(tu) << std::get<3>(tu) << std::get<4>(tu)
-               << std::get<5>(tu) << std::get<6>(tu) << std::get<7>(tu);
+        return Private::TupleHelper<8>::marshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8> tu)
     {
-        return arg << std::get<0>(tu) << std::get<1>(tu) << std::get<2>(tu) << std::get<3>(tu) << std::get<4>(tu)
-                << std::get<5>(tu) << std::get<6>(tu) << std::get<7>(tu) << std::get<8>(tu);
+        return Private::TupleHelper<9>::marshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
-    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &, T9 &> tu)
+    QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> tu)
     {
-        return arg << std::get<0>(tu) << std::get<1>(tu) << std::get<2>(tu) << std::get<3>(tu) << std::get<4>(tu)
-               << std::get<5>(tu) << std::get<6>(tu) << std::get<7>(tu) << std::get<8>(tu) << std::get<9>(tu);
+        return Private::TupleHelper<10>::marshall(arg, tu);
     }
 
-    inline const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<>)
+    inline const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<> tu)
     {
-        return arg;
+        return Private::TupleHelper<0>::unmarshall(arg, tu);
     }
 
     template <class T0>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0 &> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0> tu)
     {
-        return arg >> std::get<0>(tu);
+        return Private::TupleHelper<1>::unmarshall(arg, tu);
     }
 
     template <class T0, class T1>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0 &, T1 &> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0, T1> tu)
     {
-        return arg >> std::get<0>(tu) >> std::get<1>(tu);
+        return Private::TupleHelper<2>::unmarshall(arg, tu);
     }
 
     template <class T0, class T1, class T2>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0, T1, T2> tu)
     {
-        return arg >> std::get<0>(tu) >> std::get<1>(tu) >> std::get<2>(tu);
+        return Private::TupleHelper<3>::unmarshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0, T1, T2, T3> tu)
     {
-        return arg >> std::get<0>(tu) >> std::get<1>(tu) >> std::get<2>(tu) >> std::get<3>(tu);
+        return Private::TupleHelper<4>::unmarshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4> tu)
     {
-        return arg >> std::get<0>(tu) >> std::get<1>(tu) >> std::get<2>(tu) >> std::get<3>(tu) >> std::get<4>(tu);
+        return Private::TupleHelper<5>::unmarshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5> tu)
     {
-        return arg >> std::get<0>(tu) >> std::get<1>(tu) >> std::get<2>(tu) >> std::get<3>(tu) >> std::get<4>(tu)
-               >> std::get<5>(tu);
+        return Private::TupleHelper<6>::unmarshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5, T6> tu)
     {
-        return arg >> std::get<0>(tu) >> std::get<1>(tu) >> std::get<2>(tu) >> std::get<3>(tu) >> std::get<4>(tu)
-               >> std::get<5>(tu) >> std::get<6>(tu);
+        return Private::TupleHelper<7>::unmarshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7> tu)
     {
-        return arg >> std::get<0>(tu) >> std::get<1>(tu) >> std::get<2>(tu) >> std::get<3>(tu) >> std::get<4>(tu)
-               >> std::get<5>(tu) >> std::get<6>(tu) >> std::get<7>(tu);
+        return Private::TupleHelper<8>::unmarshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8> tu)
     {
-        return arg >> std::get<0>(tu) >> std::get<1>(tu) >> std::get<2>(tu) >> std::get<3>(tu) >> std::get<4>(tu)
-               >> std::get<5>(tu) >> std::get<6>(tu) >> std::get<7>(tu) >> std::get<8>(tu);
+        return Private::TupleHelper<9>::unmarshall(arg, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
-    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &, T9 &> tu)
+    const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> tu)
     {
-        return arg >> std::get<0>(tu) >> std::get<1>(tu) >> std::get<2>(tu) >> std::get<3>(tu) >> std::get<4>(tu)
-               >> std::get<5>(tu) >> std::get<6>(tu) >> std::get<7>(tu) >> std::get<8>(tu) >> std::get<9>(tu);
+        return Private::TupleHelper<10>::unmarshall(arg, tu);
     }
 
-    inline void deserializeJson(const QJsonObject &, const QStringList &, std::tuple<>)
+    inline void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<> tu)
     {
+        Private::TupleHelper<0>::deserializeJson(json, members, tu);
     }
 
     template <class T0>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0 &> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0> tu)
     {
-        json.value(members.at(0)) >> std::get<0>(tu);
+        Private::TupleHelper<1>::deserializeJson(json, members, tu);
     }
 
     template <class T0, class T1>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0 &, T1 &> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0, T1> tu)
     {
-        json.value(members.at(0)) >> std::get<0>(tu);
-        json.value(members.at(1)) >> std::get<1>(tu);
+        Private::TupleHelper<2>::deserializeJson(json, members, tu);
     }
 
     template <class T0, class T1, class T2>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0 &, T1 &, T2 &> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0, T1, T2> tu)
     {
-        json.value(members.at(0)) >> std::get<0>(tu);
-        json.value(members.at(1)) >> std::get<1>(tu);
-        json.value(members.at(2)) >> std::get<2>(tu);
+        Private::TupleHelper<3>::deserializeJson(json, members, tu);
     }
 
     template <class T0, class T1, class T2, class T3>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0 &, T1 &, T2 &, T3 &> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0, T1, T2, T3> tu)
     {
-        json.value(members.at(0)) >> std::get<0>(tu);
-        json.value(members.at(1)) >> std::get<1>(tu);
-        json.value(members.at(2)) >> std::get<2>(tu);
-        json.value(members.at(3)) >> std::get<3>(tu);
+        Private::TupleHelper<4>::deserializeJson(json, members, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0, T1, T2, T3, T4> tu)
     {
-        json.value(members.at(0)) >> std::get<0>(tu);
-        json.value(members.at(1)) >> std::get<1>(tu);
-        json.value(members.at(2)) >> std::get<2>(tu);
-        json.value(members.at(3)) >> std::get<3>(tu);
-        json.value(members.at(4)) >> std::get<4>(tu);
+        Private::TupleHelper<5>::deserializeJson(json, members, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0, T1, T2, T3, T4, T5> tu)
     {
-        json.value(members.at(0)) >> std::get<0>(tu);
-        json.value(members.at(1)) >> std::get<1>(tu);
-        json.value(members.at(2)) >> std::get<2>(tu);
-        json.value(members.at(3)) >> std::get<3>(tu);
-        json.value(members.at(4)) >> std::get<4>(tu);
-        json.value(members.at(5)) >> std::get<5>(tu);
+        Private::TupleHelper<6>::deserializeJson(json, members, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0, T1, T2, T3, T4, T5, T6> tu)
     {
-        json.value(members.at(0)) >> std::get<0>(tu);
-        json.value(members.at(1)) >> std::get<1>(tu);
-        json.value(members.at(2)) >> std::get<2>(tu);
-        json.value(members.at(3)) >> std::get<3>(tu);
-        json.value(members.at(4)) >> std::get<4>(tu);
-        json.value(members.at(5)) >> std::get<5>(tu);
-        json.value(members.at(6)) >> std::get<6>(tu);
+        Private::TupleHelper<7>::deserializeJson(json, members, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7> tu)
     {
-        json.value(members.at(0)) >> std::get<0>(tu);
-        json.value(members.at(1)) >> std::get<1>(tu);
-        json.value(members.at(2)) >> std::get<2>(tu);
-        json.value(members.at(3)) >> std::get<3>(tu);
-        json.value(members.at(4)) >> std::get<4>(tu);
-        json.value(members.at(5)) >> std::get<5>(tu);
-        json.value(members.at(6)) >> std::get<6>(tu);
-        json.value(members.at(7)) >> std::get<7>(tu);
+        Private::TupleHelper<8>::deserializeJson(json, members, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8> tu)
     {
-        json.value(members.at(0)) >> std::get<0>(tu);
-        json.value(members.at(1)) >> std::get<1>(tu);
-        json.value(members.at(2)) >> std::get<2>(tu);
-        json.value(members.at(3)) >> std::get<3>(tu);
-        json.value(members.at(4)) >> std::get<4>(tu);
-        json.value(members.at(5)) >> std::get<5>(tu);
-        json.value(members.at(6)) >> std::get<6>(tu);
-        json.value(members.at(7)) >> std::get<7>(tu);
-        json.value(members.at(8)) >> std::get<8>(tu);
+        Private::TupleHelper<9>::deserializeJson(json, members, tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
-    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &, T9 &> tu)
+    void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> tu)
     {
-        json.value(members.at(0)) >> std::get<0>(tu);
-        json.value(members.at(1)) >> std::get<1>(tu);
-        json.value(members.at(2)) >> std::get<2>(tu);
-        json.value(members.at(3)) >> std::get<3>(tu);
-        json.value(members.at(4)) >> std::get<4>(tu);
-        json.value(members.at(5)) >> std::get<5>(tu);
-        json.value(members.at(6)) >> std::get<6>(tu);
-        json.value(members.at(7)) >> std::get<7>(tu);
-        json.value(members.at(8)) >> std::get<8>(tu);
-        json.value(members.at(9)) >> std::get<9>(tu);
+        Private::TupleHelper<10>::deserializeJson(json, members, tu);
     }
 
-    inline uint qHash(std::tuple<>)
+    inline uint qHash(std::tuple<> tu)
     {
-        return 0;
+        return Private::TupleHelper<0>::hash(tu);
     }
 
     template <class T0>
-    uint qHash(std::tuple<T0 &> tu)
+    uint qHash(std::tuple<T0> tu)
     {
-        return qHash(std::get<0>(tu));
+        return Private::TupleHelper<1>::hash(tu);
     }
 
     template <class T0, class T1>
-    uint qHash(std::tuple<T0 &, T1 &> tu)
+    uint qHash(std::tuple<T0, T1> tu)
     {
-        return qHash(std::get<0>(tu)) ^ qHash(std::get<1>(tu));
+        return Private::TupleHelper<2>::hash(tu);
     }
 
     template <class T0, class T1, class T2>
-    uint qHash(std::tuple<T0 &, T1 &, T2 &> tu)
+    uint qHash(std::tuple<T0, T1, T2> tu)
     {
-        return qHash(std::get<0>(tu)) ^ qHash(std::get<1>(tu)) ^ qHash(std::get<2>(tu));
+        return Private::TupleHelper<3>::hash(tu);
     }
 
     template <class T0, class T1, class T2, class T3>
-    uint qHash(std::tuple<T0 &, T1 &, T2 &, T3 &> tu)
+    uint qHash(std::tuple<T0, T1, T2, T3> tu)
     {
-        return qHash(std::get<0>(tu)) ^ qHash(std::get<1>(tu)) ^ qHash(std::get<2>(tu)) ^ qHash(std::get<3>(tu));
+        return Private::TupleHelper<4>::hash(tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4>
-    uint qHash(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &> tu)
+    uint qHash(std::tuple<T0, T1, T2, T3, T4> tu)
     {
-        return qHash(std::get<0>(tu)) ^ qHash(std::get<1>(tu)) ^ qHash(std::get<2>(tu)) ^ qHash(std::get<3>(tu)) ^ qHash(std::get<4>(tu));
+        return Private::TupleHelper<5>::hash(tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5>
-    uint qHash(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &> tu)
+    uint qHash(std::tuple<T0, T1, T2, T3, T4, T5> tu)
     {
-        return qHash(std::get<0>(tu)) ^ qHash(std::get<1>(tu)) ^ qHash(std::get<2>(tu)) ^ qHash(std::get<3>(tu)) ^ qHash(std::get<4>(tu)) ^
-               qHash(std::get<5>(tu));
+        return Private::TupleHelper<6>::hash(tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
-    uint qHash(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &> tu)
+    uint qHash(std::tuple<T0, T1, T2, T3, T4, T5, T6> tu)
     {
-        return qHash(std::get<0>(tu)) ^ qHash(std::get<1>(tu)) ^ qHash(std::get<2>(tu)) ^ qHash(std::get<3>(tu)) ^ qHash(std::get<4>(tu)) ^
-               qHash(std::get<5>(tu)) ^ qHash(std::get<6>(tu));
+        return Private::TupleHelper<7>::hash(tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
-    uint qHash(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &> tu)
+    uint qHash(std::tuple<T0, T1, T2, T3, T4, T5, T6, T7> tu)
     {
-        return qHash(std::get<0>(tu)) ^ qHash(std::get<1>(tu)) ^ qHash(std::get<2>(tu)) ^ qHash(std::get<3>(tu)) ^ qHash(std::get<4>(tu)) ^
-               qHash(std::get<5>(tu)) ^ qHash(std::get<6>(tu)) ^ qHash(std::get<7>(tu));
+        return Private::TupleHelper<8>::hash(tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
-    uint qHash(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &> tu)
+    uint qHash(std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8> tu)
     {
-        return qHash(std::get<0>(tu)) ^ qHash(std::get<1>(tu)) ^ qHash(std::get<2>(tu)) ^ qHash(std::get<3>(tu)) ^ qHash(std::get<4>(tu)) ^
-               qHash(std::get<5>(tu)) ^ qHash(std::get<6>(tu)) ^ qHash(std::get<7>(tu)) ^ qHash(std::get<8>(tu));
+        return Private::TupleHelper<9>::hash(tu);
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
-    uint qHash(std::tuple<T0 &, T1 &, T2 &, T3 &, T4 &, T5 &, T6 &, T7 &, T8 &, T9 &> tu)
+    uint qHash(std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> tu)
     {
-        return qHash(std::get<0>(tu)) ^ qHash(std::get<1>(tu)) ^ qHash(std::get<2>(tu)) ^ qHash(std::get<3>(tu)) ^ qHash(std::get<4>(tu)) ^
-               qHash(std::get<5>(tu)) ^ qHash(std::get<6>(tu)) ^ qHash(std::get<7>(tu)) ^ qHash(std::get<8>(tu)) ^ qHash(std::get<9>(tu));
+        return Private::TupleHelper<9>::hash(tu);
     }
 
-    inline QJsonObject serializeJson(const QStringList &, std::tuple<>)
+    inline QJsonObject serializeJson(const QStringList &members, std::tuple<> tu)
     {
         QJsonObject json;
+        Private::TupleHelper<0>::serializeJson(json, members, tu);
         return json;
     }
 
     template <class T0>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const T0 &> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<T0> tu)
     {
         QJsonObject json;
-        json << std::pair<QString, T0>(members.at(0), std::get<0>(tu));
+        Private::TupleHelper<1>::serializeJson(json, members, tu);
         return json;
     }
 
     template <class T0, class T1>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const T0 &, const T1 &> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<T0, T1> tu)
     {
         QJsonObject json;
-        json << std::pair<QString, T0>(members.at(0), std::get<0>(tu));
-        json << std::pair<QString, T1>(members.at(1), std::get<1>(tu));
+        Private::TupleHelper<2>::serializeJson(json, members, tu);
         return json;
     }
 
     template <class T0, class T1, class T2>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const T0 &, const T1 &, const T2 &> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<T0, T1, T2> tu)
     {
         QJsonObject json;
-        json << std::pair<QString, T0>(members.at(0), std::get<0>(tu));
-        json << std::pair<QString, T1>(members.at(1), std::get<1>(tu));
-        json << std::pair<QString, T2>(members.at(2), std::get<2>(tu));
+        Private::TupleHelper<3>::serializeJson(json, members, tu);
         return json;
     }
 
     template <class T0, class T1, class T2, class T3>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const T0 &, const T1 &, const T2 &, const T3 &> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<T0, T1, T2, T3> tu)
     {
         QJsonObject json;
-        json << std::pair<QString, T0>(members.at(0), std::get<0>(tu));
-        json << std::pair<QString, T1>(members.at(1), std::get<1>(tu));
-        json << std::pair<QString, T2>(members.at(2), std::get<2>(tu));
-        json << std::pair<QString, T3>(members.at(3), std::get<3>(tu));
+        Private::TupleHelper<4>::serializeJson(json, members, tu);
         return json;
     }
 
     template <class T0, class T1, class T2, class T3, class T4>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const T0 &, const T1 &, const T2 &, const T3 &, const T4 &> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<T0, T1, T2, T3, T4> tu)
     {
         QJsonObject json;
-        json << std::pair<QString, T0>(members.at(0), std::get<0>(tu));
-        json << std::pair<QString, T1>(members.at(1), std::get<1>(tu));
-        json << std::pair<QString, T2>(members.at(2), std::get<2>(tu));
-        json << std::pair<QString, T3>(members.at(3), std::get<3>(tu));
-        json << std::pair<QString, T4>(members.at(4), std::get<4>(tu));
+        Private::TupleHelper<5>::serializeJson(json, members, tu);
         return json;
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const T0 &, const T1 &, const T2 &, const T3 &, const T4 &, const T5 &> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<T0, T1, T2, T3, T4, T5> tu)
     {
         QJsonObject json;
-        json << std::pair<QString, T0>(members.at(0), std::get<0>(tu));
-        json << std::pair<QString, T1>(members.at(1), std::get<1>(tu));
-        json << std::pair<QString, T2>(members.at(2), std::get<2>(tu));
-        json << std::pair<QString, T3>(members.at(3), std::get<3>(tu));
-        json << std::pair<QString, T4>(members.at(4), std::get<4>(tu));
-        json << std::pair<QString, T5>(members.at(5), std::get<5>(tu));
+        Private::TupleHelper<6>::serializeJson(json, members, tu);
         return json;
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const T0 &, const T1 &, const T2 &, const T3 &, const T4 &, const T5 &, const T6 &> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<T0, T1, T2, T3, T4, T5, T6> tu)
     {
         QJsonObject json;
-        json << std::pair<QString, T0>(members.at(0), std::get<0>(tu));
-        json << std::pair<QString, T1>(members.at(1), std::get<1>(tu));
-        json << std::pair<QString, T2>(members.at(2), std::get<2>(tu));
-        json << std::pair<QString, T3>(members.at(3), std::get<3>(tu));
-        json << std::pair<QString, T4>(members.at(4), std::get<4>(tu));
-        json << std::pair<QString, T5>(members.at(5), std::get<5>(tu));
-        json << std::pair<QString, T6>(members.at(6), std::get<6>(tu));
+        Private::TupleHelper<7>::serializeJson(json, members, tu);
         return json;
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const T0 &, const T1 &, const T2 &, const T3 &, const T4 &, const T5 &, const T6 &, const T7 &> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7> tu)
     {
         QJsonObject json;
-        json << std::pair<QString, T0>(members.at(0), std::get<0>(tu));
-        json << std::pair<QString, T1>(members.at(1), std::get<1>(tu));
-        json << std::pair<QString, T2>(members.at(2), std::get<2>(tu));
-        json << std::pair<QString, T3>(members.at(3), std::get<3>(tu));
-        json << std::pair<QString, T4>(members.at(4), std::get<4>(tu));
-        json << std::pair<QString, T5>(members.at(5), std::get<5>(tu));
-        json << std::pair<QString, T6>(members.at(6), std::get<6>(tu));
-        json << std::pair<QString, T7>(members.at(7), std::get<7>(tu));
+        Private::TupleHelper<8>::serializeJson(json, members, tu);
         return json;
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const T0 &, const T1 &, const T2 &, const T3 &, const T4 &, const T5 &, const T6 &, const T7 &, const T8 &> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8> tu)
     {
         QJsonObject json;
-        json << std::pair<QString, T0>(members.at(0), std::get<0>(tu));
-        json << std::pair<QString, T1>(members.at(1), std::get<1>(tu));
-        json << std::pair<QString, T2>(members.at(2), std::get<2>(tu));
-        json << std::pair<QString, T3>(members.at(3), std::get<3>(tu));
-        json << std::pair<QString, T4>(members.at(4), std::get<4>(tu));
-        json << std::pair<QString, T5>(members.at(5), std::get<5>(tu));
-        json << std::pair<QString, T6>(members.at(6), std::get<6>(tu));
-        json << std::pair<QString, T7>(members.at(7), std::get<7>(tu));
-        json << std::pair<QString, T8>(members.at(8), std::get<8>(tu));
+        Private::TupleHelper<9>::serializeJson(json, members, tu);
         return json;
     }
 
     template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
-    QJsonObject serializeJson(const QStringList &members, std::tuple<const T0 &, const T1 &, const T2 &, const T3 &, const T4 &, const T5 &, const T6 &, const T7 &, const T8 &, const T9 &> tu)
+    QJsonObject serializeJson(const QStringList &members, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> tu)
     {
         QJsonObject json;
-        json << std::pair<QString, T0>(members.at(0), std::get<0>(tu));
-        json << std::pair<QString, T1>(members.at(1), std::get<1>(tu));
-        json << std::pair<QString, T2>(members.at(2), std::get<2>(tu));
-        json << std::pair<QString, T3>(members.at(3), std::get<3>(tu));
-        json << std::pair<QString, T4>(members.at(4), std::get<4>(tu));
-        json << std::pair<QString, T5>(members.at(5), std::get<5>(tu));
-        json << std::pair<QString, T6>(members.at(6), std::get<6>(tu));
-        json << std::pair<QString, T7>(members.at(7), std::get<7>(tu));
-        json << std::pair<QString, T8>(members.at(8), std::get<8>(tu));
-        json << std::pair<QString, T9>(members.at(9), std::get<9>(tu));
+        Private::TupleHelper<10>::serializeJson(json, members, tu);
         return json;
     }
 

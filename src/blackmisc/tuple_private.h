@@ -137,7 +137,6 @@ namespace BlackMisc
         }
         //! @}
 
-#ifdef Q_COMPILER_VARIADIC_TEMPLATES
 
         // Applying operations to all elements in a tuple, using recursion
         //! \private
@@ -203,7 +202,6 @@ namespace BlackMisc
             static void deserializeJson(const QJsonObject &, const QStringList &, Tu &) {}
         };
 
-#endif // Q_COMPILER_VARIADIC_TEMPLATES
 
     } // namespace Private
 
