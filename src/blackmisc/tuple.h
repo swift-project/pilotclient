@@ -61,7 +61,7 @@
             }                                                                   \
             static const QStringList &jsonMembers()                             \
             {                                                                   \
-                static QStringList members = QString(#MEMBERS).replace("(","").replace(")","").replace(" ","").replace("o.","").split(","); \
+                static QStringList members = QString(#MEMBERS).replace("tie(","").replace("(","").replace(")","").replace(" ","").replace("o.","").split(","); \
                 return members;                                                 \
             }                                                                   \
         };                                                                      \
@@ -90,7 +90,7 @@
             }                                                                   \
             static const QStringList &jsonMembers()                             \
             {                                                                   \
-                static QStringList members = QString(#MEMBERS).replace("(","").replace(")","").replace(" ","").replace("o.","").split(","); \
+                static QStringList members = QString(#MEMBERS).replace("tie(","").replace("(","").replace(")","").replace(" ","").replace("o.","").split(","); \
                 return members;                                                 \
             }                                                                   \
         };                                                                      \

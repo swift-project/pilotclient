@@ -137,6 +137,25 @@ namespace BlackMisc
         }
         //! @}
 
+        // Helper which (de)serializes its argument to/from JSON,
+        // whether it is a simple value or a nested tuple.
+        // Defined later because it uses TupleHelper;
+        // forward-declared because TupleHelper uses it.
+        //! \private
+        //! @{
+        template <class T>
+        static void serializeJsonHelper(QJsonObject &json, const QStringList &members, const T &obj, int index, std::false_type isNestedTag);
+        template <class T>
+        static void serializeJsonHelper(QJsonObject &json, const QStringList &members, const T &obj, int index, std::true_type isNestedTag);
+        template <class T>
+        static void serializeJsonHelper(QJsonObject &json, const QStringList &members, const T &obj, int index);
+        template <class T>
+        static void deserializeJsonHelper(const QJsonObject &json, const QStringList &members, T &obj, int index, std::false_type isNestedTag);
+        template <class T>
+        static void deserializeJsonHelper(const QJsonObject &json, const QStringList &members, T &obj, int index, std::true_type isNestedTag);
+        template <class T>
+        static void deserializeJsonHelper(const QJsonObject &json, const QStringList &members, T &obj, int index);
+        //! @}
 
         // Applying operations to all elements in a tuple, using recursion
         //! \private
@@ -172,15 +191,15 @@ namespace BlackMisc
             template <class Tu>
             static void serializeJson(QJsonObject &json, const QStringList &members, const Tu &tu)
             {
-                json << std::make_pair(members.at(N - 1), std::get < N - 1 > (tu));
                 TupleHelper < N - 1 >::serializeJson(json, members, tu);
+                serializeJsonHelper(json, members, std::get < N - 1 > (tu), N - 1);
             }
 
             template <class Tu>
             static void deserializeJson(const QJsonObject &json, const QStringList &members, Tu &tu)
             {
-                json.value(members.at(N - 1)) >> std::get < N - 1 > (tu);
                 TupleHelper < N - 1 >::deserializeJson(json, members, tu);
+                deserializeJsonHelper(json, members, std::get < N - 1 > (tu), N - 1);
             }
         };
 
@@ -202,6 +221,41 @@ namespace BlackMisc
             static void deserializeJson(const QJsonObject &, const QStringList &, Tu &) {}
         };
 
+        // definitions of helpers declared earlier
+        template <class T>
+        static void serializeJsonHelper(QJsonObject &json, const QStringList &members, const T &obj, int index, std::false_type isNestedTag)
+        {
+            Q_UNUSED(isNestedTag);
+            json << std::make_pair(members.at(index), obj);
+        }
+        template <class T>
+        static void serializeJsonHelper(QJsonObject &json, const QStringList &members, const T &obj, int index, std::true_type isNestedTag)
+        {
+            Q_UNUSED(isNestedTag);
+            TupleHelper<std::tuple_size<T>::value>::serializeJson(json, members.mid(index), obj);
+        }
+        template <class T>
+        static void serializeJsonHelper(QJsonObject &json, const QStringList &members, const T &obj, int index)
+        {
+            serializeJsonHelper(json, members, obj, index, IsTuple<T>());
+        }
+        template <class T>
+        static void deserializeJsonHelper(const QJsonObject &json, const QStringList &members, T &obj, int index, std::false_type isNestedTag)
+        {
+            Q_UNUSED(isNestedTag);
+            json.value(members.at(index)) >> obj;
+        }
+        template <class T>
+        static void deserializeJsonHelper(const QJsonObject &json, const QStringList &members, T &obj, int index, std::true_type isNestedTag)
+        {
+            Q_UNUSED(isNestedTag);
+            TupleHelper<std::tuple_size<T>::value>::deserializeJson(json, members.mid(index), obj);
+        }
+        template <class T>
+        static void deserializeJsonHelper(const QJsonObject &json, const QStringList &members, T &obj, int index)
+        {
+            deserializeJsonHelper(json, members, obj, index, IsTuple<T>());
+        }
 
     } // namespace Private
 
