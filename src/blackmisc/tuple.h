@@ -64,6 +64,11 @@
                 static QStringList members = QString(#MEMBERS).replace("tie(","").replace("(","").replace(")","").replace(" ","").replace("o.","").split(","); \
                 return members;                                                 \
             }                                                                   \
+        public:                                                                 \
+            static auto constToTuple(const T &o) -> decltype(BlackMisc::tie MEMBERS)    \
+            {                                                                   \
+                return BlackMisc::tie MEMBERS;                                  \
+            }                                                                   \
         };                                                                      \
     }
 
@@ -92,6 +97,11 @@
             {                                                                   \
                 static QStringList members = QString(#MEMBERS).replace("tie(","").replace("(","").replace(")","").replace(" ","").replace("o.","").split(","); \
                 return members;                                                 \
+            }                                                                   \
+        public:                                                                 \
+            static auto constToTuple(const T<U> &o) -> decltype(BlackMisc::tie MEMBERS) \
+            {                                                                   \
+                return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
         };                                                                      \
     }
@@ -134,6 +144,10 @@ namespace BlackMisc
                           "Missing BLACK_DECLARE_TUPLE_CONVERSION macro for T");
             Q_UNUSED(object);
             return std::tuple<>();
+        }
+        static std::tuple<> constToTuple(const T &object)
+        {
+            return toTuple(object);
         }
         static const QStringList jsonMembers()
         {
@@ -195,6 +209,27 @@ namespace BlackMisc
     const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<Ts...> tu)
     {
         return Private::TupleHelper<sizeof...(Ts)>::unmarshall(arg, tu);
+    }
+
+    /*!
+     * \brief   Stream a tuple to qDebug.
+     * \ingroup Tuples
+     */
+    template <class... Ts>
+    QDebug operator <<(QDebug debug, std::tuple<Ts &...> tu)
+    {
+        return Private::TupleHelper<sizeof...(Ts)>::debug(debug, tu);
+    }
+
+    /*!
+     * \brief   Stream a tuple to qDebug.
+     * \ingroup Tuples
+     */
+    template <class... Ts>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<Ts &...> tu)
+    {
+        Q_UNUSED(tu);
+        return noDebug;
     }
 
     /*!
@@ -505,6 +540,136 @@ namespace BlackMisc
     const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> tu)
     {
         return Private::TupleHelper<10>::unmarshall(arg, tu);
+    }
+
+    inline QDebug operator <<(QDebug debug, std::tuple<> tu)
+    {
+        return Private::TupleHelper<0>::debug(debug, tu);
+    }
+
+    template <class T0>
+    QDebug operator <<(QDebug debug, std::tuple<T0> tu)
+    {
+        return Private::TupleHelper<1>::debug(debug, tu);
+    }
+
+    template <class T0, class T1>
+    QDebug operator <<(QDebug debug, std::tuple<T0, T1> tu)
+    {
+        return Private::TupleHelper<2>::debug(debug, tu);
+    }
+
+    template <class T0, class T1, class T2>
+    QDebug operator <<(QDebug debug, std::tuple<T0, T1, T2> tu)
+    {
+        return Private::TupleHelper<3>::debug(debug, tu);
+    }
+
+    template <class T0, class T1, class T2, class T3>
+    QDebug operator <<(QDebug debug, std::tuple<T0, T1, T2, T3> tu)
+    {
+        return Private::TupleHelper<4>::debug(debug, tu);
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4>
+    QDebug operator <<(QDebug debug, std::tuple<T0, T1, T2, T3, T4> tu)
+    {
+        return Private::TupleHelper<5>::debug(debug, tu);
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5>
+    QDebug operator <<(QDebug debug, std::tuple<T0, T1, T2, T3, T4, T5> tu)
+    {
+        return Private::TupleHelper<6>::debug(debug, tu);
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
+    QDebug operator <<(QDebug debug, std::tuple<T0, T1, T2, T3, T4, T5, T6> tu)
+    {
+        return Private::TupleHelper<7>::debug(debug, tu);
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
+    QDebug operator <<(QDebug debug, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7> tu)
+    {
+        return Private::TupleHelper<8>::debug(debug, tu);
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
+    QDebug operator <<(QDebug debug, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8> tu)
+    {
+        return Private::TupleHelper<9>::debug(debug, tu);
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
+    QDebug operator <<(QDebug debug, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> tu)
+    {
+        return Private::TupleHelper<10>::debug(debug, tu);
+    }
+
+    inline QNoDebug operator <<(QNoDebug noDebug, std::tuple<>)
+    {
+        return noDebug;
+    }
+
+    template <class T0>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<T0>)
+    {
+        return noDebug;
+    }
+
+    template <class T0, class T1>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<T0, T1>)
+    {
+        return noDebug;
+    }
+
+    template <class T0, class T1, class T2>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<T0, T1, T2>)
+    {
+        return noDebug;
+    }
+
+    template <class T0, class T1, class T2, class T3>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<T0, T1, T2, T3>)
+    {
+        return noDebug;
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<T0, T1, T2, T3, T4>)
+    {
+        return noDebug;
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<T0, T1, T2, T3, T4, T5>)
+    {
+        return noDebug;
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<T0, T1, T2, T3, T4, T5, T6>)
+    {
+        return noDebug;
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7>)
+    {
+        return noDebug;
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8>)
+    {
+        return noDebug;
+    }
+
+    template <class T0, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
+    QNoDebug operator <<(QNoDebug noDebug, std::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>)
+    {
+        return noDebug;
     }
 
     inline void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<> tu)

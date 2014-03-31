@@ -18,6 +18,7 @@
 #include <QJsonObject>
 #include <QDateTime>
 #include <QString>
+#include <QDebug>
 #include <tuple>
 #include <type_traits>
 #include <functional>
@@ -183,6 +184,12 @@ namespace BlackMisc
             }
 
             template <class Tu>
+            static QDebug debug(QDebug dbg, Tu &tu)
+            {
+                return TupleHelper < N - 1 >::debug(dbg, tu) << std::get < N - 1 > (tu);
+            }
+
+            template <class Tu>
             static uint hash(const Tu &tu)
             {
                 return TupleHelper < N - 1 >::hash(tu) ^ qHash(std::get < N - 1 > (tu));
@@ -213,6 +220,8 @@ namespace BlackMisc
             static QDBusArgument &marshall(QDBusArgument &arg, const Tu &) { return arg; }
             template <class Tu>
             static const QDBusArgument &unmarshall(const QDBusArgument &arg, Tu &) { return arg; }
+            template <class Tu>
+            static QDebug debug(QDebug dbg, Tu &) { return dbg; }
             template <class Tu>
             static uint hash(const Tu &) { return 0; }
             template <class Tu>
