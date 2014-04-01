@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
     BlackMisc::initResources();
     QCoreApplication a(argc, argv);
     CSamplesJson::samples();
-//    CSamplesChangeObject::samples();
-//    CSamplesContainer::samples();
-//    CSamplesMetadata::samples();
-    return a.exec();
+    CSamplesChangeObject::samples();
+    CSamplesContainer::samples();
+    CSamplesMetadata::samples();
+    return 0;
 }

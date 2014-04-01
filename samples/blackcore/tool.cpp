@@ -1,7 +1,8 @@
 #include "tool.h"
-#include "blackcore/coreruntime.h"
+#include "blackcore/context_runtime.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_audio.h"
+#include "blackcore/context_settings.h"
 #include "blackmisc/valuemap.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/pqallquantities.h"
@@ -42,23 +43,16 @@ namespace BlackMiscTest
         QString line;
         while (line != "x")
         {
-            const BlackCore::IContextNetwork *networkContext = core->getIContextNetwork();
-            const BlackCore::IContextAudio *audioContext = core->getIContextAudio();
+            const BlackCore::IContextNetwork *networkContext = runtime->getIContextNetwork();
+            const BlackCore::IContextAudio *audioContext = runtime->getIContextAudio();
+            const BlackCore::IContextSettings *settingsContext = runtime->getIContextSettings();
 
-            // display current status
-            qDebug() << "-------------";
-            qDebug() << "ATC booked";
-            qDebug() << networkContext->getAtcStationsBooked().toQString();
-            qDebug() << "-------------";
-            qDebug() << "ATC online";
-            qDebug() << networkContext->getAtcStationsOnline().toQString();
-
-            // next round? Server
             qDebug() << "-------------";
             qDebug() << "Connected with network: " << networkContext->isConnected();
 
             qDebug() << "-------------";
             qDebug() << "Key  x to exit";
+            qDebug() << "0 .. settings";
             qDebug() << "1 .. ATC booked";
             qDebug() << "2 .. ATC online";
             qDebug() << "3 .. Aircrafts in range";
@@ -67,7 +61,13 @@ namespace BlackMiscTest
 
             line = qtin.readLine();
 
-            if (line.startsWith("1"))
+            if (line.startsWith("0"))
+            {
+                qDebug() << "-------------";
+                qDebug() << "Settings:" << settingsContext->getSettingsFileName();
+                qDebug() << settingsContext->getSettingsAsJsonString();
+            }
+            else if (line.startsWith("1"))
             {
                 qDebug() << "-------------";
                 qDebug() << "ATC booked";
