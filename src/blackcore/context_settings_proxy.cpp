@@ -65,20 +65,8 @@ namespace BlackCore
     }
 
     /*
-     * DBus version of value
      */
-    BlackMisc::CStatusMessageList CContextSettingsProxy::value(const QString &path, const QString &command, QDBusVariant value, int unifiedBlackMetaType)
     {
-        QVariant qv = value.variant();
-        if (qv.canConvert<QDBusArgument>())
-        {
-            // convert from QDBusArgument
-            int type = BlackMisc::firstBlackMetaType() + unifiedBlackMetaType; // unify
-            qv = BlackMisc::fixQVariantFromDbusArgument(qv, type);
-        }
-        // when called locally, this will call the virtual method
-        // of the concrete implementation in context_settings
-        return this->value(path, command, qv);
     }
 
 } // namespace

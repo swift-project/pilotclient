@@ -31,19 +31,6 @@ namespace BlackCore
         //! \brief Destructor
         virtual ~CContextSettingsProxy() {}
 
-
-        /*!
-         * \brief Handle value
-         * \param path      where value belongs to
-         * \param command   what to do with value
-         * \param value
-         * \return          messages generated during handling
-         * \remarks Do not make this a slot, no DBus XML signature shall be created. The QVariant
-         *  will be send a tailored value method using QDBusVariant
-         *  @see value(const QString &, const QString &, QDBusVariant, int)
-         */
-        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value) override;
-
     private:
         friend class CRuntime;
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
@@ -67,13 +54,9 @@ namespace BlackCore
         //! \copydoc IContextSettings::getHotkeys()
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const override;
 
-        /*!
-         * \brief DBus version of value method.
-         * \remarks Basically an unwanted signature as this is different from the "local" signature and
-         * contains explicit DBus types (a: QDbusArgument, b: type for conversion).
-         * If this can be removed, fine.
-         */
-        BlackMisc::CStatusMessageList value(const QString &path, const QString &command, QDBusVariant value, int unifiedBlackMetaType);
+        //! \copydoc IContextSettings::value
+        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value) override;
+
     };
 }
 
