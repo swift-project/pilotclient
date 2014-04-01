@@ -62,7 +62,6 @@ namespace BlackCore
         //! Aircraft list has been changed
         void changedAircraftsInRange();
 
-<<<<<<< HEAD
         /*!
          * \brief Aircraft situation update
          * \param callsign
