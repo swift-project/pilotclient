@@ -57,6 +57,18 @@ namespace BlackCore
         //! \copydoc IContextSettings::value
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value) override;
 
+        //! \copydoc IContextSettings::write
+        BlackMisc::CStatusMessage write() const override;
+
+        //! \brief read settings
+        virtual BlackMisc::CStatusMessage read() override;
+
+        //! \brief settings file name
+        virtual QString getSettingsFileName() const override;
+
+        //! \brief as JSON string
+        virtual QString getSettingsAsJsonString() const override;
+
     };
 }
 

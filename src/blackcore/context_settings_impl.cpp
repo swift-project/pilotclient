@@ -7,6 +7,9 @@
 #include "context_runtime.h"
 
 #include "blackmisc/settingutilities.h"
+#include "blackmisc/blackmiscfreefunctions.h"
+#include <QFile>
+#include <QJsonDocument>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Settings;
@@ -21,19 +24,107 @@ namespace BlackCore
      */
     CContextSettings::CContextSettings(CRuntimeConfig::ContextMode mode, CRuntime *parent) : IContextSettings(mode, parent) {}
 
+    /*
+     * Read settings
+     */
+    CStatusMessage CContextSettings::read()
     {
-        // create some dummy settings
-        // this would actually be reading the settings from disk ..
+        if (!CSettingUtilities::initSettingsDirectory())
+        {
+            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError,
+                                  QString("Cannot init directory: %1").arg(this->getSettingsDirectory()));
+        }
+        bool ok = false;
+        QFile jsonFile(this->getSettingsFileName());
+        QJsonObject obj;
 
-        this->m_settingsNetwork.setCurrentNetworkServer(CServer("Testserver", "Client project testserver", "vatsim-germany.org", 6809, CUser("guest", "Guest Client project", "", "guest")));
-        this->m_settingsNetwork.addTrafficNetworkServer(this->m_settingsNetwork.getCurrentTrafficNetworkServer());
-        this->m_settingsNetwork.addTrafficNetworkServer(CServer("Europe C2", "VATSIM Server", "88.198.19.202", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
-        this->m_settingsNetwork.addTrafficNetworkServer(CServer("Europe CC", "VATSIM Server", "5.9.155.43", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
-        this->m_settingsNetwork.addTrafficNetworkServer(CServer("UK", "VATSIM Server", "109.169.48.148", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
-        this->m_settingsNetwork.addTrafficNetworkServer(CServer("USA-W", "VATSIM Server", "64.151.108.52", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
+        if (jsonFile.open(QFile::ReadOnly))
+        {
+            QJsonDocument doc = QJsonDocument::fromJson(jsonFile.readAll());
+            obj = doc.object();
+            ok = true;
+        }
+        jsonFile.close();
 
-        // hotkeys
-        this->m_hotkeys.initAsHotkeyList();
+        // init network
+        if (obj.contains(IContextSettings::PathNetworkSettings()))
+        {
+            this->m_settingsNetwork.fromJson(
+                obj.value(IContextSettings::PathNetworkSettings()).toObject()
+            );
+        }
+        else
+        {
+            this->m_settingsNetwork.initDefaultValues();
+        }
+
+        // init own members
+        if (obj.contains(IContextSettings::PathHotkeys()))
+        {
+            this->m_hotkeys.fromJson(
+                obj.value(IContextSettings::PathHotkeys()).toObject()
+            );
+        }
+        this->m_hotkeys.initAsHotkeyList(false); // update missing parts
+
+        if (ok)
+        {
+            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityInfo,
+                                  QString("Read settings: %1").arg(this->getSettingsFileName()));
+        }
+        else
+        {
+            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError,
+                                  QString("Problem reading settings: %1").arg(this->getSettingsFileName()));
+        }
+    }
+
+    /*
+     * Write settings
+     */
+    CStatusMessage CContextSettings::write() const
+    {
+        if (!CSettingUtilities::initSettingsDirectory())
+        {
+            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError,
+                                  QString("Cannot init directory: %1").arg(this->getSettingsDirectory()));
+        }
+        QFile jsonFile(this->getSettingsFileName());
+        bool ok = false;
+        if (jsonFile.open(QFile::WriteOnly))
+        {
+            QJsonDocument doc = this->toJsonDocument();
+            ok = jsonFile.write(doc.toJson(QJsonDocument::Indented)) >= 0;
+            jsonFile.close();
+        }
+        if (ok)
+        {
+            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityInfo,
+                                  QString("Written settings: %1").arg(this->getSettingsFileName()));
+        }
+        else
+        {
+            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError,
+                                  QString("Problem writing settings: %1").arg(this->getSettingsFileName()));
+        }
+    }
+
+    QString CContextSettings::getSettingsAsJsonString() const
+    {
+        QJsonDocument doc = this->toJsonDocument();
+        return QString(doc.toJson(QJsonDocument::Indented));
+    }
+
+    /*
+     * JSON document
+     */
+    QJsonDocument CContextSettings::toJsonDocument() const
+    {
+        QJsonObject obj;
+        obj.insert(IContextSettings::PathNetworkSettings(), this->m_settingsNetwork.toJson());
+        obj.insert(IContextSettings::PathHotkeys(), this->m_hotkeys.toJson());
+        QJsonDocument doc(obj);
+        return doc;
     }
 
     /*
@@ -69,9 +160,8 @@ namespace BlackCore
                 {
                     BlackMisc::Hardware::CKeyboardKeyList hotkeys = value.value<BlackMisc::Hardware::CKeyboardKeyList>();
                     this->m_hotkeys = hotkeys;
-                    emit this->changedSettings(SettingsHotKeys);
-
-                    msgs.push_back(CStatusMessage::getInfoMessage("set hotkeys"));
+                    msgs.push_back(this->write()); // write settings
+                    emit this->changedSettings(static_cast<uint>(SettingsHotKeys));
                     return msgs;
                 }
             }
@@ -85,8 +175,8 @@ namespace BlackCore
             msgs = this->m_settingsNetwork.value(nextLevelPath, command, value, changed);
             if (changed)
             {
-                emit this->changedNetworkSettings();
-                emit this->changedSettings(SettingsNetwork);
+                msgs.push_back(this->write());
+                emit this->changedSettings(static_cast<uint>(SettingsNetwork));
             }
         }
         else

@@ -36,7 +36,7 @@ namespace BlackCore
     void CContextSettingsProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         connection.connect(serviceName, IContextSettings::ObjectPath(), IContextSettings::InterfaceName(),
-                           "changedNetworkSettings", this, SIGNAL(changedNetworkSettings()));
+                           "changedSettings", this, SIGNAL(changedSettings(uint)));
     }
 
     /*
@@ -65,8 +65,35 @@ namespace BlackCore
     }
 
     /*
+     * Write settings
      */
+    BlackMisc::CStatusMessage CContextSettingsProxy::write() const
     {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("write"));
+    }
+
+    /*
+     * Read settings
+     */
+    CStatusMessage CContextSettingsProxy::read()
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("read"));
+    }
+
+    /*
+     * File name
+     */
+    QString CContextSettingsProxy::getSettingsFileName() const
+    {
+        return this->m_dBusInterface->callDBusRet<QString>(QLatin1Literal("getSettingsFileName"));
+    }
+
+    /*
+     * As JSON string
+     */
+    QString CContextSettingsProxy::getSettingsAsJsonString() const
+    {
+        return this->m_dBusInterface->callDBusRet<QString>(QLatin1Literal("getSettingsAsJsonString"));
     }
 
 } // namespace

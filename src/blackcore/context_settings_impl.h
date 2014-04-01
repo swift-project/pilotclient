@@ -8,7 +8,7 @@
 
 #include "context_settings.h"
 #include "dbus_server.h"
-#include "coreruntime.h"
+#include "context_runtime.h"
 
 #include "blackmisc/setnetwork.h"
 #include "blackmisc/statusmessagelist.h"
@@ -61,11 +61,23 @@ namespace BlackCore
          */
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, QDBusVariant value, int unifiedBlackMetaType);
 
+        //! \brief read settings
+        virtual BlackMisc::CStatusMessage read() override;
+
+        //! \copydoc IContextSettings::write
+        virtual BlackMisc::CStatusMessage write() const override;
+
+        //! Settings file name
+        virtual QString getSettingsFileName() const override { return BlackMisc::Settings::CSettingUtilities::getSettingsFile(); }
+
+        //! JSON represenation
+        virtual QString getSettingsAsJsonString() const override;
 
     private:
         friend class CRuntime;
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
         BlackMisc::Hardware::CKeyboardKeyList m_hotkeys;
+        QJsonDocument toJsonDocument() const;
     };
 }
 

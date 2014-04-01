@@ -6,15 +6,14 @@
 #ifndef BLACKCORE_CONTEXTSETTINGS_H
 #define BLACKCORE_CONTEXTSETTINGS_H
 
-#include "blackcore/coreruntime.h"
+#include "blackcore/context.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/keyboard.h"
 #include "blackmisc/hwkeyboardkeylist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/setnetwork.h"
-
-
+#include "blackmisc/dbus.h"
 #include <QObject>
 #include <QVariant>
 
@@ -46,15 +45,15 @@ namespace BlackCore
         {}
 
     public:
+
+        //! Service name
         static const QString &InterfaceName()
         {
             static QString s(BLACKCORE_CONTEXTSETTINGS_INTERFACENAME);
             return s;
         }
 
-        /*!
-         * \brief Service path
-         */
+        //! Service path
         static const QString &ObjectPath()
         {
             static QString s(BLACKCORE_CONTEXTSETTINGS_OBJECTPATH);
@@ -94,9 +93,8 @@ namespace BlackCore
         //! Destructor
         virtual ~IContextSettings() {}
 
-
         /*!
-         * \brief Handle value
+         * Handle value
          * \param path      where value belongs to
          * \param command   what to do with value
          * \param value
@@ -108,11 +106,8 @@ namespace BlackCore
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value) = 0;
 
     signals:
-        //! \brief Settings have been changed
-        void changedSettings(SettingsType type);
-
-        //! \brief Network settings have been changed
-        void changedNetworkSettings();
+        //! Settings have been changed
+        void changedSettings(uint type);
 
     public slots:
 
@@ -121,6 +116,18 @@ namespace BlackCore
 
         //! Hotkeys
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const = 0;
+
+        //! save settings
+        virtual BlackMisc::CStatusMessage write() const = 0;
+
+        //! Read settings
+        virtual BlackMisc::CStatusMessage read() = 0;
+
+        //! Read settings
+        virtual QString getSettingsFileName() const = 0;
+
+        //! Settings as JSON string
+        virtual QString getSettingsAsJsonString() const = 0;
     };
 }
 
