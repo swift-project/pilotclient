@@ -30,16 +30,11 @@ namespace BlackCore
          */
         CContextApplication(QObject *parent = nullptr);
 
-        /*!
-         * Destructor
-         */
+        //! Destructor
         virtual ~CContextApplication() {}
 
-        /*!
-         * \brief Register myself in DBus
-         * \param server
-         */
-        void registerWithDBus(CDBusServer *server)
+        //! Register myself in DBus
+        CContextApplication *registerWithDBus(CDBusServer *server)
         {
             server->addObject(IContextApplication::ObjectPath(), this);
         }

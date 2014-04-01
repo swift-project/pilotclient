@@ -28,47 +28,31 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
 
     public:
-        /*!
-         * \brief Interface name
-         * \return
-         */
+        //! \brief Interface name
         static const QString &InterfaceName()
         {
             static QString s(BLACKCORE_CONTEXTAUDIO_INTERFACENAME);
             return s;
         }
 
-        /*!
-         * \brief Object path
-         * \return
-         */
+        //! \brief Object path
         static const QString &ObjectPath()
         {
             static QString s(BLACKCORE_CONTEXTAUDIO_OBJECTPATH);
             return s;
         }
 
-        /*!
-         * \brief Constructor
-         * \param parent
-         */
+        //! \brief Constructor
         IContextAudio(QObject *parent = nullptr) : QObject(parent) {}
 
-        /*!
-         * Destructor
-         */
+        //! \brief Destructor
         virtual ~IContextAudio() {}
 
-        /*!
-         * \brief Using local objects?
-         * \return
-         */
+        //! \brief Using local objects?
         virtual bool usingLocalObjects() const = 0;
 
     signals:
-        /*!
-         * \brief Audio test has been completed
-         */
+        //! \brief Audio test has been completed
         void audioTestCompleted();
 
     public slots:
@@ -80,16 +64,10 @@ namespace BlackCore
          */
         virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAiricraft) = 0;
 
-        /*!
-         * Get voice rooms for COM1, COM2:
-         * From this connection audio status can be obtained
-         */
+        //! Get voice rooms for COM1, COM2:
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const = 0;
 
-        /*!
-         * Get voice rooms for COM1, COM2, but without latest audio status
-         * \return all voice rooms
-         */
+        //! Get voice rooms for COM1, COM2, but without latest audio status
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const = 0;
 
         /*!
@@ -106,39 +84,25 @@ namespace BlackCore
          */
         virtual BlackMisc::Audio::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const = 0;
 
-        /*!
-         * \brief Set voice rooms
-         */
+        //! Set voice rooms
         virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoom &voiceRoomCom1, const BlackMisc::Audio::CVoiceRoom &voiceRoomCom2) = 0;
 
-        /*!
-         * Leave all voice rooms
-         */
+        //! Leave all voice rooms
         virtual void leaveAllVoiceRooms() = 0;
 
-        /*!
-         * \brief COM1 room users callsigns
-         */
+        //! COM1 room users callsigns
         virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const = 0;
 
-        /*!
-         * \brief COM2 room users callsigns
-         */
+        //! COM2 room users callsigns
         virtual BlackMisc::Aviation::CCallsignList getCom2RoomCallsigns() const = 0;
 
-        /*!
-         * \brief COM1 room users
-         */
+        //! COM1 room users
         virtual BlackMisc::Network::CUserList getCom1RoomUsers() const = 0;
 
-        /*!
-         * \brief COM2 room users
-         */
+        //! COM2 room users
         virtual BlackMisc::Network::CUserList getCom2RoomUsers() const = 0;
 
-        /*!
-         * \brief Audio devices
-         */
+        //! Audio devices
         virtual BlackMisc::Audio::CAudioDeviceList getAudioDevices() const = 0;
 
         /*!
@@ -160,14 +124,10 @@ namespace BlackCore
          */
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2) = 0;
 
-        /*!
-         * \brief Is muted?
-         */
+        //! Is muted?
         virtual bool isMuted() const = 0;
 
-        /*!
-         * \brief Play SELCAL tone
-         */
+        //! Play SELCAL tone
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const = 0;
 
         /*!
@@ -176,24 +136,16 @@ namespace BlackCore
          */
         virtual void playNotification(uint notification) const = 0;
 
-        /*!
-         * \brief Microphone test
-         */
+        //! Microphone test
         virtual void runMicrophoneTest() = 0;
 
-        /*!
-         * \brief Microphone test
-         */
+        //! Microphone test
         virtual void runSquelchTest() = 0;
 
-        /*!
-         * \brief Get the microphone test result
-         */
+        //! Get the microphone test result
         virtual QString getMicrophoneTestResult() const = 0;
 
-        /*!
-         * \brief Get the squelch value
-         */
+        //! Get the squelch value
         virtual double getSquelchValue() const = 0;
     };
 }

@@ -68,15 +68,16 @@ namespace BlackCore
          */
         void statusMessages(const BlackMisc::CStatusMessageList &messages);
 
-        //! \brief ATC station (online) list has been changed
+        //! ATC station (online) list has been changed
         void changedAtcStationsOnline();
 
-        //! \brief ATC station (booked) list has been changed
+        //! ATC station (booked) list has been changed
         void changedAtcStationsBooked();
 
-        //! \brief Aircraft list has been changed
+        //! Aircraft list has been changed
         void changedAircraftsInRange();
 
+<<<<<<< HEAD
         /*!
          * \brief Aircraft situation update
          * \param callsign
@@ -85,7 +86,7 @@ namespace BlackCore
          */
         void aircraftSituationUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation);
 
-        //! \brief Terminated connection
+        //! Terminated connection
         void connectionTerminated();
 
         /*!
@@ -97,15 +98,12 @@ namespace BlackCore
          */
         void connectionStatusChanged(uint from, uint to);
 
-        /*!
-         * \brief Text messages (also private chat messages)
-         * \param textMessages message list
-         */
+        //! Text messages received (also private chat messages, rfaio channel messages)
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
     public slots:
 
-        //! \brief Reload bookings from booking service
+        //! Reload bookings from booking service
         virtual void readAtcBookingsFromSource() const = 0;
 
         /*!
@@ -114,19 +112,19 @@ namespace BlackCore
          */
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const = 0;
 
-        //! \brief ATC list, with booked controllers
+        //! ATC list, with booked controllers
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const = 0 ;
 
-        //! \brief Aircraft list
+        //! Aircraft list
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const = 0;
 
-        //! \brief Get all users
+        //! Get all users
         virtual BlackMisc::Network::CUserList getUsers() const = 0;
 
-        //! \brief Users for given callsigns, e.g. for voice room resolution
+        //! Users for given callsigns, e.g. for voice room resolution
         virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const = 0;
 
-        //! \brief Get own aircraft
+        //! Get own aircraft
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
 
         /*!
@@ -152,16 +150,16 @@ namespace BlackCore
          */
         virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
 
-        //! \brief Own position, be aware height is terrain height
+        //! Own position, be aware height is terrain height
         virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
 
-        //! \brief Complete situation update
+        //! Complete situation update
         virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
 
-        //! \brief Update own cockpit
+        //! Update own cockpit
         virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder) = 0;
 
-        //! \brief Text messages (radio and private chat messages)
+        //! Text messages (radio and private chat messages)
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) = 0;
 
         /*!
@@ -171,16 +169,16 @@ namespace BlackCore
          */
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode) = 0;
 
-        //! \brief Use the selected COM1/2 frequencies, and get the corresponding voice room for it
+        //! Use the selected COM1/2 frequencies, and get the corresponding voice room for it
         virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const = 0;
 
-        //! \brief Use the selected COM1/2 frequencies, and get the corresponding ATC stations for it
+        //! Use the selected COM1/2 frequencies, and get the corresponding ATC stations for it
         virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const = 0;
 
-        //! \brief Request data updates (pilot's frequencies, ATIS, ..)
+        //! Request data updates (pilot's frequencies, ATIS, ..)
         virtual void requestDataUpdates() = 0;
 
-        //! \brief Request ATIS updates (for all stations)
+        //! Request ATIS updates (for all stations)
         virtual void requestAtisUpdates() = 0;
     };
 }

@@ -25,20 +25,14 @@ namespace BlackCore
 
     public:
 
-        /*!
-         * \brief Service name
-         * \return
-         */
+        //! Service name
         static const QString &InterfaceName()
         {
             static QString s(BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME);
             return s;
         }
 
-        /*!
-         * \brief Service path
-         * \return
-         */
+        //! Service path
         static const QString &ObjectPath()
         {
             static QString s(BLACKCORE_CONTEXTAPPLICATION_OBJECTPATH);
@@ -50,10 +44,7 @@ namespace BlackCore
           * \param parent
           */
         IContextApplication(QObject *parent = nullptr) : QObject(parent) {}
-
-        /*!
-         * Destructor
-         */
+        //! Destructor
         virtual ~IContextApplication() {}
 
     signals:
@@ -68,13 +59,8 @@ namespace BlackCore
 
     public slots:
 
-        /*!
-         * \brief Ping
-         * \param token
-         * \return
-         */
+        //! \brief Ping a token, used to check if application is alive
         virtual qint64 ping(qint64 token) const = 0;
-
     };
 }
 

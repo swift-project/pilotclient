@@ -38,7 +38,7 @@ namespace BlackMisc
                 IndexKeyObject, // just for updates
             };
 
-            //! \brief Function
+            //! Function
             enum HotkeyFunction
             {
                 HotkeyNone,
@@ -49,7 +49,7 @@ namespace BlackMisc
                 HotkeyOpacity100
             };
 
-            //! \brief Modifier
+            //! Modifier
             enum Modifier
             {
                 ModifierNone,
@@ -66,13 +66,13 @@ namespace BlackMisc
                 ModifierNum
             };
 
-            //! \brief Default constructor
+            //! Default constructor
             CKeyboardKey();
 
-            //! \brief Constructor by function
+            //! Constructor by function
             CKeyboardKey(HotkeyFunction function);
 
-            //! \brief Constructor
+            //! Constructor
             CKeyboardKey(Qt::Key keyCode, quint32 nativeVirtualKey, Modifier modifier1 = ModifierNone, Modifier modifier2 = ModifierNone, const HotkeyFunction &function = HotkeyNone);
 
             //! \brief Destructor

@@ -32,10 +32,7 @@ namespace BlackCore
          * \brief DBus version constructor
          */
         CContextSettingsProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent = nullptr);
-
-        /*!
-         * Destructor
-         */
+        //! \brief Destructor
         virtual ~CContextSettingsProxy() {}
 
 
@@ -54,11 +51,8 @@ namespace BlackCore
     private:
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
-        /*!
-         * Relay connection signals to local signals
-         * No idea why this has to be wired and is not done automatically
-         * \param connection
-         */
+        //! Relay connection signals to local signals
+        //! No idea why this has to be wired and is not done automatically
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
 
     protected:

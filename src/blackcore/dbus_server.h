@@ -22,7 +22,7 @@ namespace BlackCore
 
     /*!
      *  \brief     Custom DBusServer
-     *  \details   This class implements a custom DBusServer for DBus peer connections
+     *  \details   This class implements a custom DBusServer for DBus peer connections, but can also be used as session or system bus
      */
     class CDBusServer : public QObject
     {
@@ -33,9 +33,7 @@ namespace BlackCore
         //! \brief Service name of DBus serve
         static const QString ServiceName;
 
-        /*!
-         * \brief Server mode, normally P2P, but can be changed for debugging / testing
-         */
+        //! \brief Server mode, normally P2P, but can be changed for debugging / testing
         enum ServerMode
         {
             SERVERMODE_P2P,
@@ -49,24 +47,13 @@ namespace BlackCore
         QMap<QString, QObject *> m_objects; //!< Mapping of all exposed objects
         QMap<QString, QDBusConnection> m_DBusConnections; //!< Mapping of all DBusConnection objects
 
-        /*!
-         * \brief Check if address means a real server with P2P connection
-         * \param address
-         * \return
-         */
+        //! \brief Check if address means a real server with P2P connection
         static bool isP2P(const QString &address);
 
-        /*!
-         * \brief Get the class info
-         * \param object
-         * \return
-         */
+        //! \brief Get the class info
         static const QString getClassInfo(QObject *object);
 
-        /*!
-         * \brief Register options with connection
-         * \return
-         */
+        //! \brief Register options with connection
         static const QDBusConnection::RegisterOptions &RegisterOptions()
         {
             static QDBusConnection::RegisterOptions opt = QDBusConnection::ExportAdaptors | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots;
@@ -80,55 +67,35 @@ namespace BlackCore
         //!! \brief Adds a QObject to be exposed to DBus
         void addObject(const QString &name, QObject *object);
 
-        /*!
-         * \brief Last error
-         * \return
-         */
+        //! \brief Last error
         QDBusError lastError() const;
 
-        /*!
-         * \brief Connected?
-         * \return
-         */
+        //! \brief Connected?
         bool isConnected() const
         {
             return this->m_busServer.isConnected();
         }
 
-        /*!
-         * \brief address
-         * \return
-         */
+        //! \brief address
         QString address() const
         {
-
             return this->m_busServer.address();
         }
 
-        /*!
-         * \brief Connection by name
-         * \param connectionName
-         * \return
-         */
+        //! \brief Connection by name
         const QDBusConnection getDbusConnection(const QString &connectionName) const
         {
             return this->m_DBusConnections.value(connectionName, CDBusServer::defaultConnection());
         }
 
-        /*!
-         * \brief Get DBbus connections
-         * \return
-         */
+        //! \brief Get DBbus connections
         const QList<QDBusConnection> getDbusConnections() const
         {
             // http://stackoverflow.com/questions/1124340/any-ideas-why-qhash-and-qmap-return-const-t-instead-of-const-t
             return this->m_DBusConnections.values();
         }
 
-        /*!
-         * \brief Default connection
-         * \return
-         */
+        //! \brief Default connection
         static const QDBusConnection &defaultConnection()
         {
             static QDBusConnection defaultConnection("default");
@@ -137,11 +104,7 @@ namespace BlackCore
 
     private slots:
 
-        /*!
-         * \brief Called when a new DBus client has connected
-         * \param connection
-         * \return
-         */
+        //! \brief Called when a new DBus client has connected
         bool newConnection(const QDBusConnection &connection);
     };
 }

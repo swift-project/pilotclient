@@ -28,7 +28,7 @@ namespace BlackMisc
             //! Default constructor
             CKeyboardKeyList();
 
-            //! \brief Construct from a base class object.
+            //! Construct from a base class object.
             CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass);
 
             //! \copydoc CValueObject::toQVariant

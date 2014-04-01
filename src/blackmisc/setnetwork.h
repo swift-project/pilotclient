@@ -20,7 +20,8 @@ namespace BlackMisc
 {
     namespace Settings
     {
-        //! Value object encapsulating information of a server
+        //! \brief Value object encapsulating information of network related settings.
+        //! \remarks Not only traffic network settings, but also URLs, DBus address, ...
         class CSettingsNetwork : public BlackMisc::CValueObject
         {
         public:

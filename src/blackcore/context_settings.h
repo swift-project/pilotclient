@@ -33,8 +33,7 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSETTINGS_INTERFACENAME)
 
     public:
-
-        //! \brief Settings type
+        //! Settings type
         enum SettingsType
         {
             SettingsHotKeys,
@@ -121,10 +120,10 @@ namespace BlackCore
 
     public slots:
 
-        //! \brief Network settings
+        //! Network settings
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const = 0;
 
-        //! \brief Hotkeys
+        //! Hotkeys
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const = 0;
     };
 }

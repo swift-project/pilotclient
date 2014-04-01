@@ -29,11 +29,8 @@ namespace BlackCore
         //! \brief Destructor
         virtual ~CContextAudio();
 
-        /*!
-         * \brief Register myself in DBus
-         * \param server DBus server
-         */
-        void registerWithDBus(CDBusServer *server)
+        //! \brief Register myself in DBus
+        CContextAudio *registerWithDBus(CDBusServer *server)
         {
             Q_ASSERT(server);
             server->addObject(IContextAudio::ObjectPath(), this);

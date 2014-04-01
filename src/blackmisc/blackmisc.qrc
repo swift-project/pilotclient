@@ -20,5 +20,6 @@
         <file>icons/S3.png</file>
         <file>icons/SUP.png</file>
         <file>icons/aeropuerto.png</file>
+        <file>icons/tower.png</file>
     </qresource>
 </RCC>

@@ -33,9 +33,7 @@ namespace BlackCore
          */
         CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent = nullptr);
 
-        /*!
-         * Destructor
-         */
+        //! Destructor
         virtual ~CContextAudioProxy() {}
 
         //! \copydoc IContextVoice::usingLocalObjects()
@@ -44,11 +42,8 @@ namespace BlackCore
     private:
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
-        /*!
-         * Relay connection signals to local signals
-         * No idea why this has to be wired and is not done automatically
-         * \param connection
-         */
+        //! Relay connection signals to local signals
+        //! No idea why this has to be wired and is not done automatically
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
 
     protected:

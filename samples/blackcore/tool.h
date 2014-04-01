@@ -1,7 +1,7 @@
 #ifndef BLACKMISCTEST_Tool_H
 #define BLACKMISCTEST_Tool_H
 
-#include "blackcore/coreruntime.h"
+#include "blackcore/context_runtime.h"
 #include <QCoreApplication>
 #include <QProcess>
 #include <QDBusConnection>
@@ -15,35 +15,21 @@ namespace BlackMiscTest
     class Tool
     {
     private:
-        /*!
-         * \brief Constructor
-         */
+        //! \brief Constructor
         Tool() {}
 
     public:
-        /*!
-         * \brief Get process id
-         * \return
-         */
+        //! \brief Get process id
         static qint64 getPid()
         {
             return QCoreApplication::applicationPid();
         }
 
-        /*!
-         * \brief Start a new process
-         * \param executable
-         * \param arguments
-         * \param parent
-         * \return
-         */
+        //! Start a new process
         static QProcess *startNewProcess(const QString &executable, const QStringList &arguments = QStringList(), QObject *parent = 0);
 
-        /*!
-         * \brief Server loop
-         * \param core
-         */
-        static void serverLoop(const BlackCore::CCoreRuntime *core);
+        //! \brief Server loop
+        static void serverLoop(const BlackCore::CRuntime *runtime);
     };
 
 } // namespace

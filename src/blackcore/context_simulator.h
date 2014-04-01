@@ -24,20 +24,14 @@ namespace BlackCore
 
     public:
 
-        /*!
-         * \brief Service name
-         * \return
-         */
+        //! \brief Service name
         static const QString &InterfaceName()
         {
             static QString s(BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME);
             return s;
         }
 
-        /*!
-         * \brief Service path
-         * \return
-         */
+        //! \brief Service path
         static const QString &ObjectPath()
         {
             static QString s(BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH);
@@ -57,10 +51,7 @@ namespace BlackCore
         virtual bool usingLocalObjects() const = 0;
 
     signals:
-        /*!
-         * \brief Emitted when the simulator connection changes
-         * \param value
-         */
+        //! Emitted when the simulator connection changes
         void connectionChanged(bool value);
 
     public slots:
@@ -69,12 +60,10 @@ namespace BlackCore
         virtual bool isConnected() const = 0;
 
         /*!
-         * \brief Get user aircraft value object
-         * \return
-         */
+        //! Get user aircraft value object
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
     };
 
 } // namespace BlackCore
 
-#endif // BLACKCORE_CONTEXTSIMULATOR_H
+#endif // guard

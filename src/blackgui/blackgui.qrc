@@ -10,5 +10,6 @@
         <file>icons/close.png</file>
         <file>icons/aircraftdeparture.png</file>
         <file>icons/apronsmall.jpg</file>
+        <file>icons/tower.png</file>
     </qresource>
 </RCC>

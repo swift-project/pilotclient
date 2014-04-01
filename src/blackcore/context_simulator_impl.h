@@ -31,10 +31,8 @@ namespace BlackCore
         virtual ~CContextSimulator();
 
         /*!
-         * \brief Register myself in DBus
-         * \param server
-         */
-        void registerWithDBus(CDBusServer *server)
+        //! Register myself in DBus
+        CContextSimulator *registerWithDBus(CDBusServer *server)
         {
             Q_ASSERT(server);
             server->addObject(CContextSimulator::ObjectPath(), this);
@@ -77,10 +75,7 @@ namespace BlackCore
         //! \copydoc IContextSimulator::updateOwnAircraft()
         virtual void updateOwnAircraft();
 
-        /*!
-         * \brief Set new connection status
-         * \param value
-         */
+        //! Set new connection status
         void setConnectionStatus(bool value);
 
     private:

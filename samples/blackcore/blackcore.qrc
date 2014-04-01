@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/blackcore">
+        <file>icons/tower.png</file>
+    </qresource>
+</RCC>

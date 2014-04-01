@@ -30,7 +30,7 @@ namespace BlackMiscTest
     /*
      * Send data to testservice, this sends data to the slots on the server
      */
-    void Tool::serverLoop(const BlackCore::CCoreRuntime *core)
+    void Tool::serverLoop(const BlackCore::CRuntime *runtime)
     {
         QThread::sleep(3); // let the client connect
         qDebug() << "Running on server here" << Tool::getPid();
