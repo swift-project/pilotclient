@@ -29,6 +29,9 @@ SOURCES += *.cpp
 HEADERS += $$PWD/fscommon/*.h
 SOURCES += $$PWD/fscommon/*.cpp
 
+HEADERS += $$PWD/fsx/simconnectutilities.h
+SOURCES += $$PWD/fsx/simconnectutilities.cpp
+
 contains(BLACK_CONFIG, FSX) {
 	HEADERS += $$PWD/fsx/*.h
 	SOURCES += $$PWD/fsx/*.cpp
