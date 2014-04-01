@@ -221,7 +221,7 @@ namespace BlackSim
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::FsCommon::CAircraftMapping, (o.m_mappingId, o.m_proposalId, o.m_fsAircraftKey, o.m_aircraftDesignator, o.m_airlineDesignator, o.m_aircraftCombinedType, o.m_wakeTurbulenceCategory, o.m_aircraftColor, o.m_lastChanged, o.m_simulatorInfo))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::FsCommon::CAircraftMapping, (o.m_mappingId, o.m_proposalId, o.m_fsAircraftKey, o.m_aircraftDesignator, o.m_airlineDesignator, o.m_aircraftCombinedType, o.m_wakeTurbulenceCategory, o.m_aircraftColor, o.m_lastChanged,  tie(o.m_simulatorInfo, o.m_changed)))
 Q_DECLARE_METATYPE(BlackSim::FsCommon::CAircraftMapping)
 
 #endif // guard
