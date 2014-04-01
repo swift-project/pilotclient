@@ -81,28 +81,28 @@ namespace BlackSimPlugin
             // TODO
         }
 
-        void CALLBACK CSimulatorFSX::SimConnectProc(SIMCONNECT_RECV* pData, DWORD /* cbData */, void *pContext)
+        void CALLBACK CSimulatorFSX::SimConnectProc(SIMCONNECT_RECV *pData, DWORD /* cbData */, void *pContext)
         {
-            CSimulatorFSX *simulatorFsx = static_cast<CSimulatorFSX*>(pContext);
+            CSimulatorFSX *simulatorFsx = static_cast<CSimulatorFSX *>(pContext);
 
-            switch(pData->dwID)
+            switch (pData->dwID)
             {
-                case SIMCONNECT_RECV_ID_EXCEPTION:
+            case SIMCONNECT_RECV_ID_EXCEPTION:
                 {
-                    SIMCONNECT_RECV_EXCEPTION *event = (SIMCONNECT_RECV_EXCEPTION*)pData;
+                    SIMCONNECT_RECV_EXCEPTION *event = (SIMCONNECT_RECV_EXCEPTION *)pData;
                     CSimConnectException::handleException((SIMCONNECT_EXCEPTION)event->dwException);
                     break;
                 }
-                case SIMCONNECT_RECV_ID_QUIT:
+            case SIMCONNECT_RECV_ID_QUIT:
                 {
                     simulatorFsx->onSimExit();
                     break;
                 }
-                case SIMCONNECT_RECV_ID_EVENT:
+            case SIMCONNECT_RECV_ID_EVENT:
                 {
-                    SIMCONNECT_RECV_EVENT *event = static_cast<SIMCONNECT_RECV_EVENT*>(pData);
+                    SIMCONNECT_RECV_EVENT *event = static_cast<SIMCONNECT_RECV_EVENT *>(pData);
 
-                    switch(event->uEventID)
+                    switch (event->uEventID)
                     {
                     case EVENT_SIM_STATUS:
                         if (event->dwData)
@@ -117,9 +117,9 @@ namespace BlackSimPlugin
                     }
                     break;
                 }
-                case SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE:
+            case SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE:
                 {
-                    SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *event = static_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE*>(pData);
+                    SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *event = static_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *>(pData);
                     if (event->uEventID == EVENT_OBJECT_ADDED)
                     {
                     }
@@ -129,24 +129,24 @@ namespace BlackSimPlugin
 
                     break;
                 }
-                case SIMCONNECT_RECV_ID_EVENT_FRAME:
+            case SIMCONNECT_RECV_ID_EVENT_FRAME:
                 {
                     simulatorFsx->onSimFrame();
                     break;
                 }
-                case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
+            case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
                 {
-                    SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID*>(pData);
+                    SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
                     simulatorFsx->setSimconnectObjectID(event->dwRequestID, event->dwObjectID);
                 }
-                case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
+            case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
                 {
-                    SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA*) pData;
-                    switch(pObjData->dwRequestID)
+                    SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA *) pData;
+                    switch (pObjData->dwRequestID)
                     {
                     case CSimConnectDataDefinition::RequestOwnAircraft:
                         DataDefinitionOwnAircraft *ownAircaft;
-                        ownAircaft = (DataDefinitionOwnAircraft*)&pObjData->dwData;
+                        ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
                         simulatorFsx->setOwnAircraft(*ownAircaft);
                         break;
                     }
@@ -212,11 +212,11 @@ namespace BlackSimPlugin
         {
             SimConnect_AIReleaseControl(m_hSimConnect, objectID, requestID);
             SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZELAT, 1,
-                SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                                           SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZEALT, 1,
-                SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                                           SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
             SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZEATT, 1,
-                SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                                           SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
             DataDefinitionAircraftConfiguration configuration;
             configuration.gearCenter = 100.0;
@@ -227,7 +227,7 @@ namespace BlackSimPlugin
             SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, objectID, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftConfiguration), &configuration);
 
             SimConnectObject simObject;
-            foreach (simObject, m_simConnectObjects)
+            foreach(simObject, m_simConnectObjects)
             {
                 if (simObject.m_requestId == static_cast<int>(requestID))
                 {
@@ -239,7 +239,7 @@ namespace BlackSimPlugin
 
         }
 
-        void CSimulatorFSX::timerEvent(QTimerEvent* /* event */)
+        void CSimulatorFSX::timerEvent(QTimerEvent * /* event */)
         {
             dispatch();
             update();
@@ -287,7 +287,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFSX::update()
         {
-            foreach (SimConnectObject simObj, m_simConnectObjects)
+            foreach(SimConnectObject simObj, m_simConnectObjects)
             {
                 if (simObj.m_interpolator.hasEnoughAircraftSituations())
                 {
