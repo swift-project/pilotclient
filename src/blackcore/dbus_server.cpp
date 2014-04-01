@@ -21,7 +21,7 @@ namespace BlackCore
     CDBusServer::CDBusServer(const QString &address, QObject *parent) :
         QObject(parent), m_busServer(CDBusServer::isP2P(address) ? address : "unix:tmpdir=/tmp" , parent), m_serverMode(CDBusServer::SERVERMODE_P2P)
     {
-        if (address.isEmpty() || address.toLower() == "session")
+        if (address.isEmpty() || address.toLower() == CDBusServer::sessionDBusServer())
         {
             // we use a session bus connection instead of a real P2P connection
             this->m_serverMode = CDBusServer::SERVERMODE_SESSIONBUS;
@@ -33,7 +33,7 @@ namespace BlackCore
             }
             this->newConnection(con);
         }
-        else if (address.toLower() == "system")
+        else if (address.toLower() == CDBusServer::systemDBusServer())
         {
             // we use a system bus connection instead of a real P2P connection
             this->m_serverMode = CDBusServer::SERVERMODE_SYSTEMBUS;

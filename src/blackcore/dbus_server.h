@@ -102,6 +102,20 @@ namespace BlackCore
             return defaultConnection;
         }
 
+        //! \brief Denotes a session DBus server
+        static const QString &sessionDBusServer()
+        {
+            static QString session("session");
+            return session;
+        }
+
+        //! \brief Denotes a session DBus server
+        static const QString &systemDBusServer()
+        {
+            static QString system("system");
+            return system;
+        }
+
     private slots:
 
         //! \brief Called when a new DBus client has connected
