@@ -22,13 +22,22 @@ namespace BlackCore
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
+        friend class CRuntime;
 
     public:
-        //! \brief Constructor
-        CContextSimulator(CRuntimeConfig::ContextMode, CRuntime *runtime);
-
         //! \brief Destructor
         virtual ~CContextSimulator();
+
+    public slots:
+        //! \copydoc IContextSimulator::isConnected()
+        virtual bool isConnected() const override;
+
+        //! \copydoc IContextSimulator::getOwnAircraft()
+        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
+
+    protected:
+        //! \brief Constructor
+        CContextSimulator(CRuntimeConfig::ContextMode, CRuntime *runtime);
 
         //! Register myself in DBus
         CContextSimulator *registerWithDBus(CDBusServer *server)
@@ -37,13 +46,6 @@ namespace BlackCore
             server->addObject(CContextSimulator::ObjectPath(), this);
             return this;
         }
-
-    public slots:
-        //! \copydoc IContextSimulator::isConnected()
-        virtual bool isConnected() const override;
-
-        //! \copydoc IContextSimulator::getOwnAircraft()
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
 
     private slots:
         //! \copydoc IContextSimulator::updateOwnAircraft()
@@ -62,9 +64,7 @@ namespace BlackCore
         BlackMisc::Aviation::CAircraft m_ownAircraft;
         BlackCore::ISimulator *m_simulator;
         QTimer *m_updateTimer;
-        BlackCore::IContextNetwork *m_contextNetwork;
         QDir m_pluginsDir;
-        IContextNetwork *getNetworkContext();
     };
 
 } // namespace BlackCore

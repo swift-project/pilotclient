@@ -18,18 +18,15 @@ namespace BlackCore
     class CContextApplicationProxy : public IContextApplication
     {
         Q_OBJECT
+        friend class CRuntime;
 
     public:
         //! Destructor
         virtual ~CContextApplicationProxy() {}
 
-    private:
-        friend class CRuntime;
-        BlackMisc::CGenericDBusInterface *m_dBusInterface;
-
-        //! Relay connection signals to local signals
-        //! No idea why this has to be wired and is not done automatically
-        void relaySignals(const QString &serviceName, QDBusConnection &connection);
+    public slots:
+        //! \copydoc IContextApplication::ping()
+        virtual qint64 ping(qint64 token) const override;
 
     protected:
         //! Constructor
@@ -38,11 +35,12 @@ namespace BlackCore
         //! DBus version constructor
         CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
-    public slots:
+    private:
+        BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
-        //! \copydoc IContextApplication::ping()
-        virtual qint64 ping(qint64 token) const override;
-
+        //! Relay connection signals to local signals
+        //! No idea why this has to be wired and is not done automatically
+        void relaySignals(const QString &serviceName, QDBusConnection &connection);
     };
 }
 

@@ -22,7 +22,6 @@
 
 namespace BlackCore
 {
-
     /*!
      * Context settings interface
      */

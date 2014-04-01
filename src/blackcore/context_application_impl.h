@@ -21,14 +21,11 @@ namespace BlackCore
     {
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
         Q_OBJECT
+        friend class CRuntime;
 
-    public:
-
+    protected:
         //! Constructor
-        CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime = nullptr);
-
-        //! Destructor
-        virtual ~CContextApplication() {}
+        CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
         //! Register myself in DBus
         CContextApplication *registerWithDBus(CDBusServer *server)
@@ -37,11 +34,13 @@ namespace BlackCore
             return this;
         }
 
-    public slots:
+    public:
+        //! Destructor
+        virtual ~CContextApplication() {}
 
+    public slots:
         //! \copydoc IContextApplication::ping()
         virtual qint64 ping(qint64 token) const override;
-
     };
 }
 

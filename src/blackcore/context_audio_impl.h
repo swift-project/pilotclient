@@ -20,19 +20,12 @@ namespace BlackCore
     {
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
         Q_OBJECT
+        friend class CRuntime;
 
     public:
 
         //! \brief Destructor
         virtual ~CContextAudio();
-
-        //! \brief Register myself in DBus
-        CContextAudio *registerWithDBus(CDBusServer *server)
-        {
-            Q_ASSERT(server);
-            server->addObject(IContextAudio::ObjectPath(), this);
-            return this;
-        }
 
     public slots:
         //! \copydoc IContextAudio::setOwnAircraft()
@@ -105,8 +98,15 @@ namespace BlackCore
         //! \brief Constructor
         CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
+        //! \brief Register myself in DBus
+        CContextAudio *registerWithDBus(CDBusServer *server)
+        {
+            Q_ASSERT(server);
+            server->addObject(IContextAudio::ObjectPath(), this);
+            return this;
+        }
+
     private slots:
-        friend class CRuntime;
         void settingsChanged(uint typeValue);
 
     private:

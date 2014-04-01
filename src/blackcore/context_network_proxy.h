@@ -24,17 +24,14 @@ namespace BlackCore
     class CContextNetworkProxy : public IContextNetwork
     {
         Q_OBJECT
+        friend class CRuntime;
 
     public:
 
         //! Destructor
         virtual ~CContextNetworkProxy() {}
 
-        //! \copydoc IContextNetwork::usingLocalObjects()
-        virtual bool usingLocalObjects() const override { return false; }
-
     private:
-        friend class CRuntime;
         BlackMisc::CGenericDBusInterface *m_dBusInterface; /*!< DBus interface */
 
         //! \brief Relay connection signals to local signals.

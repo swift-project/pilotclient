@@ -157,6 +157,15 @@ namespace BlackCore
             connect(this->m_contextSettings, &IContextSettings::changedSettings,
                     this->getCContextAudio(), &CContextAudio::settingsChanged);
         }
+
+        if (this->m_contextSimulator && this->m_contextSimulator->usingLocalObjects() && this->m_contextNetwork)
+        {
+            if (this->getCContextSimulator()->m_simulator)
+            {
+                connect(this->m_contextNetwork, SIGNAL(aircraftSituationUpdate(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation)),
+                        this->getCContextSimulator()->m_simulator, SLOT(addAircraftSituation(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation)));
+            }
+        }
     }
 
     void CRuntime::initDBusConnection()
@@ -167,25 +176,25 @@ namespace BlackCore
 
     IContextNetwork *CRuntime::getIContextNetwork()
     {
-        Q_ASSERT_X(this->m_contextSettings, "CCoreRuntime", "Requested missing network context");
+        Q_ASSERT_X(this->m_contextNetwork, "CCoreRuntime", "Requested missing network context");
         return this->m_contextNetwork;
     }
 
     const IContextNetwork *CRuntime::getIContextNetwork() const
     {
-        Q_ASSERT_X(this->m_contextSettings, "CCoreRuntime", "Requested missing network context");
+        Q_ASSERT_X(this->m_contextNetwork, "CCoreRuntime", "Requested missing network context");
         return this->m_contextNetwork;
     }
 
     IContextAudio *CRuntime::getIContextAudio()
     {
-        Q_ASSERT_X(this->m_contextSettings, "CCoreRuntime", "Requested missing audio context");
+        Q_ASSERT_X(this->m_contextAudio, "CCoreRuntime", "Requested missing audio context");
         return this->m_contextAudio;
     }
 
     const IContextAudio *CRuntime::getIContextAudio() const
     {
-        Q_ASSERT_X(this->m_contextSettings, "CCoreRuntime", "Requested missing audio context");
+        Q_ASSERT_X(this->m_contextAudio, "CCoreRuntime", "Requested missing audio context");
         return this->m_contextAudio;
     }
 
@@ -203,33 +212,54 @@ namespace BlackCore
 
     const IContextApplication *CRuntime::getIContextApplication() const
     {
-        Q_ASSERT_X(this->m_contextSettings, "CCoreRuntime", "Requested missing application context");
+        Q_ASSERT_X(this->m_contextApplication, "CCoreRuntime", "Requested missing application context");
         return this->m_contextApplication;
     }
 
     IContextApplication *CRuntime::getIContextApplication()
     {
-        Q_ASSERT_X(this->m_contextSettings, "CCoreRuntime", "Requested missing application context");
+        Q_ASSERT_X(this->m_contextApplication, "CCoreRuntime", "Requested missing application context");
         return this->m_contextApplication;
     }
 
     const IContextSimulator *CRuntime::getIContextSimulator() const
     {
-        Q_ASSERT_X(this->m_contextSettings, "CCoreRuntime", "Requested missing simulator context");
+        Q_ASSERT_X(this->m_contextSimulator, "CCoreRuntime", "Requested missing simulator context");
         return this->m_contextSimulator;
     }
 
     IContextSimulator *CRuntime::getIContextSimulator()
     {
-        Q_ASSERT_X(this->m_contextSettings, "CCoreRuntime", "Requested missing simulator context");
+        Q_ASSERT_X(this->m_contextSimulator, "CCoreRuntime", "Requested missing simulator context");
         return this->m_contextSimulator;
     }
 
     CContextAudio *CRuntime::getCContextAudio()
     {
-        Q_ASSERT_X(this->m_contextSettings, "CCoreRuntime", "Requested missing audio context");
-        Q_ASSERT_X(this->m_contextSimulator->usingLocalObjects(), "CCoreRuntime", "Cannot specialize to local object");
+        Q_ASSERT_X(this->m_contextAudio, "CCoreRuntime", "Requested missing audio context");
+        Q_ASSERT_X(this->m_contextAudio->usingLocalObjects(), "CCoreRuntime", "Cannot specialize to local object");
         return static_cast<CContextAudio *>(this->m_contextAudio);
+    }
+
+    CContextAudio *CRuntime::getCContextAudio() const
+    {
+        Q_ASSERT_X(this->m_contextAudio, "CCoreRuntime", "Requested missing audio context");
+        Q_ASSERT_X(this->m_contextAudio->usingLocalObjects(), "CCoreRuntime", "Cannot specialize to local object");
+        return static_cast<CContextAudio *>(this->m_contextAudio);
+    }
+
+    CContextSimulator *CRuntime::getCContextSimulator()
+    {
+        Q_ASSERT_X(this->m_contextSimulator, "CCoreRuntime", "Requested missing simulator context");
+        Q_ASSERT_X(this->m_contextSimulator->usingLocalObjects(), "CCoreRuntime", "Cannot specialize to local object");
+        return static_cast<CContextSimulator *>(this->m_contextSimulator);
+    }
+
+    CContextSimulator *CRuntime::getCContextSimulator() const
+    {
+        Q_ASSERT_X(this->m_contextSimulator, "CCoreRuntime", "Requested missing simulator context");
+        Q_ASSERT_X(this->m_contextSimulator->usingLocalObjects(), "CCoreRuntime", "Cannot specialize to local object");
+        return static_cast<CContextSimulator *>(this->m_contextSimulator);
     }
 
     const CRuntimeConfig &CRuntimeConfig::forCore()

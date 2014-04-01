@@ -22,6 +22,7 @@ namespace BlackCore
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
+        friend class CRuntime;
 
     public:
 
@@ -29,7 +30,6 @@ namespace BlackCore
         virtual ~CContextAudioProxy() {}
 
     private:
-        friend class CRuntime;
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
         //! Relay connection signals to local signals

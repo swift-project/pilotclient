@@ -24,14 +24,11 @@ namespace BlackCore
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSETTINGS_INTERFACENAME)
+        friend class CRuntime;
 
     protected:
         //! \brief Constructor
         CContextSettings(CRuntimeConfig::ContextMode mode, CRuntime *runtime = nullptr);
-
-    public:
-        //! Destructor
-        virtual ~CContextSettings() {}
 
         //! \brief Register myself in DBus
         CContextSettings *registerWithDBus(CDBusServer *server)
@@ -39,6 +36,10 @@ namespace BlackCore
             server->addObject(IContextSettings::ObjectPath(), this);
             return this;
         }
+
+    public:
+        //! Destructor
+        virtual ~CContextSettings() {}
 
         //! \brief settings file
         const QString &getSettingsDirectory() const { return BlackMisc::Settings::CSettingUtilities::getSettingsDirectory(); }
@@ -74,7 +75,6 @@ namespace BlackCore
         virtual QString getSettingsAsJsonString() const override;
 
     private:
-        friend class CRuntime;
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
         BlackMisc::Hardware::CKeyboardKeyList m_hotkeys;
         QJsonDocument toJsonDocument() const;

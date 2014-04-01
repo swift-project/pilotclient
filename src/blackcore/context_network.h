@@ -45,9 +45,6 @@ namespace BlackCore
         //! Destructor
         virtual ~IContextNetwork() {}
 
-        //! \brief Using local objects?
-        virtual bool usingLocalObjects() const = 0;
-
     signals:
 
         //! Send status message
@@ -170,12 +167,8 @@ namespace BlackCore
         virtual void requestAtisUpdates() = 0;
 
     protected:
-        friend class CRuntime;
-
         //! Constructor
-        IContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime = nullptr) : CContext(mode, runtime) {}
-
-
+        IContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
     };
 }
 

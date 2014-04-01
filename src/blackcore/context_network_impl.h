@@ -28,33 +28,11 @@ namespace BlackCore
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
+        friend class CRuntime;
 
     public:
         //! Destructor
         virtual ~CContextNetwork();
-
-        //! Register myself in DBus
-        CContextNetwork *registerWithDBus(CDBusServer *server)
-        {
-            Q_ASSERT(server);
-            server->addObject(IContextNetwork::ObjectPath(), this);
-            return this;
-        }
-
-        //! Runtime
-        CRuntime *getRuntime()
-        {
-            return static_cast<CRuntime *>(this->parent());
-        }
-
-        //! \brief Const runtime
-        const CRuntime *getRuntime() const
-        {
-            return static_cast<CRuntime *>(this->parent());
-        }
-
-        //! \copydoc IContextNetwork::usingLocalObjects()
-        virtual bool usingLocalObjects() const override { return true; }
 
     public slots: // IContextNetwork overrides
 
@@ -134,8 +112,15 @@ namespace BlackCore
         //! Constructor, with link to runtime
         CContextNetwork(CRuntimeConfig::ContextMode, CRuntime *runtime);
 
+        //! Register myself in DBus
+        CContextNetwork *registerWithDBus(CDBusServer *server)
+        {
+            Q_ASSERT(server);
+            server->addObject(IContextNetwork::ObjectPath(), this);
+            return this;
+        }
+
     private:
-        friend class CRuntime;
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
         BlackMisc::Aviation::CAircraftList m_aircraftsInRange;

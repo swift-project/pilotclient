@@ -15,12 +15,13 @@ namespace BlackCore
     class CContextSimulatorProxy : public IContextSimulator
     {
         Q_OBJECT
+        friend class CRuntime;
+
     public:
         //! Destructor
         ~CContextSimulatorProxy() {}
 
     private:
-        friend class CRuntime;
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
         //! Relay connection signals to local signals

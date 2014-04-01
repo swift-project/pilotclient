@@ -24,8 +24,6 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
 
     protected:
-        friend class CRuntime;
-
         //! Constructor
         IContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
 

@@ -24,7 +24,6 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
 
     public:
-
         //! \brief Service name
         static const QString &InterfaceName()
         {
@@ -55,8 +54,6 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
 
     protected:
-        friend class CRuntime;
-
         //! \brief Constructor
         IContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
     };

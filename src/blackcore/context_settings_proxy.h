@@ -25,14 +25,13 @@ namespace BlackCore
     class CContextSettingsProxy : public IContextSettings
     {
         Q_OBJECT
+        friend class CRuntime;
 
     public:
-
         //! \brief Destructor
         virtual ~CContextSettingsProxy() {}
 
     private:
-        friend class CRuntime;
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
         //! Relay connection signals to local signals
@@ -47,7 +46,6 @@ namespace BlackCore
         CContextSettingsProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSettings(mode, runtime), m_dBusInterface(nullptr) {}
 
     public slots:
-
         //! \copydoc IContextSettings::getNetworkSettings()
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const override;
 

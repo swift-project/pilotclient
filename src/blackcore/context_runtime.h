@@ -26,29 +26,6 @@ namespace BlackCore
     {
         Q_OBJECT
 
-    private:
-        bool m_init; /*!< flag */
-        CDBusServer *m_dbusServer;
-        bool m_initDBusConnection;
-        QDBusConnection m_dbusConnection;
-        IContextNetwork *m_contextNetwork;
-        IContextAudio *m_contextAudio;
-        IContextSettings *m_contextSettings;
-        IContextApplication *m_contextApplication;
-        IContextSimulator *m_contextSimulator;
-
-        //! Init
-        void init(const CRuntimeConfig &config);
-
-        //! initialization of DBus connection (where applicable)
-        void initDBusConnection();
-
-        //! initialization of DBus connection (where applicable)
-        void initDBusServer(const QString &dBusAddress);
-
-        //! post init tasks, mainly connecting context signal slots
-        void initPostSetup();
-
     public:
         //! Constructor
         CRuntime(const CRuntimeConfig &config, QObject *parent = nullptr);
@@ -93,8 +70,34 @@ namespace BlackCore
         IContextSimulator *getIContextSimulator();
 
     private:
+        bool m_init; /*!< flag */
+        CDBusServer *m_dbusServer;
+        bool m_initDBusConnection;
+        QDBusConnection m_dbusConnection;
+        IContextNetwork *m_contextNetwork;
+        IContextAudio *m_contextAudio;
+        IContextSettings *m_contextSettings;
+        IContextApplication *m_contextApplication;
+        IContextSimulator *m_contextSimulator;
+
+        //! Init
+        void init(const CRuntimeConfig &config);
+
+        //! initialization of DBus connection (where applicable)
+        void initDBusConnection();
+
+        //! initialization of DBus connection (where applicable)
+        void initDBusServer(const QString &dBusAddress);
+
+        //! post init tasks, mainly connecting context signal slots
+        void initPostSetup();
+
         CContextAudio *getCContextAudio();
         CContextAudio *getCContextAudio() const;
+
+        CContextSimulator *getCContextSimulator();
+        CContextSimulator *getCContextSimulator() const;
+
     };
 }
 #endif // guard
