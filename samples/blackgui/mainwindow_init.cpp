@@ -168,14 +168,11 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     if (this->m_timerSimulator == nullptr) this->m_timerSimulator = new QTimer(this);
 
     // context
-    if (this->m_coreMode != GuiModes::CoreInGuiProcess)
-    {
-        this->m_rt.reset(new CRuntime(CRuntimeConfig::remote(), this));
-    }
-    else
-    {
-        this->m_rt.reset(new CRuntime(CRuntimeConfig::local(), this));
-    }
+    this->m_rt.reset(
+        this->m_coreMode != GuiModes::CoreInGuiProcess ?
+        new CRuntime(CRuntimeConfig::remote(), this) :
+        new CRuntime(CRuntimeConfig::local(), this)
+    );
 
     // wire GUI signals
     this->initGuiSignals();
