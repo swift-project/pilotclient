@@ -17,7 +17,7 @@
 #include "blackcore/context_settings.h"
 #include "blackcore/context_application.h"
 #include "blackcore/context_simulator.h"
-#include "blackcore/coreruntime.h"
+#include "blackcore/context_runtime.h"
 #include "blackgui/transpondermodeselector.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/serverlistmodel.h"
@@ -113,7 +113,6 @@ private:
     bool m_init;
     GuiModes::WindowMode m_windowMode;
     AudioTest m_audioTestRunning;
-    QDBusConnection m_dBusConnection;
 
     // the table view models
     // normal pointers, as these will be deleted by parent
@@ -132,12 +131,7 @@ private:
     bool m_coreAvailable;
     bool m_contextNetworkAvailable;
     bool m_contextAudioAvailable;
-    QScopedPointer<BlackCore::CCoreRuntime> m_coreRuntime; /*!< runtime, if working with local core */
-    BlackCore::IContextApplication *m_contextApplication; /*!< overall application state */
-    BlackCore::IContextNetwork *m_contextNetwork;
-    BlackCore::IContextAudio *m_contextAudio;
-    BlackCore::IContextSettings *m_contextSettings;
-    BlackCore::IContextSimulator *m_contextSimulator;
+    QScopedPointer<BlackCore::CRuntime> m_rt; /*!< runtime */
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
     QTimer *m_timerUpdateAtcStationsOnline; /*!< timer for update of stations */
     QTimer *m_timerUpdateAircraftsInRange; /*!< timer for update of aircrafts */

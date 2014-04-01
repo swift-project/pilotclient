@@ -23,7 +23,7 @@ using namespace BlackSim::Fsx;
 void MainWindow::reloadSettings()
 {
     // local copy
-    CSettingsNetwork nws = this->m_contextSettings->getNetworkSettings();
+    CSettingsNetwork nws = this->m_rt->getIContextSettings()->getNetworkSettings();
 
     // update servers
     this->m_modelTrafficServerList->setSelectedServer(nws.getCurrentTrafficNetworkServer());
@@ -32,7 +32,7 @@ void MainWindow::reloadSettings()
     this->ui->tv_SettingsTnServers->resizeRowsToContents();
 
     // update hot keys
-    this->m_modelSettingsHotKeys->update(this->m_contextSettings->getHotkeys());
+    this->m_modelSettingsHotKeys->update(this->m_rt->getIContextSettings()->getHotkeys());
     this->ui->tv_SettingsMiscHotkeys->resizeColumnsToContents();
     this->ui->tv_SettingsMiscHotkeys->resizeRowsToContents();
 
@@ -68,15 +68,15 @@ void MainWindow::alterTrafficServer()
     CStatusMessageList msgs;
     if (sender == this->ui->pb_SettingsTnCurrentServer)
     {
-        msgs = this->m_contextSettings->value(path, CSettingsNetwork::CmdSetCurrentServer(), server.toQVariant());
+        msgs = this->m_rt->getIContextSettings()->value(path, CSettingsNetwork::CmdSetCurrentServer(), server.toQVariant());
     }
     else if (sender == this->ui->pb_SettingsTnRemoveServer)
     {
-        msgs = this->m_contextSettings->value(path, CSettingUtilities::CmdRemove(), server.toQVariant());
+        msgs = this->m_rt->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), server.toQVariant());
     }
     else if (sender == this->ui->pb_SettingsTnSaveServer)
     {
-        msgs = this->m_contextSettings->value(path, CSettingUtilities::CmdUpdate(), server.toQVariant());
+        msgs = this->m_rt->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), server.toQVariant());
     }
 
     // status messages
@@ -134,7 +134,7 @@ CServer MainWindow::selectedServerFromTextboxes() const
 void MainWindow::saveHotkeys()
 {
     const QString path = CSettingUtilities::appendPaths(IContextSettings::PathRoot(), IContextSettings::PathHotkeys());
-    CStatusMessageList msgs = this->m_contextSettings->value(path, CSettingUtilities::CmdUpdate(), this->m_modelSettingsHotKeys->getContainer().toQVariant());
+    CStatusMessageList msgs = this->m_rt->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->m_modelSettingsHotKeys->getContainer().toQVariant());
 
     // status messages
     this->displayStatusMessages(msgs);

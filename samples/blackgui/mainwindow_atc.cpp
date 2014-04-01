@@ -20,7 +20,7 @@ using namespace BlackMisc::Settings;
 void MainWindow::reloadAtcStationsBooked()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_modelAtcListBooked->update(this->m_contextNetwork->getAtcStationsBooked());
+    this->m_modelAtcListBooked->update(this->m_rt->getIContextNetwork()->getAtcStationsBooked());
     this->ui->tv_AtcStationsBooked->resizeColumnsToContents();
     this->ui->tv_AtcStationsBooked->resizeRowsToContents();
 }
@@ -31,11 +31,11 @@ void MainWindow::reloadAtcStationsBooked()
 void MainWindow::reloadAtcStationsOnline()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_modelAtcListOnline->update(this->m_contextNetwork->getAtcStationsOnline());
+    this->m_modelAtcListOnline->update(this->m_rt->getIContextNetwork()->getAtcStationsOnline());
     this->ui->tv_AtcStationsOnline->resizeColumnsToContents();
     this->ui->tv_AtcStationsOnline->resizeRowsToContents();
 
-    if (!this->m_contextNetwork->isConnected())
+    if (!this->m_rt->getIContextNetwork()->isConnected())
     {
         // clear metar/ATIS
         this->ui->te_AtcStationsOnlineInfo->clear();
@@ -72,11 +72,11 @@ void MainWindow::onlineAtcStationSelected(QModelIndex index)
 void MainWindow::getMetar(const QString &airportIcaoCode)
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    if (!this->m_contextNetwork->isConnected()) return;
+    if (!this->m_rt->getIContextNetwork()->isConnected()) return;
     QString icao = airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper();
     this->ui->le_AtcStationsOnlineMetar->setText(icao);
     if (icao.length() != 4) return;
-    CInformationMessage metar = this->m_contextNetwork->getMetar(icao);
+    CInformationMessage metar = this->m_rt->getIContextNetwork()->getMetar(icao);
     if (metar.getType() != CInformationMessage::METAR) return;
     if (metar.isEmpty()) return;
     this->ui->te_AtcStationsOnlineInfo->setText(metar.getMessage());
@@ -88,8 +88,8 @@ void MainWindow::getMetar(const QString &airportIcaoCode)
 void MainWindow::requestAtis()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    if (!this->m_contextNetwork->isConnected()) return;
-    this->m_contextNetwork->requestAtisUpdates();
+    if (!this->m_rt->getIContextNetwork()->isConnected()) return;
+    this->m_rt->getIContextNetwork()->requestAtisUpdates();
 }
 
 /*

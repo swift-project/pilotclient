@@ -20,7 +20,7 @@ using namespace BlackMisc::Audio;
 void MainWindow::reloadAircraftsInRange()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_modelAircraftsInRange->update(this->m_contextNetwork->getAircraftsInRange());
+    this->m_modelAircraftsInRange->update(this->m_rt->getIContextNetwork()->getAircraftsInRange());
     this->ui->tv_AircraftsInRange->resizeColumnsToContents();
     this->ui->tv_AircraftsInRange->resizeRowsToContents();
 }
@@ -35,7 +35,7 @@ bool MainWindow::reloadOwnAircraft()
 
     // check for changed aircraft
     bool changed = false;
-    CAircraft loadedAircraft = this->m_contextNetwork->getOwnAircraft();
+    CAircraft loadedAircraft = this->m_rt->getIContextNetwork()->getOwnAircraft();
     if (loadedAircraft != this->m_ownAircraft)
     {
         this->m_ownAircraft = loadedAircraft;
@@ -57,7 +57,7 @@ void MainWindow::setTestPosition(const QString &wgsLatitude, const QString &wgsL
 
     this->m_ownAircraft.setPosition(coordinate);
     this->m_ownAircraft.setAltitude(altitude);
-    this->m_contextNetwork->updateOwnPosition(
+    this->m_rt->getIContextNetwork()->updateOwnPosition(
         coordinate,
         altitude
     );

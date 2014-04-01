@@ -28,7 +28,7 @@ void MainWindow::appendTextMessagesToGui(const CTextMessageList &messages, bool 
                 // this is SELCAL for me
                 if (this->m_contextAudioAvailable)
                 {
-                    CAudioDevice dev = this->m_contextAudio->getCurrentAudioDevices().getOutputDevices()[0];
+                    CAudioDevice dev = this->m_rt->getIContextAudio()->getCurrentAudioDevices().getOutputDevices()[0];
                     BlackSound::CSoundGenerator::playSelcal(90, CSelcal(currentSelcal), dev);
                 }
                 else
@@ -261,7 +261,7 @@ void MainWindow::commandEntered()
     QString cmd = parts[0].startsWith('.') ? parts[0].toLower() : "";
     if (cmd == ".m" || cmd == ".msg")
     {
-        if (!this->m_contextNetworkAvailable || !this->m_contextNetwork->isConnected())
+        if (!this->m_contextNetworkAvailable || !this->m_rt->getIContextNetwork()->isConnected())
         {
             this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "network needs to be connected"));
             return;
@@ -308,7 +308,7 @@ void MainWindow::commandEntered()
         if (tm.isEmpty()) return;
         if (!this->isContextNetworkAvailableCheck()) return;
         CTextMessageList tml(tm);
-        this->m_contextNetwork->sendTextMessages(tml);
+        this->m_rt->getIContextNetwork()->sendTextMessages(tml);
         this->appendTextMessagesToGui(tml, true);
         this->ui->le_CommandLineInput->setText("");
     }
@@ -320,7 +320,7 @@ void MainWindow::commandEntered()
     {
         // single line, no command
         // line is considered to be a message to the selected channel, send
-        if (!this->m_contextNetwork->isConnected())
+        if (!this->m_rt->getIContextNetwork()->isConnected())
         {
             this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "network needs to be connected"));
             return;
@@ -344,7 +344,7 @@ void MainWindow::commandEntered()
             if (tm.isEmpty()) return;
             if (!this->isContextNetworkAvailableCheck()) return;
             CTextMessageList textMessageList(tm);
-            this->m_contextNetwork->sendTextMessages(textMessageList);
+            this->m_rt->getIContextNetwork()->sendTextMessages(textMessageList);
             this->appendTextMessagesToGui(textMessageList, true);
             this->ui->le_CommandLineInput->setText("");
         }

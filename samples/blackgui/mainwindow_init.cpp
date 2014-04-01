@@ -11,7 +11,7 @@
 #include "blackcore/context_settings_proxy.h"
 #include "blackcore/context_audio_impl.h"
 #include "blackcore/context_audio_proxy.h"
-#include "blackcore/coreruntime.h"
+#include "blackcore/context_runtime.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/keyboardkeylistmodel.h"
 #include "blackmisc/avselcal.h"
@@ -170,21 +170,11 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     // context
     if (this->m_coreMode != GuiModes::CoreInGuiProcess)
     {
-        this->m_dBusConnection = QDBusConnection::sessionBus();
-        this->m_contextNetwork = new BlackCore::CContextNetworkProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
-        this->m_contextAudio = new BlackCore::CContextAudioProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
-        this->m_contextSettings = new BlackCore::CContextSettingsProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
-        this->m_contextApplication = new BlackCore::CContextApplicationProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
-        this->m_contextSimulator = new BlackCore::CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName, this->m_dBusConnection, this);
+        this->m_rt.reset(new CRuntime(CRuntimeConfig::remote(), this));
     }
     else
     {
-        this->m_coreRuntime.reset(new CCoreRuntime(false, this));
-        this->m_contextNetwork = this->m_coreRuntime->getIContextNetwork();
-        this->m_contextAudio = this->m_coreRuntime->getIContextAudio();
-        this->m_contextSettings = this->m_coreRuntime->getIContextSettings();
-        this->m_contextApplication = this->m_coreRuntime->getIContextApplication();
-        this->m_contextSimulator = this->m_coreRuntime->getIContextSimulator();
+        this->m_rt.reset(new CRuntime(CRuntimeConfig::local(), this));
     }
 
     // wire GUI signals
@@ -214,15 +204,14 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
 
     // signal / slots contexts / timers
     bool connect;
-    this->connect(this->m_contextNetwork, &IContextNetwork::statusMessage, this, &MainWindow::displayStatusMessage);
-    this->connect(this->m_contextNetwork, &IContextNetwork::statusMessages, this, &MainWindow::displayStatusMessages);
-    this->connect(this->m_contextNetwork, &IContextNetwork::connectionTerminated, this, &MainWindow::connectionTerminated);
-    this->connect(this->m_contextNetwork, &IContextNetwork::connectionStatusChanged, this, &MainWindow::connectionStatusChanged);
-    this->connect(this->m_contextSettings, &IContextSettings::changedSettings, this, &MainWindow::changedSettings);
-    connect = this->connect(this->m_contextNetwork, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
+    this->connect(this->m_rt->getIContextNetwork(), &IContextNetwork::statusMessage, this, &MainWindow::displayStatusMessage);
+    this->connect(this->m_rt->getIContextNetwork(), &IContextNetwork::statusMessages, this, &MainWindow::displayStatusMessages);
+    this->connect(this->m_rt->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &MainWindow::connectionTerminated);
+    this->connect(this->m_rt->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &MainWindow::connectionStatusChanged);
+    this->connect(this->m_rt->getIContextSettings(), &IContextSettings::changedSettings, this, &MainWindow::changedSettings);
+    connect = this->connect(this->m_rt->getIContextNetwork(), SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
     Q_ASSERT(connect);
-    Q_UNUSED(connect); // suppress GCC warning in release build
-    this->connect(this->m_contextSimulator, &IContextSimulator::connectionChanged, this, &MainWindow::simulatorAvailable);
+    this->connect(this->m_rt->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorAvailable);
     this->connect(this->m_timerUpdateAircraftsInRange, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateAtcStationsOnline, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateUsers, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
@@ -230,8 +219,10 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
     this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
     this->connect(this->m_timerSimulator, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
-    connect = this->connect(this->m_contextAudio, &IContextAudio::audioTestCompleted, this, &MainWindow::audioTestUpdate);
-
+    connect = this->connect(this->m_rt->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &MainWindow::audioTestUpdate);
+    Q_ASSERT(connect);
+    Q_UNUSED(connect); // suppress GCC warning in release build
+	
     // start timers, update timers will be started when network is connected
     this->m_timerContextWatchdog->start(2 * 1000);
 
@@ -383,7 +374,7 @@ void MainWindow::initGuiSignals()
 void MainWindow::initialDataReads()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
-    this->m_coreAvailable = (this->m_contextNetwork->usingLocalObjects() || (this->m_contextApplication->ping(t) == t));
+    this->m_coreAvailable = (this->m_rt->getIContextNetwork()->usingLocalObjects() || (this->m_rt->getIContextApplication()->ping(t) == t));
     if (!this->m_coreAvailable)
     {
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityError,
@@ -395,7 +386,7 @@ void MainWindow::initialDataReads()
     this->reloadAtcStationsBooked(); // init read, to do this no traffic network required
     this->reloadOwnAircraft(); // init read, independent of traffic network
 
-    if (this->m_contextNetwork->isConnected())
+    if (this->m_rt->getIContextNetwork()->isConnected())
     {
         // connection is already established
         this->reloadAircraftsInRange();

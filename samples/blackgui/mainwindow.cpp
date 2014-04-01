@@ -26,8 +26,6 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     ui(new Ui::MainWindow),
     m_infoWindow(nullptr),
     m_init(false), m_windowMode(windowMode), m_audioTestRunning(NoAudioTest),
-    // misc
-    m_dBusConnection("dummy"),
     // table view models
     m_statusMessageList(nullptr),
     m_modelAtcListOnline(nullptr), m_modelAtcListBooked(nullptr), m_modelTrafficServerList(nullptr), m_modelAircraftsInRange(nullptr),
@@ -35,8 +33,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     // contexts and runtime
     m_coreMode(GuiModes::CoreExternal),
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextAudioAvailable(false),
-    m_contextApplication(nullptr), m_contextNetwork(nullptr), m_contextAudio(nullptr), m_contextSettings(nullptr),
-    m_contextSimulator(nullptr),
+
     // timers
     m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerUpdateUsers(nullptr),
     m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
@@ -94,15 +91,15 @@ void MainWindow::gracefulShutdown()
     // if we have a context, we shut some things down
     if (this->m_contextNetworkAvailable)
     {
-        if (this->m_contextNetwork->isConnected())
+        if (this->m_rt->getIContextNetwork()->isConnected())
         {
             if (this->m_contextAudioAvailable)
             {
-                this->m_contextAudio->leaveAllVoiceRooms();
-                this->m_contextAudio->disconnect(this); // break down signal / slots
+                this->m_rt->getIContextAudio()->leaveAllVoiceRooms();
+                this->m_rt->getIContextAudio()->disconnect(this); // break down signal / slots
             }
-            this->m_contextNetwork->disconnectFromNetwork();
-            this->m_contextNetwork->disconnect(this); // avoid any status update signals, etc.
+            this->m_rt->getIContextNetwork()->disconnectFromNetwork();
+            this->m_rt->getIContextNetwork()->disconnect(this); // avoid any status update signals, etc.
         }
     }
 }
@@ -198,7 +195,7 @@ void MainWindow::toggleNetworkConnection()
     if (!this->isContextNetworkAvailableCheck()) return;
 
     this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(this->m_resPixmapConnectionConnecting);
-    if (!this->m_contextNetwork->isConnected())
+    if (!this->m_rt->getIContextNetwork()->isConnected())
     {
         if (this->m_ownAircraft.getCallsign().isEmpty())
         {
@@ -207,8 +204,8 @@ void MainWindow::toggleNetworkConnection()
         }
 
         // send latest aircraft to network/voice
-        this->m_contextNetwork->setOwnAircraft(this->m_ownAircraft);
-        if (this->m_contextAudioAvailable) this->m_contextAudio->setOwnAircraft(this->m_ownAircraft);
+        this->m_rt->getIContextNetwork()->setOwnAircraft(this->m_ownAircraft);
+        if (this->m_contextAudioAvailable) this->m_rt->getIContextAudio()->setOwnAircraft(this->m_ownAircraft);
 
         // Login is based on setting current server
         INetwork::LoginMode mode = INetwork::LoginNormal;
@@ -222,14 +219,14 @@ void MainWindow::toggleNetworkConnection()
             mode = INetwork::LoginAsObserver;
             this->displayStatusMessage(CStatusMessage::getInfoMessage("login in observer mode"));
         }
-        msgs = this->m_contextNetwork->connectToNetwork(static_cast<uint>(mode));
+        msgs = this->m_rt->getIContextNetwork()->connectToNetwork(static_cast<uint>(mode));
     }
     else
     {
         // disconnect from network
         this->stopUpdateTimers(); // stop update timers, to avoid updates during disconnecting (a short time frame)
-        if (this->m_contextAudioAvailable) this->m_contextAudio->leaveAllVoiceRooms();
-        msgs = this->m_contextNetwork->disconnectFromNetwork();
+        if (this->m_contextAudioAvailable) this->m_rt->getIContextAudio()->leaveAllVoiceRooms();
+        msgs = this->m_rt->getIContextNetwork()->disconnectFromNetwork();
     }
     if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
 }
@@ -372,9 +369,9 @@ void MainWindow::timerBasedUpdates()
 void MainWindow::setContextAvailability()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
-    this->m_coreAvailable = this->m_contextApplication->ping(t) == t;
-    this->m_contextNetworkAvailable = this->m_coreAvailable || this->m_contextNetwork->usingLocalObjects();
-    this->m_contextAudioAvailable = this->m_coreAvailable || this->m_contextAudio->usingLocalObjects();
+    this->m_coreAvailable = this->m_rt->getIContextApplication()->ping(t) == t;
+    this->m_contextNetworkAvailable = this->m_coreAvailable || this->m_rt->getIContextNetwork()->usingLocalObjects();
+    this->m_contextAudioAvailable = this->m_coreAvailable || this->m_rt->getIContextAudio()->usingLocalObjects();
 }
 
 /*
@@ -403,14 +400,14 @@ void MainWindow::updateGuiStatusInformation()
     QString network("unavailable");
     if (this->m_contextNetworkAvailable)
     {
-        network = this->m_contextNetwork->usingLocalObjects() ? "local" : now;
+        network = this->m_rt->getIContextNetwork()->usingLocalObjects() ? "local" : now;
     }
 
     // handle voice, mute
     QString voice("unavailable");
     if (this->m_contextAudioAvailable)
     {
-        voice = this->m_contextAudio->usingLocalObjects() ? "local" : now;
+        voice = this->m_rt->getIContextAudio()->usingLocalObjects() ? "local" : now;
         this->ui->pb_SoundMute->setEnabled(true);
     }
     else
@@ -425,7 +422,7 @@ void MainWindow::updateGuiStatusInformation()
     this->ui->cb_StatusWithDBus->setCheckState(this->m_coreMode ? Qt::Checked : Qt::Unchecked);
 
     // Connected button
-    if (this->m_contextNetworkAvailable && this->m_contextNetwork->isConnected())
+    if (this->m_contextNetworkAvailable && this->m_rt->getIContextNetwork()->isConnected())
     {
         if (this->ui->lbl_StatusNetworkConnectedIcon->toolTip().startsWith("dis", Qt::CaseInsensitive))
             this->ui->lbl_StatusNetworkConnectedIcon->setToolTip(now);
@@ -499,7 +496,7 @@ void MainWindow::displayOverlayInfo(const CStatusMessage &message)
 void MainWindow::reloadAllUsers()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_modelAllUsers->update(this->m_contextNetwork->getUsers());
+    this->m_modelAllUsers->update(this->m_rt->getIContextNetwork()->getUsers());
     this->ui->tv_AllUsers->resizeColumnsToContents();
     this->ui->tv_AllUsers->resizeRowsToContents();
     this->ui->tv_AllUsers->horizontalHeader()->setStretchLastSection(true);
@@ -507,12 +504,12 @@ void MainWindow::reloadAllUsers()
 
 void MainWindow::updateSimulatorData()
 {
-    if (m_contextSimulator->isConnected())
+    if (this->m_rt->getIContextSimulator()->isConnected())
         ui->le_SimulatorStatus->setText("Connected");
     else
         ui->le_SimulatorStatus->setText("Not connected");
 
-    CAircraft ownAircraft = m_contextSimulator->getOwnAircraft();
+    CAircraft ownAircraft = this->m_rt->getIContextSimulator()->getOwnAircraft();
     ui->le_SimulatorLatitude->setText(ownAircraft.getSituation().latitude().toFormattedQString());
     ui->le_SimulatorLongitude->setText(ownAircraft.getSituation().longitude().toFormattedQString());
     ui->le_SimulatorAltitude->setText(ownAircraft.getSituation().getAltitude().toFormattedQString());
