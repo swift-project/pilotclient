@@ -27,7 +27,7 @@ namespace BlackGui
         //! \copydoc CListModelBase::data
         QVariant data(const QModelIndex &modelIndex, int role = Qt::DisplayRole) const override;
 
-        //! \copydoc BlackMisc::Hardware::CKeyboardKeyList::initAsHotkeyList
+        //! \copydoc CKeyboardKeyList::initAsHotkeyList(bool reset)
         void initAsHotkeyList() { this->m_container.initAsHotkeyList(); }
 
         //! \copydoc QAbstractTableModel::setData

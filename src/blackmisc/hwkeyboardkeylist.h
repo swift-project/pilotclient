@@ -37,11 +37,17 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
+            //! \brief contains given hotkey function?
+            bool containsFunction(CKeyboardKey::HotkeyFunction key);
+
             //! \brief Register metadata
             static void registerMetadata();
 
-            //! \brief Fill the list with hotkey
-            void initAsHotkeyList();
+            /*!
+             * \brief Fill the list with hotkeys
+             * \param reset true, list will be be reset, otherwise value will not be overridde
+             */
+            void initAsHotkeyList(bool reset = true);
         };
 
     } //namespace

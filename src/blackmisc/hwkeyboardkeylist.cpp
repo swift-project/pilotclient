@@ -23,6 +23,14 @@ namespace BlackMisc
         { }
 
         /*
+         * Contains this hotkey function?
+         */
+        bool CKeyboardKeyList::containsFunction(CKeyboardKey::HotkeyFunction key)
+        {
+            return CSequence::contains(&CKeyboardKey::getFunction, key);
+        }
+
+        /*
          * Register metadata
          */
         void CKeyboardKeyList::registerMetadata()
@@ -35,14 +43,17 @@ namespace BlackMisc
             qDBusRegisterMetaType<CKeyboardKeyList>();
         }
 
-        void CKeyboardKeyList::initAsHotkeyList()
+        /*
+         * Hotkey list
+         */
+        void CKeyboardKeyList::initAsHotkeyList(bool reset)
         {
-            this->clear();
-            this->push_back(CKeyboardKey(CKeyboardKey::HotkeyPtt));
-            this->push_back(CKeyboardKey(CKeyboardKey::HotkeyOpacity50));
-            this->push_back(CKeyboardKey(CKeyboardKey::HotkeyOpacity100));
-            this->push_back(CKeyboardKey(CKeyboardKey::HotkeyToggleCom1));
-            this->push_back(CKeyboardKey(CKeyboardKey::HotkeyToggleCom2));
+            if (reset) this->clear();
+            if (!this->containsFunction(CKeyboardKey::HotkeyPtt)) this->push_back(CKeyboardKey(CKeyboardKey::HotkeyPtt));
+            if (!this->containsFunction(CKeyboardKey::HotkeyOpacity50)) this->push_back(CKeyboardKey(CKeyboardKey::HotkeyOpacity50));
+            if (!this->containsFunction(CKeyboardKey::HotkeyOpacity100)) this->push_back(CKeyboardKey(CKeyboardKey::HotkeyOpacity100));
+            if (!this->containsFunction(CKeyboardKey::HotkeyToggleCom1)) this->push_back(CKeyboardKey(CKeyboardKey::HotkeyToggleCom1));
+            if (!this->containsFunction(CKeyboardKey::HotkeyToggleCom2)) this->push_back(CKeyboardKey(CKeyboardKey::HotkeyToggleCom2));
         }
 
     } // namespace
