@@ -39,7 +39,6 @@ namespace BlackSimPlugin
 
         void CSimulatorFSX::addRemoteAircraft(const CCallsign &callsign, const QString &type, const CAircraftSituation &initialSituation)
         {
-            HRESULT hr = S_OK;
             Q_UNUSED(type);
 
             SIMCONNECT_DATA_INITPOSITION initialPosition;
@@ -60,7 +59,8 @@ namespace BlackSimPlugin
             m_simConnectObjects.insert(callsign, simObj);
             ++m_nextObjID;
 
-            hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, "Boeing 737-800 Paint1", callsign.toQString().left(12).toLatin1().constData(), initialPosition, simObj.m_requestId);
+            HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, "Boeing 737-800 Paint1", callsign.toQString().left(12).toLatin1().constData(), initialPosition, simObj.m_requestId);
+            Q_UNUSED(hr);
         }
 
         void CSimulatorFSX::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
@@ -229,7 +229,7 @@ namespace BlackSimPlugin
             SimConnectObject simObject;
             foreach (simObject, m_simConnectObjects)
             {
-                if (simObject.m_requestId == requestID)
+                if (simObject.m_requestId == static_cast<int>(requestID))
                 {
                     simObject.m_objectId = objectID;
                     break;

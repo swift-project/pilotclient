@@ -23,6 +23,7 @@ namespace BlackCore
         m_simulator(nullptr), m_updateTimer(nullptr)
     {
         m_updateTimer = new QTimer(this);
+        loadPlugins();
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
     }
 
@@ -40,25 +41,11 @@ namespace BlackCore
         return m_ownAircraft;
     }
 
-    void CContextSimulator::init()
-    {
-        loadPlugins();
-
-        if (!m_contextNetwork)
-        {
-            m_contextNetwork = getRuntime()->getIContextNetwork();
-        }
-
-        if (m_simulator)
-            connect(m_contextNetwork, SIGNAL(aircraftSituationUpdate(BlackMisc::Aviation::CCallsign,BlackMisc::Aviation::CAircraftSituation)),
-                    m_simulator, SLOT(addAircraftSituation(BlackMisc::Aviation::CCallsign,BlackMisc::Aviation::CAircraftSituation)));
-    }
-
     void CContextSimulator::updateOwnAircraft()
     {
         m_ownAircraft = m_simulator->getOwnAircraft();
-        getNetworkContext()->updateOwnSituation(m_ownAircraft.getSituation());
-        getNetworkContext()->updateOwnCockpit(m_ownAircraft.getCom1System(), m_ownAircraft.getCom2System(), m_ownAircraft.getTransponder());
+        getRuntime()->getIContextNetwork()->updateOwnSituation(m_ownAircraft.getSituation());
+        getRuntime()->getIContextNetwork()->updateOwnCockpit(m_ownAircraft.getCom1System(), m_ownAircraft.getCom2System(), m_ownAircraft.getTransponder());
     }
 
     void CContextSimulator::setConnectionStatus(bool value)
@@ -72,10 +59,14 @@ namespace BlackCore
 
     void CContextSimulator::loadPlugins()
     {
-        m_pluginsDir = QDir(qApp->applicationDirPath());
-        m_pluginsDir.cd("plugins");
+        m_pluginsDir = QDir(qApp->applicationDirPath().append("/plugins"));
+        if (!m_pluginsDir.exists())
+        {
+            qWarning() << "No plugin directory" << m_pluginsDir;
+            return;
+        }
 
-        foreach (QString fileName, m_pluginsDir.entryList(QDir::Files))
+        foreach(QString fileName, m_pluginsDir.entryList(QDir::Files))
         {
             QPluginLoader loader(m_pluginsDir.absoluteFilePath(fileName));
             QObject *plugin = loader.instance();
@@ -86,20 +77,14 @@ namespace BlackCore
                 {
                     m_simulator = factory->create(this);
                     connect(m_simulator, SIGNAL(connectionChanged(bool)), this, SLOT(setConnectionStatus(bool)));
+                    break;
                 }
-
             }
             else
             {
                 qDebug() << loader.errorString();
             }
         }
-	}
-		
-    IContextNetwork *CContextSimulator::getNetworkContext()
-    {
-        Q_ASSERT(this->getRuntime()->getIContextNetwork());
-        return getRuntime()->getIContextNetwork();
     }
 
 } // namespace BlackCore
