@@ -86,8 +86,9 @@ void MainWindow::alterTrafficServer()
 /*
  * Settings did changed
  */
-void MainWindow::changedSettings()
+void MainWindow::changedSettings(uint typeValue)
 {
+    Q_UNUSED(typeValue);
     this->reloadSettings();
 }
 
@@ -104,7 +105,6 @@ void MainWindow::updateGuiSelectedServerTextboxes(const CServer &server)
     this->ui->le_SettingsTnCsNetworkId->setText(server.getUser().getId());
     this->ui->le_SettingsTnCsPassword->setText(server.getUser().getPassword());
 }
-
 
 /*
  * Server settings from textboxes

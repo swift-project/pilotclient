@@ -424,7 +424,7 @@ private slots:
     void alterTrafficServer();
 
     //! \brief Network settings have been changed
-    void changedSettings();
+    void changedSettings(uint typeValue);
 
     /*!
      * \brief Update timer
