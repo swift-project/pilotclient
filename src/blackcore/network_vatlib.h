@@ -38,6 +38,12 @@ namespace BlackCore
         //! \copydoc INetwork::isConnected()
         virtual bool isConnected() const override { return m_status == Cvatlib_Network::connStatus_Connected; }
 
+        //! \copydoc INetwork::getStatusUrls()
+        virtual QList<QUrl> getStatusUrls() const override;
+
+        //! \copydoc INetwork::getKnownServers()
+        virtual BlackMisc::Network::CServerList getKnownServers() const override;
+
         // Network slots
         virtual void presetServer(const BlackMisc::Network::CServer &server) override;
         virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;

@@ -317,6 +317,61 @@ namespace BlackCore
         }
     }
 
+    QList<QUrl> CNetworkVatlib::getStatusUrls() const
+    {
+        QList<QUrl> result;
+        try
+        {
+            Cvatlib_Network *net = m_net.data();
+            decltype(m_net) netPtr;
+            if (!net)
+            {
+                netPtr.reset(Cvatlib_Network::Create());
+                net = netPtr.data();
+            }
+
+            auto urlsPtr = QSharedPointer<const char *const>(net->GetVatsimStatusUrls(), [=](const char *const *p){ net->GetVatsimStatusUrls_Free(p); });
+            auto urls = urlsPtr.data();
+            while (*urls)
+            {
+                result.push_back(QUrl(*urls++));
+            }
+        }
+        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+        return result;
+    }
+
+    BlackMisc::Network::CServerList CNetworkVatlib::getKnownServers() const
+    {
+        BlackMisc::Network::CServerList result;
+        try
+        {
+            Cvatlib_Network *net = m_net.data();
+            decltype(m_net) netPtr;
+            if (!net)
+            {
+                netPtr.reset(Cvatlib_Network::Create());
+                net = netPtr.data();
+            }
+
+            auto namesPtr = QSharedPointer<const char *const>(net->GetVatsimFSDServerNames(), [=](const char *const *p){ net->GetVatsimFSDServerNames_Free(p); });
+            auto ipsPtr = QSharedPointer<const char *const>(net->GetVatsimFSDServerIps(), [=](const char *const *p){ net->GetVatsimFSDServerIps_Free(p); });
+            auto locationsPtr = QSharedPointer<const char *const>(net->GetVatsimFSDServerLocations(), [=](const char *const *p){ net->GetVatsimFSDServerLocations_Free(p); });
+            auto acceptsPtr = QSharedPointer<const bool>(net->GetVatsimFSDServerAcceptingConnections(), [=](const bool *p){ net->GetVatsimFSDServerAcceptingConnections_Free(p); });
+            auto names = namesPtr.data();
+            auto ips = ipsPtr.data();
+            auto locations = locationsPtr.data();
+            auto accepts = acceptsPtr.data();
+            int port = 6809; // TODO hard-coded number?
+            while (*names)
+            {
+                result.push_back(BlackMisc::Network::CServer(*names++, *locations++, *ips++, port, BlackMisc::Network::CUser(), *accepts++));
+            }
+        }
+        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+        return result;
+    }
+
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
     /**********************************             INetwork slots            ************************************/
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/

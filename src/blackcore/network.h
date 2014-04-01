@@ -25,6 +25,8 @@
 #include <QMap>
 #include <QVector>
 #include <QMetaEnum>
+#include <QList>
+#include <QUrl>
 
 namespace BlackCore
 {
@@ -119,6 +121,18 @@ namespace BlackCore
          * Returns true if the current ConnectionStatus is a connected state.
          */
         virtual bool isConnected() const = 0;
+
+        /*!
+         * Returns a list of URLs where network status data can be found.
+         * To obtain the status, one of these URLs should be picked at random.
+         */
+        virtual QList<QUrl> getStatusUrls() const = 0;
+
+        /*!
+         * Returns a list of known servers which may be connected to.
+         * Not all servers may be accepting connections; consult the CServer::isAcceptingConnections method.
+         */
+        virtual BlackMisc::Network::CServerList getKnownServers() const = 0;
 
     public slots:
         ////////////////////////////////////////////////////////////////

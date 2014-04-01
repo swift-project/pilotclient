@@ -16,6 +16,7 @@ namespace BlackMisc
             s.append(" ").append(this->m_address);
             s.append(" ").append(QString::number(this->m_port));
             s.append(" ").append(this->m_user.toQString(i18n));
+            s.append(" ").append(this->m_isAcceptingConnections ? "true" : "false");
             return s;
         }
 
@@ -68,7 +69,7 @@ namespace BlackMisc
          */
         bool CServer::isValidForLogin() const
         {
-            return this->m_user.hasValidCredentials() && this->m_port > 0 && !this->m_address.isEmpty();
+            return this->m_user.hasValidCredentials() && this->m_port > 0 && !this->m_address.isEmpty() && this->isAcceptingConnections();
         }
 
         /*
@@ -115,6 +116,8 @@ namespace BlackMisc
                 return QVariant::fromValue(this->m_user.getId());
             case IndexUserRealName:
                 return QVariant::fromValue(this->m_user.getRealName());
+            case IndexIsAcceptingConnections:
+                return QVariant::fromValue(this->m_isAcceptingConnections);
             default:
                 break;
             }
@@ -160,6 +163,9 @@ namespace BlackMisc
                 break;
             case IndexUserRealName:
                 this->m_user.setRealName(variant.value<QString>());
+                break;
+            case IndexIsAcceptingConnections:
+                this->setIsAcceptingConnections(variant.value<bool>());
                 break;
             default:
                 Q_ASSERT_X(false, "CServer", "index unknown");

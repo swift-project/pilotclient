@@ -23,11 +23,11 @@ namespace BlackMisc
         {
         public:
             //! \brief Default constructor.
-            CServer() : m_port(-1) {}
+            CServer() : m_port(-1), m_isAcceptingConnections(true) {}
 
             //! \brief Constructor.
-            CServer(const QString &name, const QString &description, const QString &address, qint32 port, const CUser &user)
-                : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user) {}
+            CServer(const QString &name, const QString &description, const QString &address, qint32 port, const CUser &user, bool isAcceptingConnections = true)
+                : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user), m_isAcceptingConnections(isAcceptingConnections) {}
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
@@ -65,6 +65,12 @@ namespace BlackMisc
             //! \brief Set port
             void setPort(qint32 port) { m_port = port; }
 
+            //! \brief Server is accepting connections
+            bool isAcceptingConnections() const { return m_isAcceptingConnections; }
+
+            //! \brief Set whether server is accepting connections
+            void setIsAcceptingConnections(bool value) { m_isAcceptingConnections = value; }
+
             //! \brief Is valid for login?
             bool isValidForLogin() const;
 
@@ -98,7 +104,8 @@ namespace BlackMisc
                 IndexPort,
                 IndexUserId,
                 IndexUserRealName,
-                IndexUserPassword
+                IndexUserPassword,
+                IndexIsAcceptingConnections
             };
 
             //! \copydoc CValueObject::propertyByIndex(int)
@@ -136,11 +143,12 @@ namespace BlackMisc
             QString m_address;
             qint32 m_port;
             CUser m_user;
+            bool m_isAcceptingConnections;
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CServer, (o.m_name, o.m_description, o.m_address, o.m_port, o.m_user))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CServer, (o.m_name, o.m_description, o.m_address, o.m_port, o.m_user, o.m_isAcceptingConnections))
 Q_DECLARE_METATYPE(BlackMisc::Network::CServer)
 
 #endif // guard
