@@ -49,11 +49,26 @@ namespace BlackMisc
             //! \brief Wrong path messages
             static BlackMisc::CStatusMessageList wrongPathMessages(const QString &path = "");
 
+            //! \brief Value not changed message
+            static BlackMisc::CStatusMessage valueNotChangedMessage(const QString &valueName);
+
+            //! \brief Value changed message
+            static BlackMisc::CStatusMessage valueChangedMessage(const QString &valueName);
+
             //! \brief Remove leading path
             static QString removeLeadingPath(const QString &path);
 
             //! \brief Append setting paths
             static QString appendPaths(const QString &part1, const QString &part2, const QString &part3 = "");
+
+            //! \brief prepare the settings directory, if required create it
+            static bool initSettingsDirectory();
+
+            //! \brief get the settings directory
+            static const QString &getSettingsDirectory();
+
+            //! \brief get the settings directory
+            static const QString &getSettingsFile();
 
         };
     } // namespace
