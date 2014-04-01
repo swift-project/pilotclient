@@ -6,7 +6,7 @@
 #include "context_network_impl.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
-#include "coreruntime.h"
+#include "context_runtime.h"
 
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/predicates.h"

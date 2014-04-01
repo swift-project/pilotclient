@@ -6,6 +6,7 @@
 #ifndef BLACKCORE_CONTEXTAUDIO_H
 #define BLACKCORE_CONTEXTAUDIO_H
 
+#include "blackcore/context.h"
 #include "blackmisc/genericdbusinterface.h"
 #include "blackmisc/audiodevicelist.h"
 #include "blackmisc/voiceroomlist.h"
@@ -22,10 +23,14 @@ namespace BlackCore
 {
 
     //! \brief Audio context interface
-    class IContextAudio : public QObject
+    class IContextAudio : public CContext
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
+
+    protected:
+        //! \brief Constructor
+        IContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
 
     public:
         //! \brief Interface name
@@ -42,14 +47,8 @@ namespace BlackCore
             return s;
         }
 
-        //! \brief Constructor
-        IContextAudio(QObject *parent = nullptr) : QObject(parent) {}
-
         //! \brief Destructor
         virtual ~IContextAudio() {}
-
-        //! \brief Using local objects?
-        virtual bool usingLocalObjects() const = 0;
 
     signals:
         //! \brief Audio test has been completed

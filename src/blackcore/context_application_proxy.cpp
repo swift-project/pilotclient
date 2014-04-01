@@ -15,7 +15,7 @@ namespace BlackCore
     /*
      * Constructor for DBus
      */
-    CContextApplicationProxy::CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent) : IContextApplication(parent), m_dBusInterface(nullptr)
+    CContextApplicationProxy::CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(serviceName , IContextApplication::ObjectPath(), IContextApplication::InterfaceName(), connection, this);
         this->relaySignals(serviceName, connection);

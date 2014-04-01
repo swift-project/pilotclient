@@ -17,7 +17,7 @@ namespace BlackCore
 {
 
     // Constructor for DBus
-    CContextSimulatorProxy::CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent) : IContextSimulator(parent), m_dBusInterface(nullptr)
+    CContextSimulatorProxy::CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSimulator(mode, runtime), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
             serviceName , IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
@@ -27,8 +27,7 @@ namespace BlackCore
 
     // Workaround for signals, not working without, but why?
     void CContextSimulatorProxy::relaySignals(const QString &/*serviceName*/, QDBusConnection &/*connection*/)
-    {
-    }
+    { }
 
     bool CContextSimulatorProxy::isConnected() const
     {

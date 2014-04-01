@@ -25,31 +25,25 @@ namespace BlackCore
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSETTINGS_INTERFACENAME)
 
-    public:
-
+    protected:
         //! \brief Constructor
-        CContextSettings(QObject *runtime = nullptr);
+        CContextSettings(CRuntimeConfig::ContextMode mode, CRuntime *runtime = nullptr);
 
+    public:
         //! Destructor
         virtual ~CContextSettings() {}
 
         //! \brief Register myself in DBus
-        void registerWithDBus(CDBusServer *server)
+        CContextSettings *registerWithDBus(CDBusServer *server)
         {
             server->addObject(IContextSettings::ObjectPath(), this);
+            return this;
         }
 
-        //! \brief Runtime
-        CCoreRuntime *getRuntime()
-        {
-            return static_cast<CCoreRuntime *>(this->parent());
-        }
+        //! \brief settings file
+        const QString &getSettingsDirectory() const { return BlackMisc::Settings::CSettingUtilities::getSettingsDirectory(); }
 
-        //! \brief Runtime
-        const CCoreRuntime *getRuntime() const
-        {
-            return static_cast<CCoreRuntime *>(this->parent());
-        }
+        //! \copydoc IContextSettings::value()
 
     public slots:
         //! \copydoc IContextSettings::getNetworkSettings()
@@ -62,6 +56,7 @@ namespace BlackCore
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value) override;
 
     private:
+        friend class CRuntime;
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
         BlackMisc::Hardware::CKeyboardKeyList m_hotkeys;
     };

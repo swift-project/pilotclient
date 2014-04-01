@@ -25,42 +25,18 @@ namespace BlackCore
 
     public:
         //! \brief Constructor
-        CContextSimulator(QObject *parent = nullptr);
+        CContextSimulator(CRuntimeConfig::ContextMode, CRuntime *runtime);
 
         //! \brief Destructor
         virtual ~CContextSimulator();
 
-        /*!
         //! Register myself in DBus
         CContextSimulator *registerWithDBus(CDBusServer *server)
         {
             Q_ASSERT(server);
             server->addObject(CContextSimulator::ObjectPath(), this);
+            return this;
         }
-
-        /*!
-         * \brief Runtime
-         * \return
-         */
-        const CCoreRuntime *getRuntime() const
-        {
-            return static_cast<CCoreRuntime *>(this->parent());
-        }
-
-        /*!
-         * \brief Runtime
-         * \return
-         */
-        CCoreRuntime *getRuntime()
-        {
-            return static_cast<CCoreRuntime *>(this->parent());
-        }
-
-        //! \brief Initialze the context
-        void init();
-
-        //! \copydoc IContextSimulator::usingLocalObjects()
-        virtual bool usingLocalObjects() const override { return true; }
 
     public slots:
         //! \copydoc IContextSimulator::isConnected()
@@ -68,8 +44,6 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::getOwnAircraft()
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
-
-
 
     private slots:
         //! \copydoc IContextSimulator::updateOwnAircraft()
@@ -79,23 +53,20 @@ namespace BlackCore
         void setConnectionStatus(bool value);
 
     private:
-
         /*!
          * \brief Load any kind of plugins
          * \todo Currently it goes through the plugins folder and creates an instance for any plugin it may find
          *       In case an FSX and an X-Plane are in that folder, m_simulator will always point to X-Plane in the end.
          */
         void loadPlugins();
-
         BlackMisc::Aviation::CAircraft m_ownAircraft;
         BlackCore::ISimulator *m_simulator;
-
         QTimer *m_updateTimer;
         BlackCore::IContextNetwork *m_contextNetwork;
-
         QDir m_pluginsDir;
+        IContextNetwork *getNetworkContext();
     };
 
 } // namespace BlackCore
 
-#endif // BLACKCORE_CONTEXTSIMULATOR_IMPL_H
+#endif // guard

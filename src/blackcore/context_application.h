@@ -6,6 +6,7 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_H
 #define BLACKCORE_CONTEXTAPPLICATION_H
 
+#include "blackcore/context.h"
 #include "blackmisc/statusmessage.h"
 #include <QObject>
 
@@ -14,14 +15,19 @@
 
 namespace BlackCore
 {
-
     /*!
      * \brief Application context interface
      */
-    class IContextApplication : public QObject
+    class IContextApplication : public CContext
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
+
+    protected:
+        friend class CRuntime;
+
+        //! Constructor
+        IContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
 
     public:
 
@@ -39,11 +45,6 @@ namespace BlackCore
             return s;
         }
 
-        /*!
-          * \brief DBus version constructor
-          * \param parent
-          */
-        IContextApplication(QObject *parent = nullptr) : QObject(parent) {}
         //! Destructor
         virtual ~IContextApplication() {}
 

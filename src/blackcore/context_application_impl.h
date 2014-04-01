@@ -7,12 +7,12 @@
 #define BLACKCORE_CONTEXTAPPLICATION_IMPL_H
 
 #include "context_application.h"
-#include "coreruntime.h"
+#include "context_runtime.h"
 #include "dbus_server.h"
 
 namespace BlackCore
 {
-    class CCoreRuntime;
+    class CRuntime;
 
     /*!
      * \brief Application context
@@ -24,11 +24,8 @@ namespace BlackCore
 
     public:
 
-        /*!
-         * Context
-         * \param parent
-         */
-        CContextApplication(QObject *parent = nullptr);
+        //! Constructor
+        CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime = nullptr);
 
         //! Destructor
         virtual ~CContextApplication() {}
@@ -37,24 +34,7 @@ namespace BlackCore
         CContextApplication *registerWithDBus(CDBusServer *server)
         {
             server->addObject(IContextApplication::ObjectPath(), this);
-        }
-
-        /*!
-         * \brief Runtime
-         * \return
-         */
-        CCoreRuntime *getRuntime()
-        {
-            return static_cast<CCoreRuntime *>(this->parent());
-        }
-
-        /*!
-         * \brief Const runtime
-         * \return
-         */
-        const CCoreRuntime *getRuntime() const
-        {
-            return static_cast<CCoreRuntime *>(this->parent());
+            return this;
         }
 
     public slots:

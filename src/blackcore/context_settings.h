@@ -25,9 +25,9 @@ namespace BlackCore
 {
 
     /*!
-     * \brief Context settings interface
+     * Context settings interface
      */
-    class IContextSettings : public QObject
+    class IContextSettings : public CContext
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSETTINGS_INTERFACENAME)
@@ -40,9 +40,12 @@ namespace BlackCore
             SettingsNetwork
         };
 
-        /*!
-         * \brief Service name
-         */
+    protected:
+        //! DBus version constructor
+        IContextSettings(CRuntimeConfig::ContextMode mode, CRuntime *runtime = nullptr) : CContext(mode, runtime)
+        {}
+
+    public:
         static const QString &InterfaceName()
         {
             static QString s(BLACKCORE_CONTEXTSETTINGS_INTERFACENAME);
@@ -88,14 +91,7 @@ namespace BlackCore
             return s;
         }
 
-        /*!
-         * \brief DBus version constructor
-         */
-        IContextSettings(QObject *parent = nullptr) : QObject(parent) {}
-
-        /*!
-         * Destructor
-         */
+        //! Destructor
         virtual ~IContextSettings() {}
 
 

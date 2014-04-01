@@ -28,10 +28,6 @@ namespace BlackCore
 
     public:
 
-        /*!
-         * \brief DBus version constructor
-         */
-        CContextSettingsProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent = nullptr);
         //! \brief Destructor
         virtual ~CContextSettingsProxy() {}
 
@@ -49,6 +45,7 @@ namespace BlackCore
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value) override;
 
     private:
+        friend class CRuntime;
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
         //! Relay connection signals to local signals
@@ -56,11 +53,11 @@ namespace BlackCore
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
 
     protected:
-        /*!
-         * \brief IContextSettings
-         * \param parent
-         */
-        CContextSettingsProxy(QObject *parent = nullptr) : IContextSettings(parent), m_dBusInterface(nullptr) {}
+        //! \brief DBus version constructor
+        CContextSettingsProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
+
+        //! \brief Constructor
+        CContextSettingsProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSettings(mode, runtime), m_dBusInterface(nullptr) {}
 
     public slots:
 

@@ -27,14 +27,6 @@ namespace BlackCore
 
     public:
 
-        /*!
-         * \brief DBus version constructor
-         * \param serviceName
-         * \param connection
-         * \param parent
-         */
-        CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent = nullptr);
-
         //! Destructor
         virtual ~CContextNetworkProxy() {}
 
@@ -42,6 +34,7 @@ namespace BlackCore
         virtual bool usingLocalObjects() const override { return false; }
 
     private:
+        friend class CRuntime;
         BlackMisc::CGenericDBusInterface *m_dBusInterface; /*!< DBus interface */
 
         //! \brief Relay connection signals to local signals.
@@ -49,7 +42,10 @@ namespace BlackCore
 
     protected:
         //! \brief Constructor
-        CContextNetworkProxy(QObject *parent = nullptr) : IContextNetwork(parent), m_dBusInterface(nullptr) {}
+        CContextNetworkProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextNetwork(mode, runtime), m_dBusInterface(nullptr) {}
+
+        //! \brief DBus version constructor
+        CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
         /*!
          * \brief Helper for logging, likely to be removed / changed

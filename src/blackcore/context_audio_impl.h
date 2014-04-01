@@ -8,7 +8,7 @@
 
 #include "context_audio.h"
 #include "context_settings.h"
-#include "coreruntime.h"
+#include "context_runtime.h"
 #include "dbus_server.h"
 #include "voice_vatlib.h"
 #include "blackcore/keyboard.h"
@@ -23,9 +23,6 @@ namespace BlackCore
 
     public:
 
-        //! \brief Constructor
-        CContextAudio(QObject *runtime);
-
         //! \brief Destructor
         virtual ~CContextAudio();
 
@@ -34,22 +31,9 @@ namespace BlackCore
         {
             Q_ASSERT(server);
             server->addObject(IContextAudio::ObjectPath(), this);
+            return this;
         }
 
-        //! \brief Runtime
-        CCoreRuntime *getRuntime()
-        {
-            return static_cast<CCoreRuntime *>(this->parent());
-        }
-
-        //! \brief Const runtime
-        const CCoreRuntime *getRuntime() const
-        {
-            return static_cast<CCoreRuntime *>(this->parent());
-        }
-
-        //! \copydoc IContextAudio::usingLocalObjects()
-        virtual bool usingLocalObjects() const override { return true; }
 
         //! \brief Initialize voice context
         void init();
@@ -121,15 +105,18 @@ namespace BlackCore
         //! \copydoc IContextAudio::getSquelchValue()
         virtual double getSquelchValue() const override;
 
+    protected:
+        //! \brief Constructor
+        CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
+
     private slots:
-        void settingsChanged(IContextSettings::SettingsType type);
+        friend class CRuntime;
+        void settingsChanged(uint typeValue);
 
     private:
         CVoiceVatlib *m_voice; //!< underlying voice lib
         IKeyboard *m_keyboard;
         IKeyboard::RegistrationHandle m_handlePtt;
-        IContextSettings *m_contextSettings;
-
     };
 }
 

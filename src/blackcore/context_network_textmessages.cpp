@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "context_network_impl.h"
-#include "coreruntime.h"
+#include "context_runtime.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;

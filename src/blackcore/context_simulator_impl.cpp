@@ -4,8 +4,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "context_simulator_impl.h"
-#include "coreruntime.h"
 #include <QPluginLoader>
+#include "context_runtime.h"
+
+#ifdef BLACK_WITH_FSX
+#include "fsx/simulator_fsx.h"
+#endif
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -15,27 +19,19 @@ using namespace BlackMisc::Geo;
 namespace BlackCore
 {
     // Init this context
-    CContextSimulator::CContextSimulator(QObject *parent) :
-        IContextSimulator(parent),
-        m_simulator(nullptr),
-        m_updateTimer(nullptr),
-        m_contextNetwork(nullptr)
+    CContextSimulator::CContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSimulator(mode, runtime),
+        m_simulator(nullptr), m_updateTimer(nullptr)
     {
         m_updateTimer = new QTimer(this);
-
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
     }
 
     // Cleanup
-    CContextSimulator::~CContextSimulator()
-    {
-    }
+    CContextSimulator::~CContextSimulator() {}
 
     bool CContextSimulator::isConnected() const
     {
-        if (!m_simulator)
-            return false;
-
+        if (!m_simulator) return false;
         return m_simulator->isConnected();
     }
 
@@ -60,15 +56,9 @@ namespace BlackCore
 
     void CContextSimulator::updateOwnAircraft()
     {
-        if (!m_simulator)
-            return;
-
         m_ownAircraft = m_simulator->getOwnAircraft();
-
-
-
-        m_contextNetwork->updateOwnSituation(m_ownAircraft.getSituation());
-        m_contextNetwork->updateOwnCockpit(m_ownAircraft.getCom1System(), m_ownAircraft.getCom2System(), m_ownAircraft.getTransponder());
+        getNetworkContext()->updateOwnSituation(m_ownAircraft.getSituation());
+        getNetworkContext()->updateOwnCockpit(m_ownAircraft.getCom1System(), m_ownAircraft.getCom2System(), m_ownAircraft.getTransponder());
     }
 
     void CContextSimulator::setConnectionStatus(bool value)
@@ -104,6 +94,12 @@ namespace BlackCore
                 qDebug() << loader.errorString();
             }
         }
+	}
+		
+    IContextNetwork *CContextSimulator::getNetworkContext()
+    {
+        Q_ASSERT(this->getRuntime()->getIContextNetwork());
+        return getRuntime()->getIContextNetwork();
     }
 
 } // namespace BlackCore

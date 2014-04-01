@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "context_settings_impl.h"
-#include "coreruntime.h"
+#include "context_runtime.h"
 
 #include "blackmisc/settingutilities.h"
 
@@ -19,7 +19,8 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextSettings::CContextSettings(QObject *parent) : IContextSettings(parent)
+    CContextSettings::CContextSettings(CRuntimeConfig::ContextMode mode, CRuntime *parent) : IContextSettings(mode, parent) {}
+
     {
         // create some dummy settings
         // this would actually be reading the settings from disk ..

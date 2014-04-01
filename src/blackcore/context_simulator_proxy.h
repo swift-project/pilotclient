@@ -16,40 +16,24 @@ namespace BlackCore
     {
         Q_OBJECT
     public:
-        /*!
-         * \brief DBus version constructor
-         * \param serviceName
-         * \param connection
-         * \param parent
-         */
-        CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent = 0);
-
         //! Destructor
         ~CContextSimulatorProxy() {}
 
-        /*!
-         * \brief Using local objects?
-         * \return
-         */
-        virtual bool usingLocalObjects() const override { return false; }
-
     private:
+        friend class CRuntime;
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
         //! Relay connection signals to local signals
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
 
     protected:
-        /*!
-         * \brief CContextNetworkProxy
-         * \param parent
-         */
-        CContextSimulatorProxy(QObject *parent = nullptr) : IContextSimulator(parent), m_dBusInterface(0) {}
+        //! Constructor
+        CContextSimulatorProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSimulator(mode, runtime), m_dBusInterface(0) {}
 
-    signals:
+        //! \brief DBus version constructor
+        CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
     public slots:
-
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
 
@@ -59,4 +43,4 @@ namespace BlackCore
 
 } // namespace BlackCore
 
-#endif // BLACKCORE_CONTEXTSIMULATOR_PROXY_H
+#endif // guard

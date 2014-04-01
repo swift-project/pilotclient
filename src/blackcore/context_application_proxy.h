@@ -20,19 +20,11 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-
-        /*!
-          * \brief DBus version constructor
-          * \param serviceName
-          * \param connection
-          * \param parent
-          */
-        CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent = nullptr);
-
         //! Destructor
         virtual ~CContextApplicationProxy() {}
 
     private:
+        friend class CRuntime;
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
         //! Relay connection signals to local signals
@@ -40,11 +32,11 @@ namespace BlackCore
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
 
     protected:
-        /*!
-         * \brief IContextApplication
-         * \param parent
-         */
-        CContextApplicationProxy(QObject *parent = nullptr) : IContextApplication(parent), m_dBusInterface(nullptr) {}
+        //! Constructor
+        CContextApplicationProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr) {}
+
+        //! DBus version constructor
+        CContextApplicationProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
     public slots:
 

@@ -8,7 +8,7 @@
 
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
-#include "blackcore/coreruntime.h"
+#include "blackcore/context_runtime.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/network.h"
 #include "blackmisc/avatcstationlist.h"
@@ -30,33 +30,27 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
 
     public:
-
-        //! \brief Constructor, with link to runtime
-        CContextNetwork(QObject *parent = nullptr);
-
-        //! \brief Destructor
+        //! Destructor
         virtual ~CContextNetwork();
 
-        /*!
-         * \brief Register myself in DBus
-         * \param server    DBus server
-         */
-        void registerWithDBus(CDBusServer *server)
+        //! Register myself in DBus
+        CContextNetwork *registerWithDBus(CDBusServer *server)
         {
             Q_ASSERT(server);
             server->addObject(IContextNetwork::ObjectPath(), this);
+            return this;
         }
 
-        //! \brief Runtime
-        CCoreRuntime *getRuntime()
+        //! Runtime
+        CRuntime *getRuntime()
         {
-            return static_cast<CCoreRuntime *>(this->parent());
+            return static_cast<CRuntime *>(this->parent());
         }
 
         //! \brief Const runtime
-        const CCoreRuntime *getRuntime() const
+        const CRuntime *getRuntime() const
         {
-            return static_cast<CCoreRuntime *>(this->parent());
+            return static_cast<CRuntime *>(this->parent());
         }
 
         //! \copydoc IContextNetwork::usingLocalObjects()
@@ -67,20 +61,14 @@ namespace BlackCore
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()
         virtual void readAtcBookingsFromSource() const override;
 
-        /*!
-         * \copydoc IContextNetwork::getAtcStationsOnline()
-         * \todo If I make this &getAtcStations XML is not generated correctly, needs to be crosschecked with the latest version of Qt
-         */
+        //! \copydoc IContextNetwork::getAtcStationsOnline()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override
         {
             // this->log(Q_FUNC_INFO);
             return m_atcStationsOnline;
         }
 
-        /*!
-         * \copydoc IContextNetwork::getAtcStationsBooked()
-         * \todo If I make this &getAtcStations XML is not generated correctly
-         */
+        //! \copydoc IContextNetwork::getAtcStationsBooked()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override
         {
             // this->log(Q_FUNC_INFO);
@@ -142,7 +130,12 @@ namespace BlackCore
         //! \copydoc IContextNetwork::requestAtisUpdates
         virtual void requestAtisUpdates() override;
 
+    protected:
+        //! Constructor, with link to runtime
+        CContextNetwork(CRuntimeConfig::ContextMode, CRuntime *runtime);
+
     private:
+        friend class CRuntime;
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
         BlackMisc::Aviation::CAircraftList m_aircraftsInRange;

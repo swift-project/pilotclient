@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "context_network_impl.h"
-#include "coreruntime.h"
+#include "context_runtime.h"
 #include "context_settings.h"
 #include "network_vatlib.h"
 #include "vatsimbookingreader.h"
@@ -28,8 +28,8 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextNetwork::CContextNetwork(QObject *parent) :
-        IContextNetwork(parent), m_network(nullptr), m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
+    CContextNetwork::CContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
+        IContextNetwork(mode, runtime), m_network(nullptr), m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getIContextSettings());

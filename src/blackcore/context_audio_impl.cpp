@@ -22,11 +22,10 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextAudio::CContextAudio(QObject *parent) : 
-	IContextAudio(parent), 
-	m_voice(nullptr),
-	m_keyboard(nullptr),
-	m_contextSettings(nullptr)
+    CContextAudio::CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
+        IContextAudio(mode, runtime),
+        m_voice(nullptr),
+        m_keyboard(nullptr)
     {
         // 1. Init by "voice driver"
         this->m_voice = new CVoiceVatlib(this);
@@ -288,11 +287,13 @@ namespace BlackCore
         return static_cast<double>(this->m_voice->inputSquelch());
     }
 
-    void CContextAudio::settingsChanged(IContextSettings::SettingsType type)
+    void CContextAudio::settingsChanged(uint typeValue)
     {
+        if (!this->getRuntime()->getIContextSettings()) return;
+        IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
         if (type == IContextSettings::SettingsHotKeys)
         {
-            CKeyboardKeyList hotKeys = m_contextSettings->getHotkeys();
+            CKeyboardKeyList hotKeys = this->getRuntime()->getIContextSettings()->getHotkeys();
             CKeyboardKey pttKey = hotKeys.findBy(&BlackMisc::Hardware::CKeyboardKey::getFunction, BlackMisc::Hardware::CKeyboardKey::HotkeyPtt).front();
             m_keyboard->unregisterHotkey(m_handlePtt);
             m_handlePtt = m_keyboard->registerHotkey(pttKey, m_voice, &CVoiceVatlib::handlePushToTalk);

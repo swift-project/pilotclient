@@ -22,7 +22,7 @@ namespace BlackCore
     /*
      * Constructor for DBus
      */
-    CContextSettingsProxy::CContextSettingsProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent) : IContextSettings(parent), m_dBusInterface(nullptr)
+    CContextSettingsProxy::CContextSettingsProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSettings(mode, runtime), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
             serviceName , IContextSettings::ObjectPath(), IContextSettings::InterfaceName(),

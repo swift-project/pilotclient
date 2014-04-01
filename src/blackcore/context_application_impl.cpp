@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "context_application_impl.h"
-#include "coreruntime.h"
+#include "context_runtime.h"
 #include "blackmisc/settingutilities.h"
 
 using namespace BlackMisc;
@@ -15,7 +15,7 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextApplication::CContextApplication(QObject *parent) : IContextApplication(parent)
+    CContextApplication::CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextApplication(mode, runtime)
     {
         // void
     }

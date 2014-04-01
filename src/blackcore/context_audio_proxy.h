@@ -25,21 +25,11 @@ namespace BlackCore
 
     public:
 
-        /*!
-         * \brief DBus version constructor
-         * \param serviceName
-         * \param connection
-         * \param parent
-         */
-        CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, QObject *parent = nullptr);
-
         //! Destructor
         virtual ~CContextAudioProxy() {}
 
-        //! \copydoc IContextVoice::usingLocalObjects()
-        virtual bool usingLocalObjects() const override { return false; }
-
     private:
+        friend class CRuntime;
         BlackMisc::CGenericDBusInterface *m_dBusInterface;
 
         //! Relay connection signals to local signals
@@ -47,11 +37,11 @@ namespace BlackCore
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
 
     protected:
-        /*!
-         * \brief IContextVoice
-         * \param parent
-         */
-        CContextAudioProxy(QObject *parent = nullptr) : IContextAudio(parent), m_dBusInterface(nullptr) {}
+        //! Contructor
+        CContextAudioProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextAudio(mode, runtime), m_dBusInterface(nullptr) {}
+
+        //! DBus version constructor
+        CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
         /*!
          * \brief Helper for logging, likely to be removed / changed

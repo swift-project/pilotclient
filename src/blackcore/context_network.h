@@ -6,13 +6,14 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_H
 #define BLACKCORE_CONTEXTNETWORK_H
 
+#include "blackcore/context.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/voiceroomlist.h"
-#include <QObject>
+#include "blackcore/network.h"
 
 #define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextNetwork"
 #define BLACKCORE_CONTEXTNETWORK_OBJECTPATH "/Network"
@@ -21,32 +22,25 @@ namespace BlackCore
 {
 
     //! \brief Network context proxy
-    class IContextNetwork : public QObject
+    class IContextNetwork : public CContext
     {
         Q_OBJECT
-        Q_ENUMS(ConnectionStatus)
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
 
     public:
-        //! \brief DBus interface name
+        //! DBus interface name
         static const QString &InterfaceName()
         {
             static QString s(BLACKCORE_CONTEXTNETWORK_INTERFACENAME);
             return s;
         }
 
-        //! \brief DBus object path
+        //! DBus object path
         static const QString &ObjectPath()
         {
             static QString s(BLACKCORE_CONTEXTNETWORK_OBJECTPATH);
             return s;
         }
-
-        /*!
-         * \brief Constructor
-         * \param parent
-         */
-        IContextNetwork(QObject *parent = nullptr) : QObject(parent) {}
 
         //! Destructor
         virtual ~IContextNetwork() {}
@@ -56,16 +50,10 @@ namespace BlackCore
 
     signals:
 
-        /*!
-         * \brief Send status message
-         * \param message
-         */
+        //! Send status message
         void statusMessage(const BlackMisc::CStatusMessage &message);
 
-        /*!
-         * \brief Send status messages
-         * \param messages
-         */
+        //! Send status messages
         void statusMessages(const BlackMisc::CStatusMessageList &messages);
 
         //! ATC station (online) list has been changed
@@ -180,6 +168,14 @@ namespace BlackCore
 
         //! Request ATIS updates (for all stations)
         virtual void requestAtisUpdates() = 0;
+
+    protected:
+        friend class CRuntime;
+
+        //! Constructor
+        IContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime = nullptr) : CContext(mode, runtime) {}
+
+
     };
 }
 
