@@ -1,4 +1,5 @@
 #include "setnetwork.h"
+#include "blackcore/dbus_server.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
@@ -12,7 +13,9 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CSettingsNetwork::CSettingsNetwork()
+        CSettingsNetwork::CSettingsNetwork() :
+            m_bookingServiceUrl("http://vatbook.euroutepro.com/xml2.php"),
+            m_dbusServerAddress(BlackCore::CDBusServer::sessionDBusServer())
         {
             // settings
         }
@@ -48,7 +51,6 @@ namespace BlackMisc
         bool CSettingsNetwork::isA(int metaTypeId) const
         {
             if (metaTypeId == qMetaTypeId<CSettingsNetwork>()) { return true; }
-
             return this->CValueObject::isA(metaTypeId);
         }
 
@@ -58,29 +60,23 @@ namespace BlackMisc
         int CSettingsNetwork::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CSettingsNetwork &>(otherBase);
-
-            int result;
-            if ((result = compare(this->m_trafficNetworkServerCurrent, other.m_trafficNetworkServerCurrent))) { return result; }
-            if ((result = compare(this->m_trafficNetworkServers, other.m_trafficNetworkServers))) { return result; }
-            return 0;
+            return compare(TupleConverter<CSettingsNetwork>::toTuple(*this), TupleConverter<CSettingsNetwork>::toTuple(other));
         }
 
         /*
-         * Marshall to DBus
+         * Marshall
          */
         void CSettingsNetwork::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << this->m_trafficNetworkServerCurrent;
-            argument << this->m_trafficNetworkServers;
+            argument << TupleConverter<CSettingsNetwork>::toTuple(*this);
         }
 
         /*
-         * Unmarshall from DBus
+         * Unmarshall
          */
         void CSettingsNetwork::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> this->m_trafficNetworkServerCurrent;
-            argument >> this->m_trafficNetworkServers;
+            argument >> TupleConverter<CSettingsNetwork>::toTuple(*this);
         }
 
         /*
@@ -105,9 +101,45 @@ namespace BlackMisc
          */
         uint CSettingsNetwork::getValueHash() const
         {
-            QList<uint> hashs;
-            hashs << qHash(this->m_trafficNetworkServers);
-            return BlackMisc::calculateHash(hashs, "CSettingsNetwork");
+            return qHash(TupleConverter<CSettingsNetwork>::toTuple(*this));
+        }
+
+        /*
+         * To JSON
+         */
+        QJsonObject CSettingsNetwork::toJson() const
+        {
+            return BlackMisc::serializeJson(CSettingsNetwork::jsonMembers(), TupleConverter<CSettingsNetwork>::toTuple(*this));
+        }
+
+        /*
+         * From JSON
+         */
+        void CSettingsNetwork::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CSettingsNetwork::jsonMembers(), TupleConverter<CSettingsNetwork>::toTuple(*this));
+        }
+
+        /*
+         * Members
+         */
+        const QStringList &CSettingsNetwork::jsonMembers()
+        {
+            return TupleConverter<CSettingsNetwork>::jsonMembers();
+        }
+
+        /*
+         * Default values
+         */
+        void CSettingsNetwork::initDefaultValues()
+        {
+            CServer currentServer(CServer("Testserver", "Client project testserver", "vatsim-germany.org", 6809, CUser("guest", "Guest Client project", "", "guest")));
+            this->setCurrentNetworkServer(currentServer);
+            this->addTrafficNetworkServer(this->getCurrentTrafficNetworkServer());
+            this->addTrafficNetworkServer(CServer("Europe C2", "VATSIM Server", "88.198.19.202", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
+            this->addTrafficNetworkServer(CServer("Europe CC", "VATSIM Server", "5.9.155.43", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
+            this->addTrafficNetworkServer(CServer("UK", "VATSIM Server", "109.169.48.148", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
+            this->addTrafficNetworkServer(CServer("USA-W", "VATSIM Server", "64.151.108.52", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
         }
 
         /*
@@ -152,8 +184,24 @@ namespace BlackMisc
                 msgs.push_back(CStatusMessage::getInfoMessage("set current server", CStatusMessage::TypeSettings));
                 return msgs;
             }
+            else if (path == CSettingsNetwork::ValueBookingServiceUrl())
+            {
+                if (command == CSettingUtilities::CmdUpdate())
+                {
+                    QString v = value.toString();
+                    if (this->m_bookingServiceUrl == v)
+                    {
+                        msgs.push_back(CSettingUtilities::valueNotChangedMessage("booking URL"));
+                    }
+                    else
+                    {
+                        changedFlag = true;
+                        msgs.push_back(CSettingUtilities::valueChangedMessage("booking URL"));
+                    }
+                    return msgs;
+                }
+            }
             return CSettingUtilities::wrongPathMessages(path);
         }
-
     } // namespace
 } // namespace
