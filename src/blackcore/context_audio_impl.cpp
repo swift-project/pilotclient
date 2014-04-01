@@ -44,12 +44,6 @@ namespace BlackCore
         this->leaveAllVoiceRooms();
     }
 
-    void CContextAudio::init()
-    {
-        m_contextSettings = getRuntime()->getIContextSettings();
-        connect(m_contextSettings, &IContextSettings::changedSettings, this, &CContextAudio::settingsChanged);
-    }
-
     /*
      * Own aircraft
      */

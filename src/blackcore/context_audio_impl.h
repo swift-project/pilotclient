@@ -34,10 +34,6 @@ namespace BlackCore
             return this;
         }
 
-
-        //! \brief Initialize voice context
-        void init();
-
     public slots:
         //! \copydoc IContextAudio::setOwnAircraft()
         virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft) override;
