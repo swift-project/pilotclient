@@ -25,11 +25,14 @@ else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
 HEADERS += *.h
 SOURCES += *.cpp
 
+
 HEADERS += $$PWD/fscommon/*.h
 SOURCES += $$PWD/fscommon/*.cpp
 
-HEADERS += $$PWD/fsx/*.h
-SOURCES += $$PWD/fsx/*.cpp
+contains(BLACK_CONFIG, FSX) {
+	HEADERS += $$PWD/fsx/*.h
+	SOURCES += $$PWD/fsx/*.cpp
+}
 
 DESTDIR = ../../lib
 
