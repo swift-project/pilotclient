@@ -5,6 +5,7 @@
 
 #include "blackmisc/pqallquantities.h"
 #include "blackmiscfreefunctions.h"
+#include <QCoreApplication>
 
 namespace BlackMisc
 {
@@ -262,6 +263,7 @@ namespace BlackMisc
          */
         template <class MU, class PQ> QString CPhysicalQuantity<MU, PQ>::convertToQString(bool i18n) const
         {
+            if (this->isNull()) return (i18n) ? QCoreApplication::translate("CPhysicalQuantity", "undefined") : "undefined";
             return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
         }
 
