@@ -8,10 +8,10 @@
 #include "blackcore/context_settings.h"
 #include "tool.h"
 #include <QtConcurrent/QtConcurrent>
-
 #include <QMetaType>
 #include <QMetaMethod>
-
+#include <QApplication>
+#include <QIcon>
 
 /*!
  * DBus tests, tests marshalling / unmarshalling of many value classes.
@@ -20,7 +20,9 @@
 int main(int argc, char *argv[])
 {
     // metadata are registered in runtime
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv); // not QCoreApplication because of icon, http://qt-project.org/forums/viewthread/15412
+    QIcon icon(":/blackcore/icons/tower.png");
+    QApplication::setWindowIcon(icon);
     BlackCore::CRuntime *core = new BlackCore::CRuntime(BlackCore::CRuntimeConfig::forCore(), &a);
     QtConcurrent::run(BlackMiscTest::Tool::serverLoop, core); // QFuture<void> future
     qDebug() << "Server event loop, pid:" << BlackMiscTest::Tool::getPid();

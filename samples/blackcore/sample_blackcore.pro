@@ -1,7 +1,9 @@
 include (../../config.pri)
 include (../../build.pri)
 
-QT       += core dbus network xml multimedia
+# widgets required for icon
+QT       += core dbus network xml multimedia gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = sample_blackcore
 TEMPLATE = app
