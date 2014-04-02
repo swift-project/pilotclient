@@ -99,7 +99,7 @@ namespace BlackCore
             CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
         );
         this->m_ownAircraft.setSituation(situation);
-        this->m_ownAircraft.setPilot(this->getRuntime()->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer().getUser());
+        this->m_ownAircraft.setPilot(this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer().getUser());
 
         // TODO: This would need to come from somewhere (mappings)
         // Own callsign, plane ICAO status, model used
@@ -114,7 +114,7 @@ namespace BlackCore
     {
         // this->log(Q_FUNC_INFO);
         CStatusMessageList msgs;
-        CServer currentServer = this->getRuntime()->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer();
+        CServer currentServer = this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer();
 
         if (!currentServer.getUser().isValid())
         {

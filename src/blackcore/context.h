@@ -39,6 +39,40 @@ namespace BlackCore
             return static_cast<CRuntime *>(this->parent());
         }
 
+        //
+        // cross context access
+        //
+
+        //! Context for network
+        IContextNetwork *getIContextNetwork();
+
+        //! Context for network
+        const IContextNetwork *getIContextNetwork() const;
+
+        //! Context for network
+        IContextAudio *getIContextAudio();
+
+        //! Context for network
+        const IContextAudio *getIContextAudio() const;
+
+        //! Settings
+        IContextSettings *getIContextSettings();
+
+        //! Settings
+        const IContextSettings *getIContextSettings() const;
+
+        //! Context for application
+        const IContextApplication *getIContextApplication() const;
+
+        //! Application
+        IContextApplication *getIContextApplication();
+
+        //! Context for simulator
+        const IContextSimulator *getIContextSimulator() const;
+
+        //! Simulator
+        IContextSimulator *getIContextSimulator();
+
     protected:
         //! Constructor
         CContext(CRuntimeConfig::ContextMode mode, QObject *parent) : QObject(parent), m_mode(mode)

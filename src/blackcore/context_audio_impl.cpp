@@ -209,9 +209,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(this->getRuntime());
-        Q_ASSERT(this->getRuntime()->getIContextNetwork());
-        return this->getRuntime()->getIContextNetwork()->
-               getUsersForCallsigns(this->getCom1RoomCallsigns());
+        return this->getIContextNetwork()->getUsersForCallsigns(this->getCom1RoomCallsigns());
     }
 
     /*
@@ -283,11 +281,11 @@ namespace BlackCore
 
     void CContextAudio::settingsChanged(uint typeValue)
     {
-        if (!this->getRuntime()->getIContextSettings()) return;
+        if (!this->getIContextSettings()) return;
         IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
         if (type == IContextSettings::SettingsHotKeys)
         {
-            CKeyboardKeyList hotKeys = this->getRuntime()->getIContextSettings()->getHotkeys();
+            CKeyboardKeyList hotKeys = this->getIContextSettings()->getHotkeys();
             CKeyboardKey pttKey = hotKeys.findBy(&BlackMisc::Hardware::CKeyboardKey::getFunction, BlackMisc::Hardware::CKeyboardKey::HotkeyPtt).front();
             m_keyboard->unregisterHotkey(m_handlePtt);
             m_handlePtt = m_keyboard->registerHotkey(pttKey, m_voice, &CVoiceVatlib::handlePushToTalk);

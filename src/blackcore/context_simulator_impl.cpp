@@ -44,8 +44,8 @@ namespace BlackCore
     void CContextSimulator::updateOwnAircraft()
     {
         m_ownAircraft = m_simulator->getOwnAircraft();
-        getRuntime()->getIContextNetwork()->updateOwnSituation(m_ownAircraft.getSituation());
-        getRuntime()->getIContextNetwork()->updateOwnCockpit(m_ownAircraft.getCom1System(), m_ownAircraft.getCom2System(), m_ownAircraft.getTransponder());
+        getIContextNetwork()->updateOwnSituation(m_ownAircraft.getSituation());
+        getIContextNetwork()->updateOwnCockpit(m_ownAircraft.getCom1System(), m_ownAircraft.getCom2System(), m_ownAircraft.getTransponder());
     }
 
     void CContextSimulator::setConnectionStatus(bool value)
