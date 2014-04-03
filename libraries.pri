@@ -1,6 +1,6 @@
 include (externals.pri)
 
-LIBS *= -L../../lib -L../../../lib
+LIBS *= -L../../lib -L../../../lib -L../../../../lib
 
 blackgui {
     LIBS += -lblackgui

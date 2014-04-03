@@ -25,6 +25,10 @@ contains(BLACK_CONFIG, BlackSim) {
     contains(BLACK_CONFIG, FSX) {
         SUBDIRS += src/blacksim/fsx/plugin_fsx.pro
     }
+
+    contains(BLACK_CONFIG, XPlane) {
+        SUBDIRS += src/blacksim/xplane/plugin/plugin_xplane.pro
+    }
 }
 
 contains(BLACK_CONFIG, Samples) {
