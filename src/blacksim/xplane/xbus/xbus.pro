@@ -36,7 +36,7 @@ win32:contains(QMAKE_TARGET.arch, x86_64) {
     DESTDIR = ../../../../xbus/64
 }
 win32:contains(QMAKE_TARGET.arch, x86) {
-    DESTDIR = ../../../../xbus/32
+    DESTDIR = ../../../../xbus
 }
 win32-g++ {
     WIN_FIND = $$(SYSTEMROOT)\system32\find
@@ -45,7 +45,7 @@ win32-g++ {
         DESTDIR = ../../../../xbus/64
     }
     else {
-        DESTDIR = ../../../../xbus/32
+        DESTDIR = ../../../../xbus
     }
 }
 linux-g++ {
@@ -54,14 +54,14 @@ linux-g++ {
         DESTDIR = ../../../../xbus/64
     }
     else {
-        DESTDIR = ../../../../xbus/32
+        DESTDIR = ../../../../xbus
     }
 }
 linux-g++-64 {
     DESTDIR = ../../../../xbus/64
 }
 linux-g++-32 {
-    DESTDIR = ../../../../xbus/32
+    DESTDIR = ../../../../xbus
 }
 macx {
     # a single dylib file contains both 32bit and 64bit binaries
