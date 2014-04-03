@@ -9,6 +9,7 @@
 #include <XPLM/XPLMDefs.h>
 #include <XPLM/XPLMPlugin.h>
 #include <XPLM/XPLMProcessing.h>
+#include <XPLM/XPLMUtilities.h>
 #include <QApplication>
 #include <QSharedPointer>
 
@@ -46,7 +47,11 @@ public:
             static char *argv[] = { "X-Plane" };
             new QSharedApplication(ptr, argc, argv);
         }
-        return qobject_cast<QSharedApplication*>(instance())->m_weakptr;
+        if (! instance()->inherits("QSharedApplication"))
+        {
+            XPLMDebugString("Error: there is an unshared QApplication in another plugin\n");
+        }
+        return static_cast<QSharedApplication*>(instance())->m_weakptr;
     }
 };
 
