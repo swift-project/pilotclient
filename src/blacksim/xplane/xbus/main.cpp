@@ -6,7 +6,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "stub.h"
 #include "utils.h"
-#include <cstring>
 
 QSharedPointer<QApplication> g_qApp;
 XBus::CStub *g_stub;
@@ -25,6 +24,7 @@ PLUGIN_API void XPluginStop()
 
 PLUGIN_API int XPluginEnable()
 {
+    QXPlaneMessageHandler::install();
     g_qApp = QSharedApplication::sharedInstance();
     QXPlaneEventLoop::exec();
     g_stub = new XBus::CStub;

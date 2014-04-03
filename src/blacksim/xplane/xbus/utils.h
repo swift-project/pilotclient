@@ -6,16 +6,61 @@
 #ifndef BLACKSIM_XBUS_UTILS_H
 #define BLACKSIM_XBUS_UTILS_H
 
+#define _CRT_SECURE_NO_WARNINGS
 #include <XPLM/XPLMDefs.h>
 #include <XPLM/XPLMPlugin.h>
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
 #include <QApplication>
 #include <QSharedPointer>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
 
 /*!
  * \file
  */
+
+/*!
+ * Install a Qt message handler which outputs to the X-Plane debug log.
+ */
+class QXPlaneMessageHandler
+{
+    QXPlaneMessageHandler();
+    QXPlaneMessageHandler(const QXPlaneMessageHandler &);
+
+    static void handler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+    {
+        QByteArray localMsg = msg.toLocal8Bit();
+        char *buffer = new char[64 + localMsg.size() + std::strlen(context.file) + std::strlen(context.function)];
+        switch (type) {
+        case QtDebugMsg:
+            std::sprintf(buffer, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            XPLMDebugString(buffer);
+            break;
+        case QtWarningMsg:
+            std::sprintf(buffer, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            XPLMDebugString(buffer);
+            break;
+        default:
+        case QtCriticalMsg:
+            std::sprintf(buffer, "Error: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            XPLMDebugString(buffer);
+            break;
+        case QtFatalMsg:
+            std::sprintf(buffer, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+            XPLMDebugString(buffer);
+            std::abort();
+        }
+        delete[] buffer;
+    }
+
+public:
+    static void install()
+    {
+        qInstallMessageHandler(handler);
+    }
+};
 
 /*!
  * QApplication subclass used by XBus.
@@ -49,7 +94,7 @@ public:
         }
         if (! instance()->inherits("QSharedApplication"))
         {
-            XPLMDebugString("Error: there is an unshared QApplication in another plugin\n");
+            qFatal("There is an unshared QApplication in another plugin");
         }
         return static_cast<QSharedApplication*>(instance())->m_weakptr;
     }
