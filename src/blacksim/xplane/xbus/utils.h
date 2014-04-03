@@ -56,6 +56,9 @@ class QXPlaneMessageHandler
     }
 
 public:
+    /*!
+     * Install the handler.
+     */
     static void install()
     {
         qInstallMessageHandler(handler);
@@ -83,6 +86,11 @@ class QSharedApplication : public QApplication
     }
 
 public:
+    /*!
+     * Returns a shared pointer to the QApplication.
+     *
+     * The QApplication will not be destroyed while this shared pointer exists.
+     */
     static QSharedPointer<QApplication> sharedInstance()
     {
         QSharedPointer<QApplication> ptr;
@@ -125,6 +133,10 @@ class QXPlaneEventLoop : public QObject
     }
 
 public:
+    /*!
+     * Registers the X-Plane callback which calls into the Qt event loop,
+     * unless one was already registered.
+     */
     static void exec()
     {
         if (! QApplication::instance()->findChild<QXPlaneEventLoop *>())
