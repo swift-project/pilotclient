@@ -221,6 +221,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->connect(this->m_contextSettings, &IContextSettings::changedSettings, this, &MainWindow::changedSettings);
     connect = this->connect(this->m_contextNetwork, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
     Q_ASSERT(connect);
+    Q_UNUSED(connect); // suppress GCC warning in release build
     this->connect(this->m_contextSimulator, &IContextSimulator::connectionChanged, this, &MainWindow::simulatorAvailable);
     this->connect(this->m_timerUpdateAircraftsInRange, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateAtcStationsOnline, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
