@@ -15,10 +15,9 @@ namespace BlackCore
     /*
      * Init this context
      */
-    CContextApplication::CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextApplication(mode, runtime)
-    {
-        // void
-    }
+    CContextApplication::CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
+        CContextApplicationBase(mode, runtime)
+    {}
 
     /*
      * Ping, is DBus alive?

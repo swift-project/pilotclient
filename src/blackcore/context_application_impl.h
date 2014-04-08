@@ -17,7 +17,7 @@ namespace BlackCore
     /*!
      * \brief Application context
      */
-    class CContextApplication : public IContextApplication
+    class CContextApplication : public CContextApplicationBase
     {
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
         Q_OBJECT
