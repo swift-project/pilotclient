@@ -6,7 +6,7 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_IMPL_H
 #define BLACKCORE_CONTEXTAPPLICATION_IMPL_H
 
-#include "context_application.h"
+#include "context_application_base.h"
 #include "context_runtime.h"
 #include "dbus_server.h"
 
@@ -23,6 +23,16 @@ namespace BlackCore
         Q_OBJECT
         friend class CRuntime;
 
+    public slots:
+        //! \copydoc IContextApplication::ping()
+        virtual qint64 ping(qint64 token) const override;
+
+        //! \brief Status message
+        virtual void sendStatusMessage(const BlackMisc::CStatusMessage &message) override;
+
+        //! Send status messages
+        virtual void sendStatusMessages(const BlackMisc::CStatusMessageList &messages) override;
+
         //! \copydoc CContext::reEmitSignalFromProxy
         virtual void signalFromProxy(const QString &signalName) override;
 
@@ -37,13 +47,6 @@ namespace BlackCore
             server->addObject(IContextApplication::ObjectPath(), this);
             return this;
         }
-    public:
-        //! Destructor
-        virtual ~CContextApplication() {}
-
-    public slots:
-        //! \copydoc IContextApplication::ping()
-        virtual qint64 ping(qint64 token) const override;
     };
 }
 

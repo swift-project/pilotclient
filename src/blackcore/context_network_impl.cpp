@@ -71,7 +71,7 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CContextNetwork::psFsdAircraftUpdateReceived);
         this->connect(this->m_network, &INetwork::frequencyReplyReceived, this, &CContextNetwork::psFsdFrequencyReceived);
         this->connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::psFsdTextMessageReceived);
-        this->connect(this->m_network, &INetwork::statusMessage, this, &CContextNetwork::statusMessage);
+        if (this->getIContextApplication()) this->connect(this->m_network, &INetwork::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
     }
 
     /*

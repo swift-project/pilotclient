@@ -6,12 +6,12 @@
 #include "context_application_impl.h"
 #include "context_runtime.h"
 #include "blackmisc/settingutilities.h"
+#include <QtMsgHandler>
 
 using namespace BlackMisc;
 
 namespace BlackCore
 {
-
     /*
      * Init this context
      */
@@ -26,6 +26,24 @@ namespace BlackCore
     {
         return token;
     }
+
+    /*
+     * Status message
+     */
+    void CContextApplication::sendStatusMessage(const CStatusMessage &message)
+    {
+        emit this->statusMessage(message);
+    }
+
+    /*
+     * Status messages
+     */
+    void CContextApplication::sendStatusMessages(const CStatusMessageList &messages)
+    {
+        emit this->statusMessages(messages);
+    }
+
+    /*
      * Re-emit signal
      */
     void CContextApplication::signalFromProxy(const QString &signalName)

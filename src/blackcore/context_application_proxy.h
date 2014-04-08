@@ -6,7 +6,7 @@
 #ifndef BLACKCORE_CONTEXTAPPLICATION_PROXY_H
 #define BLACKCORE_CONTEXTAPPLICATION_PROXY_H
 
-#include "context_application.h"
+#include "context_application_base.h"
 #include "blackmisc/genericdbusinterface.h"
 
 namespace BlackCore
@@ -27,6 +27,12 @@ namespace BlackCore
     public slots:
         //! \copydoc IContextApplication::ping()
         virtual qint64 ping(qint64 token) const override;
+
+        //! \brief Status message
+        virtual void sendStatusMessage(const BlackMisc::CStatusMessage &message) override;
+
+        //! Send status messages
+        virtual void sendStatusMessages(const BlackMisc::CStatusMessageList &messages) override;
 
         //! \copydoc CContext::reEmitSignalFromProxy
         void signalFromProxy(const QString &signalName) override;

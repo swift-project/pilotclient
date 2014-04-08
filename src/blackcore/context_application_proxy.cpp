@@ -59,4 +59,20 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("signalFromProxy"), signalName);
     }
 
+    /*
+     * Status messages
+     */
+    void CContextApplicationProxy::sendStatusMessage(const BlackMisc::CStatusMessage &message)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("sendStatusMessage"), message);
+    }
+
+    /*
+     * Status messages
+     */
+    void CContextApplicationProxy::sendStatusMessages(const BlackMisc::CStatusMessageList &messages)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("sendStatusMessages"), messages);
+    }
+
 } // namespace
