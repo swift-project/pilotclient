@@ -23,6 +23,9 @@ namespace BlackCore
         Q_OBJECT
         friend class CRuntime;
 
+        //! \copydoc CContext::reEmitSignalFromProxy
+        virtual void signalFromProxy(const QString &signalName) override;
+
     protected:
         //! Constructor
         CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);

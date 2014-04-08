@@ -26,12 +26,20 @@ namespace BlackCore
      */
     void CContextApplicationProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
+        // signals originating from impl side
         connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                            "statusMessage", this, SIGNAL(statusMessage(BlackMisc::CStatusMessage)));
         connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                           "widgetGuiStarting", this, SIGNAL(widgetGuiStarting()));
+                           "statusMessages", this, SIGNAL(statusMessages(BlackMisc::CStatusMessageList)));
         connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                           "widgetGuiTerminating", this, SIGNAL(widgetGuiTerminating()));
+                           "redirectedOutput", this, SIGNAL(redirectedOutput(BlackMisc::CStatusMessage, qint64)));
+
+        // 1. No need to connect widgetGuiTerminating, only orginates from Proxy side / or is local
+        // 2. No need to connect widgetGuiStarting
+
+        // signals originating from proxy side
+        connect(this, &CContextApplicationProxy::widgetGuiStarting, [this] { this->signalFromProxy("widgetGuiStarting");});
+        connect(this, &CContextApplicationProxy::widgetGuiTerminating, [this] { this->signalFromProxy("widgetGuiTerminating");});
     }
 
     /*
@@ -41,6 +49,14 @@ namespace BlackCore
     {
         qint64 t = this->m_dBusInterface->callDBusRet<qint64>(QLatin1Literal("ping"), token);
         return t;
+    }
+
+    /*
+     * Signal from proxy
+     */
+    void CContextApplicationProxy::signalFromProxy(const QString &signalName)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("signalFromProxy"), signalName);
     }
 
 } // namespace

@@ -28,6 +28,9 @@ namespace BlackCore
         //! \copydoc IContextApplication::ping()
         virtual qint64 ping(qint64 token) const override;
 
+        //! \copydoc CContext::reEmitSignalFromProxy
+        void signalFromProxy(const QString &signalName) override;
+
     protected:
         //! Constructor
         CContextApplicationProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr) {}

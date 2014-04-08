@@ -27,4 +27,11 @@ namespace BlackCore
     {
         return token;
     }
+     * Re-emit signal
+     */
+    void CContextApplication::signalFromProxy(const QString &signalName)
+    {
+        CContext::reEmitSignalFromProxy(signalName);
+    }
+
 } // namespace
