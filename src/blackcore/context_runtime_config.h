@@ -48,6 +48,10 @@ namespace BlackCore
         ContextMode getModeApplication() const { return this->m_application; }
         //! local settings?
         bool hasLocalSettings() const { return this->m_settings == Local || this->m_settings == LocalInDbusServer; }
+        //! requires server (at least one in server)?
+        bool requiresDBusSever() const;
+        //!  requires DBus connection (at least one remote)?
+        bool requiresDBusConnection() const;
 
         //! predefined for Core
         static const CRuntimeConfig &forCore();
@@ -57,7 +61,6 @@ namespace BlackCore
 
         //! predefined, completely remote (e.g. for GUI with core)
         static const CRuntimeConfig &remote();
-
     };
 }
 #endif // guard

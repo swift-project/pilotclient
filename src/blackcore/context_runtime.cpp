@@ -262,6 +262,24 @@ namespace BlackCore
         return static_cast<CContextSimulator *>(this->m_contextSimulator);
     }
 
+    bool CRuntimeConfig::requiresDBusSever() const
+    {
+        return (this->m_application == LocalInDbusServer ||
+                this->m_audio == LocalInDbusServer ||
+                this->m_network == LocalInDbusServer ||
+                this->m_settings == LocalInDbusServer ||
+                this->m_simulator == LocalInDbusServer);
+    }
+
+    bool CRuntimeConfig::requiresDBusConnection() const
+    {
+        return (this->m_application == Remote ||
+                this->m_audio == Remote ||
+                this->m_network == Remote ||
+                this->m_settings == Remote ||
+                this->m_simulator == Remote);
+    }
+
     const CRuntimeConfig &CRuntimeConfig::forCore()
     {
         static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::LocalInDbusServer));
