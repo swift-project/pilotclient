@@ -46,13 +46,6 @@ namespace BlackCore
         virtual ~IContextNetwork() {}
 
     signals:
-
-        //! Send status message
-        void statusMessage(const BlackMisc::CStatusMessage &message);
-
-        //! Send status messages
-        void statusMessages(const BlackMisc::CStatusMessageList &messages);
-
         //! ATC station (online) list has been changed
         void changedAtcStationsOnline();
 

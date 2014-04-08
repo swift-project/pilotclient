@@ -209,21 +209,4 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isMuted"));
     }
 
-    /*
-     * Logging
-     */
-    void CContextAudioProxy::log(const QString &method, const QString &m1, const QString &m2, const QString &m3, const QString &m4) const
-    {
-        if (m1.isEmpty())
-            qDebug() << "   LOG: " << method;
-        else if (m2.isEmpty())
-            qDebug() << "   LOG: " << method << m1;
-        else if (m3.isEmpty())
-            qDebug() << "   LOG: " << method << m1 << m2;
-        else if (m4.isEmpty())
-            qDebug() << "   LOG: " << method << m1 << m2 << m3;
-        else
-            qDebug() << "   LOG: " << method << m1 << m2 << m3 << m4;
-    }
-
 } // namespace

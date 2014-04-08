@@ -43,16 +43,6 @@ namespace BlackCore
         //! DBus version constructor
         CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
-        /*!
-         * \brief Helper for logging, likely to be removed / changed
-         * \param method
-         * \param m1
-         * \param m2
-         * \param m3
-         * \param m4
-         */
-        void log(const QString &method, const QString &m1 = "", const QString &m2 = "", const QString &m3 = "", const QString &m4 = "") const;
-
     public slots:
 
         //! \copydoc IContextAudio::setOwnAircraft()
