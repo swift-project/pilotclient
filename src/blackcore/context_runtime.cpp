@@ -359,6 +359,64 @@ namespace BlackCore
         }
     }
 
+    void CRuntime::gracefulShutdown()
+    {
+        if (!this->m_init) return;
+        this->m_init = false;
+
+        // disable all logging and all signals towards runtime
+        this->signalLog(false);
+        disconnect(this);
+
+        // unregister all from DBus
+        this->m_dbusServer->unregisterAllObjects();
+
+        // handle contexts
+        if (this->getIContextApplication())
+        {
+            disconnect(this->getIContextApplication());
+            this->getIContextApplication()->setOutputRedirectionLevel(IContextApplication::RedirectNone);
+            this->getIContextApplication()->setStreamingForRedirectedOutputLevel(IContextApplication::RedirectNone);
+            CContextApplicationBase::resetOutputRedirection();
+        }
+
+        if (this->getIContextSimulator())
+        {
+            // TODO: disconnect from simulator
+            disconnect(this->getIContextSimulator());
+        }
+
+        // log off from network, if connected
+        if (this->getIContextNetwork())
+        {
+            disconnect(this->getIContextNetwork());
+            this->getIContextNetwork()->disconnectFromNetwork();
+        }
+
+        if (this->getIContextAudio()) disconnect(this->getIContextAudio());
+        if (this->getIContextSettings()) disconnect(this->getIContextAudio());
+
+        // mark contexts as invalid
+        // they will be deleted by the parent object (this runtime)
+        this->m_contextApplication = nullptr;
+        this->m_contextAudio = nullptr;
+        this->m_contextNetwork = nullptr;
+        this->m_contextSettings = nullptr;
+        this->m_contextSimulator = nullptr;
+    }
+
+    void CRuntime::disconnectLogSignals(const QString &name)
+    {
+        if (!this->m_logSignalConnections.contains(name)) return;
+        QMultiMap<QString, QMetaObject::Connection>::const_iterator i = this->m_logSignalConnections.constFind(name);
+        while (i != this->m_logSignalConnections.end() && i.key() == name)
+        {
+            disconnect(i.value());
+            ++i;
+        }
+        this->m_logSignalConnections.remove(name);
+    }
+
     void CRuntime::initDBusConnection()
     {
         if (this->m_initDBusConnection) return;
