@@ -1,9 +1,10 @@
 #ifndef BLACKCORE_CONTEXT_RUNTIME_H
 #define BLACKCORE_CONTEXT_RUNTIME_H
 
+#include "blackcore/context_runtime_config.h"
 #include <QDBusConnection>
 #include <QObject>
-#include "blackcore/context_runtime_config.h"
+#include <QMultiMap>
 
 namespace BlackCore
 {
@@ -31,7 +32,14 @@ namespace BlackCore
         CRuntime(const CRuntimeConfig &config, QObject *parent = nullptr);
 
         //! Destructor
-        virtual ~CRuntime() {}
+        virtual ~CRuntime() { this->gracefulShutdown(); }
+
+        //! DBus server (if applicable)
+        const CDBusServer *getDBusServer() const { return this->m_dbusServer; }
+
+        //! DBus connection (if applicable)
+        const QDBusConnection &getDBusConnection() const { return this->m_dbusConnection; }
+
         //! Enable / disable all logging
         void signalLog(bool enabled);
 
@@ -88,6 +96,10 @@ namespace BlackCore
         //! \sa signalLog(QOb)
         void logSlot(const char *func, const QString &p1 = "", const QString &p2 = "", const QString &p3 = "", const QString &p4 = "") const;
 
+        //! shutdown
+        void gracefulShutdown();
+
+        // ------- Context as interface, normal way to access a context
 
         //! Context for network
         IContextNetwork *getIContextNetwork();
@@ -95,29 +107,55 @@ namespace BlackCore
         //! Context for network
         const IContextNetwork *getIContextNetwork() const;
 
-        //! Context for network
+        //! Context for audio
         IContextAudio *getIContextAudio();
 
-        //! Context for network
+        //! Context for audio
         const IContextAudio *getIContextAudio() const;
 
-        //! Settings
+        //! Context for settings
         IContextSettings *getIContextSettings();
 
-        //! Settings
+        //! Context for settings
         const IContextSettings *getIContextSettings() const;
 
         //! Context for application
         const IContextApplication *getIContextApplication() const;
 
-        //! Application
+        //! Context for application
         IContextApplication *getIContextApplication();
 
         //! Context for simulator
         const IContextSimulator *getIContextSimulator() const;
 
-        //! Simulator
+        //! Context for simulator
         IContextSimulator *getIContextSimulator();
+
+        // ------- Context as implementing (local) class
+
+        //! Context for application
+        //! \remarks only applicable for local object
+        CContextApplication *getCContextApplication();
+
+        //! Context for application
+        //! \remarks only applicable for local object
+        CContextApplication *getCContextApplication() const;
+
+        //! Context for audio
+        //! \remarks only applicable for local object
+        CContextAudio *getCContextAudio();
+
+        //! Context for audio
+        //! \remarks only applicable for local object
+        CContextAudio *getCContextAudio() const;
+
+        //! Context for simulator
+        //! \remarks only applicable for local object
+        CContextSimulator *getCContextSimulator();
+
+        //! Context for simulator
+        //! \remarks only applicable for local object
+        CContextSimulator *getCContextSimulator() const;
 
     private:
         bool m_init; /*!< flag */
@@ -134,11 +172,12 @@ namespace BlackCore
         bool m_slotLogSettings;
         bool m_slotLogSimulator;
         QDBusConnection m_dbusConnection;
-        IContextNetwork *m_contextNetwork;
-        IContextAudio *m_contextAudio;
-        IContextSettings *m_contextSettings;
         IContextApplication *m_contextApplication;
+        IContextAudio *m_contextAudio;
+        IContextNetwork *m_contextNetwork;
+        IContextSettings *m_contextSettings;
         IContextSimulator *m_contextSimulator;
+        QMultiMap<QString, QMetaObject::Connection> m_logSignalConnections;
 
         //! Init
         void init(const CRuntimeConfig &config);
@@ -154,11 +193,6 @@ namespace BlackCore
 
         //! log
         void logSignal(QObject *sender, const QStringList &values);
-        CContextAudio *getCContextAudio();
-        CContextAudio *getCContextAudio() const;
-
-        CContextSimulator *getCContextSimulator();
-        CContextSimulator *getCContextSimulator() const;
 
         //! disconnect log signals (connected via connection to log them)
         void disconnectLogSignals(const QString &name);
