@@ -58,7 +58,6 @@ namespace BlackCore
     {
         // this->log(Q_FUNC_INFO, callsign.toQString(), situation.toQString(), transponder.toQString());
 
-
         CAircraftList list = this->m_aircraftsInRange.findByCallsign(callsign);
         if (list.isEmpty())
         {
@@ -78,7 +77,6 @@ namespace BlackCore
                 emit this->m_network->sendRealNameQuery(callsign);
                 emit this->m_network->sendIcaoCodesQuery(callsign);
             }
-            emit this->changedAircraftsInRange();
         }
         else
         {
@@ -90,10 +88,10 @@ namespace BlackCore
             vm.addValue(CAircraft::IndexSituation, situation);
             vm.addValue(CAircraft::IndexDistance, distance);
             this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);
-            emit this->changedAircraftsInRange();
         }
 
-        aircraftSituationUpdate(callsign, situation);
+        emit this->changedAircraftsInRange();
+        emit changedAircraftSituation(callsign, situation);
     }
 
     /*
