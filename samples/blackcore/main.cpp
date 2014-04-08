@@ -3,10 +3,12 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "blackcore/context_runtime.h"
-#include "blackmisc/blackmiscfreefunctions.h"
-#include "blackcore/context_settings.h"
 #include "tool.h"
+#include "blackcore/context_runtime.h"
+#include "blackcore/context_settings.h"
+#include "blackcore/context_application.h"
+#include "blackcore/context_application_impl.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QtConcurrent/QtConcurrent>
 #include <QMetaType>
 #include <QMetaMethod>

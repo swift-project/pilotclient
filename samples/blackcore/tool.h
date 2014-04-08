@@ -29,7 +29,8 @@ namespace BlackMiscTest
         static QProcess *startNewProcess(const QString &executable, const QStringList &arguments = QStringList(), QObject *parent = 0);
 
         //! \brief Server loop
-        static void serverLoop(const BlackCore::CRuntime *runtime);
+        static void serverLoop(BlackCore::CRuntime *runtime);
+
     };
 
 } // namespace
