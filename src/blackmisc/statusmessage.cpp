@@ -10,9 +10,14 @@ namespace BlackMisc
      */
     CStatusMessage::CStatusMessage(StatusType type, StatusSeverity severity, const QString &message)
         : m_type(type), m_severity(severity), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
-    {
-        // void
-    }
+    {  }
+
+    /*
+     * Constructor
+     */
+    CStatusMessage::CStatusMessage(StatusType type, StatusSeverity severity, const char *message)
+        : m_type(type), m_severity(severity), m_message(QString(message)), m_timestamp(QDateTime::currentDateTimeUtc())
+    {  }
 
     /*
      * To string
@@ -297,5 +302,27 @@ namespace BlackMisc
             break;
         }
         return BlackMisc::qVariantToString(qv, i18n);
+    }
+
+    /*
+     * Message as HTML
+     */
+    QString CStatusMessage::toHtml() const
+    {
+        QString html;
+        if (this->isEmpty()) return html;
+        switch (this->getSeverity())
+        {
+        case SeverityInfo:
+            break;
+        case SeverityWarning:
+            html = "<font color=\"yellow\">";
+        case SeverityError:
+            html = "<font color=\"red\">";
+        }
+        html.append(this->getMessage());
+        if (this->getSeverity() == SeverityInfo) return html;
+        html.append("</font>");
+        return html;
     }
 }

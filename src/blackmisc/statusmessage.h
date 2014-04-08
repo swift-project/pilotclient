@@ -26,7 +26,8 @@ namespace BlackMisc
             TypeSettings,
             TypeCore,
             TypeAudio,
-            TypeGui
+            TypeGui,
+            TypeStdoutRedirect
         };
 
         //! Status severities
