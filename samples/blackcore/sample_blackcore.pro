@@ -26,7 +26,6 @@ DESTDIR = ../../bin
 
 HEADERS += *.h
 SOURCES += *.cpp
-
 OTHER_FILES += readme.txt blackcore.rc blackcore.ico
 RESOURCES += blackcore.qrc
 win32: RC_FILE = blackcore.rc

@@ -29,9 +29,7 @@ namespace BlackMisc
             TypeGui
         };
 
-        /*!
-         * \brief Status severities
-         */
+        //! Status severities
         enum StatusSeverity
         {
             SeverityInfo,
@@ -39,9 +37,7 @@ namespace BlackMisc
             SeverityError
         };
 
-        /*!
-         * \brief Properties by index
-         */
+        //! Properties by index
         enum ColumnIndex
         {
             IndexType,
@@ -60,46 +56,43 @@ namespace BlackMisc
         QDateTime m_timestamp;
 
     public:
-        //! \brief Constructor
+        //! Constructor
         CStatusMessage() : m_type(TypeUnknown), m_severity(SeverityInfo) {}
 
-        //! \brief Constructor
+        //! Constructor
+        CStatusMessage(StatusType type, StatusSeverity severity, const char *message);
+
+        //! Constructor
         CStatusMessage(StatusType type, StatusSeverity severity, const QString &message);
 
-        //! \brief Status type
-        StatusType getType() const
-        {
-            return this->m_type;
-        }
+        //! Status type
+        StatusType getType() const { return this->m_type; }
 
-        //! \brief Status severity
-        StatusSeverity getSeverity() const
-        {
-            return this->m_severity;
-        }
+        //! Status severity
+        StatusSeverity getSeverity() const { return this->m_severity; }
 
-        //! \brief Message
-        QString getMessage() const
-        {
-            return this->m_message;
-        }
+        //! Message
+        QString getMessage() const { return this->m_message; }
+
+        //! Message empty
+        bool isEmpty() const { return this->m_message.isEmpty(); }
 
         //! \copydoc CValueObject::getValueHash()
         virtual uint getValueHash() const override;
 
         //! \copydoc CValueObject::toQVariant()
-        virtual QVariant toQVariant() const override
-        {
-            return QVariant::fromValue(*this);
-        }
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-        //! \brief Type as string
+        //! Type as string
         const QString &getTypeAsString() const;
 
-        //! \brief representing icon
+        //! Severity
+        void setSeverity(StatusSeverity severity) { this->m_severity = severity; }
+
+        //! Representing icon
         virtual const QPixmap &toIcon() const override { return CStatusMessage::convertToIcon(*this); }
 
-        //! \brief Type as string
+        //! Type as string
         const QString &getSeverityAsString() const;
 
         //! \copydoc CValueObject::propertyByIndex(int)
@@ -111,22 +104,25 @@ namespace BlackMisc
         //! \copydoc CValueObject::propertyByIndexAsString
         virtual QString propertyByIndexAsString(int index, bool i18n) const override;
 
-        //! \brief Equal operator ==
+        //! To HTML
+        QString toHtml() const;
+
+        //! Equal operator ==
         bool operator ==(const CStatusMessage &other) const;
 
-        //! \brief Unequal operator !=
+        //! Unequal operator !=
         bool operator !=(const CStatusMessage &other) const;
 
-        //! \brief Register metadata
+        //! Register metadata
         static void registerMetadata();
 
-        //! \brief Validation error
+        //! Validation error
         static CStatusMessage getValidationError(const QString &message);
 
-        //! \brief (Unspecific) Info message
+        //! (Unspecific) Info message
         static CStatusMessage getInfoMessage(const QString &message, StatusType type = CStatusMessage::TypeUnspecific);
 
-        //! \brief representing icon
+        //! Representing icon
         static const QPixmap &convertToIcon(const CStatusMessage &statusMessage);
 
     protected:

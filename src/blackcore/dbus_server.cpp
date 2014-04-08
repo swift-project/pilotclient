@@ -91,7 +91,7 @@ namespace BlackCore
     bool CDBusServer::newConnection(const QDBusConnection &connection)
     {
         QMap<QString, QObject *>::ConstIterator i = m_objects.begin();
-        QDBusConnection newConnection(connection);
+        QDBusConnection newConnection(connection); // copy, because object will be registered on this connection
         m_DBusConnections.insert(newConnection.name(), newConnection);
         bool success = true;
         qDebug() << "New Connection from: " << newConnection.name();
@@ -135,7 +135,6 @@ namespace BlackCore
         {
             Q_ASSERT_X(false, "CDBusServer::addObject", "Wrong server mode");
         }
-        // Q_ASSERT_X(success, "CDBusServer::addObject", "Registration failed");
     }
 
     /*

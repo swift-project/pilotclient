@@ -62,13 +62,8 @@ namespace BlackCore
         //! Aircraft list has been changed
         void changedAircraftsInRange();
 
-        /*!
-         * \brief Aircraft situation update
-         * \param callsign
-         * \param situation
-         * \return
-         */
-        void aircraftSituationUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation);
+        //! Aircraft situation update
+        void changedAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation);
 
         //! Terminated connection
         void connectionTerminated();

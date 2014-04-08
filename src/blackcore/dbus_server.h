@@ -61,26 +61,24 @@ namespace BlackCore
         }
 
     public:
-        //! \brief Constructor
+        //! Constructor
         CDBusServer(const QString &address, QObject *parent = nullptr);
 
-        //!! \brief Adds a QObject to be exposed to DBus
+        //!! Adds a QObject to be exposed to DBus
         void addObject(const QString &name, QObject *object);
 
-        //! \brief Last error
+        //! Last error
         QDBusError lastError() const;
 
-        //! \brief Connected?
-        bool isConnected() const
-        {
-            return this->m_busServer.isConnected();
-        }
+        //! Connected?
+        bool isConnected() const { return this->m_busServer.isConnected(); }
 
-        //! \brief address
-        QString address() const
-        {
-            return this->m_busServer.address();
-        }
+        //! address
+        QString address() const { return this->m_busServer.address(); }
+
+        //!
+
+
 
         //! \brief Connection by name
         const QDBusConnection getDbusConnection(const QString &connectionName) const
@@ -88,28 +86,29 @@ namespace BlackCore
             return this->m_DBusConnections.value(connectionName, CDBusServer::defaultConnection());
         }
 
-        //! \brief Get DBbus connections
-        const QList<QDBusConnection> getDbusConnections() const
+        //! Get DBus connections
+        const QList<QDBusConnection> getDBusConnections() const
         {
             // http://stackoverflow.com/questions/1124340/any-ideas-why-qhash-and-qmap-return-const-t-instead-of-const-t
             return this->m_DBusConnections.values();
         }
 
         //! \brief Default connection
+        //! Default connection
         static const QDBusConnection &defaultConnection()
         {
             static QDBusConnection defaultConnection("default");
             return defaultConnection;
         }
 
-        //! \brief Denotes a session DBus server
+        //! Denotes a session DBus server
         static const QString &sessionDBusServer()
         {
             static QString session("session");
             return session;
         }
 
-        //! \brief Denotes a session DBus server
+        //! Denotes a session DBus server
         static const QString &systemDBusServer()
         {
             static QString system("system");

@@ -47,46 +47,30 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    /*!
-     * \brief Constructor
-     */
+    //! Constructor
     explicit MainWindow(GuiModes::WindowMode windowMode, QWidget *parent = nullptr);
 
-    /*!
-     * Destructor
-     */
+    //! Destructor
     ~MainWindow();
 
-    /*!
-     * \brief Init data
-     */
+    //! Init data
     void init(GuiModes::CoreMode coreMode);
 
-    /*!
-     * \brief Graceful shutdown
-     */
+    //! Graceful shutdown
     void gracefulShutdown();
 
 protected:
-    /*!
-     * \brief Close event, e.g. when window is closed
-     */
+    //! Close event, e.g. when window is closed
     void closeEvent(QCloseEvent *event);
 
-    /*!
-     * \brief Mouse moving, required for frameless window
-     */
+    //! Mouse moving, required for frameless window
     void mouseMoveEvent(QMouseEvent *event);
 
-    /*!
-     * \brief Mouse press, required for frameless window
-     */
+    //! Mouse press, required for frameless window
     void mousePressEvent(QMouseEvent *event);
 
-    /*!
-     * \brief Main page indexes
-     * \remarks keep the values in sync with the real tab indexes
-     */
+    //! Main page indexes
+    //! \remarks keep the values in sync with the real tab indexes
     enum MainPageIndex
     {
         MainPageStatus = 0,
@@ -100,6 +84,7 @@ protected:
         MainPageSimulator = 8
     };
 
+    //! Audio test modes
     enum AudioTest
     {
         NoAudioTest,
@@ -165,9 +150,7 @@ private:
     QLabel *m_statusBarIcon; /*!< status bar icon */
     QLabel *m_statusBarLabel; /*!< status bar label */
 
-    /*!
-     * \brief GUI status update
-     */
+    //! GUI status update
     void updateGuiStatusInformation();
 
     /*!
@@ -176,42 +159,28 @@ private:
      */
     void updateGuiSelectedServerTextboxes(const BlackMisc::Network::CServer &server);
 
-    /*!
-     * \brief Selected server from textboxes
-     */
+    //! Selected server from textboxes
     BlackMisc::Network::CServer selectedServerFromTextboxes() const;
 
-    /*!
-     * \brief 1st data reads
-     */
+    //! 1st data reads
     void initialDataReads();
 
-    /*!
-     * \brief Init GUI signals
-     */
+    //! Init GUI signals
     void initGuiSignals();
 
-    /*!
-     * \brief Context network availability check, otherwise status message
-     */
+    //! Context network availability check, otherwise status message
     bool isContextNetworkAvailableCheck();
 
-    /*!
-     * \brief Context voice availability check, otherwise status message
-     */
+    //! Context voice availability check, otherwise status message
     bool isContextAudioAvailableCheck();
 
-    /*!
-     * \brief Own cockpit, update from context
-     */
+    //! Own cockpit, update from context
     void updateCockpitFromContext();
 
-    /*!
-     * \brief Pending cockpit update operation
-     */
+    //! Pending cockpit update operation
     bool isCockpitUpdatePending() const;
 
-    //! \brief Update the COM frequency displays
+    //! Update the COM frequency displays
     void updateComFrequencyDisplays(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
     /*!
@@ -221,11 +190,7 @@ private:
      */
     QWidget *addNewTextMessageTab(const QString &tabName);
 
-    /*!
-     * \brief Find text message tab by its name
-     * \param name
-     * \return
-     */
+    //! Find text message tab by its name
     QWidget *findTextMessageTabByName(const QString &name) const;
 
     /*!
@@ -241,14 +206,10 @@ private:
      */
     BlackMisc::Network::CTextMessage getTextMessageStubForChannel();
 
-    /*!
-     * \brief Audio device lists
-     */
+    //! Audio device lists
     void setAudioDeviceLists();
 
-    /*!
-     * \brief Context availability, used by watchdog
-     */
+    //! Context availability, used by watchdog
     void setContextAvailability();
 
     /*!
@@ -259,14 +220,10 @@ private:
      */
     void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude);
 
-    /*!
-     * \brief Display the overlay window
-     */
+    //! Display the overlay window
     void displayOverlayInfo(const QString &message = "");
 
-    /*!
-    * \brief Overlay info displaying status message
-    */
+    //! Overlay info displaying status message
     void displayOverlayInfo(const BlackMisc::CStatusMessage &message);
 
     /*!
@@ -276,21 +233,13 @@ private:
      */
     bool isMainPageSelected(MainPageIndex mainPage) const;
 
-    /*!
-     * \brief For this text message's receipient, is the current tab selected?
-     * \param textMessage   to be checked
-     * \return
-     */
+    //! For this text message's recepient, is the current tab selected?
     bool isCorrespondingTextMessageTabSelected(BlackMisc::Network::CTextMessage textMessage) const;
 
-    /*!
-     * \brief Init the context menus
-     */
+    //! Init the context menus
     void initContextMenus();
 
-    /*!
-     * \brief Start all update timers
-     */
+    //! Start all update timers
     void startUpdateTimers();
 
     /*!
@@ -299,22 +248,16 @@ private:
      */
     void stopUpdateTimers(bool disconnect = false);
 
-    /*!
-     * \brief Currently selected SELCAL code
-     */
+    //! Currently selected SELCAL code
     QString getSelcalCode() const;
 
-    /*!
-     * \brief Audio test updates (timer) for progressbar and fetching results
-     */
+    //! Audio test updates (timer) for progressbar and fetching results
     void audioTestUpdate();
 
-    /*!
-     * \brief Play notifcation sound
-     */
+    //! Play notifcation sound
     void playNotifcationSound(BlackSound::CSoundGenerator::Notification notification) const;
 
-    //! \brief Update simulator page with latest user aircraft data
+    //! Update simulator page with latest user aircraft data
     void updateSimulatorData();
 
 private slots:
@@ -323,37 +266,29 @@ private slots:
     // Data received related slots
     //
 
-    /*!
-     * \brief Reload booked stations
-     */
+    //! Reload booked stations
     void reloadAtcStationsBooked();
 
-    /*!
-     * \brief Reload online stations
-     */
+    //! Reload online stations
     void reloadAtcStationsOnline();
 
-    /*!
-     * \brief Reload aircrafts in range
-     */
+    //! Reload aircrafts in range
     void reloadAircraftsInRange();
 
-    /*!
-     * \brief Reload all (online) users
-     */
+    //! Reload all (online) users
     void reloadAllUsers();
 
-    /*!
-     * \brief Reload own aircraft
-     * \return
-     */
+    //! Reload own aircraft
     bool reloadOwnAircraft();
 
-    //! \brief Display status message
+    //! Display status message
     void displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
 
-    //! \brief Display status messages
+    //! Display status messages
     void displayStatusMessages(const BlackMisc::CStatusMessageList &messages);
+
+    //! Redirected output
+    void displayRedirectedOutput(const BlackMisc::CStatusMessage &statusMessage, qint64 contextId);
 
     /*!
      * \brief Connection status changed
@@ -369,13 +304,14 @@ private slots:
      */
     void appendTextMessagesToGui(const BlackMisc::Network::CTextMessageList &messages, bool sending = false);
 
-    //!\brief Reload settings
+    //! Reload settings
     void reloadSettings();
 
-    //! \brief Send cockpit updates
+    //! Send cockpit updates
     void sendCockpitUpdates();
 
-    void simulatorAvailable();
+    //! Simulator available
+    void simulatorConnectionChanged(bool isAvailable);
 
     //
     // GUI related slots
@@ -393,17 +329,13 @@ private slots:
      */
     void setMainPage(MainPageIndex mainPage);
 
-    /*!
-     * \brief Connect to network
-     * \param userId
-     * \param password
-     */
+    //! Connect to network
     void toggleNetworkConnection();
 
-    //! \brief Menu item clicked
+    //! Menu item clicked
     void menuClicked();
 
-    //! \brief Terminated connection
+    //! Terminated connection
     void connectionTerminated();
 
     /*!
@@ -418,17 +350,13 @@ private slots:
      */
     void onlineAtcStationSelected(QModelIndex index);
 
-    /*!
-     * \brief Alter traffic server
-     */
+    //! Alter traffic server
     void alterTrafficServer();
 
-    //! \brief Network settings have been changed
+    //! Network settings have been changed
     void changedSettings(uint typeValue);
 
-    /*!
-     * \brief Update timer
-     */
+    //! Update timer
     void timerBasedUpdates();
 
     /*!
@@ -443,19 +371,19 @@ private slots:
      */
     void middlePanelChanged(int index);
 
-    //! \brief Command entered
+    //! Command entered
     void commandEntered();
 
-    //! \brief Get METAR for given ICAO airport code
+    //! Get METAR for given ICAO airport code
     void getMetar(const QString &airportIcaoCode = "");
 
-    //! \brief Request new ATIS
+    //! Request new ATIS
     void requestAtis();
 
-    //! \brief Close text message tab
+    //! Close text message tab
     void closeTextMessageTab();
 
-    //! \brief Cockpit values changed
+    //! Cockpit values changed
     void cockpitValuesChanged();
 
     /*!
@@ -464,7 +392,7 @@ private slots:
      */
     void audioDeviceSelected(int index);
 
-    //! \brief Reset transponder to Standby / Charly
+    //! Reset transponder to Standby / Charly
     void resetTransponderMode();
 
     /*!
@@ -473,7 +401,7 @@ private slots:
      */
     void setAudioVoiceRooms();
 
-    //! \brief Audio volume handling and mute
+    //! Audio volume handling and mute
     void audioVolumes();
 
     /*!
@@ -482,16 +410,16 @@ private slots:
      */
     void changeWindowOpacity(int opacity = -1);
 
-    //! \brief Context menu for audio
+    //! Context menu for audio
     void audioIconContextMenu(const QPoint &position);
 
-    //! \brief Context menu for message list
+    //! Context menu for message list
     void messageListContextMenu(const QPoint &position);
 
-    //! \brief Test SELCAL (code valid? play tone)
+    //! Test SELCAL (code valid? play tone)
     void testSelcal();
 
-    //! \brief start the MIC tests (Squelch)
+    //! start the MIC tests (Squelch)
     void startAudioTest();
 
     //! \brief Input focus changed, used to detect whether an input control has focus
