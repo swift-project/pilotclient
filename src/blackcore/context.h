@@ -1,9 +1,10 @@
 #ifndef BLACKCORE_CONTEXT_H
 #define BLACKCORE_CONTEXT_H
 
-#include <QObject>
 #include "blackcore/context_runtime_config.h"
 #include "blackcore/context_runtime.h"
+#include <QObject>
+#include <QDateTime>
 
 namespace BlackCore
 {
@@ -12,9 +13,6 @@ namespace BlackCore
      */
     class CContext : public QObject
     {
-    private:
-        CRuntimeConfig::ContextMode m_mode;
-
     public:
         //! Destructor
         ~CContext() {}
@@ -38,6 +36,12 @@ namespace BlackCore
             Q_ASSERT(this->parent());
             return static_cast<CRuntime *>(this->parent());
         }
+
+        //! Mode
+        CRuntimeConfig::ContextMode getMode() const { return this->m_mode; }
+
+        //! Unique id
+        qint64 getUniqueId() const { return this->m_contextId; }
 
         //
         // cross context access
@@ -75,9 +79,16 @@ namespace BlackCore
 
     protected:
         //! Constructor
-        CContext(CRuntimeConfig::ContextMode mode, QObject *parent) : QObject(parent), m_mode(mode)
+        CContext(CRuntimeConfig::ContextMode mode, QObject *parent) :
+            QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
         {}
 
+        //! Re-emit signal locally
+        //! \details proxy uses slot to send signal, and on implementation side this re-emitted as signal
+        void reEmitSignalFromProxy(const QString &signalName);
+
+        CRuntimeConfig::ContextMode m_mode; //!< How context is used
+        qint64 m_contextId; //!< unique identifer, avoid redirection rountrips
     };
 }
 #endif // guard
