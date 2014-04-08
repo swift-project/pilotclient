@@ -33,6 +33,7 @@ namespace BlackCore
         //! \brief Register myself in DBus
         CContextSettings *registerWithDBus(CDBusServer *server)
         {
+            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
             server->addObject(IContextSettings::ObjectPath(), this);
             return this;
         }

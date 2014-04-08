@@ -101,7 +101,7 @@ namespace BlackCore
         //! \brief Register myself in DBus
         CContextAudio *registerWithDBus(CDBusServer *server)
         {
-            Q_ASSERT(server);
+            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
             server->addObject(IContextAudio::ObjectPath(), this);
             return this;
         }

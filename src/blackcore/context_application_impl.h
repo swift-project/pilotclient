@@ -27,13 +27,13 @@ namespace BlackCore
         //! Constructor
         CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
-        //! Register myself in DBus
+        //! Register myself in DBus, fail safe
         CContextApplication *registerWithDBus(CDBusServer *server)
         {
+            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
             server->addObject(IContextApplication::ObjectPath(), this);
             return this;
         }
-
     public:
         //! Destructor
         virtual ~CContextApplication() {}

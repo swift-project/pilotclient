@@ -115,7 +115,7 @@ namespace BlackCore
         //! Register myself in DBus
         CContextNetwork *registerWithDBus(CDBusServer *server)
         {
-            Q_ASSERT(server);
+            if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
             server->addObject(IContextNetwork::ObjectPath(), this);
             return this;
         }
