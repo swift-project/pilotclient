@@ -145,5 +145,33 @@ namespace BlackCore
         return this->m_busServer.lastError();
     }
 
+    /*
+     * Unregister all objects
+     */
+    void CDBusServer::unregisterAllObjects()
+    {
+        if (this->m_objects.isEmpty()) return;
+        foreach(QString path, this->m_objects.keys())
+        {
+            switch (this->m_serverMode)
+            {
+            case CDBusServer::SERVERMODE_SESSIONBUS:
+                QDBusConnection::sessionBus().unregisterObject(path);
+                break;
+            case CDBusServer::SERVERMODE_SYSTEMBUS:
+                QDBusConnection::systemBus().unregisterObject(path);
+                break;
+            case CDBusServer::SERVERMODE_P2P:
+                {
+                    foreach(QDBusConnection con, this->m_DBusConnections)
+                    {
+                        con.unregisterObject(path);
+                    }
+                    break;
+                }
+            }
+        } // all paths
+    }
+
 } // namespace BlackCore
 

@@ -80,9 +80,14 @@ namespace BlackCore
 
 
 
-        //! \brief Connection by name
-        const QDBusConnection getDbusConnection(const QString &connectionName) const
+        /*!
+         * \brief Connection by name
+         * \param connectionName empty string makes sense with session / system DBus, otherwise provide name for P2P
+         * \return
+         */
+        const QDBusConnection getDBusConnection(const QString &connectionName = "")
         {
+            if (connectionName.isEmpty()) return this->m_DBusConnections.first();
             return this->m_DBusConnections.value(connectionName, CDBusServer::defaultConnection());
         }
 
@@ -93,7 +98,9 @@ namespace BlackCore
             return this->m_DBusConnections.values();
         }
 
-        //! \brief Default connection
+        //! Unregister all objects
+        void unregisterAllObjects();
+
         //! Default connection
         static const QDBusConnection &defaultConnection()
         {
