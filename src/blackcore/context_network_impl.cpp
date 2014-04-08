@@ -6,6 +6,7 @@
 #include "context_network_impl.h"
 #include "context_runtime.h"
 #include "context_settings.h"
+#include "context_application.h"
 #include "network_vatlib.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
@@ -112,7 +113,7 @@ namespace BlackCore
      */
     CStatusMessageList CContextNetwork::connectToNetwork(uint loginMode)
     {
-        // this->log(Q_FUNC_INFO);
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         CStatusMessageList msgs;
         CServer currentServer = this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer();
 
@@ -155,7 +156,7 @@ namespace BlackCore
      */
     CStatusMessageList CContextNetwork::disconnectFromNetwork()
     {
-        // this->log(Q_FUNC_INFO);
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         CStatusMessageList msgs;
         if (this->m_network->isConnected())
         {
@@ -186,7 +187,7 @@ namespace BlackCore
      */
     CStatusMessageList CContextNetwork::setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
     {
-        // this->log(Q_FUNC_INFO, aircraft.toQString());
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, aircraft.toQString());
         CStatusMessageList msgs;
         if (this->m_network->isConnected())
         {
@@ -204,6 +205,7 @@ namespace BlackCore
      */
     void CContextNetwork::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
     {
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, position.toQString(), altitude.toQString());
         this->m_ownAircraft.setPosition(position);
         this->m_ownAircraft.setAltitude(altitude);
         this->m_network->setOwnAircraftPosition(position, altitude);
@@ -214,7 +216,7 @@ namespace BlackCore
      */
     void CContextNetwork::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
     {
-        // TODO: Do I really need own member?
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, situation.toQString());
         this->m_ownAircraft.setSituation(situation);
         this->m_network->setOwnAircraftSituation(situation);
     }
@@ -224,6 +226,7 @@ namespace BlackCore
      */
     void CContextNetwork::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder)
     {
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, com1.toQString(), com2.toQString(), transponder.toQString());
         bool changed = false;
         if (com1 != this->m_ownAircraft.getCom1System())
         {
@@ -250,7 +253,7 @@ namespace BlackCore
      */
     CAircraft CContextNetwork::getOwnAircraft() const
     {
-        // this->log(Q_FUNC_INFO, this->m_ownAircraft.toQString());
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, this->m_ownAircraft.toQString());
         return this->m_ownAircraft;
     }
 
@@ -259,7 +262,7 @@ namespace BlackCore
      */
     void CContextNetwork::sendTextMessages(const CTextMessageList &textMessages)
     {
-        // this->log(Q_FUNC_INFO, textMessages.toQString());
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, textMessages.toQString());
         this->m_network->sendTextMessages(textMessages);
     }
 
@@ -268,6 +271,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
     {
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, QString::number(from), QString::number(to));
         CStatusMessageList msgs;
         // send 1st position
         if (to == INetwork::Connected)
@@ -282,7 +286,7 @@ namespace BlackCore
         m = m.arg(INetwork::connectionStatusToString(from), INetwork::connectionStatusToString(to));
         msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork,
                                       to == INetwork::DisconnectedError ? CStatusMessage::SeverityError : CStatusMessage::SeverityInfo, m));
-        emit this->statusMessages(msgs);
+        if (this->getIContextApplication()) this->getIContextApplication()->sendStatusMessages(msgs);
 
         // send as own signal
         emit this->connectionStatusChanged(from, to);
@@ -293,7 +297,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
-        // this->log(Q_FUNC_INFO, callsign.toQString(), realname);
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, callsign.toQString(), realname);
         if (realname.isEmpty()) return;
         CValueMap vm(CAtcStation::IndexControllerRealName, realname);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
@@ -308,6 +312,7 @@ namespace BlackCore
      */
     void CContextNetwork::psDataFileRead()
     {
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         const int interval = 60 * 1000;
         if (this->m_vatsimDataFileReader->interval() < interval) this->m_vatsimDataFileReader->setInterval(interval);
     }
