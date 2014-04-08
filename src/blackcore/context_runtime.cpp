@@ -229,8 +229,7 @@ namespace BlackCore
         BlackMisc::registerMetadata();
         BlackMisc::initResources();
 
-        // upfront reading of settings, as DBus server alread relies on
-        // settings
+        // upfront reading of settings, as DBus server already relies on settings
         CContextSettings *settings = nullptr;
         QString dbusServerAddress;
         if (config.hasLocalSettings())
@@ -240,6 +239,10 @@ namespace BlackCore
             dbusServerAddress = settings->getNetworkSettings().getDBusServerAddress();
         }
 
+        // DBus
+        if (config.requiresDBusSever()) this->initDBusServer(dbusServerAddress);
+        if (config.requiresDBusConnection()) this->initDBusConnection();
+
         // contexts
         switch (config.getModeSettings())
         {
@@ -247,83 +250,73 @@ namespace BlackCore
             this->m_contextSettings = settings;
             break;
         case CRuntimeConfig::LocalInDbusServer:
-            this->initDBusServer(dbusServerAddress);
-            this->m_contextSettings = settings->registerWithDBus(this->m_dbusServer);
+            {
+                this->m_contextSettings = settings->registerWithDBus(this->m_dbusServer);
+                QDBusConnection *con = new QDBusConnection(this->m_dbusServer->getDBusConnection());
+                con->connect(BlackCore::CDBusServer::ServiceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                             "widgetGuiStarting", this->m_contextSettings, SIGNAL(widgetGuiStarting()));
+                con->connect(BlackCore::CDBusServer::ServiceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                             "widgetGuiTerminating", this->m_contextSettings, SIGNAL(widgetGuiTerminating()));
+
+            }
             break;
         case CRuntimeConfig::Remote:
-            this->initDBusConnection();
             this->m_contextSettings = new BlackCore::CContextSettingsProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeSettings(), this);
             break;
         default:
-            break;
+            qFatal("Always initialize a settings context");
         }
 
         switch (config.getModeApplication())
         {
         case CRuntimeConfig::Local:
-            this->m_contextApplication = new CContextApplication(config.getModeApplication(), this);
-            break;
         case CRuntimeConfig::LocalInDbusServer:
-            this->initDBusServer(dbusServerAddress);
             this->m_contextApplication = (new CContextApplication(config.getModeApplication(), this))->registerWithDBus(this->m_dbusServer);
             break;
         case CRuntimeConfig::Remote:
-            this->initDBusConnection();
             this->m_contextApplication = new BlackCore::CContextApplicationProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeApplication(), this);
             break;
         default:
-            break;
+            qFatal("Always initialize an application context");
         }
 
         switch (config.getModeAudio())
         {
         case CRuntimeConfig::Local:
-            this->m_contextAudio = new CContextAudio(config.getModeAudio(), this);
-            break;
         case CRuntimeConfig::LocalInDbusServer:
-            this->initDBusServer(dbusServerAddress);
             this->m_contextAudio = (new CContextAudio(config.getModeAudio(), this))->registerWithDBus(this->m_dbusServer);
             break;
         case CRuntimeConfig::Remote:
-            this->initDBusConnection();
             this->m_contextAudio = new BlackCore::CContextAudioProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeAudio(), this);
             break;
         default:
-            break;
+            break; // audio not mandatory
         }
 
         switch (config.getModeNetwork())
         {
         case CRuntimeConfig::Local:
-            this->m_contextNetwork = new CContextNetwork(config.getModeNetwork(), this);
-            break;
         case CRuntimeConfig::LocalInDbusServer:
-            this->initDBusServer(dbusServerAddress);
             this->m_contextNetwork = (new CContextNetwork(config.getModeNetwork(), this))->registerWithDBus(this->m_dbusServer);
             break;
         case CRuntimeConfig::Remote:
-            this->initDBusConnection();
             this->m_contextNetwork = new BlackCore::CContextNetworkProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeNetwork(), this);
             break;
         default:
-            break;
+            break; // network not mandatory
         }
 
         switch (config.getModeSimulator())
         {
         case CRuntimeConfig::Local:
-            this->m_contextSimulator = new CContextSimulator(config.getModeSimulator(), this);
-            break;
         case CRuntimeConfig::LocalInDbusServer:
-            this->initDBusServer(dbusServerAddress);
             this->m_contextSimulator = (new CContextSimulator(config.getModeSimulator(), this))->registerWithDBus(this->m_dbusServer);
             break;
         case CRuntimeConfig::Remote:
-            this->initDBusConnection();
             this->m_contextSimulator = new BlackCore::CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeSimulator(), this);
             break;
         default:
-            break;
+            break; // network not mandatory
         }
 
         // post inits, wiring things among context (e.g. signal slots)
