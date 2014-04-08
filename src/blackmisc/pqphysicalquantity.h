@@ -109,13 +109,20 @@ namespace BlackMisc
             //! \brief Value in current unit
             double value() const
             {
+                if (this->isNull())
+                {
+                    return 0.0;
+                }
                 return this->m_value;
             }
 
             //! \brief Set value in current unit
             void setCurrentUnitValue(double value)
             {
-                this->m_value = value;
+                if (! this->isNull())
+                {
+                    this->m_value = value;
+                }
             }
 
             //! \brief Rounded value in given unit

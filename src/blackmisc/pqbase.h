@@ -262,7 +262,7 @@ namespace BlackMisc
              * \brief Default constructor for meta system
              * \remarks Only public because the need, to use this with the metasystem
              */
-            CMeasurementUnit() : m_name("none"), m_symbol(""),  m_epsilon(0), m_displayDigits(0), m_converter(new NilConverter())
+            CMeasurementUnit() : m_name("none"), m_symbol(""),  m_epsilon(0), m_displayDigits(0)
             {}
 
             /*!
@@ -352,6 +352,7 @@ namespace BlackMisc
              */
             bool isEpsilon(double value) const
             {
+                if (this->isNull()) return false;
                 if (value == 0) return true;
                 return abs(value) <= this->m_epsilon;
             }

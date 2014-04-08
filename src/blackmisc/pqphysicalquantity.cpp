@@ -16,7 +16,7 @@ namespace BlackMisc
          * Constructor by double
          */
         template <class MU, class PQ> CPhysicalQuantity<MU, PQ>::CPhysicalQuantity(double value, const MU &unit) :
-            m_value(value), m_unit(unit)
+            m_value(unit.isNull() ? 0.0 : value), m_unit(unit)
         {
             // void
         }
@@ -37,7 +37,10 @@ namespace BlackMisc
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator ==(const CPhysicalQuantity<MU, PQ> &other) const
         {
             if (this == &other) return true;
-            if (this->isNull() && other.isNull()) return true; // preliminary fix
+
+            if (this->isNull()) return other.isNull();
+            if (other.isNull()) return false;
+
             double diff = std::abs(this->m_value - other.value(this->m_unit));
             return diff <= this->m_unit.getEpsilon();
         }
@@ -181,7 +184,8 @@ namespace BlackMisc
          */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator <(const CPhysicalQuantity<MU, PQ> &other) const
         {
-            if ((*this) == other) return false;
+            if (*this == other) return false;
+            if (this->isNull() || other.isNull()) return false;
 
             return (this->m_value < other.value(this->m_unit));
         }
@@ -191,7 +195,6 @@ namespace BlackMisc
          */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator >(const CPhysicalQuantity<MU, PQ> &other) const
         {
-            if (this == &other) return false;
             return other < *this;
         }
 
@@ -200,8 +203,8 @@ namespace BlackMisc
          */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator >=(const CPhysicalQuantity<MU, PQ> &other) const
         {
-            if (this == &other) return true;
-            return !(*this < other);
+            if (*this == other) return true;
+            return *this > other;
         }
 
         /*
@@ -209,8 +212,8 @@ namespace BlackMisc
          */
         template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::operator <=(const CPhysicalQuantity<MU, PQ> &other) const
         {
-            if (this == &other) return true;
-            return !(*this > other);
+            if (*this == other) return true;
+            return *this < other;
         }
 
         /*
@@ -324,6 +327,9 @@ namespace BlackMisc
         template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CPhysicalQuantity &>(otherBase);
+
+            if (this->isNull() > other.isNull()) { return -1; }
+            if (this->isNull() < other.isNull()) { return 1; }
 
             if (*this < other) { return -1; }
             else if (*this > other) { return 1; }

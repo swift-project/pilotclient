@@ -44,6 +44,14 @@ namespace BlackMiscTest
         CLength l2(0, CLengthUnit::nullUnit());
         QVERIFY2(l1 == l2, "Null lengths should be equal");
 
+        CLength l3(0, CLengthUnit::m());
+        CLength l4(-1, CLengthUnit::m());
+        QVERIFY2(l1 != l3, "Null length and non-null length should not be equal");
+        QVERIFY2(l1 != l4, "Null length and non-null length should not be equal");
+        QVERIFY2(!(l1 < l4), "Null length and non-null length should not be comparable");
+        QVERIFY2(!(l1 > l4), "Null length and non-null length should not be comparable");
+        QVERIFY2(compare(l1, l4) < 0, "Null length and non-null length should be sortable");
+
         QVariant station1qv = QVariant::fromValue(station1);
         QVERIFY2(station1 == station1, "Station should be equal");
 
