@@ -67,6 +67,7 @@ void MainWindow::gracefulShutdown()
 {
     if (!this->m_init) return;
     this->m_init = false;
+    if (this->m_rt->getIContextApplication()) emit this->m_rt->getIContextApplication()->widgetGuiTerminating();
 
     // close info window
     if (this->m_infoWindow)
@@ -280,6 +281,13 @@ void MainWindow::displayStatusMessages(const CStatusMessageList &messages)
     }
 }
 
+void MainWindow::displayRedirectedOutput(const CStatusMessage &statusMessage, qint64 contextId)
+{
+    if (!this->m_rt->getIContextApplication()) return;
+    if (this->m_rt->getIContextApplication()->getUniqueId() == contextId) return; //self triggered
+    this->ui->te_StatusPageConsole->appendHtml(statusMessage.toHtml());
+}
+
 /*
 * Connection terminated
 */
@@ -317,11 +325,6 @@ void MainWindow::connectionStatusChanged(uint /** from **/, uint to)
     }
 }
 
-void MainWindow::simulatorAvailable()
-{
-    m_timerSimulator->start(500);
-}
-
 /*
 * Timer event
 */
@@ -353,7 +356,7 @@ void MainWindow::timerBasedUpdates()
     }
     else if (sender == this->m_timerSimulator)
     {
-        updateSimulatorData();
+        this->updateSimulatorData();
     }
 
     // own aircraft
@@ -524,4 +527,13 @@ void MainWindow::updateSimulatorData()
     ui->le_SimulatorCom2Active->setText(ownAircraft.getCom2System().getFrequencyActive().toFormattedQString());
     ui->le_SimulatorCom2Standby->setText(ownAircraft.getCom2System().getFrequencyStandby().toFormattedQString());
     ui->le_SimulatorTransponder->setText(ownAircraft.getTransponderCodeFormatted());
+}
+
+void MainWindow::simulatorConnectionChanged(bool isAvailable)
+{
+    // Simulator timer, TODO remove later
+    if (isAvailable)
+        this->m_timerSimulator->start(500);
+    else
+        this->m_timerSimulator->stop();
 }

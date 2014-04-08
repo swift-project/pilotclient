@@ -201,14 +201,15 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
 
     // signal / slots contexts / timers
     bool connect;
-    this->connect(this->m_rt->getIContextNetwork(), &IContextNetwork::statusMessage, this, &MainWindow::displayStatusMessage);
-    this->connect(this->m_rt->getIContextNetwork(), &IContextNetwork::statusMessages, this, &MainWindow::displayStatusMessages);
+    this->connect(this->m_rt->getIContextApplication(), &IContextApplication::statusMessage, this, &MainWindow::displayStatusMessage);
+    this->connect(this->m_rt->getIContextApplication(), &IContextApplication::statusMessages, this, &MainWindow::displayStatusMessages);
+    this->connect(this->m_rt->getIContextApplication(), &IContextApplication::redirectedOutput, this, &MainWindow::displayRedirectedOutput);
     this->connect(this->m_rt->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &MainWindow::connectionTerminated);
     this->connect(this->m_rt->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &MainWindow::connectionStatusChanged);
     this->connect(this->m_rt->getIContextSettings(), &IContextSettings::changedSettings, this, &MainWindow::changedSettings);
     connect = this->connect(this->m_rt->getIContextNetwork(), SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
     Q_ASSERT(connect);
-    this->connect(this->m_rt->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorAvailable);
+    this->connect(this->m_rt->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
     this->connect(this->m_timerUpdateAircraftsInRange, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateAtcStationsOnline, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateUsers, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
@@ -239,12 +240,13 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     // init context menus
     this->initContextMenus();
 
+    // starting
+    emit this->m_rt->getIContextApplication()->widgetGuiStarting();
+
     // do this as last statement, so it can be used as flag
     // whether init has been completed
     this->m_init = true;
 
-    // TODO remove later
-    simulatorAvailable();
 }
 
 //

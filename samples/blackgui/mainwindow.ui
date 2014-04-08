@@ -554,7 +554,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QToolBox" name="tb_StatusPage">
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <property name="tabSpacing">
               <number>3</number>
@@ -637,6 +637,15 @@ QStatusBar QLabel {
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Courier New</family>
+                   <pointsize>-1</pointsize>
+                   <weight>75</weight>
+                   <italic>false</italic>
+                   <bold>true</bold>
+                  </font>
                  </property>
                  <property name="lineWrapMode">
                   <enum>QPlainTextEdit::NoWrap</enum>
