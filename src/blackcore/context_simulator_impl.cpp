@@ -62,7 +62,7 @@ namespace BlackCore
         m_pluginsDir = QDir(qApp->applicationDirPath().append("/plugins"));
         if (!m_pluginsDir.exists())
         {
-            qWarning() << "No plugin directory" << m_pluginsDir;
+            qWarning() << "No plugin directory" << m_pluginsDir.currentPath();
             return;
         }
 
