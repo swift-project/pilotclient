@@ -1,6 +1,8 @@
 #include "blackcore/context_runtime.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/nwserver.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/avaircraft.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 
 #include "blackcore/context_application_impl.h"
 #include "blackcore/context_network_impl.h"
@@ -14,6 +16,7 @@
 #include "blackcore/context_audio_proxy.h"
 #include "blackcore/context_simulator_proxy.h"
 
+#include <QDebug>
 
 namespace BlackCore
 {
@@ -21,12 +24,200 @@ namespace BlackCore
      * Constructor
      */
     CRuntime::CRuntime(const CRuntimeConfig &config, QObject *parent) :
-        QObject(parent), m_init(false), m_dbusServer(nullptr), m_initDBusConnection(false), m_dbusConnection(QDBusConnection("default")),
-        m_contextNetwork(nullptr), m_contextAudio(nullptr),
-        m_contextSettings(nullptr), m_contextApplication(nullptr),
-        m_contextSimulator(nullptr)
+        QObject(parent), m_init(false), m_dbusServer(nullptr), m_initDBusConnection(false),
+        m_signalLogApplication(false), m_signalLogAudio(false), m_signalLogNetwork(false), m_signalLogSettings(false), m_signalLogSimulator(false),
+        m_slotLogApplication(false), m_slotLogAudio(false), m_slotLogNetwork(false), m_slotLogSettings(false), m_slotLogSimulator(false),
+        m_dbusConnection(QDBusConnection("default")),
+        m_contextApplication(nullptr), m_contextAudio(nullptr), m_contextNetwork(nullptr), m_contextSettings(nullptr), m_contextSimulator(nullptr)
     {
         this->init(config);
+    }
+
+    /*
+     * Signal logging
+     */
+    void CRuntime::signalLog(bool enabled)
+    {
+        this->signalLogForApplication(enabled);
+        this->signalLogForAudio(enabled);
+        this->signalLogForNetwork(enabled);
+        this->signalLogForSettings(enabled);
+        this->signalLogForSimulator(enabled);
+    }
+
+    /*
+     * Signal logging
+     */
+    void CRuntime::slotLog(bool enabled)
+    {
+        this->slotLogForApplication(enabled);
+        this->slotLogForAudio(enabled);
+        this->slotLogForNetwork(enabled);
+        this->slotLogForSettings(enabled);
+        this->slotLogForSimulator(enabled);
+    }
+
+    /*
+     * Enable signal logging
+     */
+    bool CRuntime::signalLogForApplication(bool enabled)
+    {
+        if (enabled == this->m_signalLogApplication) return enabled;
+        if (!this->getIContextApplication())
+        {
+            this->m_signalLogApplication = false;
+            return false;
+        }
+        this->m_signalLogApplication = enabled;
+        if (enabled)
+        {
+            QMetaObject::Connection con;
+            con = QObject::connect(this->getIContextApplication(), &IContextApplication::widgetGuiStarting,
+            [this]() { QStringList l; l << "widgetGuiStarting"; this->logSignal(this->getIContextApplication(), l);});
+            this->m_logSignalConnections.insert("application", con);
+            con = QObject::connect(this->getIContextApplication(), &IContextApplication::widgetGuiTerminating,
+            [this]() { QStringList l; l << "widgetGuiTerminating"; this->logSignal(this->getIContextApplication(), l);});
+            this->m_logSignalConnections.insert("application", con);
+            con = QObject::connect(this->getIContextApplication(), &IContextApplication::statusMessage,
+            [this](const BlackMisc::CStatusMessage & msg) { QStringList l; l << "statusMessage" << msg.toQString() ; this->logSignal(this->getIContextApplication(), l);});
+            this->m_logSignalConnections.insert("application", con);
+            con = QObject::connect(this->getIContextApplication(), &IContextApplication::statusMessages,
+            [this](const BlackMisc::CStatusMessageList & msgs) { QStringList l; l << "statusMessages" << msgs.toQString(); this->logSignal(this->getIContextApplication(), l);});
+            this->m_logSignalConnections.insert("application", con);
+        }
+        else
+        {
+            this->disconnectLogSignals("application");
+        }
+        return enabled;
+    }
+
+    bool CRuntime::signalLogForAudio(bool enabled)
+    {
+        if (enabled == this->m_signalLogAudio) return enabled;
+        if (!this->getIContextNetwork())
+        {
+            this->m_signalLogAudio = false;
+            return false;
+        }
+        this->m_signalLogAudio = enabled;
+        if (enabled)
+        {
+            QMetaObject::Connection con;
+            con = QObject::connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted,
+            [this]() { QStringList l; l << "audioTestCompleted"; this->logSignal(this->getIContextAudio(), l);});
+            this->m_logSignalConnections.insert("audio", con);
+        }
+        else
+        {
+            this->disconnectLogSignals("audio");
+        }
+        return enabled;
+    }
+
+    /*
+     * Enable signal logging
+     */
+    bool CRuntime::signalLogForNetwork(bool enabled)
+    {
+        if (enabled == this->m_signalLogNetwork) return enabled;
+        if (!this->getIContextNetwork())
+        {
+            this->m_signalLogNetwork = false;
+            return false;
+        }
+        this->m_signalLogNetwork = enabled;
+        if (enabled)
+        {
+            QMetaObject::Connection con;
+            con = QObject::connect(this->getIContextNetwork(), &IContextNetwork::changedAircraftsInRange,
+            [this]() { QStringList l; l << "changedAircraftsInRange"; this->logSignal(this->getIContextNetwork(), l);});
+            this->m_logSignalConnections.insert("network", con);
+            con = QObject::connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsBooked,
+            [this]() { QStringList l; l << "changedAtcStationsBooked"; this->logSignal(this->getIContextNetwork(), l);});
+            this->m_logSignalConnections.insert("network", con);
+            con = QObject::connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnline,
+            [this]() { QStringList l; l << "changedAtcStationsOnline"; this->logSignal(this->getIContextNetwork(), l);});
+            this->m_logSignalConnections.insert("network", con);
+            con = QObject::connect(this->getIContextNetwork(), &IContextNetwork::changedAircraftSituation,
+            [this](const BlackMisc::Aviation::CCallsign & callsign, const BlackMisc::Aviation::CAircraftSituation & situation) { QStringList l; l << "changedAircraftSituation" << callsign.toQString() << situation.toQString(); this->logSignal(this->getIContextNetwork(), l);});
+            this->m_logSignalConnections.insert("network", con);
+            con = QObject::connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged,
+            [this](uint from, uint to) { QStringList l; l << "connectionStatusChanged" << QString::number(from) << QString::number(to); this->logSignal(this->getIContextNetwork(), l);});
+            this->m_logSignalConnections.insert("network", con);
+        }
+        else
+        {
+            this->disconnectLogSignals("network");
+        }
+        return enabled;
+    }
+
+    /*
+     * Enable signal logging
+     */
+    bool CRuntime::signalLogForSettings(bool enabled)
+    {
+        if (enabled == this->m_signalLogSettings) return enabled;
+        if (!this->getIContextSettings())
+        {
+            this->m_signalLogSettings = false;
+            return false;
+        }
+        this->m_signalLogSettings = enabled;
+        if (enabled)
+        {
+            QMetaObject::Connection con;
+            con = QObject::connect(this->getIContextSettings(), &IContextSettings::changedSettings,
+            [this]() { QStringList l; l << "changedSettings"; this->logSignal(this->getIContextSettings(), l);});
+            this->m_logSignalConnections.insert("settings", con);
+        }
+        else
+        {
+            this->disconnectLogSignals("settings");
+        }
+        return enabled;
+    }
+
+    /*
+     * Enable signal logging
+     */
+    bool CRuntime::signalLogForSimulator(bool enabled)
+    {
+        if (enabled == this->m_signalLogSimulator) return enabled;
+        if (!this->getIContextSimulator())
+        {
+            this->m_signalLogSimulator = false;
+            return false;
+        }
+        this->m_signalLogSimulator = enabled;
+        if (enabled)
+        {
+            QMetaObject::Connection con;
+            con = QObject::connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged,
+            [this]() { QStringList l; l << "connectionChanged"; this->logSignal(this->getIContextSimulator(), l);});
+            this->m_logSignalConnections.insert("simulator", con);
+        }
+        else
+        {
+            this->disconnectLogSignals("simulator");
+        }
+        return enabled;
+    }
+
+    void CRuntime::logSignal(QObject *sender, const QStringList &values)
+    {
+        QString s = (sender) ? sender->metaObject()->className() : "";
+        qDebug() << "signal" << s << values;
+    }
+
+    void CRuntime::logSlot(const char *func, const QString &p1, const QString &p2, const QString &p3, const QString &p4) const
+    {
+        if (p1.isEmpty()) qDebug() << func; return;
+        if (p2.isEmpty()) qDebug() << func << p1; return;
+        if (p3.isEmpty()) qDebug() << func << p1 << p2; return;
+        if (p4.isEmpty()) qDebug() << func << p1 << p2 << p3; return;
+        qDebug() << func << p1 << p2 << p3 << p4; return;
     }
 
     /*
