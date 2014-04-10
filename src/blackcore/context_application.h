@@ -30,12 +30,26 @@ namespace BlackCore
     public:
 
         //! What output to redirect
-        enum RedirectionLevel
+        enum RedirectionLevel : uint
         {
             RedirectNone,
             RedirectAllOutput,
             RedirectWarningAndAbove,
             RedirectError
+        };
+
+        //! Components
+        enum Component : uint
+        {
+            ComponentGui,
+            ComponentCore
+        };
+
+        //! What a component does
+        enum Actions : uint
+        {
+            ActionStarts,
+            ActionStops
         };
 
         //! Service name
@@ -81,25 +95,22 @@ namespace BlackCore
         //!          never output redirected stream messages from the same context again
         void redirectedOutput(const BlackMisc::CStatusMessage &message, qint64 contextId);
 
-        //! Widget GUI is about to start
-        void widgetGuiStarting();
-
-        //! Widget GUI is about to terminate
-        void widgetGuiTerminating();
+        //! A component changes
+        void componentChanged(uint component, uint action);
 
     public slots:
 
         //! \brief Ping a token, used to check if application is alive
         virtual qint64 ping(qint64 token) const = 0;
 
-        //! \copydoc CContext::reEmitSignalFromProxy
-        virtual void signalFromProxy(const QString &signalName) = 0;
-
-        //! \brief Status message
+        //! Status message
         virtual void sendStatusMessage(const BlackMisc::CStatusMessage &message) = 0;
 
         //! Send status messages
         virtual void sendStatusMessages(const BlackMisc::CStatusMessageList &messages) = 0;
+
+        //! A component has changed its state
+        virtual void notifyAboutComponentChange(uint component, uint action) = 0;
     };
 }
 

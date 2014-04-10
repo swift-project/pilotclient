@@ -83,10 +83,6 @@ namespace BlackCore
             QObject(parent), m_mode(mode), m_contextId(QDateTime::currentMSecsSinceEpoch())
         {}
 
-        //! Re-emit signal locally
-        //! \details proxy uses slot to send signal, and on implementation side this re-emitted as signal
-        void reEmitSignalFromProxy(const QString &signalName);
-
         CRuntimeConfig::ContextMode m_mode; //!< How context is used
         qint64 m_contextId; //!< unique identifer, avoid redirection rountrips
     };

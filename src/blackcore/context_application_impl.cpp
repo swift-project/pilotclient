@@ -44,11 +44,11 @@ namespace BlackCore
     }
 
     /*
-     * Re-emit signal
+     * Component has changed
      */
-    void CContextApplication::signalFromProxy(const QString &signalName)
+    void CContextApplication::notifyAboutComponentChange(uint component, uint action)
     {
-        CContext::reEmitSignalFromProxy(signalName);
+        this->componentChanged(component, action);
     }
 
 } // namespace

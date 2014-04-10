@@ -33,13 +33,8 @@ namespace BlackCore
                            "statusMessages", this, SIGNAL(statusMessages(BlackMisc::CStatusMessageList)));
         connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                            "redirectedOutput", this, SIGNAL(redirectedOutput(BlackMisc::CStatusMessage, qint64)));
-
-        // 1. No need to connect widgetGuiTerminating, only orginates from Proxy side / or is local
-        // 2. No need to connect widgetGuiStarting
-
-        // signals originating from proxy side
-        connect(this, &CContextApplicationProxy::widgetGuiStarting, [this] { this->signalFromProxy("widgetGuiStarting");});
-        connect(this, &CContextApplicationProxy::widgetGuiTerminating, [this] { this->signalFromProxy("widgetGuiTerminating");});
+        connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                           "componentChanged", this, SIGNAL(componentChanged(uint, uint)));
     }
 
     /*
@@ -49,14 +44,6 @@ namespace BlackCore
     {
         qint64 t = this->m_dBusInterface->callDBusRet<qint64>(QLatin1Literal("ping"), token);
         return t;
-    }
-
-    /*
-     * Signal from proxy
-     */
-    void CContextApplicationProxy::signalFromProxy(const QString &signalName)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("signalFromProxy"), signalName);
     }
 
     /*
@@ -73,6 +60,14 @@ namespace BlackCore
     void CContextApplicationProxy::sendStatusMessages(const BlackMisc::CStatusMessageList &messages)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("sendStatusMessages"), messages);
+    }
+
+    /*
+     * Component has changed
+     */
+    void CContextApplicationProxy::notifyAboutComponentChange(uint component, uint action)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("notifyAboutComponentChange"), component, action);
     }
 
 } // namespace

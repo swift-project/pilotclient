@@ -33,8 +33,8 @@ namespace BlackCore
         //! Send status messages
         virtual void sendStatusMessages(const BlackMisc::CStatusMessageList &messages) override;
 
-        //! \copydoc CContext::reEmitSignalFromProxy
-        virtual void signalFromProxy(const QString &signalName) override;
+        //! \copydoc IContextApplication::notifyAboutComponentChange
+        virtual void notifyAboutComponentChange(uint component, uint action) override;
 
     protected:
         //! Constructor

@@ -72,11 +72,8 @@ namespace BlackCore
         if (enabled)
         {
             QMetaObject::Connection con;
-            con = QObject::connect(this->getIContextApplication(), &IContextApplication::widgetGuiStarting,
-            [this]() { QStringList l; l << "widgetGuiStarting"; this->logSignal(this->getIContextApplication(), l);});
-            this->m_logSignalConnections.insert("application", con);
-            con = QObject::connect(this->getIContextApplication(), &IContextApplication::widgetGuiTerminating,
-            [this]() { QStringList l; l << "widgetGuiTerminating"; this->logSignal(this->getIContextApplication(), l);});
+            con = QObject::connect(this->getIContextApplication(), &IContextApplication::componentChanged,
+            [this](uint component, uint action) { QStringList l; l << "componentChanged" << QString::number(component) << QString::number(action); this->logSignal(this->getIContextApplication(), l);});
             this->m_logSignalConnections.insert("application", con);
             con = QObject::connect(this->getIContextApplication(), &IContextApplication::statusMessage,
             [this](const BlackMisc::CStatusMessage & msg) { QStringList l; l << "statusMessage" << msg.toQString() ; this->logSignal(this->getIContextApplication(), l);});

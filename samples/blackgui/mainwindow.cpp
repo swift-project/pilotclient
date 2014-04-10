@@ -67,7 +67,8 @@ void MainWindow::gracefulShutdown()
 {
     if (!this->m_init) return;
     this->m_init = false;
-    if (this->m_rt->getIContextApplication()) emit this->m_rt->getIContextApplication()->widgetGuiTerminating();
+    if (this->m_rt->getIContextApplication())
+        emit this->m_rt->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStops);
 
     // close info window
     if (this->m_infoWindow)

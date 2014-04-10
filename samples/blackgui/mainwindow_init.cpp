@@ -220,7 +220,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     connect = this->connect(this->m_rt->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &MainWindow::audioTestUpdate);
     Q_ASSERT(connect);
     Q_UNUSED(connect); // suppress GCC warning in release build
-	
+
     // start timers, update timers will be started when network is connected
     this->m_timerContextWatchdog->start(2 * 1000);
 
@@ -241,7 +241,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     this->initContextMenus();
 
     // starting
-    emit this->m_rt->getIContextApplication()->widgetGuiStarting();
+    emit this->m_rt->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStarts);
 
     // do this as last statement, so it can be used as flag
     // whether init has been completed
