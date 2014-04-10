@@ -18,7 +18,6 @@ using namespace BlackMisc::Geo;
 
 namespace BlackCore
 {
-    // Init this context
     CContextSimulator::CContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSimulator(mode, runtime),
         m_simulator(nullptr), m_updateTimer(nullptr)
     {
@@ -27,17 +26,18 @@ namespace BlackCore
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
     }
 
-    // Cleanup
     CContextSimulator::~CContextSimulator() {}
 
     bool CContextSimulator::isConnected() const
     {
+        if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         if (!m_simulator) return false;
         return m_simulator->isConnected();
     }
 
     BlackMisc::Aviation::CAircraft CContextSimulator::getOwnAircraft() const
     {
+        if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         return m_ownAircraft;
     }
 

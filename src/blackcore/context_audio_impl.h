@@ -20,6 +20,7 @@ namespace BlackCore
     {
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
         Q_OBJECT
+
         friend class CRuntime;
 
     public:

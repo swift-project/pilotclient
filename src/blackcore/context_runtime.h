@@ -93,8 +93,10 @@ namespace BlackCore
 
         //! Slot logging
         //! \todo to be replace if initializer lists becomes available
-        //! \sa signalLog(QOb)
         void logSlot(const char *func, const QString &p1 = "", const QString &p2 = "", const QString &p3 = "", const QString &p4 = "") const;
+
+        //! Slot logging for bool value
+        void logSlot(const char *func, bool boolValue) const;
 
         //! shutdown
         void gracefulShutdown();
@@ -157,6 +159,9 @@ namespace BlackCore
         //! \remarks only applicable for local object
         CContextSimulator *getCContextSimulator() const;
 
+        //! Init
+        void init(const CRuntimeConfig &config);
+
     private:
         bool m_init; /*!< flag */
         CDBusServer *m_dbusServer;
@@ -179,8 +184,6 @@ namespace BlackCore
         IContextSimulator *m_contextSimulator;
         QMultiMap<QString, QMetaObject::Connection> m_logSignalConnections;
 
-        //! Init
-        void init(const CRuntimeConfig &config);
 
         //! initialization of DBus connection (where applicable)
         void initDBusConnection();

@@ -179,6 +179,7 @@ namespace BlackCore
      */
     bool CContextNetwork::isConnected() const
     {
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         return this->m_network->isConnected();
     }
 
