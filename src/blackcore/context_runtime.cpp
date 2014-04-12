@@ -233,34 +233,31 @@ namespace BlackCore
 
         // upfront reading of settings, as DBus server already relies on settings
         CContextSettings *settings = nullptr;
-        QString dbusServerAddress;
+        QString dbusAddress;
+
+        if (config.hasDBusAddress()) dbusAddress = config.getDBusAddress(); // bootstrap / explicit
         if (config.hasLocalSettings())
         {
             settings = new CContextSettings(config.getModeSettings(), this);
             if (settings) settings->read();
-            dbusServerAddress = settings->getNetworkSettings().getDBusServerAddress();
+            if (dbusAddress.isEmpty()) dbusAddress = settings->getNetworkSettings().getDBusServerAddress();
         }
 
         // DBus
-        if (config.requiresDBusSever()) this->initDBusServer(dbusServerAddress);
-        if (config.requiresDBusConnection()) this->initDBusConnection();
+        if (config.requiresDBusSever()) this->initDBusServer(dbusAddress);
+        if (config.requiresDBusConnection())
+        {
+            this->initDBusConnection(dbusAddress);
+            Q_ASSERT(this->m_dbusConnection.isConnected());
+        }
 
         // contexts
         switch (config.getModeSettings())
         {
         case CRuntimeConfig::Local:
-            this->m_contextSettings = settings;
-            break;
         case CRuntimeConfig::LocalInDbusServer:
-            {
-                this->m_contextSettings = settings->registerWithDBus(this->m_dbusServer);
-                QDBusConnection *con = new QDBusConnection(this->m_dbusServer->getDBusConnection());
-                con->connect(BlackCore::CDBusServer::ServiceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                             "widgetGuiStarting", this->m_contextSettings, SIGNAL(widgetGuiStarting()));
-                con->connect(BlackCore::CDBusServer::ServiceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                             "widgetGuiTerminating", this->m_contextSettings, SIGNAL(widgetGuiTerminating()));
-
-            }
+            Q_ASSERT(settings);
+            this->m_contextSettings = settings->registerWithDBus(this->m_dbusServer);
             break;
         case CRuntimeConfig::Remote:
             this->m_contextSettings = new BlackCore::CContextSettingsProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeSettings(), this);
@@ -364,7 +361,7 @@ namespace BlackCore
         disconnect(this);
 
         // unregister all from DBus
-        this->m_dbusServer->unregisterAllObjects();
+        if (this->m_dbusServer) this->m_dbusServer->unregisterAllObjects();
 
         // handle contexts
         if (this->getIContextApplication())
@@ -373,12 +370,14 @@ namespace BlackCore
             this->getIContextApplication()->setOutputRedirectionLevel(IContextApplication::RedirectNone);
             this->getIContextApplication()->setStreamingForRedirectedOutputLevel(IContextApplication::RedirectNone);
             CContextApplicationBase::resetOutputRedirection();
+            this->getIContextApplication()->deleteLater();
         }
 
         if (this->getIContextSimulator())
         {
             // TODO: disconnect from simulator
             disconnect(this->getIContextSimulator());
+            this->getIContextSimulator()->deleteLater();
         }
 
         // log off from network, if connected
@@ -386,10 +385,19 @@ namespace BlackCore
         {
             disconnect(this->getIContextNetwork());
             this->getIContextNetwork()->disconnectFromNetwork();
+            this->getIContextNetwork()->deleteLater();
         }
 
-        if (this->getIContextAudio()) disconnect(this->getIContextAudio());
-        if (this->getIContextSettings()) disconnect(this->getIContextAudio());
+        if (this->getIContextAudio())
+        {
+            disconnect(this->getIContextAudio());
+            this->getIContextAudio()->deleteLater();
+        }
+        if (this->getIContextSettings())
+        {
+            disconnect(this->getIContextSettings());
+            this->getIContextSettings()->deleteLater();
+        }
 
         // mark contexts as invalid
         // they will be deleted by the parent object (this runtime)
@@ -412,10 +420,15 @@ namespace BlackCore
         this->m_logSignalConnections.remove(name);
     }
 
-    void CRuntime::initDBusConnection()
+    void CRuntime::initDBusConnection(const QString &address)
     {
         if (this->m_initDBusConnection) return;
-        this->m_dbusConnection = QDBusConnection::sessionBus();
+        if (address.isEmpty() || address == CDBusServer::sessionDBusServer())
+            this->m_dbusConnection = QDBusConnection::sessionBus();
+        else if (address == CDBusServer::systemDBusServer())
+            this->m_dbusConnection = QDBusConnection::sessionBus();
+        else
+            this->m_dbusConnection = QDBusConnection::connectToPeer(address, "BlackBoxRuntime");
     }
 
     IContextNetwork *CRuntime::getIContextNetwork()
@@ -516,21 +529,35 @@ namespace BlackCore
                 this->m_simulator == Remote);
     }
 
-    const CRuntimeConfig &CRuntimeConfig::forCore()
+    const CRuntimeConfig &CRuntimeConfig::forCoreAllLocalInDBus(const QString &dbusBootstrapAddress)
     {
-        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::LocalInDbusServer));
+        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::LocalInDbusServer, dbusBootstrapAddress));
         return cfg;
     }
 
-    const CRuntimeConfig &CRuntimeConfig::local()
+    const CRuntimeConfig &CRuntimeConfig::forCoreAllLocalInDBusNoAudio(const QString &dbusBootstrapAddress)
     {
-        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::Local));
+        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::LocalInDbusServer, dbusBootstrapAddress));
+        cfg.m_audio = CRuntimeConfig::NotUsed;
         return cfg;
     }
 
-    const CRuntimeConfig &CRuntimeConfig::remote()
+    const CRuntimeConfig &CRuntimeConfig::local(const QString &dbusBootstrapAddress)
     {
-        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::Remote));
+        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::Local, dbusBootstrapAddress));
+        return cfg;
+    }
+
+    const CRuntimeConfig &CRuntimeConfig::remote(const QString &dbusBootstrapAddress)
+    {
+        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::Remote, dbusBootstrapAddress));
+        return cfg;
+    }
+
+    const CRuntimeConfig &CRuntimeConfig::remoteLocalAudio(const QString &dbusBootstrapAddress)
+    {
+        static CRuntimeConfig cfg = CRuntimeConfig(CRuntimeConfig(CRuntimeConfig::Remote, dbusBootstrapAddress));
+        cfg.m_audio = CRuntimeConfig::Local;
         return cfg;
     }
 }

@@ -184,9 +184,8 @@ namespace BlackCore
         IContextSimulator *m_contextSimulator;
         QMultiMap<QString, QMetaObject::Connection> m_logSignalConnections;
 
-
         //! initialization of DBus connection (where applicable)
-        void initDBusConnection();
+        void initDBusConnection(const QString &address);
 
         //! initialization of DBus connection (where applicable)
         void initDBusServer(const QString &dBusAddress);
