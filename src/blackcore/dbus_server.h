@@ -62,6 +62,8 @@ namespace BlackCore
 
     public:
         //! Constructor
+        //! \remarks We are using address and not ServerMode, as on some systems we need to pass in some specific configuration string
+        //! \sa QDBusServer
         CDBusServer(const QString &address, QObject *parent = nullptr);
 
         //!! Adds a QObject to be exposed to DBus
@@ -75,28 +77,6 @@ namespace BlackCore
 
         //! address
         QString address() const { return this->m_busServer.address(); }
-
-        //!
-
-
-
-        /*!
-         * \brief Connection by name
-         * \param connectionName empty string makes sense with session / system DBus, otherwise provide name for P2P
-         * \return
-         */
-        const QDBusConnection getDBusConnection(const QString &connectionName = "")
-        {
-            if (connectionName.isEmpty()) return this->m_DBusConnections.first();
-            return this->m_DBusConnections.value(connectionName, CDBusServer::defaultConnection());
-        }
-
-        //! Get DBus connections
-        const QList<QDBusConnection> getDBusConnections() const
-        {
-            // http://stackoverflow.com/questions/1124340/any-ideas-why-qhash-and-qmap-return-const-t-instead-of-const-t
-            return this->m_DBusConnections.values();
-        }
 
         //! Unregister all objects
         void unregisterAllObjects();
@@ -122,10 +102,23 @@ namespace BlackCore
             return system;
         }
 
+        //! Denotes a P2P DBus server, e.g. "tcp:host=192.168.3.3,port=45000"
+        //! \remarks it is valid to pass only one string as host:port
+        static QString p2pAddress(const QString &host = "127.0.0.1", const QString &port = "");
+
+        //! Turn something like 127.0.0.1:45000 into "tcp:host=127.0.0.1,port=45000"
+        static QString fixAddressToDBusAddress(const QString &address);
+
+        //! address to DBus server mode
+        static ServerMode addressToDBusMode(const QString &address);
+
+        //! Qt DBus address, e.g. "unix:tmpdir=/tmp", "tcp:host=127.0.0.1,port=45000"
+        static bool isQtDBusAddress(const QString &address);
+
     private slots:
 
-        //! \brief Called when a new DBus client has connected
-        bool newConnection(const QDBusConnection &connection);
+        //! \brief Called when a new DBus client has connected in P2P mode
+        bool registerObjectsWithConnection(const QDBusConnection &connection);
     };
 }
 
