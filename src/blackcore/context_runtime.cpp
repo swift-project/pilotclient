@@ -483,31 +483,37 @@ namespace BlackCore
 
     CContextAudio *CRuntime::getCContextAudio()
     {
+        Q_ASSERT_X(!this->m_contextAudio || this->m_contextAudio->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextAudio *>(this->m_contextAudio);
     }
 
-    CContextAudio *CRuntime::getCContextAudio() const
+    const CContextAudio *CRuntime::getCContextAudio() const
     {
+        Q_ASSERT_X(!this->m_contextAudio || this->m_contextAudio->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextAudio *>(this->m_contextAudio);
     }
 
     CContextApplication *CRuntime::getCContextApplication()
     {
+        Q_ASSERT_X(!this->m_contextApplication || this->m_contextApplication->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextApplication *>(this->m_contextApplication);
     }
 
-    CContextApplication *CRuntime::getCContextApplication() const
+    const CContextApplication *CRuntime::getCContextApplication() const
     {
+        Q_ASSERT_X(!this->m_contextApplication || this->m_contextApplication->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextApplication *>(this->m_contextApplication);
     }
 
     CContextSimulator *CRuntime::getCContextSimulator()
     {
+        Q_ASSERT_X(!this->m_contextSimulator || this->m_contextSimulator->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextSimulator *>(this->m_contextSimulator);
     }
 
-    CContextSimulator *CRuntime::getCContextSimulator() const
+    const CContextSimulator *CRuntime::getCContextSimulator() const
     {
+        Q_ASSERT_X(!this->m_contextSimulator || this->m_contextSimulator->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextSimulator *>(this->m_contextSimulator);
     }
 

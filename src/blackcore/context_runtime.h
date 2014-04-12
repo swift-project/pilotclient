@@ -141,7 +141,7 @@ namespace BlackCore
 
         //! Context for application
         //! \remarks only applicable for local object
-        CContextApplication *getCContextApplication() const;
+        const CContextApplication *getCContextApplication() const;
 
         //! Context for audio
         //! \remarks only applicable for local object
@@ -149,7 +149,7 @@ namespace BlackCore
 
         //! Context for audio
         //! \remarks only applicable for local object
-        CContextAudio *getCContextAudio() const;
+        const CContextAudio *getCContextAudio() const;
 
         //! Context for simulator
         //! \remarks only applicable for local object
@@ -157,7 +157,7 @@ namespace BlackCore
 
         //! Context for simulator
         //! \remarks only applicable for local object
-        CContextSimulator *getCContextSimulator() const;
+        const CContextSimulator *getCContextSimulator() const;
 
         //! Init
         void init(const CRuntimeConfig &config);

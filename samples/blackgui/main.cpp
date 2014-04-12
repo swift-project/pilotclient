@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         coreMode = intro.getCoreMode();
         windowMode = intro.getWindowMode();
         QString dbusAddress = BlackCore::CDBusServer::fixAddressToDBusAddress(intro.getDBusAddress());
-        switch (windowMode)
+        switch (coreMode)
         {
         case GuiModes::CoreExternal:
             runtimeConfig =  BlackCore::CRuntimeConfig::remote(dbusAddress);

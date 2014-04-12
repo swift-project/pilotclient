@@ -9,7 +9,7 @@ using namespace BlackMisc;
 namespace BlackCore
 {
 
-    QList<CContextApplicationBase *> CContextApplicationBase::s_contexts = QList<CContextApplicationBase *>();
+    QList<CContextApplicationBase *> CContextApplicationBase::s_contexts;
     QtMessageHandler CContextApplicationBase::s_oldHandler = nullptr;
 
     /*

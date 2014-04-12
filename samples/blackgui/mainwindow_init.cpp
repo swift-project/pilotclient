@@ -236,7 +236,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->initContextMenus();
 
     // starting
-    emit this->m_rt->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStarts);
+    this->m_rt->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStarts);
 
     // do this as last statement, so it can be used as flag
     // whether init has been completed

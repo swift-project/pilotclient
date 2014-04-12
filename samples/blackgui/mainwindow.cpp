@@ -67,7 +67,7 @@ void MainWindow::gracefulShutdown()
     if (!this->m_init) return;
     this->m_init = false;
     if (this->m_rt->getIContextApplication())
-        emit this->m_rt->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStops);
+        this->m_rt->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStops);
 
     // close info window
     if (this->m_infoWindow)
@@ -521,7 +521,6 @@ void MainWindow::updateSimulatorData()
     ui->le_SimulatorBank->setText(ownAircraft.getSituation().getBank().toFormattedQString());
     ui->le_SimulatorHeading->setText(ownAircraft.getSituation().getHeading().toFormattedQString());
     ui->le_SimulatorGroundSpeed->setText(ownAircraft.getSituation().getGroundSpeed().toFormattedQString());
-
 
     ui->le_SimulatorCom1Active->setText(ownAircraft.getCom1System().getFrequencyActive().toFormattedQString());
     ui->le_SimulatorCom1Standby->setText(ownAircraft.getCom1System().getFrequencyStandby().toFormattedQString());

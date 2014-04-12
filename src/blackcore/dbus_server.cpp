@@ -33,7 +33,7 @@ namespace BlackCore
                 QDBusConnection con = QDBusConnection::sessionBus();
                 if (!con.registerService(CDBusServer::ServiceName))
                 {
-                    qCritical() << this->m_busServer.lastError().message();
+                    qCritical() << con.lastError().message();
                     qFatal("Cannot register DBus service, server started? dbus-daemon.exe --session --address=tcp:host=192.168.0.133,port=45000");
                 }
             }
@@ -45,7 +45,7 @@ namespace BlackCore
                 QDBusConnection con = QDBusConnection::systemBus();
                 if (!con.registerService(CDBusServer::ServiceName))
                 {
-                    qCritical() << this->m_busServer.lastError().message();
+                    qCritical() << con.lastError().message();
                     qFatal("Cannot register DBus service, server started? dbus-daemon.exe --system --address=tcp:host=192.168.0.133,port=45000");
                 }
             }
