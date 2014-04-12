@@ -54,7 +54,7 @@ public:
     ~MainWindow();
 
     //! Init data
-    void init(GuiModes::CoreMode coreMode);
+    void init(const BlackCore::CRuntimeConfig &runtimeConfig);
 
     //! Graceful shutdown
     void gracefulShutdown();
@@ -112,7 +112,6 @@ private:
     BlackGui::CKeyboardKeyListModel *m_modelSettingsHotKeys;
 
     // contexts
-    GuiModes::CoreMode m_coreMode;
     bool m_coreAvailable;
     bool m_contextNetworkAvailable;
     bool m_contextAudioAvailable;

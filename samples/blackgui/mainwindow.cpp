@@ -31,7 +31,6 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_modelAtcListOnline(nullptr), m_modelAtcListBooked(nullptr), m_modelTrafficServerList(nullptr), m_modelAircraftsInRange(nullptr),
     m_modelAllUsers(nullptr), m_modelUsersVoiceCom1(nullptr), m_modelUsersVoiceCom2(nullptr), m_modelSettingsHotKeys(nullptr),
     // contexts and runtime
-    m_coreMode(GuiModes::CoreExternal),
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextAudioAvailable(false),
 
     // timers
@@ -404,7 +403,9 @@ void MainWindow::updateGuiStatusInformation()
     QString network("unavailable");
     if (this->m_contextNetworkAvailable)
     {
-        network = this->m_rt->getIContextNetwork()->usingLocalObjects() ? "local" : now;
+        bool dbus = !this->m_rt->getIContextNetwork()->usingLocalObjects();
+        network =  dbus ? now : "local";
+        this->ui->cb_StatusWithDBus->setChecked(dbus);
     }
 
     // handle voice, mute
@@ -423,7 +424,6 @@ void MainWindow::updateGuiStatusInformation()
     // update status fields
     this->ui->le_StatusNetworkContext->setText(network);
     this->ui->le_StatusAudioContext->setText(voice);
-    this->ui->cb_StatusWithDBus->setCheckState(this->m_coreMode ? Qt::Checked : Qt::Unchecked);
 
     // Connected button
     if (this->m_contextNetworkAvailable && this->m_rt->getIContextNetwork()->isConnected())

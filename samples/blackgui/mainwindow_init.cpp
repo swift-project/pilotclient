@@ -27,10 +27,9 @@ using namespace BlackGui;
 /*
  * Init data
  */
-void MainWindow::init(GuiModes::CoreMode coreMode)
+void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 {
     if (this->m_init) return;
-    this->m_coreMode = coreMode;
 
     // with frameless window, we shift menu and statusbar into central widget
     // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
@@ -168,11 +167,7 @@ void MainWindow::init(GuiModes::CoreMode coreMode)
     if (this->m_timerSimulator == nullptr) this->m_timerSimulator = new QTimer(this);
 
     // context
-    this->m_rt.reset(
-        this->m_coreMode != GuiModes::CoreInGuiProcess ?
-        new CRuntime(CRuntimeConfig::remote(), this) :
-        new CRuntime(CRuntimeConfig::local(), this)
-    );
+    this->m_rt.reset(new CRuntime(runtimeConfig, this));
 
     // wire GUI signals
     this->initGuiSignals();

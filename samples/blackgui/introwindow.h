@@ -20,33 +20,23 @@ class CIntroWindow : public QDialog
     Q_OBJECT
 
 public:
-    /*!
-     * \brief Constructor
-     * \param parent widget
-     */
+    //! \brief Constructor
     explicit CIntroWindow(QWidget *parent = nullptr);
 
-    /*!
-     * Destructor
-     */
+    //! Destructor
     ~CIntroWindow();
 
-    /*!
-     * \brief Selected window mode
-     * \see GuiModes::WindowMode
-     */
+    //! Selected window mode
     GuiModes::WindowMode getWindowMode() const;
 
-    /*!
-     * \brief Get core mode
-     * \see GuiModes::CoreMode
-     */
+    //! Get core mode
     GuiModes::CoreMode getCoreMode() const;
 
+    //! select DBus address/mode
+    QString getDBusAddress() const;
+
 private slots:
-    /*!
-     * \brief Button has been clicked
-     */
+    //! Button has been clicked
     void buttonClicked() const;
 
 private:

@@ -1,6 +1,7 @@
 #include "introwindow.h"
 #include "mainwindow.h"
 #include "guimodeenums.h"
+#include "blackcore/context_runtime_config.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QtGlobal>
 #include <QApplication>
@@ -39,6 +40,7 @@ int main(int argc, char *argv[])
 
     // Dialog to decide external or internal core
     CIntroWindow intro;
+    BlackCore::CRuntimeConfig runtimeConfig;
     if (intro.exec() == QDialog::Rejected)
     {
         return 0;
@@ -47,13 +49,26 @@ int main(int argc, char *argv[])
     {
         coreMode = intro.getCoreMode();
         windowMode = intro.getWindowMode();
+        QString dbusAddress = BlackCore::CDBusServer::fixAddressToDBusAddress(intro.getDBusAddress());
+        switch (windowMode)
+        {
+        case GuiModes::CoreExternal:
+            runtimeConfig =  BlackCore::CRuntimeConfig::remote(dbusAddress);
+            break;
+        case GuiModes::CoreInGuiProcess:
+            runtimeConfig =  BlackCore::CRuntimeConfig::local(dbusAddress);
+            break;
+        case GuiModes::CoreExternalAudioLocal:
+            runtimeConfig =  BlackCore::CRuntimeConfig::remoteLocalAudio(dbusAddress);
+            break;
+        }
     }
     intro.close();
 
     // show window
     MainWindow w(windowMode);
     w.show();
-    w.init(coreMode); // object is complete by now
+    w.init(runtimeConfig); // object is complete by now
     int r = a.exec();
     return r;
 }

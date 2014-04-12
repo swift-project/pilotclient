@@ -1,5 +1,7 @@
 #include "introwindow.h"
 #include "ui_introwindow.h"
+#include "blackcore/dbus_server.h"
+#include "blackmisc/networkutils.h"
 #include <QDesktopServices>
 #include <QUrl>
 
@@ -12,6 +14,10 @@ CIntroWindow::CIntroWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->layout()->setSizeConstraint(QLayout::SetFixedSize);
+    this->ui->cb_DBusServer->addItem(BlackCore::CDBusServer::sessionDBusServer());
+    this->ui->cb_DBusServer->addItem(BlackCore::CDBusServer::systemDBusServer());
+    this->ui->cb_DBusServer->addItems(BlackMisc::CNetworkUtils::getKnownIpAddresses());
+    this->ui->cb_DBusServer->setCurrentIndex(0);
 }
 
 /*
@@ -24,10 +30,10 @@ CIntroWindow::~CIntroWindow() { }
  */
 GuiModes::WindowMode CIntroWindow::getWindowMode() const
 {
-    if (this->ui->rb_WindowNormal->isChecked()) return GuiModes::WindowNormal;
-    if (this->ui->rb_WindowFrameless->isChecked()) return GuiModes::WindowFrameless;
-    qFatal("Illegal GUI status (window mode");
-    return GuiModes::WindowNormal; // just for compiler warning
+    if (this->ui->rb_WindowFrameless->isChecked())
+        return GuiModes::WindowFrameless;
+    else
+        return GuiModes::WindowNormal;
 }
 
 /*
@@ -35,13 +41,20 @@ GuiModes::WindowMode CIntroWindow::getWindowMode() const
  */
 GuiModes::CoreMode CIntroWindow::getCoreMode() const
 {
-    if (this->ui->rb_CoreExternal->isChecked())return GuiModes::CoreExternal;
-    if (this->ui->rb_CoreExternalVoiceLocal->isChecked()) return GuiModes::CoreExternalVoiceLocal;
-    if (this->ui->rb_CoreInGuiProcess->isChecked()) return GuiModes::CoreInGuiProcess;
-    qFatal("Illegal GUI status (core mode");
-    return GuiModes::CoreExternal; // just for compiler warning
+    if (this->ui->rb_CoreExternalVoiceLocal->isChecked())
+        return GuiModes::CoreExternalAudioLocal;
+    else if (this->ui->rb_CoreInGuiProcess->isChecked())
+        return GuiModes::CoreInGuiProcess;
+    else
+        return GuiModes::CoreExternal;
 }
-
+/*
+ * DBus server address
+ */
+QString CIntroWindow::getDBusAddress() const
+{
+    return this->ui->cb_DBusServer->currentText();
+}
 
 /*
  * Button clicked

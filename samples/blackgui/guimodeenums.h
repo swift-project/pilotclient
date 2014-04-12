@@ -23,7 +23,7 @@ public:
     enum CoreMode {
         CoreInGuiProcess,
         CoreExternal,
-        CoreExternalVoiceLocal
+        CoreExternalAudioLocal
     };
 };
 
