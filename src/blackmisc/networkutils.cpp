@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "networkchecks.h"
+#include "networkutils.h"
 #include <QtNetwork/QNetworkInterface>
 #include <QtNetwork/QTcpSocket>
 #include <QCoreApplication>
@@ -15,7 +15,7 @@ namespace BlackMisc
     /*
      * Connected interface?
      */
-    bool CNetworkChecks::hasConnectedInterface(bool withDebugOutput)
+    bool CNetworkUtils::hasConnectedInterface(bool withDebugOutput)
     {
         // http://stackoverflow.com/questions/2475266/verfiying-the-network-connection-using-qt-4-4
         QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
@@ -24,12 +24,11 @@ namespace BlackMisc
         for (int i = 0; i < interfaces.count(); i++)
         {
             QNetworkInterface iface = interfaces.at(i);
+
+            // details of connection
+            if (withDebugOutput) qDebug() << "name:" << iface.name() << endl << "ip addresses:" << endl << "mac:" << iface.hardwareAddress() << endl;
             if (iface.flags().testFlag(QNetworkInterface::IsUp) && !iface.flags().testFlag(QNetworkInterface::IsLoopBack))
             {
-
-                // details of connection
-                if (withDebugOutput) qDebug() << "name:" << iface.name() << endl << "ip addresses:" << endl << "mac:" << iface.hardwareAddress() << endl;
-
                 // this loop is important
                 for (int j = 0; j < iface.addressEntries().count(); j++)
                 {
@@ -49,11 +48,30 @@ namespace BlackMisc
     }
 
     /*
+     * my IP
+     */
+    QStringList CNetworkUtils::getKnownIpAddresses()
+    {
+        QStringList ips;
+        if (!CNetworkUtils::hasConnectedInterface(false)) return ips;
+        foreach(const QHostAddress & address, QNetworkInterface::allAddresses())
+        {
+            if (address.isLoopback() || address.isNull()) continue;
+            if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
+            {
+                QString a = address.toString();
+                if (CNetworkUtils::isValidIPv4Address(a)) ips.append(a);
+            }
+        }
+        return ips;
+    }
+
+    /*
      * Can connect to IP/port?
      */
-    bool CNetworkChecks::canConnect(const QString &hostAddress, quint16 port, QString &message, int timeoutMs)
+    bool CNetworkUtils::canConnect(const QString &hostAddress, quint16 port, QString &message, int timeoutMs)
     {
-        if (!CNetworkChecks::hasConnectedInterface(false))
+        if (!CNetworkUtils::hasConnectedInterface(false))
         {
             message = QObject::tr("No connected network interface", "BlackMisc");
             return false;
@@ -80,15 +98,15 @@ namespace BlackMisc
     /*
      * Can connect server?
      */
-    bool CNetworkChecks::canConnect(const Network::CServer &server, QString &message, int timeoutMs)
+    bool CNetworkUtils::canConnect(const Network::CServer &server, QString &message, int timeoutMs)
     {
-        return CNetworkChecks::canConnect(server.getAddress(), server.getPort(), message, timeoutMs);
+        return CNetworkUtils::canConnect(server.getAddress(), server.getPort(), message, timeoutMs);
     }
 
     /*
      * Valid IPv4 address
      */
-    bool CNetworkChecks::isValidIPv4Address(const QString &candidate)
+    bool CNetworkUtils::isValidIPv4Address(const QString &candidate)
     {
         QHostAddress address(candidate);
         return (QAbstractSocket::IPv4Protocol == address.protocol());
@@ -97,7 +115,7 @@ namespace BlackMisc
     /*
      * Valid IPv6 address
      */
-    bool CNetworkChecks::isValidIPv6Address(const QString &candidate)
+    bool CNetworkUtils::isValidIPv6Address(const QString &candidate)
     {
         QHostAddress address(candidate);
         return (QAbstractSocket::IPv6Protocol == address.protocol());
@@ -106,7 +124,7 @@ namespace BlackMisc
     /*
      * Valid port?
      */
-    bool CNetworkChecks::isValidPort(const QString &port)
+    bool CNetworkUtils::isValidPort(const QString &port)
     {
         bool success;
         int p = port.toInt(&success);

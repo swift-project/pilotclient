@@ -4,7 +4,7 @@
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackmisc/hwkeyboardkey.h"
-#include "blackmisc/networkchecks.h"
+#include "blackmisc/networkutils.h"
 #include "blacksim/fsx/simconnectutilities.h"
 
 using namespace BlackCore;
@@ -160,19 +160,19 @@ void MainWindow::testSimConnectConnection()
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "no address or port"));
         return;
     }
-    if (!CNetworkChecks::isValidIPv4Address(address))
+    if (!CNetworkUtils::isValidIPv4Address(address))
     {
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "IPv4 address invalid"));
         return;
     }
-    if (!CNetworkChecks::isValidPort(port))
+    if (!CNetworkUtils::isValidPort(port))
     {
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "invalid port"));
         return;
     }
     quint16 p = port.toUInt();
     QString msg;
-    if (!CNetworkChecks::canConnect(address, p, msg))
+    if (!CNetworkUtils::canConnect(address, p, msg))
     {
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, msg));
         return;
@@ -192,12 +192,12 @@ void MainWindow::saveSimConnectCfg()
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "no address or port"));
         return;
     }
-    if (!CNetworkChecks::isValidIPv4Address(address))
+    if (!CNetworkUtils::isValidIPv4Address(address))
     {
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "IPv4 address invalid"));
         return;
     }
-    if (!CNetworkChecks::isValidPort(port))
+    if (!CNetworkUtils::isValidPort(port))
     {
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "invalid port"));
         return;

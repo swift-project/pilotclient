@@ -11,7 +11,7 @@
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
 
-#include "blackmisc/networkchecks.h"
+#include "blackmisc/networkutils.h"
 #include "blackmisc/avatcstationlist.h"
 
 #include <QtXml/QDomElement>
@@ -128,7 +128,7 @@ namespace BlackCore
         else
         {
             QString msg;
-            if (CNetworkChecks::canConnect(currentServer, msg, 2000))
+            if (CNetworkUtils::canConnect(currentServer, msg, 2000))
             {
                 INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
                 this->m_ownAircraft.setPilot(currentServer.getUser()); // still needed?

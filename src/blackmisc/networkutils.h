@@ -3,25 +3,23 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISC_NETWORKCHECKS_H
-#define BLACKMISC_NETWORKCHECKS_H
+#ifndef BLACKMISC_NETWORKUTILS_H
+#define BLACKMISC_NETWORKUTILS_H
 
 #include "nwserver.h"
-#include <QString>
+#include <QStringList>
 
 namespace BlackMisc
 {
 
     /*!
-     * \brief Utilities checking whether a network connection can be established
+     * \brief Utilities, e.g. checking whether a network connection can be established
      */
-    class CNetworkChecks
+    class CNetworkUtils
     {
     private:
-        /*!
-         * \brief Constructor
-         */
-        CNetworkChecks() {}
+        // Constructor
+        CNetworkUtils() {}
 
     public:
         /*!
@@ -50,13 +48,16 @@ namespace BlackMisc
          */
         static bool canConnect(const BlackMisc::Network::CServer &server, QString &message, int timeoutMs = 1500);
 
-        //! \brief Valid IPv4 address
+        //! Find out my IPv4 address, empty if not possible
+        static QStringList getKnownIpAddresses();
+
+        //! Valid IPv4 address
         static bool isValidIPv4Address(const QString &candidate);
 
-        //! \brief Valid IPv6 address
+        //! Valid IPv6 address
         static bool isValidIPv6Address(const QString &candidate);
 
-        //! \brief Valid port
+        //! Valid port
         static bool isValidPort(const QString &port);
 
     };
