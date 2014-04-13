@@ -92,7 +92,7 @@ namespace BlackCore
             if (plugin)
             {
                 ISimulatorFactory *factory = qobject_cast<ISimulatorFactory*>(plugin);
-                if(plugin)
+                if(factory)
                 {
                     m_simulator = factory->create(this);
                     connect(m_simulator, SIGNAL(connectionChanged(bool)), this, SLOT(setConnectionStatus(bool)));
