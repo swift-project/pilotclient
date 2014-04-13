@@ -57,7 +57,7 @@ namespace BlackCore
             this->m_audioOutput->setVolume(1.0);
 
             // do processing
-            this->startTimer(100);
+            this->startTimer(10);
         }
         catch (...)
         {
