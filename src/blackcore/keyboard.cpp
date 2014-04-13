@@ -7,6 +7,12 @@
 
 #if defined(Q_OS_WIN)
     #include "blackcore/win/keyboard_windows.h"
+#elif defined(Q_OS_LINUX)
+    #include "blackcore/linux/keyboard_linux.h"
+#elif defined(Q_OS_OSX)
+    #include "blackcore/mac/keyboard_mac.h"
+#else
+    #error "Platform is not supported!"
 #endif
 
 namespace BlackCore
@@ -24,8 +30,10 @@ namespace BlackCore
         {
 #if defined(Q_OS_WIN)
             m_instance = new CKeyboardWindows;
-#elif defined(Q_OS_OSX)
 #elif defined(Q_OS_LINUX)
+            m_instance = new CKeyboardLinux;
+#elif defined(Q_OS_OSX)
+            m_instance = new CKeyboardMac;
 #endif
             Q_ASSERT_X(m_instance, "IKeyboard::getInstance", "Pointer to IKeyboard is NULL!");
             m_instance->init();
