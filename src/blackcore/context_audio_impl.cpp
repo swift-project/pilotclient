@@ -28,7 +28,10 @@ namespace BlackCore
         m_keyboard(nullptr)
     {
         // 1. Init by "voice driver"
-        this->m_voice = new CVoiceVatlib(this);
+        this->m_voice = new CVoiceVatlib();
+        m_voice->moveToThread(&m_threadVoice);
+        m_threadVoice.start();
+
         m_keyboard = IKeyboard::getInstance();
 
         // 2. Signal / slots
@@ -42,6 +45,8 @@ namespace BlackCore
     CContextAudio::~CContextAudio()
     {
         this->leaveAllVoiceRooms();
+        m_threadVoice.quit();
+        m_threadVoice.wait(1000);
     }
 
     /*

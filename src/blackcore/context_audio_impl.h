@@ -13,6 +13,8 @@
 #include "voice_vatlib.h"
 #include "blackcore/keyboard.h"
 
+#include <QThread>
+
 namespace BlackCore
 {
     //! \brief Audio context implementation
@@ -114,6 +116,8 @@ namespace BlackCore
         CVoiceVatlib *m_voice; //!< underlying voice lib
         IKeyboard *m_keyboard;
         IKeyboard::RegistrationHandle m_handlePtt;
+        IContextSettings *m_contextSettings;
+        QThread m_threadVoice;
     };
 }
 
