@@ -267,5 +267,6 @@ namespace BlackCore
 } // namespace BlackCore
 
 Q_DECLARE_METATYPE(BlackCore::IVoice::ComUnit)
+Q_DECLARE_METATYPE(BlackCore::IVoice::ConnectionStatus)
 
 #endif // guard
