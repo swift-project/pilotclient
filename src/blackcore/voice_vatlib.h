@@ -16,6 +16,8 @@
 #include <QMap>
 #include <QSet>
 #include <QString>
+#include <QMutex>
+#include <QReadWriteLock>
 
 #ifdef Q_OS_WIN
 #ifndef NOMINMAX
@@ -104,6 +106,7 @@ namespace BlackCore
         //! \copydoc IVoice::getComVoiceRooms()
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const override
         {
+            QReadLocker lockForReading(&m_lockVoiceRooms);
             return this->m_voiceRooms;
         }
 
@@ -128,6 +131,7 @@ namespace BlackCore
         //! \copydoc IVoice::isMuted
         virtual bool isMuted() const override
         {
+            QReadLocker lockForReading(&m_lockOutputEnabled);
             if (this->m_outputEnabled.isEmpty()) return false;
             bool enabled = this->m_outputEnabled[COM1] || this->m_outputEnabled[COM2];
             return !enabled;
@@ -237,6 +241,19 @@ namespace BlackCore
         //     Maybe just use 2 "wrapper" callbacks, which then set explicitly the voice room (it is only 2 methods)
         qint32 m_temporaryUserRoomIndex; /*!< temp. storage of voice room, in order to retrieve it in static callback */
         const static qint32 InvalidRoomIndex = -1; /*! marks invalid room */
+
+        // Thread serialization
+        mutable QReadWriteLock m_lockVoiceRooms;
+        mutable QReadWriteLock m_lockCallsigns;
+        mutable QReadWriteLock m_lockCurrentOutputDevice;
+        mutable QReadWriteLock m_lockCurrentInputDevice;
+        mutable QReadWriteLock m_lockDeviceList;
+        mutable QReadWriteLock m_lockOutputEnabled;
+        mutable QReadWriteLock m_lockSquelch;
+        mutable QReadWriteLock m_lockTestResult;
+        mutable QReadWriteLock m_lockMyCallsign;
+        mutable QReadWriteLock m_lockConnectionStatus;
+        mutable QMutex m_mutexVatlib;
 
     };
 

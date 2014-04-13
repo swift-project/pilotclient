@@ -21,7 +21,18 @@ namespace BlackCore
         m_audioOutput(new QAudioOutput()),
         m_inputSquelch(-1),
         m_micTestResult(Cvatlib_Voice_Simple::agc_Ok),
-        m_temporaryUserRoomIndex(CVoiceVatlib::InvalidRoomIndex)
+        m_temporaryUserRoomIndex(CVoiceVatlib::InvalidRoomIndex),
+        m_lockVoiceRooms(QReadWriteLock::Recursive),
+        m_lockCallsigns(QReadWriteLock::Recursive),
+        m_lockCurrentOutputDevice(QReadWriteLock::Recursive),
+        m_lockCurrentInputDevice(QReadWriteLock::Recursive),
+        m_lockDeviceList(QReadWriteLock::Recursive),
+        m_lockOutputEnabled(QReadWriteLock::Recursive),
+        m_lockSquelch(QReadWriteLock::Recursive),
+        m_lockTestResult(QReadWriteLock::Recursive),
+        m_lockMyCallsign(QReadWriteLock::Recursive),
+        m_lockConnectionStatus(QReadWriteLock::Recursive),
+        m_mutexVatlib(QMutex::Recursive)
     {
         try
         {
@@ -64,6 +75,7 @@ namespace BlackCore
      */
     const BlackMisc::Audio::CAudioDeviceList &CVoiceVatlib::audioDevices() const
     {
+        QReadLocker lockForReading(&m_lockDeviceList);
         return m_devices;
     }
 
@@ -90,6 +102,7 @@ namespace BlackCore
      */
     CAudioDevice CVoiceVatlib::getCurrentOutputDevice() const
     {
+        QReadLocker lockForReading(&m_lockCurrentOutputDevice);
         return m_currentOutputDevice;
     }
 
@@ -98,6 +111,7 @@ namespace BlackCore
      */
     CAudioDevice CVoiceVatlib::getCurrentInputDevice() const
     {
+        QReadLocker lockForReading(&m_lockCurrentInputDevice);
         return m_currentInputDevice;
     }
 
@@ -106,6 +120,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::setInputDevice(const BlackMisc::Audio::CAudioDevice &device)
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         if (!device.isValid())
         {
@@ -123,6 +138,7 @@ namespace BlackCore
             {
                 qWarning() << "Input device hit a fatal error";
             }
+            QWriteLocker lockForWriting(&m_lockCurrentInputDevice);
             this->m_currentInputDevice = device;
         }
         catch (...)
@@ -136,6 +152,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::setOutputDevice(const BlackMisc::Audio::CAudioDevice &device)
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         if (!device.isValid())
         {
@@ -151,6 +168,7 @@ namespace BlackCore
             {
                 qWarning() << "Output device hit a fatal error";
             }
+            QWriteLocker lockForWriting(&m_lockCurrentOutputDevice);
             this->m_currentOutputDevice = device;
         }
         catch (...)
@@ -164,8 +182,11 @@ namespace BlackCore
      */
     BlackMisc::Audio::CVoiceRoomList CVoiceVatlib::getComVoiceRoomsWithAudioStatus() const
     {
+        QReadLocker lockForReading(&m_lockVoiceRooms);
         Q_ASSERT_X(m_voiceRooms.size() == 2, "CVoiceVatlib", "Wrong numer of COM voice rooms");
         CVoiceRoomList voiceRooms;
+
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         if (m_voice->IsValid() && m_voice->IsSetup())
         {
             // valid state, update
@@ -192,6 +213,7 @@ namespace BlackCore
      */
     CCallsignList CVoiceVatlib::getVoiceRoomCallsigns(const IVoice::ComUnit comUnit) const
     {
+        QReadLocker lockForReading(&m_lockCallsigns);
         CCallsignList callsigns;
         if (!this->m_voiceRoomCallsigns.contains(comUnit)) return callsigns;
         return this->m_voiceRoomCallsigns[comUnit];
@@ -202,11 +224,13 @@ namespace BlackCore
      */
     void CVoiceVatlib::switchAudioOutput(const ComUnit comUnit, bool enable)
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
         try
         {
             m_voice->SetOutputState(static_cast<qint32>(comUnit), 0, enable);
+            QWriteLocker lockForWriting(&m_lockOutputEnabled);
             this->m_outputEnabled[comUnit] = enable;
         }
         catch (...)
@@ -220,6 +244,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::runSquelchTest()
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
         try
@@ -240,6 +265,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::runMicrophoneTest()
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
         try
@@ -259,6 +285,7 @@ namespace BlackCore
      */
     float CVoiceVatlib::inputSquelch() const
     {
+        QReadLocker lockForReading(&m_lockSquelch);
         return m_inputSquelch;
     }
 
@@ -267,6 +294,7 @@ namespace BlackCore
      */
     qint32 CVoiceVatlib::micTestResult() const
     {
+        QReadLocker lockForReading(&m_lockTestResult);
         return m_micTestResult;
     }
 
@@ -276,6 +304,8 @@ namespace BlackCore
     QString CVoiceVatlib::micTestResultAsString() const
     {
         QString result;
+
+        QReadLocker lockForReading(&m_lockTestResult);
         switch (m_micTestResult)
         {
         case Cvatlib_Voice_Simple::agc_Ok:
@@ -306,6 +336,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign)
     {
+        QWriteLocker lockForWriting(&m_lockMyCallsign);
         m_aircraftCallsign = callsign;
     }
 
@@ -314,6 +345,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Audio::CVoiceRoom &voiceRoom)
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
 
@@ -332,6 +364,7 @@ namespace BlackCore
             this->setVoiceRoomForUnit(comUnit, vr);
             changeConnectionStatus(comUnit, Connecting);
             QString serverSpec = voiceRoom.getVoiceRoomUrl();
+            QReadLocker lockForReading(&m_lockMyCallsign);
             m_voice->JoinRoom(static_cast<qint32>(comUnit), m_aircraftCallsign.toQString().toLatin1().constData(), serverSpec.toLatin1().constData());
         }
         catch (...)
@@ -348,6 +381,7 @@ namespace BlackCore
         CVoiceRoom vr = this->voiceRoomForUnit(comUnit);
         if (!vr.isConnected()) return;
 
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
 
@@ -378,6 +412,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::setRoomOutputVolume(const ComUnit comUnit, const qint32 volume)
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
 
@@ -396,6 +431,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::startTransmitting(const ComUnit comUnit)
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
 
@@ -414,6 +450,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::stopTransmitting(const ComUnit comUnit)
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
         try
@@ -436,12 +473,17 @@ namespace BlackCore
         switch (roomStatus)
         {
         case Cvatlib_Voice_Simple::roomStatusUpdate_JoinSuccess:
-            switchAudioOutput(comUnit, this->m_outputEnabled[comUnit]);
+        {
+            m_lockOutputEnabled.lockForRead();
+            bool isOutputEnabled = this->m_outputEnabled[comUnit];
+            m_lockOutputEnabled.unlock();
+            switchAudioOutput(comUnit, isOutputEnabled);
             vr.setConnected(true);
             this->setVoiceRoomForUnit(comUnit, vr);
             changeConnectionStatus(comUnit, Connected);
             emit userJoinedLeft(comUnit);
             break;
+        }
         case Cvatlib_Voice_Simple::roomStatusUpdate_JoinFail:
             vr.setConnected(false);
             this->setVoiceRoomForUnit(comUnit, vr);
@@ -453,7 +495,9 @@ namespace BlackCore
             changeConnectionStatus(comUnit, DisconnectedError);
             break;
         case Cvatlib_Voice_Simple::roomStatusUpdate_LeaveComplete:
+            m_lockCallsigns.lockForWrite();
             m_voiceRoomCallsigns.clear();
+            m_lockCallsigns.unlock();
             break;
         case Cvatlib_Voice_Simple::roomStatusUpdate_UserJoinsLeaves:
             // FIXME: We cannot call GetRoomUserList because vatlib is not reentrent safe.
@@ -481,6 +525,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::timerEvent(QTimerEvent *)
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
         try
@@ -498,11 +543,13 @@ namespace BlackCore
      */
     void CVoiceVatlib::onEndFindSquelch()
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
         try
         {
             m_voice->EndFindSquelch();
+            QWriteLocker lockForWriting(&m_lockSquelch);
             m_inputSquelch = m_voice->GetInputSquelch();
             emit squelchTestFinished();
         }
@@ -514,10 +561,12 @@ namespace BlackCore
 
     void CVoiceVatlib::onEndMicTest()
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
         try
         {
+            QWriteLocker lockForWriting(&m_lockTestResult);
             m_micTestResult = m_voice->EndMicTest();
             emit micTestFinished();
         }
@@ -532,6 +581,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::onUserJoinedLeft(const ComUnit comUnit)
     {
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_temporaryUserRoomIndex == CVoiceVatlib::InvalidRoomIndex, "CVoiceClientVatlib::onUserJoinedLeft", "Cannot list users for two rooms in parallel!");
         try
@@ -557,6 +607,7 @@ namespace BlackCore
                 }
             }
 
+            QWriteLocker lockForWriting(&m_lockCallsigns);
             foreach(CCallsign callsign, m_temporaryVoiceRoomCallsigns)
             {
                 if (!m_voiceRoomCallsigns.value(comUnit).contains(callsign))
@@ -636,6 +687,7 @@ namespace BlackCore
     {
         Q_UNUSED(obj)
         BlackMisc::Audio::CAudioDevice inputDevice(BlackMisc::Audio::CAudioDevice::InputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDevice::InputDevice), QString(name));
+        QWriteLocker lockForWriting(&(cbvar_cast_voice(cbVar)->m_lockDeviceList));
         cbvar_cast_voice(cbVar)->m_devices.push_back(inputDevice);
     }
 
@@ -646,6 +698,7 @@ namespace BlackCore
     {
         Q_UNUSED(obj)
         BlackMisc::Audio::CAudioDevice outputDevice(BlackMisc::Audio::CAudioDevice::OutputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDevice::OutputDevice), QString(name));
+        QWriteLocker lockForWriting(&(cbvar_cast_voice(cbVar)->m_lockDeviceList));
         cbvar_cast_voice(cbVar)->m_devices.push_back(outputDevice);
     }
 
@@ -654,6 +707,7 @@ namespace BlackCore
      */
     CVoiceRoom CVoiceVatlib::voiceRoomForUnit(const IVoice::ComUnit comUnit) const
     {
+        QReadLocker lockForReading(&m_lockVoiceRooms);
         return (comUnit == COM1) ? this->m_voiceRooms[0] : this->m_voiceRooms[1];
     }
 
@@ -662,6 +716,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::setVoiceRoomForUnit(const IVoice::ComUnit comUnit, const CVoiceRoom &voiceRoom)
     {
+        QWriteLocker lockForWriting(&m_lockVoiceRooms);
         this->m_voiceRooms[comUnit == COM1 ? 0 : 1] = voiceRoom;
     }
 
@@ -715,6 +770,7 @@ namespace BlackCore
     // Change voice room status and emit signal
     void CVoiceVatlib::changeConnectionStatus(ComUnit comUnit, ConnectionStatus newStatus)
     {
+        QWriteLocker lockForWriting(&m_lockConnectionStatus);
         ConnectionStatus currentStatus = m_connectionStatus.value(comUnit);
         if (newStatus != currentStatus)
         {
