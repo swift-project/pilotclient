@@ -7,6 +7,7 @@
 #include "context_runtime.h"
 #include "blackmisc/settingutilities.h"
 #include <QtMsgHandler>
+#include <QFile>
 
 using namespace BlackMisc;
 
@@ -48,7 +49,43 @@ namespace BlackCore
      */
     void CContextApplication::notifyAboutComponentChange(uint component, uint action)
     {
+        if (this->getRuntime()->isSlotLogForApplicationEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, QString::number(component), QString::number(action));
         this->componentChanged(component, action);
+    }
+
+    /*
+     * String to file
+     */
+    bool CContextApplication::writeToFile(const QString &fileName, const QString &content)
+    {
+        if (this->getRuntime()->isSlotLogForApplicationEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, fileName, content.left(25));
+        QFile file(fileName);
+        bool success = false;
+        if ((success = file.open(QIODevice::WriteOnly | QIODevice::Text)))
+        {
+            QTextStream out(&file);
+            out << content;
+            file.close();
+        }
+        return success;
+    }
+
+    /*
+     * File to string
+     */
+    QString CContextApplication::readFromFile(const QString &fileName)
+    {
+        if (this->getRuntime()->isSlotLogForApplicationEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, fileName);
+        QFile file(fileName);
+        QString content;
+        bool success = false;
+        if ((success = file.open(QIODevice::ReadOnly | QIODevice::Text)))
+        {
+            QTextStream in(&file);
+            in >> content;
+            file.close();
+        }
+        return content;
     }
 
 } // namespace

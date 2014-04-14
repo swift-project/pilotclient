@@ -37,6 +37,12 @@ namespace BlackCore
         //! \copydoc IContextApplication::notifyAboutComponentChange
         virtual void notifyAboutComponentChange(uint component, uint action) override;
 
+        //! \copydoc IContextApplication::writeToFile
+        virtual bool writeToFile(const QString &fileName, const QString &content) override;
+
+        //! \copydoc IContextApplication::readFromFile
+        virtual QString readFromFile(const QString &fileName) override;
+
     protected:
         //! Constructor
         CContextApplicationProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContextApplicationBase(mode, runtime), m_dBusInterface(nullptr) {}

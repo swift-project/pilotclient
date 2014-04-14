@@ -111,6 +111,12 @@ namespace BlackCore
 
         //! A component has changed its state
         virtual void notifyAboutComponentChange(uint component, uint action) = 0;
+
+        //! Remote enable version of writing a text file
+        virtual bool writeToFile(const QString &fileName, const QString &content) = 0;
+
+        //!  Remote enable version of reading a text file
+        virtual QString readFromFile(const QString &fileName) = 0;
     };
 }
 

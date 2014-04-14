@@ -70,4 +70,19 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("notifyAboutComponentChange"), component, action);
     }
 
+    /*
+     * To file
+     */
+    bool CContextApplicationProxy::writeToFile(const QString &fileName, const QString &content)
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("writeToFile"), fileName, content);
+    }
+
+    /*
+     * From file
+     */
+    QString CContextApplicationProxy::readFromFile(const QString &fileName)
+    {
+        return this->m_dBusInterface->callDBusRet<QString>(QLatin1Literal("readFromFile"), fileName);
+    }
 } // namespace

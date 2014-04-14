@@ -5,6 +5,7 @@
 #include "blackcore/context_network.h"
 #include "blackmisc/hwkeyboardkey.h"
 #include "blackmisc/networkutils.h"
+#include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/fsx/simconnectutilities.h"
 
 using namespace BlackCore;
@@ -184,6 +185,7 @@ void MainWindow::testSimConnectConnection()
 
 void MainWindow::saveSimConnectCfg()
 {
+    if (!this->m_rt->getIContextSimulator()) return;
     QString address = this->ui->le_SettingsSimulatorFsxAddress->text().trimmed();
     QString port = this->ui->le_SettingsSimulatorFsxPort->text().trimmed();
 
@@ -203,15 +205,21 @@ void MainWindow::saveSimConnectCfg()
         return;
     }
     quint16 p = port.toUInt();
-    QString file = CSimConnectUtilities::getLocalSimConnectCfgFilename();
-    if (CSimConnectUtilities::writeSimConnectCfg(file, address, p))
+    QString fileName = this->m_rt->getIContextSimulator()->getSimulatorInfo().getSimulatorSetupValueAsString(CFsxSimulatorSetup::SetupSimConnectCfgFile);
+    Q_ASSERT(!fileName.isEmpty());
+    // write either local or remote file
+    bool local = this->m_rt->getIContextSimulator()->usingLocalObjects();
+    bool success = local ?
+                   BlackSim::Fsx::CSimConnectUtilities::writeSimConnectCfg(fileName, address, p) :
+                   this->m_rt->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p));
+    if (success)
     {
-        QString m = QString("Written ").append(file);
+        QString m = QString("Written ").append(local ? " local " : "remote ").append(fileName);
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, m));
     }
     else
     {
-        QString m = QString("Cannot write ").append(file);
+        QString m = QString("Cannot write ").append(fileName);
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, m));
     }
 }

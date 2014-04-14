@@ -2,7 +2,9 @@
 #include "mainwindow.h"
 #include "guimodeenums.h"
 #include "blackcore/context_runtime_config.h"
+#include "blacksim/blacksimfreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+
 #include <QtGlobal>
 #include <QApplication>
 #include <QMessageBox>
@@ -20,6 +22,7 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(blackgui);
     BlackMisc::initResources();
     BlackMisc::registerMetadata();
+    BlackSim::registerMetadata();
     // BlackMisc::displayAllUserMetatypesTypes();
 
     QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
