@@ -1,11 +1,11 @@
 #ifndef BLACKSIM_SIMULATORINFO_H
 #define BLACKSIM_SIMULATORINFO_H
 
+#include "blackmisc/indexvariantmap.h"
 #include "blackmisc/valueobject.h"
 
 namespace BlackSim
 {
-
     //! \brief Describing a simulator
     class CSimulatorInfo : public BlackMisc::CValueObject
     {
@@ -33,6 +33,15 @@ namespace BlackSim
 
         //! \copydoc CValueObject::getValueHash()
         virtual uint getValueHash() const override;
+
+        //! Single setting value
+        QVariant getSimulatorSetupValue(int index) const;
+
+        //! Single setting value
+        QString getSimulatorSetupValueAsString(int index) const;
+
+        //! Set single settings
+        void setSimulatorSetup(const BlackMisc::CIndexVariantMap &setup);
 
         //! \brief Simulator is FS9 - Microsoft Flight Simulator 2004
         static const CSimulatorInfo &FS9()
@@ -85,10 +94,11 @@ namespace BlackSim
         BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorInfo)
         QString m_fullname;
         QString m_shortname;
+        BlackMisc::CIndexVariantMap m_simsetup; //!< allows to access simulator keys requried on remote side
     };
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::CSimulatorInfo, (o.m_fullname, o.m_shortname))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::CSimulatorInfo, (o.m_fullname, o.m_shortname, o.m_simsetup))
 Q_DECLARE_METATYPE(BlackSim::CSimulatorInfo)
 
 #endif // guard

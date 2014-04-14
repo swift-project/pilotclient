@@ -27,8 +27,12 @@ namespace BlackSimPlugin
             m_isConnected(false),
             m_simRunning(false),
             m_hSimConnect(nullptr),
-            m_nextObjID(1)
+            m_nextObjID(1),
+            m_simulatorInfo(CSimulatorInfo::FSX())
         {
+            CFsxSimulatorSetup setup;
+            setup.init(); // this fetches important setting on local side
+            this->m_simulatorInfo.setSimulatorSetup(setup.getSettings());
             QTimer::singleShot(5000, this, SLOT(checkConnection()));
         }
 
@@ -79,6 +83,11 @@ namespace BlackSimPlugin
         void CSimulatorFSX::removeRemoteAircraft(const CCallsign &/*callsign*/)
         {
             // TODO
+        }
+
+        CSimulatorInfo CSimulatorFSX::getSimulatorInfo() const
+        {
+            return this->m_simulatorInfo;
         }
 
         void CALLBACK CSimulatorFSX::SimConnectProc(SIMCONNECT_RECV *pData, DWORD /* cbData */, void *pContext)

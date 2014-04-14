@@ -5,7 +5,6 @@ using namespace BlackMisc;
 
 namespace BlackSim
 {
-
     CSimulatorInfo::CSimulatorInfo(const QString &shortname, const QString &fullname) : m_fullname(fullname), m_shortname(shortname)
     { }
 
@@ -15,6 +14,23 @@ namespace BlackSim
     uint CSimulatorInfo::getValueHash() const
     {
         return qHash(TupleConverter<CSimulatorInfo>::toTuple(*this));
+    }
+
+    QVariant CSimulatorInfo::getSimulatorSetupValue(int index) const
+    {
+        return this->m_simsetup.value(index);
+    }
+
+    QString CSimulatorInfo::getSimulatorSetupValueAsString(int index) const
+    {
+        QVariant qv = getSimulatorSetupValue(index);
+        Q_ASSERT(qv.canConvert<QString>());
+        return qv.toString();
+    }
+
+    void CSimulatorInfo::setSimulatorSetup(const BlackMisc::CIndexVariantMap &setup)
+    {
+        this->m_simsetup = setup;
     }
 
     QString CSimulatorInfo::convertToQString(bool i18n) const
