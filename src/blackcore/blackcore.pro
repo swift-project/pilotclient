@@ -8,7 +8,7 @@ QT       += network dbus xml multimedia
 TARGET = blackcore
 TEMPLATE = lib
 CONFIG += staticlib
-CONFIG += blackmisc
+CONFIG += blackmisc blacksim
 
 INCLUDEPATH += ..
 DEPENDPATH += . ..
@@ -30,8 +30,8 @@ win32 {
     SOURCES += $$PWD/win/*.cpp
 }
 
-win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blacksound.lib
-else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../lib/libblacksound.a
+win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib ../../lib/blacksound.lib ../../lib/blacksim.lib
+else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a ../../lib/libblacksound.a ../../lib/libblacksim.a
 
 DESTDIR = ../../lib
 
