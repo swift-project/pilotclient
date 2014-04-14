@@ -6,18 +6,19 @@
 #ifndef BLACKSIMPLUGIN_SIMULATOR_FSX_H
 #define BLACKSIMPLUGIN_SIMULATOR_FSX_H
 
-#define NOMINMAX
-
 #include "simconnect_datadefinition.h"
-
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator_linear.h"
 #include "blackmisc/avaircraft.h"
+#include "blacksim/simulatorinfo.h"
 #include <simconnect/SimConnect.h>
 #include <QObject>
 #include <QtPlugin>
 #include <QHash>
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
 
 namespace BlackSimPlugin

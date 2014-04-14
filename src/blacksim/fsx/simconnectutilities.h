@@ -8,7 +8,10 @@
 // though it does not make sense to be used on non WIN machines.
 // But it allows parts as GUI to comile
 #ifdef Q_OS_WIN
-#include <windows.h>
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <Windows.h>
 #else
 typedef unsigned long   DWORD;
 #endif

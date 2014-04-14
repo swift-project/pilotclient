@@ -8,6 +8,9 @@
 #define BLACKCORE_KEYMAPPING_WINDOWS_H
 
 #include "blackmisc/hwkeyboardkey.h"
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
 
 namespace BlackCore
@@ -39,4 +42,4 @@ namespace BlackCore
     };
 
 } // namespace BlackCore
-#endif // BLACKCORE_KEYMAPPING_WINDOWS_H
+#endif // guard

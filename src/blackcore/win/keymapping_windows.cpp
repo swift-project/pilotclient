@@ -5,6 +5,10 @@
 
 #include "keymapping_windows.h"
 #include <QDebug>
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
 
 using namespace BlackMisc::Hardware;

@@ -6,6 +6,9 @@
 #ifndef BLACKSIMPLUGIN_FSX_SIMCONNECT_DATADEFINITION_H
 #define BLACKSIMPLUGIN_FSX_SIMCONNECT_DATADEFINITION_H
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
 
 namespace BlackSimPlugin

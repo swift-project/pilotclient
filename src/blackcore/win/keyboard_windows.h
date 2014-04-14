@@ -13,7 +13,10 @@
 #include "blackcore/keyboard.h"
 #include "blackmisc/hwkeyboardkey.h"
 #include <QHash>
-#include <Windows.h>
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
 
 namespace BlackCore
 {
