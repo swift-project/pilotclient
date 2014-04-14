@@ -13,6 +13,7 @@
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_runtime.h"
 #include "blackmisc/avaircraft.h"
+#include "blacksim/simulatorinfo.h"
 #include <QObject>
 
 namespace BlackCore
@@ -52,6 +53,9 @@ namespace BlackCore
 
         //! Get user aircraft value object
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
+
+        //! Simulator info
+        virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
 
     protected:
         //! \brief Constructor

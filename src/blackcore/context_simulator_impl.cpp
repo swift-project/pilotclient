@@ -41,6 +41,13 @@ namespace BlackCore
         return m_ownAircraft;
     }
 
+    BlackSim::CSimulatorInfo CContextSimulator::getSimulatorInfo() const
+    {
+        if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        if (!m_simulator) return BlackSim::CSimulatorInfo::UnspecifiedSim();
+        return m_simulator->getSimulatorInfo();
+    }
+
     void CContextSimulator::updateOwnAircraft()
     {
         m_ownAircraft = m_simulator->getOwnAircraft();
@@ -72,11 +79,12 @@ namespace BlackCore
             QObject *plugin = loader.instance();
             if (plugin)
             {
-                ISimulatorFactory *factory = qobject_cast<ISimulatorFactory*>(plugin);
-                if(factory)
+                ISimulatorFactory *factory = qobject_cast<ISimulatorFactory *>(plugin);
+                if (factory)
                 {
                     m_simulator = factory->create(this);
                     connect(m_simulator, SIGNAL(connectionChanged(bool)), this, SLOT(setConnectionStatus(bool)));
+                    qDebug() << "Simulator plugin:" << m_simulator->getSimulatorInfo().toQString();
                     break;
                 }
             }

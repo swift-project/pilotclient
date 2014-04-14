@@ -16,7 +16,6 @@ using namespace BlackMisc::Geo;
 namespace BlackCore
 {
 
-    // Constructor for DBus
     CContextSimulatorProxy::CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSimulator(mode, runtime), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
@@ -25,7 +24,6 @@ namespace BlackCore
         this->relaySignals(serviceName, connection);
     }
 
-    // Workaround for signals, not working without, but why?
     void CContextSimulatorProxy::relaySignals(const QString &/*serviceName*/, QDBusConnection &/*connection*/)
     { }
 
@@ -37,6 +35,11 @@ namespace BlackCore
     BlackMisc::Aviation::CAircraft CContextSimulatorProxy::getOwnAircraft() const
     {
         return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraft>(QLatin1Literal("getOwnAircraft"));
+    }
+
+    BlackSim::CSimulatorInfo CContextSimulatorProxy::getSimulatorInfo() const
+    {
+        return m_dBusInterface->callDBusRet<BlackSim::CSimulatorInfo>(QLatin1Literal("getSimulatorInfo"));
     }
 
 } // namespace BlackCore

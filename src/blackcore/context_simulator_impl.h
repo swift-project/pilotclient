@@ -35,6 +35,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getOwnAircraft()
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
 
+        //! \copydoc IContextSimulator::getSimulatorInfo()
+        virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
+
     protected:
         //! \brief Constructor
         CContextSimulator(CRuntimeConfig::ContextMode, CRuntime *runtime);
