@@ -234,7 +234,7 @@ namespace BlackMisc
          * \brief Modify by applying a value map to each element for which a given predicate returns true.
          */
         template <class Predicate>
-        void applyIf(Predicate p, const CValueMap &newValues)
+        void applyIf(Predicate p, const CIndexVariantMap &newValues)
         {
             std::for_each(begin(), end(), [ &, p ](T &value) { if (p(value)) { value.apply(newValues); } });
         }
@@ -246,7 +246,7 @@ namespace BlackMisc
          * \param newValues Values from this map will be put into each matching element.
          */
         template <class K1, class V1>
-        void applyIf(K1 key1, V1 value1, const CValueMap &newValues)
+        void applyIf(K1 key1, V1 value1, const CIndexVariantMap &newValues)
         {
             applyIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1), newValues);
         }
@@ -254,7 +254,7 @@ namespace BlackMisc
         /*!
          * \brief Modify by applying a value map to each element matching a given value map.
          */
-        void applyIf(const CValueMap &pattern, const CValueMap &newValues)
+        void applyIf(const CIndexVariantMap &pattern, const CIndexVariantMap &newValues)
         {
             applyIf([ & ](const T &value) { return value == pattern; }, newValues);
         }

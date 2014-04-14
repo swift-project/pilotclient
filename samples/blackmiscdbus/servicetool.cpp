@@ -2,7 +2,7 @@
 #include "testservice.h"
 #include "testservice_interface.h"
 #include "blackcore/dbus_server.h"
-#include "blackmisc/valuemap.h"
+#include "blackmisc/indexvariantmap.h"
 #include "blackmisc/nwserver.h"
 #include <QTextStream>
 #include <QString>
@@ -320,7 +320,7 @@ namespace BlackMiscTest
             qDebug() << "Send geo position" << geoPos;
 
             // Value map
-            CValueMap valueMap;
+            CIndexVariantMap valueMap;
             valueMap.addValue(1, 111.222);
             valueMap.addValue(2, callsign);
             valueMap.addValue(3, alt);

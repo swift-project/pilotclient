@@ -11,7 +11,7 @@
 #include "networkallclasses.h"
 #include "settingsallclasses.h"
 #include "hwallclasses.h"
-#include "valuemap.h"
+#include "indexvariantmap.h"
 #include "statusmessagelist.h"
 #include "audioallclasses.h"
 
@@ -129,7 +129,7 @@ void BlackMisc::registerMetadata()
 {
     // !! make sure the first id is correctly returned by
     // !! firstBlackMetaType
-    CValueMap::registerMetadata();
+    CIndexVariantMap::registerMetadata();
 
     CStatusMessage::registerMetadata();
     CStatusMessageList::registerMetadata();
@@ -151,7 +151,7 @@ void BlackMisc::registerMetadata()
 int BlackMisc::firstBlackMetaType()
 {
     // must be the first registered above
-    return qMetaTypeId<CValueMap>();
+    return qMetaTypeId<CIndexVariantMap>();
 }
 
 /*

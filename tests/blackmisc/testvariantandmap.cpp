@@ -5,7 +5,7 @@
 
 #include "testvariantandmap.h"
 #include "blackmisc/avatcstation.h"
-#include "blackmisc/valuemap.h"
+#include "blackmisc/indexvariantmap.h"
 #include "blackmisc/tuple.h"
 #include <QList>
 #include <QString>
@@ -77,9 +77,9 @@ namespace BlackMiscTest
                              geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
 
         // value maps
-        CValueMap vmWildcard(true);
-        CValueMap vmNoWildcard(false);
-        CValueMap vm;
+        CIndexVariantMap vmWildcard(true);
+        CIndexVariantMap vmNoWildcard(false);
+        CIndexVariantMap vm;
 
         // remark: Shortcoming here, as the callsign will automatically set for user in station
         // I have to set this as well, otherwise, not match.
@@ -89,6 +89,7 @@ namespace BlackMiscTest
         QVERIFY2(vmWildcard == station1, "Station should be equal to wildcard");
         QVERIFY2(station1 != vmNoWildcard, "Station should not be equal to empty list");
         QVERIFY2(station1 == vm, "Controller should match");
+        QVERIFY2(vmWildcard == vmWildcard, "Maps should be equal");
     }
 
 } //namespace BlackMiscTest

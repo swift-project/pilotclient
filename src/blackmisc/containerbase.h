@@ -11,7 +11,7 @@
 #define BLACKMISC_CONTAINERBASE_H
 
 #include "valueobject.h"
-#include "valuemap.h"
+#include "indexvariantmap.h"
 #include "predicates.h"
 #include "json.h"
 #include <algorithm>
@@ -93,7 +93,7 @@ namespace BlackMisc
         /*!
          * \brief Return a copy containing only those elements matching a given value map.
          */
-        C<T> findBy(const CValueMap &valueMap) const
+        C<T> findBy(const CIndexVariantMap &valueMap) const
         {
             return findBy([ & ](const T & value) { return value == valueMap; });
         }

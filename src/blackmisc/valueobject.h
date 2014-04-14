@@ -19,7 +19,7 @@
 namespace BlackMisc
 {
     // forward declaration
-    class CValueMap;
+    class CIndexVariantMap;
 
     /*!
      * \brief Base class for value objects.
@@ -110,7 +110,7 @@ namespace BlackMisc
          * \param valueObject
          * \return
          */
-        friend bool operator==(const CValueMap &valueMap, const CValueObject &valueObject);
+        friend bool operator==(const CIndexVariantMap &valueMap, const CValueObject &valueObject);
 
         /*!
          * \brief Operator != with value map
@@ -118,9 +118,7 @@ namespace BlackMisc
          * \param valueObject
          * \return
          */
-        friend bool operator!=(const CValueMap &valueMap, const CValueObject &valueObject);
-
-        //! \brief Operator == with value map
+        friend bool operator!=(const CIndexVariantMap &valueMap, const CValueObject &valueObject);
 
         /*!
          * \brief operator == with value map
@@ -128,7 +126,7 @@ namespace BlackMisc
          * \param valueMap
          * \return
          */
-        friend bool operator==(const CValueObject &valueObject, const CValueMap &valueMap);
+        friend bool operator==(const CValueObject &valueObject, const CIndexVariantMap &valueMap);
 
         /*!
          * \brief Operator != with value map
@@ -136,7 +134,7 @@ namespace BlackMisc
          * \param valueMap
          * \return
          */
-        friend bool operator!=(const CValueObject &valueObject, const CValueMap &valueMap);
+        friend bool operator!=(const CValueObject &valueObject, const CIndexVariantMap &valueMap);
 
         /*!
          * Compares two instances of related classes
@@ -171,7 +169,7 @@ namespace BlackMisc
         /*!
          * \brief Update by variant map
          */
-        int apply(const BlackMisc::CValueMap &valueMap);
+        int apply(const BlackMisc::CIndexVariantMap &indexMap);
 
         /*!
          * \brief Value hash, allows comparisons between QVariants

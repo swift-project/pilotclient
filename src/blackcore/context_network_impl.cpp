@@ -300,11 +300,11 @@ namespace BlackCore
     {
         if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, callsign.toQString(), realname);
         if (realname.isEmpty()) return;
-        CValueMap vm(CAtcStation::IndexControllerRealName, realname);
+        CIndexVariantMap vm(CAtcStation::IndexControllerRealName, realname);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
 
-        vm = CValueMap(CAircraft::IndexPilotRealName, realname);
+        vm = CIndexVariantMap(CAircraft::IndexPilotRealName, realname);
         this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
     }
 

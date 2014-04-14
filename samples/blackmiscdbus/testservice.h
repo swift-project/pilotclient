@@ -194,7 +194,7 @@ namespace BlackMiscTest
          * \brief Receive an value map
          * \param valueMap
          */
-        void receiveValueMap(const BlackMisc::CValueMap &valueMap) const;
+        void receiveValueMap(const BlackMisc::CIndexVariantMap &valueMap) const;
 
         /*!
          * \brief Ping atc list

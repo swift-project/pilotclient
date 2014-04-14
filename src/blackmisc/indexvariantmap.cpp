@@ -1,4 +1,4 @@
-#include "valuemap.h"
+#include "indexvariantmap.h"
 #include "blackmiscfreefunctions.h"
 #include "avaltitude.h"
 
@@ -7,20 +7,36 @@ namespace BlackMisc
     /*
      * Constructor
      */
-    CValueMap::CValueMap(bool wildcard) : m_wildcard(wildcard) {}
+    CIndexVariantMap::CIndexVariantMap(bool wildcard) : m_wildcard(wildcard) {}
 
     /*
      * Constructor single value
      */
-    CValueMap::CValueMap(int index, const QVariant &value)
+    CIndexVariantMap::CIndexVariantMap(int index, const QVariant &value)
     {
         this->addValue(index, value);
     }
 
     /*
+     * ==
+     */
+    bool CIndexVariantMap::operator ==(const CIndexVariantMap &other) const
+    {
+        return this->m_wildcard == other.m_wildcard && this->m_values == other.m_values;
+    }
+
+    /*
+     * !=
+     */
+    bool CIndexVariantMap::operator !=(const CIndexVariantMap &other) const
+    {
+        return !(this->operator ==(other));
+    }
+
+    /*
      * Convert to string
      */
-    QString CValueMap::convertToQString(bool i18n) const
+    QString CIndexVariantMap::convertToQString(bool i18n) const
     {
         if (this->isEmpty()) return "{}";
         QString s;
@@ -41,17 +57,17 @@ namespace BlackMisc
     /*
      * metaTypeId
      */
-    int CValueMap::getMetaTypeId() const
+    int CIndexVariantMap::getMetaTypeId() const
     {
-        return qMetaTypeId<CValueMap>();
+        return qMetaTypeId<CIndexVariantMap>();
     }
 
     /*
      * is a
      */
-    bool CValueMap::isA(int metaTypeId) const
+    bool CIndexVariantMap::isA(int metaTypeId) const
     {
-        if (metaTypeId == qMetaTypeId<CValueMap>()) { return true; }
+        if (metaTypeId == qMetaTypeId<CIndexVariantMap>()) { return true; }
 
         return this->CValueObject::isA(metaTypeId);
     }
@@ -59,7 +75,7 @@ namespace BlackMisc
     /*
      * Compare
      */
-    int CValueMap::compareImpl(const CValueObject &/*otherBase*/) const
+    int CIndexVariantMap::compareImpl(const CValueObject &/*otherBase*/) const
     {
         qFatal("not implemented");
         return 0;
@@ -68,7 +84,7 @@ namespace BlackMisc
     /*
      * Marshall to DBus
      */
-    void CValueMap::marshallToDbus(QDBusArgument &argument) const
+    void CIndexVariantMap::marshallToDbus(QDBusArgument &argument) const
     {
         // remark, tried both sending as QDbusVariant and QVariant
         // does not make a difference
@@ -87,7 +103,7 @@ namespace BlackMisc
     /*
      * Unmarshall from DBus
      */
-    void CValueMap::unmarshallFromDbus(const QDBusArgument &argument)
+    void CIndexVariantMap::unmarshallFromDbus(const QDBusArgument &argument)
     {
         QList<int> indexes;
         QList<QDBusVariant> values;
@@ -120,7 +136,7 @@ namespace BlackMisc
     /*
      * Add value
      */
-    void CValueMap::addValue(int index, const QVariant &value)
+    void CIndexVariantMap::addValue(int index, const QVariant &value)
     {
         this->m_values.insert(index, value);
     }
@@ -128,16 +144,16 @@ namespace BlackMisc
     /*
      * Register metadata
      */
-    void CValueMap::registerMetadata()
+    void CIndexVariantMap::registerMetadata()
     {
-        qRegisterMetaType<CValueMap>();
-        qDBusRegisterMetaType<CValueMap>();
+        qRegisterMetaType<CIndexVariantMap>();
+        qDBusRegisterMetaType<CIndexVariantMap>();
     }
 
     /*
      * Hash
      */
-    uint CValueMap::getValueHash() const
+    uint CIndexVariantMap::getValueHash() const
     {
         return qHash(this);
     }

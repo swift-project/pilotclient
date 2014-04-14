@@ -10,7 +10,7 @@
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/aviotransponder.h"
 #include "blackmisc/avatcstationlist.h"
-#include "blackmisc/valuemap.h"
+#include "blackmisc/indexvariantmap.h"
 #include "blackmisc/predicates.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QDebug>
@@ -56,7 +56,7 @@ namespace BlackMiscTest
         qDebug() << atcList.toQString();
 
         // put Jane in the tower
-        CValueMap newController;
+        CIndexVariantMap newController;
         newController.addValue(CAtcStation::IndexController, QVariant::fromValue(CUser("112233", "Jane Doe")));
         atcList.applyIf(
             BlackMisc::Predicates::MemberEqual<CAtcStation>(&CAtcStation::getCallsign, CCallsign("eddm_twr")),
@@ -65,7 +65,7 @@ namespace BlackMiscTest
         qDebug() << atcList.toQString();
 
         // now Jane's time is over
-        CValueMap anotherController;
+        CIndexVariantMap anotherController;
         anotherController.addValue(CAtcStation::IndexController, QVariant::fromValue(CUser("445566", "Fuzzy")));
         atcList.applyIf(newController, anotherController);
 

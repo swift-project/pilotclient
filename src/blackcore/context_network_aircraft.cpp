@@ -45,7 +45,7 @@ namespace BlackCore
         else
         {
             // update
-            CValueMap vm(CAircraft::IndexIcao, icaoData.toQVariant());
+            CIndexVariantMap vm(CAircraft::IndexIcao, icaoData.toQVariant());
             this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);
             emit this->changedAircraftsInRange();
         }
@@ -83,7 +83,7 @@ namespace BlackCore
             // update
             CLength distance = this->m_ownAircraft.calculcateDistanceToPlane(situation.getPosition());
             distance.switchUnit(CLengthUnit::NM());
-            CValueMap vm;
+            CIndexVariantMap vm;
             vm.addValue(CAircraft::IndexTransponder, transponder);
             vm.addValue(CAircraft::IndexSituation, situation);
             vm.addValue(CAircraft::IndexDistance, distance);
@@ -111,7 +111,7 @@ namespace BlackCore
         // this->log(Q_FUNC_INFO, callsign.toQString(), frequency.toQString());
 
         // update
-        CValueMap vm(CAircraft::IndexFrequencyCom1, frequency.toQVariant());
+        CIndexVariantMap vm(CAircraft::IndexFrequencyCom1, frequency.toQVariant());
         this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);
         emit this->changedAircraftsInRange();
     }

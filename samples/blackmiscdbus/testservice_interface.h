@@ -202,7 +202,7 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("receiveTransponder"), argumentList);
         }
 
-        inline QDBusPendingReply<> receiveValueMap(BlackMisc::CValueMap valueMap)
+        inline QDBusPendingReply<> receiveValueMap(BlackMisc::CIndexVariantMap valueMap)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(valueMap);

@@ -11,15 +11,16 @@
 #include <QVariantMap>
 #include <QDBusArgument>
 
-#ifndef BLACKMISC_VALUEMAP_H
-#define BLACKMISC_VALUEMAP_H
+#ifndef BLACKMISC_INDEXVARIANTMAP_H
+#define BLACKMISC_INDEXVARIANTMAP_H
 
 namespace BlackMisc
 {
     /*!
-     * \brief Value map
+     * Specialized value object compliant map for variants,
+     * based on Column indexes
      */
-    class CValueMap : public CValueObject
+    class CIndexVariantMap : public CValueObject
     {
 
     public:
@@ -28,133 +29,86 @@ namespace BlackMisc
          * \brief Constructor
          * \param wildcard when used in search, for setting values irrelevant
          */
-        CValueMap(bool wildcard = false);
+        CIndexVariantMap(bool wildcard = false);
 
-        /*!
-         * \brief Single value constructor
-         * \param index
-         * \param value
-         */
-        CValueMap(int index, const QVariant &value);
+        //! Single value constructor
+        CIndexVariantMap(int index, const QVariant &value);
 
-        /*!
-         * \copydoc CValueObject::toQVariant
-         */
+        //! \copydoc CValueObject::toQVariant
         virtual QVariant toQVariant() const override
         {
             return QVariant::fromValue(*this);
         }
 
-        /*!
-         * \brief Destructor
-         */
-        virtual ~CValueMap() {}
+        //! Destructor
+        virtual ~CIndexVariantMap() {}
 
-        /*!
-         * \brief Add a value
-         * \param index
-         * \param value
-         */
+        //! Add a value
         void addValue(int index, const QVariant &value);
 
-        /*!
-         * \brief Add a value as non QVariant
-         * \param index
-         * \param value
-         */
+        //! Add a value as non QVariant
         template<class T> void addValue(int index, const T &value)
         {
             this->m_values.insert(index, QVariant::fromValue(value));
         }
 
-        /*!
-         * \brief Is empty
-         * \return
-         */
+        //! Is empty?
         bool isEmpty() const { return this->m_values.isEmpty(); }
 
-        /*!
-         * \brief Value
-         * \param index
-         * \return
-         */
+        //! Value
         QVariant value(int index) const { return this->m_values.value(index); }
 
-        /*!
-         * \brief Indexes
-         * \return
-         */
+        //! Indexes
         QList<int> indexes() const { return this->m_values.keys(); }
 
-        /*!
-         * \brief values
-         * \return
-         */
+        //! values
         QList<QVariant> values() const { return this->m_values.values(); }
 
-        /*!
-         * \brief Wildcard, only relevant when used in search
-         * \return
-         */
+        //! \brief Wildcard, only relevant when used in search
         bool isWildcard() const { return this->m_wildcard; }
 
-        /*!
-         * \brief clear
-         */
+        //! clear
         void clear() { this->m_values.clear(); }
 
-        /*!
-         * \brief Map
-         * \return
-         */
+        //! Equal operator, required if maps are directly compared, not with CValueObject
+        bool operator ==(const CIndexVariantMap &other) const;
+
+        //! Equal operator, required if maps are directly compared, not with CValueObject
+        bool operator !=(const CIndexVariantMap &other) const;
+
+        //! Map
         const QMap<int, QVariant> &map() const { return this->m_values; }
 
-        /*!
-         * \copydoc CValueObject::getValueHash
-         */
+        //! \copydoc CValueObject::getValueHash
         virtual uint getValueHash() const override;
 
-        /*!
-         * \brief Metadata
-         */
+        //! register metadata
         static void registerMetadata();
 
     protected:
         QMap<int, QVariant> m_values; //!< values
         bool m_wildcard; //!< wildcard
 
-        /*!
-         * \copydoc CValueObject::convertToQString
-         */
+        //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
 
-        /*!
-         * \copydoc CValueObject::getMetaTypeId
-         */
+        //! \copydoc CValueObject::getMetaTypeId
         virtual int getMetaTypeId() const override;
 
-        /*!
-         * \copydoc CValueObject::isA
-         */
+        //! \copydoc CValueObject::isA
         virtual bool isA(int metaTypeId) const override;
 
-        /*!
-         * \copydoc CValueObject::compareImpl
-         */
+        //! \copydoc CValueObject::compareImpl
         virtual int compareImpl(const CValueObject &other) const override;
 
-        /*!
-         * \copydoc CValueObject::marshallToDbus
-         */
+        //! \copydoc CValueObject::marshallToDbus
         virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-        /*!
-         * \copydoc CValueObject::unmarshallFromDbus
-         */
+        //! \copydoc CValueObject::unmarshallFromDbus
         virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
     };
 }
 
-Q_DECLARE_METATYPE(BlackMisc::CValueMap)
+Q_DECLARE_METATYPE(BlackMisc::CIndexVariantMap)
 
 #endif // guard

@@ -1,5 +1,5 @@
 #include "valueobject.h"
-#include "valuemap.h"
+#include "indexvariantmap.h"
 #include "blackmiscfreefunctions.h"
 
 namespace BlackMisc
@@ -104,16 +104,16 @@ namespace BlackMisc
         }
     }
 
-    /*!
+    /*
      * Variant map
      */
-    int CValueObject::apply(const BlackMisc::CValueMap &valueMap)
+    int CValueObject::apply(const BlackMisc::CIndexVariantMap &indexMap)
     {
-        if (valueMap.isEmpty()) return 0;
+        if (indexMap.isEmpty()) return 0;
         int c = 0;
 
         QMap<int, QVariant>::const_iterator it;
-        const QMap<int, QVariant> &map = valueMap.map();
+        const QMap<int, QVariant> &map = indexMap.map();
         for (it = map.begin(); it != map.end(); ++it)
         {
             this->setPropertyByIndex(it.value(), it.key());
@@ -124,11 +124,11 @@ namespace BlackMisc
     /*
      * Compare with value map
      */
-    bool operator==(const CValueMap &valueMap, const CValueObject &valueObject)
+    bool operator==(const CIndexVariantMap &indexMap, const CValueObject &valueObject)
     {
-        if (valueMap.isEmpty()) return valueMap.isWildcard();
+        if (indexMap.isEmpty()) return indexMap.isWildcard();
         QMap<int, QVariant>::const_iterator it;
-        const QMap<int, QVariant> &map = valueMap.map();
+        const QMap<int, QVariant> &map = indexMap.map();
         for (it = map.begin(); it != map.end(); ++it)
         {
             // QVariant cannot be compared directly
@@ -140,25 +140,25 @@ namespace BlackMisc
     }
 
     /*
-     * Compare with value map
+     * Compare with map
      */
-    bool operator!=(const CValueMap &valueMap, const CValueObject &valueObject)
+    bool operator!=(const CIndexVariantMap &indexMap, const CValueObject &valueObject)
     {
-        return !(valueMap == valueObject);
+        return !(indexMap == valueObject);
     }
 
     /*
-     * Compare with value map
+     * Compare with map
      */
-    bool operator==(const CValueObject &valueObject, const CValueMap &valueMap)
+    bool operator==(const CValueObject &valueObject, const CIndexVariantMap &valueMap)
     {
         return valueMap == valueObject;
     }
 
     /*
-     * Compare with value map
+     * Compare with map
      */
-    bool operator!=(const CValueObject &valueObject, const CValueMap &valueMap)
+    bool operator!=(const CValueObject &valueObject, const CIndexVariantMap &valueMap)
     {
         return !(valueMap == valueObject);
     }

@@ -257,7 +257,7 @@ namespace BlackCore
         else
         {
             // update
-            CValueMap values;
+            CIndexVariantMap values;
             values.addValue(CAtcStation::IndexFrequency, frequency);
             values.addValue(CAtcStation::IndexPosition, position);
             values.addValue(CAtcStation::IndexRange, range);
@@ -274,7 +274,7 @@ namespace BlackCore
         // this->log(Q_FUNC_INFO, callsign.toQString());
         this->m_atcStationsOnline.removeIf(&CAtcStation::getCallsign, callsign);
         emit this->changedAtcStationsOnline();
-        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, CValueMap(CAtcStation::IndexIsOnline, QVariant(false)));
+        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, CIndexVariantMap(CAtcStation::IndexIsOnline, QVariant(false)));
     }
 
     /*
@@ -284,7 +284,7 @@ namespace BlackCore
     {
         // this->log(Q_FUNC_INFO, callsign.toQString(), atisMessage);
 
-        CValueMap vm(CAtcStation::IndexAtis, atisMessage.toQVariant());
+        CIndexVariantMap vm(CAtcStation::IndexAtis, atisMessage.toQVariant());
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
     }
@@ -295,7 +295,7 @@ namespace BlackCore
     void CContextNetwork::psFsdAtisVoiceRoomQueryReceived(const CCallsign &callsign, const QString &url)
     {
         QString trimmedUrl = url.trimmed();
-        CValueMap vm(CAtcStation::IndexVoiceRoomUrl, trimmedUrl);
+        CIndexVariantMap vm(CAtcStation::IndexVoiceRoomUrl, trimmedUrl);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
     }
@@ -315,7 +315,7 @@ namespace BlackCore
             if (!ok) return;
             QDateTime logoffDateTime = QDateTime::currentDateTimeUtc();
             logoffDateTime.setTime(QTime(h, m));
-            CValueMap vm(CAtcStation::IndexBookedUntil, logoffDateTime);
+            CIndexVariantMap vm(CAtcStation::IndexBookedUntil, logoffDateTime);
             this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
             this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
         }
@@ -334,7 +334,7 @@ namespace BlackCore
         CInformationMessage metar(CInformationMessage::METAR, metarMessage);
 
         // add METAR to existing stations
-        CValueMap vm(CAtcStation::IndexMetar, metar.toQVariant());
+        CIndexVariantMap vm(CAtcStation::IndexMetar, metar.toQVariant());
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
         this->m_metarCache.insert(icaoCode, metar);

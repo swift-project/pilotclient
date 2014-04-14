@@ -208,7 +208,7 @@ namespace BlackMiscTest
     /*
      * Receive value map
      */
-    void Testservice::receiveValueMap(const BlackMisc::CValueMap &valueMap) const
+    void Testservice::receiveValueMap(const BlackMisc::CIndexVariantMap &valueMap) const
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received value map:" << valueMap;
     }
