@@ -4,7 +4,7 @@
 #include "blackcore/context_audio.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_application.h"
-#include "blackmisc/valuemap.h"
+#include "blackmisc/indexvariantmap.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/pqallquantities.h"
 #include <QTextStream>
@@ -66,7 +66,7 @@ namespace BlackMiscTest
             qDebug() << "examples: sigappd, slonete, slosimd, sloalle";
             qDebug() << "-------------";
 
-            line = qtin.readLine();
+            line = qtin.readLine().toLower().trimmed();
             if (line.startsWith("0"))
             {
                 qDebug() << "-------------";
@@ -115,6 +115,7 @@ namespace BlackMiscTest
             }
             else if (line.startsWith("sig"))
             {
+                line.replace("signal", "");
                 line.replace("sig", "");
                 bool enable = line.endsWith("e");
                 if (line.startsWith("app")) runtime->signalLogForApplication(enable);
@@ -126,6 +127,7 @@ namespace BlackMiscTest
             }
             else if (line.startsWith("slo"))
             {
+                line.replace("slot", "");
                 line.replace("slo", "");
                 bool enable = line.endsWith("e");
                 if (line.startsWith("app")) runtime->slotLogForApplication(enable);
