@@ -1,8 +1,4 @@
 #include "blackcore/context_runtime.h"
-#include "blackmisc/nwserver.h"
-#include "blackmisc/statusmessagelist.h"
-#include "blackmisc/avaircraft.h"
-#include "blackmisc/blackmiscfreefunctions.h"
 
 #include "blackcore/context_application_impl.h"
 #include "blackcore/context_network_impl.h"
@@ -15,6 +11,15 @@
 #include "blackcore/context_settings_proxy.h"
 #include "blackcore/context_audio_proxy.h"
 #include "blackcore/context_simulator_proxy.h"
+
+#include "blacksim/blacksimfreefunctions.h"
+
+#include "blackmisc/nwserver.h"
+#include "blackmisc/statusmessagelist.h"
+#include "blackmisc/avaircraft.h"
+#include "blackmisc/blackmiscfreefunctions.h"
+
+
 
 #include <QDebug>
 
@@ -230,6 +235,7 @@ namespace BlackCore
         if (m_init) return;
         BlackMisc::registerMetadata();
         BlackMisc::initResources();
+        BlackSim::registerMetadata();
 
         // upfront reading of settings, as DBus server already relies on settings
         CContextSettings *settings = nullptr;
@@ -334,19 +340,24 @@ namespace BlackCore
 
     void CRuntime::initPostSetup()
     {
+        bool c;
+        Q_UNUSED(c); // for release version
         if (this->m_contextSettings && this->m_contextAudio && this->m_contextSettings->usingLocalObjects())
         {
             // only, when both contexts exists and only if settings originate locally
-            connect(this->m_contextSettings, &IContextSettings::changedSettings,
-                    this->getCContextAudio(), &CContextAudio::settingsChanged);
+            c = connect(this->m_contextSettings, &IContextSettings::changedSettings,
+                        this->getCContextAudio(), &CContextAudio::settingsChanged);
+            Q_ASSERT(c);
         }
 
         if (this->m_contextSimulator && this->m_contextSimulator->usingLocalObjects() && this->m_contextNetwork)
         {
+            // only connect if simulator running locally, no roundtrips
             if (this->getCContextSimulator()->m_simulator)
             {
-                connect(this->m_contextNetwork, SIGNAL(aircraftSituationUpdate(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation)),
-                        this->getCContextSimulator()->m_simulator, SLOT(addAircraftSituation(BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CAircraftSituation)));
+                c = connect(this->m_contextNetwork, &IContextNetwork::changedAircraftSituation,
+                            this->getCContextSimulator()->m_simulator, &ISimulator::addAircraftSituation);
+                Q_ASSERT(c);
             }
         }
     }
