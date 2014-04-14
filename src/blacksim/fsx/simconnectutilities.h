@@ -36,13 +36,21 @@ namespace BlackSim
             static QString getLocalSimConnectCfgFilename();
 
             /*!
+             * \brief Content for FSX simconnect.cfg file
+             * \param ip IP address of FSX
+             * \param port Port of FSX (e.g. 500)
+             * \return content for simconnect.cfg
+             */
+            static QString simConnectCfg(const QString &ip, quint16 port = 500);
+
+            /*!
              * \brief Create a FSX simconnect.cfg file
              * \param fileName and path
              * \param ip IP address of FSX
              * \param port Port of FSX (e.g. 500)
              * \return success
              */
-            static bool writeSimConnectCfg(const QString &fileName, const QString &ip, quint16 port);
+            static bool writeSimConnectCfg(const QString &fileName, const QString &ip, quint16 port = 500);
 
             /*!
              * \brief Resolve SimConnect exception (based on Qt metadata).
@@ -54,7 +62,7 @@ namespace BlackSim
             /*!
              * \brief Resolve SimConnect surface (based on Qt metadata).
              * \param type enum element
-             * \param beautify remove _
+             * \param beautify remove "_"
              * \return
              */
             static const QString simConnectSurfaceTypeToString(const DWORD type, bool beautify = true);

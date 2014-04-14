@@ -22,8 +22,7 @@ namespace BlackSim
         //
         bool CSimConnectUtilities::writeSimConnectCfg(const QString &fileName, const QString &ip, quint16 port)
         {
-            QString sc = QString("[SimConnect]\nProtocol=Ipv4\nAddress=%1\nPort=%2\n"
-                                 "MaxReceiveSize=4096\nDisableNagle=0").arg(ip).arg(port);
+            QString sc = CSimConnectUtilities::simConnectCfg(ip, port);
             QFile file(fileName);
             bool success = false;
             if ((success = file.open(QIODevice::WriteOnly | QIODevice::Text)))
@@ -33,6 +32,16 @@ namespace BlackSim
                 file.close();
             }
             return success;
+        }
+
+        //
+        // simconnect.cfg file
+        //
+        QString CSimConnectUtilities::simConnectCfg(const QString &ip, quint16 port)
+        {
+            QString sc = QString("[SimConnect]\nProtocol=Ipv4\nAddress=%1\nPort=%2\n"
+                                 "MaxReceiveSize=4096\nDisableNagle=0").arg(ip).arg(port);
+            return sc;
         }
 
         //
