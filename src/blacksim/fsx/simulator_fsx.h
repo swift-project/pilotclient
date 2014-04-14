@@ -31,13 +31,15 @@ namespace BlackSimPlugin
             Q_OBJECT
             Q_PLUGIN_METADATA(IID "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
+
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create()
-            virtual BlackCore::ISimulator* create(QObject *parent) override;
+            virtual BlackCore::ISimulator *create(QObject *parent) override;
         };
 
         //! \brief SimConnect Event ID's
-        enum EVENT_ID {
+        enum EVENT_ID
+        {
             EVENT_SIM_STATUS,
             EVENT_OBJECT_ADDED,
             EVENT_OBJECT_REMOVED,
@@ -71,13 +73,16 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::removeRemoteAircraft()
             virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
+            //! \copydoc ISimulator::getSimulatorInfo()
+            virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
+
             /*!
              * \brief SimConnect Callback
              * \param pData
              * \param cbData
              * \param pContext
              */
-            static void CALLBACK SimConnectProc(SIMCONNECT_RECV* pData, DWORD cbData, void *pContext);
+            static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 
             //! \brief Called when sim has started
             void onSimRunning();
@@ -143,11 +148,9 @@ namespace BlackSimPlugin
             bool    m_simRunning; //!< Sim running.
             HANDLE  m_hSimConnect; //!< Handle to SimConnect object
             uint    m_nextObjID;
-
+            BlackSim::CSimulatorInfo m_simulatorInfo;
             BlackMisc::Aviation::CAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
-
             QHash<BlackMisc::Aviation::CCallsign, SimConnectObject> m_simConnectObjects;
-
         };
     }
 

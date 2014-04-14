@@ -3,6 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "simulator_fsx.h"
 #include "simconnect_datadefinition.h"
 #include "simconnect_exception.h"
@@ -12,6 +13,8 @@
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
+using namespace BlackSim;
+using namespace BlackSim::Fsx;
 
 namespace BlackSimPlugin
 {
@@ -258,7 +261,7 @@ namespace BlackSimPlugin
         {
             if (FAILED(SimConnect_Open(&m_hSimConnect, "BlackBox", nullptr, 0, 0, 0)))
             {
-                QTimer::singleShot(5000, this, SLOT(checkConnection()));
+                // QTimer::singleShot(5000, this, SLOT(checkConnection()));
                 return;
             }
 

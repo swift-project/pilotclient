@@ -6,7 +6,8 @@
 #ifndef BLACKCORE_SIMULATOR_H
 #define BLACKCORE_SIMULATOR_H
 
-#include <blackmisc/avaircraft.h>
+#include "blacksim/simulatorinfo.h"
+#include "blackmisc/avaircraft.h"
 #include <QObject>
 
 namespace BlackCore
@@ -41,45 +42,30 @@ namespace BlackCore
         virtual bool isConnected() const = 0;
 
     public slots:
-        /*!
-         * \brief Return user aircraft object
-         * \return
-         */
+        //! Return user aircraft object
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
 
-        /*!
-         * \brief Add new remote aircraft to the simulator
-         * \param callsign
-         * \param type
-         * \param initialSituation
-         */
+        //! Add new remote aircraft to the simulator
         virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &type, const BlackMisc::Aviation::CAircraftSituation &initialSituation) = 0;
 
-        /*!
-         * \brief Add new aircraft situation
-         * \param callsign
-         * \param initialSituation
-         */
+        //! Add new aircraft situation
         virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) = 0;
 
-        /*!
-         * \brief Remove remote aircraft from simulator
-         * \param callsign
-         */
+        //! Remove remote aircraft from simulator
         virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
+        //! Simulator info
+        virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
+
     signals:
-        //! \brief Emitted when the connection status has changed
+        //! Emitted when the connection status has changed
         void connectionChanged(bool value);
 
-        /*!
-         * \brief Emitted when new a new data object of the user aircraft is received
-         * \param aircraft
-         */
+        //! Emitted when new a new data object of the user aircraft is received
         void ownAircraftReceived(BlackMisc::Aviation::CAircraft aircraft);
     };
 
-    //! \brief Factory pattern class to create instances of ISimulator
+    //! Factory pattern class to create instances of ISimulator
     class ISimulatorFactory
     {
     public:
@@ -92,7 +78,7 @@ namespace BlackCore
          * \param parent
          * \return
          */
-        virtual ISimulator* create(QObject *parent = nullptr) = 0;
+        virtual ISimulator *create(QObject *parent = nullptr) = 0;
     };
 
 } // namespace BlackCore
