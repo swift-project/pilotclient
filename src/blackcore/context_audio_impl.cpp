@@ -311,6 +311,7 @@ namespace BlackCore
         if (type == IContextSettings::SettingsHotKeys)
         {
             CKeyboardKeyList hotKeys = this->getIContextSettings()->getHotkeys();
+            Q_ASSERT(!hotKeys.isEmpty());
             CKeyboardKey pttKey = hotKeys.findBy(&BlackMisc::Hardware::CKeyboardKey::getFunction, BlackMisc::Hardware::CKeyboardKey::HotkeyPtt).front();
             m_keyboard->unregisterHotkey(m_handlePtt);
             m_handlePtt = m_keyboard->registerHotkey(pttKey, m_voice, &CVoiceVatlib::handlePushToTalk);
