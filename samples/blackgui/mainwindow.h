@@ -437,6 +437,8 @@ private slots:
     //! Save a simconnect.cfg file for FSX
     void saveSimConnectCfg();
 
+    //!Open directoryfor simconnect.cfg (if local)
+    void openSimConnectCfg();
 };
 
 #pragma pop_macro("interface")

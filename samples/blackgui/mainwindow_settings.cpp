@@ -7,6 +7,7 @@
 #include "blackmisc/networkutils.h"
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/fsx/simconnectutilities.h"
+#include <QDesktopServices>
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -222,4 +223,11 @@ void MainWindow::saveSimConnectCfg()
         QString m = QString("Cannot write ").append(fileName);
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, m));
     }
+}
+
+void MainWindow::openSimConnectCfg()
+{
+    QFileInfo fi(CSimConnectUtilities::getLocalSimConnectCfgFilename());
+    QString path = QDir::toNativeSeparators(fi.absolutePath());
+    QDesktopServices::openUrl(QUrl("file:///" + path ));
 }

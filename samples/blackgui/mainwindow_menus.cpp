@@ -45,6 +45,16 @@ void MainWindow::menuClicked()
         msgs.insert(CStatusMessage::getInfoMessage("Closing"));
         this->close();
     }
+    else if (sender == this->ui->menu_FileSettingsDirectory)
+    {
+        QString path = QDir::toNativeSeparators(BlackMisc::Settings::CSettingUtilities::getSettingsDirectory());
+        QDesktopServices::openUrl(QUrl("file:///" + path));
+    }
+    else if (sender == this->ui->menu_FileResetSettings)
+    {
+        Q_ASSERT(this->m_rt->getIContextSettings());
+        msgs.insert(this->m_rt->getIContextSettings()->reset(true));
+    }
     if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
 }
 

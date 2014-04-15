@@ -298,6 +298,8 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->menu_TestLocationsEDNX, &QAction::triggered, this, &MainWindow::menuClicked);
     this->connect(this->ui->menu_TestLocationsEDRY, &QAction::triggered, this, &MainWindow::menuClicked);
     this->connect(this->ui->menu_FileClose, &QAction::triggered, this, &MainWindow::menuClicked);
+    this->connect(this->ui->menu_FileSettingsDirectory, &QAction::triggered, this, &MainWindow::menuClicked);
+    this->connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &MainWindow::menuClicked);
 
     // command line
     this->connect(this->ui->le_CommandLineInput, &QLineEdit::returnPressed, this, &MainWindow::commandEntered);
@@ -357,6 +359,7 @@ void MainWindow::initGuiSignals()
     // Settings simulator
     this->connect(this->ui->pb_SettingsSimulatorFsxTestConnection, &QPushButton::clicked, this, &MainWindow::testSimConnectConnection);
     this->connect(this->ui->pb_SettingsSimulatorFsxSaveSimconnectCfg, &QPushButton::clicked, this, &MainWindow::saveSimConnectCfg);
+    this->connect(this->ui->pb_SettingsSimulatorFsxOpenSimconnectCfg, &QPushButton::clicked, this, &MainWindow::openSimConnectCfg);
 
     // no warnings in release build
     Q_UNUSED(connected);
