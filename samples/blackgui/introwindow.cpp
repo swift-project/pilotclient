@@ -2,8 +2,10 @@
 #include "ui_introwindow.h"
 #include "blackcore/dbus_server.h"
 #include "blackmisc/networkutils.h"
+#include "blackmisc/settingutilities.h"
 #include <QDesktopServices>
 #include <QUrl>
+#include <QDir>
 
 /*
  * Constructor
@@ -69,5 +71,10 @@ void CIntroWindow::buttonClicked() const
     else if (sender == this->ui->pb_WebSite)
     {
         QDesktopServices::openUrl(QUrl("https://dev.vatsim-germany.org/", QUrl::TolerantMode));
+    }
+    else if (sender == this->ui->pb_SettingsDir)
+    {
+        QString path = QDir::toNativeSeparators(BlackMisc::Settings::CSettingUtilities::getSettingsDirectory());
+        QDesktopServices::openUrl(QUrl("file:///" + path));
     }
 }

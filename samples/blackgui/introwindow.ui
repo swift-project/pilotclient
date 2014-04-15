@@ -188,9 +188,9 @@ voice included</string>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pb_DeleteSettingsFile">
+         <widget class="QPushButton" name="pb_SettingsDir">
           <property name="text">
-           <string>del.settings</string>
+           <string>settings dir.</string>
           </property>
          </widget>
         </item>
@@ -256,8 +256,8 @@ voice included</string>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>257</x>
-     <y>230</y>
+     <x>240</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -272,8 +272,8 @@ voice included</string>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>310</x>
-     <y>230</y>
+     <x>240</x>
+     <y>290</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -304,12 +304,28 @@ voice included</string>
    <slot>buttonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>262</x>
-     <y>58</y>
+     <x>238</x>
+     <y>75</y>
     </hint>
     <hint type="destinationlabel">
      <x>322</x>
      <y>73</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pb_SettingsDir</sender>
+   <signal>clicked()</signal>
+   <receiver>CIntroWindow</receiver>
+   <slot>buttonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>197</x>
+     <y>97</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>86</x>
+     <y>250</y>
     </hint>
    </hints>
   </connection>
