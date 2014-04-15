@@ -116,11 +116,14 @@ namespace BlackCore
         //! Hotkeys
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const = 0;
 
-        //! save settings
+        //! Save settings
         virtual BlackMisc::CStatusMessage write() const = 0;
 
         //! Read settings
         virtual BlackMisc::CStatusMessage read() = 0;
+
+        //! Reset settings
+        virtual BlackMisc::CStatusMessage reset(bool write = true) = 0;
 
         //! Read settings
         virtual QString getSettingsFileName() const = 0;

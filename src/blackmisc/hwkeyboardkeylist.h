@@ -45,7 +45,7 @@ namespace BlackMisc
 
             /*!
              * \brief Fill the list with hotkeys
-             * \param reset true, list will be be reset, otherwise value will not be overridde
+             * \param reset true, list will be be reset, otherwise values will not be overridde
              */
             void initAsHotkeyList(bool reset = true);
         };

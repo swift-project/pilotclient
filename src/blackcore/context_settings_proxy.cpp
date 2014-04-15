@@ -81,6 +81,14 @@ namespace BlackCore
     }
 
     /*
+     * Reset settings
+     */
+    CStatusMessage CContextSettingsProxy::reset(bool write)
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("reset"), write);
+    }
+
+    /*
      * File name
      */
     QString CContextSettingsProxy::getSettingsFileName() const

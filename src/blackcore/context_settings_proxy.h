@@ -61,6 +61,9 @@ namespace BlackCore
         //! \brief read settings
         virtual BlackMisc::CStatusMessage read() override;
 
+        //! \copydoc IContextSettings::reset
+        virtual BlackMisc::CStatusMessage reset(bool write = true) override;
+
         //! \brief settings file name
         virtual QString getSettingsFileName() const override;
 

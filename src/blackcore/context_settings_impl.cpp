@@ -99,14 +99,30 @@ namespace BlackCore
         }
         if (ok)
         {
-            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityInfo,
+            return CStatusMessage(CStatusMessage::TypeSettings, CStatusMessage::SeverityInfo,
                                   QString("Written settings: %1").arg(this->getSettingsFileName()));
         }
         else
         {
-            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError,
+            return CStatusMessage(CStatusMessage::TypeSettings, CStatusMessage::SeverityError,
                                   QString("Problem writing settings: %1").arg(this->getSettingsFileName()));
         }
+    }
+
+    /*
+     * Reset settings file
+     */
+    CStatusMessage CContextSettings::reset(bool write)
+    {
+        this->m_hotkeys.initAsHotkeyList(true);
+        this->m_settingsNetwork.initDefaultValues();
+        this->emitCompletelyChanged();
+        if (write)
+            return this->write();
+        else
+            return CStatusMessage(CStatusMessage::TypeSettings, CStatusMessage::SeverityInfo,
+                                  QString("Reset settings data, not written"));
+
     }
 
     QString CContextSettings::getSettingsAsJsonString() const
@@ -125,6 +141,15 @@ namespace BlackCore
         obj.insert(IContextSettings::PathHotkeys(), this->m_hotkeys.toJson());
         QJsonDocument doc(obj);
         return doc;
+    }
+
+    /*
+     * Emit all changed signals
+     */
+    void CContextSettings::emitCompletelyChanged()
+    {
+        emit this->changedSettings(IContextSettings::SettingsHotKeys);
+        emit this->changedSettings(IContextSettings::SettingsNetwork);
     }
 
     /*

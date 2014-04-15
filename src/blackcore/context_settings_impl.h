@@ -69,6 +69,9 @@ namespace BlackCore
         //! \copydoc IContextSettings::write
         virtual BlackMisc::CStatusMessage write() const override;
 
+        //! \copydoc IContextSettings::reset
+        virtual BlackMisc::CStatusMessage reset(bool write = true) override;
+
         //! Settings file name
         virtual QString getSettingsFileName() const override { return BlackMisc::Settings::CSettingUtilities::getSettingsFile(); }
 
@@ -79,6 +82,7 @@ namespace BlackCore
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
         BlackMisc::Hardware::CKeyboardKeyList m_hotkeys;
         QJsonDocument toJsonDocument() const;
+        void emitCompletelyChanged();
     };
 }
 
