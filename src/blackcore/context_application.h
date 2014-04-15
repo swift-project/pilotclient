@@ -117,6 +117,10 @@ namespace BlackCore
 
         //!  Remote enable version of reading a text file
         virtual QString readFromFile(const QString &fileName) = 0;
+
+        //!  Remote enable version of deleting a file
+        virtual bool removeFile(const QString &fileName) = 0;
+
     };
 }
 

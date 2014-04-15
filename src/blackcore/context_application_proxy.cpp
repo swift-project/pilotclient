@@ -75,6 +75,7 @@ namespace BlackCore
      */
     bool CContextApplicationProxy::writeToFile(const QString &fileName, const QString &content)
     {
+        if (fileName.isEmpty()) return false;
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("writeToFile"), fileName, content);
     }
 
@@ -83,6 +84,16 @@ namespace BlackCore
      */
     QString CContextApplicationProxy::readFromFile(const QString &fileName)
     {
+        if (fileName.isEmpty()) return "";
         return this->m_dBusInterface->callDBusRet<QString>(QLatin1Literal("readFromFile"), fileName);
+    }
+
+    /*
+     *  Delete file
+     */
+    bool CContextApplicationProxy::removeFile(const QString &fileName)
+    {
+        if (fileName.isEmpty()) return false;
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("deleteFile"), fileName);
     }
 } // namespace

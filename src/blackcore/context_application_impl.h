@@ -42,6 +42,9 @@ namespace BlackCore
         //! \copydoc IContextApplication::readFromFile
         virtual QString readFromFile(const QString &fileName) override;
 
+        //! \copydoc IContextApplication::removeFile
+        virtual bool removeFile(const QString &fileName) override;
+
     protected:
         //! Constructor
         CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);

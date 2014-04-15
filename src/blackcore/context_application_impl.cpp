@@ -59,6 +59,7 @@ namespace BlackCore
     bool CContextApplication::writeToFile(const QString &fileName, const QString &content)
     {
         if (this->getRuntime()->isSlotLogForApplicationEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, fileName, content.left(25));
+        if (fileName.isEmpty()) return false;
         QFile file(fileName);
         bool success = false;
         if ((success = file.open(QIODevice::WriteOnly | QIODevice::Text)))
@@ -78,6 +79,7 @@ namespace BlackCore
         if (this->getRuntime()->isSlotLogForApplicationEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, fileName);
         QFile file(fileName);
         QString content;
+        if (fileName.isEmpty()) return content;
         bool success = false;
         if ((success = file.open(QIODevice::ReadOnly | QIODevice::Text)))
         {
@@ -86,6 +88,12 @@ namespace BlackCore
             file.close();
         }
         return content;
+    }
+
+    bool CContextApplication::removeFile(const QString &fileName)
+    {
+        if (fileName.isEmpty()) return false;
+        return QFile::remove(fileName);
     }
 
 } // namespace
