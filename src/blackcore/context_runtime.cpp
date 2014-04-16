@@ -380,7 +380,7 @@ namespace BlackCore
             disconnect(this->getIContextApplication());
             this->getIContextApplication()->setOutputRedirectionLevel(IContextApplication::RedirectNone);
             this->getIContextApplication()->setStreamingForRedirectedOutputLevel(IContextApplication::RedirectNone);
-            CContextApplicationBase::resetOutputRedirection();
+            IContextApplication::resetOutputRedirection();
             this->getIContextApplication()->deleteLater();
         }
 

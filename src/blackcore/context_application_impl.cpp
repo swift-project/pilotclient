@@ -17,7 +17,7 @@ namespace BlackCore
      * Init this context
      */
     CContextApplication::CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        CContextApplicationBase(mode, runtime)
+        IContextApplication(mode, runtime)
     {}
 
     /*
@@ -90,6 +90,9 @@ namespace BlackCore
         return content;
     }
 
+    /*
+     * Remove file
+     */
     bool CContextApplication::removeFile(const QString &fileName)
     {
         if (fileName.isEmpty()) return false;

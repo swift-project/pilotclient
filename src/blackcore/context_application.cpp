@@ -1,43 +1,43 @@
-#include "blackcore/context_application_base.h"
+#include "blackcore/context_application.h"
+#include "blackcore/context_application_event.h"
 #include "blackmisc/statusmessage.h"
 #include <QCoreApplication>
 #include <QThread>
-
 
 using namespace BlackMisc;
 
 namespace BlackCore
 {
 
-    QList<CContextApplicationBase *> CContextApplicationBase::s_contexts;
-    QtMessageHandler CContextApplicationBase::s_oldHandler = nullptr;
+    QList<IContextApplication *> IContextApplication::s_contexts;
+    QtMessageHandler IContextApplication::s_oldHandler = nullptr;
 
     /*
      * Constructor
      */
-    CContextApplicationBase::CContextApplicationBase(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextApplication(mode, runtime), m_outputRedirectionLevel(IContextApplication::RedirectNone), m_redirectedOutputRedirectionLevel(IContextApplication::RedirectNone)
+    IContextApplication::IContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
+        CContext(mode, runtime), m_outputRedirectionLevel(IContextApplication::RedirectNone), m_redirectedOutputRedirectionLevel(IContextApplication::RedirectNone)
     {
-        if (CContextApplicationBase::s_contexts.isEmpty())
-            CContextApplicationBase::s_oldHandler = qInstallMessageHandler(CContextApplicationBase::messageHandlerDispatch);
-        CContextApplicationBase::s_contexts.append(this);
+        if (IContextApplication::s_contexts.isEmpty())
+            IContextApplication::s_oldHandler = qInstallMessageHandler(IContextApplication::messageHandlerDispatch);
+        IContextApplication::s_contexts.append(this);
     }
 
     /*
      * Output data from redirect signal
      */
-    void CContextApplicationBase::setStreamingForRedirectedOutputLevel(RedirectionLevel redirectionLevel)
+    void IContextApplication::setStreamingForRedirectedOutputLevel(RedirectionLevel redirectionLevel)
     {
-        disconnect(this, &IContextApplication::redirectedOutput, this, &CContextApplicationBase::streamRedirectedOutput);
+        disconnect(this, &IContextApplication::redirectedOutput, this, &IContextApplication::streamRedirectedOutput);
         if (redirectionLevel != RedirectNone)
-            connect(this, &IContextApplication::redirectedOutput, this, &CContextApplicationBase::streamRedirectedOutput);
+            connect(this, &IContextApplication::redirectedOutput, this, &IContextApplication::streamRedirectedOutput);
         this->m_redirectedOutputRedirectionLevel = redirectionLevel;
     }
 
     /*
      * Process event in object's thread, used to emit signal from  other thread
      */
-    bool CContextApplicationBase::event(QEvent *event)
+    bool IContextApplication::event(QEvent *event)
     {
         if (event->type() == CApplicationEvent::eventType())
         {
@@ -45,13 +45,13 @@ namespace BlackCore
             emit this->redirectedOutput(e->m_message, this->getUniqueId());
             return true;
         }
-        return IContextApplication::event(event);
+        return CContext::event(event);
     }
 
     /*
      * Reset output redirection
      */
-    void CContextApplicationBase::resetOutputRedirection()
+    void IContextApplication::resetOutputRedirection()
     {
         qInstallMessageHandler(0);
     }
@@ -59,12 +59,12 @@ namespace BlackCore
     /*
      *  Dispatch message
      */
-    void CContextApplicationBase::messageHandlerDispatch(QtMsgType type, const QMessageLogContext &messageContext, const QString &message)
+    void IContextApplication::messageHandlerDispatch(QtMsgType type, const QMessageLogContext &messageContext, const QString &message)
     {
-        if (CContextApplicationBase::s_oldHandler) CContextApplicationBase::s_oldHandler(type, messageContext, message);
-        if (CContextApplicationBase::s_contexts.isEmpty()) return;
-        CContextApplicationBase *ctx;
-        foreach(ctx, CContextApplicationBase::s_contexts)
+        if (IContextApplication::s_oldHandler) IContextApplication::s_oldHandler(type, messageContext, message);
+        if (IContextApplication::s_contexts.isEmpty()) return;
+        IContextApplication *ctx;
+        foreach(ctx, IContextApplication::s_contexts)
         {
             ctx->messageHandler(type, messageContext, message);
         }
@@ -73,7 +73,7 @@ namespace BlackCore
     /*
      * Handle message
      */
-    void CContextApplicationBase::messageHandler(QtMsgType type, const QMessageLogContext &messageContext, const QString &message)
+    void IContextApplication::messageHandler(QtMsgType type, const QMessageLogContext &messageContext, const QString &message)
     {
         Q_UNUSED(messageContext);
         if (this->m_outputRedirectionLevel == RedirectNone) return;
@@ -119,7 +119,7 @@ namespace BlackCore
     /*
      * Redirected output
      */
-    void CContextApplicationBase::streamRedirectedOutput(const CStatusMessage &message, qint64 contextId)
+    void IContextApplication::streamRedirectedOutput(const CStatusMessage &message, qint64 contextId)
     {
         if (this->getUniqueId() == contextId) return; // avoid infinite output
         if (this->m_redirectedOutputRedirectionLevel == RedirectNone) return;
