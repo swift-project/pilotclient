@@ -57,6 +57,9 @@ namespace BlackCore
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
 
+        //! Simulator avialable?
+        bool isSimulatorAvailable() const { return !getSimulatorInfo().isUnspecified(); }
+
     protected:
         //! \brief Constructor
         IContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
