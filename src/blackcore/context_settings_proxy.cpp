@@ -35,8 +35,10 @@ namespace BlackCore
      */
     void CContextSettingsProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
-        connection.connect(serviceName, IContextSettings::ObjectPath(), IContextSettings::InterfaceName(),
-                           "changedSettings", this, SIGNAL(changedSettings(uint)));
+        bool s = connection.connect(serviceName, IContextSettings::ObjectPath(), IContextSettings::InterfaceName(),
+                                    "changedSettings", this, SIGNAL(changedSettings(uint)));
+        Q_ASSERT(s);
+        Q_UNUSED(s);
     }
 
     /*

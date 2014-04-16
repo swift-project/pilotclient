@@ -65,10 +65,11 @@ namespace BlackCore
          * \brief Connection status changed
          * \param from  old status
          * \param to    new status
+         * \param message further details
          * \remarks If I use the enum, adaptor / interface are not created correctly
          * \see INetwork::ConnectionStatus
          */
-        void connectionStatusChanged(uint from, uint to);
+        void connectionStatusChanged(uint from, uint to, const QString &message);
 
         //! Text messages received (also private chat messages, rfaio channel messages)
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);

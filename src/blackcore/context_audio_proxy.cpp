@@ -29,8 +29,10 @@ namespace BlackCore
      */
     void CContextAudioProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
-        connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                           "audioTestCompleted", this, SIGNAL(audioTestCompleted()));
+        bool s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                                    "audioTestCompleted", this, SIGNAL(audioTestCompleted()));
+        Q_ASSERT(s);
+        Q_UNUSED(s);
     }
 
     /*

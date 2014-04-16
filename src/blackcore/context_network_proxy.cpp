@@ -28,20 +28,28 @@ namespace BlackCore
      */
     void CContextNetworkProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
-        connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                           "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(uint, uint)));
-        connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                           "changedAtcStationsBooked", this, SIGNAL(changedAtcStationsBooked()));
-        connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                           "changedAtcStationsOnline", this, SIGNAL(changedAtcStationsOnline()));
-        connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                           "connectionTerminated", this, SIGNAL(connectionTerminated()));
-        connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                           "statusMessage", this, SIGNAL(statusMessage(BlackMisc::CStatusMessage)));
-        connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                           "statusMessages", this, SIGNAL(statusMessages(BlackMisc::CStatusMessageList)));
-        connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                           "textMessagesReceived", this, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)));
+        bool s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                                    "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(uint, uint,  const QString &)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "changedAtcStationsBooked", this, SIGNAL(changedAtcStationsBooked()));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "changedAtcStationsOnline", this, SIGNAL(changedAtcStationsOnline()));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "connectionTerminated", this, SIGNAL(connectionTerminated()));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "statusMessage", this, SIGNAL(statusMessage(BlackMisc::CStatusMessage)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "statusMessages", this, SIGNAL(statusMessages(BlackMisc::CStatusMessageList)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "textMessagesReceived", this, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)));
+        Q_ASSERT(s);
+        Q_UNUSED(s);
     }
 
     /*

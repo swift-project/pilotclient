@@ -124,6 +124,16 @@ namespace BlackMisc
                 static QString t("settings");
                 return t;
             }
+        case TypeSimulator:
+            {
+                static QString t("simulator");
+                return t;
+            }
+        case TypeStdoutRedirect:
+            {
+                static QString t("redirection");
+                return t;
+            }
         case TypeTrafficNetwork:
             {
                 static QString t("traffic network");

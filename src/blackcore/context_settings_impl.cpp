@@ -110,7 +110,7 @@ namespace BlackCore
     }
 
     /*
-     * Reset settings file
+     * Reset settings
      */
     CStatusMessage CContextSettings::reset(bool write)
     {

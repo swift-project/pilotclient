@@ -270,7 +270,7 @@ namespace BlackCore
     /*
      * Connection status changed
      */
-    void CContextNetwork::psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
+    void CContextNetwork::psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
     {
         if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, QString::number(from), QString::number(to));
         CStatusMessageList msgs;
@@ -285,12 +285,13 @@ namespace BlackCore
         // send as message
         QString m("connection status changed from %1 to %2");
         m = m.arg(INetwork::connectionStatusToString(from), INetwork::connectionStatusToString(to));
+        if (!message.isEmpty()) m.append(" ").append(message);
         msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork,
                                       to == INetwork::DisconnectedError ? CStatusMessage::SeverityError : CStatusMessage::SeverityInfo, m));
         if (this->getIContextApplication()) this->getIContextApplication()->sendStatusMessages(msgs);
 
         // send as own signal
-        emit this->connectionStatusChanged(from, to);
+        emit this->connectionStatusChanged(from, to, message);
     }
 
     /*

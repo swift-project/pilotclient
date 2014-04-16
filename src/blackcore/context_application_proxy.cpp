@@ -27,14 +27,19 @@ namespace BlackCore
     void CContextApplicationProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
         // signals originating from impl side
-        connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                           "statusMessage", this, SIGNAL(statusMessage(BlackMisc::CStatusMessage)));
-        connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                           "statusMessages", this, SIGNAL(statusMessages(BlackMisc::CStatusMessageList)));
-        connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                           "redirectedOutput", this, SIGNAL(redirectedOutput(BlackMisc::CStatusMessage, qint64)));
-        connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                           "componentChanged", this, SIGNAL(componentChanged(uint, uint)));
+        bool s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                                    "statusMessage", this, SIGNAL(statusMessage(BlackMisc::CStatusMessage)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                               "statusMessages", this, SIGNAL(statusMessages(BlackMisc::CStatusMessageList)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                               "redirectedOutput", this, SIGNAL(redirectedOutput(BlackMisc::CStatusMessage, qint64)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                               "componentChanged", this, SIGNAL(componentChanged(uint, uint)));
+        Q_ASSERT(s);
+
     }
 
     /*
@@ -95,5 +100,14 @@ namespace BlackCore
     {
         if (fileName.isEmpty()) return false;
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("deleteFile"), fileName);
+    }
+
+    /*
+     * Check file
+     */
+    bool CContextApplicationProxy::existsFile(const QString &fileName)
+    {
+        if (fileName.isEmpty()) return false;
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("existsFile"), fileName);
     }
 } // namespace

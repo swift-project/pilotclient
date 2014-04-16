@@ -294,7 +294,7 @@ private slots:
      * \param from  old status, as uint so it is compliant with DBus
      * \param to    new status, as uint so it is compliant with DBus
      */
-    void connectionStatusChanged(uint from, uint to);
+    void connectionStatusChanged(uint from, uint to, const QString &message);
 
     /*!
      * \brief Append text messages (received, to be sent) to GUI

@@ -133,6 +133,7 @@ namespace BlackMisc
          */
         void CSettingsNetwork::initDefaultValues()
         {
+            this->m_trafficNetworkServers.clear();
             CServer currentServer(CServer("Testserver", "Client project testserver", "vatsim-germany.org", 6809, CUser("guest", "Guest Client project", "", "guest")));
             this->setCurrentNetworkServer(currentServer);
             this->addTrafficNetworkServer(this->getCurrentTrafficNetworkServer());

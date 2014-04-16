@@ -299,7 +299,7 @@ void MainWindow::connectionTerminated()
 /*
 * Connection status changed
 */
-void MainWindow::connectionStatusChanged(uint /** from **/, uint to)
+void MainWindow::connectionStatusChanged(uint /** from **/, uint to, const QString & /* message */)
 {
     this->updateGuiStatusInformation();
     INetwork::ConnectionStatus newStatus = static_cast<INetwork::ConnectionStatus>(to);
