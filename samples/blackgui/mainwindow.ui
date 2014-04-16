@@ -2320,12 +2320,19 @@ QStatusBar QLabel {
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="1">
-                  <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <item row="3" column="0" colspan="2">
+                  <layout class="QHBoxLayout" name="hl_SettingsSimulatorSimconnectCfgButtons">
                    <item>
                     <widget class="QPushButton" name="pb_SettingsSimulatorFsxOpenSimconnectCfg">
                      <property name="text">
                       <string>Open</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pb_SettingsSimulatorFsxDeleteSimconnectCfg">
+                     <property name="text">
+                      <string>Delete</string>
                      </property>
                     </widget>
                    </item>
@@ -2344,6 +2351,44 @@ QStatusBar QLabel {
                     </widget>
                    </item>
                   </layout>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="lbl_SettingsSimulatorFsxExistsSimconncetCfg">
+                   <property name="text">
+                    <string>&quot;simconnect.cfg&quot; exists?</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QWidget" name="wi_SettingsSimulatorFsxExistsSimconncetCfg" native="true">
+                   <layout class="QHBoxLayout" name="hl_SettingsSimulatorFsxExistsSimconncetCfg">
+                    <property name="spacing">
+                     <number>4</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLineEdit" name="le_SettingsSimulatorFsxExistsSimconncetCfg"/>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pb_SettingsSimulatorFsxExistsSimconncetCfg">
+                      <property name="text">
+                       <string>Check</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
                  </item>
                 </layout>
                </item>

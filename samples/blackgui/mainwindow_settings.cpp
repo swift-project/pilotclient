@@ -142,6 +142,9 @@ void MainWindow::saveHotkeys()
     this->displayStatusMessages(msgs);
 }
 
+/*
+ * Clear particular hotkey
+ */
 void MainWindow::clearHotkey()
 {
     QModelIndex i = this->ui->tv_SettingsMiscHotkeys->currentIndex();
@@ -152,6 +155,9 @@ void MainWindow::clearHotkey()
     this->m_modelSettingsHotKeys->update(i, defKey);
 }
 
+/*
+ * SimConnect working?
+ */
 void MainWindow::testSimConnectConnection()
 {
     QString address = this->ui->le_SettingsSimulatorFsxAddress->text().trimmed();
@@ -184,9 +190,13 @@ void MainWindow::testSimConnectConnection()
     this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, msg));
 }
 
+/*
+ * Save simconnect.cfg
+ */
 void MainWindow::saveSimConnectCfg()
 {
     if (!this->m_rt->getIContextSimulator()) return;
+    if (!this->m_rt->getIContextSimulator()->isSimulatorAvailable()) return;
     QString address = this->ui->le_SettingsSimulatorFsxAddress->text().trimmed();
     QString port = this->ui->le_SettingsSimulatorFsxPort->text().trimmed();
 
@@ -223,11 +233,57 @@ void MainWindow::saveSimConnectCfg()
         QString m = QString("Cannot write ").append(fileName);
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, m));
     }
+    this->ui->pb_SettingsSimulatorFsxExistsSimconncetCfg->click(); // update status
 }
 
-void MainWindow::openSimConnectCfg()
+/*
+ * simconnect.cfg: open, delete, exists?
+ */
+void MainWindow::simConnectCfgFile()
 {
-    QFileInfo fi(CSimConnectUtilities::getLocalSimConnectCfgFilename());
-    QString path = QDir::toNativeSeparators(fi.absolutePath());
-    QDesktopServices::openUrl(QUrl("file:///" + path ));
+    if (!this->m_rt->getIContextSimulator()) return;
+    if (!this->m_rt->getIContextSimulator()->isSimulatorAvailable()) return;
+
+    QObject *sender = QObject::sender();
+    if (sender == this->ui->pb_SettingsSimulatorFsxOpenSimconnectCfg)
+    {
+        QFileInfo fi(CSimConnectUtilities::getLocalSimConnectCfgFilename());
+        QString path = QDir::toNativeSeparators(fi.absolutePath());
+        QDesktopServices::openUrl(QUrl("file:///" + path));
+    }
+    else if (sender == this->ui->pb_SettingsSimulatorFsxDeleteSimconnectCfg)
+    {
+        if (!this->m_rt->getIContextSimulator()) return;
+        QString fileName = BlackSim::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
+        QString m = QString("Deleted %1 ").append(fileName);
+        if (this->m_rt->getIContextSimulator()->usingLocalObjects())
+        {
+            QFile f(fileName);
+            f.remove();
+            m = m.arg("locally");
+        }
+        else
+        {
+            this->m_rt->getIContextApplication()->removeFile(fileName);
+            m = m.arg("remotely");
+        }
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeSimulator, CStatusMessage::SeverityInfo, m));
+        this->ui->pb_SettingsSimulatorFsxExistsSimconncetCfg->click(); // update status
+    }
+    else if (sender == this->ui->pb_SettingsSimulatorFsxExistsSimconncetCfg)
+    {
+        if (!this->m_rt->getIContextSimulator()) return;
+        QString fileName = BlackSim::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
+        bool exists = this->m_rt->getIContextSimulator()->usingLocalObjects() ?
+                      QFile::exists(fileName) :
+                      this->m_rt->getIContextApplication()->existsFile(fileName);
+        if (exists)
+        {
+            this->ui->le_SettingsSimulatorFsxExistsSimconncetCfg->setText(fileName);
+        }
+        else
+        {
+            this->ui->le_SettingsSimulatorFsxExistsSimconncetCfg->setText("no file");
+        }
+    }
 }

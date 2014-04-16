@@ -359,7 +359,9 @@ void MainWindow::initGuiSignals()
     // Settings simulator
     this->connect(this->ui->pb_SettingsSimulatorFsxTestConnection, &QPushButton::clicked, this, &MainWindow::testSimConnectConnection);
     this->connect(this->ui->pb_SettingsSimulatorFsxSaveSimconnectCfg, &QPushButton::clicked, this, &MainWindow::saveSimConnectCfg);
-    this->connect(this->ui->pb_SettingsSimulatorFsxOpenSimconnectCfg, &QPushButton::clicked, this, &MainWindow::openSimConnectCfg);
+    this->connect(this->ui->pb_SettingsSimulatorFsxOpenSimconnectCfg, &QPushButton::clicked, this, &MainWindow::simConnectCfgFile);
+    this->connect(this->ui->pb_SettingsSimulatorFsxDeleteSimconnectCfg, &QPushButton::clicked, this, &MainWindow::simConnectCfgFile);
+    this->connect(this->ui->pb_SettingsSimulatorFsxExistsSimconncetCfg, &QPushButton::clicked, this, &MainWindow::simConnectCfgFile);
 
     // no warnings in release build
     Q_UNUSED(connected);
