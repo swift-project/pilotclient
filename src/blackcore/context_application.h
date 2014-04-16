@@ -127,6 +127,9 @@ namespace BlackCore
         //!  Remote enabled version of deleting a file
         virtual bool removeFile(const QString &fileName) = 0;
 
+        //!  Remote enabled version of file exists
+        virtual bool existsFile(const QString &fileName) = 0;
+
     private:
         //! All contexts, used with messageHandler
         static QList<IContextApplication *> s_contexts;

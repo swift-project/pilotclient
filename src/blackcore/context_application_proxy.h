@@ -46,6 +46,9 @@ namespace BlackCore
         //! \copydoc IContextApplication::removeFile
         virtual bool removeFile(const QString &fileName) override;
 
+        //! \copydoc IContextApplication::existsFile
+        virtual bool existsFile(const QString &fileName) override;
+
     protected:
         //! Constructor
         CContextApplicationProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr) {}

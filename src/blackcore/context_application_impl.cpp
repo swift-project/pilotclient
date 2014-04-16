@@ -99,4 +99,13 @@ namespace BlackCore
         return QFile::remove(fileName);
     }
 
+    /*
+     * Check file
+     */
+    bool CContextApplication::existsFile(const QString &fileName)
+    {
+        if (fileName.isEmpty()) return false;
+        return QFile::exists(fileName);
+    }
+
 } // namespace
