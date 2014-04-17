@@ -41,12 +41,6 @@ namespace BlackCore
                                "connectionTerminated", this, SIGNAL(connectionTerminated()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "statusMessage", this, SIGNAL(statusMessage(BlackMisc::CStatusMessage)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "statusMessages", this, SIGNAL(statusMessages(BlackMisc::CStatusMessageList)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "textMessagesReceived", this, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)));
         Q_ASSERT(s);
         Q_UNUSED(s);

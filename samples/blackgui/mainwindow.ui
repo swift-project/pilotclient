@@ -2378,7 +2378,11 @@ QStatusBar QLabel {
                      <number>0</number>
                     </property>
                     <item>
-                     <widget class="QLineEdit" name="le_SettingsSimulatorFsxExistsSimconncetCfg"/>
+                     <widget class="QLineEdit" name="le_SettingsSimulatorFsxExistsSimconncetCfg">
+                      <property name="readOnly">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
                     </item>
                     <item>
                      <widget class="QPushButton" name="pb_SettingsSimulatorFsxExistsSimconncetCfg">

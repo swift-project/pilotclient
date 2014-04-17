@@ -99,7 +99,7 @@ namespace BlackCore
     bool CContextApplicationProxy::removeFile(const QString &fileName)
     {
         if (fileName.isEmpty()) return false;
-        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("deleteFile"), fileName);
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("removeFile"), fileName);
     }
 
     /*
