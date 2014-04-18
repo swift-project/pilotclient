@@ -242,6 +242,8 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     // whether init has been completed
     this->m_init = true;
 
+    // We don't receive signals from the past. So ask for it simulate an initial signal
+    simulatorConnectionChanged(m_rt->getIContextSimulator()->isConnected());
 }
 
 //
