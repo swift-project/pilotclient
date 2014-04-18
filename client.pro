@@ -11,14 +11,6 @@ contains(BLACK_CONFIG, BlackSound) {
     SUBDIRS += src/blacksound
 }
 
-contains(BLACK_CONFIG, BlackCore) {
-    SUBDIRS += src/blackcore
-}
-
-contains(BLACK_CONFIG, BlackGui) {
-    SUBDIRS += src/blackgui
-}
-
 contains(BLACK_CONFIG, BlackSim) {
     SUBDIRS += src/blacksim
 
@@ -30,6 +22,14 @@ contains(BLACK_CONFIG, BlackSim) {
         SUBDIRS += src/blacksim/xplane/xbus/xbus.pro
         SUBDIRS += src/blacksim/xplane/plugin/plugin_xplane.pro
     }
+}
+
+contains(BLACK_CONFIG, BlackCore) {
+    SUBDIRS += src/blackcore
+}
+
+contains(BLACK_CONFIG, BlackGui) {
+    SUBDIRS += src/blackgui
 }
 
 contains(BLACK_CONFIG, Samples) {
