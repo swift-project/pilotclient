@@ -10,7 +10,7 @@
 
 namespace BlackSimPlugin
 {
-    namespace FSX
+    namespace Fsx
     {
         //! \brief Handles SimConnect exceptions
         class CSimConnectException

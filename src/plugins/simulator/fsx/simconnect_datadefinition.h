@@ -13,7 +13,7 @@
 
 namespace BlackSimPlugin
 {
-    namespace FSX
+    namespace Fsx
     {
         //! \brief Data struct of our own aircraft
         struct DataDefinitionOwnAircraft

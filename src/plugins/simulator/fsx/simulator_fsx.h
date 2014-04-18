@@ -23,9 +23,9 @@
 
 namespace BlackSimPlugin
 {
-    namespace FSX
+    namespace Fsx
     {
-        //! \brief Factory implementation to create CSimulatorFSX instances
+        //! \brief Factory implementation to create CSimulatorFsx instances
         class Q_DECL_EXPORT CSimulatorFsxFactory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
@@ -51,12 +51,12 @@ namespace BlackSimPlugin
         };
 
         //! \brief FSX Simulator Implementation
-        class CSimulatorFSX : public BlackCore::ISimulator
+        class CSimulatorFsx : public BlackCore::ISimulator
         {
             Q_OBJECT
         public:
             //! \brief Constructor
-            CSimulatorFSX(QObject *parent = nullptr);
+            CSimulatorFsx(QObject *parent = nullptr);
 
             //! \copydoc ISimulator::isConnected()
             virtual bool isConnected() const override;

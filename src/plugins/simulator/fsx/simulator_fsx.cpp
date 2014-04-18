@@ -18,14 +18,14 @@ using namespace BlackSim::Fsx;
 
 namespace BlackSimPlugin
 {
-    namespace FSX
+    namespace Fsx
     {
         BlackCore::ISimulator *CSimulatorFsxFactory::create(QObject *parent)
         {
-            return new FSX::CSimulatorFSX(parent);
+            return new Fsx::CSimulatorFsx(parent);
         }
 
-        CSimulatorFSX::CSimulatorFSX(QObject *parent) :
+        CSimulatorFsx::CSimulatorFsx(QObject *parent) :
             ISimulator(parent),
             m_isConnected(false),
             m_simRunning(false),
@@ -39,12 +39,12 @@ namespace BlackSimPlugin
             QTimer::singleShot(5000, this, SLOT(checkConnection()));
         }
 
-        bool CSimulatorFSX::isConnected() const
+        bool CSimulatorFsx::isConnected() const
         {
             return m_isConnected;
         }
 
-        void CSimulatorFSX::addRemoteAircraft(const CCallsign &callsign, const QString &type, const CAircraftSituation &initialSituation)
+        void CSimulatorFsx::addRemoteAircraft(const CCallsign &callsign, const QString &type, const CAircraftSituation &initialSituation)
         {
             Q_UNUSED(type);
 
@@ -70,7 +70,7 @@ namespace BlackSimPlugin
             Q_UNUSED(hr);
         }
 
-        void CSimulatorFSX::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
+        void CSimulatorFsx::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
         {
             if (!m_simConnectObjects.contains(callsign))
             {
@@ -83,19 +83,19 @@ namespace BlackSimPlugin
             m_simConnectObjects.insert(callsign, simObj);
         }
 
-        void CSimulatorFSX::removeRemoteAircraft(const CCallsign &/*callsign*/)
+        void CSimulatorFsx::removeRemoteAircraft(const CCallsign &/*callsign*/)
         {
             // TODO
         }
 
-        CSimulatorInfo CSimulatorFSX::getSimulatorInfo() const
+        CSimulatorInfo CSimulatorFsx::getSimulatorInfo() const
         {
             return this->m_simulatorInfo;
         }
 
-        void CALLBACK CSimulatorFSX::SimConnectProc(SIMCONNECT_RECV *pData, DWORD /* cbData */, void *pContext)
+        void CALLBACK CSimulatorFsx::SimConnectProc(SIMCONNECT_RECV *pData, DWORD /* cbData */, void *pContext)
         {
-            CSimulatorFSX *simulatorFsx = static_cast<CSimulatorFSX *>(pContext);
+            CSimulatorFsx *simulatorFsx = static_cast<CSimulatorFsx *>(pContext);
 
             switch (pData->dwID)
             {
@@ -168,7 +168,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFSX::onSimRunning()
+        void CSimulatorFsx::onSimRunning()
         {
             m_simRunning = true;
             SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::RequestOwnAircraft,
@@ -176,21 +176,21 @@ namespace BlackSimPlugin
                                               SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME);
         }
 
-        void CSimulatorFSX::onSimStopped()
+        void CSimulatorFsx::onSimStopped()
         {
             m_simRunning = false;
         }
 
-        void CSimulatorFSX::onSimFrame()
+        void CSimulatorFsx::onSimFrame()
         {
         }
 
-        void CSimulatorFSX::onSimExit()
+        void CSimulatorFsx::onSimExit()
         {
 
         }
 
-        void CSimulatorFSX::setOwnAircraft(DataDefinitionOwnAircraft aircraft)
+        void CSimulatorFsx::setOwnAircraft(DataDefinitionOwnAircraft aircraft)
         {
             BlackMisc::Geo::CCoordinateGeodetic position;
             position.setLatitude(CLatitude(aircraft.latitude, CAngleUnit::deg()));
@@ -220,7 +220,7 @@ namespace BlackSimPlugin
             m_ownAircraft.setTransponder(transponder);
         }
 
-        void CSimulatorFSX::setSimconnectObjectID(DWORD requestID, DWORD objectID)
+        void CSimulatorFsx::setSimconnectObjectID(DWORD requestID, DWORD objectID)
         {
             SimConnect_AIReleaseControl(m_hSimConnect, objectID, requestID);
             SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZELAT, 1,
@@ -251,13 +251,13 @@ namespace BlackSimPlugin
 
         }
 
-        void CSimulatorFSX::timerEvent(QTimerEvent * /* event */)
+        void CSimulatorFsx::timerEvent(QTimerEvent * /* event */)
         {
             dispatch();
             update();
         }
 
-        void CSimulatorFSX::checkConnection()
+        void CSimulatorFsx::checkConnection()
         {
             if (FAILED(SimConnect_Open(&m_hSimConnect, "BlackBox", nullptr, 0, 0, 0)))
             {
@@ -273,12 +273,12 @@ namespace BlackSimPlugin
             emit connectionChanged(true);
         }
 
-        void CSimulatorFSX::dispatch()
+        void CSimulatorFsx::dispatch()
         {
             SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
         }
 
-        HRESULT CSimulatorFSX::initSystemEvents()
+        HRESULT CSimulatorFsx::initSystemEvents()
         {
             HRESULT hr = S_OK;
             // System events
@@ -292,12 +292,12 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        HRESULT CSimulatorFSX::initDataDefinitions()
+        HRESULT CSimulatorFsx::initDataDefinitions()
         {
             return CSimConnectDataDefinition::initDataDefinitions(m_hSimConnect);
         }
 
-        void CSimulatorFSX::update()
+        void CSimulatorFsx::update()
         {
             foreach(SimConnectObject simObj, m_simConnectObjects)
             {

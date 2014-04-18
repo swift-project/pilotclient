@@ -66,7 +66,7 @@ namespace BlackCore
 
     void CContextSimulator::loadPlugins()
     {
-        m_pluginsDir = QDir(qApp->applicationDirPath().append("/plugins"));
+        m_pluginsDir = QDir(qApp->applicationDirPath().append("/plugins/simulator"));
         if (!m_pluginsDir.exists())
         {
             qWarning() << "No plugin directory" << m_pluginsDir.currentPath();

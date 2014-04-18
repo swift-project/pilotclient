@@ -8,7 +8,7 @@
 
 namespace BlackSimPlugin
 {
-    namespace FSX
+    namespace Fsx
     {
 
         CSimConnectDataDefinition::CSimConnectDataDefinition()
