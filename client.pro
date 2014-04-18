@@ -20,7 +20,7 @@ contains(BLACK_CONFIG, BlackSim) {
 
     contains(BLACK_CONFIG, XPlane) {
         SUBDIRS += src/blacksim/xplane/xbus/xbus.pro
-        SUBDIRS += src/blacksim/xplane/plugin/plugin_xplane.pro
+        SUBDIRS += src/plugins/simulator/xplane/plugin_xplane.pro
     }
 }
 

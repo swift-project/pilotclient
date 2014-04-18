@@ -17,6 +17,6 @@ HEADERS += *.h
 
 #win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackmisc.lib
 
-DESTDIR = ../../../../bin/plugins
+DESTDIR = ../../../../bin/plugins/simulator
 
 include (../../../../libraries.pri)

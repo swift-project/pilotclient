@@ -31,11 +31,6 @@ SOURCES += $$PWD/fscommon/*.cpp
 HEADERS += $$PWD/fsx/*.h
 SOURCES += $$PWD/fsx/*.cpp
 
-contains(BLACK_CONFIG, XPlane) {
-	HEADERS += $$PWD/xplane/plugin/*.h
-	SOURCES += $$PWD/xplane/plugin/*.cpp
-}
-
 DESTDIR = ../../lib
 
 include (../../libraries.pri)
