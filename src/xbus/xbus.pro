@@ -1,5 +1,5 @@
-include (../../../../config.pri)
-include (../../../../build.pri)
+include (../../config.pri)
+include (../../build.pri)
 
 QT       += core gui widgets dbus network
 
@@ -10,8 +10,8 @@ CONFIG += blackmisc
 
 LIBS += -lXPLM
 
-DEPENDPATH += . ../../../../src
-INCLUDEPATH += . ../../../../src
+DEPENDPATH += . ../../src
+INCLUDEPATH += . ../../src
 
 SOURCES += *.cpp
 HEADERS += *.h
@@ -33,39 +33,39 @@ win32:TARGET = win
 linux:TARGET = lin
 macx:TARGET = mac
 win32:contains(QMAKE_TARGET.arch, x86_64) {
-    DESTDIR = ../../../../xbus/64
+    DESTDIR = ../../xbus/64
 }
 win32:contains(QMAKE_TARGET.arch, x86) {
-    DESTDIR = ../../../../xbus
+    DESTDIR = ../../xbus
 }
 win32-g++ {
     WIN_FIND = $$(SYSTEMROOT)\system32\find
     MINGW64 = $$system($$QMAKE_CXX -Q --help=target | $$WIN_FIND \"-m64\")
     contains(MINGW64,[enabled]) {
-        DESTDIR = ../../../../xbus/64
+        DESTDIR = ../../xbus/64
     }
     else {
-        DESTDIR = ../../../../xbus
+        DESTDIR = ../../xbus
     }
 }
 linux-g++ {
     GCC64 = $$system($$QMAKE_CXX -Q --help=target | grep m64)
     contains(GCC64,[enabled]) {
-        DESTDIR = ../../../../xbus/64
+        DESTDIR = ../../xbus/64
     }
     else {
-        DESTDIR = ../../../../xbus
+        DESTDIR = ../../xbus
     }
 }
 linux-g++-64 {
-    DESTDIR = ../../../../xbus/64
+    DESTDIR = ../../xbus/64
 }
 linux-g++-32 {
-    DESTDIR = ../../../../xbus
+    DESTDIR = ../../xbus
 }
 macx {
     # a single dylib file contains both 32bit and 64bit binaries
-    DESTDIR = ../../../../xbus
+    DESTDIR = ../../xbus
 }
 
-include (../../../../libraries.pri)
+include (../../libraries.pri)
