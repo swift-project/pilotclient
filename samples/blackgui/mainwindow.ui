@@ -554,7 +554,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QToolBox" name="tb_StatusPage">
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <property name="tabSpacing">
               <number>3</number>
@@ -588,7 +588,7 @@ QStatusBar QLabel {
                 <number>0</number>
                </property>
                <item>
-                <widget class="QTableView" name="tv_StatusMessages">
+                <widget class="BlackGui::CStatusMessageView" name="tvp_StatusMessages">
                  <property name="selectionMode">
                   <enum>QAbstractItemView::SingleSelection</enum>
                  </property>
@@ -735,7 +735,7 @@ QStatusBar QLabel {
                 <number>2</number>
                </property>
                <item>
-                <widget class="QTableView" name="tv_AtcStationsOnline">
+                <widget class="BlackGui::CAtcStationView" name="tvp_AtcStationsOnline">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                    <horstretch>0</horstretch>
@@ -945,7 +945,7 @@ QStatusBar QLabel {
                 <number>3</number>
                </property>
                <item>
-                <widget class="QTableView" name="tv_AtcStationsBooked">
+                <widget class="BlackGui::CAtcStationView" name="tvp_AtcStationsBooked">
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                  </property>
@@ -1006,7 +1006,7 @@ QStatusBar QLabel {
             <number>0</number>
            </property>
            <item>
-            <widget class="QTableView" name="tv_AircraftsInRange">
+            <widget class="BlackGui::CAircraftView" name="tvp_AircraftsInRange">
              <attribute name="verticalHeaderVisible">
               <bool>false</bool>
              </attribute>
@@ -1032,7 +1032,7 @@ QStatusBar QLabel {
             <number>0</number>
            </property>
            <item>
-            <widget class="QTableView" name="tv_AllUsers">
+            <widget class="BlackGui::CUserView" name="tvp_AllUsers">
              <property name="selectionMode">
               <enum>QAbstractItemView::SingleSelection</enum>
              </property>
@@ -1559,7 +1559,7 @@ QStatusBar QLabel {
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QTableView" name="tv_CockpitVoiceRoom1">
+              <widget class="BlackGui::CUserView" name="tvp_CockpitVoiceRoom1">
                <property name="selectionMode">
                 <enum>QAbstractItemView::SingleSelection</enum>
                </property>
@@ -1572,7 +1572,7 @@ QStatusBar QLabel {
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QTableView" name="tv_CockpitVoiceRoom2">
+              <widget class="BlackGui::CUserView" name="tvp_CockpitVoiceRoom2">
                <property name="selectionMode">
                 <enum>QAbstractItemView::SingleSelection</enum>
                </property>
@@ -1793,7 +1793,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QTabWidget" name="Simulator">
              <property name="currentIndex">
-              <number>3</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tb_SettingsTrafficNetwork">
               <attribute name="title">
@@ -1816,7 +1816,7 @@ QStatusBar QLabel {
                 <number>1</number>
                </property>
                <item>
-                <widget class="QTableView" name="tv_SettingsTnServers">
+                <widget class="BlackGui::CServerView" name="tvp_SettingsTnServers">
                  <property name="editTriggers">
                   <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
                  </property>
@@ -2546,7 +2546,7 @@ QStatusBar QLabel {
                 <number>2</number>
                </property>
                <item>
-                <widget class="QTableView" name="tv_SettingsMiscHotkeys">
+                <widget class="BlackGui::CKeyboardKeyView" name="tvp_SettingsMiscHotkeys">
                  <property name="cornerButtonEnabled">
                   <bool>true</bool>
                  </property>
@@ -3256,23 +3256,53 @@ QStatusBar QLabel {
    <extends>QComboBox</extends>
    <header>blackgui/transpondermodeselector.h</header>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::CStatusMessageView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/statusmessageview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CAtcStationView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/atcstationview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CUserView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/userview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CAircraftView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/aircraftview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CKeyboardKeyView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/keyboardkeyview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CServerView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/serverview.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>cb_StatusWithDBus</tabstop>
   <tabstop>le_StatusNetworkContext</tabstop>
   <tabstop>le_StatusAudioContext</tabstop>
-  <tabstop>tv_StatusMessages</tabstop>
+  <tabstop>tvp_StatusMessages</tabstop>
   <tabstop>le_CommandLineInput</tabstop>
   <tabstop>tw_AtcStations</tabstop>
-  <tabstop>tv_AtcStationsOnline</tabstop>
+  <tabstop>tvp_AtcStationsOnline</tabstop>
   <tabstop>te_AtcStationsOnlineInfo</tabstop>
   <tabstop>le_AtcStationsOnlineMetar</tabstop>
   <tabstop>pb_AtcStationsLoadMetar</tabstop>
   <tabstop>pb_AtcStationsAtisReload</tabstop>
-  <tabstop>tv_AtcStationsBooked</tabstop>
+  <tabstop>tvp_AtcStationsBooked</tabstop>
   <tabstop>pb_ReloadAtcStationsBooked</tabstop>
-  <tabstop>tv_AircraftsInRange</tabstop>
-  <tabstop>tv_AllUsers</tabstop>
+  <tabstop>tvp_AircraftsInRange</tabstop>
+  <tabstop>tvp_AllUsers</tabstop>
   <tabstop>pb_CockpitToggleCom1</tabstop>
   <tabstop>ds_CockpitCom1Active</tabstop>
   <tabstop>ds_CockpitCom1Standby</tabstop>
@@ -3290,15 +3320,15 @@ QStatusBar QLabel {
   <tabstop>cb_CockpitVoiceRoom1Override</tabstop>
   <tabstop>le_CockpitVoiceRoomCom2</tabstop>
   <tabstop>cb_CockpitVoiceRoom2Override</tabstop>
-  <tabstop>tv_CockpitVoiceRoom1</tabstop>
-  <tabstop>tv_CockpitVoiceRoom2</tabstop>
+  <tabstop>tvp_CockpitVoiceRoom1</tabstop>
+  <tabstop>tvp_CockpitVoiceRoom2</tabstop>
   <tabstop>tw_TextMessages</tabstop>
   <tabstop>te_TextMessagesAll</tabstop>
   <tabstop>te_TextMessagesUnicom</tabstop>
   <tabstop>te_TextMessagesCOM1</tabstop>
   <tabstop>te_TextMessagesCOM2</tabstop>
   <tabstop>Simulator</tabstop>
-  <tabstop>tv_SettingsTnServers</tabstop>
+  <tabstop>tvp_SettingsTnServers</tabstop>
   <tabstop>le_SettingsTnCsName</tabstop>
   <tabstop>le_SettingsTnCsDescription</tabstop>
   <tabstop>le_SettingsTnCsAddress</tabstop>

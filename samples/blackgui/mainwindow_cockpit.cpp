@@ -118,8 +118,6 @@ void MainWindow::updateCockpitFromContext()
         // these are the ones featuring the real audio status
         CVoiceRoomList rooms = this->m_rt->getIContextAudio()->getComVoiceRoomsWithAudioStatus();
         Q_ASSERT(rooms.size() == 2);
-        Q_ASSERT(this->m_modelUsersVoiceCom1);
-        Q_ASSERT(this->m_modelUsersVoiceCom2);
 
         CVoiceRoom room1 = rooms[0];
         CVoiceRoom room2 = rooms[1];
@@ -127,15 +125,8 @@ void MainWindow::updateCockpitFromContext()
         bool com2Connected = room2.isConnected();
 
         // update views
-        this->m_modelUsersVoiceCom1->update(this->m_rt->getIContextAudio()->getCom1RoomUsers());
-        this->ui->tv_CockpitVoiceRoom1->resizeColumnsToContents();
-        this->ui->tv_CockpitVoiceRoom1->resizeRowsToContents();
-        this->ui->tv_CockpitVoiceRoom1->horizontalHeader()->setStretchLastSection(true);
-
-        this->m_modelUsersVoiceCom2->update(this->m_rt->getIContextAudio()->getCom2RoomUsers());
-        this->ui->tv_CockpitVoiceRoom2->resizeColumnsToContents();
-        this->ui->tv_CockpitVoiceRoom2->resizeRowsToContents();
-        this->ui->tv_CockpitVoiceRoom2->horizontalHeader()->setStretchLastSection(true);
+        this->ui->tvp_CockpitVoiceRoom1->update(this->m_rt->getIContextAudio()->getCom1RoomUsers());
+        this->ui->tvp_CockpitVoiceRoom1->update(this->m_rt->getIContextAudio()->getCom1RoomUsers());
 
         // highlite voice room according to status
         QString vrStyle1;

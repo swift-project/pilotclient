@@ -28,15 +28,11 @@ void MainWindow::reloadSettings()
     CSettingsNetwork nws = this->m_rt->getIContextSettings()->getNetworkSettings();
 
     // update servers
-    this->m_modelTrafficServerList->setSelectedServer(nws.getCurrentTrafficNetworkServer());
-    this->m_modelTrafficServerList->update(nws.getTrafficNetworkServers());
-    this->ui->tv_SettingsTnServers->resizeColumnsToContents();
-    this->ui->tv_SettingsTnServers->resizeRowsToContents();
+    this->ui->tvp_SettingsTnServers->setSelectedServer(nws.getCurrentTrafficNetworkServer());
+    this->ui->tvp_SettingsTnServers->update(nws.getTrafficNetworkServers());
 
     // update hot keys
-    this->m_modelSettingsHotKeys->update(this->m_rt->getIContextSettings()->getHotkeys());
-    this->ui->tv_SettingsMiscHotkeys->resizeColumnsToContents();
-    this->ui->tv_SettingsMiscHotkeys->resizeRowsToContents();
+    this->ui->tvp_SettingsMiscHotkeys->update(this->m_rt->getIContextSettings()->getHotkeys());
 
     // fake setting for sound notifications
     this->ui->cb_SettingsAudioPlayNotificationSounds->setChecked(true);
@@ -48,7 +44,7 @@ void MainWindow::reloadSettings()
  */
 void MainWindow::networkServerSelected(QModelIndex index)
 {
-    const CServer clickedServer = this->m_modelTrafficServerList->at(index);
+    const CServer clickedServer = this->ui->tvp_SettingsTnServers->at<CServer>(index);
     this->updateGuiSelectedServerTextboxes(clickedServer);
 }
 
@@ -136,7 +132,7 @@ CServer MainWindow::selectedServerFromTextboxes() const
 void MainWindow::saveHotkeys()
 {
     const QString path = CSettingUtilities::appendPaths(IContextSettings::PathRoot(), IContextSettings::PathHotkeys());
-    CStatusMessageList msgs = this->m_rt->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->m_modelSettingsHotKeys->getContainer().toQVariant());
+    CStatusMessageList msgs = this->m_rt->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer().toQVariant());
 
     // status messages
     this->displayStatusMessages(msgs);
@@ -147,12 +143,12 @@ void MainWindow::saveHotkeys()
  */
 void MainWindow::clearHotkey()
 {
-    QModelIndex i = this->ui->tv_SettingsMiscHotkeys->currentIndex();
-    if (i.row() < 0 || i.row() >= this->m_modelSettingsHotKeys->rowCount()) return;
-    BlackMisc::Hardware::CKeyboardKey key = this->m_modelSettingsHotKeys->at(i);
-    BlackMisc::Hardware::CKeyboardKey defKey;
-    defKey.setFunction(key.getFunction());
-    this->m_modelSettingsHotKeys->update(i, defKey);
+    QModelIndex i = this->ui->tvp_SettingsMiscHotkeys->currentIndex();
+    if (i.row() < 0 || i.row() >= this->ui->tvp_SettingsMiscHotkeys->rowCount()) return;
+    BlackMisc::Hardware::CKeyboardKey key = this->ui->tvp_SettingsMiscHotkeys->at<BlackMisc::Hardware::CKeyboardKey>(i);
+    BlackMisc::Hardware::CKeyboardKey defaultKey;
+    defaultKey.setFunction(key.getFunction());
+    this->ui->tvp_SettingsMiscHotkeys->derivedModel()->update(i, defaultKey);
 }
 
 /*

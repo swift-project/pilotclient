@@ -20,9 +20,7 @@ using namespace BlackMisc::Settings;
 void MainWindow::reloadAtcStationsBooked()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_modelAtcListBooked->update(this->m_rt->getIContextNetwork()->getAtcStationsBooked());
-    this->ui->tv_AtcStationsBooked->resizeColumnsToContents();
-    this->ui->tv_AtcStationsBooked->resizeRowsToContents();
+    this->ui->tvp_AtcStationsBooked->update(this->m_rt->getIContextNetwork()->getAtcStationsBooked());
 }
 
 /*
@@ -31,10 +29,7 @@ void MainWindow::reloadAtcStationsBooked()
 void MainWindow::reloadAtcStationsOnline()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_modelAtcListOnline->update(this->m_rt->getIContextNetwork()->getAtcStationsOnline());
-    this->ui->tv_AtcStationsOnline->resizeColumnsToContents();
-    this->ui->tv_AtcStationsOnline->resizeRowsToContents();
-
+    this->ui->tvp_AtcStationsOnline->update(this->m_rt->getIContextNetwork()->getAtcStationsOnline());
     if (!this->m_rt->getIContextNetwork()->isConnected())
     {
         // clear metar/ATIS
@@ -51,7 +46,7 @@ void MainWindow::reloadAtcStationsOnline()
 void MainWindow::onlineAtcStationSelected(QModelIndex index)
 {
     this->ui->te_AtcStationsOnlineInfo->setText(""); // reset
-    const CAtcStation stationClicked = this->m_modelAtcListOnline->at(index);
+    const CAtcStation stationClicked = this->ui->tvp_AtcStationsBooked->derivedModel()->at(index);
     QString infoMessage;
 
     if (stationClicked.hasAtis())
@@ -101,7 +96,7 @@ void MainWindow::atcStationTabChanged(int /** tabIndex **/)
     {
         if (this->ui->tw_AtcStations->currentWidget() == this->ui->tb_AtcStationsBooked)
         {
-            if (this->m_modelAtcListBooked->rowCount() < 1)
+            if (this->ui->tvp_AtcStationsBooked->rowCount() < 1)
                 this->reloadAtcStationsBooked();
         }
         else if (this->ui->tw_AtcStations->currentWidget() == this->ui->tb_AtcStationsOnline)

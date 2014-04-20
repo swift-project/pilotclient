@@ -26,10 +26,6 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     ui(new Ui::MainWindow),
     m_infoWindow(nullptr),
     m_init(false), m_windowMode(windowMode), m_audioTestRunning(NoAudioTest),
-    // table view models
-    m_statusMessageList(nullptr),
-    m_modelAtcListOnline(nullptr), m_modelAtcListBooked(nullptr), m_modelTrafficServerList(nullptr), m_modelAircraftsInRange(nullptr),
-    m_modelAllUsers(nullptr), m_modelUsersVoiceCom1(nullptr), m_modelUsersVoiceCom2(nullptr), m_modelSettingsHotKeys(nullptr),
     // contexts and runtime
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextAudioAvailable(false),
 
@@ -263,9 +259,7 @@ void MainWindow::displayStatusMessage(const CStatusMessage &statusMessage)
     this->m_statusBarLabel->setText(statusMessage.getMessage());
 
     // list
-    this->m_statusMessageList->insert(statusMessage);
-    this->ui->tv_StatusMessages->resizeColumnsToContents();
-    this->ui->tv_StatusMessages->resizeRowsToContents();
+    this->ui->tvp_StatusMessages->insert(statusMessage);
     if (statusMessage.getSeverity() == CStatusMessage::SeverityError) this->displayOverlayInfo(statusMessage);
 }
 
@@ -388,7 +382,7 @@ void MainWindow::middlePanelChanged(int /* index */)
 
         if (this->ui->sw_MainMiddle->currentWidget() == this->ui->pg_AircraftsInRange)
         {
-            if (this->m_modelAircraftsInRange->rowCount() < 1)
+            if (this->ui->tvp_AircraftsInRange->rowCount() < 1)
                 this->reloadAircraftsInRange();
         }
     }
@@ -500,10 +494,7 @@ void MainWindow::displayOverlayInfo(const CStatusMessage &message)
 void MainWindow::reloadAllUsers()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_modelAllUsers->update(this->m_rt->getIContextNetwork()->getUsers());
-    this->ui->tv_AllUsers->resizeColumnsToContents();
-    this->ui->tv_AllUsers->resizeRowsToContents();
-    this->ui->tv_AllUsers->horizontalHeader()->setStretchLastSection(true);
+    this->ui->tvp_AllUsers->update(this->m_rt->getIContextNetwork()->getUsers());
 }
 
 void MainWindow::updateSimulatorData()

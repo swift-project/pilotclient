@@ -67,8 +67,6 @@ void MainWindow::initContextMenus()
     this->ui->lbl_CockpitVoiceStatus->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this->ui->lbl_StatusVoiceStatus, &QLabel::customContextMenuRequested, this, &MainWindow::audioIconContextMenu);
     connect(this->ui->lbl_CockpitVoiceStatus, &QLabel::customContextMenuRequested, this, &MainWindow::audioIconContextMenu);
-    this->ui->tv_StatusMessages->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this->ui->tv_StatusMessages, &QTableView::customContextMenuRequested, this, &MainWindow::messageListContextMenu);
 }
 
 /*
@@ -87,6 +85,7 @@ void MainWindow::audioIconContextMenu(const QPoint &position)
         this->m_contextMenuAudio->addAction("Toogle mute");
 
 #if defined(Q_OS_WIN)
+        // #if defined required? seems to be redundant
         if (QSysInfo::WindowsVersion && QSysInfo::WV_NT_based)
         {
             this->m_contextMenuAudio->addAction("Mixer");
@@ -104,35 +103,6 @@ void MainWindow::audioIconContextMenu(const QPoint &position)
         {
             QStringList parameterlist;
             QProcess::startDetached("SndVol.exe", parameterlist);
-        }
-    }
-}
-
-
-/*
- * Message list context menu
- */
-void MainWindow::messageListContextMenu(const QPoint &position)
-{
-    // position for most widgets
-    QPoint globalPosition = this->ui->tv_StatusMessages->mapToGlobal(position);
-
-    if (!this->m_contextMenuStatusMessageList)
-    {
-        this->m_contextMenuStatusMessageList = new QMenu(this);
-        this->m_contextMenuStatusMessageList->addAction("Clear");
-    }
-
-    QAction *selectedItem = this->m_contextMenuStatusMessageList->exec(globalPosition);
-    if (selectedItem)
-    {
-        // http://forum.technical-assistance.co.uk/sndvol32exe-command-line-parameters-vt1348.html
-        const QList<QAction *> actions = this->m_contextMenuStatusMessageList->actions();
-        if (selectedItem == actions.at(0))
-        {
-            this->m_statusMessageList->clear();
-            this->ui->tv_StatusMessages->resizeColumnsToContents();
-            this->ui->tv_StatusMessages->horizontalHeader()->setStretchLastSection(true);
         }
     }
 }

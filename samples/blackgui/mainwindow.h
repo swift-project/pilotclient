@@ -99,18 +99,6 @@ private:
     GuiModes::WindowMode m_windowMode;
     AudioTest m_audioTestRunning;
 
-    // the table view models
-    // normal pointers, as these will be deleted by parent
-    BlackGui::CStatusMessageListModel *m_statusMessageList;
-    BlackGui::CAtcListModel *m_modelAtcListOnline;
-    BlackGui::CAtcListModel *m_modelAtcListBooked;
-    BlackGui::CServerListModel *m_modelTrafficServerList;
-    BlackGui::CAircraftListModel *m_modelAircraftsInRange;
-    BlackGui::CUserListModel *m_modelAllUsers;
-    BlackGui::CUserListModel *m_modelUsersVoiceCom1;
-    BlackGui::CUserListModel *m_modelUsersVoiceCom2;
-    BlackGui::CKeyboardKeyListModel *m_modelSettingsHotKeys;
-
     // contexts
     bool m_coreAvailable;
     bool m_contextNetworkAvailable;
@@ -411,9 +399,6 @@ private slots:
 
     //! Context menu for audio
     void audioIconContextMenu(const QPoint &position);
-
-    //! Context menu for message list
-    void messageListContextMenu(const QPoint &position);
 
     //! Test SELCAL (code valid? play tone)
     void testSelcal();

@@ -20,9 +20,7 @@ using namespace BlackMisc::Audio;
 void MainWindow::reloadAircraftsInRange()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->m_modelAircraftsInRange->update(this->m_rt->getIContextNetwork()->getAircraftsInRange());
-    this->ui->tv_AircraftsInRange->resizeColumnsToContents();
-    this->ui->tv_AircraftsInRange->resizeRowsToContents();
+    this->ui->tvp_AircraftsInRange->update(this->m_rt->getIContextNetwork()->getAircraftsInRange());
 }
 
 /*
