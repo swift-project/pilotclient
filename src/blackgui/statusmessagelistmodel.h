@@ -16,15 +16,14 @@ namespace BlackGui
 
     public:
 
-        //! \brief Constructor
+        //! Constructor
         explicit CStatusMessageListModel(QObject *parent = nullptr);
 
-        //! \brief Destructor
+        //! Destructor
         virtual ~CStatusMessageListModel() {}
 
         //! \copydoc CListModelBase::data
         QVariant data(const QModelIndex &modelIndex, int role = Qt::DisplayRole) const;
-
     };
 }
 #endif // guard

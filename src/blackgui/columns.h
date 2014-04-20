@@ -17,9 +17,7 @@
 
 namespace BlackGui
 {
-    /*!
-     * \brief Single column
-     */
+    //! Single column
     class CColumn
     {
     public:
@@ -40,28 +38,28 @@ namespace BlackGui
          */
         CColumn(const QString &headerName, int propertyIndex, bool editable);
 
-        //! \brief Alignment for this column?
+        //! Alignment for this column?
         bool hasAlignment() const
         {
             return this->m_alignment >= 0;
         }
 
-        //! \brief Editable?
+        //! Editable?
         bool isEditable() const
         {
             return this->m_editable;
         }
 
-        //! \brief Aligment as QVariant
+        //! Aligment as QVariant
         QVariant aligmentAsQVariant() const;
 
-        //! \brief Column name
+        //! Column name
         QString getColumnName(bool i18n = false) const;
 
-        //! \brief Property index
+        //! Property index
         int getPropertyIndex() const { return this->m_propertyIndex;}
 
-        //! \brief Translation context
+        //! Translation context
         void setTranslationContext(const QString &translationContext)
         {
             this->m_translationContext = translationContext;
@@ -90,44 +88,42 @@ namespace BlackGui
          */
         CColumns(const QString &translationContext, QObject *parent = nullptr);
 
-        //! \brief Add a column
+        //! Add a column
         void addColumn(CColumn column);
 
-        //! \brief Property index to name
+        //! Property index to name
         QString propertyIndexToColumnName(int propertyIndex, bool i18n = false) const;
 
-        //! \brief Column index to name
+        //! Column index to name
         QString columnToName(int column, bool i18n = false) const;
 
-        //! \brief Column to property index
+        //! Column to property index
         int columnToPropertyIndex(int column) const;
 
-        //! \brief Property index to column
+        //! Property index to column
         int propertyIndexToColumn(int propertyIndex) const;
 
-        //! \brief Column index to property index
+        //! Column index to property index
         int indexToPropertyIndex(int index) const;
 
-        //! \brief Column index to name
+        //! Column index to name
         int nameToPropertyIndex(const QString &name) const;
 
-        //! \brief Size (number of columns)
+        //! Size (number of columns)
         int size() const;
 
-        //! \brief Alignment for this column?
+        //! Alignment for this column?
         bool hasAlignment(const QModelIndex &index) const;
 
-        //! \brief Is this column editable?
+        //! Is this column editable?
         bool isEditable(const QModelIndex &index) const;
 
-        //! \brief Aligment as QVariant
+        //! Aligment as QVariant
         QVariant aligmentAsQVariant(const QModelIndex &index) const;
 
-        //! \brief Column at position
-        const CColumn &at(int columnNumber) const
-        {
-            return this->m_columns.at(columnNumber);
-        }
+        //! Column at position
+        const CColumn &at(int columnNumber) const { return this->m_columns.at(columnNumber); }
+
 
     private:
         QList<CColumn> m_columns;

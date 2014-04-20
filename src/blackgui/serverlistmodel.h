@@ -28,50 +28,31 @@ namespace BlackGui
 
     public:
 
-        /*!
-         * \brief Constructor
-         * \param parent
-         */
+        //! Constructor
         explicit CServerListModel(QObject *parent = nullptr);
 
-        /*!
-         * \brief Destructor
-         */
+        //! Destructor
         virtual ~CServerListModel() {}
 
-        /*!
-         * \brief Has selected server?
-         * \return
-         */
+        //! Has selected server?
         bool hasSelectedServer() const
         {
             return this->m_selectedServer.isValidForLogin();
         }
 
-        /*!
-         * \brief Get selected server
-         * \return
-         */
+        //! Get selected server
         const BlackMisc::Network::CServer &getSelectedServer() const
         {
             return this->m_selectedServer;
         }
 
-        /*!
-         * \brief SetSelectedServer
-         * \param selectedServer
-         */
+        //! Set selected server
         void setSelectedServer(const BlackMisc::Network::CServer &selectedServer)
         {
             this->m_selectedServer = selectedServer;
         }
 
-        /*!
-         * \brief data
-         * \param index
-         * \param role
-         * \return
-         */
+        //! \copydoc CListModelBase::data
         virtual QVariant data(const QModelIndex &index, int role) const;
 
     };

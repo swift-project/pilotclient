@@ -89,11 +89,11 @@ namespace BlackGui
      * Update
      */
     template <typename ObjectType, typename ContainerType>
-    int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &list)
+    int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &container)
     {
-        ContainerType copyList = (list.size() > 1 && this->hasValidSortColumn() ?
-                                  this->sortListByColumn(list, this->m_sortedColumn, this->m_sortOrder) :
-                                  list);
+        ContainerType copyList = (container.size() > 1 && this->hasValidSortColumn() ?
+                                  this->sortListByColumn(container, this->m_sortedColumn, this->m_sortOrder) :
+                                  container);
         this->beginResetModel();
         this->m_container.clear();
         foreach(ObjectType object, copyList)

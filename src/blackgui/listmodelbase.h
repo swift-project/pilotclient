@@ -3,10 +3,6 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/*!
-    \file
-*/
-
 #ifndef BLACKGUI_LISTMODELBASE_H
 #define BLACKGUI_LISTMODELBASE_H
 
@@ -49,39 +45,25 @@ namespace BlackGui
 
     public:
 
-        /*!
-         * \brief Destructor
-         */
+        //! \brief Destructor
         virtual ~CListModelBase() {}
 
-        /*!
-         * \copydoc QAbstractListModel::columnCount()
-         */
+        //! \copydoc QAbstractListModel::columnCount()
         virtual int columnCount(const QModelIndex &modelIndex) const;
 
-        /*!
-         * \copydoc QAbstractItemModel::headerData()
-         */
+        //! \copydoc QAbstractItemModel::headerData()
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
-        /*!
-         * \brief Column to property index
-         * \param column
-         */
+        //! Column to property index
         virtual int columnToPropertyIndex(int column) const;
 
-        /*!
-         * \brief Index to property index
-         * \param index
-         */
-        virtual int indexToPropertyIndex(const QModelIndex &index) const {
+        //! Index to property index
+        virtual int indexToPropertyIndex(const QModelIndex &index) const
+        {
             return this->columnToPropertyIndex(index.column());
         }
 
-        /*!
-         * \brief Set sort column
-         * \param column column index
-         */
+        //! Set sort column
         virtual void setSortColumn(int column)
         {
             this->m_sortedColumn = column;
@@ -96,34 +78,25 @@ namespace BlackGui
             this->m_sortedColumn = this->m_columns.propertyIndexToColumn(propertyIndex);
         }
 
-        /*!
-         * \brief Get sort column
-         * \return
-         */
+        //! Get sort column
         virtual int getSortColumn() const
         {
             return this->m_sortedColumn;
         }
 
-        /*!
-         * \brief Has valid sort column?
-         * \return
-         */
+        //! Has valid sort column?
         virtual bool hasValidSortColumn() const
         {
             return this->m_sortedColumn >= 0 && this->m_sortedColumn < this->m_columns.size();
         }
 
-        /*!
-         * \brief Get sort column
-         * \return
-         */
+        //! Get sort order
         virtual Qt::SortOrder getSortOrder() const
         {
             return this->m_sortOrder;
         }
 
-        //! \brief Used container data
+        //! Used container data
         virtual const ContainerType &getContainer() const
         {
             return this->m_container;
@@ -138,25 +111,13 @@ namespace BlackGui
         //! \copydoc QAbstractTableModel::flags
         Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-        /*!
-         * \brief Update by new list
-         * \param list
-         * \return new list size
-         */
-        virtual int update(const ContainerType &list);
+        //! Update by new list
+        virtual int update(const ContainerType &container);
 
-        /*!
-         * \brief Update single element
-         * \param index
-         * \param object
-         */
+        //! Update single element
         virtual void update(const QModelIndex &index, const ObjectType &object);
 
-        /*!
-         * \brief Object at row position
-         * \param index
-         * \return
-         */
+        //! Object at row position
         virtual const ObjectType &at(const QModelIndex &index) const
         {
             if (index.row() < 0 || index.row() >= this->m_container.size())
@@ -173,13 +134,13 @@ namespace BlackGui
         //! \copydoc QAbstractListModel::sort()
         virtual void sort(int column, Qt::SortOrder order);
 
-        //! \brief Similar to ContainerType::push_back
+        //! Similar to ContainerType::push_back
         virtual void push_back(const ObjectType &object);
 
-        //! \brief Similar to ContainerType::insert here inserts at first position
+        //! Similar to ContainerType::insert here inserts at first position
         virtual void insert(const ObjectType &object);
 
-        //! \brief clear the list
+        //! Clear the list
         virtual void clear();
     };
 }
