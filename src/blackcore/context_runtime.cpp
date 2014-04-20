@@ -19,8 +19,6 @@
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
-
-
 #include <QDebug>
 
 namespace BlackCore
@@ -240,6 +238,9 @@ namespace BlackCore
         // upfront reading of settings, as DBus server already relies on settings
         CContextSettings *settings = nullptr;
         QString dbusAddress;
+        QMap<QString, int> times;
+        QTime time;
+        time.start();
 
         if (config.hasDBusAddress()) dbusAddress = config.getDBusAddress(); // bootstrap / explicit
         if (config.hasLocalSettings())
@@ -256,6 +257,7 @@ namespace BlackCore
             this->initDBusConnection(dbusAddress);
             Q_ASSERT(this->m_dbusConnection.isConnected());
         }
+        times.insert("DBus", time.restart());
 
         // contexts
         switch (config.getModeSettings())
@@ -271,6 +273,7 @@ namespace BlackCore
         default:
             qFatal("Always initialize a settings context");
         }
+        times.insert("Settings", time.restart());
 
         switch (config.getModeApplication())
         {
@@ -284,6 +287,7 @@ namespace BlackCore
         default:
             qFatal("Always initialize an application context");
         }
+        times.insert("Application", time.restart());
 
         switch (config.getModeAudio())
         {
@@ -297,6 +301,7 @@ namespace BlackCore
         default:
             break; // audio not mandatory
         }
+        times.insert("Audio", time.restart());
 
         switch (config.getModeNetwork())
         {
@@ -310,6 +315,7 @@ namespace BlackCore
         default:
             break; // network not mandatory
         }
+        times.insert("Network", time.restart());
 
         switch (config.getModeSimulator())
         {
@@ -323,9 +329,11 @@ namespace BlackCore
         default:
             break; // network not mandatory
         }
+        times.insert("Simulator", time.restart());
 
         // post inits, wiring things among context (e.g. signal slots)
         this->initPostSetup();
+        qDebug() << "Init times:" << times;
 
         // flag
         m_init = true;
