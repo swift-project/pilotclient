@@ -20,22 +20,29 @@ namespace BlackGui
     /*!
      * \brief ATC list model
      */
-    class CAtcListModel : public CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>
+    class CAtcStationListModel : public CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>
     {
 
     public:
+        //! What kind of stations
+        enum AtcStationMode
+        {
+            NotSet,
+            StationsBooked,
+            StationsOnline
+        };
 
-        /*!
-         * \brief Constructor
-         * \param parent
-         */
-        explicit CAtcListModel(QObject *parent = nullptr);
+        //! Constructor
+        explicit CAtcStationListModel(AtcStationMode stationMode, QObject *parent = nullptr);
 
-        /*!
-         * \brief Destructor
-         */
-        virtual ~CAtcListModel() {}
+        //! Destructor
+        virtual ~CAtcStationListModel() {}
 
+        //! Set station mode
+        void setStationMode(AtcStationMode stationMode);
+
+    private:
+        AtcStationMode m_stationMode;
     };
 }
 #endif // guard

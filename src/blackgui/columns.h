@@ -124,6 +124,8 @@ namespace BlackGui
         //! Column at position
         const CColumn &at(int columnNumber) const { return this->m_columns.at(columnNumber); }
 
+        //! Clear
+        void clear() { this->m_columns.clear(); }
 
     private:
         QList<CColumn> m_columns;

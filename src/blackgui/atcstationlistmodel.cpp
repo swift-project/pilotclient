@@ -13,22 +13,10 @@ namespace BlackGui
     /*
      * Constructor
      */
-    CAtcListModel::CAtcListModel(QObject *parent) : CListModelBase("ViewAtcList", parent)
+    CAtcStationListModel::CAtcStationListModel(AtcStationMode stationMode, QObject *parent) :
+        CListModelBase("ViewAtcList", parent), m_stationMode(NotSet)
     {
-        this->m_columns.addColumn(CColumn("callsign", CAtcStation::IndexCallsignAsStringAsSet));
-        this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexDistance,  Qt::AlignRight  | Qt::AlignVCenter));
-        this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency,  Qt::AlignRight  | Qt::AlignVCenter));
-        this->m_columns.addColumn(CColumn("controllername", CAtcStation::IndexControllerRealName));
-        this->m_columns.addColumn(CColumn("online", CAtcStation::IndexIsOnline));
-        this->m_columns.addColumn(CColumn("bookedfrom", CAtcStation::IndexBookedFrom));
-        this->m_columns.addColumn(CColumn("bookeduntil", CAtcStation::IndexBookedUntil));
-        this->m_columns.addColumn(CColumn("voiceroomurl", CAtcStation::IndexVoiceRoomUrl));
-
-
-        // default sort order
-        this->setSortColumnByPropertyIndex(CAtcStation::IndexDistance);
-        this->m_sortOrder = Qt::AscendingOrder;
-
+        this->setStationMode(stationMode);
         // force strings for translation in resource files
         (void)QT_TRANSLATE_NOOP("ViewAtcList", "callsign");
         (void)QT_TRANSLATE_NOOP("ViewAtcList", "distance");
@@ -38,5 +26,41 @@ namespace BlackGui
         (void)QT_TRANSLATE_NOOP("ViewAtcList", "bookedfrom");
         (void)QT_TRANSLATE_NOOP("ViewAtcList", "bookeduntil");
         (void)QT_TRANSLATE_NOOP("ViewAtcList", "voiceroomurl");
+    }
+
+    void CAtcStationListModel::setStationMode(CAtcStationListModel::AtcStationMode stationMode)
+    {
+        if (this->m_stationMode == stationMode) return;
+        this->m_stationMode = stationMode;
+        this->m_columns.clear();
+        switch (stationMode)
+        {
+        case StationsOnline:
+            this->m_columns.addColumn(CColumn("callsign", CAtcStation::IndexCallsignAsStringAsSet));
+            this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexDistance,  Qt::AlignRight  | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency,  Qt::AlignRight  | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn("controllername", CAtcStation::IndexControllerRealName));
+            this->m_columns.addColumn(CColumn("bookedfrom", CAtcStation::IndexBookedFrom));
+            this->m_columns.addColumn(CColumn("bookeduntil", CAtcStation::IndexBookedUntil));
+            this->m_columns.addColumn(CColumn("voiceroomurl", CAtcStation::IndexVoiceRoomUrl));
+
+            // default sort order
+            this->setSortColumnByPropertyIndex(CAtcStation::IndexDistance);
+            this->m_sortOrder = Qt::AscendingOrder;
+            break;
+
+        case StationsBooked:
+            this->m_columns.addColumn(CColumn("callsign", CAtcStation::IndexCallsignAsStringAsSet));
+            this->m_columns.addColumn(CColumn("controllername", CAtcStation::IndexControllerRealName));
+            this->m_columns.addColumn(CColumn("bookedfrom", CAtcStation::IndexBookedFrom));
+            this->m_columns.addColumn(CColumn("bookeduntil", CAtcStation::IndexBookedUntil));
+            this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency,  Qt::AlignRight  | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn("online", CAtcStation::IndexIsOnline));
+
+            // default sort order
+            this->setSortColumnByPropertyIndex(CAtcStation::IndexBookedFrom);
+            this->m_sortOrder = Qt::AscendingOrder;
+            break;
+        }
     }
 }

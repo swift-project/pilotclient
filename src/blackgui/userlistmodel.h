@@ -16,14 +16,28 @@ namespace BlackGui
 
     public:
 
+        //! What level of detail
+        enum UserMode
+        {
+            NotSet,
+            UserDetailed,
+            UserShort
+        };
+
         //! \brief Constructor
-        explicit CUserListModel(QObject *parent = nullptr);
+        CUserListModel(UserMode userMode, QObject *parent = nullptr);
 
         //! \brief Destructor
         virtual ~CUserListModel() {}
 
         //! \copydoc CListModelBase::data
         QVariant data(const QModelIndex &modelIndex, int role = Qt::DisplayRole) const;
+
+        //! Set station mode
+        void setUserMode(UserMode userMode);
+
+    private:
+        UserMode m_userMode;
     };
 }
 #endif // guard
