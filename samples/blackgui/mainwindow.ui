@@ -175,10 +175,17 @@ QPlainTextEdit {
 
 QGroupBox {
     border: 1px solid green;
+    margin-top: 2ex; /* leave space at the top for the title */
+}
+
+QGroupBox::title {
+	subcontrol-origin: margin;
+	subcontrol-position: middle center; /* position at the top center */
+	padding: 0 3px;
 }
 
 QToolBox {
-border: none;
+    border: none;
 }
 
 QToolBox::tab {
@@ -228,8 +235,8 @@ QMenu::item {
 }
 
 QMenu::item:selected {
-border-color: darkblue;
-background: black;
+    border-color: darkblue;
+    background: black;
 }
 
 QMenu::indicator {
@@ -454,7 +461,7 @@ QStatusBar QLabel {
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>7</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="pg_StatusPage">
           <property name="sizePolicy">
@@ -564,8 +571,8 @@ QStatusBar QLabel {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>90</width>
-                <height>59</height>
+                <width>326</width>
+                <height>267</height>
                </rect>
               </property>
               <attribute name="label">
@@ -1771,6 +1778,9 @@ QStatusBar QLabel {
            <property name="bottomMargin">
             <number>0</number>
            </property>
+           <item>
+            <widget class="BlackGui::CFlightPlanComponent" name="comp_Flightplan"/>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="pg_Settings">
@@ -3285,6 +3295,12 @@ QStatusBar QLabel {
    <class>BlackGui::CServerView</class>
    <extends>QTableView</extends>
    <header>blackgui/serverview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CFlightPlanComponent</class>
+   <extends>QTabWidget</extends>
+   <header>blackgui/flightplancomponent.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -145,8 +145,14 @@ QGroupBox {
     border: 1px solid green;
 }
 
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    padding: 0 3px;
+}
+
 QToolBox {
-border: none;
+    border: none;
 }
 
 QToolBox::tab {
@@ -196,8 +202,8 @@ QMenu::item {
 }
 
 QMenu::item:selected {
-border-color: darkblue;
-background: black;
+    border-color: darkblue;
+    background: black;
 }
 
 QMenu::indicator {

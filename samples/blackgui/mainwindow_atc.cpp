@@ -20,7 +20,7 @@ using namespace BlackMisc::Settings;
 void MainWindow::reloadAtcStationsBooked()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->ui->tvp_AtcStationsBooked->update(this->m_rt->getIContextNetwork()->getAtcStationsBooked());
+    this->ui->tvp_AtcStationsBooked->update(this->getIContextNetwork()->getAtcStationsBooked());
 }
 
 /*
@@ -29,8 +29,8 @@ void MainWindow::reloadAtcStationsBooked()
 void MainWindow::reloadAtcStationsOnline()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->ui->tvp_AtcStationsOnline->update(this->m_rt->getIContextNetwork()->getAtcStationsOnline());
-    if (!this->m_rt->getIContextNetwork()->isConnected())
+    this->ui->tvp_AtcStationsOnline->update(this->getIContextNetwork()->getAtcStationsOnline());
+    if (!this->getIContextNetwork()->isConnected())
     {
         // clear metar/ATIS
         this->ui->te_AtcStationsOnlineInfo->clear();
@@ -67,11 +67,11 @@ void MainWindow::onlineAtcStationSelected(QModelIndex index)
 void MainWindow::getMetar(const QString &airportIcaoCode)
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    if (!this->m_rt->getIContextNetwork()->isConnected()) return;
+    if (!this->getIContextNetwork()->isConnected()) return;
     QString icao = airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper();
     this->ui->le_AtcStationsOnlineMetar->setText(icao);
     if (icao.length() != 4) return;
-    CInformationMessage metar = this->m_rt->getIContextNetwork()->getMetar(icao);
+    CInformationMessage metar = this->getIContextNetwork()->getMetar(icao);
     if (metar.getType() != CInformationMessage::METAR) return;
     if (metar.isEmpty()) return;
     this->ui->te_AtcStationsOnlineInfo->setText(metar.getMessage());
@@ -83,8 +83,8 @@ void MainWindow::getMetar(const QString &airportIcaoCode)
 void MainWindow::requestAtis()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    if (!this->m_rt->getIContextNetwork()->isConnected()) return;
-    this->m_rt->getIContextNetwork()->requestAtisUpdates();
+    if (!this->getIContextNetwork()->isConnected()) return;
+    this->getIContextNetwork()->requestAtisUpdates();
 }
 
 /*

@@ -25,14 +25,14 @@ using namespace BlackSim::Fsx;
 void MainWindow::reloadSettings()
 {
     // local copy
-    CSettingsNetwork nws = this->m_rt->getIContextSettings()->getNetworkSettings();
+    CSettingsNetwork nws = this->getIContextSettings()->getNetworkSettings();
 
     // update servers
     this->ui->tvp_SettingsTnServers->setSelectedServer(nws.getCurrentTrafficNetworkServer());
     this->ui->tvp_SettingsTnServers->update(nws.getTrafficNetworkServers());
 
     // update hot keys
-    this->ui->tvp_SettingsMiscHotkeys->update(this->m_rt->getIContextSettings()->getHotkeys());
+    this->ui->tvp_SettingsMiscHotkeys->update(this->getIContextSettings()->getHotkeys());
 
     // fake setting for sound notifications
     this->ui->cb_SettingsAudioPlayNotificationSounds->setChecked(true);
@@ -66,15 +66,15 @@ void MainWindow::alterTrafficServer()
     CStatusMessageList msgs;
     if (sender == this->ui->pb_SettingsTnCurrentServer)
     {
-        msgs = this->m_rt->getIContextSettings()->value(path, CSettingsNetwork::CmdSetCurrentServer(), server.toQVariant());
+        msgs = this->getIContextSettings()->value(path, CSettingsNetwork::CmdSetCurrentServer(), server.toQVariant());
     }
     else if (sender == this->ui->pb_SettingsTnRemoveServer)
     {
-        msgs = this->m_rt->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), server.toQVariant());
+        msgs = this->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), server.toQVariant());
     }
     else if (sender == this->ui->pb_SettingsTnSaveServer)
     {
-        msgs = this->m_rt->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), server.toQVariant());
+        msgs = this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), server.toQVariant());
     }
 
     // status messages
@@ -132,7 +132,7 @@ CServer MainWindow::selectedServerFromTextboxes() const
 void MainWindow::saveHotkeys()
 {
     const QString path = CSettingUtilities::appendPaths(IContextSettings::PathRoot(), IContextSettings::PathHotkeys());
-    CStatusMessageList msgs = this->m_rt->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer().toQVariant());
+    CStatusMessageList msgs = this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer().toQVariant());
 
     // status messages
     this->displayStatusMessages(msgs);
@@ -191,8 +191,8 @@ void MainWindow::testSimConnectConnection()
  */
 void MainWindow::saveSimConnectCfg()
 {
-    if (!this->m_rt->getIContextSimulator()) return;
-    if (!this->m_rt->getIContextSimulator()->isSimulatorAvailable()) return;
+    if (!this->getIContextSimulator()) return;
+    if (!this->getIContextSimulator()->isSimulatorAvailable()) return;
     QString address = this->ui->le_SettingsSimulatorFsxAddress->text().trimmed();
     QString port = this->ui->le_SettingsSimulatorFsxPort->text().trimmed();
 
@@ -212,13 +212,13 @@ void MainWindow::saveSimConnectCfg()
         return;
     }
     quint16 p = port.toUInt();
-    QString fileName = this->m_rt->getIContextSimulator()->getSimulatorInfo().getSimulatorSetupValueAsString(CFsxSimulatorSetup::SetupSimConnectCfgFile);
+    QString fileName = this->getIContextSimulator()->getSimulatorInfo().getSimulatorSetupValueAsString(CFsxSimulatorSetup::SetupSimConnectCfgFile);
     Q_ASSERT(!fileName.isEmpty());
     // write either local or remote file
-    bool local = this->m_rt->getIContextSimulator()->usingLocalObjects();
+    bool local = this->getIContextSimulator()->usingLocalObjects();
     bool success = local ?
                    BlackSim::Fsx::CSimConnectUtilities::writeSimConnectCfg(fileName, address, p) :
-                   this->m_rt->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p));
+                   this->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p));
     if (success)
     {
         QString m = QString("Written ").append(local ? " local " : "remote ").append(fileName);
@@ -237,8 +237,8 @@ void MainWindow::saveSimConnectCfg()
  */
 void MainWindow::simConnectCfgFile()
 {
-    if (!this->m_rt->getIContextSimulator()) return;
-    if (!this->m_rt->getIContextSimulator()->isSimulatorAvailable()) return;
+    if (!this->getIContextSimulator()) return;
+    if (!this->getIContextSimulator()->isSimulatorAvailable()) return;
 
     QObject *sender = QObject::sender();
     if (sender == this->ui->pb_SettingsSimulatorFsxOpenSimconnectCfg)
@@ -249,10 +249,10 @@ void MainWindow::simConnectCfgFile()
     }
     else if (sender == this->ui->pb_SettingsSimulatorFsxDeleteSimconnectCfg)
     {
-        if (!this->m_rt->getIContextSimulator()) return;
+        if (!this->getIContextSimulator()) return;
         QString fileName = BlackSim::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
         QString m = QString("Deleted %1 ").append(fileName);
-        if (this->m_rt->getIContextSimulator()->usingLocalObjects())
+        if (this->getIContextSimulator()->usingLocalObjects())
         {
             QFile f(fileName);
             f.remove();
@@ -260,7 +260,7 @@ void MainWindow::simConnectCfgFile()
         }
         else
         {
-            this->m_rt->getIContextApplication()->removeFile(fileName);
+            this->getIContextApplication()->removeFile(fileName);
             m = m.arg("remotely");
         }
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeSimulator, CStatusMessage::SeverityInfo, m));
@@ -268,11 +268,11 @@ void MainWindow::simConnectCfgFile()
     }
     else if (sender == this->ui->pb_SettingsSimulatorFsxExistsSimconncetCfg)
     {
-        if (!this->m_rt->getIContextSimulator()) return;
+        if (!this->getIContextSimulator()) return;
         QString fileName = BlackSim::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
-        bool exists = this->m_rt->getIContextSimulator()->usingLocalObjects() ?
+        bool exists = this->getIContextSimulator()->usingLocalObjects() ?
                       QFile::exists(fileName) :
-                      this->m_rt->getIContextApplication()->existsFile(fileName);
+                      this->getIContextApplication()->existsFile(fileName);
         if (exists)
         {
             this->ui->le_SettingsSimulatorFsxExistsSimconncetCfg->setText(fileName);

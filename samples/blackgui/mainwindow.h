@@ -18,6 +18,7 @@
 #include "blackcore/context_application.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_runtime.h"
+#include "blackgui/runtimebasedcomponent.h"
 #include "blackgui/transpondermodeselector.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/serverlistmodel.h"
@@ -34,15 +35,12 @@
 #include <QLabel>
 #include <QTimer>
 
-namespace Ui
-{
-    class MainWindow;
-}
+namespace Ui { class MainWindow; }
 
 /*!
  * \brief GUI
  */
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow, public BlackGui::CRuntimeBasedComponent
 {
     Q_OBJECT
 
@@ -103,7 +101,6 @@ private:
     bool m_coreAvailable;
     bool m_contextNetworkAvailable;
     bool m_contextAudioAvailable;
-    QScopedPointer<BlackCore::CRuntime> m_rt; /*!< runtime */
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
     QTimer *m_timerUpdateAtcStationsOnline; /*!< timer for update of stations */
     QTimer *m_timerUpdateAircraftsInRange; /*!< timer for update of aircrafts */
@@ -111,7 +108,7 @@ private:
     QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
     QTimer *m_timerContextWatchdog; /*!< core available? */
     QTimer *m_timerStatusBar; /*!< cleaning up status bar */
-    QTimer *m_timerAudioTests; /*!< cleaning up status bar */
+    QTimer *m_timerAudioTests; /*!< audio tests: progress bar, disable/enable buttons */
     QTimer *m_timerSimulator; /*!< update simulator data */
 
     // pixmaps
@@ -154,6 +151,9 @@ private:
 
     //! Init GUI signals
     void initGuiSignals();
+
+    //! Init the context menus
+    void initContextMenus();
 
     //! Context network availability check, otherwise status message
     bool isContextNetworkAvailableCheck();
@@ -223,9 +223,6 @@ private:
     //! For this text message's recepient, is the current tab selected?
     bool isCorrespondingTextMessageTabSelected(BlackMisc::Network::CTextMessage textMessage) const;
 
-    //! Init the context menus
-    void initContextMenus();
-
     //! Start all update timers
     void startUpdateTimers();
 
@@ -246,6 +243,7 @@ private:
 
     //! Update simulator page with latest user aircraft data
     void updateSimulatorData();
+
 
 private slots:
 
@@ -346,16 +344,10 @@ private slots:
     //! Update timer
     void timerBasedUpdates();
 
-    /*!
-     * \brief ATC station, tab changed, reload data
-     * \param tabIndex
-     */
+    //! ATC station, tab changed, reload data
     void atcStationTabChanged(int tabIndex);
 
-    /*!
-     * \brief Middle panel has changed, reload data
-     * \param index
-     */
+    //! Middle panel has changed, reload data
     void middlePanelChanged(int index);
 
     //! Command entered

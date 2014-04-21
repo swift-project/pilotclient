@@ -96,7 +96,7 @@ void MainWindow::updateCockpitFromContext()
 
     if (this->m_contextNetworkAvailable)
     {
-        CAtcStationList selectedStations = this->m_rt->getIContextNetwork()->getSelectedAtcStations();
+        CAtcStationList selectedStations = this->getIContextNetwork()->getSelectedAtcStations();
         CAtcStation com1Station = selectedStations[0];
         CAtcStation com2Station = selectedStations[1];
         if (com1Station.getCallsign().isEmpty())
@@ -116,7 +116,7 @@ void MainWindow::updateCockpitFromContext()
     {
         // get all rooms, it is important to get the rooms from voice context here
         // these are the ones featuring the real audio status
-        CVoiceRoomList rooms = this->m_rt->getIContextAudio()->getComVoiceRoomsWithAudioStatus();
+        CVoiceRoomList rooms = this->getIContextAudio()->getComVoiceRoomsWithAudioStatus();
         Q_ASSERT(rooms.size() == 2);
 
         CVoiceRoom room1 = rooms[0];
@@ -125,8 +125,8 @@ void MainWindow::updateCockpitFromContext()
         bool com2Connected = room2.isConnected();
 
         // update views
-        this->ui->tvp_CockpitVoiceRoom1->update(this->m_rt->getIContextAudio()->getCom1RoomUsers());
-        this->ui->tvp_CockpitVoiceRoom1->update(this->m_rt->getIContextAudio()->getCom1RoomUsers());
+        this->ui->tvp_CockpitVoiceRoom1->update(this->getIContextAudio()->getCom1RoomUsers());
+        this->ui->tvp_CockpitVoiceRoom1->update(this->getIContextAudio()->getCom1RoomUsers());
 
         // highlite voice room according to status
         QString vrStyle1;
@@ -252,7 +252,7 @@ void MainWindow::sendCockpitUpdates()
                 this->m_ownAircraft.getCom2System() != com2 ||
                 this->m_ownAircraft.getTransponder() != transponder)
         {
-            this->m_rt->getIContextNetwork()->updateOwnCockpit(com1, com2, transponder);
+            this->getIContextNetwork()->updateOwnCockpit(com1, com2, transponder);
             this->reloadOwnAircraft(); // also loads resolved voice rooms
             changedCockpit = true;
         }
@@ -279,7 +279,7 @@ void MainWindow::setAudioVoiceRooms()
 
     CVoiceRoom room1;
     CVoiceRoom room2;
-    CVoiceRoomList selectedVoiceRooms = this->m_rt->getIContextNetwork()->getSelectedVoiceRooms();
+    CVoiceRoomList selectedVoiceRooms = this->getIContextNetwork()->getSelectedVoiceRooms();
     Q_ASSERT(selectedVoiceRooms.size() == 2);
 
     if (this->ui->cb_CockpitVoiceRoom1Override->isChecked())
@@ -301,7 +301,7 @@ void MainWindow::setAudioVoiceRooms()
     }
 
     // set the real voice rooms for audio output
-    this->m_rt->getIContextAudio()->setComVoiceRooms(room1, room2);
+    this->getIContextAudio()->setComVoiceRooms(room1, room2);
 }
 
 /*
@@ -319,7 +319,7 @@ void MainWindow::testSelcal()
     if (this->m_contextAudioAvailable)
     {
         CSelcal selcal(selcalCode);
-        this->m_rt->getIContextAudio()->playSelcalTone(selcal);
+        this->getIContextAudio()->playSelcalTone(selcal);
     }
     else
     {

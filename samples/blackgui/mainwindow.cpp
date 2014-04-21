@@ -62,8 +62,8 @@ void MainWindow::gracefulShutdown()
 {
     if (!this->m_init) return;
     this->m_init = false;
-    if (this->m_rt->getIContextApplication())
-        this->m_rt->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStops);
+    if (this->getIContextApplication())
+        this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStops);
 
     // close info window
     if (this->m_infoWindow)
@@ -88,15 +88,15 @@ void MainWindow::gracefulShutdown()
     // if we have a context, we shut some things down
     if (this->m_contextNetworkAvailable)
     {
-        if (this->m_rt->getIContextNetwork()->isConnected())
+        if (this->getIContextNetwork()->isConnected())
         {
             if (this->m_contextAudioAvailable)
             {
-                this->m_rt->getIContextAudio()->leaveAllVoiceRooms();
-                this->m_rt->getIContextAudio()->disconnect(this); // break down signal / slots
+                this->getIContextAudio()->leaveAllVoiceRooms();
+                this->getIContextAudio()->disconnect(this); // break down signal / slots
             }
-            this->m_rt->getIContextNetwork()->disconnectFromNetwork();
-            this->m_rt->getIContextNetwork()->disconnect(this); // avoid any status update signals, etc.
+            this->getIContextNetwork()->disconnectFromNetwork();
+            this->getIContextNetwork()->disconnect(this); // avoid any status update signals, etc.
         }
     }
 }
@@ -192,7 +192,7 @@ void MainWindow::toggleNetworkConnection()
     if (!this->isContextNetworkAvailableCheck()) return;
 
     this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(this->m_resPixmapConnectionConnecting);
-    if (!this->m_rt->getIContextNetwork()->isConnected())
+    if (!this->getIContextNetwork()->isConnected())
     {
         if (this->m_ownAircraft.getCallsign().isEmpty())
         {
@@ -201,8 +201,8 @@ void MainWindow::toggleNetworkConnection()
         }
 
         // send latest aircraft to network/voice
-        this->m_rt->getIContextNetwork()->setOwnAircraft(this->m_ownAircraft);
-        if (this->m_contextAudioAvailable) this->m_rt->getIContextAudio()->setOwnAircraft(this->m_ownAircraft);
+        this->getIContextNetwork()->setOwnAircraft(this->m_ownAircraft);
+        if (this->m_contextAudioAvailable) this->getIContextAudio()->setOwnAircraft(this->m_ownAircraft);
 
         // Login is based on setting current server
         INetwork::LoginMode mode = INetwork::LoginNormal;
@@ -216,14 +216,14 @@ void MainWindow::toggleNetworkConnection()
             mode = INetwork::LoginAsObserver;
             this->displayStatusMessage(CStatusMessage::getInfoMessage("login in observer mode"));
         }
-        msgs = this->m_rt->getIContextNetwork()->connectToNetwork(static_cast<uint>(mode));
+        msgs = this->getIContextNetwork()->connectToNetwork(static_cast<uint>(mode));
     }
     else
     {
         // disconnect from network
         this->stopUpdateTimers(); // stop update timers, to avoid updates during disconnecting (a short time frame)
-        if (this->m_contextAudioAvailable) this->m_rt->getIContextAudio()->leaveAllVoiceRooms();
-        msgs = this->m_rt->getIContextNetwork()->disconnectFromNetwork();
+        if (this->m_contextAudioAvailable) this->getIContextAudio()->leaveAllVoiceRooms();
+        msgs = this->getIContextNetwork()->disconnectFromNetwork();
     }
     if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
 }
@@ -260,7 +260,10 @@ void MainWindow::displayStatusMessage(const CStatusMessage &statusMessage)
 
     // list
     this->ui->tvp_StatusMessages->insert(statusMessage);
-    if (statusMessage.getSeverity() == CStatusMessage::SeverityError) this->displayOverlayInfo(statusMessage);
+
+    // display overlay for errors, but not for validation
+    if (statusMessage.getSeverity() == CStatusMessage::SeverityError && statusMessage.getType() != CStatusMessage::TypeValidation)
+        this->displayOverlayInfo(statusMessage);
 }
 
 /*
@@ -277,8 +280,8 @@ void MainWindow::displayStatusMessages(const CStatusMessageList &messages)
 
 void MainWindow::displayRedirectedOutput(const CStatusMessage &statusMessage, qint64 contextId)
 {
-    if (!this->m_rt->getIContextApplication()) return;
-    if (this->m_rt->getIContextApplication()->getUniqueId() == contextId) return; //self triggered
+    if (!this->getIContextApplication()) return;
+    if (this->getIContextApplication()->getUniqueId() == contextId) return; //self triggered
     this->ui->te_StatusPageConsole->appendHtml(statusMessage.toHtml());
 }
 
@@ -366,9 +369,9 @@ void MainWindow::timerBasedUpdates()
 void MainWindow::setContextAvailability()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
-    this->m_coreAvailable = this->m_rt->getIContextApplication()->ping(t) == t;
-    this->m_contextNetworkAvailable = this->m_coreAvailable || this->m_rt->getIContextNetwork()->usingLocalObjects();
-    this->m_contextAudioAvailable = this->m_coreAvailable || this->m_rt->getIContextAudio()->usingLocalObjects();
+    this->m_coreAvailable = this->getIContextApplication()->ping(t) == t;
+    this->m_contextNetworkAvailable = this->m_coreAvailable || this->getIContextNetwork()->usingLocalObjects();
+    this->m_contextAudioAvailable = this->m_coreAvailable || this->getIContextAudio()->usingLocalObjects();
 }
 
 /*
@@ -397,7 +400,7 @@ void MainWindow::updateGuiStatusInformation()
     QString network("unavailable");
     if (this->m_contextNetworkAvailable)
     {
-        bool dbus = !this->m_rt->getIContextNetwork()->usingLocalObjects();
+        bool dbus = !this->getIContextNetwork()->usingLocalObjects();
         network =  dbus ? now : "local";
         this->ui->cb_StatusWithDBus->setChecked(dbus);
     }
@@ -406,7 +409,7 @@ void MainWindow::updateGuiStatusInformation()
     QString voice("unavailable");
     if (this->m_contextAudioAvailable)
     {
-        voice = this->m_rt->getIContextAudio()->usingLocalObjects() ? "local" : now;
+        voice = this->getIContextAudio()->usingLocalObjects() ? "local" : now;
         this->ui->pb_SoundMute->setEnabled(true);
     }
     else
@@ -420,7 +423,7 @@ void MainWindow::updateGuiStatusInformation()
     this->ui->le_StatusAudioContext->setText(voice);
 
     // Connected button
-    if (this->m_contextNetworkAvailable && this->m_rt->getIContextNetwork()->isConnected())
+    if (this->m_contextNetworkAvailable && this->getIContextNetwork()->isConnected())
     {
         if (this->ui->lbl_StatusNetworkConnectedIcon->toolTip().startsWith("dis", Qt::CaseInsensitive))
             this->ui->lbl_StatusNetworkConnectedIcon->setToolTip(now);
@@ -494,17 +497,17 @@ void MainWindow::displayOverlayInfo(const CStatusMessage &message)
 void MainWindow::reloadAllUsers()
 {
     if (!this->isContextNetworkAvailableCheck()) return;
-    this->ui->tvp_AllUsers->update(this->m_rt->getIContextNetwork()->getUsers());
+    this->ui->tvp_AllUsers->update(this->getIContextNetwork()->getUsers());
 }
 
 void MainWindow::updateSimulatorData()
 {
-    if (this->m_rt->getIContextSimulator()->isConnected())
+    if (this->getIContextSimulator()->isConnected())
         ui->le_SimulatorStatus->setText("Connected");
     else
         ui->le_SimulatorStatus->setText("Not connected");
 
-    CAircraft ownAircraft = this->m_rt->getIContextSimulator()->getOwnAircraft();
+    CAircraft ownAircraft = this->getIContextSimulator()->getOwnAircraft();
     ui->le_SimulatorLatitude->setText(ownAircraft.getSituation().latitude().toFormattedQString());
     ui->le_SimulatorLongitude->setText(ownAircraft.getSituation().longitude().toFormattedQString());
     ui->le_SimulatorAltitude->setText(ownAircraft.getSituation().getAltitude().toFormattedQString());

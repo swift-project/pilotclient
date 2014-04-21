@@ -55,7 +55,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
         this->ui->sb_MainStatusBar->addPermanentWidget(grip);
     }
 
-    // init models
+    // init encapsulated table views / models
     this->ui->tvp_AtcStationsBooked->setStationMode(CAtcStationListModel::StationsBooked);
     this->ui->tvp_CockpitVoiceRoom1->setUserMode(CUserListModel::UserShort);
     this->ui->tvp_CockpitVoiceRoom2->setUserMode(CUserListModel::UserShort);
@@ -76,7 +76,8 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     if (this->m_timerSimulator == nullptr) this->m_timerSimulator = new QTimer(this);
 
     // context
-    this->m_rt.reset(new CRuntime(runtimeConfig, this));
+    this->createRuntime(runtimeConfig, this);
+    this->ui->comp_Flightplan->setRuntime(this->getRuntime());
 
     // wire GUI signals
     this->initGuiSignals();
@@ -105,15 +106,15 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // signal / slots contexts / timers
     bool connect;
-    this->connect(this->m_rt->getIContextApplication(), &IContextApplication::statusMessage, this, &MainWindow::displayStatusMessage);
-    this->connect(this->m_rt->getIContextApplication(), &IContextApplication::statusMessages, this, &MainWindow::displayStatusMessages);
-    this->connect(this->m_rt->getIContextApplication(), &IContextApplication::redirectedOutput, this, &MainWindow::displayRedirectedOutput);
-    this->connect(this->m_rt->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &MainWindow::connectionTerminated);
-    this->connect(this->m_rt->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &MainWindow::connectionStatusChanged);
-    this->connect(this->m_rt->getIContextSettings(), &IContextSettings::changedSettings, this, &MainWindow::changedSettings);
-    connect = this->connect(this->m_rt->getIContextNetwork(), SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
+    this->connect(this->getIContextApplication(), &IContextApplication::statusMessage, this, &MainWindow::displayStatusMessage);
+    this->connect(this->getIContextApplication(), &IContextApplication::statusMessages, this, &MainWindow::displayStatusMessages);
+    this->connect(this->getIContextApplication(), &IContextApplication::redirectedOutput, this, &MainWindow::displayRedirectedOutput);
+    this->connect(this->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &MainWindow::connectionTerminated);
+    this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &MainWindow::connectionStatusChanged);
+    this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &MainWindow::changedSettings);
+    connect = this->connect(this->getIContextNetwork(), SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
     Q_ASSERT(connect);
-    this->connect(this->m_rt->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
+    this->connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
     this->connect(this->m_timerUpdateAircraftsInRange, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateAtcStationsOnline, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateUsers, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
@@ -121,7 +122,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
     this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
     this->connect(this->m_timerSimulator, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
-    connect = this->connect(this->m_rt->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &MainWindow::audioTestUpdate);
+    connect = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &MainWindow::audioTestUpdate);
     Q_ASSERT(connect);
     Q_UNUSED(connect); // suppress GCC warning in release build
 
@@ -145,18 +146,18 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->initContextMenus();
 
     // starting
-    this->m_rt->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStarts);
+    this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStarts);
+
+    // We don't receive signals from the past. So ask for it simulate an initial signal
+    simulatorConnectionChanged(this->getIContextSimulator()->isConnected());
 
     // do this as last statement, so it can be used as flag
     // whether init has been completed
     this->m_init = true;
-
-    // We don't receive signals from the past. So ask for it simulate an initial signal
-    simulatorConnectionChanged(m_rt->getIContextSimulator()->isConnected());
 }
 
 //
-// GUI
+// GUI signals
 //
 void MainWindow::initGuiSignals()
 {
@@ -284,7 +285,7 @@ void MainWindow::initGuiSignals()
 void MainWindow::initialDataReads()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
-    this->m_coreAvailable = (this->m_rt->getIContextNetwork()->usingLocalObjects() || (this->m_rt->getIContextApplication()->ping(t) == t));
+    this->m_coreAvailable = (this->getIContextNetwork()->usingLocalObjects() || (this->getIContextApplication()->ping(t) == t));
     if (!this->m_coreAvailable)
     {
         this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityError,
@@ -296,7 +297,7 @@ void MainWindow::initialDataReads()
     this->reloadAtcStationsBooked(); // init read, to do this no traffic network required
     this->reloadOwnAircraft(); // init read, independent of traffic network
 
-    if (this->m_rt->getIContextNetwork()->isConnected())
+    if (this->getIContextNetwork()->isConnected())
     {
         // connection is already established
         this->reloadAircraftsInRange();
@@ -327,8 +328,11 @@ void MainWindow::stopUpdateTimers(bool disconnect)
     this->m_timerUpdateAtcStationsOnline->stop();
     this->m_timerUpdateUsers->stop();
     this->m_timerAudioTests->stop();
+    this->m_timerSimulator->stop();
     if (!disconnect) return;
     this->disconnect(this->m_timerUpdateAircraftsInRange);
     this->disconnect(this->m_timerUpdateAtcStationsOnline);
     this->disconnect(this->m_timerUpdateUsers);
+    this->disconnect(this->m_timerAudioTests);
+    this->disconnect(this->m_timerSimulator);
 }

@@ -52,8 +52,8 @@ void MainWindow::menuClicked()
     }
     else if (sender == this->ui->menu_FileResetSettings)
     {
-        Q_ASSERT(this->m_rt->getIContextSettings());
-        msgs.insert(this->m_rt->getIContextSettings()->reset(true));
+        Q_ASSERT(this->getIContextSettings());
+        msgs.insert(this->getIContextSettings()->reset(true));
     }
     if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
 }
