@@ -33,6 +33,16 @@ namespace BlackCore
         unloadSimulatorPlugin();
     }
 
+    CSimulatorInfoList CContextSimulator::getAvailableSimulatorPlugins() const
+    {
+        CSimulatorInfoList simulatorPlugins;
+        foreach(ISimulatorFactory *factory, m_simulatorFactories)
+        {
+            simulatorPlugins.push_back(factory->getSimulatorInfo());
+        }
+        return simulatorPlugins;
+    }
+
     bool CContextSimulator::isConnected() const
     {
         if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);

@@ -14,6 +14,7 @@
 #include "blackcore/context_runtime.h"
 #include "blackmisc/avaircraft.h"
 #include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorinfolist.h"
 #include <QObject>
 
 namespace BlackCore
@@ -47,6 +48,9 @@ namespace BlackCore
         void connectionChanged(bool value);
 
     public slots:
+
+        //! Return list of available simulator plugins
+        virtual BlackSim::CSimulatorInfoList getAvailableSimulatorPlugins() const = 0;
 
         //! Returns true when simulator is connected and available
         virtual bool isConnected() const = 0;

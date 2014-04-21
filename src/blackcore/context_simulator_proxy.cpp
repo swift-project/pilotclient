@@ -12,6 +12,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackSim;
 
 namespace BlackCore
 {
@@ -26,6 +27,11 @@ namespace BlackCore
 
     void CContextSimulatorProxy::relaySignals(const QString &/*serviceName*/, QDBusConnection &/*connection*/)
     { }
+
+    CSimulatorInfoList CContextSimulatorProxy::getAvailableSimulatorPlugins() const
+    {
+        return m_dBusInterface->callDBusRet<CSimulatorInfoList>(QLatin1Literal("getAvailableSimulatorPlugins"));
+    }
 
     bool CContextSimulatorProxy::isConnected() const
     {

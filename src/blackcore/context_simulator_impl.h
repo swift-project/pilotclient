@@ -10,6 +10,9 @@
 #include "blackcore/context_network.h"
 #include "blackcore/simulator.h"
 
+#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorinfolist.h"
+
 #include <QTimer>
 #include <QDir>
 
@@ -30,6 +33,9 @@ namespace BlackCore
 
     public slots:
 
+        //! \copydoc IContextSimulator::getSimulatorPluginList()
+        virtual BlackSim::CSimulatorInfoList getAvailableSimulatorPlugins() const override;
+		
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
 

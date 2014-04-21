@@ -35,6 +35,9 @@ namespace BlackCore
         CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
     public slots:
+	
+		//! \copydoc IContextSimulator::getSimulatorPluginList()
+        virtual BlackSim::CSimulatorInfoList getAvailableSimulatorPlugins() const override;
 
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
