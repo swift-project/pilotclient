@@ -61,6 +61,9 @@ namespace BlackMisc
         //! \brief Wildcard, only relevant when used in search
         bool isWildcard() const { return this->m_wildcard; }
 
+        //! \brief Wildcard, only relevant when used in search
+        void setWildcard(bool wildcard) { this->m_wildcard = wildcard; }
+
         //! clear
         void clear() { this->m_values.clear(); }
 

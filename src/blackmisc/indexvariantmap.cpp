@@ -38,12 +38,16 @@ namespace BlackMisc
      */
     QString CIndexVariantMap::convertToQString(bool i18n) const
     {
-        if (this->isEmpty()) return "{}";
+        if (this->isEmpty()) return QString("{wildcard: %1}").arg(this->m_wildcard ? "true" : "false");
         QString s;
         foreach(int index, this->m_values.keys())
         {
             QVariant qv = this->m_values.value(index);
-            s.isEmpty() ? s.append("{") : s.append(", ");
+
+            s.isEmpty() ?
+            s.append("{wildcard: ").append(this->m_wildcard ? "true" : "false").append(" ") :
+            s.append(", ");
+
             s.append('{').append(QString::number(index)).append(": ");
             s.append("(").append(QString::number(qv.userType())).append(") ");
             QString qvs = BlackMisc::qVariantToString(qv, i18n);
@@ -155,8 +159,10 @@ namespace BlackMisc
      */
     uint CIndexVariantMap::getValueHash() const
     {
-        return qHash(this);
+        // there is no hash for map, so I use this workaround here
+        const QString s = this->toQString(false);
+        QList<uint> h;
+        h << qHash(s);
+        return BlackMisc::calculateHash(h, "CIndexVariantMap");
     }
-
-
 } // namespace
