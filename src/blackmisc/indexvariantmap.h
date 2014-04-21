@@ -35,10 +35,7 @@ namespace BlackMisc
         CIndexVariantMap(int index, const QVariant &value);
 
         //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override
-        {
-            return QVariant::fromValue(*this);
-        }
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
         //! Destructor
         virtual ~CIndexVariantMap() {}
@@ -47,10 +44,7 @@ namespace BlackMisc
         void addValue(int index, const QVariant &value);
 
         //! Add a value as non QVariant
-        template<class T> void addValue(int index, const T &value)
-        {
-            this->m_values.insert(index, QVariant::fromValue(value));
-        }
+        template<class T> void addValue(int index, const T &value) { this->m_values.insert(index, QVariant::fromValue(value)); }
 
         //! Is empty?
         bool isEmpty() const { return this->m_values.isEmpty(); }

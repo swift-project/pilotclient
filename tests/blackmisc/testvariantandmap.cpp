@@ -22,7 +22,7 @@ namespace BlackMiscTest
     /*
      * Variant tests
      */
-    void CTestVariantAndValueMap::variant()
+    void CTestVariantAndMap::variant()
     {
         // ATC station
         QDateTime dtFrom = QDateTime::currentDateTimeUtc();
@@ -71,9 +71,9 @@ namespace BlackMiscTest
     }
 
     /*
-     * Value map tests
+     * Variant map tests
      */
-    void CTestVariantAndValueMap::valueMap()
+    void CTestVariantAndMap::valueMap()
     {
         // ATC station
         QDateTime dtFrom = QDateTime::currentDateTimeUtc();
@@ -100,4 +100,4 @@ namespace BlackMiscTest
         QVERIFY2(vmWildcard == vmWildcard, "Maps should be equal");
     }
 
-} //namespace BlackMiscTest
+} // namespace

@@ -12,31 +12,24 @@
 namespace BlackMiscTest
 {
 
-/*!
- * \brief Vector and Matrix classes tests
- */
-class CTestVectorMatrix : public QObject
-{
-    Q_OBJECT
-
-public:
     /*!
-     * \brief Standard test case constructor
-     * \param parent
+     * \brief Vector and Matrix classes tests
      */
-    explicit CTestVectorMatrix(QObject *parent = 0) : QObject(parent) {}
+    class CTestVectorMatrix : public QObject
+    {
+        Q_OBJECT
 
-private slots:
-    /*!
-     * \brief Basic unit tests for physical units
-     */
-    void vectorBasics();
+    public:
+        //! Standard test case constructor
+        explicit CTestVectorMatrix(QObject *parent = nullptr) : QObject(parent) {}
 
-    /*!
-     * \brief Vertical positions
-     */
-    void matrixBasics();
-};
+    private slots:
+        //! Vector tests
+        void vectorBasics();
+
+        //! Matrix tests
+        void matrixBasics();
+    };
 
 } // namespace
 

@@ -11,22 +11,22 @@
 namespace BlackMiscTest
 {
 
-/*!
- * Class firing all unit tests in this namespace.
- * Avoids clashes with other main(..) functions and allows to fire the test cases
- * simply from any other main.
- */
-class CBlackMiscTestMain
-{
-public:
     /*!
-     * \brief Starting all
-     * \param argc
-     * \param argv
-     * \return
+     * Class firing all unit tests in this namespace.
+     * Avoids clashes with other main(..) functions and allows to fire the test cases
+     * simply from any other main.
      */
-    static int unitMain(int argc, char *argv[]);
-};
+    class CBlackMiscTestMain
+    {
+    public:
+        /*!
+         * \brief Starting all
+         * \param argc
+         * \param argv
+         * \return
+         */
+        static int unitMain(int argc, char *argv[]);
+    };
 }
 
 #endif // guard

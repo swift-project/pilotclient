@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     CBlackMiscTestMain::unitMain(argc, argv);
+    Q_UNUSED(a);
 
     // bye
     return 0;
