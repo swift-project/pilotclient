@@ -64,6 +64,14 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::canConnect()
             virtual bool canConnect() override;
 
+            /*!
+             * \brief SimConnect Callback
+             * \param pData
+             * \param cbData
+             * \param pContext
+             */
+            static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
+
         public slots:
 
             //! \copydoc ISimulator::connectTo()
@@ -71,6 +79,7 @@ namespace BlackSimPlugin
 
             //! \copydoc ISimulator::disconnectFrom()
             virtual bool disconnectFrom() override;
+
             //! \copydoc ISimulator::getOwnAircraft()
             virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override { return m_ownAircraft; }
 
@@ -85,14 +94,6 @@ namespace BlackSimPlugin
 
             //! \copydoc ISimulator::getSimulatorInfo()
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
-
-            /*!
-             * \brief SimConnect Callback
-             * \param pData
-             * \param cbData
-             * \param pContext
-             */
-            static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 
             //! \brief Called when sim has started
             void onSimRunning();
