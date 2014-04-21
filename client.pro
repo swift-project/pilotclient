@@ -51,6 +51,7 @@ contains(BLACK_CONFIG, Samples) {
 contains(BLACK_CONFIG, Unittests) {
     SUBDIRS += tests/blackmisc/test_blackmisc.pro
     SUBDIRS += tests/blackcore/test_blackcore.pro
+    SUBDIRS += tests/blacksim/test_blacksim.pro
 }
 
 contains(BLACK_CONFIG, Doxygen) {
