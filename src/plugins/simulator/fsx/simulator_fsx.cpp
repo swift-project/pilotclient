@@ -31,17 +31,60 @@ namespace BlackSimPlugin
             m_simRunning(false),
             m_hSimConnect(nullptr),
             m_nextObjID(1),
-            m_simulatorInfo(CSimulatorInfo::FSX())
+            m_simulatorInfo(CSimulatorInfo::FSX()),
+            m_simconnectTimerId(-1)
         {
             CFsxSimulatorSetup setup;
             setup.init(); // this fetches important setting on local side
             this->m_simulatorInfo.setSimulatorSetup(setup.getSettings());
-            QTimer::singleShot(5000, this, SLOT(checkConnection()));
         }
 
         bool CSimulatorFsx::isConnected() const
         {
             return m_isConnected;
+        }
+
+        bool CSimulatorFsx::connectTo()
+        {
+            if(m_isConnected)
+                return true;
+
+            if (FAILED(SimConnect_Open(&m_hSimConnect, "BlackBox", nullptr, 0, 0, 0)))
+            {
+                return false;
+            }
+
+            initSystemEvents();
+            initDataDefinitions();
+            m_simconnectTimerId = startTimer(50);
+            m_isConnected = true;
+
+            emit connectionChanged(true);
+            return true;
+        }
+
+        bool CSimulatorFsx::disconnectFrom()
+        {
+            SimConnect_Close(m_hSimConnect);
+            killTimer(m_simconnectTimerId);
+            m_isConnected = false;
+
+            emit connectionChanged(false);
+            return true;
+        }
+
+        bool CSimulatorFsx::canConnect()
+        {
+            if (m_isConnected)
+                return true;
+
+            if (FAILED(SimConnect_Open(&m_hSimConnect, "BlackBox", nullptr, 0, 0, 0)))
+            {
+                return false;
+            }
+            SimConnect_Close(m_hSimConnect);
+
+            return true;
         }
 
         void CSimulatorFsx::addRemoteAircraft(const CCallsign &callsign, const QString &type, const CAircraftSituation &initialSituation)
@@ -255,22 +298,6 @@ namespace BlackSimPlugin
         {
             dispatch();
             update();
-        }
-
-        void CSimulatorFsx::checkConnection()
-        {
-            if (FAILED(SimConnect_Open(&m_hSimConnect, "BlackBox", nullptr, 0, 0, 0)))
-            {
-                // QTimer::singleShot(5000, this, SLOT(checkConnection()));
-                return;
-            }
-
-            initSystemEvents();
-            initDataDefinitions();
-            startTimer(50);
-            m_isConnected = true;
-
-            emit connectionChanged(true);
         }
 
         void CSimulatorFsx::dispatch()

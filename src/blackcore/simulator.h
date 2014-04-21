@@ -41,7 +41,17 @@ namespace BlackCore
         //! \brief Are we connected to the simulator?
         virtual bool isConnected() const = 0;
 
+        //! \brief Can we connect?
+        virtual bool canConnect() = 0;
+
     public slots:
+
+        //! \brief Connect to simulator
+        virtual bool connectTo() = 0;
+
+        //! \brief Disconnect from simulator
+        virtual bool disconnectFrom() = 0;
+
         //! Return user aircraft object
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
 

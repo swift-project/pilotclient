@@ -61,6 +61,16 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::isConnected()
             virtual bool isConnected() const override;
 
+            //! \copydoc ISimulator::canConnect()
+            virtual bool canConnect() override;
+
+        public slots:
+
+            //! \copydoc ISimulator::connectTo()
+            virtual bool connectTo() override;
+
+            //! \copydoc ISimulator::disconnectFrom()
+            virtual bool disconnectFrom() override;
             //! \copydoc ISimulator::getOwnAircraft()
             virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override { return m_ownAircraft; }
 
@@ -114,8 +124,6 @@ namespace BlackSimPlugin
             virtual void timerEvent(QTimerEvent *event);
 
         private slots:
-            //! \brief Try to connect
-            void checkConnection();
 
             //! \brief Dispatch SimConnect messages
             void dispatch();
@@ -151,6 +159,8 @@ namespace BlackSimPlugin
             BlackSim::CSimulatorInfo m_simulatorInfo;
             BlackMisc::Aviation::CAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
             QHash<BlackMisc::Aviation::CCallsign, SimConnectObject> m_simConnectObjects;
+
+            int m_simconnectTimerId;
         };
     }
 
