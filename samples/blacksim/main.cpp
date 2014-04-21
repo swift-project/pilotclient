@@ -7,15 +7,28 @@
 #include "samplesfscommon.h"
 #include "samplesfsx.h"
 #include <QCoreApplication>
+#include <QTextStream>
+#include <QDebug>
 
 /*!
  * Samples
  */
 int main(int argc, char *argv[])
 {
+    QTextStream streamIn(stdin);
     BlackSim::registerMetadata();
-    // BlackSimTest::CSamplesFsCommon::samples();
-    BlackSimTest::CSamplesFsx::samples();
+    qDebug() << "Run samples:";
+    qDebug() << "1 .. FS common";
+    qDebug() << "2 .. FSX";
+    QString i = streamIn.readLine().toLower().trimmed();
+    if (i.startsWith("1"))
+    {
+        BlackSimTest::CSamplesFsCommon::samples();
+    }
+    else if (i.startsWith("2"))
+    {
+        BlackSimTest::CSamplesFsx::samples();
+    }
     QCoreApplication a(argc, argv);
     return a.exec();
 }
