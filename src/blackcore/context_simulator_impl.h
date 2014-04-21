@@ -68,16 +68,14 @@ namespace BlackCore
         void setConnectionStatus(bool value);
 
     private:
-        /*!
-         * \brief Load any kind of plugins
-         * \todo Currently it goes through the plugins folder and creates an instance for any plugin it may find
-         *       In case an FSX and an X-Plane are in that folder, m_simulator will always point to X-Plane in the end.
-         */
-        void loadPlugins();
+        //! \brief find and catalog all simulator plugins
+        void findSimulatorPlugins();
+
         BlackMisc::Aviation::CAircraft m_ownAircraft;
         BlackCore::ISimulator *m_simulator;
         QTimer *m_updateTimer;
         QDir m_pluginsDir;
+        QSet<ISimulatorFactory*> m_simulatorFactories;
     };
 
 } // namespace BlackCore

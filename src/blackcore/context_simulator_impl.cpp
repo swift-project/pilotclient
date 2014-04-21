@@ -22,7 +22,7 @@ namespace BlackCore
         m_simulator(nullptr), m_updateTimer(nullptr)
     {
         m_updateTimer = new QTimer(this);
-        loadPlugins();
+        findSimulatorPlugins();
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
         connectTo();
     }
@@ -89,7 +89,7 @@ namespace BlackCore
         emit connectionChanged(value);
     }
 
-    void CContextSimulator::loadPlugins()
+    void CContextSimulator::findSimulatorPlugins()
     {
         m_pluginsDir = QDir(qApp->applicationDirPath().append("/plugins/simulator"));
         if (!m_pluginsDir.exists())
@@ -107,9 +107,9 @@ namespace BlackCore
                 ISimulatorFactory *factory = qobject_cast<ISimulatorFactory *>(plugin);
                 if (factory)
                 {
-                    m_simulator = factory->create(this);
-                    connect(m_simulator, SIGNAL(connectionChanged(bool)), this, SLOT(setConnectionStatus(bool)));
-                    qDebug() << "Simulator plugin:" << m_simulator->getSimulatorInfo().toQString();
+                    CSimulatorInfo simulatorInfo = factory->getSimulatorInfo();
+                    qDebug() << "Found simulator plugin: " << simulatorInfo.toQString();
+                    m_simulatorFactories.insert(factory);
                     break;
                 }
             }
