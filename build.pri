@@ -4,7 +4,6 @@
 
 CONFIG           += qt
 CONFIG           += warn_on
-CONFIG           += silent
 CONFIG           += c++11
 
 ###########################
