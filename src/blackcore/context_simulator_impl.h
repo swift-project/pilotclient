@@ -29,8 +29,18 @@ namespace BlackCore
         virtual ~CContextSimulator();
 
     public slots:
+
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
+
+        //! \brief Can we connect?
+        virtual bool canConnect() override;
+
+        //! \brief Connect to simulator
+        virtual bool connectTo() override;
+
+        //! \brief Disconnect from simulator
+        virtual bool disconnectFrom() override;
 
         //! \copydoc IContextSimulator::getOwnAircraft()
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;

@@ -24,15 +24,40 @@ namespace BlackCore
         m_updateTimer = new QTimer(this);
         loadPlugins();
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
+        connectTo();
     }
 
-    CContextSimulator::~CContextSimulator() {}
+    CContextSimulator::~CContextSimulator()
+    {
+        disconnectFrom();
+    }
 
     bool CContextSimulator::isConnected() const
     {
         if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         if (!m_simulator) return false;
         return m_simulator->isConnected();
+    }
+
+    bool CContextSimulator::canConnect()
+    {
+        if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        if (!m_simulator) return false;
+        return m_simulator->canConnect();
+    }
+
+    bool CContextSimulator::connectTo()
+    {
+        if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        if (!m_simulator) return false;
+        return m_simulator->connectTo();
+    }
+
+    bool CContextSimulator::disconnectFrom()
+    {
+        if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        if (!m_simulator) return false;
+        return m_simulator->disconnectFrom();
     }
 
     BlackMisc::Aviation::CAircraft CContextSimulator::getOwnAircraft() const
