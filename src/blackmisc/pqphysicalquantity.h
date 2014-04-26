@@ -94,6 +94,9 @@ namespace BlackMisc
             //! Is quantity null?
             bool isNull() const { return this->m_unit.isNull(); }
 
+            //! Set null
+            void setNull() { this->m_unit = MU::nullUnit(); }
+
             //! Value in given unit
             double value(const MU &unit) const;
 
@@ -116,7 +119,13 @@ namespace BlackMisc
                 }
             }
 
-            //! \brief Rounded value in given unit
+            //! Set by other PQ
+            void set(const PQ &pq)
+            {
+                this->m_value = pq.m_value;
+                this->m_unit = pq.m_unit;
+            }
+
             //! Rounded value in given unit
             double valueRounded(const MU &unit, int digits = -1) const;
 
@@ -224,6 +233,9 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
+
+            //! \copydoc CValueObject::parseFromString
+            virtual void parseFromString(const QString &value) override;
 
             //! Register metadata of unit and quantity
             static void registerMetadata();

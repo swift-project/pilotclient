@@ -36,6 +36,13 @@ namespace BlackMisc
 
             //! Destructor
             virtual ~CTime() {}
+
+            //! From string hh:mm, or hh:mm:ss
+            void parseFromString(const QString &time);
+
+            //! To Qt time
+            QTime toQTime() const;
+
         };
 
     } // namespace
