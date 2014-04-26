@@ -4,6 +4,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "avaltitude.h"
+#include "pqstring.h"
 
 using BlackMisc::PhysicalQuantities::CLength;
 using BlackMisc::PhysicalQuantities::CLengthUnit;
@@ -14,12 +15,28 @@ namespace BlackMisc
     {
 
         /*
+         * Constructor
+         */
+        CAltitude::CAltitude(const QString &altitudeAsString) : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel)
+        {
+            this->parseFromString(altitudeAsString);
+        }
+
+        /*
          * Own implementation for streaming
          */
         QString CAltitude::convertToQString(bool /* i18n */) const
         {
-            QString s = this->CLength::convertToQString();
-            return s.append(this->isMeanSeaLevel() ? " MSL" : " AGL");
+            if (this->m_datum == FlightLevel)
+            {
+                int fl = qRound(this->CLength::value(CLengthUnit::ft()) / 100.0);
+                return QString("FL%1").arg(fl);
+            }
+            else
+            {
+                QString s = this->CLength::convertToQString();
+                return s.append(this->isMeanSeaLevel() ? " MSL" : " AGL");
+            }
         }
 
         /*
@@ -56,6 +73,24 @@ namespace BlackMisc
         bool CAltitude::operator !=(const CAltitude &other) const
         {
             return !((*this) == other);
+        }
+
+        /*
+         * To FL
+         */
+        void CAltitude::toFLightLevel()
+        {
+            Q_ASSERT(this->m_datum == MeanSeaLevel || this->m_datum == FlightLevel);
+            this->m_datum = FlightLevel;
+        }
+
+        /*
+         * To MSL
+         */
+        void CAltitude::toMeanSeaLevel()
+        {
+            Q_ASSERT(this->m_datum == MeanSeaLevel || this->m_datum == FlightLevel);
+            this->m_datum = MeanSeaLevel;
         }
 
         /*
@@ -115,6 +150,44 @@ namespace BlackMisc
         {
             CLength::fromJson(json);
             BlackMisc::deserializeJson(json, CAltitude::jsonMembers(), TupleConverter<CAltitude>::toTuple(*this));
+        }
+
+        /*
+         * Parse value
+         */
+        void CAltitude::parseFromString(const QString &value)
+        {
+            QString v = value.trimmed();
+
+            // special case FL
+            if (v.contains("FL", Qt::CaseInsensitive))
+            {
+                v = v.replace("FL", "", Qt::CaseInsensitive).trimmed();
+                this->m_datum = FlightLevel;
+                bool ok = false;
+                double dv = v.toDouble(&ok) * 100.0;
+                CLength l(ok ? dv : 0.0,
+                          ok ? CLengthUnit::ft() : CLengthUnit::nullUnit());
+                this->set(l);
+                return;
+            }
+
+            // normal altitude, AGL/MSL
+            if (v.contains("MSL", Qt::CaseInsensitive))
+            {
+                v = v.replace("MSL", "", Qt::CaseInsensitive).trimmed();
+                this->m_datum = MeanSeaLevel;
+            }
+            else if (v.contains("AGL"))
+            {
+                v = v.replace("AGL", "", Qt::CaseInsensitive).trimmed();
+                this->m_datum = AboveGround;
+            }
+            else
+                this->m_datum = MeanSeaLevel;
+
+            CLength l = BlackMisc::PhysicalQuantities::CPqString::parse<CLength>(v);
+            this->set(l);
         }
 
         /*

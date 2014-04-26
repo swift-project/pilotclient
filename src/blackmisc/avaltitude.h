@@ -21,10 +21,11 @@ namespace BlackMisc
             /*!
              * Enum type to distinguish between MSL and AGL
              */
-            enum ReferenceDatum
+            enum ReferenceDatum : uint
             {
                 MeanSeaLevel = 0,   //!< MSL
-                AboveGround = 1     //!< AGL
+                AboveGround,        //!< AGL
+                FlightLevel         //!< Flight level
             };
 
         private:
@@ -51,7 +52,7 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         public:
-            //! \brief Default constructor: 0 Altitude true
+            //! Default constructor: 0 Altitude true
             CAltitude() : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
 
             /*!
@@ -62,38 +63,38 @@ namespace BlackMisc
              */
             CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : BlackMisc::PhysicalQuantities::CLength(value, unit), m_datum(datum) {}
 
-            //! \brief Constructor by CLength
+            //! Altitude as string
+            CAltitude(const QString &altitudeAsString);
+
+            //! Constructor by CLength
             CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, ReferenceDatum datum) : BlackMisc::PhysicalQuantities::CLength(altitude), m_datum(datum) {}
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CAltitude &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CAltitude &other) const;
 
-            //! \brief AGL Above ground level?
-            bool isAboveGroundLevel() const
-            {
-                return AboveGround == this->m_datum;
-            }
+            //! AGL Above ground level?
+            bool isAboveGroundLevel() const { return AboveGround == this->m_datum; }
 
-            //! \brief MSL Mean sea level?
-            bool isMeanSeaLevel() const
-            {
-                return MeanSeaLevel == this->m_datum;
-            }
+            //! MSL Mean sea level?
+            bool isMeanSeaLevel() const { return MeanSeaLevel == this->m_datum; }
+
+            //! Flight level?
+            bool isFlightLevel() const { return FlightLevel == this->m_datum; }
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \brief Get reference datum (MSL or AGL)
-            ReferenceDatum getReferenceDatum() const
-            {
-                return m_datum;
-            }
+            //! Get reference datum (MSL or AGL)
+            ReferenceDatum getReferenceDatum() const { return m_datum; }
+
+            //! MSL to flightlevel
+            void toFLightLevel();
+
+            //! Flightlevel to MSL
+            void toMeanSeaLevel();
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
@@ -101,7 +102,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! \copydoc CValueObject::fromJson
+            void parseFromString(const QString &value) override;
+
+            //! Register metadata
             static void registerMetadata();
 
             //! \copydoc TupleConverter<>::jsonMembers()
