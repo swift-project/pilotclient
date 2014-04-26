@@ -90,14 +90,17 @@ namespace BlackMisc
             qDBusRegisterMetaType<CPqString>();
         }
 
-        QVariant CPqString::parse(const QString &value)
+        /*
+         * Parse
+         */
+        QVariant CPqString::parseToVariant(const QString &value)
         {
             QVariant v;
             if (value.isEmpty()) return v;
             QRegExp rx("^([-+]?[0-9]*\\.?[0-9]+)\\s*(\\D*)$");
             if (rx.indexIn(value) < 0) return v;
-            QString number = rx.cap(1);
-            QString unit = rx.cap(2);
+            QString number = rx.cap(1).trimmed();
+            QString unit = rx.cap(2).trimmed();
             if (unit.isEmpty() || number.isEmpty()) return v;
             bool success;
             double numberD = number.toDouble(&success);

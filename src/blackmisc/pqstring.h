@@ -74,15 +74,16 @@ namespace BlackMisc
             //! \brief Register metadata
             static void registerMetadata();
 
-            //! \brief parse a string value like "100m", "10.3Mhz"
-            static QVariant parse(const QString &value);
+            //! Parse a string value like "100m", "10.3Mhz"
+            static QVariant parseToVariant(const QString &value);
 
-            //! \brief parse into concrete type
-            template <class PQ> static const PQ parse(const QString &symbol)
+            //! Parse into concrete type
+            template <class PQ> static PQ parse(const QString &value)
             {
                 PQ invalid;
-                if (symbol.isEmpty()) return invalid;
-                QVariant qv = CPqString::parse(symbol);
+                invalid.setNull();
+                if (value.isEmpty()) return invalid;
+                QVariant qv = CPqString::parseToVariant(value);
                 if (!qv.isNull() && qv.canConvert<PQ>())
                 {
                     return qv.value<PQ>();
