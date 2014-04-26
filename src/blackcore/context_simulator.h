@@ -66,6 +66,12 @@ namespace BlackCore
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
 
+        //! Load specific simulator plugin
+        virtual bool loadSimulatorPlugin (const BlackSim::CSimulatorInfo &simulatorInfo) = 0;
+
+        //! Unload simulator plugin
+        virtual void unloadSimulatorPlugin () = 0;
+
         //! Simulator avialable?
         bool isSimulatorAvailable() const { return !getSimulatorInfo().isUnspecified(); }
 

@@ -5,16 +5,14 @@
 
 #include "context_simulator_impl.h"
 #include <QPluginLoader>
+#include <QLibrary>
 #include "context_runtime.h"
-
-#ifdef BLACK_WITH_FSX
-#include "fsx/simulator_fsx.h"
-#endif
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackSim;
 
 namespace BlackCore
 {
@@ -23,6 +21,8 @@ namespace BlackCore
     {
         m_updateTimer = new QTimer(this);
         findSimulatorPlugins();
+        loadSimulatorPlugin(CSimulatorInfo::FSX());
+
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
         connectTo();
     }
@@ -30,6 +30,7 @@ namespace BlackCore
     CContextSimulator::~CContextSimulator()
     {
         disconnectFrom();
+        unloadSimulatorPlugin();
     }
 
     bool CContextSimulator::isConnected() const
@@ -73,6 +74,35 @@ namespace BlackCore
         return m_simulator->getSimulatorInfo();
     }
 
+    bool CContextSimulator::loadSimulatorPlugin(const CSimulatorInfo &simulatorInfo)
+    {
+        ISimulatorFactory *factory = nullptr;
+        QSet<ISimulatorFactory*>::iterator iterator = std::find_if(m_simulatorFactories.begin(), m_simulatorFactories.end(), [ = ](const ISimulatorFactory *factory)
+        {
+            return factory->getSimulatorInfo() == simulatorInfo;
+        });
+
+        if(iterator == m_simulatorFactories.end())
+            return false;
+
+        factory = *iterator;
+        Q_ASSERT(factory);
+
+        m_simulator = factory->create(this);
+        Q_ASSERT(m_simulator);
+
+        connect(m_simulator, SIGNAL(connectionChanged(bool)), this, SLOT(setConnectionStatus(bool)));
+        return true;
+    }
+
+    void CContextSimulator::unloadSimulatorPlugin()
+    {
+        if(m_simulator)
+            m_simulator->deleteLater();
+
+        m_simulator = nullptr;
+    }
+
     void CContextSimulator::updateOwnAircraft()
     {
         m_ownAircraft = m_simulator->getOwnAircraft();
@@ -100,6 +130,9 @@ namespace BlackCore
 
         foreach(QString fileName, m_pluginsDir.entryList(QDir::Files))
         {
+            if (!QLibrary::isLibrary(fileName))
+                continue;
+
             QPluginLoader loader(m_pluginsDir.absoluteFilePath(fileName));
             QObject *plugin = loader.instance();
             if (plugin)

@@ -89,6 +89,9 @@ namespace BlackCore
          * \return
          */
         virtual ISimulator *create(QObject *parent = nullptr) = 0;
+
+        //! Simulator info
+        virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
     };
 
 } // namespace BlackCore

@@ -3,11 +3,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "simulator_fsx.h"
 #include "simconnect_datadefinition.h"
 #include "simconnect_exception.h"
-
+#include "blacksim/fsx/fsxsimulatorsetup.h"
+#include "blacksim/simulatorinfo.h"
 #include <QTimer>
 
 using namespace BlackMisc::Aviation;
@@ -25,6 +25,11 @@ namespace BlackSimPlugin
             return new Fsx::CSimulatorFsx(parent);
         }
 
+        BlackSim::CSimulatorInfo CSimulatorFsxFactory::getSimulatorInfo() const
+        {
+            return CSimulatorInfo::FSX();
+        }
+
         CSimulatorFsx::CSimulatorFsx(QObject *parent) :
             ISimulator(parent),
             m_isConnected(false),
@@ -37,6 +42,11 @@ namespace BlackSimPlugin
             CFsxSimulatorSetup setup;
             setup.init(); // this fetches important setting on local side
             this->m_simulatorInfo.setSimulatorSetup(setup.getSettings());
+        }
+
+        CSimulatorFsx::~CSimulatorFsx()
+        {
+            disconnectFrom();
         }
 
         bool CSimulatorFsx::isConnected() const
@@ -65,11 +75,21 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::disconnectFrom()
         {
-            SimConnect_Close(m_hSimConnect);
-            killTimer(m_simconnectTimerId);
-            m_isConnected = false;
+            if (!m_isConnected)
+                return true;
 
             emit connectionChanged(false);
+            if (m_hSimConnect)
+                SimConnect_Close(m_hSimConnect);
+
+
+            if (m_simconnectTimerId)
+                killTimer(m_simconnectTimerId);
+
+            m_hSimConnect = nullptr;
+            m_simconnectTimerId = -1;
+            m_isConnected = false;
+
             return true;
         }
 

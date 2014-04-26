@@ -57,4 +57,14 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<BlackSim::CSimulatorInfo>(QLatin1Literal("getSimulatorInfo"));
     }
 
+    bool CContextSimulatorProxy::loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo)
+    {
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("loadSimulatorPlugin"), simulatorInfo);
+    }
+
+    void CContextSimulatorProxy::unloadSimulatorPlugin()
+    {
+        m_dBusInterface->callDBus(QLatin1Literal("unloadSimulatorPlugin"));
+    }
+
 } // namespace BlackCore

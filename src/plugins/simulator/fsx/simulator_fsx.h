@@ -35,6 +35,9 @@ namespace BlackSimPlugin
         public:
             //! \copydoc BlackCore::ISimulatorFactory::create()
             virtual BlackCore::ISimulator *create(QObject *parent) override;
+
+            //! Simulator info
+            virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
         };
 
         //! \brief SimConnect Event ID's
@@ -57,6 +60,8 @@ namespace BlackSimPlugin
         public:
             //! \brief Constructor
             CSimulatorFsx(QObject *parent = nullptr);
+
+            virtual ~CSimulatorFsx();
 
             //! \copydoc ISimulator::isConnected()
             virtual bool isConnected() const override;

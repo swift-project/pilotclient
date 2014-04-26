@@ -48,6 +48,12 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getSimulatorInfo()
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
+        //! \copydoc IContextSimulator::loadSimulatorPlugin()
+        virtual bool loadSimulatorPlugin (const BlackSim::CSimulatorInfo &simulatorInfo) override;
+
+        //! \copydoc IContextSimulator::unloadSimulatorPlugin()
+        virtual void unloadSimulatorPlugin () override;
+
     protected:
         //! \brief Constructor
         CContextSimulator(CRuntimeConfig::ContextMode, CRuntime *runtime);
