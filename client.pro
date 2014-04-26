@@ -34,8 +34,6 @@ contains(BLACK_CONFIG, XPlane) {
 
 contains(BLACK_CONFIG, Samples) {
     SUBDIRS += samples/cli_client/sample_cli_client.pro
-    SUBDIRS += samples/plugin/sample_plugin.pro
-    SUBDIRS += samples/pluginmgr/sample_pluginmgr.pro
     SUBDIRS += samples/blackmiscvectorgeo/sample_vector_geo.pro
     SUBDIRS += samples/blackmiscquantities/sample_quantities_aviation.pro
     SUBDIRS += samples/blackmiscdbus/sample_blackmisc_dbus.pro
