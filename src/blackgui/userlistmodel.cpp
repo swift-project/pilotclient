@@ -31,6 +31,7 @@ namespace BlackGui
         this->m_columns.clear();
         switch (userMode)
         {
+        case NotSet:
         case UserDetailed:
             this->m_columns.addColumn(CColumn("", CUser::IndexCallsignIcon));
             this->m_columns.addColumn(CColumn("realname", CUser::IndexRealName));
@@ -43,6 +44,10 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn("", CUser::IndexCallsignIcon));
             this->m_columns.addColumn(CColumn("realname", CUser::IndexRealName));
             this->m_columns.addColumn(CColumn("callsign", CUser::IndexCallsign));
+            break;
+
+        default:
+            qFatal("Wrong mode");
             break;
         }
     }

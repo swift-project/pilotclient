@@ -71,10 +71,8 @@ namespace BlackMisc
          */
         bool CCallsign::equalsString(const QString &callsignString) const
         {
-            if (callsignString.isEmpty()) return false;
-            if (this->isEmpty()) return false;
-            if (callsignString == this->m_callsign || callsignString == this->m_callsignAsSet) return true;
-            return false;
+            CCallsign other(callsignString);
+            return other == (*this);
         }
 
         /*

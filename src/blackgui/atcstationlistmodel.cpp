@@ -35,6 +35,7 @@ namespace BlackGui
         this->m_columns.clear();
         switch (stationMode)
         {
+        case NotSet:
         case StationsOnline:
             this->m_columns.addColumn(CColumn("callsign", CAtcStation::IndexCallsignAsStringAsSet));
             this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexDistance,  Qt::AlignRight  | Qt::AlignVCenter));
@@ -60,6 +61,10 @@ namespace BlackGui
             // default sort order
             this->setSortColumnByPropertyIndex(CAtcStation::IndexBookedFrom);
             this->m_sortOrder = Qt::AscendingOrder;
+            break;
+
+        default:
+            qFatal("Wrong mode");
             break;
         }
     }
