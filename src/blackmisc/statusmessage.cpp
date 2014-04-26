@@ -73,11 +73,27 @@ namespace BlackMisc
     }
 
     /*
-     * Validation Unspecific info message
+     * Unspecific info message
      */
     CStatusMessage CStatusMessage::getInfoMessage(const QString &message, StatusType type)
     {
         return CStatusMessage(type, CStatusMessage::SeverityInfo, message);
+    }
+
+    /*
+     * Unspecific warning message
+     */
+    CStatusMessage CStatusMessage::getWarningMessage(const QString &message, StatusType type)
+    {
+        return CStatusMessage(type, CStatusMessage::SeverityWarning, message);
+    }
+
+    /*
+     * Unspecific error message
+     */
+    CStatusMessage CStatusMessage::getErrorMessage(const QString &message, StatusType type)
+    {
+        return CStatusMessage(type, CStatusMessage::SeverityError, message);
     }
 
     /*

@@ -123,6 +123,12 @@ namespace BlackMisc
         //! (Unspecific) Info message
         static CStatusMessage getInfoMessage(const QString &message, StatusType type = CStatusMessage::TypeUnspecific);
 
+        //! (Unspecific) Warning message
+        static CStatusMessage getWarningMessage(const QString &message, StatusType type = CStatusMessage::TypeUnspecific);
+
+        //! (Unspecific) Error message
+        static CStatusMessage getErrorMessage(const QString &message, StatusType type = CStatusMessage::TypeUnspecific);
+
         //! Representing icon
         static const QPixmap &convertToIcon(const CStatusMessage &statusMessage);
 
