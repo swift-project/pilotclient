@@ -608,12 +608,12 @@ namespace BlackCore
             Cvatlib_Network::FlightPlan vatlibFP;
             QByteArray acType, altApt, cruiseAlt, depApt, destApt, remarks, route;
             vatlibFP.acType = acType = toFSD(flightPlan.getEquipmentIcao());
-            vatlibFP.altApt = altApt = toFSD(flightPlan.getAlternateAirportIcao());
+            vatlibFP.altApt = altApt = toFSD(flightPlan.getAlternateAirportIcao().asString());
             vatlibFP.cruiseAlt = cruiseAlt = toFSD(QByteArray::number(flightPlan.getCruiseAltitude().value(CLengthUnit::ft()), 'f', 0));
-            vatlibFP.depApt = depApt = toFSD(flightPlan.getOriginAirportIcao());
+            vatlibFP.depApt = depApt = toFSD(flightPlan.getOriginAirportIcao().asString());
             vatlibFP.depTimeActual = flightPlan.getTakeoffTimeActual().toUTC().toString("hhmm").toInt();
             vatlibFP.depTimePlanned = flightPlan.getTakeoffTimePlanned().toUTC().toString("hhmm").toInt();
-            vatlibFP.destApt = destApt = toFSD(flightPlan.getDestinationAirportIcao());
+            vatlibFP.destApt = destApt = toFSD(flightPlan.getDestinationAirportIcao().asString());
             vatlibFP.enrouteHrs = flightPlan.getEnrouteTime().valueRounded(CTimeUnit::h(), 0);
             vatlibFP.enrouteMins = int(flightPlan.getEnrouteTime().valueRounded(CTimeUnit::hrmin(), 0)) % 60;
             vatlibFP.fuelHrs = flightPlan.getFuelTime().valueRounded(CTimeUnit::h(), 0);
