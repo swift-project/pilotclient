@@ -245,7 +245,14 @@ namespace BlackCore
         if (config.requiresDBusConnection())
         {
             this->initDBusConnection(dbusAddress);
-            Q_ASSERT(this->m_dbusConnection.isConnected());
+            if (!this->m_dbusConnection.isConnected())
+            {
+                QString notConnected("DBus connection failed");
+                QString e = this->m_dbusConnection.lastError().message();
+                if (!e.isEmpty()) notConnected.append(" ").append(e);
+                Q_ASSERT_X(false, "CRuntime::init", notConnected.toUtf8().constData());
+                qCritical() << notConnected;
+            }
         }
         times.insert("DBus", time.restart());
 

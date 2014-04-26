@@ -34,7 +34,8 @@ int main(int argc, char *argv[])
     qDebug() << "3 + la/ra .. P2P DBus server";
     qDebug() << "la .. local audio, audio runs in this core here (default)";
     qDebug() << "ra .. remote audio, audio runs in the GUI or elsewhere";
-    QString input = cin.readLine().toLower();
+    qDebug() << "x  .. exit";
+    QString input = cin.readLine().toLower().trimmed();
 
     // configure DBus server
     QString dBusAddress = BlackCore::CDBusServer::sessionDBusServer();
@@ -46,6 +47,10 @@ int main(int argc, char *argv[])
         qDebug() << "enter ip/port, e.g. 127.0.0.1:45000 (default)";
         dBusAddress = cin.readLine().toLower();
         dBusAddress = BlackCore::CDBusServer::p2pAddress(dBusAddress);
+    }
+    else if (input.startsWith("x"))
+    {
+        return 0;
     }
 
     // with remote audio

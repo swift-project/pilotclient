@@ -6,7 +6,9 @@
 #include <QDebug>
 #include <QMetaClassInfo>
 
+#include "blackmisc/networkutils.h"
 #include "dbus_server.h"
+
 
 namespace BlackCore
 {
@@ -198,21 +200,23 @@ namespace BlackCore
      */
     QString CDBusServer::p2pAddress(const QString &host, const QString &port)
     {
-        QString h = host.isEmpty() ? "127.0.0.1" : host;
+        QString h = host.isEmpty() ? "127.0.0.1" : host.trimmed();
         QString p = port;
         if (port.isEmpty())
         {
-            if (host.contains(":"))
+            if (h.contains(":"))
             {
-                QStringList parts = host.split(host);
-                h = parts.at(0);
-                p = parts.at(1);
+                QStringList parts = h.split(":");
+                Q_ASSERT_X(parts.length() == 2, "p2pAdress", "Wrong IP string split");
+                h = parts.at(0).trimmed();
+                p = parts.at(1).trimmed();
             }
             else
             {
                 p = "45000";
             }
         }
+        Q_ASSERT_X(BlackMisc::CNetworkUtils::isValidIPv4Address(p), "p2pAdress", "Wrong IP in String");
         QString p2p = QString("tcp:host=%1,port=%2").arg(h).arg(p);
         return p2p;
     }
