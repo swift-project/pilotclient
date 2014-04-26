@@ -29,26 +29,26 @@ namespace BlackMisc
             double m_value; //!< numeric part
             MU m_unit; //!< unit part
 
-            //! \brief Which subclass of CMeasurementUnit is used?
+            //! Which subclass of CMeasurementUnit is used?
             typedef MU UnitClass;
 
-            //! \brief Easy access to derived class (CRTP template parameter)
+            //! Easy access to derived class (CRTP template parameter)
             PQ const *derived() const
             {
                 return static_cast<PQ const *>(this);
             }
 
-            //! \brief Easy access to derived class (CRTP template parameter)
+            //! Easy access to derived class (CRTP template parameter)
             PQ *derived()
             {
                 return static_cast<PQ *>(this);
             }
 
         protected:
-            //! \brief Constructor with double
+            //! Constructor with double
             CPhysicalQuantity(double value, const MU &unit);
 
-            //! \brief Copy constructor
+            //! Copy constructor
             CPhysicalQuantity(const CPhysicalQuantity &other);
 
             //! \copydoc CValueObject::convertToQString
@@ -64,10 +64,10 @@ namespace BlackMisc
             virtual int compareImpl(const CValueObject &other) const override;
 
         public:
-            //! \brief Virtual destructor
+            //! Virtual destructor
             virtual ~CPhysicalQuantity() {}
 
-            //! \brief Unit
+            //! Unit
             MU getUnit() const
             {
                 return this->m_unit;
@@ -77,36 +77,27 @@ namespace BlackMisc
              * \brief Simply set unit, do no calclulate conversion
              * \sa switchUnit
              */
-            void setUnit(const MU &unit)
-            {
-                this->m_unit = unit;
-            }
+            void setUnit(const MU &unit) { this->m_unit = unit; }
 
-            //! \brief Set unit by string
+            //! Set unit by string
             void setUnitBySymbol(const QString &unitName)
             {
                 this->m_unit = CMeasurementUnit::unitFromSymbol<MU>(unitName);
             }
 
-            //! \brief Unit
-            QString getUnitSymbol() const
-            {
-                return this->m_unit.getSymbol(true);
-            }
+            //! Unit
+            QString getUnitSymbol() const { return this->m_unit.getSymbol(true); }
 
-            //! \brief Change unit, and convert value to maintain the same quantity
+            //! Change unit, and convert value to maintain the same quantity
             PQ &switchUnit(const MU &newUnit);
 
             //! Is quantity null?
-            bool isNull() const
-            {
-                return this->m_unit.isNull();
-            }
+            bool isNull() const { return this->m_unit.isNull(); }
 
-            //! \brief Value in given unit
+            //! Value in given unit
             double value(const MU &unit) const;
 
-            //! \brief Value in current unit
+            //! Value in current unit
             double value() const
             {
                 if (this->isNull())
@@ -116,103 +107,104 @@ namespace BlackMisc
                 return this->m_value;
             }
 
-            //! \brief Set value in current unit
+            //! Set value in current unit
             void setCurrentUnitValue(double value)
             {
-                if (! this->isNull())
+                if (!this->isNull())
                 {
                     this->m_value = value;
                 }
             }
 
             //! \brief Rounded value in given unit
+            //! Rounded value in given unit
             double valueRounded(const MU &unit, int digits = -1) const;
 
-            //! \brief Rounded value in current unit
+            //! Rounded value in current unit
             double valueRounded(int digits = -1) const
             {
                 return this->valueRounded(this->m_unit, digits);
             }
 
-            //! \brief Value to QString with the given unit, e.g. "5.00m"
+            //! Value to QString with the given unit, e.g. "5.00m"
             QString valueRoundedWithUnit(const MU &unit, int digits = -1, bool i18n = false) const;
 
-            //! \brief Value to QString with the current unit, e.g. "5.00m"
+            //! Value to QString with the current unit, e.g. "5.00m"
             QString valueRoundedWithUnit(int digits = -1, bool i18n = false) const
             {
                 return this->valueRoundedWithUnit(this->m_unit, digits, i18n);
             }
 
-            //! \brief Change value without changing unit
+            //! Change value without changing unit
             void setValueSameUnit(double value);
 
-            //! \brief Add to the value in the current unit.
+            //! Add to the value in the current unit.
             void addValueSameUnit(double value);
 
-            //! \brief Substract from the value in the current unit.
+            //! Substract from the value in the current unit.
             void substractValueSameUnit(double value);
 
-            //! \brief Multiply operator *=
+            //! Multiply operator *=
             CPhysicalQuantity &operator *=(double multiply);
 
-            //! \brief Divide operator /=
+            //! Divide operator /=
             CPhysicalQuantity &operator /=(double divide);
 
-            //! \brief Operator *
+            //! Operator *
             PQ operator *(double multiply) const;
 
-            //! \brief Operator to support commutative multiplication
+            //! Operator to support commutative multiplication
             friend PQ operator *(double factor, const PQ &other)
             {
                 return other * factor;
             }
 
-            //! \brief Operator /
+            //! Operator /
             PQ operator /(double divide) const;
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator==(const CPhysicalQuantity &other) const;
 
-            //! \brief Not equal operator !=
+            //! Not equal operator !=
             bool operator!=(const CPhysicalQuantity &other) const;
 
-            //! \brief Plus operator +=
+            //! Plus operator +=
             CPhysicalQuantity &operator +=(const CPhysicalQuantity &other);
 
-            //! \brief Minus operator-=
+            //! Minus operator-=
             CPhysicalQuantity &operator -=(const CPhysicalQuantity &other);
 
-            //! \brief Greater operator >
+            //! Greater operator >
             bool operator >(const CPhysicalQuantity &other) const;
 
-            //! \brief Less operator <
+            //! Less operator <
             bool operator <(const CPhysicalQuantity &other) const;
 
-            //! \brief Less equal operator <=
+            //! Less equal operator <=
             bool operator <=(const CPhysicalQuantity &other) const;
 
-            //! \brief Greater equal operator >=
+            //! Greater equal operator >=
             bool operator >=(const CPhysicalQuantity &other) const;
 
-            //! \brief Plus operator +
+            //! Plus operator +
             PQ operator +(const PQ &other) const;
 
-            //! \brief Minus operator -
+            //! Minus operator -
             PQ operator -(const PQ &other) const;
 
-            //! \brief Quantity value <= epsilon
+            //! Quantity value <= epsilon
             bool isZeroEpsilonConsidered() const
             {
                 return this->m_unit.isEpsilon(this->m_value);
             }
 
-            //! \brief Value >= 0 epsilon considered
+            //! Value >= 0 epsilon considered
             bool isPositiveWithEpsilonConsidered() const
             {
                 return !this->isZeroEpsilonConsidered() && this->m_value > 0;
             }
 
-            //! \brief Value <= 0 epsilon considered
+            //! Value <= 0 epsilon considered
             bool isNegativeWithEpsilonConsidered() const
             {
                 return !this->isZeroEpsilonConsidered() && this->m_value < 0;
@@ -233,7 +225,7 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata of unit and quantity
+            //! Register metadata of unit and quantity
             static void registerMetadata();
         };
 

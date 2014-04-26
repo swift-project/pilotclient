@@ -15,34 +15,26 @@ namespace BlackMisc
 
         /*!
          * \brief Time class, e.g. "ms", "hour", "s", "day"
-         * \author KWB
          */
         class CTime : public CPhysicalQuantity<CTimeUnit, CTime>
         {
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CTime() : CPhysicalQuantity(0, CTimeUnit::defaultUnit()) {}
 
-            /*!
-             *\brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! Init by double value
             CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! By Qt time
+            CTime(const QTime &time);
 
-            /*!
-             * \brief Destructor
-             */
+            //! By string hh:mm or hh:mm:ss
+            CTime(const QString &time);
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! Destructor
             virtual ~CTime() {}
         };
 

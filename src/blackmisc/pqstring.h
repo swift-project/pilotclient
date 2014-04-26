@@ -44,11 +44,11 @@ namespace BlackMisc
             virtual bool isA(int metaTypeId) const override;
 
         public:
-            //! \brief Default constructor
+            //! Default constructor
             CPqString() {}
 
             /*!
-             * \brief Constructor
+             * Constructor
              * \param value such as 10km/h
              */
             CPqString(const QString &value) : m_string(value) {}
@@ -65,13 +65,13 @@ namespace BlackMisc
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CPqString &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CPqString &other) const;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
             //! Parse a string value like "100m", "10.3Mhz"

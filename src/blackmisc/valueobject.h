@@ -28,112 +28,57 @@ namespace BlackMisc
     class CValueObject
     {
 
-        /*!
-         * \brief Stream << overload to be used in debugging messages
-         * \param debug
-         * \param uc
-         * \return
-         */
+        //! Stream << overload to be used in debugging messages
         friend QDebug operator<<(QDebug debug, const CValueObject &uc)
         {
             debug << uc.stringForStreaming();
             return debug;
         }
 
-        /*!
-         * \brief Operator << based on text stream
-         * \param textStream
-         * \param uc
-         * \return
-         */
+        //! Operator << based on text stream
         friend QTextStream &operator<<(QTextStream &textStream, const CValueObject &uc)
         {
             textStream << uc.stringForStreaming();
             return textStream;
         }
 
-        /*!
-         * \brief Operator << when there is no debug stream
-         * \param nodebug
-         * \param valueObject
-         * \return
-         */
+        //! Operator << when there is no debug stream
         friend QNoDebug operator<<(QNoDebug nodebug, const CValueObject &valueObject)
         {
             Q_UNUSED(valueObject);
             return nodebug;
         }
 
-        /*!
-         * \brief Stream operator << for QDataStream
-         * \param stream
-         * \param valueObject
-         * \return
-         */
+        //! Operator << for QDataStream
         friend QDataStream &operator<<(QDataStream &stream, const CValueObject &valueObject)
         {
             stream << valueObject.stringForStreaming();
             return stream;
         }
 
-        /*!
-         * \brief Stream operator << for std::cout
-         * \param ostr
-         * \param uc
-         * \return
-         */
+        //! Stream operator << for std::cout
         friend std::ostream &operator<<(std::ostream &ostr, const CValueObject &uc)
         {
             ostr << uc.stringForStreaming().toStdString();
             return ostr;
         }
 
-        /*!
-         * \brief Unmarshalling operator >>, DBus to object
-         * \param argument
-         * \param valueObject
-         * \return
-         */
+        //! Unmarshalling operator >>, DBus to object
         friend const QDBusArgument &operator>>(const QDBusArgument &argument, CValueObject &valueObject);
 
-        /*!
-         * \brief Marshalling operator <<, object to DBus
-         * \param argument
-         * \param valueObject
-         * \return
-         */
+        //! Marshalling operator <<, object to DBus
         friend QDBusArgument &operator<<(QDBusArgument &argument, const CValueObject &valueObject);
 
-        /*!
-         * \brief Operator == with value map
-         * \param valueMap
-         * \param valueObject
-         * \return
-         */
+        //! Operator == with value map
         friend bool operator==(const CIndexVariantMap &valueMap, const CValueObject &valueObject);
 
-        /*!
-         * \brief Operator != with value map
-         * \param valueMap
-         * \param valueObject
-         * \return
-         */
+        //! Operator != with value map
         friend bool operator!=(const CIndexVariantMap &valueMap, const CValueObject &valueObject);
 
-        /*!
-         * \brief operator == with value map
-         * \param valueObject
-         * \param valueMap
-         * \return
-         */
+        //! Operator == with value map
         friend bool operator==(const CValueObject &valueObject, const CIndexVariantMap &valueMap);
 
-        /*!
-         * \brief Operator != with value map
-         * \param valueObject
-         * \param valueMap
-         * \return
-         */
+        //! Operator != with value map
         friend bool operator!=(const CValueObject &valueObject, const CIndexVariantMap &valueMap);
 
         /*!
@@ -146,57 +91,34 @@ namespace BlackMisc
         friend int compare(const CValueObject &v1, const CValueObject &v2);
 
     public:
-        /*!
-         * \brief Virtual destructor
-         */
+        //! Virtual destructor
         virtual ~CValueObject() {}
 
-        /*!
-         * \brief Cast as QString
-         */
+        //! Cast as QString
         QString toQString(bool i18n = false) const;
 
-        /*!
-         * \brief Cast to pretty-printed QString
-         */
+        //! Cast to pretty-printed QString
         virtual QString toFormattedQString(bool i18n = false) const;
 
-        /*!
-         * \brief To std string
-         */
+        //! To std string
         std::string toStdString(bool i18n = false) const;
 
-        /*!
-         * \brief Update by variant map
-         */
+        //! Update by variant map
         int apply(const BlackMisc::CIndexVariantMap &indexMap);
 
-        /*!
-         * \brief Value hash, allows comparisons between QVariants
-         */
+        //! Value hash, allows comparisons between QVariants
         virtual uint getValueHash() const = 0;
 
-        /*!
-         * \brief Virtual method to return QVariant, used with DBus QVariant lists
-         */
+        //! Virtual method to return QVariant, used with DBus QVariant lists
         virtual QVariant toQVariant() const = 0;
 
-        /*!
-         * \brief Contribute to JSON object
-         * \return updated JSON object
-         */
+        //! Contribute to JSON object
         virtual QJsonObject toJson() const { QJsonObject json; return json;}
 
-        /*!
-         * \brief Initialize from JSOn object
-         * \param json
-         */
+        //! Initialize from JSON object
         virtual void fromJson(const QJsonObject &json) { Q_UNUSED(json); }
 
-        /*!
-         * \brief As icon, not implement by all classes
-         * \return
-         */
+        //! As icon, not implement by all classes
         virtual const QPixmap &toIcon() const { static const QPixmap p; return p; }
 
         /*!
@@ -224,43 +146,26 @@ namespace BlackMisc
          */
         virtual QString propertyByIndexAsString(int index, bool i18n = false) const;
 
-        /*!
-         * \brief The stored object as CValueObject
-         */
+        //! \brief The stored object as CValueObject
         static const CValueObject *fromQVariant(const QVariant &qv);
 
     protected:
-        /*!
-         * \brief Default constructor
-         */
+        //! Default constructor
         CValueObject() {}
 
-        /*!
-         * \brief Copy constructor
-         */
+        //! Copy constructor
         CValueObject(const CValueObject &) {}
 
-        /*!
-         * \brief Copy assignment operator =
-         */
+        //! Copy assignment operator =
         CValueObject &operator=(const CValueObject &) { return *this; }
 
-        /*!
-         * \brief String for streaming operators
-         */
+        //! String for streaming operators
         virtual QString stringForStreaming() const;
 
-        /*!
-         * \brief String for QString conversion
-         * \param i18n
-         * \return
-         */
+        //! String for QString conversion
         virtual QString convertToQString(bool i18n = false) const = 0;
 
-        /*!
-         * \brief Returns the Qt meta type ID of this object.
-         * \return
-         */
+        //! Returns the Qt meta type ID of this object.
         virtual int getMetaTypeId() const = 0;
 
         /*!
@@ -281,15 +186,14 @@ namespace BlackMisc
          */
         virtual int compareImpl(const CValueObject &other) const = 0;
 
-        /*!
-         * \brief Marshall to DBus
-         */
+        //! Marshall to DBus
         virtual void marshallToDbus(QDBusArgument &) const = 0;
 
-        /*!
-         * \brief Unmarshall from DBus
-         */
+        //! Unmarshall from DBus
         virtual void unmarshallFromDbus(const QDBusArgument &) = 0;
+
+        //! Parse from string, e.g. 100km/h
+        virtual void parseFromString(const QString &) { qFatal("Not implemented"); }
 
     };
 
@@ -331,36 +235,21 @@ namespace BlackMisc
         return argument << static_cast<CValueObject const &>(valueObject);
     }
 
-    /*!
-     * \brief Non member, non friend operator >> for JSON
-     * \param json
-     * \param valueObject
-     * \return
-     */
+    //! Non member, non friend operator >> for JSON
     inline const QJsonObject &operator>>(const QJsonObject &json, CValueObject &valueObject)
     {
         valueObject.fromJson(json);
         return json;
     }
 
-    /*!
-     * \brief Non member, non friend operator >> for JSON
-     * \param json
-     * \param valueObject
-     * \return
-     */
+    //! Non member, non friend operator >> for JSON
     inline const QJsonValue &operator>>(const QJsonValue &json, CValueObject &valueObject)
     {
         valueObject.fromJson(json.toObject());
         return json;
     }
 
-    /*!
-     * \brief Non member, non friend operator >> for JSON
-     * \param json
-     * \param valueObject
-     * \return
-     */
+    //! Non member, non friend operator >> for JSON
     inline const QJsonValueRef &operator>>(const QJsonValueRef &json, CValueObject &valueObject)
     {
         valueObject.fromJson(json.toObject());
@@ -382,7 +271,7 @@ namespace BlackMisc
     /*!
      * \brief Non member, non friend operator >> for JSON
      * \param json
-     * \param value
+     * \param value as pair name/value
      * \return
      */
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QJsonObject>::type &
@@ -392,11 +281,7 @@ namespace BlackMisc
         return json;
     }
 
-    /*!
-     * Allow comparison with QVariant, e.g. QVariant == CFrequency ?
-     * \param variant
-     * \param valueObject
-     */
+    //! Allow comparison with QVariant, e.g. QVariant == CFrequency ?
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
     operator==(const QVariant &variant, const T &valueObject)
     {
@@ -405,45 +290,28 @@ namespace BlackMisc
         return vuc == valueObject;
     }
 
-    /*!
-     * \brief Allow comparison with QVariant, e.g. QVariant != CFrequency ?
-     * \param variant
-     * \param valueObject
-     */
+    //! Allow comparison with QVariant, e.g. QVariant != CFrequency ?
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
     operator!=(const QVariant &variant, const T &valueObject)
     {
         return !(variant == valueObject);
     }
 
-    /*!
-     * \brief Allow comparison with QVariant, e.g. QVariant == CFrequency ?
-     * \param valueObject
-     * \param variant
-     */
+    //! Allow comparison with QVariant, e.g. QVariant == CFrequency ?
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
     operator==(const T &valueObject, const QVariant &variant)
     {
         return variant == valueObject;
     }
 
-    /*!
-     * \brief Allow comparison with QVariant, e.g. QVariant != CFrequency ?
-     * \param valueObject
-     * \param variant
-     */
+    //! Allow comparison with QVariant, e.g. QVariant != CFrequency ?
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
     operator!=(const T &valueObject, const QVariant &variant)
     {
         return variant != valueObject;
     }
 
-    /*!
-     * qHash overload, needed for storing CValueObject in a QSet.
-     * \param value
-     * \param seed
-     * \return
-     */
+    //! qHash overload, needed for storing CValueObject in a QSet.
     inline uint qHash(const BlackMisc::CValueObject &value, uint seed = 0)
     {
         return ::qHash(value.getValueHash(), seed);

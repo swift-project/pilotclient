@@ -3,10 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/*!
-    \file
-*/
-
 #ifndef BLACKMISC_CALLSIGN_H
 #define BLACKMISC_CALLSIGN_H
 #include "valueobject.h"
@@ -20,15 +16,15 @@ namespace BlackMisc
         {
 
         public:
-            //! \brief Default constructor.
+            //! Default constructor.
             CCallsign() {}
 
-            //! \brief Constructor
+            //! Constructor
             CCallsign(const QString &callsign, const QString &telephonyDesignator = "")
                 : m_callsignAsSet(callsign.trimmed()), m_callsign(CCallsign::unifyCallsign(callsign.trimmed())), m_telephonyDesignator(telephonyDesignator.trimmed())
             {}
 
-            //! \brief Constructor, needed to disambiguate implicit conversion from string literal.
+            //! Constructor, needed to disambiguate implicit conversion from string literal.
             CCallsign(const char *callsign)
                 : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign))
             {}
@@ -45,34 +41,34 @@ namespace BlackMisc
                 return CCallsign::convertToIcon(*this);
             }
 
-            //! \brief Is empty?
+            //! Is empty?
             bool isEmpty() const { return this->m_callsignAsSet.isEmpty(); }
 
-            //! \brief Get callsign.
+            //! Get callsign.
             const QString &asString() const { return this->m_callsign; }
 
-            //! \brief Get callsign.
+            //! Get callsign.
             const QString &getStringAsSet() const { return this->m_callsignAsSet; }
 
-            //! \brief Get callsign telephony designator (how callsign is pronounced)
+            //! Get callsign telephony designator (how callsign is pronounced)
             const QString &getTelephonyDesignator() const { return this->m_telephonyDesignator; }
 
-            //! \brief Get ICAO code, if this makes sense (EDDF_TWR -> EDDF)
+            //! Get ICAO code, if this makes sense (EDDF_TWR -> EDDF)
             QString getIcaoCode() const { return m_callsign.left(4).toUpper(); }
 
-            //! \brief Makes this callsign looking like an observer callsign (DAMBZ -> DAMBZ_OBS)
+            //! Makes this callsign looking like an observer callsign (DAMBZ -> DAMBZ_OBS)
             QString getAsObserverCallsignString() const;
 
-            //! \brief Equals callsign string?
+            //! Equals callsign string?
             bool equalsString(const QString &callsignString) const;
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CCallsign &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CCallsign &other) const;
 
-            //! \brief Less than operator < for sorting
+            //! Less than operator < for sorting
             bool operator <(const CCallsign &other) const;
 
             //! \copydoc CValueObject::getValueHash()
@@ -84,10 +80,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
-            //! \brief Members
+            //! Members
             static const QStringList &jsonMembers();
 
         protected:
@@ -110,13 +106,13 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
             /*!
-             * \brief Unify the callsign
+             * Unify the callsign
              * \param callsign
              * \return unified callsign
              */
             static QString unifyCallsign(const QString &callsign);
 
-            //! \brief representing icon
+            //! representing icon
             static const QPixmap &convertToIcon(const CCallsign &callsign);
 
         private:

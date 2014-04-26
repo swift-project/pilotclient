@@ -1,7 +1,7 @@
-#ifndef BLACKGUI_QWITRANSPONDERMODESELECTOR_H
-#define BLACKGUI_QWITRANSPONDERMODESELECTOR_H
+#ifndef BLACKGUI_TRANSPONDERMODESELECTOR_H
+#define BLACKGUI_TRANSPONDERMODESELECTOR_H
 
-#include "../blackmisc/aviotransponder.h"
+#include "blackmisc/aviotransponder.h"
 #include "blackmisc/aviotransponder.h"
 #include <QTimer>
 #include <QComboBox>
