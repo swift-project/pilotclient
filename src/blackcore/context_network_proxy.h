@@ -101,6 +101,9 @@ namespace BlackCore
         //! \copydoc IContextNetwork::sendTextMessages()
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
 
+        //! \copydoc IContextNetwork::sendFlightPlan()
+        virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;
+
         //! \copydoc IContextNetwork::getMetar()
         virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode) override;
 

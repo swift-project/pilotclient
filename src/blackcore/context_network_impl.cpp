@@ -268,6 +268,15 @@ namespace BlackCore
     }
 
     /*
+     * Flight plan
+     */
+    void CContextNetwork::sendFlightPlan(const CFlightPlan &flightPlan)
+    {
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, flightPlan.toQString());
+        this->m_network->sendFlightPlan(flightPlan);
+    }
+
+    /*
      * Connection status changed
      */
     void CContextNetwork::psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)

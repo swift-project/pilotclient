@@ -158,6 +158,11 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("sendTextMessages"), textMessages);
     }
 
+    void CContextNetworkProxy::sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("sendFlightPlan"), flightPlan);
+    }
+
     BlackMisc::Aviation::CInformationMessage CContextNetworkProxy::getMetar(const QString &airportIcaoCode)
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CInformationMessage>(QLatin1Literal("getMetar"), airportIcaoCode);

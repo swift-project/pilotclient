@@ -135,6 +135,9 @@ namespace BlackCore
         //! Text messages (radio and private chat messages)
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) = 0;
 
+        //! Send flight plan
+        virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) = 0;
+
         /*!
          * \brief Get METAR, if not available request it
          * \param airportIcaoCode such as EDDF, KLAX
