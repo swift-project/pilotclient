@@ -6,19 +6,16 @@
 #ifndef BLACKMISCTEST_SAMPLESAVIATION_H
 #define BLACKMISCTEST_SAMPLESAVIATION_H
 
-namespace BlackMiscTest {
-
-/*!
- * \brief Samples for physical quantities
- */
-class CSamplesAviation
+namespace BlackMiscTest
 {
-public:
-    /*!
-     * \brief Run the samples
-     */
-    static int samples();
-};
+
+//! Samples for aviation
+    class CSamplesAviation
+    {
+    public:
+        //! Run the samples
+        static int samples();
+    };
 } // namespace
 
 #endif

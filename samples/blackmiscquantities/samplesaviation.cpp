@@ -10,6 +10,10 @@
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/aviotransponder.h"
 #include "blackmisc/avatcstationlist.h"
+#include "blackmisc/avflightplan.h"
+#include "blackmisc/avaircrafticao.h"
+#include "blackmisc/avairporticao.h"
+
 
 #include <QDebug>
 
@@ -38,17 +42,6 @@ namespace BlackMiscTest
         qDebug() << c1;
         c1.setActiveUnicom();
         qDebug() << c1;
-        try
-        {
-            // uncomment to test assert
-            // CFrequency f1(-1.0, CFrequencyUnit::MHz());
-            // c1 = CComSystem("ups", f1, f1);
-            // qDebug() << "Why do I get here??";
-        }
-        catch (std::range_error &ex)
-        {
-            qDebug() << "As expected" << ex.what();
-        }
 
         // NAV system
         CNavSystem nav1;
@@ -92,9 +85,18 @@ namespace BlackMiscTest
         atcList = atcList.findBy(&CAtcStation::getCallsign, "eddm_twr", &CAtcStation::getFrequency, CFrequency(118.7, CFrequencyUnit::MHz()));
         atcList = atcList.sortedBy(&CAtcStation::getBookedFromUtc, &CAtcStation::getCallsign, &CAtcStation::getControllerRealName);
         qDebug() << atcList;
-
         qDebug() << "-----------------------------------------------";
+
+        // flight plan
+        CAltitude alt("FL110");
+        CAltitude altMsl(alt);
+        altMsl.toMeanSeaLevel();
+
+        qDebug() << alt << altMsl;
+        CAirportIcao frankfurt("eddf");
+        qDebug() << frankfurt;
+        qDebug() << "-----------------------------------------------";
+
         return 0;
     }
-
 } // namespace
