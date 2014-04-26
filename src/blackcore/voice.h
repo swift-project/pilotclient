@@ -6,7 +6,6 @@
 #ifndef BLACKCORE_VOICE_H
 #define BLACKCORE_VOICE_H
 
-#include "../blackmisc/context.h"
 #include "../blackmisc/avcallsignlist.h"
 #include "../blackmisc/avselcal.h"
 #include "../blackmisc/nwuserlist.h"

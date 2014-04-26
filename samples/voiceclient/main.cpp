@@ -16,9 +16,8 @@ using namespace BlackMisc::Audio;
 int main(int argc, char *argv[])
 {
     QCoreApplication app (argc, argv);
-    BlackMisc::IContext::getInstance().setObject<BlackCore::IVoice>(*new BlackCore::CVoiceVatlib());
 
-    Client client;
+    Client client(&app);
     LineReader reader;
     QObject::connect(&reader, SIGNAL(command(const QString &)), &client, SLOT(command(const QString &)));
     QObject::connect(&client, SIGNAL(quit()), &reader, SLOT(terminate()));

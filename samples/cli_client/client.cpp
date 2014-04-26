@@ -4,12 +4,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "client.h"
-#include "blackmisc/context.h"
+#include "blackcore/network_vatlib.h"
 #include <iostream>
 #include <QStringList>
 
-Client::Client(BlackMisc::IContext &ctx)
-    : m_net(&ctx.getObject<BlackCore::INetwork>())
+Client::Client(QObject *parent)
+    : QObject(parent), m_net(new BlackCore::CNetworkVatlib(this))
 {
     using namespace BlackCore;
     connect(m_net, &INetwork::atcPositionUpdate,                this, &Client::atcPositionUpdate);

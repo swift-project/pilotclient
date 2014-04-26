@@ -7,7 +7,6 @@
 #define __BLACKSAMPLE_CLI_CLIENT_H__
 
 #include "blackcore/network.h"
-#include "blackmisc/context.h"
 #include <QObject>
 #include <QTextStream>
 #include <QMap>
@@ -18,7 +17,7 @@ class Client : public QObject
     Q_OBJECT
 
 public:
-    Client(BlackMisc::IContext &);
+    Client(QObject *parent = nullptr);
 
 signals:
     void quit();

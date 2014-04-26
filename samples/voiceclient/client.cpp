@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "client.h"
+#include "blackcore/voice_vatlib.h"
 #include "blackmisc/audiodevicelist.h"
 #include "blackmisc/avcallsignlist.h"
 
@@ -16,7 +17,7 @@ using namespace BlackMisc::Aviation;
  */
 Client::Client(QObject *parent) :
     QObject(parent),
-    m_voiceClient(&BlackMisc::IContext::getInstance().getObject<BlackCore::IVoice>())
+    m_voiceClient(new BlackCore::CVoiceVatlib(this))
 {
     using namespace BlackCore;
     connect(m_voiceClient, &IVoice::squelchTestFinished,                  this, &Client::onSquelchTestFinished);
