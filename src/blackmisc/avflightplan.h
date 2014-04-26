@@ -12,6 +12,7 @@
 
 #include "valueobject.h"
 #include "avaltitude.h"
+#include "avairporticao.h"
 #include "pqtime.h"
 #include "pqspeed.h"
 #include <QDateTime>
@@ -44,12 +45,12 @@ namespace BlackMisc
             /*!
              * Constructor
              */
-            CFlightPlan(const QString &equipmentIcao, const QString &originAirportIcao, const QString &destinationAirportIcao, const QString &alternateAirportIcao,
-                QDateTime takeoffTimePlanned, QDateTime takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime, const PhysicalQuantities::CTime &fuelTime,
-                const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules, const QString &route, const QString &remarks)
-            : m_equipmentIcao(equipmentIcao), m_originAirportIcao(originAirportIcao), m_destinationAirportIcao(destinationAirportIcao), m_alternateAirportIcao(alternateAirportIcao),
-              m_takeoffTimePlanned(takeoffTimePlanned), m_takeoffTimeActual(takeoffTimeActual), m_enrouteTime(enrouteTime), m_fuelTime(fuelTime),
-              m_cruiseAltitude(cruiseAltitude), m_cruiseTrueAirspeed(cruiseTrueAirspeed), m_flightRules(flightRules), m_route(route), m_remarks(remarks.left(100))
+            CFlightPlan(const QString &equipmentIcao, const CAirportIcao &originAirportIcao, const CAirportIcao &destinationAirportIcao, const CAirportIcao &alternateAirportIcao,
+                        QDateTime takeoffTimePlanned, QDateTime takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime, const PhysicalQuantities::CTime &fuelTime,
+                        const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules, const QString &route, const QString &remarks)
+                : m_equipmentIcao(equipmentIcao), m_originAirportIcao(originAirportIcao), m_destinationAirportIcao(destinationAirportIcao), m_alternateAirportIcao(alternateAirportIcao),
+                  m_takeoffTimePlanned(takeoffTimePlanned), m_takeoffTimeActual(takeoffTimeActual), m_enrouteTime(enrouteTime), m_fuelTime(fuelTime),
+                  m_cruiseAltitude(cruiseAltitude), m_cruiseTrueAirspeed(cruiseTrueAirspeed), m_flightRules(flightRules), m_route(route), m_remarks(remarks.left(100))
             {}
 
             //! Set ICAO aircraft equipment code string (e.g. "T/A320/F")
@@ -58,23 +59,41 @@ namespace BlackMisc
             //! Set origin airport ICAO code
             void setOriginAirportIcao(const QString &originAirportIcao) { m_originAirportIcao = originAirportIcao; }
 
+            //! Set origin airport ICAO code
+            void setOriginAirportIcao(const CAirportIcao &originAirportIcao) { m_originAirportIcao = originAirportIcao; }
+
             //! Set destination airport ICAO code
             void setDestinationAirportIcao(const QString &destinationAirportIcao) { m_destinationAirportIcao = destinationAirportIcao; }
+
+            //! Set destination airport ICAO code
+            void setDestinationAirportIcao(const CAirportIcao &destinationAirportIcao) { m_destinationAirportIcao = destinationAirportIcao; }
 
             //! Set alternate destination airport ICAO code
             void setAlternateAirportIcao(const QString &alternateAirportIcao) { m_alternateAirportIcao = alternateAirportIcao; }
 
+            //! Set alternate destination airport ICAO code
+            void setAlternateAirportIcao(const CAirportIcao &alternateAirportIcao) { m_alternateAirportIcao = alternateAirportIcao; }
+
             //! Set planned takeoff time
             void setTakeoffTimePlanned(QDateTime takeoffTimePlanned) { m_takeoffTimePlanned = takeoffTimePlanned; }
 
+            //! Set planned takeoff time hh:mm
+            void setTakeoffTimePlanned(QString time) { m_takeoffTimePlanned = QDateTime::currentDateTimeUtc(); m_takeoffTimePlanned.setTime(QTime::fromString(time, "hh:mm"));}
+
             //! Set actual takeoff time (reserved for ATC use)
             void setTakeoffTimeActual(QDateTime takeoffTimeActual) { m_takeoffTimeActual = takeoffTimeActual; }
+
+            //! Set actual takeoff time hh:mm
+            void setTakeoffTimeActual(QString time) { m_takeoffTimeActual = QDateTime::currentDateTimeUtc(); m_takeoffTimeActual.setTime(QTime::fromString(time, "hh:mm"));}
 
             //! Set planned enroute flight time
             void setEnrouteTime(const PhysicalQuantities::CTime &enrouteTime) { m_enrouteTime = enrouteTime; }
 
             //! Set amount of fuel load in time
             void setFuelTime(const PhysicalQuantities::CTime &fuelTime) { m_fuelTime = fuelTime; }
+
+            //! Set amount of fuel load in time hh:mm
+            void setFuelTime(const QString &fuelTime) { m_fuelTime = PhysicalQuantities::CTime(fuelTime); }
 
             //! Set planned cruise altitude
             void setCruiseAltitude(const CAltitude &cruiseAltitude) { m_cruiseAltitude = cruiseAltitude; }
@@ -83,7 +102,7 @@ namespace BlackMisc
             void setCruiseTrueAirspeed(const PhysicalQuantities::CSpeed &cruiseTrueAirspeed) { m_cruiseTrueAirspeed = cruiseTrueAirspeed; }
 
             //! Set flight rules (VFR or IFR)
-            void setFlightRules(FlightRules flightRules) { m_flightRules = flightRules; }
+            void setFlightRule(FlightRules flightRules) { m_flightRules = flightRules; }
 
             //! Set route string
             void setRoute(const QString &route) { m_route = route; }
@@ -95,28 +114,40 @@ namespace BlackMisc
             const QString &getEquipmentIcao() const { return m_equipmentIcao; }
 
             //! Get origin airport ICAO code
-            const QString &getOriginAirportIcao() const { return m_originAirportIcao; }
+            const CAirportIcao &getOriginAirportIcao() const { return m_originAirportIcao; }
 
             //! Get destination airport ICAO code
-            const QString &getDestinationAirportIcao() const { return m_destinationAirportIcao; }
+            const CAirportIcao &getDestinationAirportIcao() const { return m_destinationAirportIcao; }
 
             //! Get alternate destination airport ICAO code
-            const QString &getAlternateAirportIcao() const { return m_alternateAirportIcao; }
+            const CAirportIcao &getAlternateAirportIcao() const { return m_alternateAirportIcao; }
 
-            //! Get planned takeoff time
-            QDateTime getTakeoffTimePlanned() const { return m_takeoffTimePlanned; }
+            //! Get planned takeoff time (planned)
+            const QDateTime &getTakeoffTimePlanned() const { return m_takeoffTimePlanned; }
 
-            //! Get actual takeoff time
-            QDateTime getTakeoffTimeActual() const { return m_takeoffTimeActual; }
+            //! Get planned takeoff time (planned)
+            QString getTakeoffTimePlannedHourMin() const { return m_takeoffTimePlanned.toString("hh:mm"); }
+
+            //! Get actual takeoff time (actual)
+            const QDateTime &getTakeoffTimeActual() const { return m_takeoffTimeActual; }
+
+            //! Get actual takeoff time (actual)
+            QString getTakeoffTimeActualHourMin() const { return m_takeoffTimeActual.toString("hh:mm"); }
 
             //! Get planned enroute flight time
             const PhysicalQuantities::CTime &getEnrouteTime() const { return m_enrouteTime; }
 
+            //! Get planned enroute flight time
+            QString getEnrouteTimeHourMin() const { return m_enrouteTime.valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
+
             //! Get amount of fuel load in time
             const PhysicalQuantities::CTime &getFuelTime() const { return m_fuelTime; }
 
-            //! Get planned cruise altitude
-            const CAltitude &getCruiseAltitude() const { return m_cruiseAltitude; }
+            //! Get amount of fuel load in time
+            QString getFuelTimeHourMin() const { return m_enrouteTime.valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
+
+            //! Cruising altitudes
+            const BlackMisc::Aviation::CAltitude &getCruiseAltitude() const { return m_cruiseAltitude; }
 
             //! Get planned cruise TAS
             const PhysicalQuantities::CSpeed &getCruiseTrueAirspeed() const { return m_cruiseTrueAirspeed; }
@@ -167,9 +198,9 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CFlightPlan)
             QString m_equipmentIcao;
-            QString m_originAirportIcao;
-            QString m_destinationAirportIcao;
-            QString m_alternateAirportIcao;
+            CAirportIcao m_originAirportIcao;
+            CAirportIcao m_destinationAirportIcao;
+            CAirportIcao m_alternateAirportIcao;
             QDateTime m_takeoffTimePlanned;
             QDateTime m_takeoffTimeActual;
             PhysicalQuantities::CTime m_enrouteTime;
@@ -185,6 +216,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CFlightPlan)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CFlightPlan, (o.m_equipmentIcao, o.m_originAirportIcao, o.m_destinationAirportIcao, o.m_alternateAirportIcao,
-    o.m_takeoffTimePlanned, o.m_takeoffTimeActual, o.m_enrouteTime, o.m_fuelTime, o.m_cruiseAltitude/*, tie(o.m_cruiseTrueAirspeed, o.m_flightRules, o.m_route, o.m_remarks)*/))
+                               o.m_takeoffTimePlanned, o.m_takeoffTimeActual, o.m_enrouteTime, o.m_fuelTime, o.m_cruiseAltitude/*, tie(o.m_cruiseTrueAirspeed, o.m_flightRules, o.m_route, o.m_remarks)*/))
 
 #endif // guard

@@ -29,16 +29,16 @@ namespace BlackMisc
         {
             QString s;
             s.append(m_equipmentIcao);
-            s.append(" ").append(m_originAirportIcao);
-            s.append(" ").append(m_destinationAirportIcao);
-            s.append(" ").append(m_alternateAirportIcao);
+            s.append(" ").append(m_originAirportIcao.toQString(i18n));
+            s.append(" ").append(m_destinationAirportIcao.toQString(i18n));
+            s.append(" ").append(m_alternateAirportIcao.toQString(i18n));
             s.append(" ").append(m_takeoffTimePlanned.toString("ddhhmm"));
             s.append(" ").append(m_takeoffTimeActual.toString("ddhhmm"));
             s.append(" ").append(m_enrouteTime.toQString(i18n));
             s.append(" ").append(m_fuelTime.toQString(i18n));
             s.append(" ").append(m_cruiseAltitude.toQString(i18n));
             s.append(" ").append(m_cruiseTrueAirspeed.toQString(i18n));
-            switch(m_flightRules)
+            switch (m_flightRules)
             {
             case VFR:   s.append(" VFR"); break;
             case IFR:   s.append(" IFR"); break;
