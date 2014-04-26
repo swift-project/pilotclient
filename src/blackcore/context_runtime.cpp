@@ -1,16 +1,6 @@
 #include "blackcore/context_runtime.h"
-
-#include "blackcore/context_application_impl.h"
-#include "blackcore/context_network_impl.h"
-#include "blackcore/context_settings_impl.h"
-#include "blackcore/context_audio_impl.h"
-#include "blackcore/context_simulator_impl.h"
-
-#include "blackcore/context_application_proxy.h"
-#include "blackcore/context_network_proxy.h"
-#include "blackcore/context_settings_proxy.h"
-#include "blackcore/context_audio_proxy.h"
-#include "blackcore/context_simulator_proxy.h"
+#include "blackcore/context_all_impl.h"
+#include "blackcore/context_all_proxies.h"
 
 #include "blacksim/blacksimfreefunctions.h"
 
@@ -450,14 +440,14 @@ namespace BlackCore
             this->m_dbusConnection = QDBusConnection::connectToPeer(address, "BlackBoxRuntime");
     }
 
-    IContextNetwork *CRuntime::getIContextNetwork()
+    const IContextApplication *CRuntime::getIContextApplication() const
     {
-        return this->m_contextNetwork;
+        return this->m_contextApplication;
     }
 
-    const IContextNetwork *CRuntime::getIContextNetwork() const
+    IContextApplication *CRuntime::getIContextApplication()
     {
-        return this->m_contextNetwork;
+        return this->m_contextApplication;
     }
 
     IContextAudio *CRuntime::getIContextAudio()
@@ -470,6 +460,16 @@ namespace BlackCore
         return this->m_contextAudio;
     }
 
+    IContextNetwork *CRuntime::getIContextNetwork()
+    {
+        return this->m_contextNetwork;
+    }
+
+    const IContextNetwork *CRuntime::getIContextNetwork() const
+    {
+        return this->m_contextNetwork;
+    }
+
     IContextSettings *CRuntime::getIContextSettings()
     {
         return this->m_contextSettings;
@@ -478,16 +478,6 @@ namespace BlackCore
     const IContextSettings *CRuntime::getIContextSettings() const
     {
         return this->m_contextSettings;
-    }
-
-    const IContextApplication *CRuntime::getIContextApplication() const
-    {
-        return this->m_contextApplication;
-    }
-
-    IContextApplication *CRuntime::getIContextApplication()
-    {
-        return this->m_contextApplication;
     }
 
     const IContextSimulator *CRuntime::getIContextSimulator() const
