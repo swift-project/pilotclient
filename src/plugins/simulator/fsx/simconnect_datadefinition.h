@@ -9,6 +9,7 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#include <simconnect/SimConnect.h>
 #include <windows.h>
 
 namespace BlackSimPlugin

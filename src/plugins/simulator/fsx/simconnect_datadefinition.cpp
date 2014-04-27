@@ -4,7 +4,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "simconnect_datadefinition.h"
-#include "simconnect/SimConnect.h"
 
 namespace BlackSimPlugin
 {
