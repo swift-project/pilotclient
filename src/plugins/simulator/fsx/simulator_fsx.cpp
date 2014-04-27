@@ -66,7 +66,7 @@ namespace BlackSimPlugin
 
             initSystemEvents();
             initDataDefinitions();
-            m_simconnectTimerId = startTimer(50);
+            m_simconnectTimerId = startTimer(10);
             m_isConnected = true;
 
             emit connectionChanged(true);
@@ -206,8 +206,13 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_EVENT_FRAME:
                 {
-                    simulatorFsx->onSimFrame();
-                    break;
+                    SIMCONNECT_RECV_EVENT_FRAME  *event = (SIMCONNECT_RECV_EVENT_FRAME *) pData;
+                    switch(event->uEventID)
+                    {
+                    case EVENT_FRAME:
+                        simulatorFsx->onSimFrame();
+                        break;
+                    }
                 }
             case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
                 {
@@ -246,6 +251,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimFrame()
         {
+            update();
         }
 
         void CSimulatorFsx::onSimExit()
@@ -314,7 +320,6 @@ namespace BlackSimPlugin
         void CSimulatorFsx::timerEvent(QTimerEvent * /* event */)
         {
             dispatch();
-            update();
         }
 
         void CSimulatorFsx::dispatch()
@@ -329,6 +334,7 @@ namespace BlackSimPlugin
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_SIM_STATUS, "Sim");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_OBJECT_ADDED, "ObjectAdded");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_OBJECT_REMOVED, "ObjectRemoved");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_FRAME, "Frame");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EVENT_FREEZELAT, "FREEZE_LATITUDE_LONGITUDE_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EVENT_FREEZEALT, "FREEZE_ALTITUDE_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EVENT_FREEZEATT, "FREEZE_ATTITUDE_SET");
