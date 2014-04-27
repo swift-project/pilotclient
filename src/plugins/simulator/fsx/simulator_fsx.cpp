@@ -5,7 +5,7 @@
 
 #include "simulator_fsx.h"
 #include "simconnect_datadefinition.h"
-#include "simconnect_exception.h"
+#include "blacksim/fsx/simconnectutilities.h"
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/simulatorinfo.h"
 #include <QTimer>
@@ -165,7 +165,7 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_EXCEPTION:
                 {
                     SIMCONNECT_RECV_EXCEPTION *event = (SIMCONNECT_RECV_EXCEPTION *)pData;
-                    CSimConnectException::handleException((SIMCONNECT_EXCEPTION)event->dwException);
+                    qDebug() << "Caught simConnect exception: " << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)event->dwException);
                     break;
                 }
             case SIMCONNECT_RECV_ID_QUIT:
