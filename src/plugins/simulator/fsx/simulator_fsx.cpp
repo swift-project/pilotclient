@@ -350,15 +350,20 @@ namespace BlackSimPlugin
             {
                 if (simObj.m_interpolator.hasEnoughAircraftSituations())
                 {
-                    DataDefinitionAircraftPosition position;
-                    CAircraftSituation situation = simObj.m_interpolator.getCurrentSituation();
-                    position.latitude = situation.latitude().value();
-                    position.longitude = situation.longitude().value();
-                    position.altitude = situation.getAltitude().value(CLengthUnit::ft());
-                    position.pitch = situation.getPitch().value();
-                    position.bank = situation.getBank().value();
-                    position.trueHeading = situation.getHeading().value(CAngleUnit::deg());
 
+                    SIMCONNECT_DATA_INITPOSITION position;
+                    CAircraftSituation situation = simObj.m_interpolator.getCurrentSituation();
+                    position.Latitude = situation.latitude().value();
+                    position.Longitude = situation.longitude().value();
+                    position.Altitude = situation.getAltitude().value(CLengthUnit::ft());
+                    position.Pitch = situation.getPitch().value();
+                    position.Bank = situation.getBank().value();
+                    position.Heading = situation.getHeading().value(CAngleUnit::deg());
+                    position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
+                    position.OnGround = position.Airspeed < 30 ? 1 : 0;
+
+                    DataDefinitionRemoteAircraftSituation ddAircraftSituation;
+                    ddAircraftSituation.position = position;
                     DataDefinitionAircraftConfiguration configuration;
                     configuration.gearCenter = 100.0;
                     configuration.gearLeft = 100.0;
@@ -368,7 +373,7 @@ namespace BlackSimPlugin
 
                     if (simObj.m_objectId != 0)
                     {
-                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftPosition), &position);
+                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionRemoteAircraftSituation, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(ddAircraftSituation), &ddAircraftSituation);
 
                         // With the following SimConnect call all aircrafts loose their red tag. No idea why though.
                         SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftConfiguration), &configuration);

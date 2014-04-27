@@ -19,7 +19,7 @@ namespace BlackSimPlugin
         {
             HRESULT hr = S_OK;
             hr = initOwnAircraft(hSimConnect);
-            hr = initAircraftPosition(hSimConnect);
+            hr = initRemoteAircraftSituation(hSimConnect);
             hr = initAircraftConfiguration(hSimConnect);
             return hr;
         }
@@ -44,15 +44,10 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        HRESULT CSimConnectDataDefinition::initAircraftPosition(const HANDLE hSimConnect)
+        HRESULT CSimConnectDataDefinition::initRemoteAircraftSituation(const HANDLE hSimConnect)
         {
             HRESULT hr = S_OK;
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Latitude", "Degrees");
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Longitude", "Degrees");
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Altitude", "Feet");
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Heading Degrees True", "Degrees");
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Pitch Degrees", "Degrees");
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftPosition, "Plane Bank Degrees", "Degrees");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataDefinitionRemoteAircraftSituation, "Initial Position", "", SIMCONNECT_DATATYPE_INITPOSITION);
             return hr;
         }
 

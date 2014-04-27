@@ -34,14 +34,9 @@ namespace BlackSimPlugin
         };
 
         //! \brief Data struct of aircraft position
-        struct DataDefinitionAircraftPosition
+        struct DataDefinitionRemoteAircraftSituation
         {
-            double latitude;        //!< Latitude
-            double longitude;       //!< Longitude
-            double altitude;        //!< Altitude
-            double trueHeading;     //!< True heading
-            double pitch;           //!< Pitch
-            double bank;            //!< Bank
+            SIMCONNECT_DATA_INITPOSITION position;  //!< Position struct
         };
 
         //! \brief Data struct of aircraft position
@@ -62,7 +57,7 @@ namespace BlackSimPlugin
             //! \brief SimConnect definiton ID's
             enum DataDefiniton {
                 DataOwnAircraft,
-                DataAircraftPosition,
+                DataDefinitionRemoteAircraftSituation,
                 DataAircraftConfiguration
             };
 
@@ -93,7 +88,7 @@ namespace BlackSimPlugin
              * \param hSimConnect
              * \return
              */
-            static HRESULT initAircraftPosition(const HANDLE hSimConnect);
+            static HRESULT initRemoteAircraftSituation(const HANDLE hSimConnect);
 
             /*!
              * \brief Initialize data definition for remote aircraft configuration
