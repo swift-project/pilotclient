@@ -98,6 +98,10 @@ namespace BlackCore
                                              + headingBegin,
                                              headingBegin.getReferenceNorth()));
 
+        currentSituation.setGroundspeed((endSituation.getGroundSpeed() - beginSituation.getGroundSpeed())
+                                        * simulationTime
+                                        + beginSituation.getGroundSpeed());
+
         return currentSituation;
     }
 }
