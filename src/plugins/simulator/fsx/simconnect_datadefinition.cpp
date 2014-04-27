@@ -19,7 +19,7 @@ namespace BlackSimPlugin
             HRESULT hr = S_OK;
             hr = initOwnAircraft(hSimConnect);
             hr = initRemoteAircraftSituation(hSimConnect);
-            hr = initAircraftConfiguration(hSimConnect);
+            hr = initGearHandlePosition(hSimConnect);
             return hr;
         }
 
@@ -50,14 +50,10 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        HRESULT CSimConnectDataDefinition::initAircraftConfiguration(const HANDLE hSimConnect)
+        HRESULT CSimConnectDataDefinition::initGearHandlePosition(const HANDLE hSimConnect)
         {
             HRESULT hr = S_OK;
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, "GEAR CENTER POSITION", "Percent Over 100");
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, "GEAR LEFT POSITION", "Percent Over 100");
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, "GEAR RIGHT POSITION", "Percent Over 100");
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, "GEAR TAIL POSITION", "Percent Over 100");
-            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, "GEAR AUX POSITION", "Percent Over 100");
+            hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, "GEAR HANDLE POSITION", "BOOL", SIMCONNECT_DATATYPE_INT32);
             return hr;
         }
     }

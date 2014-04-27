@@ -6,6 +6,8 @@
 #ifndef BLACKSIMPLUGIN_FSX_SIMCONNECT_DATADEFINITION_H
 #define BLACKSIMPLUGIN_FSX_SIMCONNECT_DATADEFINITION_H
 
+#include <QtGlobal>
+
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
@@ -41,13 +43,9 @@ namespace BlackSimPlugin
         };
 
         //! \brief Data struct of aircraft position
-        struct DataDefinitionAircraftConfiguration
+        struct DataDefinitionGearHandlePosition
         {
-            double gearCenter;          //!< Gear center
-            double gearLeft;            //!< Gear left
-            double gearRight;           //!< Gear right
-            double gearTail;            //!< Gear tail
-            double gearAux;             //!< Gear aux
+            qint32 gearHandlePosition;  //!< Bool, 1 if gear handle is applied otherwise 0
         };
 
         //! \brief Handles SimConnect data definitions
@@ -59,7 +57,7 @@ namespace BlackSimPlugin
             enum DataDefiniton {
                 DataOwnAircraft,
                 DataDefinitionRemoteAircraftSituation,
-                DataAircraftConfiguration
+                DataDefinitionGearHandlePosition
             };
 
             //! \brief SimConnect request ID's
@@ -96,7 +94,7 @@ namespace BlackSimPlugin
              * \param hSimConnect
              * \return
              */
-            static HRESULT initAircraftConfiguration(const HANDLE hSimConnect);
+            static HRESULT initGearHandlePosition(const HANDLE hSimConnect);
         };
     }
 }

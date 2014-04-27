@@ -293,13 +293,10 @@ namespace BlackSimPlugin
             SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZEATT, 1,
                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
-            DataDefinitionAircraftConfiguration configuration;
-            configuration.gearCenter = 100.0;
-            configuration.gearLeft = 100.0;
-            configuration.gearRight = 100.0;
-            configuration.gearTail = 100.0;
-            configuration.gearAux = 100.0;
-            SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, objectID, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftConfiguration), &configuration);
+            DataDefinitionGearHandlePosition gearHandle;
+            gearHandle.gearHandlePosition = 1;
+
+            SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, objectID, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(gearHandle), &gearHandle);
 
             SimConnectObject simObject;
             foreach(simObject, m_simConnectObjects)
@@ -364,19 +361,16 @@ namespace BlackSimPlugin
 
                     DataDefinitionRemoteAircraftSituation ddAircraftSituation;
                     ddAircraftSituation.position = position;
-                    DataDefinitionAircraftConfiguration configuration;
-                    configuration.gearCenter = 100.0;
-                    configuration.gearLeft = 100.0;
-                    configuration.gearRight = 100.0;
-                    configuration.gearTail = 100.0;
-                    configuration.gearAux = 100.0;
+
+                    DataDefinitionGearHandlePosition gearHandle;
+                    gearHandle.gearHandlePosition = 1;
 
                     if (simObj.m_objectId != 0)
                     {
                         SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionRemoteAircraftSituation, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(ddAircraftSituation), &ddAircraftSituation);
 
                         // With the following SimConnect call all aircrafts loose their red tag. No idea why though.
-                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataAircraftConfiguration, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionAircraftConfiguration), &configuration);
+                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(gearHandle), &gearHandle);
                     }
                 }
             }
