@@ -10,6 +10,7 @@
 #include "blackcore/context_application_impl.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/project.h"
 #include <QtConcurrent/QtConcurrent>
 #include <QMetaType>
 #include <QMetaMethod>
@@ -28,6 +29,10 @@ int main(int argc, char *argv[])
     QIcon icon(":/blackcore/icons/tower.png");
     QApplication::setWindowIcon(icon);
     QTextStream cin(stdin);
+
+    qDebug() << BlackMisc::CProject::version();
+    qDebug() << BlackMisc::CProject::compiledInfo();
+    qDebug();
 
     qDebug() << "1 + la/ra .. session DBus server (default)";
     qDebug() << "2 + la/ra .. system DBus server";

@@ -8,7 +8,8 @@
 BLACK_VER_MAJ     =   0
 BLACK_VER_MIN     =   4
 BLACK_VER_PAT     =   0
-BLACK_VERSION     =   $${BLACK_VER_MAJ}.$${BLACK_VER_MIN}.$${BLACK_VERSION}
+BLACK_VERSION     =   $${BLACK_VER_MAJ}.$${BLACK_VER_MIN}.$${BLACK_VER_PAT}
+DEFINES += BLACK_VERSION=$$BLACK_VERSION
 
 ###########################
 # Install paths
@@ -19,7 +20,6 @@ BLACK_VERSION     =   $${BLACK_VER_MAJ}.$${BLACK_VER_MIN}.$${BLACK_VERSION}
 # Build configuration
 ###########################
 
-BLACK_CONFIG    += BlackMisc
 BLACK_CONFIG    += BlackCore
 BLACK_CONFIG    += BlackGui
 BLACK_CONFIG    += BlackSound
@@ -29,3 +29,14 @@ BLACK_CONFIG    += Unittests
 #BLACK_CONFIG    += FSX
 #BLACK_CONFIG    += XPlane
 #BLACK_CONFIG    += Doxygen
+
+################################
+# Defines, for compile time code
+################################
+
+contains(BLACK_CONFIG, BlackSound) { DEFINES += WITH_BLACKSOUND }
+contains(BLACK_CONFIG, BlackSim) { DEFINES += WITH_BLACKSIM }
+contains(BLACK_CONFIG, BlackCore) { DEFINES += WITH_BLACKCORE }
+contains(BLACK_CONFIG, BlackGui) { DEFINES += WITH_BLACKGUI }
+contains(BLACK_CONFIG, FSX) { DEFINES += WITH_FSX }
+contains(BLACK_CONFIG, XPlane) { DEFINES += WITH_XPLANE }

@@ -3,9 +3,7 @@ include (config.pri)
 TEMPLATE = subdirs
 CONFIG += ordered
 
-contains(BLACK_CONFIG, BlackMisc) {
-    SUBDIRS += src/blackmisc
-}
+SUBDIRS += src/blackmisc
 
 contains(BLACK_CONFIG, BlackSound) {
     SUBDIRS += src/blacksound

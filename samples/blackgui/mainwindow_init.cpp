@@ -33,6 +33,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // with frameless window, we shift menu and statusbar into central widget
     // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
+    this->setWindowTitle(CProject::systemNameAndVersion());
     if (this->m_windowMode == GuiModes::WindowFrameless)
     {
 
@@ -150,6 +151,10 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // We don't receive signals from the past. So ask for it simulate an initial signal
     simulatorConnectionChanged(this->getIContextSimulator()->isConnected());
+
+    // info
+    this->ui->te_StatusPageConsole->appendPlainText(CProject::systemNameAndVersion());
+    this->ui->te_StatusPageConsole->appendPlainText(CProject::compiledInfo());
 
     // do this as last statement, so it can be used as flag
     // whether init has been completed

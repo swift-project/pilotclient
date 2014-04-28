@@ -77,7 +77,7 @@ namespace BlackCore
         virtual void unloadSimulatorPlugin () = 0;
 
         //! Simulator avialable?
-        bool isSimulatorAvailable() const { return !getSimulatorInfo().isUnspecified(); }
+        bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorInfo().isUnspecified(); }
 
     protected:
         //! \brief Constructor

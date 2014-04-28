@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "network_vatlib.h"
+#include "blackmisc/project.h"
 #include <vector>
 #include <exception>
 #include <type_traits>
@@ -11,10 +12,6 @@
 static_assert(! std::is_abstract<BlackCore::CNetworkVatlib>::value, "Must implement all pure virtuals");
 
 //TODO just placeholders to allow this to compile
-#define CLIENT_NAME_VERSION "BlackBox 0.3"
-#define CLIENT_VERSION_MAJOR 0
-#define CLIENT_VERSION_MINOR 3
-#define CLIENT_SIMULATOR_NAME "None"
 #define CLIENT_PUBLIC_ID 0
 #define CLIENT_PRIVATE_KEY ""
 
@@ -25,6 +22,8 @@ namespace BlackCore
     using namespace BlackMisc::Geo;
     using namespace BlackMisc::Aviation;
     using namespace BlackMisc::Network;
+    using namespace BlackMisc;
+
 
     void exceptionDispatcher(const char *caller);
 
@@ -66,8 +65,8 @@ namespace BlackCore
                 capabilities += "=1";
             }
 
-            m_net->CreateNetworkSession(CLIENT_NAME_VERSION, CLIENT_VERSION_MAJOR, CLIENT_VERSION_MINOR,
-                                        CLIENT_SIMULATOR_NAME, CLIENT_PUBLIC_ID, CLIENT_PRIVATE_KEY, toFSD(capabilities));
+            m_net->CreateNetworkSession(CProject::systemNameAndVersionChar(), CProject::versionMajor(), CProject::versionMinor(),
+                                        CProject::simulatorsChar(), CLIENT_PUBLIC_ID, CLIENT_PRIVATE_KEY, toFSD(capabilities));
 
             m_net->InstallOnConnectionStatusChangedEvent(onConnectionStatusChanged, this);
             m_net->InstallOnTextMessageReceivedEvent(onTextMessageReceived, this);
@@ -264,7 +263,7 @@ namespace BlackCore
                     m_bytesVec.push_back(creator->toFSD(*i));
                 }
             }
-            const char **operator ()()
+            const char **operator()()
             {
                 Q_ASSERT(m_cstrVec.isEmpty());
                 for (auto i = m_bytesVec.begin(); i != m_bytesVec.end(); ++i)
@@ -330,7 +329,7 @@ namespace BlackCore
                 net = netPtr.data();
             }
 
-            auto urlsPtr = QSharedPointer<const char *const>(net->GetVatsimStatusUrls(), [=](const char *const *p){ net->GetVatsimStatusUrls_Free(p); });
+            auto urlsPtr = QSharedPointer<const char *const>(net->GetVatsimStatusUrls(), [ = ](const char *const * p) { net->GetVatsimStatusUrls_Free(p); });
             auto urls = urlsPtr.data();
             while (*urls)
             {
@@ -354,10 +353,10 @@ namespace BlackCore
                 net = netPtr.data();
             }
 
-            auto namesPtr = QSharedPointer<const char *const>(net->GetVatsimFSDServerNames(), [=](const char *const *p){ net->GetVatsimFSDServerNames_Free(p); });
-            auto ipsPtr = QSharedPointer<const char *const>(net->GetVatsimFSDServerIps(), [=](const char *const *p){ net->GetVatsimFSDServerIps_Free(p); });
-            auto locationsPtr = QSharedPointer<const char *const>(net->GetVatsimFSDServerLocations(), [=](const char *const *p){ net->GetVatsimFSDServerLocations_Free(p); });
-            auto acceptsPtr = QSharedPointer<const bool>(net->GetVatsimFSDServerAcceptingConnections(), [=](const bool *p){ net->GetVatsimFSDServerAcceptingConnections_Free(p); });
+            auto namesPtr = QSharedPointer<const char *const>(net->GetVatsimFSDServerNames(), [ = ](const char *const * p) { net->GetVatsimFSDServerNames_Free(p); });
+            auto ipsPtr = QSharedPointer<const char *const>(net->GetVatsimFSDServerIps(), [ = ](const char *const * p) { net->GetVatsimFSDServerIps_Free(p); });
+            auto locationsPtr = QSharedPointer<const char *const>(net->GetVatsimFSDServerLocations(), [ = ](const char *const * p) { net->GetVatsimFSDServerLocations_Free(p); });
+            auto acceptsPtr = QSharedPointer<const bool>(net->GetVatsimFSDServerAcceptingConnections(), [ = ](const bool * p) { net->GetVatsimFSDServerAcceptingConnections_Free(p); });
             auto names = namesPtr.data();
             auto ips = ipsPtr.data();
             auto locations = locationsPtr.data();
@@ -759,8 +758,8 @@ namespace BlackCore
     void CNetworkVatlib::onConnectionStatusChanged(Cvatlib_Network *, Cvatlib_Network::connStatus, Cvatlib_Network::connStatus newStatus, void *cbvar)
     {
         if (newStatus == Cvatlib_Network::connStatus_Error ||
-            newStatus == Cvatlib_Network::connStatus_ConnectionFailed ||
-            newStatus == Cvatlib_Network::connStatus_ConnectionLost)
+                newStatus == Cvatlib_Network::connStatus_ConnectionFailed ||
+                newStatus == Cvatlib_Network::connStatus_ConnectionLost)
         {
             cbvar_cast(cbvar)->changeConnectionStatus(newStatus, cbvar_cast(cbvar)->getSocketError());
         }
