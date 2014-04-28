@@ -408,14 +408,6 @@ private slots:
     //! Clear single hotkey
     void clearHotkey();
 
-    //! Test the SIM connect connectivity
-    void testSimConnectConnection();
-
-    //! Save a simconnect.cfg file for FSX
-    void saveSimConnectCfg();
-
-    //! simConnect.cfg: open, exists? delete
-    void simConnectCfgFile();
 };
 
 #pragma pop_macro("interface")

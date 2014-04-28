@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CSettingsFsxComponent</class>
+ <widget class="QFrame" name="CSettingsFsxComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <layout class="QVBoxLayout" name="vl_SettingsFsxComponent">
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QFormLayout" name="fl_Settings">
+     <property name="fieldGrowthPolicy">
+      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+     </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="lbl_SettingsFsxAddress">
+       <property name="text">
+        <string>FSX address</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="le_SettingsFsxAddress">
+       <property name="text">
+        <string>127.0.0.1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="lbl_SettingsFsxPort">
+       <property name="text">
+        <string>FSX port</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="le_SettingsFsxPort">
+       <property name="text">
+        <string>500</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" colspan="2">
+      <layout class="QHBoxLayout" name="hl_SettingsSimconnectCfgButtons">
+       <item>
+        <widget class="QPushButton" name="pb_SettingsFsxOpenSimconnectCfg">
+         <property name="text">
+          <string>Open</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pb_SettingsFsxDeleteSimconnectCfg">
+         <property name="text">
+          <string>Delete</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pb_SettingsFsxSaveSimconnectCfg">
+         <property name="text">
+          <string>Save</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pb_SettingsFsxTestConnection">
+         <property name="text">
+          <string>Test connection</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="lbl_SettingsFsxExistsSimconncetCfg">
+       <property name="text">
+        <string>&quot;simconnect.cfg&quot; exists?</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QWidget" name="wi_SettingsFsxExistsSimconncetCfg" native="true">
+       <layout class="QHBoxLayout" name="hl_SettingsFsxExistsSimconncetCfg">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLineEdit" name="le_SettingsFsxExistsSimconncetCfg">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_SettingsFsxExistsSimconncetCfg">
+          <property name="text">
+           <string>Check</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>le_SettingsFsxAddress</tabstop>
+  <tabstop>le_SettingsFsxPort</tabstop>
+  <tabstop>le_SettingsFsxExistsSimconncetCfg</tabstop>
+  <tabstop>pb_SettingsFsxExistsSimconncetCfg</tabstop>
+  <tabstop>pb_SettingsFsxOpenSimconnectCfg</tabstop>
+  <tabstop>pb_SettingsFsxDeleteSimconnectCfg</tabstop>
+  <tabstop>pb_SettingsFsxSaveSimconnectCfg</tabstop>
+  <tabstop>pb_SettingsFsxTestConnection</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
