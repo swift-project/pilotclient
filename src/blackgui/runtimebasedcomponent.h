@@ -16,7 +16,13 @@ namespace BlackGui
     {
     public:
         //! Set runtime, usually set by runtime owner (must only be one, usually main window)
-        void setRuntime(BlackCore::CRuntime *runtime, bool runtimeOwner = false) { this->m_runtime = runtime; this->m_runtimeOwner = runtimeOwner; }
+        void setRuntime(BlackCore::CRuntime *runtime, bool runtimeOwner = false)
+        {
+            this->m_runtime = runtime; this->m_runtimeOwner = runtimeOwner;
+        }
+
+        //! Set runtime for each CRuntimeBasedComponent
+        static void setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent);
 
     protected:
         //! Constructor
@@ -63,6 +69,12 @@ namespace BlackGui
 
         //! Context for simulator
         BlackCore::IContextSimulator *getIContextSimulator();
+
+        //! Send status message (via application context)
+        void sendStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
+
+        //! Send status message (via application context)
+        void sendStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
 
         //! Owner?
         bool isRuntimeOwner() const { return this->m_runtimeOwner; }

@@ -1,4 +1,5 @@
 #include "runtimebasedcomponent.h"
+#include <QWidget>
 
 namespace BlackGui
 {
@@ -24,6 +25,18 @@ namespace BlackGui
     {
         if (!this->m_runtime) return nullptr;
         return this->m_runtime->getIContextAudio();
+    }
+
+    void CRuntimeBasedComponent::setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent)
+    {
+        if (!parent) return;
+        QList<QWidget *> children = parent->findChildren<QWidget *>();
+        foreach(QWidget * widget, children)
+        {
+            if (widget->objectName().isEmpty()) continue; // rule out unamed widgets
+            CRuntimeBasedComponent *rbc = dynamic_cast<CRuntimeBasedComponent *>(widget);
+            if (rbc) rbc->setRuntime(runtime, false);
+        }
     }
 
     void CRuntimeBasedComponent::createRuntime(const BlackCore::CRuntimeConfig &config, QObject *parent)
@@ -66,5 +79,17 @@ namespace BlackGui
     {
         if (!this->m_runtime) return nullptr;
         return this->m_runtime->getIContextSimulator();
+    }
+
+    void CRuntimeBasedComponent::sendStatusMessage(const BlackMisc::CStatusMessage &statusMessage)
+    {
+        Q_ASSERT(this->getIContextApplication());
+        this->getIContextApplication()->sendStatusMessage(statusMessage);
+    }
+
+    void CRuntimeBasedComponent::sendStatusMessages(const BlackMisc::CStatusMessageList &statusMessages)
+    {
+        Q_ASSERT(this->getIContextApplication());
+        this->getIContextApplication()->sendStatusMessages(statusMessages);
     }
 }

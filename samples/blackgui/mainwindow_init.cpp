@@ -78,7 +78,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // context
     this->createRuntime(runtimeConfig, this);
-    this->ui->comp_Flightplan->setRuntime(this->getRuntime());
+    CRuntimeBasedComponent::setRuntimeForComponents(this->getRuntime(), this);
 
     // wire GUI signals
     this->initGuiSignals();
