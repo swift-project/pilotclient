@@ -73,17 +73,7 @@ void MainWindow::gracefulShutdown()
     }
 
     // shut down all timers
-    this->stopUpdateTimers(true);
-    if (this->m_timerContextWatchdog)
-    {
-        this->m_timerContextWatchdog->stop();
-        this->m_timerContextWatchdog->disconnect(this);
-    }
-    if (this->m_timerCollectedCockpitUpdates)
-    {
-        this->m_timerCollectedCockpitUpdates->stop();
-        this->m_timerCollectedCockpitUpdates->disconnect(this);
-    }
+    this->stopAllTimers(true);
 
     // if we have a context, we shut some things down
     if (this->m_contextNetworkAvailable)
@@ -253,6 +243,7 @@ bool MainWindow::isContextAudioAvailableCheck()
  */
 void MainWindow::displayStatusMessage(const CStatusMessage &statusMessage)
 {
+    if (!this->m_init) return;
     this->ui->sb_MainStatusBar->show();
     this->m_timerStatusBar->start(3000);
     this->m_statusBarIcon->setPixmap(statusMessage.toIcon());
@@ -271,7 +262,7 @@ void MainWindow::displayStatusMessage(const CStatusMessage &statusMessage)
  */
 void MainWindow::displayStatusMessages(const CStatusMessageList &messages)
 {
-    if (messages.isEmpty()) return;
+    if (!this->m_init || messages.isEmpty()) return;
     foreach(CStatusMessage msg, messages)
     {
         this->displayStatusMessage(msg);

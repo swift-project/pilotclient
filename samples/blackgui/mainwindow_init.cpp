@@ -15,6 +15,7 @@
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/keyboardkeylistmodel.h"
 #include "blackmisc/avselcal.h"
+#include "blackmisc/project.h"
 #include <QSortFilterProxyModel>
 #include <QSizeGrip>
 #include <QHBoxLayout>
@@ -325,12 +326,24 @@ void MainWindow::stopUpdateTimers(bool disconnect)
     this->m_timerUpdateAircraftsInRange->stop();
     this->m_timerUpdateAtcStationsOnline->stop();
     this->m_timerUpdateUsers->stop();
-    this->m_timerAudioTests->stop();
-    this->m_timerSimulator->stop();
     if (!disconnect) return;
     this->disconnect(this->m_timerUpdateAircraftsInRange);
     this->disconnect(this->m_timerUpdateAtcStationsOnline);
     this->disconnect(this->m_timerUpdateUsers);
+}
+
+void MainWindow::stopAllTimers(bool disconnect)
+{
+    this->m_timerStatusBar->stop();
+    this->m_timerContextWatchdog->stop();
+    this->m_timerCollectedCockpitUpdates->stop();
+    this->m_timerAudioTests->stop();
+    this->m_timerSimulator->stop();
+    this->stopUpdateTimers(disconnect);
+    if (!disconnect) return;
+    this->disconnect(this->m_timerStatusBar);
+    this->disconnect(this->m_timerContextWatchdog);
+    this->disconnect(this->m_timerCollectedCockpitUpdates);
     this->disconnect(this->m_timerAudioTests);
     this->disconnect(this->m_timerSimulator);
 }

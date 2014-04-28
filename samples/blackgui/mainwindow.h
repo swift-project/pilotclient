@@ -232,6 +232,12 @@ private:
      */
     void stopUpdateTimers(bool disconnect = false);
 
+    /*!
+     * \brief Stop all timers
+     * \param disconnect also disconnect signal/slots
+     */
+    void stopAllTimers(bool disconnect);
+
     //! Currently selected SELCAL code
     QString getSelcalCode() const;
 
@@ -243,7 +249,6 @@ private:
 
     //! Update simulator page with latest user aircraft data
     void updateSimulatorData();
-
 
 private slots:
 
