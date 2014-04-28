@@ -13,6 +13,7 @@ namespace BlackGui
         connect(this->ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan);
         connect(this->ui->pb_Load, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlan);
         connect(this->ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan);
+        connect(this->ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::validateFlightPlan);
 
         bool c;
         c = connect(this->ui->cb_VoiceCapabilities, SIGNAL(currentIndexChanged(int)), this, SLOT(buildRemarkString()));
@@ -66,6 +67,11 @@ namespace BlackGui
         this->ui->le_EstimatedTimeEnroute->setText(flightPlan.getEnrouteTimeHourMin());
         this->ui->le_CrusingAltitude->setText(flightPlan.getCruiseAltitude().toQString());
         this->ui->le_CruiseTrueAirspeed->setText(flightPlan.getCruiseTrueAirspeed().valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CSpeedUnit::kts(), 0));
+    }
+
+    CFlightPlan CFlightPlanComponent::getFlightPlan() const
+    {
+        return this->m_flightPlan;
     }
 
     BlackMisc::CStatusMessageList CFlightPlanComponent::validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &flightPlan)
@@ -191,17 +197,40 @@ namespace BlackGui
         if (messages.isEmpty())
         {
             // no error, send if possible
+            CStatusMessage m;
             if (this->getIContextNetwork()->isConnected())
+            {
+                flightPlan.setWhenLastSent(QDateTime::currentDateTimeUtc());
                 this->getIContextNetwork()->sendFlightPlan(flightPlan);
+                this->ui->le_LastSent->setText(flightPlan.whenLastSent().toString());
+                m = CStatusMessage::getInfoMessage("Sent flight plan", CStatusMessage::TypeTrafficNetwork);
+            }
             else
             {
-                CStatusMessage m = CStatusMessage::getErrorMessage("No errors, but not connected, cannot send flight plan", CStatusMessage::TypeTrafficNetwork);
-                this->getIContextApplication()->sendStatusMessage(m);
+                flightPlan.setWhenLastSent(QDateTime());
+                this->ui->le_LastSent->clear();
+                m = CStatusMessage::getErrorMessage("No errors, but not connected, cannot send flight plan", CStatusMessage::TypeTrafficNetwork);
             }
+            this->sendStatusMessage(m);
+            this->m_flightPlan = flightPlan; // last valid FP
         }
         else
         {
-            this->getIContextApplication()->sendStatusMessages(messages);
+            this->sendStatusMessages(messages);
+        }
+    }
+
+    void CFlightPlanComponent::validateFlightPlan()
+    {
+        CFlightPlan flightPlan;
+        CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
+        if (messages.isEmpty())
+        {
+            this->sendStatusMessage(CStatusMessage::getInfoMessage("No errors", CStatusMessage::TypeTrafficNetwork));
+        }
+        else
+        {
+            this->sendStatusMessages(messages);
         }
     }
 
@@ -284,6 +313,8 @@ namespace BlackGui
             rem.append("PER/C ");
         else if (v.startsWith("D"))
             rem.append("PER/D ");
+        else if (v.startsWith("E"))
+            rem.append("PER/E ");
 
         if (this->ui->frp_SelcalCode->hasValidCode())
         {
@@ -304,7 +335,7 @@ namespace BlackGui
     void CFlightPlanComponent::copyRemarks()
     {
         this->ui->pte_Remarks->setPlainText(this->ui->pte_RemarksGenerated->toPlainText());
-        this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage("Copied remarks", CStatusMessage::TypeTrafficNetwork));
+        this->sendStatusMessage(CStatusMessage::getInfoMessage("Copied remarks", CStatusMessage::TypeTrafficNetwork));
     }
 
     void CFlightPlanComponent::currentTabGenerator()

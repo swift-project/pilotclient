@@ -110,6 +110,9 @@ namespace BlackMisc
             //! Set remarks string (max 100 characters)
             void setRemarks(const QString &remarks) { m_remarks = remarks.left(100); }
 
+            //! When last sent
+            void setWhenLastSent(const QDateTime &dateTime) { m_lastSent = dateTime; }
+
             //! Get ICAO aircraft equipment code string
             const QString &getEquipmentIcao() const { return m_equipmentIcao; }
 
@@ -157,6 +160,12 @@ namespace BlackMisc
 
             //! Get route string
             const QString &getRoute() const { return m_route; }
+
+            //! When last sent
+            const QDateTime &whenLastSent() const { return m_lastSent; }
+
+            //! Flight plan already sent
+            bool wasSent() const { return m_lastSent.isValid() && !m_lastSent.isNull(); }
 
             //! Get remarks string
             const QString &getRemarks() const { return m_remarks; }
@@ -210,12 +219,13 @@ namespace BlackMisc
             FlightRules m_flightRules;
             QString m_route;
             QString m_remarks;
+            QDateTime m_lastSent;
         };
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CFlightPlan)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CFlightPlan, (o.m_equipmentIcao, o.m_originAirportIcao, o.m_destinationAirportIcao, o.m_alternateAirportIcao,
-                               o.m_takeoffTimePlanned, o.m_takeoffTimeActual, o.m_enrouteTime, o.m_fuelTime, o.m_cruiseAltitude/*, tie(o.m_cruiseTrueAirspeed, o.m_flightRules, o.m_route, o.m_remarks)*/))
+                               o.m_takeoffTimePlanned, o.m_takeoffTimeActual, o.m_enrouteTime, o.m_fuelTime, o.m_cruiseAltitude, tie(o.m_cruiseTrueAirspeed, o.m_flightRules, o.m_route, o.m_remarks, o.m_lastSent)))
 
 #endif // guard

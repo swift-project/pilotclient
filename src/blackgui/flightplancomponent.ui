@@ -38,287 +38,10 @@
     </property>
     <item>
      <layout class="QGridLayout" name="gl_FlightPlan">
-      <item row="7" column="1">
-       <widget class="QLineEdit" name="le_EstimatedTimeEnroute">
-        <property name="inputMask">
-         <string>99:99</string>
-        </property>
+      <item row="11" column="2">
+       <widget class="QPushButton" name="pb_Load">
         <property name="text">
-         <string>00:00</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="lbl_Aircraft_Type">
-        <property name="text">
-         <string>3. Aircraft type</string>
-        </property>
-        <property name="scaledContents">
-         <bool>false</bool>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLineEdit" name="le_CruiseTrueAirspeed">
-        <property name="text">
-         <string>0 kts</string>
-        </property>
-        <property name="maxLength">
-         <number>40</number>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" rowspan="4">
-       <widget class="QGroupBox" name="gb_Type">
-        <property name="title">
-         <string>1. Type</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QRadioButton" name="rb_TypeVfr">
-           <property name="text">
-            <string>VFR</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="rb_TypeSvfr">
-           <property name="text">
-            <string>SVFR</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="rb_TypeIfr">
-           <property name="text">
-            <string>IFR</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QLabel" name="lbl_EstimatedTimeEnroute">
-        <property name="text">
-         <string>10. Estimated time enroute</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="lbl_OriginAirport">
-        <property name="text">
-         <string>5. Departure airport</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="3">
-       <widget class="QPushButton" name="pb_Send">
-        <property name="text">
-         <string>Send plan</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QLabel" name="lbl_CrusingAltitude">
-        <property name="text">
-         <string>7. Cruising altitude</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="4">
-       <widget class="QPlainTextEdit" name="pte_Route"/>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="le_Callsign">
-        <property name="inputMask">
-         <string/>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="maxLength">
-         <number>40</number>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="1" colspan="3">
-       <widget class="QPlainTextEdit" name="pte_Remarks"/>
-      </item>
-      <item row="7" column="2">
-       <widget class="QLineEdit" name="le_FuelOnBoard">
-        <property name="inputMask">
-         <string>99:99</string>
-        </property>
-        <property name="text">
-         <string>00:00</string>
-        </property>
-        <property name="maxLength">
-         <number>5</number>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QLineEdit" name="le_DestinationAirport">
-        <property name="inputMask">
-         <string>&gt;AAAA</string>
-        </property>
-        <property name="text">
-         <string>ICAO</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="lbl_TakeOffTimePlanned">
-        <property name="text">
-         <string>6. Departure time</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="3">
-       <widget class="QLineEdit" name="le_PilotsHomebase"/>
-      </item>
-      <item row="9" column="1" colspan="2">
-       <widget class="QLineEdit" name="le_PilotsName">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="0">
-       <widget class="QLabel" name="lbl_PilotsNameAndHomebase">
-        <property name="text">
-         <string>14. Pilots name / homebase</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <widget class="QLineEdit" name="le_CrusingAltitude">
-        <property name="maxLength">
-         <number>40</number>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="lbl_DestinationAirport">
-        <property name="text">
-         <string>9.Destination airport</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="lbl_Callsign">
-        <property name="text">
-         <string>2. Callsign</string>
-        </property>
-        <property name="scaledContents">
-         <bool>false</bool>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="lbl_CruiseTrueAirspeed">
-        <property name="text">
-         <string>4. True airspeed</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0" colspan="4">
-       <widget class="QLabel" name="lbl_Route">
-        <property name="text">
-         <string>8. Route</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="3">
-       <widget class="QLabel" name="lbl_AlternateAirport">
-        <property name="text">
-         <string>13. Alternate airport</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="2">
-       <widget class="QLabel" name="lbl_FuelOnBorad">
-        <property name="text">
-         <string>12. Fuel on board</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="3">
-       <widget class="QLineEdit" name="le_AlternateAirport">
-        <property name="inputMask">
-         <string>&gt;AAAA</string>
-        </property>
-        <property name="text">
-         <string>ICAO</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="le_OriginAirport">
-        <property name="inputMask">
-         <string>&gt;AAAA</string>
-        </property>
-        <property name="text">
-         <string>ICAO</string>
-        </property>
-        <property name="maxLength">
-         <number>4</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLineEdit" name="le_AircraftType"/>
-      </item>
-      <item row="3" column="2">
-       <widget class="QLineEdit" name="le_TakeOffTimePlanned">
-        <property name="inputMask">
-         <string>99:99</string>
-        </property>
-        <property name="text">
-         <string>00:00</string>
-        </property>
-        <property name="maxLength">
-         <number>5</number>
+         <string>Load plan</string>
         </property>
        </widget>
       </item>
@@ -364,17 +87,315 @@
         </item>
        </layout>
       </item>
-      <item row="10" column="1">
+      <item row="11" column="1">
        <widget class="QPushButton" name="pb_Reset">
         <property name="text">
          <string>Reset plan</string>
         </property>
        </widget>
       </item>
-      <item row="10" column="2">
-       <widget class="QPushButton" name="pb_Load">
+      <item row="7" column="1">
+       <widget class="QLineEdit" name="le_EstimatedTimeEnroute">
+        <property name="inputMask">
+         <string>99:99</string>
+        </property>
         <property name="text">
-         <string>Load plan</string>
+         <string>00:00</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLineEdit" name="le_CruiseTrueAirspeed">
+        <property name="text">
+         <string>0 kts</string>
+        </property>
+        <property name="maxLength">
+         <number>40</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="lbl_Aircraft_Type">
+        <property name="text">
+         <string>3. Aircraft type</string>
+        </property>
+        <property name="scaledContents">
+         <bool>false</bool>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="4">
+       <widget class="QLabel" name="lbl_Route">
+        <property name="text">
+         <string>8. Route</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="2">
+       <widget class="QLabel" name="lbl_FuelOnBorad">
+        <property name="text">
+         <string>12. Fuel on board</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="le_OriginAirport">
+        <property name="inputMask">
+         <string>&gt;AAAA</string>
+        </property>
+        <property name="text">
+         <string>ICAO</string>
+        </property>
+        <property name="maxLength">
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="le_AircraftType"/>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLineEdit" name="le_TakeOffTimePlanned">
+        <property name="inputMask">
+         <string>99:99</string>
+        </property>
+        <property name="text">
+         <string>00:00</string>
+        </property>
+        <property name="maxLength">
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="3">
+       <widget class="QLineEdit" name="le_AlternateAirport">
+        <property name="inputMask">
+         <string>&gt;AAAA</string>
+        </property>
+        <property name="text">
+         <string>ICAO</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="QLabel" name="lbl_AlternateAirport">
+        <property name="text">
+         <string>13. Alternate airport</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1" colspan="3">
+       <widget class="QPlainTextEdit" name="pte_Remarks"/>
+      </item>
+      <item row="7" column="2">
+       <widget class="QLineEdit" name="le_FuelOnBoard">
+        <property name="inputMask">
+         <string>99:99</string>
+        </property>
+        <property name="text">
+         <string>00:00</string>
+        </property>
+        <property name="maxLength">
+         <number>5</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLabel" name="lbl_CrusingAltitude">
+        <property name="text">
+         <string>7. Cruising altitude</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="lbl_TakeOffTimePlanned">
+        <property name="text">
+         <string>6. Departure time</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="4">
+       <widget class="QPlainTextEdit" name="pte_Route"/>
+      </item>
+      <item row="0" column="0" rowspan="4">
+       <widget class="QGroupBox" name="gb_Type">
+        <property name="title">
+         <string>1. Type</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QRadioButton" name="rb_TypeVfr">
+           <property name="text">
+            <string>VFR</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rb_TypeSvfr">
+           <property name="text">
+            <string>SVFR</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rb_TypeIfr">
+           <property name="text">
+            <string>IFR</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLineEdit" name="le_DestinationAirport">
+        <property name="inputMask">
+         <string>&gt;AAAA</string>
+        </property>
+        <property name="text">
+         <string>ICAO</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="lbl_CruiseTrueAirspeed">
+        <property name="text">
+         <string>4. True airspeed</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="3">
+       <widget class="QPushButton" name="pb_Send">
+        <property name="text">
+         <string>Send plan</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QLineEdit" name="le_CrusingAltitude">
+        <property name="maxLength">
+         <number>40</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="lbl_Callsign">
+        <property name="text">
+         <string>2. Callsign</string>
+        </property>
+        <property name="scaledContents">
+         <bool>false</bool>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1" colspan="2">
+       <widget class="QLineEdit" name="le_PilotsName">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QLabel" name="lbl_EstimatedTimeEnroute">
+        <property name="text">
+         <string>10. Estimated time enroute</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="lbl_PilotsNameAndHomebase">
+        <property name="text">
+         <string>14. Pilots name / homebase</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="lbl_DestinationAirport">
+        <property name="text">
+         <string>9.Destination airport</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="lbl_OriginAirport">
+        <property name="text">
+         <string>5. Departure airport</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="le_Callsign">
+        <property name="inputMask">
+         <string/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="maxLength">
+         <number>40</number>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="3">
+       <widget class="QLineEdit" name="le_PilotsHomebase"/>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="lbl_LastSent">
+        <property name="text">
+         <string>Sent</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1" colspan="3">
+       <widget class="QLineEdit" name="le_LastSent">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QPushButton" name="pb_ValidateFlightPlan">
+        <property name="text">
+         <string>Validate</string>
         </property>
        </widget>
       </item>
@@ -616,17 +637,22 @@
         </item>
         <item>
          <property name="text">
-          <string>B: 92-121kts</string>
+          <string>B: 91-120kts</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>C: 122-142kts</string>
+          <string>C: 121-140kts</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>D: 143kts or above</string>
+          <string>D: 141-165kts</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>E: 166-210kts</string>
          </property>
         </item>
        </widget>
@@ -710,6 +736,41 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>rb_TypeVfr</tabstop>
+  <tabstop>rb_TypeSvfr</tabstop>
+  <tabstop>rb_TypeIfr</tabstop>
+  <tabstop>le_Callsign</tabstop>
+  <tabstop>le_AircraftType</tabstop>
+  <tabstop>le_CruiseTrueAirspeed</tabstop>
+  <tabstop>le_OriginAirport</tabstop>
+  <tabstop>le_TakeOffTimePlanned</tabstop>
+  <tabstop>le_CrusingAltitude</tabstop>
+  <tabstop>pte_Route</tabstop>
+  <tabstop>le_DestinationAirport</tabstop>
+  <tabstop>le_EstimatedTimeEnroute</tabstop>
+  <tabstop>le_FuelOnBoard</tabstop>
+  <tabstop>le_AlternateAirport</tabstop>
+  <tabstop>pb_RemarksGenerator</tabstop>
+  <tabstop>pte_Remarks</tabstop>
+  <tabstop>le_PilotsName</tabstop>
+  <tabstop>le_PilotsHomebase</tabstop>
+  <tabstop>pb_Reset</tabstop>
+  <tabstop>pb_Load</tabstop>
+  <tabstop>pb_Send</tabstop>
+  <tabstop>pb_Parse</tabstop>
+  <tabstop>pb_CopyOver</tabstop>
+  <tabstop>pte_RemarksGenerated</tabstop>
+  <tabstop>le_AirlineOperator</tabstop>
+  <tabstop>cb_PilotRating</tabstop>
+  <tabstop>cb_RequiredNavigationPerformance</tabstop>
+  <tabstop>pte_AdditionalRemarks</tabstop>
+  <tabstop>cb_VoiceCapabilities</tabstop>
+  <tabstop>le_AircraftRegistration</tabstop>
+  <tabstop>cb_PerformanceCategory</tabstop>
+  <tabstop>cb_NavigationEquipment</tabstop>
+  <tabstop>cb_NoSidsStarts</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

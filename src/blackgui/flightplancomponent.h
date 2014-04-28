@@ -29,8 +29,14 @@ namespace BlackGui
         //! Prefill with aircraft dara
         void prefillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan);
 
+        //! Get this flight plan
+        BlackMisc::Aviation::CFlightPlan getFlightPlan() const;
+
     private:
         Ui::CFlightPlanComponent *ui;
+
+        //! My flight plan
+        BlackMisc::Aviation::CFlightPlan m_flightPlan;
 
         //! Validate, generates status messages
         BlackMisc::CStatusMessageList validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &fligtPlan);
@@ -50,6 +56,9 @@ namespace BlackGui
 
         //! Load Flightplan
         void loadFlightPlan();
+
+        //! Validate Flightplan
+        void validateFlightPlan();
 
         //! Remark
         void buildRemarkString();
