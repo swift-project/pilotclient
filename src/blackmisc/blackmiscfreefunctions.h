@@ -25,9 +25,6 @@ inline void initBlackMiscResources() { Q_INIT_RESOURCE(blackmisc); }
  */
 namespace BlackMisc
 {
-    /*!
-     * Free functions in PQs
-     */
     namespace PhysicalQuantities
     {
         /*!
@@ -37,26 +34,16 @@ namespace BlackMisc
 
     } // PQ
 
-    /*!
-     * Free functions in aviation
-     */
     namespace Aviation
     {
-        /*!
-         * \brief Register metadata for aviation
-         */
+        //! Register metadata for aviation
         void registerMetadata();
 
     } // Aviation
 
-    /*!
-     * Free functions in Math
-     */
     namespace Math
     {
-        /*!
-         * \brief Register metadata for math (matrices, vectors)
-         */
+        //! Register metadata for math (matrices, vectors)
         void registerMetadata();
 
     } // Math
@@ -64,48 +51,36 @@ namespace BlackMisc
     namespace Geo
     {
 
-        /*!
-         * \brief Register metadata for geo (coordinates)
-         */
+        //! Register metadata for geo (coordinates)
         void registerMetadata();
 
     } // Geo
 
     namespace Network
     {
-        /*!
-         * \brief Register metadata for network (server, user)
-         */
+        //! Register metadata for network (server, user)
         void registerMetadata();
     }
 
     namespace Settings
     {
-        /*!
-         * \brief Register metadata for settings
-         */
+        //! Register metadata for settings
         void registerMetadata();
     }
 
     namespace Audio
     {
-        /*!
-         * \brief Register metadata for audio / voice
-         */
+        //! Register metadata for audio / voice
         void registerMetadata();
     }
 
     namespace Hardware
     {
-        /*!
-         * \brief Register metadata for Hardware
-         */
+        //! Register metadata for Hardware
         void registerMetadata();
     }
 
-    /*!
-     * \brief Register all relevant metadata in BlackMisc
-     */
+    //! Register all relevant metadata in BlackMisc
     void registerMetadata();
 
     /*!
@@ -122,22 +97,13 @@ namespace BlackMisc
      */
     int firstBlackMetaType();
 
-    /*!
-     * \brief Init resources
-     */
+    //! Init resources
     void initResources();
 
-    /*!
-     * \brief Compare 2 QVariants
-     */
+    //! Compare 2 QVariants
     bool equalQVariants(const QVariant &v1, const QVariant &v2);
 
-    /*!
-     * \brief Compare QVariants
-     * \param v1
-     * \param v2
-     * \return same return values as in QString::compare()
-     */
+    //! Compare QVariants
     int compareQVariants(const QVariant &v1, const QVariant &v2);
 
     /*!
@@ -182,18 +148,10 @@ namespace BlackMisc
      */
     uint calculateHash(const QList<uint> &values, const char *className);
 
-    /*!
-     * \brief Real heap size of an object
-     * \param type
-     * \return
-     */
+    //! Real heap size of an object
     size_t heapSizeOf(const QMetaType &type);
 
-    /*!
-     * \brief Real heap size of an object
-     * \param objectType
-     * \return
-     */
+    //! Real heap size of an object
     size_t heapSizeOf(const QMetaObject &objectType);
 
 } // BlackMisc

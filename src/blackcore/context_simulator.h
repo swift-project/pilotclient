@@ -15,6 +15,7 @@
 #include "blackmisc/avaircraft.h"
 #include "blacksim/simulatorinfo.h"
 #include "blacksim/simulatorinfolist.h"
+#include "blackmisc/project.h"
 #include <QObject>
 
 namespace BlackCore
@@ -71,10 +72,10 @@ namespace BlackCore
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
 
         //! Load specific simulator plugin
-        virtual bool loadSimulatorPlugin (const BlackSim::CSimulatorInfo &simulatorInfo) = 0;
+        virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) = 0;
 
         //! Unload simulator plugin
-        virtual void unloadSimulatorPlugin () = 0;
+        virtual void unloadSimulatorPlugin() = 0;
 
         //! Simulator avialable?
         bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorInfo().isUnspecified(); }

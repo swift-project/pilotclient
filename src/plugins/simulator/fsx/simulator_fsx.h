@@ -172,4 +172,4 @@ namespace BlackSimPlugin
 
 } // namespace BlackCore
 
-#endif // BLACKSIMPLUGIN_SIMULATOR_FSX_H
+#endif // guard
