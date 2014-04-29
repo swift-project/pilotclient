@@ -19,16 +19,10 @@ namespace BlackMisc
         class CAngle : public CPhysicalQuantity<CAngleUnit, CAngle>
         {
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CAngle() : CPhysicalQuantity(0, CAngleUnit::defaultUnit()) {}
 
-            /*!
-             * \brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! Init by double value
             CAngle(double value, const CAngleUnit &unit): CPhysicalQuantity(value, unit) {}
 
             /*!
@@ -54,9 +48,7 @@ namespace BlackMisc
                     degrees + minutes / 100.0,
                     CAngleUnit::sexagesimalDegMin()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);

@@ -21,8 +21,6 @@ namespace BlackMisc
          */
         class CPqString : public BlackMisc::CValueObject
         {
-        public:
-
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CPqString)
             QString m_string;

@@ -18,29 +18,19 @@ namespace BlackMisc
         class CMass : public CPhysicalQuantity<CMassUnit, CMass>
         {
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CMass() : CPhysicalQuantity(0, CMassUnit::defaultUnit()) {}
 
-            /*!
-             * \brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! Init by double value
             CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Virtual destructor
-             */
+            //! Virtual destructor
             virtual ~CMass() {}
         };
 

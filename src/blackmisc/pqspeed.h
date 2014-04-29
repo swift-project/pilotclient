@@ -19,29 +19,20 @@ namespace BlackMisc
         {
 
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CSpeed() : CPhysicalQuantity(0, CSpeedUnit::defaultUnit()) {}
 
-            /*!
-             *\brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! Init by double value
             CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Destructor
-             */
+            //! Destructor
             virtual ~CSpeed() {}
         };
 

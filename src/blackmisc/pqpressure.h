@@ -15,34 +15,22 @@ namespace BlackMisc
 
         /*!
          * \brief Physical unit distance
-         * \author KWB
          */
         class CPressure : public CPhysicalQuantity<CPressureUnit, CPressure>
         {
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CPressure() : CPhysicalQuantity(0, CPressureUnit::defaultUnit()) {}
 
-            /*!
-             *\brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! Init by double value
             CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Virtual destructor
-             */
+            //! Virtual destructor
             virtual ~CPressure() {}
         };
 

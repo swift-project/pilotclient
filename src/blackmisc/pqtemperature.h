@@ -14,34 +14,21 @@ namespace BlackMisc
 
         /*!
          * \brief Physical unit temperature
-         * \author KWB
          */
         class CTemperature : public CPhysicalQuantity<CTemperatureUnit, CTemperature>
         {
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CTemperature() : CPhysicalQuantity(0, CTemperatureUnit::defaultUnit()) {}
 
-            /*!
-             * \brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! Init by double value
             CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
 
-            /*!
-             * \brief Destructor
-             */
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! Destructor
             virtual ~CTemperature() {}
         };
 
@@ -50,4 +37,4 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperature)
 
-#endif // BLACKMISC_CTEMPERATURE_H
+#endif // guard

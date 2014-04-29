@@ -28,8 +28,8 @@ namespace BlackMisc
             //! By Qt time
             CTime(const QTime &time);
 
-            //! By string hh:mm or hh:mm:ss
-            CTime(const QString &time);
+            //! \copydoc CPhysicalQuantity(const QString &unitString)
+            CTime(const QString &unitString) : CPhysicalQuantity(unitString) {}
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -37,8 +37,8 @@ namespace BlackMisc
             //! Destructor
             virtual ~CTime() {}
 
-            //! From string hh:mm, or hh:mm:ss
-            void parseFromString(const QString &time);
+            //! From string hh:mm, or hh:mm:ss, or time units such as s, min
+            virtual void parseFromString(const QString &time) override;
 
             //! To Qt time
             QTime toQTime() const;
@@ -50,4 +50,4 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTime)
 
-#endif // BLACKMISC_PQTIME_H
+#endif // guard

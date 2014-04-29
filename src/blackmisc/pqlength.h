@@ -12,35 +12,23 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
 
-        /*!
-         * \brief Physical unit length (length)
-         */
+        //! Physical unit length (length)
         class CLength : public CPhysicalQuantity<CLengthUnit, CLength>
         {
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CLength() : CPhysicalQuantity(0, CLengthUnit::defaultUnit()) {}
 
-            /*!
-             * \brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! Init by double value
             CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Virtual destructor
-             */
+            //! Virtual destructor
             virtual ~CLength() {}
         };
 

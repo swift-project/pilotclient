@@ -12,41 +12,21 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
 
-        /*!
-         * \brief Acceleration
-         */
+        //! Acceleration
         class CAcceleration : public CPhysicalQuantity<CAccelerationUnit, CAcceleration>
         {
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::defaultUnit()) {}
 
-            /*!
-             * \brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! Init by double value
             CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            /*!
-             * \brief Copy constructor by base type
-             * \param base
-             */
-            CAcceleration(const CPhysicalQuantity &base) : CPhysicalQuantity(base) {}
+            //! \copydoc CPhysicalQuantity(const QString &unitString)
+            //! copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
-            /*!
-             * \brief Virtual destructor
-             */
+            //! Virtual destructor
             virtual ~CAcceleration() {}
         };
 

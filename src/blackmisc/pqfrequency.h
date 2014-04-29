@@ -17,21 +17,14 @@ namespace BlackMisc
         class CFrequency : public CPhysicalQuantity<CFrequencyUnit, CFrequency>
         {
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CFrequency() : CPhysicalQuantity(0, CFrequencyUnit::defaultUnit()) {}
 
-            /*!
-             * \brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! Init by double value
             CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
