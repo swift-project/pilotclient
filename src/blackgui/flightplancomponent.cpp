@@ -105,7 +105,13 @@ namespace BlackGui
             flightPlan.setRoute(v);
 
         v = ui->pte_Remarks->toPlainText().trimmed();
-        flightPlan.setRemarks(v);
+        if (v.length() > 100)
+        {
+            QString m = QString("Length exceeded (100 chars max.) %1").arg(this->ui->lbl_Remarks->text());
+            messages.push_back(CStatusMessage::getValidationError(m));
+        }
+        else
+            flightPlan.setRemarks(v);
 
         v = ui->le_EstimatedTimeEnroute->text();
         if (v.isEmpty() || v == defaultTime())
@@ -175,7 +181,6 @@ namespace BlackGui
         }
         else
             flightPlan.setCruiseTrueAirspeed(cruiseTAS);
-
 
         v = this->ui->le_OriginAirport->text();
         if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
