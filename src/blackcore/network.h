@@ -366,11 +366,6 @@ namespace BlackCore
          */
         void atisLogoffTimeReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
 
-        /*!
-         * We received a custom packet. It is the slot's responsibility to decode the data.
-         */
-        void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
-
         //! @}
         ////////////////////////////////////////////////////////////////
         //! \name Aircraft signals
@@ -458,6 +453,11 @@ namespace BlackCore
          * We received one or more text messages from another user.
          */
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
+
+        /*!
+         * We received a custom packet. It is the slot's responsibility to decode the data.
+         */
+        void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
         //! @}
         ////////////////////////////////////////////////////////////////
