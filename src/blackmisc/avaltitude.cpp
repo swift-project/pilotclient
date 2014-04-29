@@ -163,31 +163,29 @@ namespace BlackMisc
             if (v.contains("FL", Qt::CaseInsensitive))
             {
                 v = v.replace("FL", "", Qt::CaseInsensitive).trimmed();
-                this->m_datum = FlightLevel;
                 bool ok = false;
                 double dv = v.toDouble(&ok) * 100.0;
-                CLength l(ok ? dv : 0.0,
-                          ok ? CLengthUnit::ft() : CLengthUnit::nullUnit());
-                this->set(l);
+                CAltitude a(ok ? dv : 0.0, FlightLevel,
+                            ok ? CLengthUnit::ft() : CLengthUnit::nullUnit());
+                *this = a;
                 return;
             }
 
             // normal altitude, AGL/MSL
+            ReferenceDatum rd = MeanSeaLevel;
             if (v.contains("MSL", Qt::CaseInsensitive))
             {
                 v = v.replace("MSL", "", Qt::CaseInsensitive).trimmed();
-                this->m_datum = MeanSeaLevel;
+                rd = MeanSeaLevel;
             }
             else if (v.contains("AGL"))
             {
                 v = v.replace("AGL", "", Qt::CaseInsensitive).trimmed();
-                this->m_datum = AboveGround;
+                rd = AboveGround;
             }
-            else
-                this->m_datum = MeanSeaLevel;
 
             CLength l = BlackMisc::PhysicalQuantities::CPqString::parse<CLength>(v);
-            this->set(l);
+            *this = CAltitude(l, rd);
         }
 
         /*

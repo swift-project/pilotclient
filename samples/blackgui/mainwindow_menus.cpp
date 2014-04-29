@@ -85,8 +85,8 @@ void MainWindow::audioIconContextMenu(const QPoint &position)
         this->m_contextMenuAudio->addAction("Toogle mute");
 
 #if defined(Q_OS_WIN)
-        // #if defined required? seems to be redundant
-        if (QSysInfo::WindowsVersion && QSysInfo::WV_NT_based)
+        // QSysInfo::WindowsVersion only available on Win platforms
+        if (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based)
         {
             this->m_contextMenuAudio->addAction("Mixer");
         }

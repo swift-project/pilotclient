@@ -19,7 +19,7 @@ namespace BlackGui
     protected:
 
         //! Constructor
-        CViewBase(QWidget *parent) : QTableView(parent)
+        CViewBase(QWidget *parent, ModelClass *model = nullptr) : QTableView(parent), m_model(model)
         {
             this->setSortingEnabled(true);
             this->horizontalHeader()->setStretchLastSection(true);

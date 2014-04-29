@@ -25,7 +25,7 @@ namespace BlackGui
         };
 
         //! \brief Constructor
-        CUserListModel(UserMode userMode, QObject *parent = nullptr);
+        explicit CUserListModel(UserMode userMode, QObject *parent = nullptr);
 
         //! \brief Destructor
         virtual ~CUserListModel() {}
