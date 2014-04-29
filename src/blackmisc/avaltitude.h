@@ -91,7 +91,7 @@ namespace BlackMisc
             ReferenceDatum getReferenceDatum() const { return m_datum; }
 
             //! MSL to flightlevel
-            void toFLightLevel();
+            void toFlightLevel();
 
             //! Flightlevel to MSL
             void toMeanSeaLevel();
@@ -102,7 +102,7 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \copydoc CValueObject::fromJson
+            //! \copydoc CValueObject::parseFromString
             void parseFromString(const QString &value) override;
 
             //! Register metadata

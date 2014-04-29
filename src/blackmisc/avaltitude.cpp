@@ -78,7 +78,7 @@ namespace BlackMisc
         /*
          * To FL
          */
-        void CAltitude::toFLightLevel()
+        void CAltitude::toFlightLevel()
         {
             Q_ASSERT(this->m_datum == MeanSeaLevel || this->m_datum == FlightLevel);
             this->m_datum = FlightLevel;
