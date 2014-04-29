@@ -9,6 +9,7 @@
 #include "blackmisc/pqbase.h"
 #include "blackmisc/pqunits.h"
 #include "blackmisc/mathematics.h"
+#include "blackmisc/pqstring.h"
 #include <QtDBus/QDBusMetaType>
 #include <QtGlobal>
 #include <QString>
@@ -50,6 +51,12 @@ namespace BlackMisc
 
             //! Copy constructor
             CPhysicalQuantity(const CPhysicalQuantity &other);
+
+            //! Constructor by parsed string, e.g. 10m
+            CPhysicalQuantity(const QString &unitString) : m_value(0.0), m_unit(MU::nullUnit())
+            {
+                this->parseFromString(unitString);
+            }
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
@@ -117,13 +124,6 @@ namespace BlackMisc
                 {
                     this->m_value = value;
                 }
-            }
-
-            //! Set by other PQ
-            void set(const PQ &pq)
-            {
-                this->m_value = pq.m_value;
-                this->m_unit = pq.m_unit;
             }
 
             //! Rounded value in given unit
@@ -235,7 +235,10 @@ namespace BlackMisc
             virtual void fromJson(const QJsonObject &json) override;
 
             //! \copydoc CValueObject::parseFromString
-            virtual void parseFromString(const QString &value) override;
+            virtual void parseFromString(const QString &value) override
+            {
+                *this = CPqString::parse<PQ>(value);
+            }
 
             //! Register metadata of unit and quantity
             static void registerMetadata();

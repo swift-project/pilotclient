@@ -307,16 +307,6 @@ namespace BlackMisc
         }
 
         /*
-         * Parse from string
-         */
-        template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::parseFromString(const QString &value)
-        {
-            PQ parsed = CPqString::parse<PQ>(value);
-            this->m_value = parsed.m_value;
-            this->m_unit = parsed.m_unit;
-        }
-
-        /*
          * metaTypeId
          */
         template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::getMetaTypeId() const
