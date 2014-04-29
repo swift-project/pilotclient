@@ -25,6 +25,10 @@ namespace BlackMisc
             //! Init by double value
             CPressure(double value, const CPressureUnit &unit) : CPhysicalQuantity(value, unit) {}
 
+            //! \copydoc CPhysicalQuantity(const QString &unitString)
+            CPressure(const QString &unitString) : CPhysicalQuantity(unitString) {}
+
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);

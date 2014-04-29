@@ -25,6 +25,8 @@ namespace BlackMisc
             //! Init by double value
             CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit) {}
 
+            //! \copydoc CPhysicalQuantity(const QString &unitString)
+            CSpeed(const QString &unitString) : CPhysicalQuantity(unitString) {}
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override

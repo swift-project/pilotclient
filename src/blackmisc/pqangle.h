@@ -25,6 +25,9 @@ namespace BlackMisc
             //! Init by double value
             CAngle(double value, const CAngleUnit &unit): CPhysicalQuantity(value, unit) {}
 
+            //! \copydoc CPhysicalQuantity(const QString &unitString)
+            CAngle(const QString &unitString) : CPhysicalQuantity(unitString) {}
+
             /*!
              * \brief Init as sexagesimal degrees, minutes, seconds
              * The sign of all parameters must be the same, either all positive or all negative.

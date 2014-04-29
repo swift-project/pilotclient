@@ -24,6 +24,9 @@ namespace BlackMisc
             //! Init by double value
             CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
 
+            //! \copydoc CPhysicalQuantity(const QString &unitString)
+            CMass(const QString &unitString) : CPhysicalQuantity(unitString) {}
+
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {

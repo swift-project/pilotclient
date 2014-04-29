@@ -22,6 +22,9 @@ namespace BlackMisc
             //! Init by double value
             CLength(double value, const CLengthUnit &unit) : CPhysicalQuantity(value, unit) {}
 
+            //! \copydoc CPhysicalQuantity(const QString &unitString)
+            CLength(const QString &unitString) : CPhysicalQuantity(unitString) {}
+
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {

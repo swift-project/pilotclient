@@ -23,6 +23,8 @@ namespace BlackMisc
             //! Init by double value
             CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit) {}
 
+            //! \copydoc CPhysicalQuantity(const QString &unitString)
+            CFrequency(const QString &unitString) : CPhysicalQuantity(unitString) {}
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override

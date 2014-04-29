@@ -24,6 +24,8 @@ namespace BlackMisc
             //! Init by double value
             CTemperature(double value, const CTemperatureUnit &unit): CPhysicalQuantity(value, unit) {}
 
+            //! \copydoc CPhysicalQuantity(const QString &unitString)
+            CTemperature(const QString &unitString) : CPhysicalQuantity(unitString) {}
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
