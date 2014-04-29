@@ -62,6 +62,9 @@ namespace BlackCore
         //! \brief Connect to simulator
         virtual bool connectTo() = 0;
 
+        //! \brief Connect to simulator (asynchronous version)
+        virtual void asyncConnectTo() = 0;
+
         //! \brief Disconnect from simulator
         virtual bool disconnectFrom() = 0;
 

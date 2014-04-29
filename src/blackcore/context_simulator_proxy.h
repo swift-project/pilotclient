@@ -35,20 +35,23 @@ namespace BlackCore
         CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
     public slots:
-	
-		//! \copydoc IContextSimulator::getSimulatorPluginList()
+
+        //! \copydoc IContextSimulator::getSimulatorPluginList()
         virtual BlackSim::CSimulatorInfoList getAvailableSimulatorPlugins() const override;
 
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
 
-        //! \brief Can we connect?
+        //! \copydoc IContextSimulator::canConnect
         virtual bool canConnect() override;
 
-        //! \brief Connect to simulator
+        //! \copydoc IContextSimulator::connectTo
         virtual bool connectTo() override;
 
-        //! \brief Disconnect from simulator
+        //! \copydoc IContextSimulator::asyncConnectTo
+        virtual void asyncConnectTo() override;
+
+        //! \copydoc IContextSimulator::disconnectFrom
         virtual bool disconnectFrom() override;
 
         //! \copydoc IContextSimulator::getOwnAircraft()
@@ -58,10 +61,10 @@ namespace BlackCore
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
         //! \copydoc IContextSimulator::loadSimulatorPlugin
-        virtual bool loadSimulatorPlugin (const BlackSim::CSimulatorInfo &simulatorInfo) override;
+        virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) override;
 
         //! \copydoc IContextSimulator::unloadSimulatorPlugin()
-        virtual void unloadSimulatorPlugin () override;
+        virtual void unloadSimulatorPlugin() override;
     };
 
 } // namespace BlackCore

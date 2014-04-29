@@ -15,6 +15,7 @@
 
 #include <QTimer>
 #include <QDir>
+#include <QtConcurrent/QtConcurrent>
 
 namespace BlackCore
 {
@@ -35,17 +36,20 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::getSimulatorPluginList()
         virtual BlackSim::CSimulatorInfoList getAvailableSimulatorPlugins() const override;
-		
+
         //! \copydoc IContextSimulator::isConnected()
         virtual bool isConnected() const override;
 
-        //! \brief Can we connect?
+        //! \copydoc IContextSimulator::canConnect
         virtual bool canConnect() override;
 
-        //! \brief Connect to simulator
+        //! \copydoc IContextSimulator::connectTo
         virtual bool connectTo() override;
 
-        //! \brief Disconnect from simulator
+        //! \copydoc IContextSimulator::asyncConnectTo
+        virtual void asyncConnectTo() override;
+
+        //! \copydoc IContextSimulator::disconnectFrom
         virtual bool disconnectFrom() override;
 
         //! \copydoc IContextSimulator::getOwnAircraft()
@@ -55,10 +59,10 @@ namespace BlackCore
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
         //! \copydoc IContextSimulator::loadSimulatorPlugin()
-        virtual bool loadSimulatorPlugin (const BlackSim::CSimulatorInfo &simulatorInfo) override;
+        virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) override;
 
         //! \copydoc IContextSimulator::unloadSimulatorPlugin()
-        virtual void unloadSimulatorPlugin () override;
+        virtual void unloadSimulatorPlugin() override;
 
     protected:
         //! \brief Constructor
@@ -87,7 +91,8 @@ namespace BlackCore
         BlackCore::ISimulator *m_simulator;
         QTimer *m_updateTimer;
         QDir m_pluginsDir;
-        QSet<ISimulatorFactory*> m_simulatorFactories;
+        QSet<ISimulatorFactory *> m_simulatorFactories;
+        QFuture<bool> m_canConnectResult;
     };
 
 } // namespace BlackCore

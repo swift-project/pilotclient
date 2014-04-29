@@ -24,7 +24,7 @@ namespace BlackCore
         loadSimulatorPlugin(CSimulatorInfo::FSX());
 
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
-        connectTo();
+        asyncConnectTo();
     }
 
     CContextSimulator::~CContextSimulator()
@@ -36,7 +36,7 @@ namespace BlackCore
     CSimulatorInfoList CContextSimulator::getAvailableSimulatorPlugins() const
     {
         CSimulatorInfoList simulatorPlugins;
-        foreach(ISimulatorFactory *factory, m_simulatorFactories)
+        foreach(ISimulatorFactory * factory, m_simulatorFactories)
         {
             simulatorPlugins.push_back(factory->getSimulatorInfo());
         }
@@ -64,6 +64,13 @@ namespace BlackCore
         return m_simulator->connectTo();
     }
 
+    void CContextSimulator::asyncConnectTo()
+    {
+        if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        if (!m_simulator || m_canConnectResult.isRunning()) return; // already checking
+        this->m_canConnectResult = QtConcurrent::run(this, &CContextSimulator::connectTo);
+    }
+
     bool CContextSimulator::disconnectFrom()
     {
         if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
@@ -87,12 +94,12 @@ namespace BlackCore
     bool CContextSimulator::loadSimulatorPlugin(const CSimulatorInfo &simulatorInfo)
     {
         ISimulatorFactory *factory = nullptr;
-        QSet<ISimulatorFactory*>::iterator iterator = std::find_if(m_simulatorFactories.begin(), m_simulatorFactories.end(), [ = ](const ISimulatorFactory *factory)
+        QSet<ISimulatorFactory *>::iterator iterator = std::find_if(m_simulatorFactories.begin(), m_simulatorFactories.end(), [ = ](const ISimulatorFactory * factory)
         {
             return factory->getSimulatorInfo() == simulatorInfo;
         });
 
-        if(iterator == m_simulatorFactories.end())
+        if (iterator == m_simulatorFactories.end())
             return false;
 
         factory = *iterator;
@@ -107,7 +114,7 @@ namespace BlackCore
 
     void CContextSimulator::unloadSimulatorPlugin()
     {
-        if(m_simulator)
+        if (m_simulator)
             m_simulator->deleteLater();
 
         m_simulator = nullptr;
