@@ -198,6 +198,18 @@ namespace BlackMiscTest
     }
 
     /*
+     * Parsing tests
+     */
+    void CTestPhysicalQuantities::parserTests()
+    {
+        QVERIFY2(CLength(33.0, CLengthUnit::ft()) == CLength("33.0 ft"), "Length");
+        QVERIFY2(CLength(33.0, CLengthUnit::ft()) != CLength("33.1 ft"), "Length !=");
+        QVERIFY2(CLength(-22.8, CLengthUnit::ft()) != CLength("-22.8 cm"), "Length !=");
+        QVERIFY2(CSpeed(123.45, CSpeedUnit::km_h()) == CSpeed("123.45km/h"), "Speed");
+        QVERIFY2(CMass(33.45, CMassUnit::kg()) == CMass("33.45000 kg"), "CMass");
+    }
+
+    /*
      * Some very basic arithmetic tests on the PQs
      */
     void CTestPhysicalQuantities::basicArithmetic()

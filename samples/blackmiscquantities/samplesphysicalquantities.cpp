@@ -92,14 +92,6 @@ namespace BlackMiscTest
         qDebug() << t1 << t2 << t2.valueRoundedWithUnit(CTemperatureUnit::defaultUnit(), -1, true);
         qDebug() << t3.valueRoundedWithUnit(CTemperatureUnit::F(), -1, true)  << t3.valueRoundedWithUnit(CTemperatureUnit::C(), -1, true) << "I18N/UTF";
 
-        // some logging with CLogMessage
-        // bDebug << p1;
-        // bDebug << p1.getUnit() << p1.getUnit().getMultiplier();
-
-        // some of the faults Mathew has pointed out, not longer possible
-        // CAngleUnit::rad() = CAngleUnit::deg();
-        // qDebug() << CAngleUnit::rad(); // wrong
-
         (t1 - t2).switchUnit(CTemperatureUnit::F()); // was not working since wrong return type const
         // CLengthUnit duA(CSpeedUnit::ft_min()); // no longer possible
         CLengthUnit duB(CLengthUnit::cm());
@@ -111,7 +103,12 @@ namespace BlackMiscTest
         CTime ti3(1.0101, CTimeUnit::hms());
         CTime ti4(1.15, CTimeUnit::hrmin());
         CTime ti5(1.30, CTimeUnit::minsec());
+        CTime ti6("12:30");
+        CTime ti7("20s");
+        CTime ti8("12:30:40");
+
         qDebug() << ti1 << ti2 << ti3 << ti4 << ti5;
+        qDebug() << ti6 << ti7 << ti8;
 
         CAcceleration ac1(10, CAccelerationUnit::m_s2());
         qDebug() << ac1 << ac1.toQString(true) << ac1.valueRoundedWithUnit(-1, true) << "I18N/UTF";

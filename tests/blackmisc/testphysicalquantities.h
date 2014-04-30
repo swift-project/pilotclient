@@ -12,82 +12,58 @@
 namespace BlackMiscTest
 {
 
-/*!
- * \brief Physical quantities, basic tests
- */
-class CTestPhysicalQuantities : public QObject
-{
-    Q_OBJECT
-
-public:
     /*!
-     * \brief Standard test case constructor
-     * \param parent
+     * \brief Physical quantities, basic tests
      */
-    explicit CTestPhysicalQuantities(QObject *parent = nullptr) : QObject(parent) {}
+    class CTestPhysicalQuantities : public QObject
+    {
+        Q_OBJECT
 
-private slots:
-    /*!
-     * \brief Basic unit tests for physical units
-     */
-    void unitsBasics();
+    public:
+        //! Standard test case constructor
+        explicit CTestPhysicalQuantities(QObject *parent = nullptr) : QObject(parent) {}
 
-    /*!
-     * \brief Basic tests around length
-     */
-    void lengthBasics();
+    private slots:
+        //! Basic unit tests for physical units
+        void unitsBasics();
 
-    /*!
-     * \brief Basic tests about speed
-     */
-    void speedBasics();
+        //! Basic tests around length
+        void lengthBasics();
 
-    /*!
-     * \brief Frequency tests
-     */
-    void frequencyTests();
+        //! Basic tests about speed
+        void speedBasics();
 
-    /*!
-     * \brief Testing angles (degrees / radians)
-     */
-    void angleTests();
+        //! Frequency tests
+        void frequencyTests();
 
-    /*!
-     * \brief Testing angles
-     */
-    void massTests();
+        //! Testing angles (degrees / radians)
+        void angleTests();
 
-    /*!
-     * \brief Testing pressure
-     */
-    void pressureTests();
+        //! Testing angles
+        void massTests();
 
-    /*!
-     * \brief Testing temperature
-     */
-    void temperatureTests();
+        //! Testing pressure
+        void pressureTests();
 
-    /*!
-     * \brief Testing time
-     */
-    void timeTests();
+        //! Testing temperature
+        void temperatureTests();
 
-    /*!
-     * \brief Testing acceleration
-     */
-    void accelerationTests();
+        //! Testing time
+        void timeTests();
 
-    /*!
-     * \brief Testing construction / destruction in memory
-     */
-    void memoryTests();
+        //! Testing acceleration
+        void accelerationTests();
 
-    /*!
-     * \brief Basic arithmetic such as +/-
-     */
-    void basicArithmetic();
+        //! Testing construction / destruction in memory
+        void memoryTests();
 
-};
+        //! Test parsing on PQs
+        void parserTests();
+
+        //! Basic arithmetic such as +/-
+        void basicArithmetic();
+
+    };
 
 } // namespace
 
