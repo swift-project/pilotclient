@@ -13,7 +13,9 @@
 namespace BlackSim
 {
     /*!
-     * \brief Simulator settings for MS Flight sims
+     * \brief Simulator settings for flight simulators
+     * \details Represents the generic part of a simulator setup ("common denominator"),
+     *          details kept in specialized classes
      */
     class CSimulatorSetup
     {
