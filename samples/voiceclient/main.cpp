@@ -12,7 +12,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
-#include <QThread>
+
 
 using namespace BlackMisc::Audio;
 
@@ -22,20 +22,10 @@ int main(int argc, char *argv[])
     Client client(&app);
     BlackMisc::registerMetadata();
     BlackCore::registerMetadata();
-    BlackCore::IVoice *m_voice = new BlackCore::CVoiceVatlib();
-    QThread m_voiceThread;
-    m_voice->moveToThread(&m_voiceThread);
-    m_voiceThread.start();
     LineReader reader;
-    QObject::connect(&reader, SIGNAL(command(const QString &)), &client, SLOT(command(const QString &)));
-    QObject::connect(&client, &Client::quit, [&] ()
-    {
-        qDebug() << "Shutting down...";
-        reader.terminate();
-        m_voiceThread.quit();
-        m_voiceThread.wait(5000);
-        qApp->quit();
-    });
+    QObject::connect(&reader, SIGNAL(command(const QString &)), &client, SLOT(command(const QString &)), Qt::QueuedConnection);
+    QObject::connect(&client, SIGNAL(quit()), &reader, SLOT(terminate()));
+    QObject::connect(&client, SIGNAL(quit()), &app, SLOT(quit()));
 
     reader.start();
     app.exec();

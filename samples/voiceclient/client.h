@@ -11,6 +11,7 @@
 #include <QObject>
 #include <functional>
 #include <QMap>
+#include <QThread>
 
 class Client : public QObject
 {
@@ -18,6 +19,7 @@ class Client : public QObject
 
 public:
     Client(QObject *parent = nullptr);
+    ~Client() { if(m_voice) m_voice->deleteLater(); }
 
 signals:
     void quit();
@@ -56,6 +58,7 @@ private slots:
 private:
     QMap<QString, std::function<void(QTextStream &)>> m_commands;
     BlackCore::IVoice *m_voice;
+    QThread m_threadVoice;
 
 };
 

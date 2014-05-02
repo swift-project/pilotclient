@@ -19,6 +19,9 @@ Client::Client(QObject *parent) :
     QObject(parent),
     m_voice(new BlackCore::CVoiceVatlib())
 {
+    m_voice->moveToThread(&m_threadVoice);
+    m_threadVoice.start();
+
     using namespace BlackCore;
     connect(m_voice, &IVoice::squelchTestFinished,                  this, &Client::onSquelchTestFinished);
     connect(m_voice, &IVoice::micTestFinished,                      this, &Client::onMicTestFinished);
@@ -91,6 +94,9 @@ void Client::echo(QTextStream &line)
 
 void Client::exit(QTextStream &)
 {
+    qDebug() << "Shutting down...";
+    m_threadVoice.quit();
+    m_threadVoice.wait(5000);
     emit quit();
 }
 
