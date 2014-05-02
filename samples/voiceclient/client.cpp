@@ -17,16 +17,16 @@ using namespace BlackMisc::Aviation;
  */
 Client::Client(QObject *parent) :
     QObject(parent),
-    m_voiceClient(new BlackCore::CVoiceVatlib(this))
+    m_voice(new BlackCore::CVoiceVatlib())
 {
     using namespace BlackCore;
-    connect(m_voiceClient, &IVoice::squelchTestFinished,                  this, &Client::onSquelchTestFinished);
-    connect(m_voiceClient, &IVoice::micTestFinished,                      this, &Client::onMicTestFinished);
-    connect(m_voiceClient, &IVoice::connectionStatusChanged,              this, &Client::connectionStatusChanged);
-    connect(m_voiceClient, &IVoice::audioStarted,                         this, &Client::audioStartedStream);
-    connect(m_voiceClient, &IVoice::audioStopped,                         this, &Client::audioStoppedStream);
-    connect(m_voiceClient, &IVoice::userJoinedRoom,                       this, &Client::userJoinedRoom);
-    connect(m_voiceClient, &IVoice::userLeftRoom,                         this, &Client::userLeftRoom);
+    connect(m_voice, &IVoice::squelchTestFinished,                  this, &Client::onSquelchTestFinished);
+    connect(m_voice, &IVoice::micTestFinished,                      this, &Client::onMicTestFinished);
+    connect(m_voice, &IVoice::connectionStatusChanged,              this, &Client::connectionStatusChanged);
+    connect(m_voice, &IVoice::audioStarted,                         this, &Client::audioStartedStream);
+    connect(m_voice, &IVoice::audioStopped,                         this, &Client::audioStoppedStream);
+    connect(m_voice, &IVoice::userJoinedRoom,                       this, &Client::userJoinedRoom);
+    connect(m_voice, &IVoice::userLeftRoom,                         this, &Client::userLeftRoom);
 
     using namespace std::placeholders;
     m_commands["help"]              = std::bind(&Client::help, this, _1);
@@ -98,21 +98,21 @@ void Client::squelchTestCmd(QTextStream & /** args **/)
 {
     std::cout << "Running squelch test. Please be quiet for 5 seconds..." << std::endl;
     printLinePrefix();
-    m_voiceClient->runSquelchTest();
+    m_voice->runSquelchTest();
 }
 
 void Client::micTestCmd(QTextStream & /** args **/)
 {
     std::cout << "Running mic test. Speak normally for 5 seconds..." << std::endl;
     printLinePrefix();
-    m_voiceClient->runMicrophoneTest();
+    m_voice->runMicrophoneTest();
 }
 
 void Client::setCallsignCmd(QTextStream &args)
 {
     QString callsign;
     args >> callsign;
-    m_voiceClient->setMyAircraftCallsign(BlackMisc::Aviation::CCallsign(callsign));
+    m_voice->setMyAircraftCallsign(BlackMisc::Aviation::CCallsign(callsign));
 }
 
 void Client::initiateConnectionCmd(QTextStream &args)
@@ -121,20 +121,20 @@ void Client::initiateConnectionCmd(QTextStream &args)
     QString channel;
     args >> hostname >> channel;
     std::cout << "Joining voice room: " << hostname.toStdString() << "/" << channel.toStdString() << std::endl;
-    m_voiceClient->joinVoiceRoom(BlackCore::IVoice::COM1, BlackMisc::Audio::CVoiceRoom(hostname, channel));
+    m_voice->joinVoiceRoom(BlackCore::IVoice::COM1, BlackMisc::Audio::CVoiceRoom(hostname, channel));
     printLinePrefix();
 }
 
 void Client::terminateConnectionCmd(QTextStream & /** args **/)
 {
     std::cout << "Leaving room." << std::endl;
-    m_voiceClient->leaveVoiceRoom(BlackCore::IVoice::COM1);
+    m_voice->leaveVoiceRoom(BlackCore::IVoice::COM1);
     printLinePrefix();
 }
 
 void Client::inputDevicesCmd(QTextStream & /** args **/)
 {
-    foreach(BlackMisc::Audio::CAudioDevice device, this->m_voiceClient->audioDevices().getInputDevices())
+    foreach(BlackMisc::Audio::CAudioDevice device, this->m_voice->audioDevices().getInputDevices())
     {
         std::cout << device.getName().toStdString() << std::endl;
     }
@@ -146,7 +146,7 @@ void Client::inputDevicesCmd(QTextStream & /** args **/)
  */
 void Client::outputDevicesCmd(QTextStream & /** args **/)
 {
-    foreach(BlackMisc::Audio::CAudioDevice device, this->m_voiceClient->audioDevices().getOutputDevices())
+    foreach(BlackMisc::Audio::CAudioDevice device, this->m_voice->audioDevices().getOutputDevices())
     {
         std::cout << device.getName().toStdString() << std::endl;
     }
@@ -159,7 +159,7 @@ void Client::outputDevicesCmd(QTextStream & /** args **/)
 void Client::listCallsignsCmd(QTextStream &args)
 {
     Q_UNUSED(args)
-    CCallsignList callsigns = m_voiceClient->getVoiceRoomCallsigns(BlackCore::IVoice::COM1);
+    CCallsignList callsigns = m_voice->getVoiceRoomCallsigns(BlackCore::IVoice::COM1);
     foreach(CCallsign callsign, callsigns)
     {
         std::cout << " " << callsign.toStdString() << std::endl;
@@ -169,13 +169,13 @@ void Client::listCallsignsCmd(QTextStream &args)
 
 void Client::onSquelchTestFinished()
 {
-    std::cout << "Input squelch: " << m_voiceClient->inputSquelch() << std::endl;
+    std::cout << "Input squelch: " << m_voice->inputSquelch() << std::endl;
     printLinePrefix();
 }
 
 void Client::onMicTestFinished()
 {
-    std::cout << "Mic test result: " << (int)m_voiceClient->micTestResult() << std::endl;
+    std::cout << "Mic test result: " << (int)m_voice->micTestResult() << std::endl;
     printLinePrefix();
 }
 
