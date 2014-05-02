@@ -1,6 +1,7 @@
 #include "introwindow.h"
 #include "mainwindow.h"
 #include "guimodeenums.h"
+#include "blackcore/blackcorefreefunctions.h"
 #include "blackcore/context_runtime_config.h"
 #include "blacksim/blacksimfreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
@@ -23,6 +24,7 @@ int main(int argc, char *argv[])
     BlackMisc::initResources();
     BlackMisc::registerMetadata();
     BlackSim::registerMetadata();
+    BlackCore::registerMetadata();
     // BlackMisc::displayAllUserMetatypesTypes();
 
     QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");

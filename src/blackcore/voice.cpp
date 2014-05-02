@@ -9,10 +9,13 @@ namespace BlackCore
 {
     IVoice::IVoice(QObject *parent) : QObject(parent)
     {
-        // http://qt-project.org/forums/viewthread/27495
-        qRegisterMetaType<IVoice::ComUnit>("ComUnit");
-        qRegisterMetaType<IVoice::ComUnit>("IVoice::ComUnit");
-        qRegisterMetaType<IVoice::ConnectionStatus>("ConnectionStatus");
-        qRegisterMetaType<IVoice::ConnectionStatus>("IVoice::ConnectionStatus");
+    }
+
+    void IVoice::registerMetadata()
+    {
+        qRegisterMetaType<ComUnit>();
+        qRegisterMetaType<ComUnit>("ComUnit");
+        qRegisterMetaType<ConnectionStatus>();
+        qRegisterMetaType<ConnectionStatus>("ConnectionStatus");
     }
 }

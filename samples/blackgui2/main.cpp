@@ -1,6 +1,7 @@
 #include "introwindow.h"
 #include "dockwindow.h"
 #include "guimodeenums.h"
+#include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QtGlobal>
 #include <QApplication>
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(blackgui);
     BlackMisc::initResources();
     BlackMisc::registerMetadata();
+    BlackCore::registerMetadata();
     // BlackMisc::displayAllUserMetatypesTypes();
 
     QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");

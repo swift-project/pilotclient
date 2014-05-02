@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackcore/voice_vatlib.h"
+#include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 #include "client.h"
@@ -20,6 +21,7 @@ int main(int argc, char *argv[])
     QCoreApplication app (argc, argv);
     Client client(&app);
     BlackMisc::registerMetadata();
+    BlackCore::registerMetadata();
     BlackCore::IVoice *m_voice = new BlackCore::CVoiceVatlib();
     QThread m_voiceThread;
     m_voice->moveToThread(&m_voiceThread);

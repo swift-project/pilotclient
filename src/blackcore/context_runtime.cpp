@@ -1,6 +1,7 @@
 #include "blackcore/context_runtime.h"
 #include "blackcore/context_all_impl.h"
 #include "blackcore/context_all_proxies.h"
+#include "blackcore/blackcorefreefunctions.h"
 
 #include "blacksim/blacksimfreefunctions.h"
 
@@ -224,6 +225,7 @@ namespace BlackCore
         BlackMisc::registerMetadata();
         BlackMisc::initResources();
         BlackSim::registerMetadata();
+        BlackCore::registerMetadata();
 
         // upfront reading of settings, as DBus server already relies on settings
         CContextSettings *settings = nullptr;
