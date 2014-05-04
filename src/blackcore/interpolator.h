@@ -7,6 +7,7 @@
 #define BLACKCORE_INTERPOLATOR_H
 
 #include "blackmisc/avaircraftsituation.h"
+#include <QDateTime>
 
 namespace BlackCore
 {
@@ -40,6 +41,12 @@ namespace BlackCore
          * \return
          */
         virtual BlackMisc::Aviation::CAircraftSituation getCurrentSituation() = 0;
+
+        /*!
+         * \brief Get timestamp of the last received aircraft situation
+         * \return
+         */
+        virtual const QDateTime &getTimeOfLastReceivedSituation() const = 0;
     };
 
 } // namespace BlackCore

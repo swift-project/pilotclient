@@ -104,4 +104,9 @@ namespace BlackCore
 
         return currentSituation;
     }
+
+    const QDateTime &CInterpolatorLinear::getTimeOfLastReceivedSituation() const
+    {
+        return m_aircraftSituationList.back().getTimestamp();
+    }
 }

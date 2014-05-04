@@ -36,6 +36,9 @@ namespace BlackCore
         //! \copydoc IInterpolator::getCurrentSituation()
         virtual BlackMisc::Aviation::CAircraftSituation getCurrentSituation() override;
 
+        //! \copydoc IInterpolator::getTimeOfLastReceivedSituation()
+        virtual const QDateTime &getTimeOfLastReceivedSituation() const override;
+
     private:
          BlackMisc::Aviation::CAircraftSituationList m_aircraftSituationList;
 
