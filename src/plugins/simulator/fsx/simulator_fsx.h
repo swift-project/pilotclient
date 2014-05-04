@@ -144,6 +144,7 @@ namespace BlackSimPlugin
 
         private:
 
+            void removeRemoteAircraft(const CSimConnectObject &simObject);
 
             /*!
              * \brief Initialize SimConnect system events

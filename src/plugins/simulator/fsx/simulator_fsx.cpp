@@ -162,9 +162,9 @@ namespace BlackSimPlugin
             m_simConnectObjects.insert(callsign, simObj);
         }
 
-        void CSimulatorFsx::removeRemoteAircraft(const CCallsign &/*callsign*/)
+        void CSimulatorFsx::removeRemoteAircraft(const CCallsign &callsign)
         {
-            // TODO
+            removeRemoteAircraft(m_simConnectObjects.value(callsign));
         }
 
         CSimulatorInfo CSimulatorFsx::getSimulatorInfo() const
@@ -356,7 +356,12 @@ namespace BlackSimPlugin
             }
             else
                 emit statusChanged(ConnectionFailed);
-
+		}
+		
+        void CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
+        {
+            SimConnect_AIRemoveObject(m_hSimConnect, simObject.getObjectId(), simObject.getRequestId());
+            m_simConnectObjects.remove(simObject.getCallsign());
         }
 
         HRESULT CSimulatorFsx::initSystemEvents()

@@ -62,7 +62,8 @@ namespace BlackSimPlugin
 
             //! \brief SimConnect request ID's
             enum Requests {
-                RequestOwnAircraft = 1000
+                RequestOwnAircraft = 1000,
+                RequestRemoveAircraft = 2000
             };
 
             //! \brief Constructor
