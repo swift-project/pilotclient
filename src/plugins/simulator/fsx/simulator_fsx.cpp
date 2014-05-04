@@ -137,15 +137,15 @@ namespace BlackSimPlugin
             initialPosition.Airspeed = 0;
             initialPosition.OnGround = 0;
 
-            SimConnectObject simObj;
-            simObj.m_callsign = callsign;
-            simObj.m_requestId = m_nextObjID;
-            simObj.m_objectId = 0;
-            simObj.m_interpolator.addAircraftSituation(initialSituation);
+            CSimConnectObject simObj;
+            simObj.setCallsign(callsign);
+            simObj.setRequestId(m_nextObjID);
+            simObj.setObjectId(0);
+            simObj.getInterpolator()->addAircraftSituation(initialSituation);
             m_simConnectObjects.insert(callsign, simObj);
             ++m_nextObjID;
 
-            HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, "Boeing 737-800 Paint1", callsign.toQString().left(12).toLatin1().constData(), initialPosition, simObj.m_requestId);
+            HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, "Boeing 737-800 Paint1", callsign.toQString().left(12).toLatin1().constData(), initialPosition, simObj.getRequestId());
             Q_UNUSED(hr);
         }
 
@@ -157,8 +157,8 @@ namespace BlackSimPlugin
                 return;
             }
 
-            SimConnectObject simObj = m_simConnectObjects.value(callsign);
-            simObj.m_interpolator.addAircraftSituation(situation);
+            CSimConnectObject simObj = m_simConnectObjects.value(callsign);
+            simObj.getInterpolator()->addAircraftSituation(situation);
             m_simConnectObjects.insert(callsign, simObj);
         }
 
@@ -320,16 +320,16 @@ namespace BlackSimPlugin
 
             SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, objectID, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(gearHandle), &gearHandle);
 
-            SimConnectObject simObject;
+            CSimConnectObject simObject;
             foreach(simObject, m_simConnectObjects)
             {
-                if (simObject.m_requestId == static_cast<int>(requestID))
+                if (simObject.getRequestId()== static_cast<int>(requestID))
                 {
-                    simObject.m_objectId = objectID;
+                    simObject.setObjectId(objectID);
                     break;
                 }
             }
-            m_simConnectObjects.insert(simObject.m_callsign, simObject);
+            m_simConnectObjects.insert(simObject.getCallsign(), simObject);
 
         }
 
@@ -381,13 +381,13 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::update()
         {
-            foreach(SimConnectObject simObj, m_simConnectObjects)
+            foreach(CSimConnectObject simObj, m_simConnectObjects)
             {
-                if (simObj.m_interpolator.hasEnoughAircraftSituations())
-                {
 
+                if (simObj.getInterpolator()->hasEnoughAircraftSituations())
+                {
                     SIMCONNECT_DATA_INITPOSITION position;
-                    CAircraftSituation situation = simObj.m_interpolator.getCurrentSituation();
+                    CAircraftSituation situation = simObj.getInterpolator()->getCurrentSituation();
                     position.Latitude = situation.latitude().value();
                     position.Longitude = situation.longitude().value();
                     position.Altitude = situation.getAltitude().value(CLengthUnit::ft());
@@ -403,12 +403,12 @@ namespace BlackSimPlugin
                     DataDefinitionGearHandlePosition gearHandle;
                     gearHandle.gearHandlePosition = 1;
 
-                    if (simObj.m_objectId != 0)
+                    if (simObj.getObjectId() != 0)
                     {
-                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionRemoteAircraftSituation, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(ddAircraftSituation), &ddAircraftSituation);
+                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionRemoteAircraftSituation, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(ddAircraftSituation), &ddAircraftSituation);
 
                         // With the following SimConnect call all aircrafts loose their red tag. No idea why though.
-                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, simObj.m_objectId, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(gearHandle), &gearHandle);
+                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionGearHandlePosition), &gearHandle);
                     }
                 }
             }

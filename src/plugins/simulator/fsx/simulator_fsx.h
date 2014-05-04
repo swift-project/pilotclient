@@ -7,6 +7,7 @@
 #define BLACKSIMPLUGIN_SIMULATOR_FSX_H
 
 #include "simconnect_datadefinition.h"
+#include "simconnect_object.h"
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator_linear.h"
 #include "blackmisc/avaircraft.h"
@@ -143,13 +144,6 @@ namespace BlackSimPlugin
 
         private:
 
-            struct SimConnectObject
-            {
-                BlackMisc::Aviation::CCallsign m_callsign;
-                BlackCore::CInterpolatorLinear m_interpolator;
-                int m_requestId;
-                int m_objectId;
-            };
 
             /*!
              * \brief Initialize SimConnect system events
@@ -171,7 +165,7 @@ namespace BlackSimPlugin
             uint    m_nextObjID;
             BlackSim::CSimulatorInfo m_simulatorInfo;
             BlackMisc::Aviation::CAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
-            QHash<BlackMisc::Aviation::CCallsign, SimConnectObject> m_simConnectObjects;
+            QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
 
             int m_simconnectTimerId;
 
