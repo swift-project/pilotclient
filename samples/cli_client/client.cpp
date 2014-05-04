@@ -29,6 +29,7 @@ Client::Client(QObject *parent)
     connect(m_net, &INetwork::pongReceived,                     this, &Client::pongReceived);
     connect(m_net, &INetwork::textMessagesReceived,             this, &Client::textMessagesReceived);
     connect(m_net, &INetwork::customPacketReceived,             this, &Client::customPacketReceived);
+    connect(m_net, &INetwork::statusMessage,                    this, &Client::statusMessage);
 
     connect(this, &Client::presetServer,                        m_net, &INetwork::presetServer);
     connect(this, &Client::presetCallsign,                      m_net, &INetwork::presetCallsign);
@@ -532,4 +533,10 @@ void Client::customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign
         std::cout << i->toStdString() << std::endl;
     }
     std::cout << std::endl;
+}
+
+void Client::statusMessage(const BlackMisc::CStatusMessage &message)
+{
+    std::cout << "STATUS " << message.getSeverityAsString().toStdString() << " " << message.getTypeAsString().toStdString() << " "
+        << message.getMessage().toStdString() << "\n";
 }
