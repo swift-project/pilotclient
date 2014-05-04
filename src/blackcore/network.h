@@ -246,6 +246,13 @@ namespace BlackCore
          */
         virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) = 0;
 
+        /*!
+         * Send a message querying our currently filed flight plan, which may have been amended by a controller.
+         * \pre Network must be connected when calling this function.
+         * \sa flightPlanReplyReceived
+         */
+        virtual void sendFlightPlanQuery() = 0;
+
         //! @}
         ////////////////////////////////////////////////////////////////
         //! \name Aircraft slots
@@ -365,6 +372,12 @@ namespace BlackCore
          * \sa sendAtisQuery
          */
         void atisLogoffTimeReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
+
+        /*!
+         * We received a reply to one of our flight plan queries, containing our up-to-date flight plan.
+         * \sa sendFlightPlanQuery
+         */
+        void flightPlanReplyReceived(const BlackMisc::Aviation::CFlightPlan &flightPlan);
 
         //! @}
         ////////////////////////////////////////////////////////////////

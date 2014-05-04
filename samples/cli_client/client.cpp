@@ -24,6 +24,7 @@ Client::Client(QObject *parent)
     connect(m_net, &INetwork::capabilitiesReplyReceived,        this, &Client::capabilitiesReplyReceived);
     connect(m_net, &INetwork::kicked,                           this, &Client::kicked);
     connect(m_net, &INetwork::metarReplyReceived,               this, &Client::metarReplyReceived);
+    connect(m_net, &INetwork::flightPlanReplyReceived,          this, &Client::flightPlanReplyReceived);
     connect(m_net, &INetwork::pilotDisconnected,                this, &Client::pilotDisconnected);
     connect(m_net, &INetwork::icaoCodesReplyReceived,           this, &Client::icaoCodesReplyReceived);
     connect(m_net, &INetwork::pongReceived,                     this, &Client::pongReceived);
@@ -44,6 +45,7 @@ Client::Client(QObject *parent)
     connect(this, &Client::sendAtcQuery,                        m_net, &INetwork::sendAtcQuery);
     connect(this, &Client::sendAtisQuery,                       m_net, &INetwork::sendAtisQuery);
     connect(this, &Client::sendFlightPlan,                      m_net, &INetwork::sendFlightPlan);
+    connect(this, &Client::sendFlightPlanQuery,                 m_net, &INetwork::sendFlightPlanQuery);
     connect(this, &Client::sendRealNameQuery,                   m_net, &INetwork::sendRealNameQuery);
     connect(this, &Client::sendCapabilitiesQuery,               m_net, &INetwork::sendCapabilitiesQuery);
     connect(this, &Client::sendIcaoCodesQuery,                  m_net, &INetwork::sendIcaoCodesQuery);
@@ -76,6 +78,7 @@ Client::Client(QObject *parent)
     m_commands["atc"]               = std::bind(&Client::sendAtcQueryCmd, this, _1);
     m_commands["atis"]              = std::bind(&Client::sendAtisQueryCmd, this, _1);
     m_commands["flightplan"]        = std::bind(&Client::sendFlightPlanCmd, this, _1);
+    m_commands["getflightplan"]     = std::bind(&Client::sendFlightPlanQueryCmd, this, _1);
     m_commands["name"]              = std::bind(&Client::sendRealNameQueryCmd, this, _1);
     m_commands["caps"]              = std::bind(&Client::sendCapabilitiesQueryCmd, this, _1);
     m_commands["icao"]              = std::bind(&Client::sendIcaoCodesQueryCmd, this, _1);
@@ -264,6 +267,11 @@ void Client::sendFlightPlanCmd(QTextStream &args)
         BlackMisc::PhysicalQuantities::CSpeed(cruiseTrueAirspeed, BlackMisc::PhysicalQuantities::CSpeedUnit::kts()),
         flightRules, route, args.readAll());
     emit sendFlightPlan(fp);
+}
+
+void Client::sendFlightPlanQueryCmd(QTextStream &)
+{
+    emit sendFlightPlanQuery();
 }
 
 void Client::sendServerQueryCmd(QTextStream &args)
@@ -503,6 +511,25 @@ void Client::kicked(const QString &msg)
 void Client::metarReplyReceived(const QString &data)
 {
     std::cout << "METAR " << data.toStdString() << std::endl;
+}
+
+void Client::flightPlanReplyReceived(const BlackMisc::Aviation::CFlightPlan &flightPlan)
+{
+    std::string rules;
+    switch (flightPlan.getFlightRules())
+    {
+        default:
+        case BlackMisc::Aviation::CFlightPlan::IFR:  rules = "IFR"; break;
+        case BlackMisc::Aviation::CFlightPlan::VFR:  rules = "VFR"; break;
+        case BlackMisc::Aviation::CFlightPlan::SVFR: rules = "SVFR"; break;
+    }
+
+    std::cout << "FLIGHTPLAN " << flightPlan.getEquipmentIcao().toStdString() << " " << flightPlan.getOriginAirportIcao() << " "
+        << flightPlan.getDestinationAirportIcao() << " " << flightPlan.getAlternateAirportIcao() << " "
+        << flightPlan.getTakeoffTimePlannedHourMin().toStdString() << " " << flightPlan.getTakeoffTimeActualHourMin().toStdString() << " "
+        << flightPlan.getEnrouteTime() << " " << flightPlan.getFuelTime() << " "
+        << flightPlan.getCruiseAltitude() << " " << flightPlan.getCruiseTrueAirspeed() << " " << rules << " "
+        << flightPlan.getRoute().toStdString() << " " << flightPlan.getRemarks().toStdString() << "\n";
 }
 
 void Client::pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign)

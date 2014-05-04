@@ -82,6 +82,7 @@ namespace BlackCore
             m_net->InstallOnInfoQueryReplyReceivedEvent(onInfoQueryReplyReceived, this);
             m_net->InstallOnCapabilitiesReplyReceivedEvent(onCapabilitiesReplyReceived, this);
             m_net->InstallOnAtisReplyReceivedEvent(onAtisReplyReceived, this);
+            m_net->InstallOnFlightPlanReceivedEvent(onFlightPlanReceived, this);
             m_net->InstallOnTemperatureDataReceivedEvent(onTemperatureDataReceived, this);
             m_net->InstallOnErrorReceivedEvent(onErrorReceived, this);
             m_net->InstallOnWindDataReceivedEvent(onWindDataReceived, this);
@@ -645,6 +646,17 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
+    void CNetworkVatlib::sendFlightPlanQuery()
+    {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
+        try
+        {
+            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_FP, toFSD(m_callsign));
+        }
+        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+    }
+
     void CNetworkVatlib::sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
@@ -982,6 +994,49 @@ namespace BlackCore
                 atis.appendMessage(fixed);
             }
         }
+    }
+
+    void CNetworkVatlib::onFlightPlanReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::FlightPlan fp, void *cbvar)
+    {
+        if (cbvar_cast(cbvar)->m_callsign != cbvar_cast(cbvar)->fromFSD(callsign))
+        {
+            return; // ignore other pilots' flightplans
+        }
+
+        BlackMisc::Aviation::CFlightPlan::FlightRules rules = BlackMisc::Aviation::CFlightPlan::VFR;
+        switch (fp.fpRules)
+        {
+        default:
+        case Cvatlib_Network::fpRuleType_VFR:   rules = BlackMisc::Aviation::CFlightPlan::VFR;  break;
+        case Cvatlib_Network::fpRuleType_IFR:   rules = BlackMisc::Aviation::CFlightPlan::IFR;  break;
+        case Cvatlib_Network::fpRuleType_SVFR:  rules = BlackMisc::Aviation::CFlightPlan::SVFR; break;
+        }
+
+        auto cruiseAltString = cbvar_cast(cbvar)->fromFSD(fp.cruiseAlt);
+        if (! cruiseAltString.contains(QRegExp("[A-Z][a-z]")))
+        {
+            cruiseAltString += "ft";
+        }
+        BlackMisc::Aviation::CAltitude cruiseAlt;
+        cruiseAlt.parseFromString(cruiseAltString);
+
+        BlackMisc::Aviation::CFlightPlan flightPlan(
+            cbvar_cast(cbvar)->fromFSD(fp.acType),
+            cbvar_cast(cbvar)->fromFSD(fp.depApt),
+            cbvar_cast(cbvar)->fromFSD(fp.destApt),
+            cbvar_cast(cbvar)->fromFSD(fp.altApt),
+            QDateTime::fromString(QString::number(fp.depTimePlanned), "hhmm"),
+            QDateTime::fromString(QString::number(fp.depTimeActual), "hhmm"),
+            BlackMisc::PhysicalQuantities::CTime(fp.enrouteHrs * 60 + fp.enrouteMins, BlackMisc::PhysicalQuantities::CTimeUnit::min()),
+            BlackMisc::PhysicalQuantities::CTime(fp.fuelHrs * 60 + fp.fuelMins, BlackMisc::PhysicalQuantities::CTimeUnit::min()),
+            cruiseAlt,
+            BlackMisc::PhysicalQuantities::CSpeed(fp.trueCruiseSpeed, BlackMisc::PhysicalQuantities::CSpeedUnit::kts()),
+            rules,
+            cbvar_cast(cbvar)->fromFSD(fp.route),
+            cbvar_cast(cbvar)->fromFSD(fp.remarks)
+        );
+
+        emit cbvar_cast(cbvar)->flightPlanReplyReceived(flightPlan);
     }
 
     void CNetworkVatlib::onTemperatureDataReceived(Cvatlib_Network *, Cvatlib_Network::TempLayer /** layers **/ [4], INT /** pressure **/, void * /** cbvar **/)

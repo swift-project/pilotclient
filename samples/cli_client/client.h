@@ -45,6 +45,7 @@ private: //commands
     void sendAtcQueryCmd(QTextStream &args);
     void sendAtisQueryCmd(QTextStream &args);
     void sendFlightPlanCmd(QTextStream &args);
+    void sendFlightPlanQueryCmd(QTextStream &args);
     void sendRealNameQueryCmd(QTextStream &args);
     void sendCapabilitiesQueryCmd(QTextStream &args);
     void sendIcaoCodesQueryCmd(QTextStream &args);
@@ -73,6 +74,7 @@ signals: //to send to INetwork
     void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &fp);
+    void sendFlightPlanQuery();
     void sendRealNameQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign);
     void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign);
@@ -101,6 +103,7 @@ public slots: //to receive from INetwork
     void capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
     void kicked(const QString &msg);
     void metarReplyReceived(const QString &data);
+    void flightPlanReplyReceived(const BlackMisc::Aviation::CFlightPlan &flightPlan);
     void pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
     void icaoCodesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
     void pongReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);

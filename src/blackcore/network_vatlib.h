@@ -64,6 +64,7 @@ namespace BlackCore
         virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;
+        virtual void sendFlightPlanQuery() override;
 
         // Aircraft slots
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -126,6 +127,7 @@ namespace BlackCore
         static void onInfoQueryReplyReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::infoQuery type, const char *data, const char *data2, void *cbvar);
         static void onCapabilitiesReplyReceived(Cvatlib_Network *, const char *callsign, const char **keysValues, void *cbvar);
         static void onAtisReplyReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::atisLineType type, const char *data, void *cbvar);
+        static void onFlightPlanReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::FlightPlan fp, void *cbvar);
         static void onTemperatureDataReceived(Cvatlib_Network *, Cvatlib_Network::TempLayer layers[4], INT pressure, void *cbvar);
         static void onErrorReceived(Cvatlib_Network *, Cvatlib_Network::error type, const char *msg, const char *data, void *cbvar);
         static void onWindDataReceived(Cvatlib_Network *, Cvatlib_Network::WindLayer layers[4], void *cbvar);
