@@ -67,4 +67,46 @@ namespace BlackMiscTest
         QVERIFY2(s1.back() == 1, "Last element has expected value");
     }
 
+    void CTestContainers::joinAndSplit()
+    {
+        CSequence<int> s1, s2;
+        s1.push_back(1);
+        s1.push_back(2);
+        s1.push_back(3);
+        s2.push_back(4);
+        s2.push_back(5);
+        s2.push_back(6);
+        auto joined = s1.join(s2);
+        s1.push_back(s2);
+        QVERIFY2(s1.size() == 6, "Combine sequences");
+        QVERIFY2(s1 == joined, "Combine sequences");
+
+        CCollection<int> c1, c2, c3, c4;
+        c1.push_back(1);
+        c1.push_back(2);
+        c1.push_back(3);
+        c1.push_back(4);
+        c1.push_back(5);
+        c1.push_back(6);
+        c2.push_back(1);
+        c2.push_back(2);
+        c2.push_back(3);
+        c3.push_back(4);
+        c3.push_back(5);
+        c3.push_back(6);
+        c4.push_back(10);
+        c4.push_back(20);
+        c4.push_back(30);
+        QVERIFY2(c1.makeUnion(c2) == c1, "Combine collections");
+        QVERIFY2(c2.makeUnion(c3) == c1, "Combine collections");
+        QVERIFY2(c1.intersection(c2) == c2, "Combine collections");
+        QVERIFY2(c1.difference(c2) == c3, "Split collections");
+        c1.insert(c4);
+        QVERIFY2(c1.size() == 9, "Combine collections");
+        c1.remove(c4);
+        QVERIFY2(c1.size() == 6, "Split collections");
+        c1.remove(c2);
+        QVERIFY2(c1 == c3, "Split collections");
+    }
+
 } //namespace BlackMiscTest

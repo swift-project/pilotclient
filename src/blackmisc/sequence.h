@@ -207,6 +207,19 @@ namespace BlackMisc
         void push_back(T &&value) { Q_ASSERT(pimpl()); pimpl()->push_back(std::move(value)); }
 
         /*!
+         * \brief Appends all elements from another sequence at the end of this sequence.
+         * \pre This sequence must be initialized.
+         */
+        void push_back(const CSequence &other) { std::copy(other.begin(), other.end(), std::back_inserter(*this)); }
+
+        /*!
+         * \brief Appends all elements from another sequence at the end of this sequence.
+         * This version moves elements instead of copying.
+         * \pre This sequence must be initialized.
+         */
+        void push_back(CSequence &&other) { std::move(other.begin(), other.end(), std::back_inserter(*this)); }
+
+        /*!
          * \brief Synonym for push_back.
          * \pre The sequence must be initialized.
          */
@@ -217,6 +230,24 @@ namespace BlackMisc
          * \pre The sequence must be initialized.
          */
         void insert(T &&value) { push_back(std::move(value)); }
+
+        /*!
+         * \brief Synonym for push_back.
+         * \pre The sequence must be initialized.
+         */
+        void insert(const CSequence &other) { push_back(other); }
+
+        /*!
+         * \brief Synonym for push_back.
+         * \pre The sequence must be initialized.
+         */
+        void insert(CSequence &&other) { push_back(std::move(other)); }
+
+        /*!
+         * \brief Concatenates two sequences and returns the result.
+         * \pre This sequence must be initialized.
+         */
+        CSequence join(const CSequence &other) const { CSequence copy(*this); copy.push_back(other); return copy; }
 
         /*!
          * \brief Removes an element at the end of the sequence.

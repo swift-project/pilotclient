@@ -189,6 +189,19 @@ namespace BlackMisc
         iterator insert(T &&value) { Q_ASSERT(pimpl()); return pimpl()->insert(std::move(value)); }
 
         /*!
+         * \brief Inserts all elements from another collection into this collection.
+         * \pre This collection must be initialized.
+         */
+        void insert(const CCollection &other) { std::copy(other.begin(), other.end(), std::inserter(*this, begin())); }
+
+        /*!
+         * \brief Inserts all elements from another collection into this collection.
+         * This version moves elements instead of copying.
+         * \pre This collection must be initialized.
+         */
+        void insert(CCollection &&other) { std::move(other.begin(), other.end(), std::inserter(*this, begin())); }
+
+        /*!
          * \brief Synonym for insert.
          * \return An iterator to the position where value was inserted.
          * \pre The collection must be initialized.
@@ -201,6 +214,48 @@ namespace BlackMisc
          * \pre The collection must be initialized.
          */
         iterator push_back(T &&value) { return insert(std::move(value)); }
+
+        /*!
+         * \brief Synonym for insert.
+         * \pre This collection must be initialized.
+         */
+        void push_back(const CCollection &other) { insert(other); }
+
+        /*!
+         * \brief Synonym for insert.
+         * \pre This collection must be initialized.
+         */
+        void push_back(CCollection &&other) { insert(std::move(other)); }
+
+        /*!
+         * \brief Returns a collection which is the union of this collection and another.
+         */
+        CCollection makeUnion(const CCollection &other) const
+        {
+            CCollection result;
+            std::set_union(begin(), end(), other.begin(), other.end(), std::inserter(result, result.begin()));
+            return result;
+        }
+
+        /*!
+         * \brief Returns a collection which is the intersection of this collection and another.
+         */
+        CCollection intersection(const CCollection &other) const
+        {
+            CCollection result;
+            std::set_intersection(begin(), end(), other.begin(), other.end(), std::inserter(result, result.begin()));
+            return result;
+        }
+
+        /*!
+         * \brief Returns a collection which contains all the elements from this collection which are not in the other collection.
+         */
+        CCollection difference(const CCollection &other) const
+        {
+            CCollection result;
+            std::set_difference(begin(), end(), other.begin(), other.end(), std::inserter(result, result.begin()));
+            return result;
+        }
 
         /*!
          * \brief Remove the element pointed to by the given iterator.
@@ -236,6 +291,12 @@ namespace BlackMisc
          * \pre The sequence must be initialized.
          */
         void remove(const T &object) { auto it = find(object); if (it != end()) { erase(it); } }
+
+        /*!
+         * \brief Removes from this collection all of the elements of another collection.
+         * \pre This sequence must be initialized.
+         */
+        void remove(const CCollection &other) { *this = CCollection(*this).difference(other); }
 
         /*!
          * \brief Test for equality.

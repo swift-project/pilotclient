@@ -21,6 +21,7 @@ namespace BlackMiscTest
     private slots:
         void collectionBasics();
         void sequenceBasics();
+        void joinAndSplit();
     };
 
 } //namespace BlackMiscTest
