@@ -78,16 +78,16 @@ namespace BlackMisc
         template <class C> static CSequence fromImpl(C c = C()) { return CSequence(new Pimpl<C>(std::move(c))); }
 
         /*!
-         * \brief Change the implementation type but keep all the same elements, by copying them into the new implementation.
+         * \brief Change the implementation type but keep all the same elements, by moving them into the new implementation.
          * \tparam C Becomes the sequence's new implementation type.
          */
-        template <class C> void changeImpl(C = C()) { auto c = fromImpl(C()); for (auto i = cbegin(); i != cend(); ++i) c.push_back(*i); *this = std::move(c); }
+        template <class C> void changeImpl(C = C()) { auto c = fromImpl(C()); std::move(begin(), end(), std::inserter(c, c.begin())); *this = std::move(c); }
 
         /*!
          * \brief Like changeImpl, but uses the implementation type of another sequence.
          * \pre The other sequence must be initialized.
          */
-        void useImplOf(const CSequence &other) { PimplPtr p = other.pimpl()->cloneEmpty(); for (auto i = cbegin(); i != cend(); ++i) p->push_back(*i); m_pimpl.reset(p.take()); }
+        void useImplOf(const CSequence &other) { PimplPtr p = other.pimpl()->cloneEmpty(); std::move(begin(), end(), std::inserter(*p, p->begin())); m_pimpl.reset(p.take()); }
 
         /*!
          * \brief Returns iterator at the beginning of the sequence.
@@ -188,16 +188,35 @@ namespace BlackMisc
         iterator insert(iterator before, const T &value) { Q_ASSERT(pimpl()); return pimpl()->insert(before, value); }
 
         /*!
+         * \brief Moves an element into the sequence.
+         * \return An iterator to the position where value was inserted.
+         * \pre The sequence must be initialized.
+         */
+        iterator insert(iterator before, T &&value) { Q_ASSERT(pimpl()); return pimpl()->insert(before, std::move(value)); }
+
+        /*!
          * \brief Appends an element at the end of the sequence.
          * \pre The sequence must be initialized.
          */
         void push_back(const T &value) { Q_ASSERT(pimpl()); pimpl()->push_back(value); }
 
         /*!
+         * \brief Move-appends an element at the end of the sequence.
+         * \pre The sequence must be initialized.
+         */
+        void push_back(T &&value) { Q_ASSERT(pimpl()); pimpl()->push_back(std::move(value)); }
+
+        /*!
          * \brief Synonym for push_back.
          * \pre The sequence must be initialized.
          */
         void insert(const T &value) { push_back(value); }
+
+        /*!
+         * \brief Synonym for push_back.
+         * \pre The sequence must be initialized.
+         */
+        void insert(T &&value) { push_back(std::move(value)); }
 
         /*!
          * \brief Removes an element at the end of the sequence.
@@ -450,6 +469,7 @@ namespace BlackMisc
             virtual void clear() = 0;
             virtual iterator insert(iterator pos, const T &value) = 0;
             virtual void push_back(const T &value) = 0;
+            virtual void push_back(T &&value) = 0;
             virtual void pop_back() = 0;
             virtual iterator erase(iterator pos) = 0;
             virtual iterator erase(iterator it1, iterator it2) = 0;
@@ -480,6 +500,7 @@ namespace BlackMisc
             void clear() override { m_impl.clear(); }
             iterator insert(iterator pos, const T &value) override { return iterator::fromImpl(m_impl.insert(*static_cast<const typename C::iterator*>(pos.getImpl()), value)); }
             void push_back(const T &value) override { m_impl.push_back(value); }
+            void push_back(T &&value) override { m_impl.push_back(std::move(value)); }
             void pop_back() override { m_impl.pop_back(); }
             iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator*>(pos.getImpl()))); }
             iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator*>(it1.getImpl()), *static_cast<const typename C::iterator*>(it2.getImpl()))); }

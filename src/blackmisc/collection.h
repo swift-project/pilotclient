@@ -78,16 +78,16 @@ namespace BlackMisc
         template <class C> static CCollection fromImpl(C c = C()) { return CCollection(new Pimpl<C>(std::move(c))); }
 
         /*!
-         * \brief Change the implementation type but keep all the same elements, by copying them into the new implementation.
+         * \brief Change the implementation type but keep all the same elements, by moving them into the new implementation.
          * \tparam C Becomes the collection's new implementation type.
          */
-        template <class C> void changeImpl(C = C()) { auto c = fromImpl(C()); for (auto i = cbegin(); i != cend(); ++i) c.insert(*i); *this = std::move(c); }
+        template <class C> void changeImpl(C = C()) { auto c = fromImpl(C()); std::move(begin(), end(), std::inserter(c, c.begin())); *this = std::move(c); }
 
         /*!
          * \brief Like changeImpl, but uses the implementation type of another collection.
          * \pre The other collection must be initialized.
          */
-        void useImplOf(const CCollection &other) { PimplPtr p = other.pimpl()->cloneEmpty(); for (auto i = cbegin(); i != cend(); ++i) p->insert(*i); m_pimpl.reset(p.take()); }
+        void useImplOf(const CCollection &other) { PimplPtr p = other.pimpl()->cloneEmpty(); std::move(begin(), end(), std::inserter(*p, p->begin())); m_pimpl.reset(p.take()); }
 
         /*!
          * \brief Returns iterator at the beginning of the collection.
@@ -145,6 +145,22 @@ namespace BlackMisc
         void clear() { if (pimpl()) pimpl()->clear(); }
 
         /*!
+         * \brief For compatibility with std::inserter.
+         * \param hint Ignored.
+         * \param value The value to insert.
+         * \pre The collection must be initialized.
+         */
+        iterator insert(const_iterator hint, const T &value) { Q_UNUSED(hint); return insert(value); }
+
+        /*!
+         * \brief For compatibility with std::inserter.
+         * \param hint Ignored.
+         * \param value The value to move in.
+         * \pre The collection must be initialized.
+         */
+        iterator insert(const_iterator hint, T &&value) { insert(std::move(value)); Q_UNUSED(hint); }
+
+        /*!
          * \brief Inserts an element into the collection.
          * \return An iterator to the position where value was inserted.
          * \pre The collection must be initialized.
@@ -152,11 +168,25 @@ namespace BlackMisc
         iterator insert(const T &value) { Q_ASSERT(pimpl()); return pimpl()->insert(value); }
 
         /*!
+         * \brief Moves an element into the collection.
+         * \return An iterator to the position where value was inserted.
+         * \pre The collection must be initialized.
+         */
+        iterator insert(T &&value) { Q_ASSERT(pimpl()); return pimpl()->insert(std::move(value)); }
+
+        /*!
          * \brief Synonym for insert.
          * \return An iterator to the position where value was inserted.
          * \pre The collection must be initialized.
          */
         iterator push_back(const T &value) { return insert(value); }
+
+        /*!
+         * \brief Synonym for insert.
+         * \return An iterator to the position where value was inserted.
+         * \pre The collection must be initialized.
+         */
+        iterator push_back(T &&value) { return insert(std::move(value)); }
 
         /*!
          * \brief Remove the element pointed to by the given iterator.
@@ -222,6 +252,7 @@ namespace BlackMisc
             virtual bool empty() const = 0;
             virtual void clear() = 0;
             virtual iterator insert(const T &value) = 0;
+            virtual iterator insert(T &&value) = 0;
             virtual iterator erase(iterator pos) = 0;
             virtual iterator erase(iterator it1, iterator it2) = 0;
             virtual iterator find(const T &value) = 0;
@@ -246,6 +277,7 @@ namespace BlackMisc
             bool empty() const override { return m_impl.empty(); }
             void clear() override { m_impl.clear(); }
             iterator insert(const T &value) override { return iterator::fromImpl(insertHelper(m_impl.insert(value))); }
+            iterator insert(T &&value) override { return iterator::fromImpl(insertHelper(m_impl.insert(std::move(value)))); }
             iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(pos.getImpl()))); }
             //iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()), *static_cast<const typename C::iterator*>(it2.getImpl()))); }
             iterator erase(iterator it1, iterator it2) override { while (it1 != it2) { it1 = iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()))); } return it1; }
