@@ -22,7 +22,7 @@ namespace BlackMisc
         class CAircraftIcao : public BlackMisc::CValueObject
         {
         public:
-            //! \brief Default constructor.
+            //! Default constructor.
             CAircraftIcao() {}
 
             /*!
@@ -49,40 +49,49 @@ namespace BlackMisc
             //! Set ICAO designator, e.g. "B737"
             void setAircraftDesignator(const QString &icaoDesignator) { this->m_aircraftDesignator = icaoDesignator.trimmed().toUpper(); }
 
-            //! \brief Get airline, e.g. "DLH"
+            //! Aircraft designator?
+            bool hasAircraftDesignator() const { return !this->m_aircraftDesignator.isEmpty(); }
+
+            //! Get airline, e.g. "DLH"
             const QString &getAirlineDesignator() const { return this->m_airlineDesignator; }
 
-            //! \brief Set airline, e.g. "DLH"
+            //! Set airline, e.g. "DLH"
             void setAirlineDesignator(const QString &icaoDesignator) { this->m_airlineDesignator = icaoDesignator.trimmed().toUpper(); }
 
-            //! \brief Airline available?
+            //! Airline available?
             bool hasAirlineDesignator() const { return !this->m_airlineDesignator.isEmpty(); }
 
-            //! \brief Get livery
+            //! Airline and Aircraft designator?
+            bool hasAircraftAndAirlineDsignator() const { return this->hasAirlineDesignator() && this->hasAircraftDesignator(); }
+
+            //! Get livery
             const QString &getLivery() const { return this->m_livery; }
 
-            //! \brief Set livery
+            //! Set livery
             void setLivery(const QString &livery) { this->m_livery = livery.trimmed().toUpper(); }
 
-            //! \brief has livery?
+            //! has livery?
             bool hasLivery() const { return !this->m_livery.isEmpty(); }
 
-            //! \brief Get livery or color
+            //! Get livery or color
             const QString &getLiveryOrColor() const { return this->hasLivery() ? this->m_livery : this->m_aircraftColor; }
 
-            //! \brief Get color (RGB hex)
+            //! Get color (RGB hex)
             const QString &getAircraftColor() const { return this->m_aircraftColor; }
 
-            //! \brief Set color (RGB hex)
+            //! Set color (RGB hex)
             void setAircraftColor(const QString &color) { this->m_aircraftColor = color.trimmed().toUpper(); }
 
-            //! \brief Color available?
+            //! Color available?
             bool hasAircraftColor() const { return !this->m_aircraftColor.isEmpty(); }
 
-            //! \brief Get type, e.g. "L2J"
+            //! Get type, e.g. "L2J"
             const QString &getAircraftCombinedType() const { return this->m_aircraftCombinedType; }
 
-            //! \brief Get engine type, e.g. "J"
+            //! Combined type available?
+            bool hasAircraftCombinedType() const { return this->getAircraftCombinedType().length() == 3; }
+
+            //! Get engine type, e.g. "J"
             QString getEngineType() const
             {
                 if (this->m_aircraftCombinedType.length() != 3) return "";
@@ -95,16 +104,16 @@ namespace BlackMisc
              */
             QString asString() const;
 
-            //! \brief Set type
+            //! Set type
             void setAircraftCombinedType(const QString &type) { this->m_aircraftCombinedType = type.trimmed().toUpper(); }
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CAircraftIcao &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CAircraftIcao &other) const;
 
-            //! \brief Value hash
+            //! Value hash
             virtual uint getValueHash() const override;
 
             //! \copydoc CValueObject::toJson
@@ -113,10 +122,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
-            //! \brief Members
+            //! Members
             static const QStringList &jsonMembers();
 
             /*!

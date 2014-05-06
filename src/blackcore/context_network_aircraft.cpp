@@ -56,8 +56,6 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdAircraftUpdateReceived(const CCallsign &callsign, const CAircraftSituation &situation, const CTransponder &transponder)
     {
-        // this->log(Q_FUNC_INFO, callsign.toQString(), situation.toQString(), transponder.toQString());
-
         CAircraftList list = this->m_aircraftsInRange.findByCallsign(callsign);
         if (list.isEmpty())
         {
@@ -99,8 +97,8 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdPilotDisconnected(const CCallsign &callsign)
     {
-        // this->log(Q_FUNC_INFO, callsign.toQString());
         this->m_aircraftsInRange.removeIf(&CAircraft::getCallsign, callsign);
+        this->m_otherClients.removeIf(&CClient::getCallsign, callsign);
     }
 
     /*
@@ -108,8 +106,6 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdFrequencyReceived(const CCallsign &callsign, const CFrequency &frequency)
     {
-        // this->log(Q_FUNC_INFO, callsign.toQString(), frequency.toQString());
-
         // update
         CIndexVariantMap vm(CAircraft::IndexFrequencyCom1, frequency.toQVariant());
         this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);

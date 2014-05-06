@@ -2,7 +2,6 @@
 #define BLACKGUI_USERLISTMODEL_H
 
 #include <QAbstractItemModel>
-#include <QDBusConnection>
 #include "blackmisc/nwuserlist.h"
 #include "blackgui/listmodelbase.h"
 

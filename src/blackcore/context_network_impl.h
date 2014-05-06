@@ -23,7 +23,7 @@ namespace BlackCore
     class CVatsimBookingReader;
     class CVatsimDataFileReader;
 
-    //! \brief Network context implementation
+    //! Network context implementation
     class CContextNetwork : public IContextNetwork
     {
         Q_OBJECT
@@ -136,28 +136,28 @@ namespace BlackCore
         CVatsimDataFileReader *m_vatsimDataFileReader;
         QTimer *m_dataUpdateTimer; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
-        //! \brief Replace value by new values
+        //! Replace value by new values
         void setAtcStationsBooked(const BlackMisc::Aviation::CAtcStationList &newStations);
 
-        //! \brief Replace value by new values
+        //! Replace value by new values
         void setAtcStationsOnline(const BlackMisc::Aviation::CAtcStationList &newStations);
 
-        //! \brief The "central" ATC list with online ATC controllers
+        //! The "central" ATC list with online ATC controllers
         BlackMisc::Aviation::CAtcStationList &atcStationsOnline()
         {
             return m_atcStationsOnline;
         }
 
-        //! \brief ATC list, with booked controllers
+        //! ATC list, with booked controllers
         BlackMisc::Aviation::CAtcStationList &atcStationsBooked()
         {
             return m_atcStationsBooked;
         }
 
-        //! \brief Init my very onw aircraft
+        //! Init my very own aircraft
         void initOwnAircraft();
 
-        //! \brief Get network settings
+        //! Get network settings
         BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const
         {
             Q_ASSERT(this->getRuntime());
@@ -166,10 +166,10 @@ namespace BlackCore
         }
 
     private slots:
-        //! \brief ATC bookings received
+        //! ATC bookings received
         void psReceivedBookings(BlackMisc::Aviation::CAtcStationList bookedStations);
 
-        //! \brief Data file has been read
+        //! Data file has been read
         void psDataFileRead();
 
         /*!
@@ -179,7 +179,7 @@ namespace BlackCore
          */
         void psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message);
 
-        //! \brief ATC position update
+        //! ATC position update
         void psFsdAtcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
 
         /*!
@@ -188,7 +188,7 @@ namespace BlackCore
          */
         void psFsdAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! \brief ATIS received
+        //! ATIS received
         void psFsdAtisQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
 
         /*!
@@ -205,25 +205,25 @@ namespace BlackCore
          */
         void psFsdAtisLogoffTimeQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
 
-        //! \brief METAR received
+        //! METAR received
         void psFsdMetarReceived(const QString &metarMessage);
 
-        //! \brief Realname recevied
+        //! Realname recevied
         void psFsdRealNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
 
-        //! \brief Plane ICAO codes received
+        //! Plane ICAO codes received
         void psFsdIcaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
 
-        //! \brief Aircraft position update received
+        //! Aircraft position update received
         void psFsdAircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
 
-        //! \brief Pilot disconnected
+        //! Pilot disconnected
         void psFsdPilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! \brief Frequency received
+        //! Frequency received
         void psFsdFrequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
 
-        //! \brief Radio text messages received
+        //! Radio text messages received
         void psFsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
     };
 }

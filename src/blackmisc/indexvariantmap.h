@@ -55,6 +55,9 @@ namespace BlackMisc
         //! Indexes
         QList<int> indexes() const { return this->m_values.keys(); }
 
+        //! Contains index?
+        bool contains(int index) const { return this->m_values.contains(index); }
+
         //! values
         QList<QVariant> values() const { return this->m_values.values(); }
 

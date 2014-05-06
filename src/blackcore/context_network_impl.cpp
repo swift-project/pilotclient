@@ -328,4 +328,13 @@ namespace BlackCore
         if (this->m_vatsimDataFileReader->interval() < interval) this->m_vatsimDataFileReader->setInterval(interval);
     }
 
+    /*
+     * Radio text message received
+     */
+    void CContextNetwork::psFsdTextMessageReceived(const CTextMessageList &messages)
+    {
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, messages.toQString());
+        this->textMessagesReceived(messages); // relay
+    }
+
 } // namespace

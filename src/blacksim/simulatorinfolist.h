@@ -16,7 +16,7 @@
 
 namespace BlackSim
 {
-    //! \brief Value object encapsulating a list of SimulatorInfos.
+    //! \brief Value object encapsulating a list of SimulatorInfo.
     class CSimulatorInfoList : public BlackMisc::CSequence<CSimulatorInfo>
     {
     public:

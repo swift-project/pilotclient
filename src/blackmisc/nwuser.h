@@ -3,10 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/*!
-    \file
-*/
-
 #ifndef BLACKMISC_USER_H
 #define BLACKMISC_USER_H
 
@@ -38,15 +34,18 @@ namespace BlackMisc
                 IndexCallsignIcon
             };
 
-            //! \brief Default constructor.
+            //! Default constructor.
             CUser() {}
 
-            //! \brief Constructor.
+            //! Constructor by callsign
+            CUser(const BlackMisc::Aviation::CCallsign &callsign) : m_callsign(callsign) {}
+
+            //! Constructor.
             CUser(const QString &id, const QString &realname, const BlackMisc::Aviation::CCallsign &callsign)
                 : m_id(id), m_realname(realname), m_callsign(callsign)
             {}
 
-            //! \brief Constructor.
+            //! Constructor.
             CUser(const QString &id, const QString &realname, const QString &email = "", const QString &password = "", const BlackMisc::Aviation::CCallsign &callsign = BlackMisc::Aviation::CCallsign())
                 : m_id(id), m_realname(realname), m_email(email), m_password(password), m_callsign(callsign)
             {}
@@ -100,16 +99,13 @@ namespace BlackMisc
             void setId(const QString &id) { m_id = id.trimmed(); }
 
             //! \brief Get associated callsign.
-            BlackMisc::Aviation::CCallsign getCallsign() const { return m_callsign; }
+            const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_callsign; }
 
             //! \brief Set associated callsign
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_callsign = callsign; }
 
             //! \copydoc CValueObject::toIcon()
-            virtual const QPixmap &toIcon() const override
-            {
-                return this->getCallsign().toIcon();
-            }
+            virtual const QPixmap &toIcon() const override { return this->getCallsign().toIcon(); }
 
             //! \brief Equal operator ==
             bool operator ==(const CUser &other) const;

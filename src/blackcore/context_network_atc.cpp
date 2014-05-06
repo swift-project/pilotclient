@@ -271,7 +271,6 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdAtcControllerDisconnected(const CCallsign &callsign)
     {
-        // this->log(Q_FUNC_INFO, callsign.toQString());
         this->m_atcStationsOnline.removeIf(&CAtcStation::getCallsign, callsign);
         emit this->changedAtcStationsOnline();
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, CIndexVariantMap(CAtcStation::IndexIsOnline, QVariant(false)));
