@@ -71,7 +71,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     // timers
     if (this->m_timerUpdateAircraftsInRange == nullptr) this->m_timerUpdateAircraftsInRange = new QTimer(this);
     if (this->m_timerUpdateAtcStationsOnline == nullptr) this->m_timerUpdateAtcStationsOnline = new QTimer(this);
-    if (this->m_timerUpdateUsers == nullptr) this->m_timerUpdateUsers = new QTimer(this);
     if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
     if (this->m_timerCollectedCockpitUpdates == nullptr) this->m_timerCollectedCockpitUpdates = new QTimer(this);
     if (this->m_timerAudioTests == nullptr) this->m_timerAudioTests = new QTimer(this);
@@ -119,12 +118,15 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
     this->connect(this->m_timerUpdateAircraftsInRange, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerUpdateAtcStationsOnline, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
-    this->connect(this->m_timerUpdateUsers, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
     this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
     this->connect(this->m_timerSimulator, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     connect = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &MainWindow::audioTestUpdate);
+
+    // sliders
+    this->connect(this->ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this->ui->twp_Users, &BlackGui::CUserComponent::setUpdateIntervalSeconds);
+
     Q_ASSERT(connect);
     Q_UNUSED(connect); // suppress GCC warning in release build
 
@@ -300,9 +302,9 @@ void MainWindow::initialDataReads()
     {
         // connection is already established
         this->reloadAircraftsInRange();
-        this->reloadAllUsers();
         this->reloadAtcStationsOnline();
         this->updateGuiStatusInformation();
+        this->ui->twp_Users->update();
     }
 
     this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "initial data read"));
@@ -315,7 +317,7 @@ void MainWindow::startUpdateTimers()
 {
     this->m_timerUpdateAircraftsInRange->start(this->ui->hs_SettingsGuiAircraftRefreshTime->value() * 1000);
     this->m_timerUpdateAtcStationsOnline->start(this->ui->hs_SettingsGuiAtcRefreshTime->value() * 1000);
-    this->m_timerUpdateUsers->start(this->ui->hs_SettingsGuiUserRefreshTime->value() * 1000);
+    this->ui->twp_Users->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiUserRefreshTime->value());
 }
 
 /*
@@ -325,11 +327,10 @@ void MainWindow::stopUpdateTimers(bool disconnect)
 {
     this->m_timerUpdateAircraftsInRange->stop();
     this->m_timerUpdateAtcStationsOnline->stop();
-    this->m_timerUpdateUsers->stop();
+    this->ui->twp_Users->setUpdateInterval(-1);
     if (!disconnect) return;
     this->disconnect(this->m_timerUpdateAircraftsInRange);
     this->disconnect(this->m_timerUpdateAtcStationsOnline);
-    this->disconnect(this->m_timerUpdateUsers);
 }
 
 void MainWindow::stopAllTimers(bool disconnect)

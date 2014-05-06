@@ -1039,17 +1039,7 @@ QStatusBar QLabel {
             <number>0</number>
            </property>
            <item>
-            <widget class="BlackGui::CUserView" name="tvp_AllUsers">
-             <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
-             </property>
-             <attribute name="verticalHeaderVisible">
-              <bool>false</bool>
-             </attribute>
-            </widget>
+            <widget class="BlackGui::CUserComponent" name="twp_Users"/>
            </item>
           </layout>
          </widget>
@@ -1803,7 +1793,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QTabWidget" name="tw_Settings">
              <property name="currentIndex">
-              <number>3</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="tb_SettingsTrafficNetwork">
               <attribute name="title">
@@ -2028,38 +2018,49 @@ QStatusBar QLabel {
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="lbl_SettingsIcaoTypeDesignator">
+                  <widget class="QLabel" name="lbl_SettingsIcaoAircraftDesignator">
                    <property name="text">
                     <string>ICAO type (e.g. A320)</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLineEdit" name="le_SettingsIcaoTypeDesignator">
+                  <widget class="QLineEdit" name="le_SettingsIcaoAircraftDesignator">
                    <property name="inputMethodHints">
                     <set>Qt::ImhUppercaseOnly</set>
+                   </property>
+                   <property name="text">
+                    <string>C172</string>
                    </property>
                   </widget>
                  </item>
                  <item row="2" column="0">
-                  <widget class="QLabel" name="lbl_SettingsIcaoAirline">
+                  <widget class="QLabel" name="lbl_SettingsIcaoAirlineDesignator">
                    <property name="text">
                     <string>ICAO airline (e.g.DLH)</string>
                    </property>
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLineEdit" name="le_SettingsIcaoAirline"/>
+                  <widget class="QLineEdit" name="le_SettingsIcaoAirlineDesignator">
+                   <property name="text">
+                    <string>SGN</string>
+                   </property>
+                  </widget>
                  </item>
                  <item row="3" column="0">
-                  <widget class="QLabel" name="lbl_SettingsIcaoType">
+                  <widget class="QLabel" name="lbl_SettingsIcaoCombinedType">
                    <property name="text">
                     <string>Aircraft type (e.g. L2J)</string>
                    </property>
                   </widget>
                  </item>
                  <item row="3" column="1">
-                  <widget class="QLineEdit" name="le_SettingsIcaoType"/>
+                  <widget class="QLineEdit" name="le_SettingsIcaoCombinedType">
+                   <property name="text">
+                    <string>L1P</string>
+                   </property>
+                  </widget>
                  </item>
                  <item row="4" column="0">
                   <widget class="QLabel" name="lbl_SettingsModes">
@@ -3163,6 +3164,11 @@ QStatusBar QLabel {
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::CUserView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/userview.h</header>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::CTransponderModeSelector</class>
    <extends>QComboBox</extends>
    <header>blackgui/transpondermodeselector.h</header>
@@ -3176,11 +3182,6 @@ QStatusBar QLabel {
    <class>BlackGui::CAtcStationView</class>
    <extends>QTableView</extends>
    <header>blackgui/atcstationview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::CUserView</class>
-   <extends>QTableView</extends>
-   <header>blackgui/userview.h</header>
   </customwidget>
   <customwidget>
    <class>BlackGui::CAircraftView</class>
@@ -3209,6 +3210,12 @@ QStatusBar QLabel {
    <header>blackgui/settingsfsxcomponent.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::CUserComponent</class>
+   <extends>QTabWidget</extends>
+   <header>blackgui/usercomponent.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>cb_StatusWithDBus</tabstop>
@@ -3225,7 +3232,6 @@ QStatusBar QLabel {
   <tabstop>tvp_AtcStationsBooked</tabstop>
   <tabstop>pb_ReloadAtcStationsBooked</tabstop>
   <tabstop>tvp_AircraftsInRange</tabstop>
-  <tabstop>tvp_AllUsers</tabstop>
   <tabstop>pb_CockpitToggleCom1</tabstop>
   <tabstop>ds_CockpitCom1Active</tabstop>
   <tabstop>ds_CockpitCom1Standby</tabstop>
@@ -3263,9 +3269,9 @@ QStatusBar QLabel {
   <tabstop>pb_SettingsTnRemoveServer</tabstop>
   <tabstop>pb_SettingsTnCurrentServer</tabstop>
   <tabstop>le_SettingsAircraftCallsign</tabstop>
-  <tabstop>le_SettingsIcaoTypeDesignator</tabstop>
-  <tabstop>le_SettingsIcaoAirline</tabstop>
-  <tabstop>le_SettingsIcaoType</tabstop>
+  <tabstop>le_SettingsIcaoAircraftDesignator</tabstop>
+  <tabstop>le_SettingsIcaoAirlineDesignator</tabstop>
+  <tabstop>le_SettingsIcaoCombinedType</tabstop>
   <tabstop>cb_SettingsAudioInputDevice</tabstop>
   <tabstop>cb_SettingsAudioOutputDevice</tabstop>
   <tabstop>hs_SettingsGuiOpacity</tabstop>

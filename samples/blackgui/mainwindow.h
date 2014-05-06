@@ -104,7 +104,6 @@ private:
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
     QTimer *m_timerUpdateAtcStationsOnline; /*!< timer for update of stations */
     QTimer *m_timerUpdateAircraftsInRange; /*!< timer for update of aircrafts */
-    QTimer *m_timerUpdateUsers; /*!< timer for update of users */
     QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
     QTimer *m_timerContextWatchdog; /*!< core available? */
     QTimer *m_timerStatusBar; /*!< cleaning up status bar */
@@ -264,9 +263,6 @@ private slots:
 
     //! Reload aircrafts in range
     void reloadAircraftsInRange();
-
-    //! Reload all (online) users
-    void reloadAllUsers();
 
     //! Reload own aircraft
     bool reloadOwnAircraft();

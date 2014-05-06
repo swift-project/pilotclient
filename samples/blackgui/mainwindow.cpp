@@ -30,7 +30,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextAudioAvailable(false),
 
     // timers
-    m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr), m_timerUpdateUsers(nullptr),
+    m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr),
     m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
     m_timerStatusBar(nullptr), m_timerAudioTests(nullptr), m_timerSimulator(nullptr),
     // context menus
@@ -334,12 +334,6 @@ void MainWindow::timerBasedUpdates()
         this->m_timerUpdateAircraftsInRange->start(t);
         this->reloadAircraftsInRange();
     }
-    else if (sender == this->m_timerUpdateUsers)
-    {
-        int t = this->ui->hs_SettingsGuiUserRefreshTime->value() * 1000;
-        this->m_timerUpdateUsers->start(t);
-        this->reloadAllUsers();
-    }
     else if (sender == this->m_timerContextWatchdog)
     {
         this->setContextAvailability();
@@ -483,15 +477,6 @@ void MainWindow::displayOverlayInfo(const CStatusMessage &message)
 {
     this->displayOverlayInfo(message.getMessage());
     // further code goes here, such as marking errors as red ...
-}
-
-/*
- * Read users
- */
-void MainWindow::reloadAllUsers()
-{
-    if (!this->isContextNetworkAvailableCheck()) return;
-    this->ui->tvp_AllUsers->update(this->getIContextNetwork()->getUsers());
 }
 
 void MainWindow::updateSimulatorData()
