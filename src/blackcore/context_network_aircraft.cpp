@@ -24,31 +24,10 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdIcaoCodesReceived(const CCallsign &callsign, const CAircraftIcao &icaoData)
     {
-        // this->log(Q_FUNC_INFO, callsign.toQString(), icaoData.toQString());
-        CAircraftList aircraftsWithCallsign = this->m_aircraftsInRange.findByCallsign(callsign);
-        if (aircraftsWithCallsign.isEmpty())
-        {
-            // new aircraft
-            CAircraft aircraft;
-            aircraft.setCallsign(callsign);
-            aircraft.setIcaoInfo(icaoData);
-            aircraft.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
-            this->m_aircraftsInRange.push_back(aircraft);
-            if (this->isConnected())
-            {
-                // emit only if still connected
-                emit this->m_network->sendFrequencyQuery(callsign);
-                emit this->m_network->sendRealNameQuery(callsign);
-            }
-            emit this->changedAircraftsInRange();
-        }
-        else
-        {
-            // update
-            CIndexVariantMap vm(CAircraft::IndexIcao, icaoData.toQVariant());
-            this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);
-            emit this->changedAircraftsInRange();
-        }
+        // update
+        CIndexVariantMap vm(CAircraft::IndexIcao, icaoData.toQVariant());
+        this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);
+        emit this->changedAircraftsInRange();
     }
 
     /*
