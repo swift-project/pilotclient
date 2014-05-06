@@ -173,6 +173,15 @@ namespace BlackCore
             return this->getRuntime()->getIContextSettings()->getNetworkSettings();
         }
 
+        //! Send FsInn custom package
+        void sendFsipiCustomPackage(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
+
+        //! Send FsInn custom package
+        void sendFsipirCustomPackage(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
+
+        //! Custom package data based on own aircraft / model
+        QStringList createFsipiCustomPackageData() const;
+
     private slots:
         //! ATC bookings received
         void psReceivedBookings(BlackMisc::Aviation::CAtcStationList bookedStations);
@@ -242,7 +251,6 @@ namespace BlackCore
 
         //! Server reply received
         void psFsdServerReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &host);
-
     };
 }
 

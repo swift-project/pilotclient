@@ -24,7 +24,6 @@ namespace BlackCore
     using namespace BlackMisc::Network;
     using namespace BlackMisc;
 
-
     void exceptionDispatcher(const char *caller);
 
     CNetworkVatlib::CNetworkVatlib(QObject *parent)
@@ -755,6 +754,16 @@ namespace BlackCore
             m_net->RequestWeatherData(toFSD(airportICAO));
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+    }
+
+    QStringList CNetworkVatlib::createFsipiCustomPackageData(const QString &unknown01, const QString &airlineIcao, const QString &aircraftIcao, const QString &magicNumber1, const QString &magicNumber2, const QString &magicNumber3, const QString &magicNumber4, const QString &combinedType, const QString &modelString)
+    {
+
+        QStringList data;
+        data << unknown01 << airlineIcao << aircraftIcao
+             << magicNumber1 << magicNumber2 << magicNumber3 << magicNumber4
+             << combinedType << modelString;
+        return data;
     }
 
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
