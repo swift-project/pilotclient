@@ -21,6 +21,25 @@ namespace BlackMisc
     // forward declaration
     class CIndexVariantMap;
 
+    namespace PhysicalQuantities
+    {
+        template <class MU, class PQ> class CPhysicalQuantity; // forward declaration
+
+        //! Traits class to test whether a class is a physical quantity class. Useful for enable_if.
+        template <class T>
+        class IsQuantity
+        {
+            struct yes { char x; };
+            struct no { yes x[2]; };
+            template <class MU, class PQ> static yes test(const CPhysicalQuantity<MU, PQ> &);
+            static no test(...);
+
+        public:
+            //! True if and only if T is derived from CPhysicalQuantity.
+            static const bool value = sizeof(test(*(T*)0)) == sizeof(yes);
+        };
+    }
+
     /*!
      * \brief Base class for value objects.
      * Public non-virtual interface with protected virtual implementation.
@@ -80,6 +99,42 @@ namespace BlackMisc
 
         //! Operator != with value map
         friend bool operator!=(const CValueObject &valueObject, const CIndexVariantMap &valueMap);
+
+        //! Comparison operator to allow valueobjects be used as keys in QMap and std::set.
+        template <class T> friend typename std::enable_if<std::is_base_of<CValueObject, T>::value && ! PhysicalQuantities::IsQuantity<T>::value, bool>::type
+        operator<(const T &lhs, const T &rhs)
+        {
+            const auto &lhsBase = static_cast<const CValueObject &>(lhs);
+            const auto &rhsBase = static_cast<const CValueObject &>(rhs);
+            return lhsBase.compareImpl(rhsBase) < 0;
+        }
+
+        //! Comparison for symmetry with operator<.
+        template <class T> friend typename std::enable_if<std::is_base_of<CValueObject, T>::value && ! PhysicalQuantities::IsQuantity<T>::value, bool>::type
+        operator>(const T &lhs, const T &rhs)
+        {
+            const auto &lhsBase = static_cast<const CValueObject &>(lhs);
+            const auto &rhsBase = static_cast<const CValueObject &>(rhs);
+            return lhsBase.compareImpl(rhsBase) > 0;
+        }
+
+        //! Comparison for symmetry with operator<.
+        template <class T> friend typename std::enable_if<std::is_base_of<CValueObject, T>::value && ! PhysicalQuantities::IsQuantity<T>::value, bool>::type
+        operator<=(const T &lhs, const T &rhs)
+        {
+            const auto &lhsBase = static_cast<const CValueObject &>(lhs);
+            const auto &rhsBase = static_cast<const CValueObject &>(rhs);
+            return lhsBase.compareImpl(rhsBase) <= 0;
+        }
+
+        //! Comparison for symmetry with operator<.
+        template <class T> friend typename std::enable_if<std::is_base_of<CValueObject, T>::value && ! PhysicalQuantities::IsQuantity<T>::value, bool>::type
+        operator>=(const T &lhs, const T &rhs)
+        {
+            const auto &lhsBase = static_cast<const CValueObject &>(lhs);
+            const auto &rhsBase = static_cast<const CValueObject &>(rhs);
+            return lhsBase.compareImpl(rhsBase) >= 0;
+        }
 
         /*!
          * Compares two instances of related classes

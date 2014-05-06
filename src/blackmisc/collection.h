@@ -22,7 +22,21 @@ namespace BlackMisc
 {
 
     /*!
-     * \brief Generic type-erased unsequenced container with value semantics.
+     * Needed for compatibility with C++ standard algorithms which expect ordered sets.
+     */
+    template <class T>
+    class QOrderedSet : public QMap<T, T>
+    {
+    public:
+        //! Type of values stored in the set.
+        typedef T value_type;
+
+        //! Insert a new value into the set.
+        typename QMap<T, T>::iterator insert(const T &value) { return QMap<T, T>::insert(value, value); }
+    };
+
+    /*!
+     * \brief Generic type-erased ordered container with value semantics.
      * \tparam T the type of elements contained.
      *
      * Can take any suitable container class as its implementation at runtime.
@@ -48,7 +62,7 @@ namespace BlackMisc
         /*!
          * \brief Default constructor.
          */
-        CCollection() : m_pimpl(new Pimpl<QSet<T>>(QSet<T>())) {}
+        CCollection() : m_pimpl(new Pimpl<QOrderedSet<T>>(QOrderedSet<T>())) {}
 
         /*!
          * \brief Copy constructor.
@@ -286,7 +300,7 @@ namespace BlackMisc
             bool operator ==(const PimplBase &other) const override { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.insert(*i); return m_impl == copy.m_impl; }
         private:
             C m_impl;
-            // insertHelper: QSet::insert returns an iterator, but std::set::insert returns a std::pair<interator, bool>
+            // insertHelper: QOrderedSet::insert returns an iterator, but std::set::insert returns a std::pair<interator, bool>
             template <class I> static I insertHelper(I i) { return i; }
             template <class I> static I insertHelper(std::pair<I, bool> p) { return p.first; }
         };
@@ -307,6 +321,6 @@ Q_DECLARE_METATYPE(BlackMisc::CCollection<int>)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<uint>)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<qlonglong>)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<qulonglong>)
-// CCollection<double> not instantiated because QSet<double> is not supported due to hashing constraints
+// CCollection<double> not instantiated due to it being a dumb idea because of rounding issues
 
 #endif // guard
