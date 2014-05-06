@@ -92,6 +92,9 @@ void BlackMisc::Network::registerMetadata()
     CServerList::registerMetadata();
     CTextMessage::registerMetadata();
     CTextMessageList::registerMetadata();
+    CClient::registerMetadata();
+    CClientList::registerMetadata();
+    CAircraftModel::registerMetadata();
 }
 
 /*

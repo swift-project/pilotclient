@@ -10,5 +10,8 @@
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwtextmessagelist.h"
+#include "blackmisc/nwclient.h"
+#include "blackmisc/nwclientlist.h"
+#include "blackmisc/nwaircraftmodel.h"
 
 #endif // guard

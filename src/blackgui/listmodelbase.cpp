@@ -9,6 +9,7 @@
 #include "blackmisc/avaircraftlist.h"
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwuserlist.h"
+#include "blackmisc/nwclientlist.h"
 #include "blackmisc/hwkeyboardkeylist.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
@@ -210,6 +211,7 @@ namespace BlackGui
     template class CListModelBase<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
     template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>;
     template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>;
+    template class CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
     template class CListModelBase<BlackMisc::Hardware::CKeyboardKey, BlackMisc::Hardware::CKeyboardKeyList>;
 
 } // namespace
