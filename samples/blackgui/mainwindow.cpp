@@ -184,11 +184,14 @@ void MainWindow::toggleNetworkConnection()
     this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(this->m_resPixmapConnectionConnecting);
     if (!this->getIContextNetwork()->isConnected())
     {
-        if (this->m_ownAircraft.getCallsign().isEmpty())
-        {
-            this->displayStatusMessage(CStatusMessage::getValidationError("missing callsign"));
-            return;
-        }
+        // validation of data here is not required, network context does this
+        // in prephase of login
+        this->m_ownAircraft.setCallsign(this->ui->le_SettingsAircraftCallsign->text());
+        CAircraftIcao icao = this->m_ownAircraft.getIcaoInfo();
+        icao.setAirlineDesignator(this->ui->le_SettingsIcaoAirlineDesignator->text());
+        icao.setAircraftDesignator(this->ui->le_SettingsIcaoAircraftDesignator->text());
+        icao.setAircraftCombinedType(this->ui->le_SettingsIcaoCombinedType->text());
+        this->m_ownAircraft.setIcaoInfo(icao);
 
         // send latest aircraft to network/voice
         this->getIContextNetwork()->setOwnAircraft(this->m_ownAircraft);
