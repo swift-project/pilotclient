@@ -32,6 +32,7 @@ namespace BlackGui
         Q_ASSERT(c);
         c = connect(this->ui->le_AirlineOperator, SIGNAL(textChanged(QString)), this, SLOT(buildRemarkString()));
         Q_ASSERT(c);
+        Q_UNUSED(c);
 
         connect(this->ui->pte_AdditionalRemarks, &QPlainTextEdit::textChanged, this, &CFlightPlanComponent::buildRemarkString);
         connect(this->ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::buildRemarkString);
@@ -79,7 +80,7 @@ namespace BlackGui
         BlackMisc::CStatusMessageList messages;
         QString v;
 
-        CFlightPlan::FlightRules rule;
+        CFlightPlan::FlightRules rule = CFlightPlan::IFR;
         if (this->ui->rb_TypeIfr->isChecked())
             rule = CFlightPlan::IFR;
         else if (this->ui->rb_TypeVfr->isChecked())
