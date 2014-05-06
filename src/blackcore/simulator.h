@@ -28,8 +28,9 @@ namespace BlackCore
         //! \brief Simulator connection
         enum Status
         {
-            Not_Connected,
-            Connected
+            Disconnected,
+            Connected,
+            ConnectionFailed
         };
 
         //! \brief Constructor
@@ -69,7 +70,7 @@ namespace BlackCore
 
     signals:
         //! Emitted when the connection status has changed
-        void connectionChanged(bool value);
+        void statusChanged(ISimulator::Status status);
 
         //! Emitted when new a new data object of the user aircraft is received
         void ownAircraftReceived(BlackMisc::Aviation::CAircraft aircraft);

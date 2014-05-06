@@ -54,7 +54,10 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
 /*
  * Destructor
  */
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow()
+{
+    this->disconnect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
+}
 
 /*
  * Graceful shutdown

@@ -69,7 +69,7 @@ namespace BlackSimPlugin
             m_simconnectTimerId = startTimer(10);
             m_isConnected = true;
 
-            emit connectionChanged(true);
+            emit statusChanged(Connected);
             return true;
         }
 
@@ -78,7 +78,7 @@ namespace BlackSimPlugin
             if (!m_isConnected)
                 return true;
 
-            emit connectionChanged(false);
+            emit statusChanged(Disconnected);
             if (m_hSimConnect)
                 SimConnect_Close(m_hSimConnect);
 

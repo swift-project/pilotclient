@@ -87,7 +87,7 @@ namespace BlackCore
         virtual void updateOwnAircraft();
 
         //! Set new connection status
-        void setConnectionStatus(bool value);
+        void setConnectionStatus(ISimulator::Status status);
 
     private:
         //! \brief find and catalog all simulator plugins

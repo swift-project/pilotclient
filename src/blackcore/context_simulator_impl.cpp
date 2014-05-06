@@ -113,7 +113,7 @@ namespace BlackCore
         m_simulator = factory->create(this);
         Q_ASSERT(m_simulator);
 
-        connect(m_simulator, SIGNAL(connectionChanged(bool)), this, SLOT(setConnectionStatus(bool)));
+        connect(m_simulator, SIGNAL(statusChanged(ISimulator::Status)), this, SLOT(setConnectionStatus(ISimulator::Status)));
         return true;
     }
 
@@ -132,13 +132,19 @@ namespace BlackCore
         getIContextNetwork()->updateOwnCockpit(m_ownAircraft.getCom1System(), m_ownAircraft.getCom2System(), m_ownAircraft.getTransponder());
     }
 
-    void CContextSimulator::setConnectionStatus(bool value)
+    void CContextSimulator::setConnectionStatus(ISimulator::Status status)
     {
-        if (value)
+        if (status == ISimulator::Connected)
+        {
             m_updateTimer->start(100);
+            emit connectionChanged(true);
+        }
         else
+        {
             m_updateTimer->stop();
-        emit connectionChanged(value);
+            emit connectionChanged(false);
+        }
+
     }
 
     void CContextSimulator::findSimulatorPlugins()
