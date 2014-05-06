@@ -68,7 +68,7 @@ namespace BlackCore
     {
         if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         if (!m_simulator || m_canConnectResult.isRunning()) return; // already checking
-        this->m_canConnectResult = QtConcurrent::run(this, &CContextSimulator::connectTo);
+        m_simulator->asyncConnectTo();
     }
 
     bool CContextSimulator::disconnectFrom()
