@@ -57,6 +57,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getOwnAircraft()
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
 
+        //! \copydoc IContextSimulator::getAircraftModel()
+        virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override;
+
         //! \copydoc IContextSimulator::getSimulatorInfo
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 

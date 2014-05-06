@@ -12,6 +12,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/nwuserlist.h"
+#include "blackmisc/nwclientlist.h"
 #include "blackmisc/voiceroomlist.h"
 #include "blackcore/network.h"
 
@@ -99,6 +100,12 @@ namespace BlackCore
 
         //! Get own aircraft
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
+
+        //! Information about other clients
+        virtual BlackMisc::Network::CClientList getOtherClients() const = 0;
+
+        //! Clients for given callsign, e.g. to test direct model
+        virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const = 0;
 
         /*!
          * \brief Connect to Network

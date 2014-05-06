@@ -7,6 +7,7 @@
 #include "context_runtime.h"
 #include "context_settings.h"
 #include "context_application.h"
+#include "context_simulator.h"
 #include "network_vatlib.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
@@ -72,6 +73,9 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CContextNetwork::psFsdAircraftUpdateReceived);
         this->connect(this->m_network, &INetwork::frequencyReplyReceived, this, &CContextNetwork::psFsdFrequencyReceived);
         this->connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::psFsdTextMessageReceived);
+        this->connect(this->m_network, &INetwork::capabilitiesReplyReceived, this, &CContextNetwork::psFsdCapabilitiesReplyReceived);
+        this->connect(this->m_network, &INetwork::customPacketReceived, this, &CContextNetwork::psFsdCustomPackageReceived);
+        this->connect(this->m_network, &INetwork::serverReplyReceived, this, &CContextNetwork::psFsdServerReplyReceived);
         if (this->getIContextApplication()) this->connect(this->m_network, &INetwork::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
     }
 
@@ -121,6 +125,10 @@ namespace BlackCore
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Invalid user credentials"));
         }
+        else if (!this->m_ownAircraft.getIcaoInfo().hasAircraftAndAirlineDsignator())
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Invalid ICAO data for own aircraft"));
+        }
         else if (this->m_network->isConnected())
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Already connected"));
@@ -164,6 +172,7 @@ namespace BlackCore
             this->m_aircraftsInRange.clear();
             this->m_atcStationsBooked.clear();
             this->m_atcStationsOnline.clear();
+            this->m_otherClients.clear();
             this->m_metarCache.clear();
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, "Connection terminating"));
         }
@@ -277,6 +286,95 @@ namespace BlackCore
     }
 
     /*
+     * All users
+     */
+    CUserList CContextNetwork::getUsers() const
+    {
+        CUserList users;
+        foreach(CAtcStation station, this->m_atcStationsOnline)
+        {
+            CUser user = station.getController();
+            users.push_back(user);
+        }
+        foreach(CAircraft aircraft, this->m_aircraftsInRange)
+        {
+            CUser user = aircraft.getPilot();
+            users.push_back(user);
+        }
+        return users;
+    }
+
+    /*
+     * Users with callsigns
+     */
+    CUserList CContextNetwork::getUsersForCallsigns(const CCallsignList &callsigns) const
+    {
+        CUserList users;
+        if (callsigns.isEmpty()) return users;
+        CCallsignList searchList(callsigns);
+
+        // do aircrafts first, this will handle most callsigns
+        foreach(CAircraft aircraft, this->m_aircraftsInRange)
+        {
+            if (searchList.isEmpty()) break;
+            CCallsign callsign = aircraft.getCallsign();
+            if (searchList.contains(callsign))
+            {
+                CUser user = aircraft.getPilot();
+                users.push_back(user);
+                searchList.remove(callsign);
+            }
+        }
+
+        foreach(CAtcStation station, this->m_atcStationsOnline)
+        {
+            if (searchList.isEmpty()) break;
+            CCallsign callsign = station.getCallsign();
+            if (searchList.contains(callsign))
+            {
+                CUser user = station.getController();
+                users.push_back(user);
+                searchList.remove(callsign);
+            }
+        }
+
+        // we might have unresolved callsigns
+        foreach(CCallsign callsign, searchList)
+        {
+            CUser user;
+            user.setCallsign(callsign);
+            users.push_back(user);
+        }
+        return users;
+    }
+
+    /*
+     * Other clients
+     */
+    CClientList CContextNetwork::getOtherClients() const
+    {
+        return this->m_otherClients;
+    }
+
+    /*
+     * Other clients
+     */
+    CClientList CContextNetwork::getOtherClientsForCallsigns(const CCallsignList &callsigns) const
+    {
+        CClientList clients;
+        if (callsigns.isEmpty()) return clients;
+        foreach(CCallsign callsign, callsigns)
+        {
+            CClientList clientsForCallsign = this->m_otherClients.findBy(&CClient::getCallsign, callsign);
+            foreach(CClient c, clientsForCallsign)
+            {
+                clients.push_back(c);
+            }
+        }
+        return clients;
+    }
+
+    /*
      * Connection status changed
      */
     void CContextNetwork::psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
@@ -316,6 +414,9 @@ namespace BlackCore
 
         vm = CIndexVariantMap(CAircraft::IndexPilotRealName, realname);
         this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
+
+        vm = CIndexVariantMap(CClient::IndexRealName, realname);
+        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 
     /*
@@ -337,4 +438,80 @@ namespace BlackCore
         this->textMessagesReceived(messages); // relay
     }
 
+    /*
+     * Capabilities
+     */
+    void CContextNetwork::psFsdCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags)
+    {
+        if (callsign.isEmpty()) return;
+        CIndexVariantMap capabilities;
+        capabilities.addValue(CClient::FsdAtisCanBeReceived, (flags & CNetworkVatlib::AcceptsAtisResponses));
+        capabilities.addValue(CClient::FsdWithInterimPositions, (flags & CNetworkVatlib::SupportsInterimPosUpdates));
+        capabilities.addValue(CClient::FsdWithModelDescription, (flags & CNetworkVatlib::SupportsModelDescriptions));
+        CIndexVariantMap vm(CClient::IndexCapabilities, capabilities.toQVariant());
+        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
+    }
+
+    /*
+     * Custom packages
+     */
+    void CContextNetwork::psFsdCustomPackageReceived(const CCallsign &callsign, const QString &package, const QStringList &data)
+    {
+        if (callsign.isEmpty() || data.isEmpty()) return;
+        if (package.startsWith("FSIPIR", Qt::CaseInsensitive))
+        {
+            // Request of other client, I can get the other's model from that
+            // FsInn response is usually my model
+            QString model = data.last();
+            if (model.isEmpty()) return;
+            CIndexVariantMap vm(CClient::IndexQueriedModelString, QVariant(model));
+            if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
+            {
+                // with custom packages it can happen,
+                //the package is received before any other package
+                this->m_otherClients.push_back(CClient(callsign));
+            }
+            this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
+            this->sendFsipiCustomPackage(callsign); // response
+        }
+    }
+
+    /*
+     * Host
+     */
+    void CContextNetwork::psFsdServerReplyReceived(const CCallsign &callsign, const QString &host)
+    {
+        if (callsign.isEmpty() || host.isEmpty()) return;
+        CIndexVariantMap vm(CClient::IndexHost, QVariant(host));
+        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
+    }
+
+    void CContextNetwork::sendFsipiCustomPackage(const CCallsign &recipientCallsign) const
+    {
+        QStringList data = this->createFsipiCustomPackageData();
+        this->m_network->sendCustomPacket(recipientCallsign.asString(), "FSIPI", data);
+    }
+
+    void CContextNetwork::sendFsipirCustomPackage(const CCallsign &recipientCallsign) const
+    {
+        QStringList data = this->createFsipiCustomPackageData();
+        this->m_network->sendCustomPacket(recipientCallsign.asString(), "FSIPIR", data);
+    }
+
+    QStringList CContextNetwork::createFsipiCustomPackageData() const
+    {
+        CAircraft me = this->getOwnAircraft();
+        CAircraftIcao icao = me.getIcaoInfo();
+        QString modelString;
+        if (this->getIContextSimulator())
+        {
+            if (this->getIContextSimulator()->isConnected()) modelString = this->getIContextSimulator()->getOwnAircraftModel().getQueriedModelString();
+        }
+        if (modelString.isEmpty()) modelString = CProject::systemNameAndVersion();
+        QStringList data = CNetworkVatlib::createFsipiCustomPackageData(
+                               "0", icao.getAirlineDesignator(), icao.getAircraftDesignator(),
+                               "", "", "", "",
+                               icao.getAircraftCombinedType(), modelString);
+        return data;
+    }
 } // namespace

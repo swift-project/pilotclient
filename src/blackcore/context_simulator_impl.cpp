@@ -91,6 +91,11 @@ namespace BlackCore
         return m_simulator->getSimulatorInfo();
     }
 
+    Network::CAircraftModel CContextSimulator::getOwnAircraftModel() const
+    {
+        return this->m_aircraftModel;
+    }
+
     bool CContextSimulator::loadSimulatorPlugin(const CSimulatorInfo &simulatorInfo)
     {
         ISimulatorFactory *factory = nullptr;

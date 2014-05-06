@@ -164,69 +164,6 @@ namespace BlackCore
     }
 
     /*
-     * All users
-     */
-    CUserList CContextNetwork::getUsers() const
-    {
-        CUserList users;
-        foreach(CAtcStation station, this->m_atcStationsOnline)
-        {
-            CUser user = station.getController();
-            users.push_back(user);
-        }
-        foreach(CAircraft aircraft, this->m_aircraftsInRange)
-        {
-            CUser user = aircraft.getPilot();
-            users.push_back(user);
-        }
-        return users;
-    }
-
-    /*
-     * Users with callsigns
-     */
-    CUserList CContextNetwork::getUsersForCallsigns(const CCallsignList &callsigns) const
-    {
-        CUserList users;
-        if (callsigns.isEmpty()) return users;
-        CCallsignList searchList(callsigns);
-
-        // do aircrafts first, this will handle most callsigns
-        foreach(CAircraft aircraft, this->m_aircraftsInRange)
-        {
-            if (searchList.isEmpty()) break;
-            CCallsign callsign = aircraft.getCallsign();
-            if (searchList.contains(callsign))
-            {
-                CUser user = aircraft.getPilot();
-                users.push_back(user);
-                searchList.remove(callsign);
-            }
-        }
-
-        foreach(CAtcStation station, this->m_atcStationsOnline)
-        {
-            if (searchList.isEmpty()) break;
-            CCallsign callsign = station.getCallsign();
-            if (searchList.contains(callsign))
-            {
-                CUser user = station.getController();
-                users.push_back(user);
-                searchList.remove(callsign);
-            }
-        }
-
-        // we might have unresolved callsigns
-        foreach(CCallsign callsign, searchList)
-        {
-            CUser user;
-            user.setCallsign(callsign);
-            users.push_back(user);
-        }
-        return users;
-    }
-
-    /*
      * ATC Position update
      */
     void CContextNetwork::psFsdAtcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)

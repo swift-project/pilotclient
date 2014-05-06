@@ -12,6 +12,7 @@
 #include "context.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_runtime.h"
+#include "blackmisc/nwaircraftmodel.h"
 #include "blackmisc/avaircraft.h"
 #include "blacksim/simulatorinfo.h"
 #include "blacksim/simulatorinfolist.h"
@@ -73,6 +74,9 @@ namespace BlackCore
 
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
+
+        //! Aircraft model
+        virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const = 0;
 
         //! Load specific simulator plugin
         virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) = 0;

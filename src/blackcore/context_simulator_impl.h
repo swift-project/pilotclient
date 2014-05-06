@@ -32,6 +32,9 @@ namespace BlackCore
         //! \brief Destructor
         virtual ~CContextSimulator();
 
+        //! Model name, e.g. as used with FSX "Cessna C172 Skyhawk"
+        void setModelName(const QString &modelName) { this->m_aircraftModel.setQueriedModelString(modelName); }
+
     public slots:
 
         //! \copydoc IContextSimulator::getSimulatorPluginList()
@@ -57,6 +60,9 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::getSimulatorInfo()
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
+
+        //! \copydoc IContextSimulator::getAircraftModel()
+        virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override;
 
         //! \copydoc IContextSimulator::loadSimulatorPlugin()
         virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) override;
@@ -88,7 +94,9 @@ namespace BlackCore
         void findSimulatorPlugins();
 
         BlackMisc::Aviation::CAircraft m_ownAircraft;
+        BlackMisc::Network::CAircraftModel m_aircraftModel;
         BlackCore::ISimulator *m_simulator;
+
         QTimer *m_updateTimer;
         QDir m_pluginsDir;
         QSet<ISimulatorFactory *> m_simulatorFactories;

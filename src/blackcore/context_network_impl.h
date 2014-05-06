@@ -13,6 +13,7 @@
 #include "blackcore/network.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/setnetwork.h"
+#include "blackmisc/nwclientlist.h"
 
 #include <QMap>
 
@@ -105,6 +106,12 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getUsersForCallsigns
         virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override;
 
+        //! \copydoc IContextNetwork::getOtherClients
+        virtual BlackMisc::Network::CClientList getOtherClients() const override;
+
+        //! \copydoc IContextNetwork::getOtherClientForCallsigns
+        virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override;
+
         //! \copydoc IContextNetwork::requestDataUpdates
         virtual void requestDataUpdates()override;
 
@@ -127,6 +134,7 @@ namespace BlackCore
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
         BlackMisc::Aviation::CAircraftList m_aircraftsInRange;
+        BlackMisc::Network::CClientList m_otherClients;
         BlackCore::INetwork *m_network;
         BlackMisc::Aviation::CAircraft m_ownAircraft;
         QMap<QString, BlackMisc::Aviation::CInformationMessage> m_metarCache /*!< Keep METARs for a while */;
@@ -225,6 +233,16 @@ namespace BlackCore
 
         //! Radio text messages received
         void psFsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
+
+        //! Capabilities received
+        void psFsdCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
+
+        //! Custom package
+        void psFsdCustomPackageReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &package, const QStringList &data);
+
+        //! Server reply received
+        void psFsdServerReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &host);
+
     };
 }
 

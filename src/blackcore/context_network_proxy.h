@@ -119,6 +119,12 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getUsersForCallsigns
         virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override;
 
+        //! \copydoc IContextNetwork::getOtherClients
+        virtual BlackMisc::Network::CClientList getOtherClients() const override;
+
+        //! \copydoc IContextNetwork::getOtherClientForCallsigns
+        virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override;
+
         //! \copydoc IContextNetwork::requestDataUpdates
         virtual void requestDataUpdates()override;
 
