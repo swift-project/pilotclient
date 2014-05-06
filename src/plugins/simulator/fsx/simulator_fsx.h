@@ -15,6 +15,7 @@
 #include <QObject>
 #include <QtPlugin>
 #include <QHash>
+#include <QFutureWatcher>
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -82,6 +83,9 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::connectTo()
             virtual bool connectTo() override;
 
+            //! \copydoc ISimulator::asyncConnectTo()
+            virtual void asyncConnectTo() override;
+
             //! \copydoc ISimulator::disconnectFrom()
             virtual bool disconnectFrom() override;
 
@@ -134,6 +138,9 @@ namespace BlackSimPlugin
             //! \brief Dispatch SimConnect messages
             void dispatch();
 
+            //! \brief Called when asynchronous connection to Simconnect has finished
+            void connectToFinished();
+
         private:
 
             struct SimConnectObject
@@ -167,6 +174,8 @@ namespace BlackSimPlugin
             QHash<BlackMisc::Aviation::CCallsign, SimConnectObject> m_simConnectObjects;
 
             int m_simconnectTimerId;
+
+            QFutureWatcher<bool> m_watcherConnect;
         };
     }
 

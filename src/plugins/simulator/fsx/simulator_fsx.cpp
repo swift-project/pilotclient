@@ -9,6 +9,7 @@
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/simulatorinfo.h"
 #include <QTimer>
+#include <QtConcurrent>
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -71,6 +72,21 @@ namespace BlackSimPlugin
 
             emit statusChanged(Connected);
             return true;
+        }
+
+        void CSimulatorFsx::asyncConnectTo()
+        {
+            connect(&m_watcherConnect, SIGNAL(finished()), this, SLOT(connectToFinished()));
+
+            auto asyncConnectFunc = [&]() -> bool
+            {
+                if (FAILED(SimConnect_Open(&m_hSimConnect, "BlackBox", nullptr, 0, 0, 0))) return false;
+
+                return true;
+            };
+            QFuture<bool> result = QtConcurrent::run( asyncConnectFunc );
+
+            m_watcherConnect.setFuture(result);
         }
 
         bool CSimulatorFsx::disconnectFrom()
@@ -325,6 +341,22 @@ namespace BlackSimPlugin
         void CSimulatorFsx::dispatch()
         {
             SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
+        }
+
+        void CSimulatorFsx::connectToFinished()
+        {
+            if( m_watcherConnect.result() )
+            {
+                initSystemEvents();
+                initDataDefinitions();
+                m_simconnectTimerId = startTimer(50);
+                m_isConnected = true;
+
+                emit statusChanged(Connected);
+            }
+            else
+                emit statusChanged(ConnectionFailed);
+
         }
 
         HRESULT CSimulatorFsx::initSystemEvents()

@@ -1,7 +1,7 @@
 include (../../../../config.pri)
 include (../../../../build.pri)
 
-QT       += core dbus gui network
+QT       += core dbus gui network concurrent
 
 TARGET = simulator_fsx
 TEMPLATE = lib
