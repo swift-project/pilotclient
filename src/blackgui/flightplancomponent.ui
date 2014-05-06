@@ -250,13 +250,6 @@
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="rb_TypeSvfr">
-           <property name="text">
-            <string>SVFR</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QRadioButton" name="rb_TypeIfr">
            <property name="text">
             <string>IFR</string>
@@ -742,7 +735,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>rb_TypeVfr</tabstop>
-  <tabstop>rb_TypeSvfr</tabstop>
   <tabstop>rb_TypeIfr</tabstop>
   <tabstop>le_Callsign</tabstop>
   <tabstop>le_AircraftType</tabstop>

@@ -85,8 +85,6 @@ namespace BlackGui
             rule = CFlightPlan::IFR;
         else if (this->ui->rb_TypeVfr->isChecked())
             rule = CFlightPlan::VFR;
-        else if (this->ui->rb_TypeSvfr->isChecked())
-            rule = CFlightPlan::SVFR;
         flightPlan.setFlightRule(rule);
 
         v = ui->le_Callsign->text().trimmed();
