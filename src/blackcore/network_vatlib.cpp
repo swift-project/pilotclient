@@ -565,6 +565,17 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
+    void CNetworkVatlib::sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign)
+    {
+        Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
+
+        try
+        {
+            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_UserInfo, toFSD(callsign));
+        }
+        catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
+    }
+
     void CNetworkVatlib::sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");

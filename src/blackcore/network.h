@@ -274,6 +274,13 @@ namespace BlackCore
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         /*!
+         * Send a user info query, which only shall be sent by supervisiors. Reply is received as
+         * text message
+         * \pre Network must be connected when calling this function.
+         */
+        virtual void sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
+
+        /*!
          * Set our own aircraft data.
          * \param aircraft Only the situation and avionics parts are used. Callsign, user, and ICAO code parts are ignored.
          */

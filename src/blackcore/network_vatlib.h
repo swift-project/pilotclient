@@ -69,6 +69,7 @@ namespace BlackCore
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendIcaoCodesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
+        virtual void sendUserInfoQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) override;
         virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
         virtual void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
