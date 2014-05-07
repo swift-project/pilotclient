@@ -22,6 +22,7 @@
 
 using namespace BlackCore;
 using namespace BlackMisc;
+using namespace BlackMisc::Hardware;
 using namespace BlackGui;
 
 
@@ -158,6 +159,9 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     // info
     this->ui->te_StatusPageConsole->appendPlainText(CProject::systemNameAndVersion());
     this->ui->te_StatusPageConsole->appendPlainText(CProject::compiledInfo());
+
+    // hotkeys
+    this->setHotkeys();
 
     // do this as last statement, so it can be used as flag
     // whether init has been completed
@@ -347,4 +351,30 @@ void MainWindow::stopAllTimers(bool disconnect)
     this->disconnect(this->m_timerCollectedCockpitUpdates);
     this->disconnect(this->m_timerAudioTests);
     this->disconnect(this->m_timerSimulator);
+}
+
+void MainWindow::setHotkeys()
+{
+    Q_ASSERT(this->getIContextSettings());
+    if (!this->m_keyboard)
+    {
+        this->m_keyboard = BlackCore::IKeyboard::getInstance();
+    }
+    else
+    {
+        this->m_keyboard->unregisterAllHotkeys();
+    }
+
+    CKeyboardKeyList keys = this->getIContextSettings()->getHotkeys();
+    if (keys.isEmpty()) return;
+
+    CKeyboardKey key = keys.keyForFunction(CKeyboardKey::HotkeyOpacity50);
+    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->changeWindowOpacity(50); });
+
+    key = keys.keyForFunction(CKeyboardKey::HotkeyOpacity100);
+    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->changeWindowOpacity(100); });
+
+    key = keys.keyForFunction(CKeyboardKey::HotkeyToogleWindowsStayOnTop);
+    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->toogleWindowStayOnTop(); });
+
 }

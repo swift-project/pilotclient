@@ -22,7 +22,7 @@ using namespace BlackMisc::Audio;
  * Constructor
  */
 MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
-    QMainWindow(parent, windowMode == GuiModes::WindowFrameless ? (Qt::Window | Qt::FramelessWindowHint) : Qt::Tool),
+    QMainWindow(parent, windowMode == GuiModes::WindowFrameless ? (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint) : (Qt::Tool | Qt::WindowStaysOnTopHint)),
     ui(new Ui::MainWindow),
     m_infoWindow(nullptr),
     m_init(false), m_windowMode(windowMode), m_audioTestRunning(NoAudioTest),
@@ -38,7 +38,9 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     // cockpit
     m_inputFocusedWidget(nullptr),
     // status bar
-    m_statusBarIcon(nullptr), m_statusBarLabel(nullptr)
+    m_statusBarIcon(nullptr), m_statusBarLabel(nullptr),
+    // keyboard /hotkeys
+    m_keyboard(nullptr)
 {
     if (windowMode == GuiModes::WindowFrameless)
     {
@@ -62,6 +64,9 @@ void MainWindow::gracefulShutdown()
 {
     if (!this->m_init) return;
     this->m_init = false;
+
+    if (this->m_keyboard) this->m_keyboard->unregisterAllHotkeys();
+
     if (this->getIContextApplication())
         this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStops);
 
@@ -509,4 +514,26 @@ void MainWindow::simulatorConnectionChanged(bool isAvailable)
         this->m_timerSimulator->start(500);
     else
         this->m_timerSimulator->stop();
+}
+
+/*
+ * Stay on top
+ */
+void MainWindow::toogleWindowStayOnTop()
+{
+    Qt::WindowFlags flags = this->windowFlags();
+    if (Qt::WindowStaysOnTopHint & flags)
+    {
+        flags ^= Qt::WindowStaysOnTopHint;
+        flags |= Qt::WindowStaysOnBottomHint;
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "on bottom"));
+    }
+    else
+    {
+        flags ^= Qt::WindowStaysOnBottomHint;
+        flags |= Qt::WindowStaysOnTopHint;
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "on top"));
+    }
+    this->setWindowFlags(flags);
+    this->show();
 }

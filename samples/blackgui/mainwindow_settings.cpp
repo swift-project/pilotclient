@@ -29,6 +29,9 @@ void MainWindow::reloadSettings()
     // update hot keys
     this->ui->tvp_SettingsMiscHotkeys->update(this->getIContextSettings()->getHotkeys());
 
+
+
+
     // fake setting for sound notifications
     this->ui->cb_SettingsAudioPlayNotificationSounds->setChecked(true);
     this->ui->cb_SettingsAudioNotificationTextMessage->setChecked(true);
@@ -81,8 +84,9 @@ void MainWindow::alterTrafficServer()
  */
 void MainWindow::changedSettings(uint typeValue)
 {
-    Q_UNUSED(typeValue);
+    IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
     this->reloadSettings();
+    if (type == IContextSettings::SettingsHotKeys) this->setHotkeys();
 }
 
 /*

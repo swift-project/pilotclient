@@ -12,6 +12,7 @@
 
 #include "infowindow.h"
 #include "guimodeenums.h"
+#include "blackcore/keyboard.h"
 #include "blackcore/context_audio.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
@@ -133,6 +134,9 @@ private:
     QLabel *m_statusBarIcon; /*!< status bar icon */
     QLabel *m_statusBarLabel; /*!< status bar label */
 
+    // Hotkeys
+    BlackCore::IKeyboard *m_keyboard;
+
     //! GUI status update
     void updateGuiStatusInformation();
 
@@ -248,6 +252,9 @@ private:
 
     //! Update simulator page with latest user aircraft data
     void updateSimulatorData();
+
+    //! Set the hotkeys
+    void setHotkeys();
 
 private slots:
 
@@ -408,6 +415,9 @@ private slots:
 
     //! Clear single hotkey
     void clearHotkey();
+
+    //! Toogle Windows stay on top
+    void toogleWindowStayOnTop();
 
 };
 
