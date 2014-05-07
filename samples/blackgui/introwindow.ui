@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>BlackGUI intro screen</string>
+   <string>swift intro screen</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../../src/blackgui/blackgui.qrc">

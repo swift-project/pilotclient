@@ -3,6 +3,7 @@
 #include "blackcore/dbus_server.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/settingutilities.h"
+#include "blackmisc/project.h"
 #include <QDesktopServices>
 #include <QUrl>
 #include <QDir>
@@ -15,6 +16,7 @@ CIntroWindow::CIntroWindow(QWidget *parent) :
     ui(new Ui::CIntroWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle(BlackMisc::CProject::systemNameAndVersion());
     this->layout()->setSizeConstraint(QLayout::SetFixedSize);
     this->ui->cb_DBusServer->addItem(BlackCore::CDBusServer::sessionDBusServer());
     this->ui->cb_DBusServer->addItem(BlackCore::CDBusServer::systemDBusServer());

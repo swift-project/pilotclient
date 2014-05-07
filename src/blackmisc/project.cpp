@@ -107,7 +107,7 @@ namespace BlackMisc
 
     const QString &CProject::systemNameAndVersion()
     {
-        static QString s = QString("BlackBox %1").arg(version());
+        static QString s = QString("swift %1").arg(version());
         return s;
     }
 
