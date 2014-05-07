@@ -21,5 +21,8 @@
         <file>icons/SUP.png</file>
         <file>icons/aeropuerto.png</file>
         <file>icons/tower.png</file>
+        <file>icons/aircraft_departure.jpg</file>
+        <file>icons/aircraft_arrival.jpg</file>
+        <file>icons/sky.jpg</file>
     </qresource>
 </RCC>

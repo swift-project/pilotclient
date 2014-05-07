@@ -27,10 +27,11 @@ namespace BlackMisc
          */
         const QPixmap &CCallsign::convertToIcon(const CCallsign &callsign)
         {
-            static const QPixmap app(QPixmap(":/blackmisc/icons/tower.png").scaledToWidth(16, Qt::SmoothTransformation));
+            static const QPixmap app(QPixmap(":/blackmisc/icons/aircraft_arrival.png").scaledToWidth(16, Qt::SmoothTransformation));
             static const QPixmap gnd(QPixmap(":/blackmisc/icons/tower.png").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap del(QPixmap(":/blackmisc/icons/tower.png").scaledToWidth(16, Qt::SmoothTransformation));
+            static const QPixmap del(QPixmap(":/blackmisc/icons/aircraft_departure.png").scaledToWidth(16, Qt::SmoothTransformation));
             static const QPixmap twr(QPixmap(":/blackmisc/icons/tower.png").scaledToWidth(16, Qt::SmoothTransformation));
+            static const QPixmap ctr(QPixmap(":/blackmisc/icons/sky.png").scaledToWidth(16, Qt::SmoothTransformation));
             static const QPixmap pilot(QPixmap(":/blackmisc/icons/aeropuerto.png").scaledToWidth(16, Qt::SmoothTransformation));
             static const QPixmap sup(":/blackmisc/icons/SUP.png");
             static const QPixmap unknown(QPixmap(":/blackmisc/icons/question.png").scaledToWidth(16, Qt::SmoothTransformation));
@@ -46,6 +47,7 @@ namespace BlackMisc
                 if ("TWR" == t) return twr;
                 if ("DEL" == t) return del;
                 if ("SUP" == t) return sup;
+                if ("CTR" == t) return ctr;
                 return unknown;
             }
             else
