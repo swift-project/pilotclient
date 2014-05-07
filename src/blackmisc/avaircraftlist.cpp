@@ -48,6 +48,20 @@ namespace BlackMisc
         }
 
         /*
+         * All pilots
+         */
+        CUserList CAircraftList::getPilots() const
+        {
+            CUserList users;
+            for (auto i = this->begin(); i != this->end(); ++i)
+            {
+                CAircraft aircraft = *i;
+                if (aircraft.getPilot().isValid()) users.push_back(aircraft.getPilot());
+            }
+            return users;
+        }
+
+        /*
          * Aircrafts within range
          */
         CAircraftList CAircraftList::findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const

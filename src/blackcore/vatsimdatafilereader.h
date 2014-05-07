@@ -9,6 +9,9 @@
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraftlist.h"
 #include "blackmisc/nwserverlist.h"
+#include "blackmisc/nwuserlist.h"
+#include "blackmisc/avcallsignlist.h"
+
 #include <QObject>
 #include <QTimer>
 #include <QNetworkReply>
@@ -50,6 +53,23 @@ namespace BlackCore
         //! Get all voice servers
         const BlackMisc::Network::CServerList &getVoiceServers() { return this->m_voiceServers; }
 
+        //! Users for callsign(s)
+        BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
+
+        //! User for callsign
+        BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Controllers for callsigns
+        BlackMisc::Network::CUserList getControllersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
+
+        //! Controllers for callsign
+        BlackMisc::Network::CUserList getControllersForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Users for callsigns
+        BlackMisc::Network::CUserList getPilotsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
+
+        //! Users for callsign
+        BlackMisc::Network::CUserList getPilotsForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
     private slots:
         //! Data have been read

@@ -80,6 +80,21 @@ namespace BlackMisc
         }
 
         /*
+         * All pilots
+         */
+        CUserList CAtcStationList::getControllers() const
+        {
+            CUserList users;
+            for (auto i = this->begin(); i != this->end(); ++i)
+            {
+                CAtcStation station = *i;
+                if (station.getController().isValid()) users.push_back(station.getController());
+            }
+            return users;
+        }
+
+
+        /*
          * Merge with booking
          */
         int  CAtcStationList::mergeWithBooking(CAtcStation &bookedAtcStation)
@@ -159,7 +174,6 @@ namespace BlackMisc
             // only one online station for this booking
             return c;
         }
-
 
         /*
          * Merge with VATSIM data file

@@ -44,6 +44,61 @@ namespace BlackCore
             this->m_updateTimer->start(updatePeriodMs);
     }
 
+    CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignList &callsigns)
+    {
+        CUserList users;
+        if (callsigns.isEmpty()) return users;
+        foreach(CCallsign callsign, callsigns)
+        {
+            users.push_back(this->m_aircrafts.findByCallsign(callsign).getPilots());
+        }
+        return users;
+    }
+
+    CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign)
+    {
+        CCallsignList callsigns;
+        callsigns.push_back(callsign);
+        return this->getPilotsForCallsigns(callsigns);
+    }
+
+    CUserList CVatsimDataFileReader::getControllersForCallsign(const CCallsign &callsign)
+    {
+        CCallsignList callsigns;
+        callsigns.push_back(callsign);
+        return this->getControllersForCallsigns(callsigns);
+    }
+
+    CUserList CVatsimDataFileReader::getUsersForCallsign(const CCallsign &callsign)
+    {
+        CCallsignList callsigns;
+        callsigns.push_back(callsign);
+        return this->getUsersForCallsigns(callsigns);
+    }
+
+    CUserList CVatsimDataFileReader::getControllersForCallsigns(const CCallsignList &callsigns)
+    {
+        CUserList users;
+        if (callsigns.isEmpty()) return users;
+        foreach(CCallsign callsign, callsigns)
+        {
+            users.push_back(this->m_atcStations.findByCallsign(callsign).getControllers());
+        }
+        return users;
+    }
+
+    CUserList CVatsimDataFileReader::getUsersForCallsigns(const CCallsignList &callsigns)
+    {
+        CUserList users;
+        if (callsigns.isEmpty()) return users;
+        foreach(CCallsign callsign, callsigns)
+        {
+            users.push_back(this->getPilotsForCallsign(callsign));
+            users.push_back(this->getControllersForCallsign(callsign));
+        }
+        return users;
+    }
+
     /*
      * Data file read from XML
      */

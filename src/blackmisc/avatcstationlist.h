@@ -10,6 +10,7 @@
 #ifndef BLACKMISC_ATCSTATIONLIST_H
 #define BLACKMISC_ATCSTATIONLIST_H
 
+#include "nwuserlist.h"
 #include "avatcstation.h"
 #include "collection.h"
 #include "sequence.h"
@@ -49,6 +50,8 @@ namespace BlackMisc
             CAtcStationList findIfComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const;
 
             //! All controllers (with valid data)
+            BlackMisc::Network::CUserList getControllers() const;
+
             //! Update distances to coordinate, usually own aircraft's position
             void calculateDistancesToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 

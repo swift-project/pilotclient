@@ -339,11 +339,20 @@ namespace BlackCore
         }
 
         // we might have unresolved callsigns
+        // these are the ones not in range
         foreach(CCallsign callsign, searchList)
         {
-            CUser user;
-            user.setCallsign(callsign);
-            users.push_back(user);
+            CUserList usersByCallsign = this->m_vatsimDataFileReader->getUsersForCallsign(callsign);
+            if (usersByCallsign.isEmpty())
+            {
+                CUser user;
+                user.setCallsign(callsign);
+                users.push_back(user);
+            }
+            else
+            {
+                users.push_back(usersByCallsign[0]);
+            }
         }
         return users;
     }
@@ -365,11 +374,7 @@ namespace BlackCore
         if (callsigns.isEmpty()) return clients;
         foreach(CCallsign callsign, callsigns)
         {
-            CClientList clientsForCallsign = this->m_otherClients.findBy(&CClient::getCallsign, callsign);
-            foreach(CClient c, clientsForCallsign)
-            {
-                clients.push_back(c);
-            }
+            clients.push_back(this->m_otherClients.findBy(&CClient::getCallsign, callsign));
         }
         return clients;
     }

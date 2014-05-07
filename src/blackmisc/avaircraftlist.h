@@ -11,6 +11,7 @@
 #define BLACKMISC_AIRCRAFTLIST_H
 
 #include "avaircraft.h"
+#include "nwuserlist.h"
 #include "collection.h"
 #include "sequence.h"
 #include <QObject>
@@ -43,6 +44,8 @@ namespace BlackMisc
             CAircraftList findByCallsign(const CCallsign &callsign) const;
 
             //! All pilots (with valid data)
+            BlackMisc::Network::CUserList getPilots() const;
+
             /*!
              * Find 0..n stations within range of given coordinate
              * \param coordinate    other position
