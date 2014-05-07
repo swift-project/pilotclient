@@ -339,7 +339,7 @@ private slots:
     //! Alter traffic server
     void alterTrafficServer();
 
-    //! Network settings have been changed
+    //! Settings have been changed
     void changedSettings(uint typeValue);
 
     //! Update timer

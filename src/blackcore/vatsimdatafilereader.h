@@ -16,20 +16,20 @@
 namespace BlackCore
 {
     /*!
-     * \brief Read bookings from VATSIM
+     * Read bookings from VATSIM
      */
     class CVatsimDataFileReader : public QObject
     {
         Q_OBJECT
 
     public:
-        //! \brief Constructor
+        //! Constructor
         explicit CVatsimDataFileReader(const QStringList &urls, QObject *parent = nullptr);
 
-        //! \brief Update timestamp
+        //! Update timestamp
         QDateTime getUpdateTimestamp() const { return this->m_updateTimestamp; }
 
-        //! \brief Read / re-read bookings
+        //! Read / re-read bookings
         void read();
 
         /*!
@@ -38,21 +38,21 @@ namespace BlackCore
          */
         void setInterval(int updatePeriodMs);
 
-        //! \brief Get the timer interval (ms)
+        //! Get the timer interval (ms)
         int interval() const { return this->m_updateTimer->interval();}
 
-        //! \brief Get aircrafts
+        //! Get aircrafts
         const BlackMisc::Aviation::CAircraftList &getAircrafts() { return this->m_aircrafts; }
 
-        //! \brief Get aircrafts
+        //! Get aircrafts
         const BlackMisc::Aviation::CAtcStationList &getAtcStations() { return this->m_atcStations; }
 
-        //! \brief Get all voice servers
+        //! Get all voice servers
         const BlackMisc::Network::CServerList &getVoiceServers() { return this->m_voiceServers; }
 
 
     private slots:
-        //! \brief Data have been read
+        //! Data have been read
         void loadFinished(QNetworkReply *nwReply);
 
     private:
@@ -66,7 +66,7 @@ namespace BlackCore
         BlackMisc::Aviation::CAircraftList m_aircrafts;
         static const QMap<QString, QString> clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes);
 
-        //! \brief Section in file
+        //! Section in file
         enum Section
         {
             SectionNone,
@@ -76,7 +76,7 @@ namespace BlackCore
         };
 
     signals:
-        //! \brief Data have been read
+        //! Data have been read
         void dataRead();
     };
 }

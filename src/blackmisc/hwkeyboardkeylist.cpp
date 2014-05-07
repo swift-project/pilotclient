@@ -25,9 +25,11 @@ namespace BlackMisc
         /*
          * Contains this hotkey function?
          */
-        bool CKeyboardKeyList::containsFunction(CKeyboardKey::HotkeyFunction key)
+        bool CKeyboardKeyList::containsFunction(CKeyboardKey::HotkeyFunction function) const
         {
-            return CSequence::contains(&CKeyboardKey::getFunction, key);
+            return CSequence::contains(&CKeyboardKey::getFunction, function);
+        }
+
         }
 
         /*

@@ -27,10 +27,10 @@ namespace BlackMisc
         class CAtcStationList : public CSequence<CAtcStation>
         {
         public:
-            //! \brief Default constructor.
+            //! Default constructor.
             CAtcStationList();
 
-            //! \brief Construct from a base class object.
+            //! Construct from a base class object.
             CAtcStationList(const CSequence<CAtcStation> &other);
 
             //! \copydoc CValueObject::toQVariant()
@@ -39,26 +39,27 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
-            //! \brief Find 0..n stations by callsign
+            //! Find 0..n stations by callsign
             CAtcStationList findByCallsign(const CCallsign &callsign) const;
 
-            //! \brief Find 0..n stations within range of given coordinate
+            //! Find 0..n stations within range of given coordinate
             CAtcStationList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
-            //! \brief Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
+            //! Find 0..n stations tune in frequency of COM unit (with 25kHt channel spacing
             CAtcStationList findIfComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const;
 
-            //! \brief Update distances to coordinate, usually own aircraft's position
+            //! All controllers (with valid data)
+            //! Update distances to coordinate, usually own aircraft's position
             void calculateDistancesToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
-            //! \brief Merge with ATC station representing booking information
+            //! Merge with ATC station representing booking information
             //! \remarks Can be used if the stored data in this list are online ATC stations
             int mergeWithBooking(CAtcStation &bookedAtcStation);
 
-            //! \brief Merge with the data from the VATSIM data file
+            //! Merge with the data from the VATSIM data file
             //! \remarks Can be used if the stored data in this list are VATSIM data file stations
             int updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const;
         };

@@ -27,10 +27,10 @@ namespace BlackMisc
         class CAircraftList : public CSequence<CAircraft>
         {
         public:
-            //! \brief Default constructor.
+            //! Default constructor.
             CAircraftList();
 
-            //! \brief Construct from a base class object.
+            //! Construct from a base class object.
             CAircraftList(const CSequence<CAircraft> &other);
 
             //! \copydoc CValueObject::toQVariant
@@ -39,18 +39,19 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
-            //! \brief Find 0..n stations by callsign
+            //! Find 0..n stations by callsign
             CAircraftList findByCallsign(const CCallsign &callsign) const;
 
+            //! All pilots (with valid data)
             /*!
-             * \brief Find 0..n stations within range of given coordinate
+             * Find 0..n stations within range of given coordinate
              * \param coordinate    other position
              * \param range         within range of other position
              * \return
              */
             CAircraftList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
             //! \brief Update aircraft with data from VATSIM data file
