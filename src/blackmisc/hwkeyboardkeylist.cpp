@@ -30,6 +30,16 @@ namespace BlackMisc
             return CSequence::contains(&CKeyboardKey::getFunction, function);
         }
 
+        /*
+         * Key for function
+         */
+        CKeyboardKey CKeyboardKeyList::keyForFunction(CKeyboardKey::HotkeyFunction function) const
+        {
+            CKeyboardKeyList keys = this->findBy(&CKeyboardKey::getFunction, function);
+            if (keys.isEmpty())
+                return CKeyboardKey(CKeyboardKey::HotkeyNone);
+            else
+                return keys[0];
         }
 
         /*
@@ -56,6 +66,7 @@ namespace BlackMisc
             if (!this->containsFunction(CKeyboardKey::HotkeyOpacity100)) this->push_back(CKeyboardKey(CKeyboardKey::HotkeyOpacity100));
             if (!this->containsFunction(CKeyboardKey::HotkeyToggleCom1)) this->push_back(CKeyboardKey(CKeyboardKey::HotkeyToggleCom1));
             if (!this->containsFunction(CKeyboardKey::HotkeyToggleCom2)) this->push_back(CKeyboardKey(CKeyboardKey::HotkeyToggleCom2));
+            if (!this->containsFunction(CKeyboardKey::HotkeyToogleWindowsStayOnTop)) this->push_back(CKeyboardKey(CKeyboardKey::HotkeyToogleWindowsStayOnTop));
         }
 
     } // namespace

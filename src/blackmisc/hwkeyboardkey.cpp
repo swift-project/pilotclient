@@ -268,6 +268,7 @@ namespace BlackMisc
                 added = true;
             }
 
+            if (added) this->cleanup();
             return added;
         }
 
@@ -291,13 +292,26 @@ namespace BlackMisc
                 removed = true;
             }
             cleanup();
-
             return removed;
         }
 
         bool CKeyboardKey::removeModifier(const QString &modifier)
         {
             return removeModifier(modifierFromString(modifier));
+        }
+
+        bool CKeyboardKey::equalsModifierReleaxed(CKeyboardKey::Modifier m1, CKeyboardKey::Modifier m2)
+        {
+            if (m1 == m2) return true;
+            if (m1 == ModifierAltAny && (m2 == ModifierAltLeft || m2 == ModifierAltRight)) return true;
+            if (m1 == ModifierCtrlAny && (m2 == ModifierCtrlLeft || m2 == ModifierCtrlRight)) return true;
+            if (m1 == ModifierShiftAny && (m2 == ModifierShiftLeft || m2 == ModifierShiftRight)) return true;
+
+            if (m2 == ModifierAltAny && (m1 == ModifierAltLeft || m1 == ModifierAltRight)) return true;
+            if (m2 == ModifierCtrlAny && (m1 == ModifierCtrlLeft || m1 == ModifierCtrlRight)) return true;
+            if (m2 == ModifierShiftAny && (m1 == ModifierShiftLeft || m1 == ModifierShiftRight)) return true;
+
+            return false;
         }
 
         QString CKeyboardKey::getFunctionAsString() const
@@ -310,6 +324,7 @@ namespace BlackMisc
             case HotkeyOpacity100: return QCoreApplication::translate("Hotkey", "Opacity 100%");
             case HotkeyToggleCom1: return QCoreApplication::translate("Hotkey", "Toggle COM1");
             case HotkeyToggleCom2: return QCoreApplication::translate("Hotkey", "Toggle COM2");
+            case HotkeyToogleWindowsStayOnTop: return QCoreApplication::translate("Hotkey", "Toogle Window on top");
             default:
                 qFatal("Wrong function");
                 return "";
@@ -321,6 +336,7 @@ namespace BlackMisc
             (void)QT_TRANSLATE_NOOP("Hotkey", "Opacity 100%");
             (void)QT_TRANSLATE_NOOP("Hotkey", "Toggle COM1");
             (void)QT_TRANSLATE_NOOP("Hotkey", "Toggle COM2");
+            (void)QT_TRANSLATE_NOOP("Hotkey", "Toogle Window on top");
         }
 
         void CKeyboardKey::setKeyObject(const CKeyboardKey &key)
@@ -330,6 +346,33 @@ namespace BlackMisc
             this->m_modifier2 = key.m_modifier2;
             this->m_nativeVirtualKey = key.m_nativeVirtualKey;
             this->m_qtKey = key.m_qtKey;
+        }
+
+        bool CKeyboardKey::equalsWithRelaxedModifiers(const CKeyboardKey &key, bool ignoreFunction) const
+        {
+            if (key == (*this)) return true; // fully equal, not need to bother
+
+            // this can never be true
+            if (key.m_qtKey != this->m_qtKey) return false;
+            if (!ignoreFunction && key.m_function != this->m_function) return false;
+            if (this->numberOfModifiers() != key.numberOfModifiers()) return false;
+
+            // special modifiers
+            if (this->getModifier1() != key.getModifier1())
+            {
+                if (!CKeyboardKey::equalsModifierReleaxed(this->getModifier1(), key.getModifier1())) return false;
+            }
+            return CKeyboardKey::equalsModifierReleaxed(this->getModifier1(), key.getModifier1());
+        }
+
+        bool CKeyboardKey::equalsWithoutFunction(const CKeyboardKey &key) const
+        {
+            if (key == (*this)) return true;
+            CKeyboardKey k1(*this);
+            CKeyboardKey k2(*this);
+            k1.setFunction(HotkeyNone);
+            k2.setFunction(HotkeyNone);
+            return k1 == k2;
         }
 
         QVariant CKeyboardKey::propertyByIndex(int index) const

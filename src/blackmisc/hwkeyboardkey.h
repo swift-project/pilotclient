@@ -46,7 +46,8 @@ namespace BlackMisc
                 HotkeyToggleCom1,
                 HotkeyToggleCom2,
                 HotkeyOpacity50,
-                HotkeyOpacity100
+                HotkeyOpacity100,
+                HotkeyToogleWindowsStayOnTop
             };
 
             //! Modifier
@@ -75,7 +76,7 @@ namespace BlackMisc
             //! Constructor
             CKeyboardKey(Qt::Key keyCode, quint32 nativeVirtualKey, Modifier modifier1 = ModifierNone, Modifier modifier2 = ModifierNone, const HotkeyFunction &function = HotkeyNone);
 
-            //! \brief Destructor
+            //! Destructor
             ~CKeyboardKey() {}
 
             //! \copydoc CValueObject::toQVariant
@@ -93,7 +94,7 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
             //! \copydoc TupleConverter<>::jsonMembers()
@@ -196,6 +197,9 @@ namespace BlackMisc
             //! Set modifier 2
             void setModifier2(const Modifier &modifier) { this->m_modifier2 = modifier; }
 
+            //! Is empty, (no key, no modifier)?
+            bool isEmpty() const { return !this->hasModifier() && !this->hasKey(); }
+
             //! Modifier?
             bool hasModifier() const
             {
@@ -208,13 +212,16 @@ namespace BlackMisc
                 return m_modifier1 == modifier || m_modifier2 == modifier;
             }
 
-            //! \brief with key?
+            //! ALT = ALT/R or ALT/L, CTRL = CTRL/R or left, ...
+            static bool equalsModifierReleaxed(Modifier m1, Modifier m2);
+
+            //! with key?
             bool hasKey() const
             {
                 return !(this->m_qtKey == Qt::Key_unknown);
             }
 
-            //! \brief Key + modifier?
+            //! Key + modifier?
             bool hasKeyAndModifier() const
             {
                 return this->hasKey() && this->hasModifier();
@@ -231,6 +238,12 @@ namespace BlackMisc
 
             //! Set function
             void setFunction(const HotkeyFunction &function) { this->m_function = function; }
+
+            //! CTRL will be consider equal CTRL-left/reigt, ALT = ALT-left/right ..
+            bool equalsWithRelaxedModifiers(const CKeyboardKey &key, bool ignoreFunction = false) const;
+
+            //! Equal, but function value ignored
+            bool equalsWithoutFunction(const CKeyboardKey &key) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const QVariant &variant, int index);

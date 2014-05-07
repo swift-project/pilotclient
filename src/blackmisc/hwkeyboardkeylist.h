@@ -41,6 +41,8 @@ namespace BlackMisc
             bool containsFunction(CKeyboardKey::HotkeyFunction function) const;
 
             //! Key for given function
+            CKeyboardKey keyForFunction(CKeyboardKey::HotkeyFunction function) const;
+
             //! Register metadata
             static void registerMetadata();
 
