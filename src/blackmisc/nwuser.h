@@ -7,6 +7,7 @@
 #define BLACKMISC_USER_H
 
 #include "avcallsign.h"
+#include "avairporticao.h"
 
 namespace BlackMisc
 {
@@ -98,6 +99,12 @@ namespace BlackMisc
             //! \brief Set id
             void setId(const QString &id) { m_id = id.trimmed(); }
 
+            //! Homebase
+            const BlackMisc::Aviation::CAirportIcao &getHomebase() const { return this->m_homebase; }
+
+            //! Set homebase
+            void setHomebase(const BlackMisc::Aviation::CAirportIcao &homebase) { this->m_homebase = homebase; }
+
             //! \brief Get associated callsign.
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_callsign; }
 
@@ -167,13 +174,14 @@ namespace BlackMisc
             QString m_email;
             QString m_password;
             BlackMisc::Aviation::CCallsign m_callsign;
+            BlackMisc::Aviation::CAirportIcao m_homebase;
         };
 
     } // namespace
 
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CUser, (o.m_id, o.m_realname, o.m_email, o.m_password, o.m_callsign))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CUser, (o.m_id, o.m_realname, o.m_email, o.m_password, o.m_callsign, o.m_homebase))
 Q_DECLARE_METATYPE(BlackMisc::Network::CUser)
 
 #endif // guard
