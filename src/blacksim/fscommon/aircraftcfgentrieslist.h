@@ -68,6 +68,9 @@ namespace BlackSim
             //! \brief Current root directory
             QString getRootDirectory() const {  return this->m_rootDirectory; }
 
+            //! Contains model with title?
+            bool containsModeWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
+
             //! \brief Unknown entries
             static const CAircraftCfgEntries &UnknownCfgEntries()
             {

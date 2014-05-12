@@ -22,6 +22,15 @@ namespace BlackSim
         }
 
         /*
+         * Model for title
+         */
+        bool CAircraftCfgEntriesList::containsModeWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
+        {
+            return this->contains([ = ](const CAircraftCfgEntries & entries) -> bool
+            { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
+        }
+
+        /*
          * Read all entrities in given directory
          */
         qint32 CAircraftCfgEntriesList::read(const QString &directory)
