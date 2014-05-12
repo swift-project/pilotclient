@@ -1,7 +1,7 @@
 include (../../config.pri)
 include (../../build.pri)
 
-QT       += core dbus network
+QT       += core dbus network testlib
 
 TARGET = sample_blacksim
 TEMPLATE = app

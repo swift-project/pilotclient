@@ -5,7 +5,10 @@
 
 #include "samplesfscommon.h"
 #include "blacksim/fscommon/aircraftcfgentrieslist.h"
+#include "blacksim/fscommon/aircraftindexer.h"
 #include <QDebug>
+#include <QFuture>
+#include <QTest>
 #include <QTextStream>
 
 namespace BlackSimTest
@@ -24,16 +27,33 @@ namespace BlackSimTest
         streamOut.flush();
         QString input = streamIn.readLine();
         if (!input.isEmpty()) fsxDir = input;
-
-        BlackSim::FsCommon::CAircraftCfgEntriesList entriesList(fsxDir);
-        if (entriesList.existsDir())
+        streamOut << "d .. direct, b .. background" << endl;
+        input = streamIn.readLine();
+        if (!input.startsWith("b"))
         {
-            streamOut << "reading " << entriesList.getRootDirectory() << endl;
-            entriesList.read();
-            streamOut << "read entries: " << entriesList.size() << endl;
-            // streamOut << entriesList << endl;
+            qDebug() << "reading directly";
+            BlackSim::FsCommon::CAircraftCfgEntriesList entriesList(fsxDir);
+            if (entriesList.existsDir())
+            {
+                streamOut << "reading " << entriesList.getRootDirectory() << endl;
+                entriesList.read();
+                streamOut << "read entries: " << entriesList.size() << endl;
+                // streamOut << entriesList << endl;
+            }
         }
-
+        else
+        {
+            qDebug() << "reading in background";
+            QFuture<int> f = BlackSim::FsCommon::CAircraftIndexer::readInBackground(fsxDir);
+            do
+            {
+                streamOut << ".";
+                streamOut.flush();
+                QTest::qSleep(1000 * 3);
+            }
+            while (!f.isFinished());
+            streamOut << endl << f.result() << " entries" << endl;
+        }
         streamOut << "-----------------------------------------------" << endl;
         return 0;
     }
