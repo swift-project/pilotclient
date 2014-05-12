@@ -24,7 +24,7 @@ namespace BlackSim
 
             enum
             {
-                SetupSimConnectCfgFile = 1000
+                SetupSimConnectCfgFile = 1000, //!< location of simconnect.cfg file
             };
 
 

@@ -43,6 +43,7 @@ namespace BlackMisc
         //! Add a value
         void addValue(int index, const QVariant &value);
 
+
         //! Add a value as non QVariant
         template<class T> void addValue(int index, const T &value) { this->m_values.insert(index, QVariant::fromValue(value)); }
 
@@ -51,6 +52,9 @@ namespace BlackMisc
 
         //! Value
         QVariant value(int index) const { return this->m_values.value(index); }
+
+        //! Set value
+        void value(int index, const QVariant &value) { this->m_values.value(index, value); }
 
         //! Indexes
         QList<int> indexes() const { return this->m_values.keys(); }
