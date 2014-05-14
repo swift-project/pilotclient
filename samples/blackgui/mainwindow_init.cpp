@@ -59,7 +59,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     }
 
     // init encapsulated table views / models
-    this->ui->tvp_AtcStationsBooked->setStationMode(CAtcStationListModel::StationsBooked);
     this->ui->tvp_CockpitVoiceRoom1->setUserMode(CUserListModel::UserShort);
     this->ui->tvp_CockpitVoiceRoom2->setUserMode(CUserListModel::UserShort);
 
@@ -70,8 +69,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->ui->cb_CockpitSelcal2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
 
     // timers
-    if (this->m_timerUpdateAircraftsInRange == nullptr) this->m_timerUpdateAircraftsInRange = new QTimer(this);
-    if (this->m_timerUpdateAtcStationsOnline == nullptr) this->m_timerUpdateAtcStationsOnline = new QTimer(this);
     if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
     if (this->m_timerCollectedCockpitUpdates == nullptr) this->m_timerCollectedCockpitUpdates = new QTimer(this);
     if (this->m_timerAudioTests == nullptr) this->m_timerAudioTests = new QTimer(this);
@@ -117,8 +114,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     connect = this->connect(this->getIContextNetwork(), SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
     Q_ASSERT(connect);
     this->connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
-    this->connect(this->m_timerUpdateAircraftsInRange, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
-    this->connect(this->m_timerUpdateAtcStationsOnline, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
     this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
@@ -127,6 +122,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // sliders
     this->connect(this->ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this->ui->twp_Users, &BlackGui::CUserComponent::setUpdateIntervalSeconds);
+    this->connect(this->ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this->ui->twp_Aircrafts, &BlackGui::CAircraftComponent::setUpdateIntervalSeconds);
 
     Q_ASSERT(connect);
     Q_UNUSED(connect); // suppress GCC warning in release build
@@ -179,7 +175,6 @@ void MainWindow::initGuiSignals()
     // This is why we still have some "old" SIGNAL/SLOT connections here
 
     // MAIN buttons
-    this->connect(this->ui->sw_MainMiddle, &QStackedWidget::currentChanged, this, &MainWindow::middlePanelChanged);
     connected = this->connect(this->ui->pb_MainAircrafts, SIGNAL(released()), this, SLOT(setMainPage()));
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainAtc, SIGNAL(released()), this, SLOT(setMainPage()));
@@ -256,16 +251,6 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->pb_SettingsAudioMicrophoneTest, &QPushButton::clicked, this, &MainWindow::startAudioTest);
     this->connect(this->ui->pb_SettingsAudioSquelchTest, &QPushButton::clicked, this, &MainWindow::startAudioTest);
 
-    // ATC
-    connected = this->connect(this->ui->le_AtcStationsOnlineMetar, SIGNAL(returnPressed()), this, SLOT(getMetar()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_AtcStationsLoadMetar, SIGNAL(clicked()), this, SLOT(getMetar()));
-    Q_ASSERT(connected);
-    this->connect(this->ui->tw_AtcStations, &QTabWidget::currentChanged, this, &MainWindow::atcStationTabChanged);
-    this->connect(this->ui->pb_ReloadAtcStationsBooked, &QPushButton::clicked, this, &MainWindow::reloadAtcStationsBooked);
-    this->connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &MainWindow::onlineAtcStationSelected);
-    this->connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &MainWindow::requestAtis);
-
     // Settings server
     this->connect(this->ui->pb_SettingsTnCurrentServer, &QPushButton::released, this, &MainWindow::alterTrafficServer);
     this->connect(this->ui->pb_SettingsTnRemoveServer, &QPushButton::released, this, &MainWindow::alterTrafficServer);
@@ -299,16 +284,17 @@ void MainWindow::initialDataReads()
     }
 
     this->reloadSettings(); // init read
-    this->reloadAtcStationsBooked(); // init read, to do this no traffic network required
     this->reloadOwnAircraft(); // init read, independent of traffic network
 
     if (this->getIContextNetwork()->isConnected())
     {
         // connection is already established
-        this->reloadAircraftsInRange();
-        this->reloadAtcStationsOnline();
+        this->ui->twp_Aircrafts->update();
+        this->ui->twp_AtcStations->update();
+
         this->updateGuiStatusInformation();
         this->ui->twp_Users->update();
+        this->ui->twp_Aircrafts->update();
     }
 
     this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "initial data read"));
@@ -319,22 +305,19 @@ void MainWindow::initialDataReads()
  */
 void MainWindow::startUpdateTimers()
 {
-    this->m_timerUpdateAircraftsInRange->start(this->ui->hs_SettingsGuiAircraftRefreshTime->value() * 1000);
-    this->m_timerUpdateAtcStationsOnline->start(this->ui->hs_SettingsGuiAtcRefreshTime->value() * 1000);
+    this->ui->twp_Aircrafts->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiAtcRefreshTime->value());
+    this->ui->twp_AtcStations->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiAircraftRefreshTime->value());
     this->ui->twp_Users->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiUserRefreshTime->value());
 }
 
 /*
  * Stop udate timers
  */
-void MainWindow::stopUpdateTimers(bool disconnect)
+void MainWindow::stopUpdateTimers()
 {
-    this->m_timerUpdateAircraftsInRange->stop();
-    this->m_timerUpdateAtcStationsOnline->stop();
-    this->ui->twp_Users->setUpdateInterval(-1);
-    if (!disconnect) return;
-    this->disconnect(this->m_timerUpdateAircraftsInRange);
-    this->disconnect(this->m_timerUpdateAtcStationsOnline);
+    this->ui->twp_AtcStations->stopTimer();
+    this->ui->twp_Aircrafts->stopTimer();
+    this->ui->twp_Users->stopTimer();
 }
 
 void MainWindow::stopAllTimers(bool disconnect)
@@ -344,7 +327,7 @@ void MainWindow::stopAllTimers(bool disconnect)
     this->m_timerCollectedCockpitUpdates->stop();
     this->m_timerAudioTests->stop();
     this->m_timerSimulator->stop();
-    this->stopUpdateTimers(disconnect);
+    this->stopUpdateTimers();
     if (!disconnect) return;
     this->disconnect(this->m_timerStatusBar);
     this->disconnect(this->m_timerContextWatchdog);

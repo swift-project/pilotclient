@@ -15,15 +15,6 @@ using namespace BlackMisc::Settings;
 using namespace BlackMisc::Audio;
 
 /*
- * Read aircrafts
- */
-void MainWindow::reloadAircraftsInRange()
-{
-    if (!this->isContextNetworkAvailableCheck()) return;
-    this->ui->tvp_AircraftsInRange->update(this->getIContextNetwork()->getAircraftsInRange());
-}
-
-/*
  * Read own aircraft
  */
 bool MainWindow::reloadOwnAircraft()

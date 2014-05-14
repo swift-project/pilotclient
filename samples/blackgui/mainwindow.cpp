@@ -30,7 +30,6 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextAudioAvailable(false),
 
     // timers
-    m_timerUpdateAtcStationsOnline(nullptr), m_timerUpdateAircraftsInRange(nullptr),
     m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
     m_timerStatusBar(nullptr), m_timerAudioTests(nullptr), m_timerSimulator(nullptr),
     // context menus
@@ -327,19 +326,7 @@ void MainWindow::connectionStatusChanged(uint /** from **/, uint to, const QStri
 void MainWindow::timerBasedUpdates()
 {
     QObject *sender = QObject::sender();
-    if (sender == this->m_timerUpdateAtcStationsOnline)
-    {
-        int t = this->ui->hs_SettingsGuiAtcRefreshTime->value() * 1000;
-        this->m_timerUpdateAtcStationsOnline->start(t);
-        this->reloadAtcStationsOnline();
-    }
-    else if (sender == this->m_timerUpdateAircraftsInRange)
-    {
-        int t = this->ui->hs_SettingsGuiAircraftRefreshTime->value() * 1000;
-        this->m_timerUpdateAircraftsInRange->start(t);
-        this->reloadAircraftsInRange();
-    }
-    else if (sender == this->m_timerContextWatchdog)
+    if (sender == this->m_timerContextWatchdog)
     {
         this->setContextAvailability();
         this->updateGuiStatusInformation();
@@ -350,10 +337,7 @@ void MainWindow::timerBasedUpdates()
     }
 
     // own aircraft
-    if (sender == this->m_timerUpdateAircraftsInRange || sender == this->m_timerUpdateAtcStationsOnline)
-    {
-        this->reloadOwnAircraft(); // regular updates
-    }
+    this->reloadOwnAircraft(); // regular updates
 }
 
 /*
@@ -365,23 +349,6 @@ void MainWindow::setContextAvailability()
     this->m_coreAvailable = this->getIContextApplication()->ping(t) == t;
     this->m_contextNetworkAvailable = this->m_coreAvailable || this->getIContextNetwork()->usingLocalObjects();
     this->m_contextAudioAvailable = this->m_coreAvailable || this->getIContextAudio()->usingLocalObjects();
-}
-
-/*
-* Middle panel changed
-*/
-void MainWindow::middlePanelChanged(int /* index */)
-{
-    if (this->isContextNetworkAvailableCheck())
-    {
-        // remark, ATC stations is handled by tab changed
-
-        if (this->ui->sw_MainMiddle->currentWidget() == this->ui->pg_AircraftsInRange)
-        {
-            if (this->ui->tvp_AircraftsInRange->rowCount() < 1)
-                this->reloadAircraftsInRange();
-        }
-    }
 }
 
 /*

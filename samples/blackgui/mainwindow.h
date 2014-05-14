@@ -103,8 +103,6 @@ private:
     bool m_contextNetworkAvailable;
     bool m_contextAudioAvailable;
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
-    QTimer *m_timerUpdateAtcStationsOnline; /*!< timer for update of stations */
-    QTimer *m_timerUpdateAircraftsInRange; /*!< timer for update of aircrafts */
     QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
     QTimer *m_timerContextWatchdog; /*!< core available? */
     QTimer *m_timerStatusBar; /*!< cleaning up status bar */
@@ -229,11 +227,8 @@ private:
     //! Start all update timers
     void startUpdateTimers();
 
-    /*!
-     * \brief Stop all update timers
-     * \param disconnect also disconnect signal/slots
-     */
-    void stopUpdateTimers(bool disconnect = false);
+    //! Stop all update timers
+    void stopUpdateTimers();
 
     /*!
      * \brief Stop all timers
@@ -261,15 +256,6 @@ private slots:
     //
     // Data received related slots
     //
-
-    //! Reload booked stations
-    void reloadAtcStationsBooked();
-
-    //! Reload online stations
-    void reloadAtcStationsOnline();
-
-    //! Reload aircrafts in range
-    void reloadAircraftsInRange();
 
     //! Reload own aircraft
     bool reloadOwnAircraft();
@@ -337,12 +323,6 @@ private slots:
      */
     void networkServerSelected(QModelIndex index);
 
-    /*!
-     * \brief Online ATC station selected
-     * \param index
-     */
-    void onlineAtcStationSelected(QModelIndex index);
-
     //! Alter traffic server
     void alterTrafficServer();
 
@@ -352,20 +332,8 @@ private slots:
     //! Update timer
     void timerBasedUpdates();
 
-    //! ATC station, tab changed, reload data
-    void atcStationTabChanged(int tabIndex);
-
-    //! Middle panel has changed, reload data
-    void middlePanelChanged(int index);
-
     //! Command entered
     void commandEntered();
-
-    //! Get METAR for given ICAO airport code
-    void getMetar(const QString &airportIcaoCode = "");
-
-    //! Request new ATIS
-    void requestAtis();
 
     //! Close text message tab
     void closeTextMessageTab();
