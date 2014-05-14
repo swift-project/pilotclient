@@ -23,6 +23,7 @@ namespace BlackSim
             CAircraftCfgEntriesList m_entries; //!< all entries
 
         signals:
+            //! Number of entries read
             void entriesRead(int number);
 
         public:
