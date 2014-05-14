@@ -27,6 +27,14 @@ namespace BlackGui
         return this->m_runtime->getIContextAudio();
     }
 
+    void CRuntimeBasedComponent::setRuntime(BlackCore::CRuntime *runtime, bool runtimeOwner)
+    {
+        Q_ASSERT(runtime);
+        this->m_runtime = runtime;
+        this->m_runtimeOwner = runtimeOwner;
+        this->runtimeHasBeenSet();
+    }
+
     void CRuntimeBasedComponent::setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent)
     {
         if (!parent) return;

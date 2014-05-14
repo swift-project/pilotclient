@@ -3,6 +3,7 @@
 
 #include "blackcore/context_runtime.h"
 #include "blackcore/context_all_interfaces.h"
+#include <QTimer>
 
 namespace BlackGui
 {
@@ -16,17 +17,15 @@ namespace BlackGui
     {
     public:
         //! Set runtime, usually set by runtime owner (must only be one, usually main window)
-        void setRuntime(BlackCore::CRuntime *runtime, bool runtimeOwner = false)
-        {
-            this->m_runtime = runtime; this->m_runtimeOwner = runtimeOwner;
-        }
+        void setRuntime(BlackCore::CRuntime *runtime, bool runtimeOwner = false);
 
         //! Set runtime for each CRuntimeBasedComponent
         static void setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent);
 
     protected:
         //! Constructor
-        //! \remarks usually runtime will be provide later, not at initialization time
+        //! \remarks Usually runtime will be provided later, not at initialization time.
+        //!          If runtime is provided right now, make sure to call runtimeHasBeenSet afterwards
         CRuntimeBasedComponent(BlackCore::CRuntime *runtime = nullptr, bool runtimeOwner = false) :
             m_runtime(runtime), m_runtimeOwner(runtimeOwner)
         {}
@@ -79,10 +78,13 @@ namespace BlackGui
         //! Owner?
         bool isRuntimeOwner() const { return this->m_runtimeOwner; }
 
+        //! "Callback" when runtime is initialized, done this way as we do not have signals/slots here
+        //! \remarks use this methods to hook up signal/slots with runtime
+        virtual void runtimeHasBeenSet() {}
+
     private:
         BlackCore::CRuntime *m_runtime;
         bool m_runtimeOwner;
-
     };
 
 } // namespace
