@@ -218,11 +218,12 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdAtisQueryReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
     {
-        // this->log(Q_FUNC_INFO, callsign.toQString(), atisMessage);
-
+        if (callsign.isEmpty()) return;
         CIndexVariantMap vm(CAtcStation::IndexAtis, atisMessage.toQVariant());
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
+        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
     }
 
     /*
@@ -234,6 +235,8 @@ namespace BlackCore
         CIndexVariantMap vm(CAtcStation::IndexVoiceRoomUrl, trimmedUrl);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
+        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
     }
 
     /*
@@ -254,6 +257,8 @@ namespace BlackCore
             CIndexVariantMap vm(CAtcStation::IndexBookedUntil, logoffDateTime);
             this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
             this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+            if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
+            if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
         }
     }
 
@@ -274,6 +279,8 @@ namespace BlackCore
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
         this->m_metarCache.insert(icaoCode, metar);
+        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsignTower)) emit this->changedAtcStationsBooked();
+        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsignTower)) emit this->changedAtcStationsBooked();
     }
 
 } // namespace
