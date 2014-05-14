@@ -75,6 +75,13 @@ namespace BlackGui
             Q_ASSERT(this->m_model);
             return this->m_model->rowCount();
         }
+
+        //! Any data?
+        bool isEmpty() const
+        {
+            Q_ASSERT(this->m_model);
+            return this->m_model->rowCount() < 1;
+        }
     };
 }
 #endif // guard
