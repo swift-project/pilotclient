@@ -2,6 +2,7 @@
 #define BLACKGUI_USERCOMPONENT_H
 
 #include "blackgui/runtimebasedcomponent.h"
+#include "blackgui/timerbasedcomponent.h"
 #include "blackmisc/nwuserlist.h"
 
 #include <QTabWidget>
@@ -24,19 +25,25 @@ namespace BlackGui
         //! Destructor
         ~CUserComponent();
 
+        //! Timer for updating
+        CTimerBasedComponent *getTimerComponent() { return this->m_timerComponent; }
+
     public slots:
         //! Update users
         void update();
 
-        //! Update time, time < 100 stops updates
-        void setUpdateInterval(int milliSeconds);
+        //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
+        void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->setUpdateIntervalSeconds(seconds); }
 
-        //! Update time
-        void setUpdateIntervalSeconds(int seconds) { this->setUpdateInterval(1000 * seconds); }
+        //! \copydoc CTimerBasedComponent::setUpdateInterval
+        void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->setUpdateInterval(milliSeconds); }
+
+        //! \copydoc CTimerBasedComponent::stopTimer
+        void stopTimer() { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->stopTimer(); }
 
     private:
         Ui::CUserComponent *ui;
-        QTimer *m_timer;
+        CTimerBasedComponent *m_timerComponent;
     };
 }
 
