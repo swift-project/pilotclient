@@ -53,7 +53,7 @@ namespace BlackCore
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const override;
 
         //! \copydoc IContextSettings::value
-        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value) override;
+        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const BlackMisc::CVariant &value) override;
 
         //! \copydoc IContextSettings::write
         BlackMisc::CStatusMessage write() const override;

@@ -60,10 +60,9 @@ namespace BlackCore
     /*
      * Relay to DBus, but make this no slot
      */
-    BlackMisc::CStatusMessageList CContextSettingsProxy::value(const QString &path, const QString &command, const QVariant &value)
+    BlackMisc::CStatusMessageList CContextSettingsProxy::value(const QString &path, const QString &command, const BlackMisc::CVariant &value)
     {
-        int type = value.userType() - BlackMisc::firstBlackMetaType();
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("value"), path, command, QDBusVariant(value), type);
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("value"), path, command, value);
     }
 
     /*

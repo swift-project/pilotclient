@@ -46,7 +46,7 @@ namespace BlackCore
         const QString &getSettingsDirectory() const { return BlackMisc::Settings::CSettingUtilities::getSettingsDirectory(); }
 
         //! \copydoc IContextSettings::value()
-        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value) override;
+        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const BlackMisc::CVariant &value) override;
 
     public slots:
         //! \copydoc IContextSettings::getNetworkSettings()
@@ -54,14 +54,6 @@ namespace BlackCore
 
         //! \copydoc IContextSettings::getHotkeys()
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const override;
-
-        /*!
-         * \brief DBus version of value method.
-         * \remarks Basically an unwanted signature as this is different from the "local" signature and
-         * contains explicit DBus types (a: QDbusArgument, b: type for conversion).
-         * If this can be removed, fine. -> https://dev.vatsim-germany.org/issues/116
-         */
-        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, QDBusVariant value, int unifiedBlackMetaType);
 
         //! \brief read settings
         virtual BlackMisc::CStatusMessage read() override;

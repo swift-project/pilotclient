@@ -3,6 +3,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
+#include "blackmisc/variant.h"
 
 using namespace BlackMisc::Network;
 
@@ -155,7 +156,7 @@ namespace BlackMisc
         /*
          * Value
          */
-        BlackMisc::CStatusMessageList CSettingsNetwork::value(const QString &path, const QString &command, const QVariant &value, bool &changedFlag)
+        BlackMisc::CStatusMessageList CSettingsNetwork::value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag)
         {
             // TODO: This needs to be refactored to a smarter way to delegate commands
             changedFlag = false;

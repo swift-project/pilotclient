@@ -14,6 +14,8 @@
 
 namespace BlackMisc
 {
+    class CVariant;
+
     namespace Settings
     {
         //! \brief Value object encapsulating information of network related settings.
@@ -86,7 +88,7 @@ namespace BlackMisc
             bool operator !=(const CSettingsNetwork &other) const;
 
             //! \copydoc BlackCore::IContextSettings
-            virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value, bool &changedFlag);
+            virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag);
 
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;

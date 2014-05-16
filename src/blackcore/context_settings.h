@@ -14,6 +14,7 @@
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/setnetwork.h"
 #include "blackmisc/dbus.h"
+#include "blackmisc/variant.h"
 #include <QObject>
 #include <QVariant>
 
@@ -92,23 +93,20 @@ namespace BlackCore
         //! Destructor
         virtual ~IContextSettings() {}
 
+    signals:
+        //! Settings have been changed
+        void changedSettings(uint type);
+
+    public slots:
+
         /*!
          * Handle value
          * \param path      where value belongs to
          * \param command   what to do with value
          * \param value
          * \return          messages generated during handling
-         * \remarks Do not make this a slot, no DBus XML signature shall be created. The QVariant
-         *  will be send a tailored value method using QDBusVariant
-         *  @see value(const QString &, const QString &, QDBusVariant, int)
          */
-        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const QVariant &value) = 0;
-
-    signals:
-        //! Settings have been changed
-        void changedSettings(uint type);
-
-    public slots:
+        virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const BlackMisc::CVariant &value) = 0;
 
         //! Network settings
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const = 0;
