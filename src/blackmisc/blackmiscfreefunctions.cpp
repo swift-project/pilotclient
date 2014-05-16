@@ -12,6 +12,7 @@
 #include "settingsallclasses.h"
 #include "hwallclasses.h"
 #include "indexvariantmap.h"
+#include "variant.h"
 #include "statusmessagelist.h"
 #include "audioallclasses.h"
 
@@ -130,7 +131,9 @@ void BlackMisc::Hardware::registerMetadata()
  */
 void BlackMisc::registerMetadata()
 {
-    // !! make sure the first id is correctly returned by
+    CVariant::registerMetadata(); // before the others because it's not a CValueObject
+
+    // !! make sure the first valueobject id is correctly returned by
     // !! firstBlackMetaType
     CIndexVariantMap::registerMetadata();
 
