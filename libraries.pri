@@ -20,10 +20,10 @@ blacksound {
     LIBS += -lblacksound
 }
 
-blackmisc {
-    LIBS += -lblackmisc
-}
-
 blacksim {
     LIBS += -lblacksim
+}
+
+blackmisc {
+    LIBS += -lblackmisc
 }
