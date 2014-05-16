@@ -357,7 +357,10 @@ QVariant BlackMisc::complexQtTypeFromDbusArgument(const QDBusArgument &argument,
             return QVariant::fromValue(time);
         }
     default:
-        qFatal("Type cannot be resolved");
+        {
+            const char *name = QMetaType::typeName(type);
+            qFatal("Type cannot be resolved: %s (%d)", name ? name : "", type);
+        }
     }
     return QVariant(); // suppress compiler warning
 }
