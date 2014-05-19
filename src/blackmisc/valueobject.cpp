@@ -112,9 +112,8 @@ namespace BlackMisc
         if (indexMap.isEmpty()) return 0;
         int c = 0;
 
-        QMap<int, QVariant>::const_iterator it;
-        const QMap<int, QVariant> &map = indexMap.map();
-        for (it = map.begin(); it != map.end(); ++it)
+        const auto &map = indexMap.map();
+        for (auto it = map.begin(); it != map.end(); ++it)
         {
             this->setPropertyByIndex(it.value(), it.key());
         }
@@ -127,9 +126,8 @@ namespace BlackMisc
     bool operator==(const CIndexVariantMap &indexMap, const CValueObject &valueObject)
     {
         if (indexMap.isEmpty()) return indexMap.isWildcard();
-        QMap<int, QVariant>::const_iterator it;
-        const QMap<int, QVariant> &map = indexMap.map();
-        for (it = map.begin(); it != map.end(); ++it)
+        const auto &map = indexMap.map();
+        for (auto it = map.begin(); it != map.end(); ++it)
         {
             // QVariant cannot be compared directly
             QVariant p = valueObject.propertyByIndex(it.key()); // from value object

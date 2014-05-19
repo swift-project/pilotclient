@@ -30,7 +30,7 @@ namespace BlackMisc
      */
     bool CIndexVariantMap::operator !=(const CIndexVariantMap &other) const
     {
-        return !(this->operator ==(other));
+        return !(*this == other);
     }
 
     /*
@@ -133,8 +133,7 @@ namespace BlackMisc
             }
         }
         // replace values in one step
-        this->m_values.clear();
-        this->m_values.unite(newMap);
+        this->m_values.swap(newMap);
     }
 
     /*
