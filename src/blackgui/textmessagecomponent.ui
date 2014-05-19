@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CTextMessageComponent</class>
+ <widget class="QTabWidget" name="CTextMessageComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>580</width>
+    <height>375</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TabWidget</string>
+  </property>
+  <property name="currentIndex">
+   <number>0</number>
+  </property>
+  <widget class="QWidget" name="tb_TextMessagesAll">
+   <attribute name="title">
+    <string>All</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_TextMessagesAll">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
+    <item>
+     <widget class="QTextEdit" name="te_TextMessagesAll">
+      <property name="lineWrapMode">
+       <enum>QTextEdit::NoWrap</enum>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="tabStopWidth">
+       <number>10</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tb_TextMessagesUnicom">
+   <attribute name="title">
+    <string>UNICOM</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_TextMessagesUnicom">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
+    <item>
+     <widget class="QTextEdit" name="te_TextMessagesUnicom">
+      <property name="lineWrapMode">
+       <enum>QTextEdit::NoWrap</enum>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="tabStopWidth">
+       <number>10</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tb_TextMessagesCOM1">
+   <attribute name="title">
+    <string>COM1</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_TextMessagesCOM1">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
+    <item>
+     <widget class="QTextEdit" name="te_TextMessagesCOM1">
+      <property name="lineWrapMode">
+       <enum>QTextEdit::NoWrap</enum>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="tabStopWidth">
+       <number>10</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tb_TextMessagesCOM2">
+   <attribute name="title">
+    <string>COM2</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_TextMessagesCOM2">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
+    <item>
+     <widget class="QTextEdit" name="te_TextMessagesCOM2">
+      <property name="lineWrapMode">
+       <enum>QTextEdit::NoWrap</enum>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="tabStopWidth">
+       <number>10</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
