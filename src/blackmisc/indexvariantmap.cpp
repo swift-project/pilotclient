@@ -42,16 +42,16 @@ namespace BlackMisc
         QString s;
         foreach(int index, this->m_values.keys())
         {
-            QVariant qv = this->m_values.value(index);
+            CVariant v = this->m_values.value(index);
 
             s.isEmpty() ?
             s.append("{wildcard: ").append(this->m_wildcard ? "true" : "false").append(" ") :
             s.append(", ");
 
             s.append('{').append(QString::number(index)).append(": ");
-            s.append("(").append(QString::number(qv.userType())).append(") ");
-            QString qvs = BlackMisc::qVariantToString(qv, i18n);
-            s.append(qvs);
+            s.append("(").append(QString::number(v.userType())).append(") ");
+            QString vs = v.toString(i18n);
+            s.append(vs);
             s.append('}');
         }
         s = s.append("}");
@@ -90,18 +90,8 @@ namespace BlackMisc
      */
     void CIndexVariantMap::marshallToDbus(QDBusArgument &argument) const
     {
-        // remark, tried both sending as QDbusVariant and QVariant
-        // does not make a difference
-        QList<int> unifiedBlackTypeIds;
-        QList<QDBusVariant> dbusVariants;
-        foreach(QVariant qv, m_values.values())
-        {
-            unifiedBlackTypeIds << qv.userType() - BlackMisc::firstBlackMetaType();
-            dbusVariants << QDBusVariant(qv);
-        }
-        argument << this->m_values.keys(); // indexes
-        argument << dbusVariants;
-        argument << unifiedBlackTypeIds;
+        argument << this->m_values.keys();
+        argument << this->m_values.values();
     }
 
     /*
@@ -110,27 +100,14 @@ namespace BlackMisc
     void CIndexVariantMap::unmarshallFromDbus(const QDBusArgument &argument)
     {
         QList<int> indexes;
-        QList<QDBusVariant> values;
-        QList<int> unifiedBlackTypeIds;
+        QList<CVariant> values;
         argument >> indexes;
         argument >> values;
-        argument >> unifiedBlackTypeIds;
-        QMap<int, QVariant> newMap;
+        Q_ASSERT(indexes.size() == values.size());
+        QMap<int, CVariant> newMap;
         for (int i = 0; i < indexes.size(); i++)
         {
-            QVariant qv = values.at(i).variant();
-            int index = indexes.at(i);
-            if (qv.canConvert<QDBusArgument>())
-            {
-                int userType = unifiedBlackTypeIds.at(i) + BlackMisc::firstBlackMetaType();
-                QVariant concrete = BlackMisc::fixQVariantFromDbusArgument(qv, userType);
-                newMap.insert(index, concrete);
-            }
-            else
-            {
-                // value already OK
-                newMap.insert(index, qv);
-            }
+            newMap.insert(indexes[i], values[i]);
         }
         // replace values in one step
         this->m_values.swap(newMap);

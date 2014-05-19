@@ -115,7 +115,7 @@ namespace BlackMisc
         const auto &map = indexMap.map();
         for (auto it = map.begin(); it != map.end(); ++it)
         {
-            this->setPropertyByIndex(it.value(), it.key());
+            this->setPropertyByIndex(it.value().toQVariant(), it.key());
         }
         return c;
     }
@@ -131,7 +131,7 @@ namespace BlackMisc
         {
             // QVariant cannot be compared directly
             QVariant p = valueObject.propertyByIndex(it.key()); // from value object
-            QVariant v = it.value(); // from map
+            QVariant v = it.value().toQVariant(); // from map
             if (!BlackMisc::equalQVariants(p, v)) return false;
         }
         return true;

@@ -8,6 +8,7 @@
 */
 
 #include "valueobject.h"
+#include "variant.h"
 #include <QVariantMap>
 #include <QDBusArgument>
 
@@ -45,13 +46,13 @@ namespace BlackMisc
 
 
         //! Add a value as non QVariant
-        template<class T> void addValue(int index, const T &value) { this->m_values.insert(index, QVariant::fromValue(value)); }
+        template<class T> void addValue(int index, const T &value) { this->m_values.insert(index, CVariant::fromValue(value)); }
 
         //! Is empty?
         bool isEmpty() const { return this->m_values.isEmpty(); }
 
         //! Value
-        QVariant value(int index) const { return this->m_values.value(index); }
+        QVariant value(int index) const { return this->m_values.value(index).toQVariant(); }
 
         //! Set value
         void value(int index, const QVariant &value) { this->m_values.value(index, value); }
@@ -63,7 +64,7 @@ namespace BlackMisc
         bool contains(int index) const { return this->m_values.contains(index); }
 
         //! values
-        QList<QVariant> values() const { return this->m_values.values(); }
+        QList<CVariant> values() const { return this->m_values.values(); }
 
         //! \brief Wildcard, only relevant when used in search
         bool isWildcard() const { return this->m_wildcard; }
@@ -81,7 +82,7 @@ namespace BlackMisc
         bool operator !=(const CIndexVariantMap &other) const;
 
         //! Map
-        const QMap<int, QVariant> &map() const { return this->m_values; }
+        const QMap<int, CVariant> &map() const { return this->m_values; }
 
         //! \copydoc CValueObject::getValueHash
         virtual uint getValueHash() const override;
@@ -90,7 +91,7 @@ namespace BlackMisc
         static void registerMetadata();
 
     protected:
-        QMap<int, QVariant> m_values; //!< values
+        QMap<int, CVariant> m_values; //!< values
         bool m_wildcard; //!< wildcard
 
         //! \copydoc CValueObject::convertToQString
