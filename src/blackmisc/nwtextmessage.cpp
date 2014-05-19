@@ -139,6 +139,15 @@ namespace BlackMisc
         }
 
         /*
+         * As status message
+         */
+        CStatusMessage CTextMessage::asStatusMessage(bool withSender, bool withRecipient, const QString separator) const
+        {
+            QString m = this->asString(withSender, withRecipient, separator);
+            return CStatusMessage::getInfoMessage(m, CStatusMessage::TypeTrafficNetwork);
+        }
+
+        /*
          * Toggle sender / receiver
          */
         void CTextMessage::toggleSenderRecipient()

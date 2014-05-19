@@ -12,6 +12,7 @@
 
 #include "pqfrequency.h"
 #include "avcallsign.h"
+#include "statusmessage.h"
 #include "valueobject.h"
 #include <QDateTime>
 
@@ -127,6 +128,16 @@ namespace BlackMisc
              * \return
              */
             QString asString(bool withSender, bool withRecipient, const QString separator = ", ") const;
+
+            /*!
+             * Whole message as BlackMisc::CStatusMessage.
+             * Used to display message in logs, or any other situation where a CStatusMessage is required.
+             * \param withSender        include sender information in string?
+             * \param withRecipient     include recipient information in string?
+             * \param separator         values separated by given value
+             * \return
+             */
+            BlackMisc::CStatusMessage asStatusMessage(bool withSender, bool withRecipient, const QString separator = ", ") const;
 
             //! \brief Toggle sender receiver, can be used to ping my own message
             void toggleSenderRecipient();
