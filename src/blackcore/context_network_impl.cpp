@@ -358,6 +358,18 @@ namespace BlackCore
     }
 
     /*
+     * User for callsign
+     */
+    CUser CContextNetwork::getUserForCallsign(const CCallsign &callsign) const
+    {
+        CCallsignList callsigns;
+        callsigns.push_back(callsign);
+        CUserList users = this->getUsersForCallsigns(callsigns);
+        if (users.size() < 1) return CUser();
+        return users[0];
+    }
+
+    /*
      * Other clients
      */
     CClientList CContextNetwork::getOtherClients() const

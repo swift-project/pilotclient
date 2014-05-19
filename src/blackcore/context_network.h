@@ -98,6 +98,9 @@ namespace BlackCore
         //! Users for given callsigns, e.g. for voice room resolution
         virtual BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const = 0;
 
+        //! User for given callsign, e.g. for text messages
+        virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
         //! Get own aircraft
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
 
