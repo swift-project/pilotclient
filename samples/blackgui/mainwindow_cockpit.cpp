@@ -154,8 +154,8 @@ void MainWindow::updateCockpitFromContext()
     }
 
     // update some other GUI elements
-    this->ui->tw_TextMessages->setTabToolTip(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM1), com1.getFrequencyActive().valueRoundedWithUnit(3));
-    this->ui->tw_TextMessages->setTabToolTip(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM2), com2.getFrequencyActive().valueRoundedWithUnit(3));
+    this->ui->comp_TextMessages->setTabToolTip(BlackGui::CTextMessageComponent::TextMessagesCom1, com1.getFrequencyActive().valueRoundedWithUnit(3));
+    this->ui->comp_TextMessages->setTabToolTip(BlackGui::CTextMessageComponent::TextMessagesCom2, com2.getFrequencyActive().valueRoundedWithUnit(3));
 }
 
 /*

@@ -461,7 +461,7 @@ QStatusBar QLabel {
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>5</number>
          </property>
          <widget class="QWidget" name="pg_StatusPage">
           <property name="sizePolicy">
@@ -571,7 +571,7 @@ QStatusBar QLabel {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>90</width>
+                <width>86</width>
                 <height>59</height>
                </rect>
               </property>
@@ -694,7 +694,7 @@ QStatusBar QLabel {
             <number>0</number>
            </property>
            <item>
-            <widget class="BlackGui::CAtcStationComponent" name="twp_AtcStations">
+            <widget class="BlackGui::CAtcStationComponent" name="comp_AtcStations">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -743,7 +743,7 @@ QStatusBar QLabel {
             <number>0</number>
            </property>
            <item>
-            <widget class="BlackGui::CAircraftComponent" name="twp_Aircrafts"/>
+            <widget class="BlackGui::CAircraftComponent" name="comp_Aircrafts"/>
            </item>
           </layout>
          </widget>
@@ -765,7 +765,7 @@ QStatusBar QLabel {
             <number>0</number>
            </property>
            <item>
-            <widget class="BlackGui::CUserComponent" name="twp_Users"/>
+            <widget class="BlackGui::CUserComponent" name="comp_Users"/>
            </item>
           </layout>
          </widget>
@@ -1329,150 +1329,10 @@ QStatusBar QLabel {
             <number>0</number>
            </property>
            <item>
-            <widget class="QTabWidget" name="tw_TextMessages">
+            <widget class="BlackGui::CTextMessageComponent" name="comp_TextMessages">
              <property name="currentIndex">
-              <number>0</number>
+              <number>-1</number>
              </property>
-             <widget class="QWidget" name="tb_TextMessagesAll">
-              <attribute name="title">
-               <string>All</string>
-              </attribute>
-              <layout class="QVBoxLayout" name="vl_TextMessagesAll">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="leftMargin">
-                <number>2</number>
-               </property>
-               <property name="topMargin">
-                <number>3</number>
-               </property>
-               <property name="rightMargin">
-                <number>2</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QTextEdit" name="te_TextMessagesAll">
-                 <property name="lineWrapMode">
-                  <enum>QTextEdit::NoWrap</enum>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                 <property name="tabStopWidth">
-                  <number>10</number>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tb_TextMessagesUnicom">
-              <attribute name="title">
-               <string>UNICOM</string>
-              </attribute>
-              <layout class="QVBoxLayout" name="vl_TextMessagesUnicom">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="leftMargin">
-                <number>2</number>
-               </property>
-               <property name="topMargin">
-                <number>3</number>
-               </property>
-               <property name="rightMargin">
-                <number>2</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QTextEdit" name="te_TextMessagesUnicom">
-                 <property name="lineWrapMode">
-                  <enum>QTextEdit::NoWrap</enum>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                 <property name="tabStopWidth">
-                  <number>10</number>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tb_TextMessagesCOM1">
-              <attribute name="title">
-               <string>COM 1</string>
-              </attribute>
-              <layout class="QVBoxLayout" name="vl_TextMessagesCom1">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="leftMargin">
-                <number>2</number>
-               </property>
-               <property name="topMargin">
-                <number>3</number>
-               </property>
-               <property name="rightMargin">
-                <number>2</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QTextEdit" name="te_TextMessagesCOM1">
-                 <property name="lineWrapMode">
-                  <enum>QTextEdit::NoWrap</enum>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                 <property name="tabStopWidth">
-                  <number>10</number>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tb_TextMessagesCOM2">
-              <attribute name="title">
-               <string>COM 2</string>
-              </attribute>
-              <layout class="QVBoxLayout" name="vl_TextMessagesCom2">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="leftMargin">
-                <number>2</number>
-               </property>
-               <property name="topMargin">
-                <number>3</number>
-               </property>
-               <property name="rightMargin">
-                <number>2</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QTextEdit" name="te_TextMessagesCOM2">
-                 <property name="lineWrapMode">
-                  <enum>QTextEdit::NoWrap</enum>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                 <property name="tabStopWidth">
-                  <number>10</number>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
             </widget>
            </item>
           </layout>
@@ -1519,7 +1379,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QTabWidget" name="tw_Settings">
              <property name="currentIndex">
-              <number>1</number>
+              <number>3</number>
              </property>
              <widget class="QWidget" name="tb_SettingsTrafficNetwork">
               <attribute name="title">
@@ -2944,6 +2804,12 @@ QStatusBar QLabel {
    <header>blackgui/atcstationcomponent.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::CTextMessageComponent</class>
+   <extends>QTabWidget</extends>
+   <header>blackgui/textmessagecomponent.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>cb_StatusWithDBus</tabstop>
@@ -2951,7 +2817,7 @@ QStatusBar QLabel {
   <tabstop>le_StatusAudioContext</tabstop>
   <tabstop>tvp_StatusMessages</tabstop>
   <tabstop>le_CommandLineInput</tabstop>
-  <tabstop>twp_AtcStations</tabstop>
+  <tabstop>comp_AtcStations</tabstop>
   <tabstop>pb_CockpitToggleCom1</tabstop>
   <tabstop>ds_CockpitCom1Active</tabstop>
   <tabstop>ds_CockpitCom1Standby</tabstop>
@@ -2971,11 +2837,7 @@ QStatusBar QLabel {
   <tabstop>cb_CockpitVoiceRoom2Override</tabstop>
   <tabstop>tvp_CockpitVoiceRoom1</tabstop>
   <tabstop>tvp_CockpitVoiceRoom2</tabstop>
-  <tabstop>tw_TextMessages</tabstop>
-  <tabstop>te_TextMessagesAll</tabstop>
-  <tabstop>te_TextMessagesUnicom</tabstop>
-  <tabstop>te_TextMessagesCOM1</tabstop>
-  <tabstop>te_TextMessagesCOM2</tabstop>
+  <tabstop>comp_TextMessages</tabstop>
   <tabstop>tw_Settings</tabstop>
   <tabstop>tvp_SettingsTnServers</tabstop>
   <tabstop>le_SettingsTnCsName</tabstop>

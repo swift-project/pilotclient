@@ -171,29 +171,6 @@ private:
     //! Update the COM frequency displays
     void updateComFrequencyDisplays(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
-    /*!
-     * \brief Add new text message tab
-     * \param tabName   name of the new tab, usually the channel name
-     * \return
-     */
-    QWidget *addNewTextMessageTab(const QString &tabName);
-
-    //! Find text message tab by its name
-    QWidget *findTextMessageTabByName(const QString &name) const;
-
-    /*!
-     * \brief Private channel text message
-     * \param textMessage
-     * \param sending   sending or receiving
-     */
-    void addPrivateChannelTextMessage(const BlackMisc::Network::CTextMessage &textMessage, bool sending = false);
-
-    /*!
-     * Stub for sending a text message (eihter radio or private message).
-     * Sets sender / receiver depending on frequency / channel situation.
-     */
-    BlackMisc::Network::CTextMessage getTextMessageStubForChannel();
-
     //! Audio device lists
     void setAudioDeviceLists();
 
@@ -208,21 +185,12 @@ private:
      */
     void setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const BlackMisc::Aviation::CAltitude &altitude);
 
-    //! Display the overlay window
-    void displayOverlayInfo(const QString &message = "");
-
-    //! Overlay info displaying status message
-    void displayOverlayInfo(const BlackMisc::CStatusMessage &message);
-
     /*!
      * \brief Is given main page selected?
      * \param mainPage  index to be checked
      * \return
      */
     bool isMainPageSelected(MainPageIndex mainPage) const;
-
-    //! For this text message's recepient, is the current tab selected?
-    bool isCorrespondingTextMessageTabSelected(BlackMisc::Network::CTextMessage textMessage) const;
 
     //! Start all update timers
     void startUpdateTimers();
@@ -243,7 +211,7 @@ private:
     void audioTestUpdate();
 
     //! Play notifcation sound
-    void playNotifcationSound(BlackSound::CSoundGenerator::Notification notification) const;
+    void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;
 
     //! Update simulator page with latest user aircraft data
     void updateSimulatorData();
@@ -275,13 +243,6 @@ private slots:
      * \param to    new status, as uint so it is compliant with DBus
      */
     void connectionStatusChanged(uint from, uint to, const QString &message);
-
-    /*!
-     * \brief Append text messages (received, to be sent) to GUI
-     * \param messages
-     * \param sending
-     */
-    void appendTextMessagesToGui(const BlackMisc::Network::CTextMessageList &messages, bool sending = false);
 
     //! Reload settings
     void reloadSettings();
@@ -332,12 +293,6 @@ private slots:
     //! Update timer
     void timerBasedUpdates();
 
-    //! Command entered
-    void commandEntered();
-
-    //! Close text message tab
-    void closeTextMessageTab();
-
     //! Cockpit values changed
     void cockpitValuesChanged();
 
@@ -386,6 +341,14 @@ private slots:
 
     //! Toogle Windows stay on top
     void toogleWindowStayOnTop();
+
+    //! Display the overlay window
+    //! Empty string hides window
+    void displayOverlayInfo(const QString &message = "");
+
+    //! Overlay info displaying status message
+    void displayOverlayInfo(const BlackMisc::CStatusMessage &message);
+
 
 };
 

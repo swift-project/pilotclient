@@ -14,6 +14,7 @@
 #include "blackcore/context_runtime.h"
 #include "blackgui/atcstationlistmodel.h"
 #include "blackgui/keyboardkeylistmodel.h"
+#include "blackgui/textmessagecomponent.h"
 #include "blackmisc/avselcal.h"
 #include "blackmisc/project.h"
 #include <QSortFilterProxyModel>
@@ -111,7 +112,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->connect(this->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &MainWindow::connectionTerminated);
     this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &MainWindow::connectionStatusChanged);
     this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &MainWindow::changedSettings);
-    connect = this->connect(this->getIContextNetwork(), SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
+    connect = this->connect(this->getIContextNetwork(), SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this->ui->comp_TextMessages, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
     Q_ASSERT(connect);
     this->connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
@@ -121,8 +122,8 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     connect = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &MainWindow::audioTestUpdate);
 
     // sliders
-    this->connect(this->ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this->ui->twp_Users, &BlackGui::CUserComponent::setUpdateIntervalSeconds);
-    this->connect(this->ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this->ui->twp_Aircrafts, &BlackGui::CAircraftComponent::setUpdateIntervalSeconds);
+    this->connect(this->ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this->ui->comp_Users, &BlackGui::CUserComponent::setUpdateIntervalSeconds);
+    this->connect(this->ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this->ui->comp_Aircrafts, &BlackGui::CAircraftComponent::setUpdateIntervalSeconds);
 
     Q_ASSERT(connect);
     Q_UNUSED(connect); // suppress GCC warning in release build
@@ -220,8 +221,12 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->menu_FileSettingsDirectory, &QAction::triggered, this, &MainWindow::menuClicked);
     this->connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &MainWindow::menuClicked);
 
-    // command line
-    this->connect(this->ui->le_CommandLineInput, &QLineEdit::returnPressed, this, &MainWindow::commandEntered);
+    // command line / text messages
+    connected = this->connect(this->ui->le_CommandLineInput, SIGNAL(returnPressed()), this->ui->comp_TextMessages, SLOT(commandEntered()));
+    Q_ASSERT(connected);
+    this->connect(this->ui->comp_TextMessages, SIGNAL(displayOverlayInfo(BlackMisc::CStatusMessage)), this, SLOT(displayOverlayInfo(BlackMisc::CStatusMessage)));
+    Q_ASSERT(connected);
+    this->ui->comp_TextMessages->setSelcalCallback(std::bind(&MainWindow::getSelcalCode, this));
 
     // cockpit
     connected = this->connect(this->ui->cbp_CockpitTransponderMode, SIGNAL(currentIndexChanged(QString)), this, SLOT(cockpitValuesChanged()));
@@ -289,12 +294,12 @@ void MainWindow::initialDataReads()
     if (this->getIContextNetwork()->isConnected())
     {
         // connection is already established
-        this->ui->twp_Aircrafts->update();
-        this->ui->twp_AtcStations->update();
+        this->ui->comp_Aircrafts->update();
+        this->ui->comp_AtcStations->update();
 
         this->updateGuiStatusInformation();
-        this->ui->twp_Users->update();
-        this->ui->twp_Aircrafts->update();
+        this->ui->comp_Users->update();
+        this->ui->comp_Aircrafts->update();
     }
 
     this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "initial data read"));
@@ -305,9 +310,9 @@ void MainWindow::initialDataReads()
  */
 void MainWindow::startUpdateTimers()
 {
-    this->ui->twp_Aircrafts->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiAtcRefreshTime->value());
-    this->ui->twp_AtcStations->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiAircraftRefreshTime->value());
-    this->ui->twp_Users->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiUserRefreshTime->value());
+    this->ui->comp_Aircrafts->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiAtcRefreshTime->value());
+    this->ui->comp_AtcStations->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiAircraftRefreshTime->value());
+    this->ui->comp_Users->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiUserRefreshTime->value());
 }
 
 /*
@@ -315,9 +320,9 @@ void MainWindow::startUpdateTimers()
  */
 void MainWindow::stopUpdateTimers()
 {
-    this->ui->twp_AtcStations->stopTimer();
-    this->ui->twp_Aircrafts->stopTimer();
-    this->ui->twp_Users->stopTimer();
+    this->ui->comp_AtcStations->stopTimer();
+    this->ui->comp_Aircrafts->stopTimer();
+    this->ui->comp_Users->stopTimer();
 }
 
 void MainWindow::stopAllTimers(bool disconnect)
