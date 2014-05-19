@@ -101,7 +101,7 @@ namespace BlackMisc
             void setFrequencyStandbyMHz(double frequencyMHz);
 
             //! \brief Is active frequency within 8.3383kHz channel?
-            bool isActiveFrequencyWithin8_33kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency)
+            bool isActiveFrequencyWithin8_33kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const
             {
                 return CComSystem::isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing8_33KHz);
             }

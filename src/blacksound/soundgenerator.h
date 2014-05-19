@@ -20,9 +20,7 @@
 namespace BlackSound
 {
 
-    /*!
-     * \brief Paying simple sounds
-     */
+    //! Playing simple sounds
     class CSoundGenerator : public QIODevice
     {
         Q_OBJECT
@@ -50,9 +48,7 @@ namespace BlackSound
             NotificationTextMessage,
         };
 
-        /*!
-         * \brief Tone to be played
-         */
+        //! Tone to be played
         struct Tone
         {
             friend class CSoundGenerator;
@@ -63,17 +59,13 @@ namespace BlackSound
             qint64 m_durationMs; /*!< How long to play (duration) */
 
         public:
-            /*!
-             * \brief Play frequency f for t milliseconds
-             */
+            //! Play frequency f for t milliseconds
             Tone(const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::PhysicalQuantities::CTime &duration) :
                 m_frequencyHz(static_cast<int>(frequency.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::Hz()))),
                 m_secondaryFrequencyHz(0),
                 m_durationMs(static_cast<qint64>(duration.valueRounded(BlackMisc::PhysicalQuantities::CTimeUnit::ms()))) {}
 
-            /*!
-             * \brief Play 2 frequencies f for t milliseconds
-             */
+            //! Play 2 frequencies f for t milliseconds
             Tone(const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::PhysicalQuantities::CFrequency &secondaryFrequency, const BlackMisc::PhysicalQuantities::CTime &duration) :
                 m_frequencyHz(static_cast<int>(frequency.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::Hz()))),
                 m_secondaryFrequencyHz(static_cast<int>(secondaryFrequency.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::Hz()))),
@@ -100,9 +92,7 @@ namespace BlackSound
          */
         CSoundGenerator(const QList<Tone> &tones, PlayMode mode, QObject *parent = nullptr);
 
-        /*!
-         * Destructor
-         */
+        //! Destructor
         ~CSoundGenerator();
 
         /*!
@@ -114,19 +104,13 @@ namespace BlackSound
             this->m_audioOutput->setVolume(qreal(volume / 100.0));
         }
 
-        /*!
-         * \brief Close device, buffer stays intact
-         */
+        //! Close device, buffer stays intact
         void stop(bool destructor = false);
 
-        /*!
-         * \brief duration of one cycle
-         */
+        //! Duration of one cycle
         qint64 singleCyleDurationMs() const { return calculateDurationMs(this->m_tones); }
 
-        /*!
-         * \copydoc QIODevice::readData()
-         */
+        //! \copydoc QIODevice::readData()
         virtual qint64 readData(char *data, qint64 maxlen) override;
 
         /*!
@@ -135,31 +119,22 @@ namespace BlackSound
          */
         virtual qint64 writeData(const char *data, qint64 len) override;
 
-        /*!
-         * \copydoc QIODevice::bytesAvailable()
-         */
+        //! \copydoc QIODevice::bytesAvailable()
         virtual qint64 bytesAvailable() const override;
 
-        /*!
-         * \copydoc QIODevice::seek()
-         */
+        //! \copydoc QIODevice::seek()
         virtual bool seek(qint64 pos) override
         {
             return this->m_endReached ? false : QIODevice::seek(pos);
         }
 
-        /*!
-         * \copydoc QIODevice::atEnd()
-         */
+        //! \copydoc QIODevice::atEnd()
         virtual bool atEnd() const override
         {
             return this->m_endReached ? true : QIODevice::atEnd();
         }
 
-        /*!
-         * \brief Default audio format fo play these sounds
-         * \return
-         */
+        //! Default audio format fo play these sounds
         static QAudioFormat defaultAudioFormat();
 
         /*!
@@ -220,9 +195,7 @@ namespace BlackSound
          */
         static void playNotificationSound(qint32 volume, Notification notification);
 
-        /*!
-         * \brief One cycle of tones takes t milliseconds
-         */
+        //! One cycle of tones takes t milliseconds
         BlackMisc::PhysicalQuantities::CTime oneCycleDurationMs() const
         {
             return BlackMisc::PhysicalQuantities::CTime(this->m_oneCycleDurationMs, BlackMisc::PhysicalQuantities::CTimeUnit::ms());
@@ -259,20 +232,15 @@ namespace BlackSound
         void startInOwnThread(int volume);
 
     signals:
-
-        //! \brief Generator is stopping
+        //! Generator is stopping
         void stopping();
 
     private slots:
-        /*!
-         * \brief Push mode, timer expired
-         */
+        //! Push mode, timer expired
         void pushTimerExpired();
 
     private:
-        /*!
-         * \brief Generate tone data in internal buffer
-         */
+        //! Generate tone data in internal buffer
         void generateData();
 
     private:
@@ -290,21 +258,21 @@ namespace BlackSound
         QThread *m_ownThread;
         static QDateTime s_selcalStarted;
 
-        //! \brief Header for saving .wav files
+        //! Header for saving .wav files
         struct chunk
         {
             char        id[4];
             quint32     size;
         };
 
-        //! \brief Header for saving .wav files
+        //! Header for saving .wav files
         struct RiffHeader
         {
             chunk       descriptor;     // "RIFF"
             char        type[4];        // "WAVE"
         };
 
-        //! \brief Header for saving .wav files
+        //! Header for saving .wav files
         struct WaveHeader
         {
             chunk       descriptor;
@@ -316,13 +284,13 @@ namespace BlackSound
             quint16     bitsPerSample;
         };
 
-        //! \brief Header for saving .wav files
+        //! Header for saving .wav files
         struct DataHeader
         {
             chunk       descriptor;
         };
 
-        //! \brief Header for saving .wav files
+        //! Header for saving .wav files
         struct CombinedHeader
         {
             RiffHeader  riff;
@@ -330,21 +298,21 @@ namespace BlackSound
             DataHeader  data;
         };
 
-        //! \brief "My" media player
+        //! "My" media player
         static QMediaPlayer *mediaPlayer()
         {
             static QMediaPlayer *mediaPlayer = new QMediaPlayer();
             return mediaPlayer;
         }
 
-        //! \brief Duration of these tones
+        //! Duration of these tones
         static qint64 calculateDurationMs(const QList<Tone> &tones);
 
-        //! \brief save buffer to wav file
+        //! save buffer to wav file
         bool saveToWavFile(const QString &fileName) const;
 
         /*!
-         * \brief Write amplitude to buffer
+         * Write amplitude to buffer
          * \param amplitude value -1 .. 1
          * \param bufferPointer current buffer pointer
          */
