@@ -131,10 +131,7 @@ void BlackMisc::Hardware::registerMetadata()
  */
 void BlackMisc::registerMetadata()
 {
-    CVariant::registerMetadata(); // before the others because it's not a CValueObject
-
-    // !! make sure the first valueobject id is correctly returned by
-    // !! firstBlackMetaType
+    CVariant::registerMetadata();
     CIndexVariantMap::registerMetadata();
 
     CStatusMessage::registerMetadata();
@@ -149,15 +146,6 @@ void BlackMisc::registerMetadata()
     Settings::registerMetadata();
     Audio::registerMetadata();
     Hardware::registerMetadata();
-}
-
-/*
- * First of our ids
- */
-int BlackMisc::firstBlackMetaType()
-{
-    // must be the first registered above
-    return qMetaTypeId<CIndexVariantMap>();
 }
 
 /*
