@@ -310,13 +310,13 @@ void MainWindow::connectionStatusChanged(uint /** from **/, uint to, const QStri
     switch (newStatus)
     {
     case INetwork::Connected:
-        this->playNotifcationSound(BlackSound::CSoundGenerator::NotificationLogin);
+        this->playNotifcationSound(BlackSound::CNotificationSounds::NotificationLogin);
         break;
     case INetwork::Disconnected:
-        this->playNotifcationSound(BlackSound::CSoundGenerator::NotificationLogoff);
+        this->playNotifcationSound(BlackSound::CNotificationSounds::NotificationLogoff);
         break;
     case INetwork::DisconnectedError:
-        this->playNotifcationSound(BlackSound::CSoundGenerator::NotificationError);
+        this->playNotifcationSound(BlackSound::CNotificationSounds::NotificationError);
         break;
     default:
         break;

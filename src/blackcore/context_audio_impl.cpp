@@ -7,6 +7,7 @@
 #include "context_network.h"
 
 #include "blacksound/soundgenerator.h"
+#include "blackmisc/notificationsounds.h"
 
 #include <QTimer>
 
@@ -263,7 +264,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, QString::number(notification));
-        BlackSound::CSoundGenerator::playNotificationSound(90, static_cast<BlackSound::CSoundGenerator::Notification>(notification));
+        BlackSound::CSoundGenerator::playNotificationSound(90, static_cast<BlackSound::CNotificationSounds::Notification>(notification));
     }
 
     /*

@@ -234,10 +234,10 @@ void MainWindow::audioTestUpdate()
 /*
  * Notification
  */
-void MainWindow::playNotifcationSound(CSoundGenerator::Notification notification) const
+void MainWindow::playNotifcationSound(CNotificationSounds::Notification notification) const
 {
     if (!this->m_contextAudioAvailable) return;
     if (!this->ui->cb_SettingsAudioPlayNotificationSounds->isChecked()) return;
-    if (notification == CSoundGenerator::NotificationTextMessage && !this->ui->cb_SettingsAudioNotificationTextMessage->isChecked()) return;
+    if (notification == CNotificationSounds::NotificationTextMessage && !this->ui->cb_SettingsAudioNotificationTextMessage->isChecked()) return;
     this->getIContextAudio()->playNotification(static_cast<uint>(notification));
 }

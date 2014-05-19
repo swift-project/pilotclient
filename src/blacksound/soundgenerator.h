@@ -9,6 +9,7 @@
 #include "blackmisc/avselcal.h"
 #include "blackmisc/audiodevice.h"
 #include "blackmisc/pqtime.h"
+#include "blackmisc/notificationsounds.h"
 #include <QIODevice>
 #include <QThread>
 #include <QDateTime>
@@ -26,27 +27,6 @@ namespace BlackSound
         Q_OBJECT
 
     public:
-
-        /*!
-         * \brief How to play
-         */
-        enum PlayMode
-        {
-            Single,
-            SingleWithAutomaticDeletion,
-            EndlessLoop
-        };
-
-        /*!
-         * \brief Play notification
-         */
-        enum Notification
-        {
-            NotificationError = 0,
-            NotificationLogin,
-            NotificationLogoff,
-            NotificationTextMessage,
-        };
 
         //! Tone to be played
         struct Tone
@@ -81,7 +61,7 @@ namespace BlackSound
          * \param parent
          * \see PlayMode
          */
-        CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, PlayMode mode, QObject *parent = nullptr);
+        CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, CNotificationSounds::PlayMode mode, QObject *parent = nullptr);
 
         /*!
          * \brief Constructor
@@ -90,7 +70,7 @@ namespace BlackSound
          * \param parent
          * \see PlayMode
          */
-        CSoundGenerator(const QList<Tone> &tones, PlayMode mode, QObject *parent = nullptr);
+        CSoundGenerator(const QList<Tone> &tones, CNotificationSounds::PlayMode mode, QObject *parent = nullptr);
 
         //! Destructor
         ~CSoundGenerator();
@@ -193,7 +173,7 @@ namespace BlackSound
          * \param volume    0-100
          * \param notification
          */
-        static void playNotificationSound(qint32 volume, Notification notification);
+        static void playNotificationSound(qint32 volume, CNotificationSounds::Notification notification);
 
         //! One cycle of tones takes t milliseconds
         BlackMisc::PhysicalQuantities::CTime oneCycleDurationMs() const
@@ -246,7 +226,7 @@ namespace BlackSound
     private:
         QList<Tone> m_tones; /*! tones to be played */
         qint64 m_position; /*!< position in buffer */
-        PlayMode m_playMode; /*!< end data provisioning after playing all tones, play endless loop */
+        CNotificationSounds::PlayMode m_playMode; /*!< end data provisioning after playing all tones, play endless loop */
         bool m_endReached; /*!< indicates end in combination with single play */
         qint64 m_oneCycleDurationMs; /*!< how long is one cycle of tones */
         QByteArray m_buffer; /*!< generated buffer for data */

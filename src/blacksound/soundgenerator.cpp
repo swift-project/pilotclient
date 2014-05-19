@@ -21,7 +21,7 @@ namespace BlackSound
 {
     QDateTime CSoundGenerator::s_selcalStarted  = QDateTime::currentDateTimeUtc();
 
-    CSoundGenerator::CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, PlayMode mode, QObject *parent)
+    CSoundGenerator::CSoundGenerator(const QAudioDeviceInfo &device, const QAudioFormat &format, const QList<Tone> &tones, CNotificationSounds::PlayMode mode, QObject *parent)
         :   QIODevice(parent),
             m_tones(tones), m_position(0), m_playMode(mode), m_endReached(false), m_oneCycleDurationMs(calculateDurationMs(tones)),
             m_device(device), m_audioFormat(format), m_audioOutput(new QAudioOutput(format)),
@@ -30,7 +30,7 @@ namespace BlackSound
         Q_ASSERT(tones.size() > 0);
     }
 
-    CSoundGenerator::CSoundGenerator(const QList<Tone> &tones, PlayMode mode, QObject *parent)
+    CSoundGenerator::CSoundGenerator(const QList<Tone> &tones, CNotificationSounds::PlayMode mode, QObject *parent)
         :   QIODevice(parent),
             m_tones(tones), m_position(0), m_playMode(mode), m_endReached(false), m_oneCycleDurationMs(calculateDurationMs(tones)),
             m_device(QAudioDeviceInfo::defaultOutputDevice()), m_audioFormat(CSoundGenerator::defaultAudioFormat()),
@@ -84,7 +84,7 @@ namespace BlackSound
         connect(this, &CSoundGenerator::stopping, this->m_ownThread, &QThread::quit);
 
         // in auto delete mode force deleteLater when thread is finished
-        if (this->m_playMode == SingleWithAutomaticDeletion)
+        if (this->m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
             connect(this->m_ownThread, &QThread::finished, this, &CSoundGenerator::deleteLater);
 
         // start thread and begin processing by calling start via signal startThread
@@ -107,7 +107,7 @@ namespace BlackSound
         if (destructor) return;
 
         // trigger own termination
-        if (this->m_playMode == SingleWithAutomaticDeletion)
+        if (this->m_playMode == CNotificationSounds::SingleWithAutomaticDeletion)
         {
             emit this->stopping();
             if (!this->m_ownThread) this->deleteLater(); // with own thread, thread signal will call deleteLater
@@ -134,7 +134,7 @@ namespace BlackSound
         {
             if (this->m_pushTimer) this->m_pushTimer->stop();
             this->m_pushTimer->disconnect(this);
-            if (this->m_playMode == SingleWithAutomaticDeletion) this->stop();
+            if (this->m_playMode == CNotificationSounds::SingleWithAutomaticDeletion) this->stop();
         }
     }
 
@@ -326,7 +326,7 @@ namespace BlackSound
             this->m_position = (m_position + chunkSize) % m_buffer.size();
             total += chunkSize;
             if (m_position == 0 &&
-                    (m_playMode == Single || m_playMode == SingleWithAutomaticDeletion))
+                    (m_playMode == CNotificationSounds::Single || m_playMode == CNotificationSounds::SingleWithAutomaticDeletion))
             {
                 this->m_endReached = true;
                 break;
@@ -396,7 +396,7 @@ namespace BlackSound
 
     CSoundGenerator *CSoundGenerator::playSignal(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
     {
-        CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CSoundGenerator::SingleWithAutomaticDeletion);
+        CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CNotificationSounds::SingleWithAutomaticDeletion);
         if (tones.isEmpty()) return generator; // that was easy
         if (volume < 1) return generator;
         if (generator->singleCyleDurationMs() < 10) return generator; // unable to hear
@@ -408,7 +408,7 @@ namespace BlackSound
 
     CSoundGenerator *CSoundGenerator::playSignalInBackground(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
     {
-        CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CSoundGenerator::SingleWithAutomaticDeletion);
+        CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CNotificationSounds::SingleWithAutomaticDeletion);
         if (tones.isEmpty()) return generator; // that was easy
         if (volume < 1) return generator;
         if (generator->singleCyleDurationMs() < 10) return generator; // unable to hear
@@ -423,7 +423,7 @@ namespace BlackSound
         if (tones.isEmpty()) return; // that was easy
         if (volume < 1) return;
 
-        CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CSoundGenerator::SingleWithAutomaticDeletion);
+        CSoundGenerator *generator = new CSoundGenerator(device, CSoundGenerator::defaultAudioFormat(), tones, CNotificationSounds::SingleWithAutomaticDeletion);
         if (generator->singleCyleDurationMs() > 10)
         {
             // play, and maybe clean up when done
@@ -460,7 +460,7 @@ namespace BlackSound
         CSoundGenerator::playSelcal(volume, selcal, CSoundGenerator::findClosestOutputDevice(audioDevice));
     }
 
-    void CSoundGenerator::playNotificationSound(qint32 volume, CSoundGenerator::Notification notification)
+    void CSoundGenerator::playNotificationSound(qint32 volume, CNotificationSounds::Notification notification)
     {
         QMediaPlayer *mediaPlayer = CSoundGenerator::mediaPlayer();
         if (mediaPlayer->state() == QMediaPlayer::PlayingState) return;
