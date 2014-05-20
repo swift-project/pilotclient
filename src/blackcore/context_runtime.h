@@ -14,7 +14,7 @@ namespace BlackCore
     class CContextApplication;
     class CContextAudio;
     class CContextNetwork;
-    class ContextOwnAircraft;
+    class CContextOwnAircraft;
     class CContextSettings;
     class CContextSimulator;
     class IContextApplication;
@@ -168,6 +168,14 @@ namespace BlackCore
         //! \remarks only applicable for local object
         const CContextAudio *getCContextAudio() const;
 
+        //! Context for own aircraft
+        //! \remarks only applicable for local object
+        CContextOwnAircraft *getCContextOwnAircraft();
+
+        //! Context for own aircraft
+        //! \remarks only applicable for local object
+        const CContextOwnAircraft *getCContextOwnAircraft() const;
+
         //! Context for simulator
         //! \remarks only applicable for local object
         CContextSimulator *getCContextSimulator();
@@ -178,6 +186,7 @@ namespace BlackCore
 
         //! Init
         void init(const CRuntimeConfig &config);
+
 
     private:
         bool m_init; /*!< flag */

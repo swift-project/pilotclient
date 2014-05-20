@@ -565,6 +565,18 @@ namespace BlackCore
         return static_cast<CContextApplication *>(this->m_contextApplication);
     }
 
+    CContextOwnAircraft *CRuntime::getCContextOwnAircraft()
+    {
+        Q_ASSERT_X(!this->m_contextOwnAircraft || this->m_contextOwnAircraft->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextOwnAircraft *>(this->m_contextOwnAircraft);
+    }
+
+    const CContextOwnAircraft *CRuntime::getCContextOwnAircraft() const
+    {
+        Q_ASSERT_X(!this->m_contextOwnAircraft || this->m_contextOwnAircraft->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextOwnAircraft *>(this->m_contextOwnAircraft);
+    }
+
     CContextSimulator *CRuntime::getCContextSimulator()
     {
         Q_ASSERT_X(!this->m_contextSimulator || this->m_contextSimulator->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
