@@ -109,7 +109,7 @@ namespace BlackCore
         else
         {
             // different threads, use event.
-            // in this event the same redirect as above will emiited, only that this is then
+            // in this event the same redirect as above will emitted, only that this is then
             // done in the same thread as the parent object
             CApplicationEvent *e = new CApplicationEvent(m, this->getUniqueId());
             QCoreApplication::postEvent(this, e);
