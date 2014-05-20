@@ -213,6 +213,12 @@ namespace BlackCore
          */
         virtual void switchAudioOutput(const ComUnit comUnit, bool enable) = 0;
 
+        /*!
+         * \brief Enable audio loopback to route recorded voice from microphone to speakers
+         * \param enable (default true)
+         */
+        virtual void enableAudioLoopback(bool enable = true) = 0;
+
     signals:
 
         //! The status of a room has changed.

@@ -21,6 +21,7 @@ namespace BlackCore
         m_audioOutput(new QAudioOutput()),
         m_inputSquelch(-1),
         m_micTestResult(Cvatlib_Voice_Simple::agc_Ok),
+        m_isAudioLoopbackEnabled(false),
         m_temporaryUserRoomIndex(CVoiceVatlib::InvalidRoomIndex),
         m_lockVoiceRooms(QReadWriteLock::Recursive),
         m_lockCallsigns(QReadWriteLock::Recursive),
@@ -237,6 +238,26 @@ namespace BlackCore
         {
             this->exceptionDispatcher(Q_FUNC_INFO);
         }
+    }
+
+    void CVoiceVatlib::enableAudioLoopback(bool enable)
+    {
+        if (enable == m_isAudioLoopbackEnabled)
+            return;
+
+        QMutexLocker lockerVatlib(&m_mutexVatlib);
+        Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
+        try
+        {
+            m_voice->SetAudioLoopback(0, enable);
+        }
+        catch (...)
+        {
+            this->exceptionDispatcher(Q_FUNC_INFO);
+        }
+
+        // bools are atomic. No need to protect it with a mutex
+        m_isAudioLoopbackEnabled = enable;
     }
 
     /*

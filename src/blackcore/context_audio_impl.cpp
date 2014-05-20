@@ -307,6 +307,13 @@ namespace BlackCore
         return static_cast<double>(this->m_voice->inputSquelch());
     }
 
+    void CContextAudio::enableAudioLoopback(bool enable)
+    {
+        Q_ASSERT(this->m_voice);
+        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        m_voice->enableAudioLoopback(enable);
+    }
+
     /*
      * Settings changed
      */

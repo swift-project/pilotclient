@@ -97,6 +97,9 @@ namespace BlackCore
         //! \copydoc IContextAudio::getSquelchValue()
         virtual double getSquelchValue() const override;
 
+        //! \copydoc IContextAudio::enableAudioLoopback()
+        virtual void enableAudioLoopback(bool enable = true) override;
+
     protected:
         //! \brief Constructor
         CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime);

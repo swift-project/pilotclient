@@ -211,4 +211,9 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isMuted"));
     }
 
+    void CContextAudioProxy::enableAudioLoopback(bool enable)
+    {
+        return this->m_dBusInterface->callDBus(QLatin1Literal("enableAudioLoopback"), enable);
+    }
+
 } // namespace

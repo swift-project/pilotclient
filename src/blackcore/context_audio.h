@@ -146,6 +146,9 @@ namespace BlackCore
 
         //! Get the squelch value
         virtual double getSquelchValue() const = 0;
+
+        //! Enable audio loopback
+        virtual void enableAudioLoopback(bool enable = true) = 0;
     };
 }
 

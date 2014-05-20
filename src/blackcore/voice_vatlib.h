@@ -128,6 +128,9 @@ namespace BlackCore
         //! \copydoc IVoice::switchAudioOutput
         virtual void switchAudioOutput(const ComUnit comUnit, bool enable) override;
 
+        //! \copydoc IVoice::enableAudioLoopback
+        virtual void enableAudioLoopback(bool enable = true) override;
+
         //! \copydoc IVoice::isMuted
         virtual bool isMuted() const override
         {
@@ -235,6 +238,7 @@ namespace BlackCore
         BlackMisc::Aviation::CCallsignList m_temporaryVoiceRoomCallsigns; /*!< temp. storage of voice rooms during update */
         QMap<ComUnit, bool> m_outputEnabled; /*!< output enabled, basically a mute flag */
         QMap<ComUnit, ConnectionStatus> m_connectionStatus;  /*!< holds connection status for each com unit */
+        bool m_isAudioLoopbackEnabled; /*!< A flag whether audio loopback is enabled or not */
 
         // Need to keep the roomIndex?
         // KB: I would remove this approach, it is potentially unsafe
