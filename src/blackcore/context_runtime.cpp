@@ -19,8 +19,8 @@ namespace BlackCore
      */
     CRuntime::CRuntime(const CRuntimeConfig &config, QObject *parent) :
         QObject(parent), m_init(false), m_dbusServer(nullptr), m_initDBusConnection(false),
-        m_signalLogApplication(false), m_signalLogAudio(false), m_signalLogNetwork(false), m_signalLogSettings(false), m_signalLogSimulator(false),
-        m_slotLogApplication(false), m_slotLogAudio(false), m_slotLogNetwork(false), m_slotLogSettings(false), m_slotLogSimulator(false),
+        m_signalLogApplication(false), m_signalLogAudio(false), m_signalLogNetwork(false), m_signalLogOwnAircraft(false), m_signalLogSettings(false), m_signalLogSimulator(false),
+        m_slotLogApplication(false), m_slotLogAudio(false), m_slotLogNetwork(false), m_slotLogOwnAircraft(false), m_slotLogSettings(false), m_slotLogSimulator(false),
         m_dbusConnection(QDBusConnection("default")),
         m_contextApplication(nullptr), m_contextAudio(nullptr), m_contextNetwork(nullptr), m_contextSettings(nullptr), m_contextSimulator(nullptr)
     {
@@ -35,6 +35,7 @@ namespace BlackCore
         this->signalLogForApplication(enabled);
         this->signalLogForAudio(enabled);
         this->signalLogForNetwork(enabled);
+        this->signalLogForOwnAircraft(enabled);
         this->signalLogForSettings(enabled);
         this->signalLogForSimulator(enabled);
     }
@@ -47,6 +48,7 @@ namespace BlackCore
         this->slotLogForApplication(enabled);
         this->slotLogForAudio(enabled);
         this->slotLogForNetwork(enabled);
+        this->slotLogForOwnAircraft(enabled);
         this->slotLogForSettings(enabled);
         this->slotLogForSimulator(enabled);
     }
@@ -65,6 +67,7 @@ namespace BlackCore
         this->m_signalLogApplication = enabled;
         if (enabled)
         {
+            // connect signal / slots when enabled
             QMetaObject::Connection con;
             con = QObject::connect(this->getIContextApplication(), &IContextApplication::componentChanged,
             [this](uint component, uint action) { QStringList l; l << "componentChanged" << QString::number(component) << QString::number(action); this->logSignal(this->getIContextApplication(), l);});
@@ -143,6 +146,34 @@ namespace BlackCore
         }
         return enabled;
     }
+
+    /*
+     * Enable signal logging
+     */
+    bool CRuntime::signalLogForOwnAircraft(bool enabled)
+    {
+        if (enabled == this->m_signalLogOwnAircraft) return enabled;
+        if (!this->getIContextOwnAircraft())
+        {
+            this->m_signalLogOwnAircraft = false;
+            return false;
+        }
+        this->m_signalLogOwnAircraft = enabled;
+        if (enabled)
+        {
+            // connect signal / slots when enabled
+            QMetaObject::Connection con;
+            con = QObject::connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftSituation,
+            [this](const BlackMisc::Aviation::CAircraftSituation & situation) { QStringList l; l << "changedAircraftSituation" << situation.toQString(); this->logSignal(this->getIContextApplication(), l);});
+            this->m_logSignalConnections.insert("ownaircraft", con);
+        }
+        else
+        {
+            this->disconnectLogSignals("ownaircraft");
+        }
+        return enabled;
+    }
+
 
     /*
      * Enable signal logging
@@ -422,6 +453,7 @@ namespace BlackCore
         this->m_contextApplication = nullptr;
         this->m_contextAudio = nullptr;
         this->m_contextNetwork = nullptr;
+        this->m_contextOwnAircraft = nullptr;
         this->m_contextSettings = nullptr;
         this->m_contextSimulator = nullptr;
     }
@@ -477,6 +509,16 @@ namespace BlackCore
     const IContextNetwork *CRuntime::getIContextNetwork() const
     {
         return this->m_contextNetwork;
+    }
+
+    IContextOwnAircraft *CRuntime::getIContextOwnAircraft()
+    {
+        return this->m_contextOwnAircraft;
+    }
+
+    const IContextOwnAircraft *CRuntime::getIContextOwnAircraft() const
+    {
+        return this->m_contextOwnAircraft;
     }
 
     IContextSettings *CRuntime::getIContextSettings()
@@ -540,6 +582,7 @@ namespace BlackCore
         return (this->m_application == LocalInDbusServer ||
                 this->m_audio == LocalInDbusServer ||
                 this->m_network == LocalInDbusServer ||
+                this->m_ownAircraft == LocalInDbusServer ||
                 this->m_settings == LocalInDbusServer ||
                 this->m_simulator == LocalInDbusServer);
     }
@@ -549,6 +592,7 @@ namespace BlackCore
         return (this->m_application == Remote ||
                 this->m_audio == Remote ||
                 this->m_network == Remote ||
+                this->m_ownAircraft == Remote ||
                 this->m_settings == Remote ||
                 this->m_simulator == Remote);
     }

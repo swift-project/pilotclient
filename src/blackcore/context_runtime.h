@@ -11,15 +11,17 @@ namespace BlackCore
     // forward declaration, see review
     // https://dev.vatsim-germany.org/boards/22/topics/1350?r=1359#message-1359
     class CDBusServer;
-    class CContextNetwork;
-    class CContextAudio;
-    class CContextSettings;
     class CContextApplication;
+    class CContextAudio;
+    class CContextNetwork;
+    class ContextOwnAircraft;
+    class CContextSettings;
     class CContextSimulator;
-    class IContextNetwork;
-    class IContextAudio;
-    class IContextSettings;
     class IContextApplication;
+    class IContextAudio;
+    class IContextNetwork;
+    class IContextOwnAircraft;
+    class IContextSettings;
     class IContextSimulator;
 
     //! The Context runtime class
@@ -52,6 +54,9 @@ namespace BlackCore
         //! Signal logging for network context
         bool signalLogForNetwork(bool enabled);
 
+        //! Signal logging for own aircraft context
+        bool signalLogForOwnAircraft(bool enabled);
+
         //! Signal logging for settings context
         bool signalLogForSettings(bool enabled);
 
@@ -61,34 +66,40 @@ namespace BlackCore
         //! Enable / disable all logging
         void slotLog(bool enabled);
 
-        //! Signal logging for application context
+        //! Slot logging for application context
         void slotLogForApplication(bool enabled) { this->m_slotLogApplication = enabled; }
 
-        //! Signal logging for audio context
+        //! Slot logging for audio context
         void slotLogForAudio(bool enabled) { this->m_slotLogAudio = enabled; }
 
-        //! Signal logging for network context
+        //! Slot logging for network context
         void slotLogForNetwork(bool enabled)  { this->m_slotLogNetwork = enabled; }
 
-        //! Signal logging for settings context
+        //! Slot logging for own aircraft context
+        void slotLogForOwnAircraft(bool enabled) { this->m_slotLogOwnAircraft = enabled; }
+
+        //! Slot logging for settings context
         void slotLogForSettings(bool enabled)  { this->m_slotLogSettings = enabled; }
 
-        //! Signal logging for simulator context
+        //! Slot logging for simulator context
         void slotLogForSimulator(bool enabled)  { this->m_slotLogSimulator = enabled; }
 
-        //! Signal logging for application context
+        //! Slot logging for application context
         bool isSlotLogForApplicationEnabled() const { return this->m_slotLogApplication; }
 
-        //! Signal logging for audio context
+        //! Slot logging for audio context
         bool isSlotLogForAudioEnabled() const { return this->m_slotLogAudio; }
 
-        //! Signal logging for network context
+        //! Slot logging for network context
         bool isSlotLogForNetworkEnabled() const  { return this->m_slotLogNetwork; }
 
-        //! Signal logging for settings context
+        //! Slot log for own aircraft
+        bool isSlotLogForOwnAircraftEnabled() const { return this->m_slotLogOwnAircraft; }
+
+        //! Slot logging for settings context
         bool isSlotLogForSettingsEnabled() const { return this->m_slotLogSettings; }
 
-        //! Signal logging for simulator context
+        //! Slot logging for simulator context
         bool isSlotLogForSimulatorEnabled() const { return this->m_slotLogSimulator; }
 
         //! Slot logging
@@ -115,17 +126,23 @@ namespace BlackCore
         //! Context for audio
         const IContextAudio *getIContextAudio() const;
 
-        //! Context for settings
-        IContextSettings *getIContextSettings();
-
-        //! Context for settings
-        const IContextSettings *getIContextSettings() const;
-
         //! Context for application
         const IContextApplication *getIContextApplication() const;
 
         //! Context for application
         IContextApplication *getIContextApplication();
+
+        //! Context for own aircraft
+        IContextOwnAircraft *getIContextOwnAircraft();
+
+        //! Context for own aircraft
+        const IContextOwnAircraft *getIContextOwnAircraft() const;
+
+        //! Context for settings
+        IContextSettings *getIContextSettings();
+
+        //! Context for settings
+        const IContextSettings *getIContextSettings() const;
 
         //! Context for simulator
         const IContextSimulator *getIContextSimulator() const;
@@ -169,17 +186,20 @@ namespace BlackCore
         bool m_signalLogApplication;
         bool m_signalLogAudio;
         bool m_signalLogNetwork;
+        bool m_signalLogOwnAircraft;
         bool m_signalLogSettings;
         bool m_signalLogSimulator;
         bool m_slotLogApplication;
         bool m_slotLogAudio;
         bool m_slotLogNetwork;
+        bool m_slotLogOwnAircraft;
         bool m_slotLogSettings;
         bool m_slotLogSimulator;
         QDBusConnection m_dbusConnection;
         IContextApplication *m_contextApplication;
         IContextAudio *m_contextAudio;
         IContextNetwork *m_contextNetwork;
+        IContextOwnAircraft *m_contextOwnAircraft;
         IContextSettings *m_contextSettings;
         IContextSimulator *m_contextSimulator;
         QMultiMap<QString, QMetaObject::Connection> m_logSignalConnections;

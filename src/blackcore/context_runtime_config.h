@@ -20,34 +20,39 @@ namespace BlackCore
         };
 
     private:
-        ContextMode m_settings;
+        ContextMode m_application;
         ContextMode m_audio;
         ContextMode m_network;
+        ContextMode m_ownAircraft;
+        ContextMode m_settings;
         ContextMode m_simulator;
-        ContextMode m_application;
         QString m_dbusAddress; //!< for boot strapping
 
     public:
         //! Constructor
         CRuntimeConfig(ContextMode allTheSame = NotUsed, const QString &dbusBootstrapAddress = ""):
-            m_settings(allTheSame), m_audio(allTheSame), m_network(allTheSame), m_simulator(allTheSame), m_application(allTheSame), m_dbusAddress(dbusBootstrapAddress)
+            m_application(allTheSame), m_audio(allTheSame), m_network(allTheSame), m_ownAircraft(allTheSame), m_settings(allTheSame), m_simulator(allTheSame),
+            m_dbusAddress(dbusBootstrapAddress)
         {}
 
         //! Constructor
-        CRuntimeConfig(ContextMode settings, ContextMode audio, ContextMode network, ContextMode simulator, ContextMode application, const QString &dbusBootstrapAddress = ""):
-            m_settings(settings), m_audio(audio), m_network(network), m_simulator(simulator), m_application(application), m_dbusAddress(dbusBootstrapAddress)
+        CRuntimeConfig(ContextMode application, ContextMode audio, ContextMode network, ContextMode ownAircraft, ContextMode settings, ContextMode simulator, const QString &dbusBootstrapAddress = ""):
+            m_application(application), m_audio(audio), m_network(network), m_ownAircraft(ownAircraft) , m_settings(settings), m_simulator(simulator),
+            m_dbusAddress(dbusBootstrapAddress)
         {}
 
-        //! settings mode
-        ContextMode getModeSettings() const { return this->m_settings; }
+        //! application mode
+        ContextMode getModeApplication() const { return this->m_application; }
         //! audio mode
         ContextMode getModeAudio() const { return this->m_audio; }
         //! network mode
         ContextMode getModeNetwork() const { return this->m_network; }
+        //! own aircraft
+        ContextMode getModeOwnAircraft() const { return this->m_ownAircraft; }
+        //! settings mode
+        ContextMode getModeSettings() const { return this->m_settings; }
         //! simulator mode
         ContextMode getModeSimulator() const { return this->m_simulator; }
-        //! application mode
-        ContextMode getModeApplication() const { return this->m_application; }
         //! local settings?
         bool hasLocalSettings() const { return this->m_settings == Local || this->m_settings == LocalInDbusServer; }
         //! requires server (at least one in server)?
