@@ -47,11 +47,11 @@ namespace BlackCore
         // cross context access
         //
 
-        //! Context for network
-        IContextNetwork *getIContextNetwork();
+        //! Context for application
+        const IContextApplication *getIContextApplication() const;
 
-        //! Context for network
-        const IContextNetwork *getIContextNetwork() const;
+        //! Application
+        IContextApplication *getIContextApplication();
 
         //! Context for network
         IContextAudio *getIContextAudio();
@@ -59,17 +59,23 @@ namespace BlackCore
         //! Context for network
         const IContextAudio *getIContextAudio() const;
 
+        //! Context for network
+        IContextNetwork *getIContextNetwork();
+
+        //! Context for network
+        const IContextNetwork *getIContextNetwork() const;
+
+        //! Context for own aircraft
+        IContextOwnAircraft *getIContextOwnAircraft();
+
+        //! Context for own aircraft
+        const IContextOwnAircraft *getIContextOwnAircraft() const;
+
         //! Settings
         IContextSettings *getIContextSettings();
 
         //! Settings
         const IContextSettings *getIContextSettings() const;
-
-        //! Context for application
-        const IContextApplication *getIContextApplication() const;
-
-        //! Application
-        IContextApplication *getIContextApplication();
 
         //! Context for simulator
         const IContextSimulator *getIContextSimulator() const;

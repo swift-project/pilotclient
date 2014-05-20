@@ -25,6 +25,12 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextOwnAircraft();
 
+        //! Own aircraft
+        const BlackMisc::Aviation::CAircraft &ownAircraft() const { return this->m_ownAircraft; }
+
+        //! Own aircraft
+        BlackMisc::Aviation::CAircraft &ownAircraft() { return this->m_ownAircraft; }
+
     public slots: // IContextOwnAircraft overrides
 
         //! \copydoc IContextOwnAircraft::setOwnAircraft()
@@ -59,7 +65,6 @@ namespace BlackCore
 
         //! Init my very own aircraft
         void initOwnAircraft();
-
 
     };
 }
