@@ -43,7 +43,8 @@ Client::Client(QObject *parent) :
     m_commands["inputdevices"]      = std::bind(&Client::inputDevicesCmd, this, _1);
     m_commands["outputdevices"]     = std::bind(&Client::outputDevicesCmd, this, _1);
     m_commands["users"]             = std::bind(&Client::listCallsignsCmd, this, _1);
-
+    m_commands["enableloopback"]    = std::bind(&Client::enableLoopbackCmd, this, _1);
+    m_commands["disableloopback"]   = std::bind(&Client::disableLoopbackCmd, this, _1);
 }
 
 void Client::command(QString line)
@@ -170,6 +171,20 @@ void Client::listCallsignsCmd(QTextStream &args)
     {
         std::cout << " " << callsign.toStdString() << std::endl;
     }
+    printLinePrefix();
+}
+
+void Client::enableLoopbackCmd(QTextStream &/*args*/)
+{
+    std::cout << "Enabling audio loopback." << std::endl;
+    m_voice->enableAudioLoopback(true);
+    printLinePrefix();
+}
+
+void Client::disableLoopbackCmd(QTextStream &/*args*/)
+{
+    std::cout << "Disabling audio loopback." << std::endl;
+    m_voice->enableAudioLoopback(false);
     printLinePrefix();
 }
 

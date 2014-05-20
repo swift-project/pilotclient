@@ -39,6 +39,8 @@ private: //commands
     void inputDevicesCmd(QTextStream &args);
     void outputDevicesCmd(QTextStream &args);
     void listCallsignsCmd(QTextStream &args);
+    void enableLoopbackCmd(QTextStream &args);
+    void disableLoopbackCmd(QTextStream &args);
 
     void printLinePrefix();
 
