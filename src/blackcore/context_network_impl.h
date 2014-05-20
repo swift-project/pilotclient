@@ -35,6 +35,25 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextNetwork();
 
+        /*!
+         * Set own aircraft
+         * \param aircraft
+         * \return message list, as aircraft can only be set prior connecting
+         */
+        BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
+
+        //! Own position, be aware height is terrain height
+        void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
+
+        //! Complete situation update
+        void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        //! Update own cockpit
+        void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder);
+
+        //! Get own aircraft
+        BlackMisc::Aviation::CAircraft getOwnAircraft() const;
+
     public slots: // IContextNetwork overrides
 
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()
@@ -69,21 +88,6 @@ namespace BlackCore
 
         //! \copydoc IContextNetwork::isConnected()
         virtual bool isConnected() const override;
-
-        //! \copydoc IContextNetwork::setOwnAircraft()
-        virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) override;
-
-        //! \copydoc IContextNetwork::updateOwnPosition()
-        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
-
-        //! \copydoc IContextNetwork::updateOwnSituation()
-        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
-
-        //! \copydoc IContextNetwork::updateOwnCockpit()
-        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder) override;
-
-        //! \copydoc IContextNetwork::getOwnAircraft()
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
 
         //! \copydoc IContextNetwork::sendTextMessages()
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
@@ -139,7 +143,6 @@ namespace BlackCore
         BlackMisc::Aviation::CAircraftList m_aircraftsInRange;
         BlackMisc::Network::CClientList m_otherClients;
         BlackCore::INetwork *m_network;
-        BlackMisc::Aviation::CAircraft m_ownAircraft;
         QMap<QString, BlackMisc::Aviation::CInformationMessage> m_metarCache /*!< Keep METARs for a while */;
 
         // for reading XML and VATSIM data files
@@ -154,16 +157,10 @@ namespace BlackCore
         void setAtcStationsOnline(const BlackMisc::Aviation::CAtcStationList &newStations);
 
         //! The "central" ATC list with online ATC controllers
-        BlackMisc::Aviation::CAtcStationList &atcStationsOnline()
-        {
-            return m_atcStationsOnline;
-        }
+        BlackMisc::Aviation::CAtcStationList &atcStationsOnline() { return m_atcStationsOnline; }
 
         //! ATC list, with booked controllers
-        BlackMisc::Aviation::CAtcStationList &atcStationsBooked()
-        {
-            return m_atcStationsBooked;
-        }
+        BlackMisc::Aviation::CAtcStationList &atcStationsBooked() { return m_atcStationsBooked; }
 
         //! Init my very own aircraft
         void initOwnAircraft();
@@ -184,6 +181,12 @@ namespace BlackCore
 
         //! Custom package data based on own aircraft / model
         QStringList createFsipiCustomPackageData() const;
+
+        //! Own aircraft
+        const BlackMisc::Aviation::CAircraft &ownAircraft() const;
+
+        //! Own aircraft
+        BlackMisc::Aviation::CAircraft &ownAircraft();
 
     private slots:
         //! ATC bookings received

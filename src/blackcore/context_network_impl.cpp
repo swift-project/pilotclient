@@ -8,6 +8,7 @@
 #include "context_settings.h"
 #include "context_application.h"
 #include "context_simulator.h"
+#include "context_ownaircraft_impl.h"
 #include "network_vatlib.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
@@ -94,8 +95,8 @@ namespace BlackCore
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getIContextSettings());
-        this->m_ownAircraft.initComSystems();
-        this->m_ownAircraft.initTransponder();
+        this->ownAircraft().initComSystems();
+        this->ownAircraft().initTransponder();
         CAircraftSituation situation(
             CCoordinateGeodetic(
                 CLatitude::fromWgs84("N 049° 18' 17"),
@@ -103,13 +104,13 @@ namespace BlackCore
                 CLength(0, CLengthUnit::m())),
             CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
         );
-        this->m_ownAircraft.setSituation(situation);
-        this->m_ownAircraft.setPilot(this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer().getUser());
+        this->ownAircraft().setSituation(situation);
+        this->ownAircraft().setPilot(this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer().getUser());
 
         // TODO: This would need to come from somewhere (mappings)
         // Own callsign, plane ICAO status, model used
-        this->m_ownAircraft.setCallsign(CCallsign("BLACK"));
-        this->m_ownAircraft.setIcaoInfo(CAircraftIcao("C172", "L1P", "GA", "GA", "0000ff"));
+        this->ownAircraft().setCallsign(CCallsign("BLACK"));
+        this->ownAircraft().setIcaoInfo(CAircraftIcao("C172", "L1P", "GA", "GA", "0000ff"));
     }
 
     /*
@@ -125,7 +126,7 @@ namespace BlackCore
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Invalid user credentials"));
         }
-        else if (!this->m_ownAircraft.getIcaoInfo().hasAircraftAndAirlineDsignator())
+        else if (!this->ownAircraft().getIcaoInfo().hasAircraftAndAirlineDsignator())
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Invalid ICAO data for own aircraft"));
         }
@@ -139,12 +140,12 @@ namespace BlackCore
             if (CNetworkUtils::canConnect(currentServer, msg, 2000))
             {
                 INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
-                this->m_ownAircraft.setPilot(currentServer.getUser()); // still needed?
+                this->ownAircraft().setPilot(currentServer.getUser()); // still needed?
                 this->m_network->presetServer(currentServer);
                 this->m_network->presetLoginMode(mode);
-                this->m_network->presetCallsign(this->m_ownAircraft.getCallsign());
-                this->m_network->presetIcaoCodes(this->m_ownAircraft.getIcaoInfo());
-                this->m_network->setOwnAircraft(this->m_ownAircraft);
+                this->m_network->presetCallsign(this->ownAircraft().getCallsign());
+                this->m_network->presetIcaoCodes(this->ownAircraft().getIcaoInfo());
+                this->m_network->setOwnAircraft(this->ownAircraft());
                 this->m_network->initiateConnection();
                 msg = "Connection pending ";
                 msg.append(" ").append(currentServer.getAddress()).append(" ").append(QString::number(currentServer.getPort()));
@@ -205,7 +206,7 @@ namespace BlackCore
         }
         else
         {
-            this->m_ownAircraft = aircraft;
+            this->ownAircraft() = aircraft;
         }
         return msgs;
     }
@@ -216,8 +217,8 @@ namespace BlackCore
     void CContextNetwork::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
     {
         if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, position.toQString(), altitude.toQString());
-        this->m_ownAircraft.setPosition(position);
-        this->m_ownAircraft.setAltitude(altitude);
+        this->ownAircraft().setPosition(position);
+        this->ownAircraft().setAltitude(altitude);
         this->m_network->setOwnAircraftPosition(position, altitude);
     }
 
@@ -227,7 +228,7 @@ namespace BlackCore
     void CContextNetwork::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
     {
         if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, situation.toQString());
-        this->m_ownAircraft.setSituation(situation);
+        this->ownAircraft().setSituation(situation);
         this->m_network->setOwnAircraftSituation(situation);
     }
 
@@ -238,19 +239,19 @@ namespace BlackCore
     {
         if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, com1.toQString(), com2.toQString(), transponder.toQString());
         bool changed = false;
-        if (com1 != this->m_ownAircraft.getCom1System())
+        if (com1 != this->ownAircraft().getCom1System())
         {
-            this->m_ownAircraft.setCom1System(com1);
+            this->ownAircraft().setCom1System(com1);
             changed = true;
         }
-        if (com2 != this->m_ownAircraft.getCom2System())
+        if (com2 != this->ownAircraft().getCom2System())
         {
-            this->m_ownAircraft.setCom2System(com2);
+            this->ownAircraft().setCom2System(com2);
             changed = true;
         }
-        if (transponder != this->m_ownAircraft.getTransponder())
+        if (transponder != this->ownAircraft().getTransponder())
         {
-            this->m_ownAircraft.setTransponder(transponder);
+            this->ownAircraft().setTransponder(transponder);
             changed = true;
         }
 
@@ -263,8 +264,8 @@ namespace BlackCore
      */
     CAircraft CContextNetwork::getOwnAircraft() const
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, this->m_ownAircraft.toQString());
-        return this->m_ownAircraft;
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, this->ownAircraft().toQString());
+        return this->ownAircraft();
     }
 
     /*
@@ -402,7 +403,7 @@ namespace BlackCore
         if (to == INetwork::Connected)
         {
             QString m("Connected, own aircraft ");
-            m.append(this->m_ownAircraft.toQString(true));
+            m.append(this->ownAircraft().toQString(true));
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, m));
         }
 
@@ -531,4 +532,19 @@ namespace BlackCore
                                icao.getAircraftCombinedType(), modelString);
         return data;
     }
+
+    const CAircraft &CContextNetwork::ownAircraft() const
+    {
+        Q_ASSERT(this->getRuntime());
+        Q_ASSERT(this->getRuntime()->getCContextOwnAircraft());
+        return this->getRuntime()->getCContextOwnAircraft()->ownAircraft();
+    }
+
+    CAircraft &CContextNetwork::ownAircraft()
+    {
+        Q_ASSERT(this->getRuntime());
+        Q_ASSERT(this->getRuntime()->getCContextOwnAircraft());
+        return this->getRuntime()->getCContextOwnAircraft()->ownAircraft();
+    }
+
 } // namespace

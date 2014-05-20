@@ -73,21 +73,6 @@ namespace BlackCore
         //! \copydoc IContextNetwork::isConnected()
         virtual bool isConnected() const override;
 
-        //! \copydoc IContextNetwork::setOwnAircraft()
-        virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) override;
-
-        //! \copydoc IContextNetwork::updateOwnPosition()
-        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
-
-        //! \copydoc IContextNetwork::updateOwnSituation()
-        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
-
-        //! \copydoc IContextNetwork::updateOwnCockpit()
-        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder) override;
-
-        //! \copydoc IContextNetwork::getOwnAircraft()
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
-
         //! \copydoc IContextNetwork::sendTextMessages()
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
 

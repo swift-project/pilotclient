@@ -138,8 +138,8 @@ namespace BlackCore
      */
     CAtcStationList CContextNetwork::getSelectedAtcStations() const
     {
-        CAtcStationList stationsCom1 = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(this->m_ownAircraft.getCom1System());
-        CAtcStationList stationsCom2 = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(this->m_ownAircraft.getCom2System());
+        CAtcStationList stationsCom1 = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(this->ownAircraft().getCom1System());
+        CAtcStationList stationsCom2 = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(this->ownAircraft().getCom2System());
         stationsCom1.sortBy(&CAtcStation::getDistanceToPlane);
         stationsCom2.sortBy(&CAtcStation::getDistanceToPlane);
 
@@ -179,7 +179,7 @@ namespace BlackCore
             station.setFrequency(frequency);
             station.setPosition(position);
             station.setOnline(true);
-            station.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
+            station.calculcateDistanceToPlane(this->ownAircraft().getPosition());
             this->m_vatsimDataFileReader->getAtcStations().updateFromVatsimDataFileStation(station); // prefill
             this->m_atcStationsOnline.push_back(station);
             emit this->changedAtcStationsOnline();

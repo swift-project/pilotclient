@@ -111,11 +111,6 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("requestAtisUpdates"));
     }
 
-    BlackMisc::Aviation::CAircraft CContextNetworkProxy::getOwnAircraft() const
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraft>(QLatin1Literal("getOwnAircraft"));
-    }
-
     BlackMisc::CStatusMessageList CContextNetworkProxy::connectToNetwork(uint loginMode)
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("connectToNetwork"), loginMode);
@@ -129,26 +124,6 @@ namespace BlackCore
     bool CContextNetworkProxy::isConnected() const
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isConnected"));
-    }
-
-    BlackMisc::CStatusMessageList CContextNetworkProxy::setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
-    {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("setOwnAircraft"), aircraft);
-    }
-
-    void CContextNetworkProxy::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnPosition"), position, altitude);
-    }
-
-    void CContextNetworkProxy::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnSituation"), situation);
-    }
-
-    void CContextNetworkProxy::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnCockpit"), com1, com2, transponder);
     }
 
     void CContextNetworkProxy::sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages)

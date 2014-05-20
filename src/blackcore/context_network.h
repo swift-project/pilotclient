@@ -101,9 +101,6 @@ namespace BlackCore
         //! User for given callsign, e.g. for text messages
         virtual BlackMisc::Network::CUser getUserForCallsign(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
-        //! Get own aircraft
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
-
         //! Information about other clients
         virtual BlackMisc::Network::CClientList getOtherClients() const = 0;
 
@@ -125,22 +122,6 @@ namespace BlackCore
 
         //! \brief Network connected?
         virtual bool isConnected() const = 0;
-
-        /*!
-         * Set own aircraft
-         * \param aircraft
-         * \return message list, as aircraft can only be set prior connecting
-         */
-        virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
-
-        //! Own position, be aware height is terrain height
-        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
-
-        //! Complete situation update
-        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
-
-        //! Update own cockpit
-        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder) = 0;
 
         //! Text messages (radio and private chat messages)
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) = 0;
@@ -170,6 +151,7 @@ namespace BlackCore
     protected:
         //! Constructor
         IContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
+
     };
 }
 

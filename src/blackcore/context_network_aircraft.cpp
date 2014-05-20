@@ -43,7 +43,7 @@ namespace BlackCore
             aircraft.setCallsign(callsign);
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
-            aircraft.calculcateDistanceToPlane(this->m_ownAircraft.getPosition());
+            aircraft.calculcateDistanceToPlane(this->ownAircraft().getPosition());
             this->m_vatsimDataFileReader->getAircrafts().updateFromVatsimDataFileAircraft(aircraft);
 
             this->m_aircraftsInRange.push_back(aircraft);
@@ -67,7 +67,7 @@ namespace BlackCore
         else
         {
             // update
-            CLength distance = this->m_ownAircraft.calculcateDistanceToPlane(situation.getPosition());
+            CLength distance = this->ownAircraft().calculcateDistanceToPlane(situation.getPosition());
             distance.switchUnit(CLengthUnit::NM());
             CIndexVariantMap vm;
             vm.addValue(CAircraft::IndexTransponder, transponder);
