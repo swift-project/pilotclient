@@ -39,11 +39,11 @@ namespace BlackGui
         //! Create a runtime (becomes owner). Only create one runtime.
         void createRuntime(const BlackCore::CRuntimeConfig &config, QObject *parent);
 
-        //! Context for network
-        BlackCore::IContextNetwork *getIContextNetwork();
+        //! Context for application
+        const BlackCore::IContextApplication *getIContextApplication() const;
 
-        //! Context for network
-        const BlackCore::IContextNetwork *getIContextNetwork() const;
+        //! Context for application
+        BlackCore::IContextApplication *getIContextApplication();
 
         //! Context for audio
         BlackCore::IContextAudio *getIContextAudio();
@@ -51,17 +51,23 @@ namespace BlackGui
         //! Context for audio
         const BlackCore::IContextAudio *getIContextAudio() const;
 
+        //! Context for network
+        BlackCore::IContextNetwork *getIContextNetwork();
+
+        //! Context for network
+        const BlackCore::IContextNetwork *getIContextNetwork() const;
+
+        //! Context for own aircraft
+        const BlackCore::IContextOwnAircraft *getIContextOwnAircraft() const;
+
+        //! Context for own aircraft
+        BlackCore::IContextOwnAircraft *getIContextOwnAircraft();
+
         //! Context for settings
         BlackCore::IContextSettings *getIContextSettings();
 
         //! Context for settings
         const BlackCore::IContextSettings *getIContextSettings() const;
-
-        //! Context for application
-        const BlackCore::IContextApplication *getIContextApplication() const;
-
-        //! Context for application
-        BlackCore::IContextApplication *getIContextApplication();
 
         //! Context for simulator
         const BlackCore::IContextSimulator *getIContextSimulator() const;

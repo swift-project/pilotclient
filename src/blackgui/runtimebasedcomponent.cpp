@@ -3,29 +3,6 @@
 
 namespace BlackGui
 {
-    const BlackCore::IContextApplication *CRuntimeBasedComponent::getIContextApplication() const
-    {
-        if (!this->m_runtime) return nullptr;
-        return this->m_runtime->getIContextApplication();
-    }
-
-    BlackCore::IContextApplication *CRuntimeBasedComponent::getIContextApplication()
-    {
-        if (!this->m_runtime) return nullptr;
-        return this->m_runtime->getIContextApplication();
-    }
-
-    BlackCore::IContextAudio *CRuntimeBasedComponent::getIContextAudio()
-    {
-        if (!this->m_runtime) return nullptr;
-        return this->m_runtime->getIContextAudio();
-    }
-
-    const BlackCore::IContextAudio *CRuntimeBasedComponent::getIContextAudio() const
-    {
-        if (!this->m_runtime) return nullptr;
-        return this->m_runtime->getIContextAudio();
-    }
 
     void CRuntimeBasedComponent::setRuntime(BlackCore::CRuntime *runtime, bool runtimeOwner)
     {
@@ -53,6 +30,42 @@ namespace BlackGui
         this->m_runtimeOwner = true;
     }
 
+    void CRuntimeBasedComponent::sendStatusMessage(const BlackMisc::CStatusMessage &statusMessage)
+    {
+        Q_ASSERT(this->getIContextApplication());
+        this->getIContextApplication()->sendStatusMessage(statusMessage);
+    }
+
+    void CRuntimeBasedComponent::sendStatusMessages(const BlackMisc::CStatusMessageList &statusMessages)
+    {
+        Q_ASSERT(this->getIContextApplication());
+        this->getIContextApplication()->sendStatusMessages(statusMessages);
+    }
+
+    const BlackCore::IContextApplication *CRuntimeBasedComponent::getIContextApplication() const
+    {
+        if (!this->m_runtime) return nullptr;
+        return this->m_runtime->getIContextApplication();
+    }
+
+    BlackCore::IContextApplication *CRuntimeBasedComponent::getIContextApplication()
+    {
+        if (!this->m_runtime) return nullptr;
+        return this->m_runtime->getIContextApplication();
+    }
+
+    BlackCore::IContextAudio *CRuntimeBasedComponent::getIContextAudio()
+    {
+        if (!this->m_runtime) return nullptr;
+        return this->m_runtime->getIContextAudio();
+    }
+
+    const BlackCore::IContextAudio *CRuntimeBasedComponent::getIContextAudio() const
+    {
+        if (!this->m_runtime) return nullptr;
+        return this->m_runtime->getIContextAudio();
+    }
+
     BlackCore::IContextNetwork *CRuntimeBasedComponent::getIContextNetwork()
     {
         if (!this->m_runtime) return nullptr;
@@ -63,6 +76,18 @@ namespace BlackGui
     {
         if (!this->m_runtime) return nullptr;
         return this->m_runtime->getIContextNetwork();
+    }
+
+    BlackCore::IContextOwnAircraft *CRuntimeBasedComponent::getIContextOwnAircraft()
+    {
+        if (!this->m_runtime) return nullptr;
+        return this->m_runtime->getIContextOwnAircraft();
+    }
+
+    const BlackCore::IContextOwnAircraft *CRuntimeBasedComponent::getIContextOwnAircraft() const
+    {
+        if (!this->m_runtime) return nullptr;
+        return this->m_runtime->getIContextOwnAircraft();
     }
 
     BlackCore::IContextSettings *CRuntimeBasedComponent::getIContextSettings()
@@ -89,15 +114,4 @@ namespace BlackGui
         return this->m_runtime->getIContextSimulator();
     }
 
-    void CRuntimeBasedComponent::sendStatusMessage(const BlackMisc::CStatusMessage &statusMessage)
-    {
-        Q_ASSERT(this->getIContextApplication());
-        this->getIContextApplication()->sendStatusMessage(statusMessage);
-    }
-
-    void CRuntimeBasedComponent::sendStatusMessages(const BlackMisc::CStatusMessageList &statusMessages)
-    {
-        Q_ASSERT(this->getIContextApplication());
-        this->getIContextApplication()->sendStatusMessages(statusMessages);
-    }
 }
