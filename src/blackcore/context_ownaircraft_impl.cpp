@@ -35,9 +35,7 @@ namespace BlackCore
     /*
      * Cleanup
      */
-    CContextOwnAircraft::~CContextOwnAircraft()
-    {
-    }
+    CContextOwnAircraft::~CContextOwnAircraft() { }
 
     /*
      * Init own aircraft
@@ -67,35 +65,52 @@ namespace BlackCore
     /*
      * Own Aircraft
      */
-    CStatusMessageList CContextOwnAircraft::setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
+    void CContextOwnAircraft::updateOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator)
     {
+        // trigger the correct signals
+        this->updateOwnCockpit(aircraft.getCom1System(), aircraft.getCom2System(), aircraft.getTransponder(), originator);
+        this->updateOwnPosition(aircraft.getPosition(), aircraft.getAltitude() ,originator);
+        this->updateOwnSituation(aircraft.getSituation(), originator);
+
+        // all the rest
         this->m_ownAircraft = aircraft;
-        return CStatusMessageList();
     }
 
     /*
      * Own position
      */
-    void CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
+    void CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator)
     {
         if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, position.toQString(), altitude.toQString());
-        this->m_ownAircraft.setPosition(position);
-        this->m_ownAircraft.setAltitude(altitude);
+        bool changed = (this->m_ownAircraft.getPosition() == position);
+        if (changed) this->m_ownAircraft.setPosition(position);
+
+        if (this->m_ownAircraft.getAltitude() != altitude)
+        {
+            changed = true;
+            this->m_ownAircraft.setAltitude(altitude);
+        }
+
+        if (changed) emit this->changedAircraftPosition(this->m_ownAircraft, originator);
     }
 
     /*
      * Update own situation
      */
-    void CContextOwnAircraft::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
+    void CContextOwnAircraft::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator)
     {
         if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, situation.toQString());
+        bool changed = this->m_ownAircraft.getSituation() == situation;
+        if (!changed) return;
+
         this->m_ownAircraft.setSituation(situation);
+        emit this->changedAircraftSituation(this->m_ownAircraft, originator);
     }
 
     /*
      * Own cockpit data
      */
-    void CContextOwnAircraft::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder)
+    void CContextOwnAircraft::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator)
     {
         if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, com1.toQString(), com2.toQString(), transponder.toQString());
         bool changed = false;
@@ -114,8 +129,7 @@ namespace BlackCore
             this->m_ownAircraft.setTransponder(transponder);
             changed = true;
         }
-
-        if (!changed) return;
+        if (changed) emit this->changedAircraftCockpit(this->m_ownAircraft, originator);
     }
 
     /*

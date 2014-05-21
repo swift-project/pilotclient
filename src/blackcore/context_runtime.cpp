@@ -164,7 +164,15 @@ namespace BlackCore
             // connect signal / slots when enabled
             QMetaObject::Connection con;
             con = QObject::connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftSituation,
-            [this](const BlackMisc::Aviation::CAircraftSituation & situation) { QStringList l; l << "changedAircraftSituation" << situation.toQString(); this->logSignal(this->getIContextApplication(), l);});
+            [this](const BlackMisc::Aviation::CAircraft & aircraft, const QString & originator) { QStringList l; l << "changedAircraftSituation" << aircraft.toQString() << originator; this->logSignal(this->getIContextApplication(), l);});
+            this->m_logSignalConnections.insert("ownaircraft", con);
+
+            con = QObject::connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit,
+            [this](const BlackMisc::Aviation::CAircraft & aircraft, const QString & originator) { QStringList l; l << "changedAircraftCockpit" << aircraft.toQString() << originator; this->logSignal(this->getIContextApplication(), l);});
+            this->m_logSignalConnections.insert("ownaircraft", con);
+
+            con = QObject::connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftPosition,
+            [this](const BlackMisc::Aviation::CAircraft & aircraft, const QString & originator) { QStringList l; l << "changedAircraftPosition" << aircraft.toQString() << originator; this->logSignal(this->getIContextApplication(), l);});
             this->m_logSignalConnections.insert("ownaircraft", con);
         }
         else
@@ -319,6 +327,20 @@ namespace BlackCore
         }
         times.insert("Application", time.restart());
 
+        switch (config.getModeOwnAircraft())
+        {
+        case CRuntimeConfig::Local:
+        case CRuntimeConfig::LocalInDbusServer:
+            this->m_contextOwnAircraft = (new CContextOwnAircraft(config.getModeApplication(), this))->registerWithDBus(this->m_dbusServer);
+            break;
+        case CRuntimeConfig::Remote:
+            this->m_contextOwnAircraft = new BlackCore::CContextOwnAircraftProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeOwnAircraft(), this);
+            break;
+        default:
+            qFatal("Always initialize own aircraft context");
+        }
+        times.insert("Own aircraft", time.restart());
+
         switch (config.getModeAudio())
         {
         case CRuntimeConfig::Local:
@@ -360,6 +382,13 @@ namespace BlackCore
             break; // network not mandatory
         }
         times.insert("Simulator", time.restart());
+
+        // checks --------------
+        // 1. own aircraft and simulator should reside in same location
+        Q_ASSERT(!this->m_contextSimulator || (this->m_contextOwnAircraft->usingLocalObjects() == this->m_contextSimulator->usingLocalObjects()));
+
+        // 2. own aircraft and network should reside in same location
+        Q_ASSERT(!this->m_contextNetwork || (this->m_contextOwnAircraft->usingLocalObjects() == this->m_contextNetwork->usingLocalObjects()));
 
         // post inits, wiring things among context (e.g. signal slots)
         this->initPostSetup();
@@ -422,6 +451,12 @@ namespace BlackCore
             this->getIContextApplication()->deleteLater();
         }
 
+        if (this->getIContextOwnAircraft())
+        {
+            disconnect(this->getIContextOwnAircraft());
+            this->getIContextOwnAircraft()->deleteLater();
+        }
+
         if (this->getIContextSimulator())
         {
             // TODO: disconnect from simulator
@@ -442,6 +477,7 @@ namespace BlackCore
             disconnect(this->getIContextAudio());
             this->getIContextAudio()->deleteLater();
         }
+
         if (this->getIContextSettings())
         {
             disconnect(this->getIContextSettings());
@@ -449,7 +485,7 @@ namespace BlackCore
         }
 
         // mark contexts as invalid
-        // they will be deleted by the parent object (this runtime)
+        // objects are already scheduled for deletion
         this->m_contextApplication = nullptr;
         this->m_contextAudio = nullptr;
         this->m_contextNetwork = nullptr;

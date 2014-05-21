@@ -27,13 +27,18 @@ namespace BlackCore
      */
     void CContextOwnAircraftProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
-//        bool s; = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-//                                    "connectionStatusChanged", this, SIGNAL(connectionStatusChanged(uint, uint,  const QString &)));
-//        Q_ASSERT(s);
-//        s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
-//                               "changedAtcStationsBooked", this, SIGNAL(changedAtcStationsBooked()));
-//        Q_ASSERT(s);
-//        Q_UNUSED(s);
+        bool s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
+                                    "changedAircraftCockpit", this, SIGNAL(changedAircraftCockpit(BlackMisc::Aviation::CAircraft, QString)));
+        Q_ASSERT(s);
+
+        s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
+                               "changedAircraftPosition", this, SIGNAL(changedAircraftPosition(BlackMisc::Aviation::CAircraft, QString)));
+        Q_ASSERT(s);
+
+        s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
+                               "changedAircraftPosition", this, SIGNAL(changedAircraftPosition(BlackMisc::Aviation::CAircraft, QString)));
+        Q_ASSERT(s);
+        Q_UNUSED(s);
     }
 
     BlackMisc::Aviation::CAircraft CContextOwnAircraftProxy::getOwnAircraft() const
@@ -41,23 +46,23 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraft>(QLatin1Literal("getOwnAircraft"));
     }
 
-    BlackMisc::CStatusMessageList CContextOwnAircraftProxy::setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
+    void CContextOwnAircraftProxy::updateOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator)
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("setOwnAircraft"), aircraft);
+        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnAircraft"), aircraft, originator);
     }
 
-    void CContextOwnAircraftProxy::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
+    void CContextOwnAircraftProxy::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator)
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnPosition"), position, altitude);
+        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnPosition"), position, altitude, originator);
     }
 
-    void CContextOwnAircraftProxy::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
+    void CContextOwnAircraftProxy::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator)
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnSituation"), situation);
+        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnSituation"), situation, originator);
     }
 
-    void CContextOwnAircraftProxy::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder)
+    void CContextOwnAircraftProxy::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator)
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnCockpit"), com1, com2, transponder);
+        this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnCockpit"), com1, com2, transponder, originator);
     }
 } // namespace

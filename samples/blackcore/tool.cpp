@@ -1,9 +1,5 @@
 #include "tool.h"
-#include "blackcore/context_runtime.h"
-#include "blackcore/context_network.h"
-#include "blackcore/context_audio.h"
-#include "blackcore/context_settings.h"
-#include "blackcore/context_application.h"
+#include "blackcore/context_all_interfaces.h"
 #include "blackmisc/indexvariantmap.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/pqallquantities.h"
@@ -48,6 +44,8 @@ namespace BlackMiscTest
             const BlackCore::IContextNetwork *networkContext = runtime->getIContextNetwork();
             const BlackCore::IContextAudio *audioContext = runtime->getIContextAudio();
             const BlackCore::IContextSettings *settingsContext = runtime->getIContextSettings();
+            const BlackCore::IContextOwnAircraft *ownAircraftContext = runtime->getIContextOwnAircraft();
+
             BlackCore::IContextApplication *applicationContext = runtime->getIContextApplication();
 
             qDebug() << "-------------";
@@ -62,7 +60,7 @@ namespace BlackMiscTest
             qDebug() << "signal / slot logging:";
             qDebug() << "sig + context + [e]nabled/[d]isabled";
             qDebug() << "slo + context + [e]nabled/[d]isabled";
-            qDebug() << "contexts: app / aud / net / set / sim / all";
+            qDebug() << "contexts: app / aud / net / own (aircraft) / set / sim / all";
             qDebug() << "examples: sigappd, slonete, slosimd, sloalle";
             qDebug() << "-------------";
 
@@ -95,7 +93,7 @@ namespace BlackMiscTest
             {
                 qDebug() << "-------------";
                 qDebug() << "my aircraft";
-                qDebug() << networkContext->getOwnAircraft();
+                qDebug() << ownAircraftContext->getOwnAircraft();
             }
             else if (line.startsWith("5"))
             {
@@ -121,6 +119,7 @@ namespace BlackMiscTest
                 if (line.startsWith("app")) runtime->signalLogForApplication(enable);
                 else if (line.startsWith("aud")) runtime->signalLogForAudio(enable);
                 else if (line.startsWith("net")) runtime->signalLogForNetwork(enable);
+                else if (line.startsWith("own")) runtime->signalLogForOwnAircraft(enable);
                 else if (line.startsWith("set")) runtime->signalLogForSettings(enable);
                 else if (line.startsWith("sim")) runtime->signalLogForSimulator(enable);
                 else if (line.startsWith("all")) runtime->signalLog(enable);
@@ -133,6 +132,7 @@ namespace BlackMiscTest
                 if (line.startsWith("app")) runtime->slotLogForApplication(enable);
                 else if (line.startsWith("aud")) runtime->slotLogForAudio(enable);
                 else if (line.startsWith("net")) runtime->slotLogForNetwork(enable);
+                else if (line.startsWith("own")) runtime->signalLogForOwnAircraft(enable);
                 else if (line.startsWith("set")) runtime->slotLogForSettings(enable);
                 else if (line.startsWith("sim")) runtime->slotLogForSimulator(enable);
                 else if (line.startsWith("all")) runtime->slotLog(enable);

@@ -40,16 +40,16 @@ namespace BlackCore
     public slots: // IContextOwnAircraft overrides
 
         //! \copydoc IContextOwnAircraft::setOwnAircraft()
-        virtual BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) override;
+        virtual void updateOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateOwnPosition()
-        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
+        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateOwnSituation()
-        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
+        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateOwnCockpit()
-        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder) override;
+        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originato4) override;
 
         //! \copydoc IContextOwnAircraft::getOwnAircraft()
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
