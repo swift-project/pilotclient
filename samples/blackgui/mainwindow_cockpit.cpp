@@ -252,7 +252,7 @@ void MainWindow::sendCockpitUpdates()
                 this->m_ownAircraft.getCom2System() != com2 ||
                 this->m_ownAircraft.getTransponder() != transponder)
         {
-            this->getIContextNetwork()->updateOwnCockpit(com1, com2, transponder);
+            this->getIContextOwnAircraft()->updateOwnCockpit(com1, com2, transponder, MainWindow::ownAircraftContextOriginator());
             this->reloadOwnAircraft(); // also loads resolved voice rooms
             changedCockpit = true;
         }

@@ -86,7 +86,7 @@ namespace BlackGui
         BlackMisc::Network::CTextMessage getTextMessageStubForChannel();
 
         //! own aircraft
-        const BlackMisc::Aviation::CAircraft getOwnAircraft() const { Q_ASSERT(this->getIContextNetwork()); return this->getIContextNetwork()->getOwnAircraft(); }
+        const BlackMisc::Aviation::CAircraft getOwnAircraft() const { Q_ASSERT(this->getIContextOwnAircraft()); return this->getIContextOwnAircraft()->getOwnAircraft(); }
 
         //! For this text message's recepient, is the current tab selected?
         bool isCorrespondingTextMessageTabSelected(BlackMisc::Network::CTextMessage textMessage) const;

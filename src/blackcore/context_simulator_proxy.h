@@ -54,9 +54,6 @@ namespace BlackCore
         //! \copydoc IContextSimulator::disconnectFrom
         virtual bool disconnectFrom() override;
 
-        //! \copydoc IContextSimulator::getOwnAircraft()
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
-
         //! \copydoc IContextSimulator::getAircraftModel()
         virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override;
 

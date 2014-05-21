@@ -4,9 +4,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "context_simulator_impl.h"
+#include "context_ownaircraft_impl.h"
+#include "context_runtime.h"
+
 #include <QPluginLoader>
 #include <QLibrary>
-#include "context_runtime.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -25,6 +27,13 @@ namespace BlackCore
 
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
         asyncConnectTo();
+    }
+
+    void CContextSimulator::updateOwnAircraft()
+    {
+        Q_ASSERT(this->getRuntime());
+        Q_ASSERT(this->getRuntime()->getCContextOwnAircraft());
+        this->getRuntime()->getCContextOwnAircraft()->updateOwnAircraft(this->m_simulator->getOwnAircraft(), IContextSimulator::InterfaceName());
     }
 
     CContextSimulator::~CContextSimulator()
@@ -68,7 +77,7 @@ namespace BlackCore
     {
         if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         if (!m_simulator || m_canConnectResult.isRunning()) return; // already checking
-        m_simulator->asyncConnectTo();
+        this->m_canConnectResult = QtConcurrent::run(this, &CContextSimulator::connectTo);
     }
 
     bool CContextSimulator::disconnectFrom()
@@ -76,12 +85,6 @@ namespace BlackCore
         if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         if (!m_simulator) return false;
         return m_simulator->disconnectFrom();
-    }
-
-    BlackMisc::Aviation::CAircraft CContextSimulator::getOwnAircraft() const
-    {
-        if (this->getRuntime()->isSlotLogForSimulatorEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        return m_ownAircraft;
     }
 
     BlackSim::CSimulatorInfo CContextSimulator::getSimulatorInfo() const
@@ -113,7 +116,7 @@ namespace BlackCore
         m_simulator = factory->create(this);
         Q_ASSERT(m_simulator);
 
-        connect(m_simulator, SIGNAL(statusChanged(ISimulator::Status)), this, SLOT(setConnectionStatus(ISimulator::Status)));
+        connect(m_simulator, SIGNAL(connectionChanged(bool)), this, SLOT(setConnectionStatus(bool)));
         return true;
     }
 
@@ -125,26 +128,13 @@ namespace BlackCore
         m_simulator = nullptr;
     }
 
-    void CContextSimulator::updateOwnAircraft()
+    void CContextSimulator::setConnectionStatus(bool value)
     {
-        m_ownAircraft = m_simulator->getOwnAircraft();
-        getIContextNetwork()->updateOwnSituation(m_ownAircraft.getSituation());
-        getIContextNetwork()->updateOwnCockpit(m_ownAircraft.getCom1System(), m_ownAircraft.getCom2System(), m_ownAircraft.getTransponder());
-    }
-
-    void CContextSimulator::setConnectionStatus(ISimulator::Status status)
-    {
-        if (status == ISimulator::Connected)
-        {
+        if (value)
             m_updateTimer->start(100);
-            emit connectionChanged(true);
-        }
         else
-        {
             m_updateTimer->stop();
-            emit connectionChanged(false);
-        }
-
+        emit connectionChanged(value);
     }
 
     void CContextSimulator::findSimulatorPlugins()

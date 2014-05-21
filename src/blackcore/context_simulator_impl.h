@@ -55,9 +55,6 @@ namespace BlackCore
         //! \copydoc IContextSimulator::disconnectFrom
         virtual bool disconnectFrom() override;
 
-        //! \copydoc IContextSimulator::getOwnAircraft()
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
-
         //! \copydoc IContextSimulator::getSimulatorInfo()
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
@@ -84,7 +81,7 @@ namespace BlackCore
 
     private slots:
         //! \copydoc IContextSimulator::updateOwnAircraft()
-        virtual void updateOwnAircraft();
+        void updateOwnAircraft();
 
         //! Set new connection status
         void setConnectionStatus(ISimulator::Status status);
@@ -93,7 +90,6 @@ namespace BlackCore
         //! \brief find and catalog all simulator plugins
         void findSimulatorPlugins();
 
-        BlackMisc::Aviation::CAircraft m_ownAircraft;
         BlackMisc::Network::CAircraftModel m_aircraftModel;
         BlackCore::ISimulator *m_simulator;
 

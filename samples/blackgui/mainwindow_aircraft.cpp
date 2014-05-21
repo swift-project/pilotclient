@@ -24,7 +24,7 @@ bool MainWindow::reloadOwnAircraft()
 
     // check for changed aircraft
     bool changed = false;
-    CAircraft loadedAircraft = this->getIContextNetwork()->getOwnAircraft();
+    CAircraft loadedAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
     if (loadedAircraft != this->m_ownAircraft)
     {
         this->m_ownAircraft = loadedAircraft;
@@ -47,8 +47,5 @@ void MainWindow::setTestPosition(const QString &wgsLatitude, const QString &wgsL
 
     this->m_ownAircraft.setPosition(coordinate);
     this->m_ownAircraft.setAltitude(altitude);
-    this->getIContextNetwork()->updateOwnPosition(
-        coordinate,
-        altitude
-    );
+    this->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude, MainWindow::ownAircraftContextOriginator());
 }

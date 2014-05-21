@@ -219,6 +219,13 @@ private:
     //! Set the hotkeys
     void setHotkeys();
 
+    //! Originator for aircraft context
+    static const QString &ownAircraftContextOriginator()
+    {
+        static const QString o("GUISAMPLE1");
+        return o;
+    }
+
 private slots:
 
     //

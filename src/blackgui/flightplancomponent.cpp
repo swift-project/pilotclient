@@ -242,7 +242,7 @@ namespace BlackGui
     {
         if (this->getIContextNetwork())
         {
-            this->prefillWithAircraftData(this->getIContextNetwork()->getOwnAircraft());
+            this->prefillWithAircraftData(this->getIContextOwnAircraft()->getOwnAircraft());
         }
         this->ui->le_AircraftRegistration->clear();
         this->ui->le_AirlineOperator->clear();

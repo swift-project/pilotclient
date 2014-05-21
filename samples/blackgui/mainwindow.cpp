@@ -201,7 +201,7 @@ void MainWindow::toggleNetworkConnection()
         this->m_ownAircraft.setIcaoInfo(icao);
 
         // send latest aircraft to network/voice
-        this->getIContextNetwork()->setOwnAircraft(this->m_ownAircraft);
+        this->getIContextOwnAircraft()->updateOwnAircraft(this->m_ownAircraft, MainWindow::ownAircraftContextOriginator());
         if (this->m_contextAudioAvailable) this->getIContextAudio()->setOwnAircraft(this->m_ownAircraft);
 
         // Login is based on setting current server
@@ -461,7 +461,7 @@ void MainWindow::updateSimulatorData()
     else
         ui->le_SimulatorStatus->setText("Not connected");
 
-    CAircraft ownAircraft = this->getIContextSimulator()->getOwnAircraft();
+    CAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
     ui->le_SimulatorLatitude->setText(ownAircraft.getSituation().latitude().toFormattedQString());
     ui->le_SimulatorLongitude->setText(ownAircraft.getSituation().longitude().toFormattedQString());
     ui->le_SimulatorAltitude->setText(ownAircraft.getSituation().getAltitude().toFormattedQString());

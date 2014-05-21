@@ -69,9 +69,6 @@ namespace BlackCore
         //! \brief Disconnect from simulator
         virtual bool disconnectFrom() = 0;
 
-        //! Get user aircraft value object
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
-
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
 
