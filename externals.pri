@@ -25,12 +25,23 @@ INCLUDEPATH *= $$EXTERNALDIR/include
 
 # and the library path depending on the used compiler
 
-win32:contains(QMAKE_TARGET.arch, x86_64) {
-    LIBS *= -L$$EXTERNALDIR/vs2010_64/lib
+win32-msvc2010 {
+    win32:contains(QMAKE_TARGET.arch, x86_64) {
+        LIBS *= -L$$EXTERNALDIR/vs2010_64/lib
+    }
+    win32:contains(QMAKE_TARGET.arch, x86) {
+        LIBS *= -L$$EXTERNALDIR/vs2010_32/lib
+        LIBS += -luser32
+    }
 }
-win32:contains(QMAKE_TARGET.arch, x86) {
-    LIBS *= -L$$EXTERNALDIR/vs2010_32/lib
-    LIBS += -luser32
+win32-msvc2013 {
+    win32:contains(QMAKE_TARGET.arch, x86_64) {
+        LIBS *= -L$$EXTERNALDIR/vs2013_64/lib
+    }
+    win32:contains(QMAKE_TARGET.arch, x86) {
+        LIBS *= -L$$EXTERNALDIR/vs2013_32/lib
+        LIBS += -luser32
+    }
 }
 
 win32-g++ {
