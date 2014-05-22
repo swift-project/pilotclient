@@ -461,7 +461,7 @@ QStatusBar QLabel {
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>5</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="pg_StatusPage">
           <property name="sizePolicy">
@@ -571,8 +571,8 @@ QStatusBar QLabel {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>86</width>
-                <height>59</height>
+                <width>326</width>
+                <height>267</height>
                </rect>
               </property>
               <attribute name="label">
@@ -614,8 +614,8 @@ QStatusBar QLabel {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>90</width>
-                <height>55</height>
+                <width>326</width>
+                <height>267</height>
                </rect>
               </property>
               <attribute name="label">
@@ -1379,7 +1379,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QTabWidget" name="tw_Settings">
              <property name="currentIndex">
-              <number>3</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tb_SettingsTrafficNetwork">
               <attribute name="title">
