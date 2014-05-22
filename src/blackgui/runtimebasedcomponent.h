@@ -88,6 +88,12 @@ namespace BlackGui
         //! \remarks use this methods to hook up signal/slots with runtime
         virtual void runtimeHasBeenSet() {}
 
+        //! \copydoc CRuntime::hasRemoteApplicationContext
+        bool hasRemoteApplicationContext() const { return this->m_runtime->hasRemoteApplicationContext(); }
+
+        //! \copydoc CRuntime::canPingApplicationContext
+        bool canPingApplicationContext() const { return this->m_runtime->canPingApplicationContext(); }
+
     private:
         BlackCore::CRuntime *m_runtime;
         bool m_runtimeOwner;

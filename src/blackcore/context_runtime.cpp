@@ -398,6 +398,20 @@ namespace BlackCore
         m_init = true;
     }
 
+    bool CRuntime::hasRemoteApplicationContext() const
+    {
+        Q_ASSERT(this->m_contextApplication);
+        return !this->m_contextApplication->usingLocalObjects();
+    }
+
+    bool CRuntime::canPingApplicationContext() const
+    {
+        Q_ASSERT(this->m_contextApplication);
+        if (this->m_contextApplication->usingLocalObjects()) return true;
+        qint64 token = QDateTime::currentMSecsSinceEpoch();
+        return (token == this->m_contextApplication->ping(token));
+    }
+
     void CRuntime::initDBusServer(const QString &dBusAddress)
     {
         if (this->m_dbusServer) return;

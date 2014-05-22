@@ -187,6 +187,11 @@ namespace BlackCore
         //! Init
         void init(const CRuntimeConfig &config);
 
+        //! Remote application context, indicates distributed environment
+        bool hasRemoteApplicationContext() const;
+
+        //! Is application context available?
+        bool canPingApplicationContext() const;
 
     private:
         bool m_init; /*!< flag */

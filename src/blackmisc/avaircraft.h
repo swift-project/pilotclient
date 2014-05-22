@@ -138,6 +138,9 @@ namespace BlackMisc
             //! \brief Set COM2 system
             void setCom2System(const CComSystem &comSystem) { this->m_com2system = comSystem; }
 
+            //! Identical COM system?
+            bool hasSameComData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder);
+
             //! \brief Is any (COM1/2) active frequency within 8.3383kHz channel?
             bool isActiveFrequencyWithin8_33kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const
             {

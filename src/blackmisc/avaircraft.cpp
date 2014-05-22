@@ -56,6 +56,14 @@ namespace BlackMisc
         }
 
         /*
+         * Same COM system data
+         */
+        bool CAircraft::hasSameComData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder)
+        {
+            return this->getCom1System() == com1 && this->getCom2System() == com2 && this->getTransponder() == transponder;
+        }
+
+        /*
          * Valid for login
          */
         bool CAircraft::isValidForLogin() const
