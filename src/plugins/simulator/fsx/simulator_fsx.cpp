@@ -307,6 +307,20 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::setSimconnectObjectID(DWORD requestID, DWORD objectID)
         {
+            // First check, if this request id belongs to us
+            auto it = m_simConnectObjects.begin();
+            for (; it != m_simConnectObjects.end(); ++it)
+            {
+                if ((*it).getRequestId() == static_cast<int>(requestID))
+                {
+                    break;
+                }
+            }
+
+            if ( it == m_simConnectObjects.end() )
+                return;
+
+            (*it).setObjectId(objectID);
             SimConnect_AIReleaseControl(m_hSimConnect, objectID, requestID);
             SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZELAT, 1,
                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
@@ -319,20 +333,6 @@ namespace BlackSimPlugin
             gearHandle.gearHandlePosition = 1;
 
             SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, objectID, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(gearHandle), &gearHandle);
-
-            CSimConnectObject simObject;
-            auto it = m_simConnectObjects.begin();
-            for (; it != m_simConnectObjects.end(); ++it)
-            {
-                if ((*it).getRequestId() == static_cast<int>(requestID))
-                {
-                    (*it).setObjectId(objectID);
-                    break;
-                }
-            }
-            if (it != m_simConnectObjects.end())
-                m_simConnectObjects.insert(simObject.getCallsign(), simObject);
-
         }
 
         void CSimulatorFsx::timerEvent(QTimerEvent * /* event */)
