@@ -410,7 +410,7 @@ namespace BlackSimPlugin
                     ddAircraftSituation.position = position;
 
                     DataDefinitionGearHandlePosition gearHandle;
-                    gearHandle.gearHandlePosition = 1;
+                    gearHandle.gearHandlePosition = position.Altitude < 1000 ? 1 : 0;
 
                     if (simObj.getObjectId() != 0)
                     {
