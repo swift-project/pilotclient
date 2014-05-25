@@ -321,15 +321,17 @@ namespace BlackSimPlugin
             SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, objectID, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(gearHandle), &gearHandle);
 
             CSimConnectObject simObject;
-            foreach(simObject, m_simConnectObjects)
+            auto it = m_simConnectObjects.begin();
+            for (; it != m_simConnectObjects.end(); ++it)
             {
-                if (simObject.getRequestId()== static_cast<int>(requestID))
+                if ((*it).getRequestId() == static_cast<int>(requestID))
                 {
-                    simObject.setObjectId(objectID);
+                    (*it).setObjectId(objectID);
                     break;
                 }
             }
-            m_simConnectObjects.insert(simObject.getCallsign(), simObject);
+            if (it != m_simConnectObjects.end())
+                m_simConnectObjects.insert(simObject.getCallsign(), simObject);
 
         }
 
