@@ -98,6 +98,28 @@ namespace BlackCore
                                              + headingBegin,
                                              headingBegin.getReferenceNorth()));
 
+        // Interpolate Pitch: Pitch = (PitchB - PitchA) * t + PitchA
+        CAngle pitchBegin = beginSituation.getPitch();
+        CAngle pitchEnd = endSituation.getPitch();
+
+        CAngle pitch = (pitchEnd - pitchBegin) * simulationTime + pitchBegin;
+
+        // TODO: According to the specification, pitch above horizon should be negative.
+        // But somehow we get positive pitches from the network.
+        pitch *= -1;
+        currentSituation.setPitch(pitch);
+
+        // Interpolate bank: Bank = (BankB - BankA) * t + BankA
+        CAngle bankBegin = beginSituation.getBank();
+        CAngle bankEnd = endSituation.getBank();
+
+        CAngle bank = (bankEnd - bankBegin) * simulationTime + bankBegin;
+
+        // TODO: According to the specification, banks to the right should be negative.
+        // But somehow we get positive banks from the network.
+        bank *= -1;
+        currentSituation.setBank(bank);
+
         currentSituation.setGroundspeed((endSituation.getGroundSpeed() - beginSituation.getGroundSpeed())
                                         * simulationTime
                                         + beginSituation.getGroundSpeed());
