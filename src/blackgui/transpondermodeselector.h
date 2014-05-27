@@ -65,8 +65,12 @@ namespace BlackGui
         void setSelectedTransponderModeAsString(const QString &mode);
 
     signals:
+        //! Singal, which makes sure the value is already updated internally
+        void valueChanged();
+
         //! \brief Ident ended
         void identEnded();
+
     };
 } // namespace
 

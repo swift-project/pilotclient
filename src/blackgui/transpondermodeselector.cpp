@@ -65,16 +65,19 @@ namespace BlackGui
         {
             this->m_resetTimer.stop();
         }
+        emit this->valueChanged();
     }
 
     void CTransponderModeSelector::setSelectedTransponderModeAsString(const QString &mode)
     {
-        this->setSelectedTransponderMode(CTransponder::modeFromString(mode));
+        CTransponder::TransponderMode m = CTransponder::modeFromString(mode);
+        if (this->m_currentMode == m) return; // nothing to change
+        this->setSelectedTransponderMode(m);
     }
 
     void CTransponderModeSelector::resetTransponderMode()
     {
-        if (!this->isIdentSelected()) return;
+        if (!this->isIdentSelected()) return; // avoid unnecessary events
         this->setSelectedTransponderMode(this->m_resetMode);
     }
 }
