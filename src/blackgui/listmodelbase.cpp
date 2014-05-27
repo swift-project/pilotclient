@@ -143,6 +143,17 @@ namespace BlackGui
     }
 
     /*
+     * Remove object
+     */
+    template <typename ObjectType, typename ContainerType>
+    void CListModelBase<ObjectType, ContainerType>::remove(const ObjectType &object)
+    {
+        beginRemoveRows(QModelIndex(), 0, 0);
+        this->m_container.remove(object);
+        endRemoveRows();
+    }
+
+    /*
      * Clear
      */
     template <typename ObjectType, typename ContainerType>
