@@ -8,6 +8,7 @@
 
 #include "blackcore/context.h"
 #include "blackmisc/avallclasses.h"
+#include "blackmisc/voiceroomlist.h"
 
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextOwnAircraft"
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_OBJECTPATH "/OwnAircraft"
@@ -41,13 +42,15 @@ namespace BlackCore
 
     signals:
         //! Aircraft situation update
+        //! \remarks local only
         void changedAircraftSituation(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
+
+        //! Aircraft position update
+        //! \remarks local only
+        void changedAircraftPosition(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
 
         //! Aircraft cockpit update
         void changedAircraftCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
-
-        //! Aircraft position update
-        void changedAircraftPosition(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
 
     public slots:
 
@@ -58,13 +61,23 @@ namespace BlackCore
         virtual void updateOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) = 0;
 
         //! Own position, be aware height is terrain height
-        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) = 0;
+        virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) = 0;
 
         //! Complete situation update
-        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) = 0;
+        virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) = 0;
 
         //! Update own cockpit
-        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) = 0;
+        virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) = 0;
+
+        //! Output volumens,  volumes 0..100
+        virtual void setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2) = 0;
+
+        //! Set individual voice rooms (overrides voice rooms)
+        //! \remarks Empty string "" disables voice room override
+        virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url) = 0;
+
+        //! Automatic voice room resolution for frequencies
+        virtual void enableAutomaticVoiceRoomResolution(bool enable) = 0;
 
     protected:
         //! Constructor

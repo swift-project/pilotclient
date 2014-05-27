@@ -33,20 +33,29 @@ namespace BlackCore
 
     public slots: // IContextOwnAircraft overrides
 
+        //! \copydoc IContextOwnAircraft::getOwnAircraft()
+        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
+
         //! \copydoc IContextOwnAircraft::setOwnAircraft()
         virtual void updateOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateOwnPosition()
-        virtual void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) override;
+        virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateOwnSituation()
-        virtual void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) override;
+        virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateOwnCockpit()
-        virtual void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
+        virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::getOwnAircraft()
-        virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
+        //! \copydoc IContextOwnAircraft::setAudioOutputVolumes
+        virtual void setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2) override;
+
+        //! \copydoc IContextOwnAircraft::setAudioVoiceRoomOverrideUrls
+        virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url) override;
+
+        //! \copydoc IContextOwnAircraft::enableAutomaticVoiceRoomResolution
+        virtual void enableAutomaticVoiceRoomResolution(bool enable) override { this->m_automaticVoiceRoomResolution = enable; }
 
     protected:
         //! Constructor, with link to runtime
@@ -60,11 +69,21 @@ namespace BlackCore
             return this;
         }
 
+    private slots:
+        //! Station has been changed, needed to tune in/out voice room
+        void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
+
     private:
         BlackMisc::Aviation::CAircraft m_ownAircraft; //!< my aircraft
+        bool m_automaticVoiceRoomResolution; //!< voice room override
+        QString m_voiceRoom1UrlOverride; //!< overridden voice room url
+        QString m_voiceRoom2UrlOverride; //!< overridden voice room url
 
         //! Init my very own aircraft
         void initOwnAircraft();
+
+        //! Resolve voice rooms
+        void resolveVoiceRooms();
 
     };
 }

@@ -433,13 +433,21 @@ namespace BlackCore
 
         if (this->m_contextSimulator && this->m_contextSimulator->usingLocalObjects() && this->m_contextNetwork)
         {
-            // only connect if simulator running locally, no roundtrips
+            // only connect if simulator running locally, no round trips
             if (this->getCContextSimulator()->m_simulator)
             {
                 c = connect(this->m_contextNetwork, &IContextNetwork::changedAircraftSituation,
                             this->getCContextSimulator()->m_simulator, &ISimulator::addAircraftSituation);
                 Q_ASSERT(c);
             }
+        }
+
+        if (this->m_contextNetwork && this->m_contextOwnAircraft && this->m_contextNetwork->usingLocalObjects() && this->m_contextOwnAircraft->usingLocalObjects())
+        {
+            // only where network and(!) own aircraft run locally
+            c = this->connect(this->m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
+                              this->getCContextOwnAircraft(),  &CContextOwnAircraft::changedAtcStationOnlineConnectionStatus);
+            Q_ASSERT(c);
         }
     }
 
