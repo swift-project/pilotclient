@@ -43,6 +43,9 @@ namespace BlackMisc
             //! Find 0..n stations by callsign
             CAtcStationList findByCallsign(const CCallsign &callsign) const;
 
+            //! Find first station by callsign, if not return given value / default
+            CAtcStation findFirstByCallsign(const CCallsign &callsign, const CAtcStation &ifNotFound = CAtcStation()) const;
+
             //! Find 0..n stations within range of given coordinate
             CAtcStationList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
@@ -64,7 +67,7 @@ namespace BlackMisc
 
             //! Merge with the data from the VATSIM data file
             //! \remarks Can be used if the stored data in this list are VATSIM data file stations
-            int updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const;
+            bool updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const;
         };
 
     } //namespace

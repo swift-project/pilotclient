@@ -49,17 +49,17 @@ namespace BlackGui
         virtual ~CListModelBase() {}
 
         //! \copydoc QAbstractListModel::columnCount()
-        virtual int columnCount(const QModelIndex &modelIndex) const;
+        virtual int columnCount(const QModelIndex &modelIndex) const override;
 
         //! \copydoc QAbstractItemModel::headerData()
-        virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+        virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
         //! Column to property index
         virtual int columnToPropertyIndex(int column) const;
 
         //! Index to property index
         virtual int indexToPropertyIndex(const QModelIndex &index) const
-        {
+         {
             return this->columnToPropertyIndex(index.column());
         }
 
@@ -103,10 +103,10 @@ namespace BlackGui
         }
 
         //! \copydoc QAbstractListModel::data()
-        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QVariant data(const QModelIndex &index, int role) const override;
 
         //! \copydoc QAbstractListModel::rowCount()
-        virtual int rowCount(const QModelIndex &index = QModelIndex()) const;
+        virtual int rowCount(const QModelIndex &index = QModelIndex()) const override;
 
         //! \copydoc QAbstractTableModel::flags
         Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -142,6 +142,6 @@ namespace BlackGui
 
         //! Clear the list
         virtual void clear();
-    };
+};
 }
 #endif // guard

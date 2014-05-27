@@ -62,21 +62,21 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getAtcStationsOnline()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override
         {
-            // this->log(Q_FUNC_INFO);
+            if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
             return m_atcStationsOnline;
         }
 
         //! \copydoc IContextNetwork::getAtcStationsBooked()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override
         {
-            // this->log(Q_FUNC_INFO);
+            if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
             return m_atcStationsBooked;
         }
 
         //! \copydoc IContextNetwork::getAircraftsInRange()
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const override
         {
-            // this->log(Q_FUNC_INFO);
+            if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
             return m_aircraftsInRange;
         }
 

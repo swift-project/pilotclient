@@ -236,32 +236,6 @@
       <item row="5" column="0" colspan="4">
        <widget class="QPlainTextEdit" name="pte_Route"/>
       </item>
-      <item row="0" column="0" rowspan="4">
-       <widget class="QGroupBox" name="gb_Type">
-        <property name="title">
-         <string>1. Type</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QRadioButton" name="rb_TypeVfr">
-           <property name="text">
-            <string>VFR</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="rb_TypeIfr">
-           <property name="text">
-            <string>IFR</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
       <item row="7" column="0">
        <widget class="QLineEdit" name="le_DestinationAirport">
         <property name="inputMask">
@@ -393,6 +367,57 @@
        <widget class="QPushButton" name="pb_ValidateFlightPlan">
         <property name="text">
          <string>Validate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" rowspan="3">
+       <widget class="QGroupBox" name="gb_Type">
+        <property name="title">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <layout class="QVBoxLayout" name="vl_Type">
+         <property name="spacing">
+          <number>2</number>
+         </property>
+         <property name="leftMargin">
+          <number>4</number>
+         </property>
+         <property name="topMargin">
+          <number>2</number>
+         </property>
+         <property name="rightMargin">
+          <number>2</number>
+         </property>
+         <property name="bottomMargin">
+          <number>2</number>
+         </property>
+         <item>
+          <widget class="QRadioButton" name="rb_TypeVfr">
+           <property name="text">
+            <string>VFR</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rb_TypeIfr">
+           <property name="text">
+            <string>IFR</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_Type">
+        <property name="text">
+         <string>1. Type</string>
         </property>
        </widget>
       </item>

@@ -143,7 +143,7 @@ namespace BlackMisc
             const BlackMisc::PhysicalQuantities::CFrequency &getFrequency() const { return m_frequency; }
 
             //! Set frequency
-            void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) { this->m_frequency = frequency; }
+            void setFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency);
 
             //! Get the position of the center of the controller's area of visibility.
             const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return m_position; }

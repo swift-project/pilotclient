@@ -117,7 +117,7 @@ namespace BlackGui
 
         QModelIndex i1 = index.sibling(index.row(), 0);
         QModelIndex i2 = index.sibling(index.row(), this->columnCount(index) - 1);
-        emit this->dataChanged(i1, i2);
+        emit this->dataChanged(i1, i2); // which range has been changed
     }
 
     /*

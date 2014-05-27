@@ -47,6 +47,16 @@ namespace BlackMisc
         }
 
         /*
+         * Find first by callsign
+         */
+        CAtcStation CAtcStationList::findFirstByCallsign(const CCallsign &callsign, const CAtcStation &ifNotFound) const
+        {
+            CAtcStationList stations = findByCallsign(callsign);
+            if (!stations.isEmpty()) return stations[0];
+            return ifNotFound;
+        }
+
+        /*
          * Stations within range
          */
         CAtcStationList CAtcStationList::findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
@@ -178,35 +188,27 @@ namespace BlackMisc
         /*
          * Merge with VATSIM data file
          */
-        int CAtcStationList::updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const
+        bool CAtcStationList::updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const
         {
-            if (this->isEmpty()) return 0;
+            if (this->isEmpty()) return false;
             if (stationToBeUpdated.hasValidRealName() && stationToBeUpdated.hasValidId() && stationToBeUpdated.hasValidFrequency()) return 0;
 
-            int c = 0;
-            for (auto i = this->begin(); i != this->end(); ++i)
+            CAtcStation dataFileStation = this->findFirstByCallsign(stationToBeUpdated.getCallsign());
+            if (dataFileStation.getCallsign().isEmpty()) return false; // not found
+
+            if (!stationToBeUpdated.hasValidRealName() || !stationToBeUpdated.hasValidId())
             {
-                CAtcStation currentDataFileStation = *i;
-                if (currentDataFileStation.getCallsign() != stationToBeUpdated.getCallsign()) continue;
-
-                if (!stationToBeUpdated.hasValidRealName() || !stationToBeUpdated.hasValidId())
-                {
-                    CUser user = stationToBeUpdated.getController();
-                    if (!stationToBeUpdated.hasValidRealName()) user.setRealName(currentDataFileStation.getControllerRealName());
-                    if (!stationToBeUpdated.hasValidId()) user.setId(currentDataFileStation.getControllerId());
-                    stationToBeUpdated.setController(user);
-                }
-
-                if (!stationToBeUpdated.hasValidFrequency())
-                {
-                    stationToBeUpdated.setFrequency(currentDataFileStation.getFrequency());
-                }
-                c++;
+                CUser user = stationToBeUpdated.getController();
+                if (!stationToBeUpdated.hasValidRealName()) user.setRealName(dataFileStation.getControllerRealName());
+                if (!stationToBeUpdated.hasValidId()) user.setId(dataFileStation.getControllerId());
+                stationToBeUpdated.setController(user);
             }
 
-            // normally 1 expected, as I should find
-            // only one online station for this booking
-            return c;
+            if (!stationToBeUpdated.hasValidFrequency())
+            {
+                stationToBeUpdated.setFrequency(dataFileStation.getFrequency());
+            }
+            return true;
         }
     } // namespace
 } // namespace

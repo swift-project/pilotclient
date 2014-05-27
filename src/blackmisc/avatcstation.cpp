@@ -78,7 +78,7 @@ namespace BlackMisc
 
             // frequency
             s.append(' ');
-            s.append(this->m_frequency.toQString(i18n));
+            s.append(this->m_frequency.valueRoundedWithUnit(3,  i18n));
 
             // ATIS
             if (this->hasAtis())
@@ -103,6 +103,7 @@ namespace BlackMisc
             // distance to plane
             if (this->m_distanceToPlane.isPositiveWithEpsilonConsidered())
             {
+                s.append(' ');
                 i18n ? s.append(QCoreApplication::translate("Aviation", "distance")) : s.append("distance");
                 s.append(' ');
                 s.append(this->m_distanceToPlane.toQString(i18n));
@@ -230,6 +231,14 @@ namespace BlackMisc
         bool CAtcStation::operator !=(const CAtcStation &other) const
         {
             return !((*this) == other);
+        }
+
+        /*
+         * Frequency
+         */
+        void CAtcStation::setFrequency(const CFrequency &frequency) {
+            this->m_frequency = frequency;
+            this->m_frequency.setUnit(CFrequencyUnit::MHz());
         }
 
         /*

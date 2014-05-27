@@ -25,27 +25,19 @@ namespace BlackMisc
         class CCallsignList : public CSequence<CCallsign>
         {
         public:
-            /*!
-             * \brief Default constructor.
-             */
+            //! Default constructor.
             CCallsignList();
 
-            /*!
-             * \brief Construct from a base class object.
-             */
+            //! Construct from a base class object.
             CCallsignList(const CSequence<CCallsign> &other);
 
-            /*!
-             * \copydoc CValueObject::toQVariant()
-             */
+            //! CValueObject::toQVariant()
             virtual QVariant toQVariant() const
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Register metadata
-             */
+            //! Register metadata
             static void registerMetadata();
 
         };
