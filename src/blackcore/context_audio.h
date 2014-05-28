@@ -54,15 +54,10 @@ namespace BlackCore
         //! \brief Audio test has been completed
         void audioTestCompleted();
 
+        //! Voice rooms changed
+        void changedVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms);
+
     public slots:
-
-        /*!
-         * Set my own identity for the voice rooms.
-         * \remarks Actually at this time the callsign alone was sufficient. But pass the
-         *          whole aircraft object so further information are present if needed any time later.
-         */
-        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAiricraft) = 0;
-
         //! Get voice rooms for COM1, COM2:
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const = 0;
 
@@ -84,7 +79,7 @@ namespace BlackCore
         virtual BlackMisc::Audio::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const = 0;
 
         //! Set voice rooms
-        virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoom &voiceRoomCom1, const BlackMisc::Audio::CVoiceRoom &voiceRoomCom2) = 0;
+        virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) = 0;
 
         //! Leave all voice rooms
         virtual void leaveAllVoiceRooms() = 0;

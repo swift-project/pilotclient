@@ -32,15 +32,10 @@ namespace BlackCore
         bool s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                     "audioTestCompleted", this, SIGNAL(audioTestCompleted()));
         Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                                    "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList)));
+        Q_ASSERT(s);
         Q_UNUSED(s);
-    }
-
-    /*
-     * Own aircraft
-     */
-    void CContextAudioProxy::setOwnAircraft(const CAircraft &ownAircraft)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("setOwnAircraft"), ownAircraft);
     }
 
     /*
@@ -142,9 +137,9 @@ namespace BlackCore
     /*
      * Set voice rooms
      */
-    void CContextAudioProxy::setComVoiceRooms(const BlackMisc::Audio::CVoiceRoom &voiceRoomCom1, const BlackMisc::Audio::CVoiceRoom &voiceRoomCom2)
+    void CContextAudioProxy::setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms)
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("setComVoiceRooms"), voiceRoomCom1, voiceRoomCom2);
+        this->m_dBusInterface->callDBus(QLatin1Literal("setComVoiceRooms"), voiceRooms);
     }
 
     /*

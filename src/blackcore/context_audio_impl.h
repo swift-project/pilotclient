@@ -17,7 +17,7 @@
 
 namespace BlackCore
 {
-    //! \brief Audio context implementation
+    //! Audio context implementation
     class CContextAudio : public IContextAudio
     {
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAUDIO_INTERFACENAME)
@@ -27,13 +27,10 @@ namespace BlackCore
 
     public:
 
-        //! \brief Destructor
+        //! Destructor
         virtual ~CContextAudio();
 
     public slots:
-        //! \copydoc IContextAudio::setOwnAircraft()
-        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft) override;
-
         //! \copydoc IContextAudio::getComVoiceRooms()
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const override;
 
@@ -46,8 +43,8 @@ namespace BlackCore
         //! \copydoc IContextAudio::getCom2VoiceRoom
         virtual BlackMisc::Audio::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const override;
 
-        //! \copydoc IContextAudio::setComVoiceRooms()
-        virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoom &voiceRoomCom1, const BlackMisc::Audio::CVoiceRoom &voiceRoomCom2) override;
+        //! \copydoc IContextAudio::setComVoiceRooms
+        virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &newRooms) override;
 
         //! \copydoc IContextAudio::getCom1RoomCallsigns()
         virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const override;
@@ -101,10 +98,10 @@ namespace BlackCore
         virtual void enableAudioLoopback(bool enable = true) override;
 
     protected:
-        //! \brief Constructor
+        //! Constructor
         CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
-        //! \brief Register myself in DBus
+        //! Register myself in DBus
         CContextAudio *registerWithDBus(CDBusServer *server)
         {
             if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
@@ -113,7 +110,12 @@ namespace BlackCore
         }
 
     private slots:
+        //! Settings have been changed
         void settingsChanged(uint typeValue);
+
+        //! \copydoc IVoice::connectionStatusChanged
+        //! \sa IContextAudio::changedVoiceRooms
+        void connectionStatusChanged(IVoice::ComUnit comUnit, IVoice::ConnectionStatus oldStatus, IVoice::ConnectionStatus newStatus);
 
     private:
         CVoiceVatlib *m_voice; //!< underlying voice lib

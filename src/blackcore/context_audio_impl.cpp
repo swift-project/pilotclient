@@ -5,12 +5,14 @@
 
 #include "context_audio_impl.h"
 #include "context_network.h"
+#include "context_ownaircraft.h"
+#include "context_application.h"
 
 #include "blacksound/soundgenerator.h"
 #include "blackmisc/notificationsounds.h"
+#include "blackmisc/voiceroomlist.h"
 
 #include <QTimer>
-
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -33,11 +35,17 @@ namespace BlackCore
         m_voice->moveToThread(&m_threadVoice);
         m_threadVoice.start();
 
+        // 2. Hotkeys
         m_keyboard = IKeyboard::getInstance();
 
-        // 2. Signal / slots
+        // 3. own aircraft, if possible
+        if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+
+        // 4. Signal / slots
         connect(this->m_voice, &CVoiceVatlib::micTestFinished, this, &CContextAudio::audioTestCompleted);
         connect(this->m_voice, &CVoiceVatlib::squelchTestFinished, this, &CContextAudio::audioTestCompleted);
+        connect(this->m_voice, &CVoiceVatlib::connectionStatusChanged, this, &CContextAudio::connectionStatusChanged);
+        if (this->getIContextApplication()) this->connect(this->m_voice, &IVoice::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
     }
 
     /*
@@ -48,16 +56,6 @@ namespace BlackCore
         this->leaveAllVoiceRooms();
         m_threadVoice.quit();
         m_threadVoice.wait(1000);
-    }
-
-    /*
-     * Own aircraft
-     */
-    void CContextAudio::setOwnAircraft(const CAircraft &ownAircraft)
-    {
-        Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, ownAircraft.toQString());
-        this->m_voice->setMyAircraftCallsign(ownAircraft.getCallsign());
     }
 
     /*
@@ -80,7 +78,7 @@ namespace BlackCore
         if (withAudioStatus)
             return this->m_voice->getComVoiceRoomsWithAudioStatus()[0];
         else
-            return this->m_voice->getComVoiceRooms()[1];
+            return this->m_voice->getComVoiceRooms()[0];
     }
 
     /*
@@ -164,8 +162,10 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, com1.toQString(), com2.toQString());
-        this->m_voice->setRoomOutputVolume(IVoice::COM1, com1.getVolumeOutput());
-        this->m_voice->setRoomOutputVolume(IVoice::COM2, com2.getVolumeOutput());
+        qint32 vol1 = com1.getVolumeOutput();
+        qint32 vol2 = com2.getVolumeOutput();
+        this->m_voice->setRoomOutputVolume(IVoice::COM1, vol1);
+        this->m_voice->setRoomOutputVolume(IVoice::COM2, vol2);
         this->m_voice->switchAudioOutput(IVoice::COM1, com1.isEnabled());
         this->m_voice->switchAudioOutput(IVoice::COM2, com2.isEnabled());
     }
@@ -183,23 +183,36 @@ namespace BlackCore
     /*
      * Set voice rooms
      */
-    void CContextAudio::setComVoiceRooms(const CVoiceRoom &voiceRoomCom1, const CVoiceRoom &voiceRoomCom2)
+    void CContextAudio::setComVoiceRooms(const CVoiceRoomList &newRooms)
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, voiceRoomCom1.toQString(), voiceRoomCom2.toQString());
-        CVoiceRoomList currentRooms =  this->m_voice->getComVoiceRoomsWithAudioStatus();
+        Q_ASSERT(newRooms.size() == 2);
+        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, newRooms.toQString());
+        CVoiceRoomList currentRooms =  this->m_voice->getComVoiceRooms();
         CVoiceRoom currentRoom1 = currentRooms[0];
         CVoiceRoom currentRoom2 = currentRooms[1];
-        if (currentRoom1 != voiceRoomCom1)
+        CVoiceRoom newRoom1 = newRooms[0];
+        CVoiceRoom newRoom2 = newRooms[1];
+
+        bool changed = false;
+
+        // changed rooms?  But only compare on "URL",  not status as connected etc.
+        if (currentRoom1.getVoiceRoomUrl() != newRoom1.getVoiceRoomUrl())
         {
-            if (currentRoom1.isValid()) this->m_voice->leaveVoiceRoom(IVoice::COM1);
-            if (voiceRoomCom1.isValid()) this->m_voice->joinVoiceRoom(IVoice::COM1, voiceRoomCom1);
+            this->m_voice->leaveVoiceRoom(IVoice::COM1);
+            if (newRoom1.isValid()) this->m_voice->joinVoiceRoom(IVoice::COM1, newRoom1);
+            changed = true;
         }
-        if (currentRoom2 != voiceRoomCom2)
+        if (currentRoom2.getVoiceRoomUrl() != newRoom2.getVoiceRoomUrl())
         {
-            if (currentRoom2.isValid()) this->m_voice->leaveVoiceRoom(IVoice::COM2);
-            if (voiceRoomCom2.isValid()) this->m_voice->joinVoiceRoom(IVoice::COM2, voiceRoomCom2);
+            this->m_voice->leaveVoiceRoom(IVoice::COM2);
+            if (newRoom2.isValid()) this->m_voice->joinVoiceRoom(IVoice::COM2, newRoom2);
+            changed = true;
         }
+
+        // changed not yet used, but I keep it for debugging
+        // changedVoiceRooms called by connectionStatusChanged;
+        Q_UNUSED(changed);
     }
 
     /*
@@ -209,7 +222,9 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        return this->m_voice->getVoiceRoomCallsigns(IVoice::COM1);
+        CCallsignList callsigns = this->m_voice->getVoiceRoomCallsigns(IVoice::COM1);
+        qDebug() << "1" << callsigns;
+        return callsigns;
     }
 
     /*
@@ -219,7 +234,9 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        return this->m_voice->getVoiceRoomCallsigns(IVoice::COM2);
+        CCallsignList callsigns = this->m_voice->getVoiceRoomCallsigns(IVoice::COM2);
+        qDebug() << "2" << callsigns;
+        return callsigns;
     }
 
     /*
@@ -243,7 +260,7 @@ namespace BlackCore
         Q_ASSERT(this->getRuntime());
         if (!this->getRuntime()->getIContextNetwork()) return Network::CUserList();
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        return this->getRuntime()->getIContextNetwork()->getUsersForCallsigns(this->getCom2RoomCallsigns());
+        return this->getIContextNetwork()->getUsersForCallsigns(this->getCom2RoomCallsigns());
     }
 
     /*
@@ -319,6 +336,7 @@ namespace BlackCore
      */
     void CContextAudio::settingsChanged(uint typeValue)
     {
+        if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
         if (!this->getIContextSettings()) return;
         IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
         if (type == IContextSettings::SettingsHotKeys)
@@ -328,6 +346,29 @@ namespace BlackCore
             CKeyboardKey pttKey = hotKeys.findBy(&BlackMisc::Hardware::CKeyboardKey::getFunction, BlackMisc::Hardware::CKeyboardKey::HotkeyPtt).front();
             m_keyboard->unregisterHotkey(m_handlePtt);
             m_handlePtt = m_keyboard->registerHotkey(pttKey, m_voice, &CVoiceVatlib::handlePushToTalk);
+        }
+    }
+
+    /*
+     * Connection status changed
+     */
+    void CContextAudio::connectionStatusChanged(IVoice::ComUnit comUnit, IVoice::ConnectionStatus oldStatus, IVoice::ConnectionStatus newStatus)
+    {
+        Q_UNUSED(comUnit);
+        Q_UNUSED(oldStatus);
+
+        switch (newStatus)
+        {
+        case IVoice::Connected:
+            emit this->changedVoiceRooms(this->m_voice->getComVoiceRooms());
+            break;
+        case IVoice::Disconnecting:
+            emit this->changedVoiceRooms(this->m_voice->getComVoiceRooms());
+            // good chance to update aircraft
+            if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+            break;
+        default:
+            break;
         }
     }
 

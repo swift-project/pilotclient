@@ -44,10 +44,6 @@ namespace BlackCore
         CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
     public slots:
-
-        //! \copydoc IContextAudio::setOwnAircraft()
-        virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft) override;
-
         //! \copydoc IContextAudio::getComVoiceRooms()
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const override;
 
@@ -61,7 +57,7 @@ namespace BlackCore
         virtual BlackMisc::Audio::CVoiceRoom getCom2VoiceRoom(bool withAudioStatus) const override;
 
         //! \copydoc IContextAudio::setComVoiceRooms()
-        virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoom &voiceRoomCom1, const BlackMisc::Audio::CVoiceRoom &voiceRoomCom2) override;
+        virtual void setComVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms) override;
 
         //! \copydoc IContextAudio::getCom1RoomCallsigns()
         virtual BlackMisc::Aviation::CCallsignList getCom1RoomCallsigns() const override;
