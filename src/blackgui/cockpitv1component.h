@@ -11,7 +11,9 @@ namespace Ui { class CCockpitV1Component; }
 namespace BlackGui
 {
 
-    //! User componenet (users, clients)
+    /*!
+     * User componenet (users, clients)
+     */
     class CCockpitV1Component : public QWidget, public CRuntimeBasedComponent
     {
         Q_OBJECT
@@ -24,7 +26,19 @@ namespace BlackGui
         ~CCockpitV1Component();
 
         //! Set external push buttons
-        void setExternalButtons(QPushButton *cockpitIdent, QPushButton *cockpitSelected);
+        void setExternalIdentButton(QPushButton *cockpitIdent);
+
+        //! Volume 0..100 for COM1
+        int getCom1Volume() const;
+
+        //! Volume 0..100 for COM1
+        int getCom2Volume() const;
+
+        //! Pixmap for voice status
+        void setCockpitVoiceStatusPixmap(const QPixmap &pixmap);
+
+        //! Object one of the volume widgets?
+        bool isCockpitVolumeWidget(const QObject *sender) const;
 
         //! Originator for signals
         static const QString &cockpitOriginator();
@@ -36,34 +50,55 @@ namespace BlackGui
         //! set SELCAL code
         QString getSelcalCode() const;
 
+        //! Volume 0..100 for COM1
+        void setCom1Volume(int volume);
+
+        //! Volume 0..100 for COM2
+        void setCom2Volume(int volume);
+
+    signals:
+        //! Audio volume changed
+        void audioVolumeChanged();
+
+    protected:
+        //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+        virtual void runtimeHasBeenSet() override;
+
     private slots:
         //! Test SELCAL
         void testSelcal();
 
-        //! Code values changed
+        //! Cockpit values changed from GUI
         void cockpitValuesChanged();
 
-        //! Cockpit updates
-        void sendCockpitUpdates();
+        //! Update voice rooms from list
+        void updateAudioVoiceRoomsFromObject(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms);
+
+        //! Update the voice room members
+        void updateVoiceRoomMembers();
 
     private:
         Ui::CCockpitV1Component *ui;
-        QPushButton *pb_ExternalCockpitIdent;
-        QPushButton *pb_ExternalCockpitSelected;
+        QPushButton *m_externalCockpitIdentButton; //!< External ident button
+        QTimer *m_voiceRoomMembersTimer;
 
-        BlackMisc::Aviation::CAircraft m_ownAircraft; //!< DBus fail safe copy of last state, not used as long as DBus is working / not used with local context as well
-
-        //! Own aircraft object, normally via context (in case of failure, backup object)
+        //! Own aircraft object
         BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
-        //! COM frequencies displays
-        void updateComFrequencyDisplays(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+        //! Cockpit from aircraft object
+        void updateCockpitFromObject(const BlackMisc::Aviation::CAircraft &ownAircraft);
 
-        //! Reset transponder
-        void resetTransponderMode();
+        //! COM frequencies displays
+        void updateComFrequencyDisplaysFromObjects(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+
+        //! Cockpit updates
+        bool sendCockpitUpdates(const BlackMisc::Aviation::CAircraft &ownAircraft);
 
         //! Set audio voice rooms
-        void setAudioVoiceRooms();
+        void setAudioVoiceRoomUrls();
+
+        //! cockpit values to object, including back annotation
+        BlackMisc::Aviation::CAircraft cockpitValuesToObject();
 
     };
 }

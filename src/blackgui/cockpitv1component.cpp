@@ -18,11 +18,10 @@ using namespace BlackMisc::Settings;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Audio;
 
-
 namespace BlackGui
 {
     CCockpitV1Component::CCockpitV1Component(QWidget *parent) :
-        QWidget(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CCockpitV1Component), pb_ExternalCockpitIdent(nullptr), pb_ExternalCockpitSelected(nullptr)
+        QWidget(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CCockpitV1Component), m_externalCockpitIdentButton(nullptr), m_voiceRoomMembersTimer(nullptr)
     {
         ui->setupUi(this);
 
@@ -36,26 +35,43 @@ namespace BlackGui
         this->ui->cb_CockpitSelcal1->addItems(BlackMisc::Aviation::CSelcal::codePairs());
         this->ui->cb_CockpitSelcal2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
 
-
-        // cockpit
-        bool connected = this->connect(this->ui->cbp_CockpitTransponderMode, SIGNAL(currentIndexChanged(QString)), this, SLOT(cockpitValuesChanged()));
-        Q_ASSERT(connected);
+        // cockpit GUI events
         this->connect(this->ui->ds_CockpitCom1Active, &QDoubleSpinBox::editingFinished, this, &CCockpitV1Component::cockpitValuesChanged);
         this->connect(this->ui->ds_CockpitCom2Active, &QDoubleSpinBox::editingFinished, this, &CCockpitV1Component::cockpitValuesChanged);
         this->connect(this->ui->ds_CockpitCom1Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitV1Component::cockpitValuesChanged);
         this->connect(this->ui->ds_CockpitCom2Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitV1Component::cockpitValuesChanged);
         this->connect(this->ui->ds_CockpitTransponder, &QDoubleSpinBox::editingFinished, this, &CCockpitV1Component::cockpitValuesChanged);
 
-        this->connect(this->ui->cb_CockpitVoiceRoom1Override, &QCheckBox::clicked, this, &CCockpitV1Component::setAudioVoiceRooms);
-        this->connect(this->ui->cb_CockpitVoiceRoom2Override, &QCheckBox::clicked, this, &CCockpitV1Component::setAudioVoiceRooms);
-        this->connect(this->ui->le_CockpitVoiceRoomCom1, &QLineEdit::returnPressed, this, &CCockpitV1Component::setAudioVoiceRooms);
-        this->connect(this->ui->le_CockpitVoiceRoomCom2, &QLineEdit::returnPressed, this, &CCockpitV1Component::setAudioVoiceRooms);
+        this->connect(this->ui->cb_CockpitVoiceRoom1Override, &QCheckBox::clicked, this, &CCockpitV1Component::setAudioVoiceRoomUrls);
+        this->connect(this->ui->cb_CockpitVoiceRoom2Override, &QCheckBox::clicked, this, &CCockpitV1Component::setAudioVoiceRoomUrls);
+        this->connect(this->ui->le_CockpitVoiceRoomCom1, &QLineEdit::returnPressed, this, &CCockpitV1Component::setAudioVoiceRoomUrls);
+        this->connect(this->ui->le_CockpitVoiceRoomCom2, &QLineEdit::returnPressed, this, &CCockpitV1Component::setAudioVoiceRoomUrls);
         this->connect(this->ui->pb_CockpitToggleCom1, &QPushButton::clicked, this, &CCockpitV1Component::cockpitValuesChanged);
         this->connect(this->ui->pb_CockpitToggleCom2, &QPushButton::clicked, this, &CCockpitV1Component::cockpitValuesChanged);
         this->connect(this->ui->pb_CockpitSelcalTest, &QPushButton::clicked, this, &CCockpitV1Component::testSelcal);
-        this->connect(this->ui->cbp_CockpitTransponderMode, &CTransponderModeSelector::identEnded, this, &CCockpitV1Component::resetTransponderMode);
 
-        Q_UNUSED(connected);
+        this->connect(this->ui->cbp_CockpitTransponderMode, &CTransponderModeSelector::valueChanged, this, &CCockpitV1Component::cockpitValuesChanged);
+
+        this->connect(this->ui->di_CockpitCom1Volume, &QDial::valueChanged, this, &CCockpitV1Component::setCom1Volume);
+        this->connect(this->ui->di_CockpitCom2Volume, &QDial::valueChanged, this, &CCockpitV1Component::setCom2Volume);
+
+        // timer
+        this->m_voiceRoomMembersTimer  = new QTimer(this);
+        this->connect(this->m_voiceRoomMembersTimer,  &QTimer::timeout, this, &CCockpitV1Component::updateVoiceRoomMembers);
+        this->m_voiceRoomMembersTimer->start(10 * 1000);
+    }
+
+    void CCockpitV1Component::runtimeHasBeenSet()
+    {
+        // hook up with changes from own aircraft context
+        Q_ASSERT(this->getIContextOwnAircraft());
+        this->connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitV1Component::updateCockpitFromContext);
+
+        // Audio is optional
+        if (this->getIContextAudio())
+        {
+            this->connect(this->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitV1Component::updateAudioVoiceRoomsFromObject);
+        }
     }
 
     CCockpitV1Component::~CCockpitV1Component()
@@ -63,15 +79,53 @@ namespace BlackGui
         delete ui;
     }
 
-    void CCockpitV1Component::setExternalButtons(QPushButton *cockpitIdent, QPushButton *cockpitSelected)
+    void CCockpitV1Component::setExternalIdentButton(QPushButton *cockpitIdent)
     {
-        if (this->pb_ExternalCockpitIdent) disconnect(this->pb_ExternalCockpitIdent);
+        if (this->m_externalCockpitIdentButton) disconnect(this->m_externalCockpitIdentButton);
+        this->m_externalCockpitIdentButton = cockpitIdent;
+        if (this->m_externalCockpitIdentButton) this->connect(this->m_externalCockpitIdentButton, &QPushButton::clicked, this, &CCockpitV1Component::cockpitValuesChanged);
+    }
 
-        this->pb_ExternalCockpitIdent = cockpitIdent;
-        this->pb_ExternalCockpitSelected = cockpitSelected;
+    void CCockpitV1Component::setCom1Volume(int volume)
+    {
+        if (volume > 100) volume = 100;
+        if (volume < 0) volume = 0;
+        if (QObject::sender() != ui->di_CockpitCom1Volume)
+            this->ui->di_CockpitCom1Volume->setValue(volume);
+        this->getIContextOwnAircraft()->setAudioOutputVolumes(volume, this->ui->di_CockpitCom2Volume->value());
+        emit this->audioVolumeChanged();
+    }
 
-        if (this->pb_ExternalCockpitIdent)
-            this->connect(this->pb_ExternalCockpitIdent, &QPushButton::clicked, this, &CCockpitV1Component::cockpitValuesChanged);
+    void CCockpitV1Component::setCom2Volume(int volume)
+    {
+        if (volume > 100) volume = 100;
+        if (volume < 0) volume = 0;
+        if (QObject::sender() != ui->di_CockpitCom2Volume)
+            this->ui->di_CockpitCom2Volume->setValue(volume);
+        this->getIContextOwnAircraft()->setAudioOutputVolumes(this->ui->di_CockpitCom1Volume->value(), volume);
+        emit this->audioVolumeChanged();
+    }
+
+    int CCockpitV1Component::getCom1Volume() const
+    {
+        return this->ui->di_CockpitCom1Volume->value();
+    }
+
+    int CCockpitV1Component::getCom2Volume() const
+    {
+        return this->ui->di_CockpitCom2Volume->value();
+    }
+
+    void CCockpitV1Component::setCockpitVoiceStatusPixmap(const QPixmap &pixmap)
+    {
+        this->ui->lbl_CockpitVoiceStatus->setPixmap(pixmap);
+    }
+
+    bool CCockpitV1Component::isCockpitVolumeWidget(const QObject *sender) const
+    {
+        return
+            sender == this->ui->di_CockpitCom1Volume ||
+            sender == this->ui->di_CockpitCom2Volume;
     }
 
     const QString &CCockpitV1Component::cockpitOriginator()
@@ -88,15 +142,11 @@ namespace BlackGui
 
         // non local
         if (this->canPingApplicationContext()) return this->getIContextOwnAircraft()->getOwnAircraft();
-        return this->m_ownAircraft;
+        return CAircraft(); // anything better here, or status?
     }
 
-    /*
-     * Cockpit values
-     */
     void CCockpitV1Component::cockpitValuesChanged()
     {
-        // frequency switch?
         QObject *sender = QObject::sender();
         if (sender == this->ui->pb_CockpitToggleCom1)
         {
@@ -112,30 +162,114 @@ namespace BlackGui
             this->ui->ds_CockpitCom2Active->setValue(this->ui->ds_CockpitCom2Standby->value());
             this->ui->ds_CockpitCom2Standby->setValue(f);
         }
-        else if (this->pb_ExternalCockpitIdent && sender == this->pb_ExternalCockpitSelected)
+        else if (sender == this->ui->cbp_CockpitTransponderMode)
         {
-            // trigger the real button
+            // toggle the external button
             if (this->ui->cbp_CockpitTransponderMode->isIdentSelected())
             {
-                this->pb_ExternalCockpitIdent->setStyleSheet("");
+                if (this->m_externalCockpitIdentButton) this->m_externalCockpitIdentButton->setStyleSheet("background: red");
+            }
+            else
+            {
+                if (this->m_externalCockpitIdentButton) this->m_externalCockpitIdentButton->setStyleSheet("");
+            }
+        }
+        else if (sender == this->m_externalCockpitIdentButton)
+        {
+            // toggle the combo box
+            if (this->ui->cbp_CockpitTransponderMode->isIdentSelected())
+            {
                 this->ui->cbp_CockpitTransponderMode->resetTransponderMode();
             }
             else
             {
-                this->pb_ExternalCockpitIdent->setStyleSheet("background: red");
                 this->ui->cbp_CockpitTransponderMode->setSelectedTransponderModeStateIdent(); // trigger real button and whole process
             }
-            return;
         }
 
+        CAircraft ownAircraft = this->cockpitValuesToObject();
+        this->sendCockpitUpdates(ownAircraft);
     }
 
-    /*
-     * Own cockpit
-     */
+    CAircraft CCockpitV1Component::cockpitValuesToObject()
+    {
+
+        CAircraft ownAircraft = this->getOwnAircraft();
+        CTransponder transponder = ownAircraft.getTransponder();
+        CComSystem com1 = ownAircraft.getCom1System();
+        CComSystem com2 = ownAircraft.getCom2System();
+
+        //
+        // Transponder
+        //
+        QString transponderCode = QString::number(qRound(this->ui->ds_CockpitTransponder->value()));
+        if (CTransponder::isValidTransponderCode(transponderCode))
+        {
+            transponder.setTransponderCode(transponderCode);
+        }
+        else
+        {
+            this->sendStatusMessage(CStatusMessage::getValidationError("Wrong transponder code, reset"));
+            this->ui->ds_CockpitTransponder->setValue(transponder.getTransponderCode());
+        }
+        transponder.setTransponderMode(this->ui->cbp_CockpitTransponderMode->getSelectedTransponderMode());
+
+        //
+        // COM units
+        //
+        com1.setFrequencyActiveMHz(this->ui->ds_CockpitCom1Active->value());
+        com1.setFrequencyStandbyMHz(this->ui->ds_CockpitCom1Standby->value());
+        com2.setFrequencyActiveMHz(this->ui->ds_CockpitCom2Active->value());
+        com2.setFrequencyStandbyMHz(this->ui->ds_CockpitCom2Standby->value());
+        this->updateComFrequencyDisplaysFromObjects(com1, com2); // back annotation after rounding
+
+        ownAircraft.setCom1System(com1);
+        ownAircraft.setCom2System(com2);
+        ownAircraft.setTransponder(transponder);
+        return ownAircraft;
+    }
+
+    void CCockpitV1Component::updateComFrequencyDisplaysFromObjects(const CComSystem &com1, const CComSystem &com2)
+    {
+        double freq = com1.getFrequencyActive().valueRounded(3);
+        if (freq != this->ui->ds_CockpitCom1Active->value())
+            this->ui->ds_CockpitCom1Active->setValue(freq);
+
+        freq = com2.getFrequencyActive().valueRounded(3);
+        if (freq != this->ui->ds_CockpitCom2Active->value())
+            this->ui->ds_CockpitCom2Active->setValue(freq);
+
+        freq = com1.getFrequencyStandby().valueRounded(3);
+        if (freq != this->ui->ds_CockpitCom1Standby->value())
+            this->ui->ds_CockpitCom1Standby->setValue(freq);
+
+        freq = com2.getFrequencyStandby().valueRounded(3);
+        if (freq != this->ui->ds_CockpitCom2Standby->value())
+            this->ui->ds_CockpitCom2Standby->setValue(freq);
+    }
+
+    void CCockpitV1Component::updateCockpitFromObject(const CAircraft &ownAircraft)
+    {
+        // update GUI elements
+        // avoid unnecessary change events as far as possible
+        const CComSystem com1 = ownAircraft.getCom1System(); // aircraft just updated or set from context
+        const CComSystem com2 = ownAircraft.getCom2System();
+        const CTransponder transponder = ownAircraft.getTransponder();
+
+        // update the frequencies
+        this->updateComFrequencyDisplaysFromObjects(com1, com2);
+
+        // update transponder
+        qint32 tc = transponder.getTransponderCode();
+        if (tc != static_cast<qint32>(this->ui->ds_CockpitTransponder->value()))
+            this->ui->ds_CockpitTransponder->setValue(tc);
+
+        this->ui->cbp_CockpitTransponderMode->setSelectedTransponderMode(transponder.getTransponderMode());
+    }
+
     void CCockpitV1Component::updateCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
     {
-        Q_UNUSED(originator);
+        if (originator == CCockpitV1Component::cockpitOriginator()) return; // comes from myself
 
         // update GUI elements
         // avoid unnecessary change events as far as possible
@@ -144,9 +278,9 @@ namespace BlackGui
         const CTransponder transponder = ownAircraft.getTransponder();
 
         // update the frequencies
-        this->updateComFrequencyDisplays(com1, com2);
+        this->updateComFrequencyDisplaysFromObjects(com1, com2);
 
-        // update transponder if this is not input focused
+        // update transponder
         qint32 tc = transponder.getTransponderCode();
         if (tc != static_cast<qint32>(this->ui->ds_CockpitTransponder->value()))
             this->ui->ds_CockpitTransponder->setValue(tc);
@@ -167,185 +301,84 @@ namespace BlackGui
             else
                 this->ui->lbl_CockpitCom2->setToolTip(com2Station.getCallsign().getStringAsSet());
         }
-
-        //
-        // Voice room override
-        //
-        if (this->getIContextAudio())
-        {
-            // get all rooms, it is important to get the rooms from voice context here
-            // these are the ones featuring the real audio status
-            CVoiceRoomList rooms = this->getIContextAudio()->getComVoiceRoomsWithAudioStatus();
-            Q_ASSERT(rooms.size() == 2);
-
-            CVoiceRoom room1 = rooms[0];
-            CVoiceRoom room2 = rooms[1];
-            bool com1Connected = room1.isConnected();
-            bool com2Connected = room2.isConnected();
-
-            // update views
-            this->ui->tvp_CockpitVoiceRoom1->update(this->getIContextAudio()->getCom1RoomUsers());
-            this->ui->tvp_CockpitVoiceRoom1->update(this->getIContextAudio()->getCom1RoomUsers());
-
-            // highlite voice room according to status
-            QString vrStyle1;
-            QString vrStyle2;
-            if (!room1.getVoiceRoomUrl(true).isEmpty()) vrStyle1 = com1Connected ? "background: green" : "background: red";
-            if (!room2.getVoiceRoomUrl(true).isEmpty()) vrStyle2 = com2Connected ? "background: green" : "background: red";
-            this->ui->le_CockpitVoiceRoomCom1->setStyleSheet(vrStyle1);
-            this->ui->le_CockpitVoiceRoomCom2->setStyleSheet(vrStyle2);
-
-            // display URL if not override mode
-            if (!this->ui->cb_CockpitVoiceRoom1Override->isChecked())
-            {
-                // no override
-                QString s = room1.getVoiceRoomUrl();
-                this->ui->le_CockpitVoiceRoomCom1->setText(s);
-            }
-
-            // display URL if not override mode
-            if (!this->ui->cb_CockpitVoiceRoom2Override->isChecked())
-            {
-                // no overrride
-                QString s = room2.getVoiceRoomUrl();
-                this->ui->le_CockpitVoiceRoomCom2->setText(s);
-            }
-        }
     }
 
-    /*
-     * Round the com frequency displays
-     */
-    void CCockpitV1Component::updateComFrequencyDisplays(const CComSystem &com1, const CComSystem &com2)
+    bool CCockpitV1Component::sendCockpitUpdates(const CAircraft &ownAircraft)
     {
-        // do not just set! Leads to unwanted signals fired
-        // only update if not focused
-
-        double freq = com1.getFrequencyActive().valueRounded(3);
-        if (freq != this->ui->ds_CockpitCom1Active->value())
-            this->ui->ds_CockpitCom1Active->setValue(freq);
-
-        freq = com2.getFrequencyActive().valueRounded(3);
-        if (freq != this->ui->ds_CockpitCom2Active->value())
-            this->ui->ds_CockpitCom2Active->setValue(freq);
-
-        freq = com1.getFrequencyStandby().valueRounded(3);
-        if (freq != this->ui->ds_CockpitCom1Standby->value())
-            this->ui->ds_CockpitCom1Standby->setValue(freq);
-
-        freq = com2.getFrequencyStandby().valueRounded(3);
-        if (freq != this->ui->ds_CockpitCom2Standby->value())
-            this->ui->ds_CockpitCom2Standby->setValue(freq);
-    }
-
-    /*
-     * Reset transponder mode to Standby / Charly
-     */
-    void CCockpitV1Component::resetTransponderMode()
-    {
-        if (!this->pb_ExternalCockpitIdent) return;
-        this->pb_ExternalCockpitIdent->setStyleSheet("");
-    }
-
-    /*
-     * Send cockpit updates
-     */
-    void CCockpitV1Component::sendCockpitUpdates()
-    {
-        CTransponder transponder = this->m_ownAircraft.getTransponder();
-        CComSystem com1 = this->m_ownAircraft.getCom1System();
-        CComSystem com2 = this->m_ownAircraft.getCom2System();
-
-        //
-        // Transponder
-        //
-        QString transponderCode = QString::number(qRound(this->ui->ds_CockpitTransponder->value()));
-        if (CTransponder::isValidTransponderCode(transponderCode))
-        {
-            transponder.setTransponderCode(transponderCode);
-        }
-        else
-        {
-            this->sendStatusMessage(CStatusMessage::getValidationError("Wrong transponder code, reset"));
-            this->ui->ds_CockpitTransponder->setValue(transponder.getTransponderCode());
-        }
-
-        transponder.setTransponderMode(this->ui->cbp_CockpitTransponderMode->getSelectedTransponderMode());
-        if (this->pb_ExternalCockpitIdent && this->ui->cbp_CockpitTransponderMode->isIdentSelected())
-        {
-            // ident shall be sent for some time, then reset
-            this->pb_ExternalCockpitIdent->setStyleSheet("background: red");
-        }
-
-        //
-        // COM units
-        //
-        com1.setFrequencyActiveMHz(this->ui->ds_CockpitCom1Active->value());
-        com1.setFrequencyStandbyMHz(this->ui->ds_CockpitCom1Standby->value());
-        com2.setFrequencyActiveMHz(this->ui->ds_CockpitCom2Active->value());
-        com2.setFrequencyStandbyMHz(this->ui->ds_CockpitCom2Standby->value());
-        this->updateComFrequencyDisplays(com1, com2);
-
         //
         // Send to context
         //
         bool changedCockpit = false;
         if (this->getIContextOwnAircraft())
         {
-            CAircraft ownAircraft = this->getOwnAircraft();
-            if (!ownAircraft.hasSameComData(com1, com2, transponder))
-            {
-                this->getIContextOwnAircraft()->updateOwnCockpit(com1, com2, transponder, CCockpitV1Component::cockpitOriginator());
-                changedCockpit = true;
-            }
+            changedCockpit =  this->getIContextOwnAircraft()->updateOwnCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), CCockpitV1Component::cockpitOriginator());
         }
-
-        //
-        // Now with the new voice room data, really set the
-        // voice rooms in the context
-        //
-        if (changedCockpit) this->setAudioVoiceRooms();
+        return changedCockpit;
     }
 
-    /*
-     * Voice room override
-     */
-    void CCockpitV1Component::setAudioVoiceRooms()
+    void CCockpitV1Component::setAudioVoiceRoomUrls()
     {
+        Q_ASSERT(this->getIContextOwnAircraft());
+
         // make fields readonly if not overriding
         this->ui->le_CockpitVoiceRoomCom1->setReadOnly(!this->ui->cb_CockpitVoiceRoom1Override->isChecked());
         this->ui->le_CockpitVoiceRoomCom2->setReadOnly(!this->ui->cb_CockpitVoiceRoom2Override->isChecked());
 
-        CVoiceRoom room1;
-        CVoiceRoom room2;
-        CVoiceRoomList selectedVoiceRooms = this->getIContextNetwork()->getSelectedVoiceRooms();
-        Q_ASSERT(selectedVoiceRooms.size() == 2);
-
-        if (this->ui->cb_CockpitVoiceRoom1Override->isChecked())
-            room1 = CVoiceRoom(this->ui->le_CockpitVoiceRoomCom1->text().trimmed());
-        else
-        {
-            room1 = selectedVoiceRooms[0];
-            room1.setAudioPlaying(true);
-            this->ui->le_CockpitVoiceRoomCom1->setText(room1.getVoiceRoomUrl());
-        }
-
-        if (this->ui->cb_CockpitVoiceRoom2Override->isChecked())
-            room2 = CVoiceRoom(this->ui->le_CockpitVoiceRoomCom1->text().trimmed());
-        else
-        {
-            room2 = selectedVoiceRooms[1];
-            room2.setAudioPlaying(true);
-            this->ui->le_CockpitVoiceRoomCom2->setText(room2.getVoiceRoomUrl());
-        }
-
-        // set the real voice rooms for audio output
-        this->getIContextAudio()->setComVoiceRooms(room1, room2);
+        QString room1;
+        QString room2;
+        if (this->ui->cb_CockpitVoiceRoom1Override->isChecked()) room1 = ui->le_CockpitVoiceRoomCom1->text();
+        if (this->ui->cb_CockpitVoiceRoom2Override->isChecked()) room2 = ui->le_CockpitVoiceRoomCom2->text();
+        this->getIContextOwnAircraft()->setAudioVoiceRoomOverrideUrls(room1, room2);
     }
 
-    /*
-     * Test SELCAL code
-     */
+    void CCockpitV1Component::updateAudioVoiceRoomsFromObject(const CVoiceRoomList &selectedVoiceRooms)
+    {
+        Q_ASSERT(selectedVoiceRooms.size() == 2);
+        CVoiceRoom room1 = selectedVoiceRooms[0];
+        CVoiceRoom room2 = selectedVoiceRooms[1];
+
+        // remark
+        // isAudioPlaying() is not set, as this is only a temporary value when really "something is playing"
+
+        this->ui->le_CockpitVoiceRoomCom1->setText(room1.getVoiceRoomUrl());
+        if (room1.isConnected())
+        {
+            this->ui->le_CockpitVoiceRoomCom1->setStyleSheet("background: green");
+            if (this->getIContextAudio()) this->ui->tvp_CockpitVoiceRoom1->update(this->getIContextAudio()->getCom1RoomUsers());
+        }
+        else
+        {
+            this->ui->le_CockpitVoiceRoomCom1->setStyleSheet("");
+            this->ui->tvp_CockpitVoiceRoom1->clear();
+        }
+
+        this->ui->le_CockpitVoiceRoomCom2->setText(room2.getVoiceRoomUrl());
+        if (room2.isConnected())
+        {
+            this->ui->le_CockpitVoiceRoomCom2->setStyleSheet("background: green");
+        }
+        else
+        {
+            this->ui->le_CockpitVoiceRoomCom2->setStyleSheet("");
+            this->ui->tvp_CockpitVoiceRoom2->clear();
+        }
+    }
+
+    void CCockpitV1Component::updateVoiceRoomMembers()
+    {
+        if (!this->getIContextAudio()) return;
+        if (!this->ui->le_CockpitVoiceRoomCom1->text().trimmed().isEmpty())
+            this->ui->tvp_CockpitVoiceRoom1->update(this->getIContextAudio()->getCom1RoomUsers());
+        else
+            this->ui->tvp_CockpitVoiceRoom1->clear();
+
+        if (!this->ui->le_CockpitVoiceRoomCom2->text().trimmed().isEmpty())
+            this->ui->tvp_CockpitVoiceRoom2->update(this->getIContextAudio()->getCom2RoomUsers());
+        else
+            this->ui->tvp_CockpitVoiceRoom2->clear();
+
+    }
+
     void CCockpitV1Component::testSelcal()
     {
         QString selcalCode = this->getSelcalCode();
@@ -364,9 +397,6 @@ namespace BlackGui
         }
     }
 
-    /*
-     * SELCAL value selected
-     */
     QString CCockpitV1Component::getSelcalCode() const
     {
         QString selcal = this->ui->cb_CockpitSelcal1->currentText().append(this->ui->cb_CockpitSelcal2->currentText());
