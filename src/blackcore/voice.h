@@ -11,6 +11,8 @@
 #include "../blackmisc/nwuserlist.h"
 #include "../blackmisc/voiceroomlist.h"
 #include "../blackmisc/audiodevicelist.h"
+#include "../blackmisc/statusmessage.h"
+
 #include <vatlib/vatlib.h>
 #include <QObject>
 #include <QSet>
@@ -267,10 +269,11 @@ namespace BlackCore
         void micTestFinished();
 
         // non protocol related signals
+
         /*!
-         * \brief Exception
+         * We sent a message about the status of the network connection, for the attention of the user.
          */
-        void exception(const QString &message, bool fatal = false); // let remote places know there was an exception
+        void statusMessage(const BlackMisc::CStatusMessage &message);
     };
 
 } // namespace BlackCore

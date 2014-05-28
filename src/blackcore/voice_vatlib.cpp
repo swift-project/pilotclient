@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QTimer>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 
@@ -369,7 +370,6 @@ namespace BlackCore
         QMutexLocker lockerVatlib(&m_mutexVatlib);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
-
         if (!voiceRoom.isValid())
         {
             qDebug() << "Error: Cannot join invalid voice room.";
@@ -381,7 +381,8 @@ namespace BlackCore
             CVoiceRoom vr = this->voiceRoomForUnit(comUnit);
             if (vr.isConnected()) return; // already joined
             vr = voiceRoom;
-            vr.setConnected(true);
+            // do not(!) set as connected right now, this will be done in status changed
+            // when room really is connected
             this->setVoiceRoomForUnit(comUnit, vr);
             changeConnectionStatus(comUnit, Connecting);
             QString serverSpec = voiceRoom.getVoiceRoomUrl();
@@ -401,16 +402,16 @@ namespace BlackCore
     {
         CVoiceRoom vr = this->voiceRoomForUnit(comUnit);
         if (!vr.isConnected()) return;
-
         QMutexLocker lockerVatlib(&m_mutexVatlib);
+
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         Q_ASSERT_X(m_voice->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
 
         try
         {
+            this->setVoiceRoomForUnit(comUnit, CVoiceRoom()); // an empty voice room is easier to detect
             m_voice->LeaveRoom(static_cast<qint32>(comUnit));
-            vr.setConnected(false);
-            this->setVoiceRoomForUnit(comUnit, vr);
+            this->m_voiceRoomCallsigns[comUnit] = CCallsignList(); // empty list for this room
             changeConnectionStatus(comUnit, Disconnecting);
         }
         catch (...)
@@ -490,21 +491,20 @@ namespace BlackCore
     void CVoiceVatlib::changeRoomStatus(ComUnit comUnit, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus)
     {
         CVoiceRoom vr = this->voiceRoomForUnit(comUnit);
-
         switch (roomStatus)
         {
         case Cvatlib_Voice_Simple::roomStatusUpdate_JoinSuccess:
-        {
-            m_lockOutputEnabled.lockForRead();
-            bool isOutputEnabled = this->m_outputEnabled[comUnit];
-            m_lockOutputEnabled.unlock();
-            switchAudioOutput(comUnit, isOutputEnabled);
-            vr.setConnected(true);
-            this->setVoiceRoomForUnit(comUnit, vr);
-            changeConnectionStatus(comUnit, Connected);
-            emit userJoinedLeft(comUnit);
-            break;
-        }
+            {
+                m_lockOutputEnabled.lockForRead();
+                bool isOutputEnabled = this->m_outputEnabled[comUnit];
+                m_lockOutputEnabled.unlock();
+                switchAudioOutput(comUnit, isOutputEnabled);
+                vr.setConnected(true);
+                this->setVoiceRoomForUnit(comUnit, vr);
+                changeConnectionStatus(comUnit, Connected);
+                emit userJoinedLeft(comUnit);
+                break;
+            }
         case Cvatlib_Voice_Simple::roomStatusUpdate_JoinFail:
             vr.setConnected(false);
             this->setVoiceRoomForUnit(comUnit, vr);
@@ -607,8 +607,12 @@ namespace BlackCore
         Q_ASSERT_X(m_temporaryUserRoomIndex == CVoiceVatlib::InvalidRoomIndex, "CVoiceClientVatlib::onUserJoinedLeft", "Cannot list users for two rooms in parallel!");
         try
         {
-            // Paranoia...
-            if (!m_voice->IsRoomConnected(static_cast<qint32>(comUnit))) return;
+            // Paranoia... clear list completely
+            if (!m_voice->IsRoomConnected(static_cast<qint32>(comUnit))) {
+                this->m_voiceRoomCallsigns[comUnit] = CCallsignList();
+                this->m_temporaryVoiceRoomCallsigns.clear();
+                return;
+            }
 
             // Store the room index for the slot (called in static callback)
             m_temporaryUserRoomIndex = static_cast<qint32>(comUnit);
@@ -641,7 +645,6 @@ namespace BlackCore
             // Finally we update it with our new list
             this->m_voiceRoomCallsigns[comUnit] = this->m_temporaryVoiceRoomCallsigns;
             this->m_temporaryVoiceRoomCallsigns.clear();
-
         }
         catch (...)
         {
@@ -765,25 +768,25 @@ namespace BlackCore
         {
             // this could be caused by a race condition during normal operation, so not an error
             msg.append("NetworkNotConnectedException").append(" ").append(e.what());
-            emit this->exception(msg);
+            emit this->statusMessage(CStatusMessage::getErrorMessage(msg, CStatusMessage::TypeAudio));
             qDebug() << "NetworkNotConnectedException caught in " << caller << "\n" << e.what();
         }
         catch (const VatlibException &e)
         {
             msg.append("VatlibException").append(" ").append(e.what());
-            emit this->exception(msg, true);
+            emit this->statusMessage(CStatusMessage::getErrorMessage(msg, CStatusMessage::TypeAudio));
             qFatal("VatlibException caught in %s\n%s", caller, e.what());
         }
         catch (const std::exception &e)
         {
             msg.append("std::exception").append(" ").append(e.what());
-            emit this->exception(msg, true);
+            emit this->statusMessage(CStatusMessage::getErrorMessage(msg, CStatusMessage::TypeAudio));
             qFatal("std::exception caught in %s\n%s", caller, e.what());
         }
         catch (...)
         {
             msg.append("unknown exception");
-            emit this->exception(msg, true);
+            emit this->statusMessage(CStatusMessage::getErrorMessage(msg, CStatusMessage::TypeAudio));
             qFatal("Unknown exception caught in %s", caller);
         }
     }
@@ -795,6 +798,16 @@ namespace BlackCore
         ConnectionStatus currentStatus = m_connectionStatus.value(comUnit);
         if (newStatus != currentStatus)
         {
+            if (newStatus == Connected)
+            {
+                CVoiceRoom vr = this->voiceRoomForUnit(comUnit);
+                vr.setConnected(true);
+                this->setVoiceRoomForUnit(comUnit, vr);
+            }
+
+            // for disconnecting the voice room will already be
+            // set in leave voice room
+
             m_connectionStatus.insert(comUnit, newStatus);
             emit connectionStatusChanged(comUnit, currentStatus, newStatus);
         }
