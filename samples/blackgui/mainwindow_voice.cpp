@@ -119,15 +119,14 @@ void MainWindow::audioVolumes()
         muted = false;
         com1.setVolumeOutput(100);
         com2.setVolumeOutput(100);
-        this->ui->di_CockpitCom1Volume->setValue(100);
-        this->ui->di_CockpitCom2Volume->setValue(100);
+        this->ui->comp_Cockpit->setCom1Volume(100);
+        this->ui->comp_Cockpit->setCom2Volume(100);
     }
-    else if (sender == this->ui->di_CockpitCom1Volume ||
-             sender == this->ui->di_CockpitCom2Volume)
+    else if (this->ui->comp_Cockpit->isCockpitVolumeWidget(sender))
     {
         muted = false;
-        com1.setVolumeOutput(this->ui->di_CockpitCom1Volume->value());
-        com2.setVolumeOutput(this->ui->di_CockpitCom2Volume->value());
+        com1.setVolumeOutput(this->ui->comp_Cockpit->getCom1Volume());
+        com2.setVolumeOutput(this->ui->comp_Cockpit->getCom2Volume());
     }
     else
     {
@@ -139,7 +138,7 @@ void MainWindow::audioVolumes()
     com2.setEnabled(!muted);
     this->ui->pb_SoundMute->setText(muted ? "Unmute" : "Mute");
     this->ui->lbl_StatusVoiceStatus->setPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
-    this->ui->lbl_CockpitVoiceStatus->setPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
+    this->ui->comp_Cockpit->setCockpitVoiceStatusPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
     this->ui->pb_SoundMute->setStyleSheet(muted ? "background-color: red;" : "");
     if (muted) this->displayOverlayInfo("Sound is muted!");
 

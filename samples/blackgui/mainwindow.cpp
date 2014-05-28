@@ -30,7 +30,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextAudioAvailable(false),
 
     // timers
-    m_timerCollectedCockpitUpdates(nullptr), m_timerContextWatchdog(nullptr),
+    m_timerContextWatchdog(nullptr),
     m_timerStatusBar(nullptr), m_timerAudioTests(nullptr), m_timerSimulator(nullptr),
     // context menus
     m_contextMenuAudio(nullptr), m_contextMenuStatusMessageList(nullptr),
@@ -200,9 +200,8 @@ void MainWindow::toggleNetworkConnection()
         icao.setAircraftCombinedType(this->ui->le_SettingsIcaoCombinedType->text());
         this->m_ownAircraft.setIcaoInfo(icao);
 
-        // send latest aircraft to network/voice
+        // set latest aircraft
         this->getIContextOwnAircraft()->updateOwnAircraft(this->m_ownAircraft, MainWindow::ownAircraftContextOriginator());
-        if (this->m_contextAudioAvailable) this->getIContextAudio()->setOwnAircraft(this->m_ownAircraft);
 
         // Login is based on setting current server
         INetwork::LoginMode mode = INetwork::LoginNormal;

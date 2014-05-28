@@ -64,9 +64,7 @@ void MainWindow::menuClicked()
 void MainWindow::initContextMenus()
 {
     this->ui->lbl_StatusVoiceStatus->setContextMenuPolicy(Qt::CustomContextMenu);
-    this->ui->lbl_CockpitVoiceStatus->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this->ui->lbl_StatusVoiceStatus, &QLabel::customContextMenuRequested, this, &MainWindow::audioIconContextMenu);
-    connect(this->ui->lbl_CockpitVoiceStatus, &QLabel::customContextMenuRequested, this, &MainWindow::audioIconContextMenu);
 }
 
 /*

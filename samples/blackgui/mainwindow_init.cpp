@@ -59,19 +59,8 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
         this->ui->sb_MainStatusBar->addPermanentWidget(grip);
     }
 
-    // init encapsulated table views / models
-    this->ui->tvp_CockpitVoiceRoom1->setUserMode(CUserListModel::UserShort);
-    this->ui->tvp_CockpitVoiceRoom2->setUserMode(CUserListModel::UserShort);
-
-    // SELCAL pairs in cockpit
-    this->ui->cb_CockpitSelcal1->clear();
-    this->ui->cb_CockpitSelcal2->clear();
-    this->ui->cb_CockpitSelcal1->addItems(BlackMisc::Aviation::CSelcal::codePairs());
-    this->ui->cb_CockpitSelcal2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
-
     // timers
     if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
-    if (this->m_timerCollectedCockpitUpdates == nullptr) this->m_timerCollectedCockpitUpdates = new QTimer(this);
     if (this->m_timerAudioTests == nullptr) this->m_timerAudioTests = new QTimer(this);
     if (this->m_timerSimulator == nullptr) this->m_timerSimulator = new QTimer(this);
 
@@ -116,7 +105,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     Q_ASSERT(connect);
     this->connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
-    this->connect(this->m_timerCollectedCockpitUpdates, &QTimer::timeout, this, &MainWindow::sendCockpitUpdates);
     this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
     this->connect(this->m_timerSimulator, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
     connect = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &MainWindow::audioTestUpdate);
@@ -137,6 +125,9 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     // voice panel
     this->setAudioDeviceLists();
     this->ui->prb_SettingsAudioTestProgress->setVisible(false);
+
+    // cockpit external buttons
+    this->ui->comp_Cockpit->setExternalIdentButton(this->ui->pb_CockpitIdent);
 
     // data
     this->initialDataReads();
@@ -208,8 +199,7 @@ void MainWindow::initGuiSignals()
     // Sound buttons
     this->connect(this->ui->pb_SoundMute, &QPushButton::clicked, this, &MainWindow::audioVolumes);
     this->connect(this->ui->pb_SoundMaxVolume, &QPushButton::clicked, this, &MainWindow::audioVolumes);
-    connected = this->connect(this->ui->di_CockpitCom1Volume, &QDial::valueChanged, this, &MainWindow::audioVolumes);
-    connected = this->connect(this->ui->di_CockpitCom2Volume, &QDial::valueChanged, this, &MainWindow::audioVolumes);
+    this->connect(this->ui->comp_Cockpit, &CCockpitV1Component::audioVolumeChanged, this, &MainWindow::audioVolumes);
 
     // menu
     this->connect(this->ui->menu_ReloadSettings, &QAction::triggered, this, &MainWindow::menuClicked);
@@ -226,27 +216,7 @@ void MainWindow::initGuiSignals()
     Q_ASSERT(connected);
     this->connect(this->ui->comp_TextMessages, SIGNAL(displayOverlayInfo(BlackMisc::CStatusMessage)), this, SLOT(displayOverlayInfo(BlackMisc::CStatusMessage)));
     Q_ASSERT(connected);
-    this->ui->comp_TextMessages->setSelcalCallback(std::bind(&MainWindow::getSelcalCode, this));
-
-    // cockpit
-    connected = this->connect(this->ui->cbp_CockpitTransponderMode, SIGNAL(currentIndexChanged(QString)), this, SLOT(cockpitValuesChanged()));
-    Q_ASSERT(connected);
-    this->connect(this->ui->ds_CockpitCom1Active, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
-    this->connect(this->ui->ds_CockpitCom2Active, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
-    this->connect(this->ui->ds_CockpitCom1Standby, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
-    this->connect(this->ui->ds_CockpitCom2Standby, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
-    this->connect(this->ui->ds_CockpitTransponder, &QDoubleSpinBox::editingFinished, this, &MainWindow::cockpitValuesChanged);
-
-    this->connect(this->ui->cb_CockpitVoiceRoom1Override, &QCheckBox::clicked, this, &MainWindow::setAudioVoiceRooms);
-    this->connect(this->ui->cb_CockpitVoiceRoom2Override, &QCheckBox::clicked, this, &MainWindow::setAudioVoiceRooms);
-    this->connect(this->ui->le_CockpitVoiceRoomCom1, &QLineEdit::returnPressed, this, &MainWindow::setAudioVoiceRooms);
-    this->connect(this->ui->le_CockpitVoiceRoomCom2, &QLineEdit::returnPressed, this, &MainWindow::setAudioVoiceRooms);
-    this->connect(this->ui->pb_CockpitToggleCom1, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
-    this->connect(this->ui->pb_CockpitToggleCom2, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
-    this->connect(this->ui->pb_CockpitIdent, &QPushButton::clicked, this, &MainWindow::cockpitValuesChanged);
-    this->connect(this->ui->pb_CockpitSelcalTest, &QPushButton::clicked, this, &MainWindow::testSelcal);
-    this->connect(this->ui->cbp_CockpitTransponderMode, &CTransponderModeSelector::identEnded, this, &MainWindow::resetTransponderMode);
-    this->connect(qApp, &QApplication::focusChanged, this, &MainWindow::inputFocusChanged);
+    this->ui->comp_TextMessages->setSelcalCallback(std::bind(&CCockpitV1Component::getSelcalCode, this->ui->comp_Cockpit));
 
     // voice
     connected = this->connect(this->ui->cb_SettingsAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
@@ -329,14 +299,12 @@ void MainWindow::stopAllTimers(bool disconnect)
 {
     this->m_timerStatusBar->stop();
     this->m_timerContextWatchdog->stop();
-    this->m_timerCollectedCockpitUpdates->stop();
     this->m_timerAudioTests->stop();
     this->m_timerSimulator->stop();
     this->stopUpdateTimers();
     if (!disconnect) return;
     this->disconnect(this->m_timerStatusBar);
     this->disconnect(this->m_timerContextWatchdog);
-    this->disconnect(this->m_timerCollectedCockpitUpdates);
     this->disconnect(this->m_timerAudioTests);
     this->disconnect(this->m_timerSimulator);
 }

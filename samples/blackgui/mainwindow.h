@@ -103,7 +103,6 @@ private:
     bool m_contextNetworkAvailable;
     bool m_contextAudioAvailable;
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
-    QTimer *m_timerCollectedCockpitUpdates; /*!< collect cockpit updates over a short period before sending */
     QTimer *m_timerContextWatchdog; /*!< core available? */
     QTimer *m_timerStatusBar; /*!< cleaning up status bar */
     QTimer *m_timerAudioTests; /*!< audio tests: progress bar, disable/enable buttons */
@@ -162,15 +161,6 @@ private:
     //! Context voice availability check, otherwise status message
     bool isContextAudioAvailableCheck();
 
-    //! Own cockpit, update from context
-    void updateCockpitFromContext();
-
-    //! Pending cockpit update operation
-    bool isCockpitUpdatePending() const;
-
-    //! Update the COM frequency displays
-    void updateComFrequencyDisplays(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
-
     //! Audio device lists
     void setAudioDeviceLists();
 
@@ -203,9 +193,6 @@ private:
      * \param disconnect also disconnect signal/slots
      */
     void stopAllTimers(bool disconnect);
-
-    //! Currently selected SELCAL code
-    QString getSelcalCode() const;
 
     //! Audio test updates (timer) for progressbar and fetching results
     void audioTestUpdate();
@@ -254,9 +241,6 @@ private slots:
     //! Reload settings
     void reloadSettings();
 
-    //! Send cockpit updates
-    void sendCockpitUpdates();
-
     //! Simulator available
     void simulatorConnectionChanged(bool isAvailable);
 
@@ -300,23 +284,11 @@ private slots:
     //! Update timer
     void timerBasedUpdates();
 
-    //! Cockpit values changed
-    void cockpitValuesChanged();
-
     /*!
      * \brief Audio device selected
      * \param index audio device index (COM1, COM2)
      */
     void audioDeviceSelected(int index);
-
-    //! Reset transponder to Standby / Charly
-    void resetTransponderMode();
-
-    /*!
-     * Set voice rooms, also
-     * allows to set an arbitrary voice room for testing purposes
-     */
-    void setAudioVoiceRooms();
 
     //! Audio volume handling and mute
     void audioVolumes();
@@ -330,15 +302,8 @@ private slots:
     //! Context menu for audio
     void audioIconContextMenu(const QPoint &position);
 
-    //! Test SELCAL (code valid? play tone)
-    void testSelcal();
-
     //! start the MIC tests (Squelch)
     void startAudioTest();
-
-    //! \brief Input focus changed, used to detect whether an input control has focus
-    //! \sa QApplication::focusChanged
-    void inputFocusChanged(QWidget *oldWidget, QWidget *newWidget);
 
     //! Save the Hotkeys
     void saveHotkeys();

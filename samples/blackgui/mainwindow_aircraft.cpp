@@ -20,7 +20,6 @@ using namespace BlackMisc::Audio;
 bool MainWindow::reloadOwnAircraft()
 {
     if (!this->isContextNetworkAvailableCheck()) return false;
-    if (this->isCockpitUpdatePending()) return false;
 
     // check for changed aircraft
     bool changed = false;
@@ -28,7 +27,6 @@ bool MainWindow::reloadOwnAircraft()
     if (loadedAircraft != this->m_ownAircraft)
     {
         this->m_ownAircraft = loadedAircraft;
-        this->updateCockpitFromContext();
         this->ui->comp_Flightplan->prefillWithAircraftData(this->m_ownAircraft);
         changed = true;
     }
