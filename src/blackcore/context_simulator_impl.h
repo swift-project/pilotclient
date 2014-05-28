@@ -81,7 +81,7 @@ namespace BlackCore
 
     private slots:
         //! \copydoc IContextSimulator::updateOwnAircraft()
-        void updateOwnAircraft();
+        virtual void updateOwnAircraft();
 
         //! Set new connection status
         void setConnectionStatus(ISimulator::Status status);
