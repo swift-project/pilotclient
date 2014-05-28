@@ -37,6 +37,7 @@ namespace BlackGui
         Q_ASSERT(this->getIContextNetwork());
         this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnline, this, &CAtcStationComponent::changedAtcStationsOnline);
         this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsBooked, this, &CAtcStationComponent::changedAtcStationsBooked);
+        this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
     }
 
     void CAtcStationComponent::update()
@@ -79,7 +80,14 @@ namespace BlackGui
 
     void CAtcStationComponent::changedAtcStationsOnline()
     {
+        // just update timestamp, data will  be pulled by time
+        // the timestamp will tell if there are newer data
         this->m_timestampOnlineStationsChanged = QDateTime::currentDateTimeUtc();
+    }
+
+    void CAtcStationComponent::changedAtcStationOnlineConnectionStatus(const CAtcStation &station, bool added)
+    {
+        this->ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, added);
     }
 
     void CAtcStationComponent::changedAtcStationsBooked()

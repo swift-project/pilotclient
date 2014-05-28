@@ -3,6 +3,8 @@
 
 #include "blackgui/runtimebasedcomponent.h"
 #include "blackgui/timerbasedcomponent.h"
+#include "blackmisc/avatcstation.h"
+
 #include <QTabWidget>
 #include <QModelIndex>
 
@@ -27,10 +29,6 @@ namespace BlackGui
         //! Timer for updating
         CTimerBasedComponent *getTimerComponent() { return this->m_timerComponent; }
 
-    protected:
-        //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
-        void runtimeHasBeenSet() override;
-
     public slots:
         //! Update users
         void update();
@@ -46,6 +44,13 @@ namespace BlackGui
 
         //! Get METAR for given ICAO airport code
         void getMetar(const QString &airportIcaoCode = "");
+
+        //! \copydoc CAtcStationListModel::changedAtcStationConnectionStatus
+        void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+
+    protected:
+        //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+        void runtimeHasBeenSet() override;
 
     private slots:
 

@@ -68,4 +68,26 @@ namespace BlackGui
             break;
         }
     }
+
+    void CAtcStationListModel::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
+    {
+        if (station.getCallsign().isEmpty()) return;
+        if (added)
+        {
+            if (this->m_container.contains(&CAtcStation::getCallsign, station.getCallsign()))
+            {
+                this->m_container.replaceIf(&CAtcStation::getCallsign, station.getCallsign(), station);
+            }
+            else
+            {
+                this->insert(station);
+            }
+        }
+        else
+        {
+            beginRemoveRows(QModelIndex(), 0, 0);
+            this->m_container.removeIf(&CAtcStation::getCallsign, station.getCallsign());
+            endRemoveRows();
+        }
+    }
 }

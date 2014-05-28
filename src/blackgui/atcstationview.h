@@ -19,6 +19,11 @@ namespace BlackGui
 
         //! Set station mode
         void setStationMode(CAtcStationListModel::AtcStationMode stationMode);
+
+    public slots:
+        //! \copydoc CAtcStationListModel::changedAtcStationConnectionStatus
+        void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
+
     };
 }
 #endif // guard
