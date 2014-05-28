@@ -38,6 +38,9 @@ namespace BlackCore
                                "changedAtcStationsOnline", this, SIGNAL(changedAtcStationsOnline()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "changedAtcStationOnlineConnectionStatus", this, SIGNAL(changedAtcStationOnlineConnectionStatus(BlackMisc::Aviation::CAtcStation,bool)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "connectionTerminated", this, SIGNAL(connectionTerminated()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),

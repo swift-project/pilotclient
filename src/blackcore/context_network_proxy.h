@@ -20,7 +20,7 @@
 namespace BlackCore
 {
 
-    //! \brief Network context proxy
+    //! Network context proxy
     class CContextNetworkProxy : public IContextNetwork
     {
         Q_OBJECT
@@ -34,14 +34,14 @@ namespace BlackCore
     private:
         BlackMisc::CGenericDBusInterface *m_dBusInterface; /*!< DBus interface */
 
-        //! \brief Relay connection signals to local signals.
+        //! Relay connection signals to local signals.
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
 
     protected:
-        //! \brief Constructor
+        //! Constructor
         CContextNetworkProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextNetwork(mode, runtime), m_dBusInterface(nullptr) {}
 
-        //! \brief DBus version constructor
+        //! DBus version constructor
         CContextNetworkProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
     public slots: // IContextNetwork overrides
@@ -49,16 +49,10 @@ namespace BlackCore
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()
         virtual void readAtcBookingsFromSource() const override;
 
-        /*!
-         * \copydoc IContextNetwork::getAtcStationsOnline()
-         * \todo If I make this &getAtcStations XML is not generated correctly, needs to be crosschecked with the latest version of Qt
-         */
+        //! \copydoc IContextNetwork::getAtcStationsOnline()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override;
 
-        /*!
-         * \copydoc IContextNetwork::getAtcStationsBooked()
-         * \todo If I make this &getAtcStations XML is not generated correctly
-         */
+        //! \copydoc IContextNetwork::getAtcStationsBooked()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override;
 
         //! \copydoc IContextNetwork::getAircraftsInRange()

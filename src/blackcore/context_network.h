@@ -53,6 +53,9 @@ namespace BlackCore
         //! ATC station (booked) list has been changed
         void changedAtcStationsBooked();
 
+        //! Connection status changed for online station
+        void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
+
         //! Aircraft list has been changed
         void changedAircraftsInRange();
 

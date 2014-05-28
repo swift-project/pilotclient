@@ -314,6 +314,14 @@ namespace BlackCore
         if (callsigns.isEmpty()) return users;
         CCallsignList searchList(callsigns);
 
+        // myself, which is not in the lists below
+        CAircraft ownAircraft = this->getOwnAircraft();
+        if (!ownAircraft.getCallsign().isEmpty() && searchList.contains(ownAircraft.getCallsign()))
+        {
+            searchList.remove(ownAircraft.getCallsign());
+            users.push_back(ownAircraft.getPilot());
+        }
+
         // do aircrafts first, this will handle most callsigns
         foreach(CAircraft aircraft, this->m_aircraftsInRange)
         {
@@ -408,7 +416,7 @@ namespace BlackCore
         }
 
         // send as message
-        QString m("connection status changed from %1 to %2");
+        QString m("Connection status changed from %1 to %2");
         m = m.arg(INetwork::connectionStatusToString(from), INetwork::connectionStatusToString(to));
         if (!message.isEmpty()) m.append(" ").append(message);
         msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork,

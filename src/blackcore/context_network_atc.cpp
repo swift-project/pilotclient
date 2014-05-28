@@ -145,8 +145,12 @@ namespace BlackCore
 
         CAtcStation s;
         CAtcStationList stations;
-        stations.push_back(stationsCom1.isEmpty() ? s : stationsCom1[0]);
-        stations.push_back(stationsCom2.isEmpty() ? s : stationsCom2[0]);
+        CAtcStation com1 = stationsCom1.isEmpty() ? s : stationsCom1[0];
+        CAtcStation com2 = stationsCom2.isEmpty() ? s : stationsCom2[0];
+
+        stations.push_back(com1);
+        stations.push_back(com2);
+
         return stations;
     }
 
@@ -168,7 +172,6 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdAtcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
     {
-        // this->log(Q_FUNC_INFO, callsign.toQString(), frequency.toQString(), position.toQString(), range.toQString());
         CAtcStationList stationsWithCallsign = this->m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
         {
@@ -182,14 +185,17 @@ namespace BlackCore
             station.calculcateDistanceToPlane(this->ownAircraft().getPosition());
             this->m_vatsimDataFileReader->getAtcStations().updateFromVatsimDataFileStation(station); // prefill
             this->m_atcStationsOnline.push_back(station);
-            emit this->changedAtcStationsOnline();
 
             if (this->isConnected())
             {
-                emit this->m_network->sendAtisQuery(callsign); // request ATIS
                 emit this->m_network->sendRealNameQuery(callsign);
+                emit this->m_network->sendAtisQuery(callsign); // request ATIS and voice rooms
                 emit this->m_network->sendServerQuery(callsign);
             }
+
+            emit this->changedAtcStationsOnline();
+            // Remark: this->changedAtcStationOnlineConnectionStatus(station, true);
+            // will be sent in psFsdAtisVoiceRoomQueryReceived
         }
         else
         {
@@ -208,8 +214,15 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdAtcControllerDisconnected(const CCallsign &callsign)
     {
-        this->m_atcStationsOnline.removeIf(&CAtcStation::getCallsign, callsign);
-        emit this->changedAtcStationsOnline();
+        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign))
+        {
+            CAtcStation removeStation = this->m_atcStationsOnline.findByCallsign(callsign).front();
+            this->m_atcStationsOnline.removeIf(&CAtcStation::getCallsign, callsign);
+            emit this->changedAtcStationsOnline();
+            emit this->changedAtcStationOnlineConnectionStatus(removeStation, false);
+        }
+
+        // booked
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, CIndexVariantMap(CAtcStation::IndexIsOnline, QVariant(false)));
     }
 
@@ -235,7 +248,12 @@ namespace BlackCore
         CIndexVariantMap vm(CAtcStation::IndexVoiceRoomUrl, trimmedUrl);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
+        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign))
+        {
+            CAtcStation station = this->m_atcStationsOnline.findFirstByCallsign(callsign);
+            emit this->changedAtcStationsBooked();
+            emit this->changedAtcStationOnlineConnectionStatus(station, true);
+        }
         if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
     }
 
@@ -267,7 +285,6 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdMetarReceived(const QString &metarMessage)
     {
-        // this->log(Q_FUNC_INFO, metarMessage);
         if (metarMessage.length() < 10) return; // invalid
         const QString icaoCode = metarMessage.left(4).toUpper();
         const QString icaoCodeTower = icaoCode + "_TWR";
