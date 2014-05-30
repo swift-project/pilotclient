@@ -24,5 +24,6 @@
         <file>icons/aircraft_departure.jpg</file>
         <file>icons/aircraft_arrival.jpg</file>
         <file>icons/sky.jpg</file>
+        <file>icons/tower_framed.jpg</file>
     </qresource>
 </RCC>
