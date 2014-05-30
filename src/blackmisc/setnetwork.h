@@ -3,8 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISC_SETTINGS_SERVER_H
-#define BLACKMISC_SETTINGS_SERVER_H
+#ifndef BLACKMISC_SETTINGS_NETWORK_H
+#define BLACKMISC_SETTINGS_NETWORK_H
 
 #include "nwserverlist.h"
 #include "valueobject.h"
@@ -18,39 +18,39 @@ namespace BlackMisc
 
     namespace Settings
     {
-        //! \brief Value object encapsulating information of network related settings.
+        //! Value object encapsulating information of network related settings.
         //! \remarks Not only traffic network settings, but also URLs, DBus address, ...
         class CSettingsNetwork : public BlackMisc::CValueObject
         {
         public:
-            //! \brief Default constructor.
+            //! Default constructor.
             CSettingsNetwork();
 
-            //! \brief Destructor.
+            //! Destructor.
             virtual ~CSettingsNetwork() {}
 
-            //! \brief Update
+            //! Update
             static const QString &CmdSetCurrentServer()
             {
                 static const QString cmd("currenttrafficserver");
                 return cmd;
             }
 
-            //! \brief Path
+            //! Path
             static const QString &ValueTrafficServers()
             {
                 static const QString value("trafficservers");
                 return value;
             }
 
-            //! \brief Path
+            //! Path
             static const QString &ValueBookingServiceUrl()
             {
                 static const QString value("bookingserviceurl");
                 return value;
             }
 
-            //! \brief Path
+            //! Path
             static const QString &ValueDBusServerAddress()
             {
                 static const QString value("dbuserveraddress");
@@ -63,28 +63,28 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
-            //! \brief Value object, traffic network server objects
+            //! Value object, traffic network server objects
             BlackMisc::Network::CServerList getTrafficNetworkServers() const { return m_trafficNetworkServers; }
 
-            //! \brief Selected traffic network server
+            //! Selected traffic network server
             BlackMisc::Network::CServer getCurrentTrafficNetworkServer() const { return m_trafficNetworkServerCurrent; }
 
-            //! \brief URL of booking service
+            //! URL of booking service
             QString getBookingServiceUrl() const { return m_bookingServiceUrl; }
 
-            //! \brief Address for DBus Server
+            //! Address for DBus Server
             QString getDBusServerAddress() const { return m_dbusServerAddress; }
 
-            //! \brief Selected traffic network server
+            //! Selected traffic network server
             bool setCurrentNetworkServer(const BlackMisc::Network::CServer &currentServer);
 
-            //! \brief Traffic network server objects
+            //! Traffic network server objects
             void addTrafficNetworkServer(const BlackMisc::Network::CServer &server) { m_trafficNetworkServers.push_back(server); }
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CSettingsNetwork &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CSettingsNetwork &other) const;
 
             //! \copydoc BlackCore::IContextSettings
@@ -99,10 +99,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
 
-            //! \brief init with meaningful default values
+            //! Init with meaningful default values
             void initDefaultValues();
 
-            //! \brief Register metadata
+            //! \copydoc CValueObject::registerMetadata
             static void registerMetadata();
 
             //! \copydoc TupleConverter<>::jsonMembers()

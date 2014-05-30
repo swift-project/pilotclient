@@ -53,9 +53,9 @@ namespace BlackCore
         dataFileUrls << "http://info.vroute.net/vatsim-data.txt";
         this->m_vatsimDataFileReader = new CVatsimDataFileReader(dataFileUrls, this);
         this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CContextNetwork::psDataFileRead);
-        this->m_vatsimDataFileReader->setInterval(5 * 1000); // first read
+        this->m_vatsimDataFileReader->setInterval(5 * 1000); // first read, will be fixed when first read to longer period
 
-        // 5. Update timer for data
+        // 5. Update timer for data (network data such as frequency)
         this->m_dataUpdateTimer = new QTimer(this);
         this->connect(this->m_dataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
         this->m_dataUpdateTimer->start(30 * 1000);
@@ -126,7 +126,7 @@ namespace BlackCore
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Invalid user credentials"));
         }
-        else if (!this->ownAircraft().getIcaoInfo().hasAircraftAndAirlineDsignator())
+        else if (!this->ownAircraft().getIcaoInfo().hasAircraftAndAirlineDesignator())
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Invalid ICAO data for own aircraft"));
         }
@@ -453,6 +453,7 @@ namespace BlackCore
         if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         const int interval = 60 * 1000;
         if (this->m_vatsimDataFileReader->interval() < interval) this->m_vatsimDataFileReader->setInterval(interval);
+        this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage("Read VATSIM data file", CStatusMessage::TypeTrafficNetwork));
     }
 
     /*

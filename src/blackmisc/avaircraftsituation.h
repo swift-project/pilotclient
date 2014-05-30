@@ -36,8 +36,8 @@ namespace BlackMisc
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = BlackMisc::PhysicalQuantities::CAngle(),
                                const BlackMisc::PhysicalQuantities::CAngle &bank = BlackMisc::PhysicalQuantities::CAngle(),
                                const BlackMisc::PhysicalQuantities::CSpeed &gs = BlackMisc::PhysicalQuantities::CSpeed())
-                : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch), m_bank(bank), m_groundspeed(gs),
-                  m_timestamp(QDateTime::currentDateTimeUtc()) {}
+                : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
+                  m_bank(bank), m_groundspeed(gs), m_timestamp(QDateTime::currentDateTimeUtc()) {}
 
             //! \brief Properties by index
             enum ColumnIndex

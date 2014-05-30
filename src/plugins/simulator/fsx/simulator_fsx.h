@@ -27,7 +27,7 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        //! \brief Factory implementation to create CSimulatorFsx instances
+        //! Factory implementation to create CSimulatorFsx instances
         class Q_DECL_EXPORT CSimulatorFsxFactory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
@@ -42,7 +42,7 @@ namespace BlackSimPlugin
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
         };
 
-        //! \brief SimConnect Event ID's
+        //! SimConnect Event ID's
         enum EVENT_ID
         {
             EVENT_SIM_STATUS,
@@ -55,12 +55,12 @@ namespace BlackSimPlugin
             EVENT_FREEZEATT
         };
 
-        //! \brief FSX Simulator Implementation
+        //! FSX Simulator Implementation
         class CSimulatorFsx : public BlackCore::ISimulator
         {
             Q_OBJECT
         public:
-            //! \brief Constructor
+            //! Constructor
             CSimulatorFsx(QObject *parent = nullptr);
 
             virtual ~CSimulatorFsx();
@@ -71,12 +71,7 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::canConnect()
             virtual bool canConnect() override;
 
-            /*!
-             * \brief SimConnect Callback
-             * \param pData
-             * \param cbData
-             * \param pContext
-             */
+            //! SimConnect Callback
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
 
         public slots:
@@ -131,34 +126,29 @@ namespace BlackSimPlugin
             void onSimExit();
 
         protected:
-            //! \brief Timer event
+            //! Timer event
             virtual void timerEvent(QTimerEvent *event);
 
         private slots:
 
-            //! \brief Dispatch SimConnect messages
+            //! Dispatch SimConnect messages
             void dispatch();
 
-            //! \brief Called when asynchronous connection to Simconnect has finished
+            //! Called when asynchronous connection to Simconnect has finished
             void connectToFinished();
 
         private:
 
+            //! Remove a remote aircraft
             void removeRemoteAircraft(const CSimConnectObject &simObject);
 
-            /*!
-             * \brief Initialize SimConnect system events
-             * \return
-             */
+            //! Initialize SimConnect system events
             HRESULT initSystemEvents();
 
-            /*!
-             * \brief Initialize SimConnect data definitions
-             * \return
-             */
+            //! Initialize SimConnect data definitions
             HRESULT initDataDefinitions();
 
-            void update();
+            void update(); // TODO: @RW, please rename, update is meaningless
 
             bool    m_isConnected; //!< Is sim connected
             bool    m_simRunning; //!< Sim running.

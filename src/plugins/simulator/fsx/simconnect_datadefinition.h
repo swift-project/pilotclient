@@ -19,6 +19,8 @@ namespace BlackSimPlugin
     namespace Fsx
     {
         //! \brief Data struct of our own aircraft
+        //! \sa SimConnect variables http://msdn.microsoft.com/en-us/library/cc526981.aspx
+        //! \sa SimConnect events http://msdn.microsoft.com/en-us/library/cc526980.aspx
         struct DataDefinitionOwnAircraft
         {
             double latitude;        //!< Latitude
@@ -36,25 +38,26 @@ namespace BlackSimPlugin
             double com2StandbyMHz;  //!< COM1 standby frequency
         };
 
-        //! \brief Data struct of aircraft position
+        //! Data struct of aircraft position
         struct DataDefinitionRemoteAircraftSituation
         {
             SIMCONNECT_DATA_INITPOSITION position;  //!< Position struct
         };
 
-        //! \brief Data struct of aircraft position
+        //! Data struct of aircraft position
         struct DataDefinitionGearHandlePosition
         {
             qint32 gearHandlePosition;  //!< Bool, 1 if gear handle is applied otherwise 0
         };
 
-        //! \brief Handles SimConnect data definitions
+        //! Handles SimConnect data definitions
         class CSimConnectDataDefinition
         {
         public:
 
-            //! \brief SimConnect definiton ID's
-            enum DataDefiniton {
+            //! SimConnect definiton IDs
+            enum DataDefiniton
+            {
                 DataOwnAircraft,
                 DataDefinitionRemoteAircraftSituation,
                 DataDefinitionGearHandlePosition
@@ -66,38 +69,23 @@ namespace BlackSimPlugin
                 RequestRemoveAircraft = 2000
             };
 
-            //! \brief Constructor
+
+            //! Constructor
             CSimConnectDataDefinition();
 
-            /*!
-             * \brief Initialize all data definitions
-             * \param hSimConnect
-             * \return
-             */
+            //! Initialize all data definitions
             static HRESULT initDataDefinitions(const HANDLE hSimConnect);
 
-            /*!
-             * \brief Initialize data definition for our own aircraft
-             * \param hSimConnect
-             * \return
-             */
+            //! Initialize data definition for our own aircraft
             static HRESULT initOwnAircraft(const HANDLE hSimConnect);
 
-            /*!
-             * \brief Initialize data definition for remote aircrafts
-             * \param hSimConnect
-             * \return
-             */
+            //! Initialize data definition for remote aircrafts
             static HRESULT initRemoteAircraftSituation(const HANDLE hSimConnect);
 
-            /*!
-             * \brief Initialize data definition for remote aircraft configuration
-             * \param hSimConnect
-             * \return
-             */
+            //! Initialize data definition for remote aircraft configuration
             static HRESULT initGearHandlePosition(const HANDLE hSimConnect);
         };
     }
 }
 
-#endif // BLACKSIMPLUGIN_FSX_SIMCONNECT_DATADEFINITION_H
+#endif // guard

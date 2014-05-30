@@ -56,7 +56,7 @@ namespace BlackCore
             this->m_outputEnabled.insert(COM2, true);
             this->m_currentInputDevice = this->defaultAudioInputDevice();
             this->m_currentOutputDevice = this->defaultAudioOutputDevice();
-            this->m_audioOutput->setVolume(1.0);
+            this->m_audioOutput->setVolume(1.0); // make sure the overall sound is not muted
 
             // do processing
             this->startTimer(10);
@@ -805,7 +805,7 @@ namespace BlackCore
                 this->setVoiceRoomForUnit(comUnit, vr);
             }
 
-            // for disconnecting the voice room will already be
+            // disconnecting the voice room will already be
             // set in leave voice room
 
             m_connectionStatus.insert(comUnit, newStatus);

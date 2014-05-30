@@ -317,7 +317,7 @@ namespace BlackSimPlugin
                 }
             }
 
-            if ( it == m_simConnectObjects.end() )
+            if (it == m_simConnectObjects.end())
                 return;
 
             (*it).setObjectId(objectID);
@@ -347,7 +347,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::connectToFinished()
         {
-            if( m_watcherConnect.result() )
+            if (m_watcherConnect.result())
             {
                 initSystemEvents();
                 initDataDefinitions();

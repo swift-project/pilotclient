@@ -93,11 +93,11 @@ namespace BlackCore
         void statusMessage(const BlackMisc::CStatusMessage &message);
 
         //! Send status messages
-        //! \remarks not to be called directly, use IContextApplication::sendStatusMessages
+        //! \remarks not to be called directly, use IContextApplication::sendStatusMessage(s)
         void statusMessages(const BlackMisc::CStatusMessageList &messages);
 
         //! Redirect output streams as by qDebug(), qWarning(), qCritical()
-        //! \remarks context mode is an important means to avoid infinite redirect loops
+        //! \remarks context id is an important means to avoid infinite redirect loops
         //!          never output redirected stream messages from the same context again
         void redirectedOutput(const BlackMisc::CStatusMessage &message, qint64 contextId);
 

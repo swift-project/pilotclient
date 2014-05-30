@@ -24,7 +24,6 @@ else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a
 
 HEADERS += *.h
 SOURCES += *.cpp
-
 HEADERS += $$PWD/fscommon/*.h
 SOURCES += $$PWD/fscommon/*.cpp
 

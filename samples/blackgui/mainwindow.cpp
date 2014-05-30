@@ -495,13 +495,13 @@ void MainWindow::toogleWindowStayOnTop()
     {
         flags ^= Qt::WindowStaysOnTopHint;
         flags |= Qt::WindowStaysOnBottomHint;
-        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "on bottom"));
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "Window on bottom"));
     }
     else
     {
         flags ^= Qt::WindowStaysOnBottomHint;
         flags |= Qt::WindowStaysOnTopHint;
-        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "on top"));
+        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "Window on top"));
     }
     this->setWindowFlags(flags);
     this->show();

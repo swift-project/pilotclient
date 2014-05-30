@@ -65,6 +65,10 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::unloadSimulatorPlugin()
         virtual void unloadSimulatorPlugin() override;
+
+
+
+
     };
 
 } // namespace BlackCore

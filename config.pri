@@ -26,7 +26,7 @@ BLACK_CONFIG    += BlackSound
 BLACK_CONFIG	+= BlackSim
 BLACK_CONFIG    += Samples
 BLACK_CONFIG    += Unittests
-#BLACK_CONFIG    += FSX
+BLACK_CONFIG    += FSX
 #BLACK_CONFIG    += XPlane
 #BLACK_CONFIG    += Doxygen
 

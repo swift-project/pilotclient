@@ -124,8 +124,28 @@ namespace BlackCore
     {
         Q_ASSERT(this->getIContextOwnAircraft());
         CAircraft aircraft = m_simulator->getOwnAircraft();
+
+        // the methods will check, if an update is really required
+        // these are local (non DBus) calls
         this->getIContextOwnAircraft()->updateOwnSituation(aircraft.getSituation(), IContextSimulator::InterfaceName());
         this->getIContextOwnAircraft()->updateOwnCockpit(aircraft.getCom1System(), aircraft.getCom2System(), aircraft.getTransponder(), IContextSimulator::InterfaceName());
+    }
+
+    void CContextSimulator::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &initialSituation)
+    {
+        Q_ASSERT(this->m_simulator);
+        this->m_simulator->addAircraftSituation(callsign, initialSituation);
+    }
+
+    void CContextSimulator::updateCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
+    {
+        Q_ASSERT(this->m_simulator);
+
+        // avoid loops
+        if (originator.isEmpty() || originator == IContextSimulator::InterfaceName()) return;
+
+        // update
+        this->m_simulator->updateOwnCockpit(ownAircraft);
     }
 
     void CContextSimulator::setConnectionStatus(ISimulator::Status status)
@@ -156,7 +176,8 @@ namespace BlackCore
             if (!QLibrary::isLibrary(fileName))
                 continue;
 
-            QPluginLoader loader(m_pluginsDir.absoluteFilePath(fileName));
+            QString pluginPath = m_pluginsDir.absoluteFilePath(fileName);
+            QPluginLoader loader(pluginPath);
             QObject *plugin = loader.instance();
             if (plugin)
             {
@@ -172,6 +193,7 @@ namespace BlackCore
             else
             {
                 qDebug() << loader.errorString();
+                qDebug() << "Also check if required dll/libs of plugin exists";
             }
         }
     }

@@ -69,7 +69,7 @@ namespace BlackCore
                 this->m_network->sendIcaoCodesQuery(callsign);
                 this->m_network->sendCapabilitiesQuery(callsign);
                 this->m_network->sendServerQuery(callsign);
-                this->sendFsipirCustomPackage(callsign);
+                this->sendFsipirCustomPackage(callsign); // own aircraft model
             }
         }
         else

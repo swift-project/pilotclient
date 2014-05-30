@@ -102,4 +102,4 @@ namespace BlackCore
 
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
 
-#endif // BLACKCORE_SIMULATOR_H
+#endif // guard

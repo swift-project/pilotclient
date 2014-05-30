@@ -223,7 +223,6 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         CCallsignList callsigns = this->m_voice->getVoiceRoomCallsigns(IVoice::COM1);
-        qDebug() << "1" << callsigns;
         return callsigns;
     }
 
@@ -235,7 +234,6 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         CCallsignList callsigns = this->m_voice->getVoiceRoomCallsigns(IVoice::COM2);
-        qDebug() << "2" << callsigns;
         return callsigns;
     }
 

@@ -27,21 +27,13 @@ namespace BlackMisc
         class CVoiceRoomList : public CSequence<CVoiceRoom>
         {
         public:
-            /*!
-             * \brief Default constructor.
-             */
+            //! Default constructor.
             CVoiceRoomList();
 
-            /*!
-             * \brief Construct from a base class object.
-             * \param other
-             */
+            //! Construct from a base class object.
             CVoiceRoomList(const CSequence &other);
 
-            /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
-             */
+            //! \copydoc CValueObject::asQVariant
             virtual QVariant asQVariant() const
             {
                 return QVariant::fromValue(*this);

@@ -164,15 +164,15 @@ namespace BlackCore
             // connect signal / slots when enabled
             QMetaObject::Connection con;
             con = QObject::connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftSituation,
-            [this](const BlackMisc::Aviation::CAircraft & aircraft, const QString & originator) { QStringList l; l << "changedAircraftSituation" << aircraft.toQString() << originator; this->logSignal(this->getIContextApplication(), l);});
+            [this](const BlackMisc::Aviation::CAircraft & aircraft, const QString & originator) { QStringList l; l << "changedAircraftSituation" << aircraft.toQString() << originator; this->logSignal(this->getIContextOwnAircraft(), l);});
             this->m_logSignalConnections.insert("ownaircraft", con);
 
             con = QObject::connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit,
-            [this](const BlackMisc::Aviation::CAircraft & aircraft, const QString & originator) { QStringList l; l << "changedAircraftCockpit" << aircraft.toQString() << originator; this->logSignal(this->getIContextApplication(), l);});
+            [this](const BlackMisc::Aviation::CAircraft & aircraft, const QString & originator) { QStringList l; l << "changedAircraftCockpit" << aircraft.toQString() << originator; this->logSignal(this->getIContextOwnAircraft(), l);});
             this->m_logSignalConnections.insert("ownaircraft", con);
 
             con = QObject::connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftPosition,
-            [this](const BlackMisc::Aviation::CAircraft & aircraft, const QString & originator) { QStringList l; l << "changedAircraftPosition" << aircraft.toQString() << originator; this->logSignal(this->getIContextApplication(), l);});
+            [this](const BlackMisc::Aviation::CAircraft & aircraft, const QString & originator) { QStringList l; l << "changedAircraftPosition" << aircraft.toQString() << originator; this->logSignal(this->getIContextOwnAircraft(), l);});
             this->m_logSignalConnections.insert("ownaircraft", con);
         }
         else
@@ -431,13 +431,21 @@ namespace BlackCore
             Q_ASSERT(c);
         }
 
-        if (this->m_contextSimulator && this->m_contextSimulator->usingLocalObjects() && this->m_contextNetwork)
+        if (this->m_contextSimulator && this->m_contextSimulator->usingLocalObjects() && this->getCContextSimulator()->m_simulator)
         {
             // only connect if simulator running locally, no round trips
-            if (this->getCContextSimulator()->m_simulator)
+            if (this->m_contextNetwork && this->m_contextNetwork->usingLocalObjects())
             {
                 c = connect(this->m_contextNetwork, &IContextNetwork::changedAircraftSituation,
-                            this->getCContextSimulator()->m_simulator, &ISimulator::addAircraftSituation);
+                            this->getCContextSimulator(), &CContextSimulator::addAircraftSituation);
+                Q_ASSERT(c);
+            }
+
+            // only if own aircraft running locally
+            if (this->m_contextOwnAircraft && this->m_contextOwnAircraft->usingLocalObjects())
+            {
+                c = connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit,
+                            this->getCContextSimulator(), &CContextSimulator::updateCockpitFromContext);
                 Q_ASSERT(c);
             }
         }
