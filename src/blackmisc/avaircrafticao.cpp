@@ -1,6 +1,8 @@
 #include "avaircrafticao.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+
 #include <tuple>
+#include <QRegularExpression>
 
 namespace BlackMisc
 {
@@ -12,7 +14,7 @@ namespace BlackMisc
         QString CAircraftIcao::convertToQString(bool /** i18n **/) const
         {
             QString s(this->m_aircraftDesignator);
-            s.append(" ").append(this->m_aircraftCombinedType);
+            if (this->hasAircraftCombinedType()) s.append(" ").append(this->m_aircraftCombinedType);
             if (this->hasAirlineDesignator()) s.append(" ").append(this->m_airlineDesignator);
             if (this->hasLivery()) s.append(" ").append(this->m_livery);
             if (this->hasAircraftColor()) s.append(" ").append(this->m_aircraftColor);
@@ -62,7 +64,7 @@ namespace BlackMisc
         }
 
         /*
-         * As string?
+         * As string
          */
         QString CAircraftIcao::asString() const
         {
@@ -161,6 +163,16 @@ namespace BlackMisc
                 Q_ASSERT_X(false, "CAircraftIcao", "index unknown");
                 break;
             }
+        }
+
+        /*
+         * Valid designator?
+         */
+        bool CAircraftIcao::isValidDesignator(const QString &designator)
+        {
+            static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
+            if (designator.length() < 2 || designator.length() > 5) return false;
+            return (regexp.match(designator).hasMatch());
         }
 
         /*

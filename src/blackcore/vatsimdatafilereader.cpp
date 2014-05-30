@@ -4,6 +4,8 @@
 #include "blackmisc/nwserver.h"
 #include "vatsimdatafilereader.h"
 
+#include <QRegularExpression>
+
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -60,6 +62,12 @@ namespace BlackCore
         CCallsignList callsigns;
         callsigns.push_back(callsign);
         return this->getPilotsForCallsigns(callsigns);
+    }
+
+    CAircraftIcao CVatsimDataFileReader::getIcaoInfo(const CCallsign &callsign)
+    {
+        CAircraft aircraft = this->m_aircrafts.findFirstByCallsign(callsign);
+        return aircraft.getIcaoInfo();
     }
 
     CUserList CVatsimDataFileReader::getControllersForCallsign(const CCallsign &callsign)
@@ -176,6 +184,25 @@ namespace BlackCore
                             CAircraftSituation situation(position, altitude);
                             situation.setGroundspeed(CSpeed(groundspeed, CSpeedUnit::kts()));
                             CAircraft aircraft(user.getCallsign().getStringAsSet(), user, situation);
+
+                            QString icaoCode = clientPartsMap["planned_aircraft"];
+                            if (!icaoCode.isEmpty())
+                            {
+                                // http://uk.flightaware.com/about/faq_aircraft_flight_plan_suffix.rvt
+                                // we expect something like H/B772/F B773 B773/F
+                                static const QRegularExpression reg("/.");
+                                icaoCode = icaoCode.replace(reg, "").trimmed().toUpper();
+                                if (CAircraftIcao::isValidDesignator(icaoCode))
+                                {
+                                    aircraft.setIcaoInfo(CAircraftIcao(icaoCode));
+                                }
+                                else
+                                {
+                                    const QString w = QString("Illegal ICAO code in VATSIM data file: %1").arg(icaoCode);
+                                    qWarning(w.toLatin1());
+                                }
+                            }
+
                             this->m_aircrafts.push_back(aircraft);
                         }
                         else if (clientType.startsWith('a'))

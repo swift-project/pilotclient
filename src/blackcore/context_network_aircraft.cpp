@@ -26,6 +26,14 @@ namespace BlackCore
     {
         // update
         CIndexVariantMap vm(CAircraft::IndexIcao, icaoData.toQVariant());
+        if (!icaoData.hasAircraftDesignator())
+        {
+            // empty so far, try to fetch from data file
+            qDebug() << "Empty ICAO info for " << callsign << icaoData;
+            CAircraftIcao icaoDataDataFile = this->m_vatsimDataFileReader->getIcaoInfo(callsign);
+            if (!icaoDataDataFile.hasAircraftDesignator()) return; // give up!
+            vm = CIndexVariantMap(CAircraft::IndexIcao, icaoData.toQVariant());
+        }
         this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);
         emit this->changedAircraftsInRange();
     }

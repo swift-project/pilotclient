@@ -70,6 +70,7 @@ namespace BlackCore
         foreach(CAircraft aircraft, this->m_aircraftsInRange)
         {
             this->m_network->sendFrequencyQuery(aircraft.getCallsign());
+            this->m_network->sendIcaoCodesQuery(aircraft.getCallsign());
         }
     }
 

@@ -71,6 +71,9 @@ namespace BlackCore
         //! Users for callsign
         BlackMisc::Network::CUserList getPilotsForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! ICAO info for callsign
+        BlackMisc::Aviation::CAircraftIcao getIcaoInfo(const  BlackMisc::Aviation::CCallsign &callsign);
+
     private slots:
         //! Data have been read
         void loadFinished(QNetworkReply *nwReply);

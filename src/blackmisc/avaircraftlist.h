@@ -43,6 +43,9 @@ namespace BlackMisc
             //! Find 0..n stations by callsign
             CAircraftList findByCallsign(const CCallsign &callsign) const;
 
+            //! Find the first aircraft by callsign, if none return given one
+            CAircraft findFirstByCallsign(const CCallsign &callsign, const CAircraft &ifNotFound = CAircraft()) const;
+
             //! All pilots (with valid data)
             BlackMisc::Network::CUserList getPilots() const;
 
@@ -59,7 +62,7 @@ namespace BlackMisc
 
             //! \brief Update aircraft with data from VATSIM data file
             //! \remarks The list used needs to contain the VATSIM data file objects
-            int updateFromVatsimDataFileAircraft(CAircraft &aircraftToBeUpdated) const;
+            bool updateFromVatsimDataFileAircraft(CAircraft &aircraftToBeUpdated) const;
         };
 
     } //namespace

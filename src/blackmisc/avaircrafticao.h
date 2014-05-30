@@ -25,6 +25,9 @@ namespace BlackMisc
             //! Default constructor.
             CAircraftIcao() {}
 
+            //! Default constructor.
+            explicit CAircraftIcao(const QString &icao) : m_aircraftDesignator(icao.trimmed().toUpper()) {}
+
             /*!
              * Constructor.
              * \param icao "B737"
@@ -62,7 +65,7 @@ namespace BlackMisc
             bool hasAirlineDesignator() const { return !this->m_airlineDesignator.isEmpty(); }
 
             //! Airline and Aircraft designator?
-            bool hasAircraftAndAirlineDsignator() const { return this->hasAirlineDesignator() && this->hasAircraftDesignator(); }
+            bool hasAircraftAndAirlineDesignator() const { return this->hasAirlineDesignator() && this->hasAircraftDesignator(); }
 
             //! Get livery
             const QString &getLivery() const { return this->m_livery; }
@@ -148,6 +151,9 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+
+            //! Valid designator?
+            static bool isValidDesignator(const QString &designator);
 
         protected:
             //! \copydoc CValueObject::convertToQString

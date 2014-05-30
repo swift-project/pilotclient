@@ -48,6 +48,16 @@ namespace BlackMisc
         }
 
         /*
+         * Find by callsign
+         */
+        CAircraft CAircraftList::findFirstByCallsign(const CCallsign &callsign, const CAircraft &ifNotFound) const
+        {
+            CAircraftList aircrafts = this->findByCallsign(callsign);
+            if (aircrafts.isEmpty()) return ifNotFound;
+            return aircrafts.front();
+        }
+
+        /*
          * All pilots
          */
         CUserList CAircraftList::getPilots() const
@@ -75,27 +85,26 @@ namespace BlackMisc
         /*
          * Merge with aircraft
          */
-        int CAircraftList::updateFromVatsimDataFileAircraft(CAircraft &aircraftToBeUpdated) const
+        bool CAircraftList::updateFromVatsimDataFileAircraft(CAircraft &aircraftToBeUpdated) const
         {
-            if (this->isEmpty()) return 0;
-            if (aircraftToBeUpdated.hasValidRealName() && aircraftToBeUpdated.hasValidId()) return 0;
+            if (this->isEmpty()) return false;
+            if (aircraftToBeUpdated.hasValidRealName() && aircraftToBeUpdated.hasValidId() && aircraftToBeUpdated.hasValidAircraftAndAirlineDesignator()) return false;
 
-            int c = 0;
-            for (auto i = this->begin(); i != this->end(); ++i)
-            {
-                CAircraft currentDataFileAircraft = *i;
-                if (currentDataFileAircraft.getCallsign() != aircraftToBeUpdated.getCallsign()) continue;
+            CAircraft currentDataFileAircraft = this->findFirstByCallsign(aircraftToBeUpdated.getCallsign());
+            if (currentDataFileAircraft.getCallsign().isEmpty()) return false;
 
-                CUser user = aircraftToBeUpdated.getPilot();
-                if (!aircraftToBeUpdated.hasValidRealName()) user.setRealName(currentDataFileAircraft.getPilotRealname());
-                if (!aircraftToBeUpdated.hasValidId()) user.setId(currentDataFileAircraft.getPilotId());
-                aircraftToBeUpdated.setPilot(user);
-                c++;
-            }
+            CUser user = aircraftToBeUpdated.getPilot();
+            if (!aircraftToBeUpdated.hasValidRealName()) user.setRealName(currentDataFileAircraft.getPilotRealname());
+            if (!aircraftToBeUpdated.hasValidId()) user.setId(currentDataFileAircraft.getPilotId());
+            aircraftToBeUpdated.setPilot(user);
 
-            // normally 1 expected, as I should find
-            // only one online station for this booking
-            return c;
+            CAircraftIcao icao = aircraftToBeUpdated.getIcaoInfo();
+            CAircraftIcao dataFileIcao = currentDataFileAircraft.getIcaoInfo();
+            if (!icao.hasAircraftDesignator()) icao.setAircraftDesignator(dataFileIcao.getAircraftDesignator());
+            if (!icao.hasAirlineDesignator()) icao.setAirlineDesignator(dataFileIcao.getAirlineDesignator());
+            if (!icao.hasAircraftCombinedType()) icao.setAircraftCombinedType(dataFileIcao.getAircraftCombinedType());
+            aircraftToBeUpdated.setIcaoInfo(icao);
+            return true;
         }
     } // namespace
 } // namespace

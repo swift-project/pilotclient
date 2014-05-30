@@ -87,6 +87,9 @@ namespace BlackMisc
             //! Has valid id?
             bool hasValidId() const { return this->m_pilot.hasValidId(); }
 
+            //! Valid designators?
+            bool hasValidAircraftAndAirlineDesignator() const { return this->m_icao.hasAircraftAndAirlineDesignator(); }
+
             /*!
              * Calculcate distance to plane, set it, and also return it
              * \param position calculated from this postion to my own aircraft
