@@ -193,7 +193,6 @@ namespace BlackGui
 
     CAircraft CCockpitV1Component::cockpitValuesToObject()
     {
-
         CAircraft ownAircraft = this->getOwnAircraft();
         CTransponder transponder = ownAircraft.getTransponder();
         CComSystem com1 = ownAircraft.getCom1System();
@@ -340,6 +339,7 @@ namespace BlackGui
         // remark
         // isAudioPlaying() is not set, as this is only a temporary value when really "something is playing"
 
+        bool changedUrl1 = (room1.getVoiceRoomUrl() == this->ui->le_CockpitVoiceRoomCom1->text());
         this->ui->le_CockpitVoiceRoomCom1->setText(room1.getVoiceRoomUrl());
         if (room1.isConnected())
         {
@@ -352,6 +352,7 @@ namespace BlackGui
             this->ui->tvp_CockpitVoiceRoom1->clear();
         }
 
+        bool changedUrl2 = (room2.getVoiceRoomUrl() == this->ui->le_CockpitVoiceRoomCom2->text());
         this->ui->le_CockpitVoiceRoomCom2->setText(room2.getVoiceRoomUrl());
         if (room2.isConnected())
         {
@@ -362,6 +363,7 @@ namespace BlackGui
             this->ui->le_CockpitVoiceRoomCom2->setStyleSheet("");
             this->ui->tvp_CockpitVoiceRoom2->clear();
         }
+        if (changedUrl1 || changedUrl2) this->updateVoiceRoomMembers();
     }
 
     void CCockpitV1Component::updateVoiceRoomMembers()
@@ -376,7 +378,6 @@ namespace BlackGui
             this->ui->tvp_CockpitVoiceRoom2->update(this->getIContextAudio()->getCom2RoomUsers());
         else
             this->ui->tvp_CockpitVoiceRoom2->clear();
-
     }
 
     void CCockpitV1Component::testSelcal()
@@ -384,7 +385,7 @@ namespace BlackGui
         QString selcalCode = this->getSelcalCode();
         if (!CSelcal::isValidCode(selcalCode))
         {
-            this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityWarning, "invalid SELCAL codde"));
+            this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityWarning, "Invalid SELCAL codde"));
         }
         else if (this->getIContextAudio())
         {
@@ -393,7 +394,7 @@ namespace BlackGui
         }
         else
         {
-            this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "No audi available"));
+            this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "No audio available"));
         }
     }
 
