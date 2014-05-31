@@ -63,8 +63,18 @@ namespace BlackSimPlugin
                 DataDefinitionGearHandlePosition
             };
 
-            //! \brief SimConnect request ID's
-            enum Requests {
+            //! SimConnect Event IDs
+            enum Events {
+                EventSetCom1Active = 100, // not overlapping with DataDefinition
+                EventSetCom2Active,
+                EventSetCom1Standby,
+                EventSetCom2Standby,
+                EventSetTransponderCode
+            };
+
+            //! SimConnect request IDs
+            enum Requests
+            {
                 RequestOwnAircraft = 1000,
                 RequestRemoveAircraft = 2000
             };
@@ -84,6 +94,10 @@ namespace BlackSimPlugin
 
             //! Initialize data definition for remote aircraft configuration
             static HRESULT initGearHandlePosition(const HANDLE hSimConnect);
+
+            //! Initialize events required setting cockpit values
+            static HRESULT initSetCockpitEvents(const HANDLE hSimConnect);
+
         };
     }
 }

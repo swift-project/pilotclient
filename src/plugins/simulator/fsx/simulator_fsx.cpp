@@ -5,9 +5,12 @@
 
 #include "simulator_fsx.h"
 #include "simconnect_datadefinition.h"
+#include "blacksim/fscommon/bcdconversions.h"
 #include "blacksim/fsx/simconnectutilities.h"
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/simulatorinfo.h"
+#include "blackmisc/project.h"
+
 #include <QTimer>
 #include <QtConcurrent>
 
@@ -15,6 +18,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackSim;
+using namespace BlackSim::FsCommon;
 using namespace BlackSim::Fsx;
 
 namespace BlackSimPlugin
@@ -57,10 +61,10 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::connectTo()
         {
-            if(m_isConnected)
+            if (m_isConnected)
                 return true;
 
-            if (FAILED(SimConnect_Open(&m_hSimConnect, "BlackBox", nullptr, 0, 0, 0)))
+            if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
             {
                 return false;
             }
@@ -80,11 +84,10 @@ namespace BlackSimPlugin
 
             auto asyncConnectFunc = [&]() -> bool
             {
-                if (FAILED(SimConnect_Open(&m_hSimConnect, "BlackBox", nullptr, 0, 0, 0))) return false;
-
+                if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0))) return false;
                 return true;
             };
-            QFuture<bool> result = QtConcurrent::run( asyncConnectFunc );
+            QFuture<bool> result = QtConcurrent::run(asyncConnectFunc);
 
             m_watcherConnect.setFuture(result);
         }
@@ -114,7 +117,7 @@ namespace BlackSimPlugin
             if (m_isConnected)
                 return true;
 
-            if (FAILED(SimConnect_Open(&m_hSimConnect, "BlackBox", nullptr, 0, 0, 0)))
+            if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
             {
                 return false;
             }
@@ -172,6 +175,53 @@ namespace BlackSimPlugin
             return this->m_simulatorInfo;
         }
 
+        bool CSimulatorFsx::updateOwnCockpit(const CAircraft &ownAircraft)
+        {
+            CComSystem newCom1 = ownAircraft.getCom1System();
+            CComSystem newCom2 = ownAircraft.getCom2System();
+            CTransponder newTransponder = ownAircraft.getTransponder();
+
+            bool changed = false;
+            if (newCom1 != this->m_ownAircraft.getCom1System())
+            {
+                if (newCom1.getFrequencyActive() != this->m_ownAircraft.getCom1System().getFrequencyActive())
+                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, CSimConnectDataDefinition::EventSetCom1Active,
+                                                   CBcdConversions::comFrequencyToBcdHz(newCom1.getFrequencyActive()), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                if (newCom1.getFrequencyStandby() != this->m_ownAircraft.getCom1System().getFrequencyStandby())
+                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, CSimConnectDataDefinition::EventSetCom1Standby,
+                                                   CBcdConversions::comFrequencyToBcdHz(newCom1.getFrequencyStandby()), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+
+                this->m_ownAircraft.setCom1System(newCom1);
+                changed = true;
+            }
+
+            if (newCom2 != this->m_ownAircraft.getCom2System())
+            {
+                if (newCom2.getFrequencyActive() != this->m_ownAircraft.getCom2System().getFrequencyActive())
+                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, CSimConnectDataDefinition::EventSetCom2Active,
+                                                   CBcdConversions::comFrequencyToBcdHz(newCom2.getFrequencyActive()), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                if (newCom2.getFrequencyStandby() != this->m_ownAircraft.getCom2System().getFrequencyStandby())
+                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, CSimConnectDataDefinition::EventSetCom2Standby,
+                                                   CBcdConversions::comFrequencyToBcdHz(newCom2.getFrequencyStandby()), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+
+                this->m_ownAircraft.setCom2System(newCom1);
+                changed = true;
+            }
+
+            if (newTransponder != this->m_ownAircraft.getTransponder())
+            {
+                if (newTransponder.getTransponderCode() != this->m_ownAircraft.getTransponder().getTransponderCode())
+                {
+                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, CSimConnectDataDefinition::EventSetTransponderCode,
+                                                   CBcdConversions::transponderCodeToBcd(newTransponder), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+                    changed = true;
+                }
+                this->m_ownAircraft.setTransponder(newTransponder);
+            }
+
+            return changed;
+        }
+
         void CALLBACK CSimulatorFsx::SimConnectProc(SIMCONNECT_RECV *pData, DWORD /* cbData */, void *pContext)
         {
             CSimulatorFsx *simulatorFsx = static_cast<CSimulatorFsx *>(pContext);
@@ -217,23 +267,24 @@ namespace BlackSimPlugin
                     else if (event->uEventID == EVENT_OBJECT_REMOVED)
                     {
                     }
-
                     break;
                 }
             case SIMCONNECT_RECV_ID_EVENT_FRAME:
                 {
                     SIMCONNECT_RECV_EVENT_FRAME  *event = (SIMCONNECT_RECV_EVENT_FRAME *) pData;
-                    switch(event->uEventID)
+                    switch (event->uEventID)
                     {
                     case EVENT_FRAME:
                         simulatorFsx->onSimFrame();
                         break;
                     }
+                    break;
                 }
             case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
                 {
                     SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
                     simulatorFsx->setSimconnectObjectID(event->dwRequestID, event->dwObjectID);
+                    break;
                 }
             case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
                 {
@@ -243,12 +294,11 @@ namespace BlackSimPlugin
                     case CSimConnectDataDefinition::RequestOwnAircraft:
                         DataDefinitionOwnAircraft *ownAircaft;
                         ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
-                        simulatorFsx->setOwnAircraft(*ownAircaft);
+                        simulatorFsx->updateOwnAircraftFromSim(*ownAircaft);
                         break;
                     }
                     break;
                 }
-
             }
         }
 
@@ -275,7 +325,7 @@ namespace BlackSimPlugin
 
         }
 
-        void CSimulatorFsx::setOwnAircraft(DataDefinitionOwnAircraft aircraft)
+        void CSimulatorFsx::updateOwnAircraftFromSim(DataDefinitionOwnAircraft aircraft)
         {
             BlackMisc::Geo::CCoordinateGeodetic position;
             position.setLatitude(CLatitude(aircraft.latitude, CAngleUnit::deg()));
@@ -358,8 +408,8 @@ namespace BlackSimPlugin
             }
             else
                 emit statusChanged(ConnectionFailed);
-		}
-		
+        }
+
         void CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
         {
             SimConnect_AIRemoveObject(m_hSimConnect, simObject.getObjectId(), simObject.getRequestId());
@@ -404,6 +454,8 @@ namespace BlackSimPlugin
                     position.Bank = situation.getBank().value();
                     position.Heading = situation.getHeading().value(CAngleUnit::deg());
                     position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
+
+                    // TODO: epic fail for helicopters and VTOPs!
                     position.OnGround = position.Airspeed < 30 ? 1 : 0;
 
                     DataDefinitionRemoteAircraftSituation ddAircraftSituation;

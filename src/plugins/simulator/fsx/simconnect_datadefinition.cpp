@@ -20,6 +20,7 @@ namespace BlackSimPlugin
             hr = initOwnAircraft(hSimConnect);
             hr = initRemoteAircraftSituation(hSimConnect);
             hr = initGearHandlePosition(hSimConnect);
+            hr = initSetCockpitEvents(hSimConnect);
             return hr;
         }
 
@@ -39,7 +40,6 @@ namespace BlackSimPlugin
             hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataOwnAircraft, "COM ACTIVE FREQUENCY:2", "MHz");
             hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataOwnAircraft, "COM STANDBY FREQUENCY:1", "MHz");
             hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataOwnAircraft, "COM STANDBY FREQUENCY:2", "MHz");
-
             return hr;
         }
 
@@ -54,6 +54,17 @@ namespace BlackSimPlugin
         {
             HRESULT hr = S_OK;
             hr = SimConnect_AddToDataDefinition(hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, "GEAR HANDLE POSITION", "BOOL", SIMCONNECT_DATATYPE_INT32);
+            return hr;
+        }
+
+
+        HRESULT CSimConnectDataDefinition::initSetCockpitEvents(const HANDLE hSimConnect) {
+            HRESULT hr = S_OK;
+            hr = SimConnect_MapClientEventToSimEvent(hSimConnect, EventSetCom1Active, "COM_RADIO_SET");
+            hr = SimConnect_MapClientEventToSimEvent(hSimConnect, EventSetCom1Standby, "COM_STBY_RADIO_SET");
+            hr = SimConnect_MapClientEventToSimEvent(hSimConnect, EventSetCom2Active, "COM2_RADIO_SET");
+            hr = SimConnect_MapClientEventToSimEvent(hSimConnect, EventSetCom2Standby, "COM2_STBY_RADIO_SET");
+            hr = SimConnect_MapClientEventToSimEvent(hSimConnect, EventSetTransponderCode, "XPNDR_SET");
             return hr;
         }
     }

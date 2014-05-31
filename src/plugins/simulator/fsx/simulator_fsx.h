@@ -31,6 +31,7 @@ namespace BlackSimPlugin
         class Q_DECL_EXPORT CSimulatorFsxFactory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
+            // TODO: @RW, move this string into CProject please
             Q_PLUGIN_METADATA(IID "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
             Q_INTERFACES(BlackCore::ISimulatorFactory)
 
@@ -100,6 +101,9 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::getSimulatorInfo()
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
+            //! \copydoc ISimulator::updateOwnCockpit
+            virtual bool updateOwnCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft) override;
+
             //! \brief Called when sim has started
             void onSimRunning();
 
@@ -109,11 +113,8 @@ namespace BlackSimPlugin
             //! \brief Slot called every visual frame
             void onSimFrame();
 
-            /*!
-             * \brief Called when data about our own aircraft is received
-             * \param aircraft
-             */
-            void setOwnAircraft(DataDefinitionOwnAircraft aircraft);
+            //! Called when data about our own aircraft is received
+            void updateOwnAircraftFromSim(DataDefinitionOwnAircraft aircraft);
 
             /*!
              * \brief Set ID of a SimConnect object

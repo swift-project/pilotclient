@@ -23,6 +23,7 @@ namespace BlackCore
     class ISimulator : public QObject
     {
         Q_OBJECT
+
     public:
 
         //! \brief Simulator connection
@@ -68,15 +69,15 @@ namespace BlackCore
         //! Remove remote aircraft from simulator
         virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
+        //! Update own aircraft cockpit (usually from context)
+        virtual bool updateOwnCockpit(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
+
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
 
     signals:
         //! Emitted when the connection status has changed
         void statusChanged(ISimulator::Status status);
-
-        //! Emitted when new a new data object of the user aircraft is received
-        void ownAircraftReceived(BlackMisc::Aviation::CAircraft aircraft);
     };
 
     //! Factory pattern class to create instances of ISimulator
@@ -100,6 +101,7 @@ namespace BlackCore
 
 } // namespace BlackCore
 
+// TODO: Use CProject to store this string
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
 
 #endif // guard

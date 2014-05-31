@@ -80,8 +80,15 @@ namespace BlackCore
         }
 
     private slots:
-        //! \copydoc IContextSimulator::updateOwnAircraft()
-        virtual void updateOwnAircraft();
+        //! Update own aircraft, because simulator has changed something
+        void updateOwnAircraft();
+
+        //! \copydoc ISimulator::addAircraftSituation
+        void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
+
+        //! Update cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
+        //! \remarks set by runtime, only locally
+        void updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
 
         //! Set new connection status
         void setConnectionStatus(ISimulator::Status status);
