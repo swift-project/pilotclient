@@ -119,7 +119,7 @@ namespace BlackCore
      */
     bool CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator)
     {
-        if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, position.toQString(), altitude.toQString());
+        if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, position.toQString(), altitude.toQString(), originator);
         bool changed = (this->m_ownAircraft.getPosition() == position);
         if (changed) this->m_ownAircraft.setPosition(position);
 
@@ -179,6 +179,8 @@ namespace BlackCore
 
     void CContextOwnAircraft::setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2)
     {
+        if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, QString::number(outputVolumeCom1), QString::number(outputVolumeCom2));
+
         CComSystem com1 = this->m_ownAircraft.getCom1System();
         com1.setVolumeOutput(outputVolumeCom1);
         this->m_ownAircraft.setCom1System(com1);
@@ -207,9 +209,20 @@ namespace BlackCore
      */
     void CContextOwnAircraft::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)
     {
+        if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, voiceRoom1Url, voiceRoom2Url);
+
         this->m_voiceRoom1UrlOverride = voiceRoom1Url.trimmed();
         this->m_voiceRoom2UrlOverride = voiceRoom2Url.trimmed();
         this->resolveVoiceRooms();
+    }
+
+    /*
+     *  Voice room resolution
+     */
+    void CContextOwnAircraft::enableAutomaticVoiceRoomResolution(bool enable)
+    {
+        if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, enable);
+        this->m_automaticVoiceRoomResolution = enable;
     }
 
     /*

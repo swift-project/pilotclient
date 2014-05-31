@@ -132,7 +132,7 @@ namespace BlackMiscTest
                 if (line.startsWith("app")) runtime->slotLogForApplication(enable);
                 else if (line.startsWith("aud")) runtime->slotLogForAudio(enable);
                 else if (line.startsWith("net")) runtime->slotLogForNetwork(enable);
-                else if (line.startsWith("own")) runtime->signalLogForOwnAircraft(enable);
+                else if (line.startsWith("own")) runtime->slotLogForOwnAircraft(enable);
                 else if (line.startsWith("set")) runtime->slotLogForSettings(enable);
                 else if (line.startsWith("sim")) runtime->slotLogForSimulator(enable);
                 else if (line.startsWith("all")) runtime->slotLog(enable);

@@ -55,7 +55,7 @@ namespace BlackCore
         virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url) override;
 
         //! \copydoc IContextOwnAircraft::enableAutomaticVoiceRoomResolution
-        virtual void enableAutomaticVoiceRoomResolution(bool enable) override { this->m_automaticVoiceRoomResolution = enable; }
+        virtual void enableAutomaticVoiceRoomResolution(bool enable) override;
 
     protected:
         //! Constructor, with link to runtime
