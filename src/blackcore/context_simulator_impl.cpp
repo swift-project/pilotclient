@@ -89,7 +89,11 @@ namespace BlackCore
 
     Network::CAircraftModel CContextSimulator::getOwnAircraftModel() const
     {
-        return this->m_aircraftModel;
+        // If no ISimulator object is available, return a dummy.
+        if (!m_simulator)
+            return Network::CAircraftModel();
+
+        return this->m_simulator->getAircraftModel();
     }
 
     bool CContextSimulator::loadSimulatorPlugin(const CSimulatorInfo &simulatorInfo)

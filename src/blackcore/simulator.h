@@ -9,6 +9,7 @@
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/avaircraft.h"
+#include "blackmisc/nwaircraftmodel.h"
 #include <QObject>
 
 namespace BlackCore
@@ -78,6 +79,9 @@ namespace BlackCore
 
         //! Display a status message in the simulator
         virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const = 0;
+
+        //! Aircraft Model
+        virtual BlackMisc::Network::CAircraftModel getAircraftModel() const = 0;
 
     signals:
         //! Emitted when the connection status has changed

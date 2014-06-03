@@ -117,6 +117,11 @@ namespace BlackSimPlugin
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
 
             //! \brief Called when simulat has been started
+
+            //! \copydoc ISimulator::getAircraftModel()
+            virtual BlackMisc::Network::CAircraftModel getAircraftModel() const override { return m_aircraftModel; }
+
+            //! \brief Called when sim has started
             void onSimRunning();
 
             //! \brief Called when sim has stopped
@@ -139,7 +144,7 @@ namespace BlackSimPlugin
             void onSimExit();
 
             //! \private
-            void setAircraftModel( const BlackMisc::Network::CAircraftModel &model) { m_aircraftModel = model; }
+            void setAircraftModel(const BlackMisc::Network::CAircraftModel &model) { m_aircraftModel = model; }
 
         protected:
             //! Timer event
