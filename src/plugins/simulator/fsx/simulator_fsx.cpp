@@ -18,6 +18,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Network;
 using namespace BlackSim;
 using namespace BlackSim::FsCommon;
 using namespace BlackSim::Fsx;
@@ -337,6 +338,11 @@ namespace BlackSimPlugin
                         ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
                         simulatorFsx->updateOwnAircraftFromSim(*ownAircaft);
                         break;
+                    case CSimConnectDataDefinition::RequestOwnAircraftTitle:
+                        DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
+                        CAircraftModel model;
+                        model.setQueriedModelString(dataDefinitionModel->title);
+                        simulatorFsx->setAircraftModel(model);
                     }
                     break;
                 }
@@ -350,6 +356,13 @@ namespace BlackSimPlugin
             SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::RequestOwnAircraft,
                                               CSimConnectDataDefinition::DataOwnAircraft,
                                               SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME);
+
+
+            SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::RequestOwnAircraftTitle,
+                                              CSimConnectDataDefinition::DataOwnAircraftTitle,
+                                              SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND,
+                                              SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+
             emit simulatorStarted();
         }
 

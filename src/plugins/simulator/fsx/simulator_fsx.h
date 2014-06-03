@@ -12,6 +12,7 @@
 #include "blackcore/interpolator_linear.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/nwaircraftmodel.h"
 #include "blacksim/simulatorinfo.h"
 
 #include <simconnect/SimConnect.h>
@@ -137,6 +138,9 @@ namespace BlackSimPlugin
             //! \private
             void onSimExit();
 
+            //! \private
+            void setAircraftModel( const BlackMisc::Network::CAircraftModel &model) { m_aircraftModel = model; }
+
         protected:
             //! Timer event
             virtual void timerEvent(QTimerEvent *event);
@@ -172,6 +176,8 @@ namespace BlackSimPlugin
             BlackSim::CSimulatorInfo m_simulatorInfo;
             BlackMisc::Aviation::CAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
+            BlackMisc::Network::CAircraftModel m_aircraftModel;
+
             int m_simconnectTimerId;
             int m_skipCockpitUpdateCycles; //!< Skip some update cycles to allow changes in simulator cockpit to be set
             QFutureWatcher<bool> m_watcherConnect;

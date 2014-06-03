@@ -39,6 +39,12 @@ namespace BlackSimPlugin
         };
 
         //! Data struct of aircraft position
+        struct DataDefinitionOwnAircraftModel
+        {
+            char title[256]; //!< Aircraft model string
+        };
+
+        //! Data struct of aircraft position
         struct DataDefinitionRemoteAircraftSituation
         {
             SIMCONNECT_DATA_INITPOSITION position;  //!< Position struct
@@ -59,6 +65,7 @@ namespace BlackSimPlugin
             enum DataDefiniton
             {
                 DataOwnAircraft,
+                DataOwnAircraftTitle,
                 DataDefinitionRemoteAircraftSituation,
                 DataDefinitionGearHandlePosition
             };
@@ -66,8 +73,9 @@ namespace BlackSimPlugin
             //! SimConnect request IDs
             enum Requests
             {
-                RequestOwnAircraft = 1000,
-                RequestRemoveAircraft = 2000
+                RequestOwnAircraft,
+                RequestRemoveAircraft,
+                RequestOwnAircraftTitle
             };
 
             //! Constructor
