@@ -9,6 +9,10 @@ contains(BLACK_CONFIG, BlackSound) {
     SUBDIRS += src/blacksound
 }
 
+contains(BLACK_CONFIG, BlackInput) {
+    SUBDIRS += src/blackinput
+}
+
 contains(BLACK_CONFIG, BlackSim) {
     SUBDIRS += src/blacksim
 }

@@ -9,7 +9,7 @@ TARGET = sample_hotkey
 TEMPLATE = app
 
 CONFIG   -= app_bundle
-CONFIG   += blackmisc blackcore
+CONFIG   += blackmisc blackinput blackcore
 
 DEPENDPATH += . ../../src
 INCLUDEPATH += . ../../src

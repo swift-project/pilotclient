@@ -7,14 +7,14 @@
     \file
 */
 
-#ifndef BLACKCORE_KEYBOARD_MAC_H
-#define BLACKCORE_KEYBOARD_MAC_H
+#ifndef BLACKINPUT_KEYBOARD_MAC_H
+#define BLACKINPUT_KEYBOARD_MAC_H
 
-#include "blackcore/keyboard.h"
+#include "blackinput/keyboard.h"
 #include "blackmisc/hwkeyboardkey.h"
 #include <QHash>
 
-namespace BlackCore
+namespace BlackInput
 {
     //! \brief Linux implemenation of IKeyboard using hook procedure
     //! \todo Change QHash to a CCollection object
@@ -84,4 +84,4 @@ namespace BlackCore
     };
 }
 
-#endif // BLACKCORE_KEYBOARD_MAC_H
+#endif // BLACKINPUT_KEYBOARD_MAC_H

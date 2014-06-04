@@ -34,8 +34,7 @@ namespace BlackCore
         m_voice->moveToThread(&m_threadVoice);
         m_threadVoice.start();
 
-        // 2. Hotkeys
-        m_keyboard = IKeyboard::getInstance();
+        m_keyboard = BlackInput::IKeyboard::getInstance();
 
         // 3. own aircraft, if possible
         if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());

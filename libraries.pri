@@ -20,6 +20,10 @@ blacksound {
     LIBS += -lblacksound
 }
 
+blackinput {
+    LIBS += -lblackinput
+}
+
 blacksim {
     LIBS += -lblacksim
 }

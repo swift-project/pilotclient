@@ -23,6 +23,7 @@ DEFINES += BLACK_VERSION=$$BLACK_VERSION
 BLACK_CONFIG    += BlackCore
 BLACK_CONFIG    += BlackGui
 BLACK_CONFIG    += BlackSound
+BLACK_CONFIG    += BlackInput
 BLACK_CONFIG	+= BlackSim
 BLACK_CONFIG    += Samples
 BLACK_CONFIG    += Unittests
@@ -35,6 +36,7 @@ BLACK_CONFIG    += FSX
 ################################
 
 contains(BLACK_CONFIG, BlackSound) { DEFINES += WITH_BLACKSOUND }
+contains(BLACK_CONFIG, BlackInput) { DEFINES += WITH_BLACKINPUT }
 contains(BLACK_CONFIG, BlackSim) { DEFINES += WITH_BLACKSIM }
 contains(BLACK_CONFIG, BlackCore) { DEFINES += WITH_BLACKCORE }
 contains(BLACK_CONFIG, BlackGui) { DEFINES += WITH_BLACKGUI }

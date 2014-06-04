@@ -10,7 +10,7 @@ TEMPLATE = app
 
 CONFIG   += console
 CONFIG   -= app_bundle
-CONFIG   += blackmisc blacksound blackcore blacksim
+CONFIG   += blackmisc blacksound blackinput blackcore blacksim
 
 DEPENDPATH += . ../../src/blackmisc ../../src/blacksound ../../src/blackcore ../../src/blacksim
 INCLUDEPATH += . ../../src

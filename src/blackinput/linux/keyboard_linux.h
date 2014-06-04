@@ -7,28 +7,24 @@
     \file
 */
 
-#ifndef BLACKCORE_KEYBOARD_WINDOWS_H
-#define BLACKCORE_KEYBOARD_WINDOWS_H
+#ifndef BLACKINPUT_KEYBOARD_LINUX_H
+#define BLACKINPUT_KEYBOARD_LINUX_H
 
-#include "blackcore/keyboard.h"
+#include "blackinput/keyboard.h"
 #include "blackmisc/hwkeyboardkey.h"
 #include <QHash>
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <windows.h>
 
-namespace BlackCore
+namespace BlackInput
 {
-    //! \brief Windows implemenation of IKeyboard using hook procedure
+    //! \brief Linux implemenation of IKeyboard using hook procedure
     //! \todo Change QHash to a CCollection object
-    class CKeyboardWindows : public IKeyboard
+    class CKeyboardLinux : public IKeyboard
     {
         Q_OBJECT
     public:
 
         //! \brief Destructor
-        virtual ~CKeyboardWindows();
+        virtual ~CKeyboardLinux();
 
         //! \copydoc IKeyboard::selectKey()
         virtual void startCapture(bool ignoreNextKey = false) override;
@@ -39,27 +35,21 @@ namespace BlackCore
         //! \copydoc IKeyboard::triggerKey()
         virtual void triggerKey(const BlackMisc::Hardware::CKeyboardKey key, bool isPressed) override;
 
-        //! \brief Keyboard hook handle
-        HHOOK keyboardHook() const { return m_keyboardHook; }
-
-        //! \private
-        void keyEvent(WPARAM vkCode, uint event);
-
     protected:
 
         friend class IKeyboard;
 
         //! \brief Constructor
-        CKeyboardWindows(QObject *parent = nullptr);
+        CKeyboardLinux(QObject *parent = nullptr);
 
         //! \brief Copy Constructor
-        CKeyboardWindows(CKeyboardWindows const&);
+        CKeyboardLinux(CKeyboardLinux const&);
 
         //! \copydoc IKeyboard::init()
         virtual bool init() override;
 
         //! \brief Assignment operator
-        void operator=(CKeyboardWindows const&);
+        void operator=(CKeyboardLinux const&);
 
         //! \copydoc IKeyboard::registerHotKeyImpl()
         virtual IKeyboard::RegistrationHandle registerHotkeyImpl(BlackMisc::Hardware::CKeyboardKey key, QObject *receiver, std::function<void(bool)> function) override;
@@ -86,25 +76,12 @@ namespace BlackCore
          */
         void callFunctionsBy(const BlackMisc::Hardware::CKeyboardKey &keySet, bool isPressed);
 
-        void addKey(WPARAM vkcode);
-        void removeKey(WPARAM vkcode);
-
-        /*!
-         * \brief Keyboard hook procedure
-         * \param nCode
-         * \param wParam
-         * \param lParam
-         * \return
-         */
-        static LRESULT CALLBACK keyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
-
 
         QHash<BlackMisc::Hardware::CKeyboardKey, QList<IKeyboard::RegistrationHandle>> m_registeredFunctions; //!< Registered hotkey functions
         BlackMisc::Hardware::CKeyboardKey m_pressedKey;    //!< Set of virtual keys pressed in the last cycle
         bool m_ignoreNextKey;                   //!< Is true if the next key needs to be ignored
-        HHOOK m_keyboardHook;                   //!< Keyboard hook handle
         Mode m_mode;                            //!< Operation mode
     };
 }
 
-#endif // BLACKCORE_KEYBOARD_WINDOWS_H
+#endif // BLACKINPUT_KEYBOARD_LINUX_H

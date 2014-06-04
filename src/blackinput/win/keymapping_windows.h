@@ -4,8 +4,8 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 
-#ifndef BLACKCORE_KEYMAPPING_WINDOWS_H
-#define BLACKCORE_KEYMAPPING_WINDOWS_H
+#ifndef BLACKINPUT_KEYMAPPING_WINDOWS_H
+#define BLACKINPUT_KEYMAPPING_WINDOWS_H
 
 #include "blackmisc/hwkeyboardkey.h"
 #ifndef NOMINMAX
@@ -13,7 +13,7 @@
 #endif
 #include <windows.h>
 
-namespace BlackCore
+namespace BlackInput
 {
     //! \brief This class provides methods to map between windows virtual keys and CKeyboardKey
     class CKeyMappingWindows
@@ -41,5 +41,5 @@ namespace BlackCore
         static bool isModifier(WPARAM vkcode);
     };
 
-} // namespace BlackCore
+} // namespace BlackInput
 #endif // guard

@@ -7,8 +7,8 @@
     \file
 */
 
-#ifndef BLACKCORE_KEYBOARD_H
-#define BLACKCORE_KEYBOARD_H
+#ifndef BLACKINPUT_KEYBOARD_H
+#define BLACKINPUT_KEYBOARD_H
 
 #include "../blackmisc/hwkeyboardkey.h"
 #include <QMultiMap>
@@ -16,7 +16,7 @@
 #include <QPointer>
 #include <functional>
 
-namespace BlackCore
+namespace BlackInput
 {
     /*!
      * \brief Abstract interface for native keyboard handling.
@@ -181,4 +181,4 @@ namespace BlackCore
     bool operator==(IKeyboard::RegistrationHandle const &lhs, IKeyboard::RegistrationHandle const &rhs);
 }
 
-#endif // BLACKCORE_KEYBOARD_H
+#endif // BLACKINPUT_KEYBOARD_H

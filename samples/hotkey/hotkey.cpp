@@ -16,7 +16,7 @@ HotkeyDialog::HotkeyDialog(QWidget *parent) :
     m_lblHotkey(nullptr),
     m_led(nullptr)
 {
-    m_keyboard = BlackCore::IKeyboard::getInstance();
+    m_keyboard = BlackInput::IKeyboard::getInstance();
 
     setupUi();
     setupConnections();
@@ -87,7 +87,7 @@ void HotkeyDialog::setupUi()
 }
 void HotkeyDialog::setupConnections()
 {
-    connect(m_keyboard, &BlackCore::IKeyboard::keySelectionChanged, this, &HotkeyDialog::keySelectionChanged);
-    connect(m_keyboard, &BlackCore::IKeyboard::keySelectionFinished, this, &HotkeyDialog::keySelectionFinished);
+    connect(m_keyboard, &BlackInput::IKeyboard::keySelectionChanged, this, &HotkeyDialog::keySelectionChanged);
+    connect(m_keyboard, &BlackInput::IKeyboard::keySelectionFinished, this, &HotkeyDialog::keySelectionFinished);
     connect(m_pbSelect, &QPushButton::clicked, this, &HotkeyDialog::selectHotKey);
 }

@@ -12,7 +12,7 @@
 
 #include "infowindow.h"
 #include "guimodeenums.h"
-#include "blackcore/keyboard.h"
+#include "blackinput/keyboard.h"
 #include "blackcore/context_audio.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
@@ -132,7 +132,7 @@ private:
     QLabel *m_statusBarLabel; /*!< status bar label */
 
     // Hotkeys
-    BlackCore::IKeyboard *m_keyboard;
+    BlackInput::IKeyboard *m_keyboard;
 
     //! GUI status update
     void updateGuiStatusInformation();

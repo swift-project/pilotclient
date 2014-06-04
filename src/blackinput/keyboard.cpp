@@ -6,16 +6,16 @@
 #include "keyboard.h"
 
 #if defined(Q_OS_WIN)
-    #include "blackcore/win/keyboard_windows.h"
+    #include "win/keyboard_windows.h"
 #elif defined(Q_OS_LINUX)
-    #include "blackcore/linux/keyboard_linux.h"
+    #include "linux/keyboard_linux.h"
 #elif defined(Q_OS_OSX)
-    #include "blackcore/mac/keyboard_mac.h"
+    #include "osx/keyboard_mac.h"
 #else
     #error "Platform is not supported!"
 #endif
 
-namespace BlackCore
+namespace BlackInput
 {
     IKeyboard *IKeyboard::m_instance = nullptr;
 
@@ -49,4 +49,4 @@ namespace BlackCore
             return false;
     }
 
-} // BlackCore
+} // BlackInput

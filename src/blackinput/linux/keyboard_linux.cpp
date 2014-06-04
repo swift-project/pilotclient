@@ -3,36 +3,36 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "keyboard_mac.h"
+#include "keyboard_linux.h"
 #include <QDebug>
 
 using namespace BlackMisc::Hardware;
 
-namespace BlackCore
+namespace BlackInput
 {
-    CKeyboardMac::CKeyboardMac(QObject *parent) :
+    CKeyboardLinux::CKeyboardLinux(QObject *parent) :
         IKeyboard(parent),
         m_mode(Mode_Nominal)
     {
     }
 
-    CKeyboardMac::~CKeyboardMac()
+    CKeyboardLinux::~CKeyboardLinux()
     {
     }
 
-    bool CKeyboardMac::init()
+    bool CKeyboardLinux::init()
     {
         return true;
     }
 
-    void CKeyboardMac::startCapture(bool ignoreNextKey)
+    void CKeyboardLinux::startCapture(bool ignoreNextKey)
     {
         m_mode = Mode_Capture;
         m_ignoreNextKey = ignoreNextKey;
         m_pressedKey.setKeyObject(CKeyboardKey());
     }
 
-    int CKeyboardMac::sizeOfRegisteredFunctions() const
+    int CKeyboardLinux::sizeOfRegisteredFunctions() const
     {
         int size = 0;
         foreach (QList<IKeyboard::RegistrationHandle> functions, m_registeredFunctions)
@@ -42,12 +42,12 @@ namespace BlackCore
         return size;
     }
 
-    void CKeyboardMac::triggerKey(const CKeyboardKey key, bool isPressed)
+    void CKeyboardLinux::triggerKey(const CKeyboardKey key, bool isPressed)
     {
         callFunctionsBy(key, isPressed);
     }
 
-    IKeyboard::RegistrationHandle CKeyboardMac::registerHotkeyImpl(BlackMisc::Hardware::CKeyboardKey key, QObject *receiver, std::function<void(bool)> function)
+    IKeyboard::RegistrationHandle CKeyboardLinux::registerHotkeyImpl(BlackMisc::Hardware::CKeyboardKey key, QObject *receiver, std::function<void(bool)> function)
     {
         IKeyboard::RegistrationHandle handle;
 
@@ -75,19 +75,19 @@ namespace BlackCore
         return handle;
     }
 
-    void CKeyboardMac::unregisterHotkeyImpl(const IKeyboard::RegistrationHandle &handle)
+    void CKeyboardLinux::unregisterHotkeyImpl(const IKeyboard::RegistrationHandle &handle)
     {
         QList<IKeyboard::RegistrationHandle> functions = m_registeredFunctions.value(handle.m_key);
         functions.removeAll(handle);
         m_registeredFunctions.insert(handle.m_key, functions);
     }
 
-    void CKeyboardMac::unregisterAllHotkeysImpl()
+    void CKeyboardLinux::unregisterAllHotkeysImpl()
     {
         m_registeredFunctions.clear();
     }
 
-    void CKeyboardMac::sendCaptureNotification(const CKeyboardKey &key, bool isFinished)
+    void CKeyboardLinux::sendCaptureNotification(const CKeyboardKey &key, bool isFinished)
     {
         if (isFinished)
             emit keySelectionFinished(key);
@@ -95,7 +95,7 @@ namespace BlackCore
             emit keySelectionChanged(key);
     }
 
-    void CKeyboardMac::callFunctionsBy(const CKeyboardKey &key, bool isPressed)
+    void CKeyboardLinux::callFunctionsBy(const CKeyboardKey &key, bool isPressed)
     {
         QList<IKeyboard::RegistrationHandle> functionHandles = m_registeredFunctions.value(key);
         foreach (IKeyboard::RegistrationHandle functionHandle, functionHandles)

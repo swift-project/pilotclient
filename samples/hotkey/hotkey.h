@@ -7,7 +7,7 @@
 #define BLACKSAMPLE_HOTKEY_H
 
 #include "led.h"
-#include "blackcore/keyboard.h"
+#include "blackinput/keyboard.h"
 #include "blackmisc/hwkeyboardkey.h"
 
 #include <QDialog>
@@ -57,7 +57,7 @@ private:
     void setupUi();
     void setupConnections();
 
-    BlackCore::IKeyboard *m_keyboard;
+    BlackInput::IKeyboard *m_keyboard;
     QPushButton *m_pbSelect;
     QLabel      *m_lblHotkey;
     CLed        *m_led;

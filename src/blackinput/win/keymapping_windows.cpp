@@ -13,7 +13,7 @@
 
 using namespace BlackMisc::Hardware;
 
-namespace BlackCore
+namespace BlackInput
 {
     Qt::Key CKeyMappingWindows::convertToKey(WPARAM virtualKey)
     {

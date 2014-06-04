@@ -11,7 +11,7 @@
 #include "context_runtime.h"
 #include "dbus_server.h"
 #include "voice_vatlib.h"
-#include "blackcore/keyboard.h"
+#include "blackinput/keyboard.h"
 
 #include <QThread>
 #include <QQueue>
@@ -127,8 +127,8 @@ namespace BlackCore
         bool inTransitionState() const;
 
         CVoiceVatlib *m_voice; //!< underlying voice lib
-        IKeyboard *m_keyboard;
-        IKeyboard::RegistrationHandle m_handlePtt;
+        BlackInput::IKeyboard *m_keyboard;
+        BlackInput::IKeyboard::RegistrationHandle m_handlePtt;
         QThread m_threadVoice;
     };
 }

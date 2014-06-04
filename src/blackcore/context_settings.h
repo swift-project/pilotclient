@@ -8,7 +8,7 @@
 
 #include "blackcore/context.h"
 #include "blackcore/dbus_server.h"
-#include "blackcore/keyboard.h"
+#include "blackinput/keyboard.h"
 #include "blackmisc/hwkeyboardkeylist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"

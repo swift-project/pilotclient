@@ -9,7 +9,7 @@
 
 using namespace BlackMisc::Hardware;
 
-namespace BlackCore
+namespace BlackInput
 {
     CKeyboardWindows::CKeyboardWindows(QObject *parent) :
         IKeyboard(parent),

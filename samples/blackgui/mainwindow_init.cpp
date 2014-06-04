@@ -320,7 +320,7 @@ void MainWindow::setHotkeys()
     Q_ASSERT(this->getIContextSettings());
     if (!this->m_keyboard)
     {
-        this->m_keyboard = BlackCore::IKeyboard::getInstance();
+        this->m_keyboard = BlackInput::IKeyboard::getInstance();
     }
     else
     {
