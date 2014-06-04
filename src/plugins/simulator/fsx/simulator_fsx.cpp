@@ -14,6 +14,7 @@
 #include <QTimer>
 #include <QtConcurrent>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
@@ -42,7 +43,8 @@ namespace BlackSimPlugin
             m_hSimConnect(nullptr),
             m_nextObjID(1),
             m_simulatorInfo(CSimulatorInfo::FSX()),
-            m_simconnectTimerId(-1)
+            m_simconnectTimerId(-1),
+            m_skipCockpitUpdateCycles(0)
         {
             CFsxSimulatorSetup setup;
             setup.init(); // this fetches important setting on local side
@@ -69,7 +71,7 @@ namespace BlackSimPlugin
                 return false;
             }
 
-            initSystemEvents();
+            initEvents();
             initDataDefinitions();
             m_simconnectTimerId = startTimer(10);
             m_isConnected = true;
@@ -175,7 +177,7 @@ namespace BlackSimPlugin
             return this->m_simulatorInfo;
         }
 
-        bool CSimulatorFsx::updateOwnCockpit(const CAircraft &ownAircraft)
+        bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft)
         {
             CComSystem newCom1 = ownAircraft.getCom1System();
             CComSystem newCom2 = ownAircraft.getCom2System();
@@ -185,10 +187,10 @@ namespace BlackSimPlugin
             if (newCom1 != this->m_ownAircraft.getCom1System())
             {
                 if (newCom1.getFrequencyActive() != this->m_ownAircraft.getCom1System().getFrequencyActive())
-                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, CSimConnectDataDefinition::EventSetCom1Active,
+                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Active,
                                                    CBcdConversions::comFrequencyToBcdHz(newCom1.getFrequencyActive()), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 if (newCom1.getFrequencyStandby() != this->m_ownAircraft.getCom1System().getFrequencyStandby())
-                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, CSimConnectDataDefinition::EventSetCom1Standby,
+                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom1Standby,
                                                    CBcdConversions::comFrequencyToBcdHz(newCom1.getFrequencyStandby()), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
                 this->m_ownAircraft.setCom1System(newCom1);
@@ -198,13 +200,13 @@ namespace BlackSimPlugin
             if (newCom2 != this->m_ownAircraft.getCom2System())
             {
                 if (newCom2.getFrequencyActive() != this->m_ownAircraft.getCom2System().getFrequencyActive())
-                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, CSimConnectDataDefinition::EventSetCom2Active,
+                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Active,
                                                    CBcdConversions::comFrequencyToBcdHz(newCom2.getFrequencyActive()), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                 if (newCom2.getFrequencyStandby() != this->m_ownAircraft.getCom2System().getFrequencyStandby())
-                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, CSimConnectDataDefinition::EventSetCom2Standby,
+                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetCom2Standby,
                                                    CBcdConversions::comFrequencyToBcdHz(newCom2.getFrequencyStandby()), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
-                this->m_ownAircraft.setCom2System(newCom1);
+                this->m_ownAircraft.setCom2System(newCom2);
                 changed = true;
             }
 
@@ -212,14 +214,43 @@ namespace BlackSimPlugin
             {
                 if (newTransponder.getTransponderCode() != this->m_ownAircraft.getTransponder().getTransponderCode())
                 {
-                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, CSimConnectDataDefinition::EventSetTransponderCode,
+                    SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTransponderCode,
                                                    CBcdConversions::transponderCodeToBcd(newTransponder), SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
                     changed = true;
                 }
                 this->m_ownAircraft.setTransponder(newTransponder);
             }
 
+            // avoid changes of cockpit back to old values due to an outdated read back value
+            if (changed) m_skipCockpitUpdateCycles = SkipUpdateCyclesForCockpit;
+
+            // bye
             return changed;
+        }
+
+        void CSimulatorFsx::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
+        {
+            QByteArray m = message.getMessage().toLocal8Bit().constData();
+            m.append('\0');
+
+            SIMCONNECT_TEXT_TYPE type = SIMCONNECT_TEXT_TYPE_PRINT_BLACK;
+            switch (message.getSeverity())
+            {
+            case CStatusMessage::SeverityInfo:
+                type = SIMCONNECT_TEXT_TYPE_PRINT_GREEN;
+                break;
+            case CStatusMessage::SeverityWarning:
+                type = SIMCONNECT_TEXT_TYPE_PRINT_YELLOW;
+                break;
+            case CStatusMessage::SeverityError:
+                type = SIMCONNECT_TEXT_TYPE_PRINT_RED;
+                break;
+            }
+            HRESULT hr = SimConnect_Text(
+                             m_hSimConnect, type, 7.5, EventTextMessage, m.size(),
+                             m.data()
+                         );
+            Q_UNUSED(hr);
         }
 
         void CALLBACK CSimulatorFsx::SimConnectProc(SIMCONNECT_RECV *pData, DWORD /* cbData */, void *pContext)
@@ -228,6 +259,16 @@ namespace BlackSimPlugin
 
             switch (pData->dwID)
             {
+            case SIMCONNECT_RECV_ID_OPEN:
+                {
+                    SIMCONNECT_RECV_OPEN *event = (SIMCONNECT_RECV_OPEN *)pData;
+                    simulatorFsx->simulatorDetails = QString("Open: AppName=\"%1\"  AppVersion=%2.%3.%4.%5  SimConnectVersion=%6.%7.%8.%9")
+                                                     .arg(event->szApplicationName)
+                                                     .arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor)
+                                                     .arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
+                    simulatorFsx->displayStatusMessage(CStatusMessage::getInfoMessage(CProject::systemNameAndVersion()));
+                    break;
+                }
             case SIMCONNECT_RECV_ID_EXCEPTION:
                 {
                     SIMCONNECT_RECV_EXCEPTION *event = (SIMCONNECT_RECV_EXCEPTION *)pData;
@@ -236,7 +277,7 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_QUIT:
                 {
-                    simulatorFsx->onSimExit();
+                    simulatorFsx->onSimExit(); // TODO: What is the difference to sim stopped?
                     break;
                 }
             case SIMCONNECT_RECV_ID_EVENT:
@@ -245,7 +286,7 @@ namespace BlackSimPlugin
 
                     switch (event->uEventID)
                     {
-                    case EVENT_SIM_STATUS:
+                    case EventSimStatus:
                         if (event->dwData)
                         {
                             simulatorFsx->onSimRunning();
@@ -261,10 +302,10 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE:
                 {
                     SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *event = static_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *>(pData);
-                    if (event->uEventID == EVENT_OBJECT_ADDED)
+                    if (event->uEventID == EventObjectAdded)
                     {
                     }
-                    else if (event->uEventID == EVENT_OBJECT_REMOVED)
+                    else if (event->uEventID == EventObjectRemoved)
                     {
                     }
                     break;
@@ -274,7 +315,7 @@ namespace BlackSimPlugin
                     SIMCONNECT_RECV_EVENT_FRAME  *event = (SIMCONNECT_RECV_EVENT_FRAME *) pData;
                     switch (event->uEventID)
                     {
-                    case EVENT_FRAME:
+                    case EventFrame:
                         simulatorFsx->onSimFrame();
                         break;
                     }
@@ -304,15 +345,19 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimRunning()
         {
+            if (m_simRunning) return;
             m_simRunning = true;
             SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::RequestOwnAircraft,
                                               CSimConnectDataDefinition::DataOwnAircraft,
                                               SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME);
+            emit simulatorStarted();
         }
 
         void CSimulatorFsx::onSimStopped()
         {
+            if (!m_simRunning) return;
             m_simRunning = false;
+            emit simulatorStopped();
         }
 
         void CSimulatorFsx::onSimFrame()
@@ -322,37 +367,46 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimExit()
         {
-
+            this->onSimStopped();
         }
 
-        void CSimulatorFsx::updateOwnAircraftFromSim(DataDefinitionOwnAircraft aircraft)
+        void CSimulatorFsx::updateOwnAircraftFromSim(DataDefinitionOwnAircraft simulatorOwnAircraft)
         {
             BlackMisc::Geo::CCoordinateGeodetic position;
-            position.setLatitude(CLatitude(aircraft.latitude, CAngleUnit::deg()));
-            position.setLongitude(CLongitude(aircraft.longitude, CAngleUnit::deg()));
+            position.setLatitude(CLatitude(simulatorOwnAircraft.latitude, CAngleUnit::deg()));
+            position.setLongitude(CLongitude(simulatorOwnAircraft.longitude, CAngleUnit::deg()));
 
             BlackMisc::Aviation::CAircraftSituation aircraftSituation;
             aircraftSituation.setPosition(position);
-            aircraftSituation.setPitch(CAngle(aircraft.pitch, CAngleUnit::deg()));
-            aircraftSituation.setBank(CAngle(aircraft.bank, CAngleUnit::deg()));
-            aircraftSituation.setHeading(CHeading(aircraft.trueHeading, CHeading::True, CAngleUnit::deg()));
-            aircraftSituation.setGroundspeed(CSpeed(aircraft.velocity, CSpeedUnit::kts()));
-            aircraftSituation.setAltitude(CAltitude(aircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
-
-            CComSystem com1;
-            com1.setFrequencyActive(CFrequency(aircraft.com1ActiveMHz, CFrequencyUnit::MHz()));
-            com1.setFrequencyStandby(CFrequency(aircraft.com1StandbyMHz, CFrequencyUnit::MHz()));
-
-            CComSystem com2;
-            com2.setFrequencyActive(CFrequency(aircraft.com2ActiveMHz, CFrequencyUnit::MHz()));
-            com2.setFrequencyStandby(CFrequency(aircraft.com2StandbyMHz, CFrequencyUnit::MHz()));
-
-            CTransponder transponder("Transponder", aircraft.transponderCode, CTransponder::ModeS);
-
+            aircraftSituation.setPitch(CAngle(simulatorOwnAircraft.pitch, CAngleUnit::deg()));
+            aircraftSituation.setBank(CAngle(simulatorOwnAircraft.bank, CAngleUnit::deg()));
+            aircraftSituation.setHeading(CHeading(simulatorOwnAircraft.trueHeading, CHeading::True, CAngleUnit::deg()));
+            aircraftSituation.setGroundspeed(CSpeed(simulatorOwnAircraft.velocity, CSpeedUnit::kts()));
+            aircraftSituation.setAltitude(CAltitude(simulatorOwnAircraft.altitude, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
             m_ownAircraft.setSituation(aircraftSituation);
-            m_ownAircraft.setCom1System(com1);
-            m_ownAircraft.setCom2System(com2);
-            m_ownAircraft.setTransponder(transponder);
+
+            CComSystem com1 = m_ownAircraft.getCom1System(); // set defaults
+            CComSystem com2 = m_ownAircraft.getCom2System();
+            CTransponder transponder = m_ownAircraft.getTransponder();
+
+            // When I change cockpit values in the sim (from GUI to simulator, not originating from simulator)
+            // it takes a little while before these values are set in the simulator.
+            // To avoid jitters, I wait some update cylces to stabilize the values
+            if (m_skipCockpitUpdateCycles < 1)
+            {
+                com1.setFrequencyActive(CFrequency(simulatorOwnAircraft.com1ActiveMHz, CFrequencyUnit::MHz()));
+                com1.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com1StandbyMHz, CFrequencyUnit::MHz()));
+                m_ownAircraft.setCom1System(com1);
+
+                com2.setFrequencyActive(CFrequency(simulatorOwnAircraft.com2ActiveMHz, CFrequencyUnit::MHz()));
+                com2.setFrequencyStandby(CFrequency(simulatorOwnAircraft.com2StandbyMHz, CFrequencyUnit::MHz()));
+                m_ownAircraft.setCom2System(com2);
+
+                transponder.setTransponderCode(simulatorOwnAircraft.transponderCode);
+                m_ownAircraft.setTransponder(transponder);
+            }
+            else
+                --m_skipCockpitUpdateCycles;
         }
 
         void CSimulatorFsx::setSimconnectObjectID(DWORD requestID, DWORD objectID)
@@ -372,11 +426,11 @@ namespace BlackSimPlugin
 
             (*it).setObjectId(objectID);
             SimConnect_AIReleaseControl(m_hSimConnect, objectID, requestID);
-            SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZELAT, 1,
+            SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EventFreezeLat, 1,
                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-            SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZEALT, 1,
+            SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EventFreezeAlt, 1,
                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-            SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EVENT_FREEZEATT, 1,
+            SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EventFreezeAtt, 1,
                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 
             DataDefinitionGearHandlePosition gearHandle;
@@ -399,7 +453,7 @@ namespace BlackSimPlugin
         {
             if (m_watcherConnect.result())
             {
-                initSystemEvents();
+                initEvents();
                 initDataDefinitions();
                 m_simconnectTimerId = startTimer(50);
                 m_isConnected = true;
@@ -416,18 +470,24 @@ namespace BlackSimPlugin
             m_simConnectObjects.remove(simObject.getCallsign());
         }
 
-        HRESULT CSimulatorFsx::initSystemEvents()
+        HRESULT CSimulatorFsx::initEvents()
         {
             HRESULT hr = S_OK;
             // System events
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_SIM_STATUS, "Sim");
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_OBJECT_ADDED, "ObjectAdded");
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_OBJECT_REMOVED, "ObjectRemoved");
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EVENT_FRAME, "Frame");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EVENT_FREEZELAT, "FREEZE_LATITUDE_LONGITUDE_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EVENT_FREEZEALT, "FREEZE_ALTITUDE_SET");
-            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EVENT_FREEZEATT, "FREEZE_ATTITUDE_SET");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventSimStatus, "Sim");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventObjectAdded, "ObjectAdded");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventObjectRemoved, "ObjectRemoved");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventFrame, "Frame");
 
+            // Mapped events
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeLat, "FREEZE_LATITUDE_LONGITUDE_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAlt, "FREEZE_ALTITUDE_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAtt, "FREEZE_ATTITUDE_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom1Active, "COM_RADIO_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom1Standby, "COM_STBY_RADIO_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom2Active, "COM2_RADIO_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom2Standby, "COM2_STBY_RADIO_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTransponderCode, "XPNDR_SET");
             return hr;
         }
 

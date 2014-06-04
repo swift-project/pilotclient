@@ -30,7 +30,7 @@ namespace BlackSimPlugin
             double pitch;           //!< Pitch
             double bank;            //!< Bank
             double velocity;        //!< Ground velocity
-            double simOnGround;     //!< Is sim on ground?
+            double simOnGround;     //!< Is aircraft on ground?
             double transponderCode; //!< Transponder Code
             double com1ActiveMHz;   //!< COM1 active frequency
             double com2ActiveMHz;   //!< COM2 active frequency
@@ -63,22 +63,12 @@ namespace BlackSimPlugin
                 DataDefinitionGearHandlePosition
             };
 
-            //! SimConnect Event IDs
-            enum Events {
-                EventSetCom1Active = 100, // not overlapping with DataDefinition
-                EventSetCom2Active,
-                EventSetCom1Standby,
-                EventSetCom2Standby,
-                EventSetTransponderCode
-            };
-
             //! SimConnect request IDs
             enum Requests
             {
                 RequestOwnAircraft = 1000,
                 RequestRemoveAircraft = 2000
             };
-
 
             //! Constructor
             CSimConnectDataDefinition();
@@ -94,10 +84,6 @@ namespace BlackSimPlugin
 
             //! Initialize data definition for remote aircraft configuration
             static HRESULT initGearHandlePosition(const HANDLE hSimConnect);
-
-            //! Initialize events required setting cockpit values
-            static HRESULT initSetCockpitEvents(const HANDLE hSimConnect);
-
         };
     }
 }

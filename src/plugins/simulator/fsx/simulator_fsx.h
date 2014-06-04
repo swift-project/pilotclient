@@ -11,7 +11,9 @@
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator_linear.h"
 #include "blackmisc/avaircraft.h"
+#include "blackmisc/statusmessage.h"
 #include "blacksim/simulatorinfo.h"
+
 #include <simconnect/SimConnect.h>
 #include <QObject>
 #include <QtPlugin>
@@ -43,17 +45,23 @@ namespace BlackSimPlugin
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
         };
 
-        //! SimConnect Event ID's
-        enum EVENT_ID
+        //! SimConnect Event IDs
+        enum EventIds
         {
-            EVENT_SIM_STATUS,
-            EVENT_OBJECT_ADDED,
-            EVENT_OBJECT_REMOVED,
-            EVENT_SLEW_ON,
-            EVENT_FRAME,
-            EVENT_FREEZELAT,
-            EVENT_FREEZEALT,
-            EVENT_FREEZEATT
+            EventSimStatus,
+            EventObjectAdded,
+            EventObjectRemoved,
+            EventSlewOn,
+            EventFrame,
+            EventFreezeLat,
+            EventFreezeAlt,
+            EventFreezeAtt,
+            EventSetCom1Active,
+            EventSetCom2Active,
+            EventSetCom1Standby,
+            EventSetCom2Standby,
+            EventSetTransponderCode,
+            EventTextMessage
         };
 
         //! FSX Simulator Implementation
@@ -102,9 +110,12 @@ namespace BlackSimPlugin
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
             //! \copydoc ISimulator::updateOwnCockpit
-            virtual bool updateOwnCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft) override;
+            virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &ownAircraft) override;
 
-            //! \brief Called when sim has started
+            //! \copydoc ISimulator::displayStatusMessage
+            virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
+
+            //! \brief Called when simulat has been started
             void onSimRunning();
 
             //! \brief Called when sim has stopped
@@ -113,8 +124,8 @@ namespace BlackSimPlugin
             //! \brief Slot called every visual frame
             void onSimFrame();
 
-            //! Called when data about our own aircraft is received
-            void updateOwnAircraftFromSim(DataDefinitionOwnAircraft aircraft);
+            //! Called when data about our own aircraft are received
+            void updateOwnAircraftFromSim(DataDefinitionOwnAircraft simulatorOwnAircraft);
 
             /*!
              * \brief Set ID of a SimConnect object
@@ -144,23 +155,25 @@ namespace BlackSimPlugin
             void removeRemoteAircraft(const CSimConnectObject &simObject);
 
             //! Initialize SimConnect system events
-            HRESULT initSystemEvents();
+            HRESULT initEvents();
 
             //! Initialize SimConnect data definitions
             HRESULT initDataDefinitions();
 
-            void update(); // TODO: @RW, please rename, update is meaningless
+            //! Update what?
+            void update(); // TODO: @RW, please rename, update is meaningless: what is updated?
 
-            bool    m_isConnected; //!< Is sim connected
-            bool    m_simRunning; //!< Sim running.
+            static const int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles for updating cockpit again
+            bool    m_isConnected; //!< Is simulator connected?
+            bool    m_simRunning;  //!< Simulator running?
             HANDLE  m_hSimConnect; //!< Handle to SimConnect object
             uint    m_nextObjID;
+            QString simulatorDetails;
             BlackSim::CSimulatorInfo m_simulatorInfo;
             BlackMisc::Aviation::CAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
-
             int m_simconnectTimerId;
-
+            int m_skipCockpitUpdateCycles; //!< Skip some update cycles to allow changes in simulator cockpit to be set
             QFutureWatcher<bool> m_watcherConnect;
         };
     }
