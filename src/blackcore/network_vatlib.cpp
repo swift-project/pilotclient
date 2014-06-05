@@ -390,7 +390,7 @@ namespace BlackCore
     void CNetworkVatlib::presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao)
     {
         Q_ASSERT_X(isDisconnected(), "CNetworkVatlib", "Can't change ICAO codes while still connected");
-        m_icaoCodes = icao;
+        m_icaoCode = icao;
     }
 
     void CNetworkVatlib::presetLoginMode(LoginMode mode)
@@ -617,20 +617,28 @@ namespace BlackCore
         {
             Cvatlib_Network::FlightPlan vatlibFP;
             QString route = QString(flightPlan.getRoute()).replace(" ", ".");
-            QString remarks = QString(flightPlan.getRemarks()).replace(":", ";");
-            remarks.truncate(100);
+            QString remarks = QString(flightPlan.getRemarks()).replace(":", ";").trimmed();
+            QString alt = flightPlan.getCruiseAltitude().isFlightLevel() ?
+                          flightPlan.getCruiseAltitude().toQString() :
+                          flightPlan.getCruiseAltitude().valueRoundedWithUnit(0);
+            alt = alt.remove('.').remove(','); // remove any separators
+
             QByteArray acTypeTemp, altAptTemp, cruiseAltTemp, depAptTemp, destAptTemp, routeTemp, remarksTemp;
             vatlibFP.acType = acTypeTemp = toFSD(flightPlan.getEquipmentIcao());
             vatlibFP.altApt = altAptTemp = toFSD(flightPlan.getAlternateAirportIcao().asString());
-            vatlibFP.cruiseAlt = cruiseAltTemp = toFSD(QByteArray::number(flightPlan.getCruiseAltitude().value(CLengthUnit::ft()), 'f', 0));
+            vatlibFP.cruiseAlt = cruiseAltTemp = toFSD(alt);
             vatlibFP.depApt = depAptTemp = toFSD(flightPlan.getOriginAirportIcao().asString());
             vatlibFP.depTimeActual = flightPlan.getTakeoffTimeActual().toUTC().toString("hhmm").toInt();
             vatlibFP.depTimePlanned = flightPlan.getTakeoffTimePlanned().toUTC().toString("hhmm").toInt();
             vatlibFP.destApt = destAptTemp = toFSD(flightPlan.getDestinationAirportIcao().asString());
-            vatlibFP.enrouteHrs = flightPlan.getEnrouteTime().valueRounded(CTimeUnit::h(), 0);
-            vatlibFP.enrouteMins = int(flightPlan.getEnrouteTime().valueRounded(CTimeUnit::hrmin(), 0)) % 60;
-            vatlibFP.fuelHrs = flightPlan.getFuelTime().valueRounded(CTimeUnit::h(), 0);
-            vatlibFP.fuelMins = int(flightPlan.getFuelTime().valueRounded(CTimeUnit::hrmin(), 0)) % 60;
+
+            QList<int> timeParts = flightPlan.getEnrouteTime().getHrsMinSecParts();
+            vatlibFP.enrouteHrs = timeParts[CTime::Hours];
+            vatlibFP.enrouteMins = timeParts[CTime::Minutes];
+
+            timeParts = flightPlan.getFuelTime().getHrsMinSecParts();
+            vatlibFP.fuelHrs = timeParts[CTime::Hours];
+            vatlibFP.fuelMins = timeParts[CTime::Minutes];
             vatlibFP.remarks = remarksTemp = toFSD(remarks);
             vatlibFP.route = routeTemp = toFSD(route);
             vatlibFP.trueCruiseSpeed = flightPlan.getCruiseTrueAirspeed().valueRounded(CSpeedUnit::kts());
@@ -646,13 +654,13 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::sendFlightPlanQuery()
+    void CNetworkVatlib::sendFlightPlanQuery(const BlackMisc::Aviation::CCallsign &callsign)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
 
         try
         {
-            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_FP, toFSD(m_callsign));
+            m_net->SendInfoQuery(Cvatlib_Network::infoQuery_FP, toFSD(callsign));
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
@@ -713,21 +721,21 @@ namespace BlackCore
     {
         try
         {
-            const QByteArray acTypeICAObytes = toFSD(m_icaoCodes.getAircraftDesignator());
-            const QByteArray airlineICAObytes = toFSD(m_icaoCodes.getAirlineDesignator());
-            const QByteArray liverybytes = toFSD(m_icaoCodes.getLivery());
+            const QByteArray acTypeICAObytes = toFSD(m_icaoCode.getAircraftDesignator());
+            const QByteArray airlineICAObytes = toFSD(m_icaoCode.getAirlineDesignator());
+            const QByteArray liverybytes = toFSD(m_icaoCode.getLivery());
             std::vector<const char *> keysValues;
-            if (!m_icaoCodes.getAircraftDesignator().isEmpty())
+            if (!m_icaoCode.getAircraftDesignator().isEmpty())
             {
                 keysValues.push_back(m_net->acinfo_Equipment);
                 keysValues.push_back(acTypeICAObytes);
             }
-            if (m_icaoCodes.hasAirlineDesignator())
+            if (m_icaoCode.hasAirlineDesignator())
             {
                 keysValues.push_back(m_net->acinfo_Airline);
                 keysValues.push_back(airlineICAObytes);
             }
-            if (m_icaoCodes.hasLivery())
+            if (m_icaoCode.hasLivery())
             {
                 keysValues.push_back(m_net->acinfo_Livery);
                 keysValues.push_back(liverybytes);
@@ -749,24 +757,24 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::sendMetarQuery(const QString &airportICAO)
+    void CNetworkVatlib::sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
 
         try
         {
-            m_net->RequestMetar(toFSD(airportICAO));
+            m_net->RequestMetar(toFSD(airportIcao.asString()));
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    void CNetworkVatlib::sendWeatherDataQuery(const QString &airportICAO)
+    void CNetworkVatlib::sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao)
     {
         Q_ASSERT_X(isConnected(), "CNetworkVatlib", "Can't send to server when disconnected");
 
         try
         {
-            m_net->RequestWeatherData(toFSD(airportICAO));
+            m_net->RequestWeatherData(toFSD(airportIcao.asString()));
         }
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
@@ -998,11 +1006,6 @@ namespace BlackCore
 
     void CNetworkVatlib::onFlightPlanReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::FlightPlan fp, void *cbvar)
     {
-        if (cbvar_cast(cbvar)->m_callsign != cbvar_cast(cbvar)->fromFSD(callsign))
-        {
-            return; // ignore other pilots' flightplans
-        }
-
         BlackMisc::Aviation::CFlightPlan::FlightRules rules = BlackMisc::Aviation::CFlightPlan::VFR;
         switch (fp.fpRules)
         {
@@ -1013,20 +1016,25 @@ namespace BlackCore
         }
 
         auto cruiseAltString = cbvar_cast(cbvar)->fromFSD(fp.cruiseAlt);
-        if (! cruiseAltString.contains(QRegExp("[A-Z][a-z]")))
+        static const QRegExp withUnit("\\D+");
+        if (!cruiseAltString.isEmpty() && withUnit.indexIn(cruiseAltString) < 0)
         {
             cruiseAltString += "ft";
         }
         BlackMisc::Aviation::CAltitude cruiseAlt;
         cruiseAlt.parseFromString(cruiseAltString);
 
+
+        QString depTimePlanned = QString("0000").append(QString::number(fp.depTimePlanned)).right(4);
+        QString depTimeActual = QString("0000").append(QString::number(fp.depTimeActual)).right(4);
+
         BlackMisc::Aviation::CFlightPlan flightPlan(
             cbvar_cast(cbvar)->fromFSD(fp.acType),
             cbvar_cast(cbvar)->fromFSD(fp.depApt),
             cbvar_cast(cbvar)->fromFSD(fp.destApt),
             cbvar_cast(cbvar)->fromFSD(fp.altApt),
-            QDateTime::fromString(QString::number(fp.depTimePlanned), "hhmm"),
-            QDateTime::fromString(QString::number(fp.depTimeActual), "hhmm"),
+            QDateTime::fromString(depTimePlanned, "hhmm"),
+            QDateTime::fromString(depTimeActual, "hhmm"),
             BlackMisc::PhysicalQuantities::CTime(fp.enrouteHrs * 60 + fp.enrouteMins, BlackMisc::PhysicalQuantities::CTimeUnit::min()),
             BlackMisc::PhysicalQuantities::CTime(fp.fuelHrs * 60 + fp.fuelMins, BlackMisc::PhysicalQuantities::CTimeUnit::min()),
             cruiseAlt,
@@ -1036,7 +1044,7 @@ namespace BlackCore
             cbvar_cast(cbvar)->fromFSD(fp.remarks)
         );
 
-        emit cbvar_cast(cbvar)->flightPlanReplyReceived(flightPlan);
+        emit cbvar_cast(cbvar)->flightPlanReplyReceived(callsign, flightPlan);
     }
 
     void CNetworkVatlib::onTemperatureDataReceived(Cvatlib_Network *, Cvatlib_Network::TempLayer /** layers **/ [4], INT /** pressure **/, void * /** cbvar **/)

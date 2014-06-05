@@ -64,7 +64,7 @@ namespace BlackMisc
             CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : BlackMisc::PhysicalQuantities::CLength(value, unit), m_datum(datum) {}
 
             //! Altitude as string
-            CAltitude(const QString &altitudeAsString);
+            CAltitude(const QString &altitudeAsString, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode = BlackMisc::PhysicalQuantities::CPqString::SeparatorsLocale);
 
             //! Constructor by CLength
             CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, ReferenceDatum datum) : BlackMisc::PhysicalQuantities::CLength(altitude), m_datum(datum) {}
@@ -102,8 +102,11 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \copydoc CValueObject::parseFromString
+            //! \copydoc CValueObject::parseFromString(const QString &value)
             void parseFromString(const QString &value) override;
+
+            //! \copydoc CValueObject::parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode)
+            void parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) override;
 
             //! Register metadata
             static void registerMetadata();

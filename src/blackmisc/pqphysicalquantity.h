@@ -234,10 +234,16 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
 
+            //! Parse to string, with specified separator
+            virtual void parseFromString(const QString &value, CPqString::SeparatorMode mode)
+            {
+                this->parseFromString(value, mode);
+            }
+
             //! \copydoc CValueObject::parseFromString
             virtual void parseFromString(const QString &value) override
             {
-                *this = CPqString::parse<PQ>(value);
+                *this = CPqString::parse<PQ>(value, CPqString::SeparatorsCLocale);
             }
 
             //! Register metadata of unit and quantity

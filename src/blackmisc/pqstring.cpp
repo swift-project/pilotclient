@@ -93,17 +93,36 @@ namespace BlackMisc
         /*
          * Parse
          */
-        QVariant CPqString::parseToVariant(const QString &value)
+        QVariant CPqString::parseToVariant(const QString &value, SeparatorMode mode)
         {
+            static QRegExp rx("([0-9]+)\\s*(\\D*)$");
             QVariant v;
             if (value.isEmpty()) return v;
-            QRegExp rx("^([-+]?[0-9]*\\.?[0-9]+)\\s*(\\D*)$");
-            if (rx.indexIn(value) < 0) return v;
-            QString number = rx.cap(1).trimmed();
+
+            if (rx.indexIn(value) < 0) return v; // not a valid number
             QString unit = rx.cap(2).trimmed();
+            QString number = QString(value).replace(unit, "");
+            unit = unit.trimmed(); // trim after replace, not before
+
             if (unit.isEmpty() || number.isEmpty()) return v;
             bool success;
-            double numberD = number.toDouble(&success);
+            double numberD;
+            switch (mode)
+            {
+            case SeparatorsLocale:
+                numberD = QLocale::system().toDouble(number, &success);
+                break;
+            case SeparatorsCLocale:
+                numberD = number.toDouble(&success);
+                break;
+            case SeparatorsBestGuess:
+                numberD = number.toDouble(&success);
+                if (!success) numberD = QLocale::system().toDouble(number, &success);
+                break;
+            default:
+                qFatal("Wrong mode");
+                break;
+            }
             if (!success) return v;
 
             if (CMeasurementUnit::isValidUnitSymbol<CAccelerationUnit>(unit))

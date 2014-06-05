@@ -251,7 +251,7 @@ namespace BlackCore
          * \pre Network must be connected when calling this function.
          * \sa flightPlanReplyReceived
          */
-        virtual void sendFlightPlanQuery() = 0;
+        virtual void sendFlightPlanQuery(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! @}
         ////////////////////////////////////////////////////////////////
@@ -320,7 +320,7 @@ namespace BlackCore
          * \pre Network must be connected when calling this function.
          * \sa metarReplyReceived
          */
-        virtual void sendMetarQuery(const QString &airportICAO) = 0;
+        virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) = 0;
 
         /*!
          * Send a message querying the weather data for the airport with a specific ICAO code.
@@ -329,7 +329,7 @@ namespace BlackCore
          * \sa windDataReplyReceived
          * \sa cloudDataReplyReceived
          */
-        virtual void sendWeatherDataQuery(const QString &airportICAO) = 0;
+        virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) = 0;
 
     signals:
         //! @}
@@ -377,7 +377,7 @@ namespace BlackCore
          * We received a reply to one of our flight plan queries, containing our up-to-date flight plan.
          * \sa sendFlightPlanQuery
          */
-        void flightPlanReplyReceived(const BlackMisc::Aviation::CFlightPlan &flightPlan);
+        void flightPlanReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
 
         //! @}
         ////////////////////////////////////////////////////////////////

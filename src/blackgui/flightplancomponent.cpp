@@ -3,6 +3,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui
 {
@@ -11,7 +12,7 @@ namespace BlackGui
     {
         ui->setupUi(this);
         connect(this->ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan);
-        connect(this->ui->pb_Load, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlan);
+        connect(this->ui->pb_Load, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork);
         connect(this->ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan);
         connect(this->ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::validateFlightPlan);
 
@@ -56,7 +57,7 @@ namespace BlackGui
         this->ui->le_PilotsName->setText(aircraftData.getPilot().getRealName());
     }
 
-    void CFlightPlanComponent::prefillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan)
+    void CFlightPlanComponent::fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan)
     {
         this->ui->le_AlternateAirport->setText(flightPlan.getAlternateAirportIcao().asString());
         this->ui->le_DestinationAirport->setText(flightPlan.getAlternateAirportIcao().asString());
@@ -66,8 +67,13 @@ namespace BlackGui
         this->ui->le_TakeOffTimePlanned->setText(flightPlan.getTakeoffTimePlannedHourMin());
         this->ui->le_FuelOnBoard->setText(flightPlan.getFuelTimeHourMin());
         this->ui->le_EstimatedTimeEnroute->setText(flightPlan.getEnrouteTimeHourMin());
-        this->ui->le_CrusingAltitude->setText(flightPlan.getCruiseAltitude().toQString());
         this->ui->le_CruiseTrueAirspeed->setText(flightPlan.getCruiseTrueAirspeed().valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CSpeedUnit::kts(), 0));
+
+        CAltitude cruiseAlt = flightPlan.getCruiseAltitude();
+        if (cruiseAlt.isFlightLevel())
+            this->ui->le_CrusingAltitude->setText(cruiseAlt.toQString());
+        else
+            this->ui->le_CrusingAltitude->setText(cruiseAlt.valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CLengthUnit::ft(), 0));
     }
 
     CFlightPlan CFlightPlanComponent::getFlightPlan() const
@@ -97,16 +103,26 @@ namespace BlackGui
         v = ui->pte_Route->toPlainText().trimmed();
         if (v.isEmpty())
         {
-            QString m = QString("Missing %1").arg(this->ui->lbl_Route->text());
+            QString m = QString("Missing flight plan route");
+            messages.push_back(CStatusMessage::getValidationError(m));
+        }
+        else if (v.length() > CFlightPlan::MaxRouteLength)
+        {
+            QString m = QString("Flight plan route length exceeded (%1 chars max.)").arg(CFlightPlan::MaxRouteLength);
             messages.push_back(CStatusMessage::getValidationError(m));
         }
         else
             flightPlan.setRoute(v);
 
         v = ui->pte_Remarks->toPlainText().trimmed();
-        if (v.length() > 100)
+        if (v.isEmpty())
         {
-            QString m = QString("Length exceeded (100 chars max.) %1").arg(this->ui->lbl_Remarks->text());
+            QString m = QString("No remarks, voice capabilities are mandatory");
+            messages.push_back(CStatusMessage::getValidationError(m));
+        }
+        else if (v.length() > CFlightPlan::MaxRemarksLength)
+        {
+            QString m = QString("Flight plan remarks length exceeded (%1 chars max.)").arg(CFlightPlan::MaxRemarksLength);
             messages.push_back(CStatusMessage::getValidationError(m));
         }
         else
@@ -139,8 +155,15 @@ namespace BlackGui
         else
             flightPlan.setTakeoffTimePlanned(v);
 
+        static const QRegExp withUnit("\\D+");
         v = ui->le_CrusingAltitude->text().trimmed();
-        CAltitude cruisingAltitude(v);
+        if (!v.isEmpty() && withUnit.indexIn(v) < 0)
+        {
+            v += "ft";
+            this->ui->le_CrusingAltitude->setText(v);
+        }
+
+        CAltitude cruisingAltitude(v, CPqString::SeparatorsLocale);
         if (v.isEmpty() || cruisingAltitude.isNull())
         {
             QString m = QString("Wrong %1").arg(this->ui->lbl_CrusingAltitude->text());
@@ -171,7 +194,7 @@ namespace BlackGui
 
         v = this->ui->le_CruiseTrueAirspeed->text();
         BlackMisc::PhysicalQuantities::CSpeed cruiseTAS;
-        cruiseTAS.parseFromString(v);
+        cruiseTAS.parseFromString(v, CPqString::SeparatorsLocale);
         if (cruiseTAS.isNull())
         {
             QString m = QString("Wrong TAS, %1").arg(this->ui->lbl_CruiseTrueAirspeed->text());
@@ -204,14 +227,14 @@ namespace BlackGui
             CStatusMessage m;
             if (this->getIContextNetwork()->isConnected())
             {
-                flightPlan.setWhenLastSent(QDateTime::currentDateTimeUtc());
+                flightPlan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
                 this->getIContextNetwork()->sendFlightPlan(flightPlan);
-                this->ui->le_LastSent->setText(flightPlan.whenLastSent().toString());
+                this->ui->le_LastSent->setText(flightPlan.whenLastSentOrLoaded().toString());
                 m = CStatusMessage::getInfoMessage("Sent flight plan", CStatusMessage::TypeTrafficNetwork);
             }
             else
             {
-                flightPlan.setWhenLastSent(QDateTime());
+                flightPlan.setWhenLastSentOrLoaded(QDateTime()); // empty
                 this->ui->le_LastSent->clear();
                 m = CStatusMessage::getErrorMessage("No errors, but not connected, cannot send flight plan", CStatusMessage::TypeTrafficNetwork);
             }
@@ -258,9 +281,30 @@ namespace BlackGui
         this->ui->le_TakeOffTimePlanned->setText(QDateTime::currentDateTimeUtc().addSecs(30 * 60).toString("hh:mm"));
     }
 
-    void CFlightPlanComponent::loadFlightPlan()
+    void CFlightPlanComponent::loadFlightPlanFromNetwork()
     {
+        if (!this->getIContextNetwork())
+        {
+            this->sendStatusMessage(CStatusMessage::getInfoMessage("Cannot load flight plan, network not available", CStatusMessage::TypeTrafficNetwork));
+            return;
+        }
+        if (!this->getIContextNetwork()->isConnected())
+        {
+            this->sendStatusMessage(CStatusMessage::getWarningMessage("Cannot load flight plan, network not connected", CStatusMessage::TypeTrafficNetwork));
+            return;
+        }
 
+        CAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
+        CFlightPlan loadedPlan = this->getIContextNetwork()->loadFlightPlanFromNetwork(ownAircraft.getCallsign());
+        if (loadedPlan.wasSentOrLoaded())
+        {
+            this->fillWithFlightPlanData(loadedPlan);
+            this->sendStatusMessage(CStatusMessage::getInfoMessage("Updated with loaded flight plan", CStatusMessage::TypeTrafficNetwork));
+        }
+        else
+        {
+            this->sendStatusMessage(CStatusMessage::getWarningMessage("No flight plan data", CStatusMessage::TypeTrafficNetwork));
+        }
     }
 
     void CFlightPlanComponent::buildRemarkString()

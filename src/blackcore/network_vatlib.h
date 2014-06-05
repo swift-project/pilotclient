@@ -3,10 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/*!
-    \file
-*/
-
 #ifndef BLACKCORE_NETWORK_VATLIB_H
 #define BLACKCORE_NETWORK_VATLIB_H
 
@@ -64,7 +60,7 @@ namespace BlackCore
         virtual void sendAtcQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendAtisQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;
-        virtual void sendFlightPlanQuery() override;
+        virtual void sendFlightPlanQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
 
         // Aircraft slots
         virtual void sendCapabilitiesQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -79,13 +75,10 @@ namespace BlackCore
                                             const BlackMisc::Aviation::CTransponder &xpdr) override;
 
         // Weather slots
-        virtual void sendMetarQuery(const QString &airportICAO) override;
-        virtual void sendWeatherDataQuery(const QString &airportICAO) override;
+        virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
+        virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
 
         // some helper methods
-
-        //!
-
 
         /*!
          * \brief Create the data load for FSIPI(R) packages / FsInn
@@ -171,7 +164,7 @@ namespace BlackCore
         Cvatlib_Network::connStatus m_status;
         BlackMisc::Network::CServer m_server;
         BlackMisc::Aviation::CCallsign m_callsign;
-        BlackMisc::Aviation::CAircraftIcao m_icaoCodes;
+        BlackMisc::Aviation::CAircraftIcao m_icaoCode;
         BlackMisc::Aviation::CAircraft m_ownAircraft; // not using callsign, user, or icao parts of this member because they can't be changed when connected
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CInformationMessage> m_atisParts;
 

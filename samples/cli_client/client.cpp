@@ -252,26 +252,29 @@ void Client::sendFlightPlanCmd(QTextStream &args)
     QString flightRulesString;
     QString route;
     args >> equipmentIcao >> originAirportIcao >> destinationAirportIcao >> alternateAirportIcao >> takeoffTimePlanned >> takeoffTimeActual
-        >> enrouteTime >> fuelTime >> cruiseAltitude >> cruiseTrueAirspeed >> flightRulesString >> route;
+         >> enrouteTime >> fuelTime >> cruiseAltitude >> cruiseTrueAirspeed >> flightRulesString >> route;
 
     BlackMisc::Aviation::CFlightPlan::FlightRules flightRules;
     if (flightRulesString == "IFR") { flightRules = BlackMisc::Aviation::CFlightPlan::IFR; }
     else if (flightRulesString == "SVFR") { flightRules = BlackMisc::Aviation::CFlightPlan::SVFR; }
     else { flightRules = BlackMisc::Aviation::CFlightPlan::VFR; }
 
-    BlackMisc::Aviation::CFlightPlan fp(equipmentIcao, originAirportIcao, destinationAirportIcao, alternateAirportIcao,
-        QDateTime::fromString(takeoffTimePlanned, "hhmm"), QDateTime::fromString(takeoffTimeActual, "hhmm"),
-        BlackMisc::PhysicalQuantities::CTime(enrouteTime, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()),
-        BlackMisc::PhysicalQuantities::CTime(fuelTime, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()),
-        BlackMisc::Aviation::CAltitude(cruiseAltitude, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
-        BlackMisc::PhysicalQuantities::CSpeed(cruiseTrueAirspeed, BlackMisc::PhysicalQuantities::CSpeedUnit::kts()),
-        flightRules, route, args.readAll());
+    BlackMisc::Aviation::CFlightPlan
+    fp(equipmentIcao, originAirportIcao, destinationAirportIcao, alternateAirportIcao,
+       QDateTime::fromString(takeoffTimePlanned, "hhmm"), QDateTime::fromString(takeoffTimeActual, "hhmm"),
+       BlackMisc::PhysicalQuantities::CTime(enrouteTime, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()),
+       BlackMisc::PhysicalQuantities::CTime(fuelTime, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()),
+       BlackMisc::Aviation::CAltitude(cruiseAltitude, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+       BlackMisc::PhysicalQuantities::CSpeed(cruiseTrueAirspeed, BlackMisc::PhysicalQuantities::CSpeedUnit::kts()),
+       flightRules, route, args.readAll());
     emit sendFlightPlan(fp);
 }
 
-void Client::sendFlightPlanQueryCmd(QTextStream &)
+void Client::sendFlightPlanQueryCmd(QTextStream &args)
 {
-    emit sendFlightPlanQuery();
+    QString callsign;
+    args >> callsign;
+    emit sendFlightPlanQuery(callsign);
 }
 
 void Client::sendServerQueryCmd(QTextStream &args)
@@ -331,13 +334,13 @@ void Client::setOwnAircraftCmd(QTextStream &args)
     QString xpdrMode;
     args >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs >> com1 >> com2 >> xpdrCode >> xpdrMode;
     BlackMisc::Aviation::CAircraft aircraft("", BlackMisc::Network::CUser(), BlackMisc::Aviation::CAircraftSituation(
-        BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
-        BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
-        BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-        BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-        BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-        BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
-    ));
+            BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
+            BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+            BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+            BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+            BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+            BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
+                                            ));
     aircraft.setCom1System(BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())));
     aircraft.setCom2System(BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())));
     aircraft.setTransponder(BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode));
@@ -351,7 +354,7 @@ void Client::setOwnAircraftPositionCmd(QTextStream &args)
     double alt;
     args >> lat >> lon >> alt;
     emit setOwnAircraftPosition(BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
-        BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()));
+                                BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()));
 }
 
 void Client::setOwnAircraftSituationCmd(QTextStream &args)
@@ -365,13 +368,13 @@ void Client::setOwnAircraftSituationCmd(QTextStream &args)
     double gs;
     args >> lat >> lon >> alt >> hdg >> pitch >> bank >> gs;
     emit setOwnAircraftSituation(BlackMisc::Aviation::CAircraftSituation(
-        BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
-        BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
-        BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-        BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-        BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
-        BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
-    ));
+                                     BlackMisc::Geo::CCoordinateGeodetic(lat, lon, 0),
+                                     BlackMisc::Aviation::CAltitude(alt, BlackMisc::Aviation::CAltitude::MeanSeaLevel, BlackMisc::PhysicalQuantities::CLengthUnit::ft()),
+                                     BlackMisc::Aviation::CHeading(hdg, BlackMisc::Aviation::CHeading::True, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                                     BlackMisc::PhysicalQuantities::CAngle(pitch, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                                     BlackMisc::PhysicalQuantities::CAngle(bank, BlackMisc::PhysicalQuantities::CAngleUnit::deg()),
+                                     BlackMisc::PhysicalQuantities::CSpeed(gs, BlackMisc::PhysicalQuantities::CSpeedUnit::kts())
+                                 ));
 }
 
 void Client::setOwnAircraftAvionicsCmd(QTextStream &args)
@@ -513,23 +516,24 @@ void Client::metarReplyReceived(const QString &data)
     std::cout << "METAR " << data.toStdString() << std::endl;
 }
 
-void Client::flightPlanReplyReceived(const BlackMisc::Aviation::CFlightPlan &flightPlan)
+void Client::flightPlanReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan)
 {
     std::string rules;
     switch (flightPlan.getFlightRules())
     {
-        default:
-        case BlackMisc::Aviation::CFlightPlan::IFR:  rules = "IFR"; break;
-        case BlackMisc::Aviation::CFlightPlan::VFR:  rules = "VFR"; break;
-        case BlackMisc::Aviation::CFlightPlan::SVFR: rules = "SVFR"; break;
+    default:
+    case BlackMisc::Aviation::CFlightPlan::IFR:  rules = "IFR"; break;
+    case BlackMisc::Aviation::CFlightPlan::VFR:  rules = "VFR"; break;
+    case BlackMisc::Aviation::CFlightPlan::SVFR: rules = "SVFR"; break;
     }
 
-    std::cout << "FLIGHTPLAN " << flightPlan.getEquipmentIcao().toStdString() << " " << flightPlan.getOriginAirportIcao() << " "
-        << flightPlan.getDestinationAirportIcao() << " " << flightPlan.getAlternateAirportIcao() << " "
-        << flightPlan.getTakeoffTimePlannedHourMin().toStdString() << " " << flightPlan.getTakeoffTimeActualHourMin().toStdString() << " "
-        << flightPlan.getEnrouteTime() << " " << flightPlan.getFuelTime() << " "
-        << flightPlan.getCruiseAltitude() << " " << flightPlan.getCruiseTrueAirspeed() << " " << rules << " "
-        << flightPlan.getRoute().toStdString() << " " << flightPlan.getRemarks().toStdString() << "\n";
+    std::cout << "FLIGHTPLAN "  << callsign
+              << flightPlan.getEquipmentIcao().toStdString() << " " << flightPlan.getOriginAirportIcao() << " "
+              << flightPlan.getDestinationAirportIcao() << " " << flightPlan.getAlternateAirportIcao() << " "
+              << flightPlan.getTakeoffTimePlannedHourMin().toStdString() << " " << flightPlan.getTakeoffTimeActualHourMin().toStdString() << " "
+              << flightPlan.getEnrouteTime() << " " << flightPlan.getFuelTime() << " "
+              << flightPlan.getCruiseAltitude() << " " << flightPlan.getCruiseTrueAirspeed() << " " << rules << " "
+              << flightPlan.getRoute().toStdString() << " " << flightPlan.getRemarks().toStdString() << "\n";
 }
 
 void Client::pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
@@ -565,5 +569,5 @@ void Client::customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign
 void Client::statusMessage(const BlackMisc::CStatusMessage &message)
 {
     std::cout << "STATUS " << message.getSeverityAsString().toStdString() << " " << message.getTypeAsString().toStdString() << " "
-        << message.getMessage().toStdString() << "\n";
+              << message.getMessage().toStdString() << "\n";
 }

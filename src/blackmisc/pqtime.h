@@ -19,11 +19,23 @@ namespace BlackMisc
         class CTime : public CPhysicalQuantity<CTimeUnit, CTime>
         {
         public:
+
+            //! Parts
+            enum Parts
+            {
+                Hours = 0,
+                Minutes,
+                Seconds
+            };
+
             //! Default constructor
             CTime() : CPhysicalQuantity(0, CTimeUnit::defaultUnit()) {}
 
             //! Init by double value
             CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit) {}
+
+            //! By hours, minutes, seconds
+            CTime(int hours, int minutes, int seconds = 0);
 
             //! By Qt time
             CTime(const QTime &time);
@@ -42,6 +54,9 @@ namespace BlackMisc
 
             //! To Qt time
             QTime toQTime() const;
+
+            //! Parts hh, mm, ss
+            QList<int> getHrsMinSecParts() const;
 
         };
 

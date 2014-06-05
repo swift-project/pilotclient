@@ -17,15 +17,15 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CAltitude::CAltitude(const QString &altitudeAsString) : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel)
+        CAltitude::CAltitude(const QString &altitudeAsString, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel)
         {
-            this->parseFromString(altitudeAsString);
+            this->parseFromString(altitudeAsString, mode);
         }
 
         /*
          * Own implementation for streaming
          */
-        QString CAltitude::convertToQString(bool /* i18n */) const
+        QString CAltitude::convertToQString(bool i18n) const
         {
             if (this->m_datum == FlightLevel)
             {
@@ -34,7 +34,7 @@ namespace BlackMisc
             }
             else
             {
-                QString s = this->CLength::convertToQString();
+                QString s = this->CLength::valueRoundedWithUnit(CLengthUnit::ft(), i18n);
                 return s.append(this->isMeanSeaLevel() ? " MSL" : " AGL");
             }
         }
@@ -157,6 +157,14 @@ namespace BlackMisc
          */
         void CAltitude::parseFromString(const QString &value)
         {
+            this->parseFromString(value, BlackMisc::PhysicalQuantities::CPqString::SeparatorsCLocale);
+        }
+
+        /*
+         * Parse value
+         */
+        void CAltitude::parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode)
+        {
             QString v = value.trimmed();
 
             // special case FL
@@ -184,7 +192,7 @@ namespace BlackMisc
                 rd = AboveGround;
             }
 
-            CLength l = BlackMisc::PhysicalQuantities::CPqString::parse<CLength>(v);
+            CLength l = BlackMisc::PhysicalQuantities::CPqString::parse<CLength>(v, mode);
             *this = CAltitude(l, rd);
         }
 

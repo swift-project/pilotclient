@@ -42,13 +42,25 @@ namespace BlackMisc
             virtual bool isA(int metaTypeId) const override;
 
         public:
+            //! Number separators / group separators
+            enum SeparatorMode
+            {
+                SeparatorsCLocale, //!< 100,000.00
+                SeparatorsLocale, //!< depending on QLocale, e.g. 100.000,00 in Germany
+                SeparatorsBestGuess //!< try to figure out
+            };
+
+            //! Group and digit separator
+            enum SeparatorIndex
+            {
+                Group,
+                Digit
+            };
+
             //! Default constructor
             CPqString() {}
 
-            /*!
-             * Constructor
-             * \param value such as 10km/h
-             */
+            //! Constructor, for values such as 10km/h
             CPqString(const QString &value) : m_string(value) {}
 
             //! \copydoc CValueObject::toQVariant
@@ -73,15 +85,15 @@ namespace BlackMisc
             static void registerMetadata();
 
             //! Parse a string value like "100m", "10.3Mhz"
-            static QVariant parseToVariant(const QString &value);
+            static QVariant parseToVariant(const QString &value, SeparatorMode mode = SeparatorsCLocale);
 
             //! Parse into concrete type
-            template <class PQ> static PQ parse(const QString &value)
+            template <class PQ> static PQ parse(const QString &value, SeparatorMode mode = SeparatorsCLocale)
             {
                 PQ invalid;
                 invalid.setNull();
                 if (value.isEmpty()) return invalid;
-                QVariant qv = CPqString::parseToVariant(value);
+                QVariant qv = CPqString::parseToVariant(value, mode);
                 if (!qv.isNull() && qv.canConvert<PQ>())
                 {
                     return qv.value<PQ>();
