@@ -18,8 +18,6 @@ namespace BlackMisc
     namespace Predicates
     {
 
-#ifdef Q_COMPILER_VARIADIC_TEMPLATES
-
         namespace Private
         {
 
@@ -88,60 +86,6 @@ namespace BlackMisc
         {
             return typename Private::MemberLess<T, Ts...>(vs...);
         }
-
-#else //!Q_COMPILER_VARIADIC_TEMPLATES
-
-        template <class T, class M1, class V1>
-        typename std::function<bool(const T &)> MemberEqual(M1 m1, V1 v1)
-        {
-            return [ = ](const T & obj) -> bool { return (obj.*m1)() == v1; };
-        }
-
-        template <class T, class M1, class V1, class M2, class V2>
-        typename std::function<bool(const T &)> MemberEqual(M1 m1, V1 v1, M2 m2, V2 v2)
-        {
-            return [ = ](const T & obj) -> bool
-            {
-                return (obj.*m1)() == v1 &&
-                (obj.*m2)() == v2;
-            };
-        }
-
-        template <class T, class M1, class V1, class M2, class V2, class M3, class V3>
-        typename std::function<bool(const T &)> MemberEqual(M1 m1, V1 v1, M2 m2, V2 v2, M3 m3, V3 v3)
-        {
-            return [ = ](const T & obj) -> bool
-            {
-                return (obj.*m1)() == v1 &&
-                (obj.*m2)() == v2 &&
-                (obj.*m3)() == v3;
-            };
-        }
-
-        template <class T, class M1>
-        typename std::function<bool(const T &, const T &)> MemberLess(M1 m1)
-        {
-            return [ = ](const T & a, const T & b) -> bool { return (a.*m1)() < (b.*m1)(); };
-        }
-
-        template <class T, class M1, class M2>
-        typename std::function<bool(const T &, const T &)> MemberLess(M1 m1, M2 m2)
-        {
-            return [ = ](const T & a, const T & b) -> bool { if ((a.*m1)() != (b.*m1)()) return (a.*m1)() < (b.*m1)();
-                    return (a.*m2)() < (b.*m2)();
-                                                           };
-    }
-
-    template <class T, class M1, class M2, class M3>
-    typename std::function<bool(const T &, const T &)> MemberLess(M1 m1, M2 m2, M3 m3)
-        {
-            return [ = ](const T & a, const T & b) -> bool { if ((a.*m1)() != (b.*m1)()) return (a.*m1)() < (b.*m1)();
-                    if ((a.*m2)() != (b.*m2)()) return (a.*m2)() < (b.*m2)();
-                        return (a.*m3)() < (b.*m3)();
-                                                               };
-    }
-
-#endif //!Q_COMPILER_VARIADIC_TEMPLATES
 
     } //namespace Predicates
 
