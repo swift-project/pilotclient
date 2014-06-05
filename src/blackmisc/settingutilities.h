@@ -7,7 +7,7 @@ namespace BlackMisc
 {
     namespace Settings
     {
-        //! \brief Helper / utility methods for settings
+        //! Helper / utility methods for settings
         class CSettingUtilities
         {
         private:
@@ -40,6 +40,20 @@ namespace BlackMisc
             static const QString &CmdAdd()
             {
                 static const QString cmd("add");
+                return cmd;
+            }
+
+            //! Command Set boolean value true
+            static const QString &CmdSetTrue()
+            {
+                static const QString cmd("set:true");
+                return cmd;
+            }
+
+            //! Command Set boolean value false
+            static const QString &CmdSetFalse()
+            {
+                static const QString cmd("set:false");
                 return cmd;
             }
 

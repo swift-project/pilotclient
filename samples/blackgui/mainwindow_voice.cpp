@@ -237,6 +237,5 @@ void MainWindow::playNotifcationSound(CNotificationSounds::Notification notifica
 {
     if (!this->m_contextAudioAvailable) return;
     if (!this->ui->cb_SettingsAudioPlayNotificationSounds->isChecked()) return;
-    if (notification == CNotificationSounds::NotificationTextMessage && !this->ui->cb_SettingsAudioNotificationTextMessage->isChecked()) return;
-    this->getIContextAudio()->playNotification(static_cast<uint>(notification));
+    this->getIContextAudio()->playNotification(static_cast<uint>(notification), true);
 }

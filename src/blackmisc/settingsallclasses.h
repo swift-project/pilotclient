@@ -7,5 +7,6 @@
 #define BLACKMISC_SETTINGSALLCLASSES_H
 
 #include "blackmisc/setnetwork.h"
+#include "blackmisc/setaudio.h"
 
 #endif // guard

@@ -474,10 +474,14 @@ namespace BlackSound
             success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/sounds/login.wav"))) && success;
             success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/sounds/logoff.wav"))) && success;
             success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/sounds/privatemessage.wav"))) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/sounds/voiceroomjoined.wav"))) && success;
+            success = playlist->addMedia(QUrl::fromLocalFile(QCoreApplication::applicationDirPath().append("/sounds/voiceroomleft.wav"))) && success;
+
             Q_ASSERT(success);
             playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
             mediaPlayer->setPlaylist(playlist);
         }
+        if (notification == CNotificationSounds::NotificationsLoadSounds) return;
         int index = static_cast<int>(notification);
         playlist->setCurrentIndex(index);
         mediaPlayer->setVolume(volume); // 0-100

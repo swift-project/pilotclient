@@ -29,12 +29,10 @@ void MainWindow::reloadSettings()
     // update hot keys
     this->ui->tvp_SettingsMiscHotkeys->update(this->getIContextSettings()->getHotkeys());
 
-
-
-
     // fake setting for sound notifications
     this->ui->cb_SettingsAudioPlayNotificationSounds->setChecked(true);
     this->ui->cb_SettingsAudioNotificationTextMessage->setChecked(true);
+    this->ui->cb_SettingsAudioNotificationVoiceRoom->setChecked(true);
 }
 
 /*
