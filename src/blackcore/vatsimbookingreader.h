@@ -49,9 +49,12 @@ namespace BlackCore
         QDateTime m_updateTimestamp;
         QTimer *m_updateTimer;
 
+        //! Parse received bookings
+        void parseBookings(QNetworkReply *nwReply);
+
     signals:
-        //! \brief Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
-        void dataRead(BlackMisc::Aviation::CAtcStationList bookedStations);
+        //! Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList
+        void dataRead(const BlackMisc::Aviation::CAtcStationList &bookedStations);
     };
 }
 #endif // guard

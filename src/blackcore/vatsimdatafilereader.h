@@ -98,6 +98,9 @@ namespace BlackCore
             SectionGeneral
         };
 
+        //! Parse the VATSIM data file in backgroun
+        void parseVatsimFileInBackground(QNetworkReply *nwReply);
+
     signals:
         //! Data have been read
         void dataRead();

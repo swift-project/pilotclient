@@ -2,7 +2,9 @@
 #include "blackmisc/avatcstation.h"
 #include "blackmisc/nwuser.h"
 #include "vatsimbookingreader.h"
+
 #include <QtXml/QDomElement>
+#include <QtConcurrent/QtConcurrent>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -41,6 +43,14 @@ namespace BlackCore
      * Bookings read from XML
      */
     void CVatsimBookingReader::loadFinished(QNetworkReply *nwReply)
+    {
+        QtConcurrent::run(this, &CVatsimBookingReader::parseBookings, nwReply);
+    }
+
+    /*
+     * Parse bookings
+     */
+    void CVatsimBookingReader::parseBookings(QNetworkReply *nwReply)
     {
         if (nwReply->error() == QNetworkReply::NoError)
         {
@@ -100,10 +110,12 @@ namespace BlackCore
                 }
                 m_updateTimestamp = QDateTime::currentDateTimeUtc();
                 emit this->dataRead(bookedStations);
-                nwReply->close();
-                nwReply->deleteLater();
 
             } // node
         } // content
+
+        nwReply->close();
+        nwReply->deleteLater();
+
     } // method
 } // namespace

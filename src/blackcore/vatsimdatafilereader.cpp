@@ -5,6 +5,7 @@
 #include "vatsimdatafilereader.h"
 
 #include <QRegularExpression>
+#include <QtConcurrent/QtConcurrent>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -27,9 +28,13 @@ namespace BlackCore
     void CVatsimDataFileReader::read()
     {
         if (this->m_serviceUrls.isEmpty()) return;
+
+        // round robin for load distribution
         this->m_currentUrlIndex++;
         if (this->m_serviceUrls.size() >= this->m_currentUrlIndex) this->m_currentUrlIndex = 0;
 
+        // remark: Don't use QThread to run network operations in the background
+        // see http://qt-project.org/doc/qt-4.7/qnetworkaccessmanager.html
         QUrl url(this->m_serviceUrls.at(this->m_currentUrlIndex));
         if (url.isEmpty()) return;
         Q_ASSERT(this->m_networkManager);
@@ -111,6 +116,14 @@ namespace BlackCore
      * Data file read from XML
      */
     void CVatsimDataFileReader::loadFinished(QNetworkReply *nwReply)
+    {
+        QtConcurrent::run(this, &CVatsimDataFileReader::parseVatsimFileInBackground, nwReply);
+    }
+
+    /*
+     * Data file read from XML
+     */
+    void CVatsimDataFileReader::parseVatsimFileInBackground(QNetworkReply *nwReply)
     {
         // Example: http://info.vroute.net/vatsim-data.txt
         if (nwReply->error() == QNetworkReply::NoError)
@@ -248,6 +261,9 @@ namespace BlackCore
                 }
             } // for each
         }
+
+        nwReply->close();
+        nwReply->deleteLater(); // we are responsible for reading this
         emit this->dataRead();
     }
 
