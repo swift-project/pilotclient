@@ -12,6 +12,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackSim;
 
@@ -145,7 +146,7 @@ namespace BlackCore
         if (originator.isEmpty() || originator == IContextSimulator::InterfaceName()) return;
 
         // update
-        this->m_simulator->updateOwnCockpit(ownAircraft);
+        this->m_simulator->updateOwnSimulatorCockpit(ownAircraft);
     }
 
     void CContextSimulator::setConnectionStatus(ISimulator::Status status)
@@ -159,6 +160,29 @@ namespace BlackCore
         {
             m_updateTimer->stop();
             emit connectionChanged(false);
+        }
+    }
+
+    void CContextSimulator::statusMessageReceived(const CStatusMessage &statusMessage)
+    {
+        if (statusMessage.getSeverity() != CStatusMessage::SeverityError) return;
+        this->m_simulator->displayStatusMessage(statusMessage);
+    }
+
+    void CContextSimulator::statusMessagesReceived(const CStatusMessageList &statusMessages)
+    {
+        foreach(CStatusMessage m, statusMessages)
+        {
+            this->statusMessageReceived(m);
+        }
+    }
+
+    void CContextSimulator::textMessagesReceived(const Network::CTextMessageList &textMessages)
+    {
+        foreach(CTextMessage tm, textMessages)
+        {
+            if (!tm.isPrivateMessage()) continue;
+            this->m_simulator->displayStatusMessage(tm.asStatusMessage(true, true));
         }
     }
 

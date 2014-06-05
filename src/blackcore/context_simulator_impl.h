@@ -93,6 +93,15 @@ namespace BlackCore
         //! Set new connection status
         void setConnectionStatus(ISimulator::Status status);
 
+        //! Status message received
+        void statusMessageReceived(const BlackMisc::CStatusMessage &statusMessage);
+
+        //! Status messages received
+        void statusMessagesReceived(const BlackMisc::CStatusMessageList &statusMessages);
+
+        //! Text message received
+        void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
+
     private:
         //! \brief find and catalog all simulator plugins
         void findSimulatorPlugins();

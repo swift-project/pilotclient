@@ -7,6 +7,7 @@
 #define BLACKCORE_SIMULATOR_H
 
 #include "blacksim/simulatorinfo.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/avaircraft.h"
 #include <QObject>
 
@@ -70,14 +71,23 @@ namespace BlackCore
         virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) = 0;
 
         //! Update own aircraft cockpit (usually from context)
-        virtual bool updateOwnCockpit(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
+        virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft) = 0;
 
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
 
+        //! Display a status message in the simulator
+        virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const = 0;
+
     signals:
         //! Emitted when the connection status has changed
         void statusChanged(ISimulator::Status status);
+
+        //! Simulator started
+        void simulatorStarted();
+
+        //! Simulator stopped;
+        void simulatorStopped();
     };
 
     //! Factory pattern class to create instances of ISimulator
