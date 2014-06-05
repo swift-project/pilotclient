@@ -439,6 +439,10 @@ namespace BlackCore
                 c = connect(this->m_contextNetwork, &IContextNetwork::changedAircraftSituation,
                             this->getCContextSimulator(), &CContextSimulator::addAircraftSituation);
                 Q_ASSERT(c);
+
+                c = connect(this->m_contextNetwork, &IContextNetwork::textMessagesReceived,
+                            this->getCContextSimulator(), &CContextSimulator::textMessagesReceived);
+                Q_ASSERT(c);
             }
 
             // only if own aircraft running locally
@@ -446,6 +450,18 @@ namespace BlackCore
             {
                 c = connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit,
                             this->getCContextSimulator(), &CContextSimulator::updateCockpitFromContext);
+                Q_ASSERT(c);
+            }
+
+            // only if own aircraft running locally
+            if (this->m_contextApplication && this->m_contextApplication->usingLocalObjects())
+            {
+                c = connect(this->m_contextApplication, &IContextApplication::statusMessage,
+                            this->getCContextSimulator(), &CContextSimulator::statusMessageReceived);
+                Q_ASSERT(c);
+
+                c = connect(this->m_contextApplication, &IContextApplication::statusMessages,
+                            this->getCContextSimulator(), &CContextSimulator::statusMessagesReceived);
                 Q_ASSERT(c);
             }
         }
