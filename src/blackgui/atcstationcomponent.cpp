@@ -21,9 +21,9 @@ namespace BlackGui
         connected = this->connect(this->ui->pb_AtcStationsLoadMetar, SIGNAL(clicked()), this, SLOT(getMetar()));
         Q_ASSERT(connected);
         this->connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::atcStationsTabChanged);
-        this->connect(this->ui->pb_ReloadAtcStationsBooked, &QPushButton::clicked, this, &CAtcStationComponent::reloadAtcStationsBooked);
         this->connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::onlineAtcStationSelected);
         this->connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtis);
+        this->connect(this->ui->pb_ReloadAtcStationsBooked, &QPushButton::clicked, this, &CAtcStationComponent::reloadAtcStationsBooked);
     }
 
     CAtcStationComponent::~CAtcStationComponent()
@@ -46,11 +46,11 @@ namespace BlackGui
         Q_ASSERT(this->ui->tvp_AtcStationsOnline);
         Q_ASSERT(this->getIContextNetwork());
 
+        // initial read for bookings
+        if (this->ui->tvp_AtcStationsBooked->isEmpty()) this->reloadAtcStationsBooked();
+
         if (this->getIContextNetwork()->isConnected())
         {
-            // initial read for bookings
-            if (this->ui->tvp_AtcStationsBooked->isEmpty()) this->reloadAtcStationsBooked();
-
             // update
             if (this->m_timestampOnlineStationsChanged.isNull() || this->m_timestampLastReadOnlineStations.isNull() ||
                     (this->m_timestampOnlineStationsChanged > this->m_timestampLastReadOnlineStations))
@@ -71,11 +71,8 @@ namespace BlackGui
         Q_ASSERT(this->ui->tvp_AtcStationsBooked);
         Q_ASSERT(this->getIContextNetwork());
 
-        if (this->getIContextNetwork()->isConnected())
-        {
-            this->ui->tvp_AtcStationsBooked->update(this->getIContextNetwork()->getAtcStationsBooked());
-            this->m_timestampLastReadBookedStations = QDateTime::currentDateTimeUtc();
-        }
+        this->ui->tvp_AtcStationsBooked->update(this->getIContextNetwork()->getAtcStationsBooked());
+        this->m_timestampLastReadBookedStations = QDateTime::currentDateTimeUtc();
     }
 
     void CAtcStationComponent::changedAtcStationsOnline()

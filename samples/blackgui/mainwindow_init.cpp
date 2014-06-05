@@ -261,15 +261,21 @@ void MainWindow::initialDataReads()
     this->reloadSettings(); // init read
     this->reloadOwnAircraft(); // init read, independent of traffic network
 
+    // also reads bookings if not connected
     if (this->getIContextNetwork()->isConnected())
     {
         // connection is already established
-        this->ui->comp_Aircrafts->update();
         this->ui->comp_AtcStations->update();
+        this->ui->comp_Aircrafts->update();
 
         this->updateGuiStatusInformation();
         this->ui->comp_Users->update();
         this->ui->comp_Aircrafts->update();
+    }
+    else
+    {
+        // Initial booking read
+        QTimer::singleShot(30 * 1000, this->ui->comp_AtcStations, SLOT(update()));
     }
 
     this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "initial data read"));
