@@ -24,7 +24,10 @@ namespace BlackSound
             NotificationError = 0,
             NotificationLogin,
             NotificationLogoff,
-            NotificationTextMessage,
+            NotificationTextMessagePrivate,
+            NotificationVoiceRoomJoined,
+            NotificationVoiceRoomLeft,
+            NotificationsLoadSounds //!< end marker and force loading of sounds, keep as last element
         };
     };
 }

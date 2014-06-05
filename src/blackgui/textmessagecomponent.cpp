@@ -216,7 +216,7 @@ namespace BlackGui
 
         // sound
         if (this->getIContextAudio())
-            this->getIContextAudio()->playNotification(BlackSound::CNotificationSounds::NotificationTextMessage);
+            this->getIContextAudio()->playNotification(BlackSound::CNotificationSounds::NotificationTextMessagePrivate, true);
     }
 
     /*

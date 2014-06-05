@@ -114,4 +114,9 @@ namespace BlackGui
         return this->m_runtime->getIContextSimulator();
     }
 
+    void CRuntimeBasedComponent::playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const
+    {
+        if (!this->getIContextAudio()) return;
+        this->getIContextAudio()->playNotification(static_cast<uint>(notification), true);
+    }
 }

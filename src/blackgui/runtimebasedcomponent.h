@@ -3,6 +3,7 @@
 
 #include "blackcore/context_runtime.h"
 #include "blackcore/context_all_interfaces.h"
+#include "blackmisc/notificationsounds.h"
 #include <QTimer>
 
 namespace BlackGui
@@ -93,6 +94,9 @@ namespace BlackGui
 
         //! \copydoc CRuntime::canPingApplicationContext
         bool canPingApplicationContext() const { return this->m_runtime->canPingApplicationContext(); }
+
+        //! Play a given notification sound
+        void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;
 
     private:
         BlackCore::CRuntime *m_runtime;
