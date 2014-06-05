@@ -50,7 +50,15 @@ namespace BlackCore
     }
 
     /*
-     * Relay tp DBus
+     * Relay to DBus
+     */
+    CSettingsAudio CContextSettingsProxy::getAudioSettings() const
+    {
+        return this->m_dBusInterface->callDBusRet<CSettingsAudio>(QLatin1Literal("getAudioSettings"));
+    }
+
+    /*
+     * Relay to DBus
      */
     CKeyboardKeyList CContextSettingsProxy::getHotkeys() const
     {

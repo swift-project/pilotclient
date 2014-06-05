@@ -13,6 +13,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/setnetwork.h"
+#include "blackmisc/setaudio.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/variant.h"
 #include <QObject>
@@ -36,7 +37,8 @@ namespace BlackCore
         enum SettingsType
         {
             SettingsHotKeys,
-            SettingsNetwork
+            SettingsNetwork,
+            SettingsAudio
         };
 
     protected:
@@ -70,20 +72,21 @@ namespace BlackCore
             return s;
         }
 
-        /*!
-         * \brief Path for network settings
-         * \remarks no to be confused with DBus paths
-         */
+        //! Path for audio settings
+        static const QString &PathAudioSettings()
+        {
+            static QString s("audio");
+            return s;
+        }
+
+        //! Root path
         static const QString &PathRoot()
         {
             static QString s("root");
             return s;
         }
 
-        /*!
-         * \brief Path for hotkeys
-         * \remarks no to be confused with DBus paths
-         */
+        //! Path for hotkeys
         static const QString &PathHotkeys()
         {
             static QString s("hotkeys");
@@ -110,6 +113,9 @@ namespace BlackCore
 
         //! Network settings
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const = 0;
+
+        //! Audio settings
+        virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const = 0;
 
         //! Hotkeys
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const = 0;

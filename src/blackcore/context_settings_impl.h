@@ -11,6 +11,8 @@
 #include "context_runtime.h"
 
 #include "blackmisc/setnetwork.h"
+#include "blackmisc/setaudio.h"
+
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/hwkeyboardkeylist.h"
 
@@ -52,6 +54,9 @@ namespace BlackCore
         //! \copydoc IContextSettings::getNetworkSettings()
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const override;
 
+        //! \copydoc IContextSettings::getAudioSettings()
+        virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const override;
+
         //! \copydoc IContextSettings::getHotkeys()
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const override;
 
@@ -72,6 +77,7 @@ namespace BlackCore
 
     private:
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
+        BlackMisc::Settings::CSettingsAudio m_settingsAudio;
         BlackMisc::Hardware::CKeyboardKeyList m_hotkeys;
         QJsonDocument toJsonDocument() const;
         void emitCompletelyChanged();

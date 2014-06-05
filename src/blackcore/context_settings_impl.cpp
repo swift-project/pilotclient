@@ -36,21 +36,21 @@ namespace BlackCore
         }
         bool ok = false;
         QFile jsonFile(this->getSettingsFileName());
-        QJsonObject obj;
+        QJsonObject jsonObject;
 
         if (jsonFile.open(QFile::ReadOnly))
         {
             QJsonDocument doc = QJsonDocument::fromJson(jsonFile.readAll());
-            obj = doc.object();
+            jsonObject = doc.object();
             ok = true;
         }
         jsonFile.close();
 
         // init network
-        if (obj.contains(IContextSettings::PathNetworkSettings()))
+        if (jsonObject.contains(IContextSettings::PathNetworkSettings()))
         {
             this->m_settingsNetwork.fromJson(
-                obj.value(IContextSettings::PathNetworkSettings()).toObject()
+                jsonObject.value(IContextSettings::PathNetworkSettings()).toObject()
             );
         }
         else
@@ -58,11 +58,23 @@ namespace BlackCore
             this->m_settingsNetwork.initDefaultValues();
         }
 
+        // init audio
+        if (jsonObject.contains(IContextSettings::PathAudioSettings()))
+        {
+            this->m_settingsAudio.fromJson(
+                jsonObject.value(IContextSettings::PathNetworkSettings()).toObject()
+            );
+        }
+        else
+        {
+            this->m_settingsAudio.initDefaultValues();
+        }
+
         // init own members
-        if (obj.contains(IContextSettings::PathHotkeys()))
+        if (jsonObject.contains(IContextSettings::PathHotkeys()))
         {
             this->m_hotkeys.fromJson(
-                obj.value(IContextSettings::PathHotkeys()).toObject()
+                jsonObject.value(IContextSettings::PathHotkeys()).toObject()
             );
         }
         this->m_hotkeys.initAsHotkeyList(false); // update missing parts
@@ -116,6 +128,7 @@ namespace BlackCore
     {
         this->m_hotkeys.initAsHotkeyList(true);
         this->m_settingsNetwork.initDefaultValues();
+        this->m_settingsAudio.initDefaultValues();
         this->emitCompletelyChanged();
         if (write)
             return this->write();
@@ -136,10 +149,11 @@ namespace BlackCore
      */
     QJsonDocument CContextSettings::toJsonDocument() const
     {
-        QJsonObject obj;
-        obj.insert(IContextSettings::PathNetworkSettings(), this->m_settingsNetwork.toJson());
-        obj.insert(IContextSettings::PathHotkeys(), this->m_hotkeys.toJson());
-        QJsonDocument doc(obj);
+        QJsonObject jsonObject;
+        jsonObject.insert(IContextSettings::PathNetworkSettings(), this->m_settingsNetwork.toJson());
+        jsonObject.insert(IContextSettings::PathAudioSettings(), this->m_settingsAudio.toJson());
+        jsonObject.insert(IContextSettings::PathHotkeys(), this->m_hotkeys.toJson());
+        QJsonDocument doc(jsonObject);
         return doc;
     }
 
@@ -150,6 +164,7 @@ namespace BlackCore
     {
         emit this->changedSettings(IContextSettings::SettingsHotKeys);
         emit this->changedSettings(IContextSettings::SettingsNetwork);
+        emit this->changedSettings(IContextSettings::SettingsAudio);
     }
 
     /*
@@ -166,6 +181,14 @@ namespace BlackCore
     CSettingsNetwork CContextSettings::getNetworkSettings() const
     {
         return this->m_settingsNetwork;
+    }
+
+    /*
+     * Audio settings
+     */
+    CSettingsAudio CContextSettings::getAudioSettings() const
+    {
+        return this->m_settingsAudio;
     }
 
     /*
@@ -202,6 +225,15 @@ namespace BlackCore
             {
                 msgs.push_back(this->write());
                 emit this->changedSettings(static_cast<uint>(SettingsNetwork));
+            }
+        }
+        else if (path.startsWith(IContextSettings::PathAudioSettings()))
+        {
+            msgs = this->m_settingsAudio.value(nextLevelPath, command, value, changed);
+            if (changed)
+            {
+                msgs.push_back(this->write());
+                emit this->changedSettings(static_cast<uint>(SettingsAudio));
             }
         }
         else

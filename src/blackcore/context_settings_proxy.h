@@ -49,6 +49,9 @@ namespace BlackCore
         //! \copydoc IContextSettings::getNetworkSettings()
         virtual BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const override;
 
+        //! \copydoc IContextSettings::getAudioSettings()
+        virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const override;
+
         //! \copydoc IContextSettings::getHotkeys()
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const override;
 
