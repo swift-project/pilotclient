@@ -74,20 +74,14 @@ namespace BlackCore
         if (this->m_voiceRoom1UrlOverride.isEmpty() && this->m_voiceRoom2UrlOverride.isEmpty() && !this->m_automaticVoiceRoomResolution) return;
         if (!this->getIContextNetwork()) return; // no chance to resolve rooms
         if (!this->getIContextAudio()) return; // no place to set rooms
+        if (!this->m_automaticVoiceRoomResolution) return; // not responsible
 
         CVoiceRoomList rooms;
-        if (this->m_automaticVoiceRoomResolution)
-        {
-            // requires correct frequencies set
-            // but local network uses exactly this object here, so if frequencies are set here,
-            // they are for network context as well
-            rooms = this->getIContextNetwork()->getSelectedVoiceRooms();
-        }
-        else
-        {
-            rooms.push_back(CVoiceRoom());
-            rooms.push_back(CVoiceRoom());
-        }
+
+        // requires correct frequencies set
+        // but local network uses exactly this object here, so if frequencies are set here,
+        // they are for network context as well
+        rooms = this->getIContextNetwork()->getSelectedVoiceRooms();
 
         if (!this->m_voiceRoom1UrlOverride.isEmpty()) rooms[0] = CVoiceRoom(this->m_voiceRoom1UrlOverride);
         if (!this->m_voiceRoom2UrlOverride.isEmpty()) rooms[1] = CVoiceRoom(this->m_voiceRoom2UrlOverride);
@@ -105,10 +99,10 @@ namespace BlackCore
 
         // trigger the correct signals
         bool changedCockpit = this->updateOwnCockpit(aircraft.getCom1System(), aircraft.getCom2System(), aircraft.getTransponder(), originator);
-        bool changedPosition = this->updateOwnPosition(aircraft.getPosition(), aircraft.getAltitude() , originator);
-        bool changedSituation = this->updateOwnSituation(aircraft.getSituation(), originator);
+        this->updateOwnPosition(aircraft.getPosition(), aircraft.getAltitude() , originator);
+        this->updateOwnSituation(aircraft.getSituation(), originator);
 
-        if (changedCockpit || changedPosition || changedSituation) this->resolveVoiceRooms();
+        if (changedCockpit) this->resolveVoiceRooms();
 
         // all the rest
         this->m_ownAircraft = aircraft;
