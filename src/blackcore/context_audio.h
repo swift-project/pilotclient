@@ -127,8 +127,9 @@ namespace BlackCore
         /*!
          * \brief Play notification sound
          * \param notification CSoundGenerator::Notification
+         * \param considerSettings consider settings (notification on/off), false means settings ignored
          */
-        virtual void playNotification(uint notification) const = 0;
+        virtual void playNotification(uint notification, bool considerSettings) const = 0;
 
         //! Microphone test
         virtual void runMicrophoneTest() = 0;

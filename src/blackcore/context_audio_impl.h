@@ -14,6 +14,7 @@
 #include "blackcore/keyboard.h"
 
 #include <QThread>
+#include <QQueue>
 
 namespace BlackCore
 {
@@ -80,7 +81,7 @@ namespace BlackCore
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override;
 
         //! \copydoc IContextAudio::playNotification()
-        virtual void playNotification(uint notification) const override;
+        virtual void playNotification(uint notification, bool considerSettings) const override;
 
         //! \copydoc IContextAudio::runMicrophoneTest()
         virtual void runMicrophoneTest() override;
@@ -118,6 +119,9 @@ namespace BlackCore
         void connectionStatusChanged(IVoice::ComUnit comUnit, IVoice::ConnectionStatus oldStatus, IVoice::ConnectionStatus newStatus);
 
     private:
+        //! Connection in transition
+        bool inTransitionState() const;
+
         CVoiceVatlib *m_voice; //!< underlying voice lib
         IKeyboard *m_keyboard;
         IKeyboard::RegistrationHandle m_handlePtt;

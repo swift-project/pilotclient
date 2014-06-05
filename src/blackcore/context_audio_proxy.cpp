@@ -153,9 +153,9 @@ namespace BlackCore
     /*
      * Notification sound
      */
-    void CContextAudioProxy::playNotification(uint notification) const
+    void CContextAudioProxy::playNotification(uint notification, bool considerSettings) const
     {
-        this->m_dBusInterface->callDBus(QLatin1Literal("playNotification"), notification);
+        this->m_dBusInterface->callDBus(QLatin1Literal("playNotification"), notification, considerSettings);
     }
 
     /*

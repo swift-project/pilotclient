@@ -89,11 +89,11 @@ namespace BlackCore
         //! \copydoc IContextAudio::isMuted()
         virtual bool isMuted() const override;
 
-        //! \copydoc IContextAudio::playSelcalTone()
+        //! \copydoc IContextAudio::playSelcalTone
         virtual void playSelcalTone(const BlackMisc::Aviation::CSelcal &selcal) const override;
 
-        //! \copydoc IContextAudio::playNotification()
-        virtual void playNotification(uint notification) const override;
+        //! \copydoc IContextAudio::playNotification
+        virtual void playNotification(uint notification, bool considerSettings) const override;
 
         //! \copydoc IContextAudio::runMicrophoneTest()
         virtual void runMicrophoneTest() override;

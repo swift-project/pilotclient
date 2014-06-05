@@ -18,6 +18,7 @@ using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Hardware;
+using namespace BlackSound;
 
 namespace BlackCore
 {
@@ -26,9 +27,7 @@ namespace BlackCore
      * Init this context
      */
     CContextAudio::CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextAudio(mode, runtime),
-        m_voice(nullptr),
-        m_keyboard(nullptr)
+        IContextAudio(mode, runtime), m_voice(nullptr), m_keyboard(nullptr)
     {
         // 1. Init by "voice driver"
         this->m_voice = new CVoiceVatlib();
@@ -46,6 +45,9 @@ namespace BlackCore
         connect(this->m_voice, &CVoiceVatlib::squelchTestFinished, this, &CContextAudio::audioTestCompleted);
         connect(this->m_voice, &CVoiceVatlib::connectionStatusChanged, this, &CContextAudio::connectionStatusChanged);
         if (this->getIContextApplication()) this->connect(this->m_voice, &IVoice::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
+
+        // 5. load sounds (init)
+        CSoundGenerator::playNotificationSound(0, CNotificationSounds::NotificationsLoadSounds);
     }
 
     /*
@@ -188,6 +190,7 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         Q_ASSERT(newRooms.size() == 2);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, newRooms.toQString());
+
         CVoiceRoomList currentRooms =  this->m_voice->getComVoiceRooms();
         CVoiceRoom currentRoom1 = currentRooms[0];
         CVoiceRoom currentRoom2 = currentRooms[1];
@@ -275,11 +278,19 @@ namespace BlackCore
     /*
      * Notification
      */
-    void CContextAudio::playNotification(uint notification) const
+    void CContextAudio::playNotification(uint notification, bool considerSettings) const
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, QString::number(notification));
-        BlackSound::CSoundGenerator::playNotificationSound(90, static_cast<BlackSound::CNotificationSounds::Notification>(notification));
+
+        BlackSound::CNotificationSounds::Notification notificationSound = static_cast<BlackSound::CNotificationSounds::Notification>(notification);
+        if (considerSettings)
+        {
+            Q_ASSERT(this->getIContextSettings());
+            bool play = this->getIContextSettings()->getAudioSettings().getNotificationFlag(notificationSound);
+            if (!play) return;
+        }
+        BlackSound::CSoundGenerator::playNotificationSound(90, notificationSound);
     }
 
     /*
@@ -322,6 +333,9 @@ namespace BlackCore
         return static_cast<double>(this->m_voice->inputSquelch());
     }
 
+    /*
+     * Audio loopback
+     */
     void CContextAudio::enableAudioLoopback(bool enable)
     {
         Q_ASSERT(this->m_voice);
