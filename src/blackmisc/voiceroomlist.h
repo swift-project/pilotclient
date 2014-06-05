@@ -44,6 +44,8 @@ namespace BlackMisc
              */
             static void registerMetadata();
 
+            //! Frequently needed for voice room resolutions
+            static const CVoiceRoomList &twoEmptyRooms();
         };
 
     } //namespace

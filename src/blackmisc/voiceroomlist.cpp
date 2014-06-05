@@ -31,5 +31,19 @@ namespace BlackMisc
             qDBusRegisterMetaType<CVoiceRoomList>();
         }
 
+        /*
+         * Two empty rooms
+         */
+        const CVoiceRoomList &CVoiceRoomList::twoEmptyRooms()
+        {
+            static CVoiceRoomList emptyRooms;
+            if (emptyRooms.isEmpty())
+            {
+                emptyRooms.push_back(CVoiceRoom());
+                emptyRooms.push_back(CVoiceRoom());
+            }
+            return emptyRooms;
+        }
+
     } // namespace
 } // namespace
