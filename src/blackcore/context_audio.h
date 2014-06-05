@@ -55,7 +55,8 @@ namespace BlackCore
         void audioTestCompleted();
 
         //! Voice rooms changed
-        void changedVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms);
+        //! \details the flag indicates, whether a room got connected or disconnected
+        void changedVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms, bool connected);
 
     public slots:
         //! Get voice rooms for COM1, COM2:

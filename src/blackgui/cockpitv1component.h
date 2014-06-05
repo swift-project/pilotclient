@@ -72,7 +72,7 @@ namespace BlackGui
         void cockpitValuesChanged();
 
         //! Update voice rooms from list
-        void updateAudioVoiceRoomsFromObject(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms);
+        void updateAudioVoiceRoomsFromObjects(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
 
         //! Update the voice room members
         void updateVoiceRoomMembers();
@@ -84,9 +84,6 @@ namespace BlackGui
 
         //! Own aircraft object
         BlackMisc::Aviation::CAircraft getOwnAircraft() const;
-
-        //! Cockpit from aircraft object
-        void updateCockpitFromObject(const BlackMisc::Aviation::CAircraft &ownAircraft);
 
         //! COM frequencies displays
         void updateComFrequencyDisplaysFromObjects(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);

@@ -17,6 +17,7 @@ using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Audio;
+using namespace BlackSound;
 
 namespace BlackGui
 {
@@ -70,7 +71,7 @@ namespace BlackGui
         // Audio is optional
         if (this->getIContextAudio())
         {
-            this->connect(this->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitV1Component::updateAudioVoiceRoomsFromObject);
+            this->connect(this->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitV1Component::updateAudioVoiceRoomsFromObjects);
         }
     }
 
@@ -247,25 +248,6 @@ namespace BlackGui
             this->ui->ds_CockpitCom2Standby->setValue(freq);
     }
 
-    void CCockpitV1Component::updateCockpitFromObject(const CAircraft &ownAircraft)
-    {
-        // update GUI elements
-        // avoid unnecessary change events as far as possible
-        const CComSystem com1 = ownAircraft.getCom1System(); // aircraft just updated or set from context
-        const CComSystem com2 = ownAircraft.getCom2System();
-        const CTransponder transponder = ownAircraft.getTransponder();
-
-        // update the frequencies
-        this->updateComFrequencyDisplaysFromObjects(com1, com2);
-
-        // update transponder
-        qint32 tc = transponder.getTransponderCode();
-        if (tc != static_cast<qint32>(this->ui->ds_CockpitTransponder->value()))
-            this->ui->ds_CockpitTransponder->setValue(tc);
-
-        this->ui->cbp_CockpitTransponderMode->setSelectedTransponderMode(transponder.getTransponderMode());
-    }
-
     void CCockpitV1Component::updateCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
     {
         if (originator == CCockpitV1Component::cockpitOriginator()) return; // comes from myself
@@ -330,11 +312,14 @@ namespace BlackGui
         this->getIContextOwnAircraft()->setAudioVoiceRoomOverrideUrls(room1, room2);
     }
 
-    void CCockpitV1Component::updateAudioVoiceRoomsFromObject(const CVoiceRoomList &selectedVoiceRooms)
+    void CCockpitV1Component::updateAudioVoiceRoomsFromObjects(const CVoiceRoomList &selectedVoiceRooms, bool connected)
     {
         Q_ASSERT(selectedVoiceRooms.size() == 2);
         CVoiceRoom room1 = selectedVoiceRooms[0];
         CVoiceRoom room2 = selectedVoiceRooms[1];
+
+        // KB_REMOVE
+        qDebug() << "selected rooms" << room1.isConnected() << room1.getVoiceRoomUrl() << room2.isConnected() << room2.getVoiceRoomUrl();
 
         // remark
         // isAudioPlaying() is not set, as this is only a temporary value when really "something is playing"
@@ -363,7 +348,19 @@ namespace BlackGui
             this->ui->le_CockpitVoiceRoomCom2->setStyleSheet("");
             this->ui->tvp_CockpitVoiceRoom2->clear();
         }
-        if (changedUrl1 || changedUrl2) this->updateVoiceRoomMembers();
+        if (changedUrl1 || changedUrl2)
+        {
+            this->updateVoiceRoomMembers();
+
+            // notify
+            if (this->getIContextAudio())
+            {
+                CNotificationSounds::Notification sound = connected ?
+                        CNotificationSounds::NotificationVoiceRoomJoined :
+                        CNotificationSounds::NotificationVoiceRoomLeft;
+                this->getIContextAudio()->playNotification(static_cast<uint>(sound), true);
+            }
+        }
     }
 
     void CCockpitV1Component::updateVoiceRoomMembers()

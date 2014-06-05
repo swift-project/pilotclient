@@ -33,7 +33,7 @@ namespace BlackCore
                                     "audioTestCompleted", this, SIGNAL(audioTestCompleted()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                    "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList)));
+                                    "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList, bool)));
         Q_ASSERT(s);
         Q_UNUSED(s);
     }

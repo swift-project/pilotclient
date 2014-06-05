@@ -372,12 +372,24 @@ namespace BlackCore
         switch (newStatus)
         {
         case IVoice::Connected:
-            emit this->changedVoiceRooms(this->m_voice->getComVoiceRooms());
+            emit this->changedVoiceRooms(this->m_voice->getComVoiceRooms(), true);
             break;
         case IVoice::Disconnecting:
-            emit this->changedVoiceRooms(this->m_voice->getComVoiceRooms());
+            break;
+        case IVoice::Connecting:
+            break;
+        case IVoice::ConnectingFailed:
+        case IVoice::DisconnectedError:
+            {
+                const QString e = QString("Voice room %1 error").arg(comUnit);
+                qWarning(e.toUtf8().constData());
+
+                // no break here!
+            }
+        case IVoice::Disconnected:
             // good chance to update aircraft
             if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+            emit this->changedVoiceRooms(this->m_voice->getComVoiceRooms(), false);
             break;
         default:
             break;
