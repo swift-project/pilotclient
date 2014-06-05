@@ -73,8 +73,11 @@ namespace BlackCore
         //! \copydoc IContextNetwork::sendFlightPlan()
         virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;
 
-        //! \copydoc IContextNetwork::getMetar()
-        virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode) override;
+        //! \copydoc IContextNetwork::loadFlightPlanFromNetwork()
+        virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+        //! \copydoc IContextNetwork::getMetar
+        virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode) override;
 
         //! \copydoc IContextNetwork::getSelectedVoiceRooms()
         virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const override;

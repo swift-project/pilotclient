@@ -9,7 +9,9 @@
 #include "context_runtime.h"
 
 #include "blackmisc/avatcstationlist.h"
+#include "blackmisc/statusmessage.h"
 #include "blackmisc/predicates.h"
+#include "blackcore/context_application.h"
 
 #include <QMetaEnum>
 #include <QUrl>
@@ -41,7 +43,7 @@ namespace BlackCore
     /*
      * Update bookings
      */
-    void CContextNetwork::psReceivedBookings(CAtcStationList bookedStations)
+    void CContextNetwork::psReceivedBookings(const CAtcStationList &bookedStations)
     {
         const int interval = 60 * 1000;
         if (this->m_vatsimBookingReader->interval() < interval) this->m_vatsimBookingReader->setInterval(interval);
@@ -55,6 +57,8 @@ namespace BlackCore
             // into list
             this->m_atcStationsBooked.push_back(bookedStation);
         }
+
+        this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage("Read bookings from network", CStatusMessage::TypeTrafficNetwork));
     }
 
     /*
@@ -106,16 +110,16 @@ namespace BlackCore
     /*
      * Request METAR
      */
-    BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const QString &airportIcaoCode)
+    BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
     {
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, airportIcaoCode.toQString());
         CInformationMessage metar;
-        QString icao = airportIcaoCode.trimmed().toUpper();
-        if (icao.length() != 4) return metar;
-        if (this->m_metarCache.contains(icao)) metar = this->m_metarCache[icao];
+        if (airportIcaoCode.isEmpty()) return metar;
+        if (this->m_metarCache.contains(airportIcaoCode)) metar = this->m_metarCache[airportIcaoCode];
         if (metar.isEmpty() || metar.timeDiffReceivedMs() > 10 * 1000)
         {
             // outdated, or not in cache at all
-            this->m_network->sendMetarQuery(airportIcaoCode.trimmed().toUpper());
+            this->m_network->sendMetarQuery(airportIcaoCode);
 
             // with this little trick we try to make an asynchronous signal / slot
             // based approach a synchronous return value
@@ -124,9 +128,9 @@ namespace BlackCore
             {
                 // process some other events and hope network answer is received already
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-                if (m_metarCache.contains(icao))
+                if (m_metarCache.contains(airportIcaoCode))
                 {
-                    metar = this->m_metarCache[icao];
+                    metar = this->m_metarCache[airportIcaoCode];
                     break;
                 }
             }
@@ -139,20 +143,27 @@ namespace BlackCore
      */
     CAtcStationList CContextNetwork::getSelectedAtcStations() const
     {
+        CAtcStation com1Station;
+        CAtcStation com2Station;
+
         CAtcStationList stationsCom1 = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(this->ownAircraft().getCom1System());
         CAtcStationList stationsCom2 = this->m_atcStationsOnline.findIfComUnitTunedIn25KHz(this->ownAircraft().getCom2System());
-        stationsCom1.sortBy(&CAtcStation::getDistanceToPlane);
-        stationsCom2.sortBy(&CAtcStation::getDistanceToPlane);
+        if (!stationsCom1.isEmpty())
+        {
+            stationsCom1.sortBy(&CAtcStation::getDistanceToPlane);
+            com1Station = stationsCom1.front();
+        }
 
-        CAtcStation s;
-        CAtcStationList stations;
-        CAtcStation com1 = stationsCom1.isEmpty() ? s : stationsCom1[0];
-        CAtcStation com2 = stationsCom2.isEmpty() ? s : stationsCom2[0];
+        if (!stationsCom2.isEmpty())
+        {
+            stationsCom2.sortBy(&CAtcStation::getDistanceToPlane);
+            com2Station = stationsCom2.front();
+        }
 
-        stations.push_back(com1);
-        stations.push_back(com2);
-
-        return stations;
+        CAtcStationList selectedStations;
+        selectedStations.push_back(com1Station);
+        selectedStations.push_back(com2Station);
+        return selectedStations;
     }
 
     /*
@@ -165,6 +176,14 @@ namespace BlackCore
         CVoiceRoomList rooms;
         rooms.push_back(stations[0].getVoiceRoom());
         rooms.push_back(stations[1].getVoiceRoom());
+
+        CAtcStation s1 = stations[0];
+        CAtcStation s2 = stations[1];
+
+        // KB_REMOVE
+        qDebug() << this->ownAircraft().getCom1System().getFrequencyActive() << s1.getCallsign() << s1.getFrequency() << s1.getVoiceRoom().getVoiceRoomUrl();
+        qDebug() << this->ownAircraft().getCom2System().getFrequencyActive() << s2.getCallsign() << s2.getFrequency() << s2.getVoiceRoom().getVoiceRoomUrl();
+
         return rooms;
     }
 
@@ -280,25 +299,4 @@ namespace BlackCore
             if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
         }
     }
-
-    /*
-     * Metar received
-     */
-    void CContextNetwork::psFsdMetarReceived(const QString &metarMessage)
-    {
-        if (metarMessage.length() < 10) return; // invalid
-        const QString icaoCode = metarMessage.left(4).toUpper();
-        const QString icaoCodeTower = icaoCode + "_TWR";
-        CCallsign callsignTower(icaoCodeTower);
-        CInformationMessage metar(CInformationMessage::METAR, metarMessage);
-
-        // add METAR to existing stations
-        CIndexVariantMap vm(CAtcStation::IndexMetar, metar.toQVariant());
-        this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
-        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
-        this->m_metarCache.insert(icaoCode, metar);
-        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsignTower)) emit this->changedAtcStationsBooked();
-        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsignTower)) emit this->changedAtcStationsBooked();
-    }
-
 } // namespace

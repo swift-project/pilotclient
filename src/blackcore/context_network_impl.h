@@ -51,9 +51,6 @@ namespace BlackCore
         //! Update own cockpit
         void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder);
 
-        //! Get own aircraft
-        BlackMisc::Aviation::CAircraft getOwnAircraft() const;
-
     public slots: // IContextNetwork overrides
 
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()
@@ -95,8 +92,11 @@ namespace BlackCore
         //! \copydoc IContextNetwork::sendFlightPlan()
         virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) override;
 
-        //! \copydoc IContextNetwork::getMetar()
-        virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode) override;
+        //! \copydoc IContextNetwork::loadFlightPlanFromNetwork()
+        virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const override;
+
+        //! \copydoc IContextNetwork::getMetar
+        virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode) override;
 
         //! \copydoc IContextNetwork::getSelectedVoiceRooms()
         virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const override;
@@ -143,7 +143,8 @@ namespace BlackCore
         BlackMisc::Aviation::CAircraftList m_aircraftsInRange;
         BlackMisc::Network::CClientList m_otherClients;
         BlackCore::INetwork *m_network;
-        QMap<QString, BlackMisc::Aviation::CInformationMessage> m_metarCache /*!< Keep METARs for a while */;
+        QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache /*!< Keep METARs for a while */;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache /*!< Keep flight plans for a while */;
 
         // for reading XML and VATSIM data files
         CVatsimBookingReader *m_vatsimBookingReader;
@@ -190,7 +191,7 @@ namespace BlackCore
 
     private slots:
         //! ATC bookings received
-        void psReceivedBookings(BlackMisc::Aviation::CAtcStationList bookedStations);
+        void psReceivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
 
         //! Data file has been read
         void psDataFileRead();
@@ -230,6 +231,9 @@ namespace BlackCore
 
         //! METAR received
         void psFsdMetarReceived(const QString &metarMessage);
+
+        //! Flight plan received
+        void psFsdFlightplanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightplan);
 
         //! Realname recevied
         void psFsdRealNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);

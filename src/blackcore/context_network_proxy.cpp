@@ -38,7 +38,7 @@ namespace BlackCore
                                "changedAtcStationsOnline", this, SIGNAL(changedAtcStationsOnline()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedAtcStationOnlineConnectionStatus", this, SIGNAL(changedAtcStationOnlineConnectionStatus(BlackMisc::Aviation::CAtcStation,bool)));
+                               "changedAtcStationOnlineConnectionStatus", this, SIGNAL(changedAtcStationOnlineConnectionStatus(BlackMisc::Aviation::CAtcStation, bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "connectionTerminated", this, SIGNAL(connectionTerminated()));
@@ -139,7 +139,12 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("sendFlightPlan"), flightPlan);
     }
 
-    BlackMisc::Aviation::CInformationMessage CContextNetworkProxy::getMetar(const QString &airportIcaoCode)
+    BlackMisc::Aviation::CFlightPlan CContextNetworkProxy::loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CFlightPlan>(QLatin1Literal("loadFlightPlanFromNetwork"), callsign);
+    }
+
+    BlackMisc::Aviation::CInformationMessage CContextNetworkProxy::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CInformationMessage>(QLatin1Literal("getMetar"), airportIcaoCode);
     }

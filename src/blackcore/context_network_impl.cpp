@@ -67,6 +67,7 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::atisVoiceRoomReplyReceived, this, &CContextNetwork::psFsdAtisVoiceRoomQueryReceived);
         this->connect(this->m_network, &INetwork::atisLogoffTimeReplyReceived, this, &CContextNetwork::psFsdAtisLogoffTimeQueryReceived);
         this->connect(this->m_network, &INetwork::metarReplyReceived, this, &CContextNetwork::psFsdMetarReceived);
+        this->connect(this->m_network, &INetwork::flightPlanReplyReceived, this, &CContextNetwork::psFsdFlightplanReceived);
         this->connect(this->m_network, &INetwork::realNameReplyReceived, this, &CContextNetwork::psFsdRealNameReplyReceived);
         this->connect(this->m_network, &INetwork::icaoCodesReplyReceived, this, &CContextNetwork::psFsdIcaoCodesReceived);
         this->connect(this->m_network, &INetwork::pilotDisconnected, this, &CContextNetwork::psFsdPilotDisconnected);
@@ -260,15 +261,6 @@ namespace BlackCore
     }
 
     /*
-     * Own aircraft
-     */
-    CAircraft CContextNetwork::getOwnAircraft() const
-    {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, this->ownAircraft().toQString());
-        return this->ownAircraft();
-    }
-
-    /*
      * Send text messages
      */
     void CContextNetwork::sendTextMessages(const CTextMessageList &textMessages)
@@ -284,6 +276,36 @@ namespace BlackCore
     {
         if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, flightPlan.toQString());
         this->m_network->sendFlightPlan(flightPlan);
+        this->m_network->sendFlightPlanQuery(this->ownAircraft().getCallsign());
+    }
+
+    CFlightPlan CContextNetwork::loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const
+    {
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        CFlightPlan plan;
+
+        // use cache, but not for own callsign (always reload)
+        if (this->m_flightPlanCache.contains(callsign)) plan = this->m_flightPlanCache[callsign];
+        if (!plan.wasSentOrLoaded() || plan.timeDiffSentOrLoadedMs() > 30 * 1000)
+        {
+            // outdated, or not in cache at all
+            this->m_network->sendFlightPlanQuery(callsign);
+
+            // with this little trick we try to make an asynchronous signal / slot
+            // based approach a synchronous return value
+            QTime waitForFlightPlan = QTime::currentTime().addMSecs(1000);
+            while (QTime::currentTime() < waitForFlightPlan)
+            {
+                // process some other events and hope network answer is received already
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+                if (m_flightPlanCache.contains(callsign))
+                {
+                    plan = this->m_flightPlanCache[callsign];
+                    break;
+                }
+            }
+        }
+        return plan;
     }
 
     /*
@@ -315,7 +337,7 @@ namespace BlackCore
         CCallsignList searchList(callsigns);
 
         // myself, which is not in the lists below
-        CAircraft ownAircraft = this->getOwnAircraft();
+        CAircraft ownAircraft = this->ownAircraft();
         if (!ownAircraft.getCallsign().isEmpty() && searchList.contains(ownAircraft.getCallsign()))
         {
             searchList.remove(ownAircraft.getCallsign());
@@ -513,6 +535,37 @@ namespace BlackCore
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 
+    /*
+     * Metar received
+     */
+    void CContextNetwork::psFsdMetarReceived(const QString &metarMessage)
+    {
+        if (metarMessage.length() < 10) return; // invalid
+        const QString icaoCode = metarMessage.left(4).toUpper();
+        const QString icaoCodeTower = icaoCode + "_TWR";
+        CCallsign callsignTower(icaoCodeTower);
+        CInformationMessage metar(CInformationMessage::METAR, metarMessage);
+
+        // add METAR to existing stations
+        CIndexVariantMap vm(CAtcStation::IndexMetar, metar.toQVariant());
+        this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
+        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
+        this->m_metarCache.insert(icaoCode, metar);
+        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsignTower)) emit this->changedAtcStationsBooked();
+        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsignTower)) emit this->changedAtcStationsBooked();
+    }
+
+    /*
+     * Flight plan received
+     */
+    void CContextNetwork::psFsdFlightplanReceived(const CCallsign &callsign, const CFlightPlan &flightPlan)
+    {
+        CFlightPlan plan(flightPlan);
+        plan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
+        this->m_flightPlanCache.insert(callsign, plan);
+    }
+
+
     void CContextNetwork::sendFsipiCustomPackage(const CCallsign &recipientCallsign) const
     {
         QStringList data = this->createFsipiCustomPackageData();
@@ -527,7 +580,7 @@ namespace BlackCore
 
     QStringList CContextNetwork::createFsipiCustomPackageData() const
     {
-        CAircraft me = this->getOwnAircraft();
+        CAircraft me = this->ownAircraft();
         CAircraftIcao icao = me.getIcaoInfo();
         QString modelString;
         if (this->getIContextSimulator())

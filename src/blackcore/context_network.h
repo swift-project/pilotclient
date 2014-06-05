@@ -132,12 +132,15 @@ namespace BlackCore
         //! Send flight plan
         virtual void sendFlightPlan(const BlackMisc::Aviation::CFlightPlan &flightPlan) = 0;
 
+        //! Load flight plan (from network)
+        virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
+
         /*!
          * \brief Get METAR, if not available request it
          * \param airportIcaoCode such as EDDF, KLAX
          * \return
          */
-        virtual BlackMisc::Aviation::CInformationMessage getMetar(const QString &airportIcaoCode) = 0;
+        virtual BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode) = 0;
 
         //! Use the selected COM1/2 frequencies, and get the corresponding voice room for it
         virtual BlackMisc::Audio::CVoiceRoomList getSelectedVoiceRooms() const = 0;
