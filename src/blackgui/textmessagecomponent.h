@@ -34,9 +34,6 @@ namespace BlackGui
         //! Destructor
         ~CTextMessageComponent();
 
-        //! Set tooltip
-        void setToolTip(const QString &tooltipText, Tab tab);
-
         //! SELCAL callback, SELCAL is obtained by that
         void setSelcalCallback(const std::function<const QString(void)> &selcalCallback) { this->m_selcalCallback = selcalCallback; }
 
@@ -54,6 +51,13 @@ namespace BlackGui
          * \param sending
          */
         void appendTextMessagesToGui(const BlackMisc::Network::CTextMessageList &messages, bool sending = false);
+
+        //! Cockpit values changed, used to updated some components
+        void changedAircraftCockpit();
+
+    protected:
+        //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+        void runtimeHasBeenSet() override;
 
     private:
         Ui::CTextMessageComponent *ui;
@@ -93,6 +97,9 @@ namespace BlackGui
 
         //! Network connected?
         bool isNetworkConnected() const { return this->getIContextNetwork() && this->getIContextNetwork()->isConnected() ; }
+
+        //! Show current frequencies
+        void showCurrentFrequenciesFromCockpit();
 
     private slots:
         //! Close text message tab

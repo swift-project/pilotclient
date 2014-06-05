@@ -42,11 +42,6 @@ namespace BlackGui
         delete ui;
     }
 
-    void CTextMessageComponent::setToolTip(const QString &tooltipText, CTextMessageComponent::Tab tab)
-    {
-        this->getTab(tab)->setToolTip(tooltipText);
-    }
-
     QWidget *CTextMessageComponent::getTab(CTextMessageComponent::Tab tab)
     {
         switch (tab)
@@ -137,6 +132,16 @@ namespace BlackGui
         }
     }
 
+    void CTextMessageComponent::changedAircraftCockpit()
+    {
+        this->showCurrentFrequenciesFromCockpit();
+    }
+
+    void CTextMessageComponent::runtimeHasBeenSet()
+    {
+        connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::changedAircraftCockpit);
+    }
+
     /*
      * Is the tab of the message's receiver selected?
      */
@@ -164,6 +169,17 @@ namespace BlackGui
                 return this->currentWidget() == this->ui->tb_TextMessagesCOM2;
             return false;
         }
+    }
+
+    void CTextMessageComponent::showCurrentFrequenciesFromCockpit()
+    {
+        CAircraft ownAircraft = this->getOwnAircraft();
+        const QString f1 = QString("COM1: %1").arg(ownAircraft.getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
+        const QString f2 = QString("COM2: %1").arg(ownAircraft.getCom2System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
+        this->ui->tb_TextMessagesCOM1->setToolTip(f1);
+        this->ui->tb_TextMessagesCOM1->setToolTip(f2);
+        this->setTabText(this->indexOf(this->ui->tb_TextMessagesCOM1), f1);
+        this->setTabText(this->indexOf(this->ui->tb_TextMessagesCOM2), f2);
     }
 
     /*

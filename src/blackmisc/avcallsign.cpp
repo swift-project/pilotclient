@@ -28,7 +28,7 @@ namespace BlackMisc
         const QPixmap &CCallsign::convertToIcon(const CCallsign &callsign)
         {
             static const QPixmap app(QPixmap(":/blackmisc/icons/aircraft_arrival.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap gnd(QPixmap(":/blackmisc/icons/tower.png").scaledToWidth(16, Qt::SmoothTransformation));
+            static const QPixmap gnd(QPixmap(":/blackmisc/icons/gnd_framed.jpg").scaledToWidth(16, Qt::SmoothTransformation));
             static const QPixmap del(QPixmap(":/blackmisc/icons/aircraft_departure.jpg").scaledToWidth(16, Qt::SmoothTransformation));
             static const QPixmap twr(QPixmap(":/blackmisc/icons/tower_framed.jpg").scaledToWidth(16, Qt::SmoothTransformation));
             static const QPixmap ctr(QPixmap(":/blackmisc/icons/sky.jpg").scaledToWidth(16, Qt::SmoothTransformation));

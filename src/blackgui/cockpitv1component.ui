@@ -90,7 +90,7 @@
         <double>118.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>136.000000000000000</double>
+        <double>136.974999999999994</double>
        </property>
        <property name="singleStep">
         <double>0.025000000000000</double>
@@ -141,7 +141,7 @@
         <double>118.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>136.000000000000000</double>
+        <double>136.974999999999994</double>
        </property>
        <property name="singleStep">
         <double>0.025000000000000</double>
@@ -175,7 +175,7 @@
         <double>118.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>136.000000000000000</double>
+        <double>136.974999999999994</double>
        </property>
        <property name="singleStep">
         <double>0.025000000000000</double>
@@ -206,7 +206,7 @@
         <double>118.000000000000000</double>
        </property>
        <property name="maximum">
-        <double>136.000000000000000</double>
+        <double>136.974999999999994</double>
        </property>
        <property name="singleStep">
         <double>0.025000000000000</double>
