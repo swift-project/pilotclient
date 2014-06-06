@@ -17,7 +17,7 @@ namespace BlackMisc
          */
         CAudioDevice::CAudioDevice() :
             m_type(Unknown), m_deviceIndex(invalidDeviceIndex()),
-            m_deviceName(""), m_hostName(CAudioDevice::hostName())
+            m_deviceName(""), m_hostName(CAudioDevice::computerHostName())
         {
             // void
         }
@@ -27,7 +27,7 @@ namespace BlackMisc
          */
         CAudioDevice::CAudioDevice(DeviceType type, const qint16 index, const QString &name) :
             m_type(type), m_deviceIndex(index),
-            m_deviceName(name), m_hostName(CAudioDevice::hostName())
+            m_deviceName(name), m_hostName(CAudioDevice::computerHostName())
         {
             // void
         }
@@ -35,10 +35,10 @@ namespace BlackMisc
         /*
          * Host name
          */
-        QString CAudioDevice::hostName()
+        const QString &CAudioDevice::computerHostName()
         {
-            QHostInfo hostInfo = QHostInfo::fromName(QHostInfo::localHostName());
-            return hostInfo.localHostName();
+            static const QString hostName = QHostInfo::fromName(QHostInfo::localHostName()).localHostName();
+            return hostName;
         }
 
         /*
@@ -100,7 +100,7 @@ namespace BlackMisc
             if (this->m_hostName.isEmpty()) return m_deviceName;
             QString s(this->m_deviceName);
             s.append(" [");
-            s.append(this->hostName());
+            s.append(this->getHostName());
             s.append("]");
             return s;
         }

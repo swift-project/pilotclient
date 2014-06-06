@@ -42,25 +42,25 @@ namespace BlackMisc
              */
             CAudioDevice();
 
-            //! \brief Constructor.
+            //! Constructor.
             CAudioDevice(DeviceType type, const qint16 index, const QString &getName);
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \brief Get the device index
+            //! Get the device index
             qint16 getIndex() const { return m_deviceIndex; }
 
             //! Get the device name
             const QString &getName() const { return m_deviceName; }
 
-            //! \brief Type
+            //! Host name
+            const QString &getHostName() const { return m_hostName; }
+
+            //! Type
             DeviceType getType() const { return m_type; }
 
-            //! \brief Valid audio device object?
+            //! Valid audio device object?
             bool isValid() const { return m_deviceIndex >= -1 && !m_deviceName.isEmpty(); }
 
             //! \brief Equal operator ==
@@ -78,7 +78,7 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
             //! \copydoc TupleConverter<>::jsonMembers()
@@ -137,11 +137,8 @@ namespace BlackMisc
             QString m_hostName;
 
         private:
-            /*!
-             * \brief Own host name
-             * \return
-             */
-            static QString hostName();
+            //! Own host name
+            static const QString &computerHostName();
         };
 
     } // Audio

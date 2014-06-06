@@ -164,10 +164,14 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, com1.toQString(), com2.toQString());
+
+        // volumes
         qint32 vol1 = com1.getVolumeOutput();
         qint32 vol2 = com2.getVolumeOutput();
         this->m_voice->setRoomOutputVolume(IVoice::COM1, vol1);
         this->m_voice->setRoomOutputVolume(IVoice::COM2, vol2);
+
+        // enable / disable in the same step
         this->m_voice->switchAudioOutput(IVoice::COM1, com1.isEnabled());
         this->m_voice->switchAudioOutput(IVoice::COM2, com2.isEnabled());
     }

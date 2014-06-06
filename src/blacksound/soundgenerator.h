@@ -190,6 +190,9 @@ namespace BlackSound
          */
         static void playNotificationSound(qint32 volume, CNotificationSounds::Notification notification);
 
+        //! For debugging purposes
+        void static printAllQtSoundDevices();
+
     signals:
         /*!
          * \brief Device was closed

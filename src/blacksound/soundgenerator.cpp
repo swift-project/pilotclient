@@ -391,7 +391,6 @@ namespace BlackSound
             }
         }
         return qtDevice;
-
     }
 
     CSoundGenerator *CSoundGenerator::playSignal(qint32 volume, const QList<CSoundGenerator::Tone> &tones, QAudioDeviceInfo device)
@@ -500,4 +499,22 @@ namespace BlackSound
         // I cannot delete the file here, only after it has been played
         if (removeFileAfterPlaying) BlackMisc::CFileDeleter::addFileForDeletion(file);
     }
+
+    void CSoundGenerator::printAllQtSoundDevices()
+    {
+        qDebug() << "output";
+        foreach(QAudioDeviceInfo qd, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
+        {
+            qDebug() << qd.deviceName();
+        }
+
+        qDebug() << "input";
+        foreach(QAudioDeviceInfo qd, QAudioDeviceInfo::availableDevices(QAudio::AudioInput))
+        {
+            qDebug() << qd.deviceName();
+        }
+
+
+    }
+
 } // namespace

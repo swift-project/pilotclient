@@ -3,6 +3,8 @@
 #include "blackmisc/indexvariantmap.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/pqallquantities.h"
+#include "blacksound/soundgenerator.h"
+
 #include <QTextStream>
 #include <QString>
 #include <QFuture>
@@ -54,6 +56,7 @@ namespace BlackMiscTest
             qDebug() << "x .. to exit              0 .. settings";
             qDebug() << "1 .. ATC booked           2 .. ATC online";
             qDebug() << "3 .. Aircrafts in range   4 .. my aircraft     5 .. voice rooms";
+            qDebug() << "6 .. vatlib audio devices 7 .. Qt audio devices";
             qDebug() << "-------------";
             qDebug() << "oe . redirect enabled     od . disable redirect";
             qDebug() << "-------------";
@@ -101,6 +104,19 @@ namespace BlackMiscTest
                 qDebug() << "voice rooms";
                 qDebug() << audioContext->getComVoiceRooms();
             }
+            else if (line.startsWith("6"))
+            {
+                qDebug() << "-------------";
+                qDebug() << "vatlib audio devices";
+                qDebug() << audioContext->getAudioDevices();
+            }
+            else if (line.startsWith("7"))
+            {
+                qDebug() << "-------------";
+                qDebug() << "Qt audio devices";
+                BlackSound::CSoundGenerator::printAllQtSoundDevices();
+            }
+
             else if (line.startsWith("oe"))
             {
                 applicationContext->setOutputRedirectionLevel(IContextApplication::RedirectAllOutput);
