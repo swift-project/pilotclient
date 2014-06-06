@@ -237,7 +237,7 @@ namespace BlackMisc
             //! Parse to string, with specified separator
             virtual void parseFromString(const QString &value, CPqString::SeparatorMode mode)
             {
-                this->parseFromString(value, mode);
+                *this = CPqString::parse<PQ>(value, mode);
             }
 
             //! \copydoc CValueObject::parseFromString
