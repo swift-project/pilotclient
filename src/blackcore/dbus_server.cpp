@@ -26,6 +26,7 @@ namespace BlackCore
                                      parent), m_serverMode(CDBusServer::SERVERMODE_P2P)
     {
         ServerMode m = CDBusServer::addressToDBusMode(address);
+        m_busServer.setAnonymousAuthenticationAllowed(true);
         switch (m)
         {
         case SERVERMODE_SESSIONBUS:

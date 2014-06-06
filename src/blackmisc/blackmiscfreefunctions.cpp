@@ -104,6 +104,7 @@ void BlackMisc::Network::registerMetadata()
 void BlackMisc::Settings::registerMetadata()
 {
     CSettingsNetwork::registerMetadata();
+    CSettingsAudio::registerMetadata();
 }
 
 /*

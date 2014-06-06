@@ -93,7 +93,8 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSettingsAudio)
-            QString m_notificationFlags; //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
+            QString m_notificationFlags;  //!< play notification for notification x, a little trick to use a string here (streamable, hashable, ..)
+            void initNotificationFlags(); //!< init flags
         };
 
     } // namespace

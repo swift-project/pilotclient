@@ -168,12 +168,6 @@ namespace BlackSound
          */
         static void playSelcal(qint32 volume, const BlackMisc::Aviation::CSelcal &selcal, const BlackMisc::Audio::CAudioDevice &audioDevice);
 
-        /*!
-         * \brief Play notification
-         * \param volume    0-100
-         * \param notification
-         */
-        static void playNotificationSound(qint32 volume, CNotificationSounds::Notification notification);
 
         //! One cycle of tones takes t milliseconds
         BlackMisc::PhysicalQuantities::CTime oneCycleDurationMs() const
@@ -188,6 +182,13 @@ namespace BlackSound
          * \param removeFileAfterPlaying delete the file, after it has been played
          */
         static void playFile(qint32 volume, const QString &file, bool removeFileAfterPlaying);
+
+        /*!
+         * \brief Play notification
+         * \param volume    0-100
+         * \param notification
+         */
+        static void playNotificationSound(qint32 volume, CNotificationSounds::Notification notification);
 
     signals:
         /*!

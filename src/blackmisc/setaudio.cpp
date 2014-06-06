@@ -18,7 +18,9 @@ namespace BlackMisc
          */
         bool CSettingsAudio::getNotificationFlag(CNotificationSounds::Notification notification) const
         {
-            QChar f = m_notificationFlags.at(static_cast<int>(notification));
+            const int i = static_cast<int>(notification);
+            if (i >= m_notificationFlags.length()) return true; // default
+            QChar f = m_notificationFlags.at(i);
             return '1' == f;
         }
 
@@ -129,7 +131,19 @@ namespace BlackMisc
          */
         void CSettingsAudio::initDefaultValues()
         {
-            this->m_notificationFlags = QString(1 + static_cast<int>(CNotificationSounds::Notification::NotificationsLoadSounds), '1');
+            this->initNotificationFlags();
+        }
+
+
+        void CSettingsAudio::initNotificationFlags()
+        {
+            // if we add flags in the future, we automatically extend ...
+            static const int l = 1 + static_cast<int>(CNotificationSounds::Notification::NotificationsLoadSounds);
+            if (this->m_notificationFlags.length() < l)
+            {
+                int cl = m_notificationFlags.length();
+                this->m_notificationFlags.append(QString(l - cl, '1'));
+            }
         }
 
         /*
@@ -155,6 +169,7 @@ namespace BlackMisc
                 {
                     CNotificationSounds::Notification index = static_cast<CNotificationSounds::Notification>(value.toInt());
                     char value = (command == CSettingUtilities::CmdSetTrue()) ? '1' : '0' ;
+                    this->initNotificationFlags();
                     this->m_notificationFlags.replace(index, 1, value);
                     return msgs;
                 }
