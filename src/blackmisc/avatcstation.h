@@ -339,7 +339,7 @@ namespace BlackMisc
 } // namespace
 
 // o.m_metar, o.m_voiceRoom
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAtcStation, (o.m_callsign, o.m_controller, o.m_frequency, o.m_position, o.m_range, o.m_isOnline, o.m_distanceToPlane, o.m_atis, o.m_bookedFromUtc, tie(o.m_bookedUntilUtc, o.m_metar, o.m_voiceRoom)))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAtcStation, (o.m_callsign, o.m_controller, o.m_frequency, o.m_position, o.m_range, o.m_isOnline, o.m_distanceToPlane, o.m_atis, o.m_bookedFromUtc, o.m_bookedUntilUtc, o.m_metar, o.m_voiceRoom))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAtcStation)
 
 #endif // guard

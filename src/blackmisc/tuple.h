@@ -164,11 +164,7 @@ namespace BlackMisc
     using ::qHash;
 
     /*!
-     * \brief   Works like std::tie but with special handling for any argument which are tuples.
-     * \details Returns a tuple of references to its arguments which can be used in the same way as
-     *          std::tie, except for arguments which are themselves tuples. Arguments which are tuples
-     *          are copied into the result tuple by value. This enables nesting of calls to tie within
-     *          other calls to tie, to workaround implementations which have a maximum tuple size.
+     * \brief   Works like std::tie, and allows us to hook in our own customizations.
      */
     template <class... Ts>
     auto tie(Ts &&... args) -> decltype(std::make_tuple(Private::tieHelper(args)...))

@@ -239,6 +239,6 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CFlightPlan)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CFlightPlan, (o.m_equipmentIcao, o.m_originAirportIcao, o.m_destinationAirportIcao, o.m_alternateAirportIcao,
-                               o.m_takeoffTimePlanned, o.m_takeoffTimeActual, o.m_enrouteTime, o.m_fuelTime, o.m_cruiseAltitude, tie(o.m_cruiseTrueAirspeed, o.m_flightRules, o.m_route, o.m_remarks, o.m_lastSentOrLoaded)))
+                               o.m_takeoffTimePlanned, o.m_takeoffTimeActual, o.m_enrouteTime, o.m_fuelTime, o.m_cruiseAltitude, o.m_cruiseTrueAirspeed, o.m_flightRules, o.m_route, o.m_remarks, o.m_lastSentOrLoaded))
 
 #endif // guard
