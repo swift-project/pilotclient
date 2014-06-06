@@ -79,16 +79,16 @@
 #define BLACK_DECLARE_TUPLE_CONVERSION_TEMPLATE(T, MEMBERS)                     \
     namespace BlackMisc                                                         \
     {                                                                           \
-        template <class U> class TupleConverter<T<U>>                           \
+        template <class... U> class TupleConverter<T<U...>>                     \
         {                                                                       \
-            friend class T<U>;                                                  \
-            static_assert(Private::HasEnabledTupleConversion<T<U>>::value,      \
-                          "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T);          \
-            static auto toTuple(const T<U> &o) -> decltype(BlackMisc::tie MEMBERS)  \
+            friend class T<U...>;                                               \
+            static_assert(Private::HasEnabledTupleConversion<T<U...>>::value,   \
+                          "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T); \
+            static auto toTuple(const T<U...> &o) -> decltype(BlackMisc::tie MEMBERS) \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
-            static auto toTuple(T<U> &o) -> decltype(BlackMisc::tie MEMBERS)    \
+            static auto toTuple(T<U...> &o) -> decltype(BlackMisc::tie MEMBERS) \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
@@ -98,7 +98,7 @@
                 return members;                                                 \
             }                                                                   \
         public:                                                                 \
-            static auto constToTuple(const T<U> &o) -> decltype(BlackMisc::tie MEMBERS) \
+            static auto constToTuple(const T<U...> &o) -> decltype(BlackMisc::tie MEMBERS) \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
