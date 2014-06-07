@@ -181,7 +181,7 @@ namespace BlackMisc
     template <class... Ts>
     int compare(std::tuple<Ts...> a, std::tuple<Ts...> b)
     {
-        return Private::TupleHelper<sizeof...(Ts)>::compare(a, b);
+        return Private::TupleHelper::compare(a, b, Private::make_index_sequence<sizeof...(Ts)>());
     }
 
     /*!
@@ -191,7 +191,7 @@ namespace BlackMisc
     template <class... Ts>
     QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<Ts...> tu)
     {
-        return Private::TupleHelper<sizeof...(Ts)>::marshall(arg, tu);
+        return Private::TupleHelper::marshall(arg, tu, Private::make_index_sequence<sizeof...(Ts)>());
     }
 
     /*!
@@ -201,7 +201,7 @@ namespace BlackMisc
     template <class... Ts>
     const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<Ts...> tu)
     {
-        return Private::TupleHelper<sizeof...(Ts)>::unmarshall(arg, tu);
+        return Private::TupleHelper::unmarshall(arg, tu, Private::make_index_sequence<sizeof...(Ts)>());
     }
 
     /*!
@@ -211,7 +211,7 @@ namespace BlackMisc
     template <class... Ts>
     QDebug operator <<(QDebug debug, std::tuple<Ts &...> tu)
     {
-        return Private::TupleHelper<sizeof...(Ts)>::debug(debug, tu);
+        return Private::TupleHelper::debug(debug, tu, Private::make_index_sequence<sizeof...(Ts)>());
     }
 
     /*!
@@ -232,7 +232,7 @@ namespace BlackMisc
     template <class... Ts>
     uint qHash(std::tuple<Ts...> tu)
     {
-        return Private::TupleHelper<sizeof...(Ts)>::hash(tu);
+        return Private::TupleHelper::hash(tu, Private::make_index_sequence<sizeof...(Ts)>());
     }
 
     /*!
@@ -243,7 +243,7 @@ namespace BlackMisc
     QJsonObject serializeJson(const QStringList &members, std::tuple<Ts...> tu)
     {
         QJsonObject json;
-        Private::TupleHelper<sizeof...(Ts)>::serializeJson(json, members, tu);
+        Private::TupleHelper::serializeJson(json, members, tu, Private::make_index_sequence<sizeof...(Ts)>());
         return json;
     }
 
@@ -254,7 +254,7 @@ namespace BlackMisc
     template <class... Ts>
     void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<Ts...> tu)
     {
-        Private::TupleHelper<sizeof...(Ts)>::deserializeJson(json, members, tu);
+        Private::TupleHelper::deserializeJson(json, members, tu, Private::make_index_sequence<sizeof...(Ts)>());
     }
 
 } // namespace BlackMisc

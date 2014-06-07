@@ -73,6 +73,29 @@ namespace BlackMisc
         }
         //! @}
 
+        // Our own implementation of std::index_sequence (because not implemented by MSVC2013)
+        //! \private
+        //! @{
+        template <size_t... Is>
+        struct index_sequence
+        {
+            static const size_t size = sizeof...(Is);
+            typedef std::tuple<std::integral_constant<size_t, Is>...> tuple_type;
+        };
+        template <size_t I, size_t C, size_t... Is>
+        struct GenSequence
+        {
+            typedef typename GenSequence<I + 1, C, Is..., I>::type type;
+        };
+        template <size_t C, size_t... Is>
+        struct GenSequence<C, C, Is...>
+        {
+            typedef index_sequence<Is...> type;
+        };
+        template <size_t C>
+        using make_index_sequence = typename GenSequence<0, C>::type;
+        //! @}
+
         // Helper which will allow us to hook in our own customizations into BlackMisc::tie
         //! \private
         //! @{
@@ -83,76 +106,115 @@ namespace BlackMisc
         }
         //! @}
 
-        // Applying operations to all elements in a tuple, using recursion
+        // Applying operations to all elements in a tuple, using index_sequence instead of recursion
         //! \private
-        template <int N>
-        struct TupleHelper
+        class TupleHelper
         {
-            template <class Tu>
-            static int compare(const Tu &a, const Tu &b)
+        public:
+            template <class Tu, size_t... Is>
+            static int compare(const Tu &a, const Tu &b, index_sequence<Is...>)
             {
-                const int head = TupleHelper < N - 1 >::compare(a, b);
-                if (head) { return head; }
-                return compareHelper < N - 1 > (a, b);
+                return compareImpl(std::make_pair(get_ref<Is>(a), get_ref<Is>(b))...);
             }
 
-            template <class Tu>
-            static QDBusArgument &marshall(QDBusArgument &arg, const Tu &tu)
+            template <class Tu, size_t... Is>
+            static QDBusArgument &marshall(QDBusArgument &arg, const Tu &tu, index_sequence<Is...>)
             {
-                return TupleHelper < N - 1 >::marshall(arg, tu) << std::get < N - 1 > (tu);
+                marshallImpl(arg, std::get<Is>(tu)...);
+                return arg;
             }
 
-            template <class Tu>
-            static const QDBusArgument &unmarshall(const QDBusArgument &arg, Tu &tu)
+            template <class Tu, size_t... Is>
+            static const QDBusArgument &unmarshall(const QDBusArgument &arg, Tu &tu, index_sequence<Is...>)
             {
-                return TupleHelper < N - 1 >::unmarshall(arg, tu) >> std::get < N - 1 > (tu);
+                unmarshallImpl(arg, std::get<Is>(tu)...);
+                return arg;
             }
 
-            template <class Tu>
-            static QDebug debug(QDebug dbg, Tu &tu)
+            template <class Tu, size_t... Is>
+            static QDebug debug(QDebug dbg, const Tu &tu, index_sequence<Is...>)
             {
-                return TupleHelper < N - 1 >::debug(dbg, tu) << std::get < N - 1 > (tu);
+                debugImpl(dbg, std::get<Is>(tu)...);
+                return dbg;
             }
 
-            template <class Tu>
-            static uint hash(const Tu &tu)
+            template <class Tu, size_t... Is>
+            static uint hash(const Tu &tu, index_sequence<Is...>)
             {
-                return TupleHelper < N - 1 >::hash(tu) ^ qHash(std::get < N - 1 > (tu));
+                return hashImpl(qHash(std::get<Is>(tu))...);
             }
 
-            template <class Tu>
-            static void serializeJson(QJsonObject &json, const QStringList &members, const Tu &tu)
+            template <class Tu, size_t... Is>
+            static void serializeJson(QJsonObject &json, const QStringList &names, const Tu &tu, index_sequence<Is...>)
             {
-                TupleHelper < N - 1 >::serializeJson(json, members, tu);
-                json << std::make_pair(members.at(N - 1), std::get < N - 1 >(tu));
+                serializeJsonImpl(json, std::make_pair(names[Is], std::get<Is>(tu))...);
             }
 
-            template <class Tu>
-            static void deserializeJson(const QJsonObject &json, const QStringList &members, Tu &tu)
+            template <class Tu, size_t... Is>
+            static void deserializeJson(const QJsonObject &json, const QStringList &names, Tu &tu, index_sequence<Is...>)
             {
-                TupleHelper < N - 1 >::deserializeJson(json, members, tu);
-                json.value(members.at(N - 1)) >> std::get < N - 1 >(tu);
+                deserializeJsonImpl(json, std::make_pair(names[Is], get_ref<Is>(tu))...);
             }
-        };
 
-        //! \private
-        template <>
-        struct TupleHelper<0>
-        {
-            template <class Tu>
-            static int compare(const Tu &, const Tu &) { return 0; }
-            template <class Tu>
-            static QDBusArgument &marshall(QDBusArgument &arg, const Tu &) { return arg; }
-            template <class Tu>
-            static const QDBusArgument &unmarshall(const QDBusArgument &arg, Tu &) { return arg; }
-            template <class Tu>
-            static QDebug debug(QDebug dbg, Tu &) { return dbg; }
-            template <class Tu>
-            static uint hash(const Tu &) { return 0; }
-            template <class Tu>
-            static void serializeJson(QJsonObject &, const QStringList &, const Tu &) {}
-            template <class Tu>
-            static void deserializeJson(const QJsonObject &, const QStringList &, Tu &) {}
+        private:
+            template <size_t I, class T>
+            static auto get_ref(T &&tu) -> decltype(std::ref(std::get<I>(std::forward<T>(tu))))
+            {
+                return std::ref(std::get<I>(std::forward<T>(tu)));
+            }
+
+            static int compareImpl() { return 0; }
+            template <class T, class... Ts>
+            static int compareImpl(const std::pair<T, T> &head, const Ts &... tail)
+            {
+                int result = compareHelper(head.first, head.second, typename std::is_base_of<CValueObject, typename std::decay<T>::type>::type());
+                if (result) return result;
+                return compareImpl(tail...);
+            }
+
+            static void marshallImpl(QDBusArgument &) {}
+            template <class T, class... Ts>
+            static void marshallImpl(QDBusArgument &arg, const T &head, const Ts &... tail)
+            {
+                arg << head;
+                marshallImpl(arg, tail...);
+            }
+
+            static void unmarshallImpl(const QDBusArgument &) {}
+            template <class T, class... Ts>
+            static void unmarshallImpl(const QDBusArgument &arg, T &head, Ts &... tail)
+            {
+                arg >> head;
+                unmarshallImpl(arg, tail...);
+            }
+
+            static void debugImpl(QDebug) {}
+            template <class T, class... Ts>
+            static void debugImpl(QDebug dbg, const T &head, const Ts &... tail)
+            {
+                dbg << head;
+                debugImpl(dbg, tail...);
+            }
+
+            static void serializeJsonImpl(QJsonObject &) {}
+            template <class T, class... Ts>
+            static void serializeJsonImpl(QJsonObject &json, std::pair<QString, T> head, Ts... tail)
+            {
+                json << head;
+                serializeJsonImpl(json, tail...);
+            }
+
+            static void deserializeJsonImpl(const QJsonObject &) {}
+            template <class T, class... Ts>
+            static void deserializeJsonImpl(const QJsonObject &json, std::pair<QString, T> head, Ts... tail)
+            {
+                json.value(head.first) >> head.second;
+                deserializeJsonImpl(json, tail...);
+            }
+
+            static uint hashImpl() { return 0; }
+            template <class... Ts>
+            static uint hashImpl(uint head, Ts... tail) { return head ^ hashImpl(tail...); }
         };
 
     } // namespace Private
