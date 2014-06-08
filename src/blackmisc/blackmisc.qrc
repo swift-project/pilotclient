@@ -26,5 +26,9 @@
         <file>icons/sky.jpg</file>
         <file>icons/tower_framed.jpg</file>
         <file>icons/gnd_framed.jpg</file>
+        <file>icons/captextonly.png</file>
+        <file>icons/capunknown.png</file>
+        <file>icons/capvoice.png</file>
+        <file>icons/capvoicereceive.png</file>
     </qresource>
 </RCC>

@@ -182,6 +182,15 @@ namespace BlackMisc
             case IndexHost:
                 return QVariant(this->m_host);
                 break;
+            case IndexVoiceCapabilities:
+                return this->m_voiceCapabilities.toQVariant();
+                break;
+            case IndexVoiceCapabilitiesString:
+                return QVariant(this->m_voiceCapabilities.toQString(false));
+                break;
+            case IndexVoiceCapabilitiesIcon:
+                return QVariant(this->m_voiceCapabilities.toIcon());
+                break;
             default:
                 break;
             }
@@ -216,6 +225,12 @@ namespace BlackMisc
                 break;
             case IndexHost:
                 this->m_host = variant.toString();
+                break;
+            case IndexVoiceCapabilities:
+                this->m_voiceCapabilities = variant.value<CVoiceCapabilities>();
+                break;
+            case IndexVoiceCapabilitiesString:
+                this->m_voiceCapabilities = CVoiceCapabilities(variant.toString());
                 break;
             default:
                 Q_ASSERT_X(false, "CClient", "index unknown");

@@ -3,6 +3,7 @@
 
 #include "nwuser.h"
 #include "nwaircraftmodel.h"
+#include "nwvoicecapabilities.h"
 #include "valueobject.h"
 #include "indexvariantmap.h"
 
@@ -22,17 +23,23 @@ namespace BlackMisc
              */
             enum ColumnIndex : uint
             {
+                // user
                 IndexEmail = 0,
                 IndexId,
                 IndexPassword,
                 IndexRealName,
                 IndexCallsign,
                 IndexCallsignIcon,
+                // model
                 IndexQueriedModelString = 100,
+                // own indexes
                 IndexCapabilities = 1000,
                 IndexCapabilitiesString,
-                IndexModel, // own indexes
-                IndexHost
+                IndexModel,
+                IndexHost,
+                IndexVoiceCapabilities,
+                IndexVoiceCapabilitiesString,
+                IndexVoiceCapabilitiesIcon
             };
 
             /*!
@@ -75,7 +82,6 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-
             //! Get capabilities
             CIndexVariantMap getCapabilities() const { return this->m_capabilities; }
 
@@ -90,6 +96,15 @@ namespace BlackMisc
 
             //! Has capability?
             bool hasCapability(Capabilities capability) const;
+
+            //! Get voice capabilities
+            const CVoiceCapabilities &getVoiceCapabilities() const { return m_voiceCapabilities;}
+
+            //! Set voice capabilities
+            void setVoiceCapabilities(const CVoiceCapabilities &voiceCapabilities) { m_voiceCapabilities = voiceCapabilities;}
+
+            //! Set voice capabilities
+            void setVoiceCapabilities(const QString &flightPlanRemarks) { m_voiceCapabilities = CVoiceCapabilities(flightPlanRemarks);}
 
             //! Host
             const QString &getHost() const { return this->m_host; }
@@ -143,6 +158,8 @@ namespace BlackMisc
             CAircraftModel m_model;
             CIndexVariantMap m_capabilities;
             QString m_host;
+            CVoiceCapabilities m_voiceCapabilities;
+
         };
     } // namespace
 } // namespace

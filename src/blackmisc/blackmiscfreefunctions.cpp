@@ -96,6 +96,7 @@ void BlackMisc::Network::registerMetadata()
     CClient::registerMetadata();
     CClientList::registerMetadata();
     CAircraftModel::registerMetadata();
+    CVoiceCapabilities::registerMetadata();
 }
 
 /*
