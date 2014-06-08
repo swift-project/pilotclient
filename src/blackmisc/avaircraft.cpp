@@ -56,6 +56,33 @@ namespace BlackMisc
         }
 
         /*
+         * Set cockpit data
+         */
+        void CAircraft::setCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder)
+        {
+            this->setCom1System(com1);
+            this->setCom2System(com2);
+            this->setTransponder(transponder);
+        }
+
+        /*
+         * Set cockpit data
+         */
+        void CAircraft::setCockpit(const CComSystem &com1, const CComSystem &com2, qint32 transponderCode)
+        {
+            this->setCom1System(com1);
+            this->setCom2System(com2);
+            this->m_transponder.setTransponderCode(transponderCode);
+        }
+
+
+        /*
+         * Changed data
+         */
+        bool CAircraft::hasChangedCockpitData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder) const
+        {
+            return this->getCom1System() != com1 || this->getCom2System() != com2 || this->getTransponder() != transponder;
+        }
          * Same COM system data
          */
         bool CAircraft::hasSameComData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder)

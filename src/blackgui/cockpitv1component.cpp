@@ -292,7 +292,7 @@ namespace BlackGui
         bool changedCockpit = false;
         if (this->getIContextOwnAircraft())
         {
-            changedCockpit =  this->getIContextOwnAircraft()->updateOwnCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), CCockpitV1Component::cockpitOriginator());
+            changedCockpit = this->getIContextOwnAircraft()->updateOwnCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), CCockpitV1Component::cockpitOriginator());
         }
         return changedCockpit;
     }

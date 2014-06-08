@@ -295,19 +295,22 @@ namespace BlackCore
 
         /*!
          * Set the position and altitude of our own aircraft.
+         * \deprecated No longer needed with own aircraft context, only used in client sample
          */
         virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) = 0;
 
         /*!
          * Set the position, altitude, orientation, and miscellaneous state of our own aircraft.
+         * \deprecated No longer needed with own aircraft context, only used in client sample
          */
         virtual void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
 
         /*!
          * Set the COM frequencies and transponder code and mode of our own aircraft.
+         * \deprecated No longer needed with own aircraft context, only used in client sample
          */
-        virtual void setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
-                                            const BlackMisc::Aviation::CTransponder &transponder) = 0;
+        virtual void setOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
+                                   const BlackMisc::Aviation::CTransponder &transponder) = 0;
 
         //! @}
         ////////////////////////////////////////////////////////////////

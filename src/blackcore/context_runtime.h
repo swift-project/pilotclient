@@ -176,6 +176,14 @@ namespace BlackCore
         //! \remarks only applicable for local object
         const CContextOwnAircraft *getCContextOwnAircraft() const;
 
+        //! Context for network
+        //! \remarks only applicable for local object
+        CContextNetwork *getCContextNetwork();
+
+        //! Context for network
+        //! \remarks only applicable for local object
+        const CContextNetwork *getCContextNetwork() const;
+
         //! Context for simulator
         //! \remarks only applicable for local object
         CContextSimulator *getCContextSimulator();

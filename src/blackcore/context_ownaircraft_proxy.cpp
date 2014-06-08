@@ -58,6 +58,11 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateOwnCockpit"), com1, com2, transponder, originator);
     }
 
+    bool CContextOwnAircraftProxy::updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator)
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updatePilot"), pilot, originator);
+    }
+
     void CContextOwnAircraftProxy::setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("updateOwnCockpitOutputVolumes"), outputVolumeCom1, outputVolumeCom2);

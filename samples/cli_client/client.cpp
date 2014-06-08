@@ -52,7 +52,7 @@ Client::Client(QObject *parent)
     connect(this, &Client::setOwnAircraft,                      m_net, &INetwork::setOwnAircraft);
     connect(this, &Client::setOwnAircraftPosition,              m_net, &INetwork::setOwnAircraftPosition);
     connect(this, &Client::setOwnAircraftSituation,             m_net, &INetwork::setOwnAircraftSituation);
-    connect(this, &Client::setOwnAircraftAvionics,              m_net, &INetwork::setOwnAircraftAvionics);
+    connect(this, &Client::setOwnAircraftCockpit,               m_net, &INetwork::setOwnCockpit);
     connect(this, &Client::sendPing,                            m_net, &INetwork::sendPing);
     connect(this, &Client::sendMetarQuery,                      m_net, &INetwork::sendMetarQuery);
     connect(this, &Client::sendWeatherDataQuery,                m_net, &INetwork::sendWeatherDataQuery);
@@ -85,7 +85,7 @@ Client::Client(QObject *parent)
     m_commands["setaircraft"]       = std::bind(&Client::setOwnAircraftCmd, this, _1);
     m_commands["setposition"]       = std::bind(&Client::setOwnAircraftPositionCmd, this, _1);
     m_commands["setsituation"]      = std::bind(&Client::setOwnAircraftSituationCmd, this, _1);
-    m_commands["setavionics"]       = std::bind(&Client::setOwnAircraftAvionicsCmd, this, _1);
+    m_commands["setcockpit"]        = std::bind(&Client::setOwnAircraftCockpitCmd, this, _1);
     m_commands["ping"]              = std::bind(&Client::sendPingCmd, this, _1);
     m_commands["metar"]             = std::bind(&Client::sendMetarQueryCmd, this, _1);
     m_commands["weather"]           = std::bind(&Client::sendWeatherDataQueryCmd, this, _1);
@@ -377,14 +377,14 @@ void Client::setOwnAircraftSituationCmd(QTextStream &args)
                                  ));
 }
 
-void Client::setOwnAircraftAvionicsCmd(QTextStream &args)
+void Client::setOwnAircraftCockpitCmd(QTextStream &args)
 {
     double com1;
     double com2;
     int xpdrCode;
     QString xpdrMode;
     args >> com1 >> com2 >> xpdrCode >> xpdrMode;
-    emit setOwnAircraftAvionics(
+    emit setOwnAircraftCockpit(
         BlackMisc::Aviation::CComSystem("COM1", BlackMisc::PhysicalQuantities::CFrequency(com1, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CComSystem("COM2", BlackMisc::PhysicalQuantities::CFrequency(com2, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz())),
         BlackMisc::Aviation::CTransponder("Transponder", xpdrCode, xpdrMode)

@@ -52,7 +52,7 @@ private: //commands
     void setOwnAircraftCmd(QTextStream &args);
     void setOwnAircraftPositionCmd(QTextStream &args);
     void setOwnAircraftSituationCmd(QTextStream &args);
-    void setOwnAircraftAvionicsCmd(QTextStream &args);
+    void setOwnAircraftCockpitCmd(QTextStream &args);
     void sendPingCmd(QTextStream &args);
     void sendMetarQueryCmd(QTextStream &args);
     void sendWeatherDataQueryCmd(QTextStream &args);
@@ -81,7 +81,7 @@ signals: //to send to INetwork
     void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
     void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
     void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
-    void setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
+    void setOwnAircraftCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
         const BlackMisc::Aviation::CTransponder &xpdr);
     void sendPing(const BlackMisc::Aviation::CCallsign &callsign);
     void sendMetarQuery(const QString &airportICAO);

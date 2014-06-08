@@ -40,9 +40,6 @@ namespace BlackCore
         // 1. Init by "network driver"
         this->m_network = new CNetworkVatlib(this);
 
-        // 2. Init own aircraft
-        this->initOwnAircraft();
-
         // 3. Init VATSIM bookings
         this->m_vatsimBookingReader = new CVatsimBookingReader(this->getRuntime()->getIContextSettings()->getNetworkSettings().getBookingServiceUrl(), this);
         this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CContextNetwork::psReceivedBookings);
@@ -90,31 +87,6 @@ namespace BlackCore
     }
 
     /*
-     * Init own aircraft
-     */
-    void CContextNetwork::initOwnAircraft()
-    {
-        Q_ASSERT(this->getRuntime());
-        Q_ASSERT(this->getRuntime()->getIContextSettings());
-        this->ownAircraft().initComSystems();
-        this->ownAircraft().initTransponder();
-        CAircraftSituation situation(
-            CCoordinateGeodetic(
-                CLatitude::fromWgs84("N 049° 18' 17"),
-                CLongitude::fromWgs84("E 008° 27' 05"),
-                CLength(0, CLengthUnit::m())),
-            CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft())
-        );
-        this->ownAircraft().setSituation(situation);
-        this->ownAircraft().setPilot(this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer().getUser());
-
-        // TODO: This would need to come from somewhere (mappings)
-        // Own callsign, plane ICAO status, model used
-        this->ownAircraft().setCallsign(CCallsign("BLACK"));
-        this->ownAircraft().setIcaoInfo(CAircraftIcao("C172", "L1P", "GA", "GA", "0000ff"));
-    }
-
-    /*
      * Connect to network
      */
     CStatusMessageList CContextNetwork::connectToNetwork(uint loginMode)
@@ -141,12 +113,13 @@ namespace BlackCore
             if (CNetworkUtils::canConnect(currentServer, msg, 2000))
             {
                 INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
-                this->ownAircraft().setPilot(currentServer.getUser()); // still needed?
+                this->getIContextOwnAircraft()->updatePilot(currentServer.getUser(), this->getPathAndContextId());
+                const CAircraft ownAircraft = this->ownAircraft();
                 this->m_network->presetServer(currentServer);
                 this->m_network->presetLoginMode(mode);
-                this->m_network->presetCallsign(this->ownAircraft().getCallsign());
-                this->m_network->presetIcaoCodes(this->ownAircraft().getIcaoInfo());
-                this->m_network->setOwnAircraft(this->ownAircraft());
+                this->m_network->presetCallsign(ownAircraft.getCallsign());
+                this->m_network->presetIcaoCodes(ownAircraft.getIcaoInfo());
+                this->m_network->setOwnAircraft(ownAircraft);
                 this->m_network->initiateConnection();
                 msg = "Connection pending ";
                 msg.append(" ").append(currentServer.getAddress()).append(" ").append(QString::number(currentServer.getPort()));
@@ -192,72 +165,6 @@ namespace BlackCore
     {
         if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         return this->m_network->isConnected();
-    }
-
-    /*
-     * Own Aircraft
-     */
-    CStatusMessageList CContextNetwork::setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
-    {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, aircraft.toQString());
-        CStatusMessageList msgs;
-        if (this->m_network->isConnected())
-        {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "Cannot set aircraft info, network already connected"));
-        }
-        else
-        {
-            this->ownAircraft() = aircraft;
-        }
-        return msgs;
-    }
-
-    /*
-     * Own position
-     */
-    void CContextNetwork::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude)
-    {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, position.toQString(), altitude.toQString());
-        this->ownAircraft().setPosition(position);
-        this->ownAircraft().setAltitude(altitude);
-        this->m_network->setOwnAircraftPosition(position, altitude);
-    }
-
-    /*
-     * Update own situation
-     */
-    void CContextNetwork::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation)
-    {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, situation.toQString());
-        this->ownAircraft().setSituation(situation);
-        this->m_network->setOwnAircraftSituation(situation);
-    }
-
-    /*
-     * Own cockpit data
-     */
-    void CContextNetwork::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder)
-    {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, com1.toQString(), com2.toQString(), transponder.toQString());
-        bool changed = false;
-        if (com1 != this->ownAircraft().getCom1System())
-        {
-            this->ownAircraft().setCom1System(com1);
-            changed = true;
-        }
-        if (com2 != this->ownAircraft().getCom2System())
-        {
-            this->ownAircraft().setCom2System(com2);
-            changed = true;
-        }
-        if (transponder != this->ownAircraft().getTransponder())
-        {
-            this->ownAircraft().setTransponder(transponder);
-            changed = true;
-        }
-
-        if (!changed) return;
-        this->m_network->setOwnAircraftAvionics(com1, com2, transponder);
     }
 
     /*
@@ -602,11 +509,11 @@ namespace BlackCore
         return this->getRuntime()->getCContextOwnAircraft()->ownAircraft();
     }
 
-    CAircraft &CContextNetwork::ownAircraft()
+    void CContextNetwork::psChangedOwnAircraft(const CAircraft &aircraft, const QString &originator)
     {
-        Q_ASSERT(this->getRuntime());
-        Q_ASSERT(this->getRuntime()->getCContextOwnAircraft());
-        return this->getRuntime()->getCContextOwnAircraft()->ownAircraft();
+        Q_ASSERT(this->m_network);
+        Q_UNUSED(originator);
+        this->m_network->setOwnAircraft(aircraft);
     }
 
 } // namespace

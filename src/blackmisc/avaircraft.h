@@ -141,6 +141,15 @@ namespace BlackMisc
             //! Set COM2 system
             void setCom2System(const CComSystem &comSystem) { this->m_com2system = comSystem; }
 
+            //! Cockpit data
+            void setCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder);
+
+            //! Cockpit data
+            void setCockpit(const CComSystem &com1, const CComSystem &com2, qint32 transponderCode);
+
+            //! Changed cockpit data?
+            bool hasChangedCockpitData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder) const;
+
             //! Identical COM system?
             bool hasSameComData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder);
 

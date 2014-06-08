@@ -496,7 +496,7 @@ namespace BlackCore
         m_ownAircraft.setSituation(situation);
     }
 
-    void CNetworkVatlib::setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
+    void CNetworkVatlib::setOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2,
             const BlackMisc::Aviation::CTransponder &xpdr)
     {
         m_ownAircraft.setCom1System(com1);

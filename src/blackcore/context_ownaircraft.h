@@ -37,10 +37,17 @@ namespace BlackCore
             return s;
         }
 
+        //! \copydoc CContext::getPathAndContextId()
+        virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
+
         //! Destructor
         virtual ~IContextOwnAircraft() {}
 
     signals:
+        //! Aircraft changed
+        //! \remarks local only
+        void changedAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
+
         //! Aircraft situation update
         //! \remarks local only
         void changedAircraftSituation(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
@@ -50,6 +57,7 @@ namespace BlackCore
         void changedAircraftPosition(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
 
         //! Aircraft cockpit update
+        //! \remarks DBus and local
         void changedAircraftCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
 
     public slots:
@@ -68,6 +76,9 @@ namespace BlackCore
 
         //! Update own cockpit
         virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) = 0;
+
+        //! Set current pilot
+        virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) = 0;
 
         //! Output volumens,  volumes 0..100
         virtual void setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2) = 0;

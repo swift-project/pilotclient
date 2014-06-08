@@ -52,7 +52,10 @@ namespace BlackCore
         virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateOwnCockpit()
-        virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originato4) override;
+        virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
+
+        //! \copydoc IContextOwnAircraft::updatePilot()
+        virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::setAudioOutputVolumes
         virtual void setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2) override;

@@ -70,7 +70,7 @@ namespace BlackCore
         virtual void setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft) override;
         virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
         virtual void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
-        virtual void setOwnAircraftAvionics(const BlackMisc::Aviation::CComSystem &com1,
+        virtual void setOwnCockpit(const BlackMisc::Aviation::CComSystem &com1,
                                             const BlackMisc::Aviation::CComSystem &com2,
                                             const BlackMisc::Aviation::CTransponder &xpdr) override;
 

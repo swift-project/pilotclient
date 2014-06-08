@@ -472,6 +472,11 @@ namespace BlackCore
             c = this->connect(this->m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
                               this->getCContextOwnAircraft(),  &CContextOwnAircraft::changedAtcStationOnlineConnectionStatus);
             Q_ASSERT(c);
+
+            // inject updated own aircraft to network
+            c = this->connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraft,
+                              this->getCContextNetwork(),  &CContextNetwork::psChangedOwnAircraft);
+            Q_ASSERT(c);
         }
     }
 
@@ -646,6 +651,20 @@ namespace BlackCore
         Q_ASSERT_X(!this->m_contextApplication || this->m_contextApplication->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextApplication *>(this->m_contextApplication);
     }
+
+    CContextNetwork *CRuntime::getCContextNetwork()
+    {
+        Q_ASSERT_X(!this->m_contextApplication || this->m_contextNetwork->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextNetwork *>(this->m_contextNetwork);
+    }
+
+    const CContextNetwork *CRuntime::getCContextNetwork() const
+    {
+        Q_ASSERT_X(!this->m_contextApplication || this->m_contextNetwork->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        return static_cast<CContextNetwork *>(this->m_contextNetwork);
+    }
+
+
 
     CContextOwnAircraft *CRuntime::getCContextOwnAircraft()
     {

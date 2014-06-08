@@ -99,13 +99,22 @@ namespace BlackCore
 
         // trigger the correct signals
         bool changedCockpit = this->updateOwnCockpit(aircraft.getCom1System(), aircraft.getCom2System(), aircraft.getTransponder(), originator);
-        this->updateOwnPosition(aircraft.getPosition(), aircraft.getAltitude() , originator);
-        this->updateOwnSituation(aircraft.getSituation(), originator);
+        bool changedPosition = this->updateOwnPosition(aircraft.getPosition(), aircraft.getAltitude() , originator);
+        bool changedSituation = this->updateOwnSituation(aircraft.getSituation(), originator);
+        bool changed = changedCockpit || changedPosition || changedSituation;
 
+        // new voice rooms, cockpit has changed
         if (changedCockpit) this->resolveVoiceRooms();
 
-        // all the rest
-        this->m_ownAircraft = aircraft;
+        // any change triggers a global updated aircraft signal
+        // comparison is not to avoid setting the value, but avoid wrong signals
+        if (changed || this->m_ownAircraft != aircraft)
+        {
+            emit this->changedAircraft(aircraft, originator);
+
+            // now set value
+            this->m_ownAircraft = aircraft;
+        }
     }
 
     /*
@@ -123,7 +132,11 @@ namespace BlackCore
             this->m_ownAircraft.setAltitude(altitude);
         }
 
-        if (changed) emit this->changedAircraftPosition(this->m_ownAircraft, originator);
+        if (changed)
+        {
+            emit this->changedAircraftPosition(this->m_ownAircraft, originator);
+            emit this->changedAircraft(this->m_ownAircraft, originator);
+        }
         return changed;
     }
 
@@ -136,8 +149,12 @@ namespace BlackCore
         bool changed = this->m_ownAircraft.getSituation() == situation;
         if (!changed) return changed;
 
-        this->m_ownAircraft.setSituation(situation);
-        emit this->changedAircraftSituation(this->m_ownAircraft, originator);
+        if (changed)
+        {
+            this->m_ownAircraft.setSituation(situation);
+            emit this->changedAircraftSituation(this->m_ownAircraft, originator);
+            emit this->changedAircraft(this->m_ownAircraft, originator);
+        }
         return changed;
     }
 
@@ -147,28 +164,23 @@ namespace BlackCore
     bool CContextOwnAircraft::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator)
     {
         if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, com1.toQString(), com2.toQString(), transponder.toQString());
-        bool changed = false;
-        if (com1 != this->m_ownAircraft.getCom1System())
-        {
-            this->m_ownAircraft.setCom1System(com1);
-            changed = true;
-        }
-        if (com2 != this->m_ownAircraft.getCom2System())
-        {
-            this->m_ownAircraft.setCom2System(com2);
-            changed = true;
-        }
-        if (transponder != this->m_ownAircraft.getTransponder())
-        {
-            this->m_ownAircraft.setTransponder(transponder);
-            changed = true;
-        }
+        bool changed = this->m_ownAircraft.hasChangedCockpitData(com1, com2, transponder);
         if (changed)
         {
+            this->m_ownAircraft.setCockpit(com1, com2, transponder);
             emit this->changedAircraftCockpit(this->m_ownAircraft, originator);
+            emit this->changedAircraft(this->m_ownAircraft, originator);
             this->resolveVoiceRooms();
         }
         return changed;
+    }
+
+    bool CContextOwnAircraft::updatePilot(const CUser &pilot, const QString &originator)
+    {
+        if (this->m_ownAircraft.getPilot() == pilot) return false;
+        this->m_ownAircraft.setPilot(pilot);
+        emit this->changedAircraft(this->m_ownAircraft, originator);
+        return true;
     }
 
     void CContextOwnAircraft::setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2)

@@ -35,22 +35,6 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextNetwork();
 
-        /*!
-         * Set own aircraft
-         * \param aircraft
-         * \return message list, as aircraft can only be set prior connecting
-         */
-        BlackMisc::CStatusMessageList setOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
-
-        //! Own position, be aware height is terrain height
-        void updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude);
-
-        //! Complete situation update
-        void updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
-
-        //! Update own cockpit
-        void updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder);
-
     public slots: // IContextNetwork overrides
 
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()
@@ -163,9 +147,6 @@ namespace BlackCore
         //! ATC list, with booked controllers
         BlackMisc::Aviation::CAtcStationList &atcStationsBooked() { return m_atcStationsBooked; }
 
-        //! Init my very own aircraft
-        void initOwnAircraft();
-
         //! Get network settings
         BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const
         {
@@ -186,10 +167,10 @@ namespace BlackCore
         //! Own aircraft
         const BlackMisc::Aviation::CAircraft &ownAircraft() const;
 
-        //! Own aircraft
-        BlackMisc::Aviation::CAircraft &ownAircraft();
-
     private slots:
+        //! Own aircraft was updated
+        void psChangedOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
+
         //! ATC bookings received
         void psReceivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
 

@@ -124,12 +124,16 @@ namespace BlackCore
     void CContextSimulator::updateOwnAircraft()
     {
         Q_ASSERT(this->getIContextOwnAircraft());
-        CAircraft aircraft = m_simulator->getOwnAircraft();
 
-        // the methods will check, if an update is really required
+        // we make sure not to override values we do not have
+        CAircraft aircraft = this->getIContextOwnAircraft()->getOwnAircraft();
+        CAircraft simulatorAircraft = this->m_simulator->getOwnAircraft();
+        aircraft.setSituation(simulatorAircraft.getSituation());
+        aircraft.setCockpit(simulatorAircraft.getCom1System(), simulatorAircraft.getCom2System(), simulatorAircraft.getTransponderCode());
+
+        // the method will check, if an update is really required
         // these are local (non DBus) calls
-        this->getIContextOwnAircraft()->updateOwnSituation(aircraft.getSituation(), IContextSimulator::InterfaceName());
-        this->getIContextOwnAircraft()->updateOwnCockpit(aircraft.getCom1System(), aircraft.getCom2System(), aircraft.getTransponder(), IContextSimulator::InterfaceName());
+        this->getIContextOwnAircraft()->updateOwnAircraft(aircraft, this->getPathAndContextId());
     }
 
     void CContextSimulator::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &initialSituation)
