@@ -6,6 +6,8 @@
 #ifndef BLACKMISCTEST_H
 #define BLACKMISCTEST_H
 
+/*! \file */
+
 /*!
  * @namespace BlackMiscTest
  * Unit tests for BlackMisc. Unit tests do have their own namespace, so

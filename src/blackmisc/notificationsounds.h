@@ -5,8 +5,9 @@ namespace BlackSound
 {
 
     /*!
-     * Simplified enums to play sound. Outside BlackSound as this allows
-     * to trigger sounds without using Multimedia libraries.
+     * Simplified enums to play sounds.
+     * \remarks Currently located in project BlackMisc (i.e. outside project BlackSound)
+     * as this allows to trigger sounds without using Multimedia libraries.
      */
     struct CNotificationSounds
     {

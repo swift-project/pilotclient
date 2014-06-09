@@ -10,11 +10,6 @@
  */
 
 /*!
- * \namespace BlackMisctest
- * \brief Tests and samples for namespace BlackMisc.
- */
-
-/*!
  * \namespace BlackMisc::Aviation
  * \brief Aviation and Avionics classes such as CHeading or CTransponder .
  */
