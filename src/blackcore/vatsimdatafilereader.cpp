@@ -122,10 +122,12 @@ namespace BlackCore
 
     /*
      * Data file read from XML
+     * Example: http://info.vroute.net/vatsim-data.txt
      */
     void CVatsimDataFileReader::parseVatsimFileInBackground(QNetworkReply *nwReply)
     {
-        // Example: http://info.vroute.net/vatsim-data.txt
+        QStringList illegalIcaoCodes;
+
         if (nwReply->error() == QNetworkReply::NoError)
         {
             const QString dataFileData = nwReply->readAll();
@@ -211,8 +213,7 @@ namespace BlackCore
                                 }
                                 else
                                 {
-                                    const QString w = QString("Illegal ICAO code in VATSIM data file: %1").arg(icaoCode);
-                                    qWarning(w.toLatin1());
+                                    illegalIcaoCodes.append(icaoCode);
                                 }
                             }
 
@@ -265,6 +266,13 @@ namespace BlackCore
         nwReply->close();
         nwReply->deleteLater(); // we are responsible for reading this
         emit this->dataRead();
+
+        // warnings, if required
+        if (!illegalIcaoCodes.isEmpty())
+        {
+            const QString w = QString("Illegal ICAO code(s) in VATSIM data file: %1").arg(illegalIcaoCodes.join(", "));
+            qWarning(w.toLatin1());
+        }
     }
 
     const QMap<QString, QString> CVatsimDataFileReader::clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes)

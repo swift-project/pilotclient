@@ -45,7 +45,7 @@ namespace BlackCore
      */
     void CContextNetwork::psReceivedBookings(const CAtcStationList &bookedStations)
     {
-        const int interval = 60 * 1000;
+        const int interval = 180 * 1000;
         if (this->m_vatsimBookingReader->interval() < interval) this->m_vatsimBookingReader->setInterval(interval);
         this->m_atcStationsBooked.clear();
         foreach(CAtcStation bookedStation, bookedStations)
@@ -266,15 +266,20 @@ namespace BlackCore
     {
         QString trimmedUrl = url.trimmed();
         CIndexVariantMap vm(CAtcStation::IndexVoiceRoomUrl, trimmedUrl);
-        this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
-        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign))
+        {
+            this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+            emit this->changedAtcStationsBooked();
+        }
         if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign))
         {
+            this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
             CAtcStation station = this->m_atcStationsOnline.findFirstByCallsign(callsign);
             emit this->changedAtcStationsBooked();
             emit this->changedAtcStationOnlineConnectionStatus(station, true);
         }
-        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
+        vm = CIndexVariantMap(CClient::IndexVoiceCapabilities, CVoiceCapabilities(CVoiceCapabilities::Voice).toQVariant());
+        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 
     /*

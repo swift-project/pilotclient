@@ -40,24 +40,24 @@ namespace BlackCore
         // 1. Init by "network driver"
         this->m_network = new CNetworkVatlib(this);
 
-        // 3. Init VATSIM bookings
+        // 2. Init VATSIM bookings
         this->m_vatsimBookingReader = new CVatsimBookingReader(this->getRuntime()->getIContextSettings()->getNetworkSettings().getBookingServiceUrl(), this);
         this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CContextNetwork::psReceivedBookings);
-        this->m_vatsimBookingReader->setInterval(10 * 1000); // first read
+        this->m_vatsimBookingReader->setInterval(15 * 1000); // first read
 
-        // 4. VATSIM data file
+        // 3. VATSIM data file
         QStringList dataFileUrls;
         dataFileUrls << "http://info.vroute.net/vatsim-data.txt";
         this->m_vatsimDataFileReader = new CVatsimDataFileReader(dataFileUrls, this);
         this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CContextNetwork::psDataFileRead);
         this->m_vatsimDataFileReader->setInterval(5 * 1000); // first read, will be fixed when first read to longer period
 
-        // 5. Update timer for data (network data such as frequency)
+        // 4. Update timer for data (network data such as frequency)
         this->m_dataUpdateTimer = new QTimer(this);
         this->connect(this->m_dataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
         this->m_dataUpdateTimer->start(30 * 1000);
 
-        // 6. connect signals and slots
+        // 5. connect signals and slots
         this->connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::psFsdConnectionStatusChanged);
         this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CContextNetwork::psFsdAtcPositionUpdate);
         this->connect(this->m_network, &INetwork::atisReplyReceived, this, &CContextNetwork::psFsdAtisQueryReceived);
@@ -375,12 +375,12 @@ namespace BlackCore
     }
 
     /*
-     * Data file has been read
+     * Data file (VATSIM) has been read
      */
     void CContextNetwork::psDataFileRead()
     {
         if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        const int interval = 60 * 1000;
+        const int interval = 90 * 1000;
         if (this->m_vatsimDataFileReader->interval() < interval) this->m_vatsimDataFileReader->setInterval(interval);
         this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage("Read VATSIM data file", CStatusMessage::TypeTrafficNetwork));
     }

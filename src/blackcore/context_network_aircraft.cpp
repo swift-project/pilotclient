@@ -51,15 +51,17 @@ namespace BlackCore
             aircraft.setCallsign(callsign);
             aircraft.setSituation(situation);
             aircraft.setTransponder(transponder);
-            aircraft.calculcateDistanceToPlane(this->ownAircraft().getPosition());
-            this->m_vatsimDataFileReader->getAircrafts().updateFromVatsimDataFileAircraft(aircraft);
-
+            aircraft.setCalculcatedDistanceToPosition(this->ownAircraft().getPosition()); // distance from myself
+            this->m_vatsimDataFileReader->updateWithVatsimDataFileData(aircraft);
             this->m_aircraftsInRange.push_back(aircraft);
 
             // and new client, there is a chance it has been created by
             // custom package first
             if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
-                this->m_otherClients.push_back(CClient(callsign)); // initial, will be filled by data later
+            {
+                CClient c(callsign);
+                this->m_otherClients.push_back(c); // initial, will be filled by data later
+            }
 
             if (this->isConnected())
             {
@@ -75,7 +77,7 @@ namespace BlackCore
         else
         {
             // update
-            CLength distance = this->ownAircraft().calculcateDistanceToPlane(situation.getPosition());
+            CLength distance = this->ownAircraft().calculcateDistanceToPosition(situation.getPosition());
             distance.switchUnit(CLengthUnit::NM());
             CIndexVariantMap vm;
             vm.addValue(CAircraft::IndexTransponder, transponder);

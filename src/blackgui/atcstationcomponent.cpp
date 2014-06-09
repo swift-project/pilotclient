@@ -71,13 +71,22 @@ namespace BlackGui
         Q_ASSERT(this->ui->tvp_AtcStationsBooked);
         Q_ASSERT(this->getIContextNetwork());
 
-        this->ui->tvp_AtcStationsBooked->update(this->getIContextNetwork()->getAtcStationsBooked());
-        this->m_timestampLastReadBookedStations = QDateTime::currentDateTimeUtc();
+        QObject *sender = QObject::sender();
+        if (sender == this->ui->pb_ReloadAtcStationsBooked && this->getIContextNetwork())
+        {
+            this->getIContextNetwork()->readAtcBookingsFromSource(); // trigger new read
+            QTimer::singleShot(7500, this, SLOT(reloadAtcStationsBooked())); // deferred loading
+        }
+        else
+        {
+            this->ui->tvp_AtcStationsBooked->update(this->getIContextNetwork()->getAtcStationsBooked());
+            this->m_timestampLastReadBookedStations = QDateTime::currentDateTimeUtc();
+        }
     }
 
     void CAtcStationComponent::changedAtcStationsOnline()
     {
-        // just update timestamp, data will  be pulled by time
+        // just update timestamp, data will be pulled by time
         // the timestamp will tell if there are newer data
         this->m_timestampOnlineStationsChanged = QDateTime::currentDateTimeUtc();
     }
