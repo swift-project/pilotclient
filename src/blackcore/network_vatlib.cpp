@@ -525,7 +525,7 @@ namespace BlackCore
                 // if this is really required, I need to group by message
                 // currently I send individual messages
                 QVector<INT> freqsVec;
-                freqsVec.push_back(message.getFrequency().value(CFrequencyUnit::kHz()));
+                freqsVec.push_back(message.getFrequency().valueRounded(CFrequencyUnit::kHz(), 0));
                 m_net->SendRadioTextMessage(freqsVec.size(), freqsVec.data(), toFSD(message.getMessage()));
             }
         }

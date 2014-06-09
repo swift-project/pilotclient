@@ -162,10 +162,11 @@ namespace BlackGui
         else
         {
             // frequency message
+            const CAircraft ownAircraft = this->getOwnAircraft();
             if (this->currentWidget() == this->ui->tb_TextMessagesAll) return true;
-            if (textMessage.isSendToFrequency(this->getOwnAircraft().getCom1System().getFrequencyActive()))
+            if (textMessage.isSendToFrequency(ownAircraft.getCom1System().getFrequencyActive()))
                 return this->currentWidget() == this->ui->tb_TextMessagesCOM1;
-            if (textMessage.isSendToFrequency(this->getOwnAircraft().getCom2System().getFrequencyActive()))
+            if (textMessage.isSendToFrequency(ownAircraft.getCom2System().getFrequencyActive()))
                 return this->currentWidget() == this->ui->tb_TextMessagesCOM2;
             return false;
         }
@@ -173,7 +174,7 @@ namespace BlackGui
 
     void CTextMessageComponent::showCurrentFrequenciesFromCockpit()
     {
-        CAircraft ownAircraft = this->getOwnAircraft();
+        const CAircraft ownAircraft = this->getOwnAircraft();
         const QString f1 = QString("COM1: %1").arg(ownAircraft.getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
         const QString f2 = QString("COM2: %1").arg(ownAircraft.getCom2System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
         this->ui->tb_TextMessagesCOM1->setToolTip(f1);
