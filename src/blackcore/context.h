@@ -83,6 +83,9 @@ namespace BlackCore
         //! Simulator
         IContextSimulator *getIContextSimulator();
 
+        //! Id and path name for round trip protection
+        virtual QString getPathAndContextId() const = 0;
+
     protected:
         //! Constructor
         CContext(CRuntimeConfig::ContextMode mode, QObject *parent) :
@@ -91,6 +94,15 @@ namespace BlackCore
 
         CRuntimeConfig::ContextMode m_mode; //!< How context is used
         qint64 m_contextId; //!< unique identifer, avoid redirection rountrips
+
+        //! Path and context id
+        QString buildPathAndContextId(const QString &path) const
+        {
+            return QString(path).
+                   append(':').
+                   append(QString::number(this->getUniqueId()));
+        }
+
     };
 }
 #endif // guard

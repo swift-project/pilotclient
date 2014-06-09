@@ -207,9 +207,9 @@ private:
     void setHotkeys();
 
     //! Originator for aircraft context
-    static const QString &ownAircraftContextOriginator()
+    static const QString &sampleBlackGuiOriginator()
     {
-        static const QString o("GUISAMPLE1");
+        static const QString o = QString("GUISAMPLE1:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
         return o;
     }
 

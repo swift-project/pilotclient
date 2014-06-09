@@ -131,7 +131,7 @@ namespace BlackGui
 
     const QString &CCockpitV1Component::cockpitOriginator()
     {
-        static const QString o("cockpit v1");
+        static const QString o = QString("COCKPITV1:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
         return o;
     }
 

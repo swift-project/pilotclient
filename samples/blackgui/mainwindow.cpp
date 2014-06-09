@@ -201,7 +201,8 @@ void MainWindow::toggleNetworkConnection()
         this->m_ownAircraft.setIcaoInfo(icao);
 
         // set latest aircraft
-        this->getIContextOwnAircraft()->updateOwnAircraft(this->m_ownAircraft, MainWindow::ownAircraftContextOriginator());
+        this->getIContextOwnAircraft()->updateOwnAircraft(this->m_ownAircraft, MainWindow::sampleBlackGuiOriginator());
+
 
         // Login is based on setting current server
         INetwork::LoginMode mode = INetwork::LoginNormal;

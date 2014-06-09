@@ -45,5 +45,5 @@ void MainWindow::setTestPosition(const QString &wgsLatitude, const QString &wgsL
 
     this->m_ownAircraft.setPosition(coordinate);
     this->m_ownAircraft.setAltitude(altitude);
-    this->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude, MainWindow::ownAircraftContextOriginator());
+    this->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude, MainWindow::sampleBlackGuiOriginator());
 }

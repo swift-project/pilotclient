@@ -42,6 +42,9 @@ namespace BlackCore
             return s;
         }
 
+        //! \copydoc CContext::getPathAndContextId()
+        virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
+
         //! Destructor
         virtual ~IContextSimulator() {}
 

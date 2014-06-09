@@ -62,6 +62,9 @@ namespace BlackCore
             return s;
         }
 
+        //! \copydoc CContext::getPathAndContextId()
+        virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
+
         /*!
          * \brief Path for network settings
          * \remarks no to be confused with DBus paths
