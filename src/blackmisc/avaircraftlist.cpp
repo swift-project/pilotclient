@@ -85,7 +85,7 @@ namespace BlackMisc
         /*
          * Merge with aircraft
          */
-        bool CAircraftList::updateFromVatsimDataFileAircraft(CAircraft &aircraftToBeUpdated) const
+        bool CAircraftList::updateWithVatsimDataFileData(CAircraft &aircraftToBeUpdated) const
         {
             if (this->isEmpty()) return false;
             if (aircraftToBeUpdated.hasValidRealName() && aircraftToBeUpdated.hasValidId() && aircraftToBeUpdated.hasValidAircraftAndAirlineDesignator()) return false;

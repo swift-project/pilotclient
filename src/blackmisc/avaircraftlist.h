@@ -62,7 +62,7 @@ namespace BlackMisc
 
             //! \brief Update aircraft with data from VATSIM data file
             //! \remarks The list used needs to contain the VATSIM data file objects
-            bool updateFromVatsimDataFileAircraft(CAircraft &aircraftToBeUpdated) const;
+            bool updateWithVatsimDataFileData(CAircraft &aircraftToBeUpdated) const;
         };
 
     } //namespace

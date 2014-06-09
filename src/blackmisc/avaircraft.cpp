@@ -49,7 +49,7 @@ namespace BlackMisc
         /*
          * Distance to plane
          */
-        const PhysicalQuantities::CLength &CAircraft::calculcateDistanceToPlane(const Geo::CCoordinateGeodetic &position)
+        const PhysicalQuantities::CLength &CAircraft::setCalculcatedDistanceToPosition(const Geo::CCoordinateGeodetic &position)
         {
             this->m_distanceToPlane = Geo::greatCircleDistance(position, this->m_situation.getPosition());
             return this->m_distanceToPlane;
@@ -83,6 +83,17 @@ namespace BlackMisc
         {
             return this->getCom1System() != com1 || this->getCom2System() != com2 || this->getTransponder() != transponder;
         }
+
+        /*
+         * Distance to plane
+         */
+        PhysicalQuantities::CLength CAircraft::calculcateDistanceToPosition(const Geo::CCoordinateGeodetic &position) const
+        {
+            return Geo::greatCircleDistance(position, this->m_situation.getPosition());
+        }
+
+
+        /*
          * Same COM system data
          */
         bool CAircraft::hasSameComData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder)

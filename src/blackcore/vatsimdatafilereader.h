@@ -74,6 +74,9 @@ namespace BlackCore
         //! ICAO info for callsign
         BlackMisc::Aviation::CAircraftIcao getIcaoInfo(const  BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Update with VATSIM aircraft data from data file
+        void updateWithVatsimDataFileData(BlackMisc::Aviation::CAircraft &aircraftToBeUdpated) const { this->m_aircrafts.updateWithVatsimDataFileData(aircraftToBeUdpated); }
+
     private slots:
         //! Data have been read
         void loadFinished(QNetworkReply *nwReply);

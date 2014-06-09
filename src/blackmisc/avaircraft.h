@@ -90,11 +90,14 @@ namespace BlackMisc
             //! Valid designators?
             bool hasValidAircraftAndAirlineDesignator() const { return this->m_icao.hasAircraftAndAirlineDesignator(); }
 
+            //! Distance to aircraft
+            PhysicalQuantities::CLength calculcateDistanceToPosition(const Geo::CCoordinateGeodetic &position) const;
+
             /*!
              * Calculcate distance to plane, set it, and also return it
              * \param position calculated from this postion to my own aircraft
              */
-            const BlackMisc::PhysicalQuantities::CLength &calculcateDistanceToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
+            const BlackMisc::PhysicalQuantities::CLength &setCalculcatedDistanceToPosition(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
             //! Get position
             BlackMisc::Geo::CCoordinateGeodetic getPosition() const { return this->m_situation.getPosition(); }
