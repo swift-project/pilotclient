@@ -4,6 +4,7 @@
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackmisc/hwkeyboardkey.h"
+#include "blackmisc/setaudio.h"
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -21,6 +22,7 @@ void MainWindow::reloadSettings()
 {
     // local copy
     CSettingsNetwork nws = this->getIContextSettings()->getNetworkSettings();
+    CSettingsAudio as = this->getIContextSettings()->getAudioSettings();
 
     // update servers
     this->ui->tvp_SettingsTnServers->setSelectedServer(nws.getCurrentTrafficNetworkServer());
@@ -31,8 +33,8 @@ void MainWindow::reloadSettings()
 
     // fake setting for sound notifications
     this->ui->cb_SettingsAudioPlayNotificationSounds->setChecked(true);
-    this->ui->cb_SettingsAudioNotificationTextMessage->setChecked(true);
-    this->ui->cb_SettingsAudioNotificationVoiceRoom->setChecked(true);
+    this->ui->cb_SettingsAudioNotificationTextMessage->setChecked(as.getNotificationFlag(BlackSound::CNotificationSounds::NotificationTextMessagePrivate));
+    this->ui->cb_SettingsAudioNotificationVoiceRoom->setChecked(as.getNotificationFlag(BlackSound::CNotificationSounds::NotificationVoiceRoomJoined));
 }
 
 /*

@@ -203,6 +203,8 @@ void MainWindow::toggleNetworkConnection()
         // set latest aircraft
         this->getIContextOwnAircraft()->updateOwnAircraft(this->m_ownAircraft, MainWindow::sampleBlackGuiOriginator());
 
+        // flight plan
+        this->ui->comp_Flightplan->prefillWithAircraftData(this->m_ownAircraft);
 
         // Login is based on setting current server
         INetwork::LoginMode mode = INetwork::LoginNormal;

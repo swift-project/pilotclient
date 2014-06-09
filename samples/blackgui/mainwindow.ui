@@ -571,8 +571,8 @@ QStatusBar QLabel {
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>326</width>
-                <height>267</height>
+                <width>90</width>
+                <height>59</height>
                </rect>
               </property>
               <attribute name="label">
@@ -859,7 +859,7 @@ QStatusBar QLabel {
            <item>
             <widget class="QTabWidget" name="tw_Settings">
              <property name="currentIndex">
-              <number>2</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="tb_SettingsTrafficNetwork">
               <attribute name="title">
