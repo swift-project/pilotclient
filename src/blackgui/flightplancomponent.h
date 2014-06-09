@@ -24,7 +24,7 @@ namespace BlackGui
 
     public slots:
         //! Prefill with aircraft data
-        void prefillWithAircraftData(const BlackMisc::Aviation::CAircraft &aircraftData);
+        void prefillWithAircraftData(const BlackMisc::Aviation::CAircraft &ownAircraft);
 
         //! Prefill with aircraft dara
         void fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan);

@@ -50,11 +50,11 @@ namespace BlackGui
         delete ui;
     }
 
-    void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Aviation::CAircraft &aircraftData)
+    void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Aviation::CAircraft &ownAircraft)
     {
-        this->ui->le_Callsign->setText(aircraftData.getCallsign().asString());
-        this->ui->le_AircraftType->setText(aircraftData.getIcaoInfo().getAircraftDesignator());
-        this->ui->le_PilotsName->setText(aircraftData.getPilot().getRealName());
+        this->ui->le_Callsign->setText(ownAircraft.getCallsign().asString());
+        this->ui->le_AircraftType->setText(ownAircraft.getIcaoInfo().getAircraftDesignator());
+        this->ui->le_PilotsName->setText(ownAircraft.getPilot().getRealName());
     }
 
     void CFlightPlanComponent::fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan)
