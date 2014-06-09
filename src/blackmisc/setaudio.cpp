@@ -158,7 +158,7 @@ namespace BlackMisc
         /*
          * Value
          */
-        BlackMisc::CStatusMessageList CSettingsAudio::value(const QString &path, const QString &command, const QVariant &value, bool &changedFlag)
+        BlackMisc::CStatusMessageList CSettingsAudio::value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag)
         {
             // TODO: This needs to be refactored to a smarter way to delegate commands
             changedFlag = false;

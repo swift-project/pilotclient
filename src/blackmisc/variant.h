@@ -11,6 +11,7 @@
 #define BLACKMISC_VARIANT_H
 
 #include <QVariant>
+#include <QDateTime>
 
 class QDBusArgument;
 
@@ -54,13 +55,13 @@ namespace BlackMisc
         CVariant &operator =(const CVariant &other) { m_v = other.m_v; return *this; }
 
         //! Move assignment operatior.
-        CVariant &operator =(CVariant &&other) { m_v = std::move(other.m_v); return *this; }
+        CVariant &operator =(CVariant && other) { m_v = std::move(other.m_v); return *this; }
 
         //! Change the internal QVariant
         CVariant &operator =(const QVariant &var) { m_v = var; return *this; }
 
         //! Change the internal QVariant
-        CVariant &operator =(QVariant &&var) { m_v = std::move(var); return *this; }
+        CVariant &operator =(QVariant && var) { m_v = std::move(var); return *this; }
 
         //! Swap this variant with another.
         void swap(CVariant &other) { m_v.swap(other.m_v); }
@@ -103,6 +104,15 @@ namespace BlackMisc
 
         //! Convert this variant to a bool.
         bool toBool() const { return m_v.toBool(); }
+
+        //! Convert this variant to an integer.
+        int toInt() const { return m_v.toInt(); }
+
+        //! Convert this variant to double.
+        double toDouble() const { return m_v.toDouble(); }
+
+        //! Convert this variant to QDateTime.
+        QDateTime toDateTime() const { return m_v.toDateTime(); }
 
         //! Set the variant to null.
         void clear() { m_v.clear(); }
