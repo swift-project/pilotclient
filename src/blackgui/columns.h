@@ -33,22 +33,27 @@ namespace BlackGui
         /*!
          * \brief Constructor
          * \param headerName
-         * \param propertyIndex
+         * \param propertyIndex as in CValueObject::propertyByIndex
          * \param editable
          */
         CColumn(const QString &headerName, int propertyIndex, bool editable);
 
+        /*!
+         * \brief Constructor column is icon
+         * \remarks only make sense with isIcon as true
+         * \param propertyIndex as in CValueObject::propertyByIndex
+         * \param isIcon icon, should be used with true only
+         */
+        CColumn(int propertyIndex, bool isIcon);
+
         //! Alignment for this column?
-        bool hasAlignment() const
-        {
-            return this->m_alignment >= 0;
-        }
+        bool hasAlignment() const { return this->m_alignment >= 0; }
 
         //! Editable?
-        bool isEditable() const
-        {
-            return this->m_editable;
-        }
+        bool isEditable() const { return this->m_editable; }
+
+        //! Icon?
+        bool isIcon() const { return this->m_icon; }
 
         //! Aligment as QVariant
         QVariant aligmentAsQVariant() const;
@@ -71,6 +76,7 @@ namespace BlackGui
         int m_alignment;
         int m_propertyIndex; // property index
         bool m_editable;
+        bool m_icon;
         const char *getTranslationContextChar() const;
         const char *getColumnNameChar() const;
     };
@@ -117,6 +123,9 @@ namespace BlackGui
 
         //! Is this column editable?
         bool isEditable(const QModelIndex &index) const;
+
+        //! Is icon?
+        bool isIcon(const QModelIndex &index) const;
 
         //! Aligment as QVariant
         QVariant aligmentAsQVariant(const QModelIndex &index) const;

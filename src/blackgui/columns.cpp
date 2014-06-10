@@ -10,11 +10,18 @@
 namespace BlackGui
 {
     CColumn::CColumn(const QString &headerName, int propertyIndex, int alignment, bool editable) :
-        m_columnName(headerName), m_alignment(alignment), m_propertyIndex(propertyIndex), m_editable(editable)
+        m_columnName(headerName), m_alignment(alignment), m_propertyIndex(propertyIndex),
+        m_editable(editable), m_icon(false)
     {}
 
     CColumn::CColumn(const QString &headerName, int propertyIndex, bool editable) :
-        m_columnName(headerName), m_alignment(-1), m_propertyIndex(propertyIndex), m_editable(editable)
+        m_columnName(headerName), m_alignment(-1), m_propertyIndex(propertyIndex),
+        m_editable(editable), m_icon(false)
+    {}
+
+    CColumn::CColumn(int propertyIndex, bool isIcon) :
+        m_alignment(-1), m_propertyIndex(propertyIndex),
+        m_editable(false), m_icon(isIcon)
     {}
 
     const char *CColumn::getTranslationContextChar() const
@@ -135,6 +142,15 @@ namespace BlackGui
     {
         if (index.column() < 0 || index.column() >= this->m_columns.size()) return false;
         return this->m_columns.at(index.column()).isEditable();
+    }
+
+    /*
+     * Is icon?
+     */
+    bool CColumns::isIcon(const QModelIndex &index) const
+    {
+        if (index.column() < 0 || index.column() >= this->m_columns.size()) return false;
+        return this->m_columns.at(index.column()).isIcon();
     }
 
     /*

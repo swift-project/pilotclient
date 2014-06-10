@@ -74,10 +74,18 @@ namespace BlackGui
 
         if (role == Qt::DisplayRole)
         {
+            if (this->m_columns.isIcon(index)) return QVariant();
             ObjectType obj = this->m_container[index.row()];
             int propertyIndex = this->columnToPropertyIndex(index.column());
             QString propertyString = obj.propertyByIndexAsString(propertyIndex, true);
             return QVariant::fromValue(propertyString);
+        }
+        else if (role == Qt::DecorationRole)
+        {
+            if (!this->m_columns.isIcon(index)) return QVariant();
+            ObjectType obj = this->m_container[index.row()];
+            int propertyIndex = this->columnToPropertyIndex(index.column());
+            return obj.propertyByIndex(propertyIndex);
         }
         else if (role == Qt::TextAlignmentRole)
         {

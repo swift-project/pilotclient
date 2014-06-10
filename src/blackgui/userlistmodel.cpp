@@ -33,7 +33,7 @@ namespace BlackGui
         {
         case NotSet:
         case UserDetailed:
-            this->m_columns.addColumn(CColumn("", CUser::IndexCallsignIcon));
+            this->m_columns.addColumn(CColumn(CUser::IndexCallsignIcon, true));
             this->m_columns.addColumn(CColumn("realname", CUser::IndexRealName));
             this->m_columns.addColumn(CColumn("callsign", CUser::IndexCallsign));
             this->m_columns.addColumn(CColumn("userid", CUser::IndexId));
@@ -50,23 +50,5 @@ namespace BlackGui
             qFatal("Wrong mode");
             break;
         }
-    }
-
-    /*
-     * Display icons
-     */
-    QVariant CUserListModel::data(const QModelIndex &modelIndex, int role) const
-    {
-        // shortcut, fast check
-        if (role != Qt::DecorationRole) return CListModelBase::data(modelIndex, role);
-        if (this->columnToPropertyIndex(modelIndex.column()) == CUser::IndexCallsignIcon)
-        {
-            if (role == Qt::DecorationRole)
-            {
-                CUser u = this->at(modelIndex);
-                return u.toIcon();
-            }
-        }
-        return CListModelBase::data(modelIndex, role);
     }
 }

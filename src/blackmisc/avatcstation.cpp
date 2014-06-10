@@ -236,7 +236,8 @@ namespace BlackMisc
         /*
          * Frequency
          */
-        void CAtcStation::setFrequency(const CFrequency &frequency) {
+        void CAtcStation::setFrequency(const CFrequency &frequency)
+        {
             this->m_frequency = frequency;
             this->m_frequency.setUnit(CFrequencyUnit::MHz());
         }
@@ -318,6 +319,8 @@ namespace BlackMisc
                 return QVariant(this->m_callsign.asString());
             case IndexCallsignAsStringAsSet:
                 return QVariant(this->m_callsign.getStringAsSet());
+            case IndexCallsignIcon:
+                return QVariant(this->m_callsign.toIcon());
             case IndexController:
                 return this->m_controller.toQVariant();
             case IndexControllerRealName:

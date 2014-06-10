@@ -29,9 +29,6 @@ namespace BlackGui
         //! \brief Destructor
         virtual ~CUserListModel() {}
 
-        //! \copydoc CListModelBase::data
-        QVariant data(const QModelIndex &modelIndex, int role = Qt::DisplayRole) const;
-
         //! Set station mode
         void setUserMode(UserMode userMode);
 

@@ -40,6 +40,7 @@ namespace BlackMisc
                 IndexCallsign = 0,
                 IndexCallsignAsString,
                 IndexCallsignAsStringAsSet,
+                IndexCallsignIcon,
                 IndexController,
                 IndexControllerRealName,
                 IndexControllerId,

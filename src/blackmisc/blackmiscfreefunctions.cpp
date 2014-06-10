@@ -222,6 +222,13 @@ int BlackMisc:: compareQVariants(const QVariant &v1, const QVariant &v2)
             if (t1 == t2) return 0;
             return t1 < t2 ? -1 : 1;
         }
+    case QMetaType::QPixmap:
+        {
+            QPixmap p1 = v1.value<QPixmap>();
+            QPixmap p2 = v2.value<QPixmap>();
+            if (p1.width() == p2.width()) return 0;
+            return p1.width() < p2.width() ? -1 : 1;
+        }
     default:
         break;
     }

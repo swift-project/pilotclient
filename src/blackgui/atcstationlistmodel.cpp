@@ -38,6 +38,7 @@ namespace BlackGui
         case NotSet:
         case StationsOnline:
             this->m_columns.addColumn(CColumn("callsign", CAtcStation::IndexCallsignAsStringAsSet));
+            this->m_columns.addColumn(CColumn(CAtcStation::IndexCallsignIcon, true));
             this->m_columns.addColumn(CColumn("distance", CAtcStation::IndexDistance,  Qt::AlignRight  | Qt::AlignVCenter));
             this->m_columns.addColumn(CColumn("frequency", CAtcStation::IndexFrequency,  Qt::AlignRight  | Qt::AlignVCenter));
             this->m_columns.addColumn(CColumn("controllername", CAtcStation::IndexControllerRealName));
@@ -52,6 +53,7 @@ namespace BlackGui
 
         case StationsBooked:
             this->m_columns.addColumn(CColumn("callsign", CAtcStation::IndexCallsignAsStringAsSet));
+            this->m_columns.addColumn(CColumn(CAtcStation::IndexCallsignIcon, true));
             this->m_columns.addColumn(CColumn("controllername", CAtcStation::IndexControllerRealName));
             this->m_columns.addColumn(CColumn("bookedfrom", CAtcStation::IndexBookedFrom));
             this->m_columns.addColumn(CColumn("bookeduntil", CAtcStation::IndexBookedUntil));
