@@ -14,6 +14,9 @@
 #include "blackmisc/hwkeyboardkey.h"
 #include <QHash>
 
+class QFileSystemWatcher;
+class QFile;
+
 namespace BlackInput
 {
     //! \brief Linux implemenation of IKeyboard using hook procedure
@@ -60,6 +63,14 @@ namespace BlackInput
         //! \copydoc IKeyboard::unregisterHotkeyImpl()
         virtual void unregisterAllHotkeysImpl() override;
 
+    private slots:
+
+        //! Changed directory to linux devices
+        void deviceDirectoryChanged(const QString &);
+
+        //! Device is ready to read new input
+        void inputReadyRead(int);
+
     private:
 
         /*!
@@ -76,11 +87,27 @@ namespace BlackInput
          */
         void callFunctionsBy(const BlackMisc::Hardware::CKeyboardKey &keySet, bool isPressed);
 
+        /*!
+         * \brief Add new raw input device
+         * \param filePath Path to device file
+         */
+        void addRawInputDevice(const QString &filePath);
+
+        /*!
+         * \brief Process new key event
+         * \param virtualKeyCode
+         * \param isPressed
+         */
+        void keyEvent(int virtualKeyCode, bool isPressed);
+
 
         QHash<BlackMisc::Hardware::CKeyboardKey, QList<IKeyboard::RegistrationHandle>> m_registeredFunctions; //!< Registered hotkey functions
         BlackMisc::Hardware::CKeyboardKey m_pressedKey;    //!< Set of virtual keys pressed in the last cycle
         bool m_ignoreNextKey;                   //!< Is true if the next key needs to be ignored
         Mode m_mode;                            //!< Operation mode
+
+        QFileSystemWatcher *m_devInputWatcher; //!< Watches the device file system for input devices
+        QHash<QString, QFile *> m_hashInputDevices; //!< Hash map containing all known input devices
     };
 }
 
