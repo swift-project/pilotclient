@@ -3,11 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/*!
-    \file
-    Private implementation details used by tuple.h
-*/
-
 #ifndef BLACKMISC_TUPLE_PRIVATE_H
 #define BLACKMISC_TUPLE_PRIVATE_H
 
@@ -30,15 +25,13 @@ namespace BlackMisc
     namespace Private
     {
 
-        // Using SFINAE to help detect missing BLACK_ENABLE_TUPLE_CONVERSION macro in static_assert
-        //! \private
-        std::false_type hasEnabledTupleConversionHelper(...);
+        // Inhibit doxygen warnings about missing documentation
+        //! \cond PRIVATE
 
-        //! \private
+        // Using SFINAE to help detect missing BLACK_ENABLE_TUPLE_CONVERSION macro in static_assert
+        std::false_type hasEnabledTupleConversionHelper(...);
         template <class T>
         typename T::EnabledTupleConversion hasEnabledTupleConversionHelper(T *);
-
-        //! \private
         template <class T>
         struct HasEnabledTupleConversion
         {
@@ -47,15 +40,12 @@ namespace BlackMisc
         };
 
         // Using tag dispatch to select which implementation of compare() to use
-        //! \private
-        //! @{
         template <class T>
         int compareHelper(const T &a, const T &b, std::true_type isCValueObjectTag)
         {
             Q_UNUSED(isCValueObjectTag);
             return compare(a, b);
         }
-
         template <class T>
         int compareHelper(const T &a, const T &b, std::false_type isCValueObjectTag)
         {
@@ -71,11 +61,8 @@ namespace BlackMisc
             typedef typename std::decay<typename std::tuple_element<N, Tu>::type>::type Element;
             return compareHelper(std::get<N>(a), std::get<N>(b), typename std::is_base_of<CValueObject, Element>::type());
         }
-        //! @}
 
         // Our own implementation of std::index_sequence (because not implemented by MSVC2013)
-        //! \private
-        //! @{
         template <size_t... Is>
         struct index_sequence
         {
@@ -94,20 +81,15 @@ namespace BlackMisc
         };
         template <size_t C>
         using make_index_sequence = typename GenSequence<0, C>::type;
-        //! @}
 
         // Helper which will allow us to hook in our own customizations into BlackMisc::tie
-        //! \private
-        //! @{
         template <class T>
         std::reference_wrapper<T> tieHelper(T &obj)
         {
             return obj;
         }
-        //! @}
 
-        // Applying operations to all elements in a tuple, using index_sequence instead of recursion
-        //! \private
+        // Applying operations to all elements in a tuple, using index_sequence for clean recursion
         class TupleHelper
         {
         public:
@@ -216,6 +198,8 @@ namespace BlackMisc
             template <class... Ts>
             static uint hashImpl(uint head, Ts... tail) { return head ^ hashImpl(tail...); }
         };
+
+        //! \endcond
 
     } // namespace Private
 

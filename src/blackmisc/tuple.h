@@ -3,9 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKMISC_TUPLE_H
 #define BLACKMISC_TUPLE_H
@@ -13,7 +11,7 @@
 #include "tuple_private.h"
 
 /*!
- * \defgroup Tuples Tuples Simplified handling of class members (CValueObject) by std::tuple
+ * \defgroup Tuples Tuple conversion of object data members
  */
 
 /*!
@@ -64,7 +62,7 @@
                 return members;                                                 \
             }                                                                   \
         public:                                                                 \
-            static auto constToTuple(const T &o) -> decltype(BlackMisc::tie MEMBERS)    \
+            static auto constToTuple(const T &o) -> decltype(BlackMisc::tie MEMBERS) \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
@@ -123,39 +121,27 @@ namespace BlackMisc
         // BLACK_DECLARE_TUPLE_CONVERSION generates an explicit specialization of TupleConverter,
         // so this unspecialized template will only be used if the macro is missing. It is also
         // a good place to put Doxygen comments to document the API of the macro-generated specializations.
+
+        static_assert(std::is_void<T>::value, // always false; is_void<> trick is just to make the condition dependent on the template parameter T
+                      "Missing BLACK_DECLARE_TUPLE_CONVERSION macro for T");
+
     public:
         /*!
          * \name    Static Private Member Functions
-         * \brief   Returns a tuple of references to object's data members as they were declared in BLACK_DECLARE_TUPLE_CONVERSION().
+         * \brief   Returns a tuple of references to object's data members listed in BLACK_DECLARE_TUPLE_CONVERSION().
          *          Can be used like <CODE> std::tie </CODE>.
          */
         //! @{
-        static std::tuple<> toTuple(const T &object)
-        {
-            static_assert(std::is_void<T>::value, // always false; is_void<> trick is just to make the condition dependent on the template parameter T
-                          "Missing BLACK_DECLARE_TUPLE_CONVERSION macro for T");
-            Q_UNUSED(object);
-            return std::tuple<>();
-        }
-        static std::tuple<> toTuple(T &object)
-        {
-            static_assert(std::is_void<T>::value, // always false; is_void<> trick is just to make the condition dependent on the template parameter T
-                          "Missing BLACK_DECLARE_TUPLE_CONVERSION macro for T");
-            Q_UNUSED(object);
-            return std::tuple<>();
-        }
-        static std::tuple<> constToTuple(const T &object)
-        {
-            return toTuple(object);
-        }
-        static const QStringList jsonMembers()
-        {
-            static_assert(std::is_void<T>::value, // always false; is_void<> trick is just to make the condition dependent on the template parameter T
-                          "Missing BLACK_DECLARE_TUPLE_CONVERSION macro for T");
-            static QStringList members;
-            return members;
-        }
+        static std::tuple<> toTuple(const T &object);
+        static std::tuple<> toTuple(T &object);
+        static std::tuple<> constToTuple(const T &object);
         //! @}
+
+        /*!
+         * \name    Static Private Member Functions
+         * \brief   Returns a list of the names of the tuple members.
+         */
+        static const QStringList &jsonMembers();
     };
 
     // Needed so that our qHash overload doesn't hide the qHash overloads in the global namespace.
@@ -165,6 +151,7 @@ namespace BlackMisc
 
     /*!
      * \brief   Works like std::tie, and allows us to hook in our own customizations.
+     * \ingroup Tuples
      */
     template <class... Ts>
     auto tie(Ts &&... args) -> decltype(std::make_tuple(Private::tieHelper(args)...))
