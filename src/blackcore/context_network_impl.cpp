@@ -60,9 +60,9 @@ namespace BlackCore
         // 5. connect signals and slots
         this->connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::psFsdConnectionStatusChanged);
         this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CContextNetwork::psFsdAtcPositionUpdate);
-        this->connect(this->m_network, &INetwork::atisReplyReceived, this, &CContextNetwork::psFsdAtisQueryReceived);
-        this->connect(this->m_network, &INetwork::atisVoiceRoomReplyReceived, this, &CContextNetwork::psFsdAtisVoiceRoomQueryReceived);
-        this->connect(this->m_network, &INetwork::atisLogoffTimeReplyReceived, this, &CContextNetwork::psFsdAtisLogoffTimeQueryReceived);
+        this->connect(this->m_network, &INetwork::atisReplyReceived, this, &CContextNetwork::psFsdAtisReceived);
+        this->connect(this->m_network, &INetwork::atisVoiceRoomReplyReceived, this, &CContextNetwork::psFsdAtisVoiceRoomReceived);
+        this->connect(this->m_network, &INetwork::atisLogoffTimeReplyReceived, this, &CContextNetwork::psFsdAtisLogoffTimeReceived);
         this->connect(this->m_network, &INetwork::metarReplyReceived, this, &CContextNetwork::psFsdMetarReceived);
         this->connect(this->m_network, &INetwork::flightPlanReplyReceived, this, &CContextNetwork::psFsdFlightplanReceived);
         this->connect(this->m_network, &INetwork::realNameReplyReceived, this, &CContextNetwork::psFsdRealNameReplyReceived);

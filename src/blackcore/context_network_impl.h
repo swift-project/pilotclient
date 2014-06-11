@@ -194,21 +194,21 @@ namespace BlackCore
         void psFsdAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! ATIS received
-        void psFsdAtisQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
+        void psFsdAtisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
 
         /*!
          * \brief ATIS received (voice room part)
          * \param callsign  station callsign
          * \param url       voice room's URL
          */
-        void psFsdAtisVoiceRoomQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
+        void psFsdAtisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
 
         /*!
          * \brief ATIS received (logoff time part)
          * \param callsign  station callsign
          * \param zuluTime  UTC time, when controller will logoff
          */
-        void psFsdAtisLogoffTimeQueryReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
+        void psFsdAtisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
 
         //! METAR received
         void psFsdMetarReceived(const QString &metarMessage);

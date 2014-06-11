@@ -215,7 +215,7 @@ namespace BlackCore
 
             emit this->changedAtcStationsOnline();
             // Remark: this->changedAtcStationOnlineConnectionStatus(station, true);
-            // will be sent in psFsdAtisVoiceRoomQueryReceived
+            // will be sent in psFsdAtisVoiceRoomReceived
         }
         else
         {
@@ -249,7 +249,7 @@ namespace BlackCore
     /*
      * ATIS received
      */
-    void CContextNetwork::psFsdAtisQueryReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
+    void CContextNetwork::psFsdAtisReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
     {
         if (callsign.isEmpty()) return;
         CIndexVariantMap vm(CAtcStation::IndexAtis, atisMessage.toQVariant());
@@ -262,7 +262,7 @@ namespace BlackCore
     /*
      * ATIS (voice room part) received
      */
-    void CContextNetwork::psFsdAtisVoiceRoomQueryReceived(const CCallsign &callsign, const QString &url)
+    void CContextNetwork::psFsdAtisVoiceRoomReceived(const CCallsign &callsign, const QString &url)
     {
         QString trimmedUrl = url.trimmed();
         CIndexVariantMap vm(CAtcStation::IndexVoiceRoomUrl, trimmedUrl);
@@ -285,7 +285,7 @@ namespace BlackCore
     /*
      * ATIS (logoff time part) received
      */
-    void CContextNetwork::psFsdAtisLogoffTimeQueryReceived(const CCallsign &callsign, const QString &zuluTime)
+    void CContextNetwork::psFsdAtisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
     {
         if (zuluTime.length() == 4)
         {
