@@ -138,18 +138,6 @@ namespace BlackCore
         CVatsimDataFileReader *m_vatsimDataFileReader;
         QTimer *m_dataUpdateTimer; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
-        //! Replace value by new values
-        void setAtcStationsBooked(const BlackMisc::Aviation::CAtcStationList &newStations);
-
-        //! Replace value by new values
-        void setAtcStationsOnline(const BlackMisc::Aviation::CAtcStationList &newStations);
-
-        //! The "central" ATC list with online ATC controllers
-        BlackMisc::Aviation::CAtcStationList &atcStationsOnline() { return m_atcStationsOnline; }
-
-        //! ATC list, with booked controllers
-        BlackMisc::Aviation::CAtcStationList &atcStationsBooked() { return m_atcStationsBooked; }
-
         //! Get network settings
         BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const
         {

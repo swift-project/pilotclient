@@ -91,22 +91,6 @@ namespace BlackCore
     }
 
     /*
-     * Booked stations
-     */
-    void CContextNetwork::setAtcStationsBooked(const BlackMisc::Aviation::CAtcStationList &newStations)
-    {
-        this->m_atcStationsBooked = newStations;
-    }
-
-    /*
-     * Online stations
-     */
-    void CContextNetwork::setAtcStationsOnline(const BlackMisc::Aviation::CAtcStationList &newStations)
-    {
-        this->m_atcStationsOnline = newStations;
-    }
-
-    /*
      * Request METAR
      */
     BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
