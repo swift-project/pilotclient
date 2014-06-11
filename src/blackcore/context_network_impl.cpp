@@ -46,8 +46,7 @@ namespace BlackCore
         this->m_vatsimBookingReader->setInterval(15 * 1000); // first read
 
         // 3. VATSIM data file
-        QStringList dataFileUrls;
-        dataFileUrls << "http://info.vroute.net/vatsim-data.txt";
+        const QStringList dataFileUrls = { "http://info.vroute.net/vatsim-data.txt" };
         this->m_vatsimDataFileReader = new CVatsimDataFileReader(dataFileUrls, this);
         this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CContextNetwork::psDataFileRead);
         this->m_vatsimDataFileReader->setInterval(5 * 1000); // first read, will be fixed when first read to longer period
