@@ -93,6 +93,7 @@ namespace BlackCore
     {
         if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         CStatusMessageList msgs;
+        QString msg;
         CServer currentServer = this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer();
 
         if (!currentServer.getUser().isValid())
@@ -107,29 +108,24 @@ namespace BlackCore
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Already connected"));
         }
+        else if (!CNetworkUtils::canConnect(currentServer, msg, 2000))
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, msg));
+        }
         else
         {
-            QString msg;
-            if (CNetworkUtils::canConnect(currentServer, msg, 2000))
-            {
-                INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
-                this->getIContextOwnAircraft()->updatePilot(currentServer.getUser(), this->getPathAndContextId());
-                const CAircraft ownAircraft = this->ownAircraft();
-                this->m_network->presetServer(currentServer);
-                this->m_network->presetLoginMode(mode);
-                this->m_network->presetCallsign(ownAircraft.getCallsign());
-                this->m_network->presetIcaoCodes(ownAircraft.getIcaoInfo());
-                this->m_network->setOwnAircraft(ownAircraft);
-                this->m_network->initiateConnection();
-                msg = "Connection pending ";
-                msg.append(" ").append(currentServer.getAddress()).append(" ").append(QString::number(currentServer.getPort()));
-                msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, msg));
-            }
-            else
-            {
-                // I cannot connect, add error message
-                msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, msg));
-            }
+            INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
+            this->getIContextOwnAircraft()->updatePilot(currentServer.getUser(), this->getPathAndContextId());
+            const CAircraft ownAircraft = this->ownAircraft();
+            this->m_network->presetServer(currentServer);
+            this->m_network->presetLoginMode(mode);
+            this->m_network->presetCallsign(ownAircraft.getCallsign());
+            this->m_network->presetIcaoCodes(ownAircraft.getIcaoInfo());
+            this->m_network->setOwnAircraft(ownAircraft);
+            this->m_network->initiateConnection();
+            msg = "Connection pending ";
+            msg.append(" ").append(currentServer.getAddress()).append(" ").append(QString::number(currentServer.getPort()));
+            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, msg));
         }
         return msgs;
     }
