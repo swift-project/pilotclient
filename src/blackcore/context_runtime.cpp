@@ -250,6 +250,16 @@ namespace BlackCore
         qDebug() << func << p1 << p2 << p3 << p4;
     }
 
+    void CRuntime::logSlot(const char *func, const QString &param) const
+    {
+        qDebug() << func << param;
+    }
+
+    void CRuntime::logSlot(const char *func, const QStringList &params) const
+    {
+        qDebug() << func << params;
+    }
+
     void CRuntime::logSlot(const char *func, bool boolValue) const
     {
         qDebug() << func << boolValue;

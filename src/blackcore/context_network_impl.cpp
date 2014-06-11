@@ -331,7 +331,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, QString::number(from), QString::number(to));
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, { QString::number(from), QString::number(to) });
         CStatusMessageList msgs;
         // send 1st position
         if (to == INetwork::Connected)
@@ -358,7 +358,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, callsign.toQString(), realname);
+        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, { callsign.toQString(), realname });
         if (realname.isEmpty()) return;
         CIndexVariantMap vm(CAtcStation::IndexControllerRealName, realname);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);

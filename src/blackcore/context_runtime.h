@@ -103,8 +103,14 @@ namespace BlackCore
         bool isSlotLogForSimulatorEnabled() const { return this->m_slotLogSimulator; }
 
         //! Slot logging
-        //! \todo to be replace if initializer lists becomes available
-        void logSlot(const char *func, const QString &p1 = "", const QString &p2 = "", const QString &p3 = "", const QString &p4 = "") const;
+        //! \deprecated Use a brace-initialized QStringList
+        void logSlot(const char *func, const QString &param, const QString &p2, const QString &p3 = "", const QString &p4 = "") const;
+
+        //! Slot logging
+        void logSlot(const char *func, const QString &param = "") const;
+
+        //! Slot logging
+        void logSlot(const char *func, const QStringList &params) const;
 
         //! Slot logging for bool value
         void logSlot(const char *func, bool boolValue) const;
