@@ -81,7 +81,7 @@ namespace BlackCore
         // some helper methods
 
         /*!
-         * \brief Create the data load for FSIPI(R) packages / FsInn
+         * \brief Create the data load for FSIPI(R) packets / FsInn
          * \details FSIPI(R) queries
          * <BLOCKQUOTE>
          * index 0 .. 0/1 ???
@@ -94,10 +94,10 @@ namespace BlackCore
          *       7 .. 3-letter combined L2J
          *       8 .. Model string
          * </BLOCKQUOTE>
-         * \remarks This helper here has more or less the function of documenting the package,
+         * \remarks This helper here has more or less the function of documenting the packet,
          *          it is nothing but a little string concatenating
          */
-        static QStringList createFsipiCustomPackageData(const QString &unknown01, const QString &airlineDesignator, const QString &aircraftDesignator,
+        static QStringList createFsipiCustomPacketData(const QString &unknown01, const QString &airlineDesignator, const QString &aircraftDesignator,
                 const QString &magicNumber1, const QString &magicNumber2, const QString &magicNumber3, const QString &magicNumber4,
                 const QString &combinedType, const QString &modelString);
 

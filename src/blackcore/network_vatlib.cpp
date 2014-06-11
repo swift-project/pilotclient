@@ -779,7 +779,7 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    QStringList CNetworkVatlib::createFsipiCustomPackageData(const QString &unknown01, const QString &airlineIcao, const QString &aircraftIcao, const QString &magicNumber1, const QString &magicNumber2, const QString &magicNumber3, const QString &magicNumber4, const QString &combinedType, const QString &modelString)
+    QStringList CNetworkVatlib::createFsipiCustomPacketData(const QString &unknown01, const QString &airlineIcao, const QString &aircraftIcao, const QString &magicNumber1, const QString &magicNumber2, const QString &magicNumber3, const QString &magicNumber4, const QString &combinedType, const QString &modelString)
     {
 
         QStringList data;

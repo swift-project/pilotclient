@@ -155,14 +155,14 @@ namespace BlackCore
             return this->getRuntime()->getIContextSettings()->getNetworkSettings();
         }
 
-        //! Send FsInn custom package
-        void sendFsipiCustomPackage(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
+        //! Send FsInn custom packet
+        void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
 
-        //! Send FsInn custom package
-        void sendFsipirCustomPackage(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
+        //! Send FsInn custom packet
+        void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
 
-        //! Custom package data based on own aircraft / model
-        QStringList createFsipiCustomPackageData() const;
+        //! Custom packet data based on own aircraft / model
+        QStringList createFsipiCustomPacketData() const;
 
         //! Own aircraft
         const BlackMisc::Aviation::CAircraft &ownAircraft() const;
@@ -237,8 +237,8 @@ namespace BlackCore
         //! Capabilities received
         void psFsdCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
 
-        //! Custom package
-        void psFsdCustomPackageReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &package, const QStringList &data);
+        //! Custom packet
+        void psFsdCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &package, const QStringList &data);
 
         //! Server reply received
         void psFsdServerReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &host);

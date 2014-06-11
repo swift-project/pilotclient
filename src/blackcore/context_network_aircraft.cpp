@@ -56,7 +56,7 @@ namespace BlackCore
             this->m_aircraftsInRange.push_back(aircraft);
 
             // and new client, there is a chance it has been created by
-            // custom package first
+            // custom packet first
             if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
             {
                 CClient c(callsign);
@@ -71,7 +71,7 @@ namespace BlackCore
                 this->m_network->sendIcaoCodesQuery(callsign);
                 this->m_network->sendCapabilitiesQuery(callsign);
                 this->m_network->sendServerQuery(callsign);
-                this->sendFsipirCustomPackage(callsign); // own aircraft model
+                this->sendFsipirCustomPacket(callsign); // own aircraft model
             }
         }
         else

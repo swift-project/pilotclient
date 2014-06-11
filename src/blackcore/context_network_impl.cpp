@@ -73,7 +73,7 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::frequencyReplyReceived, this, &CContextNetwork::psFsdFrequencyReceived);
         this->connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::psFsdTextMessageReceived);
         this->connect(this->m_network, &INetwork::capabilitiesReplyReceived, this, &CContextNetwork::psFsdCapabilitiesReplyReceived);
-        this->connect(this->m_network, &INetwork::customPacketReceived, this, &CContextNetwork::psFsdCustomPackageReceived);
+        this->connect(this->m_network, &INetwork::customPacketReceived, this, &CContextNetwork::psFsdCustomPacketReceived);
         this->connect(this->m_network, &INetwork::serverReplyReceived, this, &CContextNetwork::psFsdServerReplyReceived);
         if (this->getIContextApplication()) this->connect(this->m_network, &INetwork::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
     }
@@ -409,12 +409,12 @@ namespace BlackCore
     }
 
     /*
-     * Custom packages
+     * Custom packets
      */
-    void CContextNetwork::psFsdCustomPackageReceived(const CCallsign &callsign, const QString &package, const QStringList &data)
+    void CContextNetwork::psFsdCustomPacketReceived(const CCallsign &callsign, const QString &packet, const QStringList &data)
     {
         if (callsign.isEmpty() || data.isEmpty()) return;
-        if (package.startsWith("FSIPIR", Qt::CaseInsensitive))
+        if (packet.startsWith("FSIPIR", Qt::CaseInsensitive))
         {
             // Request of other client, I can get the other's model from that
             // FsInn response is usually my model
@@ -423,12 +423,12 @@ namespace BlackCore
             CIndexVariantMap vm(CClient::IndexQueriedModelString, QVariant(model));
             if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
             {
-                // with custom packages it can happen,
-                //the package is received before any other package
+                // with custom packets it can happen,
+                //the packet is received before any other packet
                 this->m_otherClients.push_back(CClient(callsign));
             }
             this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
-            this->sendFsipiCustomPackage(callsign); // response
+            this->sendFsipiCustomPacket(callsign); // response
         }
     }
 
@@ -473,19 +473,19 @@ namespace BlackCore
     }
 
 
-    void CContextNetwork::sendFsipiCustomPackage(const CCallsign &recipientCallsign) const
+    void CContextNetwork::sendFsipiCustomPacket(const CCallsign &recipientCallsign) const
     {
-        QStringList data = this->createFsipiCustomPackageData();
+        QStringList data = this->createFsipiCustomPacketData();
         this->m_network->sendCustomPacket(recipientCallsign.asString(), "FSIPI", data);
     }
 
-    void CContextNetwork::sendFsipirCustomPackage(const CCallsign &recipientCallsign) const
+    void CContextNetwork::sendFsipirCustomPacket(const CCallsign &recipientCallsign) const
     {
-        QStringList data = this->createFsipiCustomPackageData();
+        QStringList data = this->createFsipiCustomPacketData();
         this->m_network->sendCustomPacket(recipientCallsign.asString(), "FSIPIR", data);
     }
 
-    QStringList CContextNetwork::createFsipiCustomPackageData() const
+    QStringList CContextNetwork::createFsipiCustomPacketData() const
     {
         CAircraft me = this->ownAircraft();
         CAircraftIcao icao = me.getIcaoInfo();
@@ -495,7 +495,7 @@ namespace BlackCore
             if (this->getIContextSimulator()->isConnected()) modelString = this->getIContextSimulator()->getOwnAircraftModel().getQueriedModelString();
         }
         if (modelString.isEmpty()) modelString = CProject::systemNameAndVersion();
-        QStringList data = CNetworkVatlib::createFsipiCustomPackageData(
+        QStringList data = CNetworkVatlib::createFsipiCustomPacketData(
                                "0", icao.getAirlineDesignator(), icao.getAircraftDesignator(),
                                "", "", "", "",
                                icao.getAircraftCombinedType(), modelString);
