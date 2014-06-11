@@ -76,7 +76,12 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::capabilitiesReplyReceived, this, &CContextNetwork::psFsdCapabilitiesReplyReceived);
         this->connect(this->m_network, &INetwork::customPacketReceived, this, &CContextNetwork::psFsdCustomPacketReceived);
         this->connect(this->m_network, &INetwork::serverReplyReceived, this, &CContextNetwork::psFsdServerReplyReceived);
-        if (this->getIContextApplication()) this->connect(this->m_network, &INetwork::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
+
+        // FIXME (MS) conditional increases the number of scenarios which must be considered and continuously tested
+        if (this->getIContextApplication())
+        {
+            this->connect(this->m_network, &INetwork::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
+        }
     }
 
     /*
@@ -347,7 +352,11 @@ namespace BlackCore
         if (!message.isEmpty()) m.append(" ").append(message);
         msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork,
                                       to == INetwork::DisconnectedError ? CStatusMessage::SeverityError : CStatusMessage::SeverityInfo, m));
-        if (this->getIContextApplication()) this->getIContextApplication()->sendStatusMessages(msgs);
+        // FIXME (MS) conditional increases the number of scenarios which must be considered and continuously tested
+        if (this->getIContextApplication())
+        {
+            this->getIContextApplication()->sendStatusMessages(msgs);
+        }
 
         // send as own signal
         emit this->connectionStatusChanged(from, to, message);
@@ -377,6 +386,7 @@ namespace BlackCore
     void CContextNetwork::psDataFileRead()
     {
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+        // TODO (MS) no test for if (this->getIContextApplication()) here?
         this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage("Read VATSIM data file", CStatusMessage::TypeTrafficNetwork));
     }
 
@@ -485,6 +495,7 @@ namespace BlackCore
         CAircraft me = this->ownAircraft();
         CAircraftIcao icao = me.getIcaoInfo();
         QString modelString;
+        // FIXME (MS) simulator context should send model string to own aircraft context, so we wouldn't need to interrogate the simulator context here.
         if (this->getIContextSimulator())
         {
             if (this->getIContextSimulator()->isConnected()) modelString = this->getIContextSimulator()->getOwnAircraftModel().getQueriedModelString();

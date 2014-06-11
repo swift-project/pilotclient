@@ -56,6 +56,7 @@ namespace BlackCore
             this->m_atcStationsBooked.push_back(bookedStation);
         }
 
+        // TODO (MS) no test for if (this->getIContextApplication()) here?
         this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage("Read bookings from network", CStatusMessage::TypeTrafficNetwork));
     }
 
