@@ -265,6 +265,35 @@ namespace BlackCore
         qDebug() << func << boolValue;
     }
 
+    void CRuntime::logSlot(CRuntime::LogContext context, const char *func, const QString &param) const
+    {
+        if (this->isSlotLogEnabledFor(context)) qDebug() << func << param;
+    }
+
+    void CRuntime::logSlot(CRuntime::LogContext context, const char *func, const QStringList &params) const
+    {
+        if (this->isSlotLogEnabledFor(context)) qDebug() << func << params;
+    }
+
+    void CRuntime::logSlot(CRuntime::LogContext context, const char *func, bool boolValue) const
+    {
+        if (this->isSlotLogEnabledFor(context)) qDebug() << func << boolValue;
+    }
+
+    bool CRuntime::isSlotLogEnabledFor(CRuntime::LogContext context) const
+    {
+        switch (context)
+        {
+        default: return true;
+        case LogForApplication: return this->m_slotLogApplication;
+        case LogForAudio: return this->m_slotLogAudio;
+        case LogForNetwork: return this->m_slotLogNetwork;
+        case LogForOwnAircraft: return this->m_slotLogOwnAircraft;
+        case LogForSettings: return this->m_slotLogSettings;
+        case LogForSimulator: return this->m_slotLogSimulator;
+        }
+    }
+
     /*
      * Init runtime
      */

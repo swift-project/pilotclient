@@ -110,7 +110,7 @@ namespace BlackCore
      */
     BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, airportIcaoCode.toQString());
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, airportIcaoCode.toQString());
         CInformationMessage metar;
         if (airportIcaoCode.isEmpty()) return metar;
         if (this->m_metarCache.contains(airportIcaoCode)) metar = this->m_metarCache[airportIcaoCode];

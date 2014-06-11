@@ -92,7 +92,7 @@ namespace BlackCore
      */
     CStatusMessageList CContextNetwork::connectToNetwork(uint loginMode)
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         CStatusMessageList msgs;
         QString msg;
         CServer currentServer = this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer();
@@ -136,7 +136,7 @@ namespace BlackCore
      */
     CStatusMessageList CContextNetwork::disconnectFromNetwork()
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         CStatusMessageList msgs;
         if (this->m_network->isConnected())
         {
@@ -160,7 +160,7 @@ namespace BlackCore
      */
     bool CContextNetwork::isConnected() const
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return this->m_network->isConnected();
     }
 
@@ -169,7 +169,7 @@ namespace BlackCore
      */
     void CContextNetwork::sendTextMessages(const CTextMessageList &textMessages)
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, textMessages.toQString());
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, textMessages.toQString());
         this->m_network->sendTextMessages(textMessages);
     }
 
@@ -178,14 +178,14 @@ namespace BlackCore
      */
     void CContextNetwork::sendFlightPlan(const CFlightPlan &flightPlan)
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, flightPlan.toQString());
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, flightPlan.toQString());
         this->m_network->sendFlightPlan(flightPlan);
         this->m_network->sendFlightPlanQuery(this->ownAircraft().getCallsign());
     }
 
     CFlightPlan CContextNetwork::loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         CFlightPlan plan;
 
         // use cache, but not for own callsign (always reload)
@@ -331,7 +331,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, { QString::number(from), QString::number(to) });
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { QString::number(from), QString::number(to) });
         CStatusMessageList msgs;
         // send 1st position
         if (to == INetwork::Connected)
@@ -358,7 +358,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, { callsign.toQString(), realname });
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { callsign.toQString(), realname });
         if (realname.isEmpty()) return;
         CIndexVariantMap vm(CAtcStation::IndexControllerRealName, realname);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
@@ -376,7 +376,7 @@ namespace BlackCore
      */
     void CContextNetwork::psDataFileRead()
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage("Read VATSIM data file", CStatusMessage::TypeTrafficNetwork));
     }
 
@@ -385,7 +385,7 @@ namespace BlackCore
      */
     void CContextNetwork::psFsdTextMessageReceived(const CTextMessageList &messages)
     {
-        if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, messages.toQString());
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, messages.toQString());
         this->textMessagesReceived(messages); // relay
     }
 

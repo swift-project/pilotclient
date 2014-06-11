@@ -43,21 +43,21 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getAtcStationsOnline()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override
         {
-            if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+            this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
             return m_atcStationsOnline;
         }
 
         //! \copydoc IContextNetwork::getAtcStationsBooked()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override
         {
-            if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+            this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
             return m_atcStationsBooked;
         }
 
         //! \copydoc IContextNetwork::getAircraftsInRange()
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const override
         {
-            if (this->getRuntime()->isSlotLogForNetworkEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+            this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
             return m_aircraftsInRange;
         }
 
@@ -122,6 +122,8 @@ namespace BlackCore
         }
 
     private:
+        static const auto c_logContext = CRuntime::LogForNetwork;
+
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
         BlackMisc::Aviation::CAircraftList m_aircraftsInRange;

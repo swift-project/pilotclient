@@ -30,6 +30,18 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+        //! Tags to identify the context when logging a slot
+        enum LogContext
+        {
+            LogDefault = 0,
+            LogForApplication,
+            LogForAudio,
+            LogForNetwork,
+            LogForOwnAircraft,
+            LogForSettings,
+            LogForSimulator
+        };
+
         //! Constructor
         CRuntime(const CRuntimeConfig &config, QObject *parent = nullptr);
 
@@ -102,6 +114,9 @@ namespace BlackCore
         //! Slot logging for simulator context
         bool isSlotLogForSimulatorEnabled() const { return this->m_slotLogSimulator; }
 
+        //! Slot logging for specified context
+        bool isSlotLogEnabledFor(LogContext context) const;
+
         //! Slot logging
         //! \deprecated Use a brace-initialized QStringList
         void logSlot(const char *func, const QString &param, const QString &p2, const QString &p3 = "", const QString &p4 = "") const;
@@ -114,6 +129,15 @@ namespace BlackCore
 
         //! Slot logging for bool value
         void logSlot(const char *func, bool boolValue) const;
+
+        //! Slot logging from a specific context
+        void logSlot(LogContext ctx, const char *func, const QString &param = "") const;
+
+        //! Slot logging from a specific context
+        void logSlot(LogContext ctx, const char *func, const QStringList &params) const;
+
+        //! Slot logging for bool value from a specific context
+        void logSlot(LogContext ctx, const char *func, bool boolValue) const;
 
         //! shutdown
         void gracefulShutdown();
