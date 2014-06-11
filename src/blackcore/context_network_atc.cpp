@@ -45,8 +45,6 @@ namespace BlackCore
      */
     void CContextNetwork::psReceivedBookings(const CAtcStationList &bookedStations)
     {
-        const int interval = 180 * 1000;
-        if (this->m_vatsimBookingReader->interval() < interval) this->m_vatsimBookingReader->setInterval(interval);
         this->m_atcStationsBooked.clear();
         foreach(CAtcStation bookedStation, bookedStations)
         {
