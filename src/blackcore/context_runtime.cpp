@@ -394,18 +394,7 @@ namespace BlackCore
         }
         times.insert("Audio", time.restart());
 
-        switch (config.getModeNetwork())
-        {
-        case CRuntimeConfig::Local:
-        case CRuntimeConfig::LocalInDbusServer:
-            this->m_contextNetwork = (new CContextNetwork(config.getModeNetwork(), this))->registerWithDBus(this->m_dbusServer);
-            break;
-        case CRuntimeConfig::Remote:
-            this->m_contextNetwork = new BlackCore::CContextNetworkProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeNetwork(), this);
-            break;
-        default:
-            break; // network not mandatory
-        }
+        this->m_contextNetwork = IContextNetwork::create(this, config.getModeNetwork(), this->m_dbusServer, this->m_dbusConnection);
         times.insert("Network", time.restart());
 
         switch (config.getModeSimulator())

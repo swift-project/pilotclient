@@ -29,6 +29,7 @@ namespace BlackCore
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
+        friend class IContextNetwork;
         friend class CRuntime;
 
     public:

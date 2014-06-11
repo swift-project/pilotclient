@@ -24,7 +24,7 @@ namespace BlackCore
     class CContextNetworkProxy : public IContextNetwork
     {
         Q_OBJECT
-        friend class CRuntime;
+        friend class IContextNetwork;
 
     public:
 
