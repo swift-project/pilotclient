@@ -481,9 +481,9 @@ void Client::freqReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, c
     std::cout << "FREQ_REPLY " << callsign << " " << freq << std::endl;
 }
 
-void Client::serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname)
+void Client::serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server)
 {
-    std::cout << "SERVER_REPLY " << callsign << " " << hostname.toStdString() << std::endl;
+    std::cout << "SERVER_REPLY " << callsign << " " << server.toStdString() << std::endl;
 }
 
 void Client::atcReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC)

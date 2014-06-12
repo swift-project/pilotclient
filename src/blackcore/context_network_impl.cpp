@@ -438,10 +438,10 @@ namespace BlackCore
     /*
      * Host
      */
-    void CContextNetwork::psFsdServerReplyReceived(const CCallsign &callsign, const QString &host)
+    void CContextNetwork::psFsdServerReplyReceived(const CCallsign &callsign, const QString &server)
     {
-        if (callsign.isEmpty() || host.isEmpty()) return;
-        CIndexVariantMap vm(CClient::IndexHost, QVariant(host));
+        if (callsign.isEmpty() || server.isEmpty()) return;
+        CIndexVariantMap vm(CClient::IndexServer, QVariant(server));
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 

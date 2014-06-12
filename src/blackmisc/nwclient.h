@@ -36,7 +36,7 @@ namespace BlackMisc
                 IndexCapabilities = 1000,
                 IndexCapabilitiesString,
                 IndexModel,
-                IndexHost,
+                IndexServer,
                 IndexVoiceCapabilities,
                 IndexVoiceCapabilitiesString,
                 IndexVoiceCapabilitiesIcon
@@ -106,11 +106,11 @@ namespace BlackMisc
             //! Set voice capabilities
             void setVoiceCapabilities(const QString &flightPlanRemarks) { m_voiceCapabilities = CVoiceCapabilities(flightPlanRemarks);}
 
-            //! Host
-            const QString &getHost() const { return this->m_host; }
+            //! Server
+            const QString &getServer() const { return this->m_server; }
 
-            //! Host
-            void setHost(const QString &host) { this->m_host = host;}
+            //! Server
+            void setServer(const QString &server) { this->m_server = server;}
 
             //! Model
             const CAircraftModel &getAircraftModel() const { return this->m_model; }
@@ -157,7 +157,7 @@ namespace BlackMisc
             CUser m_user;
             CAircraftModel m_model;
             CIndexVariantMap m_capabilities;
-            QString m_host;
+            QString m_server;
             CVoiceCapabilities m_voiceCapabilities;
 
         };

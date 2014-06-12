@@ -96,7 +96,7 @@ public slots: //to receive from INetwork
                                  const QString &errorMessage);
     void ipReplyReceived(const QString &ip);
     void freqReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
-    void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);
+    void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
     void atcReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, bool isATC);
     void atisReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atis);
     void realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);

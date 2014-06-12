@@ -457,7 +457,7 @@ namespace BlackCore
          * We received a reply to one of our queries.
          * \sa sendServerQuery
          */
-        void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &hostname);
+        void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
 
         /*!
          * We received a reply to one of our queries.

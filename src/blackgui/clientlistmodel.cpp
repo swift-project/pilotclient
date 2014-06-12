@@ -19,7 +19,7 @@ namespace BlackGui
         this->m_columns.addColumn(CColumn("", CClient::IndexVoiceCapabilitiesIcon));
         this->m_columns.addColumn(CColumn("capabilities", CClient::IndexCapabilitiesString));
         this->m_columns.addColumn(CColumn("model", CClient::IndexQueriedModelString));
-        this->m_columns.addColumn(CColumn("host", CClient::IndexHost));
+        this->m_columns.addColumn(CColumn("server", CClient::IndexServer));
 
         // force strings for translation in resource files
         // force strings for translation in resource files
@@ -27,7 +27,7 @@ namespace BlackGui
         (void)QT_TRANSLATE_NOOP("ViewClientList", "realname");
         (void)QT_TRANSLATE_NOOP("ViewClientList", "userid");
         (void)QT_TRANSLATE_NOOP("ViewClientList", "model");
-        (void)QT_TRANSLATE_NOOP("ViewClientList", "host");
+        (void)QT_TRANSLATE_NOOP("ViewClientList", "server");
     }
 
     /*

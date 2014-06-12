@@ -179,8 +179,8 @@ namespace BlackMisc
             case IndexModel:
                 return QVariant(this->m_model.toQVariant());
                 break;
-            case IndexHost:
-                return QVariant(this->m_host);
+            case IndexServer:
+                return QVariant(this->m_server);
                 break;
             case IndexVoiceCapabilities:
                 return this->m_voiceCapabilities.toQVariant();
@@ -223,8 +223,8 @@ namespace BlackMisc
             case IndexModel:
                 this->m_model = variant.value<CAircraftModel>();
                 break;
-            case IndexHost:
-                this->m_host = variant.toString();
+            case IndexServer:
+                this->m_server = variant.toString();
                 break;
             case IndexVoiceCapabilities:
                 this->m_voiceCapabilities = variant.value<CVoiceCapabilities>();

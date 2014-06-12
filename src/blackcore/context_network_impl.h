@@ -232,7 +232,7 @@ namespace BlackCore
         void psFsdCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &package, const QStringList &data);
 
         //! Server reply received
-        void psFsdServerReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &host);
+        void psFsdServerReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
     };
 }
 
