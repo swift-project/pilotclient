@@ -21,7 +21,7 @@ void BlackCoreTest::CTestNetwork::networkTest(BlackCore::INetwork *net)
     Expect e(net);
 
     EXPECT_UNIT(e)
-    .send(&INetwork::presetServer, CServer("", "", "vatsim-germany.org", 6809, CUser("guest", "", "", "guest")))
+    .send(&INetwork::presetServer, CServer("", "", "vatsim-germany.org", 6809, CUser("1234567", "", "", "123456")))
     .send(&INetwork::presetCallsign, "BLACK")
     .send(&INetwork::presetIcaoCodes, CAircraftIcao("C172", "P1L", "YYY", "YYY", "white"))
     .send(&INetwork::initiateConnection)
