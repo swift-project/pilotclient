@@ -24,6 +24,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::Audio;
 
 namespace BlackCore
 {
@@ -32,7 +33,7 @@ namespace BlackCore
      * Init this context
      */
     CContextNetwork::CContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextNetwork(mode, runtime), m_network(nullptr), m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
+        IContextNetwork(mode, runtime), m_network(nullptr), m_airspace(nullptr), m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getIContextSettings());
@@ -40,22 +41,7 @@ namespace BlackCore
         // 1. Init by "network driver"
         this->m_network = new CNetworkVatlib(this);
         this->connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::psFsdConnectionStatusChanged);
-        this->connect(this->m_network, &INetwork::atcPositionUpdate, this, &CContextNetwork::psFsdAtcPositionUpdate);
-        this->connect(this->m_network, &INetwork::atisReplyReceived, this, &CContextNetwork::psFsdAtisReceived);
-        this->connect(this->m_network, &INetwork::atisVoiceRoomReplyReceived, this, &CContextNetwork::psFsdAtisVoiceRoomReceived);
-        this->connect(this->m_network, &INetwork::atisLogoffTimeReplyReceived, this, &CContextNetwork::psFsdAtisLogoffTimeReceived);
-        this->connect(this->m_network, &INetwork::metarReplyReceived, this, &CContextNetwork::psFsdMetarReceived);
-        this->connect(this->m_network, &INetwork::flightPlanReplyReceived, this, &CContextNetwork::psFsdFlightplanReceived);
-        this->connect(this->m_network, &INetwork::realNameReplyReceived, this, &CContextNetwork::psFsdRealNameReplyReceived);
-        this->connect(this->m_network, &INetwork::icaoCodesReplyReceived, this, &CContextNetwork::psFsdIcaoCodesReceived);
-        this->connect(this->m_network, &INetwork::pilotDisconnected, this, &CContextNetwork::psFsdPilotDisconnected);
-        this->connect(this->m_network, &INetwork::atcDisconnected, this, &CContextNetwork::psFsdAtcControllerDisconnected);
-        this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CContextNetwork::psFsdAircraftUpdateReceived);
-        this->connect(this->m_network, &INetwork::frequencyReplyReceived, this, &CContextNetwork::psFsdFrequencyReceived);
         this->connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::psFsdTextMessageReceived);
-        this->connect(this->m_network, &INetwork::capabilitiesReplyReceived, this, &CContextNetwork::psFsdCapabilitiesReplyReceived);
-        this->connect(this->m_network, &INetwork::customPacketReceived, this, &CContextNetwork::psFsdCustomPacketReceived);
-        this->connect(this->m_network, &INetwork::serverReplyReceived, this, &CContextNetwork::psFsdServerReplyReceived);
 
         // 2. VATSIM bookings
         this->m_vatsimBookingReader = new CVatsimBookingReader(this->getRuntime()->getIContextSettings()->getNetworkSettings().getBookingServiceUrl(), this);
@@ -74,6 +60,15 @@ namespace BlackCore
         this->m_dataUpdateTimer = new QTimer(this);
         this->connect(this->m_dataUpdateTimer, &QTimer::timeout, this, &CContextNetwork::requestDataUpdates);
         this->m_dataUpdateTimer->start(30 * 1000);
+
+        // 5. Airspace contents
+        this->m_airspace = new CAirspaceMonitor(this, this->m_network, this->m_vatsimBookingReader, this->m_vatsimDataFileReader);
+        this->connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsOnline, this, &CContextNetwork::changedAtcStationsOnline);
+        this->connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationsBooked, this, &CContextNetwork::changedAtcStationsBooked);
+        this->connect(this->m_airspace, &CAirspaceMonitor::changedAtcStationOnlineConnectionStatus, this, &CContextNetwork::changedAtcStationOnlineConnectionStatus);
+        this->connect(this->m_airspace, &CAirspaceMonitor::changedAircraftsInRange, this, &CContextNetwork::changedAircraftsInRange);
+        this->connect(this->m_airspace, &CAirspaceMonitor::changedAircraftSituation, this, &CContextNetwork::changedAircraftSituation);
+        this->connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraft, this->m_airspace, &CAirspaceMonitor::setOwnAircraft);
 
         // FIXME (MS) conditional increases the number of scenarios which must be considered and continuously tested
         if (this->getIContextApplication())
@@ -144,11 +139,7 @@ namespace BlackCore
         if (this->m_network->isConnected())
         {
             this->m_network->terminateConnection();
-            this->m_aircraftsInRange.clear();
-            this->m_atcStationsBooked.clear();
-            this->m_atcStationsOnline.clear();
-            this->m_otherClients.clear();
-            this->m_metarCache.clear();
+            this->m_airspace->clear();
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, "Connection terminating"));
         }
         else
@@ -189,30 +180,7 @@ namespace BlackCore
     CFlightPlan CContextNetwork::loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const
     {
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
-        CFlightPlan plan;
-
-        // use cache, but not for own callsign (always reload)
-        if (this->m_flightPlanCache.contains(callsign)) plan = this->m_flightPlanCache[callsign];
-        if (!plan.wasSentOrLoaded() || plan.timeDiffSentOrLoadedMs() > 30 * 1000)
-        {
-            // outdated, or not in cache at all
-            this->m_network->sendFlightPlanQuery(callsign);
-
-            // with this little trick we try to make an asynchronous signal / slot
-            // based approach a synchronous return value
-            QTime waitForFlightPlan = QTime::currentTime().addMSecs(1000);
-            while (QTime::currentTime() < waitForFlightPlan)
-            {
-                // process some other events and hope network answer is received already
-                QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-                if (m_flightPlanCache.contains(callsign))
-                {
-                    plan = this->m_flightPlanCache[callsign];
-                    break;
-                }
-            }
-        }
-        return plan;
+        return this->m_airspace->loadFlightPlanFromNetwork(callsign);
     }
 
     /*
@@ -220,18 +188,7 @@ namespace BlackCore
      */
     CUserList CContextNetwork::getUsers() const
     {
-        CUserList users;
-        foreach(CAtcStation station, this->m_atcStationsOnline)
-        {
-            CUser user = station.getController();
-            users.push_back(user);
-        }
-        foreach(CAircraft aircraft, this->m_aircraftsInRange)
-        {
-            CUser user = aircraft.getPilot();
-            users.push_back(user);
-        }
-        return users;
+        return this->m_airspace->getUsers();
     }
 
     /*
@@ -241,58 +198,7 @@ namespace BlackCore
     {
         CUserList users;
         if (callsigns.isEmpty()) return users;
-        CCallsignList searchList(callsigns);
-
-        // myself, which is not in the lists below
-        CAircraft ownAircraft = this->ownAircraft();
-        if (!ownAircraft.getCallsign().isEmpty() && searchList.contains(ownAircraft.getCallsign()))
-        {
-            searchList.remove(ownAircraft.getCallsign());
-            users.push_back(ownAircraft.getPilot());
-        }
-
-        // do aircrafts first, this will handle most callsigns
-        foreach(CAircraft aircraft, this->m_aircraftsInRange)
-        {
-            if (searchList.isEmpty()) break;
-            CCallsign callsign = aircraft.getCallsign();
-            if (searchList.contains(callsign))
-            {
-                CUser user = aircraft.getPilot();
-                users.push_back(user);
-                searchList.remove(callsign);
-            }
-        }
-
-        foreach(CAtcStation station, this->m_atcStationsOnline)
-        {
-            if (searchList.isEmpty()) break;
-            CCallsign callsign = station.getCallsign();
-            if (searchList.contains(callsign))
-            {
-                CUser user = station.getController();
-                users.push_back(user);
-                searchList.remove(callsign);
-            }
-        }
-
-        // we might have unresolved callsigns
-        // these are the ones not in range
-        foreach(CCallsign callsign, searchList)
-        {
-            CUserList usersByCallsign = this->m_vatsimDataFileReader->getUsersForCallsign(callsign);
-            if (usersByCallsign.isEmpty())
-            {
-                CUser user;
-                user.setCallsign(callsign);
-                users.push_back(user);
-            }
-            else
-            {
-                users.push_back(usersByCallsign[0]);
-            }
-        }
-        return users;
+        return this->m_airspace->getUsersForCallsigns(callsigns);
     }
 
     /*
@@ -312,7 +218,7 @@ namespace BlackCore
      */
     CClientList CContextNetwork::getOtherClients() const
     {
-        return this->m_otherClients;
+        return this->m_airspace->getOtherClients();
     }
 
     /*
@@ -320,13 +226,7 @@ namespace BlackCore
      */
     CClientList CContextNetwork::getOtherClientsForCallsigns(const CCallsignList &callsigns) const
     {
-        CClientList clients;
-        if (callsigns.isEmpty()) return clients;
-        foreach(CCallsign callsign, callsigns)
-        {
-            clients.push_back(this->m_otherClients.findBy(&CClient::getCallsign, callsign));
-        }
-        return clients;
+        return this->m_airspace->getOtherClientsForCallsigns(callsigns);
     }
 
     /*
@@ -361,24 +261,6 @@ namespace BlackCore
     }
 
     /*
-     * Name query
-     */
-    void CContextNetwork::psFsdRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
-    {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { callsign.toQString(), realname });
-        if (realname.isEmpty()) return;
-        CIndexVariantMap vm(CAtcStation::IndexControllerRealName, realname);
-        this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
-        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-
-        vm = CIndexVariantMap(CAircraft::IndexPilotRealName, realname);
-        this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
-
-        vm = CIndexVariantMap(CClient::IndexRealName, realname);
-        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
-    }
-
-    /*
      * Data file (VATSIM) has been read
      */
     void CContextNetwork::psDataFileRead()
@@ -395,115 +277,6 @@ namespace BlackCore
     {
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, messages.toQString());
         this->textMessagesReceived(messages); // relay
-    }
-
-    /*
-     * Capabilities
-     */
-    void CContextNetwork::psFsdCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags)
-    {
-        if (callsign.isEmpty()) return;
-        CIndexVariantMap capabilities;
-        capabilities.addValue(CClient::FsdAtisCanBeReceived, (flags & CNetworkVatlib::AcceptsAtisResponses));
-        capabilities.addValue(CClient::FsdWithInterimPositions, (flags & CNetworkVatlib::SupportsInterimPosUpdates));
-        capabilities.addValue(CClient::FsdWithModelDescription, (flags & CNetworkVatlib::SupportsModelDescriptions));
-        CIndexVariantMap vm(CClient::IndexCapabilities, capabilities.toQVariant());
-        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
-    }
-
-    /*
-     * Custom packets
-     */
-    void CContextNetwork::psFsdCustomPacketReceived(const CCallsign &callsign, const QString &packet, const QStringList &data)
-    {
-        if (callsign.isEmpty() || data.isEmpty()) return;
-        if (packet.startsWith("FSIPIR", Qt::CaseInsensitive))
-        {
-            // Request of other client, I can get the other's model from that
-            // FsInn response is usually my model
-            QString model = data.last();
-            if (model.isEmpty()) return;
-            CIndexVariantMap vm(CClient::IndexQueriedModelString, QVariant(model));
-            if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
-            {
-                // with custom packets it can happen,
-                //the packet is received before any other packet
-                this->m_otherClients.push_back(CClient(callsign));
-            }
-            this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
-            this->sendFsipiCustomPacket(callsign); // response
-        }
-    }
-
-    /*
-     * Host
-     */
-    void CContextNetwork::psFsdServerReplyReceived(const CCallsign &callsign, const QString &server)
-    {
-        if (callsign.isEmpty() || server.isEmpty()) return;
-        CIndexVariantMap vm(CClient::IndexServer, QVariant(server));
-        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
-    }
-
-    /*
-     * Metar received
-     */
-    void CContextNetwork::psFsdMetarReceived(const QString &metarMessage)
-    {
-        if (metarMessage.length() < 10) return; // invalid
-        const QString icaoCode = metarMessage.left(4).toUpper();
-        const QString icaoCodeTower = icaoCode + "_TWR";
-        CCallsign callsignTower(icaoCodeTower);
-        CInformationMessage metar(CInformationMessage::METAR, metarMessage);
-
-        // add METAR to existing stations
-        CIndexVariantMap vm(CAtcStation::IndexMetar, metar.toQVariant());
-        this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
-        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
-        this->m_metarCache.insert(icaoCode, metar);
-        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsignTower)) emit this->changedAtcStationsOnline();
-        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsignTower)) emit this->changedAtcStationsBooked();
-    }
-
-    /*
-     * Flight plan received
-     */
-    void CContextNetwork::psFsdFlightplanReceived(const CCallsign &callsign, const CFlightPlan &flightPlan)
-    {
-        CFlightPlan plan(flightPlan);
-        plan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
-        this->m_flightPlanCache.insert(callsign, plan);
-    }
-
-
-    void CContextNetwork::sendFsipiCustomPacket(const CCallsign &recipientCallsign) const
-    {
-        QStringList data = this->createFsipiCustomPacketData();
-        this->m_network->sendCustomPacket(recipientCallsign.asString(), "FSIPI", data);
-    }
-
-    void CContextNetwork::sendFsipirCustomPacket(const CCallsign &recipientCallsign) const
-    {
-        QStringList data = this->createFsipiCustomPacketData();
-        this->m_network->sendCustomPacket(recipientCallsign.asString(), "FSIPIR", data);
-    }
-
-    QStringList CContextNetwork::createFsipiCustomPacketData() const
-    {
-        CAircraft me = this->ownAircraft();
-        CAircraftIcao icao = me.getIcaoInfo();
-        QString modelString;
-        // FIXME (MS) simulator context should send model string to own aircraft context, so we wouldn't need to interrogate the simulator context here.
-        if (this->getIContextSimulator())
-        {
-            if (this->getIContextSimulator()->isConnected()) modelString = this->getIContextSimulator()->getOwnAircraftModel().getQueriedModelString();
-        }
-        if (modelString.isEmpty()) modelString = CProject::systemNameAndVersion();
-        QStringList data = CNetworkVatlib::createFsipiCustomPacketData(
-                               "0", icao.getAirlineDesignator(), icao.getAircraftDesignator(),
-                               "", "", "", "",
-                               icao.getAircraftCombinedType(), modelString);
-        return data;
     }
 
     const CAircraft &CContextNetwork::ownAircraft() const

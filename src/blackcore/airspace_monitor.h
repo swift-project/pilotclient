@@ -1,0 +1,146 @@
+/* Copyright (C) 2013 VATSIM Community / contributors
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#ifndef BLACKCORE_AIRSPACE_MONITOR_H
+#define BLACKCORE_AIRSPACE_MONITOR_H
+
+#include "blackmisc/avatcstationlist.h"
+#include "blackmisc/avaircraftlist.h"
+#include "blackmisc/nwclientlist.h"
+#include "blackmisc/avflightplan.h"
+#include "blackmisc/nwuserlist.h"
+#include "blackmisc/avcallsignlist.h"
+#include "network.h"
+#include "vatsimbookingreader.h"
+#include "vatsimdatafilereader.h"
+
+//! \file
+
+namespace BlackCore
+{
+
+    /*!
+     * Keeps track of other entities in the airspace: aircraft, ATC stations, etc.
+     */
+    class CAirspaceMonitor : public QObject
+    {
+        Q_OBJECT
+
+    public:
+        //! Constructor
+        CAirspaceMonitor(QObject *parent, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile);
+
+        //! Returns the list of users we know about
+        BlackMisc::Network::CUserList getUsers() const;
+
+        //! Returns a list of the users corresponding to the given callsigns
+        BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
+
+        //! Returns the flightplan for the given callsign
+        BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Returns this list of other clients we know about
+        BlackMisc::Network::CClientList getOtherClients() const { return m_otherClients; }
+
+        //! Returns a list of other clients corresponding to the given callsigns
+        BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const;
+
+        //! Returns a METAR for the given airport, if available
+        BlackMisc::Aviation::CInformationMessage getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode);
+
+        //! Returns the current online ATC stations
+        BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const { return m_atcStationsOnline; }
+
+        //! Returns the current booked ATC stations
+        BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const { return m_atcStationsBooked; }
+
+        //! Returns the current aircraft in range
+        BlackMisc::Aviation::CAircraftList getAircraftInRange() const { return m_aircraftsInRange; }
+
+        //! Returns the closest ATC station operating on the given frequency, if any
+        BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem);
+
+        //! Request to update other clients' data from the network
+        void requestDataUpdates();
+
+        //! Request to update ATC stations' ATIS data from the network
+        void requestAtisUpdates();
+
+    signals:
+        //! Online ATC stations were changed
+        void changedAtcStationsOnline();
+
+        //! Booked ATC stations were changed
+        void changedAtcStationsBooked();
+
+        //! Connection status of an ATC station was changed
+        void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool isConnected);
+
+        //! Aircrafts were changed
+        void changedAircraftsInRange();
+
+        //! An aircraft's situation was changed
+        void changedAircraftSituation(const BlackMisc::Aviation::CCallsign, const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        //! Sent a status message
+        void statusMessage(const BlackMisc::CStatusMessage &msg);
+
+    public slots:
+        //! Own aircraft updated
+        void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft) { m_ownAircraft = ownAircraft; }
+            
+    public:
+        //! Clear the contents
+        void clear()
+        {
+            m_atcStationsOnline.clear();
+            m_atcStationsBooked.clear();
+            m_aircraftsInRange.clear();
+            m_otherClients.clear();
+            m_metarCache.clear();
+            m_flightPlanCache.clear();
+        }
+
+    private:
+        BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
+        BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
+        BlackMisc::Aviation::CAircraftList m_aircraftsInRange;
+        BlackMisc::Network::CClientList m_otherClients;
+        QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache;
+
+        BlackMisc::Aviation::CAircraft m_ownAircraft;
+
+        INetwork *m_network;
+        CVatsimBookingReader *m_vatsimBookingReader;
+        CVatsimDataFileReader *m_vatsimDataFileReader;
+
+        // FIXME (MS) should be in INetwork
+        void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
+        void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
+        QStringList createFsipiCustomPacketData() const;
+
+    private slots:
+        void realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
+        void capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
+        void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packet, const QStringList &data);
+        void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
+        void metarReceived(const QString &metarMessage);
+        void flightplanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
+        void receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
+        void atcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
+        void atisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
+        void atisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
+        void atisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
+        void icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
+        void aircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+        void pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
+        void frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+    };
+
+} // namespace
+
+#endif // guard

@@ -11,6 +11,7 @@
 #include "blackcore/context_runtime.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/network.h"
+#include "blackcore/airspace_monitor.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/setnetwork.h"
 #include "blackmisc/nwclientlist.h"
@@ -45,21 +46,21 @@ namespace BlackCore
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override
         {
             this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
-            return m_atcStationsOnline;
+            return this->m_airspace->getAtcStationsOnline();
         }
 
         //! \copydoc IContextNetwork::getAtcStationsBooked()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override
         {
             this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
-            return m_atcStationsBooked;
+            return this->m_airspace->getAtcStationsBooked();
         }
 
         //! \copydoc IContextNetwork::getAircraftsInRange()
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const override
         {
             this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
-            return m_aircraftsInRange;
+            return this->m_airspace->getAircraftInRange();
         }
 
         //! \copydoc IContextNetwork::connectToNetwork()
@@ -125,13 +126,8 @@ namespace BlackCore
     private:
         static const auto c_logContext = CRuntime::LogForNetwork;
 
-        BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
-        BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
-        BlackMisc::Aviation::CAircraftList m_aircraftsInRange;
-        BlackMisc::Network::CClientList m_otherClients;
+        CAirspaceMonitor *m_airspace;
         BlackCore::INetwork *m_network;
-        QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache /*!< Keep METARs for a while */;
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache /*!< Keep flight plans for a while */;
 
         // for reading XML and VATSIM data files
         CVatsimBookingReader *m_vatsimBookingReader;
@@ -145,15 +141,6 @@ namespace BlackCore
             Q_ASSERT(this->getRuntime()->getIContextSettings());
             return this->getRuntime()->getIContextSettings()->getNetworkSettings();
         }
-
-        //! Send FsInn custom packet
-        void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
-
-        //! Send FsInn custom packet
-        void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
-
-        //! Custom packet data based on own aircraft / model
-        QStringList createFsipiCustomPacketData() const;
 
         //! Own aircraft
         const BlackMisc::Aviation::CAircraft &ownAircraft() const;
@@ -175,64 +162,8 @@ namespace BlackCore
          */
         void psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message);
 
-        //! ATC position update
-        void psFsdAtcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
-
-        /*!
-         * \brief Controller disconnected
-         * \param callsign  callsign of controller
-         */
-        void psFsdAtcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-
-        //! ATIS received
-        void psFsdAtisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
-
-        /*!
-         * \brief ATIS received (voice room part)
-         * \param callsign  station callsign
-         * \param url       voice room's URL
-         */
-        void psFsdAtisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
-
-        /*!
-         * \brief ATIS received (logoff time part)
-         * \param callsign  station callsign
-         * \param zuluTime  UTC time, when controller will logoff
-         */
-        void psFsdAtisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
-
-        //! METAR received
-        void psFsdMetarReceived(const QString &metarMessage);
-
-        //! Flight plan received
-        void psFsdFlightplanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightplan);
-
-        //! Realname recevied
-        void psFsdRealNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
-
-        //! Plane ICAO codes received
-        void psFsdIcaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
-
-        //! Aircraft position update received
-        void psFsdAircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
-
-        //! Pilot disconnected
-        void psFsdPilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-
-        //! Frequency received
-        void psFsdFrequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
-
         //! Radio text messages received
         void psFsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
-
-        //! Capabilities received
-        void psFsdCapabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
-
-        //! Custom packet
-        void psFsdCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &package, const QStringList &data);
-
-        //! Server reply received
-        void psFsdServerReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
     };
 }
 
