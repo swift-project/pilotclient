@@ -412,19 +412,13 @@ namespace BlackSimPlugin
         void CSimulatorFsx::setSimconnectObjectID(DWORD requestID, DWORD objectID)
         {
             // First check, if this request id belongs to us
-            auto it = m_simConnectObjects.begin();
-            for (; it != m_simConnectObjects.end(); ++it)
-            {
-                if ((*it).getRequestId() == static_cast<int>(requestID))
-                {
-                    break;
-                }
-            }
+            auto it = std::find_if(m_simConnectObjects.begin(), m_simConnectObjects.end(),
+                 [requestID](const CSimConnectObject &obj) { return obj.getRequestId() == static_cast<int>(requestID); });
 
             if (it == m_simConnectObjects.end())
                 return;
 
-            (*it).setObjectId(objectID);
+            it->setObjectId(objectID);
             SimConnect_AIReleaseControl(m_hSimConnect, objectID, requestID);
             SimConnect_TransmitClientEvent(m_hSimConnect, objectID, EventFreezeLat, 1,
                                            SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
