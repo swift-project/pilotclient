@@ -125,7 +125,7 @@ namespace BlackCore
     private slots:
         void realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
         void capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
-        void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packet, const QStringList &data);
+        void fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &, const QString &, const QString &, const QString &model);
         void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
         void metarReceived(const QString &metarMessage);
         void flightplanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);

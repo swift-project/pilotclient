@@ -212,11 +212,40 @@ namespace BlackCore
          */
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) = 0;
 
+        //! @}
+        ////////////////////////////////////////////////////////////////
+        //! \name Custom packets
+        //! @{
+        ////////////////////////////////////////////////////////////////
+
         /*!
          * Send a custom packet.
          * \pre Network must be connected when calling this function.
+         * \deprecated As a short cut you can use this slot directly, but it is better to implement the encoding in INetwork and add a new signal.
          */
         virtual void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data) = 0;
+
+        /*!
+         * Send an FSInn custom packet.
+         * \details FSIPI(R) queries
+         * <BLOCKQUOTE>
+         * index 0 .. 0/1 ???
+         *       1 .. MQT, GEC, DLH -> Airline ICAO, most of the time empty
+         *       2 .. AIRCRAFT ICAO "B747"
+         *       3 .. 10.64195
+         *       4 .. 1.06080:
+         *       5 .. 5825.00000
+         *       6 .. 4.DD89CCB6.EC9BB7D7
+         *       7 .. 3-letter combined L2J
+         *       8 .. Model string
+         * </BLOCKQUOTE>
+         */
+        //! @{
+        virtual void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
+            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) = 0;
+        virtual void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
+            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) = 0;
+        //! @}
 
         //! @}
         ////////////////////////////////////////////////////////////////
@@ -471,9 +500,22 @@ namespace BlackCore
         void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
 
         /*!
-         * We received a custom packet. It is the slot's responsibility to decode the data.
+         * We received a custom packet.
+         * \deprecated As a short cut you can use this signal directly, but it is better to implement the decoding in INetwork and add a new signal.
          */
         void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
+
+        /*!
+         * We received an FSInn custom packet.
+         */
+        void fsipiCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
+            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
+
+        /*!
+         * We received an FSInn custom response packet.
+         */
+        void fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
+            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
 
         //! @}
         ////////////////////////////////////////////////////////////////

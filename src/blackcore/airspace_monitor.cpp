@@ -6,7 +6,6 @@
 #include "airspace_monitor.h"
 #include "blackmisc/project.h"
 #include "blackmisc/indexvariantmap.h"
-#include "network_vatlib.h" // for createFsipiCustomPacketData
 
 namespace BlackCore
 {
@@ -33,7 +32,7 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::aircraftPositionUpdate, this, &CAirspaceMonitor::aircraftUpdateReceived);
         this->connect(this->m_network, &INetwork::frequencyReplyReceived, this, &CAirspaceMonitor::frequencyReceived);
         this->connect(this->m_network, &INetwork::capabilitiesReplyReceived, this, &CAirspaceMonitor::capabilitiesReplyReceived);
-        this->connect(this->m_network, &INetwork::customPacketReceived, this, &CAirspaceMonitor::customPacketReceived);
+        this->connect(this->m_network, &INetwork::fsipirCustomPacketReceived, this, &CAirspaceMonitor::fsipirCustomPacketReceived);
         this->connect(this->m_network, &INetwork::serverReplyReceived, this, &CAirspaceMonitor::serverReplyReceived);
 
         this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::receivedBookings);
@@ -237,25 +236,20 @@ namespace BlackCore
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 
-    void CAirspaceMonitor::customPacketReceived(const CCallsign &callsign, const QString &packet, const QStringList &data)
+    void CAirspaceMonitor::fsipirCustomPacketReceived(const CCallsign &callsign, const QString &, const QString &, const QString &, const QString &model)
     {
-        if (callsign.isEmpty() || data.isEmpty()) return;
-        if (packet.startsWith("FSIPIR", Qt::CaseInsensitive))
+        if (callsign.isEmpty() || model.isEmpty()) return;
+
+        // Request of other client, I can get the other's model from that
+        CIndexVariantMap vm(CClient::IndexQueriedModelString, QVariant(model));
+        if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
         {
-            // Request of other client, I can get the other's model from that
-            // FsInn response is usually my model
-            QString model = data.last();
-            if (model.isEmpty()) return;
-            CIndexVariantMap vm(CClient::IndexQueriedModelString, QVariant(model));
-            if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
-            {
-                // with custom packets it can happen,
-                //the packet is received before any other packet
-                this->m_otherClients.push_back(CClient(callsign));
-            }
-            this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
-            this->sendFsipiCustomPacket(callsign); // response
+            // with custom packets it can happen,
+            //the packet is received before any other packet
+            this->m_otherClients.push_back(CClient(callsign));
         }
+        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
+        this->sendFsipiCustomPacket(callsign); // response
     }
 
     void CAirspaceMonitor::serverReplyReceived(const CCallsign &callsign, const QString &server)
@@ -291,17 +285,19 @@ namespace BlackCore
 
     void CAirspaceMonitor::sendFsipiCustomPacket(const CCallsign &recipientCallsign) const
     {
-        QStringList data = this->createFsipiCustomPacketData();
-        this->m_network->sendCustomPacket(recipientCallsign.asString(), "FSIPI", data);
+        CAircraft me = this->m_ownAircraft;
+        CAircraftIcao icao = me.getIcaoInfo();
+        QString modelString;
+        // FIXME (MS) simulator or ownaircraft context should send an ownAircraftModelChanged signal, so we wouldn't need to interrogate the simulator context here.
+        //if (this->getIContextSimulator())
+        //{
+        //    if (this->getIContextSimulator()->isConnected()) modelString = this->getIContextSimulator()->getOwnAircraftModel().getQueriedModelString();
+        //}
+        if (modelString.isEmpty()) modelString = CProject::systemNameAndVersion();
+        this->m_network->sendFsipiCustomPacket(recipientCallsign, icao.getAirlineDesignator(), icao.getAircraftDesignator(), icao.getAircraftCombinedType(), modelString);
     }
 
     void CAirspaceMonitor::sendFsipirCustomPacket(const CCallsign &recipientCallsign) const
-    {
-        QStringList data = this->createFsipiCustomPacketData();
-        this->m_network->sendCustomPacket(recipientCallsign.asString(), "FSIPIR", data);
-    }
-
-    QStringList CAirspaceMonitor::createFsipiCustomPacketData() const
     {
         CAircraft me = this->m_ownAircraft;
         CAircraftIcao icao = me.getIcaoInfo();
@@ -312,11 +308,7 @@ namespace BlackCore
         //    if (this->getIContextSimulator()->isConnected()) modelString = this->getIContextSimulator()->getOwnAircraftModel().getQueriedModelString();
         //}
         if (modelString.isEmpty()) modelString = CProject::systemNameAndVersion();
-        QStringList data = CNetworkVatlib::createFsipiCustomPacketData(
-                               "0", icao.getAirlineDesignator(), icao.getAircraftDesignator(),
-                               "", "", "", "",
-                               icao.getAircraftCombinedType(), modelString);
-        return data;
+        this->m_network->sendFsipirCustomPacket(recipientCallsign, icao.getAirlineDesignator(), icao.getAircraftDesignator(), icao.getAircraftCombinedType(), modelString);
     }
 
     void CAirspaceMonitor::receivedBookings(const CAtcStationList &bookedStations)

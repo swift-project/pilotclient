@@ -33,6 +33,7 @@ namespace BlackCore
           m_fsdTextCodec(QTextCodec::codecForName("latin1"))
     {
         connect(this, &CNetworkVatlib::terminate, this, &INetwork::terminateConnection, Qt::QueuedConnection);
+        connect(this, &INetwork::customPacketReceived, this, &CNetworkVatlib::customPacketDispatcher);
 
         Q_ASSERT_X(m_fsdTextCodec, "CNetworkVatlib", "Missing default wire text encoding");
         //TODO reinit m_fsdTextCodec from WireTextEncoding config setting if present
@@ -779,14 +780,18 @@ namespace BlackCore
         catch (...) { exceptionDispatcher(Q_FUNC_INFO); }
     }
 
-    QStringList CNetworkVatlib::createFsipiCustomPacketData(const QString &unknown01, const QString &airlineIcao, const QString &aircraftIcao, const QString &magicNumber1, const QString &magicNumber2, const QString &magicNumber3, const QString &magicNumber4, const QString &combinedType, const QString &modelString)
+    void CNetworkVatlib::sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &callsign,
+        const QString &airlineIcao, const QString &aircraftIcao, const QString &combinedType, const QString &modelString)
     {
+        QStringList data { { "0" }, airlineIcao, aircraftIcao, { "" }, { "" }, { "" }, { "" }, combinedType, modelString };
+        sendCustomPacket(callsign, "FSIPI", data);
+    }
 
-        QStringList data;
-        data << unknown01 << airlineIcao << aircraftIcao
-             << magicNumber1 << magicNumber2 << magicNumber3 << magicNumber4
-             << combinedType << modelString;
-        return data;
+    void CNetworkVatlib::sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign,
+        const QString &airlineIcao, const QString &aircraftIcao, const QString &combinedType, const QString &modelString)
+    {
+        QStringList data { { "0" }, airlineIcao, aircraftIcao, { "" }, { "" }, { "" }, { "" }, combinedType, modelString };
+        sendCustomPacket(callsign, "FSIPIR", data);
     }
 
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
@@ -911,6 +916,32 @@ namespace BlackCore
     void CNetworkVatlib::onCustomPacketReceived(Cvatlib_Network *, const char *callsign, const char *packetId, const char **data, INT dataSize, void *cbvar)
     {
         emit cbvar_cast(cbvar)->customPacketReceived(cbvar_cast(cbvar)->fromFSD(callsign), cbvar_cast(cbvar)->fromFSD(packetId), cbvar_cast(cbvar)->fromFSD(data, dataSize));
+    }
+
+    void CNetworkVatlib::customPacketDispatcher(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data)
+    {
+        if (packetId.compare("FSIPI", Qt::CaseInsensitive) == 0)
+        {
+            if (data.size() < 9)
+            {
+                qDebug() << "Malformed FSIPI packet";
+            }
+            else
+            {
+                emit fsipiCustomPacketReceived(callsign, data[1], data[2], data[7], data[8]);
+            }
+        }
+        else if (packetId.compare("FSIPIR", Qt::CaseInsensitive) == 0)
+        {
+            if (data.size() < 9)
+            {
+                qDebug() << "Malformed FSIPIR packet";
+            }
+            else
+            {
+                emit fsipirCustomPacketReceived(callsign, data[1], data[2], data[7], data[8]);
+            }
+        }
     }
 
     void CNetworkVatlib::onMetarReceived(Cvatlib_Network *, const char *data, void *cbvar)

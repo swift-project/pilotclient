@@ -52,6 +52,10 @@ namespace BlackCore
         virtual void sendIpQuery() override;
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data) override;
+        virtual void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
+            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
+        virtual void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
+            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
 
         // Text message slots
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) override;
@@ -77,29 +81,6 @@ namespace BlackCore
         // Weather slots
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
         virtual void sendWeatherDataQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
-
-        // some helper methods
-
-        /*!
-         * \brief Create the data load for FSIPI(R) packets / FsInn
-         * \details FSIPI(R) queries
-         * <BLOCKQUOTE>
-         * index 0 .. 0/1 ???
-         *       1 .. MQT, GEC, DLH -> Airline ICAO, most of the time empty
-         *       2 .. AIRCRAFT ICAO "B747"
-         *       3 .. 10.64195
-         *       4 .. 1.06080:
-         *       5 .. 5825.00000
-         *       6 .. 4.DD89CCB6.EC9BB7D7
-         *       7 .. 3-letter combined L2J
-         *       8 .. Model string
-         * </BLOCKQUOTE>
-         * \remarks This helper here has more or less the function of documenting the packet,
-         *          it is nothing but a little string concatenating
-         */
-        static QStringList createFsipiCustomPacketData(const QString &unknown01, const QString &airlineDesignator, const QString &aircraftDesignator,
-                const QString &magicNumber1, const QString &magicNumber2, const QString &magicNumber3, const QString &magicNumber4,
-                const QString &combinedType, const QString &modelString);
 
     private slots:
         void replyToFrequencyQuery(const BlackMisc::Aviation::CCallsign &callsign);
@@ -146,6 +127,7 @@ namespace BlackCore
     private slots:
         void process();
         void update();
+        void customPacketDispatcher(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
 
     signals:
         void terminate(); //!< \private
