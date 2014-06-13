@@ -90,6 +90,9 @@ namespace BlackCore
     public slots:
         //! Own aircraft updated
         void setOwnAircraft(const BlackMisc::Aviation::CAircraft &ownAircraft) { m_ownAircraft = ownAircraft; }
+
+        //! Own aircraft model updated
+        void setOwnAircraftModel(const BlackMisc::Network::CAircraftModel &model) { m_ownAircraftModel = model; }
             
     public:
         //! Clear the contents
@@ -112,6 +115,7 @@ namespace BlackCore
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache;
 
         BlackMisc::Aviation::CAircraft m_ownAircraft;
+        BlackMisc::Network::CAircraftModel m_ownAircraftModel;
 
         INetwork *m_network;
         CVatsimBookingReader *m_vatsimBookingReader;

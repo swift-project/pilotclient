@@ -178,6 +178,15 @@ namespace BlackSimPlugin
             return this->m_simulatorInfo;
         }
 
+        void CSimulatorFsx::setAircraftModel(const BlackMisc::Network::CAircraftModel &model)
+        {
+            if (m_aircraftModel != model)
+            {
+                m_aircraftModel = model;
+                emit aircraftModelChanged(model);
+            }
+        }
+
         bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft)
         {
             CComSystem newCom1 = ownAircraft.getCom1System();

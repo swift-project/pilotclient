@@ -52,6 +52,9 @@ namespace BlackCore
         //! Emitted when the simulator connection changes
         void connectionChanged(bool value);
 
+        //! Emitted when own aircraft model changes (TODO move to own aircraft context?)
+        void ownAircraftModelChanged(BlackMisc::Network::CAircraftModel model);
+
     public slots:
 
         //! Return list of available simulator plugins

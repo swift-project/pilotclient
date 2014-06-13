@@ -394,9 +394,6 @@ namespace BlackCore
         }
         times.insert("Audio", time.restart());
 
-        this->m_contextNetwork = IContextNetwork::create(this, config.getModeNetwork(), this->m_dbusServer, this->m_dbusConnection);
-        times.insert("Network", time.restart());
-
         switch (config.getModeSimulator())
         {
         case CRuntimeConfig::Local:
@@ -410,6 +407,9 @@ namespace BlackCore
             break; // network not mandatory
         }
         times.insert("Simulator", time.restart());
+
+        this->m_contextNetwork = IContextNetwork::create(this, config.getModeNetwork(), this->m_dbusServer, this->m_dbusConnection);
+        times.insert("Network", time.restart());
 
         // checks --------------
         // 1. own aircraft and simulator should reside in same location

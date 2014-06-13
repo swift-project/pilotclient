@@ -69,6 +69,7 @@ namespace BlackCore
         this->connect(this->m_airspace, &CAirspaceMonitor::changedAircraftsInRange, this, &CContextNetwork::changedAircraftsInRange);
         this->connect(this->m_airspace, &CAirspaceMonitor::changedAircraftSituation, this, &CContextNetwork::changedAircraftSituation);
         this->connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraft, this->m_airspace, &CAirspaceMonitor::setOwnAircraft);
+        this->connect(this->getIContextSimulator(), &IContextSimulator::ownAircraftModelChanged, this->m_airspace, &CAirspaceMonitor::setOwnAircraftModel);
 
         // FIXME (MS) conditional increases the number of scenarios which must be considered and continuously tested
         if (this->getIContextApplication())

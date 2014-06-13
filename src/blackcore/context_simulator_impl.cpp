@@ -114,6 +114,7 @@ namespace BlackCore
         Q_ASSERT(m_simulator);
 
         connect(m_simulator, SIGNAL(statusChanged(ISimulator::Status)), this, SLOT(setConnectionStatus(ISimulator::Status)));
+        connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
         return true;
     }
 

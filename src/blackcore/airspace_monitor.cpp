@@ -287,12 +287,7 @@ namespace BlackCore
     {
         CAircraft me = this->m_ownAircraft;
         CAircraftIcao icao = me.getIcaoInfo();
-        QString modelString;
-        // FIXME (MS) simulator or ownaircraft context should send an ownAircraftModelChanged signal, so we wouldn't need to interrogate the simulator context here.
-        //if (this->getIContextSimulator())
-        //{
-        //    if (this->getIContextSimulator()->isConnected()) modelString = this->getIContextSimulator()->getOwnAircraftModel().getQueriedModelString();
-        //}
+        QString modelString = this->m_ownAircraftModel.getQueriedModelString();
         if (modelString.isEmpty()) modelString = CProject::systemNameAndVersion();
         this->m_network->sendFsipiCustomPacket(recipientCallsign, icao.getAirlineDesignator(), icao.getAircraftDesignator(), icao.getAircraftCombinedType(), modelString);
     }
@@ -301,12 +296,7 @@ namespace BlackCore
     {
         CAircraft me = this->m_ownAircraft;
         CAircraftIcao icao = me.getIcaoInfo();
-        QString modelString;
-        // FIXME (MS) simulator or ownaircraft context should send an ownAircraftModelChanged signal, so we wouldn't need to interrogate the simulator context here.
-        //if (this->getIContextSimulator())
-        //{
-        //    if (this->getIContextSimulator()->isConnected()) modelString = this->getIContextSimulator()->getOwnAircraftModel().getQueriedModelString();
-        //}
+        QString modelString = this->m_ownAircraftModel.getQueriedModelString();
         if (modelString.isEmpty()) modelString = CProject::systemNameAndVersion();
         this->m_network->sendFsipirCustomPacket(recipientCallsign, icao.getAirlineDesignator(), icao.getAircraftDesignator(), icao.getAircraftCombinedType(), modelString);
     }

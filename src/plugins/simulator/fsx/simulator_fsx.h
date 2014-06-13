@@ -144,7 +144,7 @@ namespace BlackSimPlugin
             void onSimExit();
 
             //! \private
-            void setAircraftModel(const BlackMisc::Network::CAircraftModel &model) { m_aircraftModel = model; }
+            void setAircraftModel(const BlackMisc::Network::CAircraftModel &model);
 
         protected:
             //! Timer event

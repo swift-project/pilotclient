@@ -87,6 +87,9 @@ namespace BlackCore
         //! Emitted when the connection status has changed
         void statusChanged(ISimulator::Status status);
 
+        //! Emitted when own aircraft model has changed
+        void aircraftModelChanged(BlackMisc::Network::CAircraftModel model);
+
         //! Simulator started
         void simulatorStarted();
 
