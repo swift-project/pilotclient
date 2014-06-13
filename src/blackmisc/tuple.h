@@ -43,7 +43,7 @@
 #define BLACK_DECLARE_TUPLE_CONVERSION(T, MEMBERS)                              \
     namespace BlackMisc                                                         \
     {                                                                           \
-        template <> class TupleConverter<T>                                     \
+        template <> class TupleConverter<T> : TupleConverterBase                \
         {                                                                       \
             friend class T;                                                     \
             static_assert(Private::HasEnabledTupleConversion<T>::value,         \
@@ -56,10 +56,14 @@
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
+            static const Parser &parser()                                       \
+            {                                                                   \
+                static const Parser p(#MEMBERS);                                \
+                return p;                                                       \
+            }                                                                   \
             static const QStringList &jsonMembers()                             \
             {                                                                   \
-                static QStringList members = QString(#MEMBERS).replace("tie(","").replace("(","").replace(")","").replace(" ","").replace("o.","").split(","); \
-                return members;                                                 \
+                return parser().m_names;                                        \
             }                                                                   \
         public:                                                                 \
             static auto constToTuple(const T &o) -> decltype(BlackMisc::tie MEMBERS) \
@@ -77,7 +81,7 @@
 #define BLACK_DECLARE_TUPLE_CONVERSION_TEMPLATE(T, MEMBERS)                     \
     namespace BlackMisc                                                         \
     {                                                                           \
-        template <class... U> class TupleConverter<T<U...>>                     \
+        template <class... U> class TupleConverter<T<U...>> : TupleConverterBase \
         {                                                                       \
             friend class T<U...>;                                               \
             static_assert(Private::HasEnabledTupleConversion<T<U...>>::value,   \
@@ -90,10 +94,14 @@
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
+            static const Parser &parser()                                       \
+            {                                                                   \
+                static const Parser p(#MEMBERS);                                \
+                return p;                                                       \
+            }                                                                   \
             static const QStringList &jsonMembers()                             \
             {                                                                   \
-                static QStringList members = QString(#MEMBERS).replace("tie(","").replace("(","").replace(")","").replace(" ","").replace("o.","").split(","); \
-                return members;                                                 \
+                return parser().m_names;                                        \
             }                                                                   \
         public:                                                                 \
             static auto constToTuple(const T<U...> &o) -> decltype(BlackMisc::tie MEMBERS) \
@@ -107,6 +115,23 @@ namespace BlackMisc
 {
 
     /*!
+     * \brief   Base class for TupleConverter<T>.
+     * \details Defines common types and functions which can be used inside the BLACK_DECLARE_TUPLE_CONVERSION() macro.
+     * \ingroup Tuples
+     */
+    class TupleConverterBase
+    {
+    protected:
+        //! \brief   Helper class which parses the stringified macro argument.
+        struct Parser
+        {
+            Parser(QString); //!< Constructor.
+            QStringList m_raw; //!< The raw macro argument, split by top-level commas.
+            QStringList m_names; //!< The names of the tuple members, stripped of any o.m_ prefix.
+        };
+    };
+
+    /*!
      * \brief   Class template for converting class objects to tuples
      * \details If a class T uses the BLACK_ENABLE_TUPLE_CONVERSION() and BLACK_DECLARE_TUPLE_CONVERSION() macros, and <CODE>object</CODE>
      *          is an instance of T, then <CODE> TupleConverter<T>::toTuple(object) </CODE> will return a std::tuple representing object.
@@ -116,7 +141,7 @@ namespace BlackMisc
      * \nosubgrouping
      * \ingroup Tuples
      */
-    template <class T> class TupleConverter
+    template <class T> class TupleConverter : private TupleConverterBase
     {
         // BLACK_DECLARE_TUPLE_CONVERSION generates an explicit specialization of TupleConverter,
         // so this unspecialized template will only be used if the macro is missing. It is also
@@ -136,6 +161,12 @@ namespace BlackMisc
         static std::tuple<> toTuple(T &object);
         static std::tuple<> constToTuple(const T &object);
         //! @}
+
+        /*!
+         * \name    Static Private Member Functions
+         * \brief   Returns an object with information extracted from the stringified macro argument.
+         */
+        static const Parser &parser();
 
         /*!
          * \name    Static Private Member Functions
