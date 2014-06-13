@@ -21,8 +21,10 @@ contains(BLACK_CONFIG, BlackGui) {
     SUBDIRS += src/blackgui
 }
 
-contains(BLACK_CONFIG, FSX) {
-    SUBDIRS += src/plugins/simulator/fsx/plugin_fsx.pro
+win32 {
+    contains(BLACK_CONFIG, FSX) {
+        SUBDIRS += src/plugins/simulator/fsx/plugin_fsx.pro
+    }
 }
 
 contains(BLACK_CONFIG, XPlane) {
