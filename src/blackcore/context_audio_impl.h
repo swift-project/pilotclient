@@ -118,6 +118,9 @@ namespace BlackCore
         //! \sa IContextAudio::changedVoiceRooms
         void connectionStatusChanged(IVoice::ComUnit comUnit, IVoice::ConnectionStatus oldStatus, IVoice::ConnectionStatus newStatus);
 
+        //! Init notification sounds
+        void initNotificationSounds();
+
     private:
         //! Connection in transition
         bool inTransitionState() const;

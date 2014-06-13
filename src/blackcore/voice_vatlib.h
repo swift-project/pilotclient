@@ -221,7 +221,7 @@ namespace BlackCore
              */
             static inline void cleanup(Cvatlib_Voice_Simple *pointer)
             {
-                pointer->Destroy();
+                if (pointer) pointer->Destroy();
             }
         };
 

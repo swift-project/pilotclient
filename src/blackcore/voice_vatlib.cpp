@@ -42,12 +42,6 @@ namespace BlackCore
             m_voice->GetInputDevices(onInputHardwareDeviceReceived, this);
             m_voice->GetOutputDevices(onOutputHardwareDeviceReceived, this);
 
-            // TODO: read audio device settings here and init with the same devices
-            // If not, settings are there or it is the first run, use the default one
-            // TODO: KB, setting this kind of default device results in an error
-            // setInputDevice(defaultAudioInputDevice());
-            // setOutputDevice(defaultAudioOutputDevice());
-
             connect(this, &CVoiceVatlib::userJoinedLeft, this, &CVoiceVatlib::onUserJoinedLeft, Qt::QueuedConnection);
 
             this->m_voiceRooms.push_back(CVoiceRoom()); // COM1

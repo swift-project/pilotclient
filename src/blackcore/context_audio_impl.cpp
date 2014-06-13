@@ -46,8 +46,8 @@ namespace BlackCore
         connect(this->m_voice, &CVoiceVatlib::connectionStatusChanged, this, &CContextAudio::connectionStatusChanged);
         if (this->getIContextApplication()) this->connect(this->m_voice, &IVoice::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
 
-        // 5. load sounds (init)
-        CSoundGenerator::playNotificationSound(0, CNotificationSounds::NotificationsLoadSounds);
+        // 5. load sounds (init), not possible in own thread
+        QTimer::singleShot(10 * 1000, this, SLOT(initNotificationSounds()));
     }
 
     /*
@@ -295,6 +295,15 @@ namespace BlackCore
             if (!play) return;
         }
         BlackSound::CSoundGenerator::playNotificationSound(90, notificationSound);
+    }
+
+    /*
+     * Notification
+     */
+    void CContextAudio::initNotificationSounds()
+    {
+        // not possible in own thread
+        CSoundGenerator::playNotificationSound(0, CNotificationSounds::NotificationsLoadSounds);
     }
 
     /*
