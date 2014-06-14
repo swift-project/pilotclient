@@ -3,24 +3,28 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKSIM_XBUS_STUB_H
-#define BLACKSIM_XBUS_STUB_H
+#ifndef BLACKSIM_XBUS_PLUGIN_H
+#define BLACKSIM_XBUS_PLUGIN_H
 
-/*!
- * \file
- */
+//! \file
 
-/*!
- * \namespace XBus
- */
+//! \namespace XBus
+
+#include <QObject>
 
 namespace XBus
 {
     /*!
-     * stub
+     * Main plugin class
      */
-    class CStub
+    class CPlugin : public QObject
     {
+        Q_OBJECT
+
+    public:
+        CPlugin();
+
+    private:
     };
 }
 

@@ -3,12 +3,13 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#define NOMINMAX
 #define _CRT_SECURE_NO_WARNINGS
-#include "stub.h"
+#include "plugin.h"
 #include "utils.h"
 
 QSharedPointer<QApplication> g_qApp;
-XBus::CStub *g_stub;
+XBus::CPlugin *g_plugin;
 
 PLUGIN_API int XPluginStart(char *o_name, char *o_sig, char *o_desc)
 {
@@ -27,13 +28,13 @@ PLUGIN_API int XPluginEnable()
     QXPlaneMessageHandler::install();
     g_qApp = QSharedApplication::sharedInstance();
     QXPlaneEventLoop::exec();
-    g_stub = new XBus::CStub;
+    g_plugin = new XBus::CPlugin;
     return 1;
 }
 
 PLUGIN_API void XPluginDisable()
 {
-    delete g_stub;
+    delete g_plugin;
     g_qApp.reset();
 }
 
