@@ -6,7 +6,7 @@ QT       += network dbus xml
 TARGET = blacksim
 TEMPLATE = lib
 
-CONFIG += staticlib c++11
+CONFIG += staticlib
 CONFIG += blackmisc
 
 INCLUDEPATH += ..
