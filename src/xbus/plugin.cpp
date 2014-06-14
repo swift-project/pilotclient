@@ -12,4 +12,10 @@ namespace XBus
     {
     }
 
+    void CPlugin::startServer(const QString &address)
+    {
+        Q_ASSERT(! m_server);
+        m_server = new BlackCore::CDBusServer(address, this);
+    }
+
 }

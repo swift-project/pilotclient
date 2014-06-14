@@ -10,7 +10,12 @@
 
 //! \namespace XBus
 
-#include <QObject>
+#define NOMINMAX
+
+#pragma push_macro("interface")
+#undef interface
+#include "blackcore/dbus_server.h"
+#pragma pop_macro("interface")
 
 namespace XBus
 {
@@ -25,6 +30,9 @@ namespace XBus
         CPlugin();
 
     private:
+        BlackCore::CDBusServer *m_server = nullptr;
+
+        void startServer(const QString &address);
     };
 }
 

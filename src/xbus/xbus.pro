@@ -6,7 +6,7 @@ QT       += core gui widgets dbus network
 TEMPLATE = lib
 
 CONFIG += shared
-CONFIG += blackmisc
+CONFIG += blackmisc blackcore
 
 LIBS += -lXPLM
 
@@ -17,6 +17,7 @@ SOURCES += *.cpp
 HEADERS += *.h
 
 #win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackmisc.lib
+#win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackcore.lib
 
 
 # Required by X-Plane SDK
