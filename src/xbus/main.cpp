@@ -7,6 +7,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "plugin.h"
 #include "utils.h"
+#include <XPLM/XPLMPlanes.h>
+
+#if ! defined(XPLM210)
+#define XPLM_MSG_LIVERY_LOADED 108
+#endif
 
 QSharedPointer<QApplication> g_qApp;
 XBus::CPlugin *g_plugin;
@@ -40,7 +45,14 @@ PLUGIN_API void XPluginDisable()
 
 PLUGIN_API void XPluginReceiveMessage(XPLMPluginID from, long msg, void *param)
 {
-    Q_UNUSED(from);
-    Q_UNUSED(msg);
-    Q_UNUSED(param);
+    if (from == XPLM_PLUGIN_XPLANE)
+    {
+        if (msg == XPLM_MSG_PLANE_LOADED || msg == XPLM_MSG_LIVERY_LOADED)
+        {
+            if (reinterpret_cast<intptr_t>(param) == XPLM_USER_AIRCRAFT)
+            {
+                g_plugin->onAircraftModelChanged();
+            }
+        }
+    }
 }

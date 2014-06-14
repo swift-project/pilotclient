@@ -22,6 +22,16 @@ namespace XBus
         for (auto &item : m_startServerMenuItems) { item.setEnabled(false); }
 
         m_server = new BlackCore::CDBusServer(address, this);
+        m_service = new CService(this);
+        m_server->addObject(CService::ObjectPath(), m_service);
+    }
+
+    void CPlugin::onAircraftModelChanged()
+    {
+        if (m_service)
+        {
+            m_service->onAircraftModelChanged();
+        }
     }
 
 }

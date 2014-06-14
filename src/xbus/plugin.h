@@ -12,6 +12,7 @@
 
 #define NOMINMAX
 #include "menus.h"
+#include "service.h"
 
 #pragma push_macro("interface")
 #undef interface
@@ -32,8 +33,11 @@ namespace XBus
     public:
         CPlugin();
 
+        void onAircraftModelChanged();
+
     private:
         BlackCore::CDBusServer *m_server = nullptr;
+        CService *m_service = nullptr;
         CMenu m_menu;
         QVector<CMenuItem> m_startServerMenuItems;
 
