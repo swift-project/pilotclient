@@ -6,6 +6,14 @@ CONFIG           += qt
 CONFIG           += warn_on
 CONFIG           += c++11
 
+# workaround QTBUG-39142
+win32-msvc2013 {
+    PLATFORM_TOOLSET = $$(PlatformToolset)
+    equals(PLATFORM_TOOLSET,CTP_Nov2013) {
+        DEFINES += Q_COMPILER_INITIALIZER_LISTS
+    }
+}
+
 ###########################
 # Debug/Release
 ###########################
