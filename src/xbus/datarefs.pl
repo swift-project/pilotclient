@@ -1,0 +1,142 @@
+#!/usr/bin/perl
+#
+# Script to generate C++ traits classes for all X-Plane datarefs.
+#
+# Copyright (C) 2014 VATSIM Community / contributors
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+use strict;
+use warnings;
+
+sub usage
+{
+    print STDERR <<"EOF";
+This program generates C++ traits classes that describe the data refs of the
+X-Plane Plugin SDK.
+Usage:
+    $0 <XPLANEPATH>
+Arguments:
+    <XPLANEPATH> - directory in which X-Plane is installed
+EOF
+    exit 1;
+}
+
+@ARGV == 1 or usage();
+
+my $filename = "$ARGV[0]/Resources/plugins/DataRefs.txt";
+
+my $fh;
+unless (open $fh, '<', $filename)
+{
+    print STDERR "$filename: $!\n";
+    usage();
+}
+
+my %hierarchy;
+
+while (<$fh>)
+{
+    chomp;
+    next unless m"\t";
+
+    my @fields = split "\t";
+    next unless @fields >= 3;
+  
+    my($dataref, $type, $writable, $extra, $comment) = @fields;
+    $writable = $writable eq 'y' ? 'true' : 'false';
+    $comment ||= 'Undocumented dataref';
+    my $size;
+    $type =~ m"(\w+)\[(\d+)\]" and ($type, $size) = ($1, $2);
+  
+    my @namespaces = split '/', $dataref;
+    my $class = pop @namespaces;
+    $class =~ s(\])()g;
+    $class =~ s(\[)(_)g;
+    $class =~ s((plane\d+)_sla1_ratio)(${1}_slat_ratio);
+    $class eq 'type' and $class .= '_';
+  
+    my $namespace = \%hierarchy;
+    $namespace = ($namespace->{$_} ||= {}) foreach @namespaces;
+  
+    $namespace->{$class} = [$dataref, $type, $size, $writable, $extra, $comment];
+}
+
+close $fh;
+
+our $indent = '    ';
+print <<"EOF";
+// DO NOT EDIT
+// This file automatically generated from DataRefs.txt by $0
+
+//! X-Plane Plugin SDK C++ API
+namespace xplane
+{
+${indent}//! X-Plane datarefs
+${indent}namespace data
+${indent}{
+EOF
+
+recurse(\%hierarchy, 2);
+
+print <<"EOF";
+${indent}}
+}
+EOF
+
+sub recurse
+{
+    my($hash, $indentLevel) = @_;
+  
+    my $in = $indent x $indentLevel;
+    foreach my $key (sort keys %$hash)
+    {
+        if (ref $hash->{$key} eq 'HASH')
+        {
+            print <<"EOF";
+${in}//! $key datarefs
+${in}namespace $key
+${in}{
+EOF
+
+            recurse($hash->{$key}, $indentLevel + 1);
+      
+            print <<"EOF";
+${in}}
+
+EOF
+        }
+        else
+        {
+            my($name, $type, $size, $writable, $extra, $comment) = @{ $hash->{$key} };
+      
+            defined $extra and $extra ne '???' and $comment .= " ($extra)";
+      
+            print <<"EOF";
+${in}//! $comment
+${in}struct $key
+${in}{
+${in}${indent}//! Dataref name
+${in}${indent}static const char *name() { return "$name"; }
+${in}${indent}//! Can be written to?
+${in}${indent}static const bool writable = $writable;
+EOF
+
+            print <<"EOF" if $type =~ m(int|float|double);
+${in}${indent}//! Dataref type
+${in}${indent}typedef $type type;
+EOF
+
+            print <<"EOF" if defined $size;
+${in}${indent}//! Size of array dataref
+${in}${indent}static const size_t size = $size;
+EOF
+
+            print <<"EOF";
+${in}};
+
+EOF
+        }
+    }
+}
