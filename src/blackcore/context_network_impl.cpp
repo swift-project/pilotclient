@@ -33,7 +33,7 @@ namespace BlackCore
      * Init this context
      */
     CContextNetwork::CContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextNetwork(mode, runtime), m_network(nullptr), m_airspace(nullptr), m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
+        IContextNetwork(mode, runtime), m_airspace(nullptr), m_network(nullptr), m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getIContextSettings());
