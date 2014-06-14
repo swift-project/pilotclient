@@ -85,6 +85,8 @@ class QSharedApplication : public QApplication
         m_weakptr = ptr;
     }
 
+    static char *strdup(const char *s) { auto s2 = static_cast<char *>(std::malloc(std::strlen(s))); return std::strcpy(s2, s); }
+
 public:
     /*!
      * Returns a shared pointer to the QApplication.
@@ -97,7 +99,7 @@ public:
         if (! instance())
         {
             static int argc = 1;
-            static char *argv[] = { "X-Plane" };
+            static char *argv[] = { strdup("X-Plane") };
             new QSharedApplication(ptr, argc, argv);
         }
         if (! instance()->inherits("QSharedApplication"))
