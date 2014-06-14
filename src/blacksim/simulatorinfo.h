@@ -57,10 +57,10 @@ namespace BlackSim
             return sim;
         }
 
-        //! \brief Simulator is XPlane 10
-        static const CSimulatorInfo &XP10()
+        //! \brief Simulator is XPlane, unspecified version
+        static const CSimulatorInfo &XP()
         {
-            static CSimulatorInfo sim("XP10", "XPlane 10 (2011)");
+            static CSimulatorInfo sim("XP", "X-Plane");
             return sim;
         }
 
