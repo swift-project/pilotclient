@@ -1,0 +1,122 @@
+/*  Copyright (C) 2013 VATSIM Community / contributors
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "menus.h"
+#include <type_traits>
+#include <cassert>
+
+namespace XBus
+{
+
+    // Own implementation of std::make_unique, a C++14 feature not provided by GCC in C++11 mode
+    template<typename T, typename... Args>
+    std::unique_ptr<T> make_unique(Args&&... args)
+    {
+        return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    }
+
+    template <typename T> void *voidptr_cast(T i) // "safe" cast from integer to void*
+    {
+        static_assert(std::is_integral<T>::value, "voidptr_cast expects an integer");
+        typedef typename std::conditional<std::is_signed<T>::value, intptr_t, uintptr_t>::type intptr_type;
+        return reinterpret_cast<void *>(static_cast<intptr_type>(i));
+    }
+
+    template <typename T> T intptr_cast(void *p) // "safe" cast from void* to integer
+    {
+        static_assert(std::is_integral<T>::value, "voidptr_cast returns an integer");
+        typedef typename std::conditional<std::is_signed<T>::value, intptr_t, uintptr_t>::type intptr_type;
+        return static_cast<T>(reinterpret_cast<intptr_type>(p));
+    }
+
+    CMenu::CMenu(XPLMMenuID id, bool isMainMenu, std::unique_ptr<ItemList> items)
+        : m_data(std::make_shared<Data>(id, isMainMenu, std::move(items)))
+    {}
+
+    CMenu::Data::~Data()
+    {
+        if (! isMainMenu)
+        {
+            XPLMDestroyMenu(id);
+        }
+    }
+
+    CMenu CMenu::mainMenu()
+    {
+        return { XPLMFindPluginsMenu(), true, nullptr };
+    }
+
+    CMenuItem CMenu::item(std::string name, std::function<void()> callback)
+    {
+        assert(! name.empty());
+        m_data->items->emplace_back(
+            CMenuItem { m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), voidptr_cast(m_data->items->size() + 1), false), false, false },
+            [callback](bool){ callback(); }
+        );
+        return m_data->items->back().first;
+    }
+
+    CMenuItem CMenu::checkableItem(std::string name, bool checked, std::function<void(bool)> callback)
+    {
+        assert(! name.empty());
+        m_data->items->emplace_back(
+            CMenuItem { m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), voidptr_cast(m_data->items->size() + 1), false), true, checked },
+            callback
+        );
+        return m_data->items->back().first;
+    }
+
+    void CMenu::sep()
+    {
+        XPLMAppendMenuSeparator(m_data->id);
+    }
+
+    CMenu CMenu::subMenu(std::string name)
+    {
+        assert(! name.empty());
+        auto items = make_unique<ItemList>();
+        auto itemsVoidPtr = static_cast<void *>(&*items);
+        return { XPLMCreateMenu(name.c_str(), m_data->id, XPLMAppendMenuItem(m_data->id, name.c_str(), nullptr, false), handler, itemsVoidPtr), false, std::move(items) };
+    }
+
+    void CMenu::handler(void *menuRef, void *itemRef)
+    {
+        if (menuRef && itemRef)
+        {
+            auto items = static_cast<ItemList *>(menuRef);
+            auto itemIdx = intptr_cast<intptr_t>(itemRef) - 1;
+            assert(itemIdx >= 0);
+
+            (*items)[itemIdx].second((*items)[itemIdx].first.getChecked());
+        }
+    }
+
+    CMenuItem::CMenuItem(XPLMMenuID parent, int item, bool checkable, bool checked)
+        : m_data(std::make_shared<Data>(parent, item, checkable))
+    {
+        if (checkable)
+        {
+            setChecked(checked);
+        }
+    }
+
+    bool CMenuItem::getChecked() const
+    {
+        XPLMMenuCheck check = xplm_Menu_NoCheck;
+        XPLMCheckMenuItemState(m_data->parent, m_data->item, &check);
+        return check == xplm_Menu_Checked;
+    }
+
+    void CMenuItem::setChecked(bool checked)
+    {
+        XPLMCheckMenuItem(m_data->parent, m_data->item, checked);
+    }
+
+    void CMenuItem::setEnabled(bool enabled)
+    {
+        XPLMEnableMenuItem(m_data->parent, m_data->item, enabled);
+    }
+
+}
