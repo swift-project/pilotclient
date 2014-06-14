@@ -45,6 +45,9 @@ namespace BlackCore
         //! \copydoc CContext::getPathAndContextId()
         virtual QString getPathAndContextId() const { return this->buildPathAndContextId(ObjectPath()); }
 
+        //! Factory method
+        static IContextSimulator *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn);
+
         //! Destructor
         virtual ~IContextSimulator() {}
 

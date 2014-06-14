@@ -25,7 +25,7 @@ namespace BlackCore
     class CContextSettingsProxy : public IContextSettings
     {
         Q_OBJECT
-        friend class CRuntime;
+        friend class IContextSettings;
 
     public:
         //! \brief Destructor

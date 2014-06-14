@@ -25,6 +25,7 @@ namespace BlackCore
         Q_OBJECT
 
         friend class CRuntime;
+        friend class IContextAudio;
 
     public:
 

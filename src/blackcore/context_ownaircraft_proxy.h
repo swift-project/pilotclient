@@ -17,7 +17,7 @@ namespace BlackCore
     class CContextOwnAircraftProxy : public IContextOwnAircraft
     {
         Q_OBJECT
-        friend class CRuntime;
+        friend class IContextOwnAircraft;
 
     public:
 

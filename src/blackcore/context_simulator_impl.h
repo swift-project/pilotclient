@@ -27,6 +27,7 @@ namespace BlackCore
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
         friend class CRuntime;
+        friend class IContextSimulator;
 
     public:
         //! \brief Destructor

@@ -337,75 +337,19 @@ namespace BlackCore
         times.insert("DBus", time.restart());
 
         // contexts
-        switch (config.getModeSettings())
-        {
-        case CRuntimeConfig::Local:
-        case CRuntimeConfig::LocalInDbusServer:
-            Q_ASSERT(settings);
-            this->m_contextSettings = settings->registerWithDBus(this->m_dbusServer);
-            break;
-        case CRuntimeConfig::Remote:
-            this->m_contextSettings = new BlackCore::CContextSettingsProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeSettings(), this);
-            break;
-        default:
-            qFatal("Always initialize a settings context");
-        }
+        this->m_contextSettings = IContextSettings::create(this, config.getModeSettings(), this->m_dbusServer, this->m_dbusConnection);
         times.insert("Settings", time.restart());
 
-        switch (config.getModeApplication())
-        {
-        case CRuntimeConfig::Local:
-        case CRuntimeConfig::LocalInDbusServer:
-            this->m_contextApplication = (new CContextApplication(config.getModeApplication(), this))->registerWithDBus(this->m_dbusServer);
-            break;
-        case CRuntimeConfig::Remote:
-            this->m_contextApplication = new BlackCore::CContextApplicationProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeApplication(), this);
-            break;
-        default:
-            qFatal("Always initialize an application context");
-        }
+        this->m_contextApplication = IContextApplication::create(this, config.getModeApplication(), this->m_dbusServer, this->m_dbusConnection);
         times.insert("Application", time.restart());
 
-        switch (config.getModeOwnAircraft())
-        {
-        case CRuntimeConfig::Local:
-        case CRuntimeConfig::LocalInDbusServer:
-            this->m_contextOwnAircraft = (new CContextOwnAircraft(config.getModeApplication(), this))->registerWithDBus(this->m_dbusServer);
-            break;
-        case CRuntimeConfig::Remote:
-            this->m_contextOwnAircraft = new BlackCore::CContextOwnAircraftProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeOwnAircraft(), this);
-            break;
-        default:
-            qFatal("Always initialize own aircraft context");
-        }
+        this->m_contextOwnAircraft = IContextOwnAircraft::create(this, config.getModeOwnAircraft(), this->m_dbusServer, this->m_dbusConnection);
         times.insert("Own aircraft", time.restart());
 
-        switch (config.getModeAudio())
-        {
-        case CRuntimeConfig::Local:
-        case CRuntimeConfig::LocalInDbusServer:
-            this->m_contextAudio = (new CContextAudio(config.getModeAudio(), this))->registerWithDBus(this->m_dbusServer);
-            break;
-        case CRuntimeConfig::Remote:
-            this->m_contextAudio = new BlackCore::CContextAudioProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeAudio(), this);
-            break;
-        default:
-            break; // audio not mandatory
-        }
+        this->m_contextAudio = IContextAudio::create(this, config.getModeAudio(), this->m_dbusServer, this->m_dbusConnection);
         times.insert("Audio", time.restart());
 
-        switch (config.getModeSimulator())
-        {
-        case CRuntimeConfig::Local:
-        case CRuntimeConfig::LocalInDbusServer:
-            this->m_contextSimulator = (new CContextSimulator(config.getModeSimulator(), this))->registerWithDBus(this->m_dbusServer);
-            break;
-        case CRuntimeConfig::Remote:
-            this->m_contextSimulator = new BlackCore::CContextSimulatorProxy(BlackCore::CDBusServer::ServiceName, this->m_dbusConnection, config.getModeSimulator(), this);
-            break;
-        default:
-            break; // network not mandatory
-        }
+        this->m_contextSimulator = IContextSimulator::create(this, config.getModeSimulator(), this->m_dbusServer, this->m_dbusConnection);
         times.insert("Simulator", time.restart());
 
         this->m_contextNetwork = IContextNetwork::create(this, config.getModeNetwork(), this->m_dbusServer, this->m_dbusConnection);

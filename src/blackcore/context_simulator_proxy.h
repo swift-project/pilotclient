@@ -15,7 +15,7 @@ namespace BlackCore
     class CContextSimulatorProxy : public IContextSimulator
     {
         Q_OBJECT
-        friend class CRuntime;
+        friend class IContextSimulator;
 
     public:
         //! Destructor

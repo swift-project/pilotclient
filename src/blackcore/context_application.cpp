@@ -1,4 +1,6 @@
 #include "blackcore/context_application.h"
+#include "blackcore/context_application_impl.h"
+#include "blackcore/context_application_proxy.h"
 #include "blackcore/context_application_event.h"
 #include "blackmisc/statusmessage.h"
 #include <QCoreApplication>
@@ -11,6 +13,21 @@ namespace BlackCore
 
     QList<IContextApplication *> IContextApplication::s_contexts;
     QtMessageHandler IContextApplication::s_oldHandler = nullptr;
+
+    IContextApplication *IContextApplication::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn)
+    {
+        switch (mode)
+        {
+        case CRuntimeConfig::Local:
+        case CRuntimeConfig::LocalInDbusServer:
+            return (new CContextApplication(mode, parent))->registerWithDBus(server);
+        case CRuntimeConfig::Remote:
+            return new BlackCore::CContextApplicationProxy(BlackCore::CDBusServer::ServiceName, conn, mode, parent);
+        default:
+            qFatal("Always initialize an application context");
+            return nullptr;
+        }
+    }
 
     /*
      * Constructor

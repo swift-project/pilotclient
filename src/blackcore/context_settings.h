@@ -96,6 +96,9 @@ namespace BlackCore
             return s;
         }
 
+        //! Factory method
+        static IContextSettings *create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn);
+
         //! Destructor
         virtual ~IContextSettings() {}
 

@@ -22,6 +22,7 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME)
         Q_OBJECT
         friend class CRuntime;
+        friend class IContextApplication;
 
     public slots:
         //! \copydoc IContextApplication::ping()

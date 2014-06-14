@@ -18,7 +18,7 @@ namespace BlackCore
     class CContextApplicationProxy : public IContextApplication
     {
         Q_OBJECT
-        friend class CRuntime;
+        friend class IContextApplication;
 
     public:
         //! Destructor

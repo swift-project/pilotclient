@@ -20,6 +20,7 @@ namespace BlackCore
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME)
         friend class CRuntime;
+        friend class IContextOwnAircraft;
 
     public:
         //! Destructor
