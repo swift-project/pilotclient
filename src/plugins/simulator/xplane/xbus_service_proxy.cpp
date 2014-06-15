@@ -32,6 +32,26 @@ namespace BlackSimPlugin
             }
         }
 
+        QString CXBusServiceProxy::getAircraftModelPath() const
+        {
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getAircraftModelPath"));
+        }
+
+        QString CXBusServiceProxy::getAircraftModelFilename() const
+        {
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getAircraftModelFilename"));
+        }
+
+        QString CXBusServiceProxy::getAircraftModelLivery() const
+        {
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getAircraftModelLivery"));
+        }
+
+        QString CXBusServiceProxy::getAircraftIcaoCode() const
+        {
+            return m_dbusInterface->callDBusRet<QString>(QLatin1String("getAircraftIcaoCode"));
+        }
+
         int CXBusServiceProxy::getXPlaneVersionMajor() const
         {
             return m_dbusInterface->callDBusRet<int>(QLatin1String("getXPlaneVersionMajor"));

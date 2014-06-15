@@ -50,9 +50,21 @@ namespace XBus
 
     signals:
         //! Emitted when the model or livery changes.
-        void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery);
+        void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
 
     public slots:
+        //! Get full path to current aircraft model
+        QString getAircraftModelPath() const;
+
+        //! Get base filename of current aircraft model
+        QString getAircraftModelFilename() const;
+
+        //! Get path to current aircraft livery
+        QString getAircraftLivery() const { return m_liveryPath.get().c_str(); }
+
+        //! Get the ICAO code of the current aircraft model
+        QString getAircraftIcaoCode() const { return m_icao.get().c_str(); }
+
         //! Get major version number
         int getXPlaneVersionMajor() const;
 
@@ -97,6 +109,7 @@ namespace XBus
 
     private:
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
+        StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;
         DataRef<xplane::data::sim::flightmodel::position::latitude> m_latitude;
         DataRef<xplane::data::sim::flightmodel::position::longitude> m_longitude;
         DataRef<xplane::data::sim::flightmodel::position::elevation> m_elevation;

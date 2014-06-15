@@ -52,9 +52,21 @@ namespace BlackSimPlugin
 
         signals:
             //! \copydoc XBus::CService::aircraftModelChanged
-            void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery);
+            void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
 
         public slots:
+            //! \copydoc XBus::CService::getAircraftModelPath
+            QString getAircraftModelPath() const;
+
+            //! \copydoc XBus::CService::getAircraftModelFilename
+            QString getAircraftModelFilename() const;
+
+            //! \copydoc XBus::CService::getAircraftModelLivery
+            QString getAircraftModelLivery() const;
+
+            //! \copydoc XBus::CService::getAircraftIcaoCode
+            QString getAircraftIcaoCode() const;
+
             //! \copydoc XBus::CService::getXPlaneVersionMajor
             int getXPlaneVersionMajor() const;
 

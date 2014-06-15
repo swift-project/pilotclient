@@ -19,7 +19,21 @@ namespace XBus
         char filename[256];
         char path[512];
         XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
-        emit aircraftModelChanged(path, filename, m_liveryPath.get().c_str());
+        emit aircraftModelChanged(path, filename, getAircraftLivery(), getAircraftIcaoCode());
+    }
+
+    QString CService::getAircraftModelPath() const
+    {
+        char path[512];
+        XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, nullptr, path);
+        return path;
+    }
+
+    QString CService::getAircraftModelFilename() const
+    {
+        char filename[256];
+        XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, nullptr);
+        return filename;
     }
 
     int CService::getXPlaneVersionMajor() const
