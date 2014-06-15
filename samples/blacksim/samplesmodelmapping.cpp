@@ -6,11 +6,11 @@
 #include "samplesmodelmapping.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blacksim/blacksimfreefunctions.h"
-#include "blacksim/vpilotmodelmappings.h"
+#include "blacksim/fscommon/vpilotmodelmappings.h"
 
 #include <QDebug>
 
-using namespace BlackSim;
+using namespace BlackSim::FsCommon;
 
 namespace BlackSimTest
 {
