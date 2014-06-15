@@ -287,7 +287,7 @@ namespace BlackCore
     {
         CAircraft me = this->m_ownAircraft;
         CAircraftIcao icao = me.getIcaoInfo();
-        QString modelString = this->m_ownAircraftModel.getQueriedModelString();
+        QString modelString = this->m_ownAircraftModel.getModelString();
         if (modelString.isEmpty()) modelString = CProject::systemNameAndVersion();
         this->m_network->sendFsipiCustomPacket(recipientCallsign, icao.getAirlineDesignator(), icao.getAircraftDesignator(), icao.getAircraftCombinedType(), modelString);
     }
@@ -296,7 +296,7 @@ namespace BlackCore
     {
         CAircraft me = this->m_ownAircraft;
         CAircraftIcao icao = me.getIcaoInfo();
-        QString modelString = this->m_ownAircraftModel.getQueriedModelString();
+        QString modelString = this->m_ownAircraftModel.getModelString();
         if (modelString.isEmpty()) modelString = CProject::systemNameAndVersion();
         this->m_network->sendFsipirCustomPacket(recipientCallsign, icao.getAirlineDesignator(), icao.getAircraftDesignator(), icao.getAircraftCombinedType(), modelString);
     }
