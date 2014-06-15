@@ -2,7 +2,6 @@
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-#include <QCoreApplication>
 
 #include "samplesphysicalquantities.h"
 #include "samplesaviation.h"
@@ -24,7 +23,6 @@ int main(int argc, char *argv[])
     qDebug() << (t ? "Translator loaded" : "Translator not loaded");
 
     QCoreApplication a(argc, argv);
-
     qDebug() << "Use I18N version, y? n?";
     int yn = getchar();
     t = (yn == 'y' || yn == 'Y');
@@ -34,5 +32,5 @@ int main(int argc, char *argv[])
     CSamplesPhysicalQuantities::samples();
     CSamplesAviation::samples();
 
-    return a.exec();
+    return 0;
 }

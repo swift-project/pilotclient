@@ -19,8 +19,11 @@ using namespace BlackMiscTest;
  */
 int main(int argc, char *argv[])
 {
+    // QCoreApplication a(argc, argv);
+    Q_UNUSED(argc);
+    Q_UNUSED(argv);
+
     BlackMisc::initResources();
-    QCoreApplication a(argc, argv);
     CSamplesJson::samples();
     CSamplesChangeObject::samples();
     CSamplesContainer::samples();

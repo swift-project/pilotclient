@@ -6,9 +6,9 @@
 #include "samplesfscommon.h"
 #include "blacksim/fscommon/aircraftcfgentrieslist.h"
 #include "blacksim/fscommon/aircraftindexer.h"
+
 #include <QDebug>
 #include <QFuture>
-#include <QTest>
 #include <QTextStream>
 
 namespace BlackSimTest
@@ -49,7 +49,7 @@ namespace BlackSimTest
             {
                 streamOut << ".";
                 streamOut.flush();
-                QTest::qSleep(1000 * 3);
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 1000 * 3);
             }
             while (!f.isFinished());
             streamOut << endl << f.result() << " entries" << endl;
