@@ -23,6 +23,9 @@ namespace BlackMisc
             //! Init by double value
             CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit) {}
 
+            //! Init by int value converted to double
+            CFrequency(int value, const CFrequencyUnit &unit) : CFrequency(double(value), unit) {}
+
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CFrequency(const QString &unitString) : CPhysicalQuantity(unitString) {}
 
