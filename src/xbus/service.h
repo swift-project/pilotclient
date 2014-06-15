@@ -107,6 +107,12 @@ namespace XBus
         //! Get aircraft true heading in degrees
         double getTrueHeading() const { return m_heading.get(); }
 
+        //! Get whether any wheel is on the ground
+        bool getAnyWheelOnGround() const { return m_onGroundAny.get(); }
+
+        //! Get whether all wheels are on the ground
+        bool getAllWheelsOnGround() const { return m_onGroundAll.get(); }
+
         //! Get the current COM1 active frequency in kHz
         int getCom1Active() const { return m_com1Active.get() * 10; }
 
@@ -159,6 +165,8 @@ namespace XBus
         DataRef<xplane::data::sim::flightmodel::position::theta> m_pitch;
         DataRef<xplane::data::sim::flightmodel::position::phi> m_roll;
         DataRef<xplane::data::sim::flightmodel::position::psi> m_heading;
+        DataRef<xplane::data::sim::flightmodel::failures::onground_any> m_onGroundAny;
+        DataRef<xplane::data::sim::flightmodel::failures::onground_all> m_onGroundAll;
         DataRef<xplane::data::sim::cockpit::radios::com1_freq_hz> m_com1Active;
         DataRef<xplane::data::sim::cockpit::radios::com1_stdby_freq_hz> m_com1Standby;
         DataRef<xplane::data::sim::cockpit::radios::com2_freq_hz> m_com2Active;

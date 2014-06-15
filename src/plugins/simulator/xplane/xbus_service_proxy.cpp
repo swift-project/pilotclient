@@ -122,6 +122,16 @@ namespace BlackSimPlugin
             return m_dbusInterface->callDBusRet<double>(QLatin1String("getTrueHeading"));
         }
 
+        bool CXBusServiceProxy::getAnyWheelOnGround() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("getAnyWheelOnGround"));
+        }
+
+        bool CXBusServiceProxy::getAllWheelsOnGround() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("getAllWheelsOnGround"));
+        }
+
         int CXBusServiceProxy::getCom1Active() const
         {
             return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom1Active"));

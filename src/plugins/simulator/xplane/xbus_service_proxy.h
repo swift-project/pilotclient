@@ -112,6 +112,12 @@ namespace BlackSimPlugin
             //! \copydoc XBus::CService::getTrueHeading
             double getTrueHeading() const;
 
+            //! Get whether any wheel is on the ground
+            bool getAnyWheelOnGround() const;
+
+            //! Get whether all wheels are on the ground
+            bool getAllWheelsOnGround() const;
+
             //! \copydoc XBus::CService::getCom1Active
             int getCom1Active() const;
 
