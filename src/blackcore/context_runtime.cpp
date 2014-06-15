@@ -312,12 +312,16 @@ namespace BlackCore
         QTime time;
         time.start();
 
+        // FIXME RW: We are allocating a full settings context in order to get the DBus address.
+        // I wonder if this can be done cleaner.
         if (config.hasDBusAddress()) dbusAddress = config.getDBusAddress(); // bootstrap / explicit
         if (config.hasLocalSettings())
         {
             settings = new CContextSettings(config.getModeSettings(), this);
             if (settings) settings->read();
             if (dbusAddress.isEmpty()) dbusAddress = settings->getNetworkSettings().getDBusServerAddress();
+
+            settings->deleteLater();
         }
 
         // DBus
@@ -338,6 +342,7 @@ namespace BlackCore
 
         // contexts
         this->m_contextSettings = IContextSettings::create(this, config.getModeSettings(), this->m_dbusServer, this->m_dbusConnection);
+        this->m_contextSettings->read();
         times.insert("Settings", time.restart());
 
         this->m_contextApplication = IContextApplication::create(this, config.getModeApplication(), this->m_dbusServer, this->m_dbusConnection);
