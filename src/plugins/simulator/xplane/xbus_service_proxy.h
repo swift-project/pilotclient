@@ -111,6 +111,45 @@ namespace BlackSimPlugin
 
             //! \copydoc XBus::CService::getTrueHeading
             double getTrueHeading() const;
+
+            //! \copydoc XBus::CService::getCom1Active
+            int getCom1Active() const;
+
+            //! \copydoc XBus::CService::getCom1Standby
+            int getCom1Standby() const;
+
+            //! \copydoc XBus::CService::getCom2Active
+            int getCom2Active() const;
+
+            //! \copydoc XBus::CService::getCom2Standby
+            int getCom2Standby() const;
+
+            //! \copydoc XBus::CService::getTransponderCode
+            int getTransponderCode() const;
+
+            //! \copydoc XBus::CService::getTransponderMode
+            int getTransponderMode() const;
+
+            //! \copydoc XBus::CService::getTransponderIdent
+            bool getTransponderIdent() const;
+
+            //! \copydoc XBus::CService::setCom1Active
+            void setCom1Active(int freq);
+
+            //! \copydoc XBus::CService::setCom1Standby
+            void setCom1Standby(int freq);
+
+            //! \copydoc XBus::CService::setCom2Active
+            void setCom2Active(int freq);
+
+            //! \copydoc XBus::CService::setCom2Standby
+            void setCom2Standby(int freq);
+
+            //! \copydoc XBus::CService::setTransponderCode
+            void setTransponderCode(int code);
+
+            //! \copydoc XBus::CService::setTransponderMode
+            void setTransponderMode(int mode);
         };
 
     }

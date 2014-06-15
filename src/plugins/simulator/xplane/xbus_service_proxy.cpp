@@ -122,5 +122,70 @@ namespace BlackSimPlugin
             return m_dbusInterface->callDBusRet<double>(QLatin1String("getTrueHeading"));
         }
 
+        int CXBusServiceProxy::getCom1Active() const
+        {
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom1Active"));
+        }
+
+        int CXBusServiceProxy::getCom1Standby() const
+        {
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom1Standby"));
+        }
+
+        int CXBusServiceProxy::getCom2Active() const
+        {
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom2Active"));
+        }
+
+        int CXBusServiceProxy::getCom2Standby() const
+        {
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom2Standby"));
+        }
+
+        int CXBusServiceProxy::getTransponderCode() const
+        {
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getTransponderCode"));
+        }
+
+        int CXBusServiceProxy::getTransponderMode() const
+        {
+            return m_dbusInterface->callDBusRet<int>(QLatin1String("getTransponderMode"));
+        }
+
+        bool CXBusServiceProxy::getTransponderIdent() const
+        {
+            return m_dbusInterface->callDBusRet<bool>(QLatin1String("getTransponderIdent"));
+        }
+
+        void CXBusServiceProxy::setCom1Active(int freq)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setCom1Active"), freq);
+        }
+
+        void CXBusServiceProxy::setCom1Standby(int freq)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setCom1Standby"), freq);
+        }
+
+        void CXBusServiceProxy::setCom2Active(int freq)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setCom2Active"), freq);
+        }
+
+        void CXBusServiceProxy::setCom2Standby(int freq)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setCom2Standby"), freq);
+        }
+
+        void CXBusServiceProxy::setTransponderCode(int code)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setTransponderCode"), code);
+        }
+
+        void CXBusServiceProxy::setTransponderMode(int mode)
+        {
+            m_dbusInterface->callDBus(QLatin1String("setTransponderMode"), mode);
+        }
+
     }
 }

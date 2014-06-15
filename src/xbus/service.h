@@ -107,6 +107,45 @@ namespace XBus
         //! Get aircraft true heading in degrees
         double getTrueHeading() const { return m_heading.get(); }
 
+        //! Get the current COM1 active frequency in kHz
+        int getCom1Active() const { return m_com1Active.get() * 10; }
+
+        //! Get the current COM1 standby frequency in kHz
+        int getCom1Standby() const { return m_com1Standby.get() * 10; }
+
+        //! Get the current COM2 active frequency in kHz
+        int getCom2Active() const { return m_com2Active.get() * 10; }
+
+        //! Get the current COM2 standby frequency in kHz
+        int getCom2Standby() const { return m_com2Standby.get() * 10; }
+
+        //! Get the current transponder code in decimal
+        int getTransponderCode() const { return m_xpdrCode.get(); }
+
+        //! Get the current transponder mode (depends on the aircraft, 0 and 1 usually mean standby, >1 active)
+        int getTransponderMode() const { return m_xpdrMode.get(); }
+
+        //! Get whether we are currently squawking ident
+        bool getTransponderIdent() const { return m_xpdrIdent.get(); }
+
+        //! Set the current COM1 active frequency in kHz
+        void setCom1Active(int freq) { m_com1Active.set(freq / 10); }
+
+        //! Set the current COM1 standby frequency in kHz
+        void setCom1Standby(int freq) { m_com1Standby.set(freq / 10); }
+
+        //! Set the current COM2 active frequency in kHz
+        void setCom2Active(int freq) { m_com2Active.set(freq / 10); }
+
+        //! Set the current COM2 standby frequency in kHz
+        void setCom2Standby(int freq) { m_com2Standby.set(freq / 10); }
+
+        //! Set the current transponder code in decimal
+        void setTransponderCode(int code) { m_xpdrCode.set(code); }
+
+        //! Set the current transponder mode (depends on the aircraft, 0 and 1 usually mean standby, >1 active)
+        void setTransponderMode(int mode) { m_xpdrMode.set(mode); }
+
     private:
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;
@@ -120,6 +159,13 @@ namespace XBus
         DataRef<xplane::data::sim::flightmodel::position::theta> m_pitch;
         DataRef<xplane::data::sim::flightmodel::position::phi> m_roll;
         DataRef<xplane::data::sim::flightmodel::position::psi> m_heading;
+        DataRef<xplane::data::sim::cockpit::radios::com1_freq_hz> m_com1Active;
+        DataRef<xplane::data::sim::cockpit::radios::com1_stdby_freq_hz> m_com1Standby;
+        DataRef<xplane::data::sim::cockpit::radios::com2_freq_hz> m_com2Active;
+        DataRef<xplane::data::sim::cockpit::radios::com2_stdby_freq_hz> m_com2Standby;
+        DataRef<xplane::data::sim::cockpit::radios::transponder_code> m_xpdrCode;
+        DataRef<xplane::data::sim::cockpit::radios::transponder_mode> m_xpdrMode;
+        DataRef<xplane::data::sim::cockpit::radios::transponder_id> m_xpdrIdent;
     };
 
 }
