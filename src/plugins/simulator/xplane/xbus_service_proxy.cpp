@@ -12,10 +12,10 @@ namespace BlackSimPlugin
     namespace XPlane
     {
 
-        CXBusServiceProxy::CXBusServiceProxy(QDBusConnection &connection, QObject *parent) : QObject(parent)
+        CXBusServiceProxy::CXBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
         {
             m_dbusInterface = new BlackMisc::CGenericDBusInterface(BlackCore::CDBusServer::ServiceName, ObjectPath(), InterfaceName(), connection, this);
-            relaySignals();
+            if (! dummy) { relaySignals(); }
         }
 
         void CXBusServiceProxy::relaySignals()

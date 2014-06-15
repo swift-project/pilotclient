@@ -43,7 +43,10 @@ namespace BlackSimPlugin
             }
 
             //! Constructor
-            CXBusServiceProxy(QDBusConnection &connection, QObject *parent = nullptr);
+            CXBusServiceProxy(QDBusConnection &connection, QObject *parent = nullptr, bool dummy = false);
+
+            //! Does the remote object exist?
+            bool isValid() const { return m_dbusInterface->isValid(); }
 
         private:
             BlackMisc::CGenericDBusInterface *m_dbusInterface = nullptr;

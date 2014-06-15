@@ -9,11 +9,16 @@
 //! \file
 
 #include "blackcore/simulator.h"
+#include <QDBusConnection>
+
+class QDBusServiceWatcher;
 
 namespace BlackSimPlugin
 {
     namespace XPlane
     {
+
+        class CXBusServiceProxy;
 
         /*!
          * X-Plane ISimulator implementation
@@ -31,6 +36,15 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackCore::ISimulator::canConnect
             virtual bool canConnect() override;
+
+        private:
+            QDBusConnection m_conn { "default" };
+            QDBusServiceWatcher *m_watcher { nullptr };
+            CXBusServiceProxy *m_service { nullptr };
+
+        private slots:
+            void serviceRegistered();
+            void serviceUnregistered();
 
         public slots:
             //! \copydoc BlackCore::ISimulator::connectTo
