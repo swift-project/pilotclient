@@ -19,14 +19,15 @@ namespace BlackMisc
             //! Indexes
             enum ColumnIndex : uint
             {
-                IndexQueriedModelString = 100
+                IndexModelString = 100,
+                IndexQueriedModelString
             };
 
             //! \brief Default constructor.
             CAircraftModel() {}
 
             //! \brief Constructor.
-            CAircraftModel(const QString &directModel) : m_queriedModelString(directModel) {}
+            CAircraftModel(const QString &model, bool queriedString) : m_modelString(model), m_queriedModelStringFlag(queriedString) {}
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -53,13 +54,16 @@ namespace BlackMisc
             virtual void setPropertyByIndex(const QVariant &variant, int index) override;
 
             //! Queried model string
-            const QString &getQueriedModelString() const { return this->m_queriedModelString; }
+            const QString &getModelString() const { return this->m_modelString; }
 
             //! Set queried model string
-            void setQueriedModelString(const QString &model) { this->m_queriedModelString = model; }
+            void setQueriedModelString(const QString &model) { this->m_modelString = model; }
 
             //! Queried model string?
-            bool hasQueriedModelString() const { return !this->m_queriedModelString.isEmpty(); }
+            bool hasQueriedModelString() const { return this->m_queriedModelStringFlag && !this->m_modelString.isEmpty(); }
+
+            //! Matches model string?
+            bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
             //! \brief Register metadata
             static void registerMetadata();
@@ -88,12 +92,13 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftModel)
-            QString m_queriedModelString;
+            QString m_modelString;
+            bool m_queriedModelStringFlag; //!< model string is queried from network
         };
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CAircraftModel, (o.m_queriedModelString))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CAircraftModel, (o.m_modelString, o.m_queriedModelStringFlag))
 Q_DECLARE_METATYPE(BlackMisc::Network::CAircraftModel)
 
 #endif // guard

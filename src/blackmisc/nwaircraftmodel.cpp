@@ -10,7 +10,9 @@ namespace BlackMisc
          */
         QString CAircraftModel::convertToQString(bool /** i18n **/) const
         {
-            QString s = this->m_queriedModelString;
+            QString s = this->m_modelString;
+            if (!s.isEmpty()) s.append(' ');
+            s.append(this->m_queriedModelStringFlag ? "queried" : "mapped");
             return s;
         }
 
@@ -121,8 +123,11 @@ namespace BlackMisc
         {
             switch (index)
             {
+            case IndexModelString:
+                return QVariant(this->m_modelString);
+                break;
             case IndexQueriedModelString:
-                return QVariant(this->m_queriedModelString);
+                return QVariant(this->m_queriedModelStringFlag);
                 break;
             default:
                 break;
@@ -139,13 +144,27 @@ namespace BlackMisc
         {
             switch (index)
             {
+            case IndexModelString:
+                this->m_modelString = variant.toString();
+                break;
             case IndexQueriedModelString:
-                this->m_queriedModelString = variant.toString();
+                this->m_queriedModelStringFlag = variant.toBool();
                 break;
             default:
                 Q_ASSERT_X(false, "CAircraftModel", "index unknown");
                 break;
             }
+        }
+
+        /*
+         * Matches string?
+         */
+        bool CAircraftModel::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
+        {
+            if (sensitivity == Qt::CaseSensitive)
+                return modelString == this->m_modelString;
+            else
+                return this->m_modelString.indexOf(modelString) == 0;
         }
 
     } // namespace
