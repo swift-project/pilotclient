@@ -112,6 +112,7 @@ namespace BlackSimPlugin
             situation.setBank({ m_service->getRoll(), CAngleUnit::deg() });
             situation.setGroundspeed({ m_service->getGroundSpeed(), CSpeedUnit::m_s() });
             Aviation::CAircraft ac { {}, {}, situation };
+            ac.setIcaoInfo(Aviation::CAircraftIcao { m_service->getAircraftIcaoCode() });
             ac.setCom1System(Aviation::CComSystem::getCom1System({ m_service->getCom1Active(), CFrequencyUnit::kHz() }, { m_service->getCom1Standby(), CFrequencyUnit::kHz() }));
             ac.setCom2System(Aviation::CComSystem::getCom2System({ m_service->getCom2Active(), CFrequencyUnit::kHz() }, { m_service->getCom2Standby(), CFrequencyUnit::kHz() }));
             ac.setTransponder(Aviation::CTransponder::getStandardTransponder(m_service->getTransponderCode(), xpdrMode(m_service->getTransponderMode(), m_service->getTransponderIdent())));
