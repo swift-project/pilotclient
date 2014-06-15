@@ -86,18 +86,36 @@ namespace BlackSimPlugin
             emit statusChanged(ISimulator::Disconnected);
         }
 
+        // convert xplane squawk mode to swift squawk mode
+        BlackMisc::Aviation::CTransponder::TransponderMode xpdrMode(int xplaneMode, bool ident)
+        {
+            if (ident) { return BlackMisc::Aviation::CTransponder::StateIdent; }
+            if (xplaneMode == 0 || xplaneMode == 1) { return BlackMisc::Aviation::CTransponder::StateStandby; }
+            return BlackMisc::Aviation::CTransponder::ModeC;
+        }
+        // convert swift squawk mode to xplane squawk mode
+        int xpdrMode(BlackMisc::Aviation::CTransponder::TransponderMode mode)
+        {
+            return mode == BlackMisc::Aviation::CTransponder::StateStandby ? 1 : 2;
+        }
+
         BlackMisc::Aviation::CAircraft CSimulatorXPlane::getOwnAircraft() const
         {
             if (! m_service) { return {}; }
             using namespace BlackMisc;
+            using namespace BlackMisc::PhysicalQuantities;
             Aviation::CAircraftSituation situation;
             situation.setPosition({ m_service->getLatitude(), m_service->getLongitude(), 0 });
-            situation.setAltitude({ m_service->getAltitudeMSL(), Aviation::CAltitude::MeanSeaLevel, PhysicalQuantities::CLengthUnit::m() });
-            situation.setHeading({ m_service->getTrueHeading(), Aviation::CHeading::True, PhysicalQuantities::CAngleUnit::deg() });
-            situation.setPitch({ m_service->getPitch(), PhysicalQuantities::CAngleUnit::deg() });
-            situation.setBank({ m_service->getRoll(), PhysicalQuantities::CAngleUnit::deg() });
-            situation.setGroundspeed({ m_service->getGroundSpeed(), PhysicalQuantities::CSpeedUnit::m_s() });
-            return { {}, {}, situation };
+            situation.setAltitude({ m_service->getAltitudeMSL(), Aviation::CAltitude::MeanSeaLevel, CLengthUnit::m() });
+            situation.setHeading({ m_service->getTrueHeading(), Aviation::CHeading::True, CAngleUnit::deg() });
+            situation.setPitch({ m_service->getPitch(), CAngleUnit::deg() });
+            situation.setBank({ m_service->getRoll(), CAngleUnit::deg() });
+            situation.setGroundspeed({ m_service->getGroundSpeed(), CSpeedUnit::m_s() });
+            Aviation::CAircraft ac { {}, {}, situation };
+            ac.setCom1System(Aviation::CComSystem::getCom1System({ m_service->getCom1Active(), CFrequencyUnit::kHz() }, { m_service->getCom1Standby(), CFrequencyUnit::kHz() }));
+            ac.setCom2System(Aviation::CComSystem::getCom2System({ m_service->getCom2Active(), CFrequencyUnit::kHz() }, { m_service->getCom2Standby(), CFrequencyUnit::kHz() }));
+            ac.setTransponder(Aviation::CTransponder::getStandardTransponder(m_service->getTransponderCode(), xpdrMode(m_service->getTransponderMode(), m_service->getTransponderIdent())));
+            return ac;
         }
 
         void CSimulatorXPlane::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
@@ -116,8 +134,21 @@ namespace BlackSimPlugin
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft)
         {
             if (! m_service) { return false; }
-            //TODO
-            Q_UNUSED(aircraft);
+            using namespace BlackMisc;
+            using namespace BlackMisc::PhysicalQuantities;
+            auto com1 = Aviation::CComSystem::getCom1System({ m_service->getCom1Active(), CFrequencyUnit::kHz() }, { m_service->getCom1Standby(), CFrequencyUnit::kHz() });
+            auto com2 = Aviation::CComSystem::getCom2System({ m_service->getCom2Active(), CFrequencyUnit::kHz() }, { m_service->getCom2Standby(), CFrequencyUnit::kHz() });
+            auto xpdr = Aviation::CTransponder::getStandardTransponder(m_service->getTransponderCode(), xpdrMode(m_service->getTransponderMode(), m_service->getTransponderIdent()));
+            if (aircraft.hasChangedCockpitData(com1, com2, xpdr))
+            {
+                m_service->setCom1Active(aircraft.getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::kHz(), 0));
+                m_service->setCom1Standby(aircraft.getCom1System().getFrequencyStandby().valueRounded(CFrequencyUnit::kHz(), 0));
+                m_service->setCom2Active(aircraft.getCom2System().getFrequencyActive().valueRounded(CFrequencyUnit::kHz(), 0));
+                m_service->setCom2Standby(aircraft.getCom2System().getFrequencyStandby().valueRounded(CFrequencyUnit::kHz(), 0));
+                m_service->setTransponderCode(aircraft.getTransponderCode());
+                m_service->setTransponderMode(xpdrMode(aircraft.getTransponderMode()));
+                return true;
+            }
             return false;
         }
 
