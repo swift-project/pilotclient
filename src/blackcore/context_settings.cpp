@@ -16,7 +16,12 @@ namespace BlackCore
         {
         case CRuntimeConfig::Local:
         case CRuntimeConfig::LocalInDbusServer:
-            return (new CContextSettings(mode, parent))->registerWithDBus(server);
+        {
+            CContextSettings *contextSettings = new CContextSettings(mode, parent);
+            contextSettings->registerWithDBus(server);
+            contextSettings->read();
+            return contextSettings;
+        }
         case CRuntimeConfig::Remote:
             return new BlackCore::CContextSettingsProxy(BlackCore::CDBusServer::ServiceName, conn, mode, parent);
         default:

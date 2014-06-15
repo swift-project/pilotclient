@@ -342,7 +342,6 @@ namespace BlackCore
 
         // contexts
         this->m_contextSettings = IContextSettings::create(this, config.getModeSettings(), this->m_dbusServer, this->m_dbusConnection);
-        this->m_contextSettings->read();
         times.insert("Settings", time.restart());
 
         this->m_contextApplication = IContextApplication::create(this, config.getModeApplication(), this->m_dbusServer, this->m_dbusConnection);
