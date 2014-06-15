@@ -1,14 +1,14 @@
 include (../../config.pri)
 include (../../build.pri)
 
-QT       += core dbus network testlib
+QT       += core dbus network xml
 
 TARGET = sample_blacksim
 TEMPLATE = app
 
 CONFIG   += console
 CONFIG   -= app_bundle
-CONFIG   += blackmisc blackcore blacksim
+CONFIG   += blackmisc blacksim
 
 DEPENDPATH += . ../../src/blackmisc ../../src/blacksim
 INCLUDEPATH += . ../../src
@@ -20,7 +20,5 @@ DESTDIR = ../../bin
 
 HEADERS += *.h
 SOURCES += *.cpp
-
-OTHER_FILES +=
 
 include (../../libraries.pri)
