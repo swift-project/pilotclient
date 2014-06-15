@@ -18,6 +18,9 @@ namespace BlackMisc
         //! with BlackSound?
         static bool isCompiledWithBlackSound();
 
+        //! with BlackInput?
+        static bool isCompiledWithBlackInput();
+
         //! with FSX support?
         static bool isCompiledWithFsxSupport();
 

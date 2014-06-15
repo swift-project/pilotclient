@@ -26,6 +26,15 @@ namespace BlackMisc
 #endif
     }
 
+    bool CProject::isCompiledWithBlackInput()
+    {
+#ifdef WITH_BLACKINPUT
+        return true;
+#else
+        return false;
+#endif
+    }
+
     bool CProject::isCompiledWithFsxSupport()
     {
 #ifdef WITH_FSX
@@ -66,6 +75,7 @@ namespace BlackMisc
             static QStringList sl;
             if (isCompiledWithBlackCore()) sl << "BlackCore";
             if (isCompiledWithBlackSound()) sl << "BlackSound";
+            if (isCompiledWithBlackInput()) sl << "BlackInput";
             if (isCompiledWithGui()) sl << "BlackGui";
             if (isCompiledWithFsxSupport()) sl << "FSX";
             if (isCompiledWithXPlaneSupport()) sl << "XPlane";
