@@ -25,8 +25,17 @@ namespace BlackMisc
             //! Default constructor.
             CAircraftIcao() {}
 
-            //! Default constructor.
+            //! Constructor.
             explicit CAircraftIcao(const QString &icao) : m_aircraftDesignator(icao.trimmed().toUpper()) {}
+
+            /*!
+             * Constructor.
+             * \param icao "B737"
+             * \param airline "DLH"
+             */
+            CAircraftIcao(const QString &icao, const QString &airline)
+                : m_aircraftDesignator(icao.trimmed().toUpper()), m_airlineDesignator(airline.trimmed().toUpper())
+            {}
 
             /*!
              * Constructor.
@@ -112,6 +121,9 @@ namespace BlackMisc
 
             //! Equal operator ==
             bool operator ==(const CAircraftIcao &other) const;
+
+            //! Matches wildcard icao object
+            bool matchesWildcardIcao(const CAircraftIcao &otherIcao) const;
 
             //! Unequal operator !=
             bool operator !=(const CAircraftIcao &other) const;
