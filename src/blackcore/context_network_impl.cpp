@@ -33,7 +33,8 @@ namespace BlackCore
      * Init this context
      */
     CContextNetwork::CContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextNetwork(mode, runtime), m_airspace(nullptr), m_network(nullptr), m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
+        IContextNetwork(mode, runtime), m_airspace(nullptr), m_network(nullptr), m_currentStatus(INetwork::Disconnected),
+        m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getIContextSettings());
@@ -104,16 +105,21 @@ namespace BlackCore
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Invalid ICAO data for own aircraft"));
         }
-        else if (this->m_network->isConnected())
-        {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Already connected"));
-        }
         else if (!CNetworkUtils::canConnect(currentServer, msg, 2000))
         {
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, msg));
         }
+        else if (this->m_network->isConnected())
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Already connected"));
+        }
+        else if (this->isPendingConnection())
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Pending connection, please wait"));
+        }
         else
         {
+            this->m_currentStatus = INetwork::Connecting; // as semaphore we are going to connect
             INetwork::LoginMode mode = static_cast<INetwork::LoginMode>(loginMode);
             this->getIContextOwnAircraft()->updatePilot(currentServer.getUser(), this->getPathAndContextId());
             const CAircraft ownAircraft = this->ownAircraft();
@@ -139,9 +145,14 @@ namespace BlackCore
         CStatusMessageList msgs;
         if (this->m_network->isConnected())
         {
+            this->m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
             this->m_network->terminateConnection();
             this->m_airspace->clear();
             msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, "Connection terminating"));
+        }
+        else if (this->isPendingConnection())
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Pending connection, please wait"));
         }
         else
         {
@@ -157,6 +168,15 @@ namespace BlackCore
     {
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return this->m_network->isConnected();
+    }
+
+    bool CContextNetwork::isPendingConnection() const
+    {
+        // if underlying class says pending, we believe it. But not all states (e.g. disconnecting) are covered
+        if (this->m_network->isPendingConnection()) return true;
+
+        // now check out own extra states, e.g. disconnecting
+        return INetwork::isPendingStatus(this->m_currentStatus);
     }
 
     /*
@@ -236,6 +256,7 @@ namespace BlackCore
     void CContextNetwork::psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
     {
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { QString::number(from), QString::number(to) });
+        this->m_currentStatus = to;
         CStatusMessageList msgs;
         // send 1st position
         if (to == INetwork::Connected)
@@ -252,6 +273,7 @@ namespace BlackCore
         msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork,
                                       to == INetwork::DisconnectedError ? CStatusMessage::SeverityError : CStatusMessage::SeverityInfo, m));
         // FIXME (MS) conditional increases the number of scenarios which must be considered and continuously tested
+        // This is more a guard than a real conditional, e.g. when system shuts down
         if (this->getIContextApplication())
         {
             this->getIContextApplication()->sendStatusMessages(msgs);

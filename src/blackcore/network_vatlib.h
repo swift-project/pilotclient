@@ -34,6 +34,9 @@ namespace BlackCore
         //! \copydoc INetwork::isConnected()
         virtual bool isConnected() const override { return m_status == Cvatlib_Network::connStatus_Connected; }
 
+        //! \copydoc INetwork::pendingConnection()
+        virtual bool isPendingConnection() const override { return m_status == Cvatlib_Network::connStatus_Connecting; }
+
         //! \copydoc INetwork::getStatusUrls()
         virtual QList<QUrl> getStatusUrls() const override;
 

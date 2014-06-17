@@ -118,9 +118,22 @@ namespace BlackCore
         }
 
         /*!
+         * Returns true if the given ConnectionStatus represents a pending state.
+         */
+        static bool isPendingStatus(ConnectionStatus status)
+        {
+            return status == Disconnecting || status == Connecting;
+        }
+
+        /*!
          * Returns true if the current ConnectionStatus is a connected state.
          */
         virtual bool isConnected() const = 0;
+
+        /*!
+         * Returns true if the current ConnectionStatus is in transition, e.g. connecting.
+         */
+        virtual bool isPendingConnection() const = 0;
 
         /*!
          * Returns a list of URLs where network status data can be found.
@@ -226,8 +239,8 @@ namespace BlackCore
         virtual void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data) = 0;
 
         /*!
-         * Send an FSInn custom packet.
-         * \details FSIPI(R) queries
+         * Send a FSInn custom packet.
+         * \details FSIPI(R) queries, some example data below:
          * <BLOCKQUOTE>
          * index 0 .. 0/1 ???
          *       1 .. MQT, GEC, DLH -> Airline ICAO, most of the time empty
@@ -242,9 +255,9 @@ namespace BlackCore
          */
         //! @{
         virtual void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
-            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) = 0;
+                                           const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) = 0;
         virtual void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
-            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) = 0;
+                                            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) = 0;
         //! @}
 
         //! @}
@@ -509,13 +522,13 @@ namespace BlackCore
          * We received an FSInn custom packet.
          */
         void fsipiCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
-            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
+                                       const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
 
         /*!
          * We received an FSInn custom response packet.
          */
         void fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
-            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
+                                        const QString &aircraftDesignator, const QString &combinedType, const QString &modelString);
 
         //! @}
         ////////////////////////////////////////////////////////////////

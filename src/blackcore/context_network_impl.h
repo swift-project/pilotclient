@@ -72,6 +72,13 @@ namespace BlackCore
         //! \copydoc IContextNetwork::isConnected()
         virtual bool isConnected() const override;
 
+        /*!
+         * In transition state, e.g. connecting, disconnecting.
+         * \details In such a state it is advisable to wait until an end state (connected/disconnected) is reached
+         * \remarks Intentionally only running locally, not in interface
+         */
+        bool isPendingConnection() const;
+
         //! \copydoc IContextNetwork::sendTextMessages()
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages) override;
 
@@ -128,6 +135,7 @@ namespace BlackCore
 
         CAirspaceMonitor *m_airspace;
         BlackCore::INetwork *m_network;
+        INetwork::ConnectionStatus m_currentStatus; //!< used to detect pending connections
 
         // for reading XML and VATSIM data files
         CVatsimBookingReader *m_vatsimBookingReader;
