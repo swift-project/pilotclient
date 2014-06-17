@@ -8,7 +8,10 @@
 
 //! \file
 
-//! \namespace XBus
+/*!
+ * \namespace XBus
+ * Plugin loaded by X-Plane which publishes a DBus service
+ */
 
 #define NOMINMAX
 #include "menus.h"
@@ -31,8 +34,10 @@ namespace XBus
         Q_OBJECT
 
     public:
+        //! Constructor
         CPlugin();
 
+        //! Called by XPluginReceiveMessage when the model is changed
         void onAircraftModelChanged();
 
     private:

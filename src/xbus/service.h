@@ -11,7 +11,9 @@
 #include "datarefs.h"
 #include <QObject>
 
+//! \private
 #define XBUS_SERVICE_INTERFACENAME "net.vatsim.PilotClient.XBus"
+//! \private
 #define XBUS_SERVICE_OBJECTPATH "/XBus"
 
 namespace XBus
