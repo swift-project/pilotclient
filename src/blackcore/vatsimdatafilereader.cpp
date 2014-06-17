@@ -243,7 +243,10 @@ namespace BlackCore
                             QString dts = updateParts.at(1).trimmed();
                             QDateTime dt = QDateTime::fromString(dts, "yyyyMMddHHmmss");
                             dt.setOffsetFromUtc(0);
-                            if (dt == this->m_updateTimestamp) return; // still same data, terminate
+                            if (dt == this->m_updateTimestamp)
+                            {
+                                return; // still same data, terminate
+                            }
                             this->m_updateTimestamp = dt;
                         }
                     }

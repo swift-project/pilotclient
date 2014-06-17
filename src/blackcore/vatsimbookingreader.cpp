@@ -59,6 +59,24 @@ namespace BlackCore
 
             if (doc.setContent(xmlData))
             {
+                QDomNode timestamp = doc.elementsByTagName("timestamp").at(0);
+                QString ts = timestamp.toElement().text().trimmed();
+                Q_ASSERT(!ts.isEmpty());
+                if (ts.isEmpty())
+                {
+                    // fallback
+                    m_updateTimestamp = QDateTime::currentDateTimeUtc();
+                }
+                else
+                {
+                    // normally the timestamp is always updated from backend
+                    // if this changes in the future we're prepared
+                    QDateTime fileTimestamp = QDateTime::fromString(ts, "yyyy-MM-dd HH:mm:ss");
+                    fileTimestamp.setTimeSpec(Qt::UTC);
+                    if (this->m_updateTimestamp == fileTimestamp) return; // nothing to do
+                    this->m_updateTimestamp = fileTimestamp;
+                }
+
                 QDomNode atc = doc.elementsByTagName("atcs").at(0);
                 QDomNodeList bookingNodes = atc.toElement().elementsByTagName("booking");
                 int size = bookingNodes.size();
@@ -93,11 +111,13 @@ namespace BlackCore
                         else if (name == "time_end")
                         {
                             QDateTime t = QDateTime::fromString(value, "yyyy-MM-dd HH:mm:ss");
+                            t.setTimeSpec(Qt::UTC);
                             bookedStation.setBookedUntilUtc(t);
                         }
                         else if (name == "time_start")
                         {
                             QDateTime t = QDateTime::fromString(value, "yyyy-MM-dd HH:mm:ss");
+                            t.setTimeSpec(Qt::UTC);
                             bookedStation.setBookedFromUtc(t);
                         }
                     }
@@ -108,7 +128,6 @@ namespace BlackCore
                     bookedStation.setController(user);
                     bookedStations.push_back(bookedStation);
                 }
-                m_updateTimestamp = QDateTime::currentDateTimeUtc();
                 emit this->dataRead(bookedStations);
 
             } // node
