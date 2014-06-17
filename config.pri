@@ -30,15 +30,3 @@ BLACK_CONFIG    += Unittests
 BLACK_CONFIG    += FSX
 #BLACK_CONFIG    += XPlane
 #BLACK_CONFIG    += Doxygen
-
-################################
-# Defines, for compile time code
-################################
-
-contains(BLACK_CONFIG, BlackSound) { DEFINES += WITH_BLACKSOUND }
-contains(BLACK_CONFIG, BlackInput) { DEFINES += WITH_BLACKINPUT }
-contains(BLACK_CONFIG, BlackSim) { DEFINES += WITH_BLACKSIM }
-contains(BLACK_CONFIG, BlackCore) { DEFINES += WITH_BLACKCORE }
-contains(BLACK_CONFIG, BlackGui) { DEFINES += WITH_BLACKGUI }
-contains(BLACK_CONFIG, FSX) { DEFINES += WITH_FSX }
-contains(BLACK_CONFIG, XPlane) { DEFINES += WITH_XPLANE }

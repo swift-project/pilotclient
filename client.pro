@@ -1,4 +1,5 @@
 include (config.pri)
+include (build.pri)
 
 TEMPLATE = subdirs
 CONFIG += ordered

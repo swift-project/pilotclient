@@ -69,3 +69,21 @@ macx-clang {
     # TODO
     WORD_SIZE = 64
 }
+
+###########################
+# No FSX for 64 bits
+###########################
+
+equals(WORD_SIZE,64): BLACK_CONFIG -= FSX
+
+################################
+# Defines for conditional compilation
+################################
+
+contains(BLACK_CONFIG, BlackSound) { DEFINES += WITH_BLACKSOUND }
+contains(BLACK_CONFIG, BlackInput) { DEFINES += WITH_BLACKINPUT }
+contains(BLACK_CONFIG, BlackSim) { DEFINES += WITH_BLACKSIM }
+contains(BLACK_CONFIG, BlackCore) { DEFINES += WITH_BLACKCORE }
+contains(BLACK_CONFIG, BlackGui) { DEFINES += WITH_BLACKGUI }
+contains(BLACK_CONFIG, FSX) { DEFINES += WITH_FSX }
+contains(BLACK_CONFIG, XPlane) { DEFINES += WITH_XPLANE }
