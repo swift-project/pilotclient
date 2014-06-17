@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>InfoWindow</class>
+ <widget class="QWizardPage" name="InfoWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>278</width>
+    <height>143</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>WizardPage</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+	font-family: arial-rounded;
+	font: bold 10px;
+	color: black; /** font **/
+}
+
+QPushButton {
+	background-color: transparent;
+	border-style: solid;
+	border-width: 0px;
+	border-radius:3px;
+	border-color: green;
+    max-height:20px;
+}
+
+QTextEdit {
+	background-color: rgba(255, 255, 0, 240); /* transparent yellow */
+	border-style: solid;
+	border-width:1px;
+	border-radius:6px;
+	border-color: green;
+	opacity: 0.5;
+}
+</string>
+  </property>
+  <layout class="QHBoxLayout" name="hl_InfoWindow">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QStackedWidget" name="sw_DifferentModes">
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
+     <widget class="QWidget" name="pg_StringMessage">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QTextEdit" name="te_StringMessage">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="pg_TextMessage">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QGridLayout" name="gl_TextMessage">
+         <item row="0" column="2">
+          <widget class="QLabel" name="lbl_TmTo">
+           <property name="text">
+            <string>To</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Received</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="le_TmReceived"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lbl_TmFrom">
+           <property name="text">
+            <string>From</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLineEdit" name="le_TmTo">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_TmFrom">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1" colspan="3">
+          <widget class="QTextEdit" name="te_TmText"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="pg_StatusMessage">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <layout class="QGridLayout" name="gl_StatusMessage">
+         <item row="0" column="0">
+          <widget class="QLabel" name="lbl_SmSeverity">
+           <property name="text">
+            <string>Severity</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="lbl_SmType">
+           <property name="text">
+            <string>Type</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="le_SmSeverity">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QTextEdit" name="te_SmStatusMessage"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="le_SmType"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item alignment="Qt::AlignTop">
+    <widget class="QPushButton" name="pb_Close">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="blackgui.qrc">
+       <normaloff>:/blackgui/icons/close.png</normaloff>:/blackgui/icons/close.png</iconset>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="blackgui.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>pb_Close</sender>
+   <signal>clicked()</signal>
+   <receiver>InfoWindow</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>272</x>
+     <y>52</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>302</x>
+     <y>67</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

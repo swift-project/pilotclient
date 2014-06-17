@@ -10,7 +10,6 @@
 #pragma push_macro("interface")
 #undef interface
 
-#include "infowindow.h"
 #include "guimodeenums.h"
 #include "blackinput/keyboard.h"
 #include "blackcore/context_audio.h"
@@ -27,6 +26,7 @@
 #include "blackgui/userlistmodel.h"
 #include "blackgui/statusmessagelistmodel.h"
 #include "blackgui/keyboardkeylistmodel.h"
+#include "blackgui/infowindowcomponent.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blacksound/soundgenerator.h"
 #include <QMainWindow>
@@ -93,7 +93,7 @@ protected:
 
 private:
     QScopedPointer<Ui::MainWindow> ui;
-    CInfoWindow *m_infoWindow;
+    BlackGui::CInfoWindowComponent *m_compInfoWindow;
     bool m_init;
     GuiModes::WindowMode m_windowMode;
     AudioTest m_audioTestRunning;
@@ -313,14 +313,6 @@ private slots:
 
     //! Toogle Windows stay on top
     void toogleWindowStayOnTop();
-
-    //! Display the overlay window
-    //! Empty string hides window
-    void displayOverlayInfo(const QString &message = "");
-
-    //! Overlay info displaying status message
-    void displayOverlayInfo(const BlackMisc::CStatusMessage &message);
-
 
 };
 

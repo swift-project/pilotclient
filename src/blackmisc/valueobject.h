@@ -4,6 +4,7 @@
 #include "dbus.h"
 #include "tuple.h"
 #include "json.h"
+#include "variant.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>
 #include <QtGlobal>
@@ -36,7 +37,7 @@ namespace BlackMisc
 
         public:
             //! True if and only if T is derived from CPhysicalQuantity.
-            static const bool value = sizeof(test(*(T*)0)) == sizeof(yes);
+            static const bool value = sizeof(test(*(T *)0)) == sizeof(yes);
         };
     }
 
@@ -101,7 +102,7 @@ namespace BlackMisc
         friend bool operator!=(const CValueObject &valueObject, const CIndexVariantMap &valueMap);
 
         //! Comparison operator to allow valueobjects be used as keys in QMap and std::set.
-        template <class T> friend typename std::enable_if<std::is_base_of<CValueObject, T>::value && ! PhysicalQuantities::IsQuantity<T>::value, bool>::type
+        template <class T> friend typename std::enable_if < std::is_base_of<CValueObject, T>::value  &&! PhysicalQuantities::IsQuantity<T>::value, bool >::type
         operator<(const T &lhs, const T &rhs)
         {
             const auto &lhsBase = static_cast<const CValueObject &>(lhs);
@@ -110,7 +111,7 @@ namespace BlackMisc
         }
 
         //! Comparison for symmetry with operator<.
-        template <class T> friend typename std::enable_if<std::is_base_of<CValueObject, T>::value && ! PhysicalQuantities::IsQuantity<T>::value, bool>::type
+        template <class T> friend typename std::enable_if < std::is_base_of<CValueObject, T>::value  &&! PhysicalQuantities::IsQuantity<T>::value, bool >::type
         operator>(const T &lhs, const T &rhs)
         {
             const auto &lhsBase = static_cast<const CValueObject &>(lhs);
@@ -119,7 +120,7 @@ namespace BlackMisc
         }
 
         //! Comparison for symmetry with operator<.
-        template <class T> friend typename std::enable_if<std::is_base_of<CValueObject, T>::value && ! PhysicalQuantities::IsQuantity<T>::value, bool>::type
+        template <class T> friend typename std::enable_if < std::is_base_of<CValueObject, T>::value  &&! PhysicalQuantities::IsQuantity<T>::value, bool >::type
         operator<=(const T &lhs, const T &rhs)
         {
             const auto &lhsBase = static_cast<const CValueObject &>(lhs);
@@ -128,7 +129,7 @@ namespace BlackMisc
         }
 
         //! Comparison for symmetry with operator<.
-        template <class T> friend typename std::enable_if<std::is_base_of<CValueObject, T>::value && ! PhysicalQuantities::IsQuantity<T>::value, bool>::type
+        template <class T> friend typename std::enable_if < std::is_base_of<CValueObject, T>::value  &&! PhysicalQuantities::IsQuantity<T>::value, bool >::type
         operator>=(const T &lhs, const T &rhs)
         {
             const auto &lhsBase = static_cast<const CValueObject &>(lhs);
@@ -166,6 +167,9 @@ namespace BlackMisc
 
         //! Virtual method to return QVariant, used with DBus QVariant lists
         virtual QVariant toQVariant() const = 0;
+
+        //! Virtual method to return CVariant
+        virtual CVariant toCVariant() const { return CVariant(this->toQVariant()); }
 
         //! Contribute to JSON object
         virtual QJsonObject toJson() const { QJsonObject json; return json;}

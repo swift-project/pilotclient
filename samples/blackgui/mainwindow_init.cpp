@@ -214,8 +214,7 @@ void MainWindow::initGuiSignals()
     // command line / text messages
     connected = this->connect(this->ui->le_CommandLineInput, SIGNAL(returnPressed()), this->ui->comp_TextMessages, SLOT(commandEntered()));
     Q_ASSERT(connected);
-    this->connect(this->ui->comp_TextMessages, SIGNAL(displayOverlayInfo(BlackMisc::CStatusMessage)), this, SLOT(displayOverlayInfo(BlackMisc::CStatusMessage)));
-    Q_ASSERT(connected);
+    this->connect(this->ui->comp_TextMessages, &CTextMessageComponent::displayInInfoWindow, this->m_compInfoWindow, &CInfoWindowComponent::display);
     this->ui->comp_TextMessages->setSelcalCallback(std::bind(&CCockpitV1Component::getSelcalCode, this->ui->comp_Cockpit));
 
     // voice

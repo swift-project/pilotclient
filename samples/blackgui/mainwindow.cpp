@@ -24,7 +24,7 @@ using namespace BlackMisc::Audio;
 MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     QMainWindow(parent, windowMode == GuiModes::WindowFrameless ? (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint) : (Qt::Tool | Qt::WindowStaysOnTopHint)),
     ui(new Ui::MainWindow),
-    m_infoWindow(nullptr),
+    m_compInfoWindow(nullptr),
     m_init(false), m_windowMode(windowMode), m_audioTestRunning(NoAudioTest),
     // contexts and runtime
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextAudioAvailable(false),
@@ -48,7 +48,11 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
         this->setAttribute(Qt::WA_TranslucentBackground, true);
         // this->setAttribute(Qt::WA_PaintOnScreen);
     }
+
+    // GUI
     ui->setupUi(this);
+    this->m_compInfoWindow = new CInfoWindowComponent(this); // setupUi has to be first!
+
 }
 
 /*
@@ -73,10 +77,10 @@ void MainWindow::gracefulShutdown()
         this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStops);
 
     // close info window
-    if (this->m_infoWindow)
+    if (this->m_compInfoWindow)
     {
-        this->m_infoWindow->close();
-        this->m_infoWindow = nullptr;
+        this->m_compInfoWindow->close();
+        this->m_compInfoWindow = nullptr;
     }
 
     // shut down all timers
@@ -266,7 +270,7 @@ void MainWindow::displayStatusMessage(const CStatusMessage &statusMessage)
 
     // display overlay for errors, but not for validation
     if (statusMessage.getSeverity() == CStatusMessage::SeverityError && statusMessage.getType() != CStatusMessage::TypeValidation)
-        this->displayOverlayInfo(statusMessage);
+        this->m_compInfoWindow->displayStatusMessage(statusMessage);
 }
 
 /*
@@ -424,36 +428,6 @@ void MainWindow::changeWindowOpacity(int opacity)
     o = o < 0.3 ? 0.3 : o;
     QWidget::setWindowOpacity(o);
     this->ui->hs_SettingsGuiOpacity->setValue(o * 100.0);
-}
-
-/*
- * Display the info window
- */
-void MainWindow::displayOverlayInfo(const QString &message)
-{
-    if (!this->m_infoWindow)
-    {
-        this->m_infoWindow = new CInfoWindow(this);
-    }
-
-    // display window
-    if (message.isEmpty())
-    {
-        this->m_infoWindow->hide();
-    }
-    else
-    {
-        this->m_infoWindow->setInfoMessage(message);
-    }
-}
-
-/*
- * Info window by
- */
-void MainWindow::displayOverlayInfo(const CStatusMessage &message)
-{
-    this->displayOverlayInfo(message.getMessage());
-    // further code goes here, such as marking errors as red ...
 }
 
 void MainWindow::updateSimulatorData()

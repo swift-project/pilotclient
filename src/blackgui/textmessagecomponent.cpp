@@ -81,7 +81,7 @@ namespace BlackGui
                     }
                     else
                     {
-                        emit this->displayOverlayInfo(CStatusMessage::getInfoMessage("SELCAL received", CStatusMessage::TypeGui));
+                        emit this->displayInInfoWindow(CStatusMessage::getInfoMessage("SELCAL received", CStatusMessage::TypeGui).toCVariant(), 3 * 1000);
                     }
                 }
                 continue; // not displayed
@@ -127,7 +127,7 @@ namespace BlackGui
             {
                 // if the channel is selected, do nothing
                 if (!this->isCorrespondingTextMessageTabSelected(message))
-                    emit this->displayOverlayInfo(message.asStatusMessage(true, true, "\t"));
+                    emit this->displayInInfoWindow(message.toCVariant(), 5 * 1000);
             }
         }
     }

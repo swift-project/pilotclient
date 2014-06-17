@@ -38,8 +38,8 @@ namespace BlackGui
         void setSelcalCallback(const std::function<const QString(void)> &selcalCallback) { this->m_selcalCallback = selcalCallback; }
 
     signals:
-        //! Invisible text message
-        void displayOverlayInfo(const BlackMisc::CStatusMessage &message) const;
+        //! Message to be displayed in info window
+        void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
 
     public slots:
         //! Command entered
@@ -110,7 +110,6 @@ namespace BlackGui
 
         //! Clear text edit
         void clearTextEdit();
-
     };
 }
 

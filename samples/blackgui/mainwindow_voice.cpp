@@ -140,7 +140,7 @@ void MainWindow::audioVolumes()
     this->ui->lbl_StatusVoiceStatus->setPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
     this->ui->comp_Cockpit->setCockpitVoiceStatusPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
     this->ui->pb_SoundMute->setStyleSheet(muted ? "background-color: red;" : "");
-    if (muted) this->displayOverlayInfo("Sound is muted!");
+    if (muted) this->m_compInfoWindow->displayStringMessage("Sound is muted!");
 
     // update own aircraft, also set volume/mute in voice
     this->m_ownAircraft.setCom1System(com1);
