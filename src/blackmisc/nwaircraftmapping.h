@@ -34,7 +34,7 @@ namespace BlackMisc
             //! \copydoc CValueObject::unmarshallFromDbus
             virtual void unmarshallFromDbus(const QDBusArgument &) override;
 
-            //! \copydoc CValueObject::compareImpl
+            //! \copydoc CValueObject::compareImpl(const CValueObject &)
             int compareImpl(const CValueObject &otherBase) const override;
 
             //! \copydoc CValueObject::getMetaTypeId()

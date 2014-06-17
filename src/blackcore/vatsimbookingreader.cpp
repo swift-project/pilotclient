@@ -54,6 +54,7 @@ namespace BlackCore
     {
         if (nwReply->error() == QNetworkReply::NoError)
         {
+            static const QString timestampFormat("yyyy-MM-dd HH:mm:ss");
             QString xmlData = nwReply->readAll();
             QDomDocument doc;
 
@@ -71,7 +72,7 @@ namespace BlackCore
                 {
                     // normally the timestamp is always updated from backend
                     // if this changes in the future we're prepared
-                    QDateTime fileTimestamp = QDateTime::fromString(ts, "yyyy-MM-dd HH:mm:ss");
+                    QDateTime fileTimestamp = QDateTime::fromString(ts, timestampFormat);
                     fileTimestamp.setTimeSpec(Qt::UTC);
                     if (this->m_updateTimestamp == fileTimestamp) return; // nothing to do
                     this->m_updateTimestamp = fileTimestamp;
@@ -110,13 +111,13 @@ namespace BlackCore
                         }
                         else if (name == "time_end")
                         {
-                            QDateTime t = QDateTime::fromString(value, "yyyy-MM-dd HH:mm:ss");
+                            QDateTime t = QDateTime::fromString(value, timestampFormat);
                             t.setTimeSpec(Qt::UTC);
                             bookedStation.setBookedUntilUtc(t);
                         }
                         else if (name == "time_start")
                         {
-                            QDateTime t = QDateTime::fromString(value, "yyyy-MM-dd HH:mm:ss");
+                            QDateTime t = QDateTime::fromString(value, timestampFormat);
                             t.setTimeSpec(Qt::UTC);
                             bookedStation.setBookedFromUtc(t);
                         }

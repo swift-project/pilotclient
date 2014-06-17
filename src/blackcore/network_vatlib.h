@@ -53,9 +53,9 @@ namespace BlackCore
         virtual void sendServerQuery(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void sendCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data) override;
         virtual void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
-            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
+                                           const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
         virtual void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &callsign, const QString &airlineDesignator,
-            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
+                                            const QString &aircraftDesignator, const QString &combinedType, const QString &modelString) override;
 
         // Text message slots
         virtual void sendTextMessages(const BlackMisc::Network::CTextMessageList &messages) override;
@@ -75,8 +75,8 @@ namespace BlackCore
         virtual void setOwnAircraftPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude) override;
         virtual void setOwnAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) override;
         virtual void setOwnCockpit(const BlackMisc::Aviation::CComSystem &com1,
-                                            const BlackMisc::Aviation::CComSystem &com2,
-                                            const BlackMisc::Aviation::CTransponder &xpdr) override;
+                                   const BlackMisc::Aviation::CComSystem &com2,
+                                   const BlackMisc::Aviation::CTransponder &xpdr) override;
 
         // Weather slots
         virtual void sendMetarQuery(const BlackMisc::Aviation::CAirportIcao &airportIcao) override;
