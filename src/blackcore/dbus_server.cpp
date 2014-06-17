@@ -13,7 +13,7 @@
 namespace BlackCore
 {
 
-    const QString CDBusServer::ServiceName = QString(BLACKCORE_DBUSERVER_SERVICENAME);
+    const QString CDBusServer::ServiceName = QString(BLACKCORE_RUNTIME_SERVICENAME);
 
     /*
      * Constructor
@@ -21,7 +21,7 @@ namespace BlackCore
      * see http://download.froglogic.com/public/qt5-squishcoco-report/QtBase/source_241_preprocessed.html
      * DBus config: http://dbus.freedesktop.org/doc/dbus-daemon.1.html
      */
-    CDBusServer::CDBusServer(const QString &address, QObject *parent) :
+    CDBusServer::CDBusServer(const QString &service, const QString &address, QObject *parent) :
         QObject(parent), m_busServer(CDBusServer::isQtDBusAddress(address) ? address : "tcp:host=127.0.0.1,port=45000", // "unix:tmpdir=/tmp",
                                      parent), m_serverMode(CDBusServer::SERVERMODE_P2P)
     {
@@ -34,7 +34,7 @@ namespace BlackCore
                 // we use a session bus connection instead of a real P2P connection
                 this->m_serverMode = CDBusServer::SERVERMODE_SESSIONBUS;
                 QDBusConnection con = QDBusConnection::sessionBus();
-                if (!con.registerService(CDBusServer::ServiceName))
+                if (!con.registerService(service))
                 {
                     qCritical() << con.lastError().message();
                     qFatal("Cannot register DBus service, server started? dbus-daemon.exe --session --address=tcp:host=192.168.0.133,port=45000");
@@ -46,7 +46,7 @@ namespace BlackCore
                 // we use a system bus connection instead of a real P2P connection
                 this->m_serverMode = CDBusServer::SERVERMODE_SYSTEMBUS;
                 QDBusConnection con = QDBusConnection::systemBus();
-                if (!con.registerService(CDBusServer::ServiceName))
+                if (!con.registerService(service))
                 {
                     qCritical() << con.lastError().message();
                     qFatal("Cannot register DBus service, server started? dbus-daemon.exe --system --address=tcp:host=192.168.0.133,port=45000");

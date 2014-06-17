@@ -5,6 +5,8 @@
 
 #include "plugin.h"
 
+#define XBUS_SERVICE_SERVICENAME "net.vatsim.xbus"
+
 namespace XBus
 {
 
@@ -21,7 +23,7 @@ namespace XBus
         Q_ASSERT(! m_server);
         for (auto &item : m_startServerMenuItems) { item.setEnabled(false); }
 
-        m_server = new BlackCore::CDBusServer(address, this);
+        m_server = new BlackCore::CDBusServer(XBUS_SERVICE_SERVICENAME, address, this);
         m_service = new CService(this);
         m_server->addObject(CService::ObjectPath(), m_service);
     }

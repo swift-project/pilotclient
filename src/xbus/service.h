@@ -11,10 +11,10 @@
 #include "datarefs.h"
 #include <QObject>
 
-//! \private
-#define XBUS_SERVICE_INTERFACENAME "net.vatsim.PilotClient.XBus"
-//! \private
-#define XBUS_SERVICE_OBJECTPATH "/XBus"
+//! \cond PRIVATE
+#define XBUS_SERVICE_INTERFACENAME "net.vatsim.xbus.service"
+#define XBUS_SERVICE_OBJECTPATH "/xbus"
+//! \endcond
 
 namespace XBus
 {

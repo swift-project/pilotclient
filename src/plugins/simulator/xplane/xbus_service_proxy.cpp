@@ -7,6 +7,8 @@
 #include "blackcore/dbus_server.h"
 #include <QMetaMethod>
 
+#define XBUS_SERVICE_SERVICENAME "net.vatsim.xbus"
+
 namespace BlackSimPlugin
 {
     namespace XPlane
@@ -14,7 +16,7 @@ namespace BlackSimPlugin
 
         CXBusServiceProxy::CXBusServiceProxy(QDBusConnection &connection, QObject *parent, bool dummy) : QObject(parent)
         {
-            m_dbusInterface = new BlackMisc::CGenericDBusInterface(BlackCore::CDBusServer::ServiceName, ObjectPath(), InterfaceName(), connection, this);
+            m_dbusInterface = new BlackMisc::CGenericDBusInterface(XBUS_SERVICE_SERVICENAME, ObjectPath(), InterfaceName(), connection, this);
             if (! dummy) { relaySignals(); }
         }
 

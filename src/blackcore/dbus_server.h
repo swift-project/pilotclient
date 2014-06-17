@@ -14,7 +14,7 @@
 #include <QStringList>
 #include <QMap>
 
-#define BLACKCORE_DBUSERVER_SERVICENAME "org.vatsim.pilotClient"
+#define BLACKCORE_RUNTIME_SERVICENAME "net.vatsim.pilotClient"
 
 
 namespace BlackCore
@@ -27,7 +27,7 @@ namespace BlackCore
     class CDBusServer : public QObject
     {
         Q_OBJECT
-        Q_CLASSINFO("D-Bus Interface", BLACKCORE_DBUSERVER_SERVICENAME)
+        Q_CLASSINFO("D-Bus Interface", BLACKCORE_RUNTIME_SERVICENAME)
 
     public:
         //! \brief Service name of DBus serve
@@ -61,10 +61,13 @@ namespace BlackCore
         }
 
     public:
-        //! Constructor
+        //! Construct a server for the BlackCore runtime
         //! \remarks We are using address and not ServerMode, as on some systems we need to pass in some specific configuration string
         //! \sa QDBusServer
-        CDBusServer(const QString &address, QObject *parent = nullptr);
+        CDBusServer(const QString &address, QObject *parent = nullptr) : CDBusServer(CDBusServer::ServiceName, address, parent) {}
+
+        //! Construct a server for some arbitrary service
+        CDBusServer(const QString &service, const QString &address, QObject *parent = nullptr);
 
         //!! Adds a QObject to be exposed to DBus
         void addObject(const QString &name, QObject *object);
