@@ -63,11 +63,13 @@
             static auto toMetaTuple(const T &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
             {                                                                   \
                 auto tu = BlackMisc::tieMeta MEMBERS;                           \
+                parser().extendMetaTuple(tu);                                   \
                 return tu;                                                      \
             }                                                                   \
             static auto toMetaTuple(T &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
             {                                                                   \
                 auto tu = BlackMisc::tieMeta MEMBERS;                           \
+                parser().extendMetaTuple(tu);                                   \
                 return tu;                                                      \
             }                                                                   \
             static const Parser &parser()                                       \
@@ -111,11 +113,13 @@
             static auto toMetaTuple(const T<U...> &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
             {                                                                   \
                 auto tu = BlackMisc::tieMeta MEMBERS;                           \
+                parser().extendMetaTuple(tu);                                   \
                 return tu;                                                      \
             }                                                                   \
             static auto toMetaTuple(T<U...> &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
             {                                                                   \
                 auto tu = BlackMisc::tieMeta MEMBERS;                           \
+                parser().extendMetaTuple(tu);                                   \
                 return tu;                                                      \
             }                                                                   \
             static const Parser &parser()                                       \
@@ -169,11 +173,23 @@ namespace BlackMisc
         }
 
         //! \brief   Create a tuple element with attached metadata.
+        //! @{
         template <class T, quint64 F>
         static Private::Attribute<T, F> attr(T &obj, std::integral_constant<quint64, F>)
         {
             return { obj };
         }
+        template <class T>
+        static Private::Attribute<T> attr(T &obj, QString jsonName)
+        {
+            return { obj, jsonName };
+        }
+        template <class T, quint64 F>
+        static Private::Attribute<T, F> attr(T &obj, QString jsonName, std::integral_constant<quint64, F>)
+        {
+            return { obj, jsonName };
+        }
+        //! @}
 
         //! \brief   Helper class which parses the stringified macro argument.
         struct Parser
@@ -181,6 +197,14 @@ namespace BlackMisc
             Parser(QString); //!< Constructor.
             QStringList m_raw; //!< The raw macro argument, split by top-level commas.
             QStringList m_names; //!< The names of the tuple members, stripped of any o.m_ prefix.
+
+            //! Fills in any incomplete metadata in a tuple using information from the Parser.
+            template <class Tu>
+            void extendMetaTuple(Tu &&tu) const
+            {
+                Private::extendMeta(std::forward<Tu>(tu), m_names,
+                    Private::make_index_sequence<std::tuple_size<typename std::decay<Tu>::type>::value>());
+            }
         };
     };
 
@@ -233,6 +257,7 @@ namespace BlackMisc
         /*!
          * \name    Static Private Member Functions
          * \brief   Returns a list of the names of the tuple members.
+         * \deprecated This information is now embedded in the meta tuples.
          */
         static const QStringList &jsonMembers();
     };
@@ -339,6 +364,7 @@ namespace BlackMisc
     /*!
      * \brief   Convert to a JSON object
      * \ingroup Tuples
+     * \deprecated The QStringList members can be embedded in tuple metadata.
      */
     template <class... Ts>
     QJsonObject serializeJson(const QStringList &members, std::tuple<Ts...> tu)
@@ -353,6 +379,7 @@ namespace BlackMisc
     /*!
      * \brief   Convert from JSON to object
      * \ingroup Tuples
+     * \deprecated The QStringList members can be embedded in tuple metadata.
      */
     template <class... Ts>
     void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<Ts...> tu)
@@ -360,6 +387,30 @@ namespace BlackMisc
         auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
         auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
         Private::TupleHelper::deserializeJson(json, members, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(metaTu));
+    }
+
+    /*!
+     * \brief   Convert to a JSON object
+     * \ingroup Tuples
+     */
+    template <class... Ts>
+    QJsonObject serializeJson(std::tuple<Ts...> tu)
+    {
+        QJsonObject json;
+        Private::assertMeta<std::tuple<Ts...>>();
+        Private::TupleHelper::serializeJson(json, tu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(tu));
+        return json;
+    }
+
+    /*!
+     * \brief   Convert from JSON to object
+     * \ingroup Tuples
+     */
+    template <class... Ts>
+    void deserializeJson(const QJsonObject &json, std::tuple<Ts...> tu)
+    {
+        Private::assertMeta<std::tuple<Ts...>>();
+        Private::TupleHelper::deserializeJson(json, tu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(tu));
     }
 
 } // namespace BlackMisc

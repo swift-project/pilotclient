@@ -138,8 +138,10 @@ namespace BlackMisc
             typedef T type;
             static const quint64 flags = Flags;
 
-            Attribute(T &obj) : m_obj(obj) {}
+            Attribute(T &obj, QString jsonName = {}) : m_obj(obj), m_jsonName(jsonName) {}
+            void extend(QString jsonName) { if (m_jsonName.isEmpty()) m_jsonName = jsonName; }
             T &m_obj;
+            QString m_jsonName;
 
             bool operator ==(const Attribute &other) const { return m_obj == other.m_obj; }
             bool operator !=(const Attribute &other) const { return m_obj != other.m_obj; }
@@ -174,6 +176,12 @@ namespace BlackMisc
             return attr;
         }
 
+        // Compile-time assert for functions which require a meta tuple
+        template <class Tu>
+        struct assertMeta { static_assert(std::is_void<Tu>::value, "Function expected a meta tuple, got a value tuple"); };
+        template <class... Ts, quint64... Fs>
+        struct assertMeta<std::tuple<Attribute<Ts, Fs>...>> {};
+
         // Convert a meta tuple to a value tuple
         template <class Tu, size_t... Is>
         auto stripMeta(Tu &&tu, index_sequence<Is...>) -> decltype(std::make_tuple(tieHelper(std::get<Is>(std::forward<Tu>(tu)))...))
@@ -186,6 +194,13 @@ namespace BlackMisc
         auto recoverMeta(Tu &&tu, index_sequence<Is...>) -> decltype(std::make_tuple(tieMetaHelper(std::get<Is>(std::forward<Tu>(tu)))...))
         {
             return std::make_tuple(tieMetaHelper(std::get<Is>(std::forward<Tu>(tu)))...);
+        }
+
+        // Fill in any incomplete metadata in a meta tuple, from an appropriate source
+        template <class Tu, size_t... Is>
+        void extendMeta(Tu &&tu, const QStringList &jsonNames, index_sequence<Is...>)
+        {
+            [](...){}((std::get<Is>(std::forward<Tu>(tu)).extend(jsonNames[Is]), 0)...);
         }
 
         // Applying operations to all elements in a tuple, using index_sequence for clean recursion
@@ -237,11 +252,23 @@ namespace BlackMisc
                 deserializeJsonImpl(json, std::make_pair(names[Is], get_ref<Is>(tu))...);
             }
 
-        private:
-            template <size_t I, class T>
-            static auto get_ref(T &&tu) -> decltype(std::ref(std::get<I>(std::forward<T>(tu))))
+            template <class Tu, size_t... Is>
+            static void serializeJson(QJsonObject &json, const Tu &tu, index_sequence<Is...>)
             {
-                return std::ref(std::get<I>(std::forward<T>(tu)));
+                serializeJsonImpl(json, std::make_pair(std::get<Is>(tu).m_jsonName, std::get<Is>(tu).m_obj)...);
+            }
+
+            template <class Tu, size_t... Is>
+            static void deserializeJson(const QJsonObject &json, Tu &tu, index_sequence<Is...>)
+            {
+                deserializeJsonImpl(json, std::make_pair(std::get<Is>(tu).m_jsonName, get_ref<Is>(tu))...);
+            }
+
+        private:
+            template <size_t I, class Tu>
+            static auto get_ref(Tu &&tu) -> decltype(tieHelper(std::get<I>(std::forward<Tu>(tu))))
+            {
+                return tieHelper(std::get<I>(std::forward<Tu>(tu)));
             }
 
             static int compareImpl() { return 0; }
