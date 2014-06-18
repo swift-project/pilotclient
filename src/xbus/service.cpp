@@ -24,15 +24,17 @@ namespace XBus
 
     QString CService::getAircraftModelPath() const
     {
+        char filename[256];
         char path[512];
-        XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, nullptr, path);
+        XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
         return path;
     }
 
     QString CService::getAircraftModelFilename() const
     {
         char filename[256];
-        XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, nullptr);
+        char path[512];
+        XPLMGetNthAircraftModel(XPLM_USER_AIRCRAFT, filename, path);
         return filename;
     }
 
