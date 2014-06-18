@@ -37,15 +37,6 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::canConnect
             virtual bool canConnect() override;
 
-        private:
-            QDBusConnection m_conn { "default" };
-            QDBusServiceWatcher *m_watcher { nullptr };
-            CXBusServiceProxy *m_service { nullptr };
-
-        private slots:
-            void serviceRegistered();
-            void serviceUnregistered();
-
         public slots:
             //! \copydoc BlackCore::ISimulator::connectTo
             virtual bool connectTo() override;
@@ -81,6 +72,44 @@ namespace BlackSimPlugin
 
             //! \copydoc BlackCore::ISimulator::getAircraftModel
             virtual BlackMisc::Network::CAircraftModel getAircraftModel() const override;
+
+        private slots:
+            void serviceRegistered();
+            void serviceUnregistered();
+            void fastTimerTimeout();
+            void slowTimerTimeout();
+
+        private:
+            QDBusConnection m_conn { "default" };
+            QDBusServiceWatcher *m_watcher { nullptr };
+            CXBusServiceProxy *m_service { nullptr };
+            QTimer *m_fastTimer { nullptr };
+            QTimer *m_slowTimer { nullptr };
+
+            struct // data is written by DBus async method callbacks
+            {
+                QString aircraftModelPath;
+                QString aircraftIcaoCode;
+                double latitude;
+                double longitude;
+                double altitude;
+                double groundspeed;
+                double pitch;
+                double roll;
+                double trueHeading;
+                int com1Active;
+                int com1Standby;
+                int com2Active;
+                int com2Standby;
+                int xpdrCode;
+                int xpdrMode;
+                bool xpdrIdent;
+            } m_xplaneData;
+
+            void resetData()
+            {
+                m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false };
+            }
         };
     
         //! Factory for creating CSimulatorXPlane instance
