@@ -27,6 +27,8 @@ namespace BlackMisc
         {
             QRegExp simple("^o\\.(\\w+)$");
             if (member.contains(simple)) { m_names.push_back(simple.cap(1)); continue; }
+            QRegExp meta("^attr\\s*\\(\\s*o\\.(\\w+)");
+            if (member.contains(meta)) { m_names.push_back(meta.cap(1)); continue; }
             qFatal("BLACK_DECLARE_TUPLE_CONVERSION: Parser couldn't extract member name from \"%s\"", qPrintable(member));
         }
         for (auto &name : m_names) { name.remove(QRegExp("^m_")); }

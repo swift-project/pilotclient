@@ -30,11 +30,15 @@
  * \details Put this macro outside of any namespace, in the same header as T, to make it usable in TupleConverter.
  * \param   T The fully qualified name of the class.
  * \param   MEMBERS A parenthesized, comma-separated list of the data members of T, with each member prefixed by "o."
- *                (the letter o followed by dot).
+ *                (the letter o followed by dot). Can also use any types or functions inherited from TupleConverterBase.
  * \par     Example
  *              If class Things::MyThing has data members m_first, m_second, and m_third:
  *              \code
  *              BLACK_DEFINE_TUPLE_CONVERSION(Things::MyThing, (o.m_first, o.m_second, o.m_third))
+ *              \endcode
+ *              To disable m_third from participating in hash value generation:
+ *              \code
+ *              BLACK_DEFINE_TUPLE_CONVERSION(Things::MyThing, (o.m_first, o.m_second, attr(o.m_third, flags<DisabledForHash>())))
  *              \endcode
  * \see     BLACK_DECLARE_TUPLE_CONVERSION_TEMPLATE If T is a template, use this instead.
  * \hideinitializer
@@ -55,6 +59,16 @@
             static auto toTuple(T &o) -> decltype(BlackMisc::tie MEMBERS)       \
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
+            }                                                                   \
+            static auto toMetaTuple(const T &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
+            {                                                                   \
+                auto tu = BlackMisc::tieMeta MEMBERS;                           \
+                return tu;                                                      \
+            }                                                                   \
+            static auto toMetaTuple(T &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
+            {                                                                   \
+                auto tu = BlackMisc::tieMeta MEMBERS;                           \
+                return tu;                                                      \
             }                                                                   \
             static const Parser &parser()                                       \
             {                                                                   \
@@ -94,6 +108,16 @@
             {                                                                   \
                 return BlackMisc::tie MEMBERS;                                  \
             }                                                                   \
+            static auto toMetaTuple(const T<U...> &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
+            {                                                                   \
+                auto tu = BlackMisc::tieMeta MEMBERS;                           \
+                return tu;                                                      \
+            }                                                                   \
+            static auto toMetaTuple(T<U...> &o) -> decltype(BlackMisc::tieMeta MEMBERS) \
+            {                                                                   \
+                auto tu = BlackMisc::tieMeta MEMBERS;                           \
+                return tu;                                                      \
+            }                                                                   \
             static const Parser &parser()                                       \
             {                                                                   \
                 static const Parser p(#MEMBERS);                                \
@@ -121,7 +145,36 @@ namespace BlackMisc
      */
     class TupleConverterBase
     {
+    public:
+        //! \brief   Metadata flags attached to tuple elements.
+        enum Flags
+        {
+            DisabledForComparison = 1 << 0,     //!< Element will be ignored by compare(), but not by operators
+            DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus marshalling
+            DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
+            DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
+            DisabledForJson = 1 << 4            //!< Element will be ignored during JSON serialization
+        };
+
     protected:
+        //! \brief   A shorthand alias for passing flags as a compile-time constant.
+        template <quint64 F = 0>
+        using flags = std::integral_constant<quint64, F>;
+
+        //! \brief   Create a tuple element with default metadata.
+        template <class T>
+        static Private::Attribute<T> attr(T &obj)
+        {
+            return { obj };
+        }
+
+        //! \brief   Create a tuple element with attached metadata.
+        template <class T, quint64 F>
+        static Private::Attribute<T, F> attr(T &obj, std::integral_constant<quint64, F>)
+        {
+            return { obj };
+        }
+
         //! \brief   Helper class which parses the stringified macro argument.
         struct Parser
         {
@@ -164,6 +217,15 @@ namespace BlackMisc
 
         /*!
          * \name    Static Private Member Functions
+         * \brief   Returns a tuple of structs, each of which contains a reference to one of object's data members and its attched metadata.
+         */
+        //! @{
+        static std::tuple<> toMetaTuple(const T &object);
+        static std::tuple<> toMetaTuple(T &object);
+        //! @}
+
+        /*!
+         * \name    Static Private Member Functions
          * \brief   Returns an object with information extracted from the stringified macro argument.
          */
         static const Parser &parser();
@@ -181,13 +243,23 @@ namespace BlackMisc
     using ::qHash;
 
     /*!
-     * \brief   Works like std::tie, and allows us to hook in our own customizations.
+     * \brief   Works like std::tie, returning a tuple of references to just the values, with metadata removed.
      * \ingroup Tuples
      */
     template <class... Ts>
     auto tie(Ts &&... args) -> decltype(std::make_tuple(Private::tieHelper(args)...))
     {
         return std::make_tuple(Private::tieHelper(args)...);
+    }
+
+    /*!
+     * \brief   Works like std::tie, returning a tuple of objects, each of which contains metadata plus a reference to a value.
+     * \ingroup Tuples
+     */
+    template <class... Ts>
+    auto tieMeta(Ts &&... args) -> decltype(std::make_tuple(Private::tieMetaHelper(args)...))
+    {
+        return std::make_tuple(Private::tieMetaHelper(args)...);
     }
 
     /*!
@@ -199,7 +271,10 @@ namespace BlackMisc
     template <class... Ts>
     int compare(std::tuple<Ts...> a, std::tuple<Ts...> b)
     {
-        return Private::TupleHelper::compare(a, b, Private::make_index_sequence<sizeof...(Ts)>());
+        auto valuesA = Private::stripMeta(a, Private::make_index_sequence<sizeof...(Ts)>());
+        auto valuesB = Private::stripMeta(b, Private::make_index_sequence<sizeof...(Ts)>());
+        auto metaTu = Private::recoverMeta(a, Private::make_index_sequence<sizeof...(Ts)>());
+        return Private::TupleHelper::compare(valuesA, valuesB, Private::skipFlaggedIndices<TupleConverterBase::DisabledForComparison>(metaTu));
     }
 
     /*!
@@ -209,7 +284,9 @@ namespace BlackMisc
     template <class... Ts>
     QDBusArgument &operator <<(QDBusArgument &arg, std::tuple<Ts...> tu)
     {
-        return Private::TupleHelper::marshall(arg, tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        return Private::TupleHelper::marshall(arg, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForMarshalling>(metaTu));
     }
 
     /*!
@@ -219,7 +296,9 @@ namespace BlackMisc
     template <class... Ts>
     const QDBusArgument &operator >>(const QDBusArgument &arg, std::tuple<Ts...> tu)
     {
-        return Private::TupleHelper::unmarshall(arg, tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        return Private::TupleHelper::unmarshall(arg, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForMarshalling>(metaTu));
     }
 
     /*!
@@ -229,7 +308,9 @@ namespace BlackMisc
     template <class... Ts>
     QDebug operator <<(QDebug debug, std::tuple<Ts &...> tu)
     {
-        return Private::TupleHelper::debug(debug, tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        return Private::TupleHelper::debug(debug, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForDebugging>(metaTu));
     }
 
     /*!
@@ -250,7 +331,9 @@ namespace BlackMisc
     template <class... Ts>
     uint qHash(std::tuple<Ts...> tu)
     {
-        return Private::TupleHelper::hash(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        return Private::TupleHelper::hash(valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForHashing>(metaTu));
     }
 
     /*!
@@ -261,18 +344,22 @@ namespace BlackMisc
     QJsonObject serializeJson(const QStringList &members, std::tuple<Ts...> tu)
     {
         QJsonObject json;
-        Private::TupleHelper::serializeJson(json, members, tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        Private::TupleHelper::serializeJson(json, members, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(metaTu));
         return json;
     }
 
     /*!
-     * Convert from JSON to object
+     * \brief   Convert from JSON to object
      * \ingroup Tuples
      */
     template <class... Ts>
     void deserializeJson(const QJsonObject &json, const QStringList &members, std::tuple<Ts...> tu)
     {
-        Private::TupleHelper::deserializeJson(json, members, tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
+        Private::TupleHelper::deserializeJson(json, members, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(metaTu));
     }
 
 } // namespace BlackMisc

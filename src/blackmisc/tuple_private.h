@@ -55,13 +55,6 @@ namespace BlackMisc
             return 0;
         }
 
-        template <int N, class Tu>
-        int compareHelper(const Tu &a, const Tu &b)
-        {
-            typedef typename std::decay<typename std::tuple_element<N, Tu>::type>::type Element;
-            return compareHelper(std::get<N>(a), std::get<N>(b), typename std::is_base_of<CValueObject, Element>::type());
-        }
-
         // Our own implementation of std::index_sequence (because not implemented by MSVC2013)
         template <size_t... Is>
         struct index_sequence
@@ -82,11 +75,117 @@ namespace BlackMisc
         template <size_t C>
         using make_index_sequence = typename GenSequence<0, C>::type;
 
-        // Helper which will allow us to hook in our own customizations into BlackMisc::tie
+        // Create an index_sequence containing indices which match a given predicate.
+        template <class P, size_t I, size_t C, bool B = false, size_t I2 = 0xDeadBeef, size_t... Is>
+        struct GenSequenceOnPredicate;
+        template <class P, size_t I, size_t C, size_t I2, size_t... Is>
+        struct GenSequenceOnPredicate<P, I, C, true, I2, Is...>
+        {
+            static const bool test = P::template test<I>::value;
+            typedef typename GenSequenceOnPredicate<P, I + 1, C, test, I, Is..., I2>::type type;
+        };
+        template <class P, size_t I, size_t C, size_t I2, size_t... Is>
+        struct GenSequenceOnPredicate<P, I, C, false, I2, Is...>
+        {
+            static const bool test = P::template test<I>::value;
+            typedef typename GenSequenceOnPredicate<P, I + 1, C, test, I, Is...>::type type;
+        };
+        template <class P, size_t C, size_t I2, size_t... Is>
+        struct GenSequenceOnPredicate<P, C, C, true, I2, Is...>
+        {
+            typedef index_sequence<Is..., I2> type;
+        };
+        template <class P, size_t C, size_t I2, size_t... Is>
+        struct GenSequenceOnPredicate<P, C, C, false, I2, Is...>
+        {
+            typedef index_sequence<Is...> type;
+        };
+        template <class P>
+        using make_index_sequence_if = typename GenSequenceOnPredicate<P, 0, std::tuple_size<typename P::tuple_type>::value>::type;
+
+        // Predicates used with make_index_sequence_if.
+        template <quint64 F, class Tu>
+        struct FlagPresent
+        {
+            typedef Tu tuple_type;
+            template <size_t I>
+            struct test : std::integral_constant<bool, bool(std::tuple_element<I, Tu>::type::flags & F)> {};
+        };
+        template <quint64 F, class Tu>
+        struct FlagMissing
+        {
+            typedef Tu tuple_type;
+            template <size_t I>
+            struct test : std::integral_constant<bool, ! bool(std::tuple_element<I, Tu>::type::flags & F)> {};
+        };
+
+        // Combine make_index_sequence_if with predicates to get the indices of tuple elements with certain flags.
+        template <quint64 F, class Tu>
+        auto findFlaggedIndices(Tu &&) -> make_index_sequence_if<FlagPresent<F, typename std::decay<Tu>::type>>
+        {
+            return {};
+        }
+        template <quint64 F, class Tu>
+        auto skipFlaggedIndices(Tu &&) -> make_index_sequence_if<FlagMissing<F, typename std::decay<Tu>::type>>
+        {
+            return {};
+        }
+
+        // A tuple element with attached metadata.
+        template <class T, quint64 Flags = 0>
+        struct Attribute
+        {
+            typedef T type;
+            static const quint64 flags = Flags;
+
+            Attribute(T &obj) : m_obj(obj) {}
+            T &m_obj;
+
+            bool operator ==(const Attribute &other) const { return m_obj == other.m_obj; }
+            bool operator !=(const Attribute &other) const { return m_obj != other.m_obj; }
+            bool operator <(const Attribute &other) const { return m_obj < other.m_obj; }
+            bool operator <=(const Attribute &other) const { return m_obj <= other.m_obj; }
+            bool operator >(const Attribute &other) const { return m_obj > other.m_obj; }
+            bool operator >=(const Attribute &other) const { return m_obj >= other.m_obj; }
+        };
+
+        // Helpers used in tie(), tieMeta(), and elsewhere, which arrange for the correct types to be passed to std::make_tuple.
+        // See http://en.cppreference.com/w/cpp/utility/tuple/make_tuple
+        //     "For each Ti in Types..., the corresponding type Vi in Vtypes... is std::decay<Ti>::type
+        //     unless application of std::decay results in std::reference_wrapper<X>, in which case the deduced type is X&."
         template <class T>
         std::reference_wrapper<T> tieHelper(T &obj)
         {
             return obj;
+        }
+        template <class T, quint64 Flags>
+        std::reference_wrapper<T> tieHelper(Attribute<T, Flags> attr)
+        {
+            return attr.m_obj;
+        }
+        template <class T>
+        Attribute<T> tieMetaHelper(T &obj)
+        {
+            return obj;
+        }
+        template <class T, quint64 Flags>
+        Attribute<T, Flags> tieMetaHelper(Attribute<T, Flags> attr)
+        {
+            return attr;
+        }
+
+        // Convert a meta tuple to a value tuple
+        template <class Tu, size_t... Is>
+        auto stripMeta(Tu &&tu, index_sequence<Is...>) -> decltype(std::make_tuple(tieHelper(std::get<Is>(std::forward<Tu>(tu)))...))
+        {
+            return std::make_tuple(tieHelper(std::get<Is>(std::forward<Tu>(tu)))...);
+        }
+
+        // Convert a value tuple to a meta tuple with default metadata
+        template <class Tu, size_t... Is>
+        auto recoverMeta(Tu &&tu, index_sequence<Is...>) -> decltype(std::make_tuple(tieMetaHelper(std::get<Is>(std::forward<Tu>(tu)))...))
+        {
+            return std::make_tuple(tieMetaHelper(std::get<Is>(std::forward<Tu>(tu)))...);
         }
 
         // Applying operations to all elements in a tuple, using index_sequence for clean recursion
