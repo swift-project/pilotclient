@@ -9,66 +9,41 @@
 #include "blackmisc/avcallsign.h"
 #include <QSharedPointer>
 
-namespace BlackCore
-{
-    class IInterpolator;
-}
-
+namespace BlackCore { class IInterpolator; }
 namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        //! \brief Class representing a Simconnect object
+        //! Class representing a SimConnect object
         class CSimConnectObject
         {
         public:
 
-            //! \brief Constructor
+            //! Constructor
             CSimConnectObject();
 
-            //! \brief Destructor
+            //! Destructor
             ~CSimConnectObject() {}
 
-            /*!
-             * \brief Set callsign
-             * \param callsign
-             */
+            //! Set callsign
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_callsign = callsign; }
 
-            /*!
-             * \brief Get Callsign
-             * \return
-             */
+            //! Get Callsign
             BlackMisc::Aviation::CCallsign getCallsign() const { return m_callsign; }
 
-            /*!
-             * \brief Set Simconnect request id
-             * \param id
-             */
+            //! Set Simconnect request id
             void setRequestId(int id) { m_requestId = id; }
 
-            /*!
-             * \brief Get Simconnect request id
-             * \return
-             */
+            //! Get Simconnect request id
             int getRequestId() const { return m_requestId; }
 
-            /*!
-             * \brief Set Simconnect object id
-             * \param id
-             */
+            //! Set Simconnect object id
             void setObjectId(int id) { m_objectId = id; }
 
-            /*!
-             * \brief Set Simconnect object id
-             * \return
-             */
+            //! Set Simconnect object id
             int getObjectId() const { return m_objectId; }
 
-            /*!
-             * \brief Get interpolator
-             * \return
-             */
+            //! Get interpolator
             QSharedPointer<BlackCore::IInterpolator> getInterpolator() const { return m_interpolator; }
 
         private:
