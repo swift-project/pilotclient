@@ -5,13 +5,14 @@
 
 #include "blackcorefreefunctions.h"
 #include "voice.h"
-
+#include "simulator.h"
 
 namespace BlackCore
 {
     void registerMetadata()
     {
         IVoice::registerMetadata();
+        ISimulator::registerMetadata();
     }
 
 } // namespace

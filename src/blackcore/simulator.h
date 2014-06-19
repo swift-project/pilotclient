@@ -25,10 +25,11 @@ namespace BlackCore
     class ISimulator : public QObject
     {
         Q_OBJECT
+        Q_ENUMS(Status)
 
     public:
 
-        //! \brief Simulator connection
+        //! ISimulatorSimulator connection
         enum Status
         {
             Disconnected,
@@ -36,27 +37,31 @@ namespace BlackCore
             ConnectionFailed
         };
 
-        //! \brief Constructor
-        ISimulator(QObject *parent = nullptr) : QObject(parent) {}
+        //! ISimulatorConstructor
+        ISimulator(QObject *parent = nullptr);
 
-        //! \brief Destructor
+        //! ISimulatorDestructor
         virtual ~ISimulator() {}
 
-        //! \brief Are we connected to the simulator?
+        //! ISimulatorAre we connected to the simulator?
         virtual bool isConnected() const = 0;
 
-        //! \brief Can we connect?
+        //! ISimulatorCan we connect?
         virtual bool canConnect() = 0;
+
+        //! ISimulatorRegister metadata
+        static void registerMetadata();
+
 
     public slots:
 
-        //! \brief Connect to simulator
+        //! ISimulatorConnect to simulator
         virtual bool connectTo() = 0;
 
         //! Connect asynchron to simulator
         virtual void asyncConnectTo() = 0;
 
-        //! \brief Disconnect from simulator
+        //! ISimulatorDisconnect from simulator
         virtual bool disconnectFrom() = 0;
 
         //! Return user aircraft object
@@ -102,11 +107,11 @@ namespace BlackCore
     {
     public:
 
-        //! \brief Virtual destructor
+        //! ISimulatorVirtual destructor
         virtual ~ISimulatorFactory() {}
 
         /*!
-         * \brief Create a new instance
+         * ISimulatorCreate a new instance
          * \param parent
          * \return
          */
@@ -120,5 +125,6 @@ namespace BlackCore
 
 // TODO: Use CProject to store this string
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
+Q_DECLARE_METATYPE(BlackCore::ISimulator::Status)
 
 #endif // guard
