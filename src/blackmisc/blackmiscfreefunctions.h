@@ -140,6 +140,12 @@ namespace BlackMisc
     //! Real heap size of an object
     size_t heapSizeOf(const QMetaObject &objectType);
 
+    //! Get local host name
+    const QString &localHostName();
+
+    //! Get local host name env.variable
+    const QString &localHostNameEnvVariable();
+
 } // BlackMisc
 
 #endif // guard

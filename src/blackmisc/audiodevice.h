@@ -135,10 +135,6 @@ namespace BlackMisc
             QString m_deviceName;
             //! \brief We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
             QString m_hostName;
-
-        private:
-            //! Own host name
-            static const QString &computerHostName();
         };
 
     } // Audio

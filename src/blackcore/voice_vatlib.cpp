@@ -18,8 +18,8 @@ namespace BlackCore
      */
     CVoiceVatlib::CVoiceVatlib(QObject *parent) :
         IVoice(parent),
-        m_voice(Cvatlib_Voice_Simple::Create()),
-        m_audioOutput(new QAudioOutput()),
+        m_voice(nullptr),
+        m_audioOutput(nullptr),
         m_inputSquelch(-1),
         m_micTestResult(Cvatlib_Voice_Simple::agc_Ok),
         m_isAudioLoopbackEnabled(false),
@@ -38,6 +38,10 @@ namespace BlackCore
     {
         try
         {
+            // we use reset here until issue #277 is resolved
+            // easier to find root cause
+            m_audioOutput.reset(new QAudioOutput());
+            m_voice.reset(Cvatlib_Voice_Simple::Create());
             m_voice->Setup(true, 3290, 2, 1, onRoomStatusUpdate, this);
             m_voice->GetInputDevices(onInputHardwareDeviceReceived, this);
             m_voice->GetOutputDevices(onOutputHardwareDeviceReceived, this);

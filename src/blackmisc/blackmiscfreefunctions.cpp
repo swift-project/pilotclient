@@ -15,6 +15,10 @@
 #include "variant.h"
 #include "statusmessagelist.h"
 #include "audioallclasses.h"
+#include <QtNetwork/QHostInfo>
+#include <QProcessEnvironment>
+#include <QSysInfo>
+
 
 /*
  * Metadata for PQs
@@ -438,4 +442,24 @@ void BlackMisc::displayAllUserMetatypesTypes()
         QMetaType metaType(mt);
         qDebug() << "type:" << mt << "name:" << QMetaType::typeName(mt) << QMetaType::sizeOf(mt) << BlackMisc::heapSizeOf(metaType);
     }
+}
+
+/*
+ * Local host name
+ */
+const QString &BlackMisc::localHostName()
+{
+    static const QString hostName = QHostInfo::localHostName();
+    return hostName;
+}
+
+/*
+ * Local host name
+ */
+const QString &BlackMisc::localHostNameEnvVariable()
+{
+    static const QString hostName =
+        QProcessEnvironment::systemEnvironment().value("COMPUTERNAME",
+                QProcessEnvironment::systemEnvironment().value("HOSTNAME"));
+    return hostName;
 }

@@ -5,7 +5,6 @@
 
 #include "audiodevice.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include <QtNetwork/QHostInfo>
 #include <tuple>
 
 namespace BlackMisc
@@ -17,7 +16,7 @@ namespace BlackMisc
          */
         CAudioDevice::CAudioDevice() :
             m_type(Unknown), m_deviceIndex(invalidDeviceIndex()),
-            m_deviceName(""), m_hostName(CAudioDevice::computerHostName())
+            m_deviceName(""), m_hostName(BlackMisc::localHostName())
         {
             // void
         }
@@ -27,18 +26,9 @@ namespace BlackMisc
          */
         CAudioDevice::CAudioDevice(DeviceType type, const qint16 index, const QString &name) :
             m_type(type), m_deviceIndex(index),
-            m_deviceName(name), m_hostName(CAudioDevice::computerHostName())
+            m_deviceName(name), m_hostName(BlackMisc::localHostName())
         {
             // void
-        }
-
-        /*
-         * Host name
-         */
-        const QString &CAudioDevice::computerHostName()
-        {
-            static const QString hostName = QHostInfo::fromName(QHostInfo::localHostName()).localHostName();
-            return hostName;
         }
 
         /*
