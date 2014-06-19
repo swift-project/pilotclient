@@ -8,8 +8,10 @@ TEMPLATE = lib
 CONFIG += shared
 CONFIG += blackmisc blackcore
 
-equals(WORD_SIZE,64): LIBS += -lXPLM_64
-equals(WORD_SIZE,32): LIBS += -lXPLM
+win32 {
+    equals(WORD_SIZE,64): LIBS += -lXPLM_64
+    equals(WORD_SIZE,32): LIBS += -lXPLM
+}
 
 DEPENDPATH += . ../../src
 INCLUDEPATH += . ../../src
