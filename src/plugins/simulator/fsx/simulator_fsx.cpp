@@ -45,7 +45,8 @@ namespace BlackSimPlugin
             m_nextObjID(1),
             m_simulatorInfo(CSimulatorInfo::FSX()),
             m_simconnectTimerId(-1),
-            m_skipCockpitUpdateCycles(0)
+            m_skipCockpitUpdateCycles(0),
+            m_fsuipc(new CFsuipc())
         {
             CFsxSimulatorSetup setup;
             setup.init(); // this fetches important setting on local side
@@ -62,14 +63,24 @@ namespace BlackSimPlugin
             return m_isConnected;
         }
 
+        bool CSimulatorFsx::isFsuipcConnected() const
+        {
+            return m_fsuipc->isConnected();
+        }
+
+
         bool CSimulatorFsx::connectTo()
         {
-            if (m_isConnected)
-                return true;
+            if (m_isConnected) return true;
 
             if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
             {
+                emit statusChanged(ConnectionFailed);
                 return false;
+            }
+            else
+            {
+                this->m_fsuipc->connect(); // connect FSUIPC too
             }
 
             initEvents();
@@ -85,13 +96,15 @@ namespace BlackSimPlugin
         {
             connect(&m_watcherConnect, SIGNAL(finished()), this, SLOT(connectToFinished()));
 
+            // simplified connect, timers and signals not in different thread
             auto asyncConnectFunc = [&]() -> bool
             {
                 if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0))) return false;
+                this->m_fsuipc->connect(); // FSUIPC too
                 return true;
             };
-            QFuture<bool> result = QtConcurrent::run(asyncConnectFunc);
 
+            QFuture<bool> result = QtConcurrent::run(asyncConnectFunc);
             m_watcherConnect.setFuture(result);
         }
 
@@ -102,8 +115,10 @@ namespace BlackSimPlugin
 
             emit statusChanged(Disconnected);
             if (m_hSimConnect)
+            {
                 SimConnect_Close(m_hSimConnect);
-
+                this->m_fsuipc->disconnect();
+            }
 
             if (m_simconnectTimerId)
                 killTimer(m_simconnectTimerId);
@@ -435,7 +450,7 @@ namespace BlackSimPlugin
         {
             // First check, if this request id belongs to us
             auto it = std::find_if(m_simConnectObjects.begin(), m_simConnectObjects.end(),
-                 [requestID](const CSimConnectObject &obj) { return obj.getRequestId() == static_cast<int>(requestID); });
+            [requestID](const CSimConnectObject & obj) { return obj.getRequestId() == static_cast<int>(requestID); });
 
             if (it == m_simConnectObjects.end())
                 return;

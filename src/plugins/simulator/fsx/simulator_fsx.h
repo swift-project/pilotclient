@@ -8,6 +8,7 @@
 
 #include "simconnect_datadefinition.h"
 #include "simconnect_object.h"
+#include "fsuipc.h"
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator_linear.h"
 #include "blackmisc/avaircraft.h"
@@ -77,6 +78,9 @@ namespace BlackSimPlugin
 
             //! \copydoc ISimulator::isConnected()
             virtual bool isConnected() const override;
+
+            //! FSUIPC connected?
+            bool isFsuipcConnected() const;
 
             //! \copydoc ISimulator::canConnect()
             virtual bool canConnect() override;
@@ -172,7 +176,7 @@ namespace BlackSimPlugin
             //! Update what?
             void update(); // TODO: @RW, please rename, update is meaningless: what is updated?
 
-            static const int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles for updating cockpit again
+            static const int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
             bool    m_isConnected; //!< Is simulator connected?
             bool    m_simRunning;  //!< Simulator running?
             HANDLE  m_hSimConnect; //!< Handle to SimConnect object
@@ -186,6 +190,7 @@ namespace BlackSimPlugin
             int m_simconnectTimerId;
             int m_skipCockpitUpdateCycles; //!< Skip some update cycles to allow changes in simulator cockpit to be set
             QFutureWatcher<bool> m_watcherConnect;
+            QScopedPointer<CFsuipc> m_fsuipc;
         };
     }
 
