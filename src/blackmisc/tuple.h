@@ -162,8 +162,8 @@ namespace BlackMisc
 
     protected:
         //! \brief   A shorthand alias for passing flags as a compile-time constant.
-        template <quint64 F = 0>
-        using flags = std::integral_constant<quint64, F>;
+        template <qint64 F = 0>
+        using flags = std::integral_constant<qint64, F>;
 
         //! \brief   Create a tuple element with default metadata.
         template <class T>
@@ -174,8 +174,8 @@ namespace BlackMisc
 
         //! \brief   Create a tuple element with attached metadata.
         //! @{
-        template <class T, quint64 F>
-        static Private::Attribute<T, F> attr(T &obj, std::integral_constant<quint64, F>)
+        template <class T, qint64 F>
+        static Private::Attribute<T, F> attr(T &obj, std::integral_constant<qint64, F>)
         {
             return { obj };
         }
@@ -184,8 +184,8 @@ namespace BlackMisc
         {
             return { obj, jsonName };
         }
-        template <class T, quint64 F>
-        static Private::Attribute<T, F> attr(T &obj, QString jsonName, std::integral_constant<quint64, F>)
+        template <class T, qint64 F>
+        static Private::Attribute<T, F> attr(T &obj, QString jsonName, std::integral_constant<qint64, F>)
         {
             return { obj, jsonName };
         }

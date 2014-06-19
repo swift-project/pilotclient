@@ -104,14 +104,14 @@ namespace BlackMisc
         using make_index_sequence_if = typename GenSequenceOnPredicate<P, 0, std::tuple_size<typename P::tuple_type>::value>::type;
 
         // Predicates used with make_index_sequence_if.
-        template <quint64 F, class Tu>
+        template <qint64 F, class Tu>
         struct FlagPresent
         {
             typedef Tu tuple_type;
             template <size_t I>
             struct test : std::integral_constant<bool, bool(std::tuple_element<I, Tu>::type::flags & F)> {};
         };
-        template <quint64 F, class Tu>
+        template <qint64 F, class Tu>
         struct FlagMissing
         {
             typedef Tu tuple_type;
@@ -120,23 +120,23 @@ namespace BlackMisc
         };
 
         // Combine make_index_sequence_if with predicates to get the indices of tuple elements with certain flags.
-        template <quint64 F, class Tu>
+        template <qint64 F, class Tu>
         auto findFlaggedIndices(Tu &&) -> make_index_sequence_if<FlagPresent<F, typename std::decay<Tu>::type>>
         {
             return {};
         }
-        template <quint64 F, class Tu>
+        template <qint64 F, class Tu>
         auto skipFlaggedIndices(Tu &&) -> make_index_sequence_if<FlagMissing<F, typename std::decay<Tu>::type>>
         {
             return {};
         }
 
         // A tuple element with attached metadata.
-        template <class T, quint64 Flags = 0>
+        template <class T, qint64 Flags = 0>
         struct Attribute
         {
             typedef T type;
-            static const quint64 flags = Flags;
+            static const qint64 flags = Flags;
 
             Attribute(T &obj, QString jsonName = {}) : m_obj(obj), m_jsonName(jsonName) {}
             void extend(QString jsonName) { if (m_jsonName.isEmpty()) m_jsonName = jsonName; }
@@ -160,7 +160,7 @@ namespace BlackMisc
         {
             return obj;
         }
-        template <class T, quint64 Flags>
+        template <class T, qint64 Flags>
         std::reference_wrapper<T> tieHelper(Attribute<T, Flags> attr)
         {
             return attr.m_obj;
@@ -170,7 +170,7 @@ namespace BlackMisc
         {
             return obj;
         }
-        template <class T, quint64 Flags>
+        template <class T, qint64 Flags>
         Attribute<T, Flags> tieMetaHelper(Attribute<T, Flags> attr)
         {
             return attr;
@@ -179,7 +179,7 @@ namespace BlackMisc
         // Compile-time assert for functions which require a meta tuple
         template <class Tu>
         struct assertMeta { static_assert(std::is_void<Tu>::value, "Function expected a meta tuple, got a value tuple"); };
-        template <class... Ts, quint64... Fs>
+        template <class... Ts, qint64... Fs>
         struct assertMeta<std::tuple<Attribute<Ts, Fs>...>> {};
 
         // Convert a meta tuple to a value tuple
