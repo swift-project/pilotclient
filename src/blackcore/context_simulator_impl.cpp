@@ -136,9 +136,13 @@ namespace BlackCore
         aircraft.setSituation(simulatorAircraft.getSituation());
         aircraft.setCockpit(simulatorAircraft.getCom1System(), simulatorAircraft.getCom2System(), simulatorAircraft.getTransponderCode());
 
-        // the method will check, if an update is really required
-        // these are local (non DBus) calls
-        this->getIContextOwnAircraft()->updateOwnAircraft(aircraft, this->getPathAndContextId());
+        Q_ASSERT(this->getIContextOwnAircraft()); // paranoia against context having been deleted from another thread - redmine issue #270
+        if (!this->getIContextOwnAircraft())
+        {
+            // the method will check, if an update is really required
+            // these are local (non DBus) calls
+            this->getIContextOwnAircraft()->updateOwnAircraft(aircraft, this->getPathAndContextId());
+        }
     }
 
     void CContextSimulator::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &initialSituation)
