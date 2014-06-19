@@ -108,7 +108,7 @@ namespace BlackSimPlugin
 
             void resetData()
             {
-                m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false };
+                m_xplaneData = { "", "", 0, 0, 0, 0, 0, 0, 0, 122800, 122800, 122800, 122800, 2000, 0, false };
             }
         };
     
