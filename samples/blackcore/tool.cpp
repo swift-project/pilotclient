@@ -154,7 +154,6 @@ namespace BlackMiscTest
                 else if (line.startsWith("all")) runtime->slotLog(enable);
             }
         }
-        runtime->gracefulShutdown();
         QCoreApplication::quit();
     }
 } // namespace

@@ -305,6 +305,8 @@ namespace BlackCore
         BlackSim::registerMetadata();
         BlackCore::registerMetadata();
 
+        this->connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CRuntime::gracefulShutdown);
+
         // upfront reading of settings, as DBus server already relies on settings
         CContextSettings *settings = nullptr;
         QString dbusAddress;

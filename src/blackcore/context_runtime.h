@@ -139,7 +139,7 @@ namespace BlackCore
         //! Slot logging for bool value from a specific context
         void logSlot(LogContext ctx, const char *func, bool boolValue) const;
 
-        //! shutdown
+        //! Clean up (will be connected to signal QCoreApplication::aboutToQuit)
         void gracefulShutdown();
 
         // ------- Context as interface, normal way to access a context
