@@ -6,17 +6,17 @@
 
 namespace BlackSim
 {
-    //! \brief Describing a simulator
+    //! Describing a simulator
     class CSimulatorInfo : public BlackMisc::CValueObject
     {
     public:
-        //! \brief Default constructor
+        //! Default constructor
         CSimulatorInfo();
 
-        //! \brief Constructor
+        //! Constructor
         CSimulatorInfo(const QString &shortname, const QString &fullname);
 
-        //! \brief Unspecified simulator
+        //! Unspecified simulator
         bool isUnspecified() const { return this->m_shortname.isEmpty() || this->m_shortname.startsWith("Unspecified", Qt::CaseInsensitive); }
 
         //! \copydoc CValueObject::toQVariant
@@ -25,10 +25,10 @@ namespace BlackSim
             return QVariant::fromValue(*this);
         }
 
-        //! \brief Equal operator ==
+        //! Equal operator ==
         bool operator ==(const CSimulatorInfo &other) const;
 
-        //! \brief Unequal operator !=
+        //! Unequal operator !=
         bool operator !=(const CSimulatorInfo &other) const;
 
         //! \copydoc CValueObject::getValueHash()
@@ -43,35 +43,35 @@ namespace BlackSim
         //! Set single settings
         void setSimulatorSetup(const BlackMisc::CIndexVariantMap &setup);
 
-        //! \brief Simulator is FS9 - Microsoft Flight Simulator 2004
+        //! Simulator is FS9 - Microsoft Flight Simulator 2004
         static const CSimulatorInfo &FS9()
         {
             static CSimulatorInfo sim("FS9", "Microsoft Flight Simulator 2004");
             return sim;
         }
 
-        //! \brief Simulator is FSX Microsoft Flight Simulator X (2006)
+        //! Simulator is FSX Microsoft Flight Simulator X (2006)
         static const CSimulatorInfo &FSX()
         {
             static CSimulatorInfo sim("FSX", "Microsoft Flight Simulator X (2006)");
             return sim;
         }
 
-        //! \brief Simulator is XPlane, unspecified version
+        //! Simulator is XPlane, unspecified version
         static const CSimulatorInfo &XP()
         {
             static CSimulatorInfo sim("XP", "X-Plane");
             return sim;
         }
 
-        //! \brief Simulator is unspecified
+        //! Simulator is unspecified
         static const CSimulatorInfo &UnspecifiedSim()
         {
             static CSimulatorInfo sim("Unspecified", "Unspecified");
             return sim;
         }
 
-        //! \brief Register the metatypes
+        //! Register the metatypes
         static void registerMetadata();
 
     protected:

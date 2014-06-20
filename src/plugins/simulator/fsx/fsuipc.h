@@ -16,7 +16,7 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        //! Class representing a SimConnect object
+        //! Class representing a FSUIPC "interface"
         class CFsuipc
         {
         public:
