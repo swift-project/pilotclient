@@ -231,19 +231,19 @@ namespace BlackGui
 
     void CCockpitV1Component::updateComFrequencyDisplaysFromObjects(const CComSystem &com1, const CComSystem &com2)
     {
-        double freq = com1.getFrequencyActive().valueRounded(3);
+        double freq = com1.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
         if (freq != this->ui->ds_CockpitCom1Active->value())
             this->ui->ds_CockpitCom1Active->setValue(freq);
 
-        freq = com2.getFrequencyActive().valueRounded(3);
+        freq = com2.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
         if (freq != this->ui->ds_CockpitCom2Active->value())
             this->ui->ds_CockpitCom2Active->setValue(freq);
 
-        freq = com1.getFrequencyStandby().valueRounded(3);
+        freq = com1.getFrequencyStandby().valueRounded(CFrequencyUnit::MHz(), 3);
         if (freq != this->ui->ds_CockpitCom1Standby->value())
             this->ui->ds_CockpitCom1Standby->setValue(freq);
 
-        freq = com2.getFrequencyStandby().valueRounded(3);
+        freq = com2.getFrequencyStandby().valueRounded(CFrequencyUnit::MHz(), 3);
         if (freq != this->ui->ds_CockpitCom2Standby->value())
             this->ui->ds_CockpitCom2Standby->setValue(freq);
     }
