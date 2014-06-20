@@ -9,13 +9,4 @@ namespace BlackCore
 {
     IVoice::IVoice(QObject *parent) : QObject(parent)
     { }
-
-    void IVoice::registerMetadata()
-    {
-        // for some reasons (ask RW) this is registered twice
-        qRegisterMetaType<ComUnit>();
-        qRegisterMetaType<ComUnit>("ComUnit");
-        qRegisterMetaType<ConnectionStatus>();
-        qRegisterMetaType<ConnectionStatus>("ConnectionStatus");
-    }
 }

@@ -9,11 +9,4 @@ namespace BlackCore
 {
     ISimulator::ISimulator(QObject *parent) : QObject(parent)
     { }
-
-    void ISimulator::registerMetadata()
-    {
-        // for some reasons (ask RW) this is registered twice, see IVoice
-        qRegisterMetaType<Status>();
-        qRegisterMetaType<Status>("Status");
-    }
 }

@@ -128,9 +128,6 @@ namespace BlackCore
          */
         virtual QString micTestResultAsString() const = 0;
 
-        //! \brief Register metadata
-        static void registerMetadata();
-
     public slots:
 
         /*!

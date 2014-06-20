@@ -49,10 +49,6 @@ namespace BlackCore
         //! ISimulatorCan we connect?
         virtual bool canConnect() = 0;
 
-        //! ISimulatorRegister metadata
-        static void registerMetadata();
-
-
     public slots:
 
         //! ISimulatorConnect to simulator
