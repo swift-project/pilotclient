@@ -332,7 +332,10 @@ void			XPMPDefaultPlaneRenderer(int is_blend)
 			double	x,y,z;
 			XPLMWorldToLocal(pos.lat, pos.lon, pos.elevation * kFtToMeters, &x, &y, &z);
 			
-			float distMeters = sqrt(sphere_distance_sqr(&gl_camera,x,y,z));
+			float distMeters = sqrt(sphere_distance_sqr(&gl_camera,
+                                                        static_cast<float>(x),
+                                                        static_cast<float>(y),
+                                                        static_cast<float>(z)));
 			
 			// If the plane is farther than our TCAS range, it's just not visible.  Drop it!
 			if (distMeters > kMaxDistTCAS)
@@ -358,8 +361,12 @@ void			XPMPDefaultPlaneRenderer(int is_blend)
 			// Calculate the angles between the camera angles and the real angles.
 			// Cull if we exceed half the FOV.
 			
-			if(!cull && !sphere_is_visible(&gl_camera, x, y, z, 50.0))
+			if(!cull && !sphere_is_visible(&gl_camera, static_cast<float>(x),
+                                                       static_cast<float>(y),
+                                                       static_cast<float>(z), 50.0))
+            {
 				cull = true;
+            }
 			
 			// Full plane or lites based on distance.
 			bool	drawFullPlane = (distMeters < fullPlaneDist);
@@ -379,9 +386,9 @@ void			XPMPDefaultPlaneRenderer(int is_blend)
 			// Stash one render record with the plane's position, etc.
 			{
 				PlaneToRender_t		renderRecord;
-				renderRecord.x = x;
-				renderRecord.y = y;
-				renderRecord.z = z;
+				renderRecord.x = static_cast<float>(x);
+				renderRecord.y = static_cast<float>(y);
+				renderRecord.z = static_cast<float>(z);
 				renderRecord.pitch = pos.pitch;
 				renderRecord.heading = pos.heading;
 				renderRecord.roll = pos.roll;
@@ -409,13 +416,13 @@ void			XPMPDefaultPlaneRenderer(int is_blend)
 				
 				} else {
 					renderRecord.state.structSize = sizeof(renderRecord.state);
-					renderRecord.state.gearPosition = (pos.elevation < 70) ?  1.0 : 0.0;
-					renderRecord.state.flapRatio = (pos.elevation < 70) ? 1.0 : 0.0;
+					renderRecord.state.gearPosition = (pos.elevation < 70) ?  1.0f : 0.0f;
+					renderRecord.state.flapRatio = (pos.elevation < 70) ? 1.0f : 0.0f;
 					renderRecord.state.spoilerRatio = renderRecord.state.speedBrakeRatio = renderRecord.state.slatRatio = renderRecord.state.wingSweep = 0.0;
-					renderRecord.state.thrust = (pos.pitch > 30) ? 1.0 : 0.6;
-					renderRecord.state.yokePitch = pos.pitch / 90.0;
-					renderRecord.state.yokeHeading = pos.heading / 180.0;
-					renderRecord.state.yokeRoll = pos.roll / 90.0;	
+					renderRecord.state.thrust = (pos.pitch > 30) ? 1.0f : 0.6f;
+					renderRecord.state.yokePitch = pos.pitch / 90.0f;
+					renderRecord.state.yokeHeading = pos.heading / 180.0f;
+					renderRecord.state.yokeRoll = pos.roll / 90.0f;	
 
 					// use some smart defaults
 					renderRecord.lights.bcnLights = 1;
@@ -449,7 +456,7 @@ void			XPMPDefaultPlaneRenderer(int is_blend)
 	// We do this in two stages: building up what to do, then doing it in the optimal
 	// OGL order.
 	
-		int	renderedCounter = 0;
+		size_t	renderedCounter = 0;
 		
 	vector<PlaneToRender_t *>			planes_obj_lites;
 	multimap<int, PlaneToRender_t *>	planes_austin;
@@ -655,11 +662,11 @@ void			XPMPDefaultPlaneRenderer(int is_blend)
 					float x, y;
 					convert_to_2d(&gl_camera, vp, iter->second.x, iter->second.y, iter->second.z, 1.0, &x, &y);
 					
-					float rat = 1.0 - (iter->first / labelDist);
-					c[0] = c[1] = 0.5 + 0.5 * rat;
-					c[2] = 0.5 - 0.5 * rat;		// gray -> yellow - no alpha in the SDK - foo!
+					float rat = 1.0f - (iter->first / static_cast<float>(labelDist));
+					c[0] = c[1] = 0.5f + 0.5f * rat;
+					c[2] = 0.5f - 0.5f * rat;		// gray -> yellow - no alpha in the SDK - foo!
 					
-					XPLMDrawString(c, x, y+10, (char *) iter->second.label.c_str(), NULL, xplmFont_Basic);
+					XPLMDrawString(c, static_cast<int>(x), static_cast<int>(y)+10, (char *) iter->second.label.c_str(), NULL, xplmFont_Basic);
 				}
 		
 		glMatrixMode(GL_PROJECTION);
@@ -671,8 +678,8 @@ void			XPMPDefaultPlaneRenderer(int is_blend)
 
 	
 	// Final hack - leave a note to ourselves for how many of Austin's planes we relocated to do TCAS.
-	if (tcas > renderedCounter)	
-		tcas = renderedCounter;
+	if (tcas > static_cast<int>(renderedCounter))	
+		tcas = static_cast<int>(renderedCounter);
 	gEnableCount = (tcas+1);
 	
 	gDumpOneRenderCycle = 0;
