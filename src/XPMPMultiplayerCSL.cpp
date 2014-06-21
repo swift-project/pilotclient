@@ -106,7 +106,7 @@ int HFS2PosixPath(const char *path, char *result, int resultLen)
 static void MakePartialPathNativeObj(string& io_str)
 {
 //	char sep = *XPLMGetDirectorySeparator();
-	for(int i = 0; i < io_str.size(); ++i)
+	for(size_t i = 0; i < io_str.size(); ++i)
 	if(io_str[i] == '/' || io_str[i] == ':' || io_str[i] == '\\')
 		io_str[i] = '/';
 }
@@ -140,6 +140,12 @@ struct XPLMDump {
 		XPLMDebugString(buf);
 		return *this;
 	}
+    XPLMDump& operator<<(size_t n) {
+        char buf[255];
+        sprintf(buf, "%u", static_cast<unsigned>(n));
+        XPLMDebugString(buf);
+        return *this;
+    }
 };
 
 
@@ -182,6 +188,7 @@ char * fgets_multiplatform(char * s, int n, FILE * file)
 			
 			// EOF: this could mean I/O error or end of file.
 			if (c == EOF)
+            {
 				if (feof(file) && p != s)	// We read something and now the file's done, ok.
 					break;
 				else
@@ -189,6 +196,7 @@ char * fgets_multiplatform(char * s, int n, FILE * file)
 					// Haven't read yet?  I/O error?  Return NULL!
 					return(NULL);
 				}
+            }
 			
 			*p++ = c;
 		}
@@ -230,7 +238,7 @@ void	BreakStringPvt(const char * inString, std::vector<std::string>& outStrings,
 			++iter;
 		if (iter < endPos)
 		{
-			if (maxBreak && (maxBreak == (outStrings.size()+1)))
+			if (maxBreak && (maxBreak == static_cast<int>(outStrings.size()+1)))
 			{
 				outStrings.push_back(std::string(iter, endPos));
 				return;
@@ -556,7 +564,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 							HFS2PosixPath(xsystem, xsystem, 1024);
 						#endif
 						
-						int sys_len = strlen(xsystem);
+						size_t sys_len = strlen(xsystem);
 						if(fullPath.size() > sys_len)
 							fullPath.erase(fullPath.begin(),fullPath.begin() + sys_len);
 						else
@@ -613,10 +621,10 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					icao = tokens[1];
 					group = gGroupings[icao];
 					if (pckg->matches[match_icao].count(icao) == 0)
-						pckg->matches[match_icao]	   [icao] = pckg->planes.size() - 1;
+						pckg->matches[match_icao]	   [icao] = static_cast<int>(pckg->planes.size()) - 1;
 					if (!group.empty())
 					if (pckg->matches[match_group].count(group) == 0)						
-						pckg->matches[match_group]      [group] = pckg->planes.size() - 1;
+						pckg->matches[match_group]      [group] = static_cast<int>(pckg->planes.size()) - 1;
 				} else {
 					parse_err = true;
 					XPLMDump(path, lineNum, line) << "XSB WARNING: ICAO command takes 1 argument.\n";
@@ -636,7 +644,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					airline = tokens[2];
 					group = gGroupings[icao];					
 					if (pckg->matches[match_icao_airline].count(icao + " " + airline) == 0)
-						pckg->matches[match_icao_airline]      [icao + " " + airline] = pckg->planes.size() - 1;
+						pckg->matches[match_icao_airline]      [icao + " " + airline] = static_cast<int>(pckg->planes.size()) - 1;
 #if USE_DEFAULTING						
 					if (pckg->matches[match_icao		].count(icao				) == 0)
 						pckg->matches[match_icao		]      [icao				] = pckg->planes.size() - 1;
@@ -648,7 +656,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 							pckg->matches[match_group	     ]		[group				  ] = pckg->planes.size() - 1;
 #endif							
 						if (pckg->matches[match_group_airline].count(group + " " + airline) == 0)
-							pckg->matches[match_group_airline]		[group + " " + airline] = pckg->planes.size() - 1;
+							pckg->matches[match_group_airline]		[group + " " + airline] = static_cast<int>(pckg->planes.size()) - 1;
 					}
 				} else {
 					parse_err = true;
@@ -677,7 +685,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 						pckg->matches[match_icao_airline 		]	   [icao + " " + airline			   ] = pckg->planes.size() - 1;
 #endif						
 					if (pckg->matches[match_icao_airline_livery ].count(icao + " " + airline + " " + livery) == 0)
-						pckg->matches[match_icao_airline_livery ]	   [icao + " " + airline + " " + livery] = pckg->planes.size() - 1;
+						pckg->matches[match_icao_airline_livery ]	   [icao + " " + airline + " " + livery] = static_cast<int>(pckg->planes.size()) - 1;
 					if (!group.empty())
 					{
 #if USE_DEFAULTING					
@@ -687,7 +695,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 							pckg->matches[match_group_airline		 ]		[group + " " + airline			     ] = pckg->planes.size() - 1;
 #endif							
 						if (pckg->matches[match_group_airline_livery ].count(group + " " + airline + " " + livery) == 0)
-							pckg->matches[match_group_airline_livery ]		[group + " " + airline + " " + livery] = pckg->planes.size() - 1;
+							pckg->matches[match_group_airline_livery ]		[group + " " + airline + " " + livery] = static_cast<int>(pckg->planes.size()) - 1;
 					}
 				} else {
 					parse_err = true;
@@ -777,12 +785,12 @@ bool CSL_LoadCSL(const char * inFolderPath, const char * inRelatedFile, const ch
 				vector<string>	tokens;
 				BreakStringPvt(buf, tokens, 0, " \t\r\n");
 				string	group;
-				for (int n = 0; n < tokens.size(); ++n)
+				for (size_t n = 0; n < tokens.size(); ++n)
 				{
 					if (n != 0) group += " ";
 					group += tokens[n];
 				}
-				for (int n = 0; n < tokens.size(); ++n)
+				for (size_t n = 0; n < tokens.size(); ++n)
 				{
 					gGroupings[tokens[n]] = group;
 				}				
@@ -827,7 +835,7 @@ bool CSL_LoadCSL(const char * inFolderPath, const char * inRelatedFile, const ch
 	free(index_buf);
 	
 	for (int pass = 0; pass < pass_Count; ++pass)
-	for (int n = 0; n < pckgs.size(); ++n)
+	for (size_t n = 0; n < pckgs.size(); ++n)
 	{
 		if (LoadOnePackage(pckgs[n], pass))
 			ok = false;
@@ -909,7 +917,7 @@ CSLPlane_t *	CSL_MatchPlane(const char * inICAO, const char * inAirline, const c
 		}
 		
 		// Now go through each group and see if we match.
-		for (int p = 0; p < gPackages.size(); ++p)
+		for (size_t p = 0; p < gPackages.size(); ++p)
 		{
 			map<string,int>::iterator iter = gPackages[p].matches[n].find(key);
 			if (iter != gPackages[p].matches[n].end())
@@ -976,7 +984,7 @@ CSLPlane_t *	CSL_MatchPlane(const char * inICAO, const char * inAirline, const c
 				}
 			}
 
-			for (int p = 0; p < gPackages.size(); ++p)
+			for (size_t p = 0; p < gPackages.size(); ++p)
 			{
 				std::map<string, int>::const_iterator it = gPackages[p].matches[4].begin();
 				while(it != gPackages[p].matches[4].end()) {
@@ -1039,10 +1047,10 @@ CSLPlane_t *	CSL_MatchPlane(const char * inICAO, const char * inAirline, const c
 void	CSL_Dump(void)
 {
 	// DIAGNOSTICS - print out everything we know.
-	for (int n = 0; n < gPackages.size(); ++n)
+	for (size_t n = 0; n < gPackages.size(); ++n)
 	{
 		XPLMDump() << "XSB CSL: Package " << n << " path = " << gPackages[n].name << "\n";
-		for (int p = 0; p < gPackages[n].planes.size(); ++p)
+		for (size_t p = 0; p < gPackages[n].planes.size(); ++p)
 		{
 			XPLMDump() << "XSB CSL:         Plane " << p << " = " << gPackages[n].planes[p].file_path << "\n";
 		}
@@ -1096,10 +1104,10 @@ void			CSL_DrawObject(
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
-		glTranslatef(x, y, z);			
-		glRotatef(heading, 0.0, -1.0, 0.0);
-		glRotatef(pitch, 01.0, 0.0, 0.0);
-		glRotatef(roll, 0.0, 0.0, -1.0);
+		glTranslatef(static_cast<GLfloat>(x), static_cast<GLfloat>(y), static_cast<GLfloat>(z));			
+		glRotatef(static_cast<GLfloat>(heading), 0.0, -1.0, 0.0);
+		glRotatef(static_cast<GLfloat>(pitch), 01.0, 0.0, 0.0);
+		glRotatef(static_cast<GLfloat>(roll), 0.0, 0.0, -1.0);
 	}
 
 	switch (type)
@@ -1111,7 +1119,8 @@ void			CSL_DrawObject(
 				XPLMCountAircraft(&total, &active, &who);
 				if (model->austin_idx > 0  && model->austin_idx < active)
 					XPLMDrawAircraft(model->austin_idx,
-							x, y ,z, pitch, roll, heading,
+							static_cast<GLfloat>(x), static_cast<GLfloat>(y), static_cast<GLfloat>(z),
+                            static_cast<GLfloat>(pitch), static_cast<GLfloat>(roll), static_cast<GLfloat>(heading),
 							full, state);
 			}
 			break;

@@ -97,7 +97,7 @@ static float obj_get_float(void * inRefcon)
 {
 	if(s_cur_plane == NULL) return 0.0f;
 	
-	int v = reinterpret_cast<intptr_t>(inRefcon);
+	intptr_t v = reinterpret_cast<intptr_t>(inRefcon);
 	switch(v) 
 	{
 		case gear_rat:			return s_cur_plane->state->gearPosition;		break;
@@ -111,10 +111,10 @@ static float obj_get_float(void * inRefcon)
 		case head_rat:			return s_cur_plane->state->yokeHeading;			break;
 		case roll_rat:			return s_cur_plane->state->yokeRoll;			break;
 
-		case lan_lite_on:		return s_cur_plane->lights.landLights;			break;
-		case bcn_lite_on:		return s_cur_plane->lights.bcnLights;			break;
-		case str_lite_on:		return s_cur_plane->lights.strbLights;			break;
-		case nav_lite_on:		return s_cur_plane->lights.navLights;			break;			
+		case lan_lite_on:		return static_cast<float>(s_cur_plane->lights.landLights);			break;
+		case bcn_lite_on:		return static_cast<float>(s_cur_plane->lights.bcnLights);			break;
+		case str_lite_on:		return static_cast<float>(s_cur_plane->lights.strbLights);			break;
+		case nav_lite_on:		return static_cast<float>(s_cur_plane->lights.navLights);			break;			
 			
 		default:
 			return 0.0f;
@@ -124,7 +124,7 @@ static float obj_get_float(void * inRefcon)
 int obj_get_float_array(
                                    void *               inRefcon,    
                                    float *              inValues,    
-                                   int                  inOffset,    
+                                   int                  /*inOffset*/,    
                                    int                  inCount)
 {
 	if(inValues == NULL) 
@@ -212,7 +212,7 @@ void	obj_schedule_one_aircraft(
 						double 					pitch,
 						double 					roll,
 						double 					heading,
-						int	   					full,		// 
+						int	   					/*full*/,		// 
 						xpmp_LightStatus		lights,
 						XPLMPlaneDrawState_t *	state)
 {
@@ -255,12 +255,12 @@ void	obj_schedule_one_aircraft(
 			i->lights = lights;
 			i->state = state;
 			i->location.structSize = sizeof(i->location);
-			i->location.x = x;
-			i->location.y = y;
-			i->location.z = z;
-			i->location.pitch = pitch;
-			i->location.roll = roll;
-			i->location.heading = heading;
+			i->location.x = static_cast<float>(x);
+			i->location.y = static_cast<float>(y);
+			i->location.z = static_cast<float>(z);
+			i->location.pitch = static_cast<float>(pitch);
+			i->location.roll = static_cast<float>(roll);
+			i->location.heading = static_cast<float>(heading);
 		}
 	}	
 }

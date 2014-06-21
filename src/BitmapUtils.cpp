@@ -510,7 +510,7 @@ int	ConvertBitmapToAlpha(
 			struct ImageInfo *		ioImage)
 {
 		unsigned char * 	oldData, * newData, * srcPixel, * dstPixel;
-		int 	count;
+		//int 	count;
 		int	x,y;
 		
 	if (ioImage->channels == 4)
@@ -525,7 +525,7 @@ int	ConvertBitmapToAlpha(
 	
 	srcPixel = oldData;
 	dstPixel = newData;
-	count = ioImage->width * ioImage->height;
+	//count = ioImage->width * ioImage->height;
 	for (y = 0; y < ioImage->height; ++y)
 	for (x = 0; x < ioImage->width; ++x)
 	{
@@ -567,7 +567,7 @@ int	ConvertAlphaToBitmap(
 			struct ImageInfo *		ioImage)
 {
 		unsigned char * 	oldData, * newData, * srcPixel, * dstPixel;
-		int 	count;
+		//int 	count;
 		int 	x,y;
 		
 	if (ioImage->channels == 3)
@@ -590,7 +590,7 @@ int	ConvertAlphaToBitmap(
 	
 	srcPixel = oldData;
 	dstPixel = newData;
-	count = ioImage->width * ioImage->height;
+	//count = ioImage->width * ioImage->height;
 	
 	for (y = 0; y < ioImage->height; ++y)
 	for (x = 0; x < ioImage->width; ++x)
@@ -633,7 +633,7 @@ int	ConvertAlphaToBitmap(
 	return 0;
 }			
 
-#pragma mark -
+//#pragma mark -
 
 #if BITMAP_USE_JPEG
 
@@ -842,8 +842,8 @@ int		CreateBitmapFromJPEGData(void * inBytes, int inLength, struct ImageInfo * o
 
 #endif /* BITMAP_USE_JPEG */
 
-void my_error  (png_structp,png_const_charp err){}
-void my_warning(png_structp,png_const_charp err){}
+void my_error  (png_structp,png_const_charp /*err*/){}
+void my_warning(png_structp,png_const_charp /*err*/){}
 
 unsigned char *			png_start_pos 	= NULL;
 unsigned char *			png_end_pos 	= NULL;
@@ -867,7 +867,7 @@ int		CreateBitmapFromPNG(const char * inFilePath, struct ImageInfo * outImageInf
 	png_infop		infoPtr = NULL;
 	unsigned char *	buffer = NULL;
 	FILE *			file = NULL;
-	int				fileLength = 0;
+	size_t			fileLength = 0;
 	outImageInfo->data = NULL;
 	char** 			rows = NULL;
 	double lcl_gamma;			// This will be the gamma of the file if it has one.
@@ -947,7 +947,7 @@ int		CreateBitmapFromPNG(const char * inFilePath, struct ImageInfo * outImageInf
 	rows=(char**)malloc(height*sizeof(char*));
 	if (!rows) goto bail;
 	
-	for(int i=0;i<height;i++)
+	for(png_uint_32 i=0;i<height;i++)
 	{
 		rows[i]=(char*)outImageInfo->data     +((outImageInfo->height-1-i)*(outImageInfo->width)*(outImageInfo->channels));
 	}

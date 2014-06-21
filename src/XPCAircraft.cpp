@@ -15,7 +15,7 @@ XPCAircraft::~XPCAircraft()
 }
 
 XPMPPlaneCallbackResult	XPCAircraft::AircraftCB(
-										XPMPPlaneID			inPlane,
+										XPMPPlaneID			/*inPlane*/,
 										XPMPPlaneDataType	inDataType,
 										void *				ioData,
 										void *				inRefcon)

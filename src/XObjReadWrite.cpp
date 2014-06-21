@@ -140,9 +140,9 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 				cmd.cmdType = type_PtLine;
 				count = obj2_op;
 				if (tokens.size() < 4) return false;			
-				scanned_st_rgb[0][0]=scanned_st_rgb[1][0]=atof(tokens[1].c_str())*0.1; // r
-				scanned_st_rgb[0][1]=scanned_st_rgb[1][1]=atof(tokens[2].c_str())*0.1; // g
-				scanned_st_rgb[0][2]=scanned_st_rgb[1][2]=atof(tokens[3].c_str())*0.1; // b
+				scanned_st_rgb[0][0]=scanned_st_rgb[1][0]=static_cast<float>(atof(tokens[1].c_str()))*0.1f; // r
+				scanned_st_rgb[0][1]=scanned_st_rgb[1][1]=static_cast<float>(atof(tokens[2].c_str()))*0.1f; // g
+				scanned_st_rgb[0][2]=scanned_st_rgb[1][2]=static_cast<float>(atof(tokens[3].c_str()))*0.1f; // b
 
 				// Sets of x,y,z follows.
 				for (int t = 0; t < count; ++t)
@@ -151,9 +151,9 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 					f.next();
 					BreakString(line, tokens);
 					if (tokens.size() < 3) return false;
-					vrgb.v[0] = atof(tokens[0].c_str());
-					vrgb.v[1] = atof(tokens[1].c_str());
-					vrgb.v[2] = atof(tokens[2].c_str());
+					vrgb.v[0] = static_cast<float>(atof(tokens[0].c_str()));
+					vrgb.v[1] = static_cast<float>(atof(tokens[1].c_str()));
+					vrgb.v[2] = static_cast<float>(atof(tokens[2].c_str()));
 					vrgb.rgb[0] = scanned_st_rgb[t][0];
 					vrgb.rgb[1] = scanned_st_rgb[t][1];
 					vrgb.rgb[2] = scanned_st_rgb[t][2];
@@ -176,10 +176,10 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 				// because 
 				if (version == 2)
 				{
-					scanned_st_rgb[2][0]=scanned_st_rgb[3][0]=atof(tokens[1].c_str());	// s1
-					scanned_st_rgb[0][0]=scanned_st_rgb[1][0]=atof(tokens[2].c_str());	// s2
-					scanned_st_rgb[1][1]=scanned_st_rgb[2][1]=atof(tokens[3].c_str());	// t1
-					scanned_st_rgb[0][1]=scanned_st_rgb[3][1]=atof(tokens[4].c_str());  // t2
+					scanned_st_rgb[2][0]=scanned_st_rgb[3][0]=static_cast<float>(atof(tokens[1].c_str()));	// s1
+					scanned_st_rgb[0][0]=scanned_st_rgb[1][0]=static_cast<float>(atof(tokens[2].c_str()));	// s2
+					scanned_st_rgb[1][1]=scanned_st_rgb[2][1]=static_cast<float>(atof(tokens[3].c_str()));	// t1
+					scanned_st_rgb[0][1]=scanned_st_rgb[3][1]=static_cast<float>(atof(tokens[4].c_str()));  // t2
 				} else {
 					scanned_st_rgb[2][0]=scanned_st_rgb[3][0]=0.0;
 					scanned_st_rgb[0][0]=scanned_st_rgb[1][0]=0.0;
@@ -194,9 +194,9 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 					BreakString(line, tokens);
 					if (tokens.size() < 3) return false;
 					
-					vst.v[0] =  atof(tokens[0].c_str());
-					vst.v[1] =  atof(tokens[1].c_str());
-					vst.v[2] =  atof(tokens[2].c_str());
+					vst.v[0] =  static_cast<float>(atof(tokens[0].c_str()));
+					vst.v[1] =  static_cast<float>(atof(tokens[1].c_str()));
+					vst.v[2] =  static_cast<float>(atof(tokens[2].c_str()));
 					vst.st[0] = scanned_st_rgb[t][0];
 					vst.st[1] = scanned_st_rgb[t][1];
 					cmd.st.push_back(vst);
@@ -224,17 +224,17 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 					f.next();
 					BreakString(line, tokens);
 					if (tokens.size() < 10) return false;
-					vst.v[0] = atof(tokens[0].c_str());
-					vst.v[1] = atof(tokens[1].c_str());
-					vst.v[2] = atof(tokens[2].c_str());
-					vst.st[0] = atof(tokens[6].c_str());
-					vst.st[1] = atof(tokens[8].c_str());
+					vst.v[0] = static_cast<float>(atof(tokens[0].c_str()));
+					vst.v[1] = static_cast<float>(atof(tokens[1].c_str()));
+					vst.v[2] = static_cast<float>(atof(tokens[2].c_str()));
+					vst.st[0] = static_cast<float>(atof(tokens[6].c_str()));
+					vst.st[1] = static_cast<float>(atof(tokens[8].c_str()));
 					cmd.st.push_back(vst);
-					vst.v[0] = atof(tokens[3].c_str());
-					vst.v[1] = atof(tokens[4].c_str());
-					vst.v[2] = atof(tokens[5].c_str());
-					vst.st[0] = atof(tokens[7].c_str());
-					vst.st[1] = atof(tokens[9].c_str());
+					vst.v[0] = static_cast<float>(atof(tokens[3].c_str()));
+					vst.v[1] = static_cast<float>(atof(tokens[4].c_str()));
+					vst.v[2] = static_cast<float>(atof(tokens[5].c_str()));
+					vst.st[0] = static_cast<float>(atof(tokens[7].c_str()));
+					vst.st[1] = static_cast<float>(atof(tokens[9].c_str()));
 					cmd.st.push_back(vst);
 				}
 				outObj.cmds.push_back(cmd);					
@@ -270,12 +270,12 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 					BreakString(line, tokens);
 					if (tokens.size() > 5)
 					{
-						vrgb.v[0] = atof(tokens[0].c_str());
-						vrgb.v[1] = atof(tokens[1].c_str());
-						vrgb.v[2] = atof(tokens[2].c_str());
-						vrgb.rgb[0] = atof(tokens[3].c_str());
-						vrgb.rgb[1] = atof(tokens[4].c_str());
-						vrgb.rgb[2] = atof(tokens[5].c_str());
+						vrgb.v[0] = static_cast<float>(atof(tokens[0].c_str()));
+						vrgb.v[1] = static_cast<float>(atof(tokens[1].c_str()));
+						vrgb.v[2] = static_cast<float>(atof(tokens[2].c_str()));
+						vrgb.rgb[0] = static_cast<float>(atof(tokens[3].c_str()));
+						vrgb.rgb[1] = static_cast<float>(atof(tokens[4].c_str()));
+						vrgb.rgb[2] = static_cast<float>(atof(tokens[5].c_str()));
 						
 						cmd.rgb.push_back(vrgb);
 					} else
@@ -295,22 +295,22 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 					BreakString(line, tokens);
 					if (tokens.size() > 4)
 					{
-						vst.v[0] = atof(tokens[0].c_str());
-						vst.v[1] = atof(tokens[1].c_str());
-						vst.v[2] = atof(tokens[2].c_str());
-						vst.st[0] = atof(tokens[3].c_str());
-						vst.st[1] = atof(tokens[4].c_str());
+						vst.v[0] = static_cast<float>(atof(tokens[0].c_str()));
+						vst.v[1] = static_cast<float>(atof(tokens[1].c_str()));
+						vst.v[2] = static_cast<float>(atof(tokens[2].c_str()));
+						vst.st[0] = static_cast<float>(atof(tokens[3].c_str()));
+						vst.st[1] = static_cast<float>(atof(tokens[4].c_str()));
 						
 						cmd.st.push_back(vst);
 						
 						if (tokens.size() > 9)
 						{
 							--count;
-							vst.v[0] = atof(tokens[5].c_str());
-							vst.v[1] = atof(tokens[6].c_str());
-							vst.v[2] = atof(tokens[7].c_str());
-							vst.st[0] = atof(tokens[8].c_str());
-							vst.st[1] = atof(tokens[9].c_str());
+							vst.v[0] = static_cast<float>(atof(tokens[5].c_str()));
+							vst.v[1] = static_cast<float>(atof(tokens[6].c_str()));
+							vst.v[2] = static_cast<float>(atof(tokens[7].c_str()));
+							vst.st[0] = static_cast<float>(atof(tokens[8].c_str()));
+							vst.st[1] = static_cast<float>(atof(tokens[9].c_str()));
 							
 							cmd.st.push_back(vst);
 						}
@@ -322,10 +322,10 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 				break;
 			case type_Attr:
 				
-				if (tokens.size() > count)
+				if (tokens.size() > static_cast<size_t>(count))
 				{
 					for (int n = 0; n < count; ++n)
-						cmd.attributes.push_back(atof(tokens[n+1].c_str()));
+						cmd.attributes.push_back(static_cast<float>(atof(tokens[n+1].c_str())));
 				} else
 					return false;
 					

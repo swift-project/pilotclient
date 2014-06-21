@@ -114,11 +114,11 @@ const char * 	XPMPMultiplayerInit(
 	gDefaultPlane = inDefaultPlane;
 	gIntPrefsFunc = inIntPrefsFunc;
 	gFloatPrefsFunc = inFloatPrefsFunc;
-	char	myPath[1024];
-	char	airPath[1024];
-	char	line[256];
-	char	sysPath[1024];
-	FILE *	fi;
+	//char	myPath[1024];
+	//char	airPath[1024];
+	//char	line[256];
+	//char	sysPath[1024];
+	//FILE *	fi;
 	
 	bool	problem = false;
 
@@ -162,13 +162,13 @@ const  char * XPMPMultiplayerEnable(void)
 	std::vector<char *>		ptrs;
 	gPlanePaths.push_back("");
 	
-	for (int p = 0; p < gPackages.size(); ++p)
+	for (size_t p = 0; p < gPackages.size(); ++p)
 	{
-		for (int pp = 0; pp < gPackages[p].planes.size(); ++pp)
+		for (size_t pp = 0; pp < gPackages[p].planes.size(); ++pp)
 		{
 			if (gPackages[p].planes[pp].plane_type == plane_Austin)
 			{
-				gPackages[p].planes[pp].austin_idx = gPlanePaths.size();
+				gPackages[p].planes[pp].austin_idx = static_cast<int>(gPlanePaths.size());
 				char	buf[1024];
 				strcpy(buf,gPackages[p].planes[pp].file_path.c_str());
 				#if APL
@@ -180,11 +180,11 @@ const  char * XPMPMultiplayerEnable(void)
 	}
 	
 	// Copy the list into something that's not permanent, but is needed by the XPLM.
-	for (int n = 0; n < gPlanePaths.size(); ++n)
+	for (size_t n = 0; n < gPlanePaths.size(); ++n)
 	{
 #if DEBUG_MANUAL_LOADING
 		char	strbuf[1024];
-		sprintf(strbuf, "Plane %d = '%s'\n", n, gPlanePaths[n].c_str());
+		sprintf(strbuf, "Plane %d = '%s'\n", static_cast<int>(n), gPlanePaths[n].c_str());
 		XPLMDebugString(strbuf);
 #endif	
 		ptrs.push_back((char *) gPlanePaths[n].c_str());
@@ -220,8 +220,8 @@ void	XPMPLoadPlanesIfNecessary(void)
 	if (owner != XPLMGetMyID())
 		return;
 		
-	if (models > gPlanePaths.size())
-		models = gPlanePaths.size();
+	if (models > static_cast<int>(gPlanePaths.size()))
+		models = static_cast<int>(gPlanePaths.size());
 	for (int n = 1; n < models; ++n)
 	{
 		if (!gPlanePaths[n].empty())
@@ -327,13 +327,13 @@ void	XPMPSetDefaultPlaneICAO(
 
 long			XPMPCountPlanes(void)
 {
-	return gPlanes.size();
+	return static_cast<long>(gPlanes.size());
 }
 
 XPMPPlaneID		XPMPGetNthPlane(
 							long 					index)
 {
-	if ((index < 0) || (index >= gPlanes.size()))
+	if ((index < 0) || (index >= static_cast<long>(gPlanes.size())))
 		return NULL;
 		
 	return gPlanes[index];
@@ -457,8 +457,8 @@ void		XPMPSetPlaneRenderer(
 // This callback ping-pongs the multiplayer count up and back depending 
 // on whether we're drawing the TCAS gauges or not.
 int	XPMPControlPlaneCount(
-                                   XPLMDrawingPhase     inPhase,    
-                                   int                  inIsBefore,    
+                                   XPLMDrawingPhase     /*inPhase*/,    
+                                   int                  /*inIsBefore*/,    
                                    void *               inRefcon)
 {
 	if (inRefcon == NULL)
@@ -473,9 +473,9 @@ int	XPMPControlPlaneCount(
 
 // This routine draws the actual planes.
 int	XPMPRenderMultiplayerPlanes(
-                                   XPLMDrawingPhase     inPhase,    
-                                   int                  inIsBefore,    
-                                   void *               inRefcon)
+                                   XPLMDrawingPhase     /*inPhase*/,    
+                                   int                  /*inIsBefore*/,    
+                                   void *               /*inRefcon*/)
 {
 	static int is_blend = 0;
 	
