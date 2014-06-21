@@ -108,6 +108,6 @@ double	BicubicInterpolate2d(
 		BicubicInterpolate1d(v0, v1, v2, v3, hPosition),
 		BicubicInterpolate1d(v4, v5, v6, v7, hPosition),
 		BicubicInterpolate1d(v8, v9, v10, v11, hPosition),
-		BicubicInterpolate1d(v12, v13, v14, 15, hPosition),
+		BicubicInterpolate1d(v12, v13, v14, v15, hPosition),
 		vPosition);
 }					
