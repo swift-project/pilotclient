@@ -19,15 +19,44 @@ INCLUDEPATH += . ../../src
 SOURCES += *.cpp
 HEADERS += *.h
 
+# Using the $$files function so we can remove some with -= below
+SOURCES += $$files(libxplanemp/src/*.cpp)
+HEADERS += $$files(libxplanemp/src/*.h) $$files(libxplanemp/include/*.h)
+INCLUDEPATH += ./libxplanemp ./libxplanemp/include ./libxplanemp/src
+
+# CSLLoaderThread not used, see libxplanemp/README.markdown
+SOURCES -= libxplanemp/src/CSLLoaderThread.cpp
+HEADERS -= libxplanemp/src/CSLLoaderThread.h
+
+# PlatformUtils also not used
+SOURCES -= $$files(libxplanemp/src/PlatformUtils.*.cpp)
+HEADERS -= libxplanemp/src/PlatformUtils.h
+
+# Externals required by libxplanemp
+CONFIG += opengl
+win32-msvc* {
+    CONFIG(debug, debug|release): LIBS += -lpngd -lzd
+    CONFIG(release, debug|release): LIBS += -lpng -lz
+}
+else: LIBS += -lpng -lz
+
+win32-msvc*: DEFINES += _CRT_SECURE_NO_WARNINGS
+
+
 #win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackmisc.lib
 #win32:!win32-g++*: PRE_TARGETDEPS += ../../../../lib/blackcore.lib
 
 
-# Required by X-Plane SDK
+# Required by X-Plane SDK and libxplanemp
+win32:DEFINES += IBM=1
+linux:DEFINES += LIN=1
+macx:DEFINES += APL=1
 DEFINES += XPLM200=1
-win32:DEFINES += IBM
-linux:DEFINES += LIN
-macx:DEFINES += APL
+# XPLM210 is required for new features in libxplanemp,
+# but means we lose support for X-Plane 9 and earlier versions.
+# TODO add config option to select minimum X-Plane version when building
+DEFINES += XPLM210=1
+
 
 # X-Plane plugins must follow a prescribed filename and directory structure.
 TARGET_EXT = .xpl
@@ -44,3 +73,7 @@ else {
 }
 
 include (../../libraries.pri)
+
+# TODO refactor .pri files into common_pre.pri and common_post.pri
+# to sort out this include order fiasco
+INCLUDEPATH += $$EXTERNALDIR/include/XPLM

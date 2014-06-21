@@ -4,7 +4,6 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #define NOMINMAX
-#define _CRT_SECURE_NO_WARNINGS
 #include "plugin.h"
 #include "utils.h"
 #include <XPLM/XPLMPlanes.h>

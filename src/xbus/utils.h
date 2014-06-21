@@ -6,7 +6,6 @@
 #ifndef BLACKSIM_XBUS_UTILS_H
 #define BLACKSIM_XBUS_UTILS_H
 
-#define _CRT_SECURE_NO_WARNINGS
 #include <XPLM/XPLMDefs.h>
 #include <XPLM/XPLMPlugin.h>
 #include <XPLM/XPLMProcessing.h>
