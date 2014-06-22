@@ -150,6 +150,13 @@ const char * 	XPMPMultiplayerInit(
 	else 				return "";
 }
 
+void XPMPMultiplayerCleanup(void)
+{
+    XPLMUnregisterDrawCallback(XPMPControlPlaneCount, xplm_Phase_Gauges, 0, 0);
+    XPLMUnregisterDrawCallback(XPMPControlPlaneCount, xplm_Phase_Gauges, 1, (void *) -1);
+    XPLMUnregisterDrawCallback(XPMPRenderMultiplayerPlanes, xplm_Phase_Airplanes, 0, 0);
+}
+
 
 // We use this array to track Austin's planes, since we have to mess with them.
 static	vector<string>	gPlanePaths;
@@ -208,6 +215,11 @@ const  char * XPMPMultiplayerEnable(void)
 		return "XSquawkBox was not able to start up multiplayer visuals because another plugin is controlling aircraft.";
 	} else 
 		return "";
+}
+
+void XPMPMultiplayerDisable(void)
+{
+    XPLMReleasePlanes();
 }
 
 
