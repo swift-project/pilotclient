@@ -388,11 +388,10 @@ namespace BlackCore
         CAtcStationList stations = this->getSelectedAtcStations();
         Q_ASSERT(stations.size() == 2);
         CVoiceRoomList rooms;
-        rooms.push_back(stations[0].getVoiceRoom());
-        rooms.push_back(stations[1].getVoiceRoom());
-
         CAtcStation s1 = stations[0];
         CAtcStation s2 = stations[1];
+        rooms.push_back(s1.getVoiceRoom());
+        rooms.push_back(s2.getVoiceRoom());
 
         // KB_REMOVE
         qDebug() << this->ownAircraft().getCom1System().getFrequencyActive() << s1.getCallsign() << s1.getFrequency() << s1.getVoiceRoom().getVoiceRoomUrl();

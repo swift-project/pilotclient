@@ -44,7 +44,6 @@ namespace BlackMisc
         //! Add a value
         void addValue(int index, const QVariant &value);
 
-
         //! Add a value as non QVariant
         template<class T> void addValue(int index, const T &value) { this->m_values.insert(index, CVariant::fromValue(value)); }
 

@@ -13,6 +13,7 @@
  */
 CIntroWindow::CIntroWindow(QWidget *parent) :
     QDialog(parent, (Qt::WindowStaysOnTopHint)),
+    // (Qt::Tool | Qt::WindowStaysOnTopHint)),
     ui(new Ui::CIntroWindow)
 {
     ui->setupUi(this);
