@@ -67,7 +67,7 @@ namespace BlackSimPlugin
             {
                 static const QStringList sims(
                 {
-                    "FS98", "FS2000", "CFS2", "CFS1", "Fly!", "FS2002", "FS2004"
+                    "any", "FS98", "FS2000", "CFS2", "CFS1", "Fly!", "FS2002", "FS2004", "FSX", "ESP", "P3D"
                 }
                 );
                 return sims;
@@ -76,7 +76,7 @@ namespace BlackSimPlugin
         private:
             bool m_connected;
             QString m_lastErrorMessage;
-
+            QString m_fsuipcVersion;
         };
     }
 }
