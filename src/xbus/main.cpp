@@ -6,6 +6,7 @@
 #define NOMINMAX
 #include "plugin.h"
 #include "utils.h"
+#include "traffic.h"
 #include <XPLM/XPLMPlanes.h>
 
 #if ! defined(XPLM210)
@@ -20,6 +21,8 @@ PLUGIN_API int XPluginStart(char *o_name, char *o_sig, char *o_desc)
     std::strcpy(o_name, "X-Bus");
     std::strcpy(o_sig, "net.vatsim.XBus");
     std::strcpy(o_desc, "Allows pilot client to connect to X-Plane via D-Bus");
+
+    XBus::CTraffic::initLegacyData();
     return 1;
 }
 

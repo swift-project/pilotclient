@@ -4,6 +4,8 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "plugin.h"
+#include "service.h"
+#include "traffic.h"
 
 #define XBUS_SERVICE_SERVICENAME "net.vatsim.xbus"
 
@@ -25,7 +27,9 @@ namespace XBus
 
         m_server = new BlackCore::CDBusServer(XBUS_SERVICE_SERVICENAME, address, this);
         m_service = new CService(this);
+        m_traffic = new CTraffic(this);
         m_server->addObject(CService::ObjectPath(), m_service);
+        m_server->addObject(CTraffic::ObjectPath(), m_traffic);
     }
 
     void CPlugin::onAircraftModelChanged()
