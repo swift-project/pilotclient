@@ -15,6 +15,8 @@ namespace BlackGui
     void CRuntimeBasedComponent::setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent)
     {
         if (!parent) return;
+
+        // tested for runtime, not too slow, only some ms
         QList<QWidget *> children = parent->findChildren<QWidget *>();
         foreach(QWidget * widget, children)
         {
