@@ -273,6 +273,22 @@ const char *	XPMPMultiplayerInit(
 const char *	XPMPMultiplayerEnable(void);
 
 /*
+ * XPMPMultiplayerDisable
+ *
+ * Disable drawing of multiplayer planes.  Call this from XPluginDisable to release multiplayer.
+ * Reverses the actions on XPMPMultiplayerEnable.
+ */
+void XPMPMultiplayerDisable(void);
+
+/*
+ * XPMPMultiplayerCleanup
+ *
+ * Clean up the multiplayer library. Call this from XPluginStop to reverse the actions of
+ * XPMPMultiplayerInit as much as possible.
+ */
+void XPMPMultiplayerCleanup(void);
+
+/*
  * XPMPLoadPlanesIfNecessary
  *
  * This routine checks what planes are loaded and loads any that we didn't get.
