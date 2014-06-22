@@ -19,7 +19,7 @@ namespace BlackCore
     CVoiceVatlib::CVoiceVatlib(QObject *parent) :
         IVoice(parent),
         m_voice(nullptr),
-        m_audioOutput(nullptr),
+        // m_audioOutput(nullptr), // removed #227
         m_inputSquelch(-1),
         m_micTestResult(Cvatlib_Voice_Simple::agc_Ok),
         m_isAudioLoopbackEnabled(false),
@@ -40,7 +40,7 @@ namespace BlackCore
         {
             // we use reset here until issue #277 is resolved
             // easier to find root cause
-            m_audioOutput.reset(new QAudioOutput());
+            // m_audioOutput.reset(new QAudioOutput());
             m_voice.reset(Cvatlib_Voice_Simple::Create());
             m_voice->Setup(true, 3290, 2, 1, onRoomStatusUpdate, this);
             m_voice->GetInputDevices(onInputHardwareDeviceReceived, this);
@@ -54,7 +54,7 @@ namespace BlackCore
             this->m_outputEnabled.insert(COM2, true);
             this->m_currentInputDevice = this->defaultAudioInputDevice();
             this->m_currentOutputDevice = this->defaultAudioOutputDevice();
-            this->m_audioOutput->setVolume(1.0); // make sure the overall sound is not muted
+            // this->m_audioOutput->setVolume(1.0); // make sure the overall sound is not muted
 
             // do processing
             this->startTimer(10);

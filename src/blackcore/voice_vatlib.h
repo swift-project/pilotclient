@@ -226,7 +226,7 @@ namespace BlackCore
         };
 
         QScopedPointer<Cvatlib_Voice_Simple, Cvatlib_Voice_Simple_Deleter> m_voice;
-        QScopedPointer<QAudioOutput> m_audioOutput;
+        // QScopedPointer<QAudioOutput> m_audioOutput; #227
         BlackMisc::Aviation::CCallsign m_aircraftCallsign; /*!< own callsign to join voice rooms */
         BlackMisc::Audio::CVoiceRoomList m_voiceRooms;
         BlackMisc::Audio::CAudioDeviceList m_devices; /*!< in and output devices */
