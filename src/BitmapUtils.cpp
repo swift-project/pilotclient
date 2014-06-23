@@ -69,7 +69,13 @@ inline void BMP_EndianFlipShort(short * x) { short t = Endian16_Swap(*x); *x = t
  * that they do not belong here!
  *
  */
-#include "../png.h"
+//#include "../png.h"
+/*
+ * MAT SAYS 2014-06-23: on Windows, swift's fork of libxplanemp uses the libpng contained in swift's external dependencies package.
+ * On other operating systems, it uses the libpng which the developer has installed on their system. There are no libpng or zlib
+ * headers, source code, or binaries, anywhere in swift's git repository (which includes our fork of libxplanemp).
+ */
+#include <png.h>
 
 int		CreateBitmapFromFile(const char * inFilePath, struct ImageInfo * outImageInfo)
 {
