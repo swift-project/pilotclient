@@ -908,7 +908,7 @@ int		CreateBitmapFromPNG(const char * inFilePath, struct ImageInfo * outImageInf
 	if (png_sig_cmp(png_current_pos,0,8)) goto bail;
 
 	png_set_interlace_handling(pngPtr);
-	if(setjmp(pngPtr->jmpbuf))
+	if(setjmp(png_jmpbuf(pngPtr)))
 	{
 		goto bail;
 	}
