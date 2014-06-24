@@ -115,7 +115,7 @@ struct XPLMDump {
 	XPLMDump() { }
 	
 	XPLMDump(const string& inFileName, int lineNum, const char * line) {
-		XPLMDebugString("XSB WARNING: Parse Error in file ");
+		XPLMDebugString("xbus WARNING: Parse Error in file ");
 		XPLMDebugString(inFileName.c_str());
 		XPLMDebugString(" line ");
 		char buf[32];
@@ -267,7 +267,7 @@ bool			CSL_Init(
 	obj_init();
 	bool ok = OBJ_Init(inTexturePath);
 	if (!ok)
-		XPLMDump() << "XSB WARNING: we failed to find XSB's custom lighting texture at " << inTexturePath << ".\n";
+		XPLMDump() << "xbus WARNING: we failed to find xpmp's custom lighting texture at " << inTexturePath << ".\n";
 	return ok;
 }
 
@@ -299,7 +299,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 	if (fi != NULL)
 	{
 		if (pass == pass_Load)
-			XPLMDump() << "XSB: Loading package: " << path << "\n";
+			XPLMDump() << "xbus: Loading package: " << path << "\n";
 	
 		if (pass == pass_Load)
 			gPackages.push_back(CSLPackage_t());
@@ -349,11 +349,11 @@ bool	LoadOnePackage(const string& inPath, int pass)
 						gPackageNames[tokens[1]] = inPath;
 					} else {
 						//parse_err = true; // warning, not error
-						XPLMDump(path, lineNum, line)  << "XSB WARNING: Package name " << tokens[1].c_str() << " already in use by "<< gPackageNames[tokens[1]].c_str() << " reqested by use by " << inPath.c_str() << "'\n";
+						XPLMDump(path, lineNum, line)  << "xbus WARNING: Package name " << tokens[1].c_str() << " already in use by "<< gPackageNames[tokens[1]].c_str() << " reqested by use by " << inPath.c_str() << "'\n";
 					}
 				} else {
 					parse_err = true;
-					XPLMDump(path, lineNum, line)  << "XSB WARNING: EXPORT_NAME command requires 1 argument.\n";
+					XPLMDump(path, lineNum, line)  << "xbus WARNING: EXPORT_NAME command requires 1 argument.\n";
 				}
 			} 
 
@@ -365,13 +365,13 @@ bool	LoadOnePackage(const string& inPath, int pass)
 				{
 					if (gPackageNames.count(tokens[1]) == 0)
 					{
-						XPLMDump(path, lineNum, line) << "XSB WARNING: required package " << tokens[1] << " not found.  Aborting processing of this package.\n";
+						XPLMDump(path, lineNum, line) << "xbus WARNING: required package " << tokens[1] << " not found.  Aborting processing of this package.\n";
 						fclose(fi);
 						return true;
 					}
 				} else {
 					parse_err = true;
-					XPLMDump(path, lineNum, line) << "XSB WARNING: DEPENDENCY command needs 1 argument.\n";
+					XPLMDump(path, lineNum, line) << "xbus WARNING: DEPENDENCY command needs 1 argument.\n";
 				}
 			} 
 			
@@ -391,7 +391,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 						MakePartialPathNativeObj(fullPath);
 						if (!DoPackageSub(fullPath))
 						{
-							XPLMDump(path, lineNum, line) << "XSB WARNING: package not found.\n";
+							XPLMDump(path, lineNum, line) << "xbus WARNING: package not found.\n";
 							parse_err = true;
 						}
 						pckg->planes.push_back(CSLPlane_t());
@@ -408,7 +408,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					}
 				} else {
 					parse_err = true;
-					XPLMDump(path, lineNum, line) << "XSB WARNING: AIRCRAFT command takes 3 arguments.\n";
+					XPLMDump(path, lineNum, line) << "xbus WARNING: AIRCRAFT command takes 3 arguments.\n";
 				}
 			}
 
@@ -426,7 +426,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					MakePartialPathNativeObj(fullPath);
 					if (!DoPackageSub(fullPath))
 					{
-						XPLMDump(path, lineNum, line) << "XSB WARNING: package not found.\n";
+						XPLMDump(path, lineNum, line) << "xbus WARNING: package not found.\n";
 						parse_err = true;
 					}
 					pckg->planes.push_back(CSLPlane_t());
@@ -438,7 +438,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					pckg->planes.back().obj_idx = OBJ_LoadModel(fullPath.c_str());
 					if (pckg->planes.back().obj_idx == -1)
 					{
-						XPLMDump(path, lineNum, line) << "XSB WARNING: the model " << fullPath << " failed to load.\n";
+						XPLMDump(path, lineNum, line) << "xbus WARNING: the model " << fullPath << " failed to load.\n";
 						parse_err = true;
 					}
 #if DEBUG_CSL_LOADING
@@ -448,7 +448,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 #endif					
 				} else {
 					parse_err = true;
-					XPLMDump(path, lineNum, line) << "XSB WARNING: OBJECT command takes 1 argument.\n";
+					XPLMDump(path, lineNum, line) << "xbus WARNING: OBJECT command takes 1 argument.\n";
 				}
 			}
 			
@@ -458,7 +458,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 				if(tokens.size() != 2)
 				{
 					parse_err = true;
-					XPLMDump(path, lineNum, line) << "XSB WARNING: TEXTURE command takes 1 argument.\n";
+					XPLMDump(path, lineNum, line) << "xbus WARNING: TEXTURE command takes 1 argument.\n";
 				} else {
 					// Load regular texture
 					string texPath = tokens[1];
@@ -467,7 +467,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					if (!DoPackageSub(texPath))
 					{
 						parse_err = true;
-						XPLMDump(path, lineNum, line) << "XSB WARNING: package not found.\n";
+						XPLMDump(path, lineNum, line) << "xbus WARNING: package not found.\n";
 					}					
 					pckg->planes.back().texID = OBJ_LoadTexture(texPath.c_str(), false);
 					if (pckg->planes.back().texID == -1)
@@ -508,7 +508,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 				else
 				{
 					parse_err = true;
-					XPLMDump(path, lineNum, line) << "XSB WARNING: OBJ8_AIRCARFT command takes 1 argument.\n";				
+					XPLMDump(path, lineNum, line) << "xbus WARNING: OBJ8_AIRCARFT command takes 1 argument.\n";				
 				}
 			}
 			
@@ -553,7 +553,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 						MakePartialPathNativeObj(fullPath);
 						if (!DoPackageSub(fullPath))
 						{
-							XPLMDump(path, lineNum, line) << "XSB WARNING: package not found.\n";
+							XPLMDump(path, lineNum, line) << "xbus WARNING: package not found.\n";
 							parse_err = true;
 						}
 						
@@ -597,7 +597,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 				if (tokens.size() != 2 || (tokens[1] != "YES" && tokens[1] != "NO"))
 				{
 					parse_err = true;
-					XPLMDump(path, lineNum, line) << "XSB WARNING: HASGEAR takes one argument that must be YES or NO.\n";
+					XPLMDump(path, lineNum, line) << "xbus WARNING: HASGEAR takes one argument that must be YES or NO.\n";
 				} else {
 					if (tokens[1] == "YES")
 						pckg->planes.back().moving_gear = true;
@@ -605,7 +605,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 						pckg->planes.back().moving_gear = false;
 					else {
 						parse_err = true;
-						XPLMDump(path, lineNum, line) << "XSB WARNING: HASGEAR must have a YES or NO argument, but we got " << tokens[1] << ".\n";
+						XPLMDump(path, lineNum, line) << "xbus WARNING: HASGEAR must have a YES or NO argument, but we got " << tokens[1] << ".\n";
 					}
 				}
 			}
@@ -627,7 +627,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 						pckg->matches[match_group]      [group] = static_cast<int>(pckg->planes.size()) - 1;
 				} else {
 					parse_err = true;
-					XPLMDump(path, lineNum, line) << "XSB WARNING: ICAO command takes 1 argument.\n";
+					XPLMDump(path, lineNum, line) << "xbus WARNING: ICAO command takes 1 argument.\n";
 				}				
 			}
 
@@ -660,7 +660,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					}
 				} else {
 					parse_err = true;
-					XPLMDump(path, lineNum, line) << "XB WARNING: AIRLINE command takes two arguments.\n";
+					XPLMDump(path, lineNum, line) << "xbus WARNING: AIRLINE command takes two arguments.\n";
 				}				
 			}
 			
@@ -699,13 +699,13 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					}
 				} else {
 					parse_err = true;
-					XPLMDump(path, lineNum, line) << "XSB WARNING: LIVERY command takes two arguments.\n";
+					XPLMDump(path, lineNum, line) << "xbus WARNING: LIVERY command takes two arguments.\n";
 				}				
 			}
 		}
 		fclose(fi);
 	} else {
-		XPLMDump() << "XSB WARNING: package '" << inPath << "' could not be opened.  Error was: "  << strerror(errno) << ".\n";
+		XPLMDump() << "xbus WARNING: package '" << inPath << "' could not be opened.  Error was: "  << strerror(errno) << ".\n";
 	}
 	return parse_err;		
 }
@@ -769,7 +769,7 @@ bool CSL_LoadCSL(const char * inFolderPath, const char * inRelatedFile, const ch
 		}
 		fclose(aircraft_fi);
 	} else {
-		XPLMDump() << "XSB WARNING: could not open ICAO document 8643 at " << inDoc8643 << "\n";
+		XPLMDump() << "xbus WARNING: could not open ICAO document 8643 at " << inDoc8643 << "\n";
 		ok = false;
 	}
 
@@ -798,7 +798,7 @@ bool CSL_LoadCSL(const char * inFolderPath, const char * inRelatedFile, const ch
 		}
 		fclose(related_fi);
 	} else {
-		XPLMDump() << "XSB WARNING: could not open related.txt at " << inRelatedFile << "\n";
+		XPLMDump() << "xbus WARNING: could not open related.txt at " << inRelatedFile << "\n";
 		ok = false;
 	}
 
@@ -888,7 +888,7 @@ CSLPlane_t *	CSL_MatchPlane(const char * inICAO, const char * inAirline, const c
 
 	if (gIntPrefsFunc("debug", "model_matching", 0))
 	{
-		sprintf(buf,"XSB MATCH - ICAO=%s AIRLINE=%s LIVERY=%s GROUP=%s\n", icao.c_str(), airline.c_str(), livery.c_str(), group.c_str());
+		sprintf(buf,"xbus MATCH - ICAO=%s AIRLINE=%s LIVERY=%s GROUP=%s\n", icao.c_str(), airline.c_str(), livery.c_str(), group.c_str());
 		XPLMDebugString(buf);
 	}
 
@@ -912,7 +912,7 @@ CSLPlane_t *	CSL_MatchPlane(const char * inICAO, const char * inAirline, const c
 
 		if (gIntPrefsFunc("debug", "model_matching", 0))
 		{			
-			sprintf(buf,"XSB MATCH -    Group %d key %s\n", n, key.c_str());
+			sprintf(buf,"xbus MATCH -    Group %d key %s\n", n, key.c_str());
 			XPLMDebugString(buf);
 		}
 		
@@ -930,7 +930,7 @@ CSLPlane_t *	CSL_MatchPlane(const char * inICAO, const char * inAirline, const c
 
 				if (gIntPrefsFunc("debug", "model_matching", 0))
 				{
-					sprintf(buf, "XB MATCH - Found: %s\n", gPackages[p].planes[iter->second].file_path.c_str());
+					sprintf(buf, "xbus MATCH - Found: %s\n", gPackages[p].planes[iter->second].file_path.c_str());
 					XPLMDebugString(buf);
 				}
 
@@ -941,7 +941,7 @@ CSLPlane_t *	CSL_MatchPlane(const char * inICAO, const char * inAirline, const c
 
 	if (gIntPrefsFunc("debug", "model_matching", 0))
 	{
-		XPLMDebugString("XSB MATCH - No match.\n");
+		XPLMDebugString("xbus MATCH - No match.\n");
 	}
 
 
@@ -955,7 +955,7 @@ CSLPlane_t *	CSL_MatchPlane(const char * inICAO, const char * inAirline, const c
 
 		if (gIntPrefsFunc("debug", "model_matching", 0))
 		{
-			XPLMDebugString("XSB MATCH/acf - Looking for a ");
+			XPLMDebugString("xbus MATCH/acf - Looking for a ");
 			switch(model_it->second.category) {
 				case 'L': XPLMDebugString(" light "); break;
 				case 'M': XPLMDebugString(" medium "); break;
@@ -976,11 +976,11 @@ CSLPlane_t *	CSL_MatchPlane(const char * inICAO, const char * inAirline, const c
 			if (gIntPrefsFunc("debug", "model_matching", 0))
 			{
 				switch(pass) {
-					case 1: XPLMDebugString("XSB Match/acf - matching WTC and configuration\n"); break;
-					case 2: XPLMDebugString("XSB Match/acf - matching WTC, #engines and enginetype\n"); break;
-					case 3: XPLMDebugString("XSB Match/acf - matching WTC, #engines\n"); break;
-					case 4: XPLMDebugString("XSB Match/acf - matching WTC, enginetype\n"); break;
-					case 5: XPLMDebugString("XSB Match/acf - matching WTC\n"); break;
+					case 1: XPLMDebugString("xbus Match/acf - matching WTC and configuration\n"); break;
+					case 2: XPLMDebugString("xbus Match/acf - matching WTC, #engines and enginetype\n"); break;
+					case 3: XPLMDebugString("xbus Match/acf - matching WTC, #engines\n"); break;
+					case 4: XPLMDebugString("xbus Match/acf - matching WTC, enginetype\n"); break;
+					case 5: XPLMDebugString("xbus Match/acf - matching WTC\n"); break;
 				}
 			}
 
@@ -1019,7 +1019,7 @@ CSLPlane_t *	CSL_MatchPlane(const char * inICAO, const char * inAirline, const c
 								// bingo
 								if (gIntPrefsFunc("debug", "model_matching", 0))
 								{
-									XPLMDebugString("XSB MATCH/acf - found: ");
+									XPLMDebugString("xbus MATCH/acf - found: ");
 									XPLMDebugString(it->first.c_str());
 									XPLMDebugString("\n");
 								}
@@ -1049,17 +1049,17 @@ void	CSL_Dump(void)
 	// DIAGNOSTICS - print out everything we know.
 	for (size_t n = 0; n < gPackages.size(); ++n)
 	{
-		XPLMDump() << "XSB CSL: Package " << n << " path = " << gPackages[n].name << "\n";
+		XPLMDump() << "xbus CSL: Package " << n << " path = " << gPackages[n].name << "\n";
 		for (size_t p = 0; p < gPackages[n].planes.size(); ++p)
 		{
-			XPLMDump() << "XSB CSL:         Plane " << p << " = " << gPackages[n].planes[p].file_path << "\n";
+			XPLMDump() << "xbus CSL:         Plane " << p << " = " << gPackages[n].planes[p].file_path << "\n";
 		}
 		for (int t = 0; t < 6; ++t)
 		{
-			XPLMDump() << "XSB CSL:           Table " << t << "\n";
+			XPLMDump() << "xbus CSL:           Table " << t << "\n";
 			for (map<string, int>::iterator i = gPackages[n].matches[t].begin(); i != gPackages[n].matches[t].end(); ++i)
 			{
-				XPLMDump() << "XSB CSL:                " << i->first << " -> " << i->second << "\n";
+				XPLMDump() << "xbus CSL:                " << i->first << " -> " << i->second << "\n";
 			}
 		}
 	}
