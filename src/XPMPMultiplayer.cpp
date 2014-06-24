@@ -196,8 +196,8 @@ const  char * XPMPMultiplayerEnable(void)
 	int	result = XPLMAcquirePlanes(&(*ptrs.begin()), NULL, NULL);
 	if (result)
 		XPLMSetActiveAircraftCount(1);
-	else
-		XPLMDebugString("WARNING: XSquawkBox did not acquire multiplayer planes!!\n");
+	//else
+	//	XPLMDebugString("WARNING: XSquawkBox did not acquire multiplayer planes!!\n");
 
 		int	total, 		active;
 		XPLMPluginID	who;
