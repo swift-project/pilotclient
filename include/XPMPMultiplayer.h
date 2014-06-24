@@ -227,9 +227,9 @@ typedef	XPMPPlaneCallbackResult (* XPMPPlaneData_f)(
 										void *				inRefcon);
 
 /*
- * XPMPMultiplayerInit
+ * XPMPMultiplayerInitLegacyData
  *
- * This routine initializes the multiplayer library.
+ * This routine initializes legacy portions of the multiplayer library.
  *
  * inPlaneList is a ptr to a fully qualified file name that is a text file of ICAO -> model
  * mappings.  The xsb_aircraft.txt file can be used as a template.  (Please note: other 
@@ -252,14 +252,40 @@ typedef	XPMPPlaneCallbackResult (* XPMPPlaneData_f)(
  *
  * Call this once from your XPluginStart routine.
  *
+ * Depending on which plane packages are installed this can take between 30 seconds and 15 minutes.
+ *
+ * After transitioning to exclusively OBJ8-based packages, this function should no longer be required.
+ * Instead, make separate calls to XPMPLoadCSLPackages and XPMPSetDefaultPlaneICAO.
+ *
  */
-const char *	XPMPMultiplayerInit(
+const char *	XPMPMultiplayerInitLegacyData(
 						const char * inCSLFolder,
 						const char * inRelatedPath,
 						const char * inTexturePath,
 						const char * inDoc8643,
 						const char * inDefaltICAO,
 						int (* inIntPrefsFunc)(const char *, const char *, int),
+						float (* inFloatPrefsFunc)(const char *, const char *, float));
+
+/*
+ * XPMPMultiplayerInit
+ *
+ * The two prefs funcs each take an ini section and key and return a value and also take
+ * a default.  The renderer uses them for configuration.  Currently the following keys are
+ * needed:
+ *
+ * section	key					type	default	description
+ * planes	full_distance		float	3.0		
+ * planes	max_full_count		int		50		
+ *
+ * The return value is a string indicating any problem that may have gone wrong in a human-readable
+ * form, or an empty string if initalizatoin was okay.
+ *
+ * Call this once, typically from your XPluginStart routine.
+ * 
+ */
+const char *    XPMPMultiplayerInit(
+                        int (* inIntPrefsFunc)(const char *, const char *, int),
 						float (* inFloatPrefsFunc)(const char *, const char *, float));
 
 /*
@@ -287,6 +313,29 @@ void XPMPMultiplayerDisable(void);
  * XPMPMultiplayerInit as much as possible.
  */
 void XPMPMultiplayerCleanup(void);
+
+/*
+ * XPMPLoadCSLPackage
+ *
+ * Loads a collection of planes
+ *
+ * inPlaneList is a ptr to a fully qualified file name that is a text file of ICAO -> model
+ * mappings.  The xsb_aircraft.txt file can be used as a template.  (Please note: other 
+ * XSB files are NOT necessary and are not necessarily available under open source license.)
+ *
+ * inDoc8643 is the path to the ICAO document 8643, available at
+ * http://www.icao.int/anb/ais/TxtFiles/Doc8643.txt. This file lists all aircraft types
+ * with their manufacturer, ICAO equipment code and aircraft category.
+ *
+ * This is fast if the planes are all OBJ8 (because the objects are loaded asynchronously,
+ * on demand), otherwise it could take several seconds or minutes depending on the quantity
+ * and fidelity of the planes.
+ *
+ */
+const char *	XPMPLoadCSLPackage(
+						const char * inCSLFolder,
+						const char * inRelatedPath,
+						const char * inDoc8643);
 
 /*
  * XPMPLoadPlanesIfNecessary

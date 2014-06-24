@@ -104,7 +104,7 @@ static	int				XPMPControlPlaneCount(
  ********************************************************************************/
 
 
-const char * 	XPMPMultiplayerInit(
+const char * 	XPMPMultiplayerInitLegacyData(
 						const char * inCSLFolder, const char * inRelatedPath,
 						const char * inTexturePath, const char * inDoc8643,
 						const char * inDefaultPlane,
@@ -112,6 +112,25 @@ const char * 	XPMPMultiplayerInit(
 						float (* inFloatPrefsFunc)(const char *, const char *, float))
 {
 	gDefaultPlane = inDefaultPlane;
+	gIntPrefsFunc = inIntPrefsFunc;
+	gFloatPrefsFunc = inFloatPrefsFunc;
+
+	bool	problem = false;
+
+	if (!CSL_LoadCSL(inCSLFolder, inRelatedPath, inDoc8643))
+		problem = true;
+
+	if (!CSL_Init(inTexturePath))
+		problem = true;
+
+	if (problem)		return "There were problems initializing XSquawkBox.  Please examine X-Plane's error.out file for detailed information.";
+	else 				return "";
+}
+
+const char * 	XPMPMultiplayerInit(
+						int (* inIntPrefsFunc)(const char *, const char *, int),
+						float (* inFloatPrefsFunc)(const char *, const char *, float))
+{
 	gIntPrefsFunc = inIntPrefsFunc;
 	gFloatPrefsFunc = inFloatPrefsFunc;
 	//char	myPath[1024];
@@ -127,13 +146,7 @@ const char * 	XPMPMultiplayerInit(
 	// Initialize our OpenGL Utilities
 	OGL_UtilsInit();
 
-	if (!CSL_LoadCSL(inCSLFolder, inRelatedPath, inDoc8643))
-		problem = true;
-
 	XPMPInitDefaultPlaneRenderer();	
-
-	if (!CSL_Init(inTexturePath))
-		problem = true;
 
 	// Register the plane control calls.
 	XPLMRegisterDrawCallback(XPMPControlPlaneCount,
@@ -222,6 +235,18 @@ void XPMPMultiplayerDisable(void)
     XPLMReleasePlanes();
 }
 
+
+const char * 	XPMPLoadCSLPackage(
+						const char * inCSLFolder, const char * inRelatedPath, const char * inDoc8643)
+{
+	bool	problem = false;
+
+	if (!CSL_LoadCSL(inCSLFolder, inRelatedPath, inDoc8643))
+		problem = true;
+
+	if (problem)		return "There were problems initializing XSquawkBox.  Please examine X-Plane's error.out file for detailed information.";
+	else 				return "";
+}
 
 // This routine checks plane loading and grabs anyone we're missing.
 void	XPMPLoadPlanesIfNecessary(void)
