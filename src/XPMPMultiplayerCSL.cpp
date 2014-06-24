@@ -348,7 +348,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 					{
 						gPackageNames[tokens[1]] = inPath;
 					} else {
-						parse_err = true;
+						//parse_err = true; // warning, not error
 						XPLMDump(path, lineNum, line)  << "XSB WARNING: Package name " << tokens[1].c_str() << " already in use by "<< gPackageNames[tokens[1]].c_str() << " reqested by use by " << inPath.c_str() << "'\n";
 					}
 				} else {
