@@ -19,68 +19,6 @@ using namespace BlackMisc::Settings;
 using namespace BlackMisc::Math;
 
 /*
- * Set audio device lists
- */
-void MainWindow::setAudioDeviceLists()
-{
-    if (!this->isContextAudioAvailableCheck()) return;
-    this->ui->cb_SettingsAudioOutputDevice->clear();
-    this->ui->cb_SettingsAudioInputDevice->clear();
-
-    foreach(CAudioDevice device, this->getIContextAudio()->getAudioDevices())
-    {
-        if (device.getType() == CAudioDevice::InputDevice)
-        {
-            this->ui->cb_SettingsAudioInputDevice->addItem(device.toQString(true));
-        }
-        else if (device.getType() == CAudioDevice::OutputDevice)
-        {
-            this->ui->cb_SettingsAudioOutputDevice->addItem(device.toQString(true));
-        }
-    }
-
-    foreach(CAudioDevice device, this->getIContextAudio()->getCurrentAudioDevices())
-    {
-        if (device.getType() == CAudioDevice::InputDevice)
-        {
-            this->ui->cb_SettingsAudioInputDevice->setCurrentText(device.toQString(true));
-        }
-        else if (device.getType() == CAudioDevice::OutputDevice)
-        {
-            this->ui->cb_SettingsAudioOutputDevice->setCurrentText(device.toQString(true));
-        }
-    }
-}
-
-/*
- * Select audio device
- */
-void MainWindow::audioDeviceSelected(int index)
-{
-    if (!this->m_init) return; // not during init
-    if (!this->isContextAudioAvailableCheck()) return;
-    if (index < 0)return;
-    CAudioDeviceList devices = this->getIContextAudio()->getAudioDevices();
-    if (devices.isEmpty()) return;
-    CAudioDevice selectedDevice;
-    QObject *sender = QObject::sender();
-    if (sender == this->ui->cb_SettingsAudioInputDevice)
-    {
-        CAudioDeviceList inputDevices = devices.getInputDevices();
-        if (index >= inputDevices.size()) return;
-        selectedDevice = inputDevices[index];
-        this->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
-    }
-    else if (sender == this->ui->cb_SettingsAudioOutputDevice)
-    {
-        CAudioDeviceList outputDevices = devices.getOutputDevices();
-        if (index >= outputDevices.size()) return;
-        selectedDevice = outputDevices[index];
-        this->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
-    }
-}
-
-/*
  * Select audio device
  */
 void MainWindow::audioVolumes()
@@ -149,93 +87,11 @@ void MainWindow::audioVolumes()
 }
 
 /*
- * Start the voice tests
- */
-void MainWindow::startAudioTest()
-{
-    if (!this->m_contextAudioAvailable)
-    {
-        CStatusMessage m(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "voice context not available");
-        this->displayStatusMessage(m);
-        return;
-    }
-    if (this->m_timerAudioTests->isActive())
-    {
-        CStatusMessage m(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "test running, wait until completed");
-        this->displayStatusMessage(m);
-        return;
-    }
-
-    QObject *sender = QObject::sender();
-    this->m_timerAudioTests->start(600); // I let this run for <x>ms, so there is enough overhead to really complete it
-    this->ui->prb_SettingsAudioTestProgress->setValue(0);
-    this->ui->pte_SettingsAudioTestActionAndResult->clear();
-    if (sender == this->ui->pb_SettingsAudioMicrophoneTest)
-    {
-        this->m_audioTestRunning = MicrophoneTest;
-        this->getIContextAudio()->runMicrophoneTest();
-        this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText("Speak normally for 5 seconds");
-    }
-    else if (sender == this->ui->pb_SettingsAudioSquelchTest)
-    {
-        this->m_audioTestRunning = SquelchTest;
-        this->getIContextAudio()->runSquelchTest();
-        this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText("Silence for 5 seconds");
-    }
-    this->ui->prb_SettingsAudioTestProgress->setVisible(true);
-    this->ui->pb_SettingsAudioMicrophoneTest->setEnabled(false);
-    this->ui->pb_SettingsAudioSquelchTest->setEnabled(false);
-}
-
-/*
- * Start the voice tests
- */
-void MainWindow::audioTestUpdate()
-{
-    int v = this->ui->prb_SettingsAudioTestProgress->value();
-    QObject *sender = this->sender();
-
-    if (v < 100 && (sender == m_timerAudioTests))
-    {
-        // timer update, increasing progress
-        this->ui->prb_SettingsAudioTestProgress->setValue(v + 10);
-    }
-    else
-    {
-        this->m_timerAudioTests->stop();
-        this->ui->prb_SettingsAudioTestProgress->setValue(100);
-        if (sender == m_timerAudioTests) return; // just timer update
-
-        // getting here we assume the audio test finished signal
-        // fetch results
-        this->ui->pte_SettingsAudioTestActionAndResult->clear();
-        if (this->m_contextAudioAvailable)
-        {
-            if (this->m_audioTestRunning == SquelchTest)
-            {
-                double s = this->getIContextAudio()->getSquelchValue();
-                this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText(QString::number(s));
-            }
-            else if (this->m_audioTestRunning == MicrophoneTest)
-            {
-                QString m = this->getIContextAudio()->getMicrophoneTestResult();
-                this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText(m);
-            }
-        }
-        this->m_audioTestRunning = NoAudioTest;
-        this->m_timerAudioTests->stop();
-        this->ui->pb_SettingsAudioMicrophoneTest->setEnabled(true);
-        this->ui->pb_SettingsAudioSquelchTest->setEnabled(true);
-        this->ui->prb_SettingsAudioTestProgress->setVisible(false);
-    }
-}
-
-/*
  * Notification
  */
 void MainWindow::playNotifcationSound(CNotificationSounds::Notification notification) const
 {
     if (!this->m_contextAudioAvailable) return;
-    if (!this->ui->cb_SettingsAudioPlayNotificationSounds->isChecked()) return;
+    if (!this->ui->comp_Settings->playNotificationSounds()) return;
     this->getIContextAudio()->playNotification(static_cast<uint>(notification), true);
 }

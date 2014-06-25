@@ -83,20 +83,12 @@ protected:
         MainPageSimulator = 8
     };
 
-    //! Audio test modes
-    enum AudioTest
-    {
-        NoAudioTest,
-        SquelchTest,
-        MicrophoneTest
-    };
-
 private:
     QScopedPointer<Ui::MainWindow> ui;
     BlackGui::CInfoWindowComponent *m_compInfoWindow;
     bool m_init;
     GuiModes::WindowMode m_windowMode;
-    AudioTest m_audioTestRunning;
+    BlackInput::IKeyboard *m_keyboard; //!< hotkeys
 
     // contexts
     bool m_coreAvailable;
@@ -105,7 +97,6 @@ private:
     BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
     QTimer *m_timerContextWatchdog; /*!< core available? */
     QTimer *m_timerStatusBar; /*!< cleaning up status bar */
-    QTimer *m_timerAudioTests; /*!< audio tests: progress bar, disable/enable buttons */
     QTimer *m_timerSimulator; /*!< update simulator data */
 
     // pixmaps
@@ -131,20 +122,8 @@ private:
     QLabel *m_statusBarIcon; /*!< status bar icon */
     QLabel *m_statusBarLabel; /*!< status bar label */
 
-    // Hotkeys
-    BlackInput::IKeyboard *m_keyboard;
-
     //! GUI status update
     void updateGuiStatusInformation();
-
-    /*!
-     * \brief Update the selected server textboxes
-     * \param server to be displayed
-     */
-    void updateGuiSelectedServerTextboxes(const BlackMisc::Network::CServer &server);
-
-    //! Selected server from textboxes
-    BlackMisc::Network::CServer selectedServerFromTextboxes() const;
 
     //! 1st data reads
     void initialDataReads();
@@ -194,17 +173,11 @@ private:
      */
     void stopAllTimers(bool disconnect);
 
-    //! Audio test updates (timer) for progressbar and fetching results
-    void audioTestUpdate();
-
     //! Play notifcation sound
     void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;
 
     //! Update simulator page with latest user aircraft data
     void updateSimulatorData();
-
-    //! Set the hotkeys
-    void setHotkeys();
 
     //! Originator for aircraft context
     static const QString &sampleBlackGuiOriginator()
@@ -223,13 +196,16 @@ private slots:
     bool reloadOwnAircraft();
 
     //! Display status message
-    void displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
+    void displayStatusMessage(const BlackMisc::CStatusMessage &sendStatusMessage);
 
     //! Display status messages
     void displayStatusMessages(const BlackMisc::CStatusMessageList &messages);
 
     //! Redirected output
-    void displayRedirectedOutput(const BlackMisc::CStatusMessage &statusMessage, qint64 contextId);
+    void displayRedirectedOutput(const BlackMisc::CStatusMessage &sendStatusMessage, qint64 contextId);
+
+    //! Settings have been changed
+    void changedSetttings(uint typeValue);
 
     /*!
      * \brief Connection status changed
@@ -237,9 +213,6 @@ private slots:
      * \param to    new status, as uint so it is compliant with DBus
      */
     void connectionStatusChanged(uint from, uint to, const QString &message);
-
-    //! Reload settings
-    void reloadSettings();
 
     //! Simulator available
     void simulatorConnectionChanged(bool isAvailable);
@@ -269,26 +242,8 @@ private slots:
     //! Terminated connection
     void connectionTerminated();
 
-    /*!
-     * \brief Network server selected
-     * \param index
-     */
-    void networkServerSelected(QModelIndex index);
-
-    //! Alter traffic server
-    void alterTrafficServer();
-
-    //! Settings have been changed
-    void changedSettings(uint typeValue);
-
     //! Update timer
     void timerBasedUpdates();
-
-    /*!
-     * \brief Audio device selected
-     * \param index audio device index (COM1, COM2)
-     */
-    void audioDeviceSelected(int index);
 
     //! Audio volume handling and mute
     void audioVolumes();
@@ -302,18 +257,11 @@ private slots:
     //! Context menu for audio
     void audioIconContextMenu(const QPoint &position);
 
-    //! start the MIC tests (Squelch)
-    void startAudioTest();
-
-    //! Save the Hotkeys
-    void saveHotkeys();
-
-    //! Clear single hotkey
-    void clearHotkey();
-
     //! Toogle Windows stay on top
     void toogleWindowStayOnTop();
 
+    //! Set the hotkeys
+    void registerHotkeys();
 };
 
 #pragma pop_macro("interface")

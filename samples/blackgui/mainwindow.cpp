@@ -17,6 +17,7 @@ using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Settings;
 using namespace BlackMisc::Audio;
+using namespace BlackMisc::Hardware;
 
 /*
  * Constructor
@@ -25,21 +26,19 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     QMainWindow(parent, windowMode == GuiModes::WindowFrameless ? (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint) : (Qt::Tool | Qt::WindowStaysOnTopHint)),
     ui(new Ui::MainWindow),
     m_compInfoWindow(nullptr),
-    m_init(false), m_windowMode(windowMode), m_audioTestRunning(NoAudioTest),
+    m_init(false), m_windowMode(windowMode), m_keyboard(nullptr),
     // contexts and runtime
     m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextAudioAvailable(false),
 
     // timers
     m_timerContextWatchdog(nullptr),
-    m_timerStatusBar(nullptr), m_timerAudioTests(nullptr), m_timerSimulator(nullptr),
+    m_timerStatusBar(nullptr), m_timerSimulator(nullptr),
     // context menus
     m_contextMenuAudio(nullptr), m_contextMenuStatusMessageList(nullptr),
     // cockpit
     m_inputFocusedWidget(nullptr),
     // status bar
-    m_statusBarIcon(nullptr), m_statusBarLabel(nullptr),
-    // keyboard /hotkeys
-    m_keyboard(nullptr)
+    m_statusBarIcon(nullptr), m_statusBarLabel(nullptr)
 {
     if (windowMode == GuiModes::WindowFrameless)
     {
@@ -197,11 +196,9 @@ void MainWindow::toggleNetworkConnection()
     {
         // validation of data here is not required, network context does this
         // in prephase of login
-        this->m_ownAircraft.setCallsign(this->ui->le_SettingsAircraftCallsign->text());
+        this->m_ownAircraft.setCallsign(this->ui->comp_Settings->getOwnCallsignFromGui());
         CAircraftIcao icao = this->m_ownAircraft.getIcaoInfo();
-        icao.setAirlineDesignator(this->ui->le_SettingsIcaoAirlineDesignator->text());
-        icao.setAircraftDesignator(this->ui->le_SettingsIcaoAircraftDesignator->text());
-        icao.setAircraftCombinedType(this->ui->le_SettingsIcaoCombinedType->text());
+        this->ui->comp_Settings->setOwnAircraftIcaoDataFromGui(icao);
         this->m_ownAircraft.setIcaoInfo(icao);
 
         // set latest aircraft
@@ -212,12 +209,12 @@ void MainWindow::toggleNetworkConnection()
 
         // Login is based on setting current server
         INetwork::LoginMode mode = INetwork::LoginNormal;
-        if (this->ui->rb_SettingsLoginStealthMode->isChecked())
+        if (this->ui->comp_Settings->loginStealth())
         {
             mode = INetwork::LoginStealth;
             this->displayStatusMessage(CStatusMessage::getInfoMessage("login in stealth mode"));
         }
-        else if (this->ui->rb_SettingsLoginObserver->isChecked())
+        else if (this->ui->comp_Settings->loginAsObserver())
         {
             mode = INetwork::LoginAsObserver;
             this->displayStatusMessage(CStatusMessage::getInfoMessage("login in observer mode"));
@@ -290,6 +287,12 @@ void MainWindow::displayRedirectedOutput(const CStatusMessage &statusMessage, qi
     if (!this->getIContextApplication()) return;
     if (this->getIContextApplication()->getUniqueId() == contextId) return; //self triggered
     this->ui->te_StatusPageConsole->appendHtml(statusMessage.toHtml());
+}
+
+void MainWindow::changedSetttings(uint typeValue)
+{
+    IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
+    if (type == IContextSettings::SettingsHotKeys) this->registerHotkeys();
 }
 
 /*
@@ -427,7 +430,7 @@ void MainWindow::changeWindowOpacity(int opacity)
     qreal o = opacity / 100.0;
     o = o < 0.3 ? 0.3 : o;
     QWidget::setWindowOpacity(o);
-    this->ui->hs_SettingsGuiOpacity->setValue(o * 100.0);
+    this->ui->comp_Settings->setGuiOpacity(o * 100.0);
 }
 
 void MainWindow::updateSimulatorData()
@@ -482,4 +485,32 @@ void MainWindow::toogleWindowStayOnTop()
     }
     this->setWindowFlags(flags);
     this->show();
+}
+
+/*
+ * Hotkeys
+ */
+void MainWindow::registerHotkeys()
+{
+    if (!this->getIContextSettings()) qFatal("Missing settings");
+    if (!this->m_keyboard)
+    {
+        this->m_keyboard = BlackInput::IKeyboard::getInstance();
+    }
+    else
+    {
+        this->m_keyboard->unregisterAllHotkeys();
+    }
+
+    CKeyboardKeyList keys = this->getIContextSettings()->getHotkeys();
+    if (keys.isEmpty()) return;
+
+    CKeyboardKey key = keys.keyForFunction(CKeyboardKey::HotkeyOpacity50);
+    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->changeWindowOpacity(50); });
+
+    key = keys.keyForFunction(CKeyboardKey::HotkeyOpacity100);
+    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->changeWindowOpacity(100); });
+
+    key = keys.keyForFunction(CKeyboardKey::HotkeyToogleWindowsStayOnTop);
+    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->toogleWindowStayOnTop(); });
 }

@@ -37,7 +37,7 @@ void MainWindow::menuClicked()
     }
     else if (sender == this->ui->menu_ReloadSettings)
     {
-        this->reloadSettings();
+        this->ui->comp_Settings->reloadSettings();
         msgs.insert(CStatusMessage::getInfoMessage("Settings reloaded"));
     }
     else if (sender == this->ui->menu_FileClose)

@@ -61,7 +61,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // timers
     if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
-    if (this->m_timerAudioTests == nullptr) this->m_timerAudioTests = new QTimer(this);
     if (this->m_timerSimulator == nullptr) this->m_timerSimulator = new QTimer(this);
 
     // context
@@ -100,18 +99,17 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->connect(this->getIContextApplication(), &IContextApplication::redirectedOutput, this, &MainWindow::displayRedirectedOutput);
     this->connect(this->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &MainWindow::connectionTerminated);
     this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &MainWindow::connectionStatusChanged);
-    this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &MainWindow::changedSettings);
     connect = this->connect(this->getIContextNetwork(), SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this->ui->comp_TextMessages, SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
     Q_ASSERT(connect);
     this->connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
-    this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &MainWindow::audioTestUpdate);
     this->connect(this->m_timerSimulator, &QTimer::timeout, this, &MainWindow::timerBasedUpdates);
-    connect = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &MainWindow::audioTestUpdate);
+    this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &MainWindow::changedSetttings);
 
     // sliders
-    this->connect(this->ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this->ui->comp_Users, &BlackGui::CUserComponent::setUpdateIntervalSeconds);
-    this->connect(this->ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this->ui->comp_Aircrafts, &BlackGui::CAircraftComponent::setUpdateIntervalSeconds);
+    this->connect(this->ui->comp_Settings, &CSettingsComponent::changedUsersUpdateInterval, this->ui->comp_Users, &BlackGui::CUserComponent::setUpdateIntervalSeconds);
+    this->connect(this->ui->comp_Settings, &CSettingsComponent::changedAircraftsUpdateInterval, this->ui->comp_Aircrafts, &BlackGui::CAircraftComponent::setUpdateIntervalSeconds);
+    this->connect(this->ui->comp_Settings, &CSettingsComponent::changedAtcStationsUpdateInterval, this->ui->comp_AtcStations, &BlackGui::CAtcStationComponent::setUpdateIntervalSeconds);
 
     Q_ASSERT(connect);
     Q_UNUSED(connect); // suppress GCC warning in release build
@@ -121,10 +119,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // init availability
     this->setContextAvailability();
-
-    // voice panel
-    this->setAudioDeviceLists();
-    this->ui->prb_SettingsAudioTestProgress->setVisible(false);
 
     // cockpit external buttons
     this->ui->comp_Cockpit->setExternalIdentButton(this->ui->pb_CockpitIdent);
@@ -149,7 +143,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->ui->te_StatusPageConsole->appendPlainText(CProject::compiledInfo());
 
     // hotkeys
-    this->setHotkeys();
+    this->registerHotkeys();
 
     // do this as last statement, so it can be used as flag
     // whether init has been completed
@@ -217,27 +211,8 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->comp_TextMessages, &CTextMessageComponent::displayInInfoWindow, this->m_compInfoWindow, &CInfoWindowComponent::display);
     this->ui->comp_TextMessages->setSelcalCallback(std::bind(&CCockpitV1Component::getSelcalCode, this->ui->comp_Cockpit));
 
-    // voice
-    connected = this->connect(this->ui->cb_SettingsAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->cb_SettingsAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
-    Q_ASSERT(connected);
-    this->connect(this->ui->pb_SettingsAudioMicrophoneTest, &QPushButton::clicked, this, &MainWindow::startAudioTest);
-    this->connect(this->ui->pb_SettingsAudioSquelchTest, &QPushButton::clicked, this, &MainWindow::startAudioTest);
-
-    // Settings server
-    this->connect(this->ui->pb_SettingsTnCurrentServer, &QPushButton::released, this, &MainWindow::alterTrafficServer);
-    this->connect(this->ui->pb_SettingsTnRemoveServer, &QPushButton::released, this, &MainWindow::alterTrafficServer);
-    this->connect(this->ui->pb_SettingsTnSaveServer, &QPushButton::released, this, &MainWindow::alterTrafficServer);
-    this->connect(this->ui->tvp_SettingsTnServers, &QTableView::clicked, this, &MainWindow::networkServerSelected);
-
-    // Settings
-    this->connect(this->ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &MainWindow::changeWindowOpacity);
-
-    // Settings hotkeys
-    this->connect(this->ui->pb_SettingsMiscCancel, &QPushButton::clicked, this, &MainWindow::reloadSettings);
-    this->connect(this->ui->pb_SettingsMiscSave, &QPushButton::clicked, this, &MainWindow::saveHotkeys);
-    this->connect(this->ui->pb_SettingsMiscRemove, &QPushButton::clicked, this, &MainWindow::clearHotkey);
+    // settings (GUI component)
+    this->connect(this->ui->comp_Settings, &CSettingsComponent::changedWindowsOpacity, this, &MainWindow::changeWindowOpacity);
 
     // no warnings in release build
     Q_UNUSED(connected);
@@ -257,7 +232,7 @@ void MainWindow::initialDataReads()
         return;
     }
 
-    this->reloadSettings(); // init read
+    this->ui->comp_Settings->reloadSettings(); // init read
     this->reloadOwnAircraft(); // init read, independent of traffic network
 
     // also reads bookings if not connected
@@ -285,9 +260,9 @@ void MainWindow::initialDataReads()
  */
 void MainWindow::startUpdateTimers()
 {
-    this->ui->comp_Aircrafts->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiAtcRefreshTime->value());
-    this->ui->comp_AtcStations->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiAircraftRefreshTime->value());
-    this->ui->comp_Users->setUpdateIntervalSeconds(this->ui->hs_SettingsGuiUserRefreshTime->value());
+    this->ui->comp_Aircrafts->setUpdateIntervalSeconds(this->ui->comp_Settings->getAircraftUpdateIntervalSeconds());
+    this->ui->comp_AtcStations->setUpdateIntervalSeconds(this->ui->comp_Settings->getAtcUpdateIntervalSeconds());
+    this->ui->comp_Users->setUpdateIntervalSeconds(this->ui->comp_Settings->getUsersUpdateIntervalSeconds());
 }
 
 /*
@@ -304,38 +279,10 @@ void MainWindow::stopAllTimers(bool disconnect)
 {
     this->m_timerStatusBar->stop();
     this->m_timerContextWatchdog->stop();
-    this->m_timerAudioTests->stop();
     this->m_timerSimulator->stop();
     this->stopUpdateTimers();
     if (!disconnect) return;
     this->disconnect(this->m_timerStatusBar);
     this->disconnect(this->m_timerContextWatchdog);
-    this->disconnect(this->m_timerAudioTests);
     this->disconnect(this->m_timerSimulator);
-}
-
-void MainWindow::setHotkeys()
-{
-    Q_ASSERT(this->getIContextSettings());
-    if (!this->m_keyboard)
-    {
-        this->m_keyboard = BlackInput::IKeyboard::getInstance();
-    }
-    else
-    {
-        this->m_keyboard->unregisterAllHotkeys();
-    }
-
-    CKeyboardKeyList keys = this->getIContextSettings()->getHotkeys();
-    if (keys.isEmpty()) return;
-
-    CKeyboardKey key = keys.keyForFunction(CKeyboardKey::HotkeyOpacity50);
-    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->changeWindowOpacity(50); });
-
-    key = keys.keyForFunction(CKeyboardKey::HotkeyOpacity100);
-    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->changeWindowOpacity(100); });
-
-    key = keys.keyForFunction(CKeyboardKey::HotkeyToogleWindowsStayOnTop);
-    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->toogleWindowStayOnTop(); });
-
 }
