@@ -4,8 +4,10 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "testcontainers.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
+#include "blackmisc/avcallsignlist.h"
 #include <QList>
 #include <QVector>
 #include <QSet>
@@ -13,6 +15,7 @@
 #include <set>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
 
 namespace BlackMiscTest
 {
@@ -107,6 +110,18 @@ namespace BlackMiscTest
         QVERIFY2(c1.size() == 6, "Split collections");
         c1.remove(c2);
         QVERIFY2(c1 == c3, "Split collections");
+    }
+
+    void CTestContainers::findTests()
+    {
+        BlackMisc::registerMetadata();
+        CCallsignList callsigns;
+        CSequence<CCallsign> found = callsigns.findBy(&CCallsign::asString, "Foo");
+        QVERIFY2(found.isEmpty(), "Empty found");
+        callsigns.push_back(CCallsign("EDDM_TWR"));
+        callsigns.push_back(CCallsign("KLAX_TWR"));
+        found = callsigns.findBy(&CCallsign::asString, "KLAXTWR");
+        QVERIFY2(found.size() == 1, "found");
     }
 
 } //namespace BlackMiscTest

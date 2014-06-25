@@ -15,7 +15,7 @@ namespace BlackMisc
 
         public:
 
-            //! \brief Command validate
+            //! Command validate
             static const QString &CmdValidate()
             {
                 static const QString cmd("validate");
@@ -57,31 +57,34 @@ namespace BlackMisc
                 return cmd;
             }
 
-            //! \brief Wrong path message
+            //! Wrong path message
             static BlackMisc::CStatusMessage wrongPathMessage(const QString &path = "");
 
-            //! \brief Wrong path messages
+            //! Wrong path messages
             static BlackMisc::CStatusMessageList wrongPathMessages(const QString &path = "");
 
-            //! \brief Value not changed message
+            //! Value not changed message
             static BlackMisc::CStatusMessage valueNotChangedMessage(const QString &valueName);
 
-            //! \brief Value changed message
+            //! Value changed message with flag
+            static CStatusMessage valueChangedMessage(bool changed, const QString &valueName);
+
+            //! Value changed message
             static BlackMisc::CStatusMessage valueChangedMessage(const QString &valueName);
 
-            //! \brief Remove leading path
+            //! Remove leading path
             static QString removeLeadingPath(const QString &path);
 
-            //! \brief Append setting paths
+            //! Append setting paths
             static QString appendPaths(const QString &part1, const QString &part2, const QString &part3 = "");
 
-            //! \brief prepare the settings directory, if required create it
+            //! prepare the settings directory, if required create it
             static bool initSettingsDirectory();
 
-            //! \brief get the settings directory
+            //! get the settings directory
             static const QString &getSettingsDirectory();
 
-            //! \brief get the settings directory
+            //! get the settings directory
             static const QString &getSettingsFile();
 
         };

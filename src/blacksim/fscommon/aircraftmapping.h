@@ -7,7 +7,7 @@
 #define BLACKSIM_FSCOMMON_AIRCRAFTMAPPING_H
 
 #include "aircraftcfgentries.h"
-#include "../simulatorinfo.h"
+#include "blacksim/simulatorinfo.h"
 #include "blackmisc/valueobject.h"
 #include <QVariant>
 #include <QDateTime>

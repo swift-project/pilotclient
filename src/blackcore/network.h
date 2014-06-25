@@ -126,6 +126,16 @@ namespace BlackCore
         }
 
         /*!
+         * Returns true if the given ConnectionStatus represents a disconnected state.
+         */
+        static bool isDisconnectedStatus(ConnectionStatus status)
+        {
+            return status == Disconnected || status == DisconnectedError ||
+                   status == DisconnectedFailed || status == DisconnectedLost;
+        }
+
+
+        /*!
          * Returns true if the current ConnectionStatus is a connected state.
          */
         virtual bool isConnected() const = 0;

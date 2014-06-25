@@ -173,7 +173,7 @@ namespace BlackMisc
         default:
             static QString x("unknown type");
             qFatal("Unknown type");
-            return x; // just for compiler warning
+            return x;
         }
     }
 

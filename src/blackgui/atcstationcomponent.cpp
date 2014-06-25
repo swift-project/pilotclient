@@ -35,9 +35,13 @@ namespace BlackGui
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getIContextNetwork());
-        this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnline, this, &CAtcStationComponent::changedAtcStationsOnline);
-        this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsBooked, this, &CAtcStationComponent::changedAtcStationsBooked);
-        this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
+        if (this->getIContextNetwork())
+        {
+            this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnline, this, &CAtcStationComponent::changedAtcStationsOnline);
+            this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsBooked, this, &CAtcStationComponent::changedAtcStationsBooked);
+            this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
+            this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::connectionStatusChanged);
+        }
     }
 
     void CAtcStationComponent::update()
@@ -62,6 +66,7 @@ namespace BlackGui
         }
         else
         {
+            this->ui->tvp_AtcStationsOnline->clear();
             this->ui->le_AtcStationsOnlineMetar->clear();
         }
     }
@@ -87,8 +92,21 @@ namespace BlackGui
     void CAtcStationComponent::changedAtcStationsOnline()
     {
         // just update timestamp, data will be pulled by time
-        // the timestamp will tell if there are newer data
+        // the timestamp will tell if there are any newer data
         this->m_timestampOnlineStationsChanged = QDateTime::currentDateTimeUtc();
+    }
+
+    void CAtcStationComponent::connectionStatusChanged(uint from, uint to, const QString &message)
+    {
+        INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
+        INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
+        Q_UNUSED(fromStatus);
+        Q_UNUSED(message);
+        if (INetwork::isDisconnectedStatus(toStatus))
+        {
+            this->ui->tvp_AtcStationsOnline->clear();
+            this->ui->le_AtcStationsOnlineMetar->clear();
+        }
     }
 
     void CAtcStationComponent::changedAtcStationOnlineConnectionStatus(const CAtcStation &station, bool added)
@@ -103,14 +121,24 @@ namespace BlackGui
 
     void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
     {
-        if (!this->getIContextNetwork()->isConnected()) return;
+        if (!this->getIContextNetwork()->isConnected())
+        {
+            this->ui->te_AtcStationsOnlineInfo->clear();
+            return;
+        }
         QString icao = airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper();
         this->ui->le_AtcStationsOnlineMetar->setText(icao);
         if (icao.length() != 4) return;
         CInformationMessage metar = this->getIContextNetwork()->getMetar(icao);
         if (metar.getType() != CInformationMessage::METAR) return;
-        if (metar.isEmpty()) return;
-        this->ui->te_AtcStationsOnlineInfo->setText(metar.getMessage());
+        if (metar.isEmpty())
+        {
+            this->ui->te_AtcStationsOnlineInfo->clear();
+        }
+        else
+        {
+            this->ui->te_AtcStationsOnlineInfo->setText(metar.getMessage());
+        }
     }
 
     void CAtcStationComponent::onlineAtcStationSelected(QModelIndex index)

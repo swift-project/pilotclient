@@ -134,7 +134,9 @@ namespace BlackMisc
             this->initNotificationFlags();
         }
 
-
+        /*
+         * Flags
+         */
         void CSettingsAudio::initNotificationFlags()
         {
             // if we add flags in the future, we automatically extend ...

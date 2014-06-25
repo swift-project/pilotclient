@@ -175,8 +175,11 @@ namespace BlackGui
     void CTextMessageComponent::showCurrentFrequenciesFromCockpit()
     {
         const CAircraft ownAircraft = this->getOwnAircraft();
-        const QString f1 = QString("COM1: %1").arg(ownAircraft.getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
-        const QString f2 = QString("COM2: %1").arg(ownAircraft.getCom2System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
+        QString f1n, f2n;
+        f1n.sprintf("%03.3f", ownAircraft.getCom1System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
+        f2n.sprintf("%03.3f", ownAircraft.getCom2System().getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3));
+        const QString f1 = QString("COM1: %1").arg(f1n);
+        const QString f2 = QString("COM2: %1").arg(f2n);
         this->ui->tb_TextMessagesCOM1->setToolTip(f1);
         this->ui->tb_TextMessagesCOM1->setToolTip(f2);
         this->setTabText(this->indexOf(this->ui->tb_TextMessagesCOM1), f1);

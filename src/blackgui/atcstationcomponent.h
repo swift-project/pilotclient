@@ -72,6 +72,9 @@ namespace BlackGui
         //! Online stations changed
         void changedAtcStationsOnline();
 
+        //! Connection status has been changed
+        void connectionStatusChanged(uint from, uint to, const QString &message);
+
     private:
         Ui::CAtcStationComponent *ui;
         CTimerBasedComponent *m_timerComponent;
