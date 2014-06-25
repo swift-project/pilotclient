@@ -77,6 +77,7 @@ namespace BlackSimPlugin
         private slots:
             void serviceRegistered(const QString &serviceName);
             void serviceUnregistered();
+            void emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
             void fastTimerTimeout();
             void slowTimerTimeout();
 

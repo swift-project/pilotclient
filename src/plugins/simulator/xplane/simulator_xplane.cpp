@@ -86,7 +86,7 @@ namespace BlackSimPlugin
             m_traffic = new CXBusTrafficProxy(m_conn, this);
             if (m_service->isValid() && m_traffic->isValid() && m_traffic->initialize())
             {
-                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::aircraftModelChanged);
+                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitAircraftModelChanged);
                 m_watcher->setConnection(m_conn);
                 emit statusChanged(ISimulator::Connected);
                 return true;
@@ -126,7 +126,7 @@ namespace BlackSimPlugin
             {
                 delete m_service;
                 m_service = new CXBusServiceProxy(m_conn, this);
-                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::aircraftModelChanged);
+                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitAircraftModelChanged);
             }
             else if (serviceName == CXBusTrafficProxy::InterfaceName())
             {
@@ -146,6 +146,14 @@ namespace BlackSimPlugin
             m_service = nullptr;
             m_traffic = nullptr;
             emit statusChanged(ISimulator::Disconnected);
+        }
+
+        void CSimulatorXPlane::emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
+        {
+            emit aircraftModelChanged({ path, true });
+            Q_UNUSED(filename);
+            Q_UNUSED(livery);
+            Q_UNUSED(icao);
         }
 
         // convert xplane squawk mode to swift squawk mode
@@ -191,7 +199,7 @@ namespace BlackSimPlugin
         BlackMisc::Network::CAircraftModel CSimulatorXPlane::getAircraftModel() const
         {
             if (! isConnected()) { return {}; }
-            return m_xplaneData.aircraftModelPath;
+            return { m_xplaneData.aircraftModelPath, true };
         }
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft)
