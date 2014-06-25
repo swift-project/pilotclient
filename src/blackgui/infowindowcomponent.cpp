@@ -21,6 +21,7 @@ namespace BlackGui
         this->m_hideTimer = new QTimer(this);
         this->m_hideTimer->setSingleShot(true);
         connect(this->m_hideTimer, &QTimer::timeout, this, &CInfoWindowComponent::hide);
+        connect(this->ui->pb_Close, &QPushButton::pressed, this, &CInfoWindowComponent::hide);
     }
 
     /*
@@ -80,7 +81,7 @@ namespace BlackGui
         this->ui->le_SmSeverity->setText(statusMessage.getSeverityAsString());
         this->ui->le_SmType->setText(statusMessage.getTypeAsString());
         this->ui->te_SmStatusMessage->setText(statusMessage.getMessage());
-        this->ui->lbl_SmSeverity->setPixmap(statusMessage.toIcon());
+        this->ui->lbl_SmSeverityIcon->setPixmap(statusMessage.toIcon());
 
         this->setCurrentPage(this->ui->pg_StatusMessage);
         this->showWindow(displayTimeMs);
