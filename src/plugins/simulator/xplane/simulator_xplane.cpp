@@ -5,6 +5,7 @@
 
 #include "simulator_xplane.h"
 #include "xbus_service_proxy.h"
+#include "xbus_traffic_proxy.h"
 #include <QDBusServiceWatcher>
 #include <QTimer>
 
@@ -18,6 +19,7 @@ namespace BlackSimPlugin
             m_watcher = new QDBusServiceWatcher(this);
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
             m_watcher->addWatchedService(CXBusServiceProxy::InterfaceName());
+            m_watcher->addWatchedService(CXBusTrafficProxy::InterfaceName());
             connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlane::serviceRegistered);
             connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorXPlane::serviceUnregistered);
 
@@ -63,7 +65,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::isConnected() const
         {
-            return m_service;
+            return m_service && m_traffic;
         }
 
         bool CSimulatorXPlane::canConnect()
@@ -81,7 +83,8 @@ namespace BlackSimPlugin
             if (isConnected()) { return true; }
             m_conn = QDBusConnection::sessionBus(); // TODO make this configurable
             m_service = new CXBusServiceProxy(m_conn, this);
-            if (m_service->isValid())
+            m_traffic = new CXBusTrafficProxy(m_conn, this);
+            if (m_service->isValid() && m_traffic->isValid() && m_traffic->initialize())
             {
                 connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::aircraftModelChanged);
                 m_watcher->setConnection(m_conn);
@@ -103,26 +106,45 @@ namespace BlackSimPlugin
 
         bool CSimulatorXPlane::disconnectFrom()
         {
+            if (m_traffic)
+            {
+                m_traffic->cleanup();
+            }
             emit statusChanged(ISimulator::Disconnected);
             m_conn = QDBusConnection { "default" };
             m_watcher->setConnection(m_conn);
             delete m_service;
+            delete m_traffic;
             m_service = nullptr;
+            m_traffic = nullptr;
             return true;
         }
 
-        void CSimulatorXPlane::serviceRegistered()
+        void CSimulatorXPlane::serviceRegistered(const QString &serviceName)
         {
-            delete m_service;
-            m_service = new CXBusServiceProxy(m_conn, this);
-            connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::aircraftModelChanged);
-            emit statusChanged(ISimulator::Connected);
+            if (serviceName == CXBusServiceProxy::InterfaceName())
+            {
+                delete m_service;
+                m_service = new CXBusServiceProxy(m_conn, this);
+                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::aircraftModelChanged);
+            }
+            else if (serviceName == CXBusTrafficProxy::InterfaceName())
+            {
+                delete m_traffic;
+                m_traffic = new CXBusTrafficProxy(m_conn, this);
+            }
+            if (m_service && m_traffic)
+            {
+                emit statusChanged(ISimulator::Connected);
+            }
         }
 
         void CSimulatorXPlane::serviceUnregistered()
         {
             delete m_service;
+            delete m_traffic;
             m_service = nullptr;
+            m_traffic = nullptr;
             emit statusChanged(ISimulator::Disconnected);
         }
 
@@ -199,6 +221,36 @@ namespace BlackSimPlugin
                 return true;
             }
             return false;
+        }
+
+        void CSimulatorXPlane::addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &type,
+            const BlackMisc::Aviation::CAircraftSituation &initialSituation)
+        {
+            if (! isConnected()) { return; }
+            m_traffic->addPlane(callsign.asString(), type, "YYY", "YYY"); // TODO livery
+            addAircraftSituation(callsign, initialSituation);
+        }
+
+        void CSimulatorXPlane::addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
+            const BlackMisc::Aviation::CAircraftSituation &situ)
+        {
+            if (! isConnected()) { return; }
+            using namespace BlackMisc::PhysicalQuantities;
+            m_traffic->setPlanePosition(callsign.asString(),
+                situ.latitude().value(CAngleUnit::deg()),
+                situ.longitude().value(CAngleUnit::deg()),
+                situ.getAltitude().value(CLengthUnit::ft()),
+                situ.getPitch().value(CAngleUnit::deg()),
+                situ.getBank().value(CAngleUnit::deg()),
+                situ.getHeading().value(CAngleUnit::deg()));
+            m_traffic->setPlaneSurfaces(callsign.asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
+            m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false); // TODO transponder
+        }
+
+        void CSimulatorXPlane::removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign)
+        {
+            if (! isConnected()) { return; }
+            m_traffic->removePlane(callsign.asString());
         }
 
     }

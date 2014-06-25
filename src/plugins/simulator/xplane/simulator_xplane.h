@@ -19,6 +19,7 @@ namespace BlackSimPlugin
     {
 
         class CXBusServiceProxy;
+        class CXBusTrafficProxy;
 
         /*!
          * X-Plane ISimulator implementation
@@ -51,15 +52,15 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
 
             //! \copydoc BlackCore::ISimulator::addRemoteAircraft
-            virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &/*callsign*/, const QString &/*type*/,
-                const BlackMisc::Aviation::CAircraftSituation &/*initialSituation*/) override {}
+            virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &type,
+                const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
 
             //! \copydoc BlackCore::ISimulator::addAircraftSituation
-            virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &/*callsign*/,
-                const BlackMisc::Aviation::CAircraftSituation &/*initialSituation*/) override {}
+            virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
+                const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
 
             //! \copydoc BlackCore::ISimulator::removeRemoteAircraft
-            virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &/*callsign*/) override {}
+            virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
 
             //! \copydoc BlackCore::ISimulator::updateOwnSimulatorCockpit
             virtual bool updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft) override;
@@ -74,7 +75,7 @@ namespace BlackSimPlugin
             virtual BlackMisc::Network::CAircraftModel getAircraftModel() const override;
 
         private slots:
-            void serviceRegistered();
+            void serviceRegistered(const QString &serviceName);
             void serviceUnregistered();
             void fastTimerTimeout();
             void slowTimerTimeout();
@@ -83,6 +84,7 @@ namespace BlackSimPlugin
             QDBusConnection m_conn { "default" };
             QDBusServiceWatcher *m_watcher { nullptr };
             CXBusServiceProxy *m_service { nullptr };
+            CXBusTrafficProxy *m_traffic { nullptr };
             QTimer *m_fastTimer { nullptr };
             QTimer *m_slowTimer { nullptr };
 
