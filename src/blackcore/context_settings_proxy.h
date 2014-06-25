@@ -52,6 +52,9 @@ namespace BlackCore
         //! \copydoc IContextSettings::getAudioSettings()
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const override;
 
+        //! \copydoc IContextSettings::getSimulatorSettings()
+        virtual BlackSim::Settings::CSettingsSimulator getSimulatorSettings() const override;
+
         //! \copydoc IContextSettings::getHotkeys()
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const override;
 

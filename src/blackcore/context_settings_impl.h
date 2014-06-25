@@ -10,9 +10,7 @@
 #include "dbus_server.h"
 #include "context_runtime.h"
 
-#include "blackmisc/setnetwork.h"
-#include "blackmisc/setaudio.h"
-
+#include "blackcore/settingsallclasses.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/hwkeyboardkeylist.h"
 
@@ -20,7 +18,7 @@ namespace BlackCore
 {
 
     /*!
-     * \brief Settings context implementation
+     * Settings context implementation
      */
     class CContextSettings : public IContextSettings
     {
@@ -30,10 +28,10 @@ namespace BlackCore
         friend class IContextSettings;
 
     protected:
-        //! \brief Constructor
+        //! Constructor
         CContextSettings(CRuntimeConfig::ContextMode mode, CRuntime *runtime = nullptr);
 
-        //! \brief Register myself in DBus
+        //! Register myself in DBus
         CContextSettings *registerWithDBus(CDBusServer *server)
         {
             if (!server || this->m_mode != CRuntimeConfig::LocalInDbusServer) return this;
@@ -45,7 +43,7 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextSettings() {}
 
-        //! \brief settings file
+        //! settings file
         const QString &getSettingsDirectory() const { return BlackMisc::Settings::CSettingUtilities::getSettingsDirectory(); }
 
         //! \copydoc IContextSettings::value()
@@ -58,10 +56,13 @@ namespace BlackCore
         //! \copydoc IContextSettings::getAudioSettings()
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const override;
 
+        //! \copydoc IContextSettings::getSimulatorSettings()
+        virtual BlackSim::Settings::CSettingsSimulator getSimulatorSettings() const override;
+
         //! \copydoc IContextSettings::getHotkeys()
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const override;
 
-        //! \brief read settings
+        //! read settings
         virtual BlackMisc::CStatusMessage read() override;
 
         //! \copydoc IContextSettings::write
@@ -79,6 +80,7 @@ namespace BlackCore
     private:
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
         BlackMisc::Settings::CSettingsAudio m_settingsAudio;
+        BlackSim::Settings::CSettingsSimulator m_settingsSimulator;
         BlackMisc::Hardware::CKeyboardKeyList m_hotkeys;
         QJsonDocument toJsonDocument() const;
         void emitCompletelyChanged();

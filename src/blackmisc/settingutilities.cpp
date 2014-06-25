@@ -37,7 +37,7 @@ namespace BlackMisc
         CStatusMessage CSettingUtilities::valueNotChangedMessage(const QString &valueName)
         {
             return CStatusMessage(CStatusMessage::TypeSettings, CStatusMessage::SeverityWarning,
-                                  QString("Value %1 not changed").arg(valueName));
+                                  QString("Value '%1' not changed").arg(valueName));
         }
 
         /*
@@ -46,7 +46,17 @@ namespace BlackMisc
         CStatusMessage CSettingUtilities::valueChangedMessage(const QString &valueName)
         {
             return CStatusMessage(CStatusMessage::TypeSettings, CStatusMessage::SeverityInfo,
-                                  QString("Value %1 changed").arg(valueName));
+                                  QString("Value '%1' changed").arg(valueName));
+        }
+
+        /*
+         * Value changed
+         */
+        CStatusMessage CSettingUtilities::valueChangedMessage(bool changed, const QString &valueName)
+        {
+            return changed ?
+                   valueChangedMessage(valueName) :
+                   valueNotChangedMessage(valueName);
         }
 
         /*
@@ -100,6 +110,5 @@ namespace BlackMisc
             static QString file(QString(CSettingUtilities::getSettingsDirectory()).append("/settings.json"));
             return file;
         }
-
     }
 }

@@ -11,11 +11,9 @@
 #include "blackinput/keyboard.h"
 #include "blackmisc/hwkeyboardkeylist.h"
 #include "blackmisc/statusmessagelist.h"
-#include "blackmisc/settingutilities.h"
-#include "blackmisc/setnetwork.h"
-#include "blackmisc/setaudio.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/variant.h"
+#include "blackcore/settingsallclasses.h"
 #include <QObject>
 #include <QVariant>
 
@@ -38,7 +36,8 @@ namespace BlackCore
         {
             SettingsHotKeys,
             SettingsNetwork,
-            SettingsAudio
+            SettingsAudio,
+            SettingsSimulator
         };
 
     protected:
@@ -82,6 +81,13 @@ namespace BlackCore
             return s;
         }
 
+        //! Path for simulator settings
+        static const QString &PathSimulatorSettings()
+        {
+            static QString s("simulator");
+            return s;
+        }
+
         //! Root path
         static const QString &PathRoot()
         {
@@ -122,6 +128,9 @@ namespace BlackCore
 
         //! Audio settings
         virtual BlackMisc::Settings::CSettingsAudio getAudioSettings() const = 0;
+
+        //! Audio settings
+        virtual BlackSim::Settings::CSettingsSimulator getSimulatorSettings() const = 0;
 
         //! Hotkeys
         virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const = 0;

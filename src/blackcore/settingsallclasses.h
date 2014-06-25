@@ -3,10 +3,10 @@
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#ifndef BLACKMISC_SETTINGSALLCLASSES_H
-#define BLACKMISC_SETTINGSALLCLASSES_H
+#ifndef BLACKCORE_SETTINGSALLCLASSES_H
+#define BLACKCORE_SETTINGSALLCLASSES_H
 
-#include "blackmisc/setnetwork.h"
-#include "blackmisc/setaudio.h"
+#include "blackmisc/settingsblackmiscclasses.h"
+#include "blacksim/setsimulator.h"
 
 #endif // guard

@@ -191,15 +191,8 @@ namespace BlackMisc
                 if (command == CSettingUtilities::CmdUpdate())
                 {
                     QString v = value.toString();
-                    if (this->m_bookingServiceUrl == v)
-                    {
-                        msgs.push_back(CSettingUtilities::valueNotChangedMessage("booking URL"));
-                    }
-                    else
-                    {
-                        changedFlag = true;
-                        msgs.push_back(CSettingUtilities::valueChangedMessage("booking URL"));
-                    }
+                    msgs.push_back(CSettingUtilities::valueChangedMessage(v != this->m_bookingServiceUrl, "booking URL"));
+                    this->m_bookingServiceUrl = v;
                     return msgs;
                 }
             }

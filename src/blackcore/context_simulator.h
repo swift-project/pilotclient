@@ -12,10 +12,10 @@
 #include "context.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_runtime.h"
-#include "blackmisc/nwaircraftmodel.h"
-#include "blackmisc/avaircraft.h"
 #include "blacksim/simulatorinfo.h"
 #include "blacksim/simulatorinfolist.h"
+#include "blackmisc/nwaircraftmodel.h"
+#include "blackmisc/avaircraft.h"
 #include "blackmisc/project.h"
 #include <QObject>
 

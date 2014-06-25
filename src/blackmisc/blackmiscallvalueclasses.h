@@ -9,7 +9,7 @@
 #include "blackmisc/pqallquantities.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/geoallclasses.h"
-#include "blackmisc/settingsallclasses.h"
+#include "blackmisc/settingsblackmiscclasses.h"
 #include "blackmisc/indexvariantmap.h"
 #include "blackmisc/networkallclasses.h"
 #include "blackmisc/statusmessagelist.h"

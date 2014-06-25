@@ -9,7 +9,7 @@
 #include "mathallclasses.h"
 #include "geoallclasses.h"
 #include "networkallclasses.h"
-#include "settingsallclasses.h"
+#include "settingsblackmiscclasses.h"
 #include "hwallclasses.h"
 #include "indexvariantmap.h"
 #include "variant.h"
