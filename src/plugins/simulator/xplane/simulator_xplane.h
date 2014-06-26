@@ -88,6 +88,7 @@ namespace BlackSimPlugin
             CXBusTrafficProxy *m_traffic { nullptr };
             QTimer *m_fastTimer { nullptr };
             QTimer *m_slowTimer { nullptr };
+            QSet<QString> m_planes; // FIXME should not be needed here IMHO
 
             struct // data is written by DBus async method callbacks
             {
