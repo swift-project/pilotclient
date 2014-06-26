@@ -137,7 +137,7 @@ namespace BlackCore
         aircraft.setCockpit(simulatorAircraft.getCom1System(), simulatorAircraft.getCom2System(), simulatorAircraft.getTransponderCode());
 
         Q_ASSERT(this->getIContextOwnAircraft()); // paranoia against context having been deleted from another thread - redmine issue #270
-        if (!this->getIContextOwnAircraft())
+        if (this->getIContextOwnAircraft())
         {
             // the method will check, if an update is really required
             // these are local (non DBus) calls
