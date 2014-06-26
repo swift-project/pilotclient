@@ -527,7 +527,7 @@
    </attribute>
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="BlackGui::CSettingsFsxComponent" name="comp_SettingsSimulatorFsx">
+     <widget class="BlackGui::CSettingsSimulatorComponent" name="comp_SettingsSimulator">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -743,9 +743,9 @@
    <header>blackgui/serverview.h</header>
   </customwidget>
   <customwidget>
-   <class>BlackGui::CSettingsFsxComponent</class>
+   <class>BlackGui::CSettingsSimulatorComponent</class>
    <extends>QFrame</extends>
-   <header>blackgui/settingsfsxcomponent.h</header>
+   <header>blackgui/settingssimulatorcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

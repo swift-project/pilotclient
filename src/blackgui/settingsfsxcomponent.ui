@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>150</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,35 +40,35 @@
      <property name="fieldGrowthPolicy">
       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
      </property>
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QLabel" name="lbl_SettingsFsxAddress">
        <property name="text">
         <string>FSX address</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="1" column="1">
       <widget class="QLineEdit" name="le_SettingsFsxAddress">
        <property name="text">
         <string>127.0.0.1</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="lbl_SettingsFsxPort">
        <property name="text">
         <string>FSX port</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="2" column="1">
       <widget class="QLineEdit" name="le_SettingsFsxPort">
        <property name="text">
         <string>500</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0" colspan="2">
+     <item row="4" column="0" colspan="2">
       <layout class="QHBoxLayout" name="hl_SettingsSimconnectCfgButtons">
        <item>
         <widget class="QPushButton" name="pb_SettingsFsxOpenSimconnectCfg">
@@ -100,14 +100,14 @@
        </item>
       </layout>
      </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="lbl_SettingsFsxExistsSimconncetCfg">
        <property name="text">
         <string>&quot;simconnect.cfg&quot; exists?</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="3" column="1">
       <widget class="QWidget" name="wi_SettingsFsxExistsSimconncetCfg" native="true">
        <layout class="QHBoxLayout" name="hl_SettingsFsxExistsSimconncetCfg">
         <property name="spacing">
@@ -140,6 +140,13 @@
          </widget>
         </item>
        </layout>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="lbl_HeaderFsxSimConnect">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;FSX simconnect config files&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
       </widget>
      </item>
     </layout>
