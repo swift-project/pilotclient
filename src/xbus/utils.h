@@ -78,7 +78,7 @@ class QSharedApplication : public QApplication
 
     QWeakPointer<QApplication> m_weakptr;
 
-    QSharedApplication(QSharedPointer<QApplication> &ptr, int argc, char **argv) : QApplication(argc, argv)
+    QSharedApplication(QSharedPointer<QApplication> &ptr, int &argc, char **argv) : QApplication(argc, argv)
     {
         ptr.reset(this);
         m_weakptr = ptr;
