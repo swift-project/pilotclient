@@ -149,7 +149,8 @@ namespace BlackSim
                     if (command == CSettingUtilities::CmdUpdate())
                     {
                         CSimulatorInfo v = value.value<CSimulatorInfo>();
-                        msgs.push_back(CSettingUtilities::valueChangedMessage(v != this->m_selectedDriver, "selected driver"));
+                        changedFlag = (v != this->m_selectedDriver);
+                        msgs.push_back(CSettingUtilities::valueChangedMessage(changedFlag, "selected driver"));
                         this->m_selectedDriver = v;
                         return msgs;
                     }
