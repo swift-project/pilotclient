@@ -87,11 +87,17 @@ namespace BlackCore
         //! Load specific simulator plugin
         virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) = 0;
 
+        //! Load specific simulator plugin as set in settings
+        virtual bool loadSimulatorPluginFromSettings() = 0;
+
         //! Unload simulator plugin
         virtual void unloadSimulatorPlugin() = 0;
 
         //! Simulator avialable?
         bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorInfo().isUnspecified(); }
+
+        //! Settings have been changed
+        virtual void settingsChanged(uint type) = 0;
 
     protected:
         //! \brief Constructor

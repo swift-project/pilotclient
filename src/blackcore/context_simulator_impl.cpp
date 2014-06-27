@@ -5,6 +5,8 @@
 
 #include "context_simulator_impl.h"
 #include "context_ownaircraft.h"
+#include "context_settings.h"
+#include "context_application.h"
 #include <QPluginLoader>
 #include <QLibrary>
 #include "context_runtime.h"
@@ -23,10 +25,10 @@ namespace BlackCore
     {
         m_updateTimer = new QTimer(this);
         findSimulatorPlugins();
-        loadSimulatorPlugin(CSimulatorInfo::FSX());
-
         connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
-        asyncConnectTo();
+
+        // do not load plugin here, as it depends on settings
+        // it has to be guaranteed the settings are alredy loaded
     }
 
     CContextSimulator::~CContextSimulator()
@@ -98,31 +100,57 @@ namespace BlackCore
 
     bool CContextSimulator::loadSimulatorPlugin(const CSimulatorInfo &simulatorInfo)
     {
+        if (this->m_simulator && this->m_simulator->getSimulatorInfo() == simulatorInfo) { return true; } // already loaded
+        if (simulatorInfo.isUnspecified()) { return false; }
+
         ISimulatorFactory *factory = nullptr;
         QSet<ISimulatorFactory *>::iterator iterator = std::find_if(m_simulatorFactories.begin(), m_simulatorFactories.end(), [ = ](const ISimulatorFactory * factory)
         {
             return factory->getSimulatorInfo() == simulatorInfo;
         });
 
-        if (iterator == m_simulatorFactories.end())
-            return false;
-
+        if (iterator == m_simulatorFactories.end()) { return false; }
         factory = *iterator;
         Q_ASSERT(factory);
 
-        m_simulator = factory->create(this);
-        Q_ASSERT(m_simulator);
+        ISimulator *newSimulator = factory->create(this);
+        Q_ASSERT(newSimulator);
+
+        this->unloadSimulatorPlugin(); // old plugin unloaded
+        m_simulator = newSimulator;
 
         connect(m_simulator, SIGNAL(statusChanged(ISimulator::Status)), this, SLOT(setConnectionStatus(ISimulator::Status)));
         connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
+        asyncConnectTo(); // try to connect
         return true;
+    }
+
+    bool CContextSimulator::loadSimulatorPluginFromSettings()
+    {
+        Q_ASSERT(this->getIContextSettings());
+        if (!this->getIContextSettings()) return false;
+
+        CSimulatorInfoList drivers = this->getAvailableSimulatorPlugins();
+        if (drivers.size() == 1)
+        {
+            // load, independent from settings, we have only driver
+            return this->loadSimulatorPlugin(drivers.front());
+        }
+        else if (drivers.size() > 1)
+        {
+            return this->loadSimulatorPlugin(
+                       this->getIContextSettings()->getSimulatorSettings().getSelectedDriver()
+                   );
+        }
+        else
+        {
+            return false;
+        }
     }
 
     void CContextSimulator::unloadSimulatorPlugin()
     {
-        if (m_simulator)
-            m_simulator->deleteLater();
-
+        if (m_simulator) { m_simulator->deleteLater(); }
         m_simulator = nullptr;
     }
 
@@ -196,6 +224,29 @@ namespace BlackCore
         {
             if (!tm.isPrivateMessage()) continue;
             this->m_simulator->displayStatusMessage(tm.asStatusMessage(true, true));
+        }
+    }
+
+    void CContextSimulator::settingsChanged(uint type)
+    {
+        Q_ASSERT(this->getIContextSettings());
+        if (!this->getIContextSettings()) return;
+        IContextSettings::SettingsType settingsType = static_cast<IContextSettings::SettingsType>(type);
+        if (settingsType == IContextSettings::SettingsSimulator)
+        {
+            CSimulatorInfo driver = this->getIContextSettings()->getSimulatorSettings().getSelectedDriver();
+            if (this->loadSimulatorPlugin(driver))
+            {
+                QString m = QString("Driver loaded: '%1'").arg(driver.toQString(true));
+                if (this->getIContextApplication())
+                    this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage(m, CStatusMessage::TypeSimulator));
+            }
+            else
+            {
+                QString m = QString("Cannot load driver: '%1'").arg(driver.toQString(true));
+                if (this->getIContextApplication())
+                    this->getIContextApplication()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
+            }
         }
     }
 

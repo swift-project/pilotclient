@@ -409,9 +409,10 @@ namespace BlackCore
             Q_ASSERT(c);
         }
 
-        if (this->m_contextSimulator && this->m_contextSimulator->usingLocalObjects() && this->getCContextSimulator()->m_simulator)
+        // local simulator?
+        if (this->m_contextSimulator && this->m_contextSimulator->usingLocalObjects())
         {
-            // only connect if simulator running locally, no round trips
+            // only connect if simulator runs locally, no round trips
             if (this->m_contextNetwork && this->m_contextNetwork->usingLocalObjects())
             {
                 c = connect(this->m_contextNetwork, &IContextNetwork::changedAircraftSituation,
@@ -423,7 +424,7 @@ namespace BlackCore
                 Q_ASSERT(c);
             }
 
-            // only if own aircraft running locally
+            // only if own aircraft runs locally
             if (this->m_contextOwnAircraft && this->m_contextOwnAircraft->usingLocalObjects())
             {
                 c = connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit,
@@ -431,7 +432,7 @@ namespace BlackCore
                 Q_ASSERT(c);
             }
 
-            // only if own aircraft running locally
+            // only if application runs locally
             if (this->m_contextApplication && this->m_contextApplication->usingLocalObjects())
             {
                 c = connect(this->m_contextApplication, &IContextApplication::statusMessage,
@@ -442,11 +443,25 @@ namespace BlackCore
                             this->getCContextSimulator(), &CContextSimulator::statusMessagesReceived);
                 Q_ASSERT(c);
             }
+
+            // connect local simulator and settings
+            if (this->m_contextSettings)
+            {
+                connect(this->m_contextSettings, &IContextSettings::changedSettings, this->m_contextSimulator, &IContextSimulator::settingsChanged);
+                if (this->m_contextSimulator->loadSimulatorPluginFromSettings())
+                {
+                    qDebug() << "Simulator driver loaded";
+                }
+                else
+                {
+                    qWarning() << "No simulator driver loaded";
+                }
+            }
         }
 
+        // only where network and(!) own aircraft run locally
         if (this->m_contextNetwork && this->m_contextOwnAircraft && this->m_contextNetwork->usingLocalObjects() && this->m_contextOwnAircraft->usingLocalObjects())
         {
-            // only where network and(!) own aircraft run locally
             c = this->connect(this->m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
                               this->getCContextOwnAircraft(),  &CContextOwnAircraft::changedAtcStationOnlineConnectionStatus);
             Q_ASSERT(c);
