@@ -5,10 +5,10 @@ using namespace BlackMisc;
 
 namespace BlackSim
 {
-    CSimulatorInfo::CSimulatorInfo(const QString &shortname, const QString &fullname) : m_fullname(fullname), m_shortname(shortname)
+    CSimulatorInfo::CSimulatorInfo(const QString &shortname, const QString &fullname) : m_fullName(fullname), m_shortName(shortname)
     { }
 
-    CSimulatorInfo::CSimulatorInfo() :  m_fullname("Unknown"), m_shortname("Unknown")
+    CSimulatorInfo::CSimulatorInfo() :  m_fullName("Unknown"), m_shortName("Unknown")
     {}
 
     uint CSimulatorInfo::getValueHash() const
@@ -36,7 +36,7 @@ namespace BlackSim
     QString CSimulatorInfo::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        return QString(this->m_shortname).append(" (").append(this->m_fullname).append(")");
+        return QString(this->m_shortName).append(" (").append(this->m_fullName).append(")");
     }
 
     int CSimulatorInfo::getMetaTypeId() const
@@ -69,6 +69,21 @@ namespace BlackSim
     void CSimulatorInfo::unmarshallFromDbus(const QDBusArgument &argument)
     {
         argument >> TupleConverter<CSimulatorInfo>::toTuple(*this);
+    }
+
+    const QStringList &CSimulatorInfo::jsonMembers()
+    {
+        return TupleConverter<CSimulatorInfo>::jsonMembers();
+    }
+
+    QJsonObject CSimulatorInfo::toJson() const
+    {
+        return BlackMisc::serializeJson(CSimulatorInfo::jsonMembers(), TupleConverter<CSimulatorInfo>::toTuple(*this));
+    }
+
+    void CSimulatorInfo::fromJson(const QJsonObject &json)
+    {
+        BlackMisc::deserializeJson(json, CSimulatorInfo::jsonMembers(), TupleConverter<CSimulatorInfo>::toTuple(*this));
     }
 
     void CSimulatorInfo::registerMetadata()

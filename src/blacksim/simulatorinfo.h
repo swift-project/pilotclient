@@ -17,13 +17,10 @@ namespace BlackSim
         CSimulatorInfo(const QString &shortname, const QString &fullname);
 
         //! Unspecified simulator
-        bool isUnspecified() const { return this->m_shortname.isEmpty() || this->m_shortname.startsWith("Unspecified", Qt::CaseInsensitive); }
+        bool isUnspecified() const { return this->m_shortName.isEmpty() || this->m_shortName.startsWith("Unspecified", Qt::CaseInsensitive); }
 
         //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override
-        {
-            return QVariant::fromValue(*this);
-        }
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
         //! Equal operator ==
         bool operator ==(const CSimulatorInfo &other) const;
@@ -42,6 +39,24 @@ namespace BlackSim
 
         //! Set single settings
         void setSimulatorSetup(const BlackMisc::CIndexVariantMap &setup);
+
+        //! Short name
+        const QString &getShortName() const { return m_shortName; }
+
+        //! Short name
+        const QString &getFullName() const { return m_fullName; }
+
+        //! \copydoc CValueObject::toJson
+        virtual QJsonObject toJson() const override;
+
+        //! \copydoc CValueObject::fromJson
+        virtual void fromJson(const QJsonObject &json) override;
+
+        //! Members
+        static const QStringList &jsonMembers();
+
+        //! Register the metatypes
+        static void registerMetadata();
 
         //! Simulator is FS9 - Microsoft Flight Simulator 2004
         static const CSimulatorInfo &FS9()
@@ -71,9 +86,6 @@ namespace BlackSim
             return sim;
         }
 
-        //! Register the metatypes
-        static void registerMetadata();
-
     protected:
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
@@ -92,13 +104,13 @@ namespace BlackSim
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorInfo)
-        QString m_fullname;
-        QString m_shortname;
+        QString m_fullName;
+        QString m_shortName;
         BlackMisc::CIndexVariantMap m_simsetup; //!< allows to access simulator keys requried on remote side
     };
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::CSimulatorInfo, (o.m_fullname, o.m_shortname, o.m_simsetup))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::CSimulatorInfo, (o.m_fullName, o.m_shortName, o.m_simsetup))
 Q_DECLARE_METATYPE(BlackSim::CSimulatorInfo)
 
 #endif // guard
