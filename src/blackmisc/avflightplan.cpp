@@ -79,6 +79,21 @@ namespace BlackMisc
             argument >> TupleConverter<CFlightPlan>::toTuple(*this);
         }
 
+        const QStringList &CFlightPlan::jsonMembers()
+        {
+            return TupleConverter<CFlightPlan>::jsonMembers();
+        }
+
+        QJsonObject CFlightPlan::toJson() const
+        {
+            return BlackMisc::serializeJson(CFlightPlan::jsonMembers(), TupleConverter<CFlightPlan>::toTuple(*this));
+        }
+
+        void CFlightPlan::fromJson(const QJsonObject &json)
+        {
+            BlackMisc::deserializeJson(json, CFlightPlan::jsonMembers(), TupleConverter<CFlightPlan>::toTuple(*this));
+        }
+
         void CFlightPlan::registerMetadata()
         {
             qRegisterMetaType<CFlightPlan>();
