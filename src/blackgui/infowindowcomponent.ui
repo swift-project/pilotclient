@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>180</height>
+    <height>185</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <string notr="true">QFrame#fr_InfoWindow {
 	border-style: solid;
 	border-width: 2px;
-	border-radius: 20px;
+	border-radius: 10px;
 	border-color: white;
 }
 
@@ -51,19 +51,19 @@ QTextEdit {
   </property>
   <layout class="QVBoxLayout" name="vl_InfoWindow">
    <property name="spacing">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="leftMargin">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="topMargin">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>2</number>
    </property>
    <item>
     <widget class="QFrame" name="fr_InfoWindow">

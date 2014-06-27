@@ -15,20 +15,18 @@
 
 namespace BlackSim
 {
-    //! \brief Value object encapsulating a list of SimulatorInfo.
+    //! Value object encapsulating a list of SimulatorInfo objects.
     class CSimulatorInfoList : public BlackMisc::CSequence<CSimulatorInfo>
     {
     public:
+        //! Default constructor
         CSimulatorInfoList();
 
-        //! \brief Construct from a base class object.
+        //! Construct from a base class object.
         CSimulatorInfoList(const CSequence<CSimulatorInfo> &other);
 
         //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const
-        {
-            return QVariant::fromValue(*this);
-        }
+        virtual QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
         //! Is simulator supported
         bool supportsSimulator(const CSimulatorInfo &info);
@@ -36,11 +34,10 @@ namespace BlackSim
         //! String list with meaningful representations
         QStringList toStringList(bool i18n = false) const;
     };
-
 }
 
 Q_DECLARE_METATYPE(BlackSim::CSimulatorInfoList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackSim::CSimulatorInfo>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackSim::CSimulatorInfo>)
 
-#endif // BLACKSIM_SIMULATORINFOLIST_H
+#endif // guard

@@ -183,7 +183,7 @@ namespace BlackMisc
                     changedFlag = this->m_trafficNetworkServers.contains(&CServer::getName, server.getName());
                     this->m_trafficNetworkServers.removeIf(&CServer::getName, server.getName());
                 }
-                msgs.push_back(CStatusMessage::getInfoMessage("set current server", CStatusMessage::TypeSettings));
+                msgs.push_back(CStatusMessage::getInfoMessage("Set current server", CStatusMessage::TypeSettings));
                 return msgs;
             }
             else if (path == CSettingsNetwork::ValueBookingServiceUrl())
