@@ -8,8 +8,22 @@
 namespace BlackSim
 {
 
-    CSimulatorInfoList::CSimulatorInfoList()
+    CSimulatorInfoList::CSimulatorInfoList() { }
+
+    bool CSimulatorInfoList::supportsSimulator(const CSimulatorInfo &info)
     {
+        return this->contains(info);
+    }
+
+    QStringList CSimulatorInfoList::toStringList(bool i18n) const
+    {
+        QStringList infoList;
+        foreach(CSimulatorInfo info, (*this))
+        {
+            QString i = info.toQString(i18n);
+            infoList.append(i);
+        }
+        return infoList;
     }
 
 } // namespace BlackSim

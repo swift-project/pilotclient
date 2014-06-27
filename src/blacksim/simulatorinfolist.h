@@ -11,6 +11,7 @@
 #include "simulatorinfo.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
+#include <QStringList>
 
 namespace BlackSim
 {
@@ -28,6 +29,12 @@ namespace BlackSim
         {
             return QVariant::fromValue(*this);
         }
+
+        //! Is simulator supported
+        bool supportsSimulator(const CSimulatorInfo &info);
+
+        //! String list with meaningful representations
+        QStringList toStringList(bool i18n = false) const;
     };
 
 }
