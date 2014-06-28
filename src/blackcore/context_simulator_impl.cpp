@@ -150,17 +150,21 @@ namespace BlackCore
         Q_ASSERT(this->getIContextSettings());
         if (!this->getIContextSettings()) return false;
 
-        CSimulatorInfoList plugin = this->getAvailableSimulatorPlugins();
-        if (plugin.size() == 1)
+        CSimulatorInfoList plugins = this->getAvailableSimulatorPlugins();
+        if (plugins.size() == 1)
         {
             // load, independent from settings, we have only driver
-            return this->loadSimulatorPlugin(plugin.front());
+            return this->loadSimulatorPlugin(plugins.front());
         }
-        else if (plugin.size() > 1)
+        else if (plugins.size() > 1)
         {
-            return this->loadSimulatorPlugin(
-                       this->getIContextSettings()->getSimulatorSettings().getSelectedPlugin()
-                   );
+            if (this->loadSimulatorPlugin(
+                        this->getIContextSettings()->getSimulatorSettings().getSelectedPlugin()
+                    )) return true;
+
+            // we have plugins, but none got loaded
+            // just load first one
+            return this->loadSimulatorPlugin(plugins.front());
         }
         else
         {

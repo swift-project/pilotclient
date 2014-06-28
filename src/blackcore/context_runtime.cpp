@@ -448,7 +448,11 @@ namespace BlackCore
             if (this->m_contextSettings)
             {
                 connect(this->m_contextSettings, &IContextSettings::changedSettings, this->m_contextSimulator, &IContextSimulator::settingsChanged);
-                this->m_contextSimulator->loadSimulatorPluginFromSettings();
+                if (!this->m_contextSimulator->loadSimulatorPluginFromSettings())
+                {
+                    qWarning() << "No simulator plugin loaded";
+                    this->sendStatusMessage(CStatusMessage::getWarningMessage("No simulator plugin loaded", CStatusMessage::TypeSimulator));
+                }
             }
         }
 
