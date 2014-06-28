@@ -234,6 +234,7 @@ namespace BlackSimPlugin
         void CSimulatorXPlane::addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &type,
             const BlackMisc::Aviation::CAircraftSituation &initialSituation)
         {
+            Q_UNUSED(initialSituation); // fixed gcc warning
             if (! isConnected()) { return; }
             m_traffic->addPlane(callsign.asString(), type, "YYY", "YYY"); // TODO livery
             //addAircraftSituation(callsign, initialSituation);

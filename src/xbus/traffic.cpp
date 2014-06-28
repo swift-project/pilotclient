@@ -84,6 +84,8 @@ namespace XBus
 
     int CTraffic::preferences(const char *section, const char *name, int def)
     {
+        Q_UNUSED(name);
+        Q_UNUSED(section);
         // TODO [planes] max_full_count
         return def;
     }
@@ -91,6 +93,8 @@ namespace XBus
     float CTraffic::preferences(const char *section, const char *name, float def)
     {
         // TODO [planes] full_distance
+        Q_UNUSED(name);
+        Q_UNUSED(section);
         return def;
     }
 

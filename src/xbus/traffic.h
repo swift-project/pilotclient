@@ -11,7 +11,7 @@
 #include "datarefs.h"
 #include <QObject>
 #include <QHash>
-#include "XPMPMultiplayer.h"
+#include "include/XPMPMultiplayer.h"
 
 //! \cond PRIVATE
 #define XBUS_TRAFFIC_INTERFACENAME "net.vatsim.xbus.traffic"
