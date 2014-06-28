@@ -401,33 +401,13 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief In-place sort by a particular key.
+         * \brief In-place sort by some particular key(s).
          * \param key1 A pointer to a member function of T.
+         * \param keys Zero or more additional pointers to member functions of T.
          */
-        template <class K1> void sortBy(K1 key1)
+        template <class K1, class... Keys> void sortBy(K1 key1, Keys... keys)
         {
-            sort(BlackMisc::Predicates::MemberLess<T>(key1));
-        }
-
-        /*!
-         * \brief In-place sort by some particular keys.
-         * \param key1 A pointer to a member function of T.
-         * \param key2 A pointer to a member function of T.
-         */
-        template <class K1, class K2> void sortBy(K1 key1, K2 key2)
-        {
-            sort(BlackMisc::Predicates::MemberLess<T>(key1, key2));
-        }
-
-        /*!
-         * \brief In-place sort by some particular keys.
-         * \param key1 A pointer to a member function of T.
-         * \param key2 A pointer to a member function of T.
-         * \param key3 A pointer to a member function of T.
-         */
-        template <class K1, class K2, class K3> void sortBy(K1 key1, K2 key2, K3 key3)
-        {
-            sort(BlackMisc::Predicates::MemberLess<T>(key1, key2, key3));
+            sort(BlackMisc::Predicates::MemberLess<T>(key1, keys...));
         }
 
         /*!
@@ -442,36 +422,14 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Return a copy sorted by a particular key.
+         * \brief Return a copy sorted by some particular key(s).
          * \param key1 A pointer to a member function of T.
+         * \param keys Zero or more additional pointers to member functions of T.
          */
-        template <class K1>
-        CSequence sortedBy(K1 key1) const
+        template <class K1, class... Keys>
+        CSequence sortedBy(K1 key1, Keys... keys) const
         {
-            return sorted(BlackMisc::Predicates::MemberLess<T>(key1));
-        }
-
-        /*!
-         * \brief Return a copy sorted by some particular keys.
-         * \param key1 A pointer to a member function of T.
-         * \param key2 A pointer to a member function of T.
-         */
-        template <class K1, class K2>
-        CSequence sortedBy(K1 key1, K2 key2) const
-        {
-            return sorted(BlackMisc::Predicates::MemberLess<T>(key1, key2));
-        }
-
-        /*!
-         * \brief Return a copy sorted by some particular keys.
-         * \param key1 A pointer to a member function of T.
-         * \param key2 A pointer to a member function of T.
-         * \param key3 A pointer to a member function of T.
-         */
-        template <class K1, class K2, class K3>
-        CSequence sortedBy(K1 key1, K2 key2, K3 key3) const
-        {
-            return sorted(BlackMisc::Predicates::MemberLess<T>(key1, key2, key3));
+            return sorted(BlackMisc::Predicates::MemberLess<T>(key1, keys...));
         }
 
         /*!

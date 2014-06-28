@@ -72,42 +72,15 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Return a copy containing only those elements matching a particular key/value pair.
-         * \param key1 A pointer to a member function of T.
-         * \param value1 Will be compared to the return value of key1.
+         * \brief Return a copy containing only those elements matching some particular key/value pair(s).
+         * \param k0 A pointer to a member function of T.
+         * \param v0 A value to compare against the value returned by k0.
+         * \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
          */
-        template <class K1, class V1>
-        C<T> findBy(K1 key1, V1 value1) const
+        template <class K0, class V0, class... KeysValues>
+        C<T> findBy(K0 k0, V0 v0, KeysValues... keysValues) const
         {
-            return findBy(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
-        }
-
-        /*!
-         * \brief Return a copy containing only those elements matching some particular key/value pairs.
-         * \param key1 A pointer to a member function of T.
-         * \param value1 Will be compared to the return value of key1.
-         * \param key2 A pointer to a member function of T.
-         * \param value2 Will be compared to the return value of key2.
-         */
-        template <class K1, class V1, class K2, class V2>
-        C<T> findBy(K1 key1, V1 value1, K2 key2, V2 value2) const
-        {
-            return findBy(BlackMisc::Predicates::MemberEqual<T>(key1, value1, key2, value2));
-        }
-
-        /*!
-         * \brief Return a copy containing only those elements matching some particular key/value pairs.
-         * \param key1 A pointer to a member function of T.
-         * \param value1 Will be compared to the return value of key1.
-         * \param key2 A pointer to a member function of T.
-         * \param value2 Will be compared to the return value of key2.
-         * \param key3 A pointer to a member function of T.
-         * \param value3 Will be compared to the return value of key3.
-         */
-        template <class K1, class V1, class K2, class V2, class K3, class V3>
-        C<T> findBy(K1 key1, V1 value1, K2 key2, V2 value2, K3 key3, V3 value3) const
-        {
-            return findBy(BlackMisc::Predicates::MemberEqual<T>(key1, value1, key2, value2, key3, value3));
+            return findBy(BlackMisc::Predicates::MemberEqual<T>(k0, v0, keysValues...));
         }
 
         /*!
@@ -136,14 +109,15 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Return a copy containing only those elements matching a particular key/value pair.
-         * \param key1 A pointer to a member function of T.
-         * \param value1 Will be compared to the return value of key1.
+         * \brief Return a copy containing only those elements matching some particular key/value pair(s).
+         * \param k0 A pointer to a member function of T.
+         * \param v0 A value to compare against the value returned by k0.
+         * \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
          */
-        template <class K1, class V1>
-        bool contains(K1 key1, V1 value1) const
+        template <class K0, class V0, class... KeysValues>
+        bool contains(K0 k0, V0 v0, KeysValues... keysValues) const
         {
-            return contains(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
+            return contains(BlackMisc::Predicates::MemberEqual<T>(k0, v0, keysValues...));
         }
 
         /*!
@@ -161,14 +135,15 @@ namespace BlackMisc
         }
 
         /*!
-         * \brief Remove elements matching a particular key/value pair.
-         * \param key1 A pointer to a member function of T.
-         * \param value1 Will be compared to the return value of key1.
+         * \brief Remove elements matching some particular key/value pair(s).
+         * \param k0 A pointer to a member function of T.
+         * \param v0 A value to compare against the value returned by k0.
+         * \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
          */
-        template <class K1, class V1>
-        void removeIf(K1 key1, V1 value1)
+        template <class K0, class V0, class... KeysValues>
+        void removeIf(K0 k0, V0 v0, KeysValues... keysValues)
         {
-            removeIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1));
+            removeIf(BlackMisc::Predicates::MemberEqual<T>(k0, v0, keysValues...));
         }
 
     public:
