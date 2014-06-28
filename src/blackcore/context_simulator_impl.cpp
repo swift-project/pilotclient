@@ -159,7 +159,7 @@ namespace BlackCore
         else if (plugin.size() > 1)
         {
             return this->loadSimulatorPlugin(
-                       this->getIContextSettings()->getSimulatorSettings().getSelectedDriver()
+                       this->getIContextSettings()->getSimulatorSettings().getSelectedPlugin()
                    );
         }
         else
@@ -262,7 +262,7 @@ namespace BlackCore
         IContextSettings::SettingsType settingsType = static_cast<IContextSettings::SettingsType>(type);
         if (settingsType == IContextSettings::SettingsSimulator)
         {
-            CSimulatorInfo driver = this->getIContextSettings()->getSimulatorSettings().getSelectedDriver();
+            CSimulatorInfo driver = this->getIContextSettings()->getSimulatorSettings().getSelectedPlugin();
             if (this->loadSimulatorPlugin(driver))
             {
                 QString m = QString("Driver loaded: '%1'").arg(driver.toQString(true));

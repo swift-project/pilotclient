@@ -38,10 +38,10 @@ namespace BlackSim
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Selected driver
-            BlackSim::CSimulatorInfo getSelectedDriver() const { return this->m_selectedDriver; }
+            BlackSim::CSimulatorInfo getSelectedPlugin() const { return this->m_selectedPlugin; }
 
             //! Selected driver
-            bool setSelectedDriver(const BlackSim::CSimulatorInfo &driver) { this->m_selectedDriver = driver; }
+            void setSelectedPlugin(const BlackSim::CSimulatorInfo &plugin) { this->m_selectedPlugin = plugin; }
 
             //! Equal operator ==
             bool operator ==(const CSettingsSimulator &other) const;
@@ -91,13 +91,13 @@ namespace BlackSim
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSettingsSimulator)
-            BlackSim::CSimulatorInfo m_selectedDriver;
+            BlackSim::CSimulatorInfo m_selectedPlugin;
         };
 
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackSim::Settings::CSettingsSimulator)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::Settings::CSettingsSimulator, (o.m_selectedDriver))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::Settings::CSettingsSimulator, (o.m_selectedPlugin))
 
 #endif // guard

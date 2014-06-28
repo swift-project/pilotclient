@@ -22,7 +22,7 @@ namespace BlackSim
         {
             Q_UNUSED(i18n);
             QString s("Sel.driver:");
-            s.append(" ").append(m_selectedDriver.toQString(i18n));
+            s.append(" ").append(m_selectedPlugin.toQString(i18n));
             return s;
         }
 
@@ -122,7 +122,7 @@ namespace BlackSim
          */
         void CSettingsSimulator::initDefaultValues()
         {
-            this->m_selectedDriver = CSimulatorInfo::FSX();
+            this->m_selectedPlugin = CSimulatorInfo::FSX();
         }
 
         /*
@@ -149,9 +149,9 @@ namespace BlackSim
                     if (command == CSettingUtilities::CmdUpdate())
                     {
                         CSimulatorInfo v = value.value<CSimulatorInfo>();
-                        changedFlag = (v != this->m_selectedDriver);
+                        changedFlag = (v != this->m_selectedPlugin);
                         msgs.push_back(CSettingUtilities::valueChangedMessage(changedFlag, "selected driver"));
-                        this->m_selectedDriver = v;
+                        this->m_selectedPlugin = v;
                         return msgs;
                     }
                     return msgs;
