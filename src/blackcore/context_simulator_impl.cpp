@@ -44,6 +44,7 @@ namespace BlackCore
         {
             simulatorPlugins.push_back(factory->getSimulatorInfo());
         }
+        simulatorPlugins.sortBy(&CSimulatorInfo::getShortName);
         return simulatorPlugins;
     }
 
@@ -103,13 +104,28 @@ namespace BlackCore
         if (this->m_simulator && this->m_simulator->getSimulatorInfo() == simulatorInfo) { return true; } // already loaded
         if (simulatorInfo.isUnspecified()) { return false; }
 
+        // warning if we do not have any plugins
+        if (m_simulatorFactories.isEmpty())
+        {
+            this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage("No simulator plugins", CStatusMessage::TypeSimulator));
+            return false;
+        }
+
         ISimulatorFactory *factory = nullptr;
         QSet<ISimulatorFactory *>::iterator iterator = std::find_if(m_simulatorFactories.begin(), m_simulatorFactories.end(), [ = ](const ISimulatorFactory * factory)
         {
             return factory->getSimulatorInfo() == simulatorInfo;
         });
 
-        if (iterator == m_simulatorFactories.end()) { return false; }
+        // no plugin found
+        if (iterator == m_simulatorFactories.end())
+        {
+            QString m = QString("Plugin not found: '%1'").arg(simulatorInfo.toQString(true));
+            this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
+            qCritical() << m;
+            return false;
+        }
+
         factory = *iterator;
         Q_ASSERT(factory);
 
@@ -122,6 +138,10 @@ namespace BlackCore
         connect(m_simulator, SIGNAL(statusChanged(ISimulator::Status)), this, SLOT(setConnectionStatus(ISimulator::Status)));
         connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
         asyncConnectTo(); // try to connect
+
+        QString m = QString("Simulator plugin loaded: '%1'").arg(this->m_simulator->getSimulatorInfo().toQString(true));
+        this->getRuntime()->sendStatusMessage(CStatusMessage::getInfoMessage(m, CStatusMessage::TypeSimulator));
+        qDebug() << m;
         return true;
     }
 
@@ -130,13 +150,13 @@ namespace BlackCore
         Q_ASSERT(this->getIContextSettings());
         if (!this->getIContextSettings()) return false;
 
-        CSimulatorInfoList drivers = this->getAvailableSimulatorPlugins();
-        if (drivers.size() == 1)
+        CSimulatorInfoList plugin = this->getAvailableSimulatorPlugins();
+        if (plugin.size() == 1)
         {
             // load, independent from settings, we have only driver
-            return this->loadSimulatorPlugin(drivers.front());
+            return this->loadSimulatorPlugin(plugin.front());
         }
-        else if (drivers.size() > 1)
+        else if (plugin.size() > 1)
         {
             return this->loadSimulatorPlugin(
                        this->getIContextSettings()->getSimulatorSettings().getSelectedDriver()
@@ -150,7 +170,12 @@ namespace BlackCore
 
     void CContextSimulator::unloadSimulatorPlugin()
     {
-        if (m_simulator) { m_simulator->deleteLater(); }
+        if (m_simulator)
+        {
+            disconnect(m_simulator); // disconnect as receiver straight away
+            m_simulator->disconnectFrom(); // disconnect from simulator
+            m_simulator->deleteLater();
+        }
         m_simulator = nullptr;
     }
 
@@ -176,12 +201,14 @@ namespace BlackCore
     void CContextSimulator::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &initialSituation)
     {
         Q_ASSERT(this->m_simulator);
+        if (!this->m_simulator) return;
         this->m_simulator->addAircraftSituation(callsign, initialSituation);
     }
 
     void CContextSimulator::updateCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
     {
         Q_ASSERT(this->m_simulator);
+        if (!this->m_simulator) return;
 
         // avoid loops
         if (originator.isEmpty() || originator == IContextSimulator::InterfaceName()) return;
@@ -220,6 +247,7 @@ namespace BlackCore
 
     void CContextSimulator::textMessagesReceived(const Network::CTextMessageList &textMessages)
     {
+        if (!this->m_simulator) return;
         foreach(CTextMessage tm, textMessages)
         {
             if (!tm.isPrivateMessage()) continue;
@@ -238,32 +266,31 @@ namespace BlackCore
             if (this->loadSimulatorPlugin(driver))
             {
                 QString m = QString("Driver loaded: '%1'").arg(driver.toQString(true));
-                if (this->getIContextApplication())
-                    this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage(m, CStatusMessage::TypeSimulator));
+                this->getRuntime()->sendStatusMessage(CStatusMessage::getInfoMessage(m, CStatusMessage::TypeSimulator));
             }
             else
             {
                 QString m = QString("Cannot load driver: '%1'").arg(driver.toQString(true));
-                if (this->getIContextApplication())
-                    this->getIContextApplication()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
+                this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
             }
         }
     }
 
     void CContextSimulator::findSimulatorPlugins()
     {
-        m_pluginsDir = QDir(qApp->applicationDirPath().append("/plugins/simulator"));
+        const QString path = qApp->applicationDirPath().append("/plugins/simulator");
+        m_pluginsDir = QDir(path);
         if (!m_pluginsDir.exists())
         {
             qWarning() << "No plugin directory" << m_pluginsDir.currentPath();
             return;
         }
 
-        foreach(QString fileName, m_pluginsDir.entryList(QDir::Files))
+        QStringList fileNames = m_pluginsDir.entryList(QDir::Files);
+        fileNames.sort(Qt::CaseInsensitive); // give a certain order, rather than random file order
+        foreach(QString fileName, fileNames)
         {
-            if (!QLibrary::isLibrary(fileName))
-                continue;
-
+            if (!QLibrary::isLibrary(fileName)) { continue; }
             QString pluginPath = m_pluginsDir.absoluteFilePath(fileName);
             QPluginLoader loader(pluginPath);
             QObject *plugin = loader.instance();
@@ -275,7 +302,6 @@ namespace BlackCore
                     CSimulatorInfo simulatorInfo = factory->getSimulatorInfo();
                     qDebug() << "Found simulator plugin: " << simulatorInfo.toQString();
                     m_simulatorFactories.insert(factory);
-                    break;
                 }
             }
             else
