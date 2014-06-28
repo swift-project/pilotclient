@@ -260,6 +260,15 @@ namespace BlackCore
                 emit this->changedSettings(static_cast<uint>(SettingsAudio));
             }
         }
+        else if (path.startsWith(IContextSettings::PathSimulatorSettings()))
+        {
+            msgs = this->m_settingsSimulator.value(nextLevelPath, command, value, changed);
+            if (changed)
+            {
+                msgs.push_back(this->write());
+                emit this->changedSettings(static_cast<uint>(SettingsSimulator));
+            }
+        }
         else
         {
             // wrong path
