@@ -444,18 +444,11 @@ namespace BlackCore
                 Q_ASSERT(c);
             }
 
-            // connect local simulator and settings
+            // connect local simulator and settings and load plugin
             if (this->m_contextSettings)
             {
                 connect(this->m_contextSettings, &IContextSettings::changedSettings, this->m_contextSimulator, &IContextSimulator::settingsChanged);
-                if (this->m_contextSimulator->loadSimulatorPluginFromSettings())
-                {
-                    qDebug() << "Simulator driver loaded";
-                }
-                else
-                {
-                    qWarning() << "No simulator driver loaded";
-                }
+                this->m_contextSimulator->loadSimulatorPluginFromSettings();
             }
         }
 
@@ -486,26 +479,12 @@ namespace BlackCore
         if (this->m_dbusServer) this->m_dbusServer->unregisterAllObjects();
 
         // handle contexts
-        if (this->getIContextApplication())
-        {
-            disconnect(this->getIContextApplication());
-            this->getIContextApplication()->setOutputRedirectionLevel(IContextApplication::RedirectNone);
-            this->getIContextApplication()->setStreamingForRedirectedOutputLevel(IContextApplication::RedirectNone);
-            IContextApplication::resetOutputRedirection();
-            this->getIContextApplication()->deleteLater();
-        }
-
-        if (this->getIContextOwnAircraft())
-        {
-            disconnect(this->getIContextOwnAircraft());
-            this->getIContextOwnAircraft()->deleteLater();
-        }
-
         if (this->getIContextSimulator())
         {
-            // TODO: disconnect from simulator
             disconnect(this->getIContextSimulator());
+            this->getIContextSimulator()->disconnectFrom();
             this->getIContextSimulator()->deleteLater();
+            this->m_contextSimulator = nullptr;
         }
 
         // log off from network, if connected
@@ -514,28 +493,51 @@ namespace BlackCore
             disconnect(this->getIContextNetwork());
             this->getIContextNetwork()->disconnectFromNetwork();
             this->getIContextNetwork()->deleteLater();
+            this->m_contextNetwork = nullptr;
         }
 
         if (this->getIContextAudio())
         {
             disconnect(this->getIContextAudio());
             this->getIContextAudio()->deleteLater();
+            this->m_contextAudio = nullptr;
+        }
+
+        if (this->getIContextOwnAircraft())
+        {
+            disconnect(this->getIContextOwnAircraft());
+            this->getIContextOwnAircraft()->deleteLater();
+            this->m_contextOwnAircraft = nullptr;
         }
 
         if (this->getIContextSettings())
         {
             disconnect(this->getIContextSettings());
             this->getIContextSettings()->deleteLater();
+            this->m_contextSettings = nullptr;
         }
 
-        // mark contexts as invalid
-        // objects are already scheduled for deletion
-        this->m_contextApplication = nullptr;
-        this->m_contextAudio = nullptr;
-        this->m_contextNetwork = nullptr;
-        this->m_contextOwnAircraft = nullptr;
-        this->m_contextSettings = nullptr;
-        this->m_contextSimulator = nullptr;
+        if (this->getIContextApplication())
+        {
+            disconnect(this->getIContextApplication());
+            this->getIContextApplication()->setOutputRedirectionLevel(IContextApplication::RedirectNone);
+            this->getIContextApplication()->setStreamingForRedirectedOutputLevel(IContextApplication::RedirectNone);
+            IContextApplication::resetOutputRedirection();
+            this->getIContextApplication()->deleteLater();
+            this->m_contextApplication = nullptr;
+        }
+    }
+
+    void CRuntime::sendStatusMessage(const CStatusMessage &message)
+    {
+        if (!this->getIContextApplication()) return;
+        this->getIContextApplication()->sendStatusMessage(message);
+    }
+
+    void CRuntime::sendStatusMessages(const CStatusMessageList &messages)
+    {
+        if (!this->getIContextApplication()) return;
+        this->getIContextApplication()->sendStatusMessages(messages);
     }
 
     void CRuntime::disconnectLogSignals(const QString &name)

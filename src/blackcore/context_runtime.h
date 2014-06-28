@@ -2,9 +2,12 @@
 #define BLACKCORE_CONTEXT_RUNTIME_H
 
 #include "blackcore/context_runtime_config.h"
+#include "blackmisc/statusmessagelist.h"
 #include <QDBusConnection>
 #include <QObject>
 #include <QMultiMap>
+
+using namespace BlackMisc;
 
 namespace BlackCore
 {
@@ -141,6 +144,14 @@ namespace BlackCore
 
         //! Clean up (will be connected to signal QCoreApplication::aboutToQuit)
         void gracefulShutdown();
+
+        //! \copydoc IContextApplication::sendStatusMessage
+        //! \remarks fail safe
+        void sendStatusMessage(const BlackMisc::CStatusMessage &message);
+
+        //! \copydoc IContextApplication::sendStatusMessage
+        //! \remarks fail safe
+        void sendStatusMessages(const BlackMisc::CStatusMessageList &messages);
 
         // ------- Context as interface, normal way to access a context
 
