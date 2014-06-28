@@ -202,6 +202,13 @@ namespace BlackMisc
         void insert(CCollection &&other) { std::move(other.begin(), other.end(), std::inserter(*this, begin())); }
 
         /*!
+         * \brief Appends all elements from a range at the end of this collection.
+         * \pre This collection must be initialized.
+         */
+        template <typename I>
+        void insert(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
+
+        /*!
          * \brief Synonym for insert.
          * \return An iterator to the position where value was inserted.
          * \pre The collection must be initialized.
@@ -228,9 +235,17 @@ namespace BlackMisc
         void push_back(CCollection &&other) { insert(std::move(other)); }
 
         /*!
-         * \brief Returns a collection which is the union of this collection and another.
+         * \brief Synonym for insert.
+         * \pre This collection must be initialized.
          */
-        CCollection makeUnion(const CCollection &other) const
+        template <typename I>
+        void push_back(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
+
+        /*!
+         * \brief Returns a collection which is the union of this collection and another container.
+         */
+        template <class C>
+        CCollection makeUnion(const C &other) const
         {
             CCollection result;
             std::set_union(begin(), end(), other.begin(), other.end(), std::inserter(result, result.begin()));
@@ -240,7 +255,8 @@ namespace BlackMisc
         /*!
          * \brief Returns a collection which is the intersection of this collection and another.
          */
-        CCollection intersection(const CCollection &other) const
+        template <class C>
+        CCollection intersection(const C &other) const
         {
             CCollection result;
             std::set_intersection(begin(), end(), other.begin(), other.end(), std::inserter(result, result.begin()));
@@ -250,7 +266,8 @@ namespace BlackMisc
         /*!
          * \brief Returns a collection which contains all the elements from this collection which are not in the other collection.
          */
-        CCollection difference(const CCollection &other) const
+        template <class C>
+        CCollection difference(const C &other) const
         {
             CCollection result;
             std::set_difference(begin(), end(), other.begin(), other.end(), std::inserter(result, result.begin()));

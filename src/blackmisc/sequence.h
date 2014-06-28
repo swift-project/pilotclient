@@ -240,6 +240,13 @@ namespace BlackMisc
         void push_back(CSequence &&other) { std::move(other.begin(), other.end(), std::back_inserter(*this)); }
 
         /*!
+         * \brief Appends all elements from a range at the end of this sequence.
+         * \pre This sequence must be initialized.
+         */
+        template <typename I>
+        void push_back(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
+
+        /*!
          * \brief Synonym for push_back.
          * \pre The sequence must be initialized.
          */
@@ -264,10 +271,24 @@ namespace BlackMisc
         void insert(CSequence &&other) { push_back(std::move(other)); }
 
         /*!
+         * \brief Synonym for push_back.
+         * \pre This sequence must be initialized.
+         */
+        template <typename I>
+        void insert(const CRange<I> &range) { std::copy(range.begin(), range.end(), std::back_inserter(*this)); }
+
+        /*!
          * \brief Concatenates two sequences and returns the result.
          * \pre This sequence must be initialized.
          */
         CSequence join(const CSequence &other) const { CSequence copy(*this); copy.push_back(other); return copy; }
+
+        /*!
+         * \brief Concatenates a sequence and a range and returns the result.
+         * \pre This sequence must be initialized.
+         */
+        template <typename I>
+        CSequence join(const CRange<I> &range) const { CSequence copy(*this); copy.push_back(range); return copy; }
 
         /*!
          * \brief Removes an element at the end of the sequence.
