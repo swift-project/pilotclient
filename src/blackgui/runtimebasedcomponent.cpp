@@ -34,13 +34,13 @@ namespace BlackGui
 
     void CRuntimeBasedComponent::sendStatusMessage(const BlackMisc::CStatusMessage &statusMessage)
     {
-        Q_ASSERT(this->getIContextApplication());
+        if (!this->getIContextApplication()) return;
         this->getIContextApplication()->sendStatusMessage(statusMessage);
     }
 
     void CRuntimeBasedComponent::sendStatusMessages(const BlackMisc::CStatusMessageList &statusMessages)
     {
-        Q_ASSERT(this->getIContextApplication());
+        if (!this->getIContextApplication()) return;
         this->getIContextApplication()->sendStatusMessages(statusMessages);
     }
 

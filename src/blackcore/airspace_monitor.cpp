@@ -35,6 +35,7 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::fsipirCustomPacketReceived, this, &CAirspaceMonitor::fsipirCustomPacketReceived);
         this->connect(this->m_network, &INetwork::serverReplyReceived, this, &CAirspaceMonitor::serverReplyReceived);
 
+        // AutoConnection: this should also avoid race conditions by updating the bookings
         this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::receivedBookings);
     }
 

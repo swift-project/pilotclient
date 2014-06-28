@@ -41,7 +41,7 @@ namespace BlackGui
             break;
 
         case UserShort:
-            this->m_columns.addColumn(CColumn("", CUser::IndexCallsignIcon));
+            this->m_columns.addColumn(CColumn(CUser::IndexCallsignIcon, true));
             this->m_columns.addColumn(CColumn("realname", CUser::IndexRealName));
             this->m_columns.addColumn(CColumn("callsign", CUser::IndexCallsign));
             break;

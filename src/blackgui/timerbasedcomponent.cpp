@@ -13,7 +13,7 @@ namespace BlackGui
     CTimerBasedComponent::~CTimerBasedComponent()
     {
         this->m_timer->stop();
-        this->disconnect(this->parent());
+        if (this->parent()) this->disconnect(this->parent());
     }
 
     void CTimerBasedComponent::setUpdateInterval(int milliSeconds)
