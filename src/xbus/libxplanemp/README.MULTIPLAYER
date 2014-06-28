@@ -1,0 +1,68 @@
+Copyright (c) 2006, Ben Supnik and Chris Serio.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
+******************************************************************************
+				XSQUAWKBOX MULTIPLAYER ENGINE - README
+******************************************************************************
+
+Revision History
+	3/14/05 - Initial draft
+	
+INTRO
+
+This snippet of code is the XSB multiplayer engine, that is, the code 
+responsible for visualizing planes.  It is provided totally as-is with
+no guarantees of working or being rmotely useful.
+
+Two files, XPLMMultiplayer.cpp and XPLMPlaneRenderer.cpp implement the
+lib.  You must include XPLMMultiplayer.h to use it, and provide a text file
+with your plugin to config multiplayer.
+
+HISTORY
+
+PATH NAMES AND CROSS-PLATFORM CODE
+
+Paths for XPMP are always "native".  This means:
+
+- Backslash separators on Windows.
+- Forward slash separators on Macintosh and Linux.
+- For Macintosh (which has both "HFS" and "Posix" style paths) posix paths
+  are used.
+  
+Clients initializing the library are responsible for passing paths in these
+formats.  (Macintosh clients can convert from HFS to Posix using the routine
+HFS2PosixPath, which internally uses CFURL for the conversion.)
+
+The X-Plane SDK uses native paths, but on Macintosh uses HFS paths.  XPMP
+on Mac converts paths from HFS to Posix at all points of interaction with
+the SDK.
+
+The paths in some X-Plane formats like OBJ can often have any directory
+separator.  These paths are always partial paths; XPMP converts them to
+native separators when they are read in. 
+
+Therefore the following rules should be followed when using/modifying XPMP:
+
+- Always pass native paths to the lib and expect native paths out.
+- When getting file paths from external sources (like OBJ files) make them
+  native immediately.
+- Mac only: In the lib wrap any SDK call with HFS->Posix conversion if 
+  needed.
