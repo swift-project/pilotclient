@@ -21,6 +21,26 @@
 namespace BlackMisc
 {
 
+    //! Class providing static helper methods for different containers
+    class CContainerHelper
+    {
+    public:
+        //! Stringify value object
+        template <class U> static QString stringify(const U &obj, bool i18n) { return obj.toQString(i18n); }
+        //! Stringify int
+        static QString stringify(int n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
+        //! Stringify uint
+        static QString stringify(uint n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
+        //! Stringify qlonglong
+        static QString stringify(qlonglong n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
+        //! Stringify qulonglong
+        static QString stringify(qulonglong n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
+        //! Stringify double
+        static QString stringify(double n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
+        //! Stringify QString
+        static QString stringify(QString str, bool /*i18n*/) { return str; }
+    };
+
     /*!
      * \brief Base class for CCollection and CSequence implementing their algorithms.
      */
@@ -190,7 +210,7 @@ namespace BlackMisc
         {
             QString str;
             // qualifying stringify with this-> to workaround bug in GCC 4.7.2 http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56402
-            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T & value) { str += (str.isEmpty() ? "{" : ", ") + this->stringify(value, i18n); });
+            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T & value) { str += (str.isEmpty() ? "{" : ", ") + CContainerHelper::stringify(value, i18n); });
             if (str.isEmpty()) { str = "{"; }
             return str += "}";
         }
@@ -238,13 +258,6 @@ namespace BlackMisc
     private:
         C<T> &derived() { return static_cast<C<T> &>(*this); }
         const C<T> &derived() const { return static_cast<const C<T> &>(*this); }
-
-        template <class U> static QString stringify(const U &obj, bool i18n) { return obj.toQString(i18n); }
-        static QString stringify(int n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
-        static QString stringify(uint n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
-        static QString stringify(qlonglong n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
-        static QString stringify(qulonglong n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
-        static QString stringify(double n, bool i18n) { return i18n ? QLocale().toString(n) : QString::number(n); }
     };
 
 }
