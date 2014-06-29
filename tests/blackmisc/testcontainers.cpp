@@ -4,10 +4,12 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "testcontainers.h"
+#include "testvalueobject.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/collection.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/avcallsignlist.h"
+#include "blackmisc/dictionary.h"
 #include <QList>
 #include <QVector>
 #include <QSet>
@@ -122,6 +124,83 @@ namespace BlackMiscTest
         callsigns.push_back(CCallsign("KLAX_TWR"));
         found = callsigns.findBy(&CCallsign::asString, "KLAXTWR");
         QVERIFY2(found.size() == 1, "found");
+    }
+
+    void CTestContainers::dictionaryBasics()
+    {
+        CTestValueObject key1("Key1", "This is key object 1");
+        CTestValueObject key2("Key2", "This is key object 2");
+
+        CTestValueObject value1("Value1", "This is value object 1");
+        CTestValueObject value2("Value2", "This is value object 2");
+
+        CValueObjectDictionary d1;
+        d1.insert(key1, value1);
+        d1.insert(key2, value2);
+
+        CValueObjectDictionary d3;
+        d3.insert(key1, value1);
+        d3.insert(key2, value2);
+
+        CValueObjectDictionary d2;
+
+        // Operators
+        QVERIFY2(d1 != d2, "Inequality operator failed");
+        QVERIFY2(d1 == d3, "Equality operator failed");
+
+        // size
+        QVERIFY2(d1.size() == 2, "size() wrong");
+        QVERIFY2(d1.size() == d1.count(), "size() is different to count()");
+
+        // clear/empty
+        d1.clear();
+        QVERIFY2(d1.isEmpty(), "clear failed");
+        d1.insert(key1, value1);
+        d1.insert(key2, value2);
+
+        // keysCollection
+        CCollection<CTestValueObject> keyCollection = d1.keysCollection();
+        QVERIFY2(keyCollection.size() == 2, "keysCollection size wrong");
+
+        // keysSequence
+        CSequence<CTestValueObject> keySequence = d1.keysSequence();
+        QVERIFY2(keySequence.size() == 2, "keysSequence size wrong");
+
+        // findKeyBy
+        d2 = d1.findKeyBy(&CTestValueObject::getName, QString("Key1"));
+        QVERIFY2(d2.size() == 1, "findKeyBy returned wrong container");
+        CTestValueObject o1 = d2.value(key1);
+        QVERIFY2(o1.getName() == "Value1", "findKeyBy returned wrong container");
+
+        // findValueBy
+        d2 = d1.findValueBy(&CTestValueObject::getName, QString("Value1"));
+        QVERIFY2(d2.size() == 1, "findValueBy returned wrong container");
+        o1 = d2.value(key1);
+        QVERIFY2(o1.getName() == "Value1", "findKeyBy returned wrong container");
+
+        // containsByKey
+        QVERIFY2(d1.containsByKey(&CTestValueObject::getName, QString("Key1")), "containsByKey failed");
+        QVERIFY2(!d1.containsByKey(&CTestValueObject::getName, QString("Key5")), "containsByKey failed");
+
+        // containsByValue
+        QVERIFY2(d1.containsByValue(&CTestValueObject::getName, QString("Value1")), "containsByValue failed");
+        QVERIFY2(!d1.containsByValue(&CTestValueObject::getName, QString("Value5")), "containsByValue failed");
+
+        // removeByKeyIf
+        d2 = d1;
+        d2.removeByKeyIf(&CTestValueObject::getName, "Key2");
+        QVERIFY2(d2.size() == 1, "size() wrong");
+
+        // removeByValueIf
+        d2 = d1;
+        d2.removeByValueIf(&CTestValueObject::getName, "Value2");
+        QVERIFY2(d2.size() == 1, "size() wrong");
+
+        // JSON
+        QJsonObject jsonObject = d1.toJson();
+        CValueObjectDictionary d4;
+        d4.fromJson(jsonObject);
+        QVERIFY2(d1 == d4, "JSON serialization/deserialization failed");
     }
 
 } //namespace BlackMiscTest

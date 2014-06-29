@@ -25,6 +25,7 @@ namespace BlackMiscTest
         void sequenceBasics();
         void joinAndSplit();
         void findTests();
+        void dictionaryBasics();
     };
 
 } //namespace BlackMiscTest
