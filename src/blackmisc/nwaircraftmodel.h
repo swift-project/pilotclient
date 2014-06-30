@@ -56,6 +56,9 @@ namespace BlackMisc
             //! Queried model string
             const QString &getModelString() const { return this->m_modelString; }
 
+            //! Queried model string
+            void setModelString(const QString &modelString) { this->m_modelString = modelString; }
+
             //! Set queried model string
             void setQueriedModelString(const QString &model) { this->m_modelString = model; }
 

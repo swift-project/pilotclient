@@ -478,6 +478,7 @@ namespace BlackSimPlugin
         void CSimulatorFsx::dispatch()
         {
             SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
+            if (this->m_fsuipc) this->m_fsuipc->process();
         }
 
         void CSimulatorFsx::connectToFinished()

@@ -6,11 +6,9 @@
 #ifndef BLACKSIMPLUGIN_FSUIPC_H
 #define BLACKSIMPLUGIN_FSUIPC_H
 
+#include "blackmisc/avaircraft.h"
+#include "blackmisc/nwaircraftmodel.h"
 #include <QStringList>
-
-// SB offsets
-// http://board.vacc-sag.org/32/7945/#post75582
-// http://squawkbox.ca/doc/sdk/fsuipc.php
 
 namespace BlackSimPlugin
 {
@@ -35,6 +33,12 @@ namespace BlackSimPlugin
 
             //! Is connected?
             bool isConnected() const { return m_connected; }
+
+            //! Valid read values
+            bool validReadValues() const { return m_validReadValues; }
+
+            //! Process reading and writing variables
+            void process();
 
             //! Error messages
             static const QStringList &errorMessages()
@@ -75,8 +79,18 @@ namespace BlackSimPlugin
 
         private:
             bool m_connected;
+            bool m_validReadValues;
             QString m_lastErrorMessage;
             QString m_fsuipcVersion;
+            BlackMisc::Aviation::CAircraft m_aircraft; //!< FSUIPC read aircraft
+            BlackMisc::Network::CAircraftModel m_model; //!< FSUIPC read model
+
+            //! Read data from FSUIPC
+            void read();
+
+            //! Integer representing fractional
+            static double intToFractional(double fractional);
+
         };
     }
 }
