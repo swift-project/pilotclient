@@ -58,9 +58,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
  * Destructor
  */
 MainWindow::~MainWindow()
-{
-    this->disconnect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
-}
+{ }
 
 /*
  * Graceful shutdown
@@ -88,7 +86,7 @@ void MainWindow::gracefulShutdown()
     // if we have a context, we shut some things down
     if (this->m_contextNetworkAvailable)
     {
-        if (this->getIContextNetwork()->isConnected())
+        if (this->getIContextNetwork() && this->getIContextNetwork()->isConnected())
         {
             if (this->m_contextAudioAvailable)
             {
@@ -99,6 +97,9 @@ void MainWindow::gracefulShutdown()
             this->getIContextNetwork()->disconnect(this); // avoid any status update signals, etc.
         }
     }
+
+    if (this->getIContextSimulator())
+        this->disconnect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
 }
 
 /*
