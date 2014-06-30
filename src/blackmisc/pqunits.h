@@ -37,6 +37,7 @@ namespace BlackMisc
                 CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
             {}
 
+            //! null constructor
             CLengthUnit(const QString &name, const QString &symbol, std::nullptr_t) :
                 CMeasurementUnit(name, symbol, nullptr)
             {}
@@ -98,7 +99,7 @@ namespace BlackMisc
              */
             static const CLengthUnit &ft()
             {
-                static CLengthUnit ft(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot"), "ft", LinearConverter<FeetToMeters>(), 0);
+                static CLengthUnit ft(QT_TRANSLATE_NOOP("CMeasurementUnit", "foot"), "ft", LinearConverter<FeetToMeters>(), 1);
                 return ft;
             }
 

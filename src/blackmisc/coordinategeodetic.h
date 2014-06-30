@@ -18,37 +18,25 @@ namespace BlackMisc
 
         /*!
          * Latitude and longitude interface
-         * \brief Interface for geodetic ccordinates
+         * Interface for geodetic ccordinates
          */
         class ICoordinateGeodetic
         {
         public:
 
-            /*!
-             * \brief Latitude
-             * \return
-             */
+            //! Latitude
             virtual const CLatitude &latitude() const = 0;
 
-            /*!
-             * \brief Longitude
-             * \return
-             */
+            //! Longitude
             virtual const CLongitude &longitude() const = 0;
 
-            /*!
-             * \brief As string
-             * \return
-             */
+            //! Latitude as string
             QString latitudeAsString() const
             {
                 return this->latitude().toQString(true);
             }
 
-            /*!
-             * \brief As string
-             * \return
-             */
+            //! Longitude as string
             QString longitudeAsString() const
             {
                 return this->longitude().toQString(true);
@@ -56,24 +44,20 @@ namespace BlackMisc
 
         };
 
-        /*!
-         * \brief Great circle distance between points
-         * \param coordinate1
-         * \param coordinate2
-         * \return
-         */
+        //! Great circle distance between points
         BlackMisc::PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
-        /*!
-         * \brief Geodetic coordinate
-         */
+        //! Geodetic coordinate
+        //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
+        //! \sa http://http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf (page 5)
+        //! \sa http://en.wikipedia.org/wiki/Geodetic_datum#Vertical_datum
         class CCoordinateGeodetic : public CValueObject, public ICoordinateGeodetic
         {
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)
             BlackMisc::Geo::CLatitude m_latitude; //!< Latitude
             BlackMisc::Geo::CLongitude m_longitude; //!< Longitude
-            BlackMisc::PhysicalQuantities::CLength m_height; //!< height
+            BlackMisc::PhysicalQuantities::CLength m_height; //!< height, ellipsoidal or geodetic height
 
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -95,54 +79,31 @@ namespace BlackMisc
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CCoordinateGeodetic() : m_latitude(), m_longitude(), m_height() {}
 
-            /*!
-             * \brief Constructor by values
-             * \param latitude
-             * \param longitude
-             * \param height
-             */
+            //! Constructor by values
             CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength height) :
                 m_latitude(latitude), m_longitude(longitude), m_height(height) {}
 
-            /*!
-             * \brief Constructor by values
-             * \param latitudeDegrees
-             * \param longitudeDegrees
-             * \param heightMeters
-             */
+            //! Constructor by values
             CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters) :
                 m_latitude(latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_longitude(longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_height(heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m()) {}
 
             //! \copydoc ICoordinateGeodetic::latitude
-            virtual const CLatitude &latitude() const override
-            {
-                return this->m_latitude;
-            }
+            virtual const CLatitude &latitude() const override { return this->m_latitude; }
 
             //! \copydoc ICoordinateGeodetic::longitude
-            virtual const CLongitude &longitude() const override
-            {
-                return this->m_longitude;
-            }
+            virtual const CLongitude &longitude() const override { return this->m_longitude; }
 
-            //! \brief Height
-            const BlackMisc::PhysicalQuantities::CLength &height() const
-            {
-                return this->m_height;
-            }
+            //! Height, ellipsoidal or geodetic height
+            //! \remarks see http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf page 5
+            const BlackMisc::PhysicalQuantities::CLength &height() const { return this->m_height; }
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \brief Switch unit of latitude / longitude
+            //! Switch unit of latitude / longitude
             CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit)
             {
                 this->m_latitude.switchUnit(unit);
@@ -150,35 +111,26 @@ namespace BlackMisc
                 return *this;
             }
 
-            //! \brief Switch unit of height
+            //! Switch unit of height
             CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit)
             {
                 this->m_height.switchUnit(unit);
                 return *this;
             }
 
-            //! \brief Set latitude
-            void setLatitude(const CLatitude &latitude)
-            {
-                this->m_latitude = latitude;
-            }
+            //! Set latitude
+            void setLatitude(const CLatitude &latitude) { this->m_latitude = latitude; }
 
-            //! \brief Set longitude
-            void setLongitude(const CLongitude &longitude)
-            {
-                this->m_longitude = longitude;
-            }
+            //! Set longitude
+            void setLongitude(const CLongitude &longitude) { this->m_longitude = longitude; }
 
-            //! \brief Set height
-            void setHeight(const BlackMisc::PhysicalQuantities::CLength &height)
-            {
-                this->m_height = height;
-            }
+            //! Set height (ellipsoidal or geodetic height)
+            void setHeight(const BlackMisc::PhysicalQuantities::CLength &height) { this->m_height = height; }
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CCoordinateGeodetic &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CCoordinateGeodetic &other) const;
 
             //! \copydoc CValueObject::getValueHash
@@ -190,19 +142,13 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
-            //! \brief Members
+            //! Members
             static const QStringList &jsonMembers();
 
-            /*!
-             * \brief Coordinate by WGS84 position data
-             * \param latitudeWgs84
-             * \param longitudeWgs84
-             * \param height
-             * \return
-             */
+            //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength height = BlackMisc::PhysicalQuantities::CLength());
         };
 

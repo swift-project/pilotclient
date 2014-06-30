@@ -19,7 +19,7 @@ namespace BlackMisc
             s.append(" pitch: ").append(this->m_pitch.toQString(i18n));
             s.append(" gs: ").append(this->m_groundspeed.toQString(i18n));
             s.append(" heading: ").append(this->m_heading.toQString(i18n));
-            s.append(" ts: ").append(this->m_timestamp.toString("dd hh:mm:ss"));
+            s.append(" timestamp: ").append(this->m_timestamp.toString("dd hh:mm:ss"));
             return s;
         }
 

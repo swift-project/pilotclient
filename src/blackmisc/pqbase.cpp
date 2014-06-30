@@ -12,11 +12,6 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
-// -----------------------------------------------------------------------
-// --- Measurement unit --------------------------------------------------
-// -----------------------------------------------------------------------
-
         /*
          * Equal operator
          */
@@ -108,8 +103,6 @@ namespace BlackMisc
             qRegisterMetaType<CMeasurementUnit>();
             qDBusRegisterMetaType<CMeasurementUnit>();
         }
-
-
 
     } // namespace
 } // namespace
