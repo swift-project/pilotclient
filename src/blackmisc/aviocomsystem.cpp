@@ -25,26 +25,12 @@ namespace BlackMisc
                  CComSystem::isValidMilitaryFrequency(this->getFrequencyStandby()));
         }
 
-        /*
-         * Validate
-         */
-        bool CComSystem::validate(bool strict) const
-        {
-            if (this->isDefaultValue()) return true;
-            bool valid = this->validValues();
-            if (!strict) return valid;
-            Q_ASSERT_X(valid, "CComSystem::validate", "illegal values");
-            if (!valid) throw std::range_error("Illegal values in CComSystem::validate");
-            return true;
-        }
-
         void CComSystem::setFrequencyActiveMHz(double frequencyMHz)
         {
             CFrequency f(frequencyMHz, CFrequencyUnit::MHz());
             if (f == this->getFrequencyActive()) return; // save all the comparisons / rounding
             CComSystem::roundToChannelSpacing(f, this->m_channelSpacing);
             this->CModulator::setFrequencyActive(f);
-            this->validate(true);
         }
 
         void CComSystem::setFrequencyStandbyMHz(double frequencyMHz)
@@ -53,7 +39,6 @@ namespace BlackMisc
             if (f == this->getFrequencyStandby()) return; // save all the comparisons / rounding
             CComSystem::roundToChannelSpacing(f, this->m_channelSpacing);
             CModulator::setFrequencyStandby(f);
-            this->validate(true);
         }
 
         /*

@@ -21,20 +21,6 @@ namespace BlackMisc
         }
 
         /*
-         * Validate
-         */
-        bool CTransponder::validate(bool strict) const
-        {
-            if (this->isDefaultValue()) return true;
-            bool valid = this->validValues();
-            if (!strict) return valid;
-            Q_ASSERT_X(valid, "CTransponder::validate", "illegal values");
-            if (!valid)
-                throw std::range_error("Illegal values in CTransponder::validate");
-            return true;
-        }
-
-        /*
          * String representation
          */
         QString CTransponder::convertToQString(bool /* i18n */) const

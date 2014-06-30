@@ -36,19 +36,7 @@ namespace BlackMisc
 
         protected:
             //! \brief Default value?
-            virtual bool isDefaultValue() const
-            {
-                return this->m_transponderCode == 0;
-            }
-
-            /*!
-             * \brief Validate values by assert and exception
-             * \param strict
-             * \throws std::range_error
-             * \remarks Cannot be virtual since already used in constructor
-             * \return
-             */
-            bool validate(bool strict = true) const;
+            virtual bool isDefaultValue() const { return this->m_transponderCode == 0; }
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
@@ -73,16 +61,13 @@ namespace BlackMisc
             //! \brief Constructor
             CTransponder(const QString &name, qint32 transponderCode, TransponderMode transponderMode) :
                 CAvionicsBase(name), m_transponderCode(transponderCode), m_transponderMode(transponderMode)
-            {
-                this->validate(true);
-            }
+            {  }
 
             //! \brief Constructor with transponder mode as string
             CTransponder(const QString &name, qint32 transponderCode, QString transponderMode) :
                 CAvionicsBase(name), m_transponderCode(transponderCode), m_transponderMode(StateStandby)
             {
                 this->setModeAsString(transponderMode);
-                this->validate(true);
             }
 
             //! \brief Constructor, code as string
@@ -92,7 +77,6 @@ namespace BlackMisc
                 bool ok = false;
                 this->m_transponderCode = transponderCode.toUInt(&ok);
                 if (!ok) this->m_transponderCode = -1; // will cause assert / exception
-                this->validate(true);
             }
 
             //! \brief Constructor
@@ -103,24 +87,6 @@ namespace BlackMisc
                 this->m_transponderCode = transponderCode.toUInt(&ok);
                 if (!ok) this->m_transponderCode = -1; // will cause assert / exception
                 this->setModeAsString(transponderMode);
-                this->validate(true);
-            }
-
-            //! \brief Constructor for validation, used with test cases
-            CTransponder(bool validate, const QString &name, qint32 transponderCode, TransponderMode transponderMode) :
-                CAvionicsBase(name), m_transponderCode(transponderCode), m_transponderMode(transponderMode)
-            {
-                this->validate(validate);
-            }
-
-            //! \brief Constructor for validation, used with test cases
-            CTransponder(bool validate, const QString &name, const QString transponderCode, TransponderMode transponderMode) :
-                CAvionicsBase(name), m_transponderCode(0), m_transponderMode(transponderMode)
-            {
-                bool ok = false;
-                this->m_transponderCode = transponderCode.toUInt(&ok);
-                if (!ok) this->m_transponderCode = -1; // will cause assert / exception
-                this->validate(validate);
             }
 
             //! \copydoc CAvionicsBase::validValues
@@ -169,7 +135,6 @@ namespace BlackMisc
             void setTransponderCode(qint32 transponderCode)
             {
                 this->m_transponderCode = transponderCode;
-                this->validate(true);
             }
 
             //! \brief Set transponder code
@@ -182,7 +147,6 @@ namespace BlackMisc
             void setTransponderMode(TransponderMode mode)
             {
                 this->m_transponderMode = mode ;
-                this->validate(true);
             }
 
             //! \brief Set emergency

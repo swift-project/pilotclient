@@ -33,21 +33,6 @@ namespace BlackMisc
             ChannelSpacing m_channelSpacing;
 
             /*!
-             * \brief Constructor
-             * \param validate
-             * \param name
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \param digits
-             *
-             */
-            CComSystem(bool validate, const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits = 3):
-                CModulator(name, activeFrequency, standbyFrequency, digits), m_channelSpacing(ChannelSpacing25KHz)
-            {
-                this->validate(validate);
-            }
-
-            /*!
              * \brief Give me channel spacing in KHz
              * \remarks Just a helper method, that is why no CFrequency is returned
              */
@@ -56,15 +41,6 @@ namespace BlackMisc
         protected:
             //! \copydoc CAvionicsBase::validValues
             virtual bool validValues() const override;
-
-            /*!
-             * \brief Validate values by assert and exception
-             * \param strict
-             * \throws std::range_error
-             * \remarks Cannot be virtual because used in constructor
-             * \return
-             */
-            bool validate(bool strict = true) const;
 
             //! \copydoc CValueObject::marshallFromDbus()
             virtual void marshallToDbus(QDBusArgument &argument) const override;
@@ -82,15 +58,10 @@ namespace BlackMisc
             //! \brief Constructor
             CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
                 CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits), m_channelSpacing(ChannelSpacing25KHz)
-            {
-                this->validate(true);
-            }
+            { }
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! \brief Set active frequency
             //! \remarks will be rounded to channel spacing
