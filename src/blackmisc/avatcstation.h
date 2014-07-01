@@ -171,8 +171,8 @@ namespace BlackMisc
             //! Set distance to own plane
             void setDistanceToPlane(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToPlane = distance; }
 
-            //! \brief Valid distance?
-            bool hasValidDistance() const { return !this->m_distanceToPlane.isNegativeWithEpsilonConsidered();}
+            //! Valid distance?
+            bool hasValidDistance() const { return !this->m_distanceToPlane.isNull();}
 
             /*!
              * \brief Calculcate distance to plane, set it, and also return it
