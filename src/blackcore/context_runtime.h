@@ -6,6 +6,7 @@
 #include <QDBusConnection>
 #include <QObject>
 #include <QMultiMap>
+#include <QReadWriteLock>
 
 using namespace BlackMisc;
 
@@ -58,66 +59,135 @@ namespace BlackCore
         const QDBusConnection &getDBusConnection() const { return this->m_dbusConnection; }
 
         //! Enable / disable all logging
+        //! \threadsafe
         void signalLog(bool enabled);
 
         //! Signal logging for application context
+        //! \threadsafe
         bool signalLogForApplication(bool enabled);
 
         //! Signal logging for audio context
+        //! \threadsafe
         bool signalLogForAudio(bool enabled);
 
         //! Signal logging for network context
+        //! \threadsafe
         bool signalLogForNetwork(bool enabled);
 
         //! Signal logging for own aircraft context
+        //! \threadsafe
         bool signalLogForOwnAircraft(bool enabled);
 
         //! Signal logging for settings context
+        //! \threadsafe
         bool signalLogForSettings(bool enabled);
 
         //! Signal logging for simulator context
+        //! \threadsafe
         bool signalLogForSimulator(bool enabled);
 
         //! Enable / disable all logging
+        //! \threadsafe
         void slotLog(bool enabled);
 
         //! Slot logging for application context
-        void slotLogForApplication(bool enabled) { this->m_slotLogApplication = enabled; }
+        //! \threadsafe
+        void slotLogForApplication(bool enabled)
+        {
+            QWriteLocker wl(&m_lock);
+            this->m_slotLogApplication = enabled;
+        }
 
         //! Slot logging for audio context
-        void slotLogForAudio(bool enabled) { this->m_slotLogAudio = enabled; }
+        //! \threadsafe
+        void slotLogForAudio(bool enabled)
+        {
+            QWriteLocker wl(&m_lock);
+            this->m_slotLogAudio = enabled;
+        }
 
         //! Slot logging for network context
-        void slotLogForNetwork(bool enabled)  { this->m_slotLogNetwork = enabled; }
+        //! \threadsafe
+        void slotLogForNetwork(bool enabled)
+        {
+            QWriteLocker wl(&m_lock);
+            this->m_slotLogNetwork = enabled;
+        }
 
         //! Slot logging for own aircraft context
-        void slotLogForOwnAircraft(bool enabled) { this->m_slotLogOwnAircraft = enabled; }
+        //! \threadsafe
+        void slotLogForOwnAircraft(bool enabled)
+        {
+            QWriteLocker wl(&m_lock);
+            this->m_slotLogOwnAircraft = enabled;
+        }
 
         //! Slot logging for settings context
-        void slotLogForSettings(bool enabled)  { this->m_slotLogSettings = enabled; }
+        //! \threadsafe
+        void slotLogForSettings(bool enabled)
+        {
+            QWriteLocker wl(&m_lock);
+            this->m_slotLogSettings = enabled;
+        }
 
         //! Slot logging for simulator context
-        void slotLogForSimulator(bool enabled)  { this->m_slotLogSimulator = enabled; }
+        //! \threadsafe
+        void slotLogForSimulator(bool enabled)
+        {
+            QWriteLocker wl(&m_lock);
+            this->m_slotLogSimulator = enabled;
+        }
 
         //! Slot logging for application context
-        bool isSlotLogForApplicationEnabled() const { return this->m_slotLogApplication; }
+        //! \threadsafe
+        bool isSlotLogForApplicationEnabled() const
+        {
+            QReadLocker rl(&m_lock);
+            return this->m_slotLogApplication;
+        }
 
         //! Slot logging for audio context
-        bool isSlotLogForAudioEnabled() const { return this->m_slotLogAudio; }
+        //! \threadsafe
+        bool isSlotLogForAudioEnabled() const
+        {
+            QReadLocker rl(&m_lock);
+            return this->m_slotLogAudio;
+        }
 
         //! Slot logging for network context
-        bool isSlotLogForNetworkEnabled() const  { return this->m_slotLogNetwork; }
+        //! \threadsafe
+        bool isSlotLogForNetworkEnabled() const
+        {
+            QReadLocker rl(&m_lock);
+            return this->m_slotLogNetwork;
+        }
 
         //! Slot log for own aircraft
-        bool isSlotLogForOwnAircraftEnabled() const { return this->m_slotLogOwnAircraft; }
+        //! \threadsafe
+        bool isSlotLogForOwnAircraftEnabled() const
+        {
+            QReadLocker rl(&m_lock);
+            return this->m_slotLogOwnAircraft;
+        }
 
         //! Slot logging for settings context
-        bool isSlotLogForSettingsEnabled() const { return this->m_slotLogSettings; }
+        //! \threadsafe
+        bool isSlotLogForSettingsEnabled() const
+        {
+            QReadLocker rl(&m_lock);
+            return this->m_slotLogSettings;
+        }
 
         //! Slot logging for simulator context
-        bool isSlotLogForSimulatorEnabled() const { return this->m_slotLogSimulator; }
+        //! \threadsafe
+        bool isSlotLogForSimulatorEnabled() const
+        {
+            QReadLocker rl(&m_lock);
+            return this->m_slotLogSimulator;
+        }
 
         //! Slot logging for specified context
+        //! \threadsafe
         bool isSlotLogEnabledFor(LogContext context) const;
 
         //! Slot logging
@@ -266,6 +336,7 @@ namespace BlackCore
         IContextSettings *m_contextSettings;
         IContextSimulator *m_contextSimulator;
         QMultiMap<QString, QMetaObject::Connection> m_logSignalConnections;
+        mutable QReadWriteLock m_lock;
 
         //! initialization of DBus connection (where applicable)
         void initDBusConnection(const QString &address);

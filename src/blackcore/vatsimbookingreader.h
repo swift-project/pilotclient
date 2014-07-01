@@ -6,50 +6,42 @@
 #ifndef BLACKCORE_VATSIMBOOKINGREADER_H
 #define BLACKCORE_VATSIMBOOKINGREADER_H
 
+//! \file
+
+#include "blackmisc/threadedreader.h"
 #include "blackmisc/avatcstationlist.h"
+
 #include <QObject>
 #include <QTimer>
 #include <QNetworkReply>
+#include <QReadWriteLock>
 
 namespace BlackCore
 {
     /*!
-     * \brief Read bookings from VATSIM
+     * Read bookings from VATSIM
      */
-    class CVatsimBookingReader : public QObject
+    class CVatsimBookingReader : public QObject, public BlackMisc::CThreadedReader<void>
     {
         Q_OBJECT
 
     public:
-        //! \brief Constructor
+        //! Constructor
         explicit CVatsimBookingReader(const QString &url, QObject *parent = nullptr);
 
-        //! \brief Update timestamp
-        QDateTime getUpdateTimestamp() const { return this->m_updateTimestamp; }
-
-        //! \brief Read / re-read bookings
+        //! Read / re-read bookings
         void read();
 
-        /*!
-         * \brief Set the update time
-         * \param updatePeriodMs 0 stops the timer
-         */
-        void setInterval(int updatePeriodMs);
-
-        //! \brief Get the timer interval (ms)
-        int interval() const { return this->m_updateTimer->interval();}
-
     private slots:
-        //! \brief Bookings have been read
+        //! Bookings have been read
         void loadFinished(QNetworkReply *nwReply);
 
     private:
         QString m_serviceUrl; /*!< URL of the service */
         QNetworkAccessManager *m_networkManager;
-        QDateTime m_updateTimestamp;
-        QTimer *m_updateTimer;
 
         //! Parse received bookings
+        //! \threadsafe
         void parseBookings(QNetworkReply *nwReply);
 
     signals:

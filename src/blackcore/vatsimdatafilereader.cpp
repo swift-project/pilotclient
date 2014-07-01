@@ -13,14 +13,13 @@ using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 
-
 namespace BlackCore
 {
-
-    CVatsimDataFileReader::CVatsimDataFileReader(const QStringList &urls, QObject *parent) : QObject(parent), m_serviceUrls(urls), m_currentUrlIndex(0), m_networkManager(nullptr), m_updateTimer(nullptr)
+    CVatsimDataFileReader::CVatsimDataFileReader(const QStringList &urls, QObject *parent) :
+        QObject(parent), CThreadedReader(),
+        m_serviceUrls(urls), m_currentUrlIndex(0), m_networkManager(nullptr)
     {
         this->m_networkManager = new QNetworkAccessManager(this);
-        this->m_updateTimer = new QTimer(this);
         this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimDataFileReader::loadFinished);
         this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimDataFileReader::read);
     }
@@ -39,16 +38,26 @@ namespace BlackCore
         if (url.isEmpty()) return;
         Q_ASSERT(this->m_networkManager);
         QNetworkRequest request(url);
-        this->m_networkManager->get(request);
+        QNetworkReply *r = this->m_networkManager->get(request);
+        this->setPendingNetworkReply(r);
     }
 
-    void CVatsimDataFileReader::setInterval(int updatePeriodMs)
+    const CAircraftList &CVatsimDataFileReader::getAircrafts()
     {
-        Q_ASSERT(this->m_updateTimer);
-        if (updatePeriodMs < 1)
-            this->m_updateTimer->stop();
-        else
-            this->m_updateTimer->start(updatePeriodMs);
+        QReadLocker rl(&this->m_lock);
+        return this->m_aircrafts;
+    }
+
+    const CAtcStationList &CVatsimDataFileReader::getAtcStations()
+    {
+        QReadLocker rl(&this->m_lock);
+        return this->m_atcStations;
+    }
+
+    const CServerList &CVatsimDataFileReader::getVoiceServers()
+    {
+        QReadLocker rl(&this->m_lock);
+        return this->m_voiceServers;
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignList &callsigns)
@@ -57,7 +66,7 @@ namespace BlackCore
         if (callsigns.isEmpty()) return users;
         foreach(CCallsign callsign, callsigns)
         {
-            users.push_back(this->m_aircrafts.findByCallsign(callsign).getPilots());
+            users.push_back(this->getAircrafts().findByCallsign(callsign).getPilots());
         }
         return users;
     }
@@ -71,7 +80,7 @@ namespace BlackCore
 
     CAircraftIcao CVatsimDataFileReader::getIcaoInfo(const CCallsign &callsign)
     {
-        CAircraft aircraft = this->m_aircrafts.findFirstByCallsign(callsign);
+        CAircraft aircraft = this->getAircrafts().findFirstByCallsign(callsign);
         return aircraft.getIcaoInfo();
     }
 
@@ -95,7 +104,7 @@ namespace BlackCore
         if (callsigns.isEmpty()) return users;
         foreach(CCallsign callsign, callsigns)
         {
-            users.push_back(this->m_atcStations.findByCallsign(callsign).getControllers());
+            users.push_back(this->getAtcStations().findByCallsign(callsign).getControllers());
         }
         return users;
     }
@@ -117,7 +126,12 @@ namespace BlackCore
      */
     void CVatsimDataFileReader::loadFinished(QNetworkReply *nwReply)
     {
-        QtConcurrent::run(this, &CVatsimDataFileReader::parseVatsimFileInBackground, nwReply);
+        this->setPendingNetworkReply(nullptr);
+        if (!this->isStopped())
+        {
+            QFuture<void> f = QtConcurrent::run(this, &CVatsimDataFileReader::parseVatsimFileInBackground, nwReply);
+            this->setPendingFuture(f);
+        }
     }
 
     /*
@@ -126,8 +140,14 @@ namespace BlackCore
      */
     void CVatsimDataFileReader::parseVatsimFileInBackground(QNetworkReply *nwReply)
     {
-        QStringList illegalIcaoCodes;
+        // Worker thread, make sure to write only synced here!
+        if (this->isStopped())
+        {
+            qDebug() << "terminated" << Q_FUNC_INFO;
+            return; // stop, terminate straight away, ending thread
+        }
 
+        QStringList illegalIcaoCodes;
         if (nwReply->error() == QNetworkReply::NoError)
         {
             const QString dataFileData = nwReply->readAll();
@@ -135,10 +155,23 @@ namespace BlackCore
             QStringList lines = dataFileData.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
             if (lines.isEmpty()) return;
 
+            // build on local vars for thread safety
+            CServerList voiceServers;
+            CAtcStationList atcStations;
+            CAircraftList aircrafts;
+            QDateTime updateTimestampFromFile;
+
             QStringList clientSectionAttributes;
             Section section = SectionNone;
             foreach(QString currentLine, lines)
             {
+                if (this->isStopped())
+                {
+                    qDebug() << "terminated" << Q_FUNC_INFO;
+                    return; // stop, terminate straight away, ending thread
+                }
+
+                // parse lines
                 currentLine = currentLine.trimmed();
                 if (currentLine.isEmpty()) continue;
                 if (currentLine.startsWith(";"))
@@ -162,13 +195,10 @@ namespace BlackCore
                     else if (currentLine.contains("VOICE SERVERS", Qt::CaseInsensitive))
                     {
                         section = SectionVoiceServer;
-                        this->m_voiceServers.clear();
                     }
                     else if (currentLine.contains("CLIENTS", Qt::CaseInsensitive))
                     {
                         section = SectionClients;
-                        this->m_aircrafts.clear();
-                        this->m_atcStations.clear();
                     }
                     else
                     {
@@ -217,16 +247,16 @@ namespace BlackCore
                                 }
                             }
 
-                            this->m_aircrafts.push_back(aircraft);
+                            aircrafts.push_back(aircraft);
                         }
                         else if (clientType.startsWith('a'))
                         {
                             // ATC section
                             CLength range;
-                            position.setHeight(altitude); // the altitude is elevation for a station
+                            position.setGeodeticHeight(altitude); // the altitude is elevation for a station
                             CAtcStation station(user.getCallsign().getStringAsSet(), user, frequency, position, range);
                             station.setOnline(true);
-                            this->m_atcStations.push_back(station);
+                            atcStations.push_back(station);
                         }
                         else
                         {
@@ -241,40 +271,45 @@ namespace BlackCore
                             QStringList updateParts = currentLine.replace(" ", "").split('=');
                             if (updateParts.length() < 2) continue;
                             QString dts = updateParts.at(1).trimmed();
-                            QDateTime dt = QDateTime::fromString(dts, "yyyyMMddHHmmss");
-                            dt.setOffsetFromUtc(0);
-                            if (dt == this->m_updateTimestamp)
-                            {
-                                return; // still same data, terminate
-                            }
-                            this->m_updateTimestamp = dt;
+                            updateTimestampFromFile = QDateTime::fromString(dts, "yyyyMMddHHmmss");
+                            updateTimestampFromFile.setOffsetFromUtc(0);
+                            bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
+                            if (alreadyRead) { return; }// still same data, terminate
                         }
+                        break;
+                    case SectionVoiceServer:
+                        {
+                            QStringList voiceServerParts = currentLine.split(':');
+                            if (voiceServerParts.size() < 3) continue;
+                            BlackMisc::Network::CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1, CUser());
+                            voiceServers.push_back(voiceServer);
+                        }
+                        break;
+                    case SectionNone:
+                    default:
+                        break;
                     }
-                    break;
-                case SectionVoiceServer:
-                    {
-                        QStringList voiceServerParts = currentLine.split(':');
-                        if (voiceServerParts.size() < 3) continue;
-                        BlackMisc::Network::CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1, CUser());
-                        this->m_voiceServers.push_back(voiceServer);
-                    }
-                    break;
-                case SectionNone:
-                default:
-                    break;
-                }
-            } // for each
-        }
+                } // for each
 
-        nwReply->close();
-        nwReply->deleteLater(); // we are responsible for reading this
-        emit this->dataRead();
+                // this part needs to be synchronized
+                this->m_lock.lockForWrite();
+                this->m_updateTimestamp = updateTimestampFromFile;
+                this->m_aircrafts = aircrafts;
+                this->m_atcStations = atcStations;
+                this->m_voiceServers = voiceServers;
+                this->m_lock.unlock();
+            } // read success
 
-        // warnings, if required
-        if (!illegalIcaoCodes.isEmpty())
-        {
-            const QString w = QString("Illegal ICAO code(s) in VATSIM data file: %1").arg(illegalIcaoCodes.join(", "));
-            qWarning(w.toLatin1());
+            nwReply->close();
+            nwReply->deleteLater(); // we are responsible for reading this
+
+            emit this->dataRead();
+            // warnings, if required
+            if (!illegalIcaoCodes.isEmpty())
+            {
+                const QString w = QString("Illegal ICAO code(s) in VATSIM data file: %1").arg(illegalIcaoCodes.join(", "));
+                qWarning(w.toLatin1());
+            }
         }
     }
 

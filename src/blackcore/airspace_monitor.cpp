@@ -7,6 +7,9 @@
 #include "blackmisc/project.h"
 #include "blackmisc/indexvariantmap.h"
 
+// KB_REMOVE with debug log message
+#include <QThread>
+
 namespace BlackCore
 {
 
@@ -304,6 +307,9 @@ namespace BlackCore
 
     void CAirspaceMonitor::receivedBookings(const CAtcStationList &bookedStations)
     {
+        // KB_REMOVE qDebug
+        qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
+
         this->m_atcStationsBooked.clear();
         foreach(CAtcStation bookedStation, bookedStations)
         {

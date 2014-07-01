@@ -8,11 +8,15 @@
 #include <QTextStream>
 #include <QString>
 #include <QFuture>
+#include <QMetaObject>
+#include <QGenericReturnArgument>
+#include <QGenericArgument>
 #include <QtConcurrent/QtConcurrent>
 
 using namespace BlackCore;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Audio;
 
 namespace BlackMiscTest
 {
@@ -33,8 +37,8 @@ namespace BlackMiscTest
     void Tool::serverLoop(BlackCore::CRuntime *runtime)
     {
         Q_ASSERT(runtime);
-        QThread::sleep(3); // let the client connect
-        qDebug() << "Running on server here" << Tool::getPid();
+        QThread::sleep(3); // let the DBus server startup
+        qDebug() << "Running on server here" << Tool::getPid() << "thread:" << QThread::currentThreadId();
 
         //
         // Server loop
@@ -43,15 +47,16 @@ namespace BlackMiscTest
         QString line;
         while (line != "x" && runtime)
         {
-            const BlackCore::IContextNetwork *networkContext = runtime->getIContextNetwork();
-            const BlackCore::IContextAudio *audioContext = runtime->getIContextAudio();
-            const BlackCore::IContextSettings *settingsContext = runtime->getIContextSettings();
-            const BlackCore::IContextOwnAircraft *ownAircraftContext = runtime->getIContextOwnAircraft();
+            BlackCore::IContextNetwork *networkContext = runtime->getIContextNetwork();
+            BlackCore::IContextAudio *audioContext = runtime->getIContextAudio();
+            BlackCore::IContextSettings *settingsContext = runtime->getIContextSettings();
+            BlackCore::IContextOwnAircraft *ownAircraftContext = runtime->getIContextOwnAircraft();
 
             BlackCore::IContextApplication *applicationContext = runtime->getIContextApplication();
 
             qDebug() << "-------------";
             qDebug() << "Connected with network: " << networkContext->isConnected();
+            qDebug() << "Thread id:" << QThread::currentThreadId();
             qDebug() << "-------------";
             qDebug() << "x .. to exit              0 .. settings";
             qDebug() << "1 .. ATC booked           2 .. ATC online";
@@ -71,44 +76,79 @@ namespace BlackMiscTest
             if (line.startsWith("0"))
             {
                 qDebug() << "-------------";
-                qDebug() << "Settings:" << settingsContext->getSettingsFileName();
-                qDebug() << settingsContext->getSettingsAsJsonString();
+                QString ret1;
+                QMetaObject::invokeMethod(settingsContext, "getSettingsFileName",
+                                          Qt::BlockingQueuedConnection,
+                                          Q_RETURN_ARG(QString, ret1));
+                qDebug() << "Settings:" << ret1;
+
+
+                QMetaObject::invokeMethod(settingsContext, "getSettingsAsJsonString",
+                                          Qt::BlockingQueuedConnection,
+                                          Q_RETURN_ARG(QString, ret1));
+                qDebug() << "JSON" << ret1;
             }
             else if (line.startsWith("1"))
             {
+                // remarks: use fully qualified name in Q_RETURN_ARG
                 qDebug() << "-------------";
                 qDebug() << "ATC booked";
-                qDebug() << networkContext->getAtcStationsBooked().toFormattedQString();
+                CAtcStationList stations;
+                QMetaObject::invokeMethod(networkContext, "getAtcStationsBooked",
+                                          Qt::BlockingQueuedConnection,
+                                          Q_RETURN_ARG(BlackMisc::Aviation::CAtcStationList, stations));
+                qDebug() << stations;
             }
             else if (line.startsWith("2"))
             {
                 qDebug() << "-------------";
                 qDebug() << "ATC online";
-                qDebug() << networkContext->getAtcStationsOnline().toFormattedQString();
+                CAtcStationList stations;
+                QMetaObject::invokeMethod(networkContext, "getAtcStationsOnline",
+                                          Qt::BlockingQueuedConnection,
+                                          Q_RETURN_ARG(BlackMisc::Aviation::CAtcStationList, stations));
+                qDebug() << stations;
             }
             else if (line.startsWith("3"))
             {
                 qDebug() << "-------------";
                 qDebug() << "aircrafts in range";
-                qDebug() << networkContext->getAircraftsInRange().toFormattedQString();
+                CAircraftList aircrafts;
+                QMetaObject::invokeMethod(networkContext, "getAircraftsInRange",
+                                          Qt::BlockingQueuedConnection,
+                                          Q_RETURN_ARG(BlackMisc::Aviation::CAircraftList, aircrafts));
+                qDebug() << aircrafts;
             }
             else if (line.startsWith("4"))
             {
                 qDebug() << "-------------";
                 qDebug() << "my aircraft";
-                qDebug() << ownAircraftContext->getOwnAircraft();
+                CAircraft aircraft;
+                QMetaObject::invokeMethod(ownAircraftContext, "getOwnAircraft",
+                                          Qt::BlockingQueuedConnection,
+                                          Q_RETURN_ARG(BlackMisc::Aviation::CAircraft, aircraft));
+                qDebug() << aircraft;
+
             }
             else if (line.startsWith("5"))
             {
                 qDebug() << "-------------";
                 qDebug() << "voice rooms";
-                qDebug() << audioContext->getComVoiceRooms();
+                CVoiceRoomList voiceRooms;
+                QMetaObject::invokeMethod(audioContext, "getComVoiceRooms",
+                                          Qt::BlockingQueuedConnection,
+                                          Q_RETURN_ARG(BlackMisc::Audio::CVoiceRoomList, voiceRooms));
+                qDebug() << voiceRooms;
             }
             else if (line.startsWith("6"))
             {
                 qDebug() << "-------------";
                 qDebug() << "vatlib audio devices";
-                qDebug() << audioContext->getAudioDevices();
+                CAudioDeviceList devices;
+                QMetaObject::invokeMethod(audioContext, "getAudioDevices",
+                                          Qt::BlockingQueuedConnection,
+                                          Q_RETURN_ARG(BlackMisc::Audio::CAudioDeviceList, devices));
+                qDebug() << devices;
             }
             else if (line.startsWith("7"))
             {
@@ -116,7 +156,6 @@ namespace BlackMiscTest
                 qDebug() << "Qt audio devices";
                 BlackSound::CSoundGenerator::printAllQtSoundDevices();
             }
-
             else if (line.startsWith("oe"))
             {
                 applicationContext->setOutputRedirectionLevel(IContextApplication::RedirectAllOutput);

@@ -1,4 +1,3 @@
-#include "blackcore/context_runtime.h"
 #include "blackcore/context_all_impl.h"
 #include "blackcore/context_all_proxies.h"
 #include "blackcore/blackcorefreefunctions.h"
@@ -9,6 +8,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackcore/context_runtime.h"
 
 #include <QDebug>
 
@@ -58,6 +58,7 @@ namespace BlackCore
      */
     bool CRuntime::signalLogForApplication(bool enabled)
     {
+        QWriteLocker wl(&m_lock);
         if (enabled == this->m_signalLogApplication) return enabled;
         if (!this->getIContextApplication())
         {
@@ -88,6 +89,7 @@ namespace BlackCore
 
     bool CRuntime::signalLogForAudio(bool enabled)
     {
+        QWriteLocker wl(&m_lock);
         if (enabled == this->m_signalLogAudio) return enabled;
         if (!this->getIContextNetwork())
         {
@@ -114,6 +116,7 @@ namespace BlackCore
      */
     bool CRuntime::signalLogForNetwork(bool enabled)
     {
+        QWriteLocker wl(&m_lock);
         if (enabled == this->m_signalLogNetwork) return enabled;
         if (!this->getIContextNetwork())
         {
@@ -152,6 +155,7 @@ namespace BlackCore
      */
     bool CRuntime::signalLogForOwnAircraft(bool enabled)
     {
+        QWriteLocker wl(&m_lock);
         if (enabled == this->m_signalLogOwnAircraft) return enabled;
         if (!this->getIContextOwnAircraft())
         {
@@ -188,6 +192,7 @@ namespace BlackCore
      */
     bool CRuntime::signalLogForSettings(bool enabled)
     {
+        QWriteLocker wl(&m_lock);
         if (enabled == this->m_signalLogSettings) return enabled;
         if (!this->getIContextSettings())
         {
@@ -214,6 +219,7 @@ namespace BlackCore
      */
     bool CRuntime::signalLogForSimulator(bool enabled)
     {
+        QWriteLocker wl(&m_lock);
         if (enabled == this->m_signalLogSimulator) return enabled;
         if (!this->getIContextSimulator())
         {
@@ -285,12 +291,12 @@ namespace BlackCore
         switch (context)
         {
         default: return true;
-        case LogForApplication: return this->m_slotLogApplication;
-        case LogForAudio: return this->m_slotLogAudio;
-        case LogForNetwork: return this->m_slotLogNetwork;
-        case LogForOwnAircraft: return this->m_slotLogOwnAircraft;
-        case LogForSettings: return this->m_slotLogSettings;
-        case LogForSimulator: return this->m_slotLogSimulator;
+        case LogForApplication: return this->isSlotLogForApplicationEnabled();
+        case LogForAudio: return this->isSlotLogForAudioEnabled();
+        case LogForNetwork: return this->isSlotLogForNetworkEnabled();
+        case LogForOwnAircraft: return this->isSlotLogForOwnAircraftEnabled();
+        case LogForSettings: return this->isSlotLogForSettingsEnabled();
+        case LogForSimulator: return this->isSlotLogForSimulatorEnabled();
         }
     }
 
@@ -496,6 +502,10 @@ namespace BlackCore
         {
             disconnect(this->getIContextNetwork());
             this->getIContextNetwork()->disconnectFromNetwork();
+            if (this->m_contextNetwork->usingLocalObjects())
+            {
+                this->getCContextNetwork()->gracefulShutdown(); // for threads
+            }
             this->getIContextNetwork()->deleteLater();
             this->m_contextNetwork = nullptr;
         }
@@ -662,8 +672,6 @@ namespace BlackCore
         Q_ASSERT_X(!this->m_contextApplication || this->m_contextNetwork->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextNetwork *>(this->m_contextNetwork);
     }
-
-
 
     CContextOwnAircraft *CRuntime::getCContextOwnAircraft()
     {

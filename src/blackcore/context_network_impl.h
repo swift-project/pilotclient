@@ -6,6 +6,8 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_IMPL_H
 #define BLACKCORE_CONTEXTNETWORK_IMPL_H
 
+//! \file
+
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_runtime.h"
@@ -117,6 +119,9 @@ namespace BlackCore
 
         //! \copydoc IContextNetwork::requestAtisUpdates
         virtual void requestAtisUpdates() override;
+
+        //! Gracefully shut down, e.g. for thread safety
+        void gracefulShutdown();
 
     protected:
         //! Constructor, with link to runtime

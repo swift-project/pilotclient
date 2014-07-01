@@ -6,6 +6,9 @@
 #ifndef BLACKCORE_VATSIMDATAFILEREADER_H
 #define BLACKCORE_VATSIMDATAFILEREADER_H
 
+//! \file
+
+#include "blackmisc/threadedreader.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraftlist.h"
 #include "blackmisc/nwserverlist.h"
@@ -15,13 +18,14 @@
 #include <QObject>
 #include <QTimer>
 #include <QNetworkReply>
+#include <QReadWriteLock>
 
 namespace BlackCore
 {
     /*!
      * Read bookings from VATSIM
      */
-    class CVatsimDataFileReader : public QObject
+    class CVatsimDataFileReader : public QObject, public BlackMisc::CThreadedReader<void>
     {
         Q_OBJECT
 
@@ -29,29 +33,17 @@ namespace BlackCore
         //! Constructor
         explicit CVatsimDataFileReader(const QStringList &urls, QObject *parent = nullptr);
 
-        //! Update timestamp
-        QDateTime getUpdateTimestamp() const { return this->m_updateTimestamp; }
-
         //! Read / re-read bookings
         void read();
 
-        /*!
-         * \brief Set the update time
-         * \param updatePeriodMs 0 stops the timer
-         */
-        void setInterval(int updatePeriodMs);
-
-        //! Get the timer interval (ms)
-        int interval() const { return this->m_updateTimer->interval();}
+        //! Get aircrafts
+        const BlackMisc::Aviation::CAircraftList &getAircrafts();
 
         //! Get aircrafts
-        const BlackMisc::Aviation::CAircraftList &getAircrafts() { return this->m_aircrafts; }
-
-        //! Get aircrafts
-        const BlackMisc::Aviation::CAtcStationList &getAtcStations() { return this->m_atcStations; }
+        const BlackMisc::Aviation::CAtcStationList &getAtcStations();
 
         //! Get all voice servers
-        const BlackMisc::Network::CServerList &getVoiceServers() { return this->m_voiceServers; }
+        const BlackMisc::Network::CServerList &getVoiceServers();
 
         //! Users for callsign(s)
         BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
@@ -85,8 +77,6 @@ namespace BlackCore
         QStringList m_serviceUrls; /*!< URL of the service */
         int m_currentUrlIndex;
         QNetworkAccessManager *m_networkManager;
-        QDateTime m_updateTimestamp;
-        QTimer *m_updateTimer;
         BlackMisc::Network::CServerList m_voiceServers;
         BlackMisc::Aviation::CAtcStationList m_atcStations;
         BlackMisc::Aviation::CAircraftList m_aircrafts;
@@ -107,6 +97,7 @@ namespace BlackCore
     signals:
         //! Data have been read
         void dataRead();
+
     };
 }
 

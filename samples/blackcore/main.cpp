@@ -45,7 +45,9 @@ int main(int argc, char *argv[])
     // configure DBus server
     QString dBusAddress = BlackCore::CDBusServer::sessionDBusServer();
     if (input.startsWith("2"))
+    {
         dBusAddress = BlackCore::CDBusServer::systemDBusServer();
+    }
     else if (input.startsWith("3"))
     {
         qDebug() << "found: " << BlackMisc::CNetworkUtils::getKnownIpAddresses();
@@ -63,8 +65,10 @@ int main(int argc, char *argv[])
     BlackCore::CRuntime *core = remoteAudio ?
                                 new BlackCore::CRuntime(BlackCore::CRuntimeConfig::forCoreAllLocalInDBusNoAudio(dBusAddress), &a) :
                                 new BlackCore::CRuntime(BlackCore::CRuntimeConfig::forCoreAllLocalInDBus(dBusAddress), &a);
+
+    // tool to allow input indepent from event loop
     QtConcurrent::run(BlackMiscTest::Tool::serverLoop, core); // QFuture<void> future
-    qDebug() << "Server event loop, pid:" << BlackMiscTest::Tool::getPid();
+    qDebug() << "Server event loop, pid:" << BlackMiscTest::Tool::getPid() << "Thread id:" << QThread::currentThreadId();
 
     // end
     return a.exec();

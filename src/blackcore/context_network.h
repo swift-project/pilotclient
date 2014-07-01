@@ -6,6 +6,8 @@
 #ifndef BLACKCORE_CONTEXTNETWORK_H
 #define BLACKCORE_CONTEXTNETWORK_H
 
+//! \file
+
 #include "blackcore/context.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/statusmessage.h"
@@ -22,7 +24,7 @@
 namespace BlackCore
 {
 
-    //! \brief Network context proxy
+    //! Network context proxy
     class IContextNetwork : public CContext
     {
         Q_OBJECT

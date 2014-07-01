@@ -12,11 +12,11 @@ using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
-
-    CVatsimBookingReader::CVatsimBookingReader(const QString &url, QObject *parent) : QObject(parent), m_serviceUrl(url), m_networkManager(nullptr), m_updateTimer(nullptr)
+    CVatsimBookingReader::CVatsimBookingReader(const QString &url, QObject *parent) :
+        QObject(parent), CThreadedReader(),
+        m_serviceUrl(url), m_networkManager(nullptr)
     {
         this->m_networkManager = new QNetworkAccessManager(this);
-        this->m_updateTimer = new QTimer(this);
         this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimBookingReader::loadFinished);
         this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimBookingReader::read);
     }
@@ -27,16 +27,8 @@ namespace BlackCore
         if (url.isEmpty()) return;
         Q_ASSERT(this->m_networkManager);
         QNetworkRequest request(url);
-        this->m_networkManager->get(request);
-    }
-
-    void CVatsimBookingReader::setInterval(int updatePeriodMs)
-    {
-        Q_ASSERT(this->m_updateTimer);
-        if (updatePeriodMs < 1)
-            this->m_updateTimer->stop();
-        else
-            this->m_updateTimer->start(updatePeriodMs);
+        QNetworkReply *reply = this->m_networkManager->get(request);
+        this->setPendingNetworkReply(reply);
     }
 
     /*
@@ -44,7 +36,12 @@ namespace BlackCore
      */
     void CVatsimBookingReader::loadFinished(QNetworkReply *nwReply)
     {
-        QtConcurrent::run(this, &CVatsimBookingReader::parseBookings, nwReply);
+        this->setPendingNetworkReply(nullptr);
+        if (!this->isStopped())
+        {
+            QFuture<void> f = QtConcurrent::run(this, &CVatsimBookingReader::parseBookings, nwReply);
+            this->setPendingFuture(f);
+        }
     }
 
     /*
@@ -52,30 +49,33 @@ namespace BlackCore
      */
     void CVatsimBookingReader::parseBookings(QNetworkReply *nwReply)
     {
+        // Worker thread, make sure to write no members here!
+        if (this->isStopped())
+        {
+            qDebug() << "terminated" << Q_FUNC_INFO;
+            return; // stop, terminate straight away, ending thread
+        }
+
         if (nwReply->error() == QNetworkReply::NoError)
         {
             static const QString timestampFormat("yyyy-MM-dd HH:mm:ss");
             QString xmlData = nwReply->readAll();
             QDomDocument doc;
+            QDateTime updateTimestamp = QDateTime::currentDateTimeUtc();
 
             if (doc.setContent(xmlData))
             {
                 QDomNode timestamp = doc.elementsByTagName("timestamp").at(0);
                 QString ts = timestamp.toElement().text().trimmed();
                 Q_ASSERT(!ts.isEmpty());
-                if (ts.isEmpty())
-                {
-                    // fallback
-                    m_updateTimestamp = QDateTime::currentDateTimeUtc();
-                }
-                else
+
+                if (!ts.isEmpty())
                 {
                     // normally the timestamp is always updated from backend
                     // if this changes in the future we're prepared
-                    QDateTime fileTimestamp = QDateTime::fromString(ts, timestampFormat);
-                    fileTimestamp.setTimeSpec(Qt::UTC);
-                    if (this->m_updateTimestamp == fileTimestamp) return; // nothing to do
-                    this->m_updateTimestamp = fileTimestamp;
+                    updateTimestamp = QDateTime::fromString(ts, timestampFormat);
+                    updateTimestamp.setTimeSpec(Qt::UTC);
+                    if (this->getUpdateTimestamp() == updateTimestamp) return; // nothing to do
                 }
 
                 QDomNode atc = doc.elementsByTagName("atcs").at(0);
@@ -84,6 +84,13 @@ namespace BlackCore
                 CAtcStationList bookedStations;
                 for (int i = 0; i < size; i++)
                 {
+                    if (this->isStopped())
+                    {
+                        qDebug() << "terminated" << Q_FUNC_INFO;
+                        return; // stop, terminate straight away, ending thread
+                    }
+
+                    // pase nodes
                     QDomNode bookingNode = bookingNodes.at(i);
                     QDomNodeList bookingNodeValues = bookingNode.childNodes();
                     CAtcStation bookedStation;
@@ -129,8 +136,8 @@ namespace BlackCore
                     bookedStation.setController(user);
                     bookedStations.push_back(bookedStation);
                 }
+                this->setUpdateTimestamp(updateTimestamp); // thread safe update
                 emit this->dataRead(bookedStations);
-
             } // node
         } // content
 
@@ -138,4 +145,5 @@ namespace BlackCore
         nwReply->deleteLater();
 
     } // method
+
 } // namespace

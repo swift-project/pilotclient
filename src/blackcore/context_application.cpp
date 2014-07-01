@@ -1,7 +1,6 @@
 #include "blackcore/context_application.h"
 #include "blackcore/context_application_impl.h"
 #include "blackcore/context_application_proxy.h"
-#include "blackcore/context_application_event.h"
 #include "blackmisc/statusmessage.h"
 #include <QCoreApplication>
 #include <QThread>
@@ -24,9 +23,27 @@ namespace BlackCore
         case CRuntimeConfig::Remote:
             return new BlackCore::CContextApplicationProxy(BlackCore::CDBusServer::ServiceName, conn, mode, parent);
         default:
-            qFatal("Always initialize an application context");
+            qFatal("Always initialize an application context!");
             return nullptr;
         }
+    }
+
+    IContextApplication::RedirectionLevel IContextApplication::getOutputRedirectionLevel() const
+    {
+        QReadLocker(&this->m_lock);
+        return this->m_outputRedirectionLevel;
+    }
+
+    void IContextApplication::setOutputRedirectionLevel(IContextApplication::RedirectionLevel redirectionLevel)
+    {
+        QWriteLocker(&this->m_lock);
+        this->m_outputRedirectionLevel = redirectionLevel;
+    }
+
+    IContextApplication::RedirectionLevel IContextApplication::getStreamingForRedirectedOutputLevel() const
+    {
+        QReadLocker(&this->m_lock);
+        return this->m_redirectedOutputRedirectionLevel;
     }
 
     /*
@@ -36,7 +53,9 @@ namespace BlackCore
         CContext(mode, runtime), m_outputRedirectionLevel(IContextApplication::RedirectNone), m_redirectedOutputRedirectionLevel(IContextApplication::RedirectNone)
     {
         if (IContextApplication::s_contexts.isEmpty())
+        {
             IContextApplication::s_oldHandler = qInstallMessageHandler(IContextApplication::messageHandlerDispatch);
+        }
         IContextApplication::s_contexts.append(this);
     }
 
@@ -45,24 +64,13 @@ namespace BlackCore
      */
     void IContextApplication::setStreamingForRedirectedOutputLevel(RedirectionLevel redirectionLevel)
     {
+        QWriteLocker(&this->m_lock);
         disconnect(this, &IContextApplication::redirectedOutput, this, &IContextApplication::streamRedirectedOutput);
         if (redirectionLevel != RedirectNone)
-            connect(this, &IContextApplication::redirectedOutput, this, &IContextApplication::streamRedirectedOutput);
-        this->m_redirectedOutputRedirectionLevel = redirectionLevel;
-    }
-
-    /*
-     * Process event in object's thread, used to emit signal from  other thread
-     */
-    bool IContextApplication::event(QEvent *event)
-    {
-        if (event->type() == CApplicationEvent::eventType())
         {
-            CApplicationEvent *e = static_cast<CApplicationEvent *>(event);
-            emit this->redirectedOutput(e->m_message, this->getUniqueId());
-            return true;
+            connect(this, &IContextApplication::redirectedOutput, this, &IContextApplication::streamRedirectedOutput);
         }
-        return CContext::event(event);
+        this->m_redirectedOutputRedirectionLevel = redirectionLevel;
     }
 
     /*
@@ -93,24 +101,25 @@ namespace BlackCore
     void IContextApplication::messageHandler(QtMsgType type, const QMessageLogContext &messageContext, const QString &message)
     {
         Q_UNUSED(messageContext);
-        if (this->m_outputRedirectionLevel == RedirectNone) return;
+        RedirectionLevel outputRedirectionLevel = this->getOutputRedirectionLevel(); // local copy, thready safety
+        if (outputRedirectionLevel == RedirectNone) return;
         CStatusMessage m(CStatusMessage::TypeStdoutRedirect, CStatusMessage::SeverityInfo, message);
         switch (type)
         {
         case QtDebugMsg:
-            if (this->m_outputRedirectionLevel != RedirectAllOutput) return;
+            if (outputRedirectionLevel != RedirectAllOutput) return;
             break;
         case QtWarningMsg:
-            if (this->m_outputRedirectionLevel == RedirectAllOutput) return;
-            if (this->m_outputRedirectionLevel == RedirectError) return;
+            if (outputRedirectionLevel == RedirectAllOutput) return;
+            if (outputRedirectionLevel == RedirectError) return;
             m.setSeverity(CStatusMessage::SeverityWarning);
             break;
         case QtCriticalMsg:
-            if (this->m_outputRedirectionLevel != RedirectError) return;
+            if (outputRedirectionLevel != RedirectError) return;
             m.setSeverity(CStatusMessage::SeverityError);
             break;
         case QtFatalMsg:
-            if (this->m_outputRedirectionLevel != RedirectError) return;
+            if (m_outputRedirectionLevel != RedirectError) return;
             m.setSeverity(CStatusMessage::SeverityError);
             break;
         default:
@@ -125,11 +134,9 @@ namespace BlackCore
         }
         else
         {
-            // different threads, use event.
-            // in this event the same redirect as above will emitted, only that this is then
-            // done in the same thread as the parent object
-            CApplicationEvent *e = new CApplicationEvent(m, this->getUniqueId());
-            QCoreApplication::postEvent(this, e);
+            // Different threads, use invoke so that is called in "main / object's thread"
+            // Otherwise for DBus: QtDBus: cannot relay signals from parent BlackCore::CContextApplication(0x4b4358 "") unless they are emitted in the object's thread QThread(0x4740b0 ""). Current thread is QThread(0x4b5530 "Thread (pooled)")
+            QMetaObject::invokeMethod(this, "redirectedOutput", Q_ARG(BlackMisc::CStatusMessage, m), Q_ARG(qint64, this->getUniqueId()));
         }
     }
 
@@ -139,22 +146,22 @@ namespace BlackCore
     void IContextApplication::streamRedirectedOutput(const CStatusMessage &message, qint64 contextId)
     {
         if (this->getUniqueId() == contextId) return; // avoid infinite output
-        if (this->m_redirectedOutputRedirectionLevel == RedirectNone) return;
+        RedirectionLevel redirectedOutputRedirectionLevel = this->getStreamingForRedirectedOutputLevel(); // local copy
 
         if (message.isEmpty()) return;
         switch (message.getSeverity())
         {
         case CStatusMessage::SeverityInfo:
-            if (this->m_redirectedOutputRedirectionLevel != RedirectAllOutput) return;
+            if (redirectedOutputRedirectionLevel != RedirectAllOutput) return;
             qDebug() << message.getMessage();
             break;
         case CStatusMessage::SeverityWarning:
-            if (this->m_redirectedOutputRedirectionLevel == RedirectAllOutput) return;
-            if (this->m_redirectedOutputRedirectionLevel == RedirectError) return;
+            if (redirectedOutputRedirectionLevel == RedirectAllOutput) return;
+            if (redirectedOutputRedirectionLevel == RedirectError) return;
             qWarning() << message.getMessage();
             break;
         case CStatusMessage::SeverityError:
-            if (this->m_redirectedOutputRedirectionLevel != RedirectError) return;
+            if (redirectedOutputRedirectionLevel != RedirectError) return;
             qCritical() << message.getMessage();
             break;
         }
