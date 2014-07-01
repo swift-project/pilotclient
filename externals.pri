@@ -16,12 +16,12 @@ isEmpty(EXTERNALDIR) {
 }
 
 # Test the folder if it exists and has a include subfolder
-!exists("$$EXTERNALDIR/include") {
+!exists("$$EXTERNALDIR/common/include") {
     error("Could not find externals in $$EXTERNALDIR. Please install it!")
 }
 
 # Everything is fine. Add the include path
-INCLUDEPATH *= $$EXTERNALDIR/include
+INCLUDEPATH *= $$EXTERNALDIR/common/include
 
 # and the library path depending on the used compiler
 win32-msvc2010 {
@@ -30,13 +30,15 @@ win32-msvc2010 {
     equals(WORD_SIZE,32): LIBS += -luser32
 }
 win32-msvc2013 {
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/vs2013_64/lib
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/vs2013_32/lib
+    INCLUDEPATH *= $$EXTERNALDIR/win32-vs2013/include
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/win32-vs2013/lib64
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/win32-vs2013/lib32
     equals(WORD_SIZE,32): LIBS += -luser32
 }
 win32-g++ {
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/mingw64/lib
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/mingw32/lib
+    INCLUDEPATH *= $$EXTERNALDIR/win32-g++/include
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/win32-g++/lib64
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/win32-g++/lib32
     LIBS += -luser32
 }
 linux-g++* {
@@ -44,6 +46,7 @@ linux-g++* {
     equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/linux32/lib
 }
 macx-clang {
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/macx-clang64/lib -F$$EXTERNALDIR/macx-clang64/lib
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/macx-clang32/lib -F$$EXTERNALDIR/macx-clang32/lib
+    INCLUDEPATH *= $$EXTERNALDIR/macx-clang/include
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/macx-clang/lib64 -F$$EXTERNALDIR/macx-clang/lib64
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/macx-clang/lib32 -F$$EXTERNALDIR/macx-clang/lib32
 }

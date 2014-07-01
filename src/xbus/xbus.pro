@@ -89,4 +89,4 @@ include (../../libraries.pri)
 
 # TODO refactor .pri files into common_pre.pri and common_post.pri
 # to sort out this include order fiasco
-INCLUDEPATH += $$EXTERNALDIR/include/XPLM
+INCLUDEPATH += $$EXTERNALDIR/common/include/XPLM
