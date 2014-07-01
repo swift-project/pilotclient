@@ -106,6 +106,19 @@ namespace BlackMisc
         QString m_description;
     };
 
+    //! \cond NO_DOXYGEN
+    struct CNotHashable
+    {
+        int n;
+        bool operator <(const CNotHashable &other) const { return n < other.n; }
+        QString toQString(bool = false) const { return {}; }
+    };
+    inline QJsonArray &operator <<(QJsonArray &a, const CNotHashable &) { return a; }
+    inline const QJsonValueRef &operator >>(const QJsonValueRef &v, CNotHashable &) { return v; }
+    inline QDBusArgument &operator <<(QDBusArgument &a, const CNotHashable &) { return a; }
+    inline const QDBusArgument &operator >>(const QDBusArgument &a, const CNotHashable &) { return a; }
+    //! \endcond
+
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CTestValueObject, (o.m_name, o.m_description))
@@ -113,9 +126,25 @@ Q_DECLARE_METATYPE(BlackMisc::CTestValueObject)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackMisc::CTestValueObject>)
 Q_DECLARE_METATYPE(BlackMisc::CSequence<BlackMisc::CTestValueObject>)
 
+Q_DECLARE_METATYPE(BlackMisc::CNotHashable)
+
 // We need to typedef because 'commas' confuse the Q_DECLARE_METATYPE macro
 // https://bugreports.qt-project.org/browse/QTBUG-11485
-typedef BlackMisc::CDictionary<BlackMisc::CTestValueObject, BlackMisc::CTestValueObject, QMap> CValueObjectDictionary;
+typedef BlackMisc::CDictionary<BlackMisc::CTestValueObject, BlackMisc::CTestValueObject> CValueObjectDictionary;
+typedef BlackMisc::CDictionary<BlackMisc::CTestValueObject, BlackMisc::CTestValueObject, QHash> CValueObjectHashDictionary;
+typedef BlackMisc::CDictionary<BlackMisc::CNotHashable, QString> CNotHashableDictionary;
+typedef BlackMisc::CDictionary<BlackMisc::CNotHashable, QString, QMap> CNotHashableMapDictionary;
 Q_DECLARE_METATYPE(CValueObjectDictionary)
+Q_DECLARE_METATYPE(CValueObjectHashDictionary)
+Q_DECLARE_METATYPE(CNotHashableDictionary)
+Q_DECLARE_METATYPE(CNotHashableMapDictionary)
+
+// MSVC has trouble with these checks
+#if !defined(Q_CC_MSVC)
+static_assert(std::is_same<CValueObjectDictionary::impl_type, CValueObjectHashDictionary::impl_type>::value,
+    "Expected CValueObjectDictionary to use QHash");
+static_assert(std::is_same<CNotHashableDictionary::impl_type, CNotHashableMapDictionary::impl_type>::value,
+    "Expected CDictionary<CNotHashableDictionary, Value> to use QMap");
+#endif // ! Q_CC_MSVC
 
 #endif // guard

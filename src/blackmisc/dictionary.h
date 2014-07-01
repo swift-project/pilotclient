@@ -13,14 +13,67 @@
 
 namespace BlackMisc
 {
+    namespace Private
+    {
+        //! \cond PRIVATE
+
+        namespace ADL
+        {
+            struct NotFound {};
+            struct FromAny { template <class T> FromAny(const T &); };
+            NotFound operator <(const FromAny &, const FromAny &);
+            NotFound operator ==(const FromAny &, const FromAny &);
+            NotFound qHash(...);
+
+            template <class Key>
+            struct SupportsQHash : std::integral_constant<bool,
+                ! std::is_same<decltype(std::declval<Key>() == std::declval<Key>()), NotFound>::value &&
+                ! std::is_same<decltype(qHash(std::declval<Key>())), NotFound>::value
+            > {};
+            template <class Key>
+            struct SupportsQMap : std::integral_constant<bool,
+                ! std::is_same<decltype(std::declval<Key>() < std::declval<Key>()), NotFound>::value
+            > {};
+        }
+
+        template <bool KeySupportsQHash /* = true */, bool KeySupportsQMap>
+        struct AssociativityTraits
+        {
+            template <class Key, class Value>
+            using DefaultType = QHash<Key, Value>;
+        };
+        template <>
+        struct AssociativityTraits<false, true>
+        {
+            template <class Key, class Value>
+            using DefaultType = QMap<Key, Value>;
+        };
+        template <>
+        struct AssociativityTraits<false, false>
+        {
+            template <class Key, class>
+            struct DefaultType { static_assert((std::is_void<Key>::value, false), "Key does not support either QHash or QMap"); };
+        };
+
+        //! \endcond
+    } // namespace Private
+
+
+    //! Trait to select the appropriate default associative container type depending on what the key type supports
+    template <class Key>
+    struct AssociativityTraits : public Private::AssociativityTraits<Private::ADL::SupportsQHash<Key>::value, Private::ADL::SupportsQMap<Key>::value>
+    {};
+
     //! Associative container with value semantics, chooses a sensible default implementation container type
-    template<class Key, class Value, template <class...> class Impl>
+    template<class Key, class Value, template <class...> class Impl = AssociativityTraits<Key>::template DefaultType>
     class CDictionary : public CValueObject
     {
 
     public:
+        //! The implementation container
+        typedef Impl<Key,Value> impl_type;
 
-        //! \brief STL compatibility
+        //! STL compatibility
         //! @{
         typedef Key key_type;
         typedef Value value_type;
