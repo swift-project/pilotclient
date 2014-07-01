@@ -44,6 +44,6 @@ linux-g++* {
     equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/linux32/lib
 }
 macx-clang {
-    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/macx-clang64/lib
-    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/macx-clang32/lib
+    equals(WORD_SIZE,64): LIBS *= -L$$EXTERNALDIR/macx-clang64/lib -F$$EXTERNALDIR/macx-clang64/lib
+    equals(WORD_SIZE,32): LIBS *= -L$$EXTERNALDIR/macx-clang32/lib -F$$EXTERNALDIR/macx-clang32/lib
 }

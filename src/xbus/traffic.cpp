@@ -10,6 +10,7 @@
 #include <XPLM/XPLMUtilities.h>
 #include <QDateTime>
 #include <cstring>
+#include <cmath>
 
 namespace XBus
 {

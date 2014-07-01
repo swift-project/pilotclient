@@ -6,6 +6,7 @@
 #include "menus.h"
 #include <type_traits>
 #include <cassert>
+#include <string>
 
 namespace XBus
 {

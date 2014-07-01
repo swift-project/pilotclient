@@ -12,7 +12,11 @@ win32 {
     equals(WORD_SIZE,64): LIBS += -lXPLM_64
     equals(WORD_SIZE,32): LIBS += -lXPLM
 }
-unix {
+else:macx {
+    LIBS += -framework XPLM -framework Cocoa -framework CoreFoundation
+    DEFINES += XUTILS_EXCLUDE_MAC_CRAP=1
+}
+else:unix {
     # Flags needed because there is no XPLM link library
     QMAKE_LFLAGS += -shared -rdynamic -nodefaultlibs -undefined_warning -Wl,--version-script=$$PWD/xbus.map
 }
@@ -76,9 +80,10 @@ else {
     equals(WORD_SIZE,32): XBUS_DESTDIR = ../../xbus
 }
 
-# QMake's Makefile generator ignores TARGET_EXT
-unix: QMAKE_POST_LINK += cp $$DESTDIR/lib$${TARGET}.so $$XBUS_DESTDIR/$${TARGET}.xpl
-else: DESTDIR = $$XBUS_DESTDIR
+# QMake ignores TARGET_EXT on Unix
+     macx: QMAKE_POST_LINK += mkdir -p $${XBUS_DESTDIR} && cp $$OUT_PWD/lib$${TARGET}.dylib $$XBUS_DESTDIR/$${TARGET}.xpl
+else:unix: QMAKE_POST_LINK += mkdir -p $${XBUS_DESTDIR} && cp $$OUT_PWD/lib$${TARGET}.so    $$XBUS_DESTDIR/$${TARGET}.xpl
+else:      DESTDIR = $$XBUS_DESTDIR
 
 include (../../libraries.pri)
 
