@@ -21,21 +21,21 @@
 
 namespace BlackCore
 {
-    //! \brief Network context
+    //! Network context
     class IContextSimulator : public CContext
     {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
 
     public:
-        //! \brief Service name
+        //! Service name
         static const QString &InterfaceName()
         {
             static QString s(BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME);
             return s;
         }
 
-        //! \brief Service path
+        //! Service path
         static const QString &ObjectPath()
         {
             static QString s(BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH);
@@ -66,16 +66,16 @@ namespace BlackCore
         //! Returns true when simulator is connected and available
         virtual bool isConnected() const = 0;
 
-        //! \brief Can we connect?
+        //! Can we connect?
         virtual bool canConnect() = 0;
 
-        //! \brief Connect to simulator
+        //! Connect to simulator
         virtual bool connectTo() = 0;
 
-        //! \brief Connect to simulator (asynchronous version)
+        //! Connect to simulator (asynchronous version)
         virtual void asyncConnectTo() = 0;
 
-        //! \brief Disconnect from simulator
+        //! Disconnect from simulator
         virtual bool disconnectFrom() = 0;
 
         //! Simulator info
@@ -100,7 +100,7 @@ namespace BlackCore
         virtual void settingsChanged(uint type) = 0;
 
     protected:
-        //! \brief Constructor
+        //! Constructor
         IContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
     };
 

@@ -8,7 +8,7 @@
 namespace BlackGui
 {
     /*!
-     * \brief Server list model
+     * User list model
      */
     class CUserListModel : public CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>
     {
@@ -23,10 +23,10 @@ namespace BlackGui
             UserShort
         };
 
-        //! \brief Constructor
+        //! Constructor
         explicit CUserListModel(UserMode userMode, QObject *parent = nullptr);
 
-        //! \brief Destructor
+        //! Destructor
         virtual ~CUserListModel() {}
 
         //! Set station mode

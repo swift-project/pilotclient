@@ -40,14 +40,10 @@ namespace BlackMisc
             static const int MaxRemarksLength = 150; //!< Max remarks length
             static const int MaxRouteLength = 150; //!< Max route length
 
-            /*!
-             * Default constructor
-             */
+            //! Default constructor
             CFlightPlan() {}
 
-            /*!
-             * Constructor
-             */
+            //! Constructor
             CFlightPlan(const QString &equipmentIcao, const CAirportIcao &originAirportIcao, const CAirportIcao &destinationAirportIcao, const CAirportIcao &alternateAirportIcao,
                         QDateTime takeoffTimePlanned, QDateTime takeoffTimeActual, const PhysicalQuantities::CTime &enrouteTime, const PhysicalQuantities::CTime &fuelTime,
                         const CAltitude &cruiseAltitude, const PhysicalQuantities::CSpeed &cruiseTrueAirspeed, FlightRules flightRules, const QString &route, const QString &remarks)

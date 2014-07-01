@@ -307,9 +307,6 @@ namespace BlackCore
 
     void CAirspaceMonitor::receivedBookings(const CAtcStationList &bookedStations)
     {
-        // KB_REMOVE qDebug
-        qDebug() << Q_FUNC_INFO << QThread::currentThreadId();
-
         this->m_atcStationsBooked.clear();
         foreach(CAtcStation bookedStation, bookedStations)
         {

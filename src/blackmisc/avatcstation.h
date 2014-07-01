@@ -3,9 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKMISC_ATCSTATION_H
 #define BLACKMISC_ATCSTATION_H
@@ -34,7 +32,7 @@ namespace BlackMisc
         {
 
         public:
-            //! \brief Properties by index
+            //! Properties by index
             enum ColumnIndex
             {
                 IndexCallsign = 0,
@@ -61,13 +59,13 @@ namespace BlackMisc
                 IndexVoiceRoomUrl
             };
 
-            //! \brief Default constructor.
+            //! Default constructor.
             CAtcStation();
 
-            //! \brief Simplified constructor
+            //! Simplified constructor
             CAtcStation(const QString &callsign);
 
-            //! \brief ATC station constructor
+            //! ATC station constructor
             CAtcStation(const CCallsign &callsign, const BlackMisc::Network::CUser &controller,
                         const BlackMisc::PhysicalQuantities::CFrequency &frequency,
                         const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range,
@@ -80,25 +78,25 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CAtcStation &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CAtcStation &other) const;
 
-            //! \brief Has booking times?
+            //! Has booking times?
             bool hasBookingTimes() const
             {
                 return !(this->m_bookedFromUtc.isNull() && this->m_bookedUntilUtc.isNull());
             }
 
-            //! \brief Has ATIS?
+            //! Has ATIS?
             bool hasAtis() const
             {
                 return this->m_atis.hasMessage();
             }
 
-            //! \brief Has METAR?
+            //! Has METAR?
             bool hasMetar() const
             {
                 return this->m_metar.hasMessage();
@@ -131,13 +129,13 @@ namespace BlackMisc
             //! Set controller's id
             void setControllerId(const QString &controllerId) { this->m_controller.setId(controllerId); }
 
-            //! \brief Has valid realname?
+            //! Has valid realname?
             bool hasValidRealName() const { return this->m_controller.hasValidRealName(); }
 
-            //! \brief Has valid id?
+            //! Has valid id?
             bool hasValidId() const { return this->m_controller.hasValidId(); }
 
-            //! \brief Valid COM frequency
+            //! Valid COM frequency
             bool hasValidFrequency() const { return BlackMisc::Aviation::CComSystem::isValidCivilAviationFrequency(this->getFrequency()); }
 
             //! Get frequency.
@@ -153,16 +151,16 @@ namespace BlackMisc
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
             /*!
-             * \brief Syncronize controller data
+             * Syncronize controller data
              * Updates two stations (namely a booked and online ATC station) with complementary data
              * \param otherStation
              */
             void syncronizeControllerData(CAtcStation &otherStation);
 
-            //! \brief Get the radius of the controller's area of visibility.
+            //! Get the radius of the controller's area of visibility.
             const BlackMisc::PhysicalQuantities::CLength &getRange() const { return m_range; }
 
-            //! \brief Set range
+            //! Set range
             void setRange(const BlackMisc::PhysicalQuantities::CLength &range) { this->m_range = range; }
 
             //! Get the distance to own plane
@@ -175,25 +173,25 @@ namespace BlackMisc
             bool hasValidDistance() const { return !this->m_distanceToPlane.isNull();}
 
             /*!
-             * \brief Calculcate distance to plane, set it, and also return it
+             * Calculcate distance to plane, set it, and also return it
              * \param position other position
              * \return
              */
             const BlackMisc::PhysicalQuantities::CLength &calculcateDistanceToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
-            //! \brief Is station online (or just booked)?
+            //! Is station online (or just booked)?
             bool isOnline() const { return m_isOnline; }
 
             //! Set online
             void setOnline(bool online) { this->m_isOnline = online; }
 
-            //! \brief Get voice room
+            //! Get voice room
             const BlackMisc::Audio::CVoiceRoom &getVoiceRoom() const { return this->m_voiceRoom; }
 
-            //! \brief Set voice room
+            //! Set voice room
             void setVoiceRoom(const BlackMisc::Audio::CVoiceRoom &voiceRoom) { this->m_voiceRoom = voiceRoom; }
 
-            //! \brief Valid voice room?
+            //! Valid voice room?
             bool hasValidVoiceRoom() const { return this->m_voiceRoom.isValid(); }
 
             /*!
@@ -211,24 +209,24 @@ namespace BlackMisc
              */
             const QDateTime &getBookedUntilUtc() const { return m_bookedUntilUtc; }
 
-            //! \brief Has valid booking times?
+            //! Has valid booking times?
             bool hasValidBookingTimes() const
             {
                 return !this->m_bookedFromUtc.isNull() && this->m_bookedFromUtc.isValid() &&
                        !this->m_bookedUntilUtc.isNull() && this->m_bookedUntilUtc.isValid();
             }
 
-            //! \brief Transfer booking times
+            //! Transfer booking times
             void setBookedFromUntil(const CAtcStation &otherStation)
             {
                 this->setBookedFromUtc(otherStation.getBookedFromUtc());
                 this->setBookedUntilUtc(otherStation.getBookedUntilUtc());
             }
 
-            //! \brief Booked now?
+            //! Booked now?
             bool isBookedNow() const;
 
-            //! \brief Tuned in within 25KHz channel spacing
+            //! Tuned in within 25KHz channel spacing
             bool isComUnitTunedIn25KHz(const BlackMisc::Aviation::CComSystem &comUnit) const
             {
                 return comUnit.isActiveFrequencyWithin25kHzChannel(this->getFrequency());
@@ -243,22 +241,22 @@ namespace BlackMisc
              */
             BlackMisc::PhysicalQuantities::CTime bookedWhen() const;
 
-            //! \brief Get ATIS
+            //! Get ATIS
             const CInformationMessage &getAtis() const { return m_atis; }
 
-            //! \brief Set ATIS
+            //! Set ATIS
             void setAtis(const CInformationMessage &atis) { this->m_atis = atis;}
 
-            //! \brief Set ATIS Message
+            //! Set ATIS Message
             void setAtisMessage(const QString &atis) { this->m_atis.setMessage(atis); }
 
-            //! \brief Get METAR
+            //! Get METAR
             const CInformationMessage &getMetar() const { return m_metar; }
 
-            //! \brief Set METAR
+            //! Set METAR
             void setMetar(const CInformationMessage &metar) { this->m_metar = metar;}
 
-            //! \brief Set METAR Message
+            //! Set METAR Message
             void setMetarMessage(const QString &metar) { this->m_metar.setMessage(metar); }
 
             //! Set booked until
@@ -294,7 +292,7 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
             //! \copydoc TupleConverter<>::jsonMembers()
@@ -326,7 +324,7 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CFrequency m_frequency;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
             BlackMisc::PhysicalQuantities::CLength m_range;
-            BlackMisc::PhysicalQuantities::CLength m_distanceToPlane;
+            BlackMisc::PhysicalQuantities::CLength m_distanceToPlane; // make mutable ?
             bool m_isOnline;
             QDateTime m_bookedFromUtc;
             QDateTime m_bookedUntilUtc;
@@ -338,7 +336,6 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-// o.m_metar, o.m_voiceRoom
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAtcStation, (o.m_callsign, o.m_controller, o.m_frequency, o.m_position, o.m_range, o.m_isOnline, o.m_distanceToPlane, o.m_atis, o.m_bookedFromUtc, o.m_bookedUntilUtc, o.m_metar, o.m_voiceRoom))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAtcStation)
 

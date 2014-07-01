@@ -90,7 +90,7 @@ namespace BlackMisc
         }
 
         /*
-         * All pilots
+         * All controllers
          */
         CUserList CAtcStationList::getControllers() const
         {
@@ -102,7 +102,6 @@ namespace BlackMisc
             }
             return users;
         }
-
 
         /*
          * Merge with booking

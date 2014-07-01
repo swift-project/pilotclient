@@ -274,9 +274,8 @@ namespace BlackMisc
             return true;
         }
 
-        /*!
-         * \brief When booked?
-         * \return
+        /*
+         * When booked?
          */
         CTime CAtcStation::bookedWhen() const
         {
