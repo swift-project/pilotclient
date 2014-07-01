@@ -310,6 +310,13 @@ namespace BlackMisc
          */
         bool operator !=(const CCollection &other) const { return !(*this == other); }
 
+        /*!
+         * \brief Return an opaque pointer to the implementation container.
+         * \details Can be useful in unusual debugging situations.
+         * \warning Not for general use.
+         */
+        void *getImpl() { return pimpl() ? pimpl()->impl() : nullptr; }
+
     private:
         class PimplBase
         {
@@ -333,6 +340,7 @@ namespace BlackMisc
             virtual iterator find(const T &value) = 0;
             virtual const_iterator find(const T &value) const = 0;
             virtual bool operator ==(const PimplBase &other) const = 0;
+            virtual void *impl() = 0;
         };
 
         template <class C> class Pimpl : public PimplBase
@@ -359,6 +367,7 @@ namespace BlackMisc
             iterator find(const T &value) override { return iterator::fromImpl(m_impl.find(value)); }
             const_iterator find(const T &value) const override { return const_iterator::fromImpl(m_impl.find(value)); }
             bool operator ==(const PimplBase &other) const override { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.insert(*i); return m_impl == copy.m_impl; }
+            void *impl() override { return &m_impl; }
         private:
             C m_impl;
             // insertHelper: QOrderedSet::insert returns an iterator, but std::set::insert returns a std::pair<interator, bool>

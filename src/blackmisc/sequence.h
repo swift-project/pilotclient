@@ -486,6 +486,13 @@ namespace BlackMisc
          */
         bool operator !=(const CSequence &other) const { return !(*this == other); }
 
+        /*!
+         * \brief Return an opaque pointer to the implementation container.
+         * \details Can be useful in unusual debugging situations.
+         * \warning Not for general use.
+         */
+        void *getImpl() { return pimpl() ? pimpl()->impl() : nullptr; }
+
     private:
         class PimplBase
         {
@@ -515,6 +522,7 @@ namespace BlackMisc
             virtual iterator erase(iterator pos) = 0;
             virtual iterator erase(iterator it1, iterator it2) = 0;
             virtual bool operator ==(const PimplBase &other) const = 0;
+            virtual void *impl() = 0;
         };
 
         template <class C> class Pimpl : public PimplBase
@@ -546,6 +554,7 @@ namespace BlackMisc
             iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator*>(pos.getImpl()))); }
             iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator*>(it1.getImpl()), *static_cast<const typename C::iterator*>(it2.getImpl()))); }
             bool operator ==(const PimplBase &other) const override { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.push_back(*i); return m_impl == copy.m_impl; }
+            void *impl() override { return &m_impl; }
         private:
             C m_impl;
         };
