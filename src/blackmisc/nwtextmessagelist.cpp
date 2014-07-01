@@ -132,12 +132,7 @@ namespace BlackMisc
         void CTextMessageList::toggleSenderRecipients()
         {
             if (this->isEmpty()) return;
-            for (int i = 0; i < this->size(); i++)
-            {
-                CTextMessage tm = (*this)[i];
-                tm.toggleSenderRecipient();
-                (*this)[i] = tm;
-            }
+            std::for_each(this->begin(), this->end(), [](CTextMessage &tm) { tm.toggleSenderRecipient(); });
         }
 
     } // namespace

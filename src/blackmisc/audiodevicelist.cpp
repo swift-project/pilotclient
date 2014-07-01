@@ -43,12 +43,10 @@ namespace BlackMisc
          */
         int CAudioDeviceList::count(CAudioDevice::DeviceType type) const
         {
-            int c = 0;
-            foreach(CAudioDevice device, *this)
+            return std::count_if(this->begin(), this->end(), [type](const CAudioDevice &device)
             {
-                if (device.getType() == type) c++;
-            }
-            return c;
+                return device.getType() == type;
+            });
         }
 
         /*

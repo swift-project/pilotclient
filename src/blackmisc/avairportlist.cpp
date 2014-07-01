@@ -86,19 +86,10 @@ namespace BlackMisc
          */
         void CAirportList::removeIfOutsideRange(const Geo::CCoordinateGeodetic &position, const CLength &maxDistance, bool updateValues)
         {
-            CLength d;
-            for (CAirportList::iterator i = begin(); i != end();)
+            this->removeIf([ & ](CAirport &airport)
             {
-                d = i->calculcateDistanceAndBearingToPlane(position, updateValues);
-                if (maxDistance < d)
-                {
-                    i = this->erase(i);
-                }
-                else
-                {
-                    ++i;
-                }
-            }
+                return airport.calculcateDistanceAndBearingToPlane(position, updateValues) > maxDistance;
+            });
         }
     } // namespace
 } // namespace
