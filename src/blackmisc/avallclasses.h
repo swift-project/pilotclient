@@ -19,6 +19,8 @@
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/avaircraftlist.h"
+#include "blackmisc/avairport.h"
+#include "blackmisc/avairportlist.h"
 #include "blackmisc/avinformationmessage.h"
 #include "blackmisc/avselcal.h"
 #include "blackmisc/avflightplan.h"
