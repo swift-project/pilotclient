@@ -26,6 +26,10 @@ namespace BlackMisc
          */
         void CClientList::registerMetadata()
         {
+            qRegisterMetaType<BlackMisc::CSequence<CClient>>();
+            qDBusRegisterMetaType<BlackMisc::CSequence<CClient>>();
+            qRegisterMetaType<BlackMisc::CCollection<CClient>>();
+            qDBusRegisterMetaType<BlackMisc::CCollection<CClient>>();
             qRegisterMetaType<CClientList>();
             qDBusRegisterMetaType<CClientList>();
         }

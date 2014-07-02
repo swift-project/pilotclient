@@ -50,13 +50,15 @@ void BlackMisc::Aviation::registerMetadata()
     CTransponder::registerMetadata();
     CHeading::registerMetadata();
     CTrack::registerMetadata();
+    CInformationMessage::registerMetadata();
     CCallsign::registerMetadata();
     CCallsignList::registerMetadata();
     CAtcStation::registerMetadata();
-    CInformationMessage::registerMetadata();
     CAtcStationList::registerMetadata();
     CAircraft::registerMetadata();
     CAircraftList::registerMetadata();
+    CAirport::registerMetadata();
+    CAirportList::registerMetadata();
     CAircraftSituation::registerMetadata();
     CAircraftIcao::registerMetadata();
     CAirportIcao::registerMetadata();
