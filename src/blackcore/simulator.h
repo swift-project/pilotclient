@@ -9,6 +9,7 @@
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/avaircraft.h"
+#include "blackmisc/avairportlist.h"
 #include "blackmisc/nwaircraftmodel.h"
 #include <QObject>
 
@@ -83,6 +84,10 @@ namespace BlackCore
 
         //! Aircraft Model
         virtual BlackMisc::Network::CAircraftModel getAircraftModel() const = 0;
+
+        //! Airports in range
+        virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
+
 
     signals:
         //! Emitted when the connection status has changed

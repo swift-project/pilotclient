@@ -74,6 +74,9 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::getAircraftModel
             virtual BlackMisc::Network::CAircraftModel getAircraftModel() const override;
 
+            //! Airports in range
+            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
+
         private slots:
             void serviceRegistered(const QString &serviceName);
             void serviceUnregistered();

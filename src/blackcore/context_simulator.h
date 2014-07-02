@@ -16,6 +16,7 @@
 #include "blacksim/simulatorinfolist.h"
 #include "blackmisc/nwaircraftmodel.h"
 #include "blackmisc/avaircraft.h"
+#include "blackmisc/avairportlist.h"
 #include "blackmisc/project.h"
 #include <QObject>
 
@@ -80,6 +81,9 @@ namespace BlackCore
 
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
+
+        //! Airports in range
+        virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
 
         //! Aircraft model
         virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const = 0;

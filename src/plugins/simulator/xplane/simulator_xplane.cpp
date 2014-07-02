@@ -202,6 +202,13 @@ namespace BlackSimPlugin
             return { m_xplaneData.aircraftModelPath, true };
         }
 
+        BlackMisc::Aviation::CAirportList CSimulatorXPlane::getAirportsInRange() const
+        {
+            // TODO: Fill with airports nearby from sim
+            BlackMisc::Aviation::CAirportList airports;
+            return airports;
+        }
+
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft)
         {
             if (! isConnected()) { return false; }

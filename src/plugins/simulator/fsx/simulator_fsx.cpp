@@ -10,6 +10,7 @@
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/project.h"
+#include "blackmisc/avairportlist.h"
 
 #include <QTimer>
 #include <QtConcurrent>
@@ -278,10 +279,14 @@ namespace BlackSimPlugin
             Q_UNUSED(hr);
         }
 
+        CAirportList CSimulatorFsx::getAirportsInRange() const
+        {
+            return this->m_airportsInRange;
+        }
+
         void CALLBACK CSimulatorFsx::SimConnectProc(SIMCONNECT_RECV *pData, DWORD /* cbData */, void *pContext)
         {
             CSimulatorFsx *simulatorFsx = static_cast<CSimulatorFsx *>(pContext);
-
             switch (pData->dwID)
             {
             case SIMCONNECT_RECV_ID_OPEN:
@@ -370,8 +375,30 @@ namespace BlackSimPlugin
                     }
                     break;
                 }
-            }
-        }
+            case SIMCONNECT_RECV_ID_AIRPORT_LIST:
+                {
+                    SIMCONNECT_RECV_AIRPORT_LIST *pAirportList = (SIMCONNECT_RECV_AIRPORT_LIST *) pData;
+                    for (unsigned i = 0; i < pAirportList->dwArraySize; ++i)
+                    {
+                        SIMCONNECT_DATA_FACILITY_AIRPORT *pFacilityAirport = pAirportList->rgData + i;
+                        if (!pFacilityAirport) break;
+                        const QString icao(pFacilityAirport->Icao);
+                        if (icao.isEmpty()) continue; // airfield without ICAO code
+                        CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
+                        CAirport airport(CAirportIcao(icao), pos);
+                        const CCoordinateGeodetic posAircraft = simulatorFsx->getOwnAircraft().getPosition();
+                        airport.calculcateDistanceToPlane(posAircraft);
+                        simulatorFsx->m_airportsInRange.replaceOrAddByIcao(airport);
+                        if (simulatorFsx->m_airportsInRange.size() > 20)
+                        {
+                            const CLength maxDistance(200.0, CLengthUnit::NM());
+                            simulatorFsx->m_airportsInRange.removeIfOutsideRange(posAircraft, maxDistance, true);
+                        }
+                    }
+                    break;
+                }
+            } // switch
+        } // method
 
         void CSimulatorFsx::onSimRunning()
         {
@@ -520,6 +547,9 @@ namespace BlackSimPlugin
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom2Active, "COM2_RADIO_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom2Standby, "COM2_STBY_RADIO_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTransponderCode, "XPNDR_SET");
+
+            // facility
+            hr = SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, m_nextObjID++);
             return hr;
         }
 

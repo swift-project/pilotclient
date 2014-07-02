@@ -12,6 +12,7 @@
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator_linear.h"
 #include "blackmisc/avaircraft.h"
+#include "blackmisc/avairportlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/nwaircraftmodel.h"
 #include "blacksim/simulatorinfo.h"
@@ -125,6 +126,10 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::getAircraftModel()
             virtual BlackMisc::Network::CAircraftModel getAircraftModel() const override { return m_aircraftModel; }
 
+            //! \copydoc ISimulator::getAirportsInRange
+            virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
+
+
             //! \brief Called when sim has started
             void onSimRunning();
 
@@ -180,12 +185,13 @@ namespace BlackSimPlugin
             bool    m_isConnected; //!< Is simulator connected?
             bool    m_simRunning;  //!< Simulator running?
             HANDLE  m_hSimConnect; //!< Handle to SimConnect object
-            uint    m_nextObjID;
+            uint    m_nextObjID; //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
             QString simulatorDetails;
             BlackSim::CSimulatorInfo m_simulatorInfo;
             BlackMisc::Aviation::CAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
             QHash<BlackMisc::Aviation::CCallsign, CSimConnectObject> m_simConnectObjects;
             BlackMisc::Network::CAircraftModel m_aircraftModel;
+            BlackMisc::Aviation::CAirportList m_airportsInRange;
 
             int m_simconnectTimerId;
             int m_skipCockpitUpdateCycles; //!< Skip some update cycles to allow changes in simulator cockpit to be set
