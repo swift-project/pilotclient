@@ -110,9 +110,6 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
             void setPropertyByIndex(const QVariant &variant, int index) override;
 
-            //! \copydoc CValueObject::propertyByIndexAsString()
-            QString propertyByIndexAsString(int index, bool i18n) const;
-
         protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;

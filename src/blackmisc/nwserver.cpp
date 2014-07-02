@@ -128,15 +128,6 @@ namespace BlackMisc
         }
 
         /*
-         * Property as string by index
-         */
-        QString CServer::propertyByIndexAsString(int index, bool i18n) const
-        {
-            QVariant qv = this->propertyByIndex(index);
-            return BlackMisc::qVariantToString(qv, i18n);
-        }
-
-        /*
          * Property by index (setter)
          */
         void CServer::setPropertyByIndex(const QVariant &variant, int index)
