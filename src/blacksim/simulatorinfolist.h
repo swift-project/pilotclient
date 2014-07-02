@@ -33,6 +33,10 @@ namespace BlackSim
 
         //! String list with meaningful representations
         QStringList toStringList(bool i18n = false) const;
+
+        //! Register the metatypes
+        static void registerMetadata();
+
     };
 }
 

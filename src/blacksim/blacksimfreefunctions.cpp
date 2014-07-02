@@ -1,6 +1,6 @@
 #include "blacksimfreefunctions.h"
 
-#include "blacksim/simulatorinfo.h"
+#include "blacksim/simulatorinfolist.h"
 #include "blacksim/setsimulator.h"
 
 #include "fsx/simconnectutilities.h"
@@ -14,6 +14,7 @@ namespace BlackSim
     void registerMetadata()
     {
         BlackSim::CSimulatorInfo::registerMetadata();
+        BlackSim::CSimulatorInfoList::registerMetadata();
         BlackSim::Settings::CSettingsSimulator::registerMetadata();
         BlackSim::FsCommon::CAircraftCfgEntries::registerMetadata();
         BlackSim::FsCommon::CAircraftMapping::registerMetadata();
