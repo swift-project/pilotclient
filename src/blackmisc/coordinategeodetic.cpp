@@ -163,5 +163,13 @@ namespace BlackMisc
             return CLength(qAbs(dist), CLengthUnit::NM());
         }
 
+        /*
+         * Great circle distance
+         */
+        CLength ICoordinateGeodetic::greatCircleDistance(const ICoordinateGeodetic &otherCoordinate)
+        {
+            return Geo::greatCircleDistance((*this), otherCoordinate);
+        }
+
     } // namespace
 } // namespace

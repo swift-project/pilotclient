@@ -42,6 +42,8 @@ namespace BlackMisc
                 return this->longitude().toQString(true);
             }
 
+            //! Great circle distance
+            BlackMisc::PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &otherCoordinate);
         };
 
         //! Great circle distance between points
