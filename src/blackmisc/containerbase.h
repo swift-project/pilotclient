@@ -11,6 +11,7 @@
 #define BLACKMISC_CONTAINERBASE_H
 
 #include "valueobject.h"
+#include "range.h"
 #include "indexvariantmap.h"
 #include "predicates.h"
 #include "json.h"
@@ -42,10 +43,10 @@ namespace BlackMisc
     };
 
     /*!
-     * \brief Base class for CCollection and CSequence implementing their algorithms.
+     * \brief Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of CRangeBase.
      */
     template <template <class> class C, class T>
-    class CContainerBase : public CValueObject
+    class CContainerBase : public CValueObject, public CRangeBase<C<T>, T>
     {
     public:
         /*!
@@ -58,66 +59,6 @@ namespace BlackMisc
         {
             for (auto it = derived().cbegin(); it != derived().cend(); ++it) { other.push_back(*it); }
             return other;
-        }
-
-        /*!
-         * \brief Return a copy containing only those elements for which a given predicate returns true.
-         */
-        template <class Predicate>
-        C<T> findBy(Predicate p) const
-        {
-            C<T> result = derived();
-            result.erase(std::remove_if(result.begin(), result.end(), [ = ](const T & value) { return !p(value); }), result.end());
-            return result;
-        }
-
-        /*!
-         * \brief Return a copy containing only those elements matching some particular key/value pair(s).
-         * \param k0 A pointer to a member function of T.
-         * \param v0 A value to compare against the value returned by k0.
-         * \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
-         */
-        template <class K0, class V0, class... KeysValues>
-        C<T> findBy(K0 k0, V0 v0, KeysValues... keysValues) const
-        {
-            return findBy(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
-        }
-
-        /*!
-         * \brief Return a copy containing only those elements matching a given value map.
-         */
-        C<T> findBy(const CIndexVariantMap &valueMap) const
-        {
-            return findBy([ & ](const T & value) { return value == valueMap; });
-        }
-
-        /*!
-         * \brief Return true if there is an element for which a given predicate returns true.
-         */
-        template <class Predicate>
-        bool contains(Predicate p) const
-        {
-            return std::any_of(derived().cbegin(), derived().cend(), p);
-        }
-
-        /*!
-         * \brief Return true if there is an element equal to given object. Uses the most efficient implementation available.
-         */
-        bool contains(const T &object) const
-        {
-            return derived().find(object) != derived().cend();
-        }
-
-        /*!
-         * \brief Return a copy containing only those elements matching some particular key/value pair(s).
-         * \param k0 A pointer to a member function of T.
-         * \param v0 A value to compare against the value returned by k0.
-         * \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
-         */
-        template <class K0, class V0, class... KeysValues>
-        bool contains(K0 k0, V0 v0, KeysValues... keysValues) const
-        {
-            return contains(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
         }
 
         /*!
