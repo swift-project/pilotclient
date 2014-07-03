@@ -45,8 +45,8 @@ namespace BlackMisc
     /*!
      * \brief Base class for CCollection and CSequence adding mutating operations and CValueObject facility on top of CRangeBase.
      */
-    template <template <class> class C, class T>
-    class CContainerBase : public CValueObject, public CRangeBase<C<T>, T>
+    template <template <class> class C, class T, class CIt>
+    class CContainerBase : public CValueObject, public CRangeBase<C<T>, CIt>
     {
     public:
         /*!

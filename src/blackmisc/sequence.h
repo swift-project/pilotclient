@@ -28,7 +28,7 @@ namespace BlackMisc
      * Can take any suitable container class as its implementation at runtime.
      */
     template <class T>
-    class CSequence : public CContainerBase<CSequence, T>
+    class CSequence : public CContainerBase<CSequence, T, Iterators::ConstBidirectionalIterator<T>>
     {
     public:
         //! \brief STL compatibility

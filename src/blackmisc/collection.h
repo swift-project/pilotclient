@@ -42,7 +42,7 @@ namespace BlackMisc
      * Can take any suitable container class as its implementation at runtime.
      */
     template <class T>
-    class CCollection : public CContainerBase<CCollection, T>
+    class CCollection : public CContainerBase<CCollection, T, Iterators::ConstForwardIterator<T>>
     {
     public:
         //! \brief STL compatibility
