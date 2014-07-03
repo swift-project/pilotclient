@@ -10,6 +10,7 @@
 #ifndef BLACKMISC_ITERATOR_H
 #define BLACKMISC_ITERATOR_H
 
+#include "optional.h"
 #include <QScopedPointer>
 #include <algorithm>
 #include <type_traits>
@@ -20,6 +21,205 @@ namespace BlackMisc
 {
     namespace Iterators
     {
+
+        /*!
+         * Iterator wrapper for Qt's STL-style associative container iterators, when dereferenced return the key instead of the value.
+         *
+         * By creating a CRange from such iterators, it is possible to create a container of keys without copying them.
+         */
+        template <class I> class KeyIterator
+            : public std::iterator<std::bidirectional_iterator_tag, typename std::decay<decltype(std::declval<I>().key())>::type>
+        {
+        public:
+            //! Constructor
+            KeyIterator(I iterator) : m_iterator(iterator) {}
+
+            //! Advance to the next element.
+            //! Undefined if iterator is at the end.
+            //! @{
+            KeyIterator &operator ++() { ++m_iterator; return *this; }
+            KeyIterator operator ++(int) { auto copy = *this; ++m_iterator; return copy; }
+            //! @}
+
+            //! Regress to the previous element.
+            //! Undefined if iterator is at the beginning.
+            //! @{
+            KeyIterator &operator --() { --m_iterator; return *this; }
+            KeyIterator operator --(int) { auto copy = *this; --m_iterator; return copy; }
+            //! @}
+
+            //! Return the value at this iterator position.
+            auto value() const -> decltype(std::declval<I>().value()) { return m_iterator.value(); }
+
+            //! Return the key at this iterator position.
+            //! @{
+            auto key() const -> decltype(std::declval<I>().key()) { return m_iterator.key(); }
+            auto operator *() const -> decltype(std::declval<I>().key()) { return key(); }
+            //! @}
+
+            //! Indirection operator: pointer to the key at this iterator position.
+            auto operator ->() const -> typename std::remove_reference<decltype(std::declval<I>().key())>::type * { return &key(); }
+
+            //! Equality operators.
+            //! @{
+            bool operator ==(const KeyIterator &other) const { return m_iterator == other.m_iterator; }
+            bool operator !=(const KeyIterator &other) const { return m_iterator != other.m_iterator; }
+            //! @}
+
+        private:
+            I m_iterator;
+        };
+
+        /*!
+         * Iterator wrapper which applies some transformation function to each element.
+         *
+         * By creating a CRange from such iterators, it is possible to perform a transformation on a container without copying elements.
+         */
+        template <class I, class F> class TransformIterator
+            : public std::iterator<std::input_iterator_tag,
+                                   typename std::decay<decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()))>::type>
+        {
+        public:
+            //! The type returned by the transformation function, which may or may not be a reference.
+            using undecayed_type = decltype(std::declval<F>()(std::declval<typename std::iterator_traits<I>::value_type>()));
+
+            //! \private A pointer-like wrapper returned by the arrow operator if the transformation function returns by value.
+            struct PointerWrapper
+            {
+                PointerWrapper(typename std::decay<undecayed_type>::type *obj) : m_obj(std::move(*obj)) {}
+                typename std::decay<undecayed_type>::type const *operator ->() const { return &m_obj; }
+                typename std::decay<undecayed_type>::type operator *() const { return m_obj; }
+                // TODO replace operator* above with the following, when our compilers support C++11 ref-qualifiers
+                //typename std::decay<undecayed_type>::type operator *() const & { return m_obj; }
+                //typename std::decay<undecayed_type>::type operator *() && { return std::move(m_obj); }
+            private:
+                const typename std::decay<undecayed_type>::type m_obj;
+            };
+
+            //! The type returned by this iterator's arrow operator, which may be a pointer or a pointer-like wrapper object
+            using pointer = typename std::conditional<std::is_reference<undecayed_type>::value,
+                                                      typename std::remove_reference<undecayed_type>::type *,
+                                                      PointerWrapper>::type;
+
+            //! Constructor.
+            TransformIterator(I iterator, F function) : m_iterator(iterator), m_function(function) {}
+
+            //! Implicit conversion from an end iterator.
+            TransformIterator(I end) : m_iterator(end) {}
+
+            //! Advance to the next element.
+            //! Undefined if iterator is at the end.
+            //! @{
+            TransformIterator &operator ++() { ++m_iterator; return *this; }
+            TransformIterator operator ++(int) { auto copy = *this; ++m_iterator; return copy; }
+            //! @}
+
+            //! Dereference operator, returns the transformed object reference by the iterator.
+            //! Undefined if iterator is at the end.
+            undecayed_type operator *() { Q_ASSERT(m_function); return (*m_function)(*m_iterator); }
+
+            //! Indirection operator, returns a pointer to the transformed object,
+            //! or a pointer-like wrapper object if the transformation function returns by value.
+            //! Undefined if iterator is at the end.
+            pointer operator ->() { Q_ASSERT(m_function); auto &&obj = (*m_function)(*m_iterator); return &obj; }
+
+            //! Comparison operators.
+            //! @{
+            bool operator ==(const TransformIterator &other) const { return m_iterator == other.m_iterator; }
+            bool operator !=(const TransformIterator &other) const { return m_iterator != other.m_iterator; }
+            bool operator <(const TransformIterator &other) const { return m_iterator < other.m_iterator; }
+            bool operator <=(const TransformIterator &other) const { return m_iterator <= other.m_iterator; }
+            bool operator >(const TransformIterator &other) const { return m_iterator > other.m_iterator; }
+            bool operator >=(const TransformIterator &other) const { return m_iterator >= other.m_iterator; }
+            //! @}
+
+        private:
+            I m_iterator;
+            Optional<F> m_function;
+        };
+
+        /*!
+         * Iterator wrapper which skips over any elements which do not satisfy a given condition predicate.
+         *
+         * By creating a CRange from such iterators, it is possible to return the results of predicate methods without copying elements.
+         */
+        template <class I, class F> class ConditionalIterator : public std::iterator<std::input_iterator_tag, typename std::iterator_traits<I>::value_type>
+        {
+        public:
+            //! Constructor.
+            ConditionalIterator(I iterator, I end, F predicate) : m_iterator(iterator), m_end(end), m_predicate(predicate)
+            {
+                while (m_iterator != m_end && !(*m_predicate)(*m_iterator))
+                {
+                    ++m_iterator;
+                }
+            }
+
+            //! Implicit conversion from an end iterator.
+            ConditionalIterator(I end) : m_iterator(end), m_end(end) {}
+
+            //! Advance the iterator to the next element which matches the predicate, or the end if there are none remaining.
+            //! Undefined if the iterator is already at the end.
+            //! @{
+            ConditionalIterator &operator ++()
+            {
+                Q_ASSERT(m_predicate);
+                do
+                {
+                    ++m_iterator;
+                } while (m_iterator != m_end && !(*m_predicate)(*m_iterator));
+                return *this;
+            }
+            ConditionalIterator operator ++(int) { auto copy = *this; ++(*this); return copy; }
+            //! @}
+
+            //! Indirection operator, returns the underlying iterator.
+            //! Undefined if iterator is at the end.
+            I operator ->() { return m_iterator; }
+
+            //! Dereference operator, returns the object referenced by the iterator.
+            //! Undefined if iterator is at the end.
+            typename std::iterator_traits<I>::reference operator *() { return *m_iterator; }
+
+            //! Comparison operators.
+            //! @{
+            bool operator ==(const ConditionalIterator &other) const { return m_iterator == other.m_iterator; }
+            bool operator !=(const ConditionalIterator &other) const { return m_iterator != other.m_iterator; }
+            bool operator <(const ConditionalIterator &other) const { return m_iterator < other.m_iterator; }
+            bool operator <=(const ConditionalIterator &other) const { return m_iterator <= other.m_iterator; }
+            bool operator >(const ConditionalIterator &other) const { return m_iterator > other.m_iterator; }
+            bool operator >=(const ConditionalIterator &other) const { return m_iterator >= other.m_iterator; }
+            //! @}
+
+        private:
+            I m_iterator;
+            I m_end;
+            Optional<F> m_predicate;
+        };
+
+        /*!
+         * Construct a KeyIterator of the appropriate type from deduced template function argument.
+         */
+        template <class I> auto makeKeyIterator(I iterator) -> KeyIterator<I>
+        {
+            return { iterator };
+        }
+
+        /*!
+         * Construct a TransformIterator of the appropriate type from deduced template function arguments.
+         */
+        template <class I, class F> auto makeTransformIterator(I iterator, F function) -> TransformIterator<I, F>
+        {
+            return { iterator, function };
+        }
+
+        /*!
+         * Construct a ConditionalIterator of the appropriate type from deduced template function arguments.
+         */
+        template <class I, class F> auto makeConditionalIterator(I iterator, I end, F predicate) -> ConditionalIterator<I, F>
+        {
+            return { iterator, end, predicate };
+        }
 
         /*!
          * \brief Generic type-erased const forward iterator with value semantics.
