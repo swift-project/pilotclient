@@ -80,7 +80,7 @@ namespace BlackMisc
         template <class K0, class V0, class... KeysValues>
         C<T> findBy(K0 k0, V0 v0, KeysValues... keysValues) const
         {
-            return findBy(BlackMisc::Predicates::MemberEqual<T>(k0, v0, keysValues...));
+            return findBy(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
         }
 
         /*!
@@ -117,7 +117,7 @@ namespace BlackMisc
         template <class K0, class V0, class... KeysValues>
         bool contains(K0 k0, V0 v0, KeysValues... keysValues) const
         {
-            return contains(BlackMisc::Predicates::MemberEqual<T>(k0, v0, keysValues...));
+            return contains(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
         }
 
         /*!
@@ -143,7 +143,7 @@ namespace BlackMisc
         template <class K0, class V0, class... KeysValues>
         void removeIf(K0 k0, V0 v0, KeysValues... keysValues)
         {
-            removeIf(BlackMisc::Predicates::MemberEqual<T>(k0, v0, keysValues...));
+            removeIf(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
         }
 
     public:

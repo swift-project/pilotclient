@@ -59,7 +59,7 @@ namespace BlackMiscTest
         CIndexVariantMap newController;
         newController.addValue(CAtcStation::IndexController, QVariant::fromValue(CUser("112233", "Jane Doe")));
         atcList.applyIf(
-            BlackMisc::Predicates::MemberEqual<CAtcStation>(&CAtcStation::getCallsign, CCallsign("eddm_twr")),
+            BlackMisc::Predicates::MemberEqual(&CAtcStation::getCallsign, CCallsign("eddm_twr")),
             newController);
         qDebug() << "-- after update via predicates";
         qDebug() << atcList.toQString();

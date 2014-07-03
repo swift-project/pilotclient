@@ -151,7 +151,7 @@ namespace BlackMisc
         template <class... Pairs >
         CDictionary findKeyBy(Pairs... pairs) const
         {
-            return findKeyBy(BlackMisc::Predicates::MemberEqual<Key>(pairs...));
+            return findKeyBy(BlackMisc::Predicates::MemberEqual(pairs...));
         }
 
         /*!
@@ -176,7 +176,7 @@ namespace BlackMisc
         template <class... Pairs >
         CDictionary findValueBy(Pairs... pairs) const
         {
-            return findValueBy(BlackMisc::Predicates::MemberEqual<Value>(pairs...));
+            return findValueBy(BlackMisc::Predicates::MemberEqual(pairs...));
         }
 
         /*!
@@ -193,7 +193,7 @@ namespace BlackMisc
         template <class MembFunc, class ReturnValue>
         bool containsByKey(MembFunc membFunc, ReturnValue returnValue) const
         {
-            return containsByKey(BlackMisc::Predicates::MemberEqual<Key>(membFunc, returnValue));
+            return containsByKey(BlackMisc::Predicates::MemberEqual(membFunc, returnValue));
         }
 
         //! Return true if there is an element for which a given predicate returns true.
@@ -207,7 +207,7 @@ namespace BlackMisc
         template <class MembFunc, class ReturnValue>
         bool containsByValue(MembFunc membFunc, ReturnValue returnValue) const
         {
-            return containsByValue(BlackMisc::Predicates::MemberEqual<Value>(membFunc, returnValue));
+            return containsByValue(BlackMisc::Predicates::MemberEqual(membFunc, returnValue));
         }
 
         //! Remove elements for which a given predicate for value returns true.
@@ -236,14 +236,14 @@ namespace BlackMisc
         template <class MembFunc, class ReturnValue>
         void removeByKeyIf(MembFunc membFunc, ReturnValue returnValue)
         {
-            removeByKeyIf(BlackMisc::Predicates::MemberEqual<Key>(membFunc, returnValue));
+            removeByKeyIf(BlackMisc::Predicates::MemberEqual(membFunc, returnValue));
         }
 
         //! Remove elements for which value matches a particular pair.
         template <class MembFunc, class ReturnValue>
         void removeByValueIf(MembFunc membFunc, ReturnValue returnValue)
         {
-            removeByValueIf(BlackMisc::Predicates::MemberEqual<Value>(membFunc, returnValue));
+            removeByValueIf(BlackMisc::Predicates::MemberEqual(membFunc, returnValue));
         }
 
         //! \copydoc BlackMisc::CValueObject::toQVariant

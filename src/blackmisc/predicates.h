@@ -25,42 +25,42 @@ namespace BlackMisc
             template <class...> struct MemberEqual;
 
             //! \private
-            template <class T, class M, class V> struct MemberEqual<T, M, V>
+            template <class M, class V> struct MemberEqual<M, V>
             {
                 M m;
                 V v;
                 MemberEqual(M m_, V v_) : m(m_), v(v_) {}
-                bool operator()(const T &obj) const { return (obj.*m)() == v; }
+                template <class T> bool operator()(const T &obj) const { return (obj.*m)() == v; }
             };
 
             //! \private
-            template <class T, class M, class V, class... Tail> struct MemberEqual<T, M, V, Tail...>
+            template <class M, class V, class... Tail> struct MemberEqual<M, V, Tail...>
             {
-                MemberEqual<T, M, V> head;
-                MemberEqual<T, Tail...> tail;
+                MemberEqual<M, V> head;
+                MemberEqual<Tail...> tail;
                 MemberEqual(M m, V v, Tail... tail_) : head(m, v), tail(tail_...) {}
-                bool operator()(const T &obj) const { return head(obj) && tail(obj); }
+                template <class T> bool operator()(const T &obj) const { return head(obj) && tail(obj); }
             };
 
             //! \private
             template <class...> struct MemberLess;
 
             //! \private
-            template <class T, class M> struct MemberLess<T, M>
+            template <class M> struct MemberLess<M>
             {
                 M m;
                 MemberLess(M m_) : m(m_) {}
-                bool operator()(const T &a, const T &b) const { return (a.*m)() < (b.*m)(); }
-                bool isStable(const T &a, const T &b) const { return (a.*m)() != (b.*m)(); }
+                template <class T> bool operator()(const T &a, const T &b) const { return (a.*m)() < (b.*m)(); }
+                template <class T> bool isStable(const T &a, const T &b) const { return (a.*m)() != (b.*m)(); }
             };
 
             //! \private
-            template <class T, class M, class... Tail> struct MemberLess<T, M, Tail...>
+            template <class M, class... Tail> struct MemberLess<M, Tail...>
             {
-                MemberLess<T, M> head;
-                MemberLess<T, Tail...> tail;
+                MemberLess<M> head;
+                MemberLess<Tail...> tail;
                 MemberLess(M m, Tail... tail_) : head(m), tail(tail_...) {}
-                bool operator()(const T &a, const T &b) const { return head.isStable(a, b) ? head(a, b) : tail(a, b); }
+                template <class T> bool operator()(const T &a, const T &b) const { return head.isStable(a, b) ? head(a, b) : tail(a, b); }
             };
 
         } //namespace Private
@@ -70,10 +70,10 @@ namespace BlackMisc
          * \param vs Pairs of { pointer to member function of T, value to compare it against }.
          * \return A unary functor whose operator() which will perform the actual test.
          */
-        template <class T, class... Ts>
-        typename Private::MemberEqual<T, Ts...> MemberEqual(Ts... vs)
+        template <class... Ts>
+        typename Private::MemberEqual<Ts...> MemberEqual(Ts... vs)
         {
-            return typename Private::MemberEqual<T, Ts...>(vs...);
+            return typename Private::MemberEqual<Ts...>(vs...);
         }
 
         /*!
@@ -81,10 +81,10 @@ namespace BlackMisc
          * \param vs Pointers to member functions of T.
          * \return A binary functor whose operator() which will perform the actual test.
          */
-        template <class T, class... Ts>
-        typename Private::MemberLess<T, Ts...> MemberLess(Ts... vs)
+        template <class... Ts>
+        typename Private::MemberLess<Ts...> MemberLess(Ts... vs)
         {
-            return typename Private::MemberLess<T, Ts...>(vs...);
+            return typename Private::MemberLess<Ts...>(vs...);
         }
 
     } //namespace Predicates

@@ -353,7 +353,7 @@ namespace BlackCore
             values.addValue(CAtcStation::IndexFrequency, frequency);
             values.addValue(CAtcStation::IndexPosition, position);
             values.addValue(CAtcStation::IndexRange, range);
-            this->m_atcStationsOnline.applyIf(BlackMisc::Predicates::MemberEqual<CAtcStation>(&CAtcStation::getCallsign, callsign), values);
+            this->m_atcStationsOnline.applyIf(BlackMisc::Predicates::MemberEqual(&CAtcStation::getCallsign, callsign), values);
             emit this->changedAtcStationsOnline();
         }
     }
@@ -434,7 +434,7 @@ namespace BlackCore
             if (!icaoDataDataFile.hasAircraftDesignator()) return; // give up!
             vm = CIndexVariantMap(CAircraft::IndexIcao, icaoData.toQVariant());
         }
-        this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);
+        this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual(&CAircraft::getCallsign, callsign), vm);
         emit this->changedAircraftsInRange();
     }
 
@@ -480,7 +480,7 @@ namespace BlackCore
             vm.addValue(CAircraft::IndexTransponder, transponder);
             vm.addValue(CAircraft::IndexSituation, situation);
             vm.addValue(CAircraft::IndexDistance, distance);
-            this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);
+            this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual(&CAircraft::getCallsign, callsign), vm);
         }
 
         emit this->changedAircraftsInRange();
@@ -497,7 +497,7 @@ namespace BlackCore
     {
         // update
         CIndexVariantMap vm(CAircraft::IndexFrequencyCom1, frequency.toQVariant());
-        this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual<CAircraft>(&CAircraft::getCallsign, callsign), vm);
+        this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual(&CAircraft::getCallsign, callsign), vm);
         emit this->changedAircraftsInRange();
     }
 

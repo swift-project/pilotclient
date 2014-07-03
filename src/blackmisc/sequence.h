@@ -308,7 +308,7 @@ namespace BlackMisc
         template <class K1, class V1>
         void applyIf(K1 key1, V1 value1, const CIndexVariantMap &newValues)
         {
-            applyIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1), newValues);
+            applyIf(BlackMisc::Predicates::MemberEqual(key1, value1), newValues);
         }
 
         /*!
@@ -354,7 +354,7 @@ namespace BlackMisc
         template <class K1, class V1>
         void replaceIf(K1 key1, V1 value1, const T &replacement)
         {
-            replaceIf(BlackMisc::Predicates::MemberEqual<T>(key1, value1), replacement);
+            replaceIf(BlackMisc::Predicates::MemberEqual(key1, value1), replacement);
         }
 
         /*!
@@ -407,7 +407,7 @@ namespace BlackMisc
          */
         template <class K1, class... Keys> void sortBy(K1 key1, Keys... keys)
         {
-            sort(BlackMisc::Predicates::MemberLess<T>(key1, keys...));
+            sort(BlackMisc::Predicates::MemberLess(key1, keys...));
         }
 
         /*!
@@ -429,7 +429,7 @@ namespace BlackMisc
         template <class K1, class... Keys>
         CSequence sortedBy(K1 key1, Keys... keys) const
         {
-            return sorted(BlackMisc::Predicates::MemberLess<T>(key1, keys...));
+            return sorted(BlackMisc::Predicates::MemberLess(key1, keys...));
         }
 
         /*!
