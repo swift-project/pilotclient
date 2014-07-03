@@ -91,6 +91,128 @@ namespace BlackMisc
         const Derived &derived() const { return static_cast<const Derived &>(*this); }
     };
 
+    /*!
+     * A range is a conceptual container which does not contain any elements of its own,
+     * but is constructed from a begin iterator and an end iterator of another container.
+     *
+     * By using iterator wrappers, it is possible to use CRange to iterate over the results of predicate methods without copying elements.
+     *
+     * \warning Remember that the iterators in the range refer to elements in the original container,
+     *          so take care that the original container remains valid and does not invalidate its iterators
+     *          during the lifetime of the range.
+     */
+    template <class I>
+    class CRange : public CRangeBase<CRange<I>, typename std::iterator_traits<I>::value_type>
+    {
+    public:
+        //! STL compatibility
+        //! @{
+        typedef typename std::iterator_traits<I>::value_type key_type;
+        typedef typename std::iterator_traits<I>::value_type value_type;
+        typedef value_type &reference;
+        typedef const value_type &const_reference;
+        typedef value_type *pointer;
+        typedef const value_type *const_pointer;
+        typedef I const_iterator;
+        typedef I iterator;
+        typedef typename std::iterator_traits<I>::difference_type difference_type;
+        //! @}
+
+        //! Constructor.
+        CRange(I begin, I end) : m_begin(begin), m_end(end) {}
+
+        //! Begin and end iterators.
+        //! @{
+        const_iterator begin() const { return m_begin; }
+        const_iterator cbegin() const { return m_begin; }
+        const_iterator end() const { return m_end; }
+        const_iterator cend() const { return m_end; }
+        //! @}
+
+        //! Implicit conversion to any container of value_type which supports push_back. This will copy elements.
+        template <class T, class = typename std::enable_if<std::is_convertible<value_type, typename T::value_type>::value>::type>
+        operator T() const
+        {
+            T container;
+            std::copy(begin(), end(), std::back_inserter(container));
+            return container;
+        }
+
+        //! Returns true if the range is empty.
+        //! @{
+        bool empty() const { return begin() == end(); }
+        bool isEmpty() const { return empty(); }
+        //! @}
+
+        //! Returns the element at the beginning of the range. Undefined if the range is empty.
+        const_reference front() const { return *begin(); }
+
+        //! Returns the element at the beginning of the range, or a default value if the range is empty.
+        const_reference frontOrDefault() const
+        {
+            static const value_type def;
+            return empty() ? def : *begin();
+        }
+
+        //! Returns the element at the beginning of the range, or a default value if the range is empty.
+        value_type frontOrDefault(value_type def) const
+        {
+            return empty() ? def : *begin();
+        }
+
+    private:
+        I m_begin;
+        I m_end;
+    };
+
+    /*!
+     * Streaming operators for CRange to qDebug.
+     */
+    //! @{
+    template <class I>
+    QDebug operator <<(QDebug d, const CRange<I> &range)
+    {
+        for (const auto &v : range) { d << v; }
+        return d;
+    }
+    template <class I>
+    QNoDebug operator <<(QNoDebug d, const CRange<I> &)
+    {
+        return d;
+    }
+    //! @}
+
+    /*!
+     * Returns a CRange constructed from begin and end iterators of deduced types.
+     * \param begin The begin iterator.
+     * \param end The end iterator, which can be any iterator type convertible to I.
+     */
+    template <class I, class I2>
+    auto makeRange(I begin, I2 end) -> CRange<I>
+    {
+        return { begin, static_cast<I>(end) };
+    }
+
+    /*!
+     * Returns a CRange constructed from the begin and end iterators of the given container.
+     *
+     * The returned CRange may or may not be const, depending on the constness of the container.
+     */
+    template <class T>
+    auto makeRange(T &&container) -> CRange<decltype(container.begin())>
+    {
+        return { container.begin(), container.end() };
+    }
+
+    /*!
+     * Returns a const CRange constructed from the cbegin and cend iterators of the given container.
+     */
+    template <class T>
+    auto makeConstRange(T &&container) -> CRange<decltype(container.cbegin())>
+    {
+        return { container.cbegin(), container.cend() };
+    }
+
 }
 
 #endif // guard
