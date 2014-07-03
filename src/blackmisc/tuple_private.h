@@ -6,6 +6,7 @@
 #ifndef BLACKMISC_TUPLE_PRIVATE_H
 #define BLACKMISC_TUPLE_PRIVATE_H
 
+#include "index_sequence.h"
 #include <QtGlobal>
 #include <QDBusArgument>
 #include <QHash>
@@ -54,26 +55,6 @@ namespace BlackMisc
             if (a > b) { return 1; }
             return 0;
         }
-
-        // Our own implementation of std::index_sequence (because not implemented by MSVC2013)
-        template <size_t... Is>
-        struct index_sequence
-        {
-            static const size_t size = sizeof...(Is);
-            typedef std::tuple<std::integral_constant<size_t, Is>...> tuple_type;
-        };
-        template <size_t I, size_t C, size_t... Is>
-        struct GenSequence
-        {
-            typedef typename GenSequence<I + 1, C, Is..., I>::type type;
-        };
-        template <size_t C, size_t... Is>
-        struct GenSequence<C, C, Is...>
-        {
-            typedef index_sequence<Is...> type;
-        };
-        template <size_t C>
-        using make_index_sequence = typename GenSequence<0, C>::type;
 
         // Create an index_sequence containing indices which match a given predicate.
         template <class P, size_t I, size_t C, bool B = false, size_t I2 = 0xDeadBeef, size_t... Is>
