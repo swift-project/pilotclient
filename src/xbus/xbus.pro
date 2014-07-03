@@ -5,12 +5,16 @@ QT       += core gui widgets dbus network
 
 TEMPLATE = lib
 
-CONFIG += shared
+CONFIG += shared plugin
 CONFIG += blackmisc blackcore
 
 win32 {
     equals(WORD_SIZE,64): LIBS += -lXPLM_64
     equals(WORD_SIZE,32): LIBS += -lXPLM
+}
+unix {
+    # Flags needed because there is no XPLM link library
+    QMAKE_LFLAGS += -shared -rdynamic -nodefaultlibs -undefined_warning -Wl,--version-script=$$PWD/xbus.map
 }
 
 DEPENDPATH += . ../../src
@@ -65,12 +69,16 @@ linux:TARGET = lin
 macx:TARGET = mac
 macx {
     # a single dylib file contains both 32bit and 64bit binaries
-    DESTDIR = ../../xbus
+    XBUS_DESTDIR = ../../xbus
 }
 else {
-    equals(WORD_SIZE,64): DESTDIR = ../../xbus/64
-    equals(WORD_SIZE,32): DESTDIR = ../../xbus
+    equals(WORD_SIZE,64): XBUS_DESTDIR = ../../xbus/64
+    equals(WORD_SIZE,32): XBUS_DESTDIR = ../../xbus
 }
+
+# QMake's Makefile generator ignores TARGET_EXT
+unix: QMAKE_POST_LINK += cp $$DESTDIR/lib$${TARGET}.so $$XBUS_DESTDIR/$${TARGET}.xpl
+else: DESTDIR = $$XBUS_DESTDIR
 
 include (../../libraries.pri)
 
