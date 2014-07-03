@@ -7,8 +7,7 @@
 #define BLACKMISC_DICTIONARY_H
 
 #include "valueobject.h"
-#include "sequence.h"
-#include "collection.h"
+#include "iterator.h"
 #include <QHash>
 
 namespace BlackMisc
@@ -84,52 +83,6 @@ namespace BlackMisc
         typedef typename Impl<Key,Value>::iterator iterator;
         typedef typename Impl<Key,Value>::const_iterator const_iterator;
         //! @}
-
-
-        //! Return keys as collection
-        CCollection<Key> keysCollection() const
-        {
-            CCollection<Key> collection;
-            for (auto it = m_impl.begin(); it != m_impl.end(); ++it)
-            {
-                collection.push_back(it.key());
-            }
-            return collection;
-        }
-
-        //! Return values as collection
-        CCollection<Value> valuesCollection() const
-        {
-            CCollection<Value> collection;
-            for (auto it = m_impl.begin(); it != m_impl.end(); ++it)
-            {
-                collection.push_back(it.value());
-            }
-            return collection;
-        }
-
-        //! Return keys as sequence
-        CSequence<Key> keysSequence() const
-        {
-            CSequence<Key> sequence;
-            for (auto it = m_impl.begin(); it != m_impl.end(); ++it)
-            {
-                sequence.push_back(it.key());
-            }
-            return sequence;
-        }
-
-        //! Return values as sequence
-        CSequence<Value> valuesSequence() const
-        {
-            CSequence<Value> sequence;
-            for (auto it = m_impl.begin(); it != m_impl.end(); ++it)
-            {
-                sequence.push_back(it.value());
-            }
-            return sequence;
-        }
-
 
         //! Return a copy containing only those elements for which the dictionary keys return true for a given predicate.
         template <class Predicate>
@@ -367,8 +320,8 @@ namespace BlackMisc
         //! Return key assigned to value or if key is not found defaultKey
         const Key key(const Value &value, const Key & defaultKey) const { return m_impl.key(value, defaultKey); }
 
-        //! Return a collection of all keys
-        CCollection<Key>	keys() const { return this->keysCollection(); }
+        //! Return a range of all keys
+        CRange<Iterators::KeyIterator<const_iterator>> keys() const { return makeRange(Iterators::makeKeyIterator(begin()), end()); }
 
         //! Remove all items with key from the dictionary
         int	remove(const Key &key) { return m_impl.remove(key); }
@@ -385,8 +338,8 @@ namespace BlackMisc
         //! Returns the value associated with the key or if key is not found defaultValue
         const Value	value(const Key &key, const Value &defaultValue) const { return m_impl.value(key); }
 
-        //! Return a collection of all values
-        CCollection<Value> values() const { return this->valuesCollection(); }
+        //! Return a range of all values
+        CRange<const_iterator> values() const { return makeRange(begin(), end()); }
 
         //! Copy assignment.
         CDictionary &operator =(const CDictionary &other) { m_impl = other.m_impl; return *this; }

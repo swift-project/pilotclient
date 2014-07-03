@@ -158,13 +158,17 @@ namespace BlackMiscTest
         d1.insert(key1, value1);
         d1.insert(key2, value2);
 
-        // keysCollection
-        CCollection<CTestValueObject> keyCollection = d1.keysCollection();
-        QVERIFY2(keyCollection.size() == 2, "keysCollection size wrong");
+        // keys range
+        auto keys = d1.keys();
+        QVERIFY2(std::distance(keys.begin(), keys.end()) == 2, "keys range size wrong");
 
-        // keysSequence
-        CSequence<CTestValueObject> keySequence = d1.keysSequence();
-        QVERIFY2(keySequence.size() == 2, "keysSequence size wrong");
+        // keys collection
+        CCollection<CTestValueObject> keyCollection = d1.keys();
+        QVERIFY2(keyCollection.size() == 2, "keys collection size wrong");
+
+        // keys sequence
+        CSequence<CTestValueObject> keySequence = d1.keys();
+        QVERIFY2(keySequence.size() == 2, "keys sequence size wrong");
 
         // findKeyBy
         d2 = d1.findKeyBy(&CTestValueObject::getName, QString("Key1"));
