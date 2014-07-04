@@ -152,6 +152,8 @@ namespace BlackMisc
                 return this->m_icao.toQVariant();
             case IndexIcaoAsString:
                 return QVariant(this->m_icao.asString());
+            case IndexDescriptiveName:
+                return QVariant(this->m_descriptiveName);
             case IndexPosition:
                 return this->getPosition().toQVariant();
             case IndexDistanceToPlane:
@@ -177,6 +179,9 @@ namespace BlackMisc
                 break;
             case IndexIcaoAsString:
                 this->setIcao(CAirportIcao(variant.toString()));
+                break;
+            case IndexDescriptiveName:
+                this->setDescriptiveName(variant.toString());
                 break;
             case IndexPosition:
                 this->setPosition(variant.value<CCoordinateGeodetic>());

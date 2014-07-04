@@ -27,6 +27,7 @@ namespace BlackMisc
             {
                 IndexIcao = 0,
                 IndexIcaoAsString,
+                IndexDescriptiveName,
                 IndexPosition,
                 IndexDistanceToPlane
             };
@@ -52,11 +53,17 @@ namespace BlackMisc
             //! Get ICAO code.
             const CAirportIcao &getIcao() const { return m_icao; }
 
+            //! Get ICAO code as string.
+            QString getIcaoAsString() const { return m_icao.asString(); }
+
             //! Set ICAO code.
             void setIcao(const CAirportIcao &icao) {  m_icao = icao; }
 
-            //! Get ICAO code as string.
-            QString getIcaoAsString() const { return m_icao.asString(); }
+            //! Get descriptive name
+            QString getDescriptiveName() const { return m_descriptiveName; }
+
+            //! Set descriptive name
+            void setDescriptiveName(const QString &name) { this->m_descriptiveName = name; }
 
             //! Get the position
             const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return m_position; }
@@ -138,8 +145,9 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirport)
             CAirportIcao m_icao;
+            QString m_descriptiveName;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
-            BlackMisc::PhysicalQuantities::CLength m_distanceToPlane;
+            BlackMisc::PhysicalQuantities::CLength m_distanceToPlane; // make mutable ?
         };
 
     } // namespace
