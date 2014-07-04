@@ -37,8 +37,11 @@ namespace BlackSim
         //! Get list
         const BlackMisc::Network::CAircraftMappingList &getMappingList() const;
 
-        //! Find by ICAO code
-        BlackMisc::Network::CAircraftMappingList findByIcao(const BlackMisc::Aviation::CAircraftIcao &icao, bool emptyMeansWildCard = true) const;
+        //! Find by ICAO code, empty fields are treated as wildcards
+        BlackMisc::Network::CAircraftMappingList findByIcaoWildcard(const BlackMisc::Aviation::CAircraftIcao &icao) const;
+
+        //! Find by ICAO code, empty fields are treated literally
+        BlackMisc::Network::CAircraftMappingList findByIcaoExact(const BlackMisc::Aviation::CAircraftIcao &icao) const;
 
     protected:
         BlackMisc::Network::CAircraftMappingList m_mappings; //!< Mappings

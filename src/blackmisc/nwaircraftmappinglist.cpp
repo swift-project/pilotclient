@@ -25,26 +25,25 @@ namespace BlackMisc
             CSequence<CAircraftMapping>(other)
         { }
 
-        CAircraftMappingList CAircraftMappingList::findByIcaoCode(const CAircraftIcao &searchIcao, bool emptyMeansWildcard) const
+        CAircraftMappingList CAircraftMappingList::findByIcaoCodeWildcard(const CAircraftIcao &searchIcao) const
         {
-            if (!emptyMeansWildcard) return this->findBy(&CAircraftMapping::getIcao, searchIcao);
-
-            CAircraftMappingList result;
-            for (auto it = this->begin() ; it != this->end(); ++it)
+            return this->findBy([ = ](const CAircraftMapping &mapping)
             {
-                if (it->getIcao().matchesWildcardIcao(searchIcao)) result.push_back(*it);
-            }
-            return result;
+                return mapping.matchesWildcardIcao(searchIcao);
+            });
+        }
+
+        CAircraftMappingList CAircraftMappingList::findByIcaoCodeExact(const CAircraftIcao &searchIcao) const
+        {
+            return this->findBy(&CAircraftMapping::getIcao, searchIcao);
         }
 
         CAircraftMappingList CAircraftMappingList::findByModelString(const QString modelString, Qt::CaseSensitivity sensitivity) const
         {
-            CAircraftMappingList result;
-            for (auto it = this->begin() ; it != this->end(); ++it)
+            return this->findBy([ = ](const CAircraftMapping &mapping)
             {
-                if (it->matchesModelString(modelString, sensitivity)) result.push_back(*it);
-            }
-            return result;
+                return mapping.matchesModelString(modelString, sensitivity);
+            });
         }
 
         /*

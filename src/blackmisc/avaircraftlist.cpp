@@ -48,13 +48,19 @@ namespace BlackMisc
         }
 
         /*
+         * Find by callsigns
+         */
+        CAircraftList CAircraftList::findByCallsigns(const CCallsignList &callsigns) const
+        {
+            return this->findBy(Predicates::MemberIsAnyOf(&CAircraft::getCallsign, callsigns));
+        }
+
+        /*
          * Find by callsign
          */
         CAircraft CAircraftList::findFirstByCallsign(const CCallsign &callsign, const CAircraft &ifNotFound) const
         {
-            CAircraftList aircrafts = this->findByCallsign(callsign);
-            if (aircrafts.isEmpty()) return ifNotFound;
-            return aircrafts.front();
+            return this->findByCallsign(callsign).frontOrDefault(ifNotFound);
         }
 
         /*
@@ -62,13 +68,7 @@ namespace BlackMisc
          */
         CUserList CAircraftList::getPilots() const
         {
-            CUserList users;
-            for (auto i = this->begin(); i != this->end(); ++i)
-            {
-                CAircraft aircraft = *i;
-                if (aircraft.getPilot().isValid()) users.push_back(aircraft.getPilot());
-            }
-            return users;
+            return this->findBy(Predicates::MemberValid(&CAircraft::getPilot)).transform(Predicates::MemberTransform(&CAircraft::getPilot));
         }
 
         /*

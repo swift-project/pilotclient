@@ -20,15 +20,7 @@ namespace BlackMisc
      */
     CStatusMessageList CStatusMessageList::findByType(CStatusMessage::StatusType type) const
     {
-        CStatusMessageList sm;
-        foreach(CStatusMessage message, *this)
-        {
-            if (message.getType() == type)
-            {
-                sm.push_back(message);
-            }
-        }
-        return sm;
+        return this->findBy(&CStatusMessage::getType, type);
     }
 
     /*
@@ -36,15 +28,7 @@ namespace BlackMisc
      */
     CStatusMessageList CStatusMessageList::findBySeverity(CStatusMessage::StatusSeverity severity) const
     {
-        CStatusMessageList sm;
-        foreach(CStatusMessage message, *this)
-        {
-            if (message.getSeverity() == severity)
-            {
-                sm.push_back(message);
-            }
-        }
-        return sm;
+        return this->findBy(&CStatusMessage::getSeverity, severity);
     }
 
     /*

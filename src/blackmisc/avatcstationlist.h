@@ -10,6 +10,7 @@
 
 #include "nwuserlist.h"
 #include "avatcstation.h"
+#include "avcallsignlist.h"
 #include "collection.h"
 #include "sequence.h"
 #include <QObject>
@@ -37,6 +38,9 @@ namespace BlackMisc
 
             //! Find 0..n stations by callsign
             CAtcStationList findByCallsign(const CCallsign &callsign) const;
+
+            //! Find 0..n stations matching any of a set of callsigns
+            CAtcStationList findByCallsigns(const CCallsignList &callsigns) const;
 
             //! Find first station by callsign, if not return given value / default
             CAtcStation findFirstByCallsign(const CCallsign &callsign, const CAtcStation &ifNotFound = CAtcStation()) const;

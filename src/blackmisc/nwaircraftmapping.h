@@ -93,6 +93,9 @@ namespace BlackMisc
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
+            //! Matches wildcard icao object
+            bool matchesWildcardIcao(const BlackMisc::Aviation::CAircraftIcao &otherIcao) const { return m_icao.matchesWildcardIcao(otherIcao); }
+
             //! Register the metatypes
             static void registerMetadata();
 

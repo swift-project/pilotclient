@@ -56,9 +56,7 @@ namespace BlackMisc
          */
         CAirport CAirportList::findFirstByIcao(const CAirportIcao &icao, const CAirport &ifNotFound) const
         {
-            CAirportList airports = this->findByIcao(icao);
-            if (!airports.isEmpty()) return airports[0];
-            return ifNotFound;
+            return this->findByIcao(icao).frontOrDefault(ifNotFound);
         }
 
         /*

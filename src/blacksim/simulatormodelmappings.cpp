@@ -20,9 +20,14 @@ namespace BlackSim
         return this->m_mappings;
     }
 
-    BlackMisc::Network::CAircraftMappingList ISimulatorModelMappings::findByIcao(const BlackMisc::Aviation::CAircraftIcao &icao, bool emptyMeansWildCard) const
+    BlackMisc::Network::CAircraftMappingList ISimulatorModelMappings::findByIcaoWildcard(const BlackMisc::Aviation::CAircraftIcao &icao) const
     {
-        return this->m_mappings.findByIcaoCode(icao, emptyMeansWildCard);
+        return this->m_mappings.findByIcaoCodeWildcard(icao);
+    }
+
+    BlackMisc::Network::CAircraftMappingList ISimulatorModelMappings::findByIcaoExact(const BlackMisc::Aviation::CAircraftIcao &icao) const
+    {
+        return this->m_mappings.findByIcaoCodeExact(icao);
     }
 
 } // namespace

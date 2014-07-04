@@ -17,13 +17,7 @@ namespace BlackSim
 
     QStringList CSimulatorInfoList::toStringList(bool i18n) const
     {
-        QStringList infoList;
-        foreach(CSimulatorInfo info, (*this))
-        {
-            QString i = info.toQString(i18n);
-            infoList.append(i);
-        }
-        return infoList;
+        return this->transform([i18n](const CSimulatorInfo &info) { return info.toQString(i18n); });
     }
 
     void CSimulatorInfoList::registerMetadata()

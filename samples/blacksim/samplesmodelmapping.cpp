@@ -29,7 +29,7 @@ namespace BlackSimTest
         qDebug() << "loaded:" << s << "size:" << cvm.size();
 
         BlackMisc::Aviation::CAircraftIcao icao("C172");
-        qDebug() << cvm.findByIcao(icao);
+        qDebug() << cvm.findByIcaoWildcard(icao);
 
         return 0;
     }

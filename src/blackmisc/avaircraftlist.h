@@ -11,6 +11,7 @@
 #define BLACKMISC_AIRCRAFTLIST_H
 
 #include "avaircraft.h"
+#include "avcallsignlist.h"
 #include "nwuserlist.h"
 #include "collection.h"
 #include "sequence.h"
@@ -39,6 +40,9 @@ namespace BlackMisc
 
             //! Find 0..n stations by callsign
             CAircraftList findByCallsign(const CCallsign &callsign) const;
+
+            //! Find 0..n aircraft matching any of a set of callsigns
+            CAircraftList findByCallsigns(const CCallsignList &callsigns) const;
 
             //! Find the first aircraft by callsign, if none return given one
             CAircraft findFirstByCallsign(const CCallsign &callsign, const CAircraft &ifNotFound = CAircraft()) const;

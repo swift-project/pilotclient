@@ -36,8 +36,11 @@ namespace BlackMisc
             //! QVariant, required for DBus QVariant lists
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! Find by frequency
-            CAircraftMappingList findByIcaoCode(const BlackMisc::Aviation::CAircraftIcao &searchIcao, bool emptyMeansWildcard = true) const;
+            //! Find by ICAO code, empty fields treated as wildcards
+            CAircraftMappingList findByIcaoCodeWildcard(const BlackMisc::Aviation::CAircraftIcao &searchIcao) const;
+
+            //! Find by ICAO code, empty fields treated literally
+            CAircraftMappingList findByIcaoCodeExact(const BlackMisc::Aviation::CAircraftIcao &searchIcao) const;
 
             //! Find by model string
             CAircraftMappingList findByModelString(const QString modelString, Qt::CaseSensitivity sensitivity) const;

@@ -35,11 +35,7 @@ namespace BlackMisc
          */
         CKeyboardKey CKeyboardKeyList::keyForFunction(CKeyboardKey::HotkeyFunction function) const
         {
-            CKeyboardKeyList keys = this->findBy(&CKeyboardKey::getFunction, function);
-            if (keys.isEmpty())
-                return CKeyboardKey(CKeyboardKey::HotkeyNone);
-            else
-                return keys[0];
+            return this->findBy(&CKeyboardKey::getFunction, function).frontOrDefault({ CKeyboardKey::HotkeyNone });
         }
 
         /*

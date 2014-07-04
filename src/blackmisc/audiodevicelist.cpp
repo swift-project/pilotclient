@@ -27,13 +27,7 @@ namespace BlackMisc
          */
         CAudioDeviceList CAudioDeviceList::getOutputDevices() const
         {
-            CAudioDeviceList outList;
-            if (this->isEmpty()) return outList;
-            foreach(CAudioDevice device, *this)
-            {
-                if (device.getType() == CAudioDevice::OutputDevice) outList.push_back(device);
-            }
-            return outList;
+            return this->findBy(&CAudioDevice::getType, CAudioDevice::OutputDevice);
         }
 
         /*
@@ -41,13 +35,7 @@ namespace BlackMisc
          */
         CAudioDeviceList CAudioDeviceList::getInputDevices() const
         {
-            CAudioDeviceList inList;
-            if (this->isEmpty()) return inList;
-            foreach(CAudioDevice device, *this)
-            {
-                if (device.getType() == CAudioDevice::InputDevice) inList.push_back(device);
-            }
-            return inList;
+            return this->findBy(&CAudioDevice::getType, CAudioDevice::InputDevice);
         }
 
         /*

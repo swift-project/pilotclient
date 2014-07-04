@@ -47,13 +47,19 @@ namespace BlackMisc
         }
 
         /*
+         * Find by callsigns
+         */
+        CAtcStationList CAtcStationList::findByCallsigns(const CCallsignList &callsigns) const
+        {
+            return this->findBy(Predicates::MemberIsAnyOf(&CAtcStation::getCallsign, callsigns));
+        }
+
+        /*
          * Find first by callsign
          */
         CAtcStation CAtcStationList::findFirstByCallsign(const CCallsign &callsign, const CAtcStation &ifNotFound) const
         {
-            CAtcStationList stations = findByCallsign(callsign);
-            if (!stations.isEmpty()) return stations[0];
-            return ifNotFound;
+            return this->findByCallsign(callsign).frontOrDefault(ifNotFound);
         }
 
         /*
@@ -94,13 +100,7 @@ namespace BlackMisc
          */
         CUserList CAtcStationList::getControllers() const
         {
-            CUserList users;
-            for (auto i = this->begin(); i != this->end(); ++i)
-            {
-                CAtcStation station = *i;
-                if (station.getController().isValid()) users.push_back(station.getController());
-            }
-            return users;
+            return this->findBy(Predicates::MemberValid(&CAtcStation::getController)).transform(Predicates::MemberTransform(&CAtcStation::getController));
         }
 
         /*

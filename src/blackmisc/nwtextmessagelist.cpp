@@ -123,7 +123,7 @@ namespace BlackMisc
          */
         CTextMessageList CTextMessageList::findByFrequency(const CFrequency &frequency) const
         {
-            return CTextMessageList(this->findBy(&CTextMessage::getFrequency, frequency));
+            return this->findBy(&CTextMessage::getFrequency, frequency);
         }
 
         /*
