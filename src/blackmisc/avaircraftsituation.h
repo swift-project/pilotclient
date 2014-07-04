@@ -83,10 +83,10 @@ namespace BlackMisc
             virtual const BlackMisc::Geo::CLongitude &longitude() const override { return this->m_position.longitude(); }
 
             //! \copydoc CCoordinateGeodetic::height
-            const BlackMisc::PhysicalQuantities::CLength &getHeight() const { return this->m_position.height(); }
+            const BlackMisc::PhysicalQuantities::CLength &getHeight() const { return this->m_position.geodeticHeight(); }
 
             //! \brief Set height
-            void setHeight(const BlackMisc::PhysicalQuantities::CLength &height) { this->m_position.setHeight(height); }
+            void setHeight(const BlackMisc::PhysicalQuantities::CLength &height) { this->m_position.setGeodeticHeight(height); }
 
             //! \brief Get heading
             const BlackMisc::Aviation::CHeading &getHeading() const { return this->m_heading; }

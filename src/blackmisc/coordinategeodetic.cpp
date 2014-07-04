@@ -22,7 +22,7 @@ namespace BlackMisc
         QString CCoordinateGeodetic::convertToQString(bool i18n) const
         {
             QString s = "Geodetic: {%1, %2, %3}";
-            return s.arg(this->m_latitude.valueRoundedWithUnit(6, i18n)).arg(this->m_longitude.valueRoundedWithUnit(6, i18n)).arg(this->m_height.valueRoundedWithUnit(6, i18n));
+            return s.arg(this->m_latitude.valueRoundedWithUnit(6, i18n)).arg(this->m_longitude.valueRoundedWithUnit(6, i18n)).arg(this->m_geodeticHeight.valueRoundedWithUnit(6, i18n));
         }
 
         /*

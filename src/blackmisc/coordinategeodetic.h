@@ -59,7 +59,7 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)
             BlackMisc::Geo::CLatitude m_latitude; //!< Latitude
             BlackMisc::Geo::CLongitude m_longitude; //!< Longitude
-            BlackMisc::PhysicalQuantities::CLength m_height; //!< height, ellipsoidal or geodetic height
+            BlackMisc::PhysicalQuantities::CLength m_geodeticHeight; //!< height, ellipsoidal or geodetic height
 
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -82,15 +82,15 @@ namespace BlackMisc
 
         public:
             //! Default constructor
-            CCoordinateGeodetic() : m_latitude(), m_longitude(), m_height() {}
+            CCoordinateGeodetic() : m_latitude(), m_longitude(), m_geodeticHeight() {}
 
             //! Constructor by values
             CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength height) :
-                m_latitude(latitude), m_longitude(longitude), m_height(height) {}
+                m_latitude(latitude), m_longitude(longitude), m_geodeticHeight(height) {}
 
             //! Constructor by values
             CCoordinateGeodetic(double latitudeDegrees, double longitudeDegrees, double heightMeters) :
-                m_latitude(latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_longitude(longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_height(heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m()) {}
+                m_latitude(latitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_longitude(longitudeDegrees, BlackMisc::PhysicalQuantities::CAngleUnit::deg()), m_geodeticHeight(heightMeters, BlackMisc::PhysicalQuantities::CLengthUnit::m()) {}
 
             //! \copydoc ICoordinateGeodetic::latitude
             virtual const CLatitude &latitude() const override { return this->m_latitude; }
@@ -98,9 +98,11 @@ namespace BlackMisc
             //! \copydoc ICoordinateGeodetic::longitude
             virtual const CLongitude &longitude() const override { return this->m_longitude; }
 
-            //! Height, ellipsoidal or geodetic height
-            //! \remarks see http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf page 5
-            const BlackMisc::PhysicalQuantities::CLength &height() const { return this->m_height; }
+            //! Height, ellipsoidal or geodetic height (used in GPS)
+            //! This is approximately MSL (orthometric) height, aka elevation.
+            //! \sa see http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf page 5
+            //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
+            const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const { return this->m_geodeticHeight; }
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -116,7 +118,7 @@ namespace BlackMisc
             //! Switch unit of height
             CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CLengthUnit &unit)
             {
-                this->m_height.switchUnit(unit);
+                this->m_geodeticHeight.switchUnit(unit);
                 return *this;
             }
 
@@ -127,7 +129,7 @@ namespace BlackMisc
             void setLongitude(const CLongitude &longitude) { this->m_longitude = longitude; }
 
             //! Set height (ellipsoidal or geodetic height)
-            void setHeight(const BlackMisc::PhysicalQuantities::CLength &height) { this->m_height = height; }
+            void setGeodeticHeight(const BlackMisc::PhysicalQuantities::CLength &height) { this->m_geodeticHeight = height; }
 
             //! Equal operator ==
             bool operator ==(const CCoordinateGeodetic &other) const;
@@ -151,13 +153,13 @@ namespace BlackMisc
             static const QStringList &jsonMembers();
 
             //! Coordinate by WGS84 position data
-            static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength height = BlackMisc::PhysicalQuantities::CLength());
+            static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength geodeticHeight = BlackMisc::PhysicalQuantities::CLength());
         };
 
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Geo::CCoordinateGeodetic, (o.m_latitude, o.m_longitude, o.m_height))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Geo::CCoordinateGeodetic, (o.m_latitude, o.m_longitude, o.m_geodeticHeight))
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodetic)
 
 #endif // guard

@@ -192,7 +192,7 @@ namespace BlackSimPlugin
                 CLength groundAltitude(groundAltitudeRaw / 256.0, CLengthUnit::m());
                 position.setLatitude(lat);
                 position.setLongitude(lon);
-                position.setHeight(groundAltitude);
+                position.setGeodeticHeight(groundAltitude);
                 situation.setPosition(position);
 
                 // speeds, situation

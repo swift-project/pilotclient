@@ -75,12 +75,10 @@ namespace BlackMisc
             double cphi = cos(phi);
 
             double n = EarthRadiusMeters() / sqrt(1 - e2() * CMath::square(sphi));
-
             double slambda = sin(lambdaRad);
-
             double clambda = cos(lambdaRad);
 
-            double h = geo.height().value(CLengthUnit::m());
+            double h = geo.geodeticHeight().value(CLengthUnit::m());
             double x = (n + h) * cphi;
             double y = x * slambda;
             x *= clambda;
