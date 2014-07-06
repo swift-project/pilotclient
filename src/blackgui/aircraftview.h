@@ -7,7 +7,7 @@
 namespace BlackGui
 {
     /*!
-     * \brief Aircrafts view
+     * Aircrafts view
      */
     class CAircraftView : public CViewBase<CAircraftListModel>
     {

@@ -19,7 +19,9 @@ namespace BlackGui
     void CTimerBasedComponent::setUpdateInterval(int milliSeconds)
     {
         if (milliSeconds < 100)
+        {
             this->m_timer->stop();
+        }
         else
         {
             this->m_timer->setInterval(milliSeconds);

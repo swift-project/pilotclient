@@ -7,6 +7,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avaircraftlist.h"
+#include "blackmisc/avairportlist.h"
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/nwclientlist.h"
@@ -228,6 +229,7 @@ namespace BlackGui
     template class CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>;
     template class CListModelBase<BlackMisc::Aviation::CAtcStation, BlackMisc::Aviation::CAtcStationList>;
     template class CListModelBase<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>;
+    template class CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>;
     template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>;
     template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>;
     template class CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;

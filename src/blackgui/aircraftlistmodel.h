@@ -14,22 +14,17 @@
 namespace BlackGui
 {
     /*!
-     * \brief Aircraft list model
+     * Aircraft list model
      */
     class CAircraftListModel : public CListModelBase<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>
     {
 
     public:
 
-        /*!
-         * \brief Constructor
-         * \param parent
-         */
+        //! Constructor
         explicit CAircraftListModel(QObject *parent = nullptr);
 
-        /*!
-         * \brief Destructor
-         */
+        //! Destructor
         virtual ~CAircraftListModel() {}
 
     };

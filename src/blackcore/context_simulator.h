@@ -108,6 +108,6 @@ namespace BlackCore
         IContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
     };
 
-} // namespace BlackCore
+} // namespace
 
 #endif // guard

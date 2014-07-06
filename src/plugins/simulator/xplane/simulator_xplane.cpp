@@ -239,7 +239,7 @@ namespace BlackSimPlugin
         }
 
         void CSimulatorXPlane::addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &type,
-            const BlackMisc::Aviation::CAircraftSituation &initialSituation)
+                const BlackMisc::Aviation::CAircraftSituation &initialSituation)
         {
             Q_UNUSED(initialSituation); // fixed gcc warning
             if (! isConnected()) { return; }
@@ -249,18 +249,18 @@ namespace BlackSimPlugin
         }
 
         void CSimulatorXPlane::addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
-            const BlackMisc::Aviation::CAircraftSituation &situ)
+                const BlackMisc::Aviation::CAircraftSituation &situ)
         {
             if (! isConnected()) { return; }
             if (! m_planes.contains(callsign.asString())) { addRemoteAircraft(callsign, "A320", situ); } // FIXME should not be needed here IMHO
             using namespace BlackMisc::PhysicalQuantities;
             m_traffic->setPlanePosition(callsign.asString(),
-                situ.latitude().value(CAngleUnit::deg()),
-                situ.longitude().value(CAngleUnit::deg()),
-                situ.getAltitude().value(CLengthUnit::ft()),
-                situ.getPitch().value(CAngleUnit::deg()),
-                situ.getBank().value(CAngleUnit::deg()),
-                situ.getHeading().value(CAngleUnit::deg()));
+                                        situ.latitude().value(CAngleUnit::deg()),
+                                        situ.longitude().value(CAngleUnit::deg()),
+                                        situ.getAltitude().value(CLengthUnit::ft()),
+                                        situ.getPitch().value(CAngleUnit::deg()),
+                                        situ.getBank().value(CAngleUnit::deg()),
+                                        situ.getHeading().value(CAngleUnit::deg()));
             m_traffic->setPlaneSurfaces(callsign.asString(), true, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, true, true, true, 0); // TODO landing gear, lights, control surfaces
             m_traffic->setPlaneTransponder(callsign.asString(), 2000, true, false); // TODO transponder
         }

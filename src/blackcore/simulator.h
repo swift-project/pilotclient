@@ -111,11 +111,7 @@ namespace BlackCore
         //! ISimulatorVirtual destructor
         virtual ~ISimulatorFactory() {}
 
-        /*!
-         * ISimulatorCreate a new instance
-         * \param parent
-         * \return
-         */
+        //! Create a new instance
         virtual ISimulator *create(QObject *parent = nullptr) = 0;
 
         //! Simulator info

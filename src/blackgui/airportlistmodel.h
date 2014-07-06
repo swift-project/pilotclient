@@ -15,10 +15,10 @@ namespace BlackGui
 
     public:
 
-        //! \brief Constructor
+        //! Constructor
         explicit CAirportListModel(QObject *parent = nullptr);
 
-        //! \brief Destructor
+        //! Destructor
         virtual ~CAirportListModel() {}
     };
 }
