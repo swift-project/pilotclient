@@ -311,10 +311,6 @@ void MainWindow::connectionStatusChanged(uint /** from **/, uint to, const QStri
 {
     this->updateGuiStatusInformation();
     INetwork::ConnectionStatus newStatus = static_cast<INetwork::ConnectionStatus>(to);
-    if (newStatus == INetwork::Connected)
-        this->startUpdateTimers();
-    else if (newStatus == INetwork::Disconnecting || newStatus == INetwork::Disconnected || newStatus == INetwork::DisconnectedError)
-        this->stopUpdateTimers();
 
     // sounds
     switch (newStatus)

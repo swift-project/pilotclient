@@ -20,10 +20,15 @@ namespace BlackGui
     {
         Q_ASSERT(this->ui->tvp_AircraftsInRange);
         Q_ASSERT(this->getIContextNetwork());
+        Q_ASSERT(this->getIContextSimulator());
 
         if (this->getIContextNetwork()->isConnected())
         {
             this->ui->tvp_AircraftsInRange->update(this->getIContextNetwork()->getAircraftsInRange());
+        }
+        if (this->getIContextSimulator()->isConnected())
+        {
+            this->ui->tvp_AirportsInRange->update(this->getIContextSimulator()->getAirportsInRange());
         }
     }
 }

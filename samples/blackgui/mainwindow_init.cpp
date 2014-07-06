@@ -145,6 +145,9 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     // hotkeys
     this->registerHotkeys();
 
+    // update timers
+    this->startUpdateTimers();
+
     // do this as last statement, so it can be used as flag
     // whether init has been completed
     this->m_init = true;
@@ -234,24 +237,6 @@ void MainWindow::initialDataReads()
 
     this->ui->comp_Settings->reloadSettings(); // init read
     this->reloadOwnAircraft(); // init read, independent of traffic network
-
-    // also reads bookings if not connected
-    if (this->getIContextNetwork()->isConnected())
-    {
-        // connection is already established
-        this->ui->comp_AtcStations->update();
-        this->ui->comp_Aircrafts->update();
-
-        this->updateGuiStatusInformation();
-        this->ui->comp_Users->update();
-        this->ui->comp_Aircrafts->update();
-    }
-    else
-    {
-        // Initial booking read
-        QTimer::singleShot(30 * 1000, this->ui->comp_AtcStations, SLOT(update()));
-    }
-
     this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "initial data read"));
 }
 
