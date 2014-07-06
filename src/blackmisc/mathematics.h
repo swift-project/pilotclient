@@ -144,6 +144,12 @@ namespace BlackMisc
              */
             static double rad2deg(double radians);
 
+            /*!
+             * \brief Normalize to 0..360 degrees
+             * \param degrees
+             * \return
+             */
+            static double normalizeDegrees(double degrees);
 
         private:
             /*!

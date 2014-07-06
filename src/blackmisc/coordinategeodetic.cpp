@@ -163,6 +163,29 @@ namespace BlackMisc
             return CLength(qAbs(dist), CLengthUnit::NM());
         }
 
+        PhysicalQuantities::CAngle initialBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
+        {
+            // same coordinate results in 0 distance
+            if (coordinate1.latitude() == coordinate2.latitude() && coordinate1.longitude() == coordinate2.longitude())
+            {
+                return CAngle(0, CAngleUnit::deg());
+            }
+
+            // http://www.yourhomenow.com/house/haversine.html
+            double lon1rad = coordinate1.longitude().value(CAngleUnit::rad());
+            double lon2rad = coordinate2.longitude().value(CAngleUnit::rad());
+            double lat1rad = coordinate1.latitude().value(CAngleUnit::rad());
+            double lat2rad = coordinate2.latitude().value(CAngleUnit::rad());
+            double dLon = lon1rad - lon2rad;
+            double y = qSin(dLon) * qCos(lat2rad);
+            double x = qCos(lat1rad) * qSin(lat2rad) -
+                       qSin(lat1rad) * qCos(lat2rad) * qCos(dLon);
+            double bearing = qAtan2(y, x);
+            bearing = CMath::rad2deg(bearing); // now in deg
+            bearing = CMath::normalizeDegrees(bearing); // normalize
+            return CAngle(bearing, CAngleUnit::deg());
+        }
+
         /*
          * Great circle distance
          */
@@ -171,5 +194,99 @@ namespace BlackMisc
             return Geo::greatCircleDistance((*this), otherCoordinate);
         }
 
+        /*
+         * Initial bearing
+         */
+        CAngle ICoordinateGeodetic::initialBearing(const ICoordinateGeodetic &otherCoordinate)
+        {
+            return Geo::initialBearing((*this), otherCoordinate);
+        }
+
+        /*
+         * My index
+         */
+        bool ICoordinateGeodetic::indexInRange(int index)
+        {
+            return index >= static_cast<int>(IndexLatitude) &&
+                   index <= static_cast<int>(IndexLongitudeAsString);
+        }
+
+        /*
+         * Property by index
+         */
+        QVariant ICoordinateGeodetic::propertyByIndex(int index) const
+        {
+
+            switch (index)
+            {
+            case IndexLatitude:
+                return this->latitude().toQVariant();
+            case IndexLongitude:
+                return this->longitude().toQVariant();
+            case IndexLatitudeAsString:
+                return QVariant(this->latitudeAsString());
+            case IndexLongitudeAsString:
+                return QVariant(this->longitudeAsString());
+            default:
+                break;
+            }
+
+            Q_ASSERT_X(false, "ICoordinateGeodetic", "index unknown");
+            QString m = QString("no property, index ").append(QString::number(index));
+            return QVariant::fromValue(m);
+        }
+
+
+        /*
+         * Property by index
+         */
+        QVariant CCoordinateGeodetic::propertyByIndex(int index) const
+        {
+            if (ICoordinateGeodetic::indexInRange(index))
+            {
+                return ICoordinateGeodetic::propertyByIndex(index);
+            }
+
+            switch (index)
+            {
+            case IndexGeodeticHeight:
+                return this->m_geodeticHeight.toQVariant();
+                break;
+            default:
+                break;
+            }
+
+            Q_ASSERT_X(false, "CCoordinateGeodetic", "index unknown");
+            QString m = QString("no property, index ").append(QString::number(index));
+            return QVariant::fromValue(m);
+        }
+
+        /*
+         * Set property as index
+         */
+        void CCoordinateGeodetic::setPropertyByIndex(const QVariant &variant, int index)
+        {
+            switch (index)
+            {
+            case IndexGeodeticHeight:
+                this->setGeodeticHeight(variant.value<CLength>());
+                break;
+            case IndexLatitude:
+                this->setLatitude(variant.value<CLatitude>());
+                break;
+            case IndexLongitude:
+                this->setLongitude(variant.value<CLongitude>());
+                break;
+            case IndexLatitudeAsString:
+                this->setLatitude(CLatitude::fromWgs84(variant.toString()));
+                break;
+            case IndexLongitudeAsString:
+                this->setLongitude(CLongitude::fromWgs84(variant.toString()));
+                break;
+            default:
+                Q_ASSERT_X(false, "CCoordinateGeodetic", "index unknown (setter)");
+                break;
+            }
+        }
     } // namespace
 } // namespace

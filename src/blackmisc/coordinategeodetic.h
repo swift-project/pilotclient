@@ -24,6 +24,18 @@ namespace BlackMisc
         {
         public:
 
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexLatitude = 6000,
+                IndexLongitude,
+                IndexLatitudeAsString,
+                IndexLongitudeAsString
+            };
+
+            //! Destructor
+            virtual ~ICoordinateGeodetic() {}
+
             //! Latitude
             virtual const CLatitude &latitude() const = 0;
 
@@ -44,10 +56,22 @@ namespace BlackMisc
 
             //! Great circle distance
             BlackMisc::PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &otherCoordinate);
+
+            //! Initial bearing
+            BlackMisc::PhysicalQuantities::CAngle initialBearing(const ICoordinateGeodetic &otherCoordinate);
+
+            //! In range
+            static bool indexInRange(int index);
+
+            //! \copydoc CValueObject::propertyByIndex
+            virtual QVariant propertyByIndex(int index) const;
         };
 
         //! Great circle distance between points
         BlackMisc::PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
+
+        //! Initial bearing
+        BlackMisc::PhysicalQuantities::CAngle initialBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2);
 
         //! Geodetic coordinate
         //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
@@ -55,6 +79,17 @@ namespace BlackMisc
         //! \sa http://en.wikipedia.org/wiki/Geodetic_datum#Vertical_datum
         class CCoordinateGeodetic : public CValueObject, public ICoordinateGeodetic
         {
+        public:
+            //! Column index
+            enum ColumnIndex
+            {
+                IndexLatitude = 6000,
+                IndexLongitude,
+                IndexLatitudeAsString,
+                IndexLongitudeAsString,
+                IndexGeodeticHeight
+            };
+
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)
             BlackMisc::Geo::CLatitude m_latitude; //!< Latitude
@@ -107,6 +142,12 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
+            //! \copydoc CValueObject::propertyByIndex
+            virtual QVariant propertyByIndex(int index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex
+            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+
             //! Switch unit of latitude / longitude
             CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit)
             {
@@ -154,6 +195,7 @@ namespace BlackMisc
 
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength geodeticHeight = BlackMisc::PhysicalQuantities::CLength());
+
         };
 
     } // namespace
