@@ -3,6 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+//! \file
+
 #ifndef BLACKCORE_NETWORK_VATLIB_H
 #define BLACKCORE_NETWORK_VATLIB_H
 
@@ -18,17 +20,17 @@
 namespace BlackCore
 {
     /*!
-     * \brief Implementation of INetwork using the vatlib shim
+     * Implementation of INetwork using the vatlib shim
      */
     class CNetworkVatlib : public INetwork
     {
         Q_OBJECT
 
     public:
-        //! \brief Constructor
+        //! Constructor
         CNetworkVatlib(QObject *parent = nullptr);
 
-        //! \brief Destructor
+        //! Destructor
         virtual ~CNetworkVatlib();
 
         //! \copydoc INetwork::isConnected()
