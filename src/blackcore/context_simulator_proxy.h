@@ -63,6 +63,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getSimulatorInfo
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 
+        //! \copydoc IContextSimulator::setTimeSynchronization
+        virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
+
         //! \copydoc IContextSimulator::loadSimulatorPlugin
         virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) override;
 

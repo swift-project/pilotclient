@@ -9,6 +9,8 @@
 #include <QDBusServiceWatcher>
 #include <QTimer>
 
+using namespace BlackMisc;
+
 namespace BlackSimPlugin
 {
     namespace XPlane
@@ -207,6 +209,15 @@ namespace BlackSimPlugin
             // TODO: Fill with airports nearby from sim
             BlackMisc::Aviation::CAirportList airports;
             return airports;
+        }
+
+        void CSimulatorXPlane::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
+        {
+            if (enable)
+            {
+                emit this->displayStatusMessage(CStatusMessage::getWarningMessage("Use time synchronization of XP itself", CStatusMessage::TypeSimulator));
+            }
+            Q_UNUSED(offset);
         }
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft)

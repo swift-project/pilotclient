@@ -105,6 +105,11 @@ namespace BlackCore
 
         return this->m_simulator->getAirportsInRange();
     }
+
+    void CContextSimulator::setTimeSynchronization(bool enable, CTime offset)
+    {
+        if (!m_simulator) return;
+        this->setTimeSynchronization(enable, offset);
     }
 
     bool CContextSimulator::loadSimulatorPlugin(const CSimulatorInfo &simulatorInfo)
@@ -145,6 +150,16 @@ namespace BlackCore
 
         connect(m_simulator, SIGNAL(statusChanged(ISimulator::Status)), this, SLOT(setConnectionStatus(ISimulator::Status)));
         connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
+        if (this->getIContextApplication() && this->getIContextApplication()->usingLocalObjects())
+        {
+            // relay status messages
+            connect(m_simulator, &ISimulator::sendStatusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
+            connect(m_simulator, &ISimulator::sendStatusMessages, this->getIContextApplication(), &IContextApplication::sendStatusMessages);
+        }
+        else
+        {
+            qFatal("No application context ot application context not local");
+        }
         asyncConnectTo(); // try to connect
 
         QString m = QString("Simulator plugin loaded: '%1'").arg(this->m_simulator->getSimulatorInfo().toQString(true));

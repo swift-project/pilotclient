@@ -286,6 +286,9 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
         {
+            Q_UNUSED(enable);
+            Q_UNUSED(offset);
+        }
 
         void CSimulatorFsx::onSimRunning()
         {

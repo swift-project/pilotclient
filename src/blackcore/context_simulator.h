@@ -88,6 +88,10 @@ namespace BlackCore
         //! Aircraft model
         virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const = 0;
 
+        //! Set time synchronization between simulator and user's computer time
+        //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
+        virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) = 0;
+
         //! Load specific simulator plugin
         virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) = 0;
 

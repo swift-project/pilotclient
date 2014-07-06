@@ -7,7 +7,7 @@
 #define BLACKCORE_SIMULATOR_H
 
 #include "blacksim/simulatorinfo.h"
-#include "blackmisc/statusmessage.h"
+#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/nwaircraftmodel.h"
@@ -88,6 +88,9 @@ namespace BlackCore
         //! Airports in range
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;
 
+        //! Set time synchronization between simulator and user's computer time
+        //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
+        virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) = 0;
 
     signals:
         //! Emitted when the connection status has changed
@@ -101,6 +104,12 @@ namespace BlackCore
 
         //! Simulator stopped;
         void simulatorStopped();
+
+        //! Send a message to be displayed (from simulator to contexts)
+        void sendStatusMessage(const BlackMisc::CStatusMessage &message);
+
+        //! Send messages to be displayed (from simulator to contexts)
+        void sendStatusMessages(const BlackMisc::CStatusMessageList &messages);
     };
 
     //! Factory pattern class to create instances of ISimulator

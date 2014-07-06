@@ -62,6 +62,9 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getAirportsInRange()
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
+        //! \copydoc IContextSimulator::setTimeSynchronization
+        virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
+
         //! \copydoc IContextSimulator::loadSimulatorPlugin()
         virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) override;
 

@@ -129,6 +129,8 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::getAirportsInRange
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
+            //! \copydoc ISimulator::setTimeSynchronization
+            virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
             //! \brief Called when sim has started
             void onSimRunning();

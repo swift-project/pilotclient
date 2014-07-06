@@ -77,6 +77,9 @@ namespace BlackSimPlugin
             //! Airports in range
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
+            //! \copydoc ISimulator::setTimeSynchronization
+            virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
+
         private slots:
             void serviceRegistered(const QString &serviceName);
             void serviceUnregistered();
