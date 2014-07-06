@@ -47,7 +47,7 @@ namespace BlackMisc
 
         void CAirportList::replaceOrAddByIcao(const CAirport &addedOrReplacedAirport)
         {
-            Q_ASSERT(addedOrReplacedAirport.hasValidIcaoCode());
+            if (!addedOrReplacedAirport.hasValidIcaoCode()) return; // ignore invalid airport
             this->replaceOrAdd(&CAirport::getIcao, addedOrReplacedAirport.getIcao(), addedOrReplacedAirport);
         }
 
@@ -75,28 +75,28 @@ namespace BlackMisc
         /*
          * Distances to own plane
          */
-        void CAirportList::calculateDistancesToPlane(const Geo::CCoordinateGeodetic &position)
+        void CAirportList::calculcateDistanceAndBearingToPlane(const Geo::CCoordinateGeodetic &position)
         {
             std::for_each(this->begin(), this->end(), [ & ](CAirport & airport)
             {
-                airport.calculcateDistanceToPlane(position);
+                airport.calculcateDistanceAndBearingToPlane(position);
             });
         }
 
-        void CAirportList::removeIfOutsideRange(const Geo::CCoordinateGeodetic &position, const CLength &distance, bool updateDistance)
+        void CAirportList::removeIfOutsideRange(const Geo::CCoordinateGeodetic &position, const CLength &maxDistance, bool updateDistance)
         {
             CLength d;
             for (CAirportList::iterator i = begin(); i != end();)
             {
                 if (updateDistance)
                 {
-                    d = i->calculcateDistanceToPlane(position);
+                    d = i->calculcateDistanceAndBearingToPlane(position);
                 }
                 else
                 {
                     d = i->greatCircleDistance(position);
                 }
-                if (distance > d)
+                if (maxDistance < d)
                 {
                     i = this->erase(i);
                 }

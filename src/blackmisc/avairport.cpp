@@ -135,9 +135,10 @@ namespace BlackMisc
         /*
          * Distance to planne
          */
-        const CLength &CAirport::calculcateDistanceToPlane(const CCoordinateGeodetic &position)
+        const CLength &CAirport::calculcateDistanceAndBearingToPlane(const CCoordinateGeodetic &position)
         {
             this->m_distanceToPlane = Geo::greatCircleDistance(this->m_position, position);
+            this->m_bearingToPlane = Geo::initialBearing(this->m_position, position);
             return this->m_distanceToPlane;
         }
 
@@ -146,6 +147,11 @@ namespace BlackMisc
          */
         QVariant CAirport::propertyByIndex(int index) const
         {
+            if (index > static_cast<int>(CAirport::IndexBearing))
+            {
+                return this->m_position.propertyByIndex(index);
+            }
+
             switch (index)
             {
             case IndexIcao:
@@ -155,8 +161,12 @@ namespace BlackMisc
             case IndexDescriptiveName:
                 return QVariant(this->m_descriptiveName);
             case IndexPosition:
-                return this->getPosition().toQVariant();
-            case IndexDistanceToPlane:
+                return this->m_position.toQVariant();
+            case IndexElevation:
+                return this->getElevation().toQVariant();
+            case IndexBearing:
+                return this->m_bearingToPlane.toQVariant();
+            case IndexDistance:
                 return this->m_distanceToPlane.toQVariant();
             default:
                 break;
@@ -172,6 +182,11 @@ namespace BlackMisc
          */
         void CAirport::setPropertyByIndex(const QVariant &variant, int index)
         {
+            if (index >= static_cast<int>(CAirport::IndexBearing))
+            {
+                this->m_position.setPropertyByIndex(variant, index);
+            }
+
             switch (index)
             {
             case IndexIcao:
@@ -185,6 +200,12 @@ namespace BlackMisc
                 break;
             case IndexPosition:
                 this->setPosition(variant.value<CCoordinateGeodetic>());
+                break;
+            case IndexBearing:
+                this->setBearingToPlane(variant.value<CAngle>());
+                break;
+            case IndexDistance:
+                this->setDistanceToPlane(variant.value<CLength>());
                 break;
             default:
                 Q_ASSERT_X(false, "CAirport", "index unknown (setter)");

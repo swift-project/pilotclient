@@ -47,10 +47,10 @@ namespace BlackMisc
             CAirportList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
             //! Update distances to coordinate, usually own aircraft's position
-            void calculateDistancesToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
+            void calculcateDistanceAndBearingToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
             //! Remove if outside given radius
-            void removeIfOutsideRange(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &distance, bool updateDistance);
+            void removeIfOutsideRange(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &maxDistance, bool updateDistance);
 
             //! Register metadata
             static void registerMetadata();

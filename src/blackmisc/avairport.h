@@ -29,7 +29,9 @@ namespace BlackMisc
                 IndexIcaoAsString,
                 IndexDescriptiveName,
                 IndexPosition,
-                IndexDistanceToPlane
+                IndexElevation,
+                IndexDistance,
+                IndexBearing
             };
 
             //! Default constructor.
@@ -71,24 +73,36 @@ namespace BlackMisc
             //! Set position
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
+            //! Elevation
+            const BlackMisc::PhysicalQuantities::CLength getElevation() const { return this->getPosition().geodeticHeight(); }
+
             //! Get the distance to own plane
             const BlackMisc::PhysicalQuantities::CLength &getDistanceToPlane() const { return m_distanceToPlane; }
 
             //! Set distance to own plane
             void setDistanceToPlane(const BlackMisc::PhysicalQuantities::CLength &distance) { this->m_distanceToPlane = distance; }
 
+            //! Get the bearing to own plane
+            const BlackMisc::PhysicalQuantities::CAngle &getBearingToPlane() const { return m_bearingToPlane; }
+
+            //! Set bearing to own plane
+            void setBearingToPlane(const BlackMisc::PhysicalQuantities::CAngle &angle) { this->m_bearingToPlane = angle; }
+
             //! Valid distance?
             bool hasValidDistance() const { return !this->m_distanceToPlane.isNull();}
+
+            //! Valid bearing?
+            bool hasValidBearing() const { return !this->m_bearingToPlane.isNull();}
 
             //! Valid ICAO code
             bool hasValidIcaoCode() const { return !this->getIcao().isEmpty(); }
 
             /*!
-             * Calculcate distance to plane, set it, and also return it
+             * Calculcate distance and bearing to plane, set it, and return distance
              * \param position other position
              * \return
              */
-            const BlackMisc::PhysicalQuantities::CLength &calculcateDistanceToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
+            const BlackMisc::PhysicalQuantities::CLength &calculcateDistanceAndBearingToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
             //! \copydoc ICoordinateGeodetic::latitude
             virtual const BlackMisc::Geo::CLatitude &latitude() const override
@@ -147,6 +161,7 @@ namespace BlackMisc
             CAirportIcao m_icao;
             QString m_descriptiveName;
             BlackMisc::Geo::CCoordinateGeodetic m_position;
+            BlackMisc::PhysicalQuantities::CAngle m_bearingToPlane;
             BlackMisc::PhysicalQuantities::CLength m_distanceToPlane; // make mutable ?
         };
 
