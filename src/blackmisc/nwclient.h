@@ -19,7 +19,7 @@ namespace BlackMisc
 
         public:
             /*!
-             * \brief Properties by index
+             * Properties by index
              */
             enum ColumnIndex : uint
             {
@@ -43,7 +43,7 @@ namespace BlackMisc
             };
 
             /*!
-             * \brief The Capabilities enum
+             * The Capabilities enum
              */
             enum Capabilities
             {

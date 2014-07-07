@@ -21,7 +21,7 @@ namespace BlackMisc
         class CClientList : public CSequence<CClient>
         {
         public:
-            //! \brief Default constructor.
+            //! Default constructor.
             CClientList();
 
             //! Construct from a base class object.

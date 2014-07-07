@@ -26,16 +26,16 @@ namespace BlackMisc
             //! \brief Default constructor.
             CAircraftModel() {}
 
-            //! \brief Constructor.
-            CAircraftModel(const QString &model, bool queriedString) : m_modelString(model), m_queriedModelStringFlag(queriedString) {}
+            //! Constructor.
+            CAircraftModel(const QString &model, bool isQueriedString) : m_modelString(model), m_queriedModelStringFlag(isQueriedString) {}
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CAircraftModel &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CAircraftModel &other) const;
 
             //! \copydoc CValueObject::getValueHash
@@ -68,7 +68,7 @@ namespace BlackMisc
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
             //! \copydoc TupleConverter<>::jsonMembers()
@@ -96,7 +96,7 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftModel)
             QString m_modelString;
-            bool m_queriedModelStringFlag; //!< model string is queried from network
+            bool m_queriedModelStringFlag; //!< model string is queried from network?
         };
     } // namespace
 } // namespace

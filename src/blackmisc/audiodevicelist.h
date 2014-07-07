@@ -27,44 +27,26 @@ namespace BlackMisc
         class CAudioDeviceList : public CSequence<CAudioDevice>
         {
         public:
-            /*!
-             * \brief Default constructor.
-             */
+            //! Default constructor.
             CAudioDeviceList();
 
-            /*!
-             * \brief Construct from a base class object.
-             * \param other
-             */
+            //! Construct from a base class object.
             CAudioDeviceList(const CSequence &other);
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            /*!
-             * \brief Get output devices in that list
-             * \return
-             */
+            //! Get output devices in that list
             CAudioDeviceList getOutputDevices() const;
 
-            /*!
-             * \brief Get output devices in that list
-             * \return
-             */
+            //! Get output devices in that list
             CAudioDeviceList getInputDevices() const;
 
-            /*!
-             * \brief Count (as of type)
-             * \param type
-             * \return
-             */
+            //! Count (as of type)
             int count(CAudioDevice::DeviceType type) const;
 
-            /*!
-             * \brief Register metadata
-             */
+            //! Register metadata
             static void registerMetadata();
-
         };
 
     } //namespace

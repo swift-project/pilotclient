@@ -27,23 +27,16 @@ namespace BlackMisc
         class CServerList : public CSequence<CServer>
         {
         public:
-            /*!
-             * \brief Empty constructor.
-             */
+            //! Default constructor.
             CServerList();
 
-            /*!
-             * \brief Construct from a base class object.
-             * \param other
-             */
+            //! Construct from a base class object.
             CServerList(const CSequence<CServer> &other);
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            /*!
-             * \brief Register metadata
-             */
+            //! Register metadata
             static void registerMetadata();
 
         };
