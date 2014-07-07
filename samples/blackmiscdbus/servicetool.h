@@ -3,6 +3,8 @@
 
 #include "blackcore/dbus_server.h"
 #include "blackmisc/avatcstationlist.h"
+#include "blackmisc/avairportlist.h"
+#include "blackmisc/nwclientlist.h"
 #include <QCoreApplication>
 #include <QProcess>
 #include <QDBusConnection>
@@ -73,7 +75,7 @@ namespace BlackMiscTest
          * \brief Get a random callsign
          * \return
          */
-        static BlackMisc::Aviation::CCallsign getRandomCallsign();
+        static BlackMisc::Aviation::CCallsign getRandomAtcCallsign();
 
         /*!
          * \brief Get stations
@@ -81,6 +83,20 @@ namespace BlackMiscTest
          * \return
          */
         static BlackMisc::Aviation::CAtcStationList getStations(qint32 number);
+
+        /*!
+         * \brief Get airports
+         * \param number
+         * \return
+         */
+        static BlackMisc::Aviation::CAirportList getAirports(qint32 number);
+
+        /*!
+         * \brief Get clients
+         * \param number
+         * \return
+         */
+        static BlackMisc::Network::CClientList getClients(qint32 number);
 
     };
 

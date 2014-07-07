@@ -60,7 +60,6 @@ namespace BlackMiscTest
         return speed;
     }
 
-
     /*
      * Get speed
      */
@@ -95,14 +94,6 @@ namespace BlackMiscTest
     void Testservice::receiveAltitude(const BlackMisc::Aviation::CAltitude &altitude)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received altitude:" << altitude;
-    }
-
-    /*
-     * Ping altitude
-     */
-    BlackMisc::Aviation::CAltitude Testservice::pingAltitude(const BlackMisc::Aviation::CAltitude &altitude)
-    {
-        return altitude;
     }
 
     /*
@@ -192,17 +183,9 @@ namespace BlackMiscTest
     /*
      * Receive ATC list
      */
-    void Testservice::receiveAtcStationList(const BlackMisc::Aviation::CAtcStationList &AtcStationList) const
+    void Testservice::receiveAtcStationList(const BlackMisc::Aviation::CAtcStationList &atcStationList) const
     {
-        qDebug() << "Pid:" << ServiceTool::getPid() << "Received ATC list:" << AtcStationList;
-    }
-
-    /*
-     * Receive ATC list
-     */
-    BlackMisc::Aviation::CAtcStationList Testservice::pingAtcStationList(const BlackMisc::Aviation::CAtcStationList &AtcStationList) const
-    {
-        return AtcStationList;
+        qDebug() << "Pid:" << ServiceTool::getPid() << "Received ATC list:" << atcStationList;
     }
 
     /*
@@ -222,14 +205,6 @@ namespace BlackMiscTest
     }
 
     /*
-     * Ping ATC station
-     */
-    const BlackMisc::Aviation::CAtcStationList Testservice::getAtcStationList(const qint32 number) const
-    {
-        return BlackMisc::Aviation::CAtcStationList(ServiceTool::getStations(number));
-    }
-
-    /*
      * Object paths
      */
     const QList<QDBusObjectPath> Testservice::getObjectPaths(const qint32 number) const
@@ -245,8 +220,71 @@ namespace BlackMiscTest
     /*
      * Ping ATC station
      */
+    const BlackMisc::Aviation::CAtcStationList Testservice::getAtcStationList(const qint32 number) const
+    {
+        return BlackMisc::Aviation::CAtcStationList(ServiceTool::getStations(number));
+    }
+
+    /*
+     * Ping ATC list
+     */
+    BlackMisc::Aviation::CAtcStationList Testservice::pingAtcStationList(const BlackMisc::Aviation::CAtcStationList &atcStationList) const
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping ATCs:" << atcStationList;
+        return atcStationList;
+    }
+
+    /*
+     * Ping aircrafts
+     */
+    CAircraftList Testservice::pingAircraftList(const CAircraftList &aircraftList)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping ATCs:" << aircraftList;
+        return aircraftList;
+    }
+
+    /*
+     * Ping airports
+     */
+    CAirportList Testservice::pingAirportList(const CAirportList &airportList)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping airports:" << airportList;
+        return airportList;
+    }
+
+    /*
+     * NW client
+     */
+    CClient Testservice::pingClient(const CClient &client)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping client:" << client;
+        return client;
+    }
+
+    /*
+     * NW clients
+     */
+    CClientList Testservice::pingClientList(const CClientList &clientList)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping clients:" << clientList;
+        return clientList;
+    }
+
+    /*
+     * Ping altitude
+     */
+    BlackMisc::Aviation::CAltitude Testservice::pingAltitude(const BlackMisc::Aviation::CAltitude &altitude)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping alt:" << altitude;
+        return altitude;
+    }
+
+    /*
+     * Ping ATC station
+     */
     BlackMisc::Aviation::CAtcStation Testservice::pingAtcStation(const BlackMisc::Aviation::CAtcStation &station)
     {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping ATC:" << station;
         return station;
     }
 
@@ -255,6 +293,19 @@ namespace BlackMiscTest
      */
     BlackMisc::Aviation::CAircraft Testservice::pingAircraft(const BlackMisc::Aviation::CAircraft &aircraft)
     {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping aircraft:" << aircraft;
         return aircraft;
     }
+
+    /*
+     * Ping variant
+     */
+    BlackMisc::CVariant Testservice::pingCVariant(const BlackMisc::Network::CClient &client)
+    {
+        // we receive as QVariant, but return as CVariant!
+        qDebug() << "Pid:" << ServiceTool::getPid() << "client sent back as CVariant:" << client.toQString();
+        return BlackMisc::CVariant::fromValue(client);
+    }
+
+
 } // namespace

@@ -2,8 +2,7 @@
 #include "testservice.h"
 #include "testservice_interface.h"
 #include "blackcore/dbus_server.h"
-#include "blackmisc/indexvariantmap.h"
-#include "blackmisc/nwserver.h"
+
 #include <QTextStream>
 #include <QString>
 #include <QFuture>
@@ -79,24 +78,25 @@ namespace BlackMiscTest
      */
     void ServiceTool::dataTransferTestClient(const QString &address)
     {
-        // send data via session
-        QDBusConnection sessionBusConnection = QDBusConnection::sessionBus();
-        qDebug() << "------------ sending via session bus" << sessionBusConnection.name();
-        ServiceTool::sendDataToTestservice(sessionBusConnection);
-
         // send data as P2P to server (this can be session bus, too, but usually is P2P)
-        QDBusConnection p2pConnection = address == "session" ?
+        bool sb = (address.toLower().startsWith("session"));
+        QDBusConnection p2pConnection = sb ?
                                         QDBusConnection::sessionBus() :
                                         QDBusConnection::connectToPeer(address, "p2pConnection");
+
+        qDebug() << "------------ connection info ---------------";
         qDebug() << "server connection has interface?" << p2pConnection.interface(); // returns 0 with server and a real interface with session bus
-        qDebug() << "------------ sending via P2P server " << p2pConnection.name();
+        qDebug() << "address:" << address;
+        qDebug() << "name:" << p2pConnection.name();
+        qDebug() << "------------ connection info ---------------";
+
         ServiceTool::sendDataToTestservice(p2pConnection);
     }
 
     /*
      * Get callsign
      */
-    CCallsign ServiceTool::getRandomCallsign()
+    CCallsign ServiceTool::getRandomAtcCallsign()
     {
         static QList<CCallsign> callsigns;
         if (callsigns.isEmpty())
@@ -108,7 +108,7 @@ namespace BlackMiscTest
             callsigns << CCallsign("EDDF_APP");
             callsigns << CCallsign("EDDF_GND");
         }
-        int i = (rand() % (6));
+        int i = (rand() % (callsigns.size()));
         CCallsign cs = callsigns.at(i);
         return cs;
     }
@@ -130,7 +130,42 @@ namespace BlackMiscTest
             list.push_back(s);
         }
         return list;
+    }
 
+    /*
+     * Airports
+     */
+    CAirportList ServiceTool::getAirports(qint32 number)
+    {
+        BlackMisc::Aviation::CAirportList list;
+        for (int i = 0; i < number; i++)
+        {
+            char cc = 65 + (i % 26);
+            QString icao = QString("EXX%1").arg(QLatin1Char(cc));
+            BlackMisc::Aviation::CAirport a(icao);
+            a.setPosition(CCoordinateGeodetic(i, i, i));
+            list.push_back(a);
+        }
+        return list;
+    }
+
+    CClientList ServiceTool::getClients(qint32 number)
+    {
+        BlackMisc::Network::CClientList list;
+        for (int i = 0; i < number; i++)
+        {
+            CCallsign cs(QString("DXX%1").arg(i));
+            QString rn = QString("Joe Doe%1").arg(i);
+            CUser user(QString::number(i), rn, cs);
+            user.setCallsign(cs);
+            CClient client(user);
+            client.setCapability(true, CClient::FsdWithInterimPositions);
+            client.setCapability(true, CClient::FsdWithModelDescription);
+            QString myFooModel = QString("fooModel %1").arg(i);
+            client.setAircraftModel(CAircraftModel(myFooModel, "nope"));
+            list.push_back(client);
+        }
+        return list;
     }
 
     /*
@@ -181,9 +216,10 @@ namespace BlackMiscTest
 
         CSpeed speed(200, BlackMisc::PhysicalQuantities::CSpeedUnit::km_h());
         CAltitude al(1000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
-        bool loop = true;
+        QTextStream qtin(stdin);
+        QString line;
 
-        while (loop)
+        while (true)
         {
             QDBusMessage m = QDBusMessage::createSignal(
                                  Testservice::ServicePath, Testservice::ServiceName,
@@ -269,7 +305,21 @@ namespace BlackMiscTest
                                 geoPos, CLength(50, CLengthUnit::km()));
 
             testserviceInterface.receiveAtcStation(station);
+            qDebug() << "Send ATC" << station;
 
+            // Math
+            CMatrix3x3 m33;
+            m33.setCellIndex();
+            testserviceInterface.receiveMatrix(m33);
+            qDebug() << "Send matrix" << m33;
+
+            // Geo
+            // EDDF: 50° 2′ 0″ N, 8° 34′ 14″ E, 100m MSL
+            geoPos = CCoordinateGeodetic::fromWgs84("50° 2′ 1″ 23 N", "8° 34′ 14″ E", CLength(111, CLengthUnit::m()));
+            testserviceInterface.receiveGeoPosition(geoPos);
+            qDebug() << "Send geo position" << geoPos;
+
+            qDebug() << "----------------- pings ----------------";
             CAtcStation stationReceived  = testserviceInterface.pingAtcStation(station);
             qDebug() << "Pinged ATC station via interface"
                      << ((station == stationReceived) ? "OK" : "ERROR!") << stationReceived;
@@ -280,17 +330,31 @@ namespace BlackMiscTest
             qDebug() << "Pinged aircraft via interface"
                      << ((aircraft == aircraftReceived) ? "OK" : "ERROR!") << aircraftReceived;
 
-            CAtcStationList AtcStationList;
-            AtcStationList.push_back(station);
-            AtcStationList.push_back(station);
-            AtcStationList.push_back(station);
-            AtcStationList = testserviceInterface.pingAtcStationList(AtcStationList);
-            qDebug() << "Pinged ATC stations list via interface" << AtcStationList.size() << AtcStationList;
+            CAtcStationList atcStationList;
+            atcStationList.push_back(station);
+            atcStationList.push_back(station);
+            atcStationList.push_back(station);
+            atcStationList = testserviceInterface.pingAtcStationList(atcStationList);
+            qDebug() << "Pinged ATC station list via interface" << atcStationList.size() << atcStationList;
 
-            AtcStationList = ServiceTool::getStations(10);
-            qDebug() << "Pinged ATC stations list via interface" << AtcStationList.size() << AtcStationList;
+            CAirportList airportList = ServiceTool::getAirports(10);
+            airportList = testserviceInterface.pingAirportList(airportList);
+            qDebug() << "Pinged airport list via interface" << airportList.size() << airportList;
+
+            CClientList clients = ServiceTool::getClients(10);
+            CClient client = clients.front();
+            client = testserviceInterface.pingClient(client);
+            qDebug() << "Pinged client via interface" << client;
+            clients = testserviceInterface.pingClientList(clients);
+            qDebug() << "Pinged client list via interface" << clients.size() << clients;
+
+            CVariant cv = CVariant::fromValue(clients);
+            qDebug() << "cv" << cv.toString();
+            cv = testserviceInterface.pingCVariant(client);
+            qDebug() << "Pinged CVariant via interface" << cv.toString();
 
             // test variant lists with different types wrapped in QVariant
+            qDebug() << "----------------- variant tests ----------------";
             QVariantList qvList;
             qvList << QVariant::fromValue(len);
             qvList << QVariant::fromValue(alt);
@@ -307,19 +371,9 @@ namespace BlackMiscTest
             }
             QThread::msleep(2500);
 
-            // Math
-            CMatrix3x3 m33;
-            m33.setCellIndex();
-            testserviceInterface.receiveMatrix(m33);
-            qDebug() << "Send matrix" << m33;
-
-            // Geo
-            // EDDF: 50° 2′ 0″ N, 8° 34′ 14″ E, 100m MSL
-            geoPos = CCoordinateGeodetic::fromWgs84("50° 2′ 1″ 23 N", "8° 34′ 14″ E", CLength(111, CLengthUnit::m()));
-            testserviceInterface.receiveGeoPosition(geoPos);
-            qDebug() << "Send geo position" << geoPos;
-
             // Value map
+            qDebug() << "----------------- index variant map ----------------";
+
             CIndexVariantMap valueMap;
             valueMap.addValue(1, 111.222);
             valueMap.addValue(2, callsign);
@@ -332,7 +386,8 @@ namespace BlackMiscTest
 
             // Performance tools
             QThread::msleep(2500);
-            qDebug() << "--- PERFORMANCE testing";
+            qDebug() << "----------------- performance ----------------";
+
             QElapsedTimer timer;
             timer.start();
             for (int i = 0; i < 10; i++)
@@ -382,20 +437,20 @@ namespace BlackMiscTest
             qDebug() << "Reading station objects 10/100/1000 in ms:" << t10 << t100 << t1000;
 
             timer.restart();
-            AtcStationList = testserviceInterface.getAtcStationList(10);
-            if (AtcStationList.size() != 10) qDebug() << "wrong list size" << AtcStationList.size();
+            atcStationList = testserviceInterface.getAtcStationList(10);
+            if (atcStationList.size() != 10) qDebug() << "wrong list size" << atcStationList.size();
             t10 = timer.nsecsElapsed() / 1000000; // ms
             QThread::msleep(1000);
 
             timer.restart();
-            AtcStationList = testserviceInterface.getAtcStationList(100);
-            if (AtcStationList.size() != 100) qDebug() << "wrong list size" << AtcStationList.size();
+            atcStationList = testserviceInterface.getAtcStationList(100);
+            if (atcStationList.size() != 100) qDebug() << "wrong list size" << atcStationList.size();
             t100 = timer.nsecsElapsed() / 1000000; // ms
             QThread::msleep(1000);
 
             timer.restart();
-            AtcStationList = testserviceInterface.getAtcStationList(1000);
-            if (AtcStationList.size() != 1000) qDebug() << "wrong list size" << AtcStationList.size();
+            atcStationList = testserviceInterface.getAtcStationList(1000);
+            if (atcStationList.size() != 1000) qDebug() << "wrong list size" << atcStationList.size();
             t1000 = timer.nsecsElapsed() / 1000000; // ms
 
             qDebug() << "Reading station list 10/100/1000 in ms:" << t10 << t100 << t1000;
@@ -420,9 +475,14 @@ namespace BlackMiscTest
             timer.invalidate();
 
             // next round?
+            qDebug() << "---------------------------------------";
             qDebug() << "Key  ....... x to exit, pid:" << ServiceTool::getPid();
-            int ch = getchar();
-            if (ch == 'x') loop = false;
+            line = qtin.readLine().toLower().trimmed();
+            if (line.startsWith('x'))
+            {
+                qDebug() << "Ending!";
+                break;
+            }
         }
     }
 } // namespace

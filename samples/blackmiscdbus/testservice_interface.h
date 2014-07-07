@@ -83,10 +83,10 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("pingAircraft"), argumentList);
         }
 
-        inline QDBusPendingReply<BlackMisc::Aviation::CAtcStationList> pingAtcStationList(BlackMisc::Aviation::CAtcStationList AtcStationList)
+        inline QDBusPendingReply<BlackMisc::Aviation::CAtcStationList> pingAtcStationList(BlackMisc::Aviation::CAtcStationList atcStationList)
         {
             QList<QVariant> argumentList;
-            argumentList << QVariant::fromValue(AtcStationList);
+            argumentList << QVariant::fromValue(atcStationList);
             return asyncCallWithArgumentList(QLatin1String("pingAtcStationList"), argumentList);
         }
 
@@ -97,7 +97,42 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("pingSpeed"), argumentList);
         }
 
-        inline QDBusPendingReply<> receiveAltitude(BlackMisc::Aviation::CAltitude altitude)
+        inline QDBusPendingReply<BlackMisc::Aviation::CAircraftList> pingAircraftList(BlackMisc::Aviation::CAircraftList aircraftList)
+        {
+            QList<QVariant> argumentList;
+            argumentList << aircraftList.toQVariant();
+            return asyncCallWithArgumentList(QLatin1String("pingAircraftList"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::Aviation::CAirportList> pingAirportList(BlackMisc::Aviation::CAirportList airportList)
+        {
+            QList<QVariant> argumentList;
+            argumentList << airportList.toQVariant();
+            return asyncCallWithArgumentList(QLatin1String("pingAirportList"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::Network::CClientList> pingClientList(BlackMisc::Network::CClientList clientList)
+        {
+            QList<QVariant> argumentList;
+            argumentList << clientList.toQVariant();
+            return asyncCallWithArgumentList(QLatin1String("pingClientList"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::Network::CClient> pingClient(BlackMisc::Network::CClient client)
+        {
+            QList<QVariant> argumentList;
+            argumentList << client.toQVariant();
+            return asyncCallWithArgumentList(QLatin1String("pingClient"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::CVariant> pingCVariant(BlackMisc::Network::CClient client)
+        {
+            QList<QVariant> argumentList;
+            argumentList << client.toQVariant();
+            return asyncCallWithArgumentList(QLatin1String("pingCVariant"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::Aviation::CAltitude> receiveAltitude(BlackMisc::Aviation::CAltitude altitude)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(altitude);

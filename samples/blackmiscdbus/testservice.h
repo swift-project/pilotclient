@@ -11,6 +11,7 @@
 #undef interface
 
 #include "blackmisc/avallclasses.h"
+#include "blackmisc/networkallclasses.h"
 #include "blackmisc/pqallquantities.h"
 #include "blackmisc/mathallclasses.h"
 #include "servicetool.h"
@@ -27,18 +28,10 @@ namespace BlackMiscTest
 {
 
     /*!
-     * Testservice for PQ DBus tests. Needs to re-generate the introspection xml file
-     * (qdbuscpp2xml) when new slots have been added.
+     * Testservice for PQ / CValueObject DBus tests
      */
     class Testservice : public QObject
     {
-        // see the readme.txt on how to qdbuscpp2xml
-        // remember to recompile the plugin when new class have been createdand registered
-        // http://techbase.kde.org/Development/Tutorials/D-Bus/CustomTypes#Write_a_class
-        // https://dev.vatsim-germany.org/projects/vatpilotclient/wiki/DBusExample
-        // http://qt-project.org/doc/qt-4.8/examples-dbus.html
-        // http://dbus.freedesktop.org/doc/dbus-tutorial.html#meta
-
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", BLACKMISCKTEST_TESTSERVICE_INTERFACENAME)
 
@@ -74,12 +67,6 @@ namespace BlackMiscTest
         void receiveSpeed(const BlackMisc::PhysicalQuantities::CSpeed &speed);
 
         /*!
-         * \brief Receive speed
-         * \param speed
-         */
-        BlackMisc::PhysicalQuantities::CSpeed pingSpeed(const BlackMisc::PhysicalQuantities::CSpeed &speed);
-
-        /*!
          * \brief Receive com unit
          * \param comUnit
          */
@@ -90,12 +77,6 @@ namespace BlackMiscTest
          * \param comUnit
          */
         void receiveAltitude(const BlackMisc::Aviation::CAltitude &altitude);
-
-        /*!
-         * \brief Receive altitude
-         * \param comUnit
-         */
-        BlackMisc::Aviation::CAltitude pingAltitude(const BlackMisc::Aviation::CAltitude &altitude);
 
         /*!
          * \brief Receive matrix
@@ -152,6 +133,37 @@ namespace BlackMiscTest
         void receiveAtcStation(const BlackMisc::Aviation::CAtcStation &station) const;
 
         /*!
+         * \brief Receive callsign
+         * \param callsign
+         */
+        void receiveCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+
+        /*!
+         * \brief Receive ATC list
+         * \param atcStationList
+         */
+        void receiveAtcStationList(const BlackMisc::Aviation::CAtcStationList &atcStationList) const;
+
+        /*!
+         * \brief Receive an value map
+         * \param valueMap
+         */
+        void receiveValueMap(const BlackMisc::CIndexVariantMap &valueMap) const;
+
+        /*!
+         * \brief Receive speed
+         * \param speed
+         */
+        BlackMisc::PhysicalQuantities::CSpeed pingSpeed(const BlackMisc::PhysicalQuantities::CSpeed &speed);
+
+        /*!
+         * \brief Receive altitude
+         * \param comUnit
+         */
+        BlackMisc::Aviation::CAltitude pingAltitude(const BlackMisc::Aviation::CAltitude &altitude);
+
+        /*!
          * \brief Ping ATC station
          * \param station
          */
@@ -165,10 +177,58 @@ namespace BlackMiscTest
         BlackMisc::Aviation::CAircraft pingAircraft(const BlackMisc::Aviation::CAircraft &aircraft);
 
         /*!
-         * \brief Receive callsign
-         * \param callsign
+         * \brief Ping ATC list
+         * \param atcStationList
+         * \return
          */
-        void receiveCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+        BlackMisc::Aviation::CAtcStationList pingAtcStationList(const BlackMisc::Aviation::CAtcStationList &atcStationList) const;
+
+        /*!
+         * \brief Ping aircrafts list
+         * \param aircraftList
+         * \return
+         */
+        BlackMisc::Aviation::CAircraftList pingAircraftList(const BlackMisc::Aviation::CAircraftList &aircraftList);
+
+        /*!
+         * \brief Ping airports list
+         * \param airportList
+         * \return
+         */
+        BlackMisc::Aviation::CAirportList pingAirportList(const BlackMisc::Aviation::CAirportList &airportList);
+
+        /*!
+         * \brief Ping client
+         * \param client
+         * \return
+         */
+        BlackMisc::Network::CClient pingClient(const BlackMisc::Network::CClient &client);
+
+        /*!
+         * \brief Ping NW clients list
+         * \param clientList
+         * \return
+         */
+        BlackMisc::Network::CClientList pingClientList(const BlackMisc::Network::CClientList &clientList);
+
+        /*!
+         * \brief Ping CVariant
+         * \param variant
+         * \return
+         */
+        BlackMisc::CVariant pingCVariant(const BlackMisc::Network::CClient &client);
+
+        /*!
+         * \brief Get speed
+         * \return
+         */
+        BlackMisc::PhysicalQuantities::CSpeed getSpeed() const;
+
+        /*!
+         * \brief Get station
+         * \return
+         */
+        BlackMisc::Aviation::CAtcStation getAtcStation() const;
 
         /*!
          * \brief return n ATC stations
@@ -183,37 +243,6 @@ namespace BlackMiscTest
          * \return
          */
         const QList<QDBusObjectPath> getObjectPaths(const qint32 number) const;
-
-        /*!
-         * \brief Receive ATC list
-         * \param AtcStationList
-         */
-        void receiveAtcStationList(const BlackMisc::Aviation::CAtcStationList &AtcStationList) const;
-
-        /*!
-         * \brief Receive an value map
-         * \param valueMap
-         */
-        void receiveValueMap(const BlackMisc::CIndexVariantMap &valueMap) const;
-
-        /*!
-         * \brief Ping atc list
-         * \param AtcStationList
-         * \return
-         */
-        BlackMisc::Aviation::CAtcStationList pingAtcStationList(const BlackMisc::Aviation::CAtcStationList &AtcStationList) const;
-
-        /*!
-         * \brief Get speed
-         * \return
-         */
-        BlackMisc::PhysicalQuantities::CSpeed getSpeed() const;
-
-        /*!
-         * \brief Get station
-         * \return
-         */
-        BlackMisc::Aviation::CAtcStation getAtcStation() const;
 
     public:
         static const QString ServiceName;
