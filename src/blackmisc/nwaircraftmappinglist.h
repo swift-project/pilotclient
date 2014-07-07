@@ -34,7 +34,7 @@ namespace BlackMisc
             CAircraftMappingList(const CSequence<CAircraftMapping> &other);
 
             //! QVariant, required for DBus QVariant lists
-            virtual QVariant toQVariant() const { return QVariant::fromValue(*this); }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Find by frequency
             CAircraftMappingList findByIcaoCode(const BlackMisc::Aviation::CAircraftIcao &searchIcao, bool emptyMeansWildcard = true) const;

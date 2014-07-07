@@ -33,10 +33,7 @@ namespace BlackMisc
         CStatusMessageList findBySeverity(CStatusMessage::StatusSeverity severity) const;
 
         //! \copydoc CValueObject::asQVariant
-        virtual QVariant asQVariant() const
-        {
-            return QVariant::fromValue(*this);
-        }
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
         //! \brief Register metadata of unit and quantity
         static void registerMetadata();

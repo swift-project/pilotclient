@@ -318,15 +318,15 @@ namespace BlackMisc
          */
         QJsonObject CAircraft::toJson() const
         {
-            return BlackMisc::serializeJson(CAircraft::jsonMembers(), TupleConverter<CAircraft>::toTuple(*this));
+            return BlackMisc::serializeJson(TupleConverter<CAircraft>::toMetaTuple(*this));
         }
 
         /*
-         * To JSON
+         * From JSON
          */
         void CAircraft::fromJson(const QJsonObject &json)
         {
-            BlackMisc::deserializeJson(json, CAircraft::jsonMembers(), TupleConverter<CAircraft>::toTuple(*this));
+            BlackMisc::deserializeJson(json, TupleConverter<CAircraft>::toMetaTuple(*this));
         }
 
         /*

@@ -33,15 +33,10 @@ namespace BlackMisc
             //! Construct from a base class object.
             CVoiceRoomList(const CSequence &other);
 
-            //! \copydoc CValueObject::asQVariant
-            virtual QVariant asQVariant() const
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            /*!
-             * \brief Register metadata
-             */
+            //! \brief Register metadata
             static void registerMetadata();
 
             //! Frequently needed for voice room resolutions

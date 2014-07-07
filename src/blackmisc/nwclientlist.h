@@ -28,7 +28,7 @@ namespace BlackMisc
             CClientList(const CSequence &other);
 
             //! QVariant, required for DBus QVariant lists
-            virtual QVariant asQVariant() const { return QVariant::fromValue(*this); }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Register metadata
             static void registerMetadata();

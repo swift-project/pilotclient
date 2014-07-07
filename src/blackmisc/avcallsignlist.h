@@ -32,10 +32,7 @@ namespace BlackMisc
             CCallsignList(const CSequence<CCallsign> &other);
 
             //! CValueObject::toQVariant()
-            virtual QVariant toQVariant() const
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Register metadata
             static void registerMetadata();

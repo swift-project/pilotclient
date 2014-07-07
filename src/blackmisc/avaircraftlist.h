@@ -35,10 +35,7 @@ namespace BlackMisc
             CAircraftList(const CSequence<CAircraft> &other);
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Find 0..n stations by callsign
             CAircraftList findByCallsign(const CCallsign &callsign) const;

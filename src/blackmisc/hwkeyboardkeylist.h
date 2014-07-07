@@ -32,10 +32,7 @@ namespace BlackMisc
             CKeyboardKeyList(const CSequence<CKeyboardKey> &baseClass);
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Contains given hotkey function?
             bool containsFunction(CKeyboardKey::HotkeyFunction function) const;

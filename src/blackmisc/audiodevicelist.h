@@ -38,14 +38,8 @@ namespace BlackMisc
              */
             CAudioDeviceList(const CSequence &other);
 
-            /*!
-             * \brief QVariant, required for DBus QVariant lists
-             * \return
-             */
-            virtual QVariant asQVariant() const
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             /*!
              * \brief Get output devices in that list

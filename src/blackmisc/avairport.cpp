@@ -71,7 +71,7 @@ namespace BlackMisc
          */
         QJsonObject CAirport::toJson() const
         {
-            return BlackMisc::serializeJson(CAirport::jsonMembers(), TupleConverter<CAirport>::toTuple(*this));
+            return BlackMisc::serializeJson(TupleConverter<CAirport>::toMetaTuple(*this));
         }
 
         /*
@@ -79,7 +79,7 @@ namespace BlackMisc
          */
         void CAirport::fromJson(const QJsonObject &json)
         {
-            BlackMisc::deserializeJson(json, CAirport::jsonMembers(), TupleConverter<CAirport>::toTuple(*this));
+            BlackMisc::deserializeJson(json, TupleConverter<CAirport>::toMetaTuple(*this));
         }
 
         /*

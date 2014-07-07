@@ -127,7 +127,7 @@ namespace BlackSimPlugin
                         if (!pFacilityAirport) break;
                         const QString icao(pFacilityAirport->Icao);
                         if (icao.isEmpty()) continue; // airfield without ICAO code
-                        if (!CAircraftIcao::isValidDesignator(icao)) continue; // tiny airfields in SIM
+                        if (!CAirportIcao::isValidIcaoDesignator(icao)) continue; // tiny airfields in SIM
                         CCoordinateGeodetic pos(pFacilityAirport->Latitude, pFacilityAirport->Longitude, pFacilityAirport->Altitude);
                         CAirport airport(CAirportIcao(icao), pos);
                         CLength d = airport.calculcateDistanceAndBearingToPlane(posAircraft);

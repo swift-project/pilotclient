@@ -32,7 +32,7 @@ namespace BlackMisc
             CAirportList(const CSequence<CAirport> &other);
 
             //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const { return QVariant::fromValue(*this); }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Find 0..n airports by ICAO code
             CAirportList findByIcao(const CAirportIcao &icao) const;

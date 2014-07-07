@@ -106,6 +106,12 @@ namespace BlackMisc
             //! Set voice capabilities
             void setVoiceCapabilities(const QString &flightPlanRemarks) { m_voiceCapabilities = CVoiceCapabilities(flightPlanRemarks);}
 
+            //! User
+            const CUser &getUser() const { return this->m_user; }
+
+            //! User
+            void setUser(const CUser &user) { this->m_user = user;}
+
             //! Server
             const QString &getServer() const { return this->m_server; }
 
@@ -164,7 +170,7 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CClient, (o.m_user, o.m_model, o.m_capabilities))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CClient, (o.m_user, o.m_model, o.m_capabilities, o.m_server, o.m_voiceCapabilities))
 Q_DECLARE_METATYPE(BlackMisc::Network::CClient)
 
 #endif // guard

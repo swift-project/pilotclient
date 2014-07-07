@@ -11,6 +11,12 @@ namespace BlackMisc
         QString CClient::convertToQString(bool i18n) const
         {
             QString s = this->m_user.toQString(i18n);
+            s.append(" capabilites: ").append(this->getCapabilitiesAsString());
+            s.append(" model: ").append(this->m_model.toQString(i18n));
+            if (!this->m_server.isEmpty())
+            {
+                s.append(" server:").append(this->m_server);
+            }
             return s;
         }
 
@@ -103,7 +109,7 @@ namespace BlackMisc
          */
         QJsonObject CClient::toJson() const
         {
-            return BlackMisc::serializeJson(CClient::jsonMembers(), TupleConverter<CClient>::toTuple(*this));
+            return BlackMisc::serializeJson(TupleConverter<CClient>::toMetaTuple(*this));
         }
 
         /*
@@ -111,7 +117,7 @@ namespace BlackMisc
          */
         void CClient::fromJson(const QJsonObject &json)
         {
-            BlackMisc::deserializeJson(json, CClient::jsonMembers(), TupleConverter<CClient>::toTuple(*this));
+            BlackMisc::deserializeJson(json, TupleConverter<CClient>::toMetaTuple(*this));
         }
 
         /*
@@ -119,7 +125,7 @@ namespace BlackMisc
          */
         void CClient::setCapability(bool hasCapability, CClient::Capabilities capability)
         {
-            this->m_capabilities.setPropertyByIndex(QVariant(hasCapability), capability);
+            this->m_capabilities.addValue(static_cast<int>(capability), hasCapability);
         }
 
         /*

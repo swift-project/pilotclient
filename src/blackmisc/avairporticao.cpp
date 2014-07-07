@@ -71,12 +71,24 @@ namespace BlackMisc
             return TupleConverter<CAirportIcao>::jsonMembers();
         }
 
+        /*
+         * Unify ICAO code
+         */
         QString CAirportIcao::unifyAirportCode(const QString &icaoCode)
         {
             QString code = icaoCode.trimmed().toUpper();
             if (code.length() != 4) return "";
             QRegExp reg("[A-Z]{4}");
             return (reg.exactMatch(code)) ? code : "";
+        }
+
+        /*
+         * Valid ICAO designator?
+         */
+        bool CAirportIcao::isValidIcaoDesignator(const QString &icaoCode)
+        {
+            QString icao = unifyAirportCode(icaoCode);
+            return icao.length() == 4;
         }
 
         /*
