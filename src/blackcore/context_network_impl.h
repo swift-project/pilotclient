@@ -160,23 +160,23 @@ namespace BlackCore
 
     private slots:
         //! Own aircraft was updated
-        void psChangedOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
+        void ps_ChangedOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
 
         //! ATC bookings received
-        void psReceivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void ps_ReceivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
 
         //! Data file has been read
-        void psDataFileRead();
+        void ps_DataFileRead();
 
         /*!
          * \brief Connection status changed?
          * \param from  old status
          * \param to    new status
          */
-        void psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message);
+        void ps_FsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message);
 
         //! Radio text messages received
-        void psFsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
+        void ps_FsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
     };
 }
 

@@ -411,7 +411,7 @@ namespace BlackCore
         {
             // only, when both contexts exists and only if settings originate locally
             c = connect(this->m_contextSettings, &IContextSettings::changedSettings,
-                        this->getCContextAudio(), &CContextAudio::settingsChanged);
+                        this->getCContextAudio(), &CContextAudio::ps_settingsChanged);
             Q_ASSERT(c);
         }
 
@@ -422,11 +422,11 @@ namespace BlackCore
             if (this->m_contextNetwork && this->m_contextNetwork->usingLocalObjects())
             {
                 c = connect(this->m_contextNetwork, &IContextNetwork::changedAircraftSituation,
-                            this->getCContextSimulator(), &CContextSimulator::addAircraftSituation);
+                            this->getCContextSimulator(), &CContextSimulator::ps_addAircraftSituation);
                 Q_ASSERT(c);
 
                 c = connect(this->m_contextNetwork, &IContextNetwork::textMessagesReceived,
-                            this->getCContextSimulator(), &CContextSimulator::textMessagesReceived);
+                            this->getCContextSimulator(), &CContextSimulator::ps_textMessagesReceived);
                 Q_ASSERT(c);
             }
 
@@ -434,7 +434,7 @@ namespace BlackCore
             if (this->m_contextOwnAircraft && this->m_contextOwnAircraft->usingLocalObjects())
             {
                 c = connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit,
-                            this->getCContextSimulator(), &CContextSimulator::updateCockpitFromContext);
+                            this->getCContextSimulator(), &CContextSimulator::ps_updateCockpitFromContext);
                 Q_ASSERT(c);
             }
 
@@ -442,11 +442,11 @@ namespace BlackCore
             if (this->m_contextApplication && this->m_contextApplication->usingLocalObjects())
             {
                 c = connect(this->m_contextApplication, &IContextApplication::statusMessage,
-                            this->getCContextSimulator(), &CContextSimulator::statusMessageReceived);
+                            this->getCContextSimulator(), &CContextSimulator::ps_statusMessageReceived);
                 Q_ASSERT(c);
 
                 c = connect(this->m_contextApplication, &IContextApplication::statusMessages,
-                            this->getCContextSimulator(), &CContextSimulator::statusMessagesReceived);
+                            this->getCContextSimulator(), &CContextSimulator::ps_statusMessagesReceived);
                 Q_ASSERT(c);
             }
 
@@ -466,12 +466,12 @@ namespace BlackCore
         if (this->m_contextNetwork && this->m_contextOwnAircraft && this->m_contextNetwork->usingLocalObjects() && this->m_contextOwnAircraft->usingLocalObjects())
         {
             c = this->connect(this->m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
-                              this->getCContextOwnAircraft(),  &CContextOwnAircraft::changedAtcStationOnlineConnectionStatus);
+                              this->getCContextOwnAircraft(),  &CContextOwnAircraft::ps_changedAtcStationOnlineConnectionStatus);
             Q_ASSERT(c);
 
             // inject updated own aircraft to network
             c = this->connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraft,
-                              this->getCContextNetwork(),  &CContextNetwork::psChangedOwnAircraft);
+                              this->getCContextNetwork(),  &CContextNetwork::ps_ChangedOwnAircraft);
             Q_ASSERT(c);
         }
     }

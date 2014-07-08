@@ -113,14 +113,14 @@ namespace BlackCore
 
     private slots:
         //! Settings have been changed
-        void settingsChanged(uint typeValue);
+        void ps_settingsChanged(uint typeValue);
 
         //! \copydoc IVoice::connectionStatusChanged
         //! \sa IContextAudio::changedVoiceRooms
-        void connectionStatusChanged(IVoice::ComUnit comUnit, IVoice::ConnectionStatus oldStatus, IVoice::ConnectionStatus newStatus);
+        void ps_connectionStatusChanged(IVoice::ComUnit comUnit, IVoice::ConnectionStatus oldStatus, IVoice::ConnectionStatus newStatus);
 
         //! Init notification sounds
-        void initNotificationSounds();
+        void ps_initNotificationSounds();
 
     private:
         //! Connection in transition

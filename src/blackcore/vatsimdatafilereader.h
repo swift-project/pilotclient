@@ -71,7 +71,7 @@ namespace BlackCore
 
     private slots:
         //! Data have been read
-        void loadFinished(QNetworkReply *nwReply);
+        void ps_loadFinished(QNetworkReply *nwReply);
 
     private:
         QStringList m_serviceUrls; /*!< URL of the service */

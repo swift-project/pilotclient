@@ -76,7 +76,7 @@ namespace BlackCore
     private slots:
         //! Station has been changed, needed to tune in/out voice room
         //! Set in runtime
-        void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
+        void ps_changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
 
     private:
         BlackMisc::Aviation::CAircraft m_ownAircraft; //!< my aircraft

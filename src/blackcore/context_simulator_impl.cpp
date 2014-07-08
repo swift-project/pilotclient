@@ -25,7 +25,7 @@ namespace BlackCore
     {
         m_updateTimer = new QTimer(this);
         findSimulatorPlugins();
-        connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::updateOwnAircraft);
+        connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::ps_updateOwnAircraft);
 
         // do not load plugin here, as it depends on settings
         // it has to be guaranteed the settings are alredy loaded
@@ -148,7 +148,7 @@ namespace BlackCore
         this->unloadSimulatorPlugin(); // old plugin unloaded
         m_simulator = newSimulator;
 
-        connect(m_simulator, SIGNAL(statusChanged(ISimulator::Status)), this, SLOT(setConnectionStatus(ISimulator::Status)));
+        connect(m_simulator, SIGNAL(statusChanged(ISimulator::Status)), this, SLOT(ps_setConnectionStatus(ISimulator::Status)));
         connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
         if (this->getIContextApplication() && this->getIContextApplication()->usingLocalObjects())
         {
@@ -206,7 +206,7 @@ namespace BlackCore
         m_simulator = nullptr;
     }
 
-    void CContextSimulator::updateOwnAircraft()
+    void CContextSimulator::ps_updateOwnAircraft()
     {
         Q_ASSERT(this->getIContextOwnAircraft());
 
@@ -225,14 +225,14 @@ namespace BlackCore
         }
     }
 
-    void CContextSimulator::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &initialSituation)
+    void CContextSimulator::ps_addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &initialSituation)
     {
         Q_ASSERT(this->m_simulator);
         if (!this->m_simulator) return;
         this->m_simulator->addAircraftSituation(callsign, initialSituation);
     }
 
-    void CContextSimulator::updateCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
+    void CContextSimulator::ps_updateCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
     {
         Q_ASSERT(this->m_simulator);
         if (!this->m_simulator) return;
@@ -244,7 +244,7 @@ namespace BlackCore
         this->m_simulator->updateOwnSimulatorCockpit(ownAircraft);
     }
 
-    void CContextSimulator::setConnectionStatus(ISimulator::Status status)
+    void CContextSimulator::ps_setConnectionStatus(ISimulator::Status status)
     {
         if (status == ISimulator::Connected)
         {
@@ -258,21 +258,21 @@ namespace BlackCore
         }
     }
 
-    void CContextSimulator::statusMessageReceived(const CStatusMessage &statusMessage)
+    void CContextSimulator::ps_statusMessageReceived(const CStatusMessage &statusMessage)
     {
         if (statusMessage.getSeverity() != CStatusMessage::SeverityError) return;
         this->m_simulator->displayStatusMessage(statusMessage);
     }
 
-    void CContextSimulator::statusMessagesReceived(const CStatusMessageList &statusMessages)
+    void CContextSimulator::ps_statusMessagesReceived(const CStatusMessageList &statusMessages)
     {
         foreach(CStatusMessage m, statusMessages)
         {
-            this->statusMessageReceived(m);
+            this->ps_statusMessageReceived(m);
         }
     }
 
-    void CContextSimulator::textMessagesReceived(const Network::CTextMessageList &textMessages)
+    void CContextSimulator::ps_textMessagesReceived(const Network::CTextMessageList &textMessages)
     {
         if (!this->m_simulator) return;
         foreach(CTextMessage tm, textMessages)

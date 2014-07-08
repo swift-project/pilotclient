@@ -42,11 +42,11 @@ namespace BlackCore
         // 4. Signal / slots
         connect(this->m_voice, &CVoiceVatlib::micTestFinished, this, &CContextAudio::audioTestCompleted);
         connect(this->m_voice, &CVoiceVatlib::squelchTestFinished, this, &CContextAudio::audioTestCompleted);
-        connect(this->m_voice, &CVoiceVatlib::connectionStatusChanged, this, &CContextAudio::connectionStatusChanged);
+        connect(this->m_voice, &CVoiceVatlib::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
         if (this->getIContextApplication()) this->connect(this->m_voice, &IVoice::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
 
         // 5. load sounds (init), not possible in own thread
-        QTimer::singleShot(10 * 1000, this, SLOT(initNotificationSounds()));
+        QTimer::singleShot(10 * 1000, this, SLOT(ps_initNotificationSounds()));
     }
 
     /*
@@ -299,7 +299,7 @@ namespace BlackCore
     /*
      * Notification
      */
-    void CContextAudio::initNotificationSounds()
+    void CContextAudio::ps_initNotificationSounds()
     {
         // not possible in own thread
         CSoundGenerator::playNotificationSound(0, CNotificationSounds::NotificationsLoadSounds);
@@ -358,7 +358,7 @@ namespace BlackCore
     /*
      * Settings changed
      */
-    void CContextAudio::settingsChanged(uint typeValue)
+    void CContextAudio::ps_settingsChanged(uint typeValue)
     {
         if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
         if (!this->getIContextSettings()) return;
@@ -376,7 +376,7 @@ namespace BlackCore
     /*
      * Connection status changed
      */
-    void CContextAudio::connectionStatusChanged(IVoice::ComUnit comUnit, IVoice::ConnectionStatus oldStatus, IVoice::ConnectionStatus newStatus)
+    void CContextAudio::ps_connectionStatusChanged(IVoice::ComUnit comUnit, IVoice::ConnectionStatus oldStatus, IVoice::ConnectionStatus newStatus)
     {
         Q_UNUSED(comUnit);
         Q_UNUSED(oldStatus);

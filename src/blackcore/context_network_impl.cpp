@@ -41,19 +41,19 @@ namespace BlackCore
 
         // 1. Init by "network driver"
         this->m_network = new CNetworkVatlib(this);
-        this->connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::psFsdConnectionStatusChanged);
-        this->connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::psFsdTextMessageReceived);
+        this->connect(this->m_network, &INetwork::connectionStatusChanged, this, &CContextNetwork::ps_FsdConnectionStatusChanged);
+        this->connect(this->m_network, &INetwork::textMessagesReceived, this, &CContextNetwork::ps_FsdTextMessageReceived);
 
         // 2. VATSIM bookings
         this->m_vatsimBookingReader = new CVatsimBookingReader(this->getRuntime()->getIContextSettings()->getNetworkSettings().getBookingServiceUrl(), this);
-        this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CContextNetwork::psReceivedBookings);
+        this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CContextNetwork::ps_ReceivedBookings);
         this->m_vatsimBookingReader->read(); // first read
         this->m_vatsimBookingReader->setInterval(180 * 1000);
 
         // 3. VATSIM data file
         const QStringList dataFileUrls = { "http://info.vroute.net/vatsim-data.txt" };
         this->m_vatsimDataFileReader = new CVatsimDataFileReader(dataFileUrls, this);
-        this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CContextNetwork::psDataFileRead);
+        this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CContextNetwork::ps_DataFileRead);
         this->m_vatsimDataFileReader->read(); // first read
         this->m_vatsimDataFileReader->setInterval(90 * 1000);
 
@@ -263,7 +263,7 @@ namespace BlackCore
     /*
      * Connection status changed
      */
-    void CContextNetwork::psFsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
+    void CContextNetwork::ps_FsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
     {
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { QString::number(from), QString::number(to) });
         this->m_currentStatus = to;
@@ -296,7 +296,7 @@ namespace BlackCore
     /*
      * Data file (VATSIM) has been read
      */
-    void CContextNetwork::psDataFileRead()
+    void CContextNetwork::ps_DataFileRead()
     {
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         // TODO (MS) no test for if (this->getIContextApplication()) here?
@@ -306,7 +306,7 @@ namespace BlackCore
     /*
      * Radio text message received
      */
-    void CContextNetwork::psFsdTextMessageReceived(const CTextMessageList &messages)
+    void CContextNetwork::ps_FsdTextMessageReceived(const CTextMessageList &messages)
     {
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, messages.toQString());
         this->textMessagesReceived(messages); // relay
@@ -319,7 +319,7 @@ namespace BlackCore
         return this->getRuntime()->getCContextOwnAircraft()->ownAircraft();
     }
 
-    void CContextNetwork::psChangedOwnAircraft(const CAircraft &aircraft, const QString &originator)
+    void CContextNetwork::ps_ChangedOwnAircraft(const CAircraft &aircraft, const QString &originator)
     {
         Q_ASSERT(this->m_network);
         Q_UNUSED(originator);
@@ -338,7 +338,7 @@ namespace BlackCore
     /*
      * Update bookings
      */
-    void CContextNetwork::psReceivedBookings(const CAtcStationList &)
+    void CContextNetwork::ps_ReceivedBookings(const CAtcStationList &)
     {
         // TODO (MS) no test for if (this->getIContextApplication()) here?
         this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage("Read bookings from network", CStatusMessage::TypeTrafficNetwork));

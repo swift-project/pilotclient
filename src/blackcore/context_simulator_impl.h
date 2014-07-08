@@ -91,26 +91,26 @@ namespace BlackCore
 
     private slots:
         //! Update own aircraft, because simulator has changed something
-        void updateOwnAircraft();
+        void ps_updateOwnAircraft();
 
         //! \copydoc ISimulator::addAircraftSituation
-        void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
+        void ps_addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
 
         //! Update cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
         //! \remarks set by runtime, only locally
-        void updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
+        void ps_updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
 
         //! Set new connection status
-        void setConnectionStatus(ISimulator::Status status);
+        void ps_setConnectionStatus(ISimulator::Status status);
 
         //! Status message received
-        void statusMessageReceived(const BlackMisc::CStatusMessage &statusMessage);
+        void ps_statusMessageReceived(const BlackMisc::CStatusMessage &statusMessage);
 
         //! Status messages received
-        void statusMessagesReceived(const BlackMisc::CStatusMessageList &statusMessages);
+        void ps_statusMessagesReceived(const BlackMisc::CStatusMessageList &statusMessages);
 
         //! Text message received
-        void textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
+        void ps_textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
     private:
         //! \brief find and catalog all simulator plugins

@@ -20,7 +20,7 @@ namespace BlackCore
         m_serviceUrls(urls), m_currentUrlIndex(0), m_networkManager(nullptr)
     {
         this->m_networkManager = new QNetworkAccessManager(this);
-        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimDataFileReader::loadFinished);
+        this->connect(this->m_networkManager, &QNetworkAccessManager::finished, this, &CVatsimDataFileReader::ps_loadFinished);
         this->connect(this->m_updateTimer, &QTimer::timeout, this, &CVatsimDataFileReader::read);
     }
 
@@ -124,7 +124,7 @@ namespace BlackCore
     /*
      * Data file read from XML
      */
-    void CVatsimDataFileReader::loadFinished(QNetworkReply *nwReply)
+    void CVatsimDataFileReader::ps_loadFinished(QNetworkReply *nwReply)
     {
         this->setPendingNetworkReply(nullptr);
         if (!this->isStopped())

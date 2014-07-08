@@ -201,7 +201,7 @@ namespace BlackCore
     /*
      * Tune in / out voice room
      */
-    void CContextOwnAircraft::changedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
+    void CContextOwnAircraft::ps_changedAtcStationOnlineConnectionStatus(const CAtcStation &atcStation, bool connected)
     {
         // any of our active frequencies?
         Q_UNUSED(connected);
