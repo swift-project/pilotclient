@@ -18,8 +18,16 @@
 #include "blackmisc/voiceroomlist.h"
 #include "blackcore/network.h"
 
+//! \addtogroup dbus
+//! @{
+
+//! DBus interface for context
 #define BLACKCORE_CONTEXTNETWORK_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextNetwork"
+
+//! DBus object path for context
 #define BLACKCORE_CONTEXTNETWORK_OBJECTPATH "/Network"
+
+//! @}
 
 namespace BlackCore
 {

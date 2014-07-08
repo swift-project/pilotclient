@@ -15,7 +15,7 @@ namespace BlackCore
     class CRuntime;
 
     /*!
-     * \brief Application context
+     * Application context
      */
     class CContextApplication : public IContextApplication
     {
@@ -28,7 +28,7 @@ namespace BlackCore
         //! \copydoc IContextApplication::ping()
         virtual qint64 ping(qint64 token) const override;
 
-        //! \brief Status message
+        //! Status message
         virtual void sendStatusMessage(const BlackMisc::CStatusMessage &message) override;
 
         //! Send status messages

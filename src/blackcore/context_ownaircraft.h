@@ -3,6 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+//! \file
+
 #ifndef BLACKCORE_CONTEXTOWNAIRCRAFT_H
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_H
 
@@ -10,13 +12,22 @@
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/voiceroomlist.h"
 
+//! \addtogroup dbus
+//! @{
+
+//! DBus interface for context
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextOwnAircraft"
+
+//! DBus object path for context
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_OBJECTPATH "/OwnAircraft"
+
+//! @}
 
 namespace BlackCore
 {
 
     //! \brief Own context proxy
+    //! \ingroup dbus
     class IContextOwnAircraft : public CContext
     {
         Q_OBJECT
@@ -47,7 +58,7 @@ namespace BlackCore
         virtual ~IContextOwnAircraft() {}
 
     signals:
-        //! Aircraft changed
+        //! \brief Aircraft changed
         //! \remarks local only
         void changedAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
 
@@ -83,7 +94,7 @@ namespace BlackCore
         //! Set current pilot
         virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) = 0;
 
-        //! Output volumens,  volumes 0..100
+        //! Output volumes,  volumes 0..100
         virtual void setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2) = 0;
 
         //! Set individual voice rooms (overrides voice rooms)

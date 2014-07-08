@@ -19,16 +19,15 @@
 namespace BlackCore
 {
 
-    /*!
-     * \brief Settings context proxy
-     */
+    //! \brief Settings context proxy
+    //! \ingroup dbus
     class CContextSettingsProxy : public IContextSettings
     {
         Q_OBJECT
         friend class IContextSettings;
 
     public:
-        //! \brief Destructor
+        //! Destructor
         virtual ~CContextSettingsProxy() {}
 
     private:
@@ -39,10 +38,10 @@ namespace BlackCore
         void relaySignals(const QString &serviceName, QDBusConnection &connection);
 
     protected:
-        //! \brief DBus version constructor
+        //! DBus version constructor
         CContextSettingsProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
-        //! \brief Constructor
+        //! Constructor
         CContextSettingsProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSettings(mode, runtime), m_dBusInterface(nullptr) {}
 
     public slots:
@@ -64,16 +63,16 @@ namespace BlackCore
         //! \copydoc IContextSettings::write
         BlackMisc::CStatusMessage write() const override;
 
-        //! \brief read settings
+        //! read settings
         virtual BlackMisc::CStatusMessage read() override;
 
         //! \copydoc IContextSettings::reset
         virtual BlackMisc::CStatusMessage reset(bool write = true) override;
 
-        //! \brief settings file name
+        //! settings file name
         virtual QString getSettingsFileName() const override;
 
-        //! \brief as JSON string
+        //! as JSON string
         virtual QString getSettingsAsJsonString() const override;
 
     };

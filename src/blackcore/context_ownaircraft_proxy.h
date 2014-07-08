@@ -14,6 +14,7 @@ namespace BlackCore
 {
 
     //! \brief Network context proxy
+    //! \ingroup dbus
     class CContextOwnAircraftProxy : public IContextOwnAircraft
     {
         Q_OBJECT

@@ -3,11 +3,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+//! \file
+
 #ifndef BLACKCORE_CONTEXTSIMULATOR_H
 #define BLACKCORE_CONTEXTSIMULATOR_H
 
+//! \addtogroup dbus
+//! @{
+
+//! DBus interface for context
 #define BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextSimulator"
+
+//! DBus object path for context
 #define BLACKCORE_CONTEXTSIMULATOR_OBJECTPATH "/Simulator"
+
+//! @}
 
 #include "context.h"
 #include "blackcore/dbus_server.h"

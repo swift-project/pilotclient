@@ -3,6 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+//! \file
+
 #ifndef BLACKCORE_CONTEXTAPPLICATION_H
 #define BLACKCORE_CONTEXTAPPLICATION_H
 
@@ -11,8 +13,16 @@
 #include <QObject>
 #include <QReadWriteLock>
 
+//! \addtogroup dbus
+//! @{
+
+//! DBus interface for context
 #define BLACKCORE_CONTEXTAPPLICATION_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextApplication"
+
+//! DBus object path for context
 #define BLACKCORE_CONTEXTAPPLICATION_OBJECTPATH "/Application"
+
+//! @}
 
 namespace BlackCore
 {

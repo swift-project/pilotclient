@@ -18,6 +18,7 @@ namespace BlackCore
 {
 
     //! \brief Audio context proxy
+    //! \ingroup dbus
     class CContextAudioProxy : public IContextAudio
     {
         Q_OBJECT

@@ -12,9 +12,8 @@
 namespace BlackCore
 {
 
-    /*!
-     * \brief Application context proxy
-     */
+    //! \brief Application context proxy
+    //! \ingroup dbus
     class CContextApplicationProxy : public IContextApplication
     {
         Q_OBJECT
@@ -28,7 +27,7 @@ namespace BlackCore
         //! \copydoc IContextApplication::ping()
         virtual qint64 ping(qint64 token) const override;
 
-        //! \brief Status message
+        //! Status message
         virtual void sendStatusMessage(const BlackMisc::CStatusMessage &message) override;
 
         //! Send status messages

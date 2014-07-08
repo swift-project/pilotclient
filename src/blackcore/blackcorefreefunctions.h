@@ -6,13 +6,10 @@
 #ifndef BLACKCORE_FREEFUNCTIONS_H
 #define BLACKCORE_FREEFUNCTIONS_H
 
-/*!
- * Free functions in BlackSim
- */
 namespace BlackCore
 {
     /*!
-     * \brief Register all relevant metadata in BlackCore
+     * Register all relevant metadata in BlackCore
      */
     void registerMetadata();
 

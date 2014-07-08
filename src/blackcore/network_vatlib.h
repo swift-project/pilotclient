@@ -46,10 +46,11 @@ namespace BlackCore
         virtual BlackMisc::Network::CServerList getKnownServers() const override;
 
         // Network slots
+        //! \copydoc INetwork::presetLoginMode
+        virtual void presetLoginMode(LoginMode mode) override;
         virtual void presetServer(const BlackMisc::Network::CServer &server) override;
         virtual void presetCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
         virtual void presetIcaoCodes(const BlackMisc::Aviation::CAircraftIcao &icao) override;
-        virtual void presetLoginMode(LoginMode mode) override;
         virtual void initiateConnection() override;
         virtual void terminateConnection() override;
         virtual void sendPing(const BlackMisc::Aviation::CCallsign &callsign) override;

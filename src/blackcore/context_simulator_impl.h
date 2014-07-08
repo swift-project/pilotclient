@@ -97,7 +97,7 @@ namespace BlackCore
         void ps_addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
 
         //! Update cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
-        //! \remarks set by runtime, only locally
+        //! \remarks set by runtime, only to be used locally (not via DBus)
         void ps_updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
 
         //! Set new connection status

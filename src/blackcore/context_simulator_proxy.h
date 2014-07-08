@@ -12,6 +12,7 @@
 namespace BlackCore
 {
     //! \brief DBus proxy for Simulator Context
+    //! \ingroup dbus
     class CContextSimulatorProxy : public IContextSimulator
     {
         Q_OBJECT
@@ -31,7 +32,7 @@ namespace BlackCore
         //! Constructor
         CContextSimulatorProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSimulator(mode, runtime), m_dBusInterface(0) {}
 
-        //! \brief DBus version constructor
+        //! DBus version constructor
         CContextSimulatorProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
     public slots:

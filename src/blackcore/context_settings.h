@@ -3,6 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+//! \file
+
 #ifndef BLACKCORE_CONTEXTSETTINGS_H
 #define BLACKCORE_CONTEXTSETTINGS_H
 
@@ -17,8 +19,16 @@
 #include <QObject>
 #include <QVariant>
 
+//! \addtogroup dbus
+//! @{
+
+//! DBus interface for context
 #define BLACKCORE_CONTEXTSETTINGS_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextSettings"
+
+//! DBus object path for context
 #define BLACKCORE_CONTEXTSETTINGS_OBJECTPATH "/Settings"
+
+//! @}
 
 namespace BlackCore
 {

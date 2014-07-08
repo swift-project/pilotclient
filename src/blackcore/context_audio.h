@@ -3,6 +3,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+//! \file
+
 #ifndef BLACKCORE_CONTEXTAUDIO_H
 #define BLACKCORE_CONTEXTAUDIO_H
 
@@ -16,8 +18,16 @@
 #include "blackmisc/avselcal.h"
 #include <QObject>
 
+//! \addtogroup dbus
+//! @{
+
+//! DBus interface for context
 #define BLACKCORE_CONTEXTAUDIO_INTERFACENAME "net.vatsim.PilotClient.BlackCore.ContextAudio"
+
+//! DBus object path for context
 #define BLACKCORE_CONTEXTAUDIO_OBJECTPATH "/Audio"
+
+//! @}
 
 namespace BlackCore
 {

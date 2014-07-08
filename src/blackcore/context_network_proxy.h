@@ -20,7 +20,8 @@
 namespace BlackCore
 {
 
-    //! Network context proxy
+    //! \brief Network context proxy
+    //! \ingroup dbus
     class CContextNetworkProxy : public IContextNetwork
     {
         Q_OBJECT
