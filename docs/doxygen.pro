@@ -23,3 +23,4 @@ doxy.input = DOXY_INPUT
 doxy.name = DOXY
 doxy.output = html/index.html
 QMAKE_EXTRA_COMPILERS += doxy
+OTHER_FILES += Doxyfile.qmake
