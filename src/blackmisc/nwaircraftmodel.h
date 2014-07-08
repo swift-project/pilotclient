@@ -23,8 +23,8 @@ namespace BlackMisc
                 IndexQueriedModelString
             };
 
-            //! \brief Default constructor.
-            CAircraftModel() {}
+            //! Default constructor.
+            CAircraftModel() : m_queriedModelStringFlag(false) {}
 
             //! Constructor.
             CAircraftModel(const QString &model, bool isQueriedString) : m_modelString(model), m_queriedModelStringFlag(isQueriedString) {}
