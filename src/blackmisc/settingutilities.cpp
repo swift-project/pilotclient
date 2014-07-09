@@ -22,13 +22,38 @@ namespace BlackMisc
         }
 
         /*
+         * Wrong cmd message
+         */
+        BlackMisc::CStatusMessage CSettingUtilities::wrongCommandMessage(const QString &command)
+        {
+            QString msg = "wrong command";
+            if (!command.isEmpty())
+            {
+                msg.append(": ").append(command);
+            }
+            BlackMisc::CStatusMessage rc(BlackMisc::CStatusMessage::TypeValidation,
+                                         BlackMisc::CStatusMessage::SeverityError, msg);
+            return rc;
+        }
+
+        /*
          * Wrong path name messages
          */
         CStatusMessageList CSettingUtilities::wrongPathMessages(const QString &path)
         {
-            BlackMisc::CStatusMessageList rps;
-            rps.push_back(CSettingUtilities::wrongPathMessage(path));
-            return rps;
+            BlackMisc::CStatusMessageList wrongPath;
+            wrongPath.push_back(CSettingUtilities::wrongPathMessage(path));
+            return wrongPath;
+        }
+
+        /*
+         * Wrong command message
+         */
+        CStatusMessageList CSettingUtilities::wrongCommandMessages(const QString &command)
+        {
+            BlackMisc::CStatusMessageList wrongCmds;
+            wrongCmds.push_back(CSettingUtilities::wrongCommandMessage(command));
+            return wrongCmds;
         }
 
         /*

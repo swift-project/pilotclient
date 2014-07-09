@@ -63,6 +63,12 @@ namespace BlackMisc
             //! Wrong path messages
             static BlackMisc::CStatusMessageList wrongPathMessages(const QString &path = "");
 
+            //! Wrong command message
+            static BlackMisc::CStatusMessage wrongCommandMessage(const QString &command);
+
+            //! Wrong command messages
+            static BlackMisc::CStatusMessageList wrongCommandMessages(const QString &command);
+
             //! Value not changed message
             static BlackMisc::CStatusMessage valueNotChangedMessage(const QString &valueName);
 

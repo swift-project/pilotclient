@@ -2,6 +2,7 @@
 
 using namespace BlackMisc;
 using namespace BlackMisc::Settings;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackSim
 {
@@ -98,7 +99,7 @@ namespace BlackSim
          */
         QJsonObject CSettingsSimulator::toJson() const
         {
-            return BlackMisc::serializeJson(CSettingsSimulator::jsonMembers(), TupleConverter<CSettingsSimulator>::toTuple(*this));
+            return BlackMisc::serializeJson(TupleConverter<CSettingsSimulator>::toMetaTuple(*this));
         }
 
         /*
@@ -106,7 +107,7 @@ namespace BlackSim
          */
         void CSettingsSimulator::fromJson(const QJsonObject &json)
         {
-            BlackMisc::deserializeJson(json, CSettingsSimulator::jsonMembers(), TupleConverter<CSettingsSimulator>::toTuple(*this));
+            BlackMisc::deserializeJson(json, TupleConverter<CSettingsSimulator>::toMetaTuple(*this));
         }
 
         /*
@@ -123,6 +124,8 @@ namespace BlackSim
         void CSettingsSimulator::initDefaultValues()
         {
             this->m_selectedPlugin = CSimulatorInfo::FSX();
+            this->m_timeSyncOffset = CTime(0, CTimeUnit::hrmin());
+            this->m_timeSync = false;
         }
 
         /*
@@ -146,18 +149,42 @@ namespace BlackSim
             {
                 if (command == CSettingUtilities::CmdAdd() || command == CSettingUtilities::CmdUpdate())
                 {
-                    if (command == CSettingUtilities::CmdUpdate())
-                    {
-                        CSimulatorInfo v = value.value<CSimulatorInfo>();
-                        changedFlag = (v != this->m_selectedPlugin);
-                        msgs.push_back(CSettingUtilities::valueChangedMessage(changedFlag, "selected driver"));
-                        this->m_selectedPlugin = v;
-                        return msgs;
-                    }
+                    CSimulatorInfo v = value.value<CSimulatorInfo>();
+                    changedFlag = (v != this->m_selectedPlugin);
+                    msgs.push_back(CSettingUtilities::valueChangedMessage(changedFlag, "selected driver"));
+                    this->m_selectedPlugin = v;
                     return msgs;
                 }
+                return CSettingUtilities::wrongCommandMessages(command);
             }
-            return CSettingUtilities::wrongPathMessages(path);
+            else if (path == CSettingsSimulator::ValueSyncTime())
+            {
+                if (command == CSettingUtilities::CmdAdd() || command == CSettingUtilities::CmdUpdate())
+                {
+                    bool v = value.value<bool>();
+                    changedFlag = (v != this->m_timeSync);
+                    msgs.push_back(CSettingUtilities::valueChangedMessage(changedFlag, "time synchronization"));
+                    this->m_timeSync = v;
+                    return msgs;
+                }
+                return CSettingUtilities::wrongCommandMessages(command);
+            }
+            else if (path == CSettingsSimulator::ValueSyncTimeOffset())
+            {
+                if (command == CSettingUtilities::CmdAdd() || command == CSettingUtilities::CmdUpdate())
+                {
+                    CTime v = value.value<CTime>();
+                    changedFlag = (v != this->m_timeSyncOffset);
+                    msgs.push_back(CSettingUtilities::valueChangedMessage(changedFlag, "time synchronization offset"));
+                    this->m_timeSyncOffset = v;
+                    return msgs;
+                }
+                return CSettingUtilities::wrongCommandMessages(command);
+            }
+            else
+            {
+                return CSettingUtilities::wrongPathMessages(path);
+            }
         }
     } // namespace
 } // namespace

@@ -11,6 +11,7 @@
 #include "blackmisc/valueobject.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
+#include "blackmisc/pqtime.h"
 #include "simulatorinfo.h"
 
 namespace BlackSim
@@ -34,14 +35,40 @@ namespace BlackSim
                 return value;
             }
 
+            //! Path
+            static const QString &ValueSyncTimeOffset()
+            {
+                static const QString value("synctimeoffset");
+                return value;
+            }
+
+            //! Path
+            static const QString &ValueSyncTime()
+            {
+                static const QString value("synctime");
+                return value;
+            }
+
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Selected driver
-            BlackSim::CSimulatorInfo getSelectedPlugin() const { return this->m_selectedPlugin; }
+            const BlackSim::CSimulatorInfo &getSelectedPlugin() const { return this->m_selectedPlugin; }
 
             //! Selected driver
             void setSelectedPlugin(const BlackSim::CSimulatorInfo &plugin) { this->m_selectedPlugin = plugin; }
+
+            //! Time synchronization offset time
+            const BlackMisc::PhysicalQuantities::CTime &getSyncTimeOffset() const { return this->m_timeSyncOffset;}
+
+            //! Set time synchronization offset time
+            void setSyncTimeOffset(const BlackMisc::PhysicalQuantities::CTime &offset) { this->m_timeSyncOffset = offset; this->m_timeSyncOffset.switchUnit(BlackMisc::PhysicalQuantities::CTimeUnit::hrmin());}
+
+            //! Time syncronization enabled?
+            bool isTimeSyncEnabled() const { return this->m_timeSync;}
+
+            //! Set time synchronization
+            void setTimeSyncEnabled(bool enabled) { this->m_timeSync = enabled; }
 
             //! Equal operator ==
             bool operator ==(const CSettingsSimulator &other) const;
@@ -92,12 +119,14 @@ namespace BlackSim
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSettingsSimulator)
             BlackSim::CSimulatorInfo m_selectedPlugin;
+            bool m_timeSync = false;
+            BlackMisc::PhysicalQuantities::CTime m_timeSyncOffset;
         };
 
     } // namespace
 } // namespace
 
 Q_DECLARE_METATYPE(BlackSim::Settings::CSettingsSimulator)
-BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::Settings::CSettingsSimulator, (o.m_selectedPlugin))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::Settings::CSettingsSimulator, (o.m_selectedPlugin, o.m_timeSync, o.m_timeSyncOffset))
 
 #endif // guard
