@@ -28,13 +28,19 @@ namespace BlackGui
 
     private slots:
         //! Driver changed
-        void pluginHasChanged(int index);
+        void ps_pluginHasChanged(int index);
+
+        //! Settings have been changed
+        void ps_settingsHaveChanged(uint settingsType);
+
+        //! A GUI value has been changed
+        void ps_guiValueHasChanged();
 
     private:
         Ui::CSettingsSimulatorComponent *ui; //!< UI
 
         //! Smarter way to set current driver, avoids unnecessary signals and less formatting dependend
-        void setCurrentPlugin(const BlackSim::CSimulatorInfo &driver);
+        void setCurrentPlugin(const BlackSim::CSimulatorInfo &plugin);
 
     };
 

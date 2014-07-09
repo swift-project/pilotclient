@@ -39,21 +39,99 @@
     <layout class="QGridLayout" name="ql_SettingsSimulatorsAll">
      <item row="0" column="0">
       <layout class="QFormLayout" name="fl_SettingsSimulatorsAll">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
+       <property name="horizontalSpacing">
+        <number>10</number>
+       </property>
+       <property name="verticalSpacing">
+        <number>6</number>
+       </property>
+       <item row="0" column="0" colspan="2">
+        <widget class="QLabel" name="lbl_SimulatorAllHeader">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;All simulators&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="lbl_SimulatorDriver">
+        <widget class="QLabel" name="lbl_Plugin">
          <property name="text">
           <string>Driver</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="cb_SimulatorDriver"/>
+        <widget class="QComboBox" name="cb_Plugins"/>
        </item>
-       <item row="0" column="0" colspan="2">
-        <widget class="QLabel" name="lbl_SettingsSimulatorAllHeader">
+       <item row="2" column="0">
+        <widget class="QLabel" name="lbl_TimeSync">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;All simulators&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>Time synchronization</string>
          </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QWidget" name="wi_TimeSync" native="true">
+         <layout class="QHBoxLayout" name="hl_WidgetTimeSync">
+          <property name="spacing">
+           <number>4</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QCheckBox" name="cb_TimeSync"/>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="le_TimeSyncOffset">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>75</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="inputMask">
+             <string>#99:99</string>
+            </property>
+            <property name="text">
+             <string>+00:00</string>
+            </property>
+            <property name="maxLength">
+             <number>6</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lbl_TimeSyncOffset">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>offset +/-hh:mm</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
