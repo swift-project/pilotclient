@@ -6,7 +6,8 @@ namespace BlackMisc
     {
         CTime::CTime(int hours, int minutes, int seconds) : CPhysicalQuantity(0, CTimeUnit::nullUnit())
         {
-            double value = hours + minutes / 100.0 + seconds / 10000.0;
+            bool negative = (hours < 0);
+            double value = qAbs(hours) + minutes / 100.0 + seconds / 10000.0;
             if (minutes == 0 && seconds == 0)
             {
                 (*this) = CTime(hours, CTimeUnit::h());
@@ -18,18 +19,39 @@ namespace BlackMisc
                 else
                     (*this) = CTime(value, CTimeUnit::hms());
             }
+            if (negative)
+            {
+                this->makeNegative();
+            }
         }
 
-        CTime::CTime(const QTime &time) : CPhysicalQuantity(0, CTimeUnit::nullUnit())
+        CTime::CTime(const QTime &time, bool negative) : CPhysicalQuantity(0, CTimeUnit::nullUnit())
         {
             CTime converted(time.hour(), time.minute(), time.second());
             (*this) = converted;
+            if (negative)
+            {
+                this->makeNegative();
+            }
         }
 
         void CTime::parseFromString(const QString &time)
         {
             QTime t;
-            const QString ts = time.trimmed();
+            QString ts = time.trimmed();
+
+            // deal with sign
+            double factor = 1.0;
+            if (ts.startsWith('+'))
+            {
+                ts.remove(0, 1);
+            }
+            else if (ts.startsWith('-'))
+            {
+                factor = -1.0;
+                ts.remove(0, 1);
+            }
+
             if (ts.contains(":") && (ts.length() == 8 || ts.length() == 5))
             {
                 if (ts.length() == 5)
@@ -37,15 +59,27 @@ namespace BlackMisc
                 else if (ts.length() == 8)
                     t = QTime::fromString(ts, "hh:mm:ss");
                 (*this) = CTime(t);
+
+                // fix sign if required
+                if (factor < 0)
+                {
+                    this->setValueSameUnit(this->value() * factor);
+                }
             }
             else
-                CPhysicalQuantity::parseFromString(ts);
+                CPhysicalQuantity::parseFromString(time);
         }
 
         QTime CTime::toQTime() const
         {
             CTime copy(*this);
             copy.setUnit(CTimeUnit::hms());
+
+            // QTime is not defined for negative numbers
+            // so we use the absolute value here
+            copy.makePositive();
+
+            // convert
             QString s = copy.toQString(false).replace('h', ':').replace('m', ':').replace('s', "");
             QTime t = s.length() == 8 ?
                       QTime::fromString(s, "hh:mm:ss") :
@@ -59,6 +93,40 @@ namespace BlackMisc
             QList<int> parts;
             parts << t.hour() << t.minute() << t.second();
             return parts;
+        }
+
+        QString CTime::formattedHrsMinSec() const
+        {
+            QList<int> parts = getHrsMinSecParts();
+            QString h = QString("00%1").arg(QString::number(parts.at(0))).right(2);
+            QString m = QString("00%1").arg(QString::number(parts.at(1))).right(2);
+            QString s = QString("00%1").arg(QString::number(parts.at(2))).right(2);
+
+            QString fs = QString("%1:%2:%3").arg(h).arg(m).arg(s);
+            if (this->isNegativeWithEpsilonConsidered())
+            {
+                return QString("-").append(fs);
+            }
+            else
+            {
+                return fs;
+            }
+        }
+
+        QString CTime::formattedHrsMin() const
+        {
+            QList<int> parts = getHrsMinSecParts();
+            QString h = QString("00%1").arg(QString::number(parts.at(0))).right(2);
+            QString m = QString("00%1").arg(QString::number(parts.at(1))).right(2);
+            QString fs = QString("%1:%2").arg(h).arg(m);
+            if (this->isNegativeWithEpsilonConsidered())
+            {
+                return QString("-").append(fs);
+            }
+            else
+            {
+                return fs;
+            }
         }
     }
 }

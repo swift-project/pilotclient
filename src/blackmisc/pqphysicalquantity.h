@@ -219,6 +219,18 @@ namespace BlackMisc
                 return !this->isZeroEpsilonConsidered() && this->m_value < 0;
             }
 
+            //! Make value always positive
+            void makePositive()
+            {
+                if (this->m_value < 0) { this->m_value *= -1.0; }
+            }
+
+            //! Make value always negative
+            void makeNegative()
+            {
+                if (this->m_value > 0) { this->m_value *= -1.0; }
+            }
+
             //! \copydoc CValueObject::marshallToDbus
             virtual void marshallToDbus(QDBusArgument &argument) const override;
 

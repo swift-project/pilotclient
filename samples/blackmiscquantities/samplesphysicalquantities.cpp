@@ -15,8 +15,9 @@ namespace BlackMiscTest
      */
     int CSamplesPhysicalQuantities::samples()
     {
-        CSpeed parsedPq1 = CPqString::parseToVariant("100 km/h").value<CSpeed>();
-        CLength parsedPq2 = CPqString::parseToVariant("-33ft").value<CLength>();
+        // parsing
+        CSpeed parsedPq1 = CPqString::parseToVariant("100.123 km/h").value<CSpeed>();
+        CLength parsedPq2 = CPqString::parseToVariant("-33.123ft").value<CLength>();
         QVariant parsedPq3 = CPqString::parseToVariant("666");
         qDebug() << "parsed" << parsedPq1 << parsedPq2 << parsedPq3;
 
@@ -24,9 +25,19 @@ namespace BlackMiscTest
         CFrequency frequencyParsed = CPqString::parse<CFrequency>("122.8MHz");
         qDebug() << "parsed" << speedParsed << speedParsed.valueRoundedWithUnit(2, true) << frequencyParsed << frequencyParsed.valueRoundedWithUnit(2, true);
 
-        // cases which must not work
-        // CLengthUnit du1(CAngleUnit::rad());
+        // the time clasas
+        CTime time1;
+        time1.parseFromString("11:30"); // hhmm
+        qDebug() << time1 << time1.toQTime() << time1.formattedHrsMin();
 
+        CTime time2;
+        time2.parseFromString("-11:30"); // hhmm
+        qDebug() << time2 << time2.toQTime() << time2.formattedHrsMin();
+
+        time1 += time2;
+        qDebug() << time1 << time1.toQTime() << time1.formattedHrsMin();
+
+        // standard tests
         CLengthUnit lu1(CLengthUnit::cm());
         CLengthUnit lu2(CLengthUnit::ft());
         QString lu1s = lu1.toQString(true);

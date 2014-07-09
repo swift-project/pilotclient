@@ -95,9 +95,14 @@ namespace BlackMisc
          */
         QVariant CPqString::parseToVariant(const QString &value, SeparatorMode mode)
         {
-            static QRegExp rx("([0-9]+)\\s*(\\D*)$");
+            static QRegExp rx("([-+]?[0-9]*[\\.,]?[0-9]+)\\s*(\\D*)$");
             QVariant v;
-            if (value.isEmpty()) return v;
+
+            // fine tuning of the string
+            QString vs = value.trimmed().simplified();
+
+            // check
+            if (vs.isEmpty()) return v;
 
             if (rx.indexIn(value) < 0) return v; // not a valid number
             QString unit = rx.cap(2).trimmed();

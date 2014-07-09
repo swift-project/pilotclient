@@ -38,7 +38,7 @@ namespace BlackMisc
             CTime(int hours, int minutes, int seconds = 0);
 
             //! By Qt time
-            CTime(const QTime &time);
+            CTime(const QTime &time, bool negative = false);
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CTime(const QString &unitString) : CPhysicalQuantity(0, CTimeUnit::nullUnit()) { this->parseFromString(unitString); }
@@ -53,10 +53,18 @@ namespace BlackMisc
             virtual void parseFromString(const QString &time) override;
 
             //! To Qt time
+            //! \warning sign not considered
             QTime toQTime() const;
 
             //! Parts hh, mm, ss
+            //! \warning sign not considered
             QList<int> getHrsMinSecParts() const;
+
+            //! Formatted as hh:mm:ss
+            QString formattedHrsMinSec() const;
+
+            //! Formatted as hh:mm
+            QString formattedHrsMin() const;
 
         };
 
