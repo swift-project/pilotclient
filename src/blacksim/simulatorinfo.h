@@ -46,6 +46,9 @@ namespace BlackSim
         //! Short name
         const QString &getFullName() const { return m_fullName; }
 
+        //! Compare on names only, ignore setup
+        bool isSameSimulator(const CSimulatorInfo &otherSimulator) const;
+
         //! \copydoc CValueObject::toJson
         virtual QJsonObject toJson() const override;
 

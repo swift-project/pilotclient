@@ -289,15 +289,20 @@ namespace BlackCore
         IContextSettings::SettingsType settingsType = static_cast<IContextSettings::SettingsType>(type);
         if (settingsType == IContextSettings::SettingsSimulator)
         {
-            CSimulatorInfo driver = this->getIContextSettings()->getSimulatorSettings().getSelectedPlugin();
-            if (this->loadSimulatorPlugin(driver))
+            CSimulatorInfo plugin = this->getIContextSettings()->getSimulatorSettings().getSelectedPlugin();
+            if (this->getSimulatorInfo().isSameSimulator(plugin))
             {
-                QString m = QString("Driver loaded: '%1'").arg(driver.toQString(true));
+                // nothing to do
+                return;
+            }
+            else if (this->loadSimulatorPlugin(plugin))
+            {
+                QString m = QString("Plugin loaded: '%1'").arg(plugin.toQString(true));
                 this->getRuntime()->sendStatusMessage(CStatusMessage::getInfoMessage(m, CStatusMessage::TypeSimulator));
             }
             else
             {
-                QString m = QString("Cannot load driver: '%1'").arg(driver.toQString(true));
+                QString m = QString("Cannot load driver: '%1'").arg(plugin.toQString(true));
                 this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
             }
         }
@@ -309,7 +314,9 @@ namespace BlackCore
         m_pluginsDir = QDir(path);
         if (!m_pluginsDir.exists())
         {
-            qWarning() << "No plugin directory" << m_pluginsDir.currentPath();
+            QString m = QString("No plugin directory: %1").arg(m_pluginsDir.currentPath());
+            qWarning() <<  m;
+            this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
             return;
         }
 
@@ -333,7 +340,9 @@ namespace BlackCore
             }
             else
             {
-                qDebug() << loader.errorString();
+                QString m = loader.errorString();
+                this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
+                qDebug() << m;
                 qDebug() << "Also check if required dll/libs of plugin exists";
             }
         }

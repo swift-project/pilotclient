@@ -33,6 +33,12 @@ namespace BlackSim
         this->m_simsetup = setup;
     }
 
+    bool CSimulatorInfo::isSameSimulator(const CSimulatorInfo &otherSimulator) const
+    {
+        return this->getFullName() == otherSimulator.getFullName() &&
+               this->getShortName() == otherSimulator.getShortName();
+    }
+
     QString CSimulatorInfo::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
