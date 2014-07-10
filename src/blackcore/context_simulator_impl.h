@@ -65,6 +65,12 @@ namespace BlackCore
         //! \copydoc IContextSimulator::setTimeSynchronization
         virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
+        //! \copydoc IContextSimulator::isTimeSynchronized
+        virtual bool isTimeSynchronized() const override;
+
+        //! \copydoc IContextSimulator::getTimeSynchronizationOffset
+        virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override;
+
         //! \copydoc IContextSimulator::loadSimulatorPlugin()
         virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) override;
 
@@ -76,6 +82,9 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::settingsChanged
         virtual void settingsChanged(uint type) override;
+
+        //! \copydoc IContextSimulator::isSimulatorPaused
+        virtual bool isSimulatorPaused() const override;
 
     protected:
         //! \brief Constructor

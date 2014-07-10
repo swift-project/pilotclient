@@ -102,6 +102,12 @@ namespace BlackCore
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
         virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) = 0;
 
+        //! Is time synchronization on?
+        virtual bool isTimeSynchronized() const = 0;
+
+        //! Time synchronization offset
+        virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
+
         //! Load specific simulator plugin
         virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) = 0;
 
@@ -113,6 +119,9 @@ namespace BlackCore
 
         //! Simulator avialable?
         bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorInfo().isUnspecified(); }
+
+        //! Simulator paused?
+        virtual bool isSimulatorPaused() const = 0;
 
         //! Settings have been changed
         virtual void settingsChanged(uint type) = 0;

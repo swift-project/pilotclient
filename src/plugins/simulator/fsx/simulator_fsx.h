@@ -132,6 +132,15 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::setTimeSynchronization
             virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
+            //! \copydoc ISimulator::isTimeSynchronized
+            virtual bool isTimeSynchronized() const override { return m_syncTime; }
+
+            //! \copydoc ISimulator::getTimeSynchronizationOffset
+            virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return m_syncTimeOffset; }
+
+            //! \copydoc ISimulator::isSimPaused
+            virtual bool isSimPaused() const override { return m_simPaused; }
+
             //! \brief Called when sim has started
             void onSimRunning();
 

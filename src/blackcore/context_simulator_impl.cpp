@@ -109,7 +109,19 @@ namespace BlackCore
     void CContextSimulator::setTimeSynchronization(bool enable, CTime offset)
     {
         if (!m_simulator) return;
-        this->setTimeSynchronization(enable, offset);
+        this->m_simulator->setTimeSynchronization(enable, offset);
+    }
+
+    bool CContextSimulator::isTimeSynchronized() const
+    {
+        if (!m_simulator) return false;
+        return this->m_simulator->isTimeSynchronized();
+    }
+
+    CTime CContextSimulator::getTimeSynchronizationOffset() const
+    {
+        if (!m_simulator) return CTime(0, CTimeUnit::hrmin());
+        return this->m_simulator->getTimeSynchronizationOffset();
     }
 
     bool CContextSimulator::loadSimulatorPlugin(const CSimulatorInfo &simulatorInfo)
@@ -306,6 +318,10 @@ namespace BlackCore
                 this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
             }
         }
+    bool CContextSimulator::isSimulatorPaused() const
+    {
+        if (!this->m_simulator) return false;
+        return this->m_simulator->isSimPaused();
     }
 
     void CContextSimulator::findSimulatorPlugins()

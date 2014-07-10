@@ -78,6 +78,16 @@ namespace BlackCore
         m_dBusInterface->callDBus(QLatin1Literal("setTimeSynchronization"), enable, offset);
     }
 
+    bool CContextSimulatorProxy::isTimeSynchronized() const
+    {
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isTimeSynchronized"));
+    }
+
+    CTime CContextSimulatorProxy::getTimeSynchronizationOffset() const
+    {
+        return m_dBusInterface->callDBusRet<BlackMisc::PhysicalQuantities::CTime>(QLatin1Literal("getTimeSynchronizationOffset"));
+    }
+
     bool CContextSimulatorProxy::loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo)
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("loadSimulatorPlugin"), simulatorInfo);
@@ -96,6 +106,11 @@ namespace BlackCore
     void CContextSimulatorProxy::settingsChanged(uint type)
     {
         m_dBusInterface->callDBus(QLatin1Literal("settingsChanged"), type);
+    }
+
+    bool CContextSimulatorProxy::isSimulatorPaused() const
+    {
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isSimulatorPaused"));
     }
 
 } // namespace BlackCore

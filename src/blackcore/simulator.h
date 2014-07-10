@@ -92,6 +92,15 @@ namespace BlackCore
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
         virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) = 0;
 
+        //! Is time synchronization on?
+        virtual bool isTimeSynchronized() const = 0;
+
+        //! Time synchronization offset
+        virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
+
+        //! Simulator paused?
+        virtual bool isSimPaused() const = 0;
+
     signals:
         //! Emitted when the connection status has changed
         void statusChanged(ISimulator::Status status);

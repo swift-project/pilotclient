@@ -80,6 +80,15 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::setTimeSynchronization
             virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
+            //! \copydoc ISimulator::isTimeSynchronized
+            virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
+
+            //! \copydoc ISimulator::getTimeSynchronizationOffset
+            virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return BlackMisc::PhysicalQuantities::CTime(0, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
+
+            //! \copydoc ISimulator::isSimPaused
+            virtual bool isSimPaused() const override { return false; }
+
         private slots:
             void serviceRegistered(const QString &serviceName);
             void serviceUnregistered();
