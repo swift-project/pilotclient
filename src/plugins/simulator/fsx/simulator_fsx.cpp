@@ -42,6 +42,7 @@ namespace BlackSimPlugin
             ISimulator(parent),
             m_isConnected(false),
             m_simRunning(false),
+            m_syncTime(false),
             m_hSimConnect(nullptr),
             m_nextObjID(1),
             m_simulatorInfo(CSimulatorInfo::FSX()),
@@ -50,7 +51,7 @@ namespace BlackSimPlugin
             m_fsuipc(new CFsuipc())
         {
             CFsxSimulatorSetup setup;
-            setup.init(); // this fetches important setting on local side
+            setup.init(); // this fetches important settings on local side
             this->m_simulatorInfo.setSimulatorSetup(setup.getSettings());
         }
 
@@ -68,7 +69,6 @@ namespace BlackSimPlugin
         {
             return m_fsuipc->isConnected();
         }
-
 
         bool CSimulatorFsx::connectTo()
         {
@@ -95,7 +95,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::asyncConnectTo()
         {
-            connect(&m_watcherConnect, SIGNAL(finished()), this, SLOT(connectToFinished()));
+            connect(&m_watcherConnect, SIGNAL(finished()), this, SLOT(ps_connectToFinished()));
 
             // simplified connect, timers and signals not in different thread
             auto asyncConnectFunc = [&]() -> bool
@@ -286,8 +286,8 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
         {
-            Q_UNUSED(enable);
-            Q_UNUSED(offset);
+            this->m_syncTime = enable;
+            this->m_syncTimeOffset = offset;
         }
 
         void CSimulatorFsx::onSimRunning()
@@ -298,9 +298,13 @@ namespace BlackSimPlugin
                                               CSimConnectDataDefinition::DataOwnAircraft,
                                               SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_VISUAL_FRAME);
 
-
             SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::RequestOwnAircraftTitle,
                                               CSimConnectDataDefinition::DataOwnAircraftTitle,
+                                              SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND,
+                                              SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
+
+            SimConnect_RequestDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::RequestSimEnvironment,
+                                              CSimConnectDataDefinition::DataSimEnvironment,
                                               SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_PERIOD_SECOND,
                                               SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
 
@@ -316,7 +320,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::onSimFrame()
         {
-            update();
+            updateOtherAircrafts();
         }
 
         void CSimulatorFsx::onSimExit()
@@ -384,21 +388,21 @@ namespace BlackSimPlugin
             DataDefinitionGearHandlePosition gearHandle;
             gearHandle.gearHandlePosition = 1;
 
-            SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, objectID, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(gearHandle), &gearHandle);
+            SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataGearHandlePosition, objectID, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(gearHandle), &gearHandle);
         }
 
         void CSimulatorFsx::timerEvent(QTimerEvent * /* event */)
         {
-            dispatch();
+            ps_dispatch();
         }
 
-        void CSimulatorFsx::dispatch()
+        void CSimulatorFsx::ps_dispatch()
         {
             SimConnect_CallDispatch(m_hSimConnect, SimConnectProc, this);
             if (this->m_fsuipc) this->m_fsuipc->process();
         }
 
-        void CSimulatorFsx::connectToFinished()
+        void CSimulatorFsx::ps_connectToFinished()
         {
             if (m_watcherConnect.result())
             {
@@ -427,6 +431,10 @@ namespace BlackSimPlugin
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventObjectAdded, "ObjectAdded");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventObjectRemoved, "ObjectRemoved");
             hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventFrame, "Frame");
+            if (hr != S_OK)
+            {
+                qFatal("SimConnect_SubscribeToSystemEvent failed");
+            }
 
             // Mapped events
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeLat, "FREEZE_LATITUDE_LONGITUDE_SET");
@@ -438,8 +446,21 @@ namespace BlackSimPlugin
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetCom2Standby, "COM2_STBY_RADIO_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTransponderCode, "XPNDR_SET");
 
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluYear, "ZULU_YEAR_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluDay, "ZULU_DAY_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluHours, "ZULU_HOURS_SET");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventSetTimeZuluMinutes, "ZULU_MINUTES_SET");
+            if (hr != S_OK)
+            {
+                qFatal("SimConnect_MapClientEventToSimEvent failed");
+            }
+
             // facility
-            hr = SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, m_nextObjID++);
+            hr += SimConnect_SubscribeToFacilities(m_hSimConnect, SIMCONNECT_FACILITY_LIST_TYPE_AIRPORT, m_nextObjID++);
+            if (hr != S_OK)
+            {
+                qFatal("SimConnect_SubscribeToFacilities failed");
+            }
             return hr;
         }
 
@@ -448,7 +469,7 @@ namespace BlackSimPlugin
             return CSimConnectDataDefinition::initDataDefinitions(m_hSimConnect);
         }
 
-        void CSimulatorFsx::update()
+        void CSimulatorFsx::updateOtherAircrafts()
         {
             foreach(CSimConnectObject simObj, m_simConnectObjects)
             {
@@ -481,13 +502,50 @@ namespace BlackSimPlugin
 
                     if (simObj.getObjectId() != 0)
                     {
-                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionRemoteAircraftSituation, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(ddAircraftSituation), &ddAircraftSituation);
+                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataRemoteAircraftSituation, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(ddAircraftSituation), &ddAircraftSituation);
 
                         // With the following SimConnect call all aircrafts loose their red tag. No idea why though.
-                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataDefinitionGearHandlePosition, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionGearHandlePosition), &gearHandle);
+                        SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDataDefinition::DataGearHandlePosition, simObj.getObjectId(), SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0, sizeof(DataDefinitionGearHandlePosition), &gearHandle);
                     }
                 }
             }
+        }
+
+        void CSimulatorFsx::synchronizeTime(const CTime &zuluTimeSim, const CTime &localTimeSim)
+        {
+            if (!this->m_syncTime) return;
+            if (!this->isConnected()) return;
+            if (m_syncDeferredCounter > 0)
+            {
+                --m_syncDeferredCounter;
+            }
+            Q_UNUSED(localTimeSim);
+
+            QDateTime myDateTime = QDateTime::currentDateTimeUtc();
+            if (!this->m_syncTimeOffset.isZeroEpsilonConsidered())
+            {
+                int offsetSeconds = this->m_syncTimeOffset.valueRounded(CTimeUnit::s(), 0);
+                myDateTime = myDateTime.addSecs(offsetSeconds);
+            }
+            QTime myTime = myDateTime.time();
+            DWORD h = myTime.hour();
+            DWORD m = myTime.minute();
+            int targetMins = myTime.hour() * 60 + myTime.minute();
+            int simMins = zuluTimeSim.valueRounded(CTimeUnit::min());
+            int diffMins = qAbs(targetMins - simMins);
+            if (diffMins < 2) return;
+            HRESULT hr = S_OK;
+            hr += SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluHours, h, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            hr += SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTimeZuluMinutes, m, SIMCONNECT_GROUP_PRIORITY_STANDARD, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+
+            if (hr != S_OK)
+            {
+                qWarning() << "Sending time sync failed!";
+            }
+
+            m_syncDeferredCounter = 5; // allow some time to sync
+            QString msg = QString("Synchronized time to UTC: %1").arg(myTime.toString());
+            this->sendStatusMessage(CStatusMessage::getInfoMessage(msg, CStatusMessage::TypeSimulator));
         }
     }
 }

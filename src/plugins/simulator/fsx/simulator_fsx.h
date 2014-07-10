@@ -64,7 +64,11 @@ namespace BlackSimPlugin
             EventSetCom1Standby,
             EventSetCom2Standby,
             EventSetTransponderCode,
-            EventTextMessage
+            EventTextMessage,
+            EventSetTimeZuluYear,
+            EventSetTimeZuluDay,
+            EventSetTimeZuluHours,
+            EventSetTimeZuluMinutes
         };
 
         //! FSX Simulator Implementation
@@ -121,8 +125,6 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::displayStatusMessage
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
 
-            //! \brief Called when simulat has been started
-
             //! \copydoc ISimulator::getAircraftModel()
             virtual BlackMisc::Network::CAircraftModel getAircraftModel() const override { return m_aircraftModel; }
 
@@ -141,20 +143,20 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::isSimPaused
             virtual bool isSimPaused() const override { return m_simPaused; }
 
-            //! \brief Called when sim has started
+            //! Called when sim has started
             void onSimRunning();
 
-            //! \brief Called when sim has stopped
+            //! Called when sim has stopped
             void onSimStopped();
 
-            //! \brief Slot called every visual frame
+            //! Slot called every visual frame
             void onSimFrame();
 
             //! Called when data about our own aircraft are received
             void updateOwnAircraftFromSim(DataDefinitionOwnAircraft simulatorOwnAircraft);
 
             /*!
-             * \brief Set ID of a SimConnect object
+             * Set ID of a SimConnect object
              * \param requestID
              * \param objectID
              */
@@ -173,10 +175,10 @@ namespace BlackSimPlugin
         private slots:
 
             //! Dispatch SimConnect messages
-            void dispatch();
+            void ps_dispatch();
 
             //! Called when asynchronous connection to Simconnect has finished
-            void connectToFinished();
+            void ps_connectToFinished();
 
         private:
 
@@ -189,14 +191,21 @@ namespace BlackSimPlugin
             //! Initialize SimConnect data definitions
             HRESULT initDataDefinitions();
 
-            //! Update what?
-            void update(); // TODO: @RW, please rename, update is meaningless: what is updated?
+            //! Update other aircrafts
+            void updateOtherAircrafts();
+
+            //! Sync time with user's computer
+            void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);
 
             static const int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
-            bool    m_isConnected; //!< Is simulator connected?
-            bool    m_simRunning;  //!< Simulator running?
+            bool    m_isConnected = false; //!< Is simulator connected?
+            bool    m_simRunning = false;  //!< Simulator running?
+            bool    m_simPaused = false;   //!< Simulator paused?
+            bool    m_syncTime = false;    //!< Time synchronized?
+            int     m_syncDeferredCounter = 0; //!< Set when synchronized, used to wait some time
+            BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;
             HANDLE  m_hSimConnect; //!< Handle to SimConnect object
-            uint    m_nextObjID; //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
+            uint    m_nextObjID;   //!< object ID TODO: also used as request id, where to we place other request ids as for facilities
             QString simulatorDetails;
             BlackSim::CSimulatorInfo m_simulatorInfo;
             BlackMisc::Aviation::CAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator

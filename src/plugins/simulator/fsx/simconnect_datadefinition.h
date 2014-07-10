@@ -56,6 +56,12 @@ namespace BlackSimPlugin
             qint32 gearHandlePosition;  //!< Bool, 1 if gear handle is applied otherwise 0
         };
 
+        //! Data struct simulator environment
+        struct DataDefinitionSimEnvironment {
+            qint32 zuluTimeSeconds;  //!< Simulator zulu (GMT) ime in secs.
+            qint32 localTimeSeconds; //!< Simulator local time in secs.
+        };
+
         //! Handles SimConnect data definitions
         class CSimConnectDataDefinition
         {
@@ -66,8 +72,9 @@ namespace BlackSimPlugin
             {
                 DataOwnAircraft,
                 DataOwnAircraftTitle,
-                DataDefinitionRemoteAircraftSituation,
-                DataDefinitionGearHandlePosition
+                DataRemoteAircraftSituation,
+                DataGearHandlePosition,
+                DataSimEnvironment
             };
 
             //! SimConnect request IDs
@@ -75,7 +82,8 @@ namespace BlackSimPlugin
             {
                 RequestOwnAircraft,
                 RequestRemoveAircraft,
-                RequestOwnAircraftTitle
+                RequestOwnAircraftTitle,
+                RequestSimEnvironment
             };
 
             //! Constructor
@@ -83,6 +91,8 @@ namespace BlackSimPlugin
 
             //! Initialize all data definitions
             static HRESULT initDataDefinitions(const HANDLE hSimConnect);
+
+        private:
 
             //! Initialize data definition for our own aircraft
             static HRESULT initOwnAircraft(const HANDLE hSimConnect);
@@ -92,6 +102,9 @@ namespace BlackSimPlugin
 
             //! Initialize data definition for remote aircraft configuration
             static HRESULT initGearHandlePosition(const HANDLE hSimConnect);
+
+            //! Initialize data definition for Simulator environment
+            static HRESULT initSimulatorEnvironment(const HANDLE hSimConnect);
         };
     }
 }

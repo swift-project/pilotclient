@@ -25,7 +25,7 @@ namespace BlackSimPlugin
 {
     namespace Fsx
     {
-        void CALLBACK CSimulatorFsx::SimConnectProc(SIMCONNECT_RECV *pData, DWORD /* cbData */, void *pContext)
+        void CALLBACK CSimulatorFsx::SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext)
         {
             CSimulatorFsx *simulatorFsx = static_cast<CSimulatorFsx *>(pContext);
             switch (pData->dwID)
@@ -42,8 +42,11 @@ namespace BlackSimPlugin
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:
                 {
-                    SIMCONNECT_RECV_EXCEPTION *event = (SIMCONNECT_RECV_EXCEPTION *)pData;
-                    qDebug() << "Caught simConnect exception: " << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)event->dwException);
+                    SIMCONNECT_RECV_EXCEPTION *exception = (SIMCONNECT_RECV_EXCEPTION *)pData;
+                    QString ex;
+                    ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d", exception->dwException, exception->dwSendID, exception->dwIndex, cbData);
+                    qDebug() << "Caught simConnect exception: " << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException);
+                    qDebug() << ex;
                     break;
                 }
             case SIMCONNECT_RECV_ID_QUIT:
@@ -58,15 +61,18 @@ namespace BlackSimPlugin
                     switch (event->uEventID)
                     {
                     case EventSimStatus:
-                        if (event->dwData)
                         {
-                            simulatorFsx->onSimRunning();
+                            if (event->dwData)
+                            {
+                                simulatorFsx->onSimRunning();
+                            }
+                            else
+                            {
+                                simulatorFsx->onSimStopped();
+                            }
+                            break;
                         }
-                        else
-                        {
-                            simulatorFsx->onSimStopped();
-                        }
-                        break;
+
                     }
                     break;
                 }
@@ -89,6 +95,8 @@ namespace BlackSimPlugin
                     case EventFrame:
                         simulatorFsx->onSimFrame();
                         break;
+                    default:
+                        break;
                     }
                     break;
                 }
@@ -104,15 +112,34 @@ namespace BlackSimPlugin
                     switch (pObjData->dwRequestID)
                     {
                     case CSimConnectDataDefinition::RequestOwnAircraft:
-                        DataDefinitionOwnAircraft *ownAircaft;
-                        ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
-                        simulatorFsx->updateOwnAircraftFromSim(*ownAircaft);
-                        break;
+                        {
+                            DataDefinitionOwnAircraft *ownAircaft;
+                            ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
+                            simulatorFsx->updateOwnAircraftFromSim(*ownAircaft);
+                            break;
+                        }
                     case CSimConnectDataDefinition::RequestOwnAircraftTitle:
-                        DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
-                        CAircraftModel model;
-                        model.setQueriedModelString(dataDefinitionModel->title);
-                        simulatorFsx->setAircraftModel(model);
+                        {
+                            DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
+                            CAircraftModel model;
+                            model.setQueriedModelString(dataDefinitionModel->title);
+                            simulatorFsx->setAircraftModel(model);
+                            break;
+                        }
+                    case CSimConnectDataDefinition::RequestSimEnvironment:
+                        {
+                            DataDefinitionSimEnvironment *simEnv = (DataDefinitionSimEnvironment *) &pObjData->dwData;
+                            qint32 zh = simEnv->zuluTimeSeconds / 3600;
+                            qint32 zm = (simEnv->zuluTimeSeconds - (zh * 3600)) / 60;
+                            CTime zulu(zh, zm);
+                            qint32 lh = simEnv->localTimeSeconds / 3600;
+                            qint32 lm = (simEnv->localTimeSeconds - (lh * 3600)) / 60;
+                            CTime local(lh, lm);
+                            simulatorFsx->synchronizeTime(zulu, local);
+                            break;
+                        }
+                    default:
+                        break;
                     }
                     break;
                 }
@@ -140,7 +167,9 @@ namespace BlackSimPlugin
                     }
                     break;
                 }
-            } // switch
+            default:
+                break;
+            } // main switch
         } // method
     }
 }
