@@ -36,9 +36,9 @@ namespace BlackGui
         if (this->getIContextSimulator())
         {
             QStringList plugins = this->getIContextSimulator()->getAvailableSimulatorPlugins().toStringList(true);
-            CSimulatorInfo currentDriver = this->getIContextSimulator()->getSimulatorInfo();
+            CSimulatorInfo currentPlugin = this->getIContextSimulator()->getSimulatorInfo();
             this->ui->cb_Plugins->addItems(plugins);
-            this->setCurrentPlugin(currentDriver);
+            this->setCurrentPlugin(currentPlugin);
 
             // disable / enable driver specific GUI parts
             bool fsxDriver =

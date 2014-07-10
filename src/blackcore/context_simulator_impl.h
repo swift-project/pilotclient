@@ -20,7 +20,7 @@
 namespace BlackCore
 {
     /*!
-     * \brief Network simulator concrete implementation
+     * Network simulator concrete implementation
      */
     class CContextSimulator : public IContextSimulator
     {
@@ -30,7 +30,7 @@ namespace BlackCore
         friend class IContextSimulator;
 
     public:
-        //! \brief Destructor
+        //! Destructor
         virtual ~CContextSimulator();
 
     public slots:
