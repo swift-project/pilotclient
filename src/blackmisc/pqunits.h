@@ -1048,6 +1048,8 @@ namespace BlackMisc
                     u.append(CTimeUnit::nullUnit());
                     u.append(CTimeUnit::d());
                     u.append(CTimeUnit::h());
+                    u.append(CTimeUnit::hms());
+                    u.append(CTimeUnit::hrmin());
                     u.append(CTimeUnit::min());
                     u.append(CTimeUnit::ms());
                     u.append(CTimeUnit::s());
