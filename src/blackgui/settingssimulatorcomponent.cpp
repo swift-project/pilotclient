@@ -45,6 +45,12 @@ namespace BlackGui
                 this->getIContextSimulator()->getAvailableSimulatorPlugins().supportsSimulator(CSimulatorInfo::FSX());
             this->ui->comp_SettingsSimulatorFsx->setVisible(fsxDriver);
 
+            // time sync
+            bool timeSynced = this->getIContextSimulator()->isTimeSynchronized();
+            this->ui->cb_TimeSync->setChecked(timeSynced);
+            CTime timeOffset= this->getIContextSimulator()->getTimeSynchronizationOffset();
+            this->ui->le_TimeSyncOffset->setText(timeOffset.formattedHrsMin());
+
             // only with simulator context set GUI values
             bool connected = this->connect(this->ui->cb_Plugins, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_pluginHasChanged(int)));
             Q_ASSERT(connected);

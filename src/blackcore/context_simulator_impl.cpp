@@ -17,6 +17,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackSim;
+using namespace BlackSim::Settings;
 
 namespace BlackCore
 {
@@ -126,6 +127,9 @@ namespace BlackCore
 
     bool CContextSimulator::loadSimulatorPlugin(const CSimulatorInfo &simulatorInfo)
     {
+        Q_ASSERT(this->getIContextApplication());
+        Q_ASSERT(this->getIContextApplication()->usingLocalObjects());
+
         if (this->m_simulator && this->m_simulator->getSimulatorInfo() == simulatorInfo) { return true; } // already loaded
         if (simulatorInfo.isUnspecified()) { return false; }
 
@@ -170,13 +174,18 @@ namespace BlackCore
         }
         else
         {
-            qFatal("No application context ot application context not local");
+            qFatal("No application context or application context not local");
         }
-        asyncConnectTo(); // try to connect
 
+        // apply latest settings
+        this->settingsChanged(static_cast<uint>(IContextSettings::SettingsSimulator));
+
+        // try to connect
+        asyncConnectTo();
+
+        // info about what is going on
         QString m = QString("Simulator plugin loaded: '%1'").arg(this->m_simulator->getSimulatorInfo().toQString(true));
         this->getRuntime()->sendStatusMessage(CStatusMessage::getInfoMessage(m, CStatusMessage::TypeSimulator));
-        qDebug() << m;
         return true;
     }
 
@@ -297,17 +306,17 @@ namespace BlackCore
     void CContextSimulator::settingsChanged(uint type)
     {
         Q_ASSERT(this->getIContextSettings());
+        Q_ASSERT(this->m_simulator);
         if (!this->getIContextSettings()) return;
         IContextSettings::SettingsType settingsType = static_cast<IContextSettings::SettingsType>(type);
-        if (settingsType == IContextSettings::SettingsSimulator)
+        if (settingsType != IContextSettings::SettingsSimulator) return;
+
+        // plugin
+        CSettingsSimulator settingsSim = this->getIContextSettings()->getSimulatorSettings();
+        CSimulatorInfo plugin = settingsSim.getSelectedPlugin();
+        if (!this->getSimulatorInfo().isSameSimulator(plugin))
         {
-            CSimulatorInfo plugin = this->getIContextSettings()->getSimulatorSettings().getSelectedPlugin();
-            if (this->getSimulatorInfo().isSameSimulator(plugin))
-            {
-                // nothing to do
-                return;
-            }
-            else if (this->loadSimulatorPlugin(plugin))
+            if (this->loadSimulatorPlugin(plugin))
             {
                 QString m = QString("Plugin loaded: '%1'").arg(plugin.toQString(true));
                 this->getRuntime()->sendStatusMessage(CStatusMessage::getInfoMessage(m, CStatusMessage::TypeSimulator));
@@ -318,6 +327,13 @@ namespace BlackCore
                 this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
             }
         }
+
+        // time sync
+        bool timeSync = settingsSim.isTimeSyncEnabled();
+        CTime syncOffset = settingsSim.getSyncTimeOffset();
+        this->m_simulator->setTimeSynchronization(timeSync, syncOffset);
+    }
+
     bool CContextSimulator::isSimulatorPaused() const
     {
         if (!this->m_simulator) return false;
