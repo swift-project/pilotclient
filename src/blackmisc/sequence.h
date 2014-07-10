@@ -201,6 +201,11 @@ namespace BlackMisc
         void clear() { if (pimpl()) pimpl()->clear(); }
 
         /*!
+         * \brief Changes the size of the sequence, if it is bigger than the given size.
+         */
+        void truncate(size_type maxSize) { if (size() > maxSize) { erase(begin() + maxSize, end()); } }
+
+        /*!
          * \brief Inserts an element into the sequence.
          * \return An iterator to the position where value was inserted.
          * \pre The sequence must be initialized.
