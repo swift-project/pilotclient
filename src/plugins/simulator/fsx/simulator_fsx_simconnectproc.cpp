@@ -44,7 +44,9 @@ namespace BlackSimPlugin
                 {
                     SIMCONNECT_RECV_EXCEPTION *exception = (SIMCONNECT_RECV_EXCEPTION *)pData;
                     QString ex;
-                    ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d", exception->dwException, exception->dwSendID, exception->dwIndex, cbData);
+                    ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d",
+                               static_cast<int>(exception->dwException), static_cast<int>(exception->dwSendID),
+                               static_cast<int>(exception->dwIndex), static_cast<int>(cbData));
                     qDebug() << "Caught simConnect exception: " << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException);
                     qDebug() << ex;
                     break;
