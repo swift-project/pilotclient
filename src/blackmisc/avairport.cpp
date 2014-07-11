@@ -135,8 +135,9 @@ namespace BlackMisc
         /*
          * Distance to planne
          */
-        const CLength &CAirport::calculcateDistanceAndBearingToPlane(const CCoordinateGeodetic &position)
+        CLength CAirport::calculcateDistanceAndBearingToPlane(const CCoordinateGeodetic &position, bool updateValues)
         {
+            if (!updateValues) return Geo::greatCircleDistance(this->m_position, position);
             this->m_distanceToPlane = Geo::greatCircleDistance(this->m_position, position);
             this->m_bearingToPlane = Geo::initialBearing(this->m_position, position);
             return this->m_distanceToPlane;

@@ -172,12 +172,8 @@ namespace BlackMisc
             //! Valid distance?
             bool hasValidDistance() const { return !this->m_distanceToPlane.isNull();}
 
-            /*!
-             * Calculcate distance to plane, set it, and also return it
-             * \param position other position
-             * \return
-             */
-            const BlackMisc::PhysicalQuantities::CLength &calculcateDistanceToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
+            //! Calculcate distance to plane, set it, and also return it
+            BlackMisc::PhysicalQuantities::CLength calculcateDistanceToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position, bool update = true);
 
             //! Is station online (or just booked)?
             bool isOnline() const { return m_isOnline; }

@@ -256,8 +256,9 @@ namespace BlackMisc
         /*
          * Distance to planne
          */
-        const CLength &CAtcStation::calculcateDistanceToPlane(const CCoordinateGeodetic &position)
+        CLength CAtcStation::calculcateDistanceToPlane(const CCoordinateGeodetic &position, bool update)
         {
+            if (!update) return Geo::greatCircleDistance(this->m_position, position);
             this->m_distanceToPlane = Geo::greatCircleDistance(this->m_position, position);
             return this->m_distanceToPlane;
         }

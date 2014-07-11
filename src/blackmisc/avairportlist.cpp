@@ -62,7 +62,7 @@ namespace BlackMisc
         }
 
         /*
-         * airports within range
+         * Airports within range
          */
         CAirportList CAirportList::findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const PhysicalQuantities::CLength &range) const
         {
@@ -73,7 +73,7 @@ namespace BlackMisc
         }
 
         /*
-         * Distances to own plane
+         * Distances, bearing to own plane
          */
         void CAirportList::calculcateDistanceAndBearingToPlane(const Geo::CCoordinateGeodetic &position)
         {
@@ -83,19 +83,15 @@ namespace BlackMisc
             });
         }
 
-        void CAirportList::removeIfOutsideRange(const Geo::CCoordinateGeodetic &position, const CLength &maxDistance, bool updateDistance)
+        /*
+         * Remove outside range
+         */
+        void CAirportList::removeIfOutsideRange(const Geo::CCoordinateGeodetic &position, const CLength &maxDistance, bool updateValues)
         {
             CLength d;
             for (CAirportList::iterator i = begin(); i != end();)
             {
-                if (updateDistance)
-                {
-                    d = i->calculcateDistanceAndBearingToPlane(position);
-                }
-                else
-                {
-                    d = i->greatCircleDistance(position);
-                }
+                d = i->calculcateDistanceAndBearingToPlane(position, updateValues);
                 if (maxDistance < d)
                 {
                     i = this->erase(i);

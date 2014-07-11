@@ -292,12 +292,13 @@ namespace BlackCore
                 } // for each
 
                 // this part needs to be synchronized
-                this->m_lock.lockForWrite();
-                this->m_updateTimestamp = updateTimestampFromFile;
-                this->m_aircrafts = aircrafts;
-                this->m_atcStations = atcStations;
-                this->m_voiceServers = voiceServers;
-                this->m_lock.unlock();
+                {
+                    QWriteLocker wl(&this->m_lock);
+                    this->m_updateTimestamp = updateTimestampFromFile;
+                    this->m_aircrafts = aircrafts;
+                    this->m_atcStations = atcStations;
+                    this->m_voiceServers = voiceServers;
+                }
             } // read success
 
             nwReply->close();

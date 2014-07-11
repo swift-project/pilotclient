@@ -92,22 +92,8 @@ namespace BlackMisc
          */
         double CMath::normalizeDegrees(double degrees)
         {
-            if (degrees == 0.0 || degrees == 360.0 || degrees == -360.0) return 0.0;
-            if (degrees > 0)
-            {
-                while (degrees >= 360.0)
-                {
-                    degrees -= 360.0;
-                }
-            }
-            else
-            {
-                while (degrees < 0.0)
-                {
-                    degrees += 360.0;
-                }
-            }
-            return degrees;
+            double result = std::fmod(degrees, 360.0);
+            return (result >= 0.0) ? result : result + 360.0;
         }
 
     } // namespace

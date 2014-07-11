@@ -189,7 +189,7 @@ namespace BlackMisc
         /*
          * Great circle distance
          */
-        CLength ICoordinateGeodetic::greatCircleDistance(const ICoordinateGeodetic &otherCoordinate)
+        CLength ICoordinateGeodetic::greatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const
         {
             return Geo::greatCircleDistance((*this), otherCoordinate);
         }
@@ -197,7 +197,7 @@ namespace BlackMisc
         /*
          * Initial bearing
          */
-        CAngle ICoordinateGeodetic::initialBearing(const ICoordinateGeodetic &otherCoordinate)
+        CAngle ICoordinateGeodetic::initialBearing(const ICoordinateGeodetic &otherCoordinate) const
         {
             return Geo::initialBearing((*this), otherCoordinate);
         }

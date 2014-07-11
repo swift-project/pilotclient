@@ -13,148 +13,83 @@ namespace BlackMisc
     namespace Math
     {
 
-        /*!
-         * \brief Math utils
-         */
+        //! Math utils
         class CMath
         {
         public:
 
-            /*!
-             * \brief Calculates the hypotenuse of x and y without overflow
-             * \param x
-             * \param y
-             * \return
-             */
+            //! Calculates the hypotenuse of x and y without overflow
             static double hypot(double x, double y);
 
-            /*!
-             * \brief Calculates the square of x
-             * \param x
-             * \return
-             */
+            //! Calculates the square of x
             static inline double square(double x)
             {
                 return x * x;
             }
 
-            /*!
-             * \brief Calculates x to the power of three
-             * \param x
-             * \return
-             */
+            //! Calculates x to the power of three
             static inline double cubic(const double x)
             {
                 return x * x * x;
             }
 
-            /*!
-             * \brief Calculates the real cubic root
-             * \param x
-             * \return
-             */
+            //! Calculates the real cubic root
             static double cubicRootReal(double x);
 
-            /*!
-             * \brief Utility round method
-             * \param value
-             * \param digits
-             * \return
-             */
+            //! Utility round method
             static double round(double value, int digits);
 
-            /*!
-             * \brief Round by given epsilon, e.g.
-             * \param value
-             * \param epsilon
-             * \return
-             */
+            //! Round by given epsilon
             static double roundEpsilon(double value, double epsilon);
 
-            /*!
-             * \brief Epsilon safe equal
-             * \param v1
-             * \param v2
-             * \param epsilon
-             * \return
-             */
+            //! Epsilon safe equal
             static bool epsilonEqual(double v1, double v2, double epsilon = 1E-06);
 
-            /*!
-             * \brief Nearest integer not greater in magnitude than value, correcting for epsilon
-             * \param value
-             * \param epsilon
-             */
+            //! Nearest integer not greater in magnitude than value, correcting for epsilon
             static inline double trunc(double value, double epsilon = 1e-10)
             {
                 return value < 0 ? ceil(value - epsilon) : floor(value + epsilon);
             }
 
-            /*!
-             * \brief Fractional part of value
-             * \param value
-             */
+            //! Fractional part of value
             static inline double fract(double value)
             {
                 double unused;
                 return modf(value, &unused);
             }
 
-            /*!
-             * \brief PI
-             * \return
-             */
+            //! PI / 2
             static const double &PIHALF()
             {
                 static double pi = 2.0 * qAtan(1.0);
                 return pi;
             }
 
-            /*!
-             * \brief PI
-             * \return
-             */
+            //! PI
             static const double &PI()
             {
                 static double pi = 4.0 * qAtan(1.0);
                 return pi;
             }
 
-            /*!
-             * \brief PI * 2
-             * \return
-             */
+            //! PI * 2
             static const double &PI2()
             {
                 static double pi2 = 8.0 * qAtan(1.0);
                 return pi2;
             }
 
-            /*!
-             * \brief Degree to radians
-             * \param degree
-             * \return
-             */
+            //! Degrees to radians
             static double deg2rad(double degree);
 
-            /*!
-             * \brief Radians to degrees
-             * \param radians
-             * \return
-             */
+            //! Radians to degrees
             static double rad2deg(double radians);
 
-            /*!
-             * \brief Normalize to 0..360 degrees
-             * \param degrees
-             * \return
-             */
+            //! Normalize: 0≤ degrees <360
             static double normalizeDegrees(double degrees);
 
         private:
-            /*!
-             * \brief No objects, just static
-             */
+            //! No objects, just static
             CMath();
         };
 

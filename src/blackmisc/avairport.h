@@ -97,12 +97,8 @@ namespace BlackMisc
             //! Valid ICAO code
             bool hasValidIcaoCode() const { return !this->getIcao().isEmpty(); }
 
-            /*!
-             * Calculcate distance and bearing to plane, set it, and return distance
-             * \param position other position
-             * \return
-             */
-            const BlackMisc::PhysicalQuantities::CLength &calculcateDistanceAndBearingToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
+            //! Calculcate distance and bearing to plane, set it, and return distance
+            BlackMisc::PhysicalQuantities::CLength calculcateDistanceAndBearingToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position, bool updateValues = true);
 
             //! \copydoc ICoordinateGeodetic::latitude
             virtual const BlackMisc::Geo::CLatitude &latitude() const override

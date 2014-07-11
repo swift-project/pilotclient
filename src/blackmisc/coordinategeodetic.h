@@ -55,10 +55,10 @@ namespace BlackMisc
             }
 
             //! Great circle distance
-            BlackMisc::PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &otherCoordinate);
+            BlackMisc::PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
 
             //! Initial bearing
-            BlackMisc::PhysicalQuantities::CAngle initialBearing(const ICoordinateGeodetic &otherCoordinate);
+            BlackMisc::PhysicalQuantities::CAngle initialBearing(const ICoordinateGeodetic &otherCoordinate) const;
 
             //! In range
             static bool indexInRange(int index);
