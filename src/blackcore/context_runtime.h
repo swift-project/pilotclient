@@ -59,39 +59,39 @@ namespace BlackCore
         const QDBusConnection &getDBusConnection() const { return this->m_dbusConnection; }
 
         //! Enable / disable all logging
-        //! \remarks thread safe
+        //! \threadsafe
         void signalLog(bool enabled);
 
         //! Signal logging for application context
-        //! \remarks thread safe
+        //! \threadsafe
         bool signalLogForApplication(bool enabled);
 
         //! Signal logging for audio context
-        //! \remarks thread safe
+        //! \threadsafe
         bool signalLogForAudio(bool enabled);
 
         //! Signal logging for network context
-        //! \remarks thread safe
+        //! \threadsafe
         bool signalLogForNetwork(bool enabled);
 
         //! Signal logging for own aircraft context
-        //! \remarks thread safe
+        //! \threadsafe
         bool signalLogForOwnAircraft(bool enabled);
 
         //! Signal logging for settings context
-        //! \remarks thread safe
+        //! \threadsafe
         bool signalLogForSettings(bool enabled);
 
         //! Signal logging for simulator context
-        //! \remarks thread safe
+        //! \threadsafe
         bool signalLogForSimulator(bool enabled);
 
         //! Enable / disable all logging
-        //! \remarks thread safe
+        //! \threadsafe
         void slotLog(bool enabled);
 
         //! Slot logging for application context
-        //! \remarks thread safe
+        //! \threadsafe
         void slotLogForApplication(bool enabled)
         {
             QWriteLocker wl(&m_lock);
@@ -99,7 +99,7 @@ namespace BlackCore
         }
 
         //! Slot logging for audio context
-        //! \remarks thread safe
+        //! \threadsafe
         void slotLogForAudio(bool enabled)
         {
             QWriteLocker wl(&m_lock);
@@ -107,7 +107,7 @@ namespace BlackCore
         }
 
         //! Slot logging for network context
-        //! \remarks thread safe
+        //! \threadsafe
         void slotLogForNetwork(bool enabled)
         {
             QWriteLocker wl(&m_lock);
@@ -115,7 +115,7 @@ namespace BlackCore
         }
 
         //! Slot logging for own aircraft context
-        //! \remarks thread safe
+        //! \threadsafe
         void slotLogForOwnAircraft(bool enabled)
         {
             QWriteLocker wl(&m_lock);
@@ -123,7 +123,7 @@ namespace BlackCore
         }
 
         //! Slot logging for settings context
-        //! \remarks thread safe
+        //! \threadsafe
         void slotLogForSettings(bool enabled)
         {
             QWriteLocker wl(&m_lock);
@@ -131,7 +131,7 @@ namespace BlackCore
         }
 
         //! Slot logging for simulator context
-        //! \remarks thread safe
+        //! \threadsafe
         void slotLogForSimulator(bool enabled)
         {
             QWriteLocker wl(&m_lock);
@@ -139,7 +139,7 @@ namespace BlackCore
         }
 
         //! Slot logging for application context
-        //! \remarks thread safe
+        //! \threadsafe
         bool isSlotLogForApplicationEnabled() const
         {
             QReadLocker rl(&m_lock);
@@ -147,7 +147,7 @@ namespace BlackCore
         }
 
         //! Slot logging for audio context
-        //! \remarks thread safe
+        //! \threadsafe
         bool isSlotLogForAudioEnabled() const
         {
             QReadLocker rl(&m_lock);
@@ -155,7 +155,7 @@ namespace BlackCore
         }
 
         //! Slot logging for network context
-        //! \remarks thread safe
+        //! \threadsafe
         bool isSlotLogForNetworkEnabled() const
         {
             QReadLocker rl(&m_lock);
@@ -163,7 +163,7 @@ namespace BlackCore
         }
 
         //! Slot log for own aircraft
-        //! \remarks thread safe
+        //! \threadsafe
         bool isSlotLogForOwnAircraftEnabled() const
         {
             QReadLocker rl(&m_lock);
@@ -171,7 +171,7 @@ namespace BlackCore
         }
 
         //! Slot logging for settings context
-        //! \remarks thread safe
+        //! \threadsafe
         bool isSlotLogForSettingsEnabled() const
         {
             QReadLocker rl(&m_lock);
@@ -179,7 +179,7 @@ namespace BlackCore
         }
 
         //! Slot logging for simulator context
-        //! \remarks thread safe
+        //! \threadsafe
         bool isSlotLogForSimulatorEnabled() const
         {
             QReadLocker rl(&m_lock);
@@ -187,7 +187,7 @@ namespace BlackCore
         }
 
         //! Slot logging for specified context
-        //! \remarks thread safe
+        //! \threadsafe
         bool isSlotLogEnabledFor(LogContext context) const;
 
         //! Slot logging

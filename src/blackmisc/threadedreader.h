@@ -30,7 +30,7 @@ namespace BlackMisc
         }
 
         //! Thread safe, set update timestamp
-        //! \remarks thread safe
+        //! \threadsafe
         QDateTime getUpdateTimestamp() const
         {
             QReadLocker(&this->m_lock);
@@ -38,7 +38,7 @@ namespace BlackMisc
         }
 
         //! Thread safe, set update timestamp
-        //! \remarks thread safe
+        //! \threadsafe
         void setUpdateTimestamp(const QDateTime &updateTimestamp)
         {
             QWriteLocker(&this->m_lock);
@@ -46,6 +46,7 @@ namespace BlackMisc
         }
 
         //! Thread safe, mark as stopped
+        //! \threadsafe
         virtual void stop()
         {
             if (this->isStopped()) return;
@@ -72,7 +73,7 @@ namespace BlackMisc
         }
 
         //! Thread safe, is in state stopped?
-        //! \remarks thread safe
+        //! \threadsafe
         bool isStopped() const
         {
             QReadLocker rl(&this->m_lock);
@@ -82,7 +83,7 @@ namespace BlackMisc
         /*!
          * Set the update time
          * \param updatePeriodMs <=0 stops the timer
-         * \remarks thread safe
+         * \threadsafe
          */
         void setInterval(int updatePeriodMs)
         {
@@ -95,7 +96,7 @@ namespace BlackMisc
         }
 
         //! Get the timer interval (ms)
-        //! \remarks thread safe
+        //! \threadsafe
         int interval() const
         {
             QReadLocker rl(&this->m_lock);
@@ -111,7 +112,7 @@ namespace BlackMisc
         }
 
         //! Has pending network replay
-        //! \remarks thread safe
+        //! \threadsafe
         void setPendingNetworkReply(QNetworkReply *reply)
         {
             QWriteLocker(&this->m_lock);
@@ -119,7 +120,7 @@ namespace BlackMisc
         }
 
         //! Has pending operation
-        //! \remarks thread safe
+        //! \threadsafe
         void setPendingFuture(QFuture<FutureRet> future)
         {
             QWriteLocker(&this->m_lock);
@@ -127,7 +128,7 @@ namespace BlackMisc
         }
 
         //! Thread safe, mark as to be stopped
-        //! \remarks thread safe
+        //! \threadsafe
         void setStopFlag()
         {
             QWriteLocker wl(&this->m_lock);
