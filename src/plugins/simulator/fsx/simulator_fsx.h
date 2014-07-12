@@ -51,11 +51,13 @@ namespace BlackSimPlugin
         //! SimConnect Event IDs
         enum EventIds
         {
-            EventSimStatus,
-            EventObjectAdded,
-            EventObjectRemoved,
-            EventSlewOn,
-            EventFrame,
+            SystemEventSimStatus,
+            SystemEventObjectAdded,
+            SystemEventObjectRemoved,
+            SystemEventSlewToggle,
+            SystemEventFrame,
+            SystemEventPause,
+            EventPauseToggle,
             EventFreezeLat,
             EventFreezeAlt,
             EventFreezeAtt,

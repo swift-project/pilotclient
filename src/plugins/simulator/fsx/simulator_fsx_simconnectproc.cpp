@@ -62,7 +62,7 @@ namespace BlackSimPlugin
 
                     switch (event->uEventID)
                     {
-                    case EventSimStatus:
+                    case SystemEventSimStatus:
                         {
                             if (event->dwData)
                             {
@@ -74,17 +74,21 @@ namespace BlackSimPlugin
                             }
                             break;
                         }
-
+                    case SystemEventPause:
+                        {
+                            simulatorFsx->m_simPaused = event->dwData ? true : false;
+                            break;
+                        }
                     }
                     break;
                 }
             case SIMCONNECT_RECV_ID_EVENT_OBJECT_ADDREMOVE:
                 {
                     SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *event = static_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *>(pData);
-                    if (event->uEventID == EventObjectAdded)
+                    if (event->uEventID == SystemEventObjectAdded)
                     {
                     }
-                    else if (event->uEventID == EventObjectRemoved)
+                    else if (event->uEventID == SystemEventObjectRemoved)
                     {
                     }
                     break;
@@ -94,7 +98,7 @@ namespace BlackSimPlugin
                     SIMCONNECT_RECV_EVENT_FRAME  *event = (SIMCONNECT_RECV_EVENT_FRAME *) pData;
                     switch (event->uEventID)
                     {
-                    case EventFrame:
+                    case SystemEventFrame:
                         simulatorFsx->onSimFrame();
                         break;
                     default:

@@ -426,17 +426,20 @@ namespace BlackSimPlugin
         HRESULT CSimulatorFsx::initEvents()
         {
             HRESULT hr = S_OK;
-            // System events
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventSimStatus, "Sim");
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventObjectAdded, "ObjectAdded");
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventObjectRemoved, "ObjectRemoved");
-            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, EventFrame, "Frame");
+            // System events, see http://msdn.microsoft.com/en-us/library/cc526983.aspx#SimConnect_SubscribeToSystemEvent
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventSimStatus, "Sim");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventObjectAdded, "ObjectAdded");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventObjectRemoved, "ObjectRemoved");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventFrame, "Frame");
+            hr += SimConnect_SubscribeToSystemEvent(m_hSimConnect, SystemEventPause, "Pause");
             if (hr != S_OK)
             {
                 qFatal("SimConnect_SubscribeToSystemEvent failed");
             }
 
-            // Mapped events
+            // Mapped events, see event ids here: http://msdn.microsoft.com/en-us/library/cc526980.aspx
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventPauseToggle, "PAUSE_TOGGLE");
+            hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, SystemEventSlewToggle, "SLEW_TOGGLE");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeLat, "FREEZE_LATITUDE_LONGITUDE_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAlt, "FREEZE_ALTITUDE_SET");
             hr += SimConnect_MapClientEventToSimEvent(m_hSimConnect, EventFreezeAtt, "FREEZE_ATTITUDE_SET");
