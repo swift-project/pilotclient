@@ -154,6 +154,11 @@ namespace BlackMisc
         const_reference frontOrDefault() const { static const value_type def; return empty() ? def : front(); }
 
         /*!
+         * \brief Access the first element, or a default-initialized value if the sequence is empty.
+         */
+        value_type frontOrDefault(value_type def) const { return empty() ? def : front(); }
+
+        /*!
          * \brief Access the last element.
          * \pre The sequence must not be empty.
          */
@@ -166,9 +171,14 @@ namespace BlackMisc
         const_reference back() const { Q_ASSERT(!empty()); return pimpl()->back(); }
 
         /*!
-        * \brief Access the last element, or a default-initialized value if the sequence is empty.
-        */
+         * \brief Access the last element, or a default value if the sequence is empty.
+         */
         const_reference backOrDefault() const { static const value_type def; return empty() ? def : back(); }
+
+        /*!
+         * \brief Access the last element, or a default value if the sequence is empty.
+         */
+        value_type backOrDefault(value_type def) const { return empty() ? def : back(); }
 
         /*!
          * \brief Returns number of elements in the sequence.
