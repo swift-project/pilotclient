@@ -31,6 +31,13 @@ namespace BlackMisc
         { }
 
         /*
+         * Constructor
+         */
+        CAirport::CAirport(const CAirportIcao &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName) :
+            m_icao(icao), m_descriptiveName(descriptiveName), m_position(position), m_distanceToPlane(0, CLengthUnit::nullUnit())
+        { }
+
+        /*
          * Convert to string
          */
         QString CAirport::convertToQString(bool i18n) const

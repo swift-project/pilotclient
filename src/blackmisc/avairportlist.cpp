@@ -91,5 +91,18 @@ namespace BlackMisc
                 return airport.calculcateDistanceAndBearingToPlane(position, updateValues) > maxDistance;
             });
         }
+
+        /*
+         * Sort by range
+         */
+        void CAirportList::sortByRange(const BlackMisc::Geo::CCoordinateGeodetic &position, bool updateValues)
+        {
+            if (updateValues)
+            {
+                this->calculcateDistanceAndBearingToPlane(position);
+            }
+            this->sort([ & ](const CAirport &a, const CAirport &b) { return a.getDistanceToPlane() < b.getDistanceToPlane(); });
+        }
+
     } // namespace
 } // namespace

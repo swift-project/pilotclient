@@ -43,6 +43,9 @@ namespace BlackMisc
             //! ATC station constructor
             CAirport(const CAirportIcao &icao, const BlackMisc::Geo::CCoordinateGeodetic &position);
 
+            //! ATC station constructor
+            CAirport(const CAirportIcao &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName);
+
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 

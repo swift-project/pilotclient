@@ -52,6 +52,9 @@ namespace BlackMisc
             //! Remove if outside given radius
             void removeIfOutsideRange(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &maxDistance, bool updateDistance);
 
+            //! Sort by range from a given coordinate
+            void sortByRange(const BlackMisc::Geo::CCoordinateGeodetic &position, bool updateDistance);
+
             //! Register metadata
             static void registerMetadata();
         };
