@@ -205,6 +205,56 @@ namespace BlackMisc
         };
 
         /*!
+         * Iterator wrapper which concatenates zero or more pairs of begin and end iterators.
+         */
+        template <class I> class ConcatIterator : public std::iterator<std::input_iterator_tag, typename std::iterator_traits<I>::value_type>
+        {
+        public:
+            //! Constructor.
+            ConcatIterator(QVector<I> iterators) : m_iterators(std::move(iterators))
+            {
+                Q_ASSERT(m_iterators.size() % 2 == 0);
+                while (!m_iterators.empty() && m_iterators[0] == m_iterators[1]) { m_iterators.remove(0, 2); }
+            }
+
+            //! Implicit conversion from an end iterator.
+            ConcatIterator(I end) { Q_UNUSED(end); }
+
+            //! Advance to the next element.
+            //! Undefined if iterator is at the end.
+            //! @{
+            ConcatIterator &operator ++()
+            {
+                ++(m_iterators[0]);
+                while (!m_iterators.empty() && m_iterators[0] == m_iterators[1]) { m_iterators.remove(0, 2); }
+                return *this;
+            }
+            ConcatIterator operator ++(int) { auto copy = *this; ++(*this); return copy; }
+            //! @}
+
+            //! Indirection operator, returns the underlying iterator.
+            //! Undefined if iterator is at the end.
+            I operator ->() { return m_iterators[0]; }
+
+            //! Dereference operator, returns the object referenced by the iterator.
+            //! Undefined if iterator is at the end.
+            typename std::iterator_traits<I>::reference operator *() { return *(m_iterators[0]); }
+
+            //! Comparison operators.
+            //! @{
+            bool operator ==(const ConcatIterator &other) const { return m_iterators == other.m_iterators; }
+            bool operator !=(const ConcatIterator &other) const { return m_iterators != other.m_iterators; }
+            bool operator <(const ConcatIterator &other) const { return m_iterators < other.m_iterators; }
+            bool operator <=(const ConcatIterator &other) const { return m_iterators <= other.m_iterators; }
+            bool operator >(const ConcatIterator &other) const { return m_iterators > other.m_iterators; }
+            bool operator >=(const ConcatIterator &other) const { return m_iterators >= other.m_iterators; }
+            //! @}
+
+        private:
+            QVector<I> m_iterators;
+        };
+
+        /*!
          * Construct a KeyIterator of the appropriate type from deduced template function argument.
          */
         template <class I> auto makeKeyIterator(I iterator) -> KeyIterator<I>
@@ -226,6 +276,14 @@ namespace BlackMisc
         template <class I, class F> auto makeConditionalIterator(I iterator, I end, F predicate) -> ConditionalIterator<I, F>
         {
             return { iterator, end, predicate };
+        }
+
+        /*!
+         * Construct a ConcatIterator of the appropriate type from deduced template function arguments.
+         */
+        template <class I> auto makeConcatIterator(QVector<I> iterators) -> ConcatIterator<I>
+        {
+            return { std::move(iterators) };
         }
 
         /*!

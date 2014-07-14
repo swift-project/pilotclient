@@ -42,6 +42,9 @@ namespace XBus
         //! Called by XPluginReceiveMessage when the model is changed
         void onAircraftModelChanged();
 
+        //! Called by XPluginReceiveMessage when the aircraft is positioned at an airport
+        void onAircraftRepositioned();
+
     private:
         BlackCore::CDBusServer *m_server = nullptr;
         CService *m_service = nullptr;

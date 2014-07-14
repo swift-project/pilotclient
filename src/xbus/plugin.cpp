@@ -40,4 +40,12 @@ namespace XBus
         }
     }
 
+    void CPlugin::onAircraftRepositioned()
+    {
+        if (m_service)
+        {
+            m_service->updateAirportsInRange();
+        }
+    }
+
 }

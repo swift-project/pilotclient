@@ -7,6 +7,7 @@
 #include "plugin.h"
 #include "utils.h"
 #include "traffic.h"
+#include "service.h"
 #include <XPLM/XPLMPlanes.h>
 
 #if ! defined(XPLM210)
@@ -32,9 +33,13 @@ PLUGIN_API void XPluginStop()
 
 PLUGIN_API int XPluginEnable()
 {
+    qRegisterMetaType<QDoubleList>();
+    qDBusRegisterMetaType<QDoubleList>();
+
     QXPlaneMessageHandler::install();
     g_qApp = QSharedApplication::sharedInstance();
     QXPlaneEventLoop::exec();
+
     g_plugin = new XBus::CPlugin;
     return 1;
 }
@@ -49,12 +54,19 @@ PLUGIN_API void XPluginReceiveMessage(XPLMPluginID from, long msg, void *param)
 {
     if (from == XPLM_PLUGIN_XPLANE)
     {
-        if (msg == XPLM_MSG_PLANE_LOADED || msg == XPLM_MSG_LIVERY_LOADED)
+        switch (msg)
         {
+        case XPLM_MSG_PLANE_LOADED:
+        case XPLM_MSG_LIVERY_LOADED:
             if (reinterpret_cast<intptr_t>(param) == XPLM_USER_AIRCRAFT)
             {
                 g_plugin->onAircraftModelChanged();
             }
+            break;
+
+        case XPLM_MSG_AIRPORT_LOADED:
+            g_plugin->onAircraftRepositioned();
+            break;
         }
     }
 }

@@ -8,13 +8,24 @@
 
 //! \file
 
+#define NOMINMAX
 #include "datarefs.h"
+#include "blackmisc/geodesicgrid.h"
+#include <XPLM/XPLMNavigation.h>
+#include <QStringList>
 #include <QObject>
+#include <QList>
+
+class QTimer;
 
 //! \cond PRIVATE
 #define XBUS_SERVICE_INTERFACENAME "net.vatsim.xbus.service"
 #define XBUS_SERVICE_OBJECTPATH "/xbus"
 //! \endcond
+
+//! Typedef needed to use QList<double> as a DBus argument
+typedef QList<double> QDoubleList;
+Q_DECLARE_METATYPE(QDoubleList);
 
 namespace XBus
 {
@@ -52,7 +63,13 @@ namespace XBus
         //! Emitted when the model or livery changes.
         void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
 
+        //! Airports in range updated.
+        void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const QDoubleList &lats, const QDoubleList &lons, const QDoubleList &alts);
+
     public slots:
+        //! Called by newly connected client to cause airportsInRangeUpdated to be emitted.
+        void updateAirportsInRange();
+
         //! Get full path to current aircraft model
         QString getAircraftModelPath() const;
 
@@ -153,6 +170,10 @@ namespace XBus
         void setTransponderMode(int mode) { m_xpdrMode.set(mode); }
 
     private:
+        BlackMisc::Geo::CGeodesicGrid<128, XPLMNavRef> m_airports;
+        QTimer *m_airportUpdater = nullptr;
+        void readAirportsDatabase();
+
         StringDataRef<xplane::data::sim::aircraft::view::acf_livery_path> m_liveryPath;
         StringDataRef<xplane::data::sim::aircraft::view::acf_ICAO> m_icao;
         DataRef<xplane::data::sim::flightmodel::position::latitude> m_latitude;

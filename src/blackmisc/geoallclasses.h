@@ -9,6 +9,7 @@
 #include "blackmisc/geoearthangle.h"
 #include "blackmisc/geolatitude.h"
 #include "blackmisc/geolongitude.h"
+#include "blackmisc/geodesicgrid.h"
 #include "blackmisc/coordinateecef.h"
 #include "blackmisc/coordinatened.h"
 #include "blackmisc/coordinategeodetic.h"
