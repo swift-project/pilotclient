@@ -29,7 +29,7 @@ namespace BlackSimPlugin
                 if (method.methodType() == QMetaMethod::Signal)
                 {
                     m_dbusInterface->connection().connect(m_dbusInterface->service(), m_dbusInterface->path(), m_dbusInterface->interface(),
-                        method.name(), this, method.methodSignature());
+                        method.name(), this, method.methodSignature().prepend("2"));
                 }
             }
         }
