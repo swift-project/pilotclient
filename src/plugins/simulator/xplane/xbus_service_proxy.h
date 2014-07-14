@@ -9,6 +9,7 @@
 //! \file
 
 #include "blackmisc/genericdbusinterface.h"
+#include "blackmisc/sequence.h"
 #include <functional>
 
 //! \cond PRIVATE
@@ -20,6 +21,9 @@ namespace BlackSimPlugin
 {
     namespace XPlane
     {
+
+        //! Typedef needed to use CSequence<double> as a DBus argument
+        typedef BlackMisc::CSequence<double> CDoubleSequence;
 
         /*!
          * Proxy object connected to a real XBus::CService object via DBus
@@ -76,7 +80,13 @@ namespace BlackSimPlugin
             //! \copydoc XBus::CService::aircraftModelChanged
             void aircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
 
+            //! \copydoc XBus::CService::airportsInRangeUpdated
+            void airportsInRangeUpdated(const QStringList &icaoCodes, const QStringList &names, const CDoubleSequence &lats, const CDoubleSequence &lons, const CDoubleSequence &alts);
+
         public slots:
+            //! \copydoc XBus::CService::updateAirportsInRange
+            void updateAirportsInRange();
+
             //! \copydoc XBus::CService::getAircraftModelPath
             //! @{
             QString getAircraftModelPath() const;

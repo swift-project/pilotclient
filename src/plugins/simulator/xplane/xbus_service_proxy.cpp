@@ -34,6 +34,11 @@ namespace BlackSimPlugin
             }
         }
 
+        void CXBusServiceProxy::updateAirportsInRange()
+        {
+            m_dbusInterface->callDBus(QLatin1String("updateAirportsInRange"));
+        }
+
         QString CXBusServiceProxy::getAircraftModelPath() const
         {
             return m_dbusInterface->callDBusRet<QString>(QLatin1String("getAircraftModelPath"));

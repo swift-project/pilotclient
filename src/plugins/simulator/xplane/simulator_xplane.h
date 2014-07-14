@@ -92,6 +92,7 @@ namespace BlackSimPlugin
         private slots:
             void serviceRegistered(const QString &serviceName);
             void serviceUnregistered();
+            void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
             void emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
             void fastTimerTimeout();
             void slowTimerTimeout();
@@ -103,6 +104,8 @@ namespace BlackSimPlugin
             CXBusTrafficProxy *m_traffic { nullptr };
             QTimer *m_fastTimer { nullptr };
             QTimer *m_slowTimer { nullptr };
+
+            BlackMisc::Aviation::CAirportList m_airports;
             QSet<QString> m_planes; // FIXME should not be needed here IMHO
 
             struct // data is written by DBus async method callbacks

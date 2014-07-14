@@ -157,6 +157,11 @@ void BlackMisc::registerMetadata()
     Settings::registerMetadata();
     Audio::registerMetadata();
     Hardware::registerMetadata();
+
+    // needed by XBus proxy class
+    qRegisterMetaType<CSequence<double>>();
+    qRegisterMetaType<CSequence<double>>("CDoubleSequence");
+    qDBusRegisterMetaType<CSequence<double>>();
 }
 
 /*

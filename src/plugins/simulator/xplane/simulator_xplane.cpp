@@ -88,7 +88,10 @@ namespace BlackSimPlugin
             m_traffic = new CXBusTrafficProxy(m_conn, this);
             if (m_service->isValid() && m_traffic->isValid() && m_traffic->initialize())
             {
+                // FIXME duplication
                 connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitAircraftModelChanged);
+                connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
+                m_service->updateAirportsInRange();
                 m_watcher->setConnection(m_conn);
                 emit statusChanged(ISimulator::Connected);
                 return true;
@@ -128,7 +131,10 @@ namespace BlackSimPlugin
             {
                 delete m_service;
                 m_service = new CXBusServiceProxy(m_conn, this);
+                // FIXME duplication
                 connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitAircraftModelChanged);
+                connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
+                m_service->updateAirportsInRange();
             }
             else if (serviceName == CXBusTrafficProxy::InterfaceName())
             {
@@ -204,20 +210,39 @@ namespace BlackSimPlugin
             return { m_xplaneData.aircraftModelPath, true };
         }
 
-        BlackMisc::Aviation::CAirportList CSimulatorXPlane::getAirportsInRange() const
+        void CSimulatorXPlane::setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
         {
-            // TODO: Fill with airports nearby from sim
-            BlackMisc::Aviation::CAirportList airports;
-            return airports;
+            qDebug() << alts;
+            m_airports.clear();
+            auto icaoIt = icaos.begin();
+            auto nameIt = names.begin();
+            auto latIt = lats.begin();
+            auto lonIt = lons.begin();
+            auto altIt = alts.begin();
+            for (; icaoIt != icaos.end() && nameIt != names.end() && latIt != lats.end() && lonIt != lons.end() && altIt != alts.end(); ++icaoIt, ++nameIt, ++latIt, ++lonIt, ++altIt)
+            {
+                using namespace BlackMisc::PhysicalQuantities;
+                using namespace BlackMisc::Geo;
+
+                m_airports.push_back({ *icaoIt, { CLatitude(*latIt, CAngleUnit::deg()), CLongitude(*lonIt, CAngleUnit::deg()), CLength(*altIt, CLengthUnit::ft()) }, *nameIt });
+            }
+            using namespace BlackMisc::Math;
         }
 
-        void CSimulatorXPlane::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
+        BlackMisc::Aviation::CAirportList CSimulatorXPlane::getAirportsInRange() const
+        {
+            auto copy = m_airports;
+            copy.sortByRange({ m_xplaneData.latitude, m_xplaneData.longitude, 0 }, true);
+            copy.truncate(20);
+            return copy;
+        }
+
+        void CSimulatorXPlane::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime)
         {
             if (enable)
             {
-                emit this->displayStatusMessage(CStatusMessage::getWarningMessage("Use time synchronization of XP itself", CStatusMessage::TypeSimulator));
+                emit displayStatusMessage(CStatusMessage::getWarningMessage("X-Plane already provides real time synchronization", CStatusMessage::TypeSimulator));
             }
-            Q_UNUSED(offset);
         }
 
         bool CSimulatorXPlane::updateOwnSimulatorCockpit(const BlackMisc::Aviation::CAircraft &aircraft)
