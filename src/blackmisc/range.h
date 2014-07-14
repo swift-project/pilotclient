@@ -124,7 +124,7 @@ namespace BlackMisc
         //! @}
 
         //! Constructor.
-        CRange(I begin, I end) : m_begin(begin), m_end(end) {}
+        CRange(I begin, I end) : m_begin(begin), m_end(end) { check(begin, end); }
 
         //! Begin and end iterators.
         //! @{
@@ -168,6 +168,12 @@ namespace BlackMisc
     private:
         I m_begin;
         I m_end;
+
+        void check(...) {};
+        template <class I2, class F> void check(Iterators::ConditionalIterator<I2, F> begin, Iterators::ConditionalIterator<I2, F> end)
+        {
+            begin.checkEnd(end);
+        }
     };
 
     /*!

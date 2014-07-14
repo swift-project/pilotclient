@@ -191,6 +191,12 @@ namespace BlackMisc
             bool operator >=(const ConditionalIterator &other) const { return m_iterator >= other.m_iterator; }
             //! @}
 
+            //! \private
+            void checkEnd(const ConditionalIterator &other) // debugging
+            {
+                Q_ASSERT(m_end == other.m_end && m_end == other.m_iterator);
+            }
+
         private:
             I m_iterator;
             I m_end;
