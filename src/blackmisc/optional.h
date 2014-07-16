@@ -75,20 +75,33 @@ namespace BlackMisc
         explicit operator bool() const { return m_isValid; }
 
         //! Dereference operator, returns reference to contained value, undefined if there is no value contained.
-        T &operator *() { Q_ASSERT(m_isValid); return *reinterpret_cast<T *>(m_bytes); }
+        T &operator *() { return dereference(); }
 
         //! Dereference operator, returns reference to contained value, undefined if there is no value contained.
-        const T &operator *() const { Q_ASSERT(m_isValid); return *reinterpret_cast<const T *>(m_bytes); }
+        const T &operator *() const { return dereference(); }
 
         //! Indirection operator, returns pointer to contained value, undefined if there is no value contained.
-        T *operator ->() { Q_ASSERT(m_isValid); return reinterpret_cast<T *>(m_bytes); }
+        T *operator ->() { return &dereference(); }
 
         //! Indirection operator, returns pointer to contained value, undefined if there is no value contained.
-        const T *operator ->() const { Q_ASSERT(m_isValid); return reinterpret_cast<const T *>(m_bytes); }
+        const T *operator ->() const { return &dereference(); }
 
     private:
         bool m_isValid;
+
+#if defined(Q_COMPILER_UNRESTRICTED_UNIONS)
+        T &dereference() { Q_ASSERT(m_isValid); return m_obj; }
+        const T &dereference() const { Q_ASSERT(m_isValid); return m_obj; }
+        union
+        {
+            char m_bytes[sizeof(T)];
+            T m_obj;
+        };
+#else
+        T &dereference() { Q_ASSERT(m_isValid); return *reinterpret_cast<T *>(m_bytes); }
+        const T &dereference() const { Q_ASSERT(m_isValid); return *reinterpret_cast<const T *>(m_bytes); }
         char m_bytes[sizeof(T)];
+#endif
     };
 
     /*!

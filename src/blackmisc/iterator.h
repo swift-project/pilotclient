@@ -195,6 +195,7 @@ namespace BlackMisc
             void checkEnd(const ConditionalIterator &other) // debugging
             {
                 Q_ASSERT(m_end == other.m_end && m_end == other.m_iterator);
+                Q_UNUSED(other);
             }
 
         private:
