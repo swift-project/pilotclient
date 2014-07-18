@@ -13,7 +13,9 @@
  * Plugin loaded by X-Plane which publishes a DBus service
  */
 
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #include "menus.h"
 
 #pragma push_macro("interface")

@@ -8,7 +8,9 @@
 
 //! \file
 
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #include "datarefs.h"
 #include "blackmisc/geodesicgrid.h"
 #include <XPLM/XPLMNavigation.h>
