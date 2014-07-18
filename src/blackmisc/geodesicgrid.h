@@ -28,15 +28,12 @@ namespace BlackMisc
                                            std::integral_constant<int, Count>>::type
         {};
 
-        //! Associative container for efficiently storing and retreiving elements at points on the Earth's surface.
-        /*
-            We treat the Earth as a unit sphere, and convert latitude/longitude coordinates into x,y,z normal vectors.
-            The x axis points to 00N00W, the y axis points to 00N90E, the z axis points to the north pole.
-
-            We slice the Earth into N slices along lines of latitude (i.e. planes perpendicular to the z axis). Call these the z slices.
-            Then we further slice the Earth along planes perpendicular to the x axis and the y axis. Call these the x slices and the y slices.
-            Where an x slice, a y slice, and a z slice intersect on the sphere, there is a triangular tile of height 21600/2^N nautical miles.
-        */
+        /*!
+         * Associative container for efficiently storing and retreiving elements at points on the Earth's surface.
+         * Works by dividing the surface of the Earth into 2N^2 triangular tiles of 21600/N nautical miles each.
+         * Each element is inserted according to which tile it falls within, and elements can later be retrieved by
+         * pointing to specific tiles.
+         */
         template <int Slices, class T, class Key = qint32>
         class CGeodesicGrid
         {
