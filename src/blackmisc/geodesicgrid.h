@@ -41,6 +41,13 @@ namespace BlackMisc
             //! Iterator
             typedef typename QMultiMap<Key, T>::const_iterator const_iterator;
 
+            //! Constructor
+            //@{
+            CGeodesicGrid() {}
+            template <template <class...> class C> explicit CGeodesicGrid(const C<T> &container) { for (const auto &v : container) { insert(v); } }
+            template <class I> explicit CGeodesicGrid(CRange<I> range) { for (const auto &v : range) { insert(v); } }
+            //@}
+
             //! Begin and end iterators of the underlying storage.
             //! @{
             const_iterator begin() const { return m_map.begin(); }
