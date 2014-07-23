@@ -11,13 +11,18 @@
 #include "context_runtime.h"
 #include "dbus_server.h"
 #include "voice_vatlib.h"
+#include "voice_channel.h"
 #include "blackinput/keyboard.h"
+#include "blackmisc/voiceroomlist.h"
 
 #include <QThread>
 #include <QQueue>
+#include <QPointer>
 
 namespace BlackCore
 {
+    class IVoiceChannel;
+
     //! Audio context implementation
     class CContextAudio : public IContextAudio
     {
@@ -117,7 +122,11 @@ namespace BlackCore
 
         //! \copydoc IVoice::connectionStatusChanged
         //! \sa IContextAudio::changedVoiceRooms
-        void ps_connectionStatusChanged(IVoice::ComUnit comUnit, IVoice::ConnectionStatus oldStatus, IVoice::ConnectionStatus newStatus);
+        void ps_com1ConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
+
+        //! \copydoc IVoice::connectionStatusChanged
+        //! \sa IContextAudio::changedVoiceRooms
+        void ps_com2ConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus);
 
         //! Init notification sounds
         void ps_initNotificationSounds();
@@ -130,6 +139,8 @@ namespace BlackCore
         BlackInput::IKeyboard *m_keyboard;
         BlackInput::IKeyboard::RegistrationHandle m_handlePtt;
         QThread m_threadVoice;
+        QPointer<IVoiceChannel> m_channelCom1;
+        QPointer<IVoiceChannel> m_channelCom2;
     };
 }
 

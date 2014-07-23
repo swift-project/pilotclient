@@ -7,8 +7,10 @@
 #define SAMPLE_VOICECLIENT
 
 #include "blackcore/voice.h"
+#include "blackcore/voice_channel.h"
 
 #include <QObject>
+#include <QPointer>
 #include <functional>
 #include <QMap>
 #include <QThread>
@@ -49,11 +51,10 @@ public slots:
     void onMicTestFinished();
 private slots:
 
-    void connectionStatusChanged(BlackCore::IVoice::ComUnit comUnit,
-                                   BlackCore::IVoice::ConnectionStatus oldStatus,
-                                   BlackCore::IVoice::ConnectionStatus newStatus);
-    void audioStartedStream(const BlackCore::IVoice::ComUnit comUnit);
-    void audioStoppedStream(const BlackCore::IVoice::ComUnit comUnit);
+    void connectionStatusChanged(BlackCore::IVoiceChannel::ConnectionStatus oldStatus,
+                                   BlackCore::IVoiceChannel::ConnectionStatus newStatus);
+    void audioStartedStream();
+    void audioStoppedStream();
     void userJoinedRoom(const BlackMisc::Aviation::CCallsign &callsign);
     void userLeftRoom(const BlackMisc::Aviation::CCallsign &callsign);
 
@@ -61,6 +62,7 @@ private:
     QMap<QString, std::function<void(QTextStream &)>> m_commands;
     BlackCore::IVoice *m_voice;
     QThread m_threadVoice;
+    QPointer<BlackCore::IVoiceChannel> m_channelCom1;
 
 };
 

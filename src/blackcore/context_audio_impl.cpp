@@ -7,10 +7,10 @@
 #include "context_network.h"
 #include "context_ownaircraft.h"
 #include "context_application.h"
+#include "voice_channel.h"
 
 #include "blacksound/soundgenerator.h"
 #include "blackmisc/notificationsounds.h"
-#include "blackmisc/voiceroomlist.h"
 
 #include <QTimer>
 
@@ -37,13 +37,20 @@ namespace BlackCore
         m_keyboard = BlackInput::IKeyboard::getInstance();
 
         // 3. own aircraft, if possible
-        if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+        //if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
 
         // 4. Signal / slots
         connect(this->m_voice, &CVoiceVatlib::micTestFinished, this, &CContextAudio::audioTestCompleted);
         connect(this->m_voice, &CVoiceVatlib::squelchTestFinished, this, &CContextAudio::audioTestCompleted);
-        connect(this->m_voice, &CVoiceVatlib::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
+        //connect(this->m_voice, &CVoiceVatlib::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
         if (this->getIContextApplication()) this->connect(this->m_voice, &IVoice::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
+
+        m_channelCom1 = m_voice->getVoiceChannel(0);
+        m_channelCom1->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+        connect(m_channelCom1.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_com1ConnectionStatusChanged);
+        m_channelCom2 = m_voice->getVoiceChannel(1);
+        m_channelCom2->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+        connect(m_channelCom2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_com2ConnectionStatusChanged);
 
         // 5. load sounds (init), not possible in own thread
         QTimer::singleShot(10 * 1000, this, SLOT(ps_initNotificationSounds()));
@@ -66,7 +73,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        return this->m_voice->getComVoiceRoomsWithAudioStatus();
+        return getComVoiceRooms();
     }
 
     /*
@@ -76,10 +83,8 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, withAudioStatus);
-        if (withAudioStatus)
-            return this->m_voice->getComVoiceRoomsWithAudioStatus()[0];
-        else
-            return this->m_voice->getComVoiceRooms()[0];
+        // We always have the audio status due to shared status
+        return m_channelCom1->getVoiceRoom();
     }
 
     /*
@@ -89,10 +94,8 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, withAudioStatus);
-        if (withAudioStatus)
-            return this->m_voice->getComVoiceRoomsWithAudioStatus()[1];
-        else
-            return this->m_voice->getComVoiceRooms()[1];
+        // We always have the audio status due to shared status
+        return m_channelCom2->getVoiceRoom();
     }
 
     /*
@@ -102,7 +105,10 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        return this->m_voice->getComVoiceRooms();
+        CVoiceRoomList voiceRoomList;
+        voiceRoomList.push_back(m_channelCom1->getVoiceRoom());
+        voiceRoomList.push_back(m_channelCom2->getVoiceRoom());
+        return voiceRoomList;
     }
 
     /*
@@ -112,7 +118,8 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        this->m_voice->leaveAllVoiceRooms();
+        m_channelCom1->leaveVoiceRoom();
+        m_channelCom2->leaveVoiceRoom();
     }
 
     /*
@@ -167,12 +174,12 @@ namespace BlackCore
         // volumes
         qint32 vol1 = com1.getVolumeOutput();
         qint32 vol2 = com2.getVolumeOutput();
-        this->m_voice->setRoomOutputVolume(IVoice::COM1, vol1);
-        this->m_voice->setRoomOutputVolume(IVoice::COM2, vol2);
+        m_channelCom1->setRoomOutputVolume(vol1);
+        m_channelCom2->setRoomOutputVolume(vol2);
 
         // enable / disable in the same step
-        this->m_voice->switchAudioOutput(IVoice::COM1, com1.isEnabled());
-        this->m_voice->switchAudioOutput(IVoice::COM2, com2.isEnabled());
+        m_channelCom1->switchAudioOutput(com1.isEnabled());
+        m_channelCom2->switchAudioOutput(com2.isEnabled());
     }
 
     /*
@@ -182,7 +189,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        return this->m_voice->isMuted();
+        return m_channelCom1->isMuted() && m_channelCom2->isMuted();
     }
 
     /*
@@ -194,7 +201,7 @@ namespace BlackCore
         Q_ASSERT(newRooms.size() == 2);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, newRooms.toQString());
 
-        CVoiceRoomList currentRooms =  this->m_voice->getComVoiceRooms();
+        CVoiceRoomList currentRooms = getComVoiceRooms();
         CVoiceRoom currentRoom1 = currentRooms[0];
         CVoiceRoom currentRoom2 = currentRooms[1];
         CVoiceRoom newRoom1 = newRooms[0];
@@ -205,14 +212,20 @@ namespace BlackCore
         // changed rooms?  But only compare on "URL",  not status as connected etc.
         if (currentRoom1.getVoiceRoomUrl() != newRoom1.getVoiceRoomUrl())
         {
-            this->m_voice->leaveVoiceRoom(IVoice::COM1);
-            if (newRoom1.isValid()) this->m_voice->joinVoiceRoom(IVoice::COM1, newRoom1);
+            m_channelCom1->leaveVoiceRoom();
+            if (newRoom1.isValid())
+            {
+                m_channelCom1->joinVoiceRoom(newRoom1);
+            }
             changed = true;
         }
         if (currentRoom2.getVoiceRoomUrl() != newRoom2.getVoiceRoomUrl())
         {
-            this->m_voice->leaveVoiceRoom(IVoice::COM2);
-            if (newRoom2.isValid()) this->m_voice->joinVoiceRoom(IVoice::COM2, newRoom2);
+            m_channelCom2->leaveVoiceRoom();
+            if (newRoom2.isValid())
+            {
+                m_channelCom2->joinVoiceRoom(newRoom2);
+            }
             changed = true;
         }
 
@@ -228,8 +241,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        CCallsignList callsigns = this->m_voice->getVoiceRoomCallsigns(IVoice::COM1);
-        return callsigns;
+        return m_channelCom1->getVoiceRoomCallsigns();
     }
 
     /*
@@ -239,8 +251,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
-        CCallsignList callsigns = this->m_voice->getVoiceRoomCallsigns(IVoice::COM2);
-        return callsigns;
+        return m_channelCom2->getVoiceRoomCallsigns();
     }
 
     /*
@@ -360,7 +371,11 @@ namespace BlackCore
      */
     void CContextAudio::ps_settingsChanged(uint typeValue)
     {
-        if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+        if (this->getIContextOwnAircraft())
+        {
+            m_channelCom1->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+            m_channelCom2->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+        }
         if (!this->getIContextSettings()) return;
         IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
         if (type == IContextSettings::SettingsHotKeys)
@@ -376,32 +391,70 @@ namespace BlackCore
     /*
      * Connection status changed
      */
-    void CContextAudio::ps_connectionStatusChanged(IVoice::ComUnit comUnit, IVoice::ConnectionStatus oldStatus, IVoice::ConnectionStatus newStatus)
+    void CContextAudio::ps_com1ConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus)
     {
-        Q_UNUSED(comUnit);
         Q_UNUSED(oldStatus);
 
         switch (newStatus)
         {
-        case IVoice::Connected:
-            emit this->changedVoiceRooms(this->m_voice->getComVoiceRooms(), true);
+        case IVoiceChannel::Connected:
+            emit this->changedVoiceRooms(getComVoiceRooms(), true);
             break;
-        case IVoice::Disconnecting:
+        case IVoiceChannel::Disconnecting:
             break;
-        case IVoice::Connecting:
+        case IVoiceChannel::Connecting:
             break;
-        case IVoice::ConnectingFailed:
-        case IVoice::DisconnectedError:
+        case IVoiceChannel::ConnectingFailed:
+        case IVoiceChannel::DisconnectedError:
             {
-                const QString e = QString("Voice room %1 error").arg(comUnit);
+                const QString e = QString("Voice room COM1 error");
                 qWarning(e.toUtf8().constData());
 
                 // no break here!
             }
-        case IVoice::Disconnected:
+        case IVoiceChannel::Disconnected:
             // good chance to update aircraft
-            if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-            emit this->changedVoiceRooms(this->m_voice->getComVoiceRooms(), false);
+            if (this->getIContextOwnAircraft())
+            {
+                m_channelCom1->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+                m_channelCom2->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+            }
+            emit this->changedVoiceRooms(getComVoiceRooms(), false);
+            break;
+        default:
+            break;
+        }
+    }
+
+    void CContextAudio::ps_com2ConnectionStatusChanged(IVoiceChannel::ConnectionStatus oldStatus, IVoiceChannel::ConnectionStatus newStatus)
+    {
+        Q_UNUSED(oldStatus);
+
+        switch (newStatus)
+        {
+        case IVoiceChannel::Connected:
+            emit this->changedVoiceRooms(getComVoiceRooms(), true);
+            break;
+        case IVoiceChannel::Disconnecting:
+            break;
+        case IVoiceChannel::Connecting:
+            break;
+        case IVoiceChannel::ConnectingFailed:
+        case IVoiceChannel::DisconnectedError:
+            {
+                const QString e = QString("Voice room COM2 error");
+                qWarning(e.toUtf8().constData());
+
+                // no break here!
+            }
+        case IVoiceChannel::Disconnected:
+            // good chance to update aircraft
+            if (this->getIContextOwnAircraft())
+            {
+                m_channelCom1->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+                m_channelCom2->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
+            }
+            emit this->changedVoiceRooms(getComVoiceRooms(), false);
             break;
         default:
             break;
