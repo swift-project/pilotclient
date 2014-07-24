@@ -4,7 +4,7 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackcorefreefunctions.h"
-#include "voice.h"
+#include "voice_channel.h"
 #include "simulator.h"
 #include <QThread>
 
@@ -15,10 +15,8 @@ namespace BlackCore
         // for some reasons (ask RW) these are registered twice
         qRegisterMetaType<ISimulator::Status>();
         qRegisterMetaType<ISimulator::Status>("Status");
-        qRegisterMetaType<IVoice::ComUnit>();
-        qRegisterMetaType<IVoice::ComUnit>("ComUnit");
-        qRegisterMetaType<IVoice::ConnectionStatus>();
-        qRegisterMetaType<IVoice::ConnectionStatus>("ConnectionStatus");
+        qRegisterMetaType<IVoiceChannel::ConnectionStatus>();
+        qRegisterMetaType<IVoiceChannel::ConnectionStatus>("ConnectionStatus");
     }
 
     bool isCurrentThreadCreatingThread(QObject *toBeTested)

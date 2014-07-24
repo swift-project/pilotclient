@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "voice_vatlib.h"
+#include "voice_channel_vatlib.h"
 #include <QDebug>
 #include <QTimer>
 
@@ -24,8 +25,6 @@ namespace BlackCore
         // m_audioOutput(nullptr), // removed #227
         m_inputSquelch(-1),
         m_micTestResult(Cvatlib_Voice_Simple::agc_Ok),
-        m_isAudioLoopbackEnabled(false),
-        m_temporaryUserRoomIndex(CVoiceVatlib::InvalidRoomIndex),
         m_lockCurrentOutputDevice(QMutex::Recursive),
         m_lockCurrentInputDevice(QMutex::Recursive),
         m_lockDeviceList(QMutex::Recursive)
@@ -39,15 +38,15 @@ namespace BlackCore
             m_vatlib->GetInputDevices(onInputHardwareDeviceReceived, this);
             m_vatlib->GetOutputDevices(onOutputHardwareDeviceReceived, this);
 
-            connect(this, &CVoiceVatlib::userJoinedLeft, this, &CVoiceVatlib::onUserJoinedLeft, Qt::QueuedConnection);
-
-            this->m_vatlibRooms.push_back(CVoiceRoom()); // COM1
-            this->m_vatlibRooms.push_back(CVoiceRoom()); // COM2
-            this->m_outputEnabled.insert(COM1, true);
-            this->m_outputEnabled.insert(COM2, true);
             this->m_currentInputDevice = this->defaultAudioInputDevice();
             this->m_currentOutputDevice = this->defaultAudioOutputDevice();
-            // this->m_audioOutput->setVolume(1.0); // make sure the overall sound is not muted
+
+            for (int ii = 0; ii < 2; ++ii)
+            {
+                IVoiceChannel *channel = new CVoiceChannelVatlib(m_vatlib, this);
+                Q_ASSERT(channel);
+                m_hashChannelIndex.insert(ii, channel);
+            }
 
             // do processing
             this->startTimer(10);
@@ -170,61 +169,6 @@ namespace BlackCore
         }
     }
 
-    /*
-     * Get voice rooms, with the latest status updated
-     */
-    BlackMisc::Audio::CVoiceRoomList CVoiceVatlib::getComVoiceRoomsWithAudioStatus() const
-    {
-        QReadLocker lockForReading(&m_lockVoiceRooms);
-        Q_ASSERT_X(m_vatlibRooms.size() == 2, "CVoiceVatlib", "Wrong numer of COM voice rooms");
-
-        if (!m_vatlib->IsValid() || !m_vatlib->IsSetup()) return CVoiceRoomList::twoEmptyRooms();
-
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
-        // valid state, update
-        CVoiceRoom com1 = this->m_vatlibRooms[0];
-        CVoiceRoom com2 = this->m_vatlibRooms[1];
-        com1.setConnected(m_vatlib->IsRoomConnected(static_cast<qint32>(COM1)));
-        com2.setConnected(m_vatlib->IsRoomConnected(static_cast<qint32>(COM2)));
-        com1.setAudioPlaying(com1.isConnected() ? m_vatlib->IsAudioPlaying(static_cast<qint32>(COM1)) : false);
-        com2.setAudioPlaying(com2.isConnected() ? m_vatlib->IsAudioPlaying(static_cast<qint32>(COM2)) : false);
-        CVoiceRoomList voiceRooms;
-        voiceRooms.push_back(com1);
-        voiceRooms.push_back(com2);
-        return voiceRooms;
-    }
-
-    /*
-     * Voice room callsigns
-     */
-    CCallsignList CVoiceVatlib::getVoiceRoomCallsigns(const IVoice::ComUnit comUnit) const
-    {
-        QReadLocker lockForReading(&m_lockCallsigns);
-        CCallsignList callsigns;
-        if (!this->m_vatlibRoomCallsigns.contains(comUnit)) return callsigns;
-        return this->m_vatlibRoomCallsigns[comUnit];
-    }
-
-    /*
-     * Enable audio
-     */
-    void CVoiceVatlib::switchAudioOutput(const ComUnit comUnit, bool enable)
-    {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
-        Q_ASSERT_X(m_vatlib->IsValid() && m_vatlib->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_vatlib->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
-        try
-        {
-            m_vatlib->SetOutputState(static_cast<qint32>(comUnit), 0, enable);
-            QWriteLocker lockForWriting(&m_lockOutputEnabled);
-            this->m_outputEnabled[comUnit] = enable;
-        }
-        catch (...)
-        {
-            this->exceptionDispatcher(Q_FUNC_INFO);
-        }
-    }
-
     void CVoiceVatlib::enableAudioLoopback(bool enable)
     {
         if (enable == m_isAudioLoopbackEnabled)
@@ -334,203 +278,35 @@ namespace BlackCore
         return result;
     }
 
-    /*
-     * Callsign
-     */
-    void CVoiceVatlib::setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign)
+    IVoiceChannel *CVoiceVatlib::getVoiceChannel(qint32 channelIndex) const
     {
-        QWriteLocker lockForWriting(&m_lockMyCallsign);
-        m_aircraftCallsign = callsign;
+        IVoiceChannel *channel = m_hashChannelIndex.value(channelIndex, nullptr);
+        Q_ASSERT(channel);
+
+        return channel;
     }
 
     /*
-     * Voice room
+     * Handle PTT
      */
-    void CVoiceVatlib::joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Audio::CVoiceRoom &voiceRoom)
+    void CVoiceVatlib::handlePushToTalk(bool value)
     {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
-        Q_ASSERT_X(m_vatlib->IsValid() && m_vatlib->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_vatlib->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
-        if (!voiceRoom.isValid())
+        qDebug() << "PTT";
+        if (!this->m_vatlib) return;
+
+        if (value) qDebug() << "Start transmitting...";
+        else qDebug() << "Stop transmitting...";
+
+        // FIXME: Set only once channel to active for transmitting
+        if (value)
         {
-            qDebug() << "Error: Cannot join invalid voice room.";
-            return;
+            getVoiceChannel(0)->startTransmitting();
+            getVoiceChannel(1)->startTransmitting();
         }
-
-        try
+        else
         {
-            // only connect, if not yet connected
-            if (this->m_vatlib->IsRoomConnected(static_cast<qint32>(comUnit))) return;
-            changeConnectionStatus(comUnit, Connecting);
-            QString serverSpec = voiceRoom.getVoiceRoomUrl();
-            QReadLocker lockForReading(&m_lockMyCallsign);
-            bool jr = m_vatlib->JoinRoom(static_cast<qint32>(comUnit), m_aircraftCallsign.toQString().toLatin1().constData(), serverSpec.toLatin1().constData());
-            if (jr)
-            {
-                // do not(!) set as connected right now, this will be done in "status changed"
-                // when room really is connected
-                this->setVoiceRoomForUnit(comUnit, voiceRoom);
-            }
-            else
-            {
-                qWarning("Could not join voice room");
-            }
-        }
-        catch (...)
-        {
-            this->exceptionDispatcher(Q_FUNC_INFO);
-        }
-    }
-
-    /*
-     * Leave a room
-     */
-    void CVoiceVatlib::leaveVoiceRoom(const ComUnit comUnit)
-    {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
-
-        Q_ASSERT_X(m_vatlib->IsValid() && m_vatlib->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_vatlib->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
-
-        try
-        {
-            // update "meta" object for room
-            this->setVoiceRoomForUnit(comUnit, CVoiceRoom()); // an empty voice room is easier to detect
-
-            // only leave is room is physically connected
-            if (this->m_vatlib->IsRoomConnected(static_cast<qint32>(comUnit)))
-            {
-                m_vatlib->LeaveRoom(static_cast<qint32>(comUnit));
-                this->m_vatlibRoomCallsigns[comUnit] = CCallsignList(); // empty list for this room
-                changeConnectionStatus(comUnit, Disconnecting);
-            }
-        }
-        catch (...)
-        {
-            this->exceptionDispatcher(Q_FUNC_INFO);
-        }
-    }
-
-    /*
-     * Leave all voice rooms
-     */
-    void CVoiceVatlib::leaveAllVoiceRooms()
-    {
-        this->leaveVoiceRoom(COM1);
-        this->leaveVoiceRoom(COM2);
-    }
-
-    /*
-     * Room output volume as per COM unit
-     */
-    void CVoiceVatlib::setRoomOutputVolume(const ComUnit comUnit, const qint32 volume)
-    {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
-        Q_ASSERT_X(m_vatlib->IsValid() && m_vatlib->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_vatlib->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
-
-        try
-        {
-            m_vatlib->SetRoomVolume(static_cast<qint32>(comUnit), volume);
-        }
-        catch (...)
-        {
-            this->exceptionDispatcher(Q_FUNC_INFO);
-        }
-    }
-
-    /*
-     * Start transmitting
-     */
-    void CVoiceVatlib::startTransmitting(const ComUnit comUnit)
-    {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
-        Q_ASSERT_X(m_vatlib->IsValid() && m_vatlib->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_vatlib->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
-
-        try
-        {
-            m_vatlib->SetMicState(static_cast<qint32>(comUnit), true);
-        }
-        catch (...)
-        {
-            this->exceptionDispatcher(Q_FUNC_INFO);
-        }
-    }
-
-    /*
-     * Start transmitting
-     */
-    void CVoiceVatlib::stopTransmitting(const ComUnit comUnit)
-    {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
-        Q_ASSERT_X(m_vatlib->IsValid() && m_vatlib->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_vatlib->IsRoomValid(static_cast<qint32>(comUnit)), "CVoiceVatlib", "Room index out of bounds!");
-        try
-        {
-            m_vatlib->SetMicState(static_cast<qint32>(comUnit), false);
-        }
-        catch (...)
-        {
-            this->exceptionDispatcher(Q_FUNC_INFO);
-        }
-    }
-
-    /*
-     * Change room status
-     */
-    void CVoiceVatlib::changeRoomStatus(ComUnit comUnit, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus)
-    {
-        qDebug() << comUnit << roomStatus; // KB_REMOVE
-        CVoiceRoom vr = this->voiceRoomForUnit(comUnit);
-        switch (roomStatus)
-        {
-        case Cvatlib_Voice_Simple::roomStatusUpdate_JoinSuccess:
-            {
-                m_lockOutputEnabled.lockForRead();
-                bool isOutputEnabled = this->m_outputEnabled[comUnit];
-                m_lockOutputEnabled.unlock();
-                switchAudioOutput(comUnit, isOutputEnabled);
-                vr.setConnected(true);
-                this->setVoiceRoomForUnit(comUnit, vr);
-                changeConnectionStatus(comUnit, Connected);
-                emit userJoinedLeft(comUnit);
-                break;
-            }
-        case Cvatlib_Voice_Simple::roomStatusUpdate_JoinFail:
-            vr.setConnected(false);
-            this->setVoiceRoomForUnit(comUnit, vr);
-            changeConnectionStatus(comUnit, ConnectingFailed);
-            break;
-        case Cvatlib_Voice_Simple::roomStatusUpdate_UnexpectedDisconnectOrKicked:
-            vr.setConnected(false);
-            this->setVoiceRoomForUnit(comUnit, vr);
-            changeConnectionStatus(comUnit, DisconnectedError);
-            break;
-        case Cvatlib_Voice_Simple::roomStatusUpdate_LeaveComplete:
-            m_lockCallsigns.lockForWrite();
-            m_voiceRoomCallsigns.clear();
-            m_lockCallsigns.unlock();
-            changeConnectionStatus(comUnit, Disconnected);
-            break;
-        case Cvatlib_Voice_Simple::roomStatusUpdate_UserJoinsLeaves:
-            // FIXME: We cannot call GetRoomUserList because vatlib is not reentrent safe.
-            emit userJoinedLeft(comUnit);
-            break;
-        case Cvatlib_Voice_Simple::roomStatusUpdate_RoomAudioStarted:
-            emit audioStarted(comUnit);
-            break;
-        case Cvatlib_Voice_Simple::roomStatusUpdate_RoomAudioStopped:
-            emit audioStopped(comUnit);
-            break;
-        case Cvatlib_Voice_Simple::roomStatusUpdate_AudioStarted:
-            emit globalAudioStarted();
-            break;
-        case Cvatlib_Voice_Simple::roomStatusUpdate_AudioStopped:
-            emit globalAudioStopped();
-            break;
-        default:
-            break;
+            getVoiceChannel(0)->stopTransmitting();
+            getVoiceChannel(1)->stopTransmitting();
         }
     }
 
@@ -588,62 +364,6 @@ namespace BlackCore
         }
     }
 
-    /*
-     * User joined / left room
-     */
-    void CVoiceVatlib::onUserJoinedLeft(const ComUnit comUnit)
-    {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
-        Q_ASSERT_X(m_vatlib->IsValid() && m_vatlib->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
-        Q_ASSERT_X(m_temporaryUserRoomIndex == CVoiceVatlib::InvalidRoomIndex, "CVoiceClientVatlib::onUserJoinedLeft", "Cannot list users for two rooms in parallel!");
-        try
-        {
-            // Paranoia... clear list completely
-            if (!m_vatlib->IsRoomConnected(static_cast<qint32>(comUnit)))
-            {
-                this->m_voiceRoomCallsigns[comUnit] = CCallsignList();
-                this->m_temporaryVoiceRoomCallsigns.clear();
-                return;
-            }
-
-            // Store the room index for the slot (called in static callback)
-            m_temporaryUserRoomIndex = static_cast<qint32>(comUnit);
-
-            // Callbacks already completed when function GetRoomUserList returns,
-            // thereafter m_voiceRoomCallsignsUpdate is filled with the latest callsigns
-            m_vatlib->GetRoomUserList(static_cast<qint32>(comUnit), onRoomUserReceived, this);
-            m_temporaryUserRoomIndex = CVoiceVatlib::InvalidRoomIndex; // reset
-
-            // we have all current users in m_temporaryVoiceRoomCallsigns
-            foreach(CCallsign callsign, m_voiceRoomCallsigns.value(comUnit))
-            {
-                if (!m_temporaryVoiceRoomCallsigns.contains(callsign))
-                {
-                    // User has left
-                    emit userLeftRoom(callsign);
-                }
-            }
-
-            QWriteLocker lockForWriting(&m_lockCallsigns);
-            foreach(CCallsign callsign, m_temporaryVoiceRoomCallsigns)
-            {
-                if (!m_voiceRoomCallsigns.value(comUnit).contains(callsign))
-                {
-                    // he joined
-                    emit userJoinedRoom(callsign);
-                }
-            }
-
-            // Finally we update it with our new list
-            this->m_voiceRoomCallsigns[comUnit] = this->m_temporaryVoiceRoomCallsigns;
-            this->m_temporaryVoiceRoomCallsigns.clear();
-        }
-        catch (...)
-        {
-            this->exceptionDispatcher(Q_FUNC_INFO);
-        }
-    }
-
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
     /**********************************           shimlib callbacks           ************************************/
     /********************************** * * * * * * * * * * * * * * * * * * * ************************************/
@@ -664,36 +384,8 @@ namespace BlackCore
     void CVoiceVatlib::onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, qint32 roomIndex, void *cbVar)
     {
         Q_UNUSED(obj)
-        ComUnit comUnit = static_cast<ComUnit>(roomIndex);
-        CVoiceVatlib *voiceClientVatlib = cbvar_cast_voice(cbVar);
-        voiceClientVatlib->changeRoomStatus(comUnit, upd);
-    }
-
-    /*
-     * Room user received
-     */
-    void CVoiceVatlib::onRoomUserReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar)
-    {
-        Q_UNUSED(obj)
-
-        // sanity check
-        QString callsign = QString(name);
-        if (callsign.isEmpty()) return;
-
-        // add callsign
-        CVoiceVatlib *voiceClientVatlib = cbvar_cast_voice(cbVar);
-        ComUnit comUnit = static_cast<ComUnit>(voiceClientVatlib->temporaryUserRoomIndex());
-
-        // add user
-        // callsign might contain: VATSIM id, user name
-        if (callsign.contains(" "))
-        {
-            QStringList parts = callsign.split(" ");
-            callsign = parts[0];
-            // I throw away VATSIM id here, maybe we could use it
-        }
-
-        voiceClientVatlib->addTemporaryCallsignForRoom(comUnit, CCallsign(callsign));
+        CVoiceVatlib *vatlibRoom = cbvar_cast_voice(cbVar);
+        vatlibRoom->onRoomStatusUpdate(roomIndex, upd);
     }
 
     /*
@@ -716,33 +408,6 @@ namespace BlackCore
         BlackMisc::Audio::CAudioDevice outputDevice(BlackMisc::Audio::CAudioDevice::OutputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDevice::OutputDevice), QString(name));
         QMutexLocker lockForWriting(&(cbvar_cast_voice(cbVar)->m_lockDeviceList));
         cbvar_cast_voice(cbVar)->m_devices.push_back(outputDevice);
-    }
-
-    /*
-     * COM unit to Voice room
-     */
-    CVoiceRoom CVoiceVatlib::voiceRoomForUnit(const IVoice::ComUnit comUnit) const
-    {
-        QReadLocker lockForReading(&m_lockVoiceRooms);
-        return (comUnit == COM1) ? this->m_voiceRooms[0] : this->m_voiceRooms[1];
-    }
-
-    /*
-     * Voice room for respectice COM unit
-     */
-    void CVoiceVatlib::setVoiceRoomForUnit(const IVoice::ComUnit comUnit, const CVoiceRoom &voiceRoom)
-    {
-        QWriteLocker lockForWriting(&m_lockVoiceRooms);
-        this->m_voiceRooms[comUnit == COM1 ? 0 : 1] = voiceRoom;
-    }
-
-    /*
-     * Add temp.callsign for room
-     */
-    void CVoiceVatlib::addTemporaryCallsignForRoom(const ComUnit /** comUnit **/, const CCallsign &callsign)
-    {
-        if (m_temporaryVoiceRoomCallsigns.contains(callsign)) return;
-        m_temporaryVoiceRoomCallsigns.push_back(callsign);
     }
 
     /*
@@ -783,26 +448,21 @@ namespace BlackCore
         }
     }
 
-    // Change voice room status and emit signal
-    void CVoiceVatlib::changeConnectionStatus(ComUnit comUnit, ConnectionStatus newStatus)
+    void CVoiceVatlib::onRoomStatusUpdate(qint32 roomIndex, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus)
     {
-        QWriteLocker lockForWriting(&m_lockConnectionStatus);
-        ConnectionStatus currentStatus = m_connectionStatus.value(comUnit);
-        if (newStatus != currentStatus)
+        QList<IVoiceChannel *> voiceChannels = m_hashChannelIndex.values();
+        auto iterator = std::find_if(voiceChannels.begin(), voiceChannels.end(), [&](const IVoiceChannel * voiceChannel)
         {
-            if (newStatus == Connected)
-            {
-                CVoiceRoom vr = this->voiceRoomForUnit(comUnit);
-                vr.setConnected(true);
-                this->setVoiceRoomForUnit(comUnit, vr);
-            }
+            return voiceChannel->getRoomIndex() == roomIndex;
+        });
 
-            // disconnecting the voice room will already be
-            // set in leave voice room
-
-            m_connectionStatus.insert(comUnit, newStatus);
-            emit connectionStatusChanged(comUnit, currentStatus, newStatus);
+        if (iterator == voiceChannels.end())
+        {
+            qWarning() << "Unknown room index";
+            return;
         }
+
+        (*iterator)->updateRoomStatus(roomStatus);
     }
 
 } // namespace

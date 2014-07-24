@@ -101,40 +101,8 @@ namespace BlackCore
         //! \copydoc IVoice::micTestResultAsString
         virtual QString micTestResultAsString() const override;
 
-    public slots:
-        //! \copydoc IVoice::setMyAircraftCallsign()
-        virtual void setMyAircraftCallsign(const BlackMisc::Aviation::CCallsign &callsign) override;
-
-        //! \copydoc IVoice::joinVoiceRoom()
-        virtual void joinVoiceRoom(const ComUnit comUnit, const BlackMisc::Audio::CVoiceRoom &voiceRoom) override;
-
-        //! \copydoc IVoice::leaveVoiceRoom()
-        virtual void leaveVoiceRoom(const ComUnit comUnit) override;
-
-        //! \copydoc IVoice::leaveAllVoiceRooms()
-        virtual void leaveAllVoiceRooms() override;
-
-        //! \copydoc IVoice::setRoomOutputVolume()
-        virtual void setRoomOutputVolume(const ComUnit comUnit, const qint32 volumne) override;
-
-        //! \copydoc IVoice::startTransmitting()
-        virtual void startTransmitting(const ComUnit comUnit) override;
-
-        //! \copydoc IVoice::stopTransmitting()
-        virtual void stopTransmitting(const ComUnit comUnit) override;
-
-        //! \copydoc IVoice::getComVoiceRoomsWithAudioStatus()
-        virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const override;
-
-        //! \copydoc IVoice::getComVoiceRooms()
-        virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRooms() const override
-        {
-            QReadLocker lockForReading(&m_lockVoiceRooms);
-            return this->m_voiceRooms;
-        }
-
-        //! \copydoc IVoice::getVoiceRoomCallsigns()
-        virtual BlackMisc::Aviation::CCallsignList getVoiceRoomCallsigns(const ComUnit comUnit) const override;
+        //! \copydoc IVoice::getVoiceChannel
+        virtual IVoiceChannel *getVoiceChannel(qint32 channelIndex) const override;
 
         //! \copydoc IVoice::setInputDevice
         virtual void setInputDevice(const BlackMisc::Audio::CAudioDevice &device) override;
@@ -148,57 +116,14 @@ namespace BlackCore
         //! \copydoc IVoice::getCurrentOutputDevice()
         virtual BlackMisc::Audio::CAudioDevice getCurrentOutputDevice() const override;
 
-        //! \copydoc IVoice::switchAudioOutput
-        virtual void switchAudioOutput(const ComUnit comUnit, bool enable) override;
-
         //! \copydoc IVoice::enableAudioLoopback
         virtual void enableAudioLoopback(bool enable = true) override;
-
-        //! \copydoc IVoice::isMuted
-        virtual bool isMuted() const override
-        {
-            QReadLocker lockForReading(&m_lockOutputEnabled);
-            if (this->m_outputEnabled.isEmpty()) return false;
-            bool enabled = this->m_outputEnabled[COM1] || this->m_outputEnabled[COM2];
-            return !enabled;
-        }
 
         /*!
          * \brief Starts or stops voice transmission
          * \param value
          */
         void handlePushToTalk(bool value = false);
-
-        /************************************************
-         * NON API METHODS:
-         * The following methods are not part of the
-         * public API. They are needed for internal
-         * workflow.
-         * *********************************************/
-
-        /*!
-         * \brief Voice room index
-         * \return
-         */
-        qint32 temporaryUserRoomIndex() const
-        {
-            return m_temporaryUserRoomIndex;
-        }
-
-        /*!
-         * \brief Room status update, used in callback
-         * \param comUnit
-         * \param roomStatus
-         */
-        void changeRoomStatus(ComUnit comUnit, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus);
-
-    signals:
-
-        /*!
-         * \brief User joined or left
-         * \param comUnit
-         */
-        void userJoinedLeft(const ComUnit comUnit);
 
     protected: // QObject overrides
 
@@ -212,47 +137,24 @@ namespace BlackCore
         void onEndFindSquelch();
         void onEndMicTest();
 
-        /*!
-         * \brief User (identified by callsign) joined or left voice room
-         */
-        void onUserJoinedLeft(const ComUnit comUnit);
-
     private:
 
         // shimlib callbacks
         static void onRoomStatusUpdate(Cvatlib_Voice_Simple *obj, Cvatlib_Voice_Simple::roomStatusUpdate upd, qint32 roomIndex, void *cbVar);
-        static void onRoomUserReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar);
         static void onInputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar);
         static void onOutputHardwareDeviceReceived(Cvatlib_Voice_Simple *obj, const char *name, void *cbVar);
 
-        BlackMisc::Audio::CVoiceRoom voiceRoomForUnit(const ComUnit comUnit) const;
-        void setVoiceRoomForUnit(const IVoice::ComUnit comUnit, const BlackMisc::Audio::CVoiceRoom &voiceRoom);
-        void addTemporaryCallsignForRoom(const ComUnit comUnit, const BlackMisc::Aviation::CCallsign &callsign);
-        void removeUserFromRoom(const ComUnit comUnit, const QString &callsign);
         void exceptionDispatcher(const char *caller);
-        void enableAudio(const ComUnit comUnit);
-        void changeConnectionStatus(ComUnit comUnit, ConnectionStatus newStatus);
+        void onRoomStatusUpdate(qint32 roomIndex, Cvatlib_Voice_Simple::roomStatusUpdate roomStatus);
 
         TVatlibPointer m_vatlib;
-        // QScopedPointer<QAudioOutput> m_audioOutput; #227
-        BlackMisc::Aviation::CCallsign m_aircraftCallsign; /*!< own callsign to join voice rooms */
-        BlackMisc::Audio::CVoiceRoomList m_voiceRooms;
         BlackMisc::Audio::CAudioDeviceList m_devices; /*!< in and output devices */
         BlackMisc::Audio::CAudioDevice m_currentOutputDevice;
         BlackMisc::Audio::CAudioDevice m_currentInputDevice;
         std::atomic<float> m_inputSquelch;
         std::atomic<Cvatlib_Voice_Simple::agc> m_micTestResult;
-        QMap <ComUnit, BlackMisc::Aviation::CCallsignList> m_voiceRoomCallsigns; /*!< voice room callsigns */
-        BlackMisc::Aviation::CCallsignList m_temporaryVoiceRoomCallsigns; /*!< temp. storage of voice rooms during update */
-        QMap<ComUnit, bool> m_outputEnabled; /*!< output enabled, basically a mute flag */
-        QMap<ComUnit, ConnectionStatus> m_connectionStatus;  /*!< holds connection status for each com unit */
+        QHash<qint32, IVoiceChannel *> m_hashChannelIndex;
         bool m_isAudioLoopbackEnabled; /*!< A flag whether audio loopback is enabled or not */
-
-        // Need to keep the roomIndex?
-        // KB: I would remove this approach, it is potentially unsafe
-        //     Maybe just use 2 "wrapper" callbacks, which then set explicitly the voice room (it is only 2 methods)
-        qint32 m_temporaryUserRoomIndex; /*!< temp. storage of voice room, in order to retrieve it in static callback */
-        const static qint32 InvalidRoomIndex = -1; /*! marks invalid room */
 
         // Thread serialization
         mutable QMutex m_lockCurrentOutputDevice;
