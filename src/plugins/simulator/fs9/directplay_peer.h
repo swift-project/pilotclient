@@ -1,0 +1,95 @@
+/* Copyright (C) 2014
+ * swift project community / contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#ifndef BLACKSIMPLUGIN_FS9_DIRECTPLAY_PEER_H
+#define BLACKSIMPLUGIN_FS9_DIRECTPLAY_PEER_H
+
+#include "fs9.h"
+#include "host_node.h"
+#include "callback_wrapper.h"
+#include <QObject>
+#include <QList>
+#include <QMutex>
+#include <QScopedPointer>
+#include <dplay8.h>
+#include <functional>
+#include <atomic>
+
+namespace BlackSimPlugin
+{
+    namespace Fs9
+    {
+        //! DirectPlay peer implementation
+        class CDirectPlayPeer : public QObject
+        {
+            Q_OBJECT
+
+        public:
+
+            //! Constructor
+            CDirectPlayPeer(const QString &callsign, QObject *parent = nullptr);
+
+            //! Destructor
+            virtual ~CDirectPlayPeer();
+
+            //! Returns users DirectPlay ID
+            DPNID getPlayerUserId() const { return m_playerUser; }
+
+            //! Sets users DirectPlay ID
+            void setPlayerUserId(DPNID id) { m_playerUser = id; }
+
+        public slots:
+
+            //! Initialize DirectPlay host
+            virtual void        init() = 0;
+
+            //! Send a custom DirectPlay message
+            HRESULT sendMessage(const QByteArray &data);
+
+        signals:
+
+            //! Received custom FS9 packet
+            void customPacketReceived(const QByteArray &data);
+
+        protected:
+
+            //! DirectPlay message handler
+            HRESULT directPlayMessageHandler(DWORD messageId, void *msgBuffer);
+
+            //! Initialize DirectPlay
+            HRESULT     initDirectPlay();
+
+            //! Returns true of the service provider is a valid on this machine
+            bool isServiceProviderValid(const GUID *pGuidSP);
+
+            //! Creates a new DirectPlay device address
+            HRESULT createDeviceAddress();
+
+            QString m_callsign; //!< Peer callsign
+
+            IDirectPlay8Peer *m_directPlayPeer = nullptr; //!< DirectPlay peer address
+            IDirectPlay8Address *m_deviceAddress = nullptr; //!< DirectPlay device address
+
+            QList<CHostNode> m_hostNodeList; //!< List of enumerated hosts
+            quint32 m_packetIndex = 0; //!< Multiplayer packet index
+
+            // DirectPlay Player Id's
+            std::atomic<DPNID> m_playerLocal; //!< Local player Id
+            // We need the Id of the users player, because we are sending packets only to him
+            std::atomic<DPNID> m_playerUser; //!< User player Id
+
+            QMutex m_mutexHostList; //!< Host list mutex
+
+            typedef CallbackWrapper<CDirectPlayPeer, HRESULT, DWORD, void *> TCallbackWrapper; //!< DirectPlay peer message handler wrapper
+            TCallbackWrapper m_callbackWrapper; //!< Callback wrapper
+        };
+    }
+}
+
+#endif // guard
