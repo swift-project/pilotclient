@@ -1,0 +1,176 @@
+/* Copyright (C) 2014
+ * swift project community / contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#ifndef BLACKSIMPLUGIN_FS9_FS9SDK_H
+#define BLACKSIMPLUGIN_FS9_FS9SDK_H
+
+#include <QByteArray>
+#include <QString>
+#include <array>
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <dplay8.h>
+
+//! \file
+
+namespace BlackSimPlugin
+{
+    namespace Fs9
+    {
+        //! FS9 SDK
+        class CFs9Sdk
+        {
+        public:
+
+            //! Engine type
+            enum EngineType
+            {
+                ENGINE_TYPE_PISTON = 0,
+                ENGINE_TYPE_JET = 1,
+                ENGINE_TYPE_NONE = 2,
+                ENGINE_TYPE_HELO_TURBINE = 3,
+                ENGINE_TYPE_TURBOPROP = 5
+            };
+
+            //! Multiplayer packet id
+            enum MULTIPLAYER_PACKET_ID
+            {
+                MULTIPLAYER_PACKET_ID_BASE = 0x1000,
+                MULTIPLAYER_PACKET_ID_PARAMS = MULTIPLAYER_PACKET_ID_BASE,
+                MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE = 0x1003,
+                MULTIPLAYER_PACKET_ID_POSITION_VELOCITY = 0x100D,
+                MPCHAT_PACKET_ID_CHAT_TEXT_SEND = 0x1017,
+            };
+
+            //! Get FS9 application GUID
+            static GUID guid()
+            {
+                return { 0x0808caa5, 0xe62c, 0x4691, {0x89, 0x57, 0x5d, 0x45, 0x24, 0xb9, 0x22, 0xda} };
+            }
+
+            //! Returns the FS9 pitch multiplier
+            static double pitchMultiplier ()
+            {
+                return 256.0  / 90.0;
+            }
+
+            //! Return the FS9 bank multiplier
+            static double bankMultiplier ()
+            {
+                return 512.0  / 180.0;
+            }
+
+            //! Returns the FS9 heading multiplier
+            static double headingMultiplier ()
+            {
+                return 1024.0 / 360.0;
+            }
+
+            //! Max Path
+            static double maxPath() { return 260; }
+        };
+
+        //! Multiplayer hacket header
+        struct MULTIPLAYER_PACKET_HEADER
+        {
+            quint32 packet_id = 0; //!< Packet type
+            quint32 data_size = 0; //!< Message size
+        };
+
+        //! Multiplayer chat message
+        struct MULTIPLAYER_PACKET_CHAT_TEXT
+        {
+            QString chat_data; //!< Chat message
+        };
+
+        //! Multiplayer player aircraft name packet
+        struct MULTIPLAYER_PACKET_CHANGE_PLAYER_PLANE
+        {
+            CFs9Sdk::EngineType engine; //!< Engine type
+            QString aircraft_name; //!< Aircraft model name
+        };
+
+        //! Reduced multiplayer position packet
+        struct REDUCED_LLAPBH_DATA
+        {
+            qint32 pbh = 0; //!< Struct pitch/bank/heading
+            qint32 lat_i = 0; //!< Latitude value - integer part
+            qint32 lon_hi = 0; //!< Longitude value - integer part
+            qint32 alt_i = 0; //!< Altitude value - integer part
+            quint16 lat_f = 0; //!< Latitude value - decimal part
+            quint16 lon_lo = 0; //!< Longitude value - decimal part
+            quint16 alt_f = 0; //!< Altitude value - decimal part
+        };
+
+        //! Full pultiplayer position and velocity packet
+        struct MULTIPLAYER_PACKET_POSITION_VELOCITY
+        {
+            MULTIPLAYER_PACKET_POSITION_VELOCITY() {}
+
+            quint32 packet_index = 0; //!< Packet index
+            quint32 application_time = 0; //!< Application time - ignored
+            qint32 lat_velocity = 0; //!< Latitude velocity
+            qint32 lon_velocity = 0; //!< Longitude velocity
+            qint32 alt_velocity = 0; //!< Altitude velocity
+            quint32 ground_velocity = 0; //!< Ground velocity
+            std::array<quint8, 4> reserved = {{0, 0, 0, 0}}; //!< Reserved
+            qint32 pbh = 0; //!< Pitch/Bank/Heading
+            qint32 lat_i = 0; //!< Latitude - integer
+            qint32 lon_hi = 0; //!< Longitude - integer
+            qint32 alt_i = 0; //!< Altitude - integer
+            quint16 lat_f = 0; //!< Latitude - fraction
+            quint16 lon_lo = 0; //!< Longitude - fraction
+            quint16 alt_f = 0; //!< Altitude - fraction
+        };
+
+        //! Player info
+        struct PLAYER_INFO_STRUCT
+        {
+            //! Player info flags
+            enum PLAYER_INFO_FLAGS
+            {
+                OBSERVER = 0x0001,
+                PARAMS_RECV = 0x0002,
+                PARAMS_SEND = 0x0004
+            };
+
+            quint32 dwFlags = 0; //!< Player flags
+            char    szAircraft[MAX_PATH + 1]; //!< Aircraft model type
+        };
+
+        //! Connect attempt info
+        struct CONNECT_ATTEMPT_INFO
+        {
+            DWORD   dwPlayerInfoFlags = 0; //!< Player info flags
+            DWORD   dwNameOffset = 0; //!< Name offset
+            DWORD   dwNameSize = 0; //!< Name size
+            DWORD   dwAircraftOffset = 0; //!< Aircraft offset
+            DWORD   dwAircraftSize = 0; //!< Aircraft size
+            DWORD   dwEngineType = 0; //!< Engine type
+        };
+
+        //! Pitch/Bank/Heading
+        union FS_PBH
+        {
+            unsigned int pbh = 0; //!< Pitch/Bank/Heading as integer value
+            struct
+            {
+                unsigned int unused   : 1; //!< unused bit
+                unsigned int onground : 1; //!< Onground flag
+                unsigned int hdg      : 10; //!< Heading
+                unsigned int bank     : 10; //!< Bank
+                unsigned int pitch    : 10; //!< Pitch
+            };
+        };
+    }
+}
+
+#endif // BLACKSIMPLUGIN_FS9_FS9SDK_H
