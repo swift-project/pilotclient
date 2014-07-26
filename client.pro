@@ -27,6 +27,11 @@ contains(BLACK_CONFIG, BlackGui) {
 }
 
 win32 {
+
+    if (contains(BLACK_CONFIG, FSX) | contains(BLACK_CONFIG, FS9)) {
+        SUBDIRS += src/plugins/simulator/fscommon/plugin_fscommon.pro
+    }
+
     contains(BLACK_CONFIG, FSX) {
         SUBDIRS += src/plugins/simulator/fsx/plugin_fsx.pro
     }
