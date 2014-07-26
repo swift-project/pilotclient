@@ -1,10 +1,16 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #ifndef BLACKMISC_VOICECAPABILITIES_H
 #define BLACKMISC_VOICECAPABILITIES_H
+
+//! \file
 
 #include "valueobject.h"
 
@@ -50,10 +56,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::toIcon()
             virtual const QPixmap &toIcon() const override;
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CVoiceCapabilities &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CVoiceCapabilities &other) const;
 
             //! \copydoc CValueObject::getValueHash()
@@ -65,10 +71,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
-            //! \brief Members
+            //! Members
             static const QStringList &jsonMembers();
 
         protected:

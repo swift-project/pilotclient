@@ -36,9 +36,9 @@ namespace BlackMisc
             enum ColumnIndex
             {
                 IndexCallsign = 0,
+                IndexIcon, // representing icon
                 IndexCallsignAsString,
                 IndexCallsignAsStringAsSet,
-                IndexCallsignIcon,
                 IndexController,
                 IndexControllerRealName,
                 IndexControllerId,

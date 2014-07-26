@@ -27,9 +27,7 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-        /*!
-         * \brief Register all metadata for PQs
-         */
+        //! Register all metadata for PQs
         void registerMetadata();
 
     } // PQ

@@ -1,4 +1,14 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of Swift Project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #include "avcallsign.h"
+#include "iconsnetwork.h"
 
 namespace BlackMisc
 {
@@ -27,34 +37,24 @@ namespace BlackMisc
          */
         const QPixmap &CCallsign::convertToIcon(const CCallsign &callsign)
         {
-            static const QPixmap app(QPixmap(":/blackmisc/icons/aircraft_arrival.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap gnd(QPixmap(":/blackmisc/icons/gnd_framed.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap del(QPixmap(":/blackmisc/icons/aircraft_departure.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap twr(QPixmap(":/blackmisc/icons/tower_framed.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap ctr(QPixmap(":/blackmisc/icons/sky.jpg").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap pilot(QPixmap(":/blackmisc/icons/aeropuerto.png").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap sup(":/blackmisc/icons/SUP.png");
-            static const QPixmap obs(":/blackmisc/icons/OBS.png");
-            static const QPixmap unknown(QPixmap(":/blackmisc/icons/question.png").scaledToWidth(16, Qt::SmoothTransformation));
-
             QString t = callsign.asString().toUpper();
-            if (t.length() < 3) return unknown;
+            if (t.length() < 3) return CIconsNetworkAndAviation::roleUnknown();
             t = t.right(3);
 
             if (callsign.getStringAsSet().contains("_"))
             {
-                if ("APP" == t) return app;
-                if ("GND" == t) return gnd;
-                if ("TWR" == t) return twr;
-                if ("DEL" == t) return del;
-                if ("SUP" == t) return sup;
-                if ("CTR" == t) return ctr;
-                if ("OBS" == t) return obs;
-                return unknown;
+                if ("APP" == t) return CIconsNetworkAndAviation::roleApproach();
+                if ("GND" == t) return CIconsNetworkAndAviation::roleGround();
+                if ("TWR" == t) return CIconsNetworkAndAviation::roleTower();
+                if ("DEL" == t) return CIconsNetworkAndAviation::roleDelivery();
+                if ("CTR" == t) return CIconsNetworkAndAviation::roleCenter();
+                if ("SUP" == t) return CIconsNetworkAndAviation::roleSup();
+                if ("OBS" == t) return CIconsNetworkAndAviation::roleObs();
+                return CIconsNetworkAndAviation::roleUnknown();
             }
             else
             {
-                return pilot;
+                return CIconsNetworkAndAviation::rolePilot();
             }
         }
 

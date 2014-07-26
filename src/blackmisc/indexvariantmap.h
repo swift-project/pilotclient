@@ -1,11 +1,13 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
-/*!
-    \file
-*/
+//! \file
 
 #include "valueobject.h"
 #include "variant.h"
@@ -27,7 +29,7 @@ namespace BlackMisc
     public:
 
         /*!
-         * \brief Constructor
+         * Constructor
          * \param wildcard when used in search, for setting values irrelevant
          */
         CIndexVariantMap(bool wildcard = false);
@@ -65,10 +67,10 @@ namespace BlackMisc
         //! values
         QList<CVariant> values() const { return this->m_values.values(); }
 
-        //! \brief Wildcard, only relevant when used in search
+        //! Wildcard, only relevant when used in search
         bool isWildcard() const { return this->m_wildcard; }
 
-        //! \brief Wildcard, only relevant when used in search
+        //! Wildcard, only relevant when used in search
         void setWildcard(bool wildcard) { this->m_wildcard = wildcard; }
 
         //! clear

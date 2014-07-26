@@ -1,3 +1,12 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #ifndef BLACKMISC_VALUEOBJECT_H
 #define BLACKMISC_VALUEOBJECT_H
 
@@ -315,12 +324,7 @@ namespace BlackMisc
         return json;
     }
 
-    /*!
-     * \brief Non member, non friend operator >> for JSON
-     * \param json
-     * \param value
-     * \return
-     */
+    //! Non member, non friend operator << for JSON
     inline QJsonArray &operator<<(QJsonArray &json, const CValueObject &value)
     {
         json.append(value.toJson());
@@ -328,7 +332,7 @@ namespace BlackMisc
     }
 
     /*!
-     * \brief Non member, non friend operator >> for JSON
+     * \brief Non member, non friend operator << for JSON
      * \param json
      * \param value as pair name/value
      * \return

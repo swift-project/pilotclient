@@ -1,3 +1,12 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #include "avaircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqconstants.h"
@@ -198,6 +207,8 @@ namespace BlackMisc
             {
             case IndexCallsign:
                 return QVariant::fromValue(this->m_callsign);
+            case IndexIcon:
+                return QVariant(this->m_callsign.toIcon());
             case IndexCallsignAsString:
                 return QVariant::fromValue(this->m_callsign.toQString(true));
             case IndexCallsignAsStringAsSet:
@@ -236,8 +247,8 @@ namespace BlackMisc
         {
             QVariant qv = this->propertyByIndex(index);
             // special treatment
-            // this is required as it is possible an ATC station is not containing all
-            // properties
+            // this is required, as it is possible that an aircraft is not
+            // containing all properties
             switch (index)
             {
             case IndexFrequencyCom1:

@@ -319,7 +319,7 @@ namespace BlackMisc
                 return QVariant(this->m_callsign.asString());
             case IndexCallsignAsStringAsSet:
                 return QVariant(this->m_callsign.getStringAsSet());
-            case IndexCallsignIcon:
+            case IndexIcon:
                 return QVariant(this->m_callsign.toIcon());
             case IndexController:
                 return this->m_controller.toQVariant();

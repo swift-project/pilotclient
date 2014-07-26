@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_PQPHYSICALQUANTITY_H
 #define BLACKMISC_PQPHYSICALQUANTITY_H
@@ -21,7 +27,7 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
         /*!
-         * \brief A physical quantity such as "5m", "20s", "1500ft/s"
+         * A physical quantity such as "5m", "20s", "1500ft/s"
          */
         template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CValueObject
         {
