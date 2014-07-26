@@ -8,7 +8,7 @@
 
 #include "simconnect_datadefinition.h"
 #include "simconnect_object.h"
-#include "fsuipc.h"
+#include "../fscommon/fsuipc.h"
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator_linear.h"
 #include "blackmisc/avaircraft.h"
@@ -218,7 +218,7 @@ namespace BlackSimPlugin
             int m_simconnectTimerId;
             int m_skipCockpitUpdateCycles; //!< Skip some update cycles to allow changes in simulator cockpit to be set
             QFutureWatcher<bool> m_watcherConnect;
-            QScopedPointer<CFsuipc> m_fsuipc;
+            QScopedPointer<FsCommon::CFsuipc> m_fsuipc;
         };
     }
 

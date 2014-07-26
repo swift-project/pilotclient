@@ -48,7 +48,7 @@ namespace BlackSimPlugin
             m_simulatorInfo(CSimulatorInfo::FSX()),
             m_simconnectTimerId(-1),
             m_skipCockpitUpdateCycles(0),
-            m_fsuipc(new CFsuipc())
+            m_fsuipc(new FsCommon::CFsuipc())
         {
             CFsxSimulatorSetup setup;
             setup.init(); // this fetches important settings on local side

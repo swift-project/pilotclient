@@ -26,7 +26,7 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackSimPlugin
 {
-    namespace Fsx
+    namespace FsCommon
     {
 
         CFsuipc::CFsuipc() : m_connected(false), m_validReadValues(false)
@@ -83,6 +83,11 @@ namespace BlackSimPlugin
         {
             if (!this->m_connected) return;
             this->read();
+        }
+
+        void CFsuipc::write()
+        {
+
         }
 
         void CFsuipc::read()

@@ -12,7 +12,7 @@
 
 namespace BlackSimPlugin
 {
-    namespace Fsx
+    namespace FsCommon
     {
         //! Class representing a FSUIPC "interface"
         class CFsuipc
@@ -37,8 +37,14 @@ namespace BlackSimPlugin
             //! Valid read values
             bool validReadValues() const { return m_validReadValues; }
 
+            //! Get own aircraft from FSUIPC
+            const BlackMisc::Aviation::CAircraft &getOwnAircraft() const { return m_aircraft; }
+
             //! Process reading and writing variables
             void process();
+
+            //! Write variables
+            void write();
 
             //! Error messages
             static const QStringList &errorMessages()
