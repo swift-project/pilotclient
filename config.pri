@@ -27,6 +27,7 @@ BLACK_CONFIG    += BlackInput
 BLACK_CONFIG	+= BlackSim
 BLACK_CONFIG    += Samples
 BLACK_CONFIG    += Unittests
+BLACK_CONFIG    += FS9
 BLACK_CONFIG    += FSX
 BLACK_CONFIG    += XPlane
 #BLACK_CONFIG    += Doxygen
