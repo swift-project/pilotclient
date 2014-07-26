@@ -35,6 +35,9 @@ win32 {
     contains(BLACK_CONFIG, FSX) {
         SUBDIRS += src/plugins/simulator/fsx/plugin_fsx.pro
     }
+    contains(BLACK_CONFIG, FS9) {
+        SUBDIRS += src/plugins/simulator/fs9/plugin_fs9.pro
+    }
 }
 
 contains(BLACK_CONFIG, XPlane) {
