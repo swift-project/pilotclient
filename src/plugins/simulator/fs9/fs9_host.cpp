@@ -1,0 +1,126 @@
+/* Copyright (C) 2014
+ * swift project community / contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#define _CRT_SECURE_NO_WARNINGS
+
+#include "fs9_host.h"
+#include "multiplayer_packet_parser.h"
+#include "multiplayer_packets.h"
+#include "blackmisc/project.h"
+#include <QScopedArrayPointer>
+
+using namespace BlackMisc;
+
+namespace BlackSimPlugin
+{
+    namespace Fs9
+    {
+        CFs9Host::CFs9Host(QObject *parent) :
+            CDirectPlayPeer(CProject::systemNameAndVersion(), parent)
+        {
+        }
+
+        void CFs9Host::init()
+        {
+            initDirectPlay();
+            createDeviceAddress();
+            startHosting(CProject::systemNameAndVersion(), m_callsign);
+        }
+
+        HRESULT CFs9Host::stopHosting()
+        {
+            HRESULT hr = S_OK;
+
+            if (m_hostStatus == Terminated) return hr;
+
+            qDebug() << "Terminating host";
+            hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0);
+            hr = m_directPlayPeer->Close(0);
+            m_hostStatus = Terminated;
+
+            emit statusChanged(m_hostStatus);
+            return hr;
+        }
+
+        void CFs9Host::sendTextMessage(const QString &textMessage)
+        {
+            MPChatText mpChatText;
+            mpChatText.chat_data = textMessage;
+            QByteArray message;
+            MultiPlayerPacketParser::writeType(message, CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND);
+            MultiPlayerPacketParser::writeSize(message, mpChatText.chat_data.size() + 1);
+            message = MultiPlayerPacketParser::writeMessage(message, mpChatText);
+            sendMessage(message);
+        }
+
+        HRESULT CFs9Host::startHosting(const QString &session, const QString &callsign)
+        {
+            HRESULT hr = S_OK;
+
+            if (m_hostStatus == Hosting) return hr;
+
+            DPN_APPLICATION_DESC dpAppDesc;
+
+            QScopedArrayPointer<wchar_t> wszSession(new wchar_t[session.size() + 1]);
+            QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[callsign.size() + 1]);
+
+            session.toWCharArray(wszSession.data());
+            wszSession[session.size()] = 0;
+            callsign.toWCharArray(wszPlayername.data());
+            wszPlayername[callsign.size()] = 0;
+
+            PLAYER_INFO_STRUCT playerInfo;
+            ZeroMemory(&playerInfo, sizeof(PLAYER_INFO_STRUCT));
+            strcpy(playerInfo.szAircraft, "Boeing 737-400");
+
+
+            playerInfo.dwFlags = PLAYER_INFO_STRUCT::PARAMS_RECV | PLAYER_INFO_STRUCT::PARAMS_SEND;
+
+            // Prepare and set the player information structure.
+            DPN_PLAYER_INFO player;
+            ZeroMemory(&player, sizeof(DPN_PLAYER_INFO));
+            player.dwSize = sizeof(DPN_PLAYER_INFO);
+            player.pvData = &playerInfo;
+            player.dwDataSize = sizeof(PLAYER_INFO_STRUCT);
+            player.dwInfoFlags = DPNINFO_NAME | DPNINFO_DATA;
+            player.pwszName = wszPlayername.data();
+            if (FAILED(hr = m_directPlayPeer->SetPeerInfo(&player, nullptr, nullptr, DPNSETPEERINFO_SYNC)))
+            {
+                qWarning() << "Failed to set peer info!";
+                return hr;
+            }
+
+            // Now set up the Application Description
+            ZeroMemory(&dpAppDesc, sizeof(DPN_APPLICATION_DESC));
+            dpAppDesc.dwSize = sizeof(DPN_APPLICATION_DESC);
+            dpAppDesc.guidApplication = CFs9Sdk::guid();
+            dpAppDesc.pwszSessionName = wszSession.data();
+
+            // We are now ready to host the app
+            if (FAILED(hr = m_directPlayPeer->Host(&dpAppDesc,              // AppDesc
+                                                   &m_deviceAddress, 1,       // Device Address
+                                                   nullptr,
+                                                   nullptr,                          // Reserved
+                                                   nullptr,                          // Player Context
+                                                   0)))                              // dwFlags
+            {
+                qWarning() << "Failed to start hosting!";
+                return hr;
+            }
+            else
+            {
+                qDebug() << "Host successfully started";
+                m_hostStatus = Hosting;
+            }
+
+            emit statusChanged(m_hostStatus);
+            return hr;
+        }
+    }
+}
