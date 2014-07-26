@@ -145,22 +145,25 @@ namespace BlackMisc
             // same coordinate results in 0 distance
             if (coordinate1.latitude() == coordinate2.latitude() && coordinate1.longitude() == coordinate2.longitude())
             {
-                return CLength(0, CLengthUnit::NM());
+                return CLength(0, CLengthUnit::m());
             }
 
             // first, prelimary distance calculation
-            // http://www.geodatasource.com/developers/c
-            double dist;
+            // http://www.movable-type.co.uk/scripts/latlong.html
+            double earthRadiusM = 6371000.8;
             double lon1rad = coordinate1.longitude().value(CAngleUnit::rad());
             double lon2rad = coordinate2.longitude().value(CAngleUnit::rad());
             double lat1rad = coordinate1.latitude().value(CAngleUnit::rad());
             double lat2rad = coordinate2.latitude().value(CAngleUnit::rad());
-            double theta = lon1rad - lon2rad;
-            dist = qSin(lat1rad) * qSin(lat2rad) + qCos(lat1rad) * qCos(lat2rad) * cos(theta);
-            dist = qAcos(dist);
-            dist = CMath::rad2deg(dist);
-            dist = dist * 60; // dist in NM
-            return CLength(qAbs(dist), CLengthUnit::NM());
+
+            double dLat = lat2rad - lat1rad;
+            double dLon = lon2rad - lon1rad;
+            double a = qSin(dLat / 2.0) * qSin(dLat / 2.0) +
+                       qCos(lat1rad) * qCos(lat2rad) * qSin(dLon / 2.0) * qSin(dLon / 2.0);
+            double c = 2.0 * qAtan(qSqrt(a) / qSqrt(1.0 - a));
+            double distance = earthRadiusM * c;
+
+            return CLength(distance, CLengthUnit::m());
         }
 
         PhysicalQuantities::CAngle initialBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
