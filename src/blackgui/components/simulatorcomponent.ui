@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CSimulatorComponent</class>
+ <widget class="QTabWidget" name="CSimulatorComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>TabWidget</string>
+  </property>
+  <property name="currentIndex">
+   <number>0</number>
+  </property>
+  <widget class="QWidget" name="tb_LiveData">
+   <attribute name="title">
+    <string>Live data</string>
+   </attribute>
+   <layout class="QVBoxLayout" name="vl_LiveData">
+    <property name="spacing">
+     <number>3</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Views::CNameVariantPairView" name="tvp_LiveData"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="tb_Information">
+   <attribute name="title">
+    <string>Information</string>
+   </attribute>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::Views::CNameVariantPairView</class>
+   <extends>QTableView</extends>
+   <header>blackgui/views/namevariantpairview.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

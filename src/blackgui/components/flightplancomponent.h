@@ -1,0 +1,89 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#ifndef BLACKGUI_FLIGHTPLANCOMPONENT_H
+#define BLACKGUI_FLIGHTPLANCOMPONENT_H
+
+//! \file
+
+#include "blackgui/components/runtimebasedcomponent.h"
+#include "blackmisc/avaircraft.h"
+#include "blackmisc/avflightplan.h"
+
+#include <QTabWidget>
+
+namespace Ui { class CFlightPlanComponent; }
+namespace BlackGui
+{
+    namespace Components
+    {
+
+        //! Flight plan widget
+        class CFlightPlanComponent : public QTabWidget, public CRuntimeBasedComponent
+        {
+            Q_OBJECT
+
+        public:
+            //! Constructor
+            explicit CFlightPlanComponent(QWidget *parent = nullptr);
+
+            //! Destructor
+            ~CFlightPlanComponent();
+
+        public slots:
+            //! Prefill with aircraft data
+            void prefillWithAircraftData(const BlackMisc::Aviation::CAircraft &ownAircraft);
+
+            //! Prefill with aircraft dara
+            void fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan);
+
+            //! Get this flight plan
+            BlackMisc::Aviation::CFlightPlan getFlightPlan() const;
+
+        private:
+            Ui::CFlightPlanComponent *ui;
+
+            //! My flight plan
+            BlackMisc::Aviation::CFlightPlan m_flightPlan;
+
+            //! Validate, generates status messages
+            BlackMisc::CStatusMessageList validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &fligtPlan);
+
+            //! Default value for airport ICAO airports
+            static const QString &defaultIcao() { static QString d("ICAO"); return d; }
+
+            //! Default value for time
+            static const QString &defaultTime() { static QString t("00:00"); return t; }
+
+        private slots:
+            //! Send flightplan
+            void sendFlightPlan();
+
+            //! Reset Flightplan
+            void resetFlightPlan();
+
+            //! Load Flightplan
+            void loadFlightPlanFromNetwork();
+
+            //! Validate Flightplan
+            void validateFlightPlan();
+
+            //! Remark
+            void buildRemarkString();
+
+            //! Copy over
+            void copyRemarks();
+
+            //! Show generator tab page
+            void currentTabGenerator();
+
+        };
+    }
+}
+#endif // guard
