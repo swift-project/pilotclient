@@ -17,7 +17,7 @@
 #include "blackgui/components/textmessagecomponent.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"
-#include "blackmisc/iconsstandard.h"
+#include "blackmisc/icons.h"
 #include "blackmisc/avselcal.h"
 #include "blackmisc/project.h"
 #include <QSortFilterProxyModel>
@@ -129,9 +129,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     // start screen
     this->ps_setMainPage(true);
 
-    // init context menus
-    this->initContextMenus();
-
     // starting
     this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStarts);
 
@@ -139,8 +136,8 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     ps_onSimulatorConnectionChanged(this->getIContextSimulator()->isConnected());
 
     // info
-    this->ui->te_StatusPageConsole->appendPlainText(CProject::systemNameAndVersion());
-    this->ui->te_StatusPageConsole->appendPlainText(CProject::compiledInfo());
+    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::systemNameAndVersion());
+    this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::compiledInfo());
 
     // hotkeys
     this->ps_registerHotkeys();
@@ -180,8 +177,6 @@ void MainWindow::initGuiSignals()
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainSimulator, SIGNAL(released()), this, SLOT(ps_setMainPage()));
     Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainStatus, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainUsers, SIGNAL(released()), this, SLOT(ps_setMainPage()));
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainTextMessages, SIGNAL(released()), this, SLOT(ps_setMainPage()));
@@ -189,6 +184,8 @@ void MainWindow::initGuiSignals()
     connected = this->connect(this->ui->pb_MainWeather, SIGNAL(released()), this, SLOT(ps_setMainPage()));
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainMappings, SIGNAL(released()), this, SLOT(ps_setMainPage()));
+    Q_ASSERT(connected);
+    connected = this->connect(this->ui->pb_MainLog, SIGNAL(released()), this, SLOT(ps_setMainPage()));
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainKeypadOpacity050, SIGNAL(clicked()), this, SLOT(ps_changeWindowOpacity()));
     Q_ASSERT(connected);

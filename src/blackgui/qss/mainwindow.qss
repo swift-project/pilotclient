@@ -1,5 +1,9 @@
 /** http://qt-project.org/doc/qt-5.3/stylesheet-examples.html **/
 
+#MainWindow {
+    background-color: darkslategray;
+}
+
 QWidget {
     background-color: black;
 }

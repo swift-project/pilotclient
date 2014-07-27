@@ -9,8 +9,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "blackmisc/iconsstandard.h"
-#include "blackmisc/iconsnetwork.h"
+#include "blackmisc/icon.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
@@ -47,7 +46,7 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     m_timerContextWatchdog(nullptr),
     m_timerStatusBar(nullptr), m_timerSimulator(nullptr),
     // context menus
-    m_contextMenuAudio(nullptr), m_contextMenuStatusMessageList(nullptr),
+    m_contextMenuStatusMessageList(nullptr),
     // cockpit
     m_inputFocusedWidget(nullptr),
     // status bar
@@ -160,10 +159,10 @@ void MainWindow::ps_setMainPage(bool start)
     }
 
     QObject *sender = QObject::sender();
-    if (sender == this->ui->pb_MainConnect || sender == this->ui->pb_MainStatus)
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageStatus);
-    else if (sender == this->ui->pb_MainCockpit)
+    if (sender == this->ui->pb_MainCockpit)
+    {
         this->ui->sw_MainMiddle->setCurrentIndex(MainPageCockpit);
+    }
     else
     {
         this->ui->sw_MainMiddle->setCurrentIndex(MainPageFoo);
@@ -200,6 +199,10 @@ void MainWindow::ps_setMainPage(bool start)
         {
             this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaWeather);
         }
+        else if (sender == this->ui->pb_MainLog)
+        {
+            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaLog);
+        }
         else if (sender == this->ui->pb_MainMappings)
         {
             this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaMappings);
@@ -230,8 +233,6 @@ void MainWindow::ps_toggleNetworkConnection()
 {
     CStatusMessageList msgs;
     if (!this->isContextNetworkAvailableCheck()) return;
-
-    this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(CIconsNetworkAndAviation::statusTransition());
     if (!this->getIContextNetwork()->isConnected())
     {
         // validation of data here is not required, network context does this
@@ -299,11 +300,11 @@ void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessag
     if (!this->m_init) return;
     this->ui->sb_MainStatusBar->show();
     this->m_timerStatusBar->start(3000);
-    this->m_statusBarIcon->setPixmap(statusMessage.toIcon());
+    this->m_statusBarIcon->setPixmap(statusMessage.toPixmap());
     this->m_statusBarLabel->setText(statusMessage.getMessage());
 
     // list
-    this->ui->tvp_StatusMessages->insert(statusMessage);
+    this->ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToList(statusMessage);
 
     // display overlay for errors, but not for validation
     if (statusMessage.getSeverity() == CStatusMessage::SeverityError && statusMessage.getType() != CStatusMessage::TypeValidation)
@@ -326,7 +327,7 @@ void MainWindow::displayRedirectedOutput(const CStatusMessage &statusMessage, qi
 {
     if (!this->getIContextApplication()) return;
     if (this->getIContextApplication()->getUniqueId() == contextId) return; //self triggered
-    this->ui->te_StatusPageConsole->appendHtml(statusMessage.toHtml());
+    this->ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToConsole(statusMessage);
 }
 
 void MainWindow::ps_onChangedSetttings(uint typeValue)
@@ -410,41 +411,23 @@ void MainWindow::updateGuiStatusInformation()
     {
         bool dbus = !this->getIContextNetwork()->usingLocalObjects();
         network =  dbus ? now : "local";
-        this->ui->cb_StatusWithDBus->setChecked(dbus);
-    }
-
-    // handle voice, mute
-    QString voice("unavailable");
-    if (this->m_contextAudioAvailable)
-    {
-        voice = this->getIContextAudio()->usingLocalObjects() ? "local" : now;
-        this->ui->pb_SoundMute->setEnabled(true);
-    }
-    else
-    {
-        // voice not available
-        this->ui->pb_SoundMute->setEnabled(false);
+        this->ui->comp_InfoBarStatus->setDBusStatus(dbus);
     }
 
     // update status fields
-    this->ui->le_StatusNetworkContext->setText(network);
-    this->ui->le_StatusAudioContext->setText(voice);
+    QString s = QString("network: %1").arg(network);
+    this->ui->comp_InfoBarStatus->setDBusTooltip(s);
 
     // Connected button
     if (this->m_contextNetworkAvailable && this->getIContextNetwork()->isConnected())
     {
-        if (this->ui->lbl_StatusNetworkConnectedIcon->toolTip().startsWith("dis", Qt::CaseInsensitive))
-            this->ui->lbl_StatusNetworkConnectedIcon->setToolTip(now);
         this->ui->pb_MainConnect->setText("Disconnect");
         this->ui->pb_MainConnect->setStyleSheet("background-color: green");
-        this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(CIconsNetworkAndAviation::statusConnected());
     }
     else
     {
-        this->ui->lbl_StatusNetworkConnectedIcon->setToolTip("disconnected");
         this->ui->pb_MainConnect->setText("Connect");
         this->ui->pb_MainConnect->setStyleSheet("background-color: ");
-        this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(CIconsNetworkAndAviation::statusDisconnected());
     }
 }
 
@@ -471,25 +454,39 @@ void MainWindow::ps_changeWindowOpacity(int opacity)
 
 void MainWindow::updateSimulatorData()
 {
-    if (this->getIContextSimulator()->isConnected())
-        ui->le_SimulatorStatus->setText("Connected");
-    else
-        ui->le_SimulatorStatus->setText("Not connected");
+    CSimulatorComponent *simComp = this->ui->comp_MainInfoArea->getSimulatorComponent();
+    Q_ASSERT(simComp);
+    if (!this->getIContextSimulator()->isConnected())
+    {
+        simComp->clear();
+        simComp->addOrUpdateByName("info", "sim not connected", CIcons::StandardIconWarning16);
+        return;
+    }
+
+    // clear old warnings / information
+    if (simComp->rowCount() < 5)
+    {
+        simComp->clear();
+    }
 
     CAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
-    ui->le_SimulatorLatitude->setText(ownAircraft.getSituation().latitude().toFormattedQString());
-    ui->le_SimulatorLongitude->setText(ownAircraft.getSituation().longitude().toFormattedQString());
-    ui->le_SimulatorAltitude->setText(ownAircraft.getSituation().getAltitude().toFormattedQString());
-    ui->le_SimulatorPitch->setText(ownAircraft.getSituation().getPitch().toFormattedQString());
-    ui->le_SimulatorBank->setText(ownAircraft.getSituation().getBank().toFormattedQString());
-    ui->le_SimulatorHeading->setText(ownAircraft.getSituation().getHeading().toFormattedQString());
-    ui->le_SimulatorGroundSpeed->setText(ownAircraft.getSituation().getGroundSpeed().toFormattedQString());
+    CAircraftSituation s = ownAircraft.getSituation();
+    CComSystem c1 = ownAircraft.getCom1System();
+    CComSystem c2 = ownAircraft.getCom2System();
 
-    ui->le_SimulatorCom1Active->setText(ownAircraft.getCom1System().getFrequencyActive().toFormattedQString());
-    ui->le_SimulatorCom1Standby->setText(ownAircraft.getCom1System().getFrequencyStandby().toFormattedQString());
-    ui->le_SimulatorCom2Active->setText(ownAircraft.getCom2System().getFrequencyActive().toFormattedQString());
-    ui->le_SimulatorCom2Standby->setText(ownAircraft.getCom2System().getFrequencyStandby().toFormattedQString());
-    ui->le_SimulatorTransponder->setText(ownAircraft.getTransponderCodeFormatted());
+    simComp->addOrUpdateByName("latitude", s.latitude().toFormattedQString(), s.latitude().toIcon());
+    simComp->addOrUpdateByName("longitude", s.longitude().toFormattedQString(), s.longitude().toIcon());
+    simComp->addOrUpdateByName("altitude", s.getAltitude().toFormattedQString(), s.getAltitude().toIcon());
+    simComp->addOrUpdateByName("pitch", s.getPitch().toFormattedQString(), CIcons::AviationAttitudeIndicator);
+    simComp->addOrUpdateByName("bank", s.getBank().toFormattedQString(), CIcons::AviationAttitudeIndicator);
+    simComp->addOrUpdateByName("heading", s.getHeading().toFormattedQString(), s.getHeading().toIcon());
+    simComp->addOrUpdateByName("ground speed", s.getGroundSpeed().toFormattedQString(), s.getGroundSpeed().toIcon());
+
+    simComp->addOrUpdateByName("COM1 active", c1.getFrequencyActive().toFormattedQString(), c1.getFrequencyActive().toIcon());
+    simComp->addOrUpdateByName("COM2 active", c2.getFrequencyActive().toFormattedQString(), c2.getFrequencyActive().toIcon());
+    simComp->addOrUpdateByName("COM1 standby", c1.getFrequencyStandby().toFormattedQString(), c1.getFrequencyStandby().toIcon());
+    simComp->addOrUpdateByName("COM2 standby", c2.getFrequencyStandby().toFormattedQString(), c2.getFrequencyStandby().toIcon());
+    simComp->addOrUpdateByName("Transponder", ownAircraft.getTransponderCodeFormatted(), ownAircraft.getTransponder().toIcon());
 }
 
 void MainWindow::ps_onSimulatorConnectionChanged(bool isAvailable)

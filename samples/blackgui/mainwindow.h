@@ -74,9 +74,8 @@ protected:
     //! \remarks keep the values in sync with the real tab indexes
     enum MainPageIndex
     {
-        MainPageStatus = 0,
-        MainPageCockpit = 4,
-        MainPageFoo = 9
+        MainPageCockpit = 0,
+        MainPageFoo = 1
     };
 
 private:
@@ -99,7 +98,6 @@ private:
     QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
 
     // context menus
-    QMenu *m_contextMenuAudio; /*!< audio context menu */
     QMenu *m_contextMenuStatusMessageList; /*!< context menu for status message list */
 
     // cockpit
@@ -118,9 +116,6 @@ private:
 
     //! Init GUI signals
     void initGuiSignals();
-
-    //! Init the context menus
-    void initContextMenus();
 
     //! Context network availability check, otherwise status message
     bool isContextNetworkAvailableCheck();
@@ -241,9 +236,6 @@ private slots:
      * \param opacity 0-100
      */
     void ps_changeWindowOpacity(int opacity = -1);
-
-    //! Context menu for audio
-    void ps_displayAudioIconContextMenu(const QPoint &position);
 
     //! Toogle Windows stay on top
     void ps_toogleWindowStayOnTop();
