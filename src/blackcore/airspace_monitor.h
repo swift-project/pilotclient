@@ -127,22 +127,22 @@ namespace BlackCore
         QStringList createFsipiCustomPacketData() const;
 
     private slots:
-        void realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
-        void capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
-        void fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &, const QString &, const QString &, const QString &model);
-        void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
-        void metarReceived(const QString &metarMessage);
-        void flightplanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
-        void receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
-        void atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
-        void atcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-        void atisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
-        void atisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
-        void atisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
-        void icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
-        void aircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
-        void pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-        void frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+        void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
+        void ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);
+        void ps_fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &, const QString &, const QString &, const QString &model);
+        void ps_serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
+        void ps_metarReceived(const QString &metarMessage);
+        void ps_flightplanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
+        void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void ps_atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
+        void ps_atcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
+        void ps_atisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
+        void ps_atisVoiceRoomReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &url);
+        void ps_atisLogoffTimeReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &zuluTime);
+        void ps_icaoCodesReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftIcao &icaoData);
+        void ps_aircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
+        void ps_pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
+        void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
     };
 
 } // namespace

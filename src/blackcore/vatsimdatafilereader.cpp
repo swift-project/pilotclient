@@ -1,3 +1,12 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #include "blackmisc/sequence.h"
 #include "blackmisc/avatcstation.h"
 #include "blackmisc/nwuser.h"
@@ -42,19 +51,19 @@ namespace BlackCore
         this->setPendingNetworkReply(r);
     }
 
-    const CAircraftList &CVatsimDataFileReader::getAircrafts()
+    CAircraftList CVatsimDataFileReader::getAircrafts() const
     {
         QReadLocker rl(&this->m_lock);
         return this->m_aircrafts;
     }
 
-    const CAtcStationList &CVatsimDataFileReader::getAtcStations()
+    CAtcStationList CVatsimDataFileReader::getAtcStations() const
     {
         QReadLocker rl(&this->m_lock);
         return this->m_atcStations;
     }
 
-    const CServerList &CVatsimDataFileReader::getVoiceServers()
+    CServerList CVatsimDataFileReader::getVoiceServers() const
     {
         QReadLocker rl(&this->m_lock);
         return this->m_voiceServers;
@@ -76,6 +85,11 @@ namespace BlackCore
     {
         CAircraft aircraft = this->getAircrafts().findFirstByCallsign(callsign);
         return aircraft.getIcaoInfo();
+    }
+
+    void CVatsimDataFileReader::updateWithVatsimDataFileData(CAircraft &aircraftToBeUdpated) const
+    {
+        this->getAircrafts().updateWithVatsimDataFileData(aircraftToBeUdpated);
     }
 
     CUserList CVatsimDataFileReader::getControllersForCallsign(const CCallsign &callsign)

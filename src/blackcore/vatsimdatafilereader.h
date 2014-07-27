@@ -1,12 +1,16 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKCORE_VATSIMDATAFILEREADER_H
 #define BLACKCORE_VATSIMDATAFILEREADER_H
-
-//! \file
 
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/avatcstationlist.h"
@@ -37,37 +41,48 @@ namespace BlackCore
         void read();
 
         //! Get aircrafts
-        const BlackMisc::Aviation::CAircraftList &getAircrafts();
+        //! \threadsafe
+        BlackMisc::Aviation::CAircraftList getAircrafts() const;
 
         //! Get aircrafts
-        const BlackMisc::Aviation::CAtcStationList &getAtcStations();
+        //! \threadsafe
+        BlackMisc::Aviation::CAtcStationList getAtcStations() const;
 
         //! Get all voice servers
-        const BlackMisc::Network::CServerList &getVoiceServers();
+        //! \threadsafe
+        BlackMisc::Network::CServerList getVoiceServers() const;
 
         //! Users for callsign(s)
+        //! \threadsafe
         BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
 
         //! User for callsign
+        //! \threadsafe
         BlackMisc::Network::CUserList getUsersForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Controllers for callsigns
+        //! \threadsafe
         BlackMisc::Network::CUserList getControllersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
 
         //! Controllers for callsign
+        //! \threadsafe
         BlackMisc::Network::CUserList getControllersForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Users for callsigns
+        //! \threadsafe
         BlackMisc::Network::CUserList getPilotsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
 
         //! Users for callsign
+        //! \threadsafe
         BlackMisc::Network::CUserList getPilotsForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! ICAO info for callsign
+        //! \threadsafe
         BlackMisc::Aviation::CAircraftIcao getIcaoInfo(const  BlackMisc::Aviation::CCallsign &callsign);
 
-        //! Update with VATSIM aircraft data from data file
-        void updateWithVatsimDataFileData(BlackMisc::Aviation::CAircraft &aircraftToBeUdpated) const { this->m_aircrafts.updateWithVatsimDataFileData(aircraftToBeUdpated); }
+        //! Update aircraft with VATSIM aircraft data from data file
+        //! \threadsafe
+        void updateWithVatsimDataFileData(BlackMisc::Aviation::CAircraft &aircraftToBeUdpated) const;
 
     private slots:
         //! Data have been read

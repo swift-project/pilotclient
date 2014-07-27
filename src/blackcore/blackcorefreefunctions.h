@@ -6,12 +6,16 @@
 #ifndef BLACKCORE_FREEFUNCTIONS_H
 #define BLACKCORE_FREEFUNCTIONS_H
 
+#include <QObject>
+
 namespace BlackCore
 {
-    /*!
-     * Register all relevant metadata in BlackCore
-     */
+    //! Register all relevant metadata in BlackCore
     void registerMetadata();
+
+    //! Is the current thread the one created the object
+    //! \remarks can be used as ASSERT check for threaded objects
+    bool isCurrentThreadCreatingThread(QObject *toBeTested);
 
 } // BlackCore
 

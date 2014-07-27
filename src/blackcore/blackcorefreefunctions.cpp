@@ -6,6 +6,7 @@
 #include "blackcorefreefunctions.h"
 #include "voice.h"
 #include "simulator.h"
+#include <QThread>
 
 namespace BlackCore
 {
@@ -18,6 +19,13 @@ namespace BlackCore
         qRegisterMetaType<IVoice::ComUnit>("ComUnit");
         qRegisterMetaType<IVoice::ConnectionStatus>();
         qRegisterMetaType<IVoice::ConnectionStatus>("ConnectionStatus");
+    }
+
+    bool isCurrentThreadCreatingThread(QObject *toBeTested)
+    {
+        if (!toBeTested) return false;
+        if (!toBeTested->thread()) return false;
+        return (QThread::currentThreadId() == toBeTested->thread()->currentThreadId());
     }
 
 } // namespace
