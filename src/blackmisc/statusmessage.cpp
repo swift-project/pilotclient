@@ -9,6 +9,7 @@
 
 #include "statusmessage.h"
 #include "blackmiscfreefunctions.h"
+#include "iconsstandard.h"
 #include <QMetaEnum>
 
 namespace BlackMisc
@@ -110,15 +111,12 @@ namespace BlackMisc
      */
     const QPixmap &CStatusMessage::convertToIcon(const CStatusMessage &statusMessage)
     {
-        static const QPixmap w(QPixmap(":/blackmisc/icons/warning.png").scaledToWidth(16, Qt::SmoothTransformation));
-        static const QPixmap e(QPixmap(":/blackmisc/icons/critical.png").scaledToWidth(16, Qt::SmoothTransformation));
-        static const QPixmap i(QPixmap(":/blackmisc/icons/information.png").scaledToWidth(16, Qt::SmoothTransformation));
         switch (statusMessage.getSeverity())
         {
-        case SeverityInfo: return i;
-        case SeverityWarning: return w;
-        case SeverityError: return e;
-        default: return i;
+        case SeverityInfo: return CIconsStandard::info16();
+        case SeverityWarning: return CIconsStandard::warning16();
+        case SeverityError: return CIconsStandard::error16();
+        default: return CIconsStandard::info16();
         }
     }
 

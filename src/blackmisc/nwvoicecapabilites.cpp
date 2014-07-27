@@ -9,7 +9,10 @@
 
 #include "blackmisc/nwvoicecapabilities.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/iconsnetwork.h"
 #include <tuple>
+
+using namespace BlackMisc;
 
 namespace BlackMisc
 {
@@ -120,24 +123,19 @@ namespace BlackMisc
          */
         const QPixmap &CVoiceCapabilities::toIcon() const
         {
-            static const QPixmap v(QPixmap(":/blackmisc/icons/capvoice.png").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap t(QPixmap(":/blackmisc/icons/captextonly.png").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap u(QPixmap(":/blackmisc/icons/capunknown.png").scaledToWidth(16, Qt::SmoothTransformation));
-            static const QPixmap r(QPixmap(":/blackmisc/icons/capvoicereceive.png").scaledToWidth(16, Qt::SmoothTransformation));
-
             switch (this->m_voiceCapabilities)
             {
             case Voice:
-                return v;
+                return CIconsNetworkAndAviation::capabilityVoice();
             case TextOnly:
-                return t;
+                return CIconsNetworkAndAviation::capabilityTextOnly();
             case Unknown:
-                return u;
+                return CIconsNetworkAndAviation::capabilityUnknown();
             case VoiceReceivingOnly:
-                return r;
+                return CIconsNetworkAndAviation::capabilityVoiceReceiveOnly();
             }
             Q_ASSERT("Wrong index");
-            return u; // never reached
+            return CIconsNetworkAndAviation::capabilityVoiceReceiveOnly(); // never reached
         }
 
         bool CVoiceCapabilities::operator ==(const CVoiceCapabilities &other) const
