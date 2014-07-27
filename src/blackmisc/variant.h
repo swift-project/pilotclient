@@ -14,11 +14,16 @@
 
 #include <QVariant>
 #include <QDateTime>
+#include <QJsonValueRef>
+#include <QJsonValue>
+#include <QJsonObject>
+#include <QJsonArray>
 
 class QDBusArgument;
 
 namespace BlackMisc
 {
+    // KB: Would it make sense to turn CVariant into an CValueObject? #307
 
     /*!
      * Wrapper class for QVariant, for more natural and transparent DBus integration.
@@ -46,6 +51,9 @@ namespace BlackMisc
 
         //! Construct a variant from the given type and opaque pointer.
         CVariant(int typeId, const void *copy) : m_v(typeId, copy) {}
+
+        //! Value hash
+        uint getValueHash() const;
 
         //! Change the internal QVariant.
         void reset(const QVariant &var) { m_v = var; }
@@ -134,6 +142,12 @@ namespace BlackMisc
         //! Return the metatype ID of the value in this variant.
         int userType() const { return m_v.userType(); }
 
+        //! To JSON
+        QJsonObject toJson() const;
+
+        //! From JSON
+        void fromJson(const QJsonObject &json);
+
         //! Equal operator.
         bool operator ==(const CVariant &other) const { return m_v == other.m_v; }
 
@@ -164,6 +178,57 @@ namespace BlackMisc
 
     //! Unmarshall a variant from DBus.
     const QDBusArgument &operator >>(const QDBusArgument &arg, CVariant &var);
+
+    //! Non member, non friend operator >> for JSON
+    inline QJsonArray &operator<<(QJsonArray &json, const BlackMisc::CVariant &variant)
+    {
+        json.append(variant.toJson());
+        return json;
+    }
+
+    /*!
+     * \brief Non member, non friend operator << for JSON
+     * \param json
+     * \param value as pair name/value
+     * \return
+     */
+    inline QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, BlackMisc::CVariant> &value)
+    {
+        json.insert(value.first, QJsonValue(value.second.toJson()));
+        return json;
+    }
+
+    //! Non member, non friend operator >> for JSON
+    inline const QJsonObject &operator>>(const QJsonObject &json, BlackMisc::CVariant &variant)
+    {
+        variant.fromJson(json);
+        return json;
+    }
+
+    //! Non member, non friend operator >> for JSON
+    inline const QJsonValue &operator>>(const QJsonValue &json, BlackMisc::CVariant &variant)
+    {
+        variant.fromJson(json.toObject());
+        return json;
+    }
+
+    //! Non member, non friend operator >> for JSON
+    inline const QJsonValueRef &operator>>(const QJsonValueRef &json, BlackMisc::CVariant &variant)
+    {
+        variant.fromJson(json.toObject());
+        return json;
+    }
+
+    //! qHash overload, needed for storing CVariant with tupel system
+    inline uint qHash(const BlackMisc::CVariant &value, uint seed = 0)
+    {
+        return ::qHash(value.getValueHash(), seed);
+    }
+
+    // Needed so that our qHash overload doesn't hide the qHash overloads in the global namespace.
+    // This will be safe as long as no global qHash has the same signature as ours.
+    // Alternative would be to qualify all our invokations of the global qHash as ::qHash.
+    using ::qHash;
 
 } // namespace
 

@@ -12,6 +12,7 @@
 #include "settingsblackmiscclasses.h"
 #include "hwallclasses.h"
 #include "indexvariantmap.h"
+#include "namevariantpairlist.h"
 #include "variant.h"
 #include "statusmessagelist.h"
 #include "audioallclasses.h"
@@ -144,6 +145,8 @@ void BlackMisc::registerMetadata()
 {
     CVariant::registerMetadata();
     CIndexVariantMap::registerMetadata();
+    CNameVariantPair::registerMetadata();
+    CNameVariantPairList::registerMetadata();
 
     CStatusMessage::registerMetadata();
     CStatusMessageList::registerMetadata();
@@ -387,7 +390,6 @@ QVariant BlackMisc::complexQtTypeFromDbusArgument(const QDBusArgument &argument,
  */
 size_t BlackMisc::heapSizeOf(const QMetaType &metaType)
 {
-
     metaType.destroy(metaType.create()); // ignore one-off allocations of a class being instantiated for the first time
     _CrtMemState oldState, newState, diff;
     oldState.lTotalCount = newState.lTotalCount = diff.lTotalCount = 0; // avoid compiler warning
