@@ -1,0 +1,36 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#ifndef BLACKGUI_SERVERVIEW_H
+#define BLACKGUI_SERVERVIEW_H
+
+//! \file
+
+#include "viewbase.h"
+#include "../models/serverlistmodel.h"
+
+namespace BlackGui
+{
+    namespace Views
+    {
+        //! Network servers
+        class CServerView : public CViewBase<Models::CServerListModel>
+        {
+
+        public:
+
+            //! Constructor
+            explicit CServerView(QWidget *parent = nullptr);
+
+            //! \copydoc CServerListModel::setSelectedServer
+            void setSelectedServer(const BlackMisc::Network::CServer &selectedServer);
+        };
+    }
+}
+#endif // guard

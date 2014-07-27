@@ -1,0 +1,33 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#ifndef BLACKGUI_KEYBOARDKEYVIEW_H
+#define BLACKGUI_KEYBOARDKEYVIEW_H
+
+//! \file
+
+#include "viewbase.h"
+#include "../models/keyboardkeylistmodel.h"
+
+namespace BlackGui
+{
+    namespace Views
+    {
+        //! Keyboard key view
+        class CKeyboardKeyView : public CViewBase<Models::CKeyboardKeyListModel>
+        {
+
+        public:
+
+            //! Constructor
+            explicit CKeyboardKeyView(QWidget *parent = nullptr);
+        };
+    }
+}
+#endif // guard
