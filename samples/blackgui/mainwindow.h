@@ -18,15 +18,15 @@
 #include "blackcore/context_application.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_runtime.h"
-#include "blackgui/runtimebasedcomponent.h"
+#include "blackgui/components/runtimebasedcomponent.h"
+#include "blackgui/components/infowindowcomponent.h"
 #include "blackgui/transpondermodeselector.h"
-#include "blackgui/atcstationlistmodel.h"
-#include "blackgui/serverlistmodel.h"
-#include "blackgui/aircraftlistmodel.h"
-#include "blackgui/userlistmodel.h"
-#include "blackgui/statusmessagelistmodel.h"
-#include "blackgui/keyboardkeylistmodel.h"
-#include "blackgui/infowindowcomponent.h"
+#include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/models/serverlistmodel.h"
+#include "blackgui/models/aircraftlistmodel.h"
+#include "blackgui/models/userlistmodel.h"
+#include "blackgui/models/statusmessagelistmodel.h"
+#include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blacksound/soundgenerator.h"
 #include <QMainWindow>
@@ -38,10 +38,8 @@
 
 namespace Ui { class MainWindow; }
 
-/*!
- * \brief GUI
- */
-class MainWindow : public QMainWindow, public BlackGui::CRuntimeBasedComponent
+//! swift GUI
+class MainWindow : public QMainWindow, public BlackGui::Components::CRuntimeBasedComponent
 {
     Q_OBJECT
 
@@ -73,19 +71,13 @@ protected:
     enum MainPageIndex
     {
         MainPageStatus = 0,
-        MainPageAtc = 1,
-        MainPageAircrafts = 2,
-        MainPageUsers = 3,
         MainPageCockpit = 4,
-        MainPageTextMessages = 5,
-        MainPageFlightplan = 6,
-        MainPageSettings = 7,
-        MainPageSimulator = 8
+        MainPageFoo = 9
     };
 
 private:
     QScopedPointer<Ui::MainWindow> ui;
-    BlackGui::CInfoWindowComponent *m_compInfoWindow;
+    BlackGui::Components::CInfoWindowComponent *m_compInfoWindow;
     bool m_init;
     GuiModes::WindowMode m_windowMode;
     BlackInput::IKeyboard *m_keyboard; //!< hotkeys
@@ -98,14 +90,6 @@ private:
     QTimer *m_timerContextWatchdog; /*!< core available? */
     QTimer *m_timerStatusBar; /*!< cleaning up status bar */
     QTimer *m_timerSimulator; /*!< update simulator data */
-
-    // pixmaps
-    QPixmap m_resPixmapConnectionConnected;
-    QPixmap m_resPixmapConnectionDisconnected;
-    QPixmap m_resPixmapConnectionConnecting;
-    QPixmap m_resPixmapVoiceHigh;
-    QPixmap m_resPixmapVoiceLow;
-    QPixmap m_resPixmapVoiceMuted;
 
     // frameless window
     QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
@@ -193,29 +177,29 @@ private slots:
     //
 
     //! Reload own aircraft
-    bool reloadOwnAircraft();
+    bool ps_reloadOwnAircraft();
 
     //! Display status message
-    void displayStatusMessage(const BlackMisc::CStatusMessage &sendStatusMessage);
+    void ps_displayStatusMessageInGui(const BlackMisc::CStatusMessage &sendStatusMessage);
 
     //! Display status messages
-    void displayStatusMessages(const BlackMisc::CStatusMessageList &messages);
+    void ps_displayStatusMessagesInGui(const BlackMisc::CStatusMessageList &messages);
 
     //! Redirected output
     void displayRedirectedOutput(const BlackMisc::CStatusMessage &sendStatusMessage, qint64 contextId);
 
     //! Settings have been changed
-    void changedSetttings(uint typeValue);
+    void ps_onChangedSetttings(uint typeValue);
 
     /*!
      * \brief Connection status changed
      * \param from  old status, as uint so it is compliant with DBus
      * \param to    new status, as uint so it is compliant with DBus
      */
-    void connectionStatusChanged(uint from, uint to, const QString &message);
+    void ps_onConnectionStatusChanged(uint from, uint to, const QString &message);
 
     //! Simulator available
-    void simulatorConnectionChanged(bool isAvailable);
+    void ps_onSimulatorConnectionChanged(bool isAvailable);
 
     //
     // GUI related slots
@@ -225,43 +209,46 @@ private slots:
      * \brief Set the main page
      * \param start Startup phase
      */
-    void setMainPage(bool start = false);
+    void ps_setMainPage(bool start = false);
 
     /*!
      * \brief setMainPage
      * \param mainPage
      */
-    void setMainPage(MainPageIndex mainPage);
+    void ps_setMainPage(MainPageIndex mainPage);
 
     //! Connect to network
-    void toggleNetworkConnection();
+    void ps_toggleNetworkConnection();
 
     //! Menu item clicked
-    void menuClicked();
+    void ps_onMenuClicked();
 
     //! Terminated connection
-    void connectionTerminated();
+    void ps_onConnectionTerminated();
 
     //! Update timer
-    void timerBasedUpdates();
+    void ps_handleTimerBasedUpdates();
 
     //! Audio volume handling and mute
-    void audioVolumes();
+    void ps_setAudioVolumes();
 
     /*!
      * \brief changeOpacity
      * \param opacity 0-100
      */
-    void changeWindowOpacity(int opacity = -1);
+    void ps_changeWindowOpacity(int opacity = -1);
 
     //! Context menu for audio
-    void audioIconContextMenu(const QPoint &position);
+    void ps_displayAudioIconContextMenu(const QPoint &position);
 
     //! Toogle Windows stay on top
-    void toogleWindowStayOnTop();
+    void ps_toogleWindowStayOnTop();
 
     //! Set the hotkeys
-    void registerHotkeys();
+    void ps_registerHotkeys();
+
+    //! Style sheet has been changed
+    void ps_onStyleSheetsChanged();
 };
 
 #pragma pop_macro("interface")

@@ -1,12 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "blackgui/stylesheetutility.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avaltitude.h"
 #include <QPoint>
 #include <QMenu>
 #include <QDesktopServices>
 #include <QProcess>
+#include <QFontDialog>
 
+using namespace BlackGui;
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
@@ -14,7 +17,7 @@ using namespace BlackMisc::Aviation;
 /*
  * Menu clicked
  */
-void MainWindow::menuClicked()
+void MainWindow::ps_onMenuClicked()
 {
     QObject *sender = QObject::sender();
     CStatusMessageList msgs;
@@ -37,8 +40,28 @@ void MainWindow::menuClicked()
     }
     else if (sender == this->ui->menu_ReloadSettings)
     {
-        this->ui->comp_Settings->reloadSettings();
+        this->ui->comp_MainInfoArea->getSettingsComponent()->reloadSettings();
         msgs.insert(CStatusMessage::getInfoMessage("Settings reloaded"));
+    }
+    else if (sender == this->ui->menu_FileReloadStyleSheets)
+    {
+        CStyleSheetUtility::instance().read();
+    }
+    else if (sender == this->ui->menu_FileFont)
+    {
+        bool ok = false;
+        QFont font = QFontDialog::getFont(&ok, this->font(), this, "Application fonts", QFontDialog::ProportionalFonts);
+        qDebug() << font.toString();
+        if (ok)
+        {
+            // the user clicked OK and font is set to the font the user selected
+            // this->setFont(font);
+            CStyleSheetUtility::instance().updateFonts(font);
+        }
+        else
+        {
+            // the user canceled the dialog; font is set to the initial
+        }
     }
     else if (sender == this->ui->menu_FileClose)
     {
@@ -55,7 +78,7 @@ void MainWindow::menuClicked()
         Q_ASSERT(this->getIContextSettings());
         msgs.insert(this->getIContextSettings()->reset(true));
     }
-    if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
+    if (!msgs.isEmpty()) this->ps_displayStatusMessagesInGui(msgs);
 }
 
 /*
@@ -64,13 +87,13 @@ void MainWindow::menuClicked()
 void MainWindow::initContextMenus()
 {
     this->ui->lbl_StatusVoiceStatus->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this->ui->lbl_StatusVoiceStatus, &QLabel::customContextMenuRequested, this, &MainWindow::audioIconContextMenu);
+    connect(this->ui->lbl_StatusVoiceStatus, &QLabel::customContextMenuRequested, this, &MainWindow::ps_displayAudioIconContextMenu);
 }
 
 /*
  * Audio context menu
  */
-void MainWindow::audioIconContextMenu(const QPoint &position)
+void MainWindow::ps_displayAudioIconContextMenu(const QPoint &position)
 {
     // position for most widgets
     QWidget *sender = qobject_cast<QWidget *>(QWidget::sender());

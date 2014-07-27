@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "blackgui/atcstationlistmodel.h"
+#include "blackmisc/iconsstandard.h"
+#include "blackgui/models/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_audio.h"
@@ -21,7 +22,7 @@ using namespace BlackMisc::Math;
 /*
  * Select audio device
  */
-void MainWindow::audioVolumes()
+void MainWindow::ps_setAudioVolumes()
 {
     if (!this->m_contextAudioAvailable)
     {
@@ -75,8 +76,8 @@ void MainWindow::audioVolumes()
     com1.setEnabled(!muted);
     com2.setEnabled(!muted);
     this->ui->pb_SoundMute->setText(muted ? "Unmute" : "Mute");
-    this->ui->lbl_StatusVoiceStatus->setPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
-    this->ui->comp_Cockpit->setCockpitVoiceStatusPixmap(muted ? this->m_resPixmapVoiceMuted : this->m_resPixmapVoiceHigh);
+    this->ui->lbl_StatusVoiceStatus->setPixmap(muted ? CIconsStandard::volumneMuted16() : CIconsStandard::volumneHigh16());
+    this->ui->comp_Cockpit->setCockpitVoiceStatusPixmap(muted ? CIconsStandard::volumneMuted16() : CIconsStandard::volumneHigh16());
     this->ui->pb_SoundMute->setStyleSheet(muted ? "background-color: red;" : "");
     if (muted) this->m_compInfoWindow->displayStringMessage("Sound is muted!");
 
@@ -92,6 +93,6 @@ void MainWindow::audioVolumes()
 void MainWindow::playNotifcationSound(CNotificationSounds::Notification notification) const
 {
     if (!this->m_contextAudioAvailable) return;
-    if (!this->ui->comp_Settings->playNotificationSounds()) return;
+    if (!this->ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) return;
     this->getIContextAudio()->playNotification(static_cast<uint>(notification), true);
 }

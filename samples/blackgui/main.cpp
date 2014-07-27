@@ -1,15 +1,19 @@
 #include "introwindow.h"
 #include "mainwindow.h"
 #include "guimodeenums.h"
+#include "blackgui/stylesheetutility.h"
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackcore/context_runtime_config.h"
 #include "blacksim/blacksimfreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/iconsstandard.h"
 
 #include <QtGlobal>
 #include <QApplication>
 #include <QMessageBox>
 #include <QPushButton>
+
+using namespace BlackGui;
 
 /*!
  * \brief Main
@@ -20,13 +24,13 @@
 int main(int argc, char *argv[])
 {
     // register
-    Q_INIT_RESOURCE(blackgui);
     BlackMisc::initResources();
     BlackMisc::registerMetadata();
     BlackSim::registerMetadata();
     BlackCore::registerMetadata();
     // BlackMisc::displayAllUserMetatypesTypes();
 
+    // Translations
     QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
     qDebug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
     QTranslator translator;
@@ -35,9 +39,18 @@ int main(int argc, char *argv[])
         qDebug() << "Translator loaded";
     }
 
-    // app
+    // application
     QApplication a(argc, argv);
+    QIcon icon(BlackMisc::CIconsStandard::swift24());
+    QApplication::setWindowIcon(icon);
+    const QString s = CStyleSheetUtility::instance().styles(
+    {
+        CStyleSheetUtility::fileNameFonts(),
+        CStyleSheetUtility::fileNameMainWindow()
+    }
+    );
     a.installTranslator(&translator);
+    a.setStyleSheet(s);
 
     // modes
     GuiModes::WindowMode windowMode;
@@ -45,6 +58,7 @@ int main(int argc, char *argv[])
 
     // Dialog to decide external or internal core
     CIntroWindow intro;
+    intro.setWindowIcon(icon);
     BlackCore::CRuntimeConfig runtimeConfig;
     if (intro.exec() == QDialog::Rejected)
     {

@@ -1,15 +1,1 @@
-<RCC>
-    <qresource prefix="/blackgui">
-        <file>icons/logingreen.png</file>
-        <file>icons/loginred.png</file>
-        <file>icons/loginyellow.png</file>
-        <file>icons/audiovolumehigh.png</file>
-        <file>icons/audiovolumelow.png</file>
-        <file>icons/audiovolumemuted.png</file>
-        <file>icons/resize.png</file>
-        <file>icons/close.png</file>
-        <file>icons/aircraftdeparture.png</file>
-        <file>icons/apronsmall.jpg</file>
-        <file>icons/tower.png</file>
-    </qresource>
-</RCC>
+<RCC/>

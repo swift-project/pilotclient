@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "blackgui/atcstationlistmodel.h"
+#include "blackgui/models/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 
@@ -15,9 +15,9 @@ using namespace BlackMisc::Settings;
 using namespace BlackMisc::Audio;
 
 /*
- * Read own aircraft
+ * Load own aircraft
  */
-bool MainWindow::reloadOwnAircraft()
+bool MainWindow::ps_reloadOwnAircraft()
 {
     if (!this->isContextNetworkAvailableCheck()) return false;
 
@@ -27,7 +27,7 @@ bool MainWindow::reloadOwnAircraft()
     if (loadedAircraft != this->m_ownAircraft)
     {
         this->m_ownAircraft = loadedAircraft;
-        this->ui->comp_Flightplan->prefillWithAircraftData(this->m_ownAircraft);
+        this->ui->comp_MainInfoArea->getFlightPlanComponent()->prefillWithAircraftData(this->m_ownAircraft);
         changed = true;
     }
     return changed;

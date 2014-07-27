@@ -8,6 +8,7 @@
 #include "blackcore/context_settings.h"
 #include "blackcore/context_application.h"
 #include "blackcore/context_application_impl.h"
+#include "blackmisc/iconsstandard.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/project.h"
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
 {
     // metadata are registered in runtime
     QApplication a(argc, argv); // not QCoreApplication because of icon, http://qt-project.org/forums/viewthread/15412
-    QIcon icon(":/blackcore/icons/tower.png");
+    QIcon icon(BlackMisc::CIconsStandard::swiftNova24());
     QApplication::setWindowIcon(icon);
     QTextStream cin(stdin);
 

@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "blackgui/atcstationlistmodel.h"
+#include "blackmisc/iconsstandard.h"
+#include "blackmisc/iconsnetwork.h"
+#include "blackgui/stylesheetutility.h"
+#include "blackgui/models/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_application.h"
@@ -11,6 +14,7 @@
 using namespace BlackCore;
 using namespace BlackMisc;
 using namespace BlackGui;
+using namespace BlackGui::Components;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
@@ -51,7 +55,6 @@ MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     // GUI
     ui->setupUi(this);
     this->m_compInfoWindow = new CInfoWindowComponent(this); // setupUi has to be first!
-
 }
 
 /*
@@ -99,7 +102,7 @@ void MainWindow::gracefulShutdown()
     }
 
     if (this->getIContextSimulator())
-        this->disconnect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::simulatorConnectionChanged);
+        this->disconnect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::ps_onSimulatorConnectionChanged);
 }
 
 /*
@@ -139,7 +142,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 /*
  * Select correct main page
  */
-void MainWindow::setMainPage(bool start)
+void MainWindow::ps_setMainPage(bool start)
 {
     if (start)
     {
@@ -150,28 +153,55 @@ void MainWindow::setMainPage(bool start)
     QObject *sender = QObject::sender();
     if (sender == this->ui->pb_MainConnect || sender == this->ui->pb_MainStatus)
         this->ui->sw_MainMiddle->setCurrentIndex(MainPageStatus);
-    else if (sender == this->ui->pb_MainAtc)
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageAtc);
-    else if (sender == this->ui->pb_MainAircrafts)
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageAircrafts);
     else if (sender == this->ui->pb_MainCockpit)
         this->ui->sw_MainMiddle->setCurrentIndex(MainPageCockpit);
-    else if (sender == this->ui->pb_MainUsers)
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageUsers);
-    else if (sender == this->ui->pb_MainTextMessages)
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageTextMessages);
-    else if (sender == this->ui->pb_MainFlightplan)
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageFlightplan);
-    else if (sender == this->ui->pb_MainSettings)
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageSettings);
-    else if (sender == this->ui->pb_MainSimulator)
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageSimulator);
+    else
+    {
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageFoo);
+
+        if (sender == this->ui->pb_MainAircrafts)
+        {
+            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaAircrafts);
+        }
+        if (sender == this->ui->pb_MainAtc)
+        {
+            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaAtc);
+        }
+        else if (sender == this->ui->pb_MainUsers)
+        {
+            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaUsers);
+        }
+        else if (sender == this->ui->pb_MainTextMessages)
+        {
+            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaTextMessages);
+        }
+        else if (sender == this->ui->pb_MainFlightplan)
+        {
+            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaFlightPlan);
+        }
+        else if (sender == this->ui->pb_MainSettings)
+        {
+            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaSettings);
+        }
+        else if (sender == this->ui->pb_MainSimulator)
+        {
+            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaSimulator);
+        }
+        else if (sender == this->ui->pb_MainWeather)
+        {
+            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaWeather);
+        }
+        else if (sender == this->ui->pb_MainMappings)
+        {
+            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaMappings);
+        }
+    }
 }
 
 /*
  * Set main page
  */
-void MainWindow::setMainPage(MainWindow::MainPageIndex mainPage)
+void MainWindow::ps_setMainPage(MainWindow::MainPageIndex mainPage)
 {
     this->ui->sw_MainMiddle->setCurrentIndex(mainPage);
 }
@@ -187,38 +217,38 @@ bool MainWindow::isMainPageSelected(MainWindow::MainPageIndex mainPage) const
 /*
  * Connect to Network
  */
-void MainWindow::toggleNetworkConnection()
+void MainWindow::ps_toggleNetworkConnection()
 {
     CStatusMessageList msgs;
     if (!this->isContextNetworkAvailableCheck()) return;
 
-    this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(this->m_resPixmapConnectionConnecting);
+    this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(CIconsNetworkAndAviation::statusTransition());
     if (!this->getIContextNetwork()->isConnected())
     {
         // validation of data here is not required, network context does this
         // in prephase of login
-        this->m_ownAircraft.setCallsign(this->ui->comp_Settings->getOwnCallsignFromGui());
+        this->m_ownAircraft.setCallsign(this->ui->comp_MainInfoArea->getSettingsComponent()->getOwnCallsignFromGui());
         CAircraftIcao icao = this->m_ownAircraft.getIcaoInfo();
-        this->ui->comp_Settings->setOwnAircraftIcaoDataFromGui(icao);
+        this->ui->comp_MainInfoArea->getSettingsComponent()->setOwnAircraftIcaoDataFromGui(icao);
         this->m_ownAircraft.setIcaoInfo(icao);
 
         // set latest aircraft
         this->getIContextOwnAircraft()->updateOwnAircraft(this->m_ownAircraft, MainWindow::sampleBlackGuiOriginator());
 
         // flight plan
-        this->ui->comp_Flightplan->prefillWithAircraftData(this->m_ownAircraft);
+        this->ui->comp_MainInfoArea->getFlightPlanComponent()->prefillWithAircraftData(this->m_ownAircraft);
 
         // Login is based on setting current server
         INetwork::LoginMode mode = INetwork::LoginNormal;
-        if (this->ui->comp_Settings->loginStealth())
+        if (this->ui->comp_MainInfoArea->getSettingsComponent()->loginStealth())
         {
             mode = INetwork::LoginStealth;
-            this->displayStatusMessage(CStatusMessage::getInfoMessage("login in stealth mode"));
+            this->ps_displayStatusMessageInGui(CStatusMessage::getInfoMessage("login in stealth mode"));
         }
-        else if (this->ui->comp_Settings->loginAsObserver())
+        else if (this->ui->comp_MainInfoArea->getSettingsComponent()->loginAsObserver())
         {
             mode = INetwork::LoginAsObserver;
-            this->displayStatusMessage(CStatusMessage::getInfoMessage("login in observer mode"));
+            this->ps_displayStatusMessageInGui(CStatusMessage::getInfoMessage("login in observer mode"));
         }
         msgs = this->getIContextNetwork()->connectToNetwork(static_cast<uint>(mode));
     }
@@ -229,7 +259,7 @@ void MainWindow::toggleNetworkConnection()
         if (this->m_contextAudioAvailable) this->getIContextAudio()->leaveAllVoiceRooms();
         msgs = this->getIContextNetwork()->disconnectFromNetwork();
     }
-    if (!msgs.isEmpty()) this->displayStatusMessages(msgs);
+    if (!msgs.isEmpty()) this->ps_displayStatusMessagesInGui(msgs);
 }
 
 /*
@@ -238,7 +268,7 @@ void MainWindow::toggleNetworkConnection()
 bool MainWindow::isContextNetworkAvailableCheck()
 {
     if (this->m_contextNetworkAvailable) return true;
-    this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError, "Network context not available, no updates this time"));
+    this->ps_displayStatusMessageInGui(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError, "Network context not available, no updates this time"));
     return false;
 }
 
@@ -248,14 +278,14 @@ bool MainWindow::isContextNetworkAvailableCheck()
 bool MainWindow::isContextAudioAvailableCheck()
 {
     if (this->m_contextAudioAvailable) return true;
-    this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError, "Voice context not available"));
+    this->ps_displayStatusMessageInGui(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError, "Voice context not available"));
     return false;
 }
 
 /*
  * Display a status message
  */
-void MainWindow::displayStatusMessage(const CStatusMessage &statusMessage)
+void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
     if (!this->m_init) return;
     this->ui->sb_MainStatusBar->show();
@@ -274,12 +304,12 @@ void MainWindow::displayStatusMessage(const CStatusMessage &statusMessage)
 /*
  * Display a status message
  */
-void MainWindow::displayStatusMessages(const CStatusMessageList &messages)
+void MainWindow::ps_displayStatusMessagesInGui(const CStatusMessageList &messages)
 {
     if (!this->m_init || messages.isEmpty()) return;
     foreach(CStatusMessage msg, messages)
     {
-        this->displayStatusMessage(msg);
+        this->ps_displayStatusMessageInGui(msg);
     }
 }
 
@@ -290,16 +320,16 @@ void MainWindow::displayRedirectedOutput(const CStatusMessage &statusMessage, qi
     this->ui->te_StatusPageConsole->appendHtml(statusMessage.toHtml());
 }
 
-void MainWindow::changedSetttings(uint typeValue)
+void MainWindow::ps_onChangedSetttings(uint typeValue)
 {
     IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
-    if (type == IContextSettings::SettingsHotKeys) this->registerHotkeys();
+    if (type == IContextSettings::SettingsHotKeys) this->ps_registerHotkeys();
 }
 
 /*
 * Connection terminated
 */
-void MainWindow::connectionTerminated()
+void MainWindow::ps_onConnectionTerminated()
 {
     this->updateGuiStatusInformation();
 }
@@ -307,7 +337,7 @@ void MainWindow::connectionTerminated()
 /*
 * Connection status changed
 */
-void MainWindow::connectionStatusChanged(uint /** from **/, uint to, const QString & /* message */)
+void MainWindow::ps_onConnectionStatusChanged(uint /** from **/, uint to, const QString & /* message */)
 {
     this->updateGuiStatusInformation();
     INetwork::ConnectionStatus newStatus = static_cast<INetwork::ConnectionStatus>(to);
@@ -332,7 +362,7 @@ void MainWindow::connectionStatusChanged(uint /** from **/, uint to, const QStri
 /*
 * Timer event
 */
-void MainWindow::timerBasedUpdates()
+void MainWindow::ps_handleTimerBasedUpdates()
 {
     QObject *sender = QObject::sender();
     if (sender == this->m_timerContextWatchdog)
@@ -346,7 +376,7 @@ void MainWindow::timerBasedUpdates()
     }
 
     // own aircraft
-    this->reloadOwnAircraft(); // regular updates
+    this->ps_reloadOwnAircraft(); // regular updates
 }
 
 /*
@@ -398,21 +428,21 @@ void MainWindow::updateGuiStatusInformation()
             this->ui->lbl_StatusNetworkConnectedIcon->setToolTip(now);
         this->ui->pb_MainConnect->setText("Disconnect");
         this->ui->pb_MainConnect->setStyleSheet("background-color: green");
-        this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(this->m_resPixmapConnectionConnected);
+        this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(CIconsNetworkAndAviation::statusConnected());
     }
     else
     {
         this->ui->lbl_StatusNetworkConnectedIcon->setToolTip("disconnected");
         this->ui->pb_MainConnect->setText("Connect");
         this->ui->pb_MainConnect->setStyleSheet("background-color: ");
-        this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(this->m_resPixmapConnectionDisconnected);
+        this->ui->lbl_StatusNetworkConnectedIcon->setPixmap(CIconsNetworkAndAviation::statusDisconnected());
     }
 }
 
 /*
  * Opacity 0-100
  */
-void MainWindow::changeWindowOpacity(int opacity)
+void MainWindow::ps_changeWindowOpacity(int opacity)
 {
     if (opacity < 0)
     {
@@ -427,7 +457,7 @@ void MainWindow::changeWindowOpacity(int opacity)
     qreal o = opacity / 100.0;
     o = o < 0.3 ? 0.3 : o;
     QWidget::setWindowOpacity(o);
-    this->ui->comp_Settings->setGuiOpacity(o * 100.0);
+    this->ui->comp_MainInfoArea->getSettingsComponent()->setGuiOpacity(o * 100.0);
 }
 
 void MainWindow::updateSimulatorData()
@@ -453,7 +483,7 @@ void MainWindow::updateSimulatorData()
     ui->le_SimulatorTransponder->setText(ownAircraft.getTransponderCodeFormatted());
 }
 
-void MainWindow::simulatorConnectionChanged(bool isAvailable)
+void MainWindow::ps_onSimulatorConnectionChanged(bool isAvailable)
 {
     // Simulator timer, TODO remove later
     if (isAvailable)
@@ -465,20 +495,20 @@ void MainWindow::simulatorConnectionChanged(bool isAvailable)
 /*
  * Stay on top
  */
-void MainWindow::toogleWindowStayOnTop()
+void MainWindow::ps_toogleWindowStayOnTop()
 {
     Qt::WindowFlags flags = this->windowFlags();
     if (Qt::WindowStaysOnTopHint & flags)
     {
         flags ^= Qt::WindowStaysOnTopHint;
         flags |= Qt::WindowStaysOnBottomHint;
-        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "Window on bottom"));
+        this->ps_displayStatusMessageInGui(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "Window on bottom"));
     }
     else
     {
         flags ^= Qt::WindowStaysOnBottomHint;
         flags |= Qt::WindowStaysOnTopHint;
-        this->displayStatusMessage(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "Window on top"));
+        this->ps_displayStatusMessageInGui(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "Window on top"));
     }
     this->setWindowFlags(flags);
     this->show();
@@ -487,7 +517,7 @@ void MainWindow::toogleWindowStayOnTop()
 /*
  * Hotkeys
  */
-void MainWindow::registerHotkeys()
+void MainWindow::ps_registerHotkeys()
 {
     if (!this->getIContextSettings()) qFatal("Missing settings");
     if (!this->m_keyboard)
@@ -503,11 +533,25 @@ void MainWindow::registerHotkeys()
     if (keys.isEmpty()) return;
 
     CKeyboardKey key = keys.keyForFunction(CKeyboardKey::HotkeyOpacity50);
-    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->changeWindowOpacity(50); });
+    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->ps_changeWindowOpacity(50); });
 
     key = keys.keyForFunction(CKeyboardKey::HotkeyOpacity100);
-    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->changeWindowOpacity(100); });
+    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->ps_changeWindowOpacity(100); });
 
     key = keys.keyForFunction(CKeyboardKey::HotkeyToogleWindowsStayOnTop);
-    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->toogleWindowStayOnTop(); });
+    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->ps_toogleWindowStayOnTop(); });
+}
+
+/*
+ * Styles
+ */
+void MainWindow::ps_onStyleSheetsChanged()
+{
+    const QString s = CStyleSheetUtility::instance().styles(
+    {
+        CStyleSheetUtility::fileNameFonts(),
+        CStyleSheetUtility::fileNameMainWindow()
+    }
+    );
+    this->setStyleSheet(s);
 }

@@ -17,7 +17,6 @@
 int main(int argc, char *argv[])
 {
     // register
-    Q_INIT_RESOURCE(blackgui);
     BlackMisc::initResources();
     BlackMisc::registerMetadata();
     BlackCore::registerMetadata();
