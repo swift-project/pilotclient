@@ -7,7 +7,9 @@
 #define BLACKCORE_INPUTMANAGER_H
 
 #include "blackinput/keyboard.h"
+#include "blackinput/joystick.h"
 #include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/hwjoystickbutton.h"
 #include "blackmisc/hotkeyfunction.h"
 #include "blackmisc/setkeyboardhotkeylist.h"
 #include <QObject>
@@ -84,6 +86,10 @@ namespace BlackCore
 
         void ps_processKeyboardKeyUp(const BlackMisc::Hardware::CKeyboardKey &);
 
+        void ps_processJoystickButtonDown(const BlackMisc::Hardware::CJoystickButton &button);
+
+        void ps_processJoystickButtonUp(const BlackMisc::Hardware::CJoystickButton &button);
+
     private:
 
         RegistrationHandle registerHotkeyFuncImpl(const BlackMisc::CHotkeyFunction &hotkeyFunction, QObject *receiver, std::function<void(bool)> function);
@@ -91,9 +97,11 @@ namespace BlackCore
         static CInputManager *m_instance;
 
         BlackInput::IKeyboard *m_keyboard = nullptr;
+        BlackInput::IJoystick *m_joystick = nullptr;
 
         QHash<BlackMisc::CHotkeyFunction, std::function<void(bool)> > m_hashRegisteredFunctions;
         QHash<BlackMisc::Hardware::CKeyboardKey, BlackMisc::CHotkeyFunction> m_hashKeyboardKeyFunctions;
+        QHash<BlackMisc::Hardware::CJoystickButton, BlackMisc::CHotkeyFunction> m_hashJoystickKeyFunctions;
     };
 }
 

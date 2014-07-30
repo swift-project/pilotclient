@@ -23,6 +23,10 @@ blacksound {
 
 blackinput {
     LIBS += -lblackinput
+
+    win32 {
+        LIBS += -ldxguid -lole32 -ldinput8 -lUser32
+    }
 }
 
 blacksim {

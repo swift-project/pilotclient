@@ -15,10 +15,13 @@ namespace BlackCore
 
     CInputManager::CInputManager(QObject *parent) :
         QObject(parent),
-        m_keyboard(IKeyboard::getInstance())
+        m_keyboard(IKeyboard::getInstance()),
+        m_joystick(IJoystick::getInstance())
     {
         connect(m_keyboard, &IKeyboard::keyUp, this, &CInputManager::ps_processKeyboardKeyUp);
         connect(m_keyboard, &IKeyboard::keyDown, this, &CInputManager::ps_processKeyboardKeyDown);
+        connect(m_joystick, &IJoystick::buttonUp, this, &CInputManager::ps_processJoystickButtonUp);
+        connect(m_joystick, &IJoystick::buttonDown, this, &CInputManager::ps_processJoystickButtonDown);
     }
 
     CInputManager *CInputManager::getInstance()
@@ -59,6 +62,26 @@ namespace BlackCore
 
         // Get configured hotkey function
         CHotkeyFunction hotkeyFunc = m_hashKeyboardKeyFunctions.value(key);
+        callFunctionsBy(hotkeyFunc, false);
+    }
+
+    void CInputManager::ps_processJoystickButtonDown(const CJoystickButton &button)
+    {
+        qDebug() << "Pressed Button" << button.getButtonIndex();
+        if (!m_hashJoystickKeyFunctions.contains(button)) return;
+
+        // Get configured hotkey function
+        CHotkeyFunction hotkeyFunc = m_hashJoystickKeyFunctions.value(button);
+        callFunctionsBy(hotkeyFunc, true);
+    }
+
+    void CInputManager::ps_processJoystickButtonUp(const CJoystickButton &button)
+    {
+        qDebug() << "Released Button" << button.getButtonIndex();
+        if (!m_hashJoystickKeyFunctions.contains(button)) return;
+
+        // Get configured hotkey function
+        CHotkeyFunction hotkeyFunc = m_hashJoystickKeyFunctions.value(button);
         callFunctionsBy(hotkeyFunc, false);
     }
 
