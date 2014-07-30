@@ -7,5 +7,6 @@
 #define BLACKMISC_HWALLCLASSES_H
 
 #include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/hwjoystickbutton.h"
 
 #endif // guard

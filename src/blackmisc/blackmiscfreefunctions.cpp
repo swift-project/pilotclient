@@ -144,6 +144,7 @@ void BlackMisc::Hardware::registerMetadata()
 {
     CKeyboardKey::registerMetadata();
     CKeyboardKeyList::registerMetadata();
+    CJoystickButton::registerMetadata();
 }
 
 /*
