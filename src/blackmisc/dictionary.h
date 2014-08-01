@@ -9,6 +9,7 @@
 #include "valueobject.h"
 #include "iterator.h"
 #include <QHash>
+#include <utility>
 
 namespace BlackMisc
 {
@@ -242,6 +243,9 @@ namespace BlackMisc
         //! Copy constructor
         CDictionary(const CDictionary &) = default;
 
+        //! Move constructor
+        CDictionary(CDictionary &&other) : m_impl(std::move(other.m_impl)) {}
+
         //! Virtual destructor
         virtual ~CDictionary() {}
 
@@ -345,7 +349,7 @@ namespace BlackMisc
         CDictionary &operator =(const CDictionary &other) { m_impl = other.m_impl; return *this; }
 
         //! Move assignment
-        CDictionary &operator =(CDictionary && other) { m_impl = other.m_impl; return *this; }
+        CDictionary &operator =(CDictionary && other) { m_impl = std::move(other.m_impl); return *this; }
 
         /*!
          * \brief Access an element by its key.
