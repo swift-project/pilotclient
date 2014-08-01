@@ -10,6 +10,7 @@
 #include "iterator.h"
 #include <QHash>
 #include <utility>
+#include <initializer_list>
 
 namespace BlackMisc
 {
@@ -239,6 +240,9 @@ namespace BlackMisc
 
         //! Default constructor.
         CDictionary() {}
+
+        //! Initializer list constructor.
+        CDictionary(std::initializer_list<std::pair<Key, Value>> il) : m_impl(il) {}
 
         //! Copy constructor
         CDictionary(const CDictionary &) = default;

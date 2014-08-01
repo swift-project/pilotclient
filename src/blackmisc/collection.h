@@ -17,6 +17,7 @@
 #include <type_traits>
 #include <iterator>
 #include <utility>
+#include <initializer_list>
 
 namespace BlackMisc
 {
@@ -33,6 +34,12 @@ namespace BlackMisc
 
         //! Insert a new value into the set.
         typename QMap<T, T>::iterator insert(const T &value) { return QMap<T, T>::insert(value, value); }
+
+        //! Default constructor.
+        QOrderedSet() {}
+
+        //! Initializer list constructor.
+        QOrderedSet(std::initializer_list<T> il) { for (const auto &v : il) { insert(v); } }
     };
 
     /*!
@@ -63,6 +70,11 @@ namespace BlackMisc
          * \brief Default constructor.
          */
         CCollection() : m_pimpl(new Pimpl<QOrderedSet<T>>(QOrderedSet<T>())) {}
+
+        /*!
+         * \brief Initializer list constructor.
+         */
+        CCollection(std::initializer_list<T> il) : m_pimpl(new Pimpl<QOrderedSet<T>>(QOrderedSet<T>(il))) {}
 
         /*!
          * \brief Copy constructor.

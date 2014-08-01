@@ -17,6 +17,7 @@
 #include <type_traits>
 #include <iterator>
 #include <utility>
+#include <initializer_list>
 
 namespace BlackMisc
 {
@@ -49,6 +50,11 @@ namespace BlackMisc
          * \brief Default constructor.
          */
         CSequence() : m_pimpl(new Pimpl<QList<T>>(QList<T>())) {}
+
+        /*!
+         * \brief Initializer list constructor.
+         */
+        CSequence(std::initializer_list<T> il) : m_pimpl(new Pimpl<QList<T>>(QList<T>(il))) {}
 
         /*!
          * \brief Copy constructor.
