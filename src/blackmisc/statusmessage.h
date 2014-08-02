@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "icon.h"
 #include "valueobject.h"
 #include <QDateTime>
 
@@ -100,7 +101,7 @@ namespace BlackMisc
         void setSeverity(StatusSeverity severity) { this->m_severity = severity; }
 
         //! Representing icon
-        virtual const QPixmap &toIcon() const override { return CStatusMessage::convertToIcon(*this); }
+        virtual CIcon toIcon() const override { return CStatusMessage::convertToIcon(*this); }
 
         //! Type as string
         const QString &getSeverityAsString() const;
@@ -139,7 +140,7 @@ namespace BlackMisc
         static CStatusMessage getErrorMessage(const QString &message, StatusType type = CStatusMessage::TypeUnspecific);
 
         //! Representing icon
-        static const QPixmap &convertToIcon(const CStatusMessage &statusMessage);
+        static const CIcon &convertToIcon(const CStatusMessage &statusMessage);
 
     protected:
         //! \copydoc CValueObject::marshallToDbus

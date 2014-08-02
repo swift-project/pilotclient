@@ -19,6 +19,7 @@
 #include "aviotransponder.h"
 #include "aviocomsystem.h"
 #include "valueobject.h"
+#include "namevariantpairlist.h"
 
 namespace BlackMisc
 {
@@ -222,7 +223,7 @@ namespace BlackMisc
             enum ColumnIndex
             {
                 IndexCallsign = 0,
-                IndexIcon,
+                IndexPixmap,
                 IndexCallsignAsString,
                 IndexCallsignAsStringAsSet,
                 IndexPilotId,

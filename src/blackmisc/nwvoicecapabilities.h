@@ -54,7 +54,7 @@ namespace BlackMisc
             void setCapabilities(VoiceCapabilities capabilites) { m_voiceCapabilities = static_cast<uint>(capabilites); }
 
             //! \copydoc CValueObject::toIcon()
-            virtual const QPixmap &toIcon() const override;
+            virtual CIcon toIcon() const override;
 
             //! Equal operator ==
             bool operator ==(const CVoiceCapabilities &other) const;

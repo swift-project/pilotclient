@@ -30,6 +30,7 @@ namespace BlackMisc
 {
     // forward declaration
     class CIndexVariantMap;
+    class CIcon;
 
     namespace PhysicalQuantities
     {
@@ -187,7 +188,10 @@ namespace BlackMisc
         virtual void fromJson(const QJsonObject &json) { Q_UNUSED(json); }
 
         //! As icon, not implement by all classes
-        virtual const QPixmap &toIcon() const { static const QPixmap p; return p; }
+        virtual CIcon toIcon() const;
+
+        //! As pixmap, required for most GUI views
+        virtual QPixmap toPixmap() const;
 
         /*!
          * \brief Set property by index

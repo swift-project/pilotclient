@@ -39,7 +39,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     if (this->m_init) return;
 
     // icon, initial position where intro was before
-    this->setWindowIcon(CIconsStandard::swift24());
+    this->setWindowIcon(CIcons::swift24());
     this->setWindowTitle(CProject::systemNameAndVersion());
     QPoint pos = CGuiUtility::introWindowPosition();
     this->move(pos);

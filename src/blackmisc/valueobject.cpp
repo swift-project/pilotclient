@@ -10,6 +10,7 @@
 #include "valueobject.h"
 #include "indexvariantmap.h"
 #include "blackmiscfreefunctions.h"
+#include "iconlist.h"
 
 namespace BlackMisc
 {
@@ -127,6 +128,22 @@ namespace BlackMisc
             this->setPropertyByIndex(it.value().toQVariant(), it.key());
         }
         return c;
+    }
+
+    /*
+     * Icon
+     */
+    CIcon CValueObject::toIcon() const
+    {
+        return CIconList::iconForIndex(CIcons::StandardIconUnknown16);
+    }
+
+    /*
+     * Pixmap
+     */
+    QPixmap CValueObject::toPixmap() const
+    {
+        return this->toIcon().toPixmap();
     }
 
     /*

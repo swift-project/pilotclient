@@ -10,6 +10,7 @@
 #include "avaircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqconstants.h"
+#include "blackmisc/icon.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -207,8 +208,8 @@ namespace BlackMisc
             {
             case IndexCallsign:
                 return QVariant::fromValue(this->m_callsign);
-            case IndexIcon:
-                return QVariant(this->m_callsign.toIcon());
+            case IndexPixmap:
+                return QVariant(this->m_callsign.toPixmap());
             case IndexCallsignAsString:
                 return QVariant::fromValue(this->m_callsign.toQString(true));
             case IndexCallsignAsStringAsSet:
@@ -347,7 +348,6 @@ namespace BlackMisc
         {
             return TupleConverter<CAircraft>::jsonMembers();
         }
-
 
     } // namespace
 } // namespace

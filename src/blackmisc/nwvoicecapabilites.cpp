@@ -9,7 +9,7 @@
 
 #include "blackmisc/nwvoicecapabilities.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/iconsnetwork.h"
+#include "blackmisc/iconlist.h"
 #include <tuple>
 
 using namespace BlackMisc;
@@ -119,25 +119,28 @@ namespace BlackMisc
         }
 
         /*
-         * Equal?
+         * Icon
          */
-        const QPixmap &CVoiceCapabilities::toIcon() const
+        CIcon CVoiceCapabilities::toIcon() const
         {
             switch (this->m_voiceCapabilities)
             {
             case Voice:
-                return CIconsNetworkAndAviation::capabilityVoice();
+                return CIconList::iconForIndex(CIcons::NetworkCapabilityVoice);
             case TextOnly:
-                return CIconsNetworkAndAviation::capabilityTextOnly();
+                return CIconList::iconForIndex(CIcons::NetworkCapabilityTextOnly);
             case Unknown:
-                return CIconsNetworkAndAviation::capabilityUnknown();
+                return CIconList::iconForIndex(CIcons::NetworkCapabilityUnknown);
             case VoiceReceivingOnly:
-                return CIconsNetworkAndAviation::capabilityVoiceReceiveOnly();
+                return CIconList::iconForIndex(CIcons::NetworkCapabilityVoiceReceiveOnly);
             }
             Q_ASSERT("Wrong index");
-            return CIconsNetworkAndAviation::capabilityVoiceReceiveOnly(); // never reached
+            return CIconList::iconForIndex(CIcons::NetworkCapabilityUnknown); // never reached
         }
 
+        /*
+         * Equal?
+         */
         bool CVoiceCapabilities::operator ==(const CVoiceCapabilities &other) const
         {
             if (this == &other) return true;

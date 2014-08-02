@@ -9,6 +9,7 @@
 
 #include "avaltitude.h"
 #include "pqstring.h"
+#include "iconlist.h"
 
 using BlackMisc::PhysicalQuantities::CLength;
 using BlackMisc::PhysicalQuantities::CLengthUnit;
@@ -202,6 +203,14 @@ namespace BlackMisc
 
             CLength l = BlackMisc::PhysicalQuantities::CPqString::parse<CLength>(v, mode);
             *this = CAltitude(l, rd);
+        }
+
+        /*
+         * Icon
+         */
+        CIcon CAltitude::toIcon() const
+        {
+            return BlackMisc::CIconList::iconForIndex(CIcons::GeoPosition);
         }
 
         /*

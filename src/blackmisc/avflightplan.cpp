@@ -8,6 +8,7 @@
  */
 
 #include "avflightplan.h"
+#include "iconlist.h"
 
 namespace BlackMisc
 {
@@ -96,6 +97,11 @@ namespace BlackMisc
         void CFlightPlan::fromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CFlightPlan::jsonMembers(), TupleConverter<CFlightPlan>::toTuple(*this));
+        }
+
+        BlackMisc::CIcon CFlightPlan::toIcon() const
+        {
+            return BlackMisc::CIconList::iconForIndex(CIcons::StandardIconAppFlightPlan16);
         }
 
         void CFlightPlan::registerMetadata()

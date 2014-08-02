@@ -1,4 +1,5 @@
 #include "nwclient.h"
+#include "icon.h"
 #include <QString>
 
 namespace BlackMisc
@@ -194,8 +195,8 @@ namespace BlackMisc
             case IndexVoiceCapabilitiesString:
                 return QVariant(this->m_voiceCapabilities.toQString(false));
                 break;
-            case IndexVoiceCapabilitiesIcon:
-                return QVariant(this->m_voiceCapabilities.toIcon());
+            case IndexVoiceCapabilitiesPixmap:
+                return QVariant(this->m_voiceCapabilities.toPixmap());
                 break;
             default:
                 break;

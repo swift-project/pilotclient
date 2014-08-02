@@ -8,6 +8,7 @@
  */
 
 #include "nwuser.h"
+#include "blackmisc/icon.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <tuple>
 
@@ -178,8 +179,8 @@ namespace BlackMisc
                 return QVariant(this->m_realname);
             case IndexCallsign:
                 return this->m_callsign.toQVariant();
-            case IndexCallsignIcon:
-                return this->m_callsign.toIcon();
+            case IndexCallsignPixmap:
+                return QVariant(this->m_callsign.toPixmap());
             default:
                 break;
             }

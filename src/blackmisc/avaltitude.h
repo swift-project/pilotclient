@@ -114,6 +114,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode)
             void parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) override;
 
+            //! \copydoc CValueObject::toIcon
+            BlackMisc::CIcon toIcon() const override;
+
             //! Register metadata
             static void registerMetadata();
 

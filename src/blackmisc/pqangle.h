@@ -58,6 +58,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
+            //! \copydoc CValueObject::toQVariant
+            virtual BlackMisc::CIcon toIcon() const override;
 
             //! Virtual destructor
             virtual ~CAngle() {}

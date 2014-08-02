@@ -13,6 +13,7 @@
 #define BLACKMISC_CALLSIGN_H
 
 #include "valueobject.h"
+#include "icon.h"
 
 namespace BlackMisc
 {
@@ -40,10 +41,7 @@ namespace BlackMisc
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! \copydoc CValueObject::toIcon()
-            virtual const QPixmap &toIcon() const override
-            {
-                return CCallsign::convertToIcon(*this);
-            }
+            virtual BlackMisc::CIcon toIcon() const override { return CCallsign::convertToIcon(*this); }
 
             //! Is empty?
             bool isEmpty() const { return this->m_callsignAsSet.isEmpty(); }
@@ -117,7 +115,7 @@ namespace BlackMisc
             static QString unifyCallsign(const QString &callsign);
 
             //! representing icon
-            static const QPixmap &convertToIcon(const CCallsign &callsign);
+            static const CIcon &convertToIcon(const CCallsign &callsign);
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CCallsign)

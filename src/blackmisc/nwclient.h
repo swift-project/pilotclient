@@ -39,7 +39,7 @@ namespace BlackMisc
                 IndexServer,
                 IndexVoiceCapabilities,
                 IndexVoiceCapabilitiesString,
-                IndexVoiceCapabilitiesIcon
+                IndexVoiceCapabilitiesPixmap
             };
 
             /*!
@@ -125,7 +125,7 @@ namespace BlackMisc
             void setAircraftModel(const CAircraftModel &model) { this->m_model = model; }
 
             //! \copydoc CValueObject::toIcon()
-            virtual const QPixmap &toIcon() const override { return this->m_user.toIcon(); }
+            virtual CIcon toIcon() const override { return this->m_user.toIcon(); }
 
             //! Register metadata
             static void registerMetadata();
