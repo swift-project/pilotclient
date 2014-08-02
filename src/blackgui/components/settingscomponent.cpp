@@ -106,10 +106,10 @@ namespace BlackGui
 
             // update servers
             this->ui->tvp_SettingsTnServers->setSelectedServer(nws.getCurrentTrafficNetworkServer());
-            this->ui->tvp_SettingsTnServers->update(nws.getTrafficNetworkServers());
+            this->ui->tvp_SettingsTnServers->updateContainer(nws.getTrafficNetworkServers());
 
             // update hot keys
-            this->ui->tvp_SettingsMiscHotkeys->update(this->getIContextSettings()->getHotkeys());
+            this->ui->tvp_SettingsMiscHotkeys->updateContainer(this->getIContextSettings()->getHotkeys());
 
             // fake setting for sound notifications
             this->ui->cb_SettingsAudioPlayNotificationSounds->setChecked(true);

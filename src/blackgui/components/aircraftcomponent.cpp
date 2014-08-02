@@ -35,11 +35,11 @@ namespace BlackGui
 
             if (this->getIContextNetwork()->isConnected())
             {
-                this->ui->tvp_AircraftsInRange->update(this->getIContextNetwork()->getAircraftsInRange());
+                this->ui->tvp_AircraftsInRange->updateContainer(this->getIContextNetwork()->getAircraftsInRange());
             }
             if (this->getIContextSimulator()->isConnected())
             {
-                this->ui->tvp_AirportsInRange->update(this->getIContextSimulator()->getAirportsInRange());
+                this->ui->tvp_AirportsInRange->updateContainer(this->getIContextSimulator()->getAirportsInRange());
             }
         }
     }

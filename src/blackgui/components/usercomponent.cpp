@@ -34,8 +34,8 @@ namespace BlackGui
 
             if (this->getIContextNetwork()->isConnected())
             {
-                this->ui->tvp_Clients->update(this->getIContextNetwork()->getOtherClients());
-                this->ui->tvp_AllUsers->update(this->getIContextNetwork()->getUsers());
+                this->ui->tvp_Clients->updateContainer(this->getIContextNetwork()->getOtherClients());
+                this->ui->tvp_AllUsers->updateContainer(this->getIContextNetwork()->getUsers());
             }
         }
     }

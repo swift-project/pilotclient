@@ -126,6 +126,12 @@ namespace BlackGui
             //! Update single element
             virtual void update(const QModelIndex &index, const ObjectType &object);
 
+            //! Update single element
+            virtual void update(int rowIndex, const ObjectType &object)
+            {
+                this->update(this->index(rowIndex), object);
+            }
+
             //! Object at row position
             virtual const ObjectType &at(const QModelIndex &index) const
             {

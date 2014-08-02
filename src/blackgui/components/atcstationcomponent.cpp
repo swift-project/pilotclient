@@ -72,7 +72,7 @@ namespace BlackGui
                 if (this->m_timestampOnlineStationsChanged.isNull() || this->m_timestampLastReadOnlineStations.isNull() ||
                         (this->m_timestampOnlineStationsChanged > this->m_timestampLastReadOnlineStations))
                 {
-                    this->ui->tvp_AtcStationsOnline->update(this->getIContextNetwork()->getAtcStationsOnline());
+                    this->ui->tvp_AtcStationsOnline->updateContainer(this->getIContextNetwork()->getAtcStationsOnline());
                     this->m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                     this->m_timestampOnlineStationsChanged = this->m_timestampLastReadOnlineStations;
                 }
@@ -97,7 +97,7 @@ namespace BlackGui
             }
             else
             {
-                this->ui->tvp_AtcStationsBooked->update(this->getIContextNetwork()->getAtcStationsBooked());
+                this->ui->tvp_AtcStationsBooked->updateContainer(this->getIContextNetwork()->getAtcStationsBooked());
                 this->m_timestampLastReadBookedStations = QDateTime::currentDateTimeUtc();
             }
         }

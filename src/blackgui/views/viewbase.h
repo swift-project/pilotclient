@@ -47,8 +47,8 @@ namespace BlackGui
             //! Clear
             void clear() { Q_ASSERT(this->m_model); this->m_model->clear(); }
 
-            //! Update
-            template<class ContainerType> int update(const ContainerType &container, bool resize = true)
+            //! Update whole container
+            template<class ContainerType> int updateContainer(const ContainerType &container, bool resize = true)
             {
                 Q_ASSERT(this->m_model);
                 int c = this->m_model->update(container);
@@ -80,6 +80,13 @@ namespace BlackGui
             {
                 Q_ASSERT(this->m_model);
                 return this->m_model->rowCount();
+            }
+
+            //! Column count
+            int columnCount() const
+            {
+                Q_ASSERT(this->m_model);
+                return this->m_model->columnCount();
             }
 
             //! Any data?
