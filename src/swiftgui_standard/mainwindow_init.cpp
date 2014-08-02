@@ -191,8 +191,6 @@ void MainWindow::initGuiSignals()
     Q_ASSERT(connected);
     connected = this->connect(this->ui->pb_MainKeypadOpacity100, SIGNAL(clicked()), this, SLOT(ps_changeWindowOpacity()));
     Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_Foo, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
 
     // Sound buttons
     this->connect(this->ui->pb_SoundMute, &QPushButton::clicked, this, &MainWindow::ps_setAudioVolumes);

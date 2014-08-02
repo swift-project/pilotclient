@@ -32,8 +32,7 @@ DESTDIR = ../../bin
 
 HEADERS += *.h
 SOURCES += *.cpp
-OTHER_FILES += readme.txt blackcore.rc blackcore.ico
-RESOURCES +=
-win32: RC_FILE = blackcore.rc
+OTHER_FILES += swiftcore.ico swiftcore.rc
+win32: RC_FILE = swiftcore.rc
 
 include (../../libraries.pri)
