@@ -156,6 +156,8 @@ namespace BlackMisc
                 return l;
             }
 
+            //! \copydoc CValueObject::toIcon
+            CIcon toIcon() const override;
 
             //! Register metadata
             static void registerMetadata();

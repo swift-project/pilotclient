@@ -9,6 +9,7 @@
 
 #include "clientlistmodel.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/icon.h"
 #include <QMetaProperty>
 #include <QBrush>
 
@@ -27,7 +28,7 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn("", CClient::IndexCallsignIcon));
             this->m_columns.addColumn(CColumn("callsign", CClient::IndexCallsign));
             this->m_columns.addColumn(CColumn("realname", CClient::IndexRealName));
-            this->m_columns.addColumn(CColumn("", CClient::IndexVoiceCapabilitiesIcon));
+            this->m_columns.addColumn(CColumn("", CClient::IndexVoiceCapabilitiesPixmap));
             this->m_columns.addColumn(CColumn("capabilities", CClient::IndexCapabilitiesString));
             this->m_columns.addColumn(CColumn("model", CClient::IndexQueriedModelString));
             this->m_columns.addColumn(CColumn("server", CClient::IndexServer));
@@ -53,7 +54,7 @@ namespace BlackGui
                 if (role == Qt::DecorationRole)
                 {
                     CClient u = this->at(modelIndex);
-                    return u.toIcon();
+                    return QVariant(u.toPixmap());
                 }
             }
             return CListModelBase::data(modelIndex, role);

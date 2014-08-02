@@ -1,4 +1,5 @@
 #include "statusmessagelistmodel.h"
+#include "blackmisc/icon.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QMetaProperty>
 #include <QBrush>
@@ -43,7 +44,7 @@ namespace BlackGui
                 if (role == Qt::DecorationRole)
                 {
                     CStatusMessage msg = this->at(modelIndex);
-                    return msg.toIcon();
+                    return QVariant(msg.toPixmap());
                 }
                 else if (role == Qt::DisplayRole)
                 {

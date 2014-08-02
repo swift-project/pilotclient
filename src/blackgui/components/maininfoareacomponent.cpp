@@ -11,7 +11,7 @@
 #include "ui_maininfoareacomponent.h"
 #include "../stylesheetutility.h"
 #include "../guiutility.h"
-#include "blackmisc/iconsstandard.h"
+#include "blackmisc/icons.h"
 #include <QMenu>
 #include <QListIterator>
 #include <QSignalMapper>
@@ -28,7 +28,7 @@ namespace BlackGui
         {
             this->ps_setInfoAreaFloating(this->m_infoAreaFloating);
             ui->setupUi(this);
-            this->setWindowIcon(CIconsStandard::swift24());
+            this->setWindowIcon(CIcons::swift24());
 
             // after setup, GUI established
             if (this->m_dockableWidgets.isEmpty())
@@ -61,9 +61,9 @@ namespace BlackGui
         void CMainInfoAreaComponent::addToContextMenu(QMenu *menu) const
         {
             if (!menu) return;
-            menu->addAction(CIconsStandard::dockTop16(), "Dock all", this, SLOT(dockAllWidgets()));
-            menu->addAction(CIconsStandard::floatAll16(), "Float all", this, SLOT(floatAllWidgets()));
-            menu->addAction(CIconsStandard::floatOne16(), "Dock / float info area", this, SLOT(toggleFloating()));
+            menu->addAction(CIcons::dockTop16(), "Dock all", this, SLOT(dockAllWidgets()));
+            menu->addAction(CIcons::floatAll16(), "Float all", this, SLOT(floatAllWidgets()));
+            menu->addAction(CIcons::floatOne16(), "Dock / float info area", this, SLOT(toggleFloating()));
 
             bool c = false;
             if (!this->m_dockableWidgets.isEmpty())
@@ -118,13 +118,13 @@ namespace BlackGui
                 QAction *showMenuText = new QAction(menu);
                 showMenuText->setObjectName("ShowDockedWidgetTextAction");
                 showMenuText->setIconText("Show tab text");
-                showMenuText->setIcon(CIconsStandard::headingOne16());
+                showMenuText->setIcon(CIcons::headingOne16());
                 showMenuText->setCheckable(true);
                 showMenuText->setChecked(this->m_showTabTexts);
                 menu->addAction(showMenuText);
                 connect(showMenuText, &QAction::toggled, this, &CMainInfoAreaComponent::ps_showTabTexts);
 
-                menu->addAction(CIconsStandard::dockBottom16(), "Toogle tabbar position", this, SLOT(ps_toggleTabBarPosition()));
+                menu->addAction(CIcons::dockBottom16(), "Toogle tabbar position", this, SLOT(ps_toggleTabBarPosition()));
             }
         }
 
@@ -373,27 +373,27 @@ namespace BlackGui
             switch (infoArea)
             {
             case InfoAreaUsers:
-                return CIconsStandard::appUsers16();
+                return CIcons::appUsers16();
             case InfoAreaWeather:
-                return CIconsStandard::appWeather16();
+                return CIcons::appWeather16();
             case InfoAreaAtc:
-                return CIconsStandard::appAtc16();
+                return CIcons::appAtc16();
             case InfoAreaAircrafts:
-                return CIconsStandard::appAircrafts16();
+                return CIcons::appAircrafts16();
             case InfoAreaSettings:
-                return CIconsStandard::appSettings16();
+                return CIcons::appSettings16();
             case InfoAreaFlightPlan:
-                return CIconsStandard::appFlightplan16();
+                return CIcons::appFlightPlan16();
             case InfoAreaTextMessages:
-                return CIconsStandard::appTextMessages16();
+                return CIcons::appTextMessages16();
             case InfoAreaSimulator:
-                return CIconsStandard::appSimulator16();
+                return CIcons::appSimulator16();
             case InfoAreaMappings:
-                return CIconsStandard::appMappings16();
+                return CIcons::appMappings16();
             case InfoAreaLog:
-                return CIconsStandard::appLog16();
+                return CIcons::appLog16();
             default:
-                return CIconsStandard::empty();
+                return CIcons::empty();
             }
         }
 

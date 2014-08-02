@@ -9,7 +9,7 @@
 
 #include "dockwidgetinfoarea.h"
 #include "components/maininfoareacomponent.h"
-#include "blackmisc/iconsstandard.h"
+#include "blackmisc/icons.h"
 
 using namespace BlackGui::Components;
 

@@ -8,7 +8,7 @@
  */
 
 #include "avcallsign.h"
-#include "iconsnetwork.h"
+#include "iconlist.h"
 
 namespace BlackMisc
 {
@@ -35,26 +35,26 @@ namespace BlackMisc
         /*
          * Iconify
          */
-        const QPixmap &CCallsign::convertToIcon(const CCallsign &callsign)
+        const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)
         {
             QString t = callsign.asString().toUpper();
-            if (t.length() < 3) return CIconsNetworkAndAviation::roleUnknown();
+            if (t.length() < 3) return CIconList::iconForIndex(CIcons::NetworkRoleUnknown);
             t = t.right(3);
 
             if (callsign.getStringAsSet().contains("_"))
             {
-                if ("APP" == t) return CIconsNetworkAndAviation::roleApproach();
-                if ("GND" == t) return CIconsNetworkAndAviation::roleGround();
-                if ("TWR" == t) return CIconsNetworkAndAviation::roleTower();
-                if ("DEL" == t) return CIconsNetworkAndAviation::roleDelivery();
-                if ("CTR" == t) return CIconsNetworkAndAviation::roleCenter();
-                if ("SUP" == t) return CIconsNetworkAndAviation::roleSup();
-                if ("OBS" == t) return CIconsNetworkAndAviation::roleObs();
-                return CIconsNetworkAndAviation::roleUnknown();
+                if ("APP" == t) return CIconList::iconForIndex(CIcons::NetworkRoleApproach);
+                if ("GND" == t) return CIconList::iconForIndex(CIcons::NetworkRoleGround);
+                if ("TWR" == t) return CIconList::iconForIndex(CIcons::NetworkRoleTower);
+                if ("DEL" == t) return CIconList::iconForIndex(CIcons::NetworkRoleDelivery);
+                if ("CTR" == t) return CIconList::iconForIndex(CIcons::NetworkRoleCenter);
+                if ("SUP" == t) return CIconList::iconForIndex(CIcons::NetworkRoleSup);
+                if ("OBS" == t) return CIconList::iconForIndex(CIcons::NetworkRoleApproach);
+                return CIconList::iconForIndex(CIcons::NetworkRoleUnknown);
             }
             else
             {
-                return CIconsNetworkAndAviation::rolePilot();
+                return CIconList::iconForIndex(CIcons::NetworkRolePilot);
             }
         }
 

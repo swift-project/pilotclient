@@ -8,6 +8,7 @@
  */
 
 #include "namevariantpair.h"
+#include "iconlist.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 namespace BlackMisc
@@ -16,9 +17,25 @@ namespace BlackMisc
     /*
      * Constructor
      */
-    CNameVariantPair::CNameVariantPair(const QString &name, const CVariant &variant)
-        : m_name(name), m_variant(variant)
+    CNameVariantPair::CNameVariantPair(const QString &name, const CVariant &variant, const CIcon &icon)
+        : m_name(name), m_variant(variant), m_icon(icon)
     {  }
+
+    /*
+     * Icon
+     */
+    const CIcon &CNameVariantPair::getIcon() const
+    {
+        return this->m_icon;
+    }
+
+    /*
+     * Icon?
+     */
+    bool CNameVariantPair::hasIcon() const
+    {
+        return this->getIcon().isSet();
+    }
 
     /*
      * Convert to string
@@ -108,6 +125,10 @@ namespace BlackMisc
             return QVariant(this->m_name);
         case IndexVariant:
             return this->m_variant.toQVariant();
+        case IndexIcon:
+            return this->m_icon.toQVariant();
+        case IndexPixmap:
+            return this->m_icon.toPixmap();
         default:
             break;
         }
@@ -129,6 +150,17 @@ namespace BlackMisc
             break;
         case IndexVariant:
             this->m_variant = variant;
+            break;
+        case IndexIcon:
+            if (variant.canConvert<int>())
+            {
+                CIcons::IconIndexes index = static_cast<CIcons::IconIndexes>(variant.toInt());
+                this->m_icon = CIconList::iconForIndex(index);
+            }
+            else
+            {
+                this->m_icon = variant.value<BlackMisc::CIcon>();
+            }
             break;
         default:
             Q_ASSERT_X(false, "CNameVariantPair", "index unknown");

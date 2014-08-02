@@ -13,13 +13,14 @@
 #include "mathallclasses.h"
 #include "geoallclasses.h"
 #include "networkallclasses.h"
-#include "settingsblackmiscclasses.h"
+#include "audioallclasses.h"
 #include "hwallclasses.h"
+#include "settingsblackmiscclasses.h"
 #include "indexvariantmap.h"
 #include "namevariantpairlist.h"
 #include "variant.h"
 #include "statusmessagelist.h"
-#include "audioallclasses.h"
+#include "iconlist.h"
 #include <QtNetwork/QHostInfo>
 #include <QProcessEnvironment>
 #include <QSysInfo>
@@ -151,9 +152,10 @@ void BlackMisc::registerMetadata()
     CIndexVariantMap::registerMetadata();
     CNameVariantPair::registerMetadata();
     CNameVariantPairList::registerMetadata();
-
     CStatusMessage::registerMetadata();
     CStatusMessageList::registerMetadata();
+    CIcon::registerMetadata();
+    CIconList::registerMetadata();
 
     // sub namespaces
     PhysicalQuantities::registerMetadata();

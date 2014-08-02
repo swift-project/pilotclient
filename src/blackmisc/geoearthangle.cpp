@@ -10,6 +10,7 @@
 #include "blackmisc/geoearthangle.h"
 #include "blackmisc/geolatitude.h"
 #include "blackmisc/geolongitude.h"
+#include "blackmisc/iconlist.h"
 
 namespace BlackMisc
 {
@@ -100,6 +101,14 @@ namespace BlackMisc
         {
             const auto &other = static_cast<const CAngle &>(otherBase);
             return CAngle::compareImpl(other);
+        }
+
+        /*
+         * Icon
+         */
+        template <class LATorLON> CIcon CEarthAngle<LATorLON>::toIcon() const
+        {
+            return BlackMisc::CIconList::iconForIndex(CIcons::GeoPosition);
         }
 
         // see here for the reason of thess forward instantiations

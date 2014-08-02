@@ -1,6 +1,7 @@
 #include "avatcstation.h"
 #include "aviocomsystem.h"
 #include "voiceroom.h"
+#include "icon.h"
 #include "blackmiscfreefunctions.h"
 
 using namespace BlackMisc::PhysicalQuantities;
@@ -319,8 +320,8 @@ namespace BlackMisc
                 return QVariant(this->m_callsign.asString());
             case IndexCallsignAsStringAsSet:
                 return QVariant(this->m_callsign.getStringAsSet());
-            case IndexIcon:
-                return QVariant(this->m_callsign.toIcon());
+            case IndexPixmap:
+                return QVariant(this->m_callsign.toPixmap());
             case IndexController:
                 return this->m_controller.toQVariant();
             case IndexControllerRealName:

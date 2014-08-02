@@ -214,6 +214,39 @@
         <file>icons/diagona/icons/compass--minus.png</file>
         <file>icons/diagona/icons/compass--pencil.png</file>
         <file>icons/diagona/icons/compass--plus.png</file>
+        <file>icons/diagona/icons/globe.png</file>
+        <file>icons/diagona/icons/globe-medium.png</file>
+        <file>icons/diagona/icons/globe-medium-green.png</file>
+        <file>icons/diagona/icons/globe-place.png</file>
+        <file>icons/diagona/icons/globe-small-green.png</file>
+        <file>icons/diagona/icons/script-globe.png</file>
+        <file>icons/diagona/icons/radio.png</file>
+        <file>icons/diagona/icons/radio--exclamation.png</file>
+        <file>icons/diagona/icons/radio-old.png</file>
+        <file>icons/diagona/icons/radio--plus.png</file>
+        <file>icons/diagona/icons/arrow-000-medium.png</file>
+        <file>icons/diagona/icons/arrow-000-small.png</file>
+        <file>icons/diagona/icons/arrow-045.png</file>
+        <file>icons/diagona/icons/arrow-045-medium.png</file>
+        <file>icons/diagona/icons/arrow-045-small.png</file>
+        <file>icons/diagona/icons/arrow-090.png</file>
+        <file>icons/diagona/icons/arrow-090-medium.png</file>
+        <file>icons/diagona/icons/arrow-090-small.png</file>
+        <file>icons/diagona/icons/arrow-135.png</file>
+        <file>icons/diagona/icons/arrow-135-medium.png</file>
+        <file>icons/diagona/icons/arrow-135-small.png</file>
+        <file>icons/diagona/icons/arrow-180.png</file>
+        <file>icons/diagona/icons/arrow-180-medium.png</file>
+        <file>icons/diagona/icons/arrow-180-small.png</file>
+        <file>icons/diagona/icons/arrow-225.png</file>
+        <file>icons/diagona/icons/arrow-225-medium.png</file>
+        <file>icons/diagona/icons/arrow-225-small.png</file>
+        <file>icons/diagona/icons/arrow-270.png</file>
+        <file>icons/diagona/icons/arrow-270-medium.png</file>
+        <file>icons/diagona/icons/arrow-270-small.png</file>
+        <file>icons/diagona/icons/arrow-315.png</file>
+        <file>icons/diagona/icons/arrow-315-medium.png</file>
+        <file>icons/diagona/icons/arrow-315-small.png</file>
     </qresource>
     <qresource prefix="/own">
         <file>icons/own/app.jpg</file>
@@ -257,8 +290,6 @@
         <file>icons/qled/round_purple.svg</file>
         <file>icons/qled/round_red.svg</file>
         <file>icons/qled/round_yellow.svg</file>
-        <file>icons/qled/screenshot.png</file>
-        <file>icons/qled/screenshot2.png</file>
         <file>icons/qled/square_blue.svg</file>
         <file>icons/qled/square_green.svg</file>
         <file>icons/qled/square_grey.svg</file>

@@ -54,7 +54,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
         QHBoxLayout *menuBarLayout = new QHBoxLayout();
         QPushButton *closeIcon = new QPushButton(this);
         closeIcon->setStyleSheet("margin: 0; padding: 0; background: transparent;");
-        closeIcon->setIcon(CIconsStandard::close16());
+        closeIcon->setIcon(CIcons::close16());
         QObject::connect(closeIcon, &QPushButton::clicked, this, &QMainWindow::close);
         menuBarLayout->addWidget(this->ui->mb_MainMenuBar, 0, Qt::AlignTop | Qt::AlignLeft);
         menuBarLayout->addWidget(closeIcon, 0, Qt::AlignTop | Qt::AlignRight);

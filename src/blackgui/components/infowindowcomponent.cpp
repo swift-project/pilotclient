@@ -9,7 +9,7 @@
 
 #include "infowindowcomponent.h"
 #include "ui_infowindowcomponent.h"
-
+#include "blackmisc/icon.h"
 #include <QTimer>
 #include <QDesktopWidget>
 
@@ -92,7 +92,7 @@ namespace BlackGui
             this->ui->le_SmSeverity->setText(statusMessage.getSeverityAsString());
             this->ui->le_SmType->setText(statusMessage.getTypeAsString());
             this->ui->te_SmStatusMessage->setText(statusMessage.getMessage());
-            this->ui->lbl_SmSeverityIcon->setPixmap(statusMessage.toIcon());
+            this->ui->lbl_SmSeverityIcon->setPixmap(statusMessage.toPixmap());
 
             this->setCurrentPage(this->ui->pg_StatusMessage);
             this->showWindow(displayTimeMs);

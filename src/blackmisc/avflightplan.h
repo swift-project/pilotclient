@@ -199,6 +199,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
 
+            //! \copydoc CValueObject::toIcon
+            virtual CIcon toIcon() const override;
+
             //! Register metadata
             static void registerMetadata();
 

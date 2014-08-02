@@ -14,6 +14,7 @@
 
 #include "variant.h"
 #include "valueobject.h"
+#include "icon.h"
 
 namespace BlackMisc
 {
@@ -27,7 +28,7 @@ namespace BlackMisc
         CNameVariantPair() {}
 
         //! Constructor.
-        CNameVariantPair(const QString &name, const CVariant &variant);
+        CNameVariantPair(const QString &name, const CVariant &variant, const CIcon &icon = CIcon());
 
         //! \copydoc CValueObject::toQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -43,6 +44,12 @@ namespace BlackMisc
 
         //! Set variant.
         void setVariant(const CVariant &variant) { m_variant = variant; }
+
+        //! Icon
+        const CIcon &getIcon() const;
+
+        //! Has icon
+        bool hasIcon() const;
 
         //! Equal operator ==
         bool operator ==(const CNameVariantPair &other) const;
@@ -70,6 +77,8 @@ namespace BlackMisc
         {
             IndexName = 0,
             IndexVariant,
+            IndexIcon,
+            IndexPixmap
         };
 
         //! \copydoc CValueObject::propertyByIndex()
@@ -99,12 +108,13 @@ namespace BlackMisc
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CNameVariantPair)
-        QString m_name;
+        QString  m_name;
         CVariant m_variant;
+        CIcon    m_icon; //!< optional icon
     };
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CNameVariantPair, (o.m_name, o.m_variant))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CNameVariantPair, (o.m_name, o.m_variant, o.m_icon))
 Q_DECLARE_METATYPE(BlackMisc::CNameVariantPair)
 
 #endif // guard
