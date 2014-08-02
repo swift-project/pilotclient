@@ -61,6 +61,13 @@ namespace BlackGui
             return f;
         }
 
+        //! File name infobar.qss
+        static const QString &fileNameInfoBar()
+        {
+            static const QString f("infobar.qss");
+            return f;
+        }
+
         //! File name dockwidgettab.qss
         static const QString &fileNameDockWidgetTab()
         {
