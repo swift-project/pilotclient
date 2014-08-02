@@ -8,17 +8,22 @@
  */
 
 #include "dockwidget.h"
-#include "blackmisc/iconsstandard.h"
+#include "blackmisc/icons.h"
+#include "blackgui/stylesheetutility.h"
 #include <QCloseEvent>
+#include <QStyleOption>
+#include <QPainter>
 
 namespace BlackGui
 {
     CDockWidget::CDockWidget(QWidget *parent) : QDockWidget(parent)
     {
+        this->ps_onStyleSheetsChanged();
         this->initTitleBarWidgets();
 
         // connect
         connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::ps_onTopLevelChanged);
+        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDockWidget::ps_onStyleSheetsChanged);
 
         // context menu
         this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -85,12 +90,22 @@ namespace BlackGui
     {
         if (this->isFloating())
         {
-            contextMenu->addAction(BlackMisc::CIconsStandard::dockTop16(), "Dock", this, SLOT(toggleFloating()));
+            contextMenu->addAction(BlackMisc::CIcons::dockTop16(), "Dock", this, SLOT(toggleFloating()));
         }
         else
         {
-            contextMenu->addAction(BlackMisc::CIconsStandard::floatOne16(), "Float", this, SLOT(toggleFloating()));
+            contextMenu->addAction(BlackMisc::CIcons::floatOne16(), "Float", this, SLOT(toggleFloating()));
         }
+    }
+
+    void CDockWidget::paintEvent(QPaintEvent *event)
+    {
+        // included for style sheet compliance
+        // QStyleOption opt;
+        // opt.init(this);
+        // QPainter p(this);
+        // style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+        QDockWidget::paintEvent(event);
     }
 
     void CDockWidget::ps_onTopLevelChanged(bool topLevel)
@@ -126,11 +141,15 @@ namespace BlackGui
 
     void CDockWidget::ps_showContextMenu(const QPoint &pos)
     {
-        // for most widgets
         QPoint globalPos = this->mapToGlobal(pos);
         QScopedPointer<QMenu> contextMenu(new QMenu(this));
         this->addToContextMenu(contextMenu.data());
         QAction *selectedItem = contextMenu.data()->exec(globalPos);
         Q_UNUSED(selectedItem);
+    }
+
+    void CDockWidget::ps_onStyleSheetsChanged()
+    {
+        // void
     }
 }

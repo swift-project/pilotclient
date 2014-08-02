@@ -79,12 +79,19 @@ namespace BlackGui
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const;
 
+        //! Paint event
+        virtual void paintEvent(QPaintEvent *event) override;
+
+    protected slots:
+        //! Style sheet has changed
+        virtual void ps_onStyleSheetsChanged();
+
     private slots:
         //! Top level has been chaged
         virtual void ps_onTopLevelChanged(bool topLevel);
 
         //! Context menu
-        void ps_showContextMenu(const QPoint &pos);
+        virtual void ps_showContextMenu(const QPoint &pos);
 
     private:
         QWidget *m_emptyTitleBar = nullptr; //!< replacing default title bar
@@ -96,7 +103,6 @@ namespace BlackGui
 
         //! Empty widget with no size
         void initTitleBarWidgets();
-
     };
 
 } // namespace
