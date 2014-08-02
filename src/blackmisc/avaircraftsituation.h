@@ -27,10 +27,10 @@ namespace BlackMisc
         class CAircraftSituation : public BlackMisc::CValueObject, public BlackMisc::Geo::ICoordinateGeodetic
         {
         public:
-            //! \brief Default constructor.
+            //! Default constructor.
             CAircraftSituation() : m_timestamp(QDateTime::currentDateTimeUtc()) {}
 
-            //! \brief Comprehensive Constructor
+            //! Comprehensive Constructor
             CAircraftSituation(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude,
                                const BlackMisc::Aviation::CHeading &heading = BlackMisc::Aviation::CHeading(),
                                const BlackMisc::PhysicalQuantities::CAngle &pitch = BlackMisc::PhysicalQuantities::CAngle(),
@@ -39,7 +39,7 @@ namespace BlackMisc
                 : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
                   m_bank(bank), m_groundspeed(gs), m_timestamp(QDateTime::currentDateTimeUtc()) {}
 
-            //! \brief Properties by index
+            //! Properties by index
             enum ColumnIndex
             {
                 IndexPosition = 1000, // used, so it can be chained in aircraft
@@ -70,10 +70,10 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
-            //! \brief Get position
+            //! Get position
             const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return this->m_position; }
 
-            //! \brief Set position
+            //! Set position
             void setPosition(const BlackMisc::Geo::CCoordinateGeodetic &position) { this->m_position = position; }
 
             //! \copydoc ICoordinateGeodetic::latitude()
@@ -85,52 +85,52 @@ namespace BlackMisc
             //! \copydoc CCoordinateGeodetic::height
             const BlackMisc::PhysicalQuantities::CLength &getHeight() const { return this->m_position.geodeticHeight(); }
 
-            //! \brief Set height
+            //! Set height
             void setHeight(const BlackMisc::PhysicalQuantities::CLength &height) { this->m_position.setGeodeticHeight(height); }
 
-            //! \brief Get heading
+            //! Get heading
             const BlackMisc::Aviation::CHeading &getHeading() const { return this->m_heading; }
 
-            //! \brief Set heading
+            //! Set heading
             void setHeading(const BlackMisc::Aviation::CHeading &heading) { this->m_heading = heading; }
 
-            //! \brief Get altitude (true)
+            //! Get altitude (true)
             const BlackMisc::Aviation::CAltitude &getAltitude() const { return this->m_altitude; }
 
-            //! \brief Set altitude
+            //! Set altitude
             void setAltitude(const BlackMisc::Aviation::CAltitude &altitude) { this->m_altitude = altitude; }
 
-            //! \brief Get pitch
+            //! Get pitch
             const BlackMisc::PhysicalQuantities::CAngle &getPitch() const { return this->m_pitch; }
 
-            //! \brief Set pitch
+            //! Set pitch
             void setPitch(const BlackMisc::PhysicalQuantities::CAngle &pitch) { this->m_pitch = pitch; }
 
             //! Get bank (angle)
             const BlackMisc::PhysicalQuantities::CAngle &getBank() const { return this->m_bank; }
 
-            //! \brief Set bank (angle)
+            //! Set bank (angle)
             void setBank(const BlackMisc::PhysicalQuantities::CAngle &bank) { this->m_bank = bank; }
 
-            //! \brief Get groundspeed
+            //! Get groundspeed
             const BlackMisc::PhysicalQuantities::CSpeed &getGroundSpeed() const { return this->m_groundspeed; }
 
-            //! \brief Set groundspeed
+            //! Set groundspeed
             void setGroundspeed(const BlackMisc::PhysicalQuantities::CSpeed &groundspeed) { this->m_groundspeed = groundspeed; }
 
-            //! \brief Timestamp
+            //! Timestamp
             const QDateTime &getTimestamp() const { return this->m_timestamp;}
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CAircraftSituation &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CAircraftSituation &other) const;
 
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
         protected:

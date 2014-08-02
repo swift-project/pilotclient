@@ -1,7 +1,13 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_STATUSMESSAGELIST_H
 #define BLACKMISC_STATUSMESSAGELIST_H
@@ -15,31 +21,30 @@ namespace BlackMisc
 {
 
     /*!
-     * \brief Status messages, e.g. from Core -> GUI
+     * Status messages, e.g. from Core -> GUI
      */
     class CStatusMessageList : public CSequence<CStatusMessage>
     {
     public:
-        //! \brief Constructor
+        //! Constructor
         CStatusMessageList() {}
 
-        //! \brief Construct from a base class object.
+        //! Construct from a base class object.
         CStatusMessageList(const CSequence<CStatusMessage> &other);
 
-        //! \brief Find by type
+        //! Find by type
         CStatusMessageList findByType(CStatusMessage::StatusType type) const;
 
-        //! \brief Find by severity
+        //! Find by severity
         CStatusMessageList findBySeverity(CStatusMessage::StatusSeverity severity) const;
 
         //! \copydoc CValueObject::asQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-        //! \brief Register metadata of unit and quantity
+        //! Register metadata of unit and quantity
         static void registerMetadata();
 
     };
-
 }
 
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessageList)

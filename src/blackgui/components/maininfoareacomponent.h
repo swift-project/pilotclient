@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_MAININFOAREACOMPONENT_H
 #define BLACKGUI_MAININFOAREACOMPONENT_H
-
-//! \file
 
 #include "../dockwidgetinfoarea.h"
 #include "atcstationcomponent.h"

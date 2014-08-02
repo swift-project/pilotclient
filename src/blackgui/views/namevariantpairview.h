@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_NAMEVARIANTPAIRVIEW_H
 #define BLACKGUI_NAMEVARIANTPAIRVIEW_H
-
-//! \file
 
 #include "viewbase.h"
 #include "../models/namevariantpairlistmodel.h"

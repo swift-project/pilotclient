@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_GEOEARTHANGLE_H
 #define BLACKMISC_GEOEARTHANGLE_H
@@ -12,18 +18,18 @@ namespace BlackMisc
     namespace Geo
     {
         /*!
-         * \brief Base class for latitude / longitude
+         * Base class for latitude / longitude
          */
         template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
         {
         protected:
-            //! \brief Default constructor
+            //! Default constructor
             CEarthAngle() : CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
 
-            //! \brief Init by double value
+            //! Init by double value
             CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit) {}
 
-            //! \brief Init by CAngle value
+            //! Init by CAngle value
             CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CAngle(angle) {}
 
             //! \copydoc CValueObject::convertToQString
@@ -54,29 +60,29 @@ namespace BlackMisc
             }
 
         public:
-            //! \brief Virtual destructor
+            //! Virtual destructor
             virtual ~CEarthAngle() {}
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator==(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator ==(latOrLon);
             }
 
-            //! \brief Not equal operator !=
+            //! Not equal operator !=
             bool operator!=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator !=(latOrLon);
             }
 
-            //! \brief Plus operator +=
+            //! Plus operator +=
             CEarthAngle &operator +=(const CEarthAngle &latOrLon)
             {
                 this->CAngle::operator +=(latOrLon);
                 return *this;
             }
 
-            //! \brief Minus operator-=
+            //! Minus operator-=
             CEarthAngle &operator -=(const CEarthAngle &latOrLon)
             {
                 this->CAngle::operator -=(latOrLon);
@@ -84,7 +90,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Multiply operator *=
+             * Multiply operator *=
              * \param multiply
              * \return
              */
@@ -95,7 +101,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Greater operator >
+             * Greater operator >
              * \param latOrLon
              * \return
              */
@@ -104,25 +110,25 @@ namespace BlackMisc
                 return this->CAngle::operator >(latOrLon);
             }
 
-            //! \brief Less operator <
+            //! Less operator <
             bool operator <(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >(latOrLon);
             }
 
-            //! \brief Less equal operator <=
+            //! Less equal operator <=
             bool operator <=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator <=(latOrLon);
             }
 
-            //! \brief Greater equal operator >=
+            //! Greater equal operator >=
             bool operator >=(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >=(latOrLon);
             }
 
-            //! \brief Plus operator +
+            //! Plus operator +
             LATorLON operator +(const CEarthAngle &latOrLon) const
             {
                 LATorLON l(*this);
@@ -130,7 +136,7 @@ namespace BlackMisc
                 return l;
             }
 
-            //! \brief Minus operator -
+            //! Minus operator -
             LATorLON operator -(const CEarthAngle &latOrLon) const
             {
                 LATorLON l(*this);
@@ -139,7 +145,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Multiply operator *
+             * Multiply operator *
              * \param multiply
              * \return
              */
@@ -150,11 +156,12 @@ namespace BlackMisc
                 return l;
             }
 
-            //! \brief Register metadata
+
+            //! Register metadata
             static void registerMetadata();
 
             /*!
-             * \brief Latitude / Longitude from a WGS string such as
+             * Latitude / Longitude from a WGS string such as
              * \param wgsCoordinate 50° 2′ 0″ N / 8° 34′ 14″ E
              * \return
              */

@@ -7,17 +7,17 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_DOCKWIDGETINFOAREA_H
 #define BLACKGUI_DOCKWIDGETINFOAREA_H
-
-//! \file
 
 #include "blackgui/dockwidget.h"
 
 namespace BlackGui
 {
 
-    //! Class for dock widgets in the info area, containing some specialized functionality
+    //! Class for dock widgets serving as info bar
     class CDockWidgetInfoArea : public CDockWidget
     {
         Q_OBJECT
@@ -29,7 +29,6 @@ namespace BlackGui
     protected:
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const override;
-
     };
 
 } // namespace

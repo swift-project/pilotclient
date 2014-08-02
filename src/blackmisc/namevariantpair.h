@@ -30,10 +30,7 @@ namespace BlackMisc
         CNameVariantPair(const QString &name, const CVariant &variant);
 
         //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override
-        {
-            return QVariant::fromValue(*this);
-        }
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
         //! Get name.
         const QString &getName() const { return m_name; }

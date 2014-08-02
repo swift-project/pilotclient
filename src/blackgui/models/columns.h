@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_COLUMNS_H
 #define BLACKGUI_COLUMNS_H
-
-//! \file
 
 #include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue
 #include "blackmisc/collection.h"

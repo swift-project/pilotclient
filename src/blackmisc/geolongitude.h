@@ -1,5 +1,17 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
 #ifndef BLACKMISC_GEOLONGITUDE_H
 #define BLACKMISC_GEOLONGITUDE_H
+
 #include "blackmisc/geoearthangle.h"
 
 namespace BlackMisc
@@ -7,17 +19,11 @@ namespace BlackMisc
     namespace Geo
     {
 
-        /*!
-         * \brief Longitude
-         */
+        //! Longitude
         class CLongitude : public CEarthAngle<CLongitude>
         {
         protected:
-            /*!
-             * \brief Specific string representation
-             * \param i18n
-             * \return
-             */
+            //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const
             {
                 QString s(CEarthAngle::convertToQString(i18n));
@@ -27,35 +33,22 @@ namespace BlackMisc
             }
 
         public:
-            /*!
-             * \brief Default constructor
-             */
+            //! Default constructor
             CLongitude() : CEarthAngle() {}
 
-            /*!
-             * \brief Constructor
-             * \param angle
-             */
+            //! Constructor
             explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
-            /*!
-             * \brief Init by double value
-             * \param value
-             * \param unit
-             */
+            //! Init by double value
             CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
+            //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
             {
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Virtual destructor
-             */
+            //! Virtual destructor
             virtual ~CLongitude() {}
         };
 

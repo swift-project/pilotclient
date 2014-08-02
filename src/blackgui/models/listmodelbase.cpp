@@ -120,7 +120,6 @@ namespace BlackGui
             return this->m_container.size();
         }
 
-
         /*
          * Update
          */

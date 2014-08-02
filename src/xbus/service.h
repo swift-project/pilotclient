@@ -27,7 +27,9 @@ class QTimer;
 
 //! Typedef needed to use QList<double> as a DBus argument
 typedef QList<double> QDoubleList;
-Q_DECLARE_METATYPE(QDoubleList);
+
+//! Typedef needed to use QList<double> as a DBus argument
+Q_DECLARE_METATYPE(QDoubleList)
 
 namespace XBus
 {

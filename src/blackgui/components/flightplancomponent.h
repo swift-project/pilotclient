@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_FLIGHTPLANCOMPONENT_H
 #define BLACKGUI_FLIGHTPLANCOMPONENT_H
-
-//! \file
 
 #include "blackgui/components/runtimebasedcomponent.h"
 #include "blackmisc/avaircraft.h"

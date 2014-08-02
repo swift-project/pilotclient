@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_PQUNITS_H
 #define BLACKMISC_PQUNITS_H
@@ -27,7 +33,7 @@ namespace BlackMisc
     {
 
         /*!
-         * \brief Specialized class for distance units (meter, foot, nautical miles).
+         * Specialized class for distance units (meter, foot, nautical miles).
          */
         class CLengthUnit : public CMeasurementUnit
         {
@@ -63,12 +69,12 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Default unit
+             * Default unit
              */
             static const CLengthUnit &defaultUnit() { return m(); }
 
             /*!
-             * \brief Null unit
+             * Null unit
              */
             static const CLengthUnit &nullUnit()
             {
@@ -77,7 +83,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Meter m
+             * Meter m
              */
             static const CLengthUnit &m()
             {
@@ -86,7 +92,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Nautical miles NM
+             * Nautical miles NM
              */
             static const CLengthUnit &NM()
             {
@@ -95,7 +101,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Foot ft
+             * Foot ft
              */
             static const CLengthUnit &ft()
             {
@@ -104,7 +110,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Kilometer km
+             * Kilometer km
              */
             static const CLengthUnit &km()
             {
@@ -113,7 +119,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Centimeter cm
+             * Centimeter cm
              */
             static const CLengthUnit &cm()
             {
@@ -122,7 +128,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief International mile
+             * International mile
              */
             static const CLengthUnit &mi()
             {
@@ -131,7 +137,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Statute mile
+             * Statute mile
              */
             static const CLengthUnit &SM()
             {
@@ -140,7 +146,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief All units
+             * All units
              */
             static const QList<CLengthUnit> &allUnits()
             {
@@ -172,7 +178,7 @@ namespace BlackMisc
         };
 
         /*!
-         * \brief Specialized class for angles (degrees, radian).
+         * Specialized class for angles (degrees, radian).
          */
         class CAngleUnit : public CMeasurementUnit
         {
@@ -204,12 +210,12 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Default unit
+             * Default unit
              */
             static const CAngleUnit &defaultUnit() { return deg(); }
 
             /*!
-             * \brief Null unit
+             * Null unit
              */
             static const CAngleUnit &nullUnit()
             {
@@ -223,7 +229,7 @@ namespace BlackMisc
             virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const override;
 
             /*!
-             * \brief Radians
+             * Radians
              */
             static const CAngleUnit &rad()
             {
@@ -232,7 +238,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Degrees
+             * Degrees
              */
             static const CAngleUnit &deg()
             {
@@ -241,7 +247,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Sexagesimal degree (degrees, minutes, seconds, decimal seconds)
+             * Sexagesimal degree (degrees, minutes, seconds, decimal seconds)
              */
             static const CAngleUnit &sexagesimalDeg()
             {
@@ -252,7 +258,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Sexagesimal degree (degrees, minutes, decimal minutes)
+             * Sexagesimal degree (degrees, minutes, decimal minutes)
              */
             static const CAngleUnit &sexagesimalDegMin()
             {
@@ -263,7 +269,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief All units
+             * All units
              */
             static const QList<CAngleUnit> &allUnits()
             {
@@ -292,7 +298,7 @@ namespace BlackMisc
         };
 
         /*!
-         * \brief Specialized class for frequency (hertz, mega hertz, kilo hertz).
+         * Specialized class for frequency (hertz, mega hertz, kilo hertz).
          */
         class CFrequencyUnit : public CMeasurementUnit
         {
@@ -323,12 +329,12 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Default unit
+             * Default unit
              */
             static const CFrequencyUnit &defaultUnit() { return Hz(); }
 
             /*!
-             * \brief Null unit
+             * Null unit
              */
             static const CFrequencyUnit &nullUnit()
             {
@@ -337,7 +343,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Hertz
+             * Hertz
              */
             static const CFrequencyUnit &Hz()
             {
@@ -346,7 +352,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Kilohertz
+             * Kilohertz
              */
             static const CFrequencyUnit &kHz()
             {
@@ -355,7 +361,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Megahertz
+             * Megahertz
              */
             static const CFrequencyUnit &MHz()
             {
@@ -364,7 +370,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Gigahertz
+             * Gigahertz
              */
             static const CFrequencyUnit &GHz()
             {
@@ -373,7 +379,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief All units
+             * All units
              */
             static const QList<CFrequencyUnit> &allUnits()
             {
@@ -402,7 +408,7 @@ namespace BlackMisc
         };
 
         /*!
-         * \brief Specialized class for mass units (kg, lbs).
+         * Specialized class for mass units (kg, lbs).
          */
         class CMassUnit : public CMeasurementUnit
         {
@@ -434,12 +440,12 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Default unit
+             * Default unit
              */
             static const CMassUnit &defaultUnit() { return kg(); }
 
             /*!
-             * \brief Null unit
+             * Null unit
              */
             static const CMassUnit &nullUnit()
             {
@@ -448,7 +454,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Kilogram, SI base unit
+             * Kilogram, SI base unit
              */
             static const CMassUnit &kg()
             {
@@ -457,7 +463,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Gram, SI unit
+             * Gram, SI unit
              */
             static const CMassUnit &g()
             {
@@ -466,7 +472,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Tonne, aka metric ton (1000kg)
+             * Tonne, aka metric ton (1000kg)
              */
             static const CMassUnit &tonne()
             {
@@ -475,7 +481,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Short ton (2000lb) used in the United States
+             * Short ton (2000lb) used in the United States
              */
             static const CMassUnit &shortTon()
             {
@@ -484,7 +490,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Pound, aka mass pound
+             * Pound, aka mass pound
              */
             static const CMassUnit &lb()
             {
@@ -493,7 +499,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief All units
+             * All units
              */
             static const QList<CMassUnit> &allUnits()
             {
@@ -523,7 +529,7 @@ namespace BlackMisc
         };
 
         /*!
-         * \brief Specialized class for pressure (psi, hPa, bar).
+         * Specialized class for pressure (psi, hPa, bar).
          */
         class CPressureUnit : public CMeasurementUnit
         {
@@ -557,12 +563,12 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Default unit
+             * Default unit
              */
             static const CPressureUnit &defaultUnit() { return hPa(); }
 
             /*!
-             * \brief Null unit
+             * Null unit
              */
             static const CPressureUnit &nullUnit()
             {
@@ -571,7 +577,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Pascal
+             * Pascal
              */
             static const CPressureUnit &Pa()
             {
@@ -580,7 +586,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Hectopascal
+             * Hectopascal
              */
             static const CPressureUnit &hPa()
             {
@@ -589,7 +595,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Pounds per square inch
+             * Pounds per square inch
              */
             static const CPressureUnit &psi()
             {
@@ -598,7 +604,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Bar
+             * Bar
              */
             static const CPressureUnit &bar()
             {
@@ -607,7 +613,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Millibar, actually the same as hPa
+             * Millibar, actually the same as hPa
              */
             static const CPressureUnit &mbar()
             {
@@ -616,7 +622,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Inch of mercury at 0°C
+             * Inch of mercury at 0°C
              */
             static const CPressureUnit &inHg()
             {
@@ -625,7 +631,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Millimeter of mercury
+             * Millimeter of mercury
              */
             static const CPressureUnit &mmHg()
             {
@@ -634,7 +640,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief All units
+             * All units
              */
             static const QList<CPressureUnit> &allUnits()
             {
@@ -665,7 +671,7 @@ namespace BlackMisc
         };
 
         /*!
-         * \brief Specialized class for temperatur units (kelvin, centidegree).
+         * Specialized class for temperatur units (kelvin, centidegree).
          */
         class CTemperatureUnit : public CMeasurementUnit
         {
@@ -705,12 +711,12 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Default unit
+             * Default unit
              */
             static const CTemperatureUnit &defaultUnit() { return C(); }
 
             /*!
-             * \brief Null unit
+             * Null unit
              */
             static const CTemperatureUnit &nullUnit()
             {
@@ -719,7 +725,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Kelvin
+             * Kelvin
              */
             static const CTemperatureUnit &K()
             {
@@ -728,7 +734,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Centigrade C
+             * Centigrade C
              */
             static const CTemperatureUnit &C()
             {
@@ -737,7 +743,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Fahrenheit F
+             * Fahrenheit F
              */
             static const CTemperatureUnit &F()
             {
@@ -746,7 +752,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief All units
+             * All units
              */
             static const QList<CTemperatureUnit> &allUnits()
             {
@@ -774,7 +780,7 @@ namespace BlackMisc
         };
 
         /*!
-         * \brief Specialized class for speed units (m/s, ft/s, NM/h).
+         * Specialized class for speed units (m/s, ft/s, NM/h).
          */
         class CSpeedUnit : public CMeasurementUnit
         {
@@ -822,7 +828,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Meter/second m/s
+             * Meter/second m/s
              */
             static const CSpeedUnit &m_s()
             {
@@ -831,7 +837,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Knots
+             * Knots
              */
             static const CSpeedUnit &kts()
             {
@@ -840,7 +846,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Nautical miles per hour NM/h (same as kts)
+             * Nautical miles per hour NM/h (same as kts)
              */
             static const CSpeedUnit &NM_h()
             {
@@ -849,7 +855,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Feet/second ft/s
+             * Feet/second ft/s
              */
             static const CSpeedUnit &ft_s()
             {
@@ -858,7 +864,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Feet/min ft/min
+             * Feet/min ft/min
              */
             static const CSpeedUnit &ft_min()
             {
@@ -867,7 +873,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Kilometer/hour km/h
+             * Kilometer/hour km/h
              */
             static const CSpeedUnit &km_h()
             {
@@ -876,7 +882,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief All units
+             * All units
              */
             static const QList<CSpeedUnit> &allUnits()
             {
@@ -907,7 +913,7 @@ namespace BlackMisc
         };
 
         /*!
-         * \brief Specialized class for time units (ms, hour, min).
+         * Specialized class for time units (ms, hour, min).
          */
         class CTimeUnit : public CMeasurementUnit
         {
@@ -960,7 +966,7 @@ namespace BlackMisc
             virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const override;
 
             /*!
-             * \brief Second s
+             * Second s
              */
             static const CTimeUnit &s()
             {
@@ -969,7 +975,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Millisecond ms
+             * Millisecond ms
              */
             static const CTimeUnit &ms()
             {
@@ -978,7 +984,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Hour
+             * Hour
              */
             static const CTimeUnit &h()
             {
@@ -987,7 +993,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Minute
+             * Minute
              */
             static const CTimeUnit &min()
             {
@@ -996,7 +1002,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Day
+             * Day
              */
             static const CTimeUnit &d()
             {
@@ -1005,7 +1011,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Hours, minutes, seconds
+             * Hours, minutes, seconds
              */
             static const CTimeUnit &hms()
             {
@@ -1016,7 +1022,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Hours, minutes
+             * Hours, minutes
              */
             static const CTimeUnit &hrmin()
             {
@@ -1027,7 +1033,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Minutes, seconds
+             * Minutes, seconds
              */
             static const CTimeUnit &minsec()
             {
@@ -1038,7 +1044,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief All units
+             * All units
              */
             static const QList<CTimeUnit> &allUnits()
             {
@@ -1070,7 +1076,7 @@ namespace BlackMisc
         };
 
         /*!
-         * \brief Specialized class for acceleration units (m/s2, ft/s2).
+         * Specialized class for acceleration units (m/s2, ft/s2).
          */
         class CAccelerationUnit : public CMeasurementUnit
         {
@@ -1115,7 +1121,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Meter/second^2 (m/s^2)
+             * Meter/second^2 (m/s^2)
              */
             static const CAccelerationUnit &m_s2()
             {
@@ -1124,7 +1130,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Feet/second^2
+             * Feet/second^2
              */
             static const CAccelerationUnit &ft_s2()
             {
@@ -1133,7 +1139,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief All units
+             * All units
              */
             static const QList<CAccelerationUnit> &allUnits()
             {

@@ -1,17 +1,20 @@
-/***************************************************************************
- *   Copyright (C) 2010 by P. Sereno                                       *
- *   http://www.sereno-online.com                                          *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License           *
- *   version 2.1 as published by the Free Software Foundation              *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU Lesser General Public License for more details.                   *
- *   http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.               *
- ***************************************************************************/
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ *
+ * Copyright (C) 2010 by P. Sereno
+ * http://www.sereno-online.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License
+ * version 2.1 as published by the Free Software Foundation
+ */
+
+#include "led.h"
 
 #include <QColor>
 #include <QtGlobal>
@@ -20,7 +23,6 @@
 #include <QtSvg>
 #include <QSvgRenderer>
 
-#include "led.h"
 
 namespace BlackGui
 {

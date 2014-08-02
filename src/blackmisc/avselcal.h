@@ -1,10 +1,17 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_SELCAL_H
 #define BLACKMISC_SELCAL_H
+
 #include "blackmisc/pqfrequency.h"
 #include "valueobject.h"
 
@@ -21,10 +28,10 @@ namespace BlackMisc
         {
 
         public:
-            //! \brief Default constructor.
+            //! Default constructor.
             CSelcal() {}
 
-            //! \brief Constructor.
+            //! Constructor.
             CSelcal(const QString &code) : m_code(code.trimmed()) {}
 
             /*!
@@ -39,22 +46,22 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
-            //! \brief Is valid?
+            //! Is valid?
             bool isValid() const { return CSelcal::isValidCode(this->m_code); }
 
-            //! \brief Get SELCAL code
+            //! Get SELCAL code
             const QString &getCode() const { return this->m_code; }
 
             /*!
-             * \brief List of 4 frequencies, if list is empty SELCAL code is not valid
+             * List of 4 frequencies, if list is empty SELCAL code is not valid
              * \return  either 4 frequencies, or empty list
              */
             QList<BlackMisc::PhysicalQuantities::CFrequency> getFrequencies() const;
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CSelcal &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CSelcal &other) const;
 
             //! \copydoc CValueObject::getValueHash
@@ -66,28 +73,28 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
             //! \copydoc TupleConverter<>::jsonMembers()
             static const QStringList &jsonMembers();
 
-            //! \brief Equals given string
+            //! Equals given string
             bool equalsString(const QString &code) const;
 
-            //! \brief Valid SELCAL characters
+            //! Valid SELCAL characters
             static const QString &validCharacters();
 
-            //! \brief Is given character a valid SELCAL characer?
+            //! Is given character a valid SELCAL characer?
             static bool isValidCharacter(QChar c);
 
-            //! \brief Valid SELCAL code?
+            //! Valid SELCAL code?
             static bool isValidCode(const QString &code);
 
-            //! \brief Audio frequency for character
+            //! Audio frequency for character
             static const BlackMisc::PhysicalQuantities::CFrequency &audioFrequencyEquivalent(QChar c);
 
-            //! \brief All valid code pairs: AB, AC, AD ...
+            //! All valid code pairs: AB, AC, AD ...
             static const QStringList &codePairs();
 
         protected:

@@ -37,10 +37,7 @@ namespace BlackMisc
             {}
 
             //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! \copydoc CValueObject::toIcon()
             virtual const QPixmap &toIcon() const override

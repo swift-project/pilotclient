@@ -1,10 +1,17 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_PQANGLE_H
 #define BLACKMISC_PQANGLE_H
+
 #include "blackmisc/pqphysicalquantity.h"
 #include "blackmisc/mathematics.h"
 
@@ -12,10 +19,7 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-
-        /*!
-         * \brief Physical unit angle (radians, degrees)
-         */
+        //! Physical unit angle (radians, degrees)
         class CAngle : public CPhysicalQuantity<CAngleUnit, CAngle>
         {
         public:
@@ -52,35 +56,21 @@ namespace BlackMisc
                     CAngleUnit::sexagesimalDegMin()) {}
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            /*!
-             * \brief Virtual destructor
-             */
+
+            //! Virtual destructor
             virtual ~CAngle() {}
 
-            /*!
-             * \brief Value as factor of PI (e.g. 0.5PI)
-             * \return
-             */
-            double piFactor() const
-            {
-                return BlackMisc::Math::CMath::round(this->value(CAngleUnit::rad()) / BlackMisc::Math::CMath::PI() , 6);
-            }
+            //! Value as factor of PI (e.g. 0.5PI)
+            double piFactor() const;
 
-            /*!
-             * \brief PI as convenience method
-             * \return
-             */
-            static const double &PI()
-            {
-                return BlackMisc::Math::CMath::PI();
-            }
+            //! PI as convenience method
+            static const double &PI();
+
+        private:
+
         };
-
     } // namespace
 } // namespace
 

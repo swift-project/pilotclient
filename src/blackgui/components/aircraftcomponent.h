@@ -23,7 +23,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! Aircraft widget
         class CAircraftComponent : public QTabWidget, public CRuntimeBasedComponent
         {

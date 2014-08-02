@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_LISTMODELBASE_H
 #define BLACKGUI_LISTMODELBASE_H
 
@@ -118,7 +120,7 @@ namespace BlackGui
             //! \copydoc QAbstractTableModel::flags
             Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-            //! Update by new list
+            //! Update by new container
             virtual int update(const ContainerType &container);
 
             //! Update single element

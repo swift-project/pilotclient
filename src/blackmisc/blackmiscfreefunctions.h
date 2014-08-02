@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_FREEFUNCTIONS_H
 #define BLACKMISC_FREEFUNCTIONS_H
@@ -16,9 +22,12 @@
  * Workaround, to call initResource from namespace. Used in BlackMisc::initResources().
  * Q_INIT_RESOURCE adds resource, here the translation files.
  */
-// cannot be declared within namespace, see docu
-// hence BlackMisc::initResources() calls this inline function
-inline void initBlackMiscResources() { Q_INIT_RESOURCE(blackmisc); }
+inline void initBlackMiscResources()
+{
+    // cannot be declared within namespace, see docu
+    // hence BlackMisc::initResources() calls this inline function
+    Q_INIT_RESOURCE(blackmisc);
+}
 
 /*!
  * Free functions in BlackMisc

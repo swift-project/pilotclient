@@ -26,10 +26,7 @@ namespace BlackMisc
                 : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user), m_isAcceptingConnections(isAcceptingConnections) {}
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Get address.
             const QString &getAddress() const { return m_address; }

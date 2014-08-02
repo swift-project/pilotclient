@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_DOCKWIDGET_H
 #define BLACKGUI_DOCKWIDGET_H
-
-//! \file
 
 #include <QDockWidget>
 #include <QTabWidget>
@@ -58,6 +58,8 @@ namespace BlackGui
 
         //! Show the window title when docked
         void showTitleWhenDocked(bool show);
+
+
 
     public slots:
         //! Toggle floating

@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_SIMULATORCOMPONENT_H
 #define BLACKGUI_SIMULATORCOMPONENT_H
-
-//! \file
 
 #include "runtimebasedcomponent.h"
 #include <QTabWidget>

@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKMISC_AVHEADING_H
 #define BLACKMISC_AVHEADING_H
 

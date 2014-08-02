@@ -34,7 +34,6 @@ namespace BlackMisc
         bool CServer::isA(int metaTypeId) const
         {
             if (metaTypeId == qMetaTypeId<CServer>()) { return true; }
-
             return this->CValueObject::isA(metaTypeId);
         }
 
@@ -44,7 +43,6 @@ namespace BlackMisc
         int CServer::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CServer &>(otherBase);
-
             return compare(TupleConverter<CServer>::toTuple(*this), TupleConverter<CServer>::toTuple(other));
         }
 

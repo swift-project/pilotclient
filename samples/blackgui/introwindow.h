@@ -1,7 +1,13 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef SAMPLE_INTROWINDOW_H
 #define SAMPLE_INTROWINDOW_H
@@ -10,17 +16,15 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-namespace Ui
-{
-    class CIntroWindow;
-}
+namespace Ui { class CIntroWindow; }
 
+//! Intro screen
 class CIntroWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    //! \brief Constructor
+    //! Constructor
     explicit CIntroWindow(QWidget *parent = nullptr);
 
     //! Destructor
