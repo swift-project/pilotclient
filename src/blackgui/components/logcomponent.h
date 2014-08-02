@@ -7,10 +7,13 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_LOGCOMPONENT_H
 #define BLACKGUI_LOGCOMPONENT_H
 
 #include "runtimebasedcomponent.h"
+#include "blackmisc/statusmessagelist.h"
 #include <QFrame>
 
 namespace Ui { class CLogComponent; }
@@ -31,6 +34,17 @@ namespace BlackGui
 
             //! Destructor
             ~CLogComponent();
+
+        public slots:
+            //! Append status message to console
+            void appendStatusMessageToConsole(const BlackMisc::CStatusMessage &statusMessage);
+
+            //! Append plain text to console
+            void appendPlainTextToConsole(const QString &text);
+
+            //! Append status message to list
+            void appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage);
+
 
         private:
             Ui::CLogComponent *ui;

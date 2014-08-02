@@ -25,5 +25,22 @@ namespace BlackGui
         {
             delete ui;
         }
+
+        void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
+        {
+            if (statusMessage.isEmpty()) return;
+            this->ui->te_StatusPageConsole->appendHtml(statusMessage.toHtml());
+        }
+
+        void CLogComponent::appendPlainTextToConsole(const QString &text)
+        {
+            this->ui->te_StatusPageConsole->appendPlainText(text);
+        }
+
+        void CLogComponent::appendStatusMessageToList(const CStatusMessage &statusMessage)
+        {
+            if (statusMessage.isEmpty()) return;
+            this->ui->tvp_StatusMessages->insert(statusMessage);
+        }
     }
 }
