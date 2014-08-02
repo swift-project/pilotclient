@@ -37,7 +37,11 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="BlackGui::Views::CNameVariantPairView" name="tvp_LiveData"/>
+     <widget class="BlackGui::Views::CNameVariantPairView" name="tvp_LiveData">
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
     </item>
    </layout>
   </widget>

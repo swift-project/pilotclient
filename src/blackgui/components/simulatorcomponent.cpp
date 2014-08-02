@@ -9,6 +9,7 @@
 
 #include "simulatorcomponent.h"
 #include "ui_simulatorcomponent.h"
+#include "blackmisc/iconlist.h"
 
 namespace BlackGui
 {
@@ -18,11 +19,33 @@ namespace BlackGui
             QTabWidget(parent), ui(new Ui::CSimulatorComponent)
         {
             ui->setupUi(this);
+            this->ui->tvp_LiveData->setIconMode(true);
+            this->addOrUpdateByName("info", "no data yet", CIcons::StandardIconWarning16);
         }
 
         CSimulatorComponent::~CSimulatorComponent()
         {
             delete ui;
+        }
+
+        void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, const CIcon &icon)
+        {
+            this->ui->tvp_LiveData->addOrUpdateByName(name, value, icon);
+        }
+
+        void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, CIcons::IconIndexes iconIndex)
+        {
+            this->addOrUpdateByName(name, value, CIconList::iconForIndex(iconIndex));
+        }
+
+        int CSimulatorComponent::rowCount() const
+        {
+            return this->ui->tvp_LiveData->rowCount();
+        }
+
+        void CSimulatorComponent::clear()
+        {
+            this->ui->tvp_LiveData->clear();
         }
     }
 }

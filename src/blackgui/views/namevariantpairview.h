@@ -26,6 +26,15 @@ namespace BlackGui
         public:
             //! Constructor
             explicit CNameVariantPairView(QWidget *parent = nullptr);
+
+            //! Icon mode
+            void setIconMode(bool withIcon);
+
+            //! Update or add value, simple string version
+            void addOrUpdateByName(const QString &name, const QString &value, const BlackMisc::CIcon &icon = BlackMisc::CIcon());
+
+            //! Remove by name
+            void removeByName(const QString &name);
         };
     }
 }

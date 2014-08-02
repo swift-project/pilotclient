@@ -13,6 +13,7 @@
 #define BLACKGUI_SIMULATORCOMPONENT_H
 
 #include "runtimebasedcomponent.h"
+#include "blackmisc/icon.h"
 #include <QTabWidget>
 
 namespace Ui { class CSimulatorComponent; }
@@ -33,6 +34,18 @@ namespace BlackGui
 
             //! Destructor
             ~CSimulatorComponent();
+
+            //! Simple add or update name / value pair
+            void addOrUpdateByName(const QString &name, const QString &value, const BlackMisc::CIcon &icon);
+
+            //! Simple add or update name / value pair
+            void addOrUpdateByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndexes iconIndex);
+
+            //! Number of entries
+            int rowCount() const;
+
+            //! Clear
+            void clear();
 
         private:
             Ui::CSimulatorComponent *ui;

@@ -30,6 +30,12 @@ namespace BlackMisc
         //! Construct from a base class object.
         CNameVariantPairList(const CSequence<CNameVariantPair> &other);
 
+        //! Contains name
+        bool containsName(const QString &name);
+
+        //! Get name index
+        int getNameRowIndex(const QString &name);
+
         //! CValueObject::toQVariant()
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 

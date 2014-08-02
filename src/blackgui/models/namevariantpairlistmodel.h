@@ -31,10 +31,19 @@ namespace BlackGui
         public:
 
             //! Constructor
-            explicit CNameVariantPairModel(QObject *parent = nullptr);
+            explicit CNameVariantPairModel(bool withIcon, QObject *parent = nullptr);
 
-            //! Constructor
-            explicit CNameVariantPairModel(const BlackMisc::CNameVariantPairList &nameValues, QObject *parent = nullptr);
+            //! Icon on / off
+            void setIconMode(bool withIcon);
+
+            //! Remove by given name
+            void removeByName(const QString &name);
+
+            //! Add our update a value
+            void addOrUpdateByName(const QString &name, const QString &value, const BlackMisc::CIcon &icon);
+
+            //! Current row index of given name
+            int getNameRowIndex(const QString &name);
 
             //! Destructor
             virtual ~CNameVariantPairModel() {}

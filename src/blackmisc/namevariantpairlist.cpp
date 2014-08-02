@@ -25,6 +25,29 @@ namespace BlackMisc
     { }
 
     /*
+     * Name contained?
+     */
+    bool CNameVariantPairList::containsName(const QString &name)
+    {
+        return this->contains(&CNameVariantPair::getName, name);
+    }
+
+    /*
+     * Name index
+     */
+    int CNameVariantPairList::getNameRowIndex(const QString &name)
+    {
+        for (int i = 0; i < this->size(); i++)
+        {
+            if ((*this)[i].getName() == name)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /*
      * Register metadata
      */
     void CNameVariantPairList::registerMetadata()
