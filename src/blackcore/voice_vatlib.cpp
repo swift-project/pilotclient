@@ -26,16 +26,9 @@ namespace BlackCore
         m_micTestResult(Cvatlib_Voice_Simple::agc_Ok),
         m_isAudioLoopbackEnabled(false),
         m_temporaryUserRoomIndex(CVoiceVatlib::InvalidRoomIndex),
-        m_lockVoiceRooms(QReadWriteLock::Recursive),
-        m_lockCallsigns(QReadWriteLock::Recursive),
-        m_lockCurrentOutputDevice(QReadWriteLock::Recursive),
-        m_lockCurrentInputDevice(QReadWriteLock::Recursive),
-        m_lockDeviceList(QReadWriteLock::Recursive),
-        m_lockOutputEnabled(QReadWriteLock::Recursive),
-        m_lockSquelch(QReadWriteLock::Recursive),
-        m_lockTestResult(QReadWriteLock::Recursive),
-        m_lockMyCallsign(QReadWriteLock::Recursive),
-        m_lockConnectionStatus(QReadWriteLock::Recursive),
+        m_lockCurrentOutputDevice(QMutex::Recursive),
+        m_lockCurrentInputDevice(QMutex::Recursive),
+        m_lockDeviceList(QMutex::Recursive)
     {
         try
         {
@@ -75,7 +68,7 @@ namespace BlackCore
      */
     const BlackMisc::Audio::CAudioDeviceList &CVoiceVatlib::audioDevices() const
     {
-        QReadLocker lockForReading(&m_lockDeviceList);
+        QMutexLocker lockForReading(&m_lockDeviceList);
         return m_devices;
     }
 
@@ -102,7 +95,7 @@ namespace BlackCore
      */
     CAudioDevice CVoiceVatlib::getCurrentOutputDevice() const
     {
-        QReadLocker lockForReading(&m_lockCurrentOutputDevice);
+        QMutexLocker locker(&m_lockCurrentOutputDevice);
         return m_currentOutputDevice;
     }
 
@@ -111,7 +104,7 @@ namespace BlackCore
      */
     CAudioDevice CVoiceVatlib::getCurrentInputDevice() const
     {
-        QReadLocker lockForReading(&m_lockCurrentInputDevice);
+        QMutexLocker locker(&m_lockCurrentInputDevice);
         return m_currentInputDevice;
     }
 
@@ -138,7 +131,7 @@ namespace BlackCore
             {
                 qWarning() << "Input device hit a fatal error";
             }
-            QWriteLocker lockForWriting(&m_lockCurrentInputDevice);
+            QMutexLocker writeLocker(&m_lockCurrentInputDevice);
             this->m_currentInputDevice = device;
         }
         catch (...)
@@ -168,7 +161,7 @@ namespace BlackCore
             {
                 qWarning() << "Output device hit a fatal error";
             }
-            QWriteLocker lockForWriting(&m_lockCurrentOutputDevice);
+            QMutexLocker writeLocker(&m_lockCurrentOutputDevice);
             this->m_currentOutputDevice = device;
         }
         catch (...)
@@ -298,7 +291,6 @@ namespace BlackCore
      */
     float CVoiceVatlib::inputSquelch() const
     {
-        QReadLocker lockForReading(&m_lockSquelch);
         return m_inputSquelch;
     }
 
@@ -307,7 +299,6 @@ namespace BlackCore
      */
     qint32 CVoiceVatlib::micTestResult() const
     {
-        QReadLocker lockForReading(&m_lockTestResult);
         return m_micTestResult;
     }
 
@@ -318,7 +309,6 @@ namespace BlackCore
     {
         QString result;
 
-        QReadLocker lockForReading(&m_lockTestResult);
         switch (m_micTestResult)
         {
         case Cvatlib_Voice_Simple::agc_Ok:
@@ -573,7 +563,6 @@ namespace BlackCore
         try
         {
             m_vatlib->EndFindSquelch();
-            QWriteLocker lockForWriting(&m_lockSquelch);
             m_inputSquelch = m_vatlib->GetInputSquelch();
             emit squelchTestFinished();
         }
@@ -590,7 +579,6 @@ namespace BlackCore
 
         try
         {
-            QWriteLocker lockForWriting(&m_lockTestResult);
             m_micTestResult = m_vatlib->EndMicTest();
             emit micTestFinished();
         }
@@ -715,7 +703,7 @@ namespace BlackCore
     {
         Q_UNUSED(obj)
         BlackMisc::Audio::CAudioDevice inputDevice(BlackMisc::Audio::CAudioDevice::InputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDevice::InputDevice), QString(name));
-        QWriteLocker lockForWriting(&(cbvar_cast_voice(cbVar)->m_lockDeviceList));
+        QMutexLocker lockForWriting(&(cbvar_cast_voice(cbVar)->m_lockDeviceList));
         cbvar_cast_voice(cbVar)->m_devices.push_back(inputDevice);
     }
 
@@ -726,7 +714,7 @@ namespace BlackCore
     {
         Q_UNUSED(obj)
         BlackMisc::Audio::CAudioDevice outputDevice(BlackMisc::Audio::CAudioDevice::OutputDevice, cbvar_cast_voice(cbVar)->m_devices.count(BlackMisc::Audio::CAudioDevice::OutputDevice), QString(name));
-        QWriteLocker lockForWriting(&(cbvar_cast_voice(cbVar)->m_lockDeviceList));
+        QMutexLocker lockForWriting(&(cbvar_cast_voice(cbVar)->m_lockDeviceList));
         cbvar_cast_voice(cbVar)->m_devices.push_back(outputDevice);
     }
 

@@ -18,6 +18,7 @@
 #include <QString>
 #include <QMutex>
 #include <QReadWriteLock>
+#include <atomic>
 #include <utility>
 
 #ifdef Q_OS_WIN
@@ -57,6 +58,7 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+
         /*!
          * \brief Constructor
          * \param parent
@@ -238,8 +240,8 @@ namespace BlackCore
         BlackMisc::Audio::CAudioDeviceList m_devices; /*!< in and output devices */
         BlackMisc::Audio::CAudioDevice m_currentOutputDevice;
         BlackMisc::Audio::CAudioDevice m_currentInputDevice;
-        float m_inputSquelch;
-        Cvatlib_Voice_Simple::agc m_micTestResult;
+        std::atomic<float> m_inputSquelch;
+        std::atomic<Cvatlib_Voice_Simple::agc> m_micTestResult;
         QMap <ComUnit, BlackMisc::Aviation::CCallsignList> m_voiceRoomCallsigns; /*!< voice room callsigns */
         BlackMisc::Aviation::CCallsignList m_temporaryVoiceRoomCallsigns; /*!< temp. storage of voice rooms during update */
         QMap<ComUnit, bool> m_outputEnabled; /*!< output enabled, basically a mute flag */
@@ -253,17 +255,9 @@ namespace BlackCore
         const static qint32 InvalidRoomIndex = -1; /*! marks invalid room */
 
         // Thread serialization
-        mutable QReadWriteLock m_lockVoiceRooms;
-        mutable QReadWriteLock m_lockCallsigns;
-        mutable QReadWriteLock m_lockCurrentOutputDevice;
-        mutable QReadWriteLock m_lockCurrentInputDevice;
-        mutable QReadWriteLock m_lockDeviceList;
-        mutable QReadWriteLock m_lockOutputEnabled;
-        mutable QReadWriteLock m_lockSquelch;
-        mutable QReadWriteLock m_lockTestResult;
-        mutable QReadWriteLock m_lockMyCallsign;
-        mutable QReadWriteLock m_lockConnectionStatus;
-
+        mutable QMutex m_lockCurrentOutputDevice;
+        mutable QMutex m_lockCurrentInputDevice;
+        mutable QMutex m_lockDeviceList;
     };
 
 } // namespace
