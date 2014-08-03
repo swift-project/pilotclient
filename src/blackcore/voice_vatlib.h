@@ -231,7 +231,7 @@ namespace BlackCore
         void enableAudio(const ComUnit comUnit);
         void changeConnectionStatus(ComUnit comUnit, ConnectionStatus newStatus);
 
-        TVatlibPointer m_voice;
+        TVatlibPointer m_vatlib;
         // QScopedPointer<QAudioOutput> m_audioOutput; #227
         BlackMisc::Aviation::CCallsign m_aircraftCallsign; /*!< own callsign to join voice rooms */
         BlackMisc::Audio::CVoiceRoomList m_voiceRooms;
