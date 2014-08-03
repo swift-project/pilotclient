@@ -9,29 +9,29 @@
 
 //! \file
 
-#ifndef BLACKGUI_INFOBARSTATUS_H
-#define BLACKGUI_INFOBARSTATUS_H
+#ifndef BLACKGUI_INFOBARSTATUSCOMPONENT_H
+#define BLACKGUI_INFOBARSTATUSCOMPONENT_H
 
 #include "runtimebasedcomponent.h"
 #include "../led.h"
 #include <QFrame>
 
-namespace Ui { class CInfoBarStatus; }
+namespace Ui { class CInfoBarStatusComponent; }
 namespace BlackGui
 {
     namespace Components
     {
         //! Info bar displaying status (Network, Simulator, DBus)
-        class CInfoBarStatus : public QFrame, public CRuntimeBasedComponent
+        class CInfoBarStatusComponent : public QFrame, public CRuntimeBasedComponent
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            explicit CInfoBarStatus(QWidget *parent = nullptr);
+            explicit CInfoBarStatusComponent(QWidget *parent = nullptr);
 
             //!Constructor
-            ~CInfoBarStatus();
+            ~CInfoBarStatusComponent();
 
             //! Init the LEDs
             void initLeds();
@@ -50,7 +50,7 @@ namespace BlackGui
             virtual void runtimeHasBeenSet() override;
 
         private:
-            Ui::CInfoBarStatus *ui;
+            Ui::CInfoBarStatusComponent *ui;
 
         private slots:
             //! Simulator connection has been changed

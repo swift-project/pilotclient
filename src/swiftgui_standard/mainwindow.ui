@@ -610,7 +610,7 @@
    <attribute name="dockWidgetArea">
     <number>4</number>
    </attribute>
-   <widget class="BlackGui::Components::CInfoBarStatus" name="comp_InfoBarStatus"/>
+   <widget class="BlackGui::Components::CInfoBarStatusComponent" name="comp_InfoBarStatus"/>
   </widget>
   <action name="menu_TestLocationsEDDF">
    <property name="text">
@@ -678,15 +678,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CInfoBarStatus</class>
-   <extends>QWidget</extends>
-   <header>blackgui/components/infobarstatus.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::CDockWidgetInfoBar</class>
    <extends>QDockWidget</extends>
    <header>blackgui/dockwidgetinfobar.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CInfoBarStatusComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/infobarstatuscomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

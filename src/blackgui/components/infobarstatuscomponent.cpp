@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "infobarstatus.h"
-#include "ui_infobarstatus.h"
+#include "infobarstatuscomponent.h"
+#include "ui_infobarstatuscomponent.h"
 #include "blackmisc/icons.h"
 
 #include <QPoint>
@@ -23,22 +23,22 @@ namespace BlackGui
 {
     namespace Components
     {
-        CInfoBarStatus::CInfoBarStatus(QWidget *parent) :
-            QFrame(parent), ui(new Ui::CInfoBarStatus)
+        CInfoBarStatusComponent::CInfoBarStatusComponent(QWidget *parent) :
+            QFrame(parent), ui(new Ui::CInfoBarStatusComponent)
         {
             ui->setupUi(this);
             this->initLeds();
 
             this->ui->lbl_Audio->setContextMenuPolicy(Qt::CustomContextMenu);
-            connect(this->ui->lbl_Audio, &QLabel::customContextMenuRequested, this, &CInfoBarStatus::ps_customAudioContextMenuRequested);
+            connect(this->ui->lbl_Audio, &QLabel::customContextMenuRequested, this, &CInfoBarStatusComponent::ps_customAudioContextMenuRequested);
         }
 
-        CInfoBarStatus::~CInfoBarStatus()
+        CInfoBarStatusComponent::~CInfoBarStatusComponent()
         {
             delete ui;
         }
 
-        void CInfoBarStatus::initLeds()
+        void CInfoBarStatusComponent::initLeds()
         {
             CLed::LedShapes shape = CLed::Circle;
             this->ui->led_DBus->setValues(CLed::Yellow, CLed::Black, shape, "DBus connected", "DBus disconnected", 14);
@@ -50,17 +50,17 @@ namespace BlackGui
             this->ui->led_Audio->setValues(CLed::Yellow, CLed::Red, shape, "On", "Muted", 18);
         }
 
-        void CInfoBarStatus::setDBusStatus(bool dbus)
+        void CInfoBarStatusComponent::setDBusStatus(bool dbus)
         {
             this->ui->led_DBus->setValue(dbus);
         }
 
-        void CInfoBarStatus::setDBusTooltip(const QString &tooltip)
+        void CInfoBarStatusComponent::setDBusTooltip(const QString &tooltip)
         {
             this->ui->led_DBus->setOnToolTip(tooltip);
         }
 
-        void CInfoBarStatus::setVolume(int volume)
+        void CInfoBarStatusComponent::setVolume(int volume)
         {
             if (volume < 1)
             {
@@ -72,7 +72,7 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatus::runtimeHasBeenSet()
+        void CInfoBarStatusComponent::runtimeHasBeenSet()
         {
             Q_ASSERT(getIContextSimulator());
             Q_ASSERT(getIContextAudio());
@@ -80,12 +80,12 @@ namespace BlackGui
 
             if (this->getIContextSimulator())
             {
-                connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &CInfoBarStatus::ps_simulatorConnectionChanged);
+                connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &CInfoBarStatusComponent::ps_simulatorConnectionChanged);
             }
 
             if (this->getIContextNetwork())
             {
-                connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatus::ps_networkConnectionChanged);
+                connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatusComponent::ps_networkConnectionChanged);
             }
 
             if (this->getIContextApplication())
@@ -101,12 +101,12 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatus::ps_simulatorConnectionChanged(bool connected)
+        void CInfoBarStatusComponent::ps_simulatorConnectionChanged(bool connected)
         {
             this->ui->led_Simulator->setValue(connected);
         }
 
-        void CInfoBarStatus::ps_networkConnectionChanged(uint from, uint to, const QString &message)
+        void CInfoBarStatusComponent::ps_networkConnectionChanged(uint from, uint to, const QString &message)
         {
             INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
             INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
@@ -133,7 +133,7 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatus::ps_customAudioContextMenuRequested(const QPoint &position)
+        void CInfoBarStatusComponent::ps_customAudioContextMenuRequested(const QPoint &position)
         {
             QWidget *sender = qobject_cast<QWidget *>(QWidget::sender());
             Q_ASSERT(sender);
