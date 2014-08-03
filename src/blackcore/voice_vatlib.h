@@ -11,13 +11,14 @@
 #include "../blackmisc/audiodevicelist.h"
 #include "../blackmisc/nwuserlist.h"
 #include "../blackmisc/avcallsignlist.h"
+#include "../blackmisc/sharedlockablepointer.h"
 
-#include <QScopedPointer>
 #include <QMap>
 #include <QSet>
 #include <QString>
 #include <QMutex>
 #include <QReadWriteLock>
+#include <utility>
 
 #ifdef Q_OS_WIN
 #ifndef NOMINMAX
@@ -26,8 +27,28 @@
 #include <Windows.h>
 #endif
 
+//! \file
+
 namespace BlackCore
 {
+    /*!
+     * \brief Deleter
+     */
+    struct Cvatlib_Voice_Simple_Deleter
+    {
+        /*!
+         * \brief Cleanup
+         * \param pointer
+         */
+        static inline void cleanup(Cvatlib_Voice_Simple *pointer)
+        {
+            if (pointer) pointer->Destroy();
+        }
+    };
+
+    //! Shared lockable pointer to Cvatlib_Voice_Simple
+    typedef BlackMisc::SharedLockablePtr<Cvatlib_Voice_Simple> TVatlibPointer;
+
     /*!
      * Vatlib implementation of the IVoice interface.
      */
@@ -210,22 +231,7 @@ namespace BlackCore
         void enableAudio(const ComUnit comUnit);
         void changeConnectionStatus(ComUnit comUnit, ConnectionStatus newStatus);
 
-        /*!
-         * \brief Deleter
-         */
-        struct Cvatlib_Voice_Simple_Deleter
-        {
-            /*!
-             * \brief Cleanup
-             * \param pointer
-             */
-            static inline void cleanup(Cvatlib_Voice_Simple *pointer)
-            {
-                if (pointer) pointer->Destroy();
-            }
-        };
-
-        QScopedPointer<Cvatlib_Voice_Simple, Cvatlib_Voice_Simple_Deleter> m_voice;
+        TVatlibPointer m_voice;
         // QScopedPointer<QAudioOutput> m_audioOutput; #227
         BlackMisc::Aviation::CCallsign m_aircraftCallsign; /*!< own callsign to join voice rooms */
         BlackMisc::Audio::CVoiceRoomList m_voiceRooms;
@@ -257,7 +263,6 @@ namespace BlackCore
         mutable QReadWriteLock m_lockTestResult;
         mutable QReadWriteLock m_lockMyCallsign;
         mutable QReadWriteLock m_lockConnectionStatus;
-        mutable QMutex m_mutexVatlib;
 
     };
 

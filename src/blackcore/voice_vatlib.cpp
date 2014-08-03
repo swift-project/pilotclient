@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QTimer>
 
+#include <mutex>
+
 using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
@@ -18,7 +20,7 @@ namespace BlackCore
      */
     CVoiceVatlib::CVoiceVatlib(QObject *parent) :
         IVoice(parent),
-        m_voice(nullptr),
+        m_voice(Cvatlib_Voice_Simple::Create(), Cvatlib_Voice_Simple_Deleter::cleanup),
         // m_audioOutput(nullptr), // removed #227
         m_inputSquelch(-1),
         m_micTestResult(Cvatlib_Voice_Simple::agc_Ok),
@@ -34,14 +36,12 @@ namespace BlackCore
         m_lockTestResult(QReadWriteLock::Recursive),
         m_lockMyCallsign(QReadWriteLock::Recursive),
         m_lockConnectionStatus(QReadWriteLock::Recursive),
-        m_mutexVatlib(QMutex::Recursive)
     {
         try
         {
             // we use reset here until issue #277 is resolved
             // easier to find root cause
             // m_audioOutput.reset(new QAudioOutput());
-            m_voice.reset(Cvatlib_Voice_Simple::Create());
             m_voice->Setup(true, 3290, 2, 1, onRoomStatusUpdate, this);
             m_voice->GetInputDevices(onInputHardwareDeviceReceived, this);
             m_voice->GetOutputDevices(onOutputHardwareDeviceReceived, this);
@@ -120,7 +120,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::setInputDevice(const BlackMisc::Audio::CAudioDevice &device)
     {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
+        std::lock_guard<TVatlibPointer> locker(m_voice);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         if (!device.isValid())
         {
@@ -152,7 +152,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::setOutputDevice(const BlackMisc::Audio::CAudioDevice &device)
     {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
+        std::lock_guard<TVatlibPointer> locker(m_voice);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         if (!device.isValid())
         {
@@ -237,7 +237,7 @@ namespace BlackCore
         if (enable == m_isAudioLoopbackEnabled)
             return;
 
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
+        std::lock_guard<TVatlibPointer> locker(m_voice);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
         try
         {
@@ -257,7 +257,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::runSquelchTest()
     {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
+        std::lock_guard<TVatlibPointer> locker(m_voice);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
         try
@@ -278,7 +278,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::runMicrophoneTest()
     {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
+        std::lock_guard<TVatlibPointer> locker(m_voice);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
         try
@@ -549,7 +549,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::timerEvent(QTimerEvent *)
     {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
+        std::lock_guard<TVatlibPointer> locker(m_voice);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
         try
@@ -567,7 +567,7 @@ namespace BlackCore
      */
     void CVoiceVatlib::onEndFindSquelch()
     {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
+        std::lock_guard<TVatlibPointer> locker(m_voice);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
         try
@@ -585,7 +585,7 @@ namespace BlackCore
 
     void CVoiceVatlib::onEndMicTest()
     {
-        QMutexLocker lockerVatlib(&m_mutexVatlib);
+        std::lock_guard<TVatlibPointer> locker(m_voice);
         Q_ASSERT_X(m_voice->IsValid() && m_voice->IsSetup(), "CVoiceVatlib", "Cvatlib_Voice_Simple invalid or not setup!");
 
         try
