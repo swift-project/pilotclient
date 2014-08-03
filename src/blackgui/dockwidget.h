@@ -50,6 +50,9 @@ namespace BlackGui
         //! Margins when widget is floating
         void setMarginsWhenDocked(int left, int top, int right, int bottom) { this->m_marginsWhenDocked = QMargins(left, top, right, bottom); }
 
+        //! Auto adjust size when floating
+        void setAutoAdjustWhenFloating(bool autoAdjust) { this->m_autoAdjustWhenFloating = autoAdjust; }
+
         //! Window title backup
         const QString &windowTitleBackup() const { return this->m_windowTitleBackup; }
 
@@ -58,8 +61,6 @@ namespace BlackGui
 
         //! Show the window title when docked
         void showTitleWhenDocked(bool show);
-
-
 
     public slots:
         //! Toggle floating
@@ -100,6 +101,7 @@ namespace BlackGui
         QMargins m_marginsWhenDocked;   //!< Offsets when window is floating
         QString m_windowTitleBackup;    //!< original title, even if the widget title is deleted for layout purposes
         bool m_windowTitleWhenDocked = true;
+        bool m_autoAdjustWhenFloating = true;
 
         //! Empty widget with no size
         void initTitleBarWidgets();

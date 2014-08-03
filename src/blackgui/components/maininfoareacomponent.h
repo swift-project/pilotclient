@@ -121,7 +121,8 @@ namespace BlackGui
             QList<CDockWidgetInfoArea *> m_dockableWidgets ;
             QTabBar *m_tabBar = nullptr;
             bool m_showTabTexts = true;
-            bool m_infoAreaFloating = false;       //!< whole info area floating
+            bool m_infoAreaFloating = false; //!< whole info area floating
+            bool m_autoAdjustFloatingWidgets = true; //!< auto ajdust the floating widgets
 
             //! Tabify the widgets
             void tabifyAllWidgets();
@@ -180,6 +181,9 @@ namespace BlackGui
 
             //! Show the tab texts, or just the icons
             void ps_showTabTexts(bool show);
+
+            //! Toggle checkable setting
+            void ps_toggleAutoAdjustFloatingWidget(bool adjust);
 
             //! Tab position for docked widgets tab
             //! \remarks North or South working, East / West not

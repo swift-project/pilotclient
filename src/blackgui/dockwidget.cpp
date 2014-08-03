@@ -118,6 +118,9 @@ namespace BlackGui
             }
             this->setNullTitleBar();
             this->setContentsMargins(this->m_marginsWhenFloating);
+            if (this->m_autoAdjustWhenFloating) {
+                this->adjustSize();
+            }
         }
         else
         {

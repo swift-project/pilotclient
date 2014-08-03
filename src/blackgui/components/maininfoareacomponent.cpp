@@ -124,6 +124,17 @@ namespace BlackGui
                 menu->addAction(showMenuText);
                 connect(showMenuText, &QAction::toggled, this, &CMainInfoAreaComponent::ps_showTabTexts);
 
+                // auto adjust floating widgets
+                QAction *autoAdjustFloatingWidget = new QAction(menu);
+                autoAdjustFloatingWidget->setObjectName("AutoAdjustFloatingWidgets");
+                autoAdjustFloatingWidget->setIconText("Auto adjust floating widgets");
+                autoAdjustFloatingWidget->setIcon(CIcons::resize16());
+                autoAdjustFloatingWidget->setCheckable(true);
+                autoAdjustFloatingWidget->setChecked(this->m_autoAdjustFloatingWidgets);
+                menu->addAction(autoAdjustFloatingWidget);
+                connect(autoAdjustFloatingWidget, &QAction::toggled, this, &CMainInfoAreaComponent::ps_toggleAutoAdjustFloatingWidget);
+
+                // tab bar position
                 menu->addAction(CIcons::dockBottom16(), "Toogle tabbar position", this, SLOT(ps_toggleTabBarPosition()));
             }
         }
@@ -503,6 +514,18 @@ namespace BlackGui
             {
                 CDockWidgetInfoArea *dw = (*i);
                 dw->showTitleWhenDocked(show);
+            }
+        }
+
+        void CMainInfoAreaComponent::ps_toggleAutoAdjustFloatingWidget(bool adjust)
+        {
+            if (adjust == this->m_autoAdjustFloatingWidgets) return;
+            this->m_autoAdjustFloatingWidgets = adjust;
+            QList<CDockWidgetInfoArea *>::iterator i;
+            for (i = this->m_dockableWidgets.begin(); i != this->m_dockableWidgets.end(); ++i)
+            {
+                CDockWidgetInfoArea *dw = (*i);
+                dw->setAutoAdjustWhenFloating(adjust);
             }
         }
 

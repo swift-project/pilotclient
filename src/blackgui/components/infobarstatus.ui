@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Info status bar</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../../blackmisc/blackmisc.qrc">
+    <normaloff>:/own/icons/own/swift/swift24.png</normaloff>:/own/icons/own/swift/swift24.png</iconset>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -164,6 +168,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

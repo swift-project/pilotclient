@@ -26,7 +26,7 @@ namespace BlackGui
         // Dockable widget's context menu
         CDockWidget::addToContextMenu(contextMenu);
 
-        // from main component
+        // from main component (info area)
         contextMenu->addSeparator();
         mainWidget->addToContextMenu(contextMenu);
     }
