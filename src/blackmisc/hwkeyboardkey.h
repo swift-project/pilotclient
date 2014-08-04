@@ -80,9 +80,6 @@ namespace BlackMisc
             //! Register metadata
             static void registerMetadata();
 
-            //! \copydoc TupleConverter<>::jsonMembers()
-            static const QStringList &jsonMembers();
-
             //! Equal?
             bool operator ==(const CKeyboardKey &other) const;
 

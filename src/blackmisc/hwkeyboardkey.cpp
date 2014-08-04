@@ -26,19 +26,11 @@ namespace BlackMisc
         }
 
         /*
-         * Members
-         */
-        const QStringList &CKeyboardKey::jsonMembers()
-        {
-            return TupleConverter<CKeyboardKey>::jsonMembers();
-        }
-
-        /*
          * To JSON
          */
         QJsonObject CKeyboardKey::toJson() const
         {
-            return BlackMisc::serializeJson(CKeyboardKey::jsonMembers(), TupleConverter<CKeyboardKey>::toTuple(*this));
+            return BlackMisc::serializeJson(TupleConverter<CKeyboardKey>::toMetaTuple(*this));
         }
 
         /*
@@ -46,7 +38,7 @@ namespace BlackMisc
          */
         void CKeyboardKey::fromJson(const QJsonObject &json)
         {
-            BlackMisc::deserializeJson(json, CKeyboardKey::jsonMembers(), TupleConverter<CKeyboardKey>::toTuple(*this));
+            BlackMisc::deserializeJson(json, TupleConverter<CKeyboardKey>::toMetaTuple(*this));
         }
 
 
@@ -148,7 +140,7 @@ namespace BlackMisc
         int CKeyboardKey::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CKeyboardKey &>(otherBase);
-            return compare(TupleConverter<CKeyboardKey>::toTuple(*this), TupleConverter<CKeyboardKey>::toTuple(other));
+            return compare(TupleConverter<CKeyboardKey>::toMetaTuple(*this), TupleConverter<CKeyboardKey>::toMetaTuple(other));
         }
 
         /*
@@ -156,7 +148,7 @@ namespace BlackMisc
          */
         void CKeyboardKey::marshallToDbus(QDBusArgument &argument) const
         {
-            argument << TupleConverter<CKeyboardKey>::toTuple(*this);
+            argument << TupleConverter<CKeyboardKey>::toMetaTuple(*this);
         }
 
         /*
@@ -164,7 +156,7 @@ namespace BlackMisc
          */
         void CKeyboardKey::unmarshallFromDbus(const QDBusArgument &argument)
         {
-            argument >> TupleConverter<CKeyboardKey>::toTuple(*this);
+            argument >> TupleConverter<CKeyboardKey>::toMetaTuple(*this);
         }
 
         /*
@@ -172,7 +164,7 @@ namespace BlackMisc
          */
         uint CKeyboardKey::getValueHash() const
         {
-            return qHash(TupleConverter<CKeyboardKey>::toTuple(*this));
+            return qHash(TupleConverter<CKeyboardKey>::toMetaTuple(*this));
         }
 
         /*
@@ -181,7 +173,7 @@ namespace BlackMisc
         bool CKeyboardKey::operator ==(const CKeyboardKey &other) const
         {
             if (this == &other) return true;
-            return TupleConverter<CKeyboardKey>::toTuple(*this) == TupleConverter<CKeyboardKey>::toTuple(other);
+            return TupleConverter<CKeyboardKey>::toMetaTuple(*this) == TupleConverter<CKeyboardKey>::toMetaTuple(other);
         }
 
         /*
