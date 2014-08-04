@@ -5,7 +5,7 @@ include (../../build.pri)
 QT       += core dbus network xml multimedia gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = sample_blackcore
+TARGET = swiftcore
 TEMPLATE = app
 
 CONFIG   += console

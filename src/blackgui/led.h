@@ -21,7 +21,6 @@
 
 #include <Qt>
 #include <QWidget>
-#include <QtDesigner/QDesignerExportWidget>
 
 class QColor;
 class QSvgRenderer;

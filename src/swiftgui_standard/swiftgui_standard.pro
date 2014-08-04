@@ -4,7 +4,7 @@ include (../../build.pri)
 QT       += core dbus gui svg network xml multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = sample_blackgui
+TARGET = swiftgui_std
 TEMPLATE = app
 
 SOURCES += *.cpp

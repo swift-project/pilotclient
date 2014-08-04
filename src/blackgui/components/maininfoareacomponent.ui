@@ -42,8 +42,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Aircrafts">
    <property name="minimumSize">
     <size>
-     <width>149</width>
-     <height>80</height>
+     <width>127</width>
+     <height>38</height>
     </size>
    </property>
    <property name="features">
@@ -83,6 +83,12 @@
      </property>
      <item>
       <widget class="BlackGui::Components::CAircraftComponent" name="comp_Aircrafts">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -138,6 +144,12 @@
      </property>
      <item>
       <widget class="BlackGui::Components::CAtcStationComponent" name="comp_AtcStations">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -177,7 +189,14 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CUserComponent" name="comp_Users"/>
+      <widget class="BlackGui::Components::CUserComponent" name="comp_Users">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -210,7 +229,14 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CTextMessageComponent" name="comp_TextMessages"/>
+      <widget class="BlackGui::Components::CTextMessageComponent" name="comp_TextMessages">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -243,7 +269,14 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CSimulatorComponent" name="comp_Simulator"/>
+      <widget class="BlackGui::Components::CSimulatorComponent" name="comp_Simulator">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -276,7 +309,14 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CFlightPlanComponent" name="comp_FlightPlan"/>
+      <widget class="BlackGui::Components::CFlightPlanComponent" name="comp_FlightPlan">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -352,7 +392,14 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QTabWidget" name="comp_Mappings"/>
+      <widget class="QTabWidget" name="comp_Mappings">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -425,7 +472,14 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CSettingsComponent" name="comp_Settings"/>
+      <widget class="BlackGui::Components::CSettingsComponent" name="comp_Settings">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
