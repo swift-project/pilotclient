@@ -41,12 +41,4 @@ namespace BlackInput
         return m_instance;
     }
 
-    bool operator==(IKeyboard::RegistrationHandle const &lhs, IKeyboard::RegistrationHandle const &rhs)
-    {
-        if ((lhs.m_key == rhs.m_key) && (lhs.m_receiver == rhs.m_receiver))
-            return true;
-        else
-            return false;
-    }
-
 } // BlackInput

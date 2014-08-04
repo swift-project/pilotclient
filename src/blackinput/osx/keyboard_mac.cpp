@@ -25,6 +25,11 @@ namespace BlackInput
         return true;
     }
 
+    void CKeyboardMac::setKeysToMonitor(const CKeyboardKeyList &keylist)
+    {
+        m_listMonitoredKeys = keylist;
+    }
+
     void CKeyboardMac::startCapture(bool ignoreNextKey)
     {
         m_mode = Mode_Capture;
@@ -32,59 +37,9 @@ namespace BlackInput
         m_pressedKey.setKeyObject(CKeyboardKey());
     }
 
-    int CKeyboardMac::sizeOfRegisteredFunctions() const
     {
-        int size = 0;
-        foreach (QList<IKeyboard::RegistrationHandle> functions, m_registeredFunctions)
-        {
-            size += functions.size();
-        }
-        return size;
-    }
-
-    void CKeyboardMac::triggerKey(const CKeyboardKey key, bool isPressed)
-    {
-        callFunctionsBy(key, isPressed);
-    }
-
-    IKeyboard::RegistrationHandle CKeyboardMac::registerHotkeyImpl(BlackMisc::Hardware::CKeyboardKey key, QObject *receiver, std::function<void(bool)> function)
-    {
-        IKeyboard::RegistrationHandle handle;
-
-        // Workaround: Remove key function. Otherwise operator== will not
-        // work when we create the key value object by pressed keys
-        key.setFunction(BlackMisc::Hardware::CKeyboardKey::HotkeyNone);
-
-        if (!key.hasModifier() && !key.hasKey())
-        {
-            return handle;
-        }
-
-        if (receiver == nullptr)
-            return handle;
-
-        handle.m_key = key;
-        handle.m_receiver = receiver;
-        handle.function = function;
-
-        QList<IKeyboard::RegistrationHandle> functions = m_registeredFunctions.value(key);
-
-        functions.append(handle);
-        m_registeredFunctions.insert(key, functions);
-
-        return handle;
-    }
-
-    void CKeyboardMac::unregisterHotkeyImpl(const IKeyboard::RegistrationHandle &handle)
-    {
-        QList<IKeyboard::RegistrationHandle> functions = m_registeredFunctions.value(handle.m_key);
-        functions.removeAll(handle);
-        m_registeredFunctions.insert(handle.m_key, functions);
-    }
-
-    void CKeyboardMac::unregisterAllHotkeysImpl()
-    {
-        m_registeredFunctions.clear();
+        if(!isPressed) emit keyUp(key);
+        else emit keyDown(key);
     }
 
     void CKeyboardMac::sendCaptureNotification(const CKeyboardKey &key, bool isFinished)
@@ -93,18 +48,5 @@ namespace BlackInput
             emit keySelectionFinished(key);
         else
             emit keySelectionChanged(key);
-    }
-
-    void CKeyboardMac::callFunctionsBy(const CKeyboardKey &key, bool isPressed)
-    {
-        QList<IKeyboard::RegistrationHandle> functionHandles = m_registeredFunctions.value(key);
-        foreach (IKeyboard::RegistrationHandle functionHandle, functionHandles)
-        {
-            if (functionHandle.m_receiver.isNull())
-            {
-                continue;
-            }
-            functionHandle.function(isPressed);
-        }
     }
 }

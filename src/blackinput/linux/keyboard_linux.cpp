@@ -38,6 +38,11 @@ namespace BlackInput
         return true;
     }
 
+    void CKeyboardLinux::setKeysToMonitor(const CKeyboardKeyList &keylist)
+    {
+        m_listMonitoredKeys = keylist;
+    }
+
     void CKeyboardLinux::startCapture(bool ignoreNextKey)
     {
         m_mode = Mode_Capture;
@@ -45,63 +50,9 @@ namespace BlackInput
         m_pressedKey.setKeyObject(CKeyboardKey());
     }
 
-    int CKeyboardLinux::sizeOfRegisteredFunctions() const
     {
-        int size = 0;
-        foreach (QList<IKeyboard::RegistrationHandle> functions, m_registeredFunctions)
-        {
-            size += functions.size();
-        }
-        return size;
-    }
-
-    void CKeyboardLinux::triggerKey(const CKeyboardKey key, bool isPressed)
-    {
-        callFunctionsBy(key, isPressed);
-    }
-
-    IKeyboard::RegistrationHandle CKeyboardLinux::registerHotkeyImpl(BlackMisc::Hardware::CKeyboardKey key, QObject *receiver, std::function<void(bool)> function)
-    {
-        IKeyboard::RegistrationHandle handle;
-
-        // Workaround: Remove key function. Otherwise operator== will not
-        // work when we create the key value object by pressed keys
-        key.setFunction(BlackMisc::Hardware::CKeyboardKey::HotkeyNone);
-
-        if (!key.hasModifier() && !key.hasKey())
-        {
-            return handle;
-        }
-
-        if (receiver == nullptr)
-            return handle;
-
-        // FIXME. Remove virtual key code, because the one we receive from Qt is different to the linux native code.
-        // If we don't remove it, the hash lookup fails later.
-        key.setNativeVirtualKey(0);
-
-        handle.m_key = key;
-        handle.m_receiver = receiver;
-        handle.function = function;
-
-        QList<IKeyboard::RegistrationHandle> functions = m_registeredFunctions.value(key);
-
-        functions.append(handle);
-        m_registeredFunctions.insert(key, functions);
-
-        return handle;
-    }
-
-    void CKeyboardLinux::unregisterHotkeyImpl(const IKeyboard::RegistrationHandle &handle)
-    {
-        QList<IKeyboard::RegistrationHandle> functions = m_registeredFunctions.value(handle.m_key);
-        functions.removeAll(handle);
-        m_registeredFunctions.insert(handle.m_key, functions);
-    }
-
-    void CKeyboardLinux::unregisterAllHotkeysImpl()
-    {
-        m_registeredFunctions.clear();
+        if(!isPressed) emit keyUp(key);
+        else emit keyDown(key);
     }
 
     void CKeyboardLinux::deviceDirectoryChanged(const QString &dir)
@@ -164,19 +115,6 @@ namespace BlackInput
             emit keySelectionFinished(key);
         else
             emit keySelectionChanged(key);
-    }
-
-    void CKeyboardLinux::callFunctionsBy(const CKeyboardKey &key, bool isPressed)
-    {
-        QList<IKeyboard::RegistrationHandle> functionHandles = m_registeredFunctions.value(key);
-        foreach (IKeyboard::RegistrationHandle functionHandle, functionHandles)
-        {
-            if (functionHandle.m_receiver.isNull())
-            {
-                continue;
-            }
-            functionHandle.function(isPressed);
-        }
     }
 
     #define test_bit(bit, array)    (array[bit/8] & (1<<(bit%8)))
@@ -269,8 +207,8 @@ namespace BlackInput
         }
         else
         {
-            callFunctionsBy(lastPressedKey, false);
-            callFunctionsBy(m_pressedKey, true);
+            if (m_listMonitoredKeys.contains(lastPressedKey)) emit keyUp(lastPressedKey);
+            if (m_listMonitoredKeys.contains(m_pressedKey)) emit keyDown(m_pressedKey);
         }
     }
 }

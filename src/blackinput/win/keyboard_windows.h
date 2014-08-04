@@ -12,6 +12,7 @@
 
 #include "blackinput/keyboard.h"
 #include "blackmisc/hwkeyboardkey.h"
+#include "blackmisc/hwkeyboardkeylist.h"
 #include <QHash>
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -30,11 +31,11 @@ namespace BlackInput
         //! \brief Destructor
         virtual ~CKeyboardWindows();
 
+        //! \copydoc IKeyboard::setKeysToMonitor()
+        virtual void setKeysToMonitor(const BlackMisc::Hardware::CKeyboardKeyList &keylist) override;
+
         //! \copydoc IKeyboard::selectKey()
         virtual void startCapture(bool ignoreNextKey = false) override;
-
-        //! \copydoc IKeyboard::sizeOfRegisteredFunctions()
-        virtual int  sizeOfRegisteredFunctions() const override;
 
         //! \copydoc IKeyboard::triggerKey()
         virtual void triggerKey(const BlackMisc::Hardware::CKeyboardKey key, bool isPressed) override;
@@ -43,7 +44,7 @@ namespace BlackInput
         HHOOK keyboardHook() const { return m_keyboardHook; }
 
         //! \private
-        void keyEvent(WPARAM vkCode, uint event);
+        void processKeyEvent(WPARAM vkCode, uint event);
 
     protected:
 
@@ -61,15 +62,6 @@ namespace BlackInput
         //! \brief Assignment operator
         void operator=(CKeyboardWindows const&);
 
-        //! \copydoc IKeyboard::registerHotKeyImpl()
-        virtual IKeyboard::RegistrationHandle registerHotkeyImpl(BlackMisc::Hardware::CKeyboardKey key, QObject *receiver, std::function<void(bool)> function) override;
-
-        //! \copydoc IKeyboard::unregisterHotkeyImpl()
-        virtual void unregisterHotkeyImpl(const IKeyboard::RegistrationHandle &handle) override;
-
-        //! \copydoc IKeyboard::unregisterHotkeyImpl()
-        virtual void unregisterAllHotkeysImpl() override;
-
     private:
 
         /*!
@@ -78,13 +70,6 @@ namespace BlackInput
          * \param isFinished
          */
         void sendCaptureNotification(const BlackMisc::Hardware::CKeyboardKey &key, bool isFinished);
-
-        /*!
-         * \brief Calls registered functions on keyboard event
-         * \param keySet
-         * \param isPressed
-         */
-        void callFunctionsBy(const BlackMisc::Hardware::CKeyboardKey &keySet, bool isPressed);
 
         void addKey(WPARAM vkcode);
         void removeKey(WPARAM vkcode);
@@ -99,7 +84,7 @@ namespace BlackInput
         static LRESULT CALLBACK keyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
 
-        QHash<BlackMisc::Hardware::CKeyboardKey, QList<IKeyboard::RegistrationHandle>> m_registeredFunctions; //!< Registered hotkey functions
+        BlackMisc::Hardware::CKeyboardKeyList m_listMonitoredKeys; //!< Registered keys
         BlackMisc::Hardware::CKeyboardKey m_pressedKey;    //!< Set of virtual keys pressed in the last cycle
         bool m_ignoreNextKey;                   //!< Is true if the next key needs to be ignored
         HHOOK m_keyboardHook;                   //!< Keyboard hook handle
