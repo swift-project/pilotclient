@@ -3,5 +3,6 @@
 
 #include "blackmisc/setaudio.h"
 #include "blackmisc/setnetwork.h"
+#include "blackmisc/setkeyboardhotkeylist.h"
 
 #endif // guard

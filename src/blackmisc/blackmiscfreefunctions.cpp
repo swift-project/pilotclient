@@ -121,6 +121,8 @@ void BlackMisc::Settings::registerMetadata()
 {
     CSettingsNetwork::registerMetadata();
     CSettingsAudio::registerMetadata();
+    CSettingKeyboardHotkey::registerMetadata();
+    CSettingKeyboardHotkeyList::registerMetadata();
 }
 
 /*
