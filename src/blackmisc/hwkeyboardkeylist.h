@@ -34,20 +34,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! Contains given hotkey function?
-            bool containsFunction(CKeyboardKey::HotkeyFunction function) const;
-
-            //! Key for given function
-            CKeyboardKey keyForFunction(CKeyboardKey::HotkeyFunction function) const;
-
             //! Register metadata
             static void registerMetadata();
-
-            /*!
-             * Fill the list with hotkeys
-             * \param reset true, list will be be reset, otherwise values will not be overridde
-             */
-            void initAsHotkeyList(bool reset = true);
         };
 
     } //namespace

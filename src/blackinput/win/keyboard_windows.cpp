@@ -69,7 +69,6 @@ namespace BlackInput
             else
             {
                 m_pressedKey.setKey(CKeyMappingWindows::convertToKey(vkcode));
-                m_pressedKey.setNativeVirtualKey(vkcode);
             }
         }
         else if ((event == WM_KEYUP) || (event == WM_SYSKEYUP) )
@@ -79,7 +78,6 @@ namespace BlackInput
             else
             {
                 m_pressedKey.setKey(Qt::Key_unknown);
-                m_pressedKey.setNativeVirtualKey(0);
             }
 
             isFinished = true;

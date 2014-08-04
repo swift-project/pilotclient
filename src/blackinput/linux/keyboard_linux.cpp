@@ -235,7 +235,6 @@ namespace BlackInput
             else
             {
                 m_pressedKey.setKey(CKeyMappingLinux::convertToKey(virtualKeyCode));
-                m_pressedKey.setNativeVirtualKey(0);
             }
         }
         else
@@ -245,7 +244,6 @@ namespace BlackInput
             else
             {
                 m_pressedKey.setKey(Qt::Key_unknown);
-                m_pressedKey.setNativeVirtualKey(0);
             }
 
             isFinished = true;

@@ -12,16 +12,11 @@ namespace BlackMisc
     namespace Hardware
     {
         CKeyboardKey::CKeyboardKey() :
-            m_qtKey(Qt::Key_unknown), m_nativeVirtualKey(0), m_modifier1(ModifierNone), m_modifier2(ModifierNone), m_function(HotkeyNone)
+            m_qtKey(Qt::Key_unknown), m_modifier1(ModifierNone), m_modifier2(ModifierNone)
         {}
 
-        CKeyboardKey::CKeyboardKey(HotkeyFunction function) :
-            m_qtKey(Qt::Key_unknown), m_nativeVirtualKey(0), m_modifier1(ModifierNone), m_modifier2(ModifierNone), m_function(function)
-        {}
-
-
-        CKeyboardKey::CKeyboardKey(Qt::Key keyCode, quint32 nativeVirtualKey, Modifier modifier1, Modifier modifier2, const HotkeyFunction &function) :
-            m_qtKey(keyCode), m_nativeVirtualKey(nativeVirtualKey), m_modifier1(modifier1), m_modifier2(modifier2), m_function(function)
+        CKeyboardKey::CKeyboardKey(Qt::Key keyCode, Modifier modifier1, Modifier modifier2) :
+            m_qtKey(keyCode), m_modifier1(modifier1), m_modifier2(modifier2)
         {}
 
         void CKeyboardKey::registerMetadata()
@@ -314,47 +309,19 @@ namespace BlackMisc
             return false;
         }
 
-        QString CKeyboardKey::getFunctionAsString() const
-        {
-            switch (this->m_function)
-            {
-            case HotkeyNone: return "";
-            case HotkeyPtt: return QCoreApplication::translate("Hotkey", "PTT");
-            case HotkeyOpacity50: return QCoreApplication::translate("Hotkey", "Opacity 50%");
-            case HotkeyOpacity100: return QCoreApplication::translate("Hotkey", "Opacity 100%");
-            case HotkeyToggleCom1: return QCoreApplication::translate("Hotkey", "Toggle COM1");
-            case HotkeyToggleCom2: return QCoreApplication::translate("Hotkey", "Toggle COM2");
-            case HotkeyToogleWindowsStayOnTop: return QCoreApplication::translate("Hotkey", "Toogle Window on top");
-            default:
-                qFatal("Wrong function");
-                return "";
-            }
-
-            // force strings for translation in resource files
-            (void)QT_TRANSLATE_NOOP("Hotkey", "PTT");
-            (void)QT_TRANSLATE_NOOP("Hotkey", "Opacity 50%");
-            (void)QT_TRANSLATE_NOOP("Hotkey", "Opacity 100%");
-            (void)QT_TRANSLATE_NOOP("Hotkey", "Toggle COM1");
-            (void)QT_TRANSLATE_NOOP("Hotkey", "Toggle COM2");
-            (void)QT_TRANSLATE_NOOP("Hotkey", "Toogle Window on top");
-        }
-
         void CKeyboardKey::setKeyObject(const CKeyboardKey &key)
         {
-            this->m_function = key.m_function;
             this->m_modifier1 = key.m_modifier1;
             this->m_modifier2 = key.m_modifier2;
-            this->m_nativeVirtualKey = key.m_nativeVirtualKey;
             this->m_qtKey = key.m_qtKey;
         }
 
-        bool CKeyboardKey::equalsWithRelaxedModifiers(const CKeyboardKey &key, bool ignoreFunction) const
+        bool CKeyboardKey::equalsWithRelaxedModifiers(const CKeyboardKey &key) const
         {
             if (key == (*this)) return true; // fully equal, not need to bother
 
             // this can never be true
             if (key.m_qtKey != this->m_qtKey) return false;
-            if (!ignoreFunction && key.m_function != this->m_function) return false;
             if (this->numberOfModifiers() != key.numberOfModifiers()) return false;
 
             // special modifiers
@@ -365,24 +332,10 @@ namespace BlackMisc
             return CKeyboardKey::equalsModifierReleaxed(this->getModifier1(), key.getModifier1());
         }
 
-        bool CKeyboardKey::equalsWithoutFunction(const CKeyboardKey &key) const
-        {
-            if (key == (*this)) return true;
-            CKeyboardKey k1(*this);
-            CKeyboardKey k2(*this);
-            k1.setFunction(HotkeyNone);
-            k2.setFunction(HotkeyNone);
-            return k1 == k2;
-        }
-
         QVariant CKeyboardKey::propertyByIndex(int index) const
         {
             switch (index)
             {
-            case IndexFunction:
-                return QVariant(this->m_function);
-            case IndexFunctionAsString:
-                return QVariant(this->getFunctionAsString());
             case IndexModifier1:
                 return QVariant(static_cast<uint>(this->m_modifier1));
             case IndexModifier2:
@@ -418,12 +371,6 @@ namespace BlackMisc
         {
             switch (index)
             {
-            case IndexFunction:
-                {
-                    uint f = variant.value<uint>();
-                    this->setFunction(static_cast<HotkeyFunction>(f));
-                    break;
-                }
             case IndexKey:
             case IndexKeyAsString:
             case IndexKeyAsStringRepresentation:

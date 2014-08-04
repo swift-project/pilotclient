@@ -23,13 +23,11 @@ namespace BlackMiscTest
     void CTestHardware::keyboardKey()
     {
         // Test equal operator
-        CKeyboardKey key = CKeyboardKey(Qt::Key_5, '5', CKeyboardKey::ModifierAltLeft, CKeyboardKey::ModifierCtrlLeft, CKeyboardKey::HotkeyPtt);
+        CKeyboardKey key = CKeyboardKey(Qt::Key_5, CKeyboardKey::ModifierAltLeft, CKeyboardKey::ModifierCtrlLeft);
         CKeyboardKey key2;
         key2.setKey(Qt::Key_5);
         key2.setModifier1(CKeyboardKey::ModifierAltLeft);
         key2.setModifier2(CKeyboardKey::ModifierCtrlLeft);
-        key2.setFunction(CKeyboardKey::HotkeyPtt);
-        key2.setNativeVirtualKey('5');
         QVERIFY2(key == key2, "CKeyboardKey::operator== failed!");
 
         key = CKeyboardKey();
@@ -55,19 +53,13 @@ namespace BlackMiscTest
         QVERIFY2(key.getModifier1() == CKeyboardKey::ModifierAltLeft, "Expected modifier to be ModifierAltLeft");
         QVERIFY2(key.getModifier2() == CKeyboardKey::ModifierNone, "Expected modifier to be ModifierAltLeft");
 
-
         // relaxed checks
-        key = CKeyboardKey(Qt::Key_1, 0, CKeyboardKey::ModifierCtrlLeft, CKeyboardKey::ModifierNone, CKeyboardKey::HotkeyPtt);
-        key2 = CKeyboardKey(Qt::Key_1, 0, CKeyboardKey::ModifierCtrlLeft, CKeyboardKey::ModifierNone, CKeyboardKey::HotkeyOpacity50);
-
-        QVERIFY2(key != key2, "Function differs, values shall be unequal");
-        QVERIFY2(key.equalsWithoutFunction(key2), "Function differs, values shall be equal without function");
+        key = CKeyboardKey(Qt::Key_1, CKeyboardKey::ModifierCtrlLeft, CKeyboardKey::ModifierNone);
+        key2 = CKeyboardKey(Qt::Key_1, CKeyboardKey::ModifierCtrlLeft, CKeyboardKey::ModifierNone);
         key2 = key;
         key2.setModifier1(CKeyboardKey::ModifierCtrlAny);
         QVERIFY2(key != key2, "Modifiers differs, values shall be unequal");
         QVERIFY2(key.equalsWithRelaxedModifiers(key2), "Modifiers are relaxed easy, values shall be equal");
-        key2.setFunction(CKeyboardKey::HotkeyToggleCom2);
-        QVERIFY2(key.equalsWithRelaxedModifiers(key2, true), "Modifiers are relaxed easy, function ignored, value shall be equal without function");
     }
 
 } // namespace

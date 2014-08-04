@@ -33,21 +33,7 @@ namespace BlackMisc
                 IndexModifier2,
                 IndexModifier1AsString,
                 IndexModifier2AsString,
-                IndexFunction,
-                IndexFunctionAsString,
                 IndexKeyObject, // just for updates
-            };
-
-            //! Function
-            enum HotkeyFunction
-            {
-                HotkeyNone,
-                HotkeyPtt,
-                HotkeyToggleCom1,
-                HotkeyToggleCom2,
-                HotkeyOpacity50,
-                HotkeyOpacity100,
-                HotkeyToogleWindowsStayOnTop
             };
 
             //! Modifier
@@ -70,11 +56,8 @@ namespace BlackMisc
             //! Default constructor
             CKeyboardKey();
 
-            //! Constructor by function
-            CKeyboardKey(HotkeyFunction function);
-
             //! Constructor
-            CKeyboardKey(Qt::Key keyCode, quint32 nativeVirtualKey, Modifier modifier1 = ModifierNone, Modifier modifier2 = ModifierNone, const HotkeyFunction &function = HotkeyNone);
+            CKeyboardKey(Qt::Key keyCode, Modifier modifier1 = ModifierNone, Modifier modifier2 = ModifierNone);
 
             //! Destructor
             ~CKeyboardKey() {}
@@ -133,12 +116,6 @@ namespace BlackMisc
             //! Set key code
             void setKey(int key) { this->m_qtKey = static_cast<Qt::Key>(key); }
 
-            //! Native virtual key
-            void setNativeVirtualKey(quint32 virtualKey) { this->m_nativeVirtualKey = virtualKey; }
-
-            //! Native virtual key
-            quint32 getNativeVirtualKey() const { return this->m_nativeVirtualKey; }
-
             /*!
              * Add modifier
              * \param modifier
@@ -155,9 +132,6 @@ namespace BlackMisc
 
             //! number of modifiers
             int numberOfModifiers() const;
-
-            //! Function (optional)
-            HotkeyFunction getFunction() const { return this->m_function; }
 
             //! Modifier 1
             Modifier getModifier1() const { return this->m_modifier1; }
@@ -230,20 +204,11 @@ namespace BlackMisc
             //! Order Modifiers
             void cleanup();
 
-            //! Function (optional)
-            QString getFunctionAsString() const;
-
             //! Set key object
             void setKeyObject(const BlackMisc::Hardware::CKeyboardKey &key);
 
-            //! Set function
-            void setFunction(const HotkeyFunction &function) { this->m_function = function; }
-
             //! CTRL will be consider equal CTRL-left/reigt, ALT = ALT-left/right ..
-            bool equalsWithRelaxedModifiers(const CKeyboardKey &key, bool ignoreFunction = false) const;
-
-            //! Equal, but function value ignored
-            bool equalsWithoutFunction(const CKeyboardKey &key) const;
+            bool equalsWithRelaxedModifiers(const CKeyboardKey &key) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const QVariant &variant, int index);
@@ -292,16 +257,13 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CKeyboardKey)
             Qt::Key m_qtKey; //!< code similar to Qt::Key
-            quint32 m_nativeVirtualKey; //!< virtual key code TODO: Risk in platform independent comparisons
             Modifier m_modifier1;
             Modifier m_modifier2;
-            HotkeyFunction m_function;
-
         };
     } // class
 } // BlackMisc
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Hardware::CKeyboardKey, (o.m_qtKey, o.m_nativeVirtualKey, o.m_modifier1, o.m_modifier2, o.m_function))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Hardware::CKeyboardKey, (o.m_qtKey, o.m_modifier1, o.m_modifier2))
 Q_DECLARE_METATYPE(BlackMisc::Hardware::CKeyboardKey)
 
 #endif // guard
