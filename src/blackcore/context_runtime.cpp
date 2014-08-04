@@ -407,11 +407,11 @@ namespace BlackCore
     {
         bool c;
         Q_UNUSED(c); // for release version
-        if (this->m_contextSettings && this->m_contextAudio && this->m_contextSettings->usingLocalObjects())
+
+        if (this->m_contextSettings && this->m_contextApplication)
         {
-            // only, when both contexts exists and only if settings originate locally
             c = connect(this->m_contextSettings, &IContextSettings::changedSettings,
-                        this->getCContextAudio(), &CContextAudio::ps_settingsChanged);
+                        this->getIContextApplication(), &IContextApplication::changeSettings);
             Q_ASSERT(c);
         }
 

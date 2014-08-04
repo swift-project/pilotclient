@@ -1,11 +1,14 @@
 #include "blackcore/context_application.h"
 #include "blackcore/context_application_impl.h"
 #include "blackcore/context_application_proxy.h"
+#include "blackcore/context_settings.h"
+#include "blackcore/input_manager.h"
 #include "blackmisc/statusmessage.h"
 #include <QCoreApplication>
 #include <QThread>
 
 using namespace BlackMisc;
+using namespace BlackMisc::Settings;
 
 namespace BlackCore
 {
@@ -57,6 +60,8 @@ namespace BlackCore
             IContextApplication::s_oldHandler = qInstallMessageHandler(IContextApplication::messageHandlerDispatch);
         }
         IContextApplication::s_contexts.append(this);
+
+        changeSettings(IContextSettings::SettingsHotKeys);
     }
 
     /*
@@ -79,6 +84,22 @@ namespace BlackCore
     void IContextApplication::resetOutputRedirection()
     {
         qInstallMessageHandler(0);
+    }
+
+    void IContextApplication::changeSettings(uint typeValue)
+    {
+        IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
+        switch (type)
+        {
+        case IContextSettings::SettingsHotKeys:
+        {
+            CSettingKeyboardHotkeyList hotkeys = getIContextSettings()->getHotkeys();
+            CInputManager::getInstance()->changeHotkeySettings(hotkeys);
+            break;
+        }
+        default:
+            break;
+        }
     }
 
     /*

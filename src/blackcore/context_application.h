@@ -26,6 +26,8 @@
 
 namespace BlackCore
 {
+    class CInputManager;
+
     /*!
      * Application context interface
      */
@@ -147,6 +149,9 @@ namespace BlackCore
 
         //!  Remote enabled version of file exists
         virtual bool existsFile(const QString &fileName) = 0;
+
+
+        void changeSettings(uint typeValue);
 
     private:
         //! All contexts, used with messageHandler
