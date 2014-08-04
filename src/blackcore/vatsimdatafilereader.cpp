@@ -71,7 +71,7 @@ namespace BlackCore
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignList &callsigns)
     {
-        return this->m_aircrafts.findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAircraft::getPilot));
+        return this->getAircrafts().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAircraft::getPilot));
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign)
@@ -108,7 +108,7 @@ namespace BlackCore
 
     CUserList CVatsimDataFileReader::getControllersForCallsigns(const CCallsignList &callsigns)
     {
-        return this->m_atcStations.findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAtcStation::getController));
+        return this->getAtcStations().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAtcStation::getController));
     }
 
     CUserList CVatsimDataFileReader::getUsersForCallsigns(const CCallsignList &callsigns)
