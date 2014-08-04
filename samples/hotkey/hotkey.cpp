@@ -20,6 +20,7 @@ HotkeyDialog::HotkeyDialog(QWidget *parent) :
 
     setupUi();
     setupConnections();
+
 }
 
 HotkeyDialog::~HotkeyDialog()
@@ -40,8 +41,17 @@ void HotkeyDialog::keySelectionChanged(BlackMisc::Hardware::CKeyboardKey key)
 void HotkeyDialog::keySelectionFinished(BlackMisc::Hardware::CKeyboardKey key)
 {
     m_lblHotkey->setText(key.toFormattedQString());
-    m_keyboard->unregisterAllHotkeys();
-    m_keyboard->registerHotkey(key, this, &HotkeyDialog::setPressed);
+    m_key = key;
+}
+
+void HotkeyDialog::processKeyDown(const BlackMisc::Hardware::CKeyboardKey &key)
+{
+    if (key == m_key) setPressed(true);
+}
+
+void HotkeyDialog::processKeyUp(const BlackMisc::Hardware::CKeyboardKey &key)
+{
+    if (key == m_key) setPressed(false);
 }
 
 void HotkeyDialog::setPressed(bool isPressed)
@@ -89,5 +99,7 @@ void HotkeyDialog::setupConnections()
 {
     connect(m_keyboard, &BlackInput::IKeyboard::keySelectionChanged, this, &HotkeyDialog::keySelectionChanged);
     connect(m_keyboard, &BlackInput::IKeyboard::keySelectionFinished, this, &HotkeyDialog::keySelectionFinished);
+    connect(m_keyboard, &BlackInput::IKeyboard::keyDown, this, &HotkeyDialog::processKeyDown);
+    connect(m_keyboard, &BlackInput::IKeyboard::keyUp, this, &HotkeyDialog::processKeyUp);
     connect(m_pbSelect, &QPushButton::clicked, this, &HotkeyDialog::selectHotKey);
 }

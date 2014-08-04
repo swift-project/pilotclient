@@ -46,6 +46,10 @@ private slots:
      */
     void keySelectionFinished(BlackMisc::Hardware::CKeyboardKey key);
 
+    void processKeyDown(const BlackMisc::Hardware::CKeyboardKey &);
+
+    void processKeyUp(const BlackMisc::Hardware::CKeyboardKey &);
+
 private:
     /*!
      * \brief Set the key status
@@ -58,6 +62,7 @@ private:
     void setupConnections();
 
     BlackInput::IKeyboard *m_keyboard;
+    BlackMisc::Hardware::CKeyboardKey m_key;
     QPushButton *m_pbSelect;
     QLabel      *m_lblHotkey;
     CLed        *m_led;
