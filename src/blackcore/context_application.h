@@ -150,7 +150,7 @@ namespace BlackCore
         //!  Remote enabled version of file exists
         virtual bool existsFile(const QString &fileName) = 0;
 
-
+        //! Change settings
         void changeSettings(uint typeValue);
 
     private:

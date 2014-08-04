@@ -93,14 +93,19 @@ namespace BlackMisc
             //! Set object
             void setObject(const CSettingKeyboardHotkey &obj);
 
+            //! Cleanup key
             void cleanup() { m_key.cleanup(); }
 
+            //! Get modifier1 as string
             QString getModifier1AsString() const { return m_key.getModifier1AsString(); }
 
+            //! Get modifier2 as string
             QString getModifier2AsString() const { return m_key.getModifier1AsString(); }
 
+            //! Modifiers
             static QStringList modifiers() { return Hardware::CKeyboardKey::modifiers(); }
 
+            //! Create string representation
             static QString toStringRepresentation(int key) { return Hardware::CKeyboardKey::toStringRepresentation(key); }
 
             //! \copydoc CValueObject::setPropertyByIndex

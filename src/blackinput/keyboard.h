@@ -40,6 +40,7 @@ namespace BlackInput
         //! Destructor
         virtual ~IKeyboard() {}
 
+        //! Set the list of keys to monitor
         virtual void setKeysToMonitor(const BlackMisc::Hardware::CKeyboardKeyList &keylist) = 0;
 
         /*!
@@ -76,7 +77,10 @@ namespace BlackInput
          */
         void keySelectionFinished(BlackMisc::Hardware::CKeyboardKey key);
 
+        //! Key down
         void keyDown(const BlackMisc::Hardware::CKeyboardKey &);
+
+        //! Key up
         void keyUp(const BlackMisc::Hardware::CKeyboardKey &);
 
     protected:

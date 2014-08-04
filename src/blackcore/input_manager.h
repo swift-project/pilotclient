@@ -19,6 +19,7 @@
 
 namespace BlackCore
 {
+    //! Input manager handling hotkey function calls
     class CInputManager : public QObject
     {
         Q_OBJECT
