@@ -157,6 +157,8 @@ void BlackMisc::registerMetadata()
     CIcon::registerMetadata();
     CIconList::registerMetadata();
 
+    CHotkeyFunction::registerMetadata();
+
     // sub namespaces
     PhysicalQuantities::registerMetadata();
     Aviation::registerMetadata();
