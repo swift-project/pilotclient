@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_RUNTIMEBASEDCOMPONENT_H
 #define BLACKGUI_RUNTIMEBASEDCOMPONENT_H
 
