@@ -39,10 +39,11 @@ namespace BlackGui
 
             this->ps_setDockArea(Qt::TopDockWidgetArea);
             this->setMarginsWhenFloating(5, 5, 5, 5); // left, top, right bottom
-            this->setMarginsWhenDocked(1, 1, 1, 1); // top has no effect
+            this->setMarginsWhenDocked(1, 1, 1, 1);   // top has no effect
             this->connectAllWidgets();
             this->setFeaturesForDockableWidgets(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
             this->tabifyAllWidgets();
+            this->setPreferredSizesWhenFloating();
 
             // context menu
             this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -78,7 +79,7 @@ namespace BlackGui
                 for (int i = 0; i < this->m_dockableWidgets.size(); i++)
                 {
                     const CDockWidgetInfoArea *dw = this->m_dockableWidgets.at(i);
-                    const QPixmap pm = infoAreaToIcon(static_cast<InfoArea>(i));
+                    const QPixmap pm = infoAreaToPixmap(static_cast<InfoArea>(i));
                     const QString t = dw->windowTitleBackup();
                     QAction *checkableMenuAction = new QAction(menu);
                     checkableMenuAction->setObjectName(QString(t).append("ToggleFloatingAction"));
@@ -125,14 +126,14 @@ namespace BlackGui
                 connect(showMenuText, &QAction::toggled, this, &CMainInfoAreaComponent::ps_showTabTexts);
 
                 // auto adjust floating widgets
-                QAction *autoAdjustFloatingWidget = new QAction(menu);
-                autoAdjustFloatingWidget->setObjectName("AutoAdjustFloatingWidgets");
-                autoAdjustFloatingWidget->setIconText("Auto adjust floating widgets");
-                autoAdjustFloatingWidget->setIcon(CIcons::resize16());
-                autoAdjustFloatingWidget->setCheckable(true);
-                autoAdjustFloatingWidget->setChecked(this->m_autoAdjustFloatingWidgets);
-                menu->addAction(autoAdjustFloatingWidget);
-                connect(autoAdjustFloatingWidget, &QAction::toggled, this, &CMainInfoAreaComponent::ps_toggleAutoAdjustFloatingWidget);
+                QAction *showTabbar = new QAction(menu);
+                showTabbar->setObjectName("ShowTabBar");
+                showTabbar->setIconText("Show tab bar");
+                showTabbar->setIcon(CIcons::dockBottom16());
+                showTabbar->setCheckable(true);
+                showTabbar->setChecked(this->m_showTabBar);
+                menu->addAction(showTabbar);
+                connect(showTabbar, &QAction::toggled, this, &CMainInfoAreaComponent::ps_showTabBar);
 
                 // tab bar position
                 menu->addAction(CIcons::dockBottom16(), "Toogle tabbar position", this, SLOT(ps_toggleTabBarPosition()));
@@ -182,6 +183,16 @@ namespace BlackGui
         void CMainInfoAreaComponent::dockAllWidgets()
         {
             this->tabifyAllWidgets();
+        }
+
+        void CMainInfoAreaComponent::adjustSizeForAllDockWidgets()
+        {
+            QList<CDockWidgetInfoArea *>::iterator i;
+            for (i = this->m_dockableWidgets.begin(); i != this->m_dockableWidgets.end(); ++i)
+            {
+                CDockWidgetInfoArea *dw = (*i);
+                dw->adjustSize();
+            }
         }
 
         void CMainInfoAreaComponent::floatAllWidgets()
@@ -305,9 +316,14 @@ namespace BlackGui
                         after->setVisible(false);
                         after->setFloating(true);
                         after->move(initPoint);
+                        after->setFloating(false);
+                        after->resetWasAlreadyFLoating();
                         after->setVisible(true);
                     }
-                    after->setFloating(false);
+                    else
+                    {
+                        after->setFloating(false);
+                    }
                     if (!first) { continue; }
                     this->tabifyDockWidget(first, after);
                 }
@@ -323,7 +339,7 @@ namespace BlackGui
                 this->m_tabBar->setObjectName("comp_MainInfoAreaDockWidgetTab");
                 this->m_tabBar->setMovable(false);
                 this->m_tabBar->setElideMode(Qt::ElideNone);
-                this->m_tabBar->setShape(QTabBar::TriangularEast);
+                this->setDocumentMode(true);
 
                 // East / West does not work (shown, but area itself empty)
                 // South does not have any effect
@@ -379,7 +395,34 @@ namespace BlackGui
             }
         }
 
-        const QPixmap &CMainInfoAreaComponent::infoAreaToIcon(CMainInfoAreaComponent::InfoArea infoArea)
+        void CMainInfoAreaComponent::setPreferredSizesWhenFloating()
+        {
+            if (this->m_dockableWidgets.isEmpty()) return;
+            for (int i = 0; i < this->m_dockableWidgets.size(); i++)
+            {
+                InfoArea ia = static_cast<InfoArea>(i);
+                switch (ia)
+                {
+                case InfoAreaAircrafts:
+                case InfoAreaAtc:
+                case InfoAreaUsers:
+                case InfoAreaLog:
+                case InfoAreaSimulator:
+                    this->m_dockableWidgets[i]->setPreferredSizeWhenFloating(QSize(400, 300));
+                    break;
+                case InfoAreaMappings:
+                case InfoAreaSettings:
+                case InfoAreaTextMessages:
+                case InfoAreaFlightPlan:
+                    this->m_dockableWidgets[i]->setPreferredSizeWhenFloating(QSize(600, 400));
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+
+        const QPixmap &CMainInfoAreaComponent::infoAreaToPixmap(CMainInfoAreaComponent::InfoArea infoArea)
         {
             switch (infoArea)
             {
@@ -458,7 +501,7 @@ namespace BlackGui
             for (int i = 0; i < this->m_tabBar->count(); i++)
             {
                 InfoArea area = static_cast<InfoArea>(i);
-                const QPixmap p(infoAreaToIcon(area));
+                const QPixmap p(infoAreaToPixmap(area));
                 this->m_tabBar->setTabIcon(i, p);
             }
         }
@@ -502,7 +545,6 @@ namespace BlackGui
 
             QAction *selectedItem = contextMenu.data()->exec(globalPos);
             Q_UNUSED(selectedItem);
-
         }
 
         void CMainInfoAreaComponent::ps_showTabTexts(bool show)
@@ -517,16 +559,14 @@ namespace BlackGui
             }
         }
 
-        void CMainInfoAreaComponent::ps_toggleAutoAdjustFloatingWidget(bool adjust)
+        void CMainInfoAreaComponent::ps_showTabBar(bool show)
         {
-            if (adjust == this->m_autoAdjustFloatingWidgets) return;
-            this->m_autoAdjustFloatingWidgets = adjust;
-            QList<CDockWidgetInfoArea *>::iterator i;
-            for (i = this->m_dockableWidgets.begin(); i != this->m_dockableWidgets.end(); ++i)
-            {
-                CDockWidgetInfoArea *dw = (*i);
-                dw->setAutoAdjustWhenFloating(adjust);
-            }
+            if (show == this->m_showTabBar) return;
+            this->m_showTabBar = show;
+            if (!this->m_tabBar) return;
+            this->m_tabBar->setVisible(show); // not working, but setting right value will not harm anything
+            this->m_tabBar->setMaximumHeight(show ? 10000 : 0); // does the trick
+            this->adjustSizeForAllDockWidgets();
         }
 
         void CMainInfoAreaComponent::ps_setTabBarPosition(QTabWidget::TabPosition position)

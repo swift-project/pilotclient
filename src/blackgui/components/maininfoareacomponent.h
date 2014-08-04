@@ -94,6 +94,9 @@ namespace BlackGui
             //! Dock all widgets
             void dockAllWidgets();
 
+            //! Adjust size for all dock widgets
+            void adjustSizeForAllDockWidgets();
+
             //! All widgets floating
             void floatAllWidgets();
 
@@ -122,7 +125,7 @@ namespace BlackGui
             QTabBar *m_tabBar = nullptr;
             bool m_showTabTexts = true;
             bool m_infoAreaFloating = false; //!< whole info area floating
-            bool m_autoAdjustFloatingWidgets = true; //!< auto ajdust the floating widgets
+            bool m_showTabBar = true; //!< auto ajdust the floating widgets
 
             //! Tabify the widgets
             void tabifyAllWidgets();
@@ -163,8 +166,11 @@ namespace BlackGui
             //! Margins for the dockable widgets
             void setMarginsWhenDocked(int left, int top, int right, int bottom);
 
+            //! Set window sizes when floating
+            void setPreferredSizesWhenFloating();
+
             //! Info area to icon
-            static const QPixmap &infoAreaToIcon(InfoArea infoArea);
+            static const QPixmap &infoAreaToPixmap(InfoArea infoArea);
 
         private slots:
             //! Tab bar has been double clicked
@@ -182,8 +188,8 @@ namespace BlackGui
             //! Show the tab texts, or just the icons
             void ps_showTabTexts(bool show);
 
-            //! Toggle checkable setting
-            void ps_toggleAutoAdjustFloatingWidget(bool adjust);
+            //! Show tab bar
+            void ps_showTabBar(bool show);
 
             //! Tab position for docked widgets tab
             //! \remarks North or South working, East / West not

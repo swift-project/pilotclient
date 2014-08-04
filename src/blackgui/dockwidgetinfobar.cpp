@@ -21,7 +21,6 @@ namespace BlackGui
 {
     CDockWidgetInfoBar::CDockWidgetInfoBar(QWidget *parent) : CDockWidget(parent)
     {
-        this->setAutoAdjustWhenFloating(false);
         this->setMarginsWhenDocked(0, 0, 0, -1);
         this->setWindowTitle("Info bar");
         this->setWindowIcon(CIcons::swift24());

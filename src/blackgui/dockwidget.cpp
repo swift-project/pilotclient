@@ -119,9 +119,15 @@ namespace BlackGui
             }
             this->setNullTitleBar();
             this->setContentsMargins(this->m_marginsWhenFloating);
-            if (this->m_autoAdjustWhenFloating) {
-                this->adjustSize();
+            if (!this->m_wasAlreadyFloating)
+            {
+                // for the first time resize
+                if (!this->m_preferredSizeWhenFloating.isNull())
+                {
+                    this->resize(this->m_preferredSizeWhenFloating);
+                }
             }
+            this->m_wasAlreadyFloating = true;
         }
         else
         {
@@ -141,6 +147,20 @@ namespace BlackGui
         this->m_titleBarOriginal = this->titleBarWidget();
         this->m_emptyTitleBar = new QWidget(this);
         this->setTitleBarWidget(this->m_emptyTitleBar);
+    }
+
+    QList<QWidget *> CDockWidget::findEmbeddedRuntimeComponents() const
+    {
+        QList<QWidget *> widgets = this->findChildren<QWidget *>();
+        QList<QWidget *> widgetsWithRuntimeComponent;
+        foreach(QWidget * w, widgets)
+        {
+            if (dynamic_cast<Components::CRuntimeBasedComponent *>(w))
+            {
+                widgetsWithRuntimeComponent.append(w);
+            }
+        }
+        return widgetsWithRuntimeComponent;
     }
 
     void CDockWidget::ps_showContextMenu(const QPoint &pos)
