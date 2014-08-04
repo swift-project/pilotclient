@@ -11,6 +11,8 @@
 
 #include "blacksound/soundgenerator.h"
 #include "blackmisc/notificationsounds.h"
+#include "blackmisc/voiceroomlist.h"
+#include "blackmisc/hotkeyfunction.h"
 
 #include <QTimer>
 
@@ -27,14 +29,16 @@ namespace BlackCore
      * Init this context
      */
     CContextAudio::CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextAudio(mode, runtime), m_voice(nullptr), m_keyboard(nullptr)
+        IContextAudio(mode, runtime), m_voice(nullptr), m_inputManager(nullptr)
     {
         // 1. Init by "voice driver"
         this->m_voice = new CVoiceVatlib();
         m_voice->moveToThread(&m_threadVoice);
         m_threadVoice.start();
 
-        m_keyboard = BlackInput::IKeyboard::getInstance();
+        // 2. Register PTT hotkey function
+        m_inputManager = CInputManager::getInstance();
+        m_handlePtt = m_inputManager->registerHotkeyFunc(CHotkeyFunction::Ptt(), m_voice, &CVoiceVatlib::handlePushToTalk);
 
         // 3. own aircraft, if possible
         //if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
@@ -364,28 +368,6 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
         m_voice->enableAudioLoopback(enable);
-    }
-
-    /*
-     * Settings changed
-     */
-    void CContextAudio::ps_settingsChanged(uint typeValue)
-    {
-        if (this->getIContextOwnAircraft())
-        {
-            m_channelCom1->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-            m_channelCom2->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-        }
-        if (!this->getIContextSettings()) return;
-        IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
-        if (type == IContextSettings::SettingsHotKeys)
-        {
-            CKeyboardKeyList hotKeys = this->getIContextSettings()->getHotkeys();
-            Q_ASSERT(!hotKeys.isEmpty());
-            CKeyboardKey pttKey = hotKeys.findBy(&BlackMisc::Hardware::CKeyboardKey::getFunction, BlackMisc::Hardware::CKeyboardKey::HotkeyPtt).front();
-            m_keyboard->unregisterHotkey(m_handlePtt);
-            m_handlePtt = m_keyboard->registerHotkey(pttKey, m_voice, &CVoiceVatlib::handlePushToTalk);
-        }
     }
 
     /*

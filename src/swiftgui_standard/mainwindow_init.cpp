@@ -20,6 +20,7 @@
 #include "blackmisc/icons.h"
 #include "blackmisc/avselcal.h"
 #include "blackmisc/project.h"
+#include "blackmisc/hotkeyfunction.h"
 #include <QSortFilterProxyModel>
 #include <QSizeGrip>
 #include <QHBoxLayout>
@@ -140,7 +141,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::compiledInfo());
 
     // hotkeys
-    this->ps_registerHotkeys();
+    this->ps_registerHotkeyFunctions();
 
     // update timers
     this->startUpdateTimers();

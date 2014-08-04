@@ -79,8 +79,6 @@ void MainWindow::gracefulShutdown()
     if (!this->m_init) return;
     this->m_init = false;
 
-    if (this->m_keyboard) this->m_keyboard->unregisterAllHotkeys();
-
     if (this->getIContextApplication())
         this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStops);
 
@@ -333,7 +331,7 @@ void MainWindow::displayRedirectedOutput(const CStatusMessage &statusMessage, qi
 void MainWindow::ps_onChangedSetttings(uint typeValue)
 {
     IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
-    if (type == IContextSettings::SettingsHotKeys) this->ps_registerHotkeys();
+    if (type == IContextSettings::SettingsHotKeys) this->ps_registerHotkeyFunctions();
 }
 
 /*
@@ -521,31 +519,26 @@ void MainWindow::ps_toogleWindowStayOnTop()
 }
 
 /*
- * Hotkeys
+ * Hotkey functions
  */
-void MainWindow::ps_registerHotkeys()
+void MainWindow::ps_registerHotkeyFunctions()
 {
-    if (!this->getIContextSettings()) qFatal("Missing settings");
-    if (!this->m_keyboard)
+    CInputManager *m_inputManager = BlackCore::CInputManager::getInstance();
+
+    m_inputManager->registerHotkeyFunc(CHotkeyFunction::Opacity50(), this, [ this ](bool isPressed)
     {
-        this->m_keyboard = BlackInput::IKeyboard::getInstance();
-    }
-    else
+        if (isPressed) this->changeWindowOpacity(50);
+    });
+
+    m_inputManager->registerHotkeyFunc(CHotkeyFunction::Opacity100(), this, [ this ](bool isPressed)
     {
-        this->m_keyboard->unregisterAllHotkeys();
-    }
+        if (isPressed) this->changeWindowOpacity(100);
+    });
 
-    CKeyboardKeyList keys = this->getIContextSettings()->getHotkeys();
-    if (keys.isEmpty()) return;
-
-    CKeyboardKey key = keys.keyForFunction(CKeyboardKey::HotkeyOpacity50);
-    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->ps_changeWindowOpacity(50); });
-
-    key = keys.keyForFunction(CKeyboardKey::HotkeyOpacity100);
-    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->ps_changeWindowOpacity(100); });
-
-    key = keys.keyForFunction(CKeyboardKey::HotkeyToogleWindowsStayOnTop);
-    if (!key.isEmpty()) this->m_keyboard->registerHotkey(key, this, [ this ](bool isPressed) { if (isPressed) this->ps_toogleWindowStayOnTop(); });
+    m_inputManager->registerHotkeyFunc(CHotkeyFunction::ToogleWindowsStayOnTop(), this, [ this ](bool isPressed)
+    {
+        if (isPressed) this->toogleWindowStayOnTop();
+    });
 }
 
 /*

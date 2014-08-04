@@ -12,6 +12,7 @@
 #include "dbus_server.h"
 #include "voice_vatlib.h"
 #include "voice_channel.h"
+#include "input_manager.h"
 #include "blackinput/keyboard.h"
 #include "blackmisc/voiceroomlist.h"
 
@@ -117,8 +118,6 @@ namespace BlackCore
         }
 
     private slots:
-        //! Settings have been changed
-        void ps_settingsChanged(uint typeValue);
 
         //! \copydoc IVoice::connectionStatusChanged
         //! \sa IContextAudio::changedVoiceRooms
@@ -136,8 +135,8 @@ namespace BlackCore
         bool inTransitionState() const;
 
         CVoiceVatlib *m_voice; //!< underlying voice lib
-        BlackInput::IKeyboard *m_keyboard;
-        BlackInput::IKeyboard::RegistrationHandle m_handlePtt;
+        CInputManager *m_inputManager;
+        CInputManager::RegistrationHandle m_handlePtt;
         QThread m_threadVoice;
         QPointer<IVoiceChannel> m_channelCom1;
         QPointer<IVoiceChannel> m_channelCom2;

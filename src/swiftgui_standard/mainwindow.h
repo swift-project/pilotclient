@@ -15,13 +15,13 @@
 #undef interface
 
 #include "guimodeenums.h"
-#include "blackinput/keyboard.h"
 #include "blackcore/context_audio.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
 #include "blackcore/context_application.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_runtime.h"
+#include "blackcore/input_manager.h"
 #include "blackgui/components/runtimebasedcomponent.h"
 #include "blackgui/components/infowindowcomponent.h"
 #include "blackgui/transpondermodeselector.h"
@@ -240,8 +240,8 @@ private slots:
     //! Toogle Windows stay on top
     void ps_toogleWindowStayOnTop();
 
-    //! Set the hotkeys
-    void ps_registerHotkeys();
+    //! Set the hotkey functions
+    void ps_registerHotkeyFunctions();
 
     //! Style sheet has been changed
     void ps_onStyleSheetsChanged();
