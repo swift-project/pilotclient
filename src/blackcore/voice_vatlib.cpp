@@ -253,7 +253,12 @@ namespace BlackCore
     {
         QString result;
 
-        switch (m_micTestResult)
+        // Due to a standard defect, some compilers do not accept two consecutive implicit conversions.
+        // Hence calling load() here.
+        // References:
+        // http://stackoverflow.com/questions/25143860/implicit-convertion-from-class-to-enumeration-type-in-switch-conditional
+        // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3323.pdf
+        switch (m_micTestResult.load())
         {
         case Cvatlib_Voice_Simple::agc_Ok:
             result = "The test went ok";
