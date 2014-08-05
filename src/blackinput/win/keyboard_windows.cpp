@@ -42,7 +42,7 @@ namespace BlackInput
         m_pressedKey.setKeyObject(CKeyboardKey());
     }
 
-    void CKeyboardWindows::triggerKey(const CKeyboardKey key, bool isPressed)
+    void CKeyboardWindows::triggerKey(const CKeyboardKey &key, bool isPressed)
     {
         if(!isPressed) emit keyUp(key);
         else emit keyDown(key);

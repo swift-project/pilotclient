@@ -36,7 +36,7 @@ namespace BlackInput
         virtual void startCapture(bool ignoreNextKey = false) override;
 
         //! \copydoc IKeyboard::triggerKey()
-        virtual void triggerKey(const BlackMisc::Hardware::CKeyboardKey key, bool isPressed) override;
+        virtual void triggerKey(const BlackMisc::Hardware::CKeyboardKey &key, bool isPressed) override;
 
     protected:
 

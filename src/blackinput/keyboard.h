@@ -57,7 +57,7 @@ namespace BlackInput
          * \param key
          * \param isPressed
          */
-        virtual void triggerKey(const BlackMisc::Hardware::CKeyboardKey key, bool isPressed) = 0;
+        virtual void triggerKey(const BlackMisc::Hardware::CKeyboardKey &key, bool isPressed) = 0;
 
         //! Creates a native keyboard handler object
         static IKeyboard *getInstance();
