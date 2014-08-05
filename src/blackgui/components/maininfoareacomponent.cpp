@@ -43,7 +43,6 @@ namespace BlackGui
             this->connectAllWidgets();
             this->setFeaturesForDockableWidgets(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
             this->tabifyAllWidgets();
-            this->setPreferredSizesWhenFloating();
 
             // context menu
             this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -103,7 +102,7 @@ namespace BlackGui
                     subMenuDisplay->addAction(displayMenuAction);
                     c = connect(displayMenuAction, SIGNAL(triggered(bool)), signalMapperDisplay, SLOT(map()));
                     Q_ASSERT(c);
-                    signalMapperDisplay->setMapping(displayMenuAction, i);
+                    signalMapperDisplay->setMapping(displayMenuAction, i); // action to index
                 }
                 c = connect(signalMapperToggleFloating, SIGNAL(mapped(int)), this, SLOT(toggleFloating(int)));
                 Q_ASSERT(c);
@@ -187,10 +186,8 @@ namespace BlackGui
 
         void CMainInfoAreaComponent::adjustSizeForAllDockWidgets()
         {
-            QList<CDockWidgetInfoArea *>::iterator i;
-            for (i = this->m_dockableWidgets.begin(); i != this->m_dockableWidgets.end(); ++i)
+            for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)
             {
-                CDockWidgetInfoArea *dw = (*i);
                 dw->adjustSize();
             }
         }
@@ -199,11 +196,18 @@ namespace BlackGui
         {
             // I fake the double click here, which queues the events in the queue
             // and hence fires all depending signals in order
-            if (!this->m_tabBar) return;
-            for (int i = 0; i < this->m_tabBar->count(); i++)
+//            if (!this->m_tabBar) return;
+//            for (int i = 0; i < this->m_tabBar->count(); i++)
+//            {
+//                // emit this->m_tabBar->tabBarDoubleClicked(i);
+//                this->toggleFloating(i);
+//            }
+            for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)
             {
-                emit this->m_tabBar->tabBarDoubleClicked(i);
+                if (dw->isFloating()) continue;
+                dw->toggleFloating();
             }
+
         }
 
         void CMainInfoAreaComponent::toggleFloating()
@@ -259,10 +263,8 @@ namespace BlackGui
 
         void CMainInfoAreaComponent::ps_setDockArea(Qt::DockWidgetArea area)
         {
-            QList<CDockWidgetInfoArea *>::iterator i;
-            for (i = this->m_dockableWidgets.begin(); i != this->m_dockableWidgets.end(); ++i)
+            for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)
             {
-                CDockWidgetInfoArea *dw = (*i);
                 Qt::DockWidgetAreas newAreas = static_cast<Qt::DockWidgetAreas>(area);
                 Qt::DockWidgetAreas oldAreas = dw->allowedAreas();
                 if (oldAreas == newAreas) continue;
@@ -273,6 +275,7 @@ namespace BlackGui
 
         void CMainInfoAreaComponent::ps_setInfoAreaFloating(bool floating)
         {
+            // float whole info area
             this->m_infoAreaFloating = floating;
             if (this->m_infoAreaFloating)
             {
@@ -297,9 +300,7 @@ namespace BlackGui
         {
             // this->setDockArea(Qt::LeftDockWidgetArea);
             this->setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::East);
-
             bool init = this->m_tabBar ? false : true;
-            QPoint pos = CGuiUtility::assumedMainWindowPosition(); //main window pos. not initialized yet
 
             if (!this->m_dockableWidgets.isEmpty())
             {
@@ -310,15 +311,17 @@ namespace BlackGui
                     Q_ASSERT(after);
 
                     // trick, init widget as floating
+                    // this completely initializes the tab bar and all docked widgets
                     if (init)
                     {
-                        QPoint initPoint(pos.rx() + i * 25, pos.ry() + i * 20);
+                        QPoint offset(i * 25, i * 20);
                         after->setVisible(false);
                         after->setFloating(true);
-                        after->move(initPoint);
+                        after->setOffsetWhenFloating(offset);
+                        after->setPreferredSizeWhenFloating(CMainInfoAreaComponent::getPreferredSizeWhenFloating(static_cast<InfoArea>(i)));
                         after->setFloating(false);
-                        after->resetWasAlreadyFLoating();
                         after->setVisible(true);
+                        after->resetWasAlreadyFLoating();
                     }
                     else
                     {
@@ -339,7 +342,8 @@ namespace BlackGui
                 this->m_tabBar->setObjectName("comp_MainInfoAreaDockWidgetTab");
                 this->m_tabBar->setMovable(false);
                 this->m_tabBar->setElideMode(Qt::ElideNone);
-                this->setDocumentMode(true);
+                this->setDocumentMode(true); // did not notice any effect
+                this->setTabPixmaps();
 
                 // East / West does not work (shown, but area itself empty)
                 // South does not have any effect
@@ -347,7 +351,6 @@ namespace BlackGui
                 connect(this->m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CMainInfoAreaComponent::ps_tabBarDoubleClicked);
             }
 
-            this->setTabPixmaps();
             if (this->countDockedWidgets() > 0)
             {
                 this->m_tabBar->setCurrentIndex(0);
@@ -368,57 +371,50 @@ namespace BlackGui
 
         void CMainInfoAreaComponent::connectAllWidgets()
         {
-            QList<CDockWidgetInfoArea *>::iterator i;
-            for (i = this->m_dockableWidgets.begin(); i != this->m_dockableWidgets.end(); ++i)
+            for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)
             {
-                connect(*i, &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CMainInfoAreaComponent::ps_onWidgetTopLevelChanged);
+                connect(dw, &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CMainInfoAreaComponent::ps_onWidgetTopLevelChanged);
             }
         }
 
         void CMainInfoAreaComponent::setMarginsWhenFloating(int left, int top, int right, int bottom)
         {
-            QList<CDockWidgetInfoArea *>::iterator i;
-            for (i = this->m_dockableWidgets.begin(); i != this->m_dockableWidgets.end(); ++i)
+            for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)
             {
                 //! Margins when window is floating
-                (*i)->setMarginsWhenFloating(left, top, right, bottom);
+                dw->setMarginsWhenFloating(left, top, right, bottom);
             }
         }
 
         void CMainInfoAreaComponent::setMarginsWhenDocked(int left, int top, int right, int bottom)
         {
-            QList<CDockWidgetInfoArea *>::iterator i;
-            for (i = this->m_dockableWidgets.begin(); i != this->m_dockableWidgets.end(); ++i)
+            for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)
             {
-                //! Margins when window is floating
-                (*i)->setMarginsWhenDocked(left, top, right, bottom);
+                //! Margins when window is docked
+                dw->setMarginsWhenDocked(left, top, right, bottom);
             }
         }
 
-        void CMainInfoAreaComponent::setPreferredSizesWhenFloating()
+        QSize CMainInfoAreaComponent::getPreferredSizeWhenFloating(InfoArea area)
         {
-            if (this->m_dockableWidgets.isEmpty()) return;
-            for (int i = 0; i < this->m_dockableWidgets.size(); i++)
+            switch (area)
             {
-                InfoArea ia = static_cast<InfoArea>(i);
-                switch (ia)
-                {
-                case InfoAreaAircrafts:
-                case InfoAreaAtc:
-                case InfoAreaUsers:
-                case InfoAreaLog:
-                case InfoAreaSimulator:
-                    this->m_dockableWidgets[i]->setPreferredSizeWhenFloating(QSize(400, 300));
-                    break;
-                case InfoAreaMappings:
-                case InfoAreaSettings:
-                case InfoAreaTextMessages:
-                case InfoAreaFlightPlan:
-                    this->m_dockableWidgets[i]->setPreferredSizeWhenFloating(QSize(600, 400));
-                    break;
-                default:
-                    break;
-                }
+            case InfoAreaAircrafts:
+            case InfoAreaAtc:
+            case InfoAreaUsers:
+            case InfoAreaLog:
+            case InfoAreaSimulator:
+                return QSize(400, 300);
+                break;
+            case InfoAreaMappings:
+            case InfoAreaSettings:
+            case InfoAreaTextMessages:
+            case InfoAreaFlightPlan:
+                return QSize(600, 400);
+                break;
+            default:
+                return QSize(400, 300);
+                break;
             }
         }
 
@@ -451,23 +447,22 @@ namespace BlackGui
             }
         }
 
-        CDockWidgetInfoArea *CMainInfoAreaComponent::getDockableWidgetByIndex(int index) const
-        {
-            if (index >= this->m_dockableWidgets.count() || index < 0) return nullptr;
-            return this->m_dockableWidgets.at(index);
-        }
-
-        CDockWidgetInfoArea *CMainInfoAreaComponent::selectedDockableWidget() const
-        {
-            if (!this->m_tabBar) return nullptr;
-            int i = this->m_tabBar->currentIndex();
-            return getDockableWidgetByIndex(i);
-        }
-
         int CMainInfoAreaComponent::countDockedWidgets() const
         {
             if (!this->m_tabBar) return 0;
             return this->m_tabBar->count();
+        }
+
+        CDockWidgetInfoArea *CMainInfoAreaComponent::getDockableWidgetByTabIndex(int tabBarIndex) const
+        {
+            if (tabBarIndex >= this->m_dockableWidgets.count() || tabBarIndex < 0) return nullptr;
+            for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)
+            {
+                if (dw->isFloating()) continue; // not in tab bar
+                if (tabBarIndex == 0) return dw;
+                tabBarIndex--;
+            }
+            return nullptr;
         }
 
         int CMainInfoAreaComponent::widgetToTabBarIndex(const CDockWidgetInfoArea *dockWidget)
@@ -475,10 +470,8 @@ namespace BlackGui
             if (!dockWidget) return -1;
             if (dockWidget->isFloating()) return -1;
             int tabBarIndex = 0;
-            QList<CDockWidgetInfoArea *>::iterator i;
-            for (i = this->m_dockableWidgets.begin(); i != this->m_dockableWidgets.end(); ++i)
+            for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)
             {
-                CDockWidgetInfoArea *dw = (*i);
                 if (dw->isFloating()) continue; // not in tab bar
                 if (dw == dockWidget) return tabBarIndex;
                 tabBarIndex++;
@@ -488,9 +481,8 @@ namespace BlackGui
 
         void CMainInfoAreaComponent::setFeaturesForDockableWidgets(QDockWidget::DockWidgetFeatures features)
         {
-            for (int i = 0; i < this->m_dockableWidgets.size(); i++)
+            for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)
             {
-                CDockWidgetInfoArea *dw = this->m_dockableWidgets.at(i);
                 dw->setFeatures(features);
             }
         }
@@ -506,11 +498,9 @@ namespace BlackGui
             }
         }
 
-        void CMainInfoAreaComponent::ps_tabBarDoubleClicked(int index)
+        void CMainInfoAreaComponent::ps_tabBarDoubleClicked(int tabBarIndex)
         {
-            CDockWidgetInfoArea *dw = (index >= 0) ?
-                                      this->getDockableWidgetByIndex(index) :
-                                      this->selectedDockableWidget();
+            CDockWidgetInfoArea *dw = this->getDockableWidgetByTabIndex(tabBarIndex);
             if (!dw) return;
             dw->toggleFloating();
         }
@@ -529,7 +519,6 @@ namespace BlackGui
         {
             QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameMainInfoArea());
             this->setStyleSheet(qss);
-
             if (this->m_tabBar)
             {
                 QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameDockWidgetTab());
@@ -551,10 +540,8 @@ namespace BlackGui
         {
             if (show == this->m_showTabTexts) return;
             this->m_showTabTexts = show;
-            QList<CDockWidgetInfoArea *>::iterator i;
-            for (i = this->m_dockableWidgets.begin(); i != this->m_dockableWidgets.end(); ++i)
+            for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)
             {
-                CDockWidgetInfoArea *dw = (*i);
                 dw->showTitleWhenDocked(show);
             }
         }

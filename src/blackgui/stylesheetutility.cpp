@@ -21,38 +21,48 @@ namespace BlackGui
         this->read();
     }
 
-    const QString CStyleSheetUtility::fontStyleAsString(const QFont &font)
+    const QString &CStyleSheetUtility::fontStyleAsString(const QFont &font)
     {
+        static const QString n("normal");
+        static const QString i("italic");
+        static const QString o("oblique");
+        static const QString e;
+
         switch (font.style())
         {
-        case QFont::StyleNormal: return "normal";
-        case QFont::StyleItalic: return "italic";
-        case QFont::StyleOblique: return "oblique";
-        default: return "";
+        case QFont::StyleNormal: return n;
+        case QFont::StyleItalic: return i;
+        case QFont::StyleOblique: return o;
+        default: return e;
         }
     }
 
-    const QString CStyleSheetUtility::fontWeightAsString(const QFont &font)
+    const QString &CStyleSheetUtility::fontWeightAsString(const QFont &font)
     {
         if (font.weight() < static_cast<int>(QFont::Normal))
         {
-            return "light";
+            static const QString l("light");
+            return l;
         }
         else if (font.weight() < static_cast<int>(QFont::DemiBold))
         {
-            return "normal";
+            static const QString n("normal");
+            return n;
         }
         else if (font.weight() < static_cast<int>(QFont::Bold))
         {
-            return "demibold";
+            static const QString d("demibold");
+            return d;
         }
         else if (font.weight() < static_cast<int>(QFont::Black))
         {
-            return "bold";
+            static const QString b("bold");
+            return b;
         }
         else
         {
-            return "black";
+            static const QString b("black");
+            return b;
         }
     }
 

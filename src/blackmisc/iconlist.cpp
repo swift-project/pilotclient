@@ -15,7 +15,7 @@ namespace BlackMisc
         CSequence<CIcon>(other)
     { }
 
-    CIcon CIconList::findByIndex(CIcons::IconIndexes index) const
+    CIcon CIconList::findByIndex(CIcons::IconIndex index) const
     {
         return this->findBy(&CIcon::getIndex, index).frontOrDefault();
     }

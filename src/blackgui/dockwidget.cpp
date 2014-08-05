@@ -10,6 +10,7 @@
 #include "dockwidget.h"
 #include "blackmisc/icons.h"
 #include "blackgui/stylesheetutility.h"
+#include "blackgui/guiutility.h"
 #include <QCloseEvent>
 #include <QStyleOption>
 #include <QPainter>
@@ -125,6 +126,15 @@ namespace BlackGui
                 if (!this->m_preferredSizeWhenFloating.isNull())
                 {
                     this->resize(this->m_preferredSizeWhenFloating);
+                }
+
+                // and move
+                QPoint mainWindowPos = BlackGui::CGuiUtility::mainWindowPosition();
+                if (!mainWindowPos.isNull())
+                {
+                    int x = mainWindowPos.x() + this->m_offsetWhenFloating.x();
+                    int y = mainWindowPos.y() + this->m_offsetWhenFloating.y();
+                    this->move(x, y);
                 }
             }
             this->m_wasAlreadyFloating = true;

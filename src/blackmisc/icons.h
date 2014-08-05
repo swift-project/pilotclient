@@ -19,14 +19,13 @@ namespace BlackMisc
     //! Standard icons
     class CIcons
     {
-    private:
-        //! Constructor, use class static only
-        CIcons();
-
     public:
 
+        //! Constructor, use class static only
+        CIcons() = delete;
+
         //! Index for each icon, allows to send them via DBus, efficiently store them, etc.
-        enum IconIndexes
+        enum IconIndex
         {
             NotSet,
             StandardIconInfo16,
@@ -606,7 +605,7 @@ namespace BlackMisc
         // -------------------------------------------------------------
 
         //! Pixmap by given index
-        static const QPixmap &pixmapByIndex(IconIndexes index)
+        static const QPixmap &pixmapByIndex(IconIndex index)
         {
             switch (index)
             {
@@ -687,7 +686,7 @@ namespace BlackMisc
         }
 
         //! Pixmap by given index rotated
-        static QPixmap pixmapByIndex(IconIndexes index, int rotateDegrees)
+        static QPixmap pixmapByIndex(IconIndex index, int rotateDegrees)
         {
             const QPixmap original = pixmapByIndex(index);
             if (rotateDegrees == 0) return original;

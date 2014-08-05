@@ -154,7 +154,7 @@ namespace BlackMisc
         case IndexIcon:
             if (variant.canConvert<int>())
             {
-                CIcons::IconIndexes index = static_cast<CIcons::IconIndexes>(variant.toInt());
+                CIcons::IconIndex index = static_cast<CIcons::IconIndex>(variant.toInt());
                 this->m_icon = CIconList::iconForIndex(index);
             }
             else

@@ -66,8 +66,11 @@ namespace BlackGui
         //! Was widget already floating
         bool wasAlreadyFloating() const { return this->m_wasAlreadyFloating; }
 
-        //! Size when floating
+        //! Size when floating first time
         void setPreferredSizeWhenFloating(const QSize &size) { this->m_preferredSizeWhenFloating = size; }
+
+        //! Position offset when floating first time
+        void setOffsetWhenFloating(const QPoint &point) { this->m_offsetWhenFloating = point; }
 
     public slots:
         //! Toggle floating
@@ -109,7 +112,8 @@ namespace BlackGui
         QString m_windowTitleBackup;    //!< original title, even if the widget title is deleted for layout purposes
         bool m_windowTitleWhenDocked = true;
         bool m_wasAlreadyFloating = false;
-        QSize m_preferredSizeWhenFloating;
+        QSize m_preferredSizeWhenFloating; //!< preferred size men floating 1st time
+        QPoint m_offsetWhenFloating;  //!< initial offset to main window when floating first time
 
         //! Empty widget with no size
         void initTitleBarWidgets();

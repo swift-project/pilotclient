@@ -34,7 +34,7 @@ namespace BlackMisc
         CIconList(const CSequence<CIcon> &other);
 
         //! Find by index
-        CIcon findByIndex(CIcons::IconIndexes index) const;
+        CIcon findByIndex(CIcons::IconIndex index) const;
 
         //! \copydoc CValueObject::asQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -126,24 +126,18 @@ namespace BlackMisc
         }
 
         //! Icon for given index
-        static const CIcon &iconForIndex(CIcons::IconIndexes index)
+        static const CIcon &iconForIndex(CIcons::IconIndex index)
         {
-            // remark, find by is copy, need reference of icon
-            int s = allIcons().size();
-            for (int i = 0; i < s; i++)
-            {
-                if (allIcons()[i].getIndex() == index)
-                {
-                    return allIcons()[i];
-                }
-            }
+            auto foundRange = allIcons().findBy(&CIcon::getIndex, index);
+            if (!foundRange.isEmpty()) { return foundRange.front(); }
             Q_ASSERT_X(false, "iconForIndex", "Missing index");
             return iconForIndex(CIcons::StandardIconUnknown16);
         }
 
         //! Icon for given index
-        static const CIcon &iconForIndex(int index) {
-            return iconForIndex(static_cast<CIcons::IconIndexes>(index));
+        static const CIcon &iconForIndex(int index)
+        {
+            return iconForIndex(static_cast<CIcons::IconIndex>(index));
         }
 
     };

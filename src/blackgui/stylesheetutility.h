@@ -96,10 +96,10 @@ namespace BlackGui
         explicit CStyleSheetUtility(QObject *parent = nullptr);
 
         //! Font style as string
-        static const QString fontStyleAsString(const QFont &font);
+        static const QString &fontStyleAsString(const QFont &font);
 
         //! Font weight as string
-        static const QString fontWeightAsString(const QFont &font);
+        static const QString &fontWeightAsString(const QFont &font);
     };
 
 }

@@ -126,7 +126,7 @@ namespace BlackSimPlugin
 
                     // COM Settings, transponder, SB3
                     FSUIPC_Read(0x7b91, 1, &xpdrModeSb3Raw, &dwResult) &&
-                    FSUIPC_Read(0x7b92, 1, &xpdrIdentSb3Raw, &dwResult) &&
+                    FSUIPC_Read(0x7b93, 1, &xpdrIdentSb3Raw, &dwResult) &&
 
                     // Speeds, situation
                     FSUIPC_Read(0x02b4, 4, &groundspeedRaw, &dwResult) &&

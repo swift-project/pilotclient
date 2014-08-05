@@ -139,11 +139,8 @@ namespace BlackGui
             //! Corresponding dockable widgets
             QList<CDockWidgetInfoArea *> dockableWidgets() const;
 
-            //! Corresponding dockable widget
-            CDockWidgetInfoArea *getDockableWidgetByIndex(int index) const;
-
-            //! Selected dockable widget
-            CDockWidgetInfoArea *selectedDockableWidget() const;
+            //! Corresponding dockable widget for given tab index
+            CDockWidgetInfoArea *getDockableWidgetByTabIndex(int tabBarIndex) const;
 
             //! Features of the dockable widgets
             void setFeaturesForDockableWidgets(QDockWidget::DockWidgetFeatures features);
@@ -167,14 +164,14 @@ namespace BlackGui
             void setMarginsWhenDocked(int left, int top, int right, int bottom);
 
             //! Set window sizes when floating
-            void setPreferredSizesWhenFloating();
+            static QSize getPreferredSizeWhenFloating(InfoArea area);
 
             //! Info area to icon
             static const QPixmap &infoAreaToPixmap(InfoArea infoArea);
 
         private slots:
             //! Tab bar has been double clicked
-            void ps_tabBarDoubleClicked(int index);
+            void ps_tabBarDoubleClicked(int tabBarIndex);
 
             //! A widget has changed its top level
             void ps_onWidgetTopLevelChanged(CDockWidget *widget, bool topLevel);

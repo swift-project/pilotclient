@@ -28,7 +28,7 @@ namespace BlackMisc
         CIcon() {}
 
         //! Constructor.
-        CIcon(CIcons::IconIndexes index, const QString &descriptiveText) :
+        CIcon( CIcons::IconIndex index, const QString &descriptiveText) :
             m_index(static_cast<int>(index)), m_descriptiveText(descriptiveText) {}
 
         //! \copydoc CValueObject::toQVariant
@@ -38,7 +38,7 @@ namespace BlackMisc
         const QString &getDescriptiveText() const { return this->m_descriptiveText; }
 
         //! Index
-        CIcons::IconIndexes getIndex() const { return static_cast<CIcons::IconIndexes>(this->m_index);}
+        CIcons::IconIndex getIndex() const { return static_cast< CIcons::IconIndex>(this->m_index);}
 
         //! Corresponding pixmap
         QPixmap toPixmap() const;

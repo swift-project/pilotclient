@@ -310,8 +310,7 @@ namespace BlackCore
             // warnings, if required
             if (!illegalIcaoCodes.isEmpty())
             {
-                const QString w = QString("Illegal ICAO code(s) in VATSIM data file: %1").arg(illegalIcaoCodes.join(", "));
-                qWarning(w.toLatin1());
+                qWarning() << "Illegal ICAO code(s) in VATSIM data file:" << illegalIcaoCodes.join(", ");
             }
         }
     }

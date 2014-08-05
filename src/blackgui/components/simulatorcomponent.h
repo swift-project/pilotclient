@@ -39,7 +39,7 @@ namespace BlackGui
             void addOrUpdateByName(const QString &name, const QString &value, const BlackMisc::CIcon &icon);
 
             //! Simple add or update name / value pair
-            void addOrUpdateByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndexes iconIndex);
+            void addOrUpdateByName(const QString &name, const QString &value, BlackMisc::CIcons::IconIndex iconIndex);
 
             //! Number of entries
             int rowCount() const;

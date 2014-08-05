@@ -33,7 +33,7 @@ namespace BlackGui
             this->ui->tvp_LiveData->addOrUpdateByName(name, value, icon);
         }
 
-        void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, CIcons::IconIndexes iconIndex)
+        void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, CIcons::IconIndex iconIndex)
         {
             this->addOrUpdateByName(name, value, CIconList::iconForIndex(iconIndex));
         }
