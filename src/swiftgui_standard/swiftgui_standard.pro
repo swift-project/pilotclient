@@ -11,6 +11,7 @@ SOURCES += *.cpp
 HEADERS += *.h
 FORMS   += *.ui
 CONFIG  += blackmisc blacksound blackinput blackcore blackgui blacksim
+CONFIG  -= app_bundle
 
 DEPENDPATH += . ../../src/blackmisc ../../src/blackgui ../../src/blacksound ../../src/blacksim ../../src/blackcore  ../../src/blackinput
 INCLUDEPATH += . ../../src
