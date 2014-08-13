@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_SETTINGSCOMPONENT_H
 #define BLACKGUI_SETTINGSCOMPONENT_H
-
-//! \file
 
 #include "blackgui/components/runtimebasedcomponent.h"
 #include <QTabWidget>
@@ -88,40 +88,40 @@ namespace BlackGui
         private slots:
 
             //! Network server selected
-            void networkServerSelected(QModelIndex index);
+            void ps_networkServerSelected(QModelIndex index);
 
             //! Alter traffic server
-            void alterTrafficServer();
+            void ps_alterTrafficServer();
 
             /*!
              * \brief Update the selected server textboxes
              * \param server to be displayed
              */
-            void updateGuiSelectedServerTextboxes(const BlackMisc::Network::CServer &server);
+            void ps_updateGuiSelectedServerTextboxes(const BlackMisc::Network::CServer &server);
 
             //! Selected server from textboxes
-            BlackMisc::Network::CServer selectedServerFromTextboxes() const;
+            BlackMisc::Network::CServer ps_selectedServerFromTextboxes() const;
 
             //! Settings have been changed
-            void changedSettings(uint typeValue);
+            void ps_changedSettings(uint typeValue);
 
             //! Save the Hotkeys
-            void saveHotkeys();
+            void ps_saveHotkeys();
 
             //! Clear single hotkey
-            void clearHotkey();
+            void ps_clearHotkey();
 
             //! start the MIC tests (Squelch)
-            void startAudioTest();
+            void ps_startAudioTest();
 
             //! Audio test updates (timer) for progressbar and fetching results
-            void audioTestUpdate();
+            void ps_audioTestUpdate();
 
             /*!
              * \brief Audio device selected
              * \param index audio device index (COM1, COM2)
              */
-            void audioDeviceSelected(int index);
+            void ps_audioDeviceSelected(int index);
 
         private:
             //! Audio test modes

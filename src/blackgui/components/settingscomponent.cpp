@@ -31,6 +31,9 @@ namespace BlackGui
     namespace Components
     {
 
+        /*
+         * Constructor
+         */
         CSettingsComponent::CSettingsComponent(QWidget *parent) :
             QTabWidget(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CSettingsComponent),
             m_audioTestRunning(NoAudioTest)
@@ -40,6 +43,9 @@ namespace BlackGui
             this->m_timerAudioTests = new QTimer(this);
         }
 
+        /*
+         * Destructor
+         */
         CSettingsComponent::~CSettingsComponent()
         {
             delete ui;
@@ -55,41 +61,65 @@ namespace BlackGui
             icao.setAircraftCombinedType(this->ui->le_SettingsIcaoCombinedType->text());
         }
 
+        /*
+         * Opacity
+         */
         void CSettingsComponent::setGuiOpacity(double value)
         {
             this->ui->hs_SettingsGuiOpacity->setValue(value);
         }
 
+        /*
+         * Login as observer
+         */
         bool CSettingsComponent::loginAsObserver() const
         {
             return this->ui->rb_SettingsLoginStealthMode->isChecked();
         }
 
+        /*
+         * Stealth
+         */
         bool CSettingsComponent::loginStealth() const
         {
             return this->ui->rb_SettingsLoginStealthMode->isChecked();
         }
 
+        /*
+         * Notification sounds
+         */
         bool CSettingsComponent::playNotificationSounds() const
         {
             return this->ui->cb_SettingsAudioPlayNotificationSounds->isChecked();
         }
 
+        /*
+         * Update interval
+         */
         int CSettingsComponent::getAtcUpdateIntervalSeconds() const
         {
             return this->ui->hs_SettingsGuiAtcRefreshTime->value();
         }
 
+        /*
+         * Update interval
+         */
         int CSettingsComponent::getAircraftUpdateIntervalSeconds() const
         {
             return this->ui->hs_SettingsGuiAircraftRefreshTime->value();
         }
 
+        /*
+         * Update interval
+         */
         int CSettingsComponent::getUsersUpdateIntervalSeconds() const
         {
             return this->ui->hs_SettingsGuiUserRefreshTime->value();
         }
 
+        /*
+         * Own callsign
+         */
         QString CSettingsComponent::getOwnCallsignFromGui() const
         {
             return this->ui->le_SettingsAircraftCallsign->text();
@@ -135,8 +165,8 @@ namespace BlackGui
                 Q_ASSERT(connected);
                 connected = this->connect(this->ui->cb_SettingsAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
                 Q_ASSERT(connected);
-                this->connect(this->ui->pb_SettingsAudioMicrophoneTest, &QPushButton::clicked, this, &CSettingsComponent::startAudioTest);
-                this->connect(this->ui->pb_SettingsAudioSquelchTest, &QPushButton::clicked, this, &CSettingsComponent::startAudioTest);
+                this->connect(this->ui->pb_SettingsAudioMicrophoneTest, &QPushButton::clicked, this, &CSettingsComponent::ps_startAudioTest);
+                this->connect(this->ui->pb_SettingsAudioSquelchTest, &QPushButton::clicked, this, &CSettingsComponent::ps_startAudioTest);
             }
 
             // Opacity, intervals
@@ -146,32 +176,33 @@ namespace BlackGui
             this->connect(this->ui->hs_SettingsGuiUserRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedUsersUpdateInterval);
 
             // Settings server
-            this->connect(this->ui->pb_SettingsTnCurrentServer, &QPushButton::released, this, &CSettingsComponent::alterTrafficServer);
-            this->connect(this->ui->pb_SettingsTnRemoveServer, &QPushButton::released, this, &CSettingsComponent::alterTrafficServer);
-            this->connect(this->ui->pb_SettingsTnSaveServer, &QPushButton::released, this, &CSettingsComponent::alterTrafficServer);
-            this->connect(this->ui->tvp_SettingsTnServers, &QTableView::clicked, this, &CSettingsComponent::networkServerSelected);
+            this->connect(this->ui->pb_SettingsTnCurrentServer, &QPushButton::released, this, &CSettingsComponent::ps_alterTrafficServer);
+            this->connect(this->ui->pb_SettingsTnRemoveServer, &QPushButton::released, this, &CSettingsComponent::ps_alterTrafficServer);
+            this->connect(this->ui->pb_SettingsTnSaveServer, &QPushButton::released, this, &CSettingsComponent::ps_alterTrafficServer);
+            this->connect(this->ui->tvp_SettingsTnServers, &QTableView::clicked, this, &CSettingsComponent::ps_networkServerSelected);
 
             // Settings hotkeys
             this->connect(this->ui->pb_SettingsMiscCancel, &QPushButton::clicked, this, &CSettingsComponent::reloadSettings);
-            this->connect(this->ui->pb_SettingsMiscSave, &QPushButton::clicked, this, &CSettingsComponent::saveHotkeys);
-            this->connect(this->ui->pb_SettingsMiscRemove, &QPushButton::clicked, this, &CSettingsComponent::clearHotkey);
+            this->connect(this->ui->pb_SettingsMiscSave, &QPushButton::clicked, this, &CSettingsComponent::ps_saveHotkeys);
+            this->connect(this->ui->pb_SettingsMiscRemove, &QPushButton::clicked, this, &CSettingsComponent::ps_clearHotkey);
+
         }
 
         /*
          * Network has been selected
          */
-        void CSettingsComponent::networkServerSelected(QModelIndex index)
+        void CSettingsComponent::ps_networkServerSelected(QModelIndex index)
         {
             const CServer clickedServer = this->ui->tvp_SettingsTnServers->at<CServer>(index);
-            this->updateGuiSelectedServerTextboxes(clickedServer);
+            this->ps_updateGuiSelectedServerTextboxes(clickedServer);
         }
 
         /*
          * Alter server
          */
-        void CSettingsComponent::alterTrafficServer()
+        void CSettingsComponent::ps_alterTrafficServer()
         {
-            CServer server = this->selectedServerFromTextboxes();
+            CServer server = this->ps_selectedServerFromTextboxes();
             if (!server.isValidForLogin())
             {
                 const CStatusMessage validation = CStatusMessage::getValidationError("Wrong settings for server");
@@ -202,7 +233,7 @@ namespace BlackGui
         /*
          * Settings did changed
          */
-        void CSettingsComponent::changedSettings(uint typeValue)
+        void CSettingsComponent::ps_changedSettings(uint typeValue)
         {
             IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
             this->reloadSettings();
@@ -212,7 +243,7 @@ namespace BlackGui
         /*
          * Textboxes from server
          */
-        void CSettingsComponent::updateGuiSelectedServerTextboxes(const CServer &server)
+        void CSettingsComponent::ps_updateGuiSelectedServerTextboxes(const CServer &server)
         {
             this->ui->le_SettingsTnCsName->setText(server.getName());
             this->ui->le_SettingsTnCsDescription->setText(server.getDescription());
@@ -226,7 +257,7 @@ namespace BlackGui
         /*
          * Server settings from textboxes
          */
-        CServer CSettingsComponent::selectedServerFromTextboxes() const
+        CServer CSettingsComponent::ps_selectedServerFromTextboxes() const
         {
             CServer server;
             bool portOk = false;
@@ -248,7 +279,7 @@ namespace BlackGui
         /*
          * Save the hotkeys
          */
-        void CSettingsComponent::saveHotkeys()
+        void CSettingsComponent::ps_saveHotkeys()
         {
             const QString path = CSettingUtilities::appendPaths(IContextSettings::PathRoot(), IContextSettings::PathHotkeys());
             CStatusMessageList msgs = this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer().toQVariant());
@@ -260,7 +291,7 @@ namespace BlackGui
         /*
          * Clear particular hotkey
          */
-        void CSettingsComponent::clearHotkey()
+        void CSettingsComponent::ps_clearHotkey()
         {
             QModelIndex i = this->ui->tvp_SettingsMiscHotkeys->currentIndex();
             if (i.row() < 0 || i.row() >= this->ui->tvp_SettingsMiscHotkeys->rowCount()) return;
@@ -307,7 +338,7 @@ namespace BlackGui
         /*
          * Start the voice tests
          */
-        void CSettingsComponent::startAudioTest()
+        void CSettingsComponent::ps_startAudioTest()
         {
             if (!this->getIContextAudio())
             {
@@ -346,7 +377,7 @@ namespace BlackGui
         /*
          * Start the voice tests
          */
-        void CSettingsComponent::audioTestUpdate()
+        void CSettingsComponent::ps_audioTestUpdate()
         {
             Q_ASSERT(this->getIContextAudio());
             if (!this->getIContextAudio()) return;
@@ -388,7 +419,7 @@ namespace BlackGui
         /*
          * Select audio device
          */
-        void CSettingsComponent::audioDeviceSelected(int index)
+        void CSettingsComponent::ps_audioDeviceSelected(int index)
         {
             if (!this->getIContextAudio()) return;
             if (index < 0)return;

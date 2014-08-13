@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_STYLESHEETUTILITY_H
 #define BLACKGUI_STYLESHEETUTILITY_H
-
-//! \file
 
 #include <QMap>
 #include <QObject>
@@ -28,7 +28,7 @@ namespace BlackGui
         //! Read the *.qss files
         bool read();
 
-        //! Style for file name
+        //! Style for given file name
         QString style(const QString &fileName) const;
 
         //! Multiple styles concatenated

@@ -1,5 +1,5 @@
 /* Copyright (C) 2013
- * Swift Project Community / Contributors
+ * swift Project Community / Contributors
  *
  * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
@@ -37,7 +37,6 @@ namespace BlackGui
             this->connect(this->ui->pb_SettingsFsxOpenSimconnectCfg, &QPushButton::clicked, this, &CSettingsFsxComponent::simConnectCfgFile);
             this->connect(this->ui->pb_SettingsFsxDeleteSimconnectCfg, &QPushButton::clicked, this, &CSettingsFsxComponent::simConnectCfgFile);
             this->connect(this->ui->pb_SettingsFsxExistsSimconncetCfg, &QPushButton::clicked, this, &CSettingsFsxComponent::simConnectCfgFile);
-
         }
 
         CSettingsFsxComponent::~CSettingsFsxComponent()
