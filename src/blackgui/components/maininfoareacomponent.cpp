@@ -261,6 +261,12 @@ namespace BlackGui
             this->selectArea(static_cast<InfoArea>(index));
         }
 
+        void CMainInfoAreaComponent::selectSettingsTab(int index)
+        {
+            this->selectArea(InfoAreaSettings);
+            this->ui->comp_Settings->setSettingsTab(static_cast<CSettingsComponent::SettingTab>(index));
+        }
+
         void CMainInfoAreaComponent::ps_setDockArea(Qt::DockWidgetArea area)
         {
             for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)

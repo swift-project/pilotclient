@@ -17,7 +17,6 @@
 #include <QModelIndex>
 #include <QTimer>
 
-
 namespace Ui { class CSettingsComponent; }
 
 namespace BlackGui
@@ -31,6 +30,18 @@ namespace BlackGui
             Q_OBJECT
 
         public:
+
+            //! Tabs
+            enum SettingTab
+            {
+                SettingTabNetwork = 0,
+                SettingTabAircraft,
+                SettingTabAircraftAudio,
+                SettingTabSimulator,
+                SettingTabGui,
+                SettingTabMisc
+            };
+
             //! Constructor
             explicit CSettingsComponent(QWidget *parent = nullptr);
 
@@ -81,6 +92,9 @@ namespace BlackGui
             //! Reload settings
             void reloadSettings();
 
+            //! Set the tab
+            void setSettingsTab(SettingTab tab);
+
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
             virtual void runtimeHasBeenSet() override;
@@ -123,6 +137,12 @@ namespace BlackGui
              */
             void ps_audioDeviceSelected(int index);
 
+            //! Font has been changed
+            void ps_fontChanged();
+
+            //! Font color dialof
+            void ps_fontColorDialog();
+
         private:
             //! Audio test modes
             enum AudioTest
@@ -135,9 +155,11 @@ namespace BlackGui
             Ui::CSettingsComponent *ui;
             QTimer *m_timerAudioTests; //!< audio tests: progress bar, disable/enable buttons
             AudioTest m_audioTestRunning;
+            QColor m_fontColor;
 
             //! Audio device lists from settings
             void initAudioDeviceLists();
+
         };
     }
 } // namespace

@@ -15,6 +15,7 @@
 #include <QMap>
 #include <QObject>
 #include <QFont>
+#include <QStringList>
 
 namespace BlackGui
 {
@@ -39,6 +40,18 @@ namespace BlackGui
 
         //! Update the fonts
         bool updateFonts(const QFont &font);
+
+        //! Update the fonts
+        bool updateFonts(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor);
+
+        //! Current font color from style sheet
+        QString fontColor();
+
+        //! Get the font style
+        static QString fontStyle(const QString &combinedStyleAndWeight);
+
+        //! Get the font weight
+        static QString fontWeight(const QString &combinedStyleAndWeight);
 
         //! Central reader
         static CStyleSheetUtility &instance()
@@ -82,8 +95,31 @@ namespace BlackGui
             return f;
         }
 
+        //! Font weights
+        static const QStringList &fontWeights()
+        {
+            static const QStringList w( {"bold", "semibold", "light", "black", "normal"});
+            return w;
+        }
+
+        //! Font styles
+        static const QStringList &fontStyles()
+        {
+            static const QStringList s( {"italic", "oblique", "normal"});
+            return s;
+        }
+
         //! qss directory
         static QString qssDirectory();
+
+        //! Font style as string
+        static const QString &fontStyleAsString(const QFont &font);
+
+        //! Font weight as string
+        static const QString &fontWeightAsString(const QFont &font);
+
+        //! Font as combined weight and style
+        static QString fontAsCombinedWeightStyle(const QFont &font);
 
     signals:
         //! Sheets have been changed
@@ -94,12 +130,6 @@ namespace BlackGui
 
         //! Constructor
         explicit CStyleSheetUtility(QObject *parent = nullptr);
-
-        //! Font style as string
-        static const QString &fontStyleAsString(const QFont &font);
-
-        //! Font weight as string
-        static const QString &fontWeightAsString(const QFont &font);
     };
 
 }

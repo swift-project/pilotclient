@@ -42,8 +42,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Aircrafts">
    <property name="minimumSize">
     <size>
-     <width>127</width>
-     <height>38</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="features">
@@ -103,8 +103,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_AtcStations">
    <property name="minimumSize">
     <size>
-     <width>127</width>
-     <height>38</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <property name="floating">
@@ -162,6 +162,12 @@
    </widget>
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Users">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
@@ -202,6 +208,12 @@
    </widget>
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_TextMessages">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
@@ -242,6 +254,12 @@
    </widget>
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Simulator">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
@@ -282,6 +300,12 @@
    </widget>
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_FlightPlan">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
@@ -322,6 +346,12 @@
    </widget>
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Weather">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
@@ -365,6 +395,12 @@
    </widget>
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Mappings">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
@@ -405,6 +441,12 @@
    </widget>
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Log">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
@@ -445,6 +487,12 @@
    </widget>
   </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Settings">
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>

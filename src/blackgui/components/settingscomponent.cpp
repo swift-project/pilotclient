@@ -10,10 +10,12 @@
 #include "settingscomponent.h"
 #include "ui_settingscomponent.h"
 #include "blackgui/models/atcstationlistmodel.h"
+#include "blackgui/stylesheetutility.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackmisc/hwkeyboardkeylist.h"
 #include "blackmisc/setaudio.h"
+#include <QColorDialog>
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -147,23 +149,35 @@ namespace BlackGui
             this->ui->cb_SettingsAudioNotificationVoiceRoom->setChecked(as.getNotificationFlag(BlackSound::CNotificationSounds::NotificationVoiceRoomJoined));
         }
 
+        /*
+         * Set tab
+         */
+        void CSettingsComponent::setSettingsTab(CSettingsComponent::SettingTab tab)
+        {
+            this->setCurrentIndex(static_cast<int>(tab));
+        }
+
+        /*
+         * Runtime set
+         */
         void CSettingsComponent::runtimeHasBeenSet()
         {
             if (!this->getIContextSettings()) qFatal("Settings missing");
 
-            this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsComponent::changedSettings);
-            this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &CSettingsComponent::audioTestUpdate);
+            this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsComponent::ps_changedSettings);
+            this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &CSettingsComponent::ps_audioTestUpdate);
 
             // based on audio context
             Q_ASSERT(this->getIContextAudio());
+            bool connected = false;
             if (this->getIContextAudio())
             {
                 this->initAudioDeviceLists();
-                bool connected = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &CSettingsComponent::audioTestUpdate);
+                connected = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &CSettingsComponent::ps_audioTestUpdate);
                 Q_ASSERT(connected);
-                connected = this->connect(this->ui->cb_SettingsAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
+                connected = this->connect(this->ui->cb_SettingsAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
                 Q_ASSERT(connected);
-                connected = this->connect(this->ui->cb_SettingsAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(audioDeviceSelected(int)));
+                connected = this->connect(this->ui->cb_SettingsAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
                 Q_ASSERT(connected);
                 this->connect(this->ui->pb_SettingsAudioMicrophoneTest, &QPushButton::clicked, this, &CSettingsComponent::ps_startAudioTest);
                 this->connect(this->ui->pb_SettingsAudioSquelchTest, &QPushButton::clicked, this, &CSettingsComponent::ps_startAudioTest);
@@ -186,6 +200,20 @@ namespace BlackGui
             this->connect(this->ui->pb_SettingsMiscSave, &QPushButton::clicked, this, &CSettingsComponent::ps_saveHotkeys);
             this->connect(this->ui->pb_SettingsMiscRemove, &QPushButton::clicked, this, &CSettingsComponent::ps_clearHotkey);
 
+            // Font
+            const QFont font = this->font();
+            this->ui->cb_SettingsGuiFontStyle->setCurrentText(CStyleSheetUtility::fontAsCombinedWeightStyle(font));
+            this->ui->cb_SettingsGuiFont->setCurrentFont(font);
+            this->ui->cb_SettingsGuiFontSize->setCurrentText(QString::number(font.pointSize()));
+            this->m_fontColor = QColor(CStyleSheetUtility::instance().fontColor());
+            this->ui->le_SettingsGuiFontColor->setText(this->m_fontColor.name());
+            connected = this->connect(this->ui->cb_SettingsGuiFont, SIGNAL(currentFontChanged(QFont)), this, SLOT(ps_fontChanged()));
+            Q_ASSERT(connected);
+            connected = this->connect(this->ui->cb_SettingsGuiFontSize, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
+            Q_ASSERT(connected);
+            connected = this->connect(this->ui->cb_SettingsGuiFontStyle, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
+            Q_ASSERT(connected);
+            this->connect(this->ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsComponent::ps_fontColorDialog);
         }
 
         /*
@@ -333,6 +361,43 @@ namespace BlackGui
                     this->ui->cb_SettingsAudioOutputDevice->setCurrentText(device.toQString(true));
                 }
             }
+        }
+
+        /*
+         * Font has been changed
+         */
+        void CSettingsComponent::ps_fontChanged()
+        {
+            QString fontSize = this->ui->cb_SettingsGuiFontSize->currentText().append("pt");
+            QString fontFamily = this->ui->cb_SettingsGuiFont->currentFont().family();
+            QString fontStyleCombined = this->ui->cb_SettingsGuiFontStyle->currentText();
+            QString fontColor = this->m_fontColor.name();
+            if (!this->m_fontColor.isValid() || this->m_fontColor.name().isEmpty())
+            {
+                fontColor = CStyleSheetUtility::instance().fontColor();
+            }
+            this->ui->le_SettingsGuiFontColor->setText(fontColor);
+            bool ok = CStyleSheetUtility::instance().updateFonts(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
+            if (ok)
+            {
+                this->sendStatusMessage(CStatusMessage::getInfoMessage("Updated font style", CStatusMessage::TypeSettings));
+            }
+            else
+            {
+                this->sendStatusMessage(CStatusMessage::getErrorMessage("Updating style failed", CStatusMessage::TypeSettings));
+            }
+        }
+
+        /*
+         * Font color dialog
+         */
+        void CSettingsComponent::ps_fontColorDialog()
+        {
+            QColor c =  QColorDialog::getColor(this->m_fontColor, this, "Font color");
+            if (c == this->m_fontColor) return;
+            this->m_fontColor = c;
+            this->ui->le_SettingsGuiFontColor->setText(this->m_fontColor.name());
+            this->ps_fontChanged();
         }
 
         /*

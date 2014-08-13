@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
+    <width>354</width>
     <height>323</height>
    </rect>
   </property>
@@ -20,7 +20,7 @@
    <string>Settings</string>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>2</number>
   </property>
   <widget class="QWidget" name="tb_SettingsTrafficNetwork">
    <attribute name="title">
@@ -190,6 +190,12 @@
        </property>
        <item>
         <widget class="QPushButton" name="pb_SettingsTnSaveServer">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
           <string>Save</string>
          </property>
@@ -197,6 +203,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="pb_SettingsTnRemoveServer">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
           <string>Remove</string>
          </property>
@@ -204,6 +216,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="pb_SettingsTnCurrentServer">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
           <string>Current server</string>
          </property>
@@ -423,6 +441,12 @@
           <layout class="QHBoxLayout" name="hl_SettingsAudioTests">
            <item>
             <widget class="QPushButton" name="pb_SettingsAudioSquelchTest">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
@@ -433,12 +457,18 @@
               <bool>false</bool>
              </property>
              <property name="text">
-              <string>Start squelch test</string>
+              <string>Squelch test</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="pb_SettingsAudioMicrophoneTest">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
@@ -446,7 +476,7 @@
               </size>
              </property>
              <property name="text">
-              <string>Start microphone test</string>
+              <string>Mic. test</string>
              </property>
             </widget>
            </item>
@@ -563,6 +593,12 @@
       </item>
       <item row="0" column="1">
        <widget class="QSlider" name="hs_SettingsGuiOpacity">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="maximum">
          <number>100</number>
         </property>
@@ -586,6 +622,12 @@
       </item>
       <item row="1" column="1">
        <widget class="QSlider" name="hs_SettingsGuiAircraftRefreshTime">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimum">
          <number>5</number>
         </property>
@@ -618,6 +660,12 @@
       </item>
       <item row="2" column="1">
        <widget class="QSlider" name="hs_SettingsGuiAtcRefreshTime">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimum">
          <number>5</number>
         </property>
@@ -647,6 +695,12 @@
       </item>
       <item row="3" column="1">
        <widget class="QSlider" name="hs_SettingsGuiUserRefreshTime">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimum">
          <number>5</number>
         </property>
@@ -666,6 +720,135 @@
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="lbl_SettingsGuiFont">
+        <property name="text">
+         <string>Font</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QFontComboBox" name="cb_SettingsGuiFont">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="lbl_SettingsGuiFontSize">
+        <property name="text">
+         <string>Font size (pt)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QComboBox" name="cb_SettingsGuiFontSize">
+        <item>
+         <property name="text">
+          <string>6</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>7</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>8</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>9</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>10</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>11</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>12</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>14</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>16</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="lbl_SettingsGuiFontStyle">
+        <property name="text">
+         <string>Font style</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QComboBox" name="cb_SettingsGuiFontStyle">
+        <item>
+         <property name="text">
+          <string>normal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>bold</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>italic</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>bold italic</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="lbl_SettingsGuiFontColor">
+        <property name="text">
+         <string>Font color</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <layout class="QHBoxLayout" name="hl_SettingsGuiFontColor">
+        <item>
+         <widget class="QToolButton" name="tb_SettingsGuiFontColor">
+          <property name="text">
+           <string>...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="le_SettingsGuiFontColor">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -719,6 +902,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="pb_SettingsMiscRemove">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
           <string>Remove</string>
          </property>
@@ -726,6 +915,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="pb_SettingsMiscCancel">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
           <string>Cancel</string>
          </property>

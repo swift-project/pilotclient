@@ -49,20 +49,8 @@ void MainWindow::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_FileFont)
     {
-        // KB: There seems to be a bug with the font Dialog (Win 7/32), it only works once
-        // Then the font cannot be changed anymore
-        bool ok = false;
-        QFont font = QFontDialog::getFont(&ok, this->font(), this, "Application fonts", QFontDialog::ProportionalFonts);
-        if (ok)
-        {
-            // the user clicked OK and font is set to the font the user selected
-            this->setFont(font);
-            CStyleSheetUtility::instance().updateFonts(font);
-        }
-        else
-        {
-            // the user canceled the dialog; font is set to the initial
-        }
+        this->ps_setMainPage(MainPageFoo);
+        this->ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
     }
     else if (sender == this->ui->menu_FileClose)
     {

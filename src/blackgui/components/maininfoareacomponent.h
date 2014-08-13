@@ -115,6 +115,9 @@ namespace BlackGui
             //! Select area
             void selectArea(int index);
 
+            //! Select settings with given area
+            void selectSettingsTab(int index);
+
         protected:
             //! Override close event
             virtual void closeEvent(QCloseEvent *event) override;

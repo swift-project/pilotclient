@@ -12,6 +12,7 @@
 #include <QDir>
 #include <QTextStream>
 #include <QDebug>
+#include <QRegExp>
 
 namespace BlackGui
 {
@@ -66,6 +67,28 @@ namespace BlackGui
         }
     }
 
+    QString CStyleSheetUtility::fontAsCombinedWeightStyle(const QFont &font)
+    {
+        QString w = fontWeightAsString(font);
+        QString s = fontStyleAsString(font);
+        if (w == s) return w; // avoid "normal" "normal"
+        if (w.isEmpty() && s.isEmpty()) return "normal";
+        if (w.isEmpty()) return s;
+        if (s.isEmpty()) return w;
+        if (s == "normal") return w;
+        return w.append(" ").append(s);
+    }
+
+    QString CStyleSheetUtility::fontColor()
+    {
+        QString s = this->style(fileNameFonts()).toLower();
+        if (!s.contains("color:")) return "red";
+        QRegExp rx("color:\\s*(#*\\w+);");
+        rx.indexIn(s);
+        QString c = rx.cap(1);
+        return c.isEmpty() ? "red" : c;
+    }
+
     bool CStyleSheetUtility::read()
     {
         QDir directory(qssDirectory());
@@ -109,7 +132,7 @@ namespace BlackGui
             QString s = this->m_styleSheets[fileName.toLower()];
             if (s.isEmpty()) continue;
             if (!style.isEmpty()) style.append("\n\n");
-            style.append("/** file: %1 **/\n").arg(fileName);
+            style.append("/** file: ").append(fileName).append(" **/\n");
             style.append(s);
         }
         return style;
@@ -123,24 +146,29 @@ namespace BlackGui
 
     bool CStyleSheetUtility::updateFonts(const QFont &font)
     {
-        const QString indent("     ");
-        QString fontStyleSheet;
-        fontStyleSheet.append(indent).append("font-family: \"").append(font.family()).append("\";\n");
-        fontStyleSheet.append(indent).append("font-size: ");
+        QString fs;
         if (font.pixelSize() >= 0)
         {
-            fontStyleSheet.append(font.pixelSize()).append("px\n");
+            fs.append(font.pixelSize()).append("px");
         }
         else
         {
-            fontStyleSheet.append(QString::number(font.pointSizeF())).append("pt;\n");
+            fs.append(QString::number(font.pointSizeF())).append("pt");
         }
-        fontStyleSheet.append(indent).append("font-style: ").append(fontStyleAsString(font)).append(";\n");
-        fontStyleSheet.append(indent).append("font-weight: ").append(fontWeightAsString(font)).append(";\n");
-        qDebug() << fontStyleSheet;
+        return updateFonts(font.family(), fs, fontStyleAsString(font), fontWeightAsString(font), "white");
+    }
+
+    bool CStyleSheetUtility::updateFonts(const QString &fontFamily, const QString &fontSize, const QString &fontStyle, const QString &fontWeight, const QString &fontColor)
+    {
+        const QString indent("     ");
+        QString fontStyleSheet;
+        fontStyleSheet.append(indent).append("font-family: \"").append(fontFamily).append("\";\n");
+        fontStyleSheet.append(indent).append("font-size: ").append(fontSize).append(";\n");
+        fontStyleSheet.append(indent).append("font-style: ").append(fontStyle).append(";\n");
+        fontStyleSheet.append(indent).append("font-weight: ").append(fontWeight).append(";\n");
+        fontStyleSheet.append(indent).append("color: ").append(fontColor).append(";\n");
 
         QString qss("QWidget {\n");
-        qss.append(indent).append("color: white;\n");
         qss.append(fontStyleSheet);
         qss.append("}\n");
 
@@ -154,6 +182,34 @@ namespace BlackGui
             ok = this->read();
         }
         return ok;
+    }
+
+    QString CStyleSheetUtility::fontStyle(const QString &combinedStyleAndWeight)
+    {
+        static const QString n("normal");
+        QString c = combinedStyleAndWeight.toLower();
+        foreach(QString s, fontStyles())
+        {
+            if (c.contains(s))
+            {
+                return s;
+            }
+        }
+        return n;
+    }
+
+    QString CStyleSheetUtility::fontWeight(const QString &combinedStyleAndWeight)
+    {
+        static const QString n("normal");
+        QString c = combinedStyleAndWeight.toLower();
+        foreach(QString w, fontWeights())
+        {
+            if (c.contains(w))
+            {
+                return w;
+            }
+        }
+        return n;
     }
 
     QString CStyleSheetUtility::qssDirectory()
