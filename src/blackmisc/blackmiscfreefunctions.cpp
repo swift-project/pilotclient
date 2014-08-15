@@ -150,6 +150,7 @@ void BlackMisc::Hardware::registerMetadata()
  */
 void BlackMisc::registerMetadata()
 {
+    CPropertyIndex::registerMetadata();
     CVariant::registerMetadata();
     CIndexVariantMap::registerMetadata();
     CNameVariantPair::registerMetadata();
@@ -158,7 +159,6 @@ void BlackMisc::registerMetadata()
     CStatusMessageList::registerMetadata();
     CIcon::registerMetadata();
     CIconList::registerMetadata();
-
     CHotkeyFunction::registerMetadata();
 
     // sub namespaces
