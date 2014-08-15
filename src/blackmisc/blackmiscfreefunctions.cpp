@@ -322,6 +322,30 @@ uint BlackMisc::calculateHash(const QList<uint> &values, const char *className)
 }
 
 /*
+ * Add hash values
+ */
+uint BlackMisc::calculateHash(const QList<int> &values, const char *className)
+{
+    QList<uint> list;
+    uint s = 0;
+    foreach(int i, values)
+    {
+
+        if (i >= 0)
+        {
+            list.append(static_cast<uint>(i));
+        }
+        else
+        {
+            list.append(static_cast<uint>(i));
+            list.append(s++);
+        }
+    }
+    return calculateHash(list, className);
+}
+
+
+/*
  * Fix QVariant if it comes from DBus and contains QDBusArgument
  */
 QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int localUserType)

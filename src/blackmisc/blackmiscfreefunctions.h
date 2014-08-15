@@ -141,6 +141,9 @@ namespace BlackMisc
      */
     uint calculateHash(const QList<uint> &values, const char *className);
 
+    //! Hash value, but with int list
+    uint calculateHash(const QList<int> &values, const char *className);
+
     //! Real heap size of an object
     size_t heapSizeOf(const QMetaType &type);
 
