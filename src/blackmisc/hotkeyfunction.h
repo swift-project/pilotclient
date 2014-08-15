@@ -49,9 +49,16 @@ namespace BlackMisc
         void setFunction(const Function &function) { m_function = function; }
 
         //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+        //! \copydoc CValueObject::fromQVariant
+        virtual void fromQVariant(const QVariant &variant) override
         {
-            return QVariant::fromValue(*this);
+            Q_ASSERT(variant.canConvert<CHotkeyFunction>());
+            if (variant.canConvert<CHotkeyFunction>())
+            {
+                (*this) = variant.value<CHotkeyFunction>();
+            }
         }
 
         //! \copydoc CValueObject::getValueHash

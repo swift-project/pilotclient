@@ -9,7 +9,7 @@
 
 //! \file
 
-#include "valueobject.h"
+#include "propertyindex.h"
 #include <QString>
 
 #ifndef BLACKMISC_VOICEROOM_H
@@ -26,6 +26,16 @@ namespace BlackMisc
         {
         public:
 
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexHostname = BlackMisc::CPropertyIndex::GlobalIndexCVoiceRoom,
+                IndexChannel,
+                IndexUrl,
+                IndexConnected,
+                IndexAudioPlaying
+            };
+
             //! Default constructor.
             CVoiceRoom() : m_connected(false), m_audioPlaying(false) {}
 
@@ -34,16 +44,13 @@ namespace BlackMisc
                 m_hostname(hostname), m_channel(channel), m_connected(false), m_audioPlaying(false) {}
 
             //! Constructor.
-            CVoiceRoom(const QString &serverUrl, bool connected = false);
+            CVoiceRoom(const QString &voiceRoomUrl, bool connected = false);
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Get the host name
-            const QString &getHostName() const { return m_hostname; }
+            const QString &getHostname() const { return m_hostname; }
 
             //! Get the voice room channel
             const QString &getChannel() const { return m_channel; }
@@ -60,6 +67,9 @@ namespace BlackMisc
              * \return
              */
             QString getVoiceRoomUrl(bool noProtocol = true) const;
+
+            //! Set voice room URL
+            void setVoiceRoomUrl(const QString &serverUrl);
 
             //! Valid voice room object?
             bool isValid() const { return !this->m_hostname.isEmpty() &&  !this->m_channel.isEmpty(); }
@@ -90,6 +100,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::propertyByIndex
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;

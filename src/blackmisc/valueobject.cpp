@@ -8,6 +8,7 @@
  */
 
 #include "valueobject.h"
+#include "propertyindex.h"
 #include "indexvariantmap.h"
 #include "blackmiscfreefunctions.h"
 #include "iconlist.h"
@@ -51,26 +52,48 @@ namespace BlackMisc
     /*
      * Setter for property by index
      */
-    void CValueObject::setPropertyByIndex(const QVariant & /** variant **/, int /** index **/)
+    void CValueObject::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
     {
-        // not all classes have to implement this
-        qFatal("Property by index setter not implemented");
+        if (index.isMyself())
+        {
+            this->fromQVariant(variant);
+            return;
+        }
+
+        // not all classes have implemented nesting
+        const QString m = QString("Property by index not found (setter), index: ").append(index.toQString());
+        qFatal(m.toLatin1().constData());
     }
 
     /*
      * By index
      */
-    QVariant CValueObject::propertyByIndex(int /** index **/) const
+    QVariant CValueObject::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
-        // not all classes have to implement this
-        qFatal("Property by index not implemented");
-        return QVariant("propertyByIndex not implemented"); // avoid compiler warning
+        if (index.isMyself()) { return this->toQVariant(); }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
+        {
+        case IndexIcon:
+            return this->toIcon().toQVariant();
+        case IndexPixmap:
+            return QVariant(this->toPixmap());
+        case IndexString:
+            return QVariant(this->toQString());
+        default:
+            break;
+        }
+
+        // not all classes have implemented nesting
+        const QString m = QString("Property by index not found, index: ").append(index.toQString());
+        qFatal(m.toLatin1().constData());
+        return QVariant(m); // avoid compiler warning
     }
 
     /*
      * By index as string
      */
-    QString CValueObject::propertyByIndexAsString(int index, bool i18n) const
+    QString CValueObject::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
     {
         // default implementation, requires propertyByIndex
         QVariant qv = this->propertyByIndex(index);

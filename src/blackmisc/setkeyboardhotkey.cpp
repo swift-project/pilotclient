@@ -130,9 +130,11 @@ namespace BlackMisc
             m_key = obj.m_key;
         }
 
-        QVariant CSettingKeyboardHotkey::propertyByIndex(int index) const
+        QVariant CSettingKeyboardHotkey::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexFunction:
                 return QVariant(m_hotkeyFunction.getFunction());
@@ -153,17 +155,19 @@ namespace BlackMisc
             case IndexKeyAsStringRepresentation:
                 return QVariant(m_key.getKeyAsStringRepresentation());
             default:
-                break;
+                return CValueObject::propertyByIndex(index);
             }
-
-            Q_ASSERT_X(false, "CSettingKeyboardHotkey", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
-            return QVariant::fromValue(m);
         }
 
-        void CSettingKeyboardHotkey::setPropertyByIndex(const QVariant &variant, int index)
+        void CSettingKeyboardHotkey::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            switch (index)
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexFunction:
                 {
@@ -192,9 +196,10 @@ namespace BlackMisc
                 this->setObject(variant.value<BlackMisc::Settings::CSettingKeyboardHotkey>());
                 break;
             default:
-                Q_ASSERT_X(false, "CSettingKeyboardHotkey", "index unknown (setter)");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }
+
     } // namespace Hardware
 } // BlackMisc

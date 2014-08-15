@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_SETTINGS_KEYBOARDHOTKEY_H
 #define BLACKMISC_SETTINGS_KEYBOARDHOTKEY_H
 
-#include "valueobject.h"
+#include "propertyindex.h"
 #include "hwkeyboardkey.h"
 #include "hotkeyfunction.h"
 #include <QStringList>
@@ -52,9 +52,16 @@ namespace BlackMisc
             CSettingKeyboardHotkey(const Hardware::CKeyboardKey &key, const CHotkeyFunction &function);
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override
             {
-                return QVariant::fromValue(*this);
+                Q_ASSERT(variant.canConvert<CSettingKeyboardHotkey>());
+                if (variant.canConvert<CSettingKeyboardHotkey>())
+                {
+                    (*this) = variant.value<CSettingKeyboardHotkey>();
+                }
             }
 
             //! \copydoc CValueObject::getValueHash
@@ -109,10 +116,10 @@ namespace BlackMisc
             static QString toStringRepresentation(int key) { return Hardware::CKeyboardKey::toStringRepresentation(key); }
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const QVariant &variant, int index);
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(int index) const;
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
         protected:
             //! \copydoc CValueObject::convertToQString

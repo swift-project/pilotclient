@@ -133,8 +133,10 @@ namespace BlackMisc
                 return CIconList::iconForIndex(CIcons::NetworkCapabilityUnknown);
             case VoiceReceivingOnly:
                 return CIconList::iconForIndex(CIcons::NetworkCapabilityVoiceReceiveOnly);
+            default:
+                break;
             }
-            Q_ASSERT("Wrong index");
+            Q_ASSERT(false);
             return CIconList::iconForIndex(CIcons::NetworkCapabilityUnknown); // never reached
         }
 

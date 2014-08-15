@@ -14,6 +14,7 @@
 
 #include "avairporticao.h"
 #include "coordinategeodetic.h"
+#include "propertyindex.h"
 
 namespace BlackMisc
 {
@@ -29,8 +30,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexIcao = 0,
-                IndexIcaoAsString,
+                IndexIcao = BlackMisc::CPropertyIndex::GlobalIndexCAirport,
                 IndexDescriptiveName,
                 IndexPosition,
                 IndexElevation,
@@ -123,10 +123,10 @@ namespace BlackMisc
             virtual uint getValueHash() const override;
 
             //! \copydoc CValueObject::propertyByIndex()
-            virtual QVariant propertyByIndex(int index) const override;
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
-            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;

@@ -247,7 +247,8 @@ namespace BlackCore
         if (callsign.isEmpty() || model.isEmpty()) return;
 
         // Request of other client, I can get the other's model from that
-        CIndexVariantMap vm(CClient::IndexQueriedModelString, QVariant(model));
+        CIndexVariantMap vm( { CClient::IndexModel, CAircraftModel::IndexModelString }, QVariant(model));
+        vm.addValue({ CClient::IndexModel, CAircraftModel::IndexIsQueriedModelString }, QVariant(true));
         if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
         {
             // with custom packets it can happen,

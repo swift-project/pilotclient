@@ -13,6 +13,7 @@
 #define BLACKMISC_CALLSIGN_H
 
 #include "valueobject.h"
+#include "propertyindex.h"
 #include "icon.h"
 
 namespace BlackMisc
@@ -24,6 +25,14 @@ namespace BlackMisc
         {
 
         public:
+            //! Indexes
+            enum ColumnIndex
+            {
+                IndexCallsignString = BlackMisc::CPropertyIndex::GlobalIndexCCallsign,
+                IndexCallsignStringAsSet,
+                IndexTelephonyDesignator
+            };
+
             //! Default constructor.
             CCallsign() {}
 
@@ -81,6 +90,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
+
+            //! \copydoc CValueObject::propertyByIndex
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex(variant, index)
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Register metadata
             static void registerMetadata();

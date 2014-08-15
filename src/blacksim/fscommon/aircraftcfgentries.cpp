@@ -59,29 +59,60 @@ namespace BlackSim
         /*
          * Get particular column
          */
-        QVariant CAircraftCfgEntries::propertyByIndex(int index) const
+        QVariant CAircraftCfgEntries::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexFilePath:
-                return this->m_filePath;
+                return QVariant(this->m_filePath);
             case IndexTitle:
-                return this->m_title;
+                return QVariant(this->m_title);
             case IndexAtcType:
-                return this->m_atcType;
+                return QVariant(this->m_atcType);
             case IndexAtcModel:
-                return this->m_atcModel;
+                return QVariant(this->m_atcModel);
             case IndexParkingCode:
-                return this->m_atcParkingCode;
+                return QVariant(this->m_atcParkingCode);
             case IndexEntryIndex:
-                return this->m_index;
+                return QVariant(this->m_index);
             default:
+                return CValueObject::propertyByIndex(index);
+            }
+        }
+
+        /*
+         * Set property as index
+         */
+        void CAircraftCfgEntries::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        {
+            if (index.isMyself()) { this->fromQVariant(variant); return; }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexAtcModel:
+                this->setAtcModel(variant.toString());
+                break;
+            case IndexAtcType:
+                this->setAtcType(variant.toString());
+                break;
+            case IndexEntryIndex:
+                this->setIndex(variant.toInt());
+                break;
+            case IndexFilePath:
+                this->setFilePath(variant.toString());
+                break;
+            case IndexParkingCode:
+                this->setAtcParkingCode(variant.toString());
+                break;
+            case IndexTitle:
+                this->setTitle(variant.toString());
+                break;
+            default:
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
-
-            Q_ASSERT_X(false, "CAircraftCfgEntries", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
-            return QVariant::fromValue(m);
         }
 
         /*

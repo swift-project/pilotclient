@@ -8,6 +8,7 @@
  */
 
 #include "nwaircraftmapping.h"
+#include "propertyindex.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -144,36 +145,44 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAircraftMapping::propertyByIndex(int index) const
+        QVariant CAircraftMapping::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexModel:
-                return this->m_model.toQVariant();
+                return this->m_model.propertyByIndex(index.copyFrontRemoved());
                 break;
             case IndexIcaoCode:
-                return this->m_icao.toQVariant();
+                return this->m_model.propertyByIndex(index.copyFrontRemoved());
                 break;
             default:
                 break;
             }
             Q_ASSERT_X(false, "CAircraftMapping", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
+            QString m = QString("no property, index ").append(index.toQString());
             return QVariant::fromValue(m);
         }
 
         /*
          * Set property as index
          */
-        void CAircraftMapping::setPropertyByIndex(const QVariant &variant, int index)
+        void CAircraftMapping::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            switch (index)
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexModel:
-                this->m_model = variant.value<BlackMisc::Network::CAircraftModel>();
+                this->m_model.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexIcaoCode:
-                this->m_icao = variant.value<BlackMisc::Aviation::CAircraftIcao>();
+                this->m_icao.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
                 Q_ASSERT_X(false, "CAircraftMapping", "index unknown");

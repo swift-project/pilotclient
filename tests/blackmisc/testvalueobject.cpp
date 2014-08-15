@@ -95,38 +95,33 @@ namespace BlackMisc
     /*
      * Property by index
      */
-    QVariant CTestValueObject::propertyByIndex(int index) const
+    QVariant CTestValueObject::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
-        switch (index)
+        if (index.isMyself()) { return this->toQVariant(); }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
         case IndexDescription:
             return QVariant::fromValue(this->m_description);
         case IndexName:
             return QVariant::fromValue(this->m_name);
         default:
-            break;
+            return CValueObject::propertyByIndex(index);
         }
-
-        Q_ASSERT_X(false, "CTestValueObject", "index unknown");
-        QString m = QString("no property, index ").append(QString::number(index));
-        return QVariant::fromValue(m);
-    }
-
-    /*
-     * Property as string by index
-     */
-    QString CTestValueObject::propertyByIndexAsString(int index, bool i18n) const
-    {
-        QVariant qv = this->propertyByIndex(index);
-        return BlackMisc::qVariantToString(qv, i18n);
     }
 
     /*
      * Property by index (setter)
      */
-    void CTestValueObject::setPropertyByIndex(const QVariant &variant, int index)
+    void CTestValueObject::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
-        switch (index)
+        if (index.isMyself())
+        {
+            this->fromQVariant(variant);
+            return;
+        }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
         case IndexDescription:
             this->setDescription(variant.value<QString>());
@@ -135,7 +130,7 @@ namespace BlackMisc
             this->setName(variant.value<QString>());
             break;
         default:
-            Q_ASSERT_X(false, "CTestValueObject", "index unknown");
+            CValueObject::setPropertyByIndex(variant, index);
             break;
         }
     }

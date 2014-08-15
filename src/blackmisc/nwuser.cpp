@@ -10,6 +10,7 @@
 #include "nwuser.h"
 #include "blackmisc/icon.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/propertyindex.h"
 #include <tuple>
 
 namespace BlackMisc
@@ -165,9 +166,11 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CUser::propertyByIndex(int index) const
+        QVariant CUser::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexEmail:
                 return QVariant(this->m_email);
@@ -178,24 +181,24 @@ namespace BlackMisc
             case IndexRealName:
                 return QVariant(this->m_realname);
             case IndexCallsign:
-                return this->m_callsign.toQVariant();
-            case IndexCallsignPixmap:
-                return QVariant(this->m_callsign.toPixmap());
+                return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
             default:
-                break;
+                return CValueObject::propertyByIndex(index);
             }
-
-            Q_ASSERT_X(false, "CUser", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
-            return QVariant::fromValue(m);
         }
 
         /*
          * Set property as index
          */
-        void CUser::setPropertyByIndex(const QVariant &variant, int index)
+        void CUser::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            switch (index)
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexEmail:
                 this->setEmail(variant.value<QString>());
@@ -210,10 +213,10 @@ namespace BlackMisc
                 this->setRealName(variant.value<QString>());
                 break;
             case IndexCallsign:
-                this->setCallsign(variant.value<BlackMisc::Aviation::CCallsign>());
+                this->m_callsign.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                Q_ASSERT_X(false, "CUser", "index unknown (setter)");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

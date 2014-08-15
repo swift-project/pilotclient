@@ -34,6 +34,15 @@ namespace BlackMisc
                 ModeS = 20
             };
 
+            //! Indexes
+            enum ColumnIndex {
+                IndexMode,
+                IndexModeAsString,
+                IndexTransponderCode,
+                IndexTransponderCodeFormatted,
+                IndexTransponderCodeAndModeFormatted
+            };
+
             //! Default constructor
             CTransponder() : CAvionicsBase("transponder"), m_transponderCode(0), m_transponderMode(StateStandby) {}
 
@@ -161,6 +170,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
+
+            //! \copydoc CValueObject::propertyByIndex
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex(variant, index)
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! \copydoc TupleConverter<>::jsonMembers()
             static const QStringList &jsonMembers();

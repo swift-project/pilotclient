@@ -9,7 +9,9 @@
 
 #include "avaircraftsituation.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/propertyindex.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
 
@@ -104,28 +106,28 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAircraftSituation::propertyByIndex(int index) const
+        QVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexPosition:
-                return QVariant::fromValue(this->m_position);
-            case IndexPositionLatitude:
-                return QVariant::fromValue(this->latitude());
-            case IndexPositionLongitude:
-                return QVariant::fromValue(this->longitude());
-            case IndexPositionHeight:
-                return QVariant::fromValue(this->getHeight());
+                return this->m_position.propertyByIndex(index.copyFrontRemoved());
+            case IndexLatitude:
+                return this->latitude().propertyByIndex(index.copyFrontRemoved());
+            case IndexLongitude:
+                return this->longitude().propertyByIndex(index.copyFrontRemoved());
             case IndexAltitude:
-                return QVariant::fromValue(this->m_altitude);
+                return this->m_altitude.propertyByIndex(index.copyFrontRemoved());
             case IndexHeading:
-                return QVariant::fromValue(this->m_heading);
+                return this->m_heading.propertyByIndex(index.copyFrontRemoved());
             case IndexPitch:
-                return QVariant::fromValue(this->m_pitch);
+                return this->m_pitch.propertyByIndex(index.copyFrontRemoved());
             case IndexBank:
-                return QVariant::fromValue(this->m_bank);
+                return this->m_bank.propertyByIndex(index.copyFrontRemoved());
             case IndexGroundspeed:
-                return QVariant::fromValue(this->m_groundspeed);
+                return this->m_groundspeed.propertyByIndex(index.copyFrontRemoved());
             case IndexTimeStamp:
                 return QVariant::fromValue(this->m_timestamp);
             case IndexTimeStampFormatted:
@@ -135,43 +137,38 @@ namespace BlackMisc
             }
 
             Q_ASSERT_X(false, "CAircraftSituation", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
+            QString m = QString("no property, index ").append(index.toQString());
             return QVariant::fromValue(m);
-        }
-
-        /*
-         * Property as string by index
-         */
-        QString CAircraftSituation::propertyByIndexAsString(int index, bool i18n) const
-        {
-            QVariant qv = this->propertyByIndex(index);
-            return BlackMisc::qVariantToString(qv, i18n);
         }
 
         /*
          * Property by index
          */
-        void CAircraftSituation::setPropertyByIndex(const QVariant &variant, int index)
+        void CAircraftSituation::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            switch (index)
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexPosition:
-                this->setPosition(variant.value<CCoordinateGeodetic>());
+                this->m_position.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexAltitude:
-                this->setAltitude(variant.value<CAltitude>());
+                this->m_altitude.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexPitch:
-                this->setPitch(variant.value<CAngle>());
+                this->m_pitch.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexBank:
-                this->setBank(variant.value<CAngle>());
+                this->m_bank.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexGroundspeed:
-                this->setGroundspeed(variant.value<CSpeed>());
-                break;
-            case IndexPositionHeight:
-                this->setHeight(variant.value<CLength>());
+                this->m_groundspeed.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
                 Q_ASSERT_X(false, "CAircraftSituation", "index unknown (setter)");

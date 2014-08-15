@@ -9,6 +9,8 @@
 
 #include "nwclient.h"
 #include "icon.h"
+#include "avcallsign.h"
+
 #include <QString>
 
 namespace BlackMisc
@@ -173,83 +175,66 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CClient::propertyByIndex(int index) const
+        QVariant CClient::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index < static_cast<int>(IndexQueriedModelString))
-            {
-                return this->m_user.propertyByIndex(index);
-            }
-            else if (index < static_cast<int>(IndexCapabilities))
-            {
-                return this->m_model.propertyByIndex(index);
-            }
-
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexCapabilities:
                 return this->m_capabilities.toQVariant();
-                break;
             case IndexCapabilitiesString:
                 return QVariant(this->getCapabilitiesAsString());
-                break;
+            case IndexCallsign:
+                return this->getCallsign().propertyByIndex(index.copyFrontRemoved());
+            case IndexUser:
+                return this->getUser().propertyByIndex(index.copyFrontRemoved());
             case IndexModel:
-                return QVariant(this->m_model.toQVariant());
-                break;
+                return this->m_model.propertyByIndex(index.copyFrontRemoved());
             case IndexServer:
                 return QVariant(this->m_server);
-                break;
             case IndexVoiceCapabilities:
-                return this->m_voiceCapabilities.toQVariant();
-                break;
-            case IndexVoiceCapabilitiesString:
-                return QVariant(this->m_voiceCapabilities.toQString(false));
-                break;
+                return this->m_voiceCapabilities.propertyByIndex(index.copyFrontRemoved());
             case IndexVoiceCapabilitiesPixmap:
                 return QVariant(this->m_voiceCapabilities.toPixmap());
-                break;
             default:
-                break;
+                return CValueObject::propertyByIndex(index);
             }
-            Q_ASSERT_X(false, "CClient", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
-            return QVariant::fromValue(m);
         }
 
         /*
          * Set property as index
          */
-        void CClient::setPropertyByIndex(const QVariant &variant, int index)
+        void CClient::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index < static_cast<int>(IndexQueriedModelString))
+            if (index.isMyself())
             {
-                this->m_user.setPropertyByIndex(variant, index);
+                this->fromQVariant(variant);
                 return;
             }
-            else if (index < static_cast<int>(IndexCapabilities))
-            {
-                this->m_model.setPropertyByIndex(variant, index);
-                return;
-            }
-
-            switch (index)
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexCapabilities:
                 this->m_capabilities = variant.value<CIndexVariantMap>();
                 break;
             case IndexModel:
-                this->m_model = variant.value<CAircraftModel>();
+                this->m_model.setPropertyByIndex(variant, index.copyFrontRemoved());;
                 break;
             case IndexServer:
                 this->m_server = variant.toString();
                 break;
-            case IndexVoiceCapabilities:
-                this->m_voiceCapabilities = variant.value<CVoiceCapabilities>();
+            case IndexUser:
+                this->m_user.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
-            case IndexVoiceCapabilitiesString:
-                this->m_voiceCapabilities = CVoiceCapabilities(variant.toString());
+            case IndexCallsign:
+                this->m_user.setCallsign(variant.value<BlackMisc::Aviation::CCallsign>());
+                break;
+            case IndexVoiceCapabilities:
+                this->m_voiceCapabilities.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                Q_ASSERT_X(false, "CClient", "index unknown");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

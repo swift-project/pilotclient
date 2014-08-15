@@ -39,13 +39,8 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexCallsign = 0,
-                IndexPixmap, // representing icon
-                IndexCallsignAsString,
-                IndexCallsignAsStringAsSet,
+                IndexCallsign = BlackMisc::CPropertyIndex::GlobalIndexCAtcStation,
                 IndexController,
-                IndexControllerRealName,
-                IndexControllerId,
                 IndexFrequency,
                 IndexPosition,
                 IndexRange,
@@ -56,11 +51,8 @@ namespace BlackMisc
                 IndexLatitude,
                 IndexLongitude,
                 IndexAtis,
-                IndexAtisMessage,
                 IndexMetar,
-                IndexMetarMessage,
                 IndexVoiceRoom,
-                IndexVoiceRoomUrl
             };
 
             //! Default constructor.
@@ -77,10 +69,10 @@ namespace BlackMisc
                         const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
             //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::toIcon()
+            virtual BlackMisc::CIcon toIcon() const override { return this->m_callsign.toIcon(); }
 
             //! Equal operator ==
             bool operator ==(const CAtcStation &other) const;
@@ -278,13 +270,13 @@ namespace BlackMisc
             virtual uint getValueHash() const override;
 
             //! \copydoc CValueObject::propertyByIndex()
-            virtual QVariant propertyByIndex(int index) const override;
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
-            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+            virtual void setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index) override;
 
             //! \copydoc CValueObject::propertyByIndexAsString()
-            virtual QString propertyByIndexAsString(int index, bool i18n = false) const override;
+            virtual QString propertyByIndexAsString(const BlackMisc::CPropertyIndex &index, bool i18n = false) const override;
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;

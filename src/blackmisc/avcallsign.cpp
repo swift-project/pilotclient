@@ -122,6 +122,53 @@ namespace BlackMisc
         }
 
         /*
+         * Index
+         */
+        QVariant CCallsign::propertyByIndex(const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexCallsignString:
+                return QVariant(this->asString());
+            case IndexCallsignStringAsSet:
+                return QVariant(this->getStringAsSet());
+            case IndexTelephonyDesignator:
+                return QVariant(this->getTelephonyDesignator());
+            default:
+                return CValueObject::propertyByIndex(index);
+            }
+        }
+
+        /*
+         * Index
+         */
+        void CCallsign::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+        {
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexCallsignString:
+                this->m_callsign = variant.toString();
+                break;
+            case IndexCallsignStringAsSet:
+                this->m_callsignAsSet = variant.toString();
+                break;
+            case IndexTelephonyDesignator:
+                this->m_telephonyDesignator = variant.toString();
+                break;
+            default:
+                return CValueObject::setPropertyByIndex(variant, index);
+            }
+        }
+
+        /*
          * Members
          */
         const QStringList &CCallsign::jsonMembers()

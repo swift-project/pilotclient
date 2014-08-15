@@ -9,6 +9,7 @@
 
 #include "statusmessage.h"
 #include "blackmiscfreefunctions.h"
+#include "propertyindex.h"
 #include "iconlist.h"
 #include <QMetaEnum>
 
@@ -266,9 +267,11 @@ namespace BlackMisc
     /*
      * Property by index
      */
-    QVariant CStatusMessage::propertyByIndex(int index) const
+    QVariant CStatusMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
-        switch (index)
+        if (index.isMyself()) { return this->toQVariant(); }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
         case IndexMessage:
             return QVariant(this->m_message);
@@ -278,6 +281,11 @@ namespace BlackMisc
             return QVariant(this->getSeverityAsString());
         case IndexTimestamp:
             return QVariant(this->m_timestamp);
+        case IndexTimestampFormatted:
+            {
+                if (this->m_timestamp.isNull() || !this->m_timestamp.isValid()) return "";
+                return this->m_timestamp.toString("HH:mm::ss.zzz");
+            }
         case IndexType:
             return QVariant(static_cast<uint>(this->m_type));
         case IndexTypeAsString:
@@ -287,16 +295,22 @@ namespace BlackMisc
         }
 
         Q_ASSERT_X(false, "CStatusMessage", "index unknown");
-        QString m = QString("no property, index ").append(QString::number(index));
+        QString m = QString("no property, index ").append(index.toQString());
         return QVariant::fromValue(m);
     }
 
     /*
      * Set property as index
      */
-    void CStatusMessage::setPropertyByIndex(const QVariant &variant, int index)
+    void CStatusMessage::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
-        switch (index)
+        if (index.isMyself())
+        {
+            this->fromQVariant(variant);
+            return;
+        }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
         case IndexMessage:
             this->m_message = variant.value<QString>();
@@ -311,30 +325,9 @@ namespace BlackMisc
             this->m_type = static_cast<StatusType>(variant.value<uint>());
             break;
         default:
-            Q_ASSERT_X(false, "CStatusMessage", "index unknown (setter)");
+            CValueObject::setPropertyByIndex(variant, index);
             break;
         }
-    }
-
-    /*
-     * Property as string by index
-     */
-    QString CStatusMessage::propertyByIndexAsString(int index, bool i18n) const
-    {
-        QVariant qv = this->propertyByIndex(index);
-        switch (index)
-        {
-        case IndexTimestamp:
-            {
-                QDateTime dt = qv.value<QDateTime>();
-                if (dt.isNull() || !dt.isValid()) return "";
-                return dt.toString("HH:mm::ss.zzz");
-                break;
-            }
-        default:
-            break;
-        }
-        return BlackMisc::qVariantToString(qv, i18n);
     }
 
     /*

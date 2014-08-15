@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_AIRCRAFTICAO_H
 #define BLACKMISC_AIRCRAFTICAO_H
 
-#include "valueobject.h"
+#include "propertyindex.h"
 
 namespace BlackMisc
 {
@@ -28,7 +28,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexAircraftDesignator,
+                IndexAircraftDesignator = BlackMisc::CPropertyIndex::GlobalIndexCAircraftIcao,
                 IndexCombinedAircraftType,
                 IndexAirlineDesignator,
                 IndexAircraftColor,
@@ -151,13 +151,10 @@ namespace BlackMisc
             virtual void fromJson(const QJsonObject &json) override;
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(int index) const override;
-
-            //! \copydoc CValueObject::propertyByIndex(index, i18n)
-            virtual QString propertyByIndexAsString(int index, bool i18n) const override;
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
-            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Register metadata
             static void registerMetadata();

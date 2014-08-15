@@ -9,8 +9,9 @@
 
 //! \file
 
-#include "valueobject.h"
 #include "variant.h"
+#include "propertyindex.h"
+#include "valueobject.h"
 #include <QVariantMap>
 #include <QDBusArgument>
 
@@ -19,6 +20,9 @@
 
 namespace BlackMisc
 {
+    // Forward declaration
+    class CPropertyIndex;
+
     /*!
      * Specialized value object compliant map for variants,
      * based on Column indexes
@@ -35,7 +39,7 @@ namespace BlackMisc
         CIndexVariantMap(bool wildcard = false);
 
         //! Single value constructor
-        CIndexVariantMap(int index, const QVariant &value);
+        CIndexVariantMap(const CPropertyIndex &index, const QVariant &value);
 
         //! \copydoc CValueObject::toQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -44,25 +48,25 @@ namespace BlackMisc
         virtual ~CIndexVariantMap() {}
 
         //! Add a value
-        void addValue(int index, const QVariant &value);
+        void addValue(const CPropertyIndex &index, const QVariant &value);
 
         //! Add a value as non QVariant
-        template<class T> void addValue(int index, const T &value) { this->m_values.insert(index, CVariant::fromValue(value)); }
+        template<class T> void addValue(const CPropertyIndex &index, const T &value) { this->m_values.insert(index, CVariant::fromValue(value)); }
 
         //! Is empty?
         bool isEmpty() const { return this->m_values.isEmpty(); }
 
         //! Value
-        QVariant value(int index) const { return this->m_values.value(index).toQVariant(); }
+        QVariant value(const CPropertyIndex &index) const { return this->m_values.value(index).toQVariant(); }
 
         //! Set value
-        void value(int index, const QVariant &value) { this->m_values.value(index, value); }
+        void value(const CPropertyIndex &index, const QVariant &value) { this->m_values.value(index, value); }
 
         //! Indexes
-        QList<int> indexes() const { return this->m_values.keys(); }
+        QList<CPropertyIndex> indexes() const { return this->m_values.keys(); }
 
         //! Contains index?
-        bool contains(int index) const { return this->m_values.contains(index); }
+        bool contains(const CPropertyIndex &index) const { return this->m_values.contains(index); }
 
         //! values
         QList<CVariant> values() const { return this->m_values.values(); }
@@ -83,7 +87,7 @@ namespace BlackMisc
         bool operator !=(const CIndexVariantMap &other) const;
 
         //! Map
-        const QMap<int, CVariant> &map() const { return this->m_values; }
+        const QMap<CPropertyIndex, CVariant> &map() const { return this->m_values; }
 
         //! \copydoc CValueObject::getValueHash
         virtual uint getValueHash() const override;
@@ -92,7 +96,7 @@ namespace BlackMisc
         static void registerMetadata();
 
     protected:
-        QMap<int, CVariant> m_values; //!< values
+        QMap<CPropertyIndex, CVariant> m_values; //!< values
         bool m_wildcard; //!< wildcard
 
         //! \copydoc CValueObject::convertToQString

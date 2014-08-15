@@ -31,6 +31,7 @@
 namespace BlackMisc
 {
     // forward declaration
+    class CPropertyIndex;
     class CIndexVariantMap;
     class CIcon;
 
@@ -159,6 +160,14 @@ namespace BlackMisc
         friend int compare(const CValueObject &v1, const CValueObject &v2);
 
     public:
+        //! Base class enums
+        enum ColumnIndex
+        {
+            IndexPixmap,
+            IndexIcon,
+            IndexString
+        };
+
         //! Virtual destructor
         virtual ~CValueObject() {}
 
@@ -195,30 +204,17 @@ namespace BlackMisc
         //! As pixmap, required for most GUI views
         virtual QPixmap toPixmap() const;
 
-        /*!
-         * \brief Set property by index
-         * \remarks Intentionally not abstract, avoiding all classes need to implement this method
-         * \param variant
-         * \param index as used in Qt table views
-         */
-        virtual void setPropertyByIndex(const QVariant &variant, int index);
+        //! Set property by index
+        //! \remarks Intentionally not abstract, avoiding all classes need to implement this method
+        virtual void setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index);
 
-        /*!
-         * \brief Property by index
-         * \remarks Intentionally not abstract, avoiding all classes need to implement this method
-         * \param index as used in Qt table views
-         * \return
-         */
-        virtual QVariant propertyByIndex(int index) const;
+        //! Property by index
+        //! \remarks Intentionally not abstract, avoiding all classes need to implement this method
+        virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
-        /*!
-         * \brief Property by index as String
-         * \remarks Intentionally not abstract, avoiding all classes need to implement this method
-         * \param index as used in Qt table views
-         * \param i18n
-         * \return
-         */
-        virtual QString propertyByIndexAsString(int index, bool i18n = false) const;
+        //! Property by index as String
+        //! Intentionally not abstract, avoiding all classes need to implement this method
+        virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
 
         //! The stored object as CValueObject
         static const CValueObject *fromQVariant(const QVariant &qv);

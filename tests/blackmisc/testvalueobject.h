@@ -39,7 +39,6 @@ namespace BlackMisc
         CTestValueObject(const QString &name, const QString &description)
             : m_name(name), m_description(description) {}
 
-
         //! Get name
         const QString &getName() const { return m_name; }
 

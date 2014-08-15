@@ -11,6 +11,7 @@
 #include "aviocomsystem.h"
 #include "voiceroom.h"
 #include "icon.h"
+#include "propertyindex.h"
 #include "blackmiscfreefunctions.h"
 
 using namespace BlackMisc::PhysicalQuantities;
@@ -315,69 +316,57 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAtcStation::propertyByIndex(int index) const
+        QVariant CAtcStation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexBookedFrom:
                 return QVariant(this->m_bookedFromUtc);
             case IndexBookedUntil:
                 return QVariant(this->m_bookedUntilUtc);
             case IndexCallsign:
-                return this->m_callsign.toQVariant();
-            case IndexCallsignAsString:
-                return QVariant(this->m_callsign.asString());
-            case IndexCallsignAsStringAsSet:
-                return QVariant(this->m_callsign.getStringAsSet());
-            case IndexPixmap:
-                return QVariant(this->m_callsign.toPixmap());
+                return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
             case IndexController:
-                return this->m_controller.toQVariant();
-            case IndexControllerRealName:
-                return QVariant(this->getControllerRealName());
-            case IndexControllerId:
-                return QVariant(this->getControllerId());
+                return this->m_controller.propertyByIndex(index.copyFrontRemoved());
             case IndexFrequency:
-                return this->m_frequency.toQVariant();
+                return this->m_frequency.propertyByIndex(index.copyFrontRemoved());
             case IndexIsOnline:
                 return QVariant(this->m_isOnline);
             case IndexLatitude:
-                return this->latitude().toQVariant();
+                return this->latitude().propertyByIndex(index.copyFrontRemoved());
             case IndexDistance:
-                return this->m_distanceToPlane.toQVariant();
+                return this->m_distanceToPlane.propertyByIndex(index.copyFrontRemoved());
             case IndexLongitude:
-                return this->longitude().toQVariant();
+                return this->longitude().propertyByIndex(index.copyFrontRemoved());
             case IndexPosition:
-                return this->m_position.toQVariant();
+                return this->m_position.propertyByIndex(index.copyFrontRemoved());
             case IndexRange:
-                return this->m_range.toQVariant();
+                return this->m_range.propertyByIndex(index.copyFrontRemoved());
             case IndexAtis:
-                return this->m_atis.toQVariant();
-            case IndexAtisMessage:
-                return QVariant(this->m_atis.getMessage());
+                return this->m_atis.propertyByIndex(index.copyFrontRemoved());
             case IndexMetar:
-                return this->m_metar.toQVariant();
-            case IndexMetarMessage:
-                return QVariant(this->m_metar.getMessage());
+                return this->m_metar.propertyByIndex(index.copyFrontRemoved());
             case IndexVoiceRoom:
-                return QVariant(this->m_voiceRoom.toQVariant());
-            case IndexVoiceRoomUrl:
-                return QVariant(this->m_voiceRoom.getVoiceRoomUrl());
+                return QVariant(this->m_voiceRoom.propertyByIndex(index.copyFrontRemoved()));
             default:
-                break;
+                if (ICoordinateGeodetic::canHandleIndex(index))
+                {
+                    return ICoordinateGeodetic::propertyByIndex(index);
+                }
+                return CValueObject::propertyByIndex(index);
             }
-
-            Q_ASSERT_X(false, "CAtcStation", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
-            return QVariant::fromValue(m);
         }
 
         /*
          * Set property as index
          */
-        void CAtcStation::setPropertyByIndex(const QVariant &variant, int index)
+        void CAtcStation::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            switch (index)
+            if (index.isMyself()) { this->fromQVariant(variant); return; }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexBookedFrom:
                 this->setBookedFromUtc(variant.value<QDateTime>());
@@ -386,55 +375,37 @@ namespace BlackMisc
                 this->setBookedUntilUtc(variant.value<QDateTime>());
                 break;
             case IndexCallsign:
-                this->setCallsign(variant.value<CCallsign>());
-                break;
-            case IndexCallsignAsString:
-                this->setCallsign(CCallsign(variant.value<QString>()));
+                this->m_callsign.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexController:
-                this->setController(variant.value<CUser>());
-                break;
-            case IndexControllerRealName:
-                this->setControllerRealName(variant.value<QString>());
-                break;
-            case IndexControllerId:
-                this->setControllerId(variant.value<QString>());
+                this->m_controller.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexFrequency:
-                this->setFrequency(variant.value<CFrequency>());
+                this->m_frequency.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexIsOnline:
                 this->setOnline(variant.value<bool>());
                 break;
             case IndexPosition:
-                this->setPosition(variant.value<CCoordinateGeodetic>());
+                this->m_position.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexRange:
-                this->setRange(variant.value<CLength>());
+                this->m_range.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexDistance:
-                this->setDistanceToPlane(variant.value<CLength>());
+                this->m_distanceToPlane.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexAtis:
-                this->setAtis(variant.value<CInformationMessage>());
-                break;
-            case IndexAtisMessage:
-                this->setAtisMessage(variant.value<QString>());
+                this->m_atis.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexMetar:
-                this->setMetar(variant.value<CInformationMessage>());
-                break;
-            case IndexMetarMessage:
-                this->setMetarMessage(variant.value<QString>());
+                this->m_metar.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexVoiceRoom:
-                this->setVoiceRoom(variant.value<CVoiceRoom>());
-                break;
-            case IndexVoiceRoomUrl:
-                this->setVoiceRoom(CVoiceRoom(variant.toString()));
+                this->m_voiceRoom.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                Q_ASSERT_X(false, "CAtcStation", "index unknown (setter)");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }
@@ -460,13 +431,15 @@ namespace BlackMisc
         /*
          * Property as string by index
          */
-        QString CAtcStation::propertyByIndexAsString(int index, bool i18n) const
+        QString CAtcStation::propertyByIndexAsString(const BlackMisc::CPropertyIndex &index, bool i18n) const
         {
             QVariant qv = this->propertyByIndex(index);
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+
             // special treatment
             // this is required as it is possible an ATC station is not containing all
             // properties
-            switch (index)
+            switch (i)
             {
             case IndexFrequency:
                 if (!CComSystem::isValidCivilAviationFrequency(qv.value<CFrequency>()))

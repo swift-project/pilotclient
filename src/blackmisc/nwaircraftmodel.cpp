@@ -128,39 +128,45 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAircraftModel::propertyByIndex(int index) const
+        QVariant CAircraftModel::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexModelString:
                 return QVariant(this->m_modelString);
                 break;
-            case IndexQueriedModelString:
+            case IndexIsQueriedModelString:
                 return QVariant(this->m_queriedModelStringFlag);
                 break;
             default:
+                return CValueObject::propertyByIndex(index);
                 break;
             }
-            Q_ASSERT_X(false, "CAircraftModel", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
-            return QVariant::fromValue(m);
         }
 
         /*
          * Set property as index
          */
-        void CAircraftModel::setPropertyByIndex(const QVariant &variant, int index)
+        void CAircraftModel::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            switch (index)
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexModelString:
                 this->m_modelString = variant.toString();
                 break;
-            case IndexQueriedModelString:
+            case IndexIsQueriedModelString:
                 this->m_queriedModelStringFlag = variant.toBool();
                 break;
             default:
-                Q_ASSERT_X(false, "CAircraftModel", "index unknown");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

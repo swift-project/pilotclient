@@ -39,7 +39,7 @@ namespace BlackMisc
             CVoiceCapabilities() {}
 
             //! Constructor by callsign
-            CVoiceCapabilities(VoiceCapabilities capabilities) : m_voiceCapabilities(static_cast<uint>(capabilities)) {}
+            CVoiceCapabilities(VoiceCapabilities capabilities) : m_voiceCapabilities(static_cast<int>(capabilities)) {}
 
             //! Constructor.
             CVoiceCapabilities(const QString &flightPlanRemarks);
@@ -51,7 +51,7 @@ namespace BlackMisc
             VoiceCapabilities getCapabilities() const { return static_cast<VoiceCapabilities>(m_voiceCapabilities); }
 
             //! Set capabilites
-            void setCapabilities(VoiceCapabilities capabilites) { m_voiceCapabilities = static_cast<uint>(capabilites); }
+            void setCapabilities(VoiceCapabilities capabilites) { m_voiceCapabilities = static_cast<int>(capabilites); }
 
             //! \copydoc CValueObject::toIcon()
             virtual CIcon toIcon() const override;
@@ -98,7 +98,7 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CVoiceCapabilities)
-            uint m_voiceCapabilities;
+            int m_voiceCapabilities = Unknown;
 
             //! Capabilites from flight plans remarks such as "/V/"
             void fromFlightPlanRemarks(const QString &flightPlanRemarks);

@@ -13,6 +13,7 @@
 #define BLACKMISC_AVIOMODULATORUNIT_H
 
 #include <QDBusMetaType>
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/aviobase.h"
 #include "blackmisc/mathematics.h"
 
@@ -30,6 +31,17 @@ namespace BlackMisc
         {
 
         public:
+
+            //! Column indexes
+            enum ColumnIndex
+            {
+                IndexActiveFrequency = BlackMisc::CPropertyIndex::GlobalIndexCModulator,
+                IndexStandbyFrequency,
+                IndexOutputVolume,
+                IndexInputVolume,
+                IndexEnabled
+            };
+
             //! Virtual destructor
             virtual ~CModulator() {}
 
@@ -89,6 +101,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
+
+            //! \copydoc CValueObject::propertyByIndex
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex(variant, index)
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Register metadata
             static void registerMetadata();

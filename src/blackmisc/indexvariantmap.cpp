@@ -21,7 +21,7 @@ namespace BlackMisc
     /*
      * Constructor single value
      */
-    CIndexVariantMap::CIndexVariantMap(int index, const QVariant &value)
+    CIndexVariantMap::CIndexVariantMap(const CPropertyIndex &index, const QVariant &value)
     {
         this->addValue(index, value);
     }
@@ -49,7 +49,7 @@ namespace BlackMisc
     {
         if (this->isEmpty()) return QString("{wildcard: %1}").arg(this->m_wildcard ? "true" : "false");
         QString s;
-        foreach(int index, this->m_values.keys())
+        foreach(CPropertyIndex index, this->m_values.keys())
         {
             CVariant v = this->m_values.value(index);
 
@@ -57,7 +57,7 @@ namespace BlackMisc
             s.append("{wildcard: ").append(this->m_wildcard ? "true" : "false").append(" ") :
             s.append(", ");
 
-            s.append('{').append(QString::number(index)).append(": ");
+            s.append('{').append(index.toQString(i18n)).append(": ");
             s.append("(").append(QString::number(v.userType())).append(") ");
             QString vs = v.toString(i18n);
             s.append(vs);
@@ -81,7 +81,6 @@ namespace BlackMisc
     bool CIndexVariantMap::isA(int metaTypeId) const
     {
         if (metaTypeId == qMetaTypeId<CIndexVariantMap>()) { return true; }
-
         return this->CValueObject::isA(metaTypeId);
     }
 
@@ -113,7 +112,7 @@ namespace BlackMisc
         argument >> indexes;
         argument >> values;
         Q_ASSERT(indexes.size() == values.size());
-        QMap<int, CVariant> newMap;
+        QMap<CPropertyIndex, CVariant> newMap;
         for (int i = 0; i < indexes.size(); i++)
         {
             newMap.insert(indexes[i], values[i]);
@@ -125,7 +124,7 @@ namespace BlackMisc
     /*
      * Add value
      */
-    void CIndexVariantMap::addValue(int index, const QVariant &value)
+    void CIndexVariantMap::addValue(const CPropertyIndex &index, const QVariant &value)
     {
         this->m_values.insert(index, value);
     }

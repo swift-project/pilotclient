@@ -77,15 +77,15 @@ namespace BlackMisc
         {
             IndexName = 0,
             IndexVariant,
-            IndexIcon,
+            IndexCallsignIcon,
             IndexPixmap
         };
 
         //! \copydoc CValueObject::propertyByIndex()
-        virtual QVariant propertyByIndex(int index) const override;
+        virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
         //! \copydoc CValueObject::setPropertyByIndex(variant, index)
-        virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+        virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
     protected:
         //! \copydoc CValueObject::convertToQString()

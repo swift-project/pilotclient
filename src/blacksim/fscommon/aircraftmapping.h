@@ -64,7 +64,7 @@ namespace BlackSim
             //! Columns
             enum ColumnIndex
             {
-                IndexMappingId = 0,
+                IndexMappingId = BlackMisc::CPropertyIndex::GlobalIndexCAircraftMapping,
                 IndexProposalId,
                 IndexAircraftKey,
                 IndexAircraftDesignator,
@@ -184,7 +184,7 @@ namespace BlackSim
             void setSimulatorText(const QString &simulator);
 
             //! \copydoc CValueObject::propertyByIndex
-            QVariant propertyByIndex(int index) const override;
+            QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex()
             void setPropertyByIndex(const QVariant &value, const BlackMisc::CPropertyIndex &index) override;

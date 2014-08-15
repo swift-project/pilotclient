@@ -16,6 +16,7 @@
 #include "blackmisc/geolatitude.h"
 #include "blackmisc/geolongitude.h"
 #include "blackmisc/pqlength.h"
+#include "propertyindex.h"
 
 namespace BlackMisc
 {
@@ -29,11 +30,10 @@ namespace BlackMisc
         class ICoordinateGeodetic
         {
         public:
-
             //! Properties by index
             enum ColumnIndex
             {
-                IndexLatitude = 6000,
+                IndexLatitude = BlackMisc::CPropertyIndex::GlobalIndexICoordinateGeodetic,
                 IndexLongitude,
                 IndexLatitudeAsString,
                 IndexLongitudeAsString
@@ -48,17 +48,14 @@ namespace BlackMisc
             //! Longitude
             virtual const CLongitude &longitude() const = 0;
 
+            //! \copydoc CValueObject::propertyByIndex
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+
             //! Latitude as string
-            QString latitudeAsString() const
-            {
-                return this->latitude().toQString(true);
-            }
+            QString latitudeAsString() const { return this->latitude().toQString(true); }
 
             //! Longitude as string
-            QString longitudeAsString() const
-            {
-                return this->longitude().toQString(true);
-            }
+            QString longitudeAsString() const { return this->longitude().toQString(true); }
 
             //! Great circle distance
             BlackMisc::PhysicalQuantities::CLength greatCircleDistance(const ICoordinateGeodetic &otherCoordinate) const;
@@ -66,11 +63,12 @@ namespace BlackMisc
             //! Initial bearing
             BlackMisc::PhysicalQuantities::CAngle initialBearing(const ICoordinateGeodetic &otherCoordinate) const;
 
-            //! In range
-            static bool indexInRange(int index);
-
-            //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(int index) const;
+            //! Can given index be handled
+            static bool canHandleIndex(const BlackMisc::CPropertyIndex &index)
+            {
+                int i = index.frontCasted<int>();
+                return (i >= static_cast<int>(IndexLatitude)) && (i <= static_cast<int>(IndexLongitudeAsString));
+            }
         };
 
         //! Great circle distance between points
@@ -86,14 +84,15 @@ namespace BlackMisc
         class CCoordinateGeodetic : public CValueObject, public ICoordinateGeodetic
         {
         public:
-            //! Column index
+            //! Properties by index
             enum ColumnIndex
             {
-                IndexLatitude = 6000,
+                IndexLatitude = BlackMisc::CPropertyIndex::GlobalIndexCCoordinateGeodetic,
                 IndexLongitude,
                 IndexLatitudeAsString,
                 IndexLongitudeAsString,
-                IndexGeodeticHeight
+                IndexGeodeticHeight,
+                IndexGeodeticHeightAsString
             };
 
         private:
@@ -149,10 +148,10 @@ namespace BlackMisc
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(int index) const override;
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Switch unit of latitude / longitude
             CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit)

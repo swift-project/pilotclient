@@ -9,6 +9,7 @@
 
 #include "avairport.h"
 #include "blackmiscfreefunctions.h"
+#include "propertyindex.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
@@ -162,70 +163,65 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAirport::propertyByIndex(int index) const
+        QVariant CAirport::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index > static_cast<int>(CAirport::IndexBearing))
-            {
-                return this->m_position.propertyByIndex(index);
-            }
-
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexIcao:
-                return this->m_icao.toQVariant();
-            case IndexIcaoAsString:
-                return QVariant(this->m_icao.asString());
+                return this->m_icao.propertyByIndex(index.copyFrontRemoved());
             case IndexDescriptiveName:
                 return QVariant(this->m_descriptiveName);
             case IndexPosition:
-                return this->m_position.toQVariant();
+                return this->m_position.propertyByIndex(index.copyFrontRemoved());
             case IndexElevation:
-                return this->getElevation().toQVariant();
+                return this->getElevation().propertyByIndex(index.copyFrontRemoved());
             case IndexBearing:
-                return this->m_bearingToPlane.toQVariant();
+                return this->m_bearingToPlane.propertyByIndex(index.copyFrontRemoved());
             case IndexDistance:
-                return this->m_distanceToPlane.toQVariant();
+                return this->m_distanceToPlane.propertyByIndex(index.copyFrontRemoved());
             default:
-                break;
+                return (ICoordinateGeodetic::canHandleIndex(index)) ?
+                       ICoordinateGeodetic::propertyByIndex(index) :
+                       CValueObject::propertyByIndex(index);
             }
 
             Q_ASSERT_X(false, "CAirport", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
+            QString m = QString("no property, index ").append(index.toQString());
             return QVariant::fromValue(m);
         }
 
         /*
          * Set property as index
          */
-        void CAirport::setPropertyByIndex(const QVariant &variant, int index)
+        void CAirport::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index >= static_cast<int>(CAirport::IndexBearing))
+            if (index.isMyself())
             {
-                this->m_position.setPropertyByIndex(variant, index);
+                this->fromQVariant(variant);
+                return;
             }
-
-            switch (index)
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexIcao:
-                this->setIcao(variant.value<CAirportIcao>());
-                break;
-            case IndexIcaoAsString:
-                this->setIcao(CAirportIcao(variant.toString()));
+                this->m_icao.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexDescriptiveName:
                 this->setDescriptiveName(variant.toString());
                 break;
             case IndexPosition:
-                this->setPosition(variant.value<CCoordinateGeodetic>());
+                this->m_position.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexBearing:
-                this->setBearingToPlane(variant.value<CAngle>());
+                this->m_bearingToPlane.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexDistance:
-                this->setDistanceToPlane(variant.value<CLength>());
+                this->m_distanceToPlane.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                Q_ASSERT_X(false, "CAirport", "index unknown (setter)");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

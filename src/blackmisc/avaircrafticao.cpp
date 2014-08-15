@@ -8,6 +8,7 @@
  */
 
 #include "avaircrafticao.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 #include <tuple>
@@ -128,9 +129,11 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAircraftIcao::propertyByIndex(int index) const
+        QVariant CAircraftIcao::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexAircraftDesignator:
                 return QVariant::fromValue(this->m_aircraftDesignator);
@@ -143,29 +146,23 @@ namespace BlackMisc
             case IndexAsString:
                 return QVariant::fromValue(this->asString());
             default:
-                break;
+                return CValueObject::propertyByIndex(index);
             }
-
-            Q_ASSERT_X(false, "CAircraftIcao", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
-            return QVariant::fromValue(m);
-        }
-
-        /*
-         * Property as string by index
-         */
-        QString CAircraftIcao::propertyByIndexAsString(int index, bool i18n) const
-        {
-            QVariant qv = this->propertyByIndex(index);
-            return BlackMisc::qVariantToString(qv, i18n);
         }
 
         /*
          * Property by index
          */
-        void CAircraftIcao::setPropertyByIndex(const QVariant &variant, int index)
+        void CAircraftIcao::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            switch (index)
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexAircraftDesignator:
                 this->setAircraftDesignator(variant.value<QString>());
@@ -180,7 +177,7 @@ namespace BlackMisc
                 this->setAircraftColor(variant.value<QString>());
                 break;
             default:
-                Q_ASSERT_X(false, "CAircraftIcao", "index unknown");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

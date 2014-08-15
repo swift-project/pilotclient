@@ -9,6 +9,7 @@
 
 #include "voiceroom.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/propertyindex.h"
 #include <QChar>
 #include <QStringList>
 #include <tuple>
@@ -17,18 +18,13 @@ namespace BlackMisc
 {
     namespace Audio
     {
-        CVoiceRoom::CVoiceRoom(const QString &serverUrl, bool connected) :
+        /*
+         * Constructor
+         */
+        CVoiceRoom::CVoiceRoom(const QString &voiceRoomUrl, bool connected) :
             m_connected(connected), m_audioPlaying(false)
         {
-            if (serverUrl.contains("/"))
-            {
-                QString url = serverUrl.trimmed().toLower();
-                url.replace(CVoiceRoom::protocolComplete(), "");
-                url.replace(CVoiceRoom::protocol(), "");
-                QStringList splitParts = serverUrl.split("/");
-                m_hostname = splitParts.at(0);
-                m_channel = splitParts.at(1);
-            }
+            this->setVoiceRoomUrl(voiceRoomUrl);
         }
 
         /*
@@ -99,6 +95,65 @@ namespace BlackMisc
         }
 
         /*
+         * Property by index
+         */
+        QVariant CVoiceRoom::propertyByIndex(const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexAudioPlaying:
+                return QVariant(this->isAudioPlaying());
+            case IndexConnected:
+                return QVariant(this->isConnected());
+            case IndexChannel:
+                return QVariant(this->getChannel());
+            case IndexHostname:
+                return QVariant(this->getHostname());
+            case IndexUrl:
+                return QVariant(this->getVoiceRoomUrl());
+            default:
+                return CValueObject::propertyByIndex(index);
+            }
+        }
+
+        /*
+         * Property by index
+         */
+        void CVoiceRoom::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+        {
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexAudioPlaying:
+                this->setAudioPlaying(variant.toBool());
+                break;
+            case IndexConnected:
+                this->setConnected(variant.toBool());
+                break;
+            case IndexChannel:
+                this->setChannel(variant.value<QString>());
+                break;
+            case IndexHostname:
+                this->setHostName(variant.value<QString>());
+                break;
+            case IndexUrl:
+                this->setVoiceRoomUrl(variant.value<QString>());
+                break;
+            default:
+                CValueObject::setPropertyByIndex(variant, index);
+                break;
+            }
+        }
+
+        /*
          * To JSON
          */
         void CVoiceRoom::fromJson(const QJsonObject &json)
@@ -113,7 +168,6 @@ namespace BlackMisc
         {
             return TupleConverter<CVoiceRoom>::jsonMembers();
         }
-
 
         /*
          * To string
@@ -156,6 +210,27 @@ namespace BlackMisc
             url.append("/");
             url.append(this->m_channel);
             return url;
+        }
+
+        /*
+         * Voice room URL
+         */
+        void CVoiceRoom::setVoiceRoomUrl(const QString &serverUrl)
+        {
+            if (serverUrl.isEmpty())
+            {
+                m_hostname = "";
+                m_channel = "";
+            }
+            else if (serverUrl.contains("/"))
+            {
+                QString url = serverUrl.trimmed().toLower();
+                url.replace(CVoiceRoom::protocolComplete(), "");
+                url.replace(CVoiceRoom::protocol(), "");
+                QStringList splitParts = serverUrl.split("/");
+                m_hostname = splitParts.at(0);
+                m_channel = splitParts.at(1);
+            }
         }
 
         /*

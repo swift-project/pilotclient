@@ -14,6 +14,7 @@
 
 #include "avcallsign.h"
 #include "avairporticao.h"
+#include "propertyindex.h"
 
 namespace BlackMisc
 {
@@ -33,12 +34,11 @@ namespace BlackMisc
              */
             enum ColumnIndex
             {
-                IndexEmail,
+                IndexEmail = BlackMisc::CPropertyIndex::GlobalIndexCUser,
                 IndexId,
                 IndexPassword,
                 IndexRealName,
-                IndexCallsign,
-                IndexCallsignPixmap
+                IndexCallsign
             };
 
             //! Default constructor.
@@ -117,9 +117,6 @@ namespace BlackMisc
             //! Set associated callsign
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_callsign = callsign; }
 
-            //! \copydoc CValueObject::toIcon()
-            virtual BlackMisc::CIcon toIcon() const override { return this->getCallsign().toIcon(); }
-
             //! Equal operator ==
             bool operator ==(const CUser &other) const;
 
@@ -129,17 +126,20 @@ namespace BlackMisc
             //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
 
+            //! \copydoc CValueObject::toIcon()
+            virtual BlackMisc::CIcon toIcon() const override { return this->getCallsign().toIcon(); }
+
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
             //! \copydoc CValueObject::fromJson
-            void fromJson(const QJsonObject &json) override;
+            virtual void fromJson(const QJsonObject &json) override;
 
-            //! Register metadata
-            static void registerMetadata();
+            //! \copydoc CValueObject::propertyByIndex(int)
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
-            //! Members
-            static const QStringList &jsonMembers();
+            //! \copydoc CValueObject::setPropertyByIndex(const QVariant, int)
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             /*!
              * This and another user exchange missing data.
@@ -148,11 +148,11 @@ namespace BlackMisc
              */
             void syncronizeData(CUser &otherUser);
 
-            //! \copydoc CValueObject::propertyByIndex(int)
-            virtual QVariant propertyByIndex(int index) const override;
+            //! Register metadata
+            static void registerMetadata();
 
-            //! \copydoc CValueObject::setPropertyByIndex(const QVariant, int)
-            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+            //! Members
+            static const QStringList &jsonMembers();
 
         protected:
             //! \copydoc CValueObject::convertToQString

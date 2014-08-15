@@ -11,6 +11,7 @@
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/avionavsystem.h"
 #include "blackmisc/avioadfsystem.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 using BlackMisc::PhysicalQuantities::CFrequency;
@@ -53,6 +54,64 @@ namespace BlackMisc
         template <class AVIO> void CModulator<AVIO>::fromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CModulator::jsonMembers(), TupleConverter<CModulator>::toTuple(*this));
+        }
+
+        /*
+         * Property by index
+         */
+        template <class AVIO> QVariant CModulator<AVIO>::propertyByIndex(const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexActiveFrequency:
+                return this->getFrequencyActive().propertyByIndex(index.copyFrontRemoved());
+            case IndexStandbyFrequency:
+                return this->getFrequencyStandby().propertyByIndex(index.copyFrontRemoved());
+            case IndexEnabled:
+                return QVariant(this->isEnabled());
+            case IndexInputVolume:
+                return QVariant(this->getVolumeInput());
+            case IndexOutputVolume:
+                return QVariant(this->getVolumeOutput());
+            default:
+                return CValueObject::propertyByIndex(index);
+            }
+        }
+
+        /*
+         * Property by index
+         */
+        template <class AVIO> void CModulator<AVIO>::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+        {
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexActiveFrequency:
+                this->m_frequencyActive.setPropertyByIndex(variant, index.copyFrontRemoved());
+                break;
+            case IndexStandbyFrequency:
+                this->m_frequencyStandby.setPropertyByIndex(variant, index.copyFrontRemoved());
+                break;
+            case IndexEnabled:
+                this->setEnabled(variant.toBool());
+                break;
+            case IndexInputVolume:
+                this->setVolumeInput(variant.toInt());
+                break;
+            case IndexOutputVolume:
+                this->setVolumeOutput(variant.toInt());
+                break;
+            default:
+                CValueObject::setPropertyByIndex(variant, index);
+                break;
+            }
         }
 
         /*

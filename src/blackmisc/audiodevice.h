@@ -47,9 +47,6 @@ namespace BlackMisc
             //! Constructor.
             CAudioDevice(DeviceType type, const qint16 index, const QString &getName);
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Get the device index
             qint16 getIndex() const { return m_deviceIndex; }
 
@@ -74,11 +71,14 @@ namespace BlackMisc
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
             //! \copydoc CValueObject::fromJson
-            void fromJson(const QJsonObject &json) override;
+            virtual void fromJson(const QJsonObject &json) override;
 
             //! Register metadata
             static void registerMetadata();

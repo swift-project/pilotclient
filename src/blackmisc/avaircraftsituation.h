@@ -44,10 +44,9 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexPosition = 1000, // used, so it can be chained in aircraft
-                IndexPositionLatitude,
-                IndexPositionLongitude,
-                IndexPositionHeight,
+                IndexPosition,
+                IndexLatitude,
+                IndexLongitude,
                 IndexAltitude,
                 IndexHeading,
                 IndexBank,
@@ -58,13 +57,10 @@ namespace BlackMisc
             };
 
             //! \copydoc CValueObject::propertyByIndex(index)
-            virtual QVariant propertyByIndex(int index) const override;
-
-            //! \copydoc CValueObject::propertyByIndexAsString
-            virtual QString propertyByIndexAsString(int index, bool i18n) const override;
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex(variant,index)
-            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }

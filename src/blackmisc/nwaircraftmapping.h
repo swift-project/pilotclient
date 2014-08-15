@@ -51,7 +51,7 @@ namespace BlackMisc
 
         public:
             //! Properties
-            enum IndexProperties
+            enum ColumnIndex
             {
                 IndexModel,
                 IndexIcaoCode
@@ -73,10 +73,10 @@ namespace BlackMisc
             bool operator !=(const CAircraftMapping &other) const;
 
             //! \copydoc CValueObject::propertyByIndex
-            QVariant propertyByIndex(int index) const override;
+            QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            void setPropertyByIndex(const QVariant &variant, int index) override;
+            void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! ICAO
             void setIcao(const BlackMisc::Aviation::CAircraftIcao &icao) { this->m_icao = icao; }

@@ -9,6 +9,7 @@
 
 #include "nwserver.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/propertyindex.h"
 #include <tuple>
 
 namespace BlackMisc
@@ -107,9 +108,11 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CServer::propertyByIndex(int index) const
+        QVariant CServer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexAddress:
                 return QVariant::fromValue(this->m_address);
@@ -119,10 +122,8 @@ namespace BlackMisc
                 return QVariant::fromValue(this->m_name);
             case IndexPort:
                 return QVariant::fromValue(this->m_port);
-            case IndexUserId:
-                return QVariant::fromValue(this->m_user.getId());
-            case IndexUserRealName:
-                return QVariant::fromValue(this->m_user.getRealName());
+            case IndexUser:
+                return this->m_user.propertyByIndex(index.copyFrontRemoved());
             case IndexIsAcceptingConnections:
                 return QVariant::fromValue(this->m_isAcceptingConnections);
             default:
@@ -130,16 +131,23 @@ namespace BlackMisc
             }
 
             Q_ASSERT_X(false, "CServer", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
+            QString m = QString("no property, index ").append(index.toQString());
             return QVariant::fromValue(m);
         }
 
         /*
          * Property by index (setter)
          */
-        void CServer::setPropertyByIndex(const QVariant &variant, int index)
+        void CServer::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            switch (index)
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexAddress:
                 this->setAddress(variant.value<QString>());
@@ -153,14 +161,8 @@ namespace BlackMisc
             case IndexName:
                 this->setName(variant.value<QString>());
                 break;
-            case IndexUserId:
-                this->m_user.setId(variant.value<QString>());
-                break;
-            case IndexUserPassword:
-                this->m_user.setPassword(variant.value<QString>());
-                break;
-            case IndexUserRealName:
-                this->m_user.setRealName(variant.value<QString>());
+            case IndexUser:
+                this->m_user.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexIsAcceptingConnections:
                 this->setIsAcceptingConnections(variant.value<bool>());

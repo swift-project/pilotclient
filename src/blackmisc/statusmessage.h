@@ -13,7 +13,7 @@
 #define BLACKMISC_STATUSMESSAGE_H
 
 #include "icon.h"
-#include "valueobject.h"
+#include "propertyindex.h"
 #include <QDateTime>
 
 namespace BlackMisc
@@ -28,8 +28,8 @@ namespace BlackMisc
         //! Status types
         enum StatusType
         {
-            TypeUnknown, // not set
-            TypeUnspecific, // intentionally set
+            TypeUnknown,    //!< not set
+            TypeUnspecific, //!< intentionally set, but not specific
             TypeValidation,
             TypeTrafficNetwork,
             TypeSimulator,
@@ -51,22 +51,15 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexType,
+            IndexType = BlackMisc::CPropertyIndex::GlobalIndexCStatusMessage,
             IndexTypeAsString,
             IndexSeverity,
             IndexSeverityAsString,
             IndexMessage,
-            IndexTimestamp
+            IndexTimestamp,
+            IndexTimestampFormatted
         };
 
-    private:
-        BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)
-        StatusType m_type;
-        StatusSeverity m_severity;
-        QString m_message;
-        QDateTime m_timestamp;
-
-    public:
         //! Constructor
         CStatusMessage() : m_type(TypeUnknown), m_severity(SeverityInfo) {}
 
@@ -107,13 +100,10 @@ namespace BlackMisc
         const QString &getSeverityAsString() const;
 
         //! \copydoc CValueObject::propertyByIndex(int)
-        virtual QVariant propertyByIndex(int index) const override;
+        virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
         //! \copydoc CValueObject::propertyByIndex(const QVariant, int)
-        virtual void setPropertyByIndex(const QVariant &variant, int index) override;
-
-        //! \copydoc CValueObject::propertyByIndexAsString
-        virtual QString propertyByIndexAsString(int index, bool i18n) const override;
+        virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         //! To HTML
         QString toHtml() const;
@@ -160,6 +150,14 @@ namespace BlackMisc
 
         //! \copydoc CValueObject::compareImpl
         virtual int compareImpl(const CValueObject &other) const override;
+
+    private:
+        BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)
+        StatusType m_type;
+        StatusSeverity m_severity;
+        QString m_message;
+        QDateTime m_timestamp;
+
     };
 }
 

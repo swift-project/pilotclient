@@ -64,9 +64,6 @@ namespace BlackSim
             //! operator !=
             bool operator !=(const CAircraftCfgEntries &other) const;
 
-            //! \copydoc CValueObject::propertyByIndex
-            QVariant propertyByIndex(int index) const;
-
             //! Filepath
             QString getFilePath() const { return this->m_filePath; }
 
@@ -114,6 +111,12 @@ namespace BlackSim
 
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
+
+            //! \copydoc CValueObject::propertyByIndex
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Register the metatypes
             static void registerMetadata();

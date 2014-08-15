@@ -20,6 +20,7 @@
 #include "aviocomsystem.h"
 #include "valueobject.h"
 #include "namevariantpairlist.h"
+#include "propertyindex.h"
 
 namespace BlackMisc
 {
@@ -31,6 +32,19 @@ namespace BlackMisc
         class CAircraft : public BlackMisc::CValueObject, public BlackMisc::Geo::ICoordinateGeodetic
         {
         public:
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexCallsign = BlackMisc::CPropertyIndex::GlobalIndexCAircraft,
+                IndexPilot,
+                IndexDistance,
+                IndexCom1System,
+                IndexCom2System,
+                IndexTransponder,
+                IndexSituation,
+                IndexIcao
+            };
+
             //! Default constructor.
             CAircraft() : m_distanceToPlane(0, BlackMisc::PhysicalQuantities::CLengthUnit::nullUnit()) {}
 
@@ -38,10 +52,10 @@ namespace BlackMisc
             CAircraft(const CCallsign &callsign, const BlackMisc::Network::CUser &user, const CAircraftSituation &situation);
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::toIcon()
+            virtual BlackMisc::CIcon toIcon() const override { return this->m_callsign.toIcon(); }
 
             //! Get callsign.
             const CCallsign &getCallsign() const { return m_callsign; }
@@ -213,38 +227,17 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
 
+            //! \copydoc CValueObject::propertyByIndex()
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex(variant, index)
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+
             //! Register metadata
             static void registerMetadata();
 
             //! Members
             static const QStringList &jsonMembers();
-
-            //! Properties by index
-            enum ColumnIndex
-            {
-                IndexCallsign = 0,
-                IndexPixmap,
-                IndexCallsignAsString,
-                IndexCallsignAsStringAsSet,
-                IndexPilotId,
-                IndexPilotRealName,
-                IndexDistance,
-                IndexCom1System,
-                IndexFrequencyCom1,
-                IndexTransponder,
-                IndexTansponderFormatted,
-                IndexSituation,
-                IndexIcao
-            };
-
-            //! \copydoc CValueObject::propertyByIndex()
-            virtual QVariant propertyByIndex(int index) const override;
-
-            //! \copydoc CValueObject::propertyByIndexAsString()
-            virtual QString propertyByIndexAsString(int index, bool i18n) const override;
-
-            //! \copydoc CValueObject::setPropertyByIndex(variant, index)
-            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
 
         protected:
             //! \copydoc CValueObject::convertToQString()

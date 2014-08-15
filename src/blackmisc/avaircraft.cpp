@@ -11,6 +11,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqconstants.h"
 #include "blackmisc/icon.h"
+#include "blackmisc/propertyindex.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -196,122 +197,74 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAircraft::propertyByIndex(int index) const
+        QVariant CAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index >= static_cast<int>(CAircraftIcao::IndexAircraftDesignator))
-                return this->m_icao.propertyByIndex(index);
-
-            if (index >= static_cast<int>(CAircraftSituation::IndexPosition))
-                return this->m_situation.propertyByIndex(index);
-
-            switch (index)
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexCallsign:
-                return QVariant::fromValue(this->m_callsign);
-            case IndexPixmap:
-                return QVariant(this->m_callsign.toPixmap());
-            case IndexCallsignAsString:
-                return QVariant::fromValue(this->m_callsign.toQString(true));
-            case IndexCallsignAsStringAsSet:
-                return QVariant(this->m_callsign.getStringAsSet());
-            case IndexPilotId:
-                return QVariant::fromValue(this->m_pilot.getId());
-            case IndexPilotRealName:
-                return QVariant::fromValue(this->m_pilot.getRealName());
+                return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
+            case IndexPilot:
+                return this->m_pilot.propertyByIndex(index.copyFrontRemoved());
             case IndexDistance:
-                return this->m_distanceToPlane.toQVariant();
+                return this->m_distanceToPlane.propertyByIndex(index.copyFrontRemoved());
             case IndexCom1System:
-                return this->m_com1system.toQVariant();
-            case IndexFrequencyCom1:
-                return this->m_com1system.getFrequencyActive().toQVariant();
+                return this->m_com1system.propertyByIndex(index.copyFrontRemoved());
+            case IndexCom2System:
+                return this->m_com2system.propertyByIndex(index.copyFrontRemoved());
             case IndexTransponder:
-                return this->m_transponder.toQVariant();
-            case IndexTansponderFormatted:
-                return QVariant::fromValue(this->m_transponder.getTransponderCodeAndModeFormatted());
+                return this->m_transponder.propertyByIndex(index.copyFrontRemoved());
             case IndexSituation:
-                return this->m_situation.toQVariant();
+                return this->m_situation.propertyByIndex(index.copyFrontRemoved());
             case IndexIcao:
-                return this->m_icao.toQVariant();
+                return this->m_icao.propertyByIndex(index.copyFrontRemoved());
             default:
-                break;
+                return (ICoordinateGeodetic::canHandleIndex(index)) ?
+                       ICoordinateGeodetic::propertyByIndex(index) :
+                       CValueObject::propertyByIndex(index);
             }
-
-            Q_ASSERT_X(false, "CAircraft", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
-            return QVariant::fromValue(m);
-        }
-
-        /*
-         * Property as string by index
-         */
-        QString CAircraft::propertyByIndexAsString(int index, bool i18n) const
-        {
-            QVariant qv = this->propertyByIndex(index);
-            // special treatment
-            // this is required, as it is possible that an aircraft is not
-            // containing all properties
-            switch (index)
-            {
-            case IndexFrequencyCom1:
-                if (!CComSystem::isValidCivilAviationFrequency(qv.value<CFrequency>()))
-                    return "";
-                else
-                    return qv.value<CFrequency>().valueRoundedWithUnit(3, i18n);
-                break;
-            case IndexDistance:
-                {
-                    CLength distance = qv.value<CLength>();
-                    if (distance.isNegativeWithEpsilonConsidered()) return "";
-                    return distance.toQString(i18n);
-                }
-            default:
-                break;
-            }
-            return BlackMisc::qVariantToString(qv, i18n);
         }
 
         /*
          * Property by index (setter)
          */
-        void CAircraft::setPropertyByIndex(const QVariant &variant, int index)
+        void CAircraft::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index >= static_cast<int>(CAircraftIcao::IndexAircraftDesignator))
-                return this->m_icao.setPropertyByIndex(variant, index);
-
-            if (index >= static_cast<int>(CAircraftSituation::IndexPosition))
-                return this->m_situation.setPropertyByIndex(variant, index);
-
-            switch (index)
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexCallsign:
-                this->setCallsign(variant.value<CCallsign>());
+                this->m_callsign.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
-            case IndexCallsignAsString:
-                this->m_callsign = CCallsign(variant.value<QString>());
-                break;
-            case IndexPilotRealName:
-                this->m_pilot.setRealName(variant.value<QString>());
+            case IndexPilot:
+                this->m_pilot.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexDistance:
-                this->m_distanceToPlane = variant.value<CLength>();
+                this->m_distanceToPlane.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexCom1System:
-                this->setCom1System(variant.value<CComSystem>());
+                this->m_com1system.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
-            case IndexFrequencyCom1:
-                this->m_com1system.setFrequencyActive(variant.value<CFrequency>());
+            case IndexCom2System:
+                this->m_com2system.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexTransponder:
-                this->setTransponder(variant.value<CTransponder>());
+                this->m_transponder.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexIcao:
-                this->setIcaoInfo(variant.value<CAircraftIcao>());
+                this->m_icao.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexSituation:
-                this->setSituation(variant.value<CAircraftSituation>());
+                this->m_situation.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             default:
-                Q_ASSERT_X(false, "CAircraft", "index unknown");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

@@ -13,7 +13,7 @@
 #define BLACKMISC_AIRCRAFTMODEL_H
 
 #include "nwuser.h"
-#include "valueobject.h"
+#include "propertyindex.h"
 
 namespace BlackMisc
 {
@@ -28,10 +28,10 @@ namespace BlackMisc
         public:
 
             //! Indexes
-            enum ColumnIndex : uint
+            enum ColumnIndex
             {
-                IndexModelString = 100,
-                IndexQueriedModelString
+                IndexModelString = BlackMisc::CPropertyIndex::GlobalIndexCAircraftModel,
+                IndexIsQueriedModelString
             };
 
             //! Default constructor.
@@ -59,10 +59,10 @@ namespace BlackMisc
             void fromJson(const QJsonObject &json) override;
 
             //! \copydoc CValueObject::propertyByIndex(int)
-            virtual QVariant propertyByIndex(int index) const override;
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex(const QVariant, int)
-            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Queried model string
             const QString &getModelString() const { return this->m_modelString; }

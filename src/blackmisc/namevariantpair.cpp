@@ -117,15 +117,17 @@ namespace BlackMisc
     /*
      * Property by index
      */
-    QVariant CNameVariantPair::propertyByIndex(int index) const
+    QVariant CNameVariantPair::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
-        switch (index)
+        if (index.isMyself()) { return this->toQVariant(); }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
         case IndexName:
             return QVariant(this->m_name);
         case IndexVariant:
             return this->m_variant.toQVariant();
-        case IndexIcon:
+        case IndexCallsignIcon:
             return this->m_icon.toQVariant();
         case IndexPixmap:
             return this->m_icon.toPixmap();
@@ -134,16 +136,22 @@ namespace BlackMisc
         }
 
         Q_ASSERT_X(false, "CNameVariantPair", "index unknown");
-        QString m = QString("no property, index ").append(QString::number(index));
+        QString m = QString("no property, index ").append(index.toQString());
         return QVariant::fromValue(m);
     }
 
     /*
      * Property by index (setter)
      */
-    void CNameVariantPair::setPropertyByIndex(const QVariant &variant, int index)
+    void CNameVariantPair::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
-        switch (index)
+        if (index.isMyself())
+        {
+            this->fromQVariant(variant);
+            return;
+        }
+        ColumnIndex i = index.frontCasted<ColumnIndex>();
+        switch (i)
         {
         case IndexName:
             this->setName(variant.value<QString>());
@@ -151,7 +159,7 @@ namespace BlackMisc
         case IndexVariant:
             this->m_variant = variant;
             break;
-        case IndexIcon:
+        case IndexCallsignIcon:
             if (variant.canConvert<int>())
             {
                 CIcons::IconIndex index = static_cast<CIcons::IconIndex>(variant.toInt());

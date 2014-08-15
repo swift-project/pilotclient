@@ -15,7 +15,7 @@
 #include "nwuser.h"
 #include "nwaircraftmodel.h"
 #include "nwvoicecapabilities.h"
-#include "valueobject.h"
+#include "propertyindex.h"
 #include "indexvariantmap.h"
 
 namespace BlackMisc
@@ -30,22 +30,14 @@ namespace BlackMisc
 
         public:
             //! Properties by index
-            enum ColumnIndex : uint
+            enum ColumnIndex
             {
-                // user
-                IndexEmail = 0,
-                IndexId,
-                IndexPassword,
-                IndexRealName,
-                IndexCallsign,
-                IndexCallsignIcon,
-                // model
-                IndexQueriedModelString = 100,
-                // own indexes
-                IndexCapabilities = 1000,
+                IndexCapabilities = BlackMisc::CPropertyIndex::GlobalIndexCClient,
                 IndexCapabilitiesString,
                 IndexModel,
                 IndexServer,
+                IndexUser,
+                IndexCallsign,
                 IndexVoiceCapabilities,
                 IndexVoiceCapabilitiesString,
                 IndexVoiceCapabilitiesPixmap
@@ -134,17 +126,17 @@ namespace BlackMisc
             //! \copydoc CValueObject::toIcon()
             virtual CIcon toIcon() const override { return this->m_user.toIcon(); }
 
+            //! \copydoc CValueObject::propertyByIndex(int)
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex(const QVariant, int)
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+
             //! Register metadata
             static void registerMetadata();
 
             //! \copydoc TupleConverter<>::jsonMembers()
             static const QStringList &jsonMembers();
-
-            //! \copydoc CValueObject::propertyByIndex(int)
-            virtual QVariant propertyByIndex(int index) const override;
-
-            //! \copydoc CValueObject::setPropertyByIndex(const QVariant, int)
-            virtual void setPropertyByIndex(const QVariant &variant, int index) override;
 
         protected:
             //! \copydoc CValueObject::convertToQString

@@ -9,6 +9,7 @@
 
 #include "hwkeyboardkey.h"
 #include "blackmiscfreefunctions.h"
+#include "propertyindex.h"
 #include <QCoreApplication>
 
 namespace BlackMisc
@@ -29,22 +30,15 @@ namespace BlackMisc
             qDBusRegisterMetaType<CKeyboardKey>();
         }
 
-        /*
-         * To JSON
-         */
         QJsonObject CKeyboardKey::toJson() const
         {
             return BlackMisc::serializeJson(TupleConverter<CKeyboardKey>::toMetaTuple(*this));
         }
 
-        /*
-         * From Json
-         */
         void CKeyboardKey::fromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, TupleConverter<CKeyboardKey>::toMetaTuple(*this));
         }
-
 
         QString CKeyboardKey::convertToQString(bool /* i18n */) const
         {
@@ -138,51 +132,33 @@ namespace BlackMisc
             return modifiers;
         }
 
-        /*
-         * Compare
-         */
         int CKeyboardKey::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CKeyboardKey &>(otherBase);
             return compare(TupleConverter<CKeyboardKey>::toMetaTuple(*this), TupleConverter<CKeyboardKey>::toMetaTuple(other));
         }
 
-        /*
-         * Marshall to DBus
-         */
         void CKeyboardKey::marshallToDbus(QDBusArgument &argument) const
         {
             argument << TupleConverter<CKeyboardKey>::toMetaTuple(*this);
         }
 
-        /*
-         * Unmarshall from DBus
-         */
         void CKeyboardKey::unmarshallFromDbus(const QDBusArgument &argument)
         {
             argument >> TupleConverter<CKeyboardKey>::toMetaTuple(*this);
         }
 
-        /*
-         * Hash
-         */
         uint CKeyboardKey::getValueHash() const
         {
             return qHash(TupleConverter<CKeyboardKey>::toMetaTuple(*this));
         }
 
-        /*
-         * Equal?
-         */
         bool CKeyboardKey::operator ==(const CKeyboardKey &other) const
         {
             if (this == &other) return true;
             return TupleConverter<CKeyboardKey>::toMetaTuple(*this) == TupleConverter<CKeyboardKey>::toMetaTuple(other);
         }
 
-        /*
-         * Unequal?
-         */
         bool CKeyboardKey::operator !=(const CKeyboardKey &other) const
         {
             return !((*this) == other);
@@ -328,9 +304,21 @@ namespace BlackMisc
             return CKeyboardKey::equalsModifierReleaxed(this->getModifier1(), key.getModifier1());
         }
 
-        QVariant CKeyboardKey::propertyByIndex(int index) const
+        bool CKeyboardKey::equalsWithoutFunction(const CKeyboardKey &key) const
         {
-            switch (index)
+            if (key == (*this)) return true;
+            CKeyboardKey k1(*this);
+            CKeyboardKey k2(*this);
+            k1.setFunction(HotkeyNone);
+            k2.setFunction(HotkeyNone);
+            return k1 == k2;
+        }
+
+        QVariant CKeyboardKey::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexModifier1:
                 return QVariant(static_cast<uint>(this->m_modifier1));
@@ -351,7 +339,7 @@ namespace BlackMisc
             }
 
             Q_ASSERT_X(false, "CKeyboardKey", "index unknown");
-            QString m = QString("no property, index ").append(QString::number(index));
+            QString m = QString("no property, index ").append(index.toQString());
             return QVariant::fromValue(m);
         }
 
@@ -363,9 +351,15 @@ namespace BlackMisc
             return ks;
         }
 
-        void CKeyboardKey::setPropertyByIndex(const QVariant &variant, int index)
+        void CKeyboardKey::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            switch (index)
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
             {
             case IndexKey:
             case IndexKeyAsString:

@@ -210,10 +210,10 @@ namespace BlackMisc
             bool equalsWithRelaxedModifiers(const CKeyboardKey &key) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const QVariant &variant, int index);
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(int index) const;
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! Modifier to string
             static QString modifierToString(Modifier modifier);

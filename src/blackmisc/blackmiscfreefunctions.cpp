@@ -16,6 +16,7 @@
 #include "audioallclasses.h"
 #include "hwallclasses.h"
 #include "settingsblackmiscclasses.h"
+#include "propertyindex.h"
 #include "indexvariantmap.h"
 #include "namevariantpairlist.h"
 #include "variant.h"
@@ -152,6 +153,7 @@ void BlackMisc::registerMetadata()
 {
     CPropertyIndex::registerMetadata();
     CVariant::registerMetadata();
+    CPropertyIndex::registerMetadata();
     CIndexVariantMap::registerMetadata();
     CNameVariantPair::registerMetadata();
     CNameVariantPairList::registerMetadata();
