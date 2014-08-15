@@ -15,17 +15,17 @@ namespace BlackGui
 {
     namespace Models
     {
-        CColumn::CColumn(const QString &headerName, int propertyIndex, int alignment, bool editable) :
+        CColumn::CColumn(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment, bool editable) :
             m_columnName(headerName), m_alignment(alignment), m_propertyIndex(propertyIndex),
             m_editable(editable), m_icon(false)
         {}
 
-        CColumn::CColumn(const QString &headerName, int propertyIndex, bool editable) :
+        CColumn::CColumn(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, bool editable) :
             m_columnName(headerName), m_alignment(-1), m_propertyIndex(propertyIndex),
             m_editable(editable), m_icon(false)
         {}
 
-        CColumn::CColumn(int propertyIndex, bool isIcon) :
+        CColumn::CColumn(const BlackMisc::CPropertyIndex &propertyIndex, bool isIcon) :
             m_alignment(-1), m_propertyIndex(propertyIndex),
             m_editable(false), m_icon(isIcon)
         {}
@@ -74,7 +74,7 @@ namespace BlackGui
         /*
          * Property index to name
          */
-        QString CColumns::propertyIndexToColumnName(int propertyIndex, bool i18n) const
+        QString CColumns::propertyIndexToColumnName(const BlackMisc::CPropertyIndex &propertyIndex, bool i18n) const
         {
             int column = this->propertyIndexToColumn(propertyIndex);
             return this->m_columns.at(column).getColumnName(i18n);
@@ -92,7 +92,7 @@ namespace BlackGui
         /*
          * Get property index
          */
-        int CColumns::columnToPropertyIndex(int column) const
+        BlackMisc::CPropertyIndex CColumns::columnToPropertyIndex(int column) const
         {
             Q_ASSERT(column >= 0 && column < this->m_columns.size());
             return this->m_columns.at(column).getPropertyIndex();
@@ -101,12 +101,14 @@ namespace BlackGui
         /*
          * Property index to column
          */
-        int CColumns::propertyIndexToColumn(int propertyIndex) const
+        int CColumns::propertyIndexToColumn(const BlackMisc::CPropertyIndex &propertyIndex) const
         {
             for (int i = 0; i < this->m_columns.size(); i++)
             {
                 if (this->m_columns.at(i).getPropertyIndex() == propertyIndex)
+                {
                     return i;
+                }
             }
             return -1;
         }
@@ -176,4 +178,4 @@ namespace BlackGui
             return this->m_translationContext.toUtf8().constData();
         }
     }
-} // namespace BlackGui
+} // namespace

@@ -25,8 +25,8 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn("description", CServer::IndexDescription));
             this->m_columns.addColumn(CColumn("address", CServer::IndexAddress));
             this->m_columns.addColumn(CColumn("port", CServer::IndexPort));
-            this->m_columns.addColumn(CColumn("realname", CServer::IndexUserRealName));
-            this->m_columns.addColumn(CColumn("userid", CServer::IndexUserId));
+            this->m_columns.addColumn(CColumn("realname", { CServer::IndexUser, CUser::IndexRealName}));
+            this->m_columns.addColumn(CColumn("userid", { CServer::IndexUser, CUser::IndexId}));
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ViewServerList", "name");

@@ -330,9 +330,6 @@ namespace BlackGui
             CVoiceRoom room1 = selectedVoiceRooms[0];
             CVoiceRoom room2 = selectedVoiceRooms[1];
 
-            // KB_REMOVE
-            qDebug() << "selected rooms" << room1.isConnected() << room1.getVoiceRoomUrl() << room2.isConnected() << room2.getVoiceRoomUrl();
-
             // remark
             // isAudioPlaying() is not set, as this is only a temporary value when really "something is playing"
 

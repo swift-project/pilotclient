@@ -14,6 +14,7 @@
 
 #include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue
 #include "blackmisc/collection.h"
+#include "blackmisc/propertyindex.h"
 #include <QObject>
 #include <QHash>
 
@@ -32,23 +33,23 @@ namespace BlackGui
              * \param alignment Qt::Alignment
              * \param editable
              */
-            CColumn(const QString &headerName, int propertyIndex, int alignment = -1, bool editable = false);
+            CColumn(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = -1, bool editable = false);
 
             /*!
-             * \brief Constructor
+             * Constructor
              * \param headerName
              * \param propertyIndex as in CValueObject::propertyByIndex
              * \param editable
              */
-            CColumn(const QString &headerName, int propertyIndex, bool editable);
+            CColumn(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, bool editable);
 
             /*!
-             * \brief Constructor column is icon
+             * Constructor column is icon
              * \remarks only make sense with isIcon as true
              * \param propertyIndex as in CValueObject::propertyByIndex
              * \param isIcon icon, should be used with true only
              */
-            CColumn(int propertyIndex, bool isIcon);
+            CColumn(const BlackMisc::CPropertyIndex &propertyIndex, bool isIcon);
 
             //! Alignment for this column?
             bool hasAlignment() const { return this->m_alignment >= 0; }
@@ -66,7 +67,7 @@ namespace BlackGui
             QString getColumnName(bool i18n = false) const;
 
             //! Property index
-            int getPropertyIndex() const { return this->m_propertyIndex;}
+            const BlackMisc::CPropertyIndex &getPropertyIndex() const { return this->m_propertyIndex;}
 
             //! Translation context
             void setTranslationContext(const QString &translationContext)
@@ -78,7 +79,7 @@ namespace BlackGui
             QString m_translationContext;
             QString m_columnName;
             int m_alignment;
-            int m_propertyIndex; // property index
+            BlackMisc::CPropertyIndex m_propertyIndex;
             bool m_editable;
             bool m_icon;
             const char *getTranslationContextChar() const;
@@ -86,13 +87,13 @@ namespace BlackGui
         };
 
         /*!
-         * \brief Header data for a table
+         * Header data for a table
          */
         class CColumns : public QObject
         {
         public:
             /*!
-             * \brief Columns constructors
+             * Columns constructors
              * \param translationContext
              * \param parent
              */
@@ -102,19 +103,19 @@ namespace BlackGui
             void addColumn(CColumn column);
 
             //! Property index to name
-            QString propertyIndexToColumnName(int propertyIndex, bool i18n = false) const;
+            QString propertyIndexToColumnName(const BlackMisc::CPropertyIndex &propertyIndex, bool i18n = false) const;
 
             //! Column index to name
             QString columnToName(int column, bool i18n = false) const;
 
             //! Column to property index
-            int columnToPropertyIndex(int column) const;
+            BlackMisc::CPropertyIndex columnToPropertyIndex(int column) const;
 
             //! Property index to column
-            int propertyIndexToColumn(int propertyIndex) const;
+            int propertyIndexToColumn(const BlackMisc::CPropertyIndex &propertyIndex) const;
 
             //! Column index to property index
-            int indexToPropertyIndex(int index) const;
+            int indexToPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex) const;
 
             //! Column index to name
             int nameToPropertyIndex(const QString &name) const;

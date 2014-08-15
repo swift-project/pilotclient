@@ -21,7 +21,7 @@ namespace BlackGui
         {
             this->m_model = new CClientListModel(this);
             this->setModel(this->m_model); // via QTableView
-            this->m_model->setSortColumnByPropertyIndex(BlackMisc::Network::CClient::IndexRealName);
+            this->m_model->setSortColumnByPropertyIndex( { BlackMisc::Network::CClient::IndexUser, BlackMisc::Network::CUser::IndexRealName });
             if (this->m_model->hasValidSortColumn())
                 this->horizontalHeader()->setSortIndicator(
                     this->m_model->getSortColumn(),

@@ -13,6 +13,7 @@
 #include <QMetaProperty>
 #include <QBrush>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Network;
 
 namespace BlackGui
@@ -25,12 +26,13 @@ namespace BlackGui
         CClientListModel::CClientListModel(QObject *parent) :
             CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>("ViewClientList", parent)
         {
-            this->m_columns.addColumn(CColumn("", CClient::IndexCallsignIcon));
+            this->m_columns.addColumn(CColumn(CClient::IndexPixmap, true));
             this->m_columns.addColumn(CColumn("callsign", CClient::IndexCallsign));
-            this->m_columns.addColumn(CColumn("realname", CClient::IndexRealName));
-            this->m_columns.addColumn(CColumn("", CClient::IndexVoiceCapabilitiesPixmap));
+            this->m_columns.addColumn(CColumn("realname", { CClient::IndexUser, CUser::IndexRealName }));
+            this->m_columns.addColumn(CColumn(CClient::IndexVoiceCapabilitiesPixmap, true));
             this->m_columns.addColumn(CColumn("capabilities", CClient::IndexCapabilitiesString));
-            this->m_columns.addColumn(CColumn("model", CClient::IndexQueriedModelString));
+            this->m_columns.addColumn(CColumn("model", {CClient::IndexModel, CAircraftModel::IndexModelString}));
+            this->m_columns.addColumn(CColumn("queried?", {CClient::IndexModel, CAircraftModel::IndexIsQueriedModelString}));
             this->m_columns.addColumn(CColumn("server", CClient::IndexServer));
 
             // force strings for translation in resource files
@@ -40,24 +42,6 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ViewClientList", "userid");
             (void)QT_TRANSLATE_NOOP("ViewClientList", "model");
             (void)QT_TRANSLATE_NOOP("ViewClientList", "server");
-        }
-
-        /*
-         * Display icons
-         */
-        QVariant CClientListModel::data(const QModelIndex &modelIndex, int role) const
-        {
-            // shortcut, fast check
-            if (role != Qt::DecorationRole) return CListModelBase::data(modelIndex, role);
-            if (this->columnToPropertyIndex(modelIndex.column()) == CClient::IndexCallsignIcon)
-            {
-                if (role == Qt::DecorationRole)
-                {
-                    CClient u = this->at(modelIndex);
-                    return QVariant(u.toPixmap());
-                }
-            }
-            return CListModelBase::data(modelIndex, role);
         }
     }
 }

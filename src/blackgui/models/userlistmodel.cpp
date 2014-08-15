@@ -44,7 +44,7 @@ namespace BlackGui
             {
             case NotSet:
             case UserDetailed:
-                this->m_columns.addColumn(CColumn(CUser::IndexCallsignPixmap, true));
+                this->m_columns.addColumn(CColumn(CUser::IndexPixmap, true));
                 this->m_columns.addColumn(CColumn("realname", CUser::IndexRealName));
                 this->m_columns.addColumn(CColumn("callsign", CUser::IndexCallsign));
                 this->m_columns.addColumn(CColumn("userid", CUser::IndexId));
@@ -52,7 +52,7 @@ namespace BlackGui
                 break;
 
             case UserShort:
-                this->m_columns.addColumn(CColumn(CUser::IndexCallsignPixmap, true));
+                this->m_columns.addColumn(CColumn(CUser::IndexPixmap, true));
                 this->m_columns.addColumn(CColumn("realname", CUser::IndexRealName));
                 this->m_columns.addColumn(CColumn("callsign", CUser::IndexCallsign));
                 break;

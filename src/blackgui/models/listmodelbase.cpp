@@ -46,7 +46,7 @@ namespace BlackGui
          * Column to property index
          */
         template <typename ObjectType, typename ContainerType>
-        int CListModelBase<ObjectType, ContainerType>::columnToPropertyIndex(int column) const
+        BlackMisc::CPropertyIndex CListModelBase<ObjectType, ContainerType>::columnToPropertyIndex(int column) const
         {
             return this->m_columns.columnToPropertyIndex(column);
         }
@@ -83,7 +83,7 @@ namespace BlackGui
             {
                 if (this->m_columns.isIcon(index)) return QVariant();
                 ObjectType obj = this->m_container[index.row()];
-                int propertyIndex = this->columnToPropertyIndex(index.column());
+                BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
                 QString propertyString = obj.propertyByIndexAsString(propertyIndex, true);
                 return QVariant::fromValue(propertyString);
             }
@@ -91,7 +91,7 @@ namespace BlackGui
             {
                 if (!this->m_columns.isIcon(index)) return QVariant();
                 ObjectType obj = this->m_container[index.row()];
-                int propertyIndex = this->columnToPropertyIndex(index.column());
+                BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
                 return obj.propertyByIndex(propertyIndex);
             }
             else if (role == Qt::TextAlignmentRole)
@@ -108,7 +108,7 @@ namespace BlackGui
         int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &container)
         {
             ContainerType copyList = (container.size() > 1 && this->hasValidSortColumn() ?
-                                      this->sortListByColumn(container, this->m_sortedColumn, this->m_sortOrder) :
+                                      this->sortListByColumn(container, this->getSortColumn(), this->m_sortOrder) :
                                       container);
             this->beginResetModel();
             this->m_container.clear();
@@ -199,9 +199,9 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType> ContainerType CListModelBase<ObjectType, ContainerType>::sortListByColumn(const ContainerType &list, int column, Qt::SortOrder order)
         {
             if (list.size() < 2) return list; // nothing to do
-            int propertyIndex = this->m_columns.columnToPropertyIndex(column);
-            Q_ASSERT(propertyIndex >= 0);
-            if (propertyIndex < 0) return list; // at release build do nothing
+            BlackMisc::CPropertyIndex propertyIndex = this->m_columns.columnToPropertyIndex(column);
+            Q_ASSERT(!propertyIndex.isEmpty());
+            if (propertyIndex.isEmpty()) return list; // at release build do nothing
 
             // sort the values
             return list.sorted

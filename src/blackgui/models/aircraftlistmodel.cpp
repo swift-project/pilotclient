@@ -8,10 +8,12 @@
  */
 
 #include "aircraftlistmodel.h"
+#include "blackmisc/nwuser.h"
 #include "blackmisc/avaircraftsituation.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 
 namespace BlackGui
 {
@@ -23,15 +25,15 @@ namespace BlackGui
         CAircraftListModel::CAircraftListModel(QObject *parent) : CListModelBase("ViewAircraftList", parent)
         {
             this->m_columns.addColumn(CColumn("callsign", CAircraft::IndexCallsign));
-            this->m_columns.addColumn(CColumn("pilotrealname", CAircraft::IndexPilotRealName));
+            this->m_columns.addColumn(CColumn("pilotrealname", { CAircraft::IndexPilot, CUser::IndexRealName }));
             this->m_columns.addColumn(CColumn("distance", CAircraft::IndexDistance, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("frequency", CAircraft::IndexFrequencyCom1, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("model", CAircraftIcao::IndexAsString));
-            this->m_columns.addColumn(CColumn("transponder", CAircraft::IndexTansponderFormatted));
-            this->m_columns.addColumn(CColumn("latitude", CAircraftSituation::IndexLatitude, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("longitude", CAircraftSituation::IndexLongitude, Qt::AlignRight  | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("altitude", CAircraftSituation::IndexAltitude, Qt::AlignRight  | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("groundspeed", CAircraftSituation::IndexGroundspeed, Qt::AlignRight  | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn("frequency", { CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, Qt::AlignRight | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn("model", { CAircraft::IndexIcao, CAircraftIcao::IndexAsString}));
+            this->m_columns.addColumn(CColumn("transponder", { CAircraft::IndexTransponder, CTransponder::IndexTransponderCodeAndModeFormatted }));
+            this->m_columns.addColumn(CColumn("latitude", { CAircraft::IndexSituation, CAircraftSituation::IndexLatitude }, Qt::AlignRight | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn("longitude", { CAircraft::IndexSituation, CAircraftSituation::IndexLongitude }, Qt::AlignRight  | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn("altitude", { CAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, Qt::AlignRight  | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn("groundspeed", { CAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, Qt::AlignRight  | Qt::AlignVCenter));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CAircraft::IndexDistance);

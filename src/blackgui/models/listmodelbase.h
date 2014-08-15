@@ -13,6 +13,7 @@
 #define BLACKGUI_LISTMODELBASE_H
 
 #include "blackgui/models/columns.h"
+#include "blackmisc/propertyindex.h"
 #include <QAbstractItemModel>
 
 namespace BlackGui
@@ -64,10 +65,10 @@ namespace BlackGui
             virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
             //! Column to property index
-            virtual int columnToPropertyIndex(int column) const;
+            virtual BlackMisc::CPropertyIndex columnToPropertyIndex(int column) const;
 
             //! Index to property index
-            virtual int indexToPropertyIndex(const QModelIndex &index) const
+            virtual BlackMisc::CPropertyIndex modelIndexToPropertyIndex(const QModelIndex &index) const
             {
                 return this->columnToPropertyIndex(index.column());
             }
@@ -79,15 +80,15 @@ namespace BlackGui
             }
 
             /*!
-             * Set column for sort
+             * Set column for sorting
              * \param propertyIndex index of column to be sorted by
              */
-            virtual void setSortColumnByPropertyIndex(int propertyIndex)
+            virtual void setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex)
             {
                 this->m_sortedColumn = this->m_columns.propertyIndexToColumn(propertyIndex);
             }
 
-            //! Get sort column
+            //! Get sort column property index
             virtual int getSortColumn() const
             {
                 return this->m_sortedColumn;
@@ -96,7 +97,7 @@ namespace BlackGui
             //! Has valid sort column?
             virtual bool hasValidSortColumn() const
             {
-                return this->m_sortedColumn >= 0 && this->m_sortedColumn < this->m_columns.size();
+                return this->m_sortedColumn >=0 && this->m_sortedColumn < this->m_columns.size();
             }
 
             //! Get sort order

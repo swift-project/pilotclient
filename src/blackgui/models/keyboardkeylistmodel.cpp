@@ -56,7 +56,7 @@ namespace BlackGui
         {
             if (role == Qt::EditRole)
             {
-                int pi = this->indexToPropertyIndex(index);
+                CSettingKeyboardHotkey::ColumnIndex pi = this->modelIndexToPropertyIndex(index).frontCasted<CSettingKeyboardHotkey::ColumnIndex>();
                 if (pi == CSettingKeyboardHotkey::IndexModifier1 || pi == CSettingKeyboardHotkey::IndexModifier2 || pi == CSettingKeyboardHotkey::IndexModifier1AsString || pi == CSettingKeyboardHotkey::IndexModifier2AsString)
                 {
                     if (index.row() >= this->m_container.size()) return true;
@@ -87,7 +87,7 @@ namespace BlackGui
 
             if (index.row() < model->rowCount())
             {
-                int pi = model->indexToPropertyIndex(index);
+                CSettingKeyboardHotkey::ColumnIndex pi = model->modelIndexToPropertyIndex(index).frontCasted<CSettingKeyboardHotkey::ColumnIndex>();
                 if (pi == CSettingKeyboardHotkey::IndexModifier1 || pi == CSettingKeyboardHotkey::IndexModifier2 || pi == CSettingKeyboardHotkey::IndexModifier1AsString || pi == CSettingKeyboardHotkey::IndexModifier2AsString)
                 {
                     CSettingKeyboardHotkey key = model->at(index);

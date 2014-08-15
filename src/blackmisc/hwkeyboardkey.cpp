@@ -304,14 +304,11 @@ namespace BlackMisc
             return CKeyboardKey::equalsModifierReleaxed(this->getModifier1(), key.getModifier1());
         }
 
-        bool CKeyboardKey::equalsWithoutFunction(const CKeyboardKey &key) const
+        QString CKeyboardKey::toStringRepresentation(int key)
         {
-            if (key == (*this)) return true;
-            CKeyboardKey k1(*this);
-            CKeyboardKey k2(*this);
-            k1.setFunction(HotkeyNone);
-            k2.setFunction(HotkeyNone);
-            return k1 == k2;
+            if (key == 0) return "";
+            QString ks = QKeySequence(key).toString();
+            return ks;
         }
 
         QVariant CKeyboardKey::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -341,14 +338,6 @@ namespace BlackMisc
             Q_ASSERT_X(false, "CKeyboardKey", "index unknown");
             QString m = QString("no property, index ").append(index.toQString());
             return QVariant::fromValue(m);
-        }
-
-        QString CKeyboardKey::toStringRepresentation(int key)
-        {
-            if (key == 0) return "";
-            QString ks = QKeySequence(key).toString();
-            // ks.append('(').append(QString::number(key)).append(')');
-            return ks;
         }
 
         void CKeyboardKey::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)

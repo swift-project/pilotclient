@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_CLIENTLISTMODEL_H
 #define BLACKGUI_CLIENTLISTMODEL_H
 
@@ -30,10 +32,6 @@ namespace BlackGui
 
             //! Destructor
             virtual ~CClientListModel() {}
-
-            //! \copydoc CListModelBase::data
-            QVariant data(const QModelIndex &modelIndex, int role = Qt::DisplayRole) const;
-
         };
     }
 }
