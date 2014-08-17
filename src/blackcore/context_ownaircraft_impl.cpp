@@ -123,7 +123,7 @@ namespace BlackCore
     bool CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator)
     {
         if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, position.toQString(), altitude.toQString(), originator);
-        bool changed = (this->m_ownAircraft.getPosition() == position);
+        bool changed = (this->m_ownAircraft.getPosition() != position);
         if (changed) this->m_ownAircraft.setPosition(position);
 
         if (this->m_ownAircraft.getAltitude() != altitude)
@@ -146,7 +146,7 @@ namespace BlackCore
     bool CContextOwnAircraft::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator)
     {
         if (this->getRuntime()->isSlotLogForOwnAircraftEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, situation.toQString());
-        bool changed = this->m_ownAircraft.getSituation() == situation;
+        bool changed = this->m_ownAircraft.getSituation() != situation;
         if (!changed) return changed;
 
         if (changed)
