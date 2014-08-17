@@ -247,15 +247,6 @@ namespace BlackCore
         qDebug() << "signal" << s << values;
     }
 
-    void CRuntime::logSlot(const char *func, const QString &p1, const QString &p2, const QString &p3, const QString &p4) const
-    {
-        if (p1.isEmpty()) { qDebug() << func; return; }
-        if (p2.isEmpty()) { qDebug() << func << p1; return; }
-        if (p3.isEmpty()) { qDebug() << func << p1 << p2; return; }
-        if (p4.isEmpty()) { qDebug() << func << p1 << p2 << p3; return; }
-        qDebug() << func << p1 << p2 << p3 << p4;
-    }
-
     void CRuntime::logSlot(const char *func, const QString &param) const
     {
         qDebug() << func << param;

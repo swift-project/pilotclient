@@ -49,7 +49,7 @@ namespace BlackCore
      */
     void CContextApplication::notifyAboutComponentChange(uint component, uint action)
     {
-        if (this->getRuntime()->isSlotLogForApplicationEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, QString::number(component), QString::number(action));
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { QString::number(component), QString::number(action) });
         this->componentChanged(component, action);
     }
 
@@ -58,7 +58,7 @@ namespace BlackCore
      */
     bool CContextApplication::writeToFile(const QString &fileName, const QString &content)
     {
-        if (this->getRuntime()->isSlotLogForApplicationEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, fileName, content.left(25));
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { fileName, content.left(25) });
         if (fileName.isEmpty()) return false;
         QFile file(fileName);
         bool success = false;
@@ -76,7 +76,7 @@ namespace BlackCore
      */
     QString CContextApplication::readFromFile(const QString &fileName)
     {
-        if (this->getRuntime()->isSlotLogForApplicationEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, fileName);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, fileName);
         QFile file(fileName);
         QString content;
         if (fileName.isEmpty()) return content;

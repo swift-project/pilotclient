@@ -79,6 +79,8 @@ namespace BlackCore
         void ps_changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &atcStation, bool connected);
 
     private:
+        static const auto c_logContext = CRuntime::LogForOwnAircraft;
+
         BlackMisc::Aviation::CAircraft m_ownAircraft; //!< my aircraft
         bool m_automaticVoiceRoomResolution; //!< voice room override
         QString m_voiceRoom1UrlOverride; //!< overridden voice room url

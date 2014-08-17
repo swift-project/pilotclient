@@ -76,7 +76,7 @@ namespace BlackCore
     CVoiceRoomList CContextAudio::getComVoiceRoomsWithAudioStatus() const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return getComVoiceRooms();
     }
 
@@ -86,7 +86,7 @@ namespace BlackCore
     CVoiceRoom CContextAudio::getCom1VoiceRoom(bool withAudioStatus) const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, withAudioStatus);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, withAudioStatus);
         // We always have the audio status due to shared status
         return m_channelCom1->getVoiceRoom();
     }
@@ -97,7 +97,7 @@ namespace BlackCore
     CVoiceRoom CContextAudio::getCom2VoiceRoom(bool withAudioStatus) const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, withAudioStatus);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, withAudioStatus);
         // We always have the audio status due to shared status
         return m_channelCom2->getVoiceRoom();
     }
@@ -108,7 +108,7 @@ namespace BlackCore
     CVoiceRoomList CContextAudio::getComVoiceRooms() const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         CVoiceRoomList voiceRoomList;
         voiceRoomList.push_back(m_channelCom1->getVoiceRoom());
         voiceRoomList.push_back(m_channelCom2->getVoiceRoom());
@@ -121,7 +121,7 @@ namespace BlackCore
     void CContextAudio::leaveAllVoiceRooms()
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         m_channelCom1->leaveVoiceRoom();
         m_channelCom2->leaveVoiceRoom();
     }
@@ -132,7 +132,7 @@ namespace BlackCore
     CAudioDeviceList CContextAudio::getAudioDevices() const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return this->m_voice->audioDevices();
     }
 
@@ -142,7 +142,7 @@ namespace BlackCore
     CAudioDeviceList CContextAudio::getCurrentAudioDevices() const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         CAudioDeviceList devices;
         devices.push_back(this->m_voice->getCurrentInputDevice());
         devices.push_back(this->m_voice->getCurrentOutputDevice());
@@ -156,7 +156,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(audioDevice.getType() != CAudioDevice::Unknown);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, audioDevice.toQString());
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, audioDevice.toQString());
         if (audioDevice.getType() == CAudioDevice::InputDevice)
         {
             this->m_voice->setInputDevice(audioDevice);
@@ -173,7 +173,7 @@ namespace BlackCore
     void CContextAudio::setVolumes(const CComSystem &com1, const CComSystem &com2)
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, com1.toQString(), com2.toQString());
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { com1.toQString(), com2.toQString() });
 
         // volumes
         qint32 vol1 = com1.getVolumeOutput();
@@ -192,7 +192,7 @@ namespace BlackCore
     bool CContextAudio::isMuted() const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return m_channelCom1->isMuted() && m_channelCom2->isMuted();
     }
 
@@ -203,7 +203,7 @@ namespace BlackCore
     {
         Q_ASSERT(this->m_voice);
         Q_ASSERT(newRooms.size() == 2);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, newRooms.toQString());
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, newRooms.toQString());
 
         CVoiceRoomList currentRooms = getComVoiceRooms();
         CVoiceRoom currentRoom1 = currentRooms[0];
@@ -244,7 +244,7 @@ namespace BlackCore
     CCallsignList CContextAudio::getCom1RoomCallsigns() const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return m_channelCom1->getVoiceRoomCallsigns();
     }
 
@@ -254,7 +254,7 @@ namespace BlackCore
     CCallsignList CContextAudio::getCom2RoomCallsigns() const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return m_channelCom2->getVoiceRoomCallsigns();
     }
 
@@ -266,7 +266,7 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         Q_ASSERT(this->getRuntime());
         if (!this->getRuntime()->getIContextNetwork()) return Network::CUserList();
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return this->getIContextNetwork()->getUsersForCallsigns(this->getCom1RoomCallsigns());
     }
 
@@ -278,7 +278,7 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         Q_ASSERT(this->getRuntime());
         if (!this->getRuntime()->getIContextNetwork()) return Network::CUserList();
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return this->getIContextNetwork()->getUsersForCallsigns(this->getCom2RoomCallsigns());
     }
 
@@ -288,7 +288,7 @@ namespace BlackCore
     void CContextAudio::playSelcalTone(const CSelcal &selcal) const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, selcal.toQString());
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, selcal.toQString());
         CAudioDevice outputDevice = m_voice->getCurrentOutputDevice();
         BlackSound::CSoundGenerator::playSelcal(90, selcal, outputDevice);
     }
@@ -299,7 +299,7 @@ namespace BlackCore
     void CContextAudio::playNotification(uint notification, bool considerSettings) const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO, QString::number(notification));
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, QString::number(notification));
 
         BlackSound::CNotificationSounds::Notification notificationSound = static_cast<BlackSound::CNotificationSounds::Notification>(notification);
         if (considerSettings)
@@ -326,7 +326,7 @@ namespace BlackCore
     void CContextAudio::runMicrophoneTest()
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         this->m_voice->runMicrophoneTest();
     }
 
@@ -336,7 +336,7 @@ namespace BlackCore
     void CContextAudio::runSquelchTest()
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         this->m_voice->runSquelchTest();
     }
 
@@ -346,7 +346,7 @@ namespace BlackCore
     QString CContextAudio::getMicrophoneTestResult() const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return this->m_voice->micTestResultAsString();
     }
 
@@ -356,7 +356,7 @@ namespace BlackCore
     double CContextAudio::getSquelchValue() const
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         return static_cast<double>(this->m_voice->inputSquelch());
     }
 
@@ -366,7 +366,7 @@ namespace BlackCore
     void CContextAudio::enableAudioLoopback(bool enable)
     {
         Q_ASSERT(this->m_voice);
-        if (this->getRuntime()->isSlotLogForAudioEnabled()) this->getRuntime()->logSlot(Q_FUNC_INFO);
+        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
         m_voice->enableAudioLoopback(enable);
     }
 

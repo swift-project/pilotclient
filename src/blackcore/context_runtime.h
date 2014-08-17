@@ -190,19 +190,6 @@ namespace BlackCore
         //! \threadsafe
         bool isSlotLogEnabledFor(LogContext context) const;
 
-        //! Slot logging
-        //! \deprecated Use a brace-initialized QStringList
-        void logSlot(const char *func, const QString &param, const QString &p2, const QString &p3 = "", const QString &p4 = "") const;
-
-        //! Slot logging
-        void logSlot(const char *func, const QString &param = "") const;
-
-        //! Slot logging
-        void logSlot(const char *func, const QStringList &params) const;
-
-        //! Slot logging for bool value
-        void logSlot(const char *func, bool boolValue) const;
-
         //! Slot logging from a specific context
         void logSlot(LogContext ctx, const char *func, const QString &param = "") const;
 
@@ -352,6 +339,15 @@ namespace BlackCore
 
         //! disconnect log signals (connected via connection to log them)
         void disconnectLogSignals(const QString &name);
+
+        //! Slot logging
+        void logSlot(const char *func, const QString &param = "") const;
+
+        //! Slot logging
+        void logSlot(const char *func, const QStringList &params) const;
+
+        //! Slot logging for bool value
+        void logSlot(const char *func, bool boolValue) const;
     };
 }
 #endif // guard

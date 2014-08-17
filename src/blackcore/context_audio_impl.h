@@ -131,6 +131,8 @@ namespace BlackCore
         void ps_initNotificationSounds();
 
     private:
+        static const auto c_logContext = CRuntime::LogForAudio;
+
         //! Connection in transition
         bool inTransitionState() const;
 
