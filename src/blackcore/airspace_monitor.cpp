@@ -17,6 +17,7 @@ namespace BlackCore
 
     using namespace BlackMisc;
     using namespace BlackMisc::Aviation;
+    using namespace BlackMisc::Audio;
     using namespace BlackMisc::Network;
     using namespace BlackMisc::Geo;
     using namespace BlackMisc::PhysicalQuantities;
@@ -220,14 +221,14 @@ namespace BlackCore
     void CAirspaceMonitor::ps_realNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
         if (realname.isEmpty()) return;
-        CIndexVariantMap vm(CAtcStation::IndexControllerRealName, realname);
+        CIndexVariantMap vm({CAtcStation::IndexController, CUser::IndexRealName}, realname);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
 
-        vm = CIndexVariantMap(CAircraft::IndexPilotRealName, realname);
+        vm = CIndexVariantMap({CAircraft::IndexPilot, CUser::IndexRealName}, realname);
         this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
 
-        vm = CIndexVariantMap(CClient::IndexRealName, realname);
+        vm = CIndexVariantMap({CClient::IndexUser, CUser::IndexRealName}, realname);
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 
@@ -393,7 +394,7 @@ namespace BlackCore
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
         QString trimmedUrl = url.trimmed();
-        CIndexVariantMap vm(CAtcStation::IndexVoiceRoomUrl, trimmedUrl);
+        CIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
         if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign))
         {
             this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
@@ -513,7 +514,7 @@ namespace BlackCore
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
 
         // update
-        CIndexVariantMap vm(CAircraft::IndexFrequencyCom1, frequency.toQVariant());
+        CIndexVariantMap vm({CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, frequency.toQVariant());
         this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual(&CAircraft::getCallsign, callsign), vm);
         emit this->changedAircraftsInRange();
     }
