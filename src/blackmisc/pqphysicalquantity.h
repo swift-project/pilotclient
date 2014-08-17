@@ -14,6 +14,7 @@
 
 #include "blackmisc/pqbase.h"
 #include "blackmisc/pqunits.h"
+#include "blackmisc/propertyindex.h"
 #include "blackmisc/mathematics.h"
 #include "blackmisc/pqstring.h"
 #include <QtDBus/QDBusMetaType>
@@ -32,6 +33,18 @@ namespace BlackMisc
         template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CValueObject
         {
         public:
+            //! Index
+            enum ColumnIndex
+            {
+                IndexUnit = BlackMisc::CPropertyIndex::GlobalIndexCPhysicalQuantity,
+                IndexValue,
+                IndexValueRounded0DigitsWithUnit,
+                IndexValueRounded1DigitsWithUnit,
+                IndexValueRounded2DigitsWithUnit,
+                IndexValueRounded3DigitsWithUnit,
+                IndexValueRounded6DigitsWithUnit
+            };
+
             //! Virtual destructor
             virtual ~CPhysicalQuantity() {}
 
@@ -209,6 +222,12 @@ namespace BlackMisc
             {
                 *this = CPqString::parse<PQ>(value, CPqString::SeparatorsCLocale);
             }
+
+            //! \copydoc CValueObject::propertyByIndex(int)
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex(const QVariant, int)
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Register metadata of unit and quantity
             static void registerMetadata();

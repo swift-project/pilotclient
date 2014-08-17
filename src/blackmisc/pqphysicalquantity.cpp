@@ -311,6 +311,66 @@ namespace BlackMisc
         }
 
         /*
+         * Property
+         */
+        template <class MU, class PQ>  QVariant CPhysicalQuantity<MU, PQ>::propertyByIndex(const CPropertyIndex &index) const
+        {
+            if (index.isMyself()) { return this->toQVariant(); }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexValue:
+                return QVariant(this->m_value);
+            case IndexUnit:
+                return this->m_unit.toQVariant();
+            case IndexValueRounded0DigitsWithUnit:
+                return QVariant(this->valueRoundedWithUnit(0));
+            case IndexValueRounded1DigitsWithUnit:
+                return QVariant(this->valueRoundedWithUnit(1));
+            case IndexValueRounded2DigitsWithUnit:
+                return QVariant(this->valueRoundedWithUnit(2));
+            case IndexValueRounded3DigitsWithUnit:
+                return QVariant(this->valueRoundedWithUnit(3));
+            case IndexValueRounded6DigitsWithUnit:
+                return QVariant(this->valueRoundedWithUnit(6));
+            default:
+                return CValueObject::propertyByIndex(index);
+            }
+        }
+
+        /*
+         * Property
+         */
+        template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+        {
+            if (index.isMyself())
+            {
+                this->fromQVariant(variant);
+                return;
+            }
+            ColumnIndex i = index.frontCasted<ColumnIndex>();
+            switch (i)
+            {
+            case IndexValue:
+                this->m_value = variant.toDouble();
+                break;
+            case IndexUnit:
+                this->m_unit.fromQVariant(variant);
+                break;
+            case IndexValueRounded0DigitsWithUnit:
+            case IndexValueRounded1DigitsWithUnit:
+            case IndexValueRounded2DigitsWithUnit:
+            case IndexValueRounded3DigitsWithUnit:
+            case IndexValueRounded6DigitsWithUnit:
+                this->parseFromString(variant.toString());
+                break;
+            default:
+                CValueObject::setPropertyByIndex(variant, index);
+                break;
+            }
+        }
+
+        /*
          * metaTypeId
          */
         template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::getMetaTypeId() const
