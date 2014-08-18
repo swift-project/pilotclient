@@ -71,6 +71,9 @@ namespace BlackSimPlugin
             //! \copydoc BlackCore::ISimulator::displayStatusMessage
             virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const override;
 
+            //! \copydoc ISimulator::displayTextMessage
+            virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const override;
+
             //! \copydoc BlackCore::ISimulator::getAircraftModel
             virtual BlackMisc::Network::CAircraftModel getAircraftModel() const override;
 

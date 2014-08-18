@@ -299,7 +299,7 @@ namespace BlackCore
         if (!this->m_simulator) return;
         foreach(CTextMessage tm, textMessages)
         {
-            this->m_simulator->displayStatusMessage(tm.asStatusMessage(true, true));
+            this->m_simulator->displayTextMessage(tm);
         }
     }
 

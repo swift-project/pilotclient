@@ -204,6 +204,13 @@ namespace BlackSimPlugin
             Q_UNUSED(message);
         }
 
+        void CSimulatorXPlane::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
+        {
+            if (! isConnected()) { return; }
+            // TODO
+            Q_UNUSED(message);
+        }
+
         BlackMisc::Network::CAircraftModel CSimulatorXPlane::getAircraftModel() const
         {
             if (! isConnected()) { return {}; }

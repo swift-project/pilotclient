@@ -279,6 +279,11 @@ namespace BlackSimPlugin
             Q_UNUSED(hr);
         }
 
+        void CSimulatorFsx::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
+        {
+            this->displayStatusMessage(message.asStatusMessage(true, true));
+        }
+
         CAirportList CSimulatorFsx::getAirportsInRange() const
         {
             return this->m_airportsInRange;

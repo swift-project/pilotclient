@@ -11,6 +11,7 @@
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/nwaircraftmodel.h"
+#include "blackmisc/nwtextmessage.h"
 #include <QObject>
 
 namespace BlackCore
@@ -76,6 +77,9 @@ namespace BlackCore
 
         //! Display a status message in the simulator
         virtual void displayStatusMessage(const BlackMisc::CStatusMessage &message) const = 0;
+
+        //! Display a text message
+        virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const = 0;
 
         //! Aircraft Model
         virtual BlackMisc::Network::CAircraftModel getAircraftModel() const = 0;

@@ -217,6 +217,11 @@ namespace BlackSimPlugin
             QMetaObject::invokeMethod(m_fs9Host, "sendTextMessage", Q_ARG(QString, message.toQString()));
         }
 
+        void CSimulatorFs9::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
+        {
+            this->displayStatusMessage(message.asStatusMessage(true, true));
+        }
+
         CAirportList CSimulatorFs9::getAirportsInRange() const
         {
             return this->m_airportsInRange;
