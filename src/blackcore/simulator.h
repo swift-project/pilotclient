@@ -16,12 +16,7 @@
 namespace BlackCore
 {
     /*!
-     * Interface to a connection to a ATC voice server for use in flight simulation.
-     *
-     * \warning If an INetwork signal is connected to a slot, and that slot emits a signal
-     *          which is connected to an INetwork slot, then at least one of those connections
-     *          must be a Qt::QueuedConnection.
-     *          Reason: IVoiceClient implementations are not re-entrant.
+     * Interface to a simulator.
      */
     class ISimulator : public QObject
     {
@@ -30,7 +25,7 @@ namespace BlackCore
 
     public:
 
-        //! ISimulatorSimulator connection
+        //! ISimulator connection
         enum Status
         {
             Disconnected,
@@ -38,27 +33,27 @@ namespace BlackCore
             ConnectionFailed
         };
 
-        //! ISimulatorConstructor
+        //! Constructor
         ISimulator(QObject *parent = nullptr);
 
-        //! ISimulatorDestructor
+        //! Destructor
         virtual ~ISimulator() {}
 
-        //! ISimulatorAre we connected to the simulator?
+        //! Are we connected to the simulator?
         virtual bool isConnected() const = 0;
 
-        //! ISimulatorCan we connect?
+        //! Can we connect?
         virtual bool canConnect() = 0;
 
     public slots:
 
-        //! ISimulatorConnect to simulator
+        //! Connect to simulator
         virtual bool connectTo() = 0;
 
-        //! Connect asynchron to simulator
+        //! Connect asynchronously to simulator
         virtual void asyncConnectTo() = 0;
 
-        //! ISimulatorDisconnect from simulator
+        //! Disconnect from simulator
         virtual bool disconnectFrom() = 0;
 
         //! Return user aircraft object
