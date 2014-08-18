@@ -22,20 +22,20 @@ namespace BlackSimPlugin
             m_watcher->setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
             m_watcher->addWatchedService(CXBusServiceProxy::InterfaceName());
             m_watcher->addWatchedService(CXBusTrafficProxy::InterfaceName());
-            connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlane::serviceRegistered);
-            connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorXPlane::serviceUnregistered);
+            connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, &CSimulatorXPlane::ps_serviceRegistered);
+            connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, &CSimulatorXPlane::ps_serviceUnregistered);
 
             m_fastTimer = new QTimer(this);
             m_slowTimer = new QTimer(this);
-            connect(m_fastTimer, &QTimer::timeout, this, &CSimulatorXPlane::fastTimerTimeout);
-            connect(m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::slowTimerTimeout);
+            connect(m_fastTimer, &QTimer::timeout, this, &CSimulatorXPlane::ps_fastTimerTimeout);
+            connect(m_slowTimer, &QTimer::timeout, this, &CSimulatorXPlane::ps_slowTimerTimeout);
             m_fastTimer->start(100);
             m_slowTimer->start(1000);
 
             resetData();
         }
 
-        void CSimulatorXPlane::fastTimerTimeout()
+        void CSimulatorXPlane::ps_fastTimerTimeout()
         {
             if (isConnected())
             {
@@ -56,7 +56,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorXPlane::slowTimerTimeout()
+        void CSimulatorXPlane::ps_slowTimerTimeout()
         {
             if (isConnected())
             {
@@ -89,8 +89,8 @@ namespace BlackSimPlugin
             if (m_service->isValid() && m_traffic->isValid() && m_traffic->initialize())
             {
                 // FIXME duplication
-                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitAircraftModelChanged);
-                connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
+                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitAircraftModelChanged);
+                connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
                 m_service->updateAirportsInRange();
                 m_watcher->setConnection(m_conn);
                 emit statusChanged(ISimulator::Connected);
@@ -125,15 +125,15 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorXPlane::serviceRegistered(const QString &serviceName)
+        void CSimulatorXPlane::ps_serviceRegistered(const QString &serviceName)
         {
             if (serviceName == CXBusServiceProxy::InterfaceName())
             {
                 delete m_service;
                 m_service = new CXBusServiceProxy(m_conn, this);
                 // FIXME duplication
-                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::emitAircraftModelChanged);
-                connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::setAirportsInRange);
+                connect(m_service, &CXBusServiceProxy::aircraftModelChanged, this, &CSimulatorXPlane::ps_emitAircraftModelChanged);
+                connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
                 m_service->updateAirportsInRange();
             }
             else if (serviceName == CXBusTrafficProxy::InterfaceName())
@@ -147,7 +147,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorXPlane::serviceUnregistered()
+        void CSimulatorXPlane::ps_serviceUnregistered()
         {
             delete m_service;
             delete m_traffic;
@@ -156,7 +156,7 @@ namespace BlackSimPlugin
             emit statusChanged(ISimulator::Disconnected);
         }
 
-        void CSimulatorXPlane::emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
+        void CSimulatorXPlane::ps_emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)
         {
             emit aircraftModelChanged({ path, true });
             Q_UNUSED(filename);
@@ -210,7 +210,7 @@ namespace BlackSimPlugin
             return { m_xplaneData.aircraftModelPath, true };
         }
 
-        void CSimulatorXPlane::setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
+        void CSimulatorXPlane::ps_setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
         {
             qDebug() << alts;
             m_airports.clear();

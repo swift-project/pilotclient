@@ -122,16 +122,16 @@ namespace BlackSimPlugin
             void ps_dispatch();
 
             //! Process incoming FS9 message
-            void processFs9Message(const QByteArray &message);
+            void ps_processFs9Message(const QByteArray &message);
 
             //! Change own aircraft model string
-            void changeOwnAircraftModel(const QString &modelname);
+            void ps_changeOwnAircraftModel(const QString &modelname);
 
             //! Change DirectPlay host status
-            void changeHostStatus(CFs9Host::HostStatus status);
+            void ps_changeHostStatus(CFs9Host::HostStatus status);
 
             //! Remove client by callsign QString
-            void removeAircraft(const QString &callsign);
+            void ps_removeAircraft(const QString &callsign);
 
         private:
 

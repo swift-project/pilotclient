@@ -50,8 +50,8 @@ namespace BlackSimPlugin
             // We move the host thread already in the constructor
             m_fs9Host->moveToThread(&m_hostThread);
             connect(&m_hostThread, &QThread::started, m_fs9Host, &CFs9Host::init);
-            connect(m_fs9Host, &CFs9Host::customPacketReceived, this, &CSimulatorFs9::processFs9Message);
-            connect(m_fs9Host, &CFs9Host::statusChanged, this, &CSimulatorFs9::changeHostStatus);
+            connect(m_fs9Host, &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
+            connect(m_fs9Host, &CFs9Host::statusChanged, this, &CSimulatorFs9::ps_changeHostStatus);
             connect(&m_hostThread, &QThread::finished, m_fs9Host, &CFs9Host::deleteLater);
             connect(&m_hostThread, &QThread::finished, &m_hostThread, &QThread::deleteLater);
             m_hostThread.start();
@@ -108,7 +108,7 @@ namespace BlackSimPlugin
             client->moveToThread(clientThread);
 
             connect(clientThread, &QThread::started, client, &CFs9Client::init);
-            connect(client, &CFs9Client::clientTimedOut, this, &CSimulatorFs9::removeAircraft);
+            connect(client, &CFs9Client::clientTimedOut, this, &CSimulatorFs9::ps_removeAircraft);
             m_fs9ClientThreads.insert(client, clientThread);
             m_hashFs9Clients.insert(callsign, client);
             clientThread->start();
@@ -239,7 +239,7 @@ namespace BlackSimPlugin
             updateOwnAircraftFromSim(m_fsuipc->getOwnAircraft());
         }
 
-        void CSimulatorFs9::processFs9Message(const QByteArray &message)
+        void CSimulatorFs9::ps_processFs9Message(const QByteArray &message)
         {
             CFs9Sdk::MULTIPLAYER_PACKET_ID messageType = MultiPlayerPacketParser::readType(message);
 
@@ -249,7 +249,7 @@ namespace BlackSimPlugin
                 {
                     MPChangePlayerPlane mpChangePlayerPlane;
                     MultiPlayerPacketParser::readMessage(message, mpChangePlayerPlane);
-                    changeOwnAircraftModel(mpChangePlayerPlane.aircraft_name);
+                    ps_changeOwnAircraftModel(mpChangePlayerPlane.aircraft_name);
                     break;
                 }
                 case CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_VELOCITY:
@@ -271,13 +271,13 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFs9::changeOwnAircraftModel(const QString &modelname)
+        void CSimulatorFs9::ps_changeOwnAircraftModel(const QString &modelname)
         {
             m_aircraftModel.setQueriedModelString(modelname);
             emit aircraftModelChanged(m_aircraftModel);
         }
 
-        void CSimulatorFs9::changeHostStatus(CFs9Host::HostStatus status)
+        void CSimulatorFs9::ps_changeHostStatus(CFs9Host::HostStatus status)
         {
             switch (status)
             {
@@ -301,7 +301,7 @@ namespace BlackSimPlugin
             }
         }
 
-        void CSimulatorFs9::removeAircraft(const QString &callsign)
+        void CSimulatorFs9::ps_removeAircraft(const QString &callsign)
         {
             removeRemoteAircraft(callsign);
         }

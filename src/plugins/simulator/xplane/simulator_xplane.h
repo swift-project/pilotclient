@@ -90,12 +90,12 @@ namespace BlackSimPlugin
             virtual bool isSimPaused() const override { return false; }
 
         private slots:
-            void serviceRegistered(const QString &serviceName);
-            void serviceUnregistered();
-            void setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
-            void emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
-            void fastTimerTimeout();
-            void slowTimerTimeout();
+            void ps_serviceRegistered(const QString &serviceName);
+            void ps_serviceUnregistered();
+            void ps_setAirportsInRange(const QStringList &icaoCodes, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts);
+            void ps_emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao);
+            void ps_fastTimerTimeout();
+            void ps_slowTimerTimeout();
 
         private:
             QDBusConnection m_conn { "default" };
