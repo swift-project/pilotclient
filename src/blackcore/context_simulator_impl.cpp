@@ -299,7 +299,6 @@ namespace BlackCore
         if (!this->m_simulator) return;
         foreach(CTextMessage tm, textMessages)
         {
-            if (!tm.isPrivateMessage()) continue;
             this->m_simulator->displayStatusMessage(tm.asStatusMessage(true, true));
         }
     }
