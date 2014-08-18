@@ -272,6 +272,36 @@ int BlackMisc::compareQVariants(const QVariant &v1, const QVariant &v2)
         }
     }
 
+    // integer types, handling not as double for rounding issues
+    if (v1.type() == QVariant::Int)
+    {
+        int i1 = v1.value<int>();
+        int i2 = v2.value<int>();
+        if (i1 == i2) return 0;
+        return i1 < i2 ? -1 : 1;
+    }
+    else if (v1.type() == QVariant::UInt)
+    {
+        uint i1 = v1.value<uint>();
+        uint i2 = v2.value<uint>();
+        if (i1 == i2) return 0;
+        return i1 < i2 ? -1 : 1;
+    }
+    else if (v1.type() == QVariant::LongLong)
+    {
+        long long i1 = v1.value<long long>();
+        long long i2 = v2.value<long long>();
+        if (i1 == i2) return 0;
+        return i1 < i2 ? -1 : 1;
+    }
+    else if (v1.type() == QVariant::ULongLong)
+    {
+        unsigned long long i1 = v1.value<unsigned long long>();
+        unsigned long long i2 = v2.value<unsigned long long>();
+        if (i1 == i2) return 0;
+        return i1 < i2 ? -1 : 1;
+    }
+
     // all kind of numeric values
     if (v1.canConvert<double>())
     {
