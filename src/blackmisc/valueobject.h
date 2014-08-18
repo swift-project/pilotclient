@@ -192,6 +192,9 @@ namespace BlackMisc
         //! Virtual method to return CVariant
         virtual CVariant toCVariant() const { return CVariant(this->toQVariant()); }
 
+        //! Set from QVariant
+        virtual void fromQVariant(const QVariant &variant) = 0;
+
         //! Contribute to JSON object
         virtual QJsonObject toJson() const { QJsonObject json; return json;}
 
@@ -217,7 +220,7 @@ namespace BlackMisc
         virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
 
         //! The stored object as CValueObject
-        static const CValueObject *fromQVariant(const QVariant &qv);
+        static const CValueObject *convertFromQVariant(const QVariant &variant);
 
     protected:
         //! Default constructor

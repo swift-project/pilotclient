@@ -13,6 +13,7 @@
 #define BLACKMISC_PQSTRING_H
 
 #include "blackmisc/valueobject.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QVariant>
 
 namespace BlackMisc
@@ -69,12 +70,6 @@ namespace BlackMisc
             //! Constructor, for values such as 10km/h
             CPqString(const QString &value) : m_string(value) {}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
             //! \copydoc CValueObject::getMetaTypeId
             int getMetaTypeId() const override;
 
@@ -86,6 +81,12 @@ namespace BlackMisc
 
             //! Unequal operator !=
             bool operator !=(const CPqString &other) const;
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Register metadata
             static void registerMetadata();

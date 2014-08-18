@@ -64,10 +64,10 @@ namespace BlackMisc
             }
 
             //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Value object, traffic network server objects
             BlackMisc::Network::CServerList getTrafficNetworkServers() const { return m_trafficNetworkServers; }

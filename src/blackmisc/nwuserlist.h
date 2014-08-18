@@ -27,8 +27,11 @@ namespace BlackMisc
             //! Construct from a base class object.
             CUserList(const CSequence &other);
 
-            //! QVariant, required for DBus QVariant lists
-            virtual QVariant asQVariant() const { return QVariant::fromValue(*this); }
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Register metadata
             static void registerMetadata();

@@ -207,8 +207,11 @@ namespace BlackMisc
             removeByValueIf(BlackMisc::Predicates::MemberEqual(membFunc, returnValue));
         }
 
-        //! \copydoc BlackMisc::CValueObject::toQVariant
+        //! \copydoc CValueObject::toQVariant()
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+        //! \copydoc CValueObject::fromQVariant
+        virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
         //! \copydoc BlackMisc::CValueObject::getValueHash
         virtual uint getValueHash() const override { return qHash(this); }

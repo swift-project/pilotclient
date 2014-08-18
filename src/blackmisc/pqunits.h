@@ -16,6 +16,7 @@
 #undef min
 
 #include "blackmisc/pqbase.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QtDBus/QDBusArgument>
 #include <QList>
 #include <QtCore/qmath.h>
@@ -56,13 +57,11 @@ namespace BlackMisc
             //! Default constructor, required for Qt Metasystem
             CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CLengthUnit &defaultUnit() { return m(); }
@@ -171,13 +170,11 @@ namespace BlackMisc
             //!  Default constructor, required for Qt Metasystem
             CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CAngleUnit &defaultUnit() { return deg(); }
@@ -269,13 +266,11 @@ namespace BlackMisc
             //! Default constructor, required for Qt Metasystem
             CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CFrequencyUnit &defaultUnit() { return Hz(); }
@@ -360,13 +355,11 @@ namespace BlackMisc
             //! Default constructor, required for Qt Metasystem
             CMassUnit() : CMeasurementUnit(defaultUnit()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CMassUnit &defaultUnit() { return kg(); }
@@ -461,13 +454,11 @@ namespace BlackMisc
             //! Default constructor, required for Qt Metasystem
             CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CPressureUnit &defaultUnit() { return hPa(); }
@@ -583,13 +574,11 @@ namespace BlackMisc
             //! Default constructor, required for Qt Metasystem
             CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CTemperatureUnit &defaultUnit() { return C(); }
@@ -669,13 +658,11 @@ namespace BlackMisc
             //! Default constructor, required for Qt Metasystem
             CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CSpeedUnit &defaultUnit() { return m_s(); }
@@ -780,13 +767,11 @@ namespace BlackMisc
             //! Default constructor, required for Qt Metasystem
             CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CTimeUnit &defaultUnit() { return s(); }
@@ -910,13 +895,11 @@ namespace BlackMisc
             //! Default constructor, required for Qt Metasystem
             CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CAccelerationUnit &defaultUnit() { return m_s2(); }

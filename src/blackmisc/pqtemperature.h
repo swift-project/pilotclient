@@ -33,9 +33,6 @@ namespace BlackMisc
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CTemperature(const QString &unitString) : CPhysicalQuantity(unitString) {}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Destructor
             virtual ~CTemperature() {}
         };

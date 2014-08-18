@@ -12,7 +12,8 @@
 #ifndef BLACKMISC_HOTKEYFUNCTION_H
 #define BLACKMISC_HOTKEYFUNCTION_H
 
-#include "valueobject.h"
+#include "propertyindex.h"
+#include "blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
@@ -48,18 +49,11 @@ namespace BlackMisc
         //! Set function
         void setFunction(const Function &function) { m_function = function; }
 
-        //! \copydoc CValueObject::toQVariant
+        //! \copydoc CValueObject::toQVariant()
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
         //! \copydoc CValueObject::fromQVariant
-        virtual void fromQVariant(const QVariant &variant) override
-        {
-            Q_ASSERT(variant.canConvert<CHotkeyFunction>());
-            if (variant.canConvert<CHotkeyFunction>())
-            {
-                (*this) = variant.value<CHotkeyFunction>();
-            }
-        }
+        virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
         //! \copydoc CValueObject::getValueHash
         virtual uint getValueHash() const override;

@@ -49,9 +49,6 @@ namespace BlackMisc
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CTime(const QString &unitString) : CPhysicalQuantity(0, CTimeUnit::nullUnit()) { this->parseFromString(unitString); }
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Destructor
             virtual ~CTime() {}
 

@@ -19,17 +19,11 @@ namespace BlackSim
         //! Unspecified simulator
         bool isUnspecified() const { return this->m_shortName.isEmpty() || this->m_shortName.startsWith("Unspecified", Qt::CaseInsensitive); }
 
-        //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
         //! Equal operator ==
         bool operator ==(const CSimulatorInfo &other) const;
 
         //! Unequal operator !=
         bool operator !=(const CSimulatorInfo &other) const;
-
-        //! \copydoc CValueObject::getValueHash()
-        virtual uint getValueHash() const override;
 
         //! Single setting value
         QVariant getSimulatorSetupValue(int index) const;
@@ -48,6 +42,15 @@ namespace BlackSim
 
         //! Compare on names only, ignore setup
         bool isSameSimulator(const CSimulatorInfo &otherSimulator) const;
+
+        //! \copydoc CValueObject::getValueHash()
+        virtual uint getValueHash() const override;
+
+        //! \copydoc CValueObject::toQVariant()
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+        //! \copydoc CValueObject::fromQVariant
+        virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
         //! \copydoc CValueObject::toJson
         virtual QJsonObject toJson() const override;

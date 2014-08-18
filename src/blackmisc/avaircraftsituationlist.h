@@ -25,12 +25,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAircraftSituationList(const CSequence<CAircraftSituation> &other);
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const
-            {
-                return QVariant::fromValue(*this);
-            }
-
             /*!
              * Get a list of situations before dateTime
              * \param dateTime
@@ -56,6 +50,13 @@ namespace BlackMisc
              * \param seconds
              */
             void removeOlderThan(double seconds);
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
         };
     }
 }

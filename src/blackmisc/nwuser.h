@@ -57,12 +57,6 @@ namespace BlackMisc
                 : m_id(id), m_realname(realname), m_email(email), m_password(password), m_callsign(callsign)
             {}
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
             //! Get full name.
             QString getRealName() const { return m_realname; }
 
@@ -125,6 +119,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
+
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::toIcon()
             virtual BlackMisc::CIcon toIcon() const override { return this->getCallsign().toIcon(); }

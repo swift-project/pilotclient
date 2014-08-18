@@ -33,9 +33,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAtcStationList(const CSequence<CAtcStation> &other);
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Find 0..n stations by callsign
             CAtcStationList findByCallsign(const CCallsign &callsign) const;
 
@@ -57,9 +54,6 @@ namespace BlackMisc
             //! Update distances to coordinate, usually own aircraft's position
             void calculateDistancesToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
-            //! Register metadata
-            static void registerMetadata();
-
             //! Merge with ATC station representing booking information
             //! \remarks Can be used if the stored data in this list are online ATC stations
             int mergeWithBooking(CAtcStation &bookedAtcStation);
@@ -67,6 +61,16 @@ namespace BlackMisc
             //! Merge with the data from the VATSIM data file
             //! \remarks Can be used if the stored data in this list are VATSIM data file stations
             bool updateFromVatsimDataFileStation(CAtcStation &stationToBeUpdated) const;
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
+            //! Register metadata
+            static void registerMetadata();
+
         };
 
     } //namespace

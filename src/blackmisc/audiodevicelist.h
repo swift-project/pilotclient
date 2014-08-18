@@ -35,9 +35,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAudioDeviceList(const CSequence &other);
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Get output devices in that list
             CAudioDeviceList getOutputDevices() const;
 
@@ -46,6 +43,12 @@ namespace BlackMisc
 
             //! Count (as of type)
             int count(CAudioDevice::DeviceType type) const;
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Register metadata
             static void registerMetadata();

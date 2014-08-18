@@ -145,7 +145,10 @@ namespace BlackMisc
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const { return this->m_geodeticHeight; }
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+            virtual QVariant toQVariant() const override  { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;

@@ -13,6 +13,7 @@
 #define BLACKMISC_INFORMATIONMESSAGE_H
 
 #include "valueobject.h"
+#include "blackmiscfreefunctions.h"
 #include <QString>
 #include <QDateTime>
 
@@ -38,15 +39,15 @@ namespace BlackMisc
                 TAF
             };
 
-            //! \brief Default constructor.
+            //! Default constructor.
             CInformationMessage() : m_type(CInformationMessage::Unspecified), m_receivedTimestamp(QDateTime::currentDateTimeUtc())
             {}
 
-            //! \brief Information message of type
+            //! Information message of type
             explicit CInformationMessage(InformationType type) : m_type(type) {}
 
             /*!
-             * \brief Information message of type
+             * Information message of type
              * \param type
              * \param message
              */
@@ -55,56 +56,56 @@ namespace BlackMisc
             {}
 
             //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \brief Equal operator ==
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
+            //! Equal operator ==
             bool operator ==(const CInformationMessage &other) const;
 
-            //! \brief operator !=
+            //! operator !=
             bool operator !=(const CInformationMessage &other) const;
 
-            //! \brief Get message.
+            //! Get message.
             const QString &getMessage() const { return m_message; }
 
-            //! \brief Is a message available
+            //! Is a message available
             bool hasMessage() const { return !m_message.isEmpty(); }
 
-            //! \brief Set message
+            //! Set message
             void setMessage(const QString &message)
             {
                 this->m_receivedTimestamp = QDateTime::currentDateTimeUtc();
                 this->m_message = message;
             }
 
-            //! \brief Append message part
+            //! Append message part
             void appendMessage(const QString &messagePart)
             {
                 this->m_receivedTimestamp = QDateTime::currentDateTimeUtc();
                 this->m_message.append(messagePart);
             }
 
-            //! \brief Type as string
+            //! Type as string
             const QString &getTypeAsString() const;
 
-            //! \brief Type
+            //! Type
             InformationType getType() const { return this->m_type; }
 
-            //! \brief Set type
+            //! Set type
             void setType(InformationType type) { this->m_type = type; }
 
-            //! \brief Timestamp
+            //! Timestamp
             const QDateTime &getReceivedTimestamp() const { return this->m_receivedTimestamp; }
 
-            //! \brief Received before n ms
+            //! Received before n ms
             qint64 timeDiffReceivedMs() const
             {
                 return this->m_receivedTimestamp.msecsTo(QDateTime::currentDateTimeUtc());
             }
 
-            //! \brief Is empty?
+            //! Is empty?
             bool isEmpty() const { return this->m_message.isEmpty(); }
 
             //! \copydoc CValueObject::getValueHash
@@ -116,10 +117,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
-            //! \brief Members
+            //! Members
             static const QStringList &jsonMembers();
 
         protected:

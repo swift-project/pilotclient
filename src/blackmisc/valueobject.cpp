@@ -103,17 +103,17 @@ namespace BlackMisc
     /*
      * Return backing streamable object (if any)
      */
-    const CValueObject *CValueObject::fromQVariant(const QVariant &qv)
+    const CValueObject *CValueObject::convertFromQVariant(const QVariant &variant)
     {
-        if (!qv.isValid()) return nullptr;
-        QVariant::Type t = qv.type();
-        uint ut = qv.userType();
+        if (!variant.isValid()) return nullptr;
+        QVariant::Type t = variant.type();
+        uint ut = variant.userType();
         if (t != QVariant::UserType) return nullptr;  // not a user type
         if (ut <= QVariant::UserType) return nullptr; // complex Qt type
-        if (qv.canConvert<QDBusArgument>()) return nullptr; // not unstreamed yet
+        if (variant.canConvert<QDBusArgument>()) return nullptr; // not unstreamed yet
 
         // this cast cannot be dynamic, so the above conditions are crucical
-        const CValueObject *vo = static_cast<const CValueObject *>(qv.constData());
+        const CValueObject *vo = static_cast<const CValueObject *>(variant.constData());
         return vo;
     }
 

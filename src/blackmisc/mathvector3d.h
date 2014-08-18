@@ -40,14 +40,6 @@ namespace BlackMisc
             CVector3D(const CVector3D &other) : CVector3DBase(other) {}
 
             /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
-            /*!
              * \brief i
              * \return
              */

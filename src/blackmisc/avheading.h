@@ -66,12 +66,6 @@ namespace BlackMisc
             //! \brief Constructor by CAngle
             CHeading(CAngle heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
@@ -89,6 +83,12 @@ namespace BlackMisc
 
             //! \brief Get reference north (magnetic or true)
             ReferenceNorth getReferenceNorth() const { return m_north; }
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;

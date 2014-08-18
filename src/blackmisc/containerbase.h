@@ -15,6 +15,7 @@
 #include "valueobject.h"
 #include "range.h"
 #include "indexvariantmap.h"
+#include "blackmiscfreefunctions.h"
 #include "predicates.h"
 #include "json.h"
 #include <algorithm>
@@ -92,6 +93,9 @@ namespace BlackMisc
     public:
         //! \copydoc BlackMisc::CValueObject::toQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(derived()); }
+
+        //! \copydoc CValueObject::fromQVariant
+        virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant< C<T> >(&derived(), variant); }
 
         //! \copydoc BlackMisc::CValueObject::getValueHash
         virtual uint getValueHash() const override { return qHash(&derived()); }

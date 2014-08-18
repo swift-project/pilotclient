@@ -30,9 +30,6 @@ namespace BlackMisc
         //! Constructor.
         CNameVariantPair(const QString &name, const CVariant &variant, const CIcon &icon = CIcon());
 
-        //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
         //! Get name.
         const QString &getName() const { return m_name; }
 
@@ -86,6 +83,12 @@ namespace BlackMisc
 
         //! \copydoc CValueObject::setPropertyByIndex(variant, index)
         virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+
+        //! \copydoc CValueObject::toQVariant
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+        //! \copydoc CValueObject::fromQVariant
+        virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
     protected:
         //! \copydoc CValueObject::convertToQString()

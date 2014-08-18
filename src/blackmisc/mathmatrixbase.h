@@ -8,8 +8,8 @@
 
 #include "blackmisc/valueobject.h"
 #include "blackmisc/mathvector3dbase.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QGenericMatrix>
-#include <QDBusMetaType>
 
 namespace BlackMisc
 {
@@ -86,6 +86,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
+
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*derived()); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant<ImplMatrix>(derived(), variant); }
 
             //! \brief Equal operator ==
             bool operator ==(const ImplMatrix &other) const

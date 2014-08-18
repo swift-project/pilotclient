@@ -43,9 +43,6 @@ namespace BlackMisc
             CServer(const QString &name, const QString &description, const QString &address, qint32 port, const CUser &user, bool isAcceptingConnections = true)
                 : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user), m_isAcceptingConnections(isAcceptingConnections) {}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Get address.
             const QString &getAddress() const { return m_address; }
 
@@ -98,19 +95,25 @@ namespace BlackMisc
             virtual QJsonObject toJson() const override;
 
             //! \copydoc CValueObject::fromJson
-            void fromJson(const QJsonObject &json) override;
+            virtual void fromJson(const QJsonObject &json) override;
 
-            //! Register metadata
-            static void registerMetadata();
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
+            //! \copydoc CValueObject::propertyByIndex(int)
+            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+
+            //! \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
+            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! \copydoc TupleConverter<>::jsonMembers()
             static const QStringList &jsonMembers();
 
-            //! \copydoc CValueObject::propertyByIndex(int)
-            QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
-
-            //! \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
-            void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            //! Register metadata
+            static void registerMetadata();
 
         protected:
             //! \copydoc CValueObject::convertToQString()

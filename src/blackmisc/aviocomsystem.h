@@ -39,9 +39,6 @@ namespace BlackMisc
                 CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits), m_channelSpacing(ChannelSpacing25KHz)
             { }
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Set active frequency
             //! \remarks will be rounded to channel spacing
             void setFrequencyActiveMHz(double frequencyMHz);

@@ -21,6 +21,7 @@
 #include "valueobject.h"
 #include "namevariantpairlist.h"
 #include "propertyindex.h"
+#include "blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
@@ -53,6 +54,9 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::toIcon()
             virtual BlackMisc::CIcon toIcon() const override { return this->m_callsign.toIcon(); }

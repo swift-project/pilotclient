@@ -38,12 +38,14 @@ namespace BlackMisc
         //! Find by severity
         CStatusMessageList findBySeverity(CStatusMessage::StatusSeverity severity) const;
 
-        //! \copydoc CValueObject::asQVariant
+        //! \copydoc CValueObject::toQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+        //! \copydoc CValueObject::fromQVariant
+        virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
         //! Register metadata of unit and quantity
         static void registerMetadata();
-
     };
 }
 

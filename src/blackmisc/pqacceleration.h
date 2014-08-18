@@ -31,9 +31,6 @@ namespace BlackMisc
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CAcceleration(const QString &unitString) : CPhysicalQuantity(unitString) {}
 
-            //! copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Virtual destructor
             virtual ~CAcceleration() {}
         };

@@ -13,6 +13,7 @@
 //! \file
 
 #include "valueobject.h"
+#include "blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
@@ -44,9 +45,6 @@ namespace BlackMisc
             //! Constructor.
             CVoiceCapabilities(const QString &flightPlanRemarks);
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Get capabilities
             VoiceCapabilities getCapabilities() const { return static_cast<VoiceCapabilities>(m_voiceCapabilities); }
 
@@ -64,6 +62,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;

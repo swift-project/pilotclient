@@ -12,10 +12,10 @@
 #ifndef BLACKMISC_AVIOMODULATORUNIT_H
 #define BLACKMISC_AVIOMODULATORUNIT_H
 
-#include <QDBusMetaType>
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/aviobase.h"
 #include "blackmisc/mathematics.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 
 using namespace BlackMisc::Math;
 
@@ -95,6 +95,12 @@ namespace BlackMisc
 
             //! Enabled?
             void setEnabled(bool enable) { this->m_enabled = enable;}
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this->derived()); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(derived(), variant); }
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
@@ -248,6 +254,12 @@ namespace BlackMisc
             qint32 m_volumeInput;  //!< volume input
             qint32 m_volumeOutput; //!< volume output
             bool m_enabled; //!< is enabled, used e.g. for mute etc.
+
+            //! Easy access to derived class (CRTP template parameter)
+            AVIO const *derived() const { return static_cast<AVIO const *>(this); }
+
+            //! Easy access to derived class (CRTP template parameter)
+            AVIO *derived() { return static_cast<AVIO *>(this); }
 
         };
 

@@ -12,9 +12,9 @@
 #ifndef BLACKMISC_CALLSIGN_H
 #define BLACKMISC_CALLSIGN_H
 
-#include "valueobject.h"
 #include "propertyindex.h"
 #include "icon.h"
+#include "blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
@@ -45,12 +45,6 @@ namespace BlackMisc
             CCallsign(const char *callsign)
                 : m_callsignAsSet(callsign), m_callsign(CCallsign::unifyCallsign(callsign))
             {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::toIcon()
-            virtual BlackMisc::CIcon toIcon() const override { return CCallsign::convertToIcon(*this); }
 
             //! Is empty?
             bool isEmpty() const { return this->m_callsignAsSet.isEmpty(); }
@@ -90,6 +84,15 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
+
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
+            //! \copydoc CValueObject::toIcon()
+            virtual BlackMisc::CIcon toIcon() const override { return CCallsign::convertToIcon(*this); }
 
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;

@@ -12,7 +12,8 @@
 #ifndef BLACKMISC_KEYBOARDKEY_H
 #define BLACKMISC_KEYBOARDKEY_H
 
-#include "valueobject.h"
+#include "propertyindex.h"
+#include "blackmiscfreefunctions.h"
 #include <QStringList>
 #include <QKeySequence>
 
@@ -64,11 +65,11 @@ namespace BlackMisc
             //! Destructor
             ~CKeyboardKey() {}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;

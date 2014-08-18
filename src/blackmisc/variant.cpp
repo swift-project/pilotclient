@@ -26,7 +26,7 @@ namespace BlackMisc
     {
         if (type() == QVariant::UserType)
         {
-            const CValueObject *s = CValueObject::fromQVariant(m_v); // FIXME this will return garbage if value is not a CValueObject
+            const CValueObject *s = CValueObject::convertFromQVariant(m_v); // FIXME this will return garbage if value is not a CValueObject
             Q_ASSERT(s);
             if (s)
             {
@@ -133,7 +133,7 @@ namespace BlackMisc
                 {
                     // value object?
                     const QVariant qv = this->toQVariant();
-                    const CValueObject *cv = CValueObject::fromQVariant(qv);
+                    const CValueObject *cv = CValueObject::convertFromQVariant(qv);
                     if (cv)
                     {
                         h = cv->getValueHash();
@@ -171,6 +171,4 @@ namespace BlackMisc
         var = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::type(qPrintable(typeName)));
         return arg;
     }
-
-
 } // namespace

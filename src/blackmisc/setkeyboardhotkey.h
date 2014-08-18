@@ -15,6 +15,7 @@
 #include "propertyindex.h"
 #include "hwkeyboardkey.h"
 #include "hotkeyfunction.h"
+#include "blackmiscfreefunctions.h"
 #include <QStringList>
 #include <QKeySequence>
 
@@ -55,14 +56,7 @@ namespace BlackMisc
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override
-            {
-                Q_ASSERT(variant.canConvert<CSettingKeyboardHotkey>());
-                if (variant.canConvert<CSettingKeyboardHotkey>())
-                {
-                    (*this) = variant.value<CSettingKeyboardHotkey>();
-                }
-            }
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;

@@ -14,6 +14,7 @@
 
 #include "blackmisc/valueobject.h"
 #include "blackmisc/mathematics.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QCoreApplication>
 #include <QtDBus/QDBusArgument>
 #include <QString>
@@ -269,20 +270,23 @@ namespace BlackMisc
             CMeasurementUnit() : m_name("none"), m_symbol(""),  m_epsilon(0), m_displayDigits(0)
             {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                // used with None!
-                return QVariant::fromValue(*this);
-            }
-
             //! Equal operator ==
             bool operator == (const CMeasurementUnit &other) const;
 
             //! Unequal operator !=
             bool operator != (const CMeasurementUnit &other) const;
+
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
+            //! \copydoc CValueObject::getValueHash
+            virtual uint getValueHash() const override
+            {
+                return qHash(this->getName());
+            }
 
             //! Name such as "meter"
             QString getName(bool i18n = false) const
@@ -294,14 +298,6 @@ namespace BlackMisc
             QString getSymbol(bool i18n = false) const
             {
                 return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_symbol.toStdString().c_str()) : this->m_symbol;
-            }
-
-            /*!
-             * \copydoc CValueObject::getValueHash
-             */
-            virtual uint getValueHash() const override
-            {
-                return qHash(this->getName());
             }
 
             //! Rounded value

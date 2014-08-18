@@ -60,8 +60,6 @@ namespace BlackMisc
             //! Constructor.
             CClient(const CUser &user) : m_user(user) {}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Equal operator ==
             bool operator ==(const CClient &other) const;
@@ -75,11 +73,17 @@ namespace BlackMisc
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
-            //! Callsign used with other client
-            const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_user.getCallsign(); }
-
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
+
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
+            //! Callsign used with other client
+            const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_user.getCallsign(); }
 
             //! Get capabilities
             CIndexVariantMap getCapabilities() const { return this->m_capabilities; }

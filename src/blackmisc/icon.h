@@ -31,9 +31,6 @@ namespace BlackMisc
         CIcon( CIcons::IconIndex index, const QString &descriptiveText) :
             m_index(static_cast<int>(index)), m_descriptiveText(descriptiveText) {}
 
-        //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
         //! Get descriptive text
         const QString &getDescriptiveText() const { return this->m_descriptiveText; }
 
@@ -65,7 +62,13 @@ namespace BlackMisc
         virtual QJsonObject toJson() const override;
 
         //! \copydoc CValueObject::fromJson
-        void fromJson(const QJsonObject &json) override;
+        virtual void fromJson(const QJsonObject &json) override;
+
+        //! \copydoc CValueObject::toQVariant()
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+        //! \copydoc CValueObject::fromQVariant
+        virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
         //! Register metadata
         static void registerMetadata();

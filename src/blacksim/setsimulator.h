@@ -53,9 +53,6 @@ namespace BlackSim
                 return value;
             }
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Selected driver
             const BlackSim::CSimulatorInfo &getSelectedPlugin() const { return this->m_selectedPlugin; }
 
@@ -80,6 +77,9 @@ namespace BlackSim
             //! Unequal operator !=
             bool operator !=(const CSettingsSimulator &other) const;
 
+            //! Init with meaningful default values
+            void initDefaultValues();
+
             //! \copydoc BlackCore::IContextSettings
             virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const BlackMisc::CVariant &value, bool &changedFlag);
 
@@ -92,8 +92,11 @@ namespace BlackSim
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
 
-            //! Init with meaningful default values
-            void initDefaultValues();
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::registerMetadata
             static void registerMetadata();

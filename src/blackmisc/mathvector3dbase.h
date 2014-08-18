@@ -203,7 +203,13 @@ namespace BlackMisc
             virtual QJsonObject toJson() const override;
 
             //! \copydoc CValueObject::fromJson
-            void fromJson(const QJsonObject &json) override;
+            virtual void fromJson(const QJsonObject &json) override;
+
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*derived()); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant<ImplVector>(derived(), variant); }
 
             //! Register metadata
             static void registerMetadata();

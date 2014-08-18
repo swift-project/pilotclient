@@ -13,6 +13,7 @@
 #define BLACKMISC_AIRCRAFTICAO_H
 
 #include "propertyindex.h"
+#include "blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
@@ -62,11 +63,11 @@ namespace BlackMisc
                 : m_aircraftDesignator(icao.trimmed().toUpper()), m_aircraftCombinedType(combinedType.trimmed().toUpper()), m_airlineDesignator(airline.trimmed().toUpper()),
                   m_livery(livery.trimmed().toUpper()), m_aircraftColor(color.trimmed().toUpper()) {}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Get ICAO designator, e.g. "B737"
             const QString &getAircraftDesignator() const { return m_aircraftDesignator; }

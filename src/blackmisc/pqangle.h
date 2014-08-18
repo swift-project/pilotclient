@@ -55,22 +55,23 @@ namespace BlackMisc
                     degrees + minutes / 100.0,
                     CAngleUnit::sexagesimalDegMin()) {}
 
-			//! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+            //! Virtual destructor
+            virtual ~CAngle() {}
 					
             //! \copydoc CValueObject::toIcon
             virtual BlackMisc::CIcon toIcon() const override;
 
-            //! Virtual destructor
-            virtual ~CAngle() {}
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Value as factor of PI (e.g. 0.5PI)
             double piFactor() const;
 
             //! PI as convenience method
             static const double &PI();
-
-        private:
 
         };
     } // namespace

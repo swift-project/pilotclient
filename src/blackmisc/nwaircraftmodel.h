@@ -40,9 +40,6 @@ namespace BlackMisc
             //! Constructor.
             CAircraftModel(const QString &model, bool isQueriedString) : m_modelString(model), m_queriedModelStringFlag(isQueriedString) {}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Equal operator ==
             bool operator ==(const CAircraftModel &other) const;
 
@@ -51,6 +48,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;

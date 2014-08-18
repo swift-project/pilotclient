@@ -41,14 +41,6 @@ namespace BlackMisc
                 this->m_matrix(0, 1) = c2;
                 this->m_matrix(0, 2) = c3;
             }
-
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
         };
 
     } // namespace

@@ -9,6 +9,7 @@
 
 #include "iconlist.h"
 #include "pqangle.h"
+#include "avheading.h"
 
 namespace BlackMisc
 {

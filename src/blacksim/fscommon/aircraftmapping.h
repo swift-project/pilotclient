@@ -189,11 +189,14 @@ namespace BlackSim
             //! \copydoc CValueObject::setPropertyByIndex()
             void setPropertyByIndex(const QVariant &value, const BlackMisc::CPropertyIndex &index) override;
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Current UTC timestamp
             static QString currentUtcTimestamp()

@@ -31,9 +31,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAirportList(const CSequence<CAirport> &other);
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Find 0..n airports by ICAO code
             CAirportList findByIcao(const CAirportIcao &icao) const;
 
@@ -54,6 +51,12 @@ namespace BlackMisc
 
             //! Sort by range from a given coordinate
             void sortByRange(const BlackMisc::Geo::CCoordinateGeodetic &position, bool updateDistance);
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Register metadata
             static void registerMetadata();

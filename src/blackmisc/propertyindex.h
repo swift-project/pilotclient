@@ -13,6 +13,7 @@
 #define BLACKMISC_PROPERTYINDEX_H
 
 #include "valueobject.h"
+#include "blackmiscfreefunctions.h"
 #include <initializer_list>
 
 namespace BlackMisc
@@ -95,18 +96,11 @@ namespace BlackMisc
         //! \copydoc CValueObject::CPropertyIndexlueHash()
         virtual uint getValueHash() const override;
 
-        //! CValueObject::toQVariant()
+        //! \copydoc CValueObject::toQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
         //! \copydoc CValueObject::fromQVariant
-        virtual void fromQVariant(const QVariant &variant) override
-        {
-            Q_ASSERT(variant.canConvert<CPropertyIndex>());
-            if (variant.canConvert<CPropertyIndex>())
-            {
-                (*this) = variant.value<CPropertyIndex>();
-            }
-        }
+        virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
         //! \copydoc CValueObject::toJson
         virtual QJsonObject toJson() const override;

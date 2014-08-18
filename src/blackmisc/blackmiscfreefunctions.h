@@ -108,6 +108,18 @@ namespace BlackMisc
     QString qVariantToString(const QVariant &qv, bool i18n = false);
 
     /*!
+     * Checked version from QVariant
+     */
+    template <class T> void setFromQVariant(T *value, const QVariant &variant)
+    {
+        Q_ASSERT(variant.canConvert<T>());
+        if (variant.canConvert<T>())
+        {
+            (*value) = variant.value<T>();
+        }
+    }
+
+    /*!
      * Fix variant. Required if a variant "comes in" via DBus,
      * and represents a QDBusArgument rather than the real type.
      * \param variant

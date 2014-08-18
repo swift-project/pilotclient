@@ -35,9 +35,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAircraftMappingList(const CSequence<CAircraftMapping> &other);
 
-            //! QVariant, required for DBus QVariant lists
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Find by ICAO code, empty fields treated as wildcards
             CAircraftMappingList findByIcaoCodeWildcard(const BlackMisc::Aviation::CAircraftIcao &searchIcao) const;
 
@@ -47,9 +44,14 @@ namespace BlackMisc
             //! Find by model string
             CAircraftMappingList findByModelString(const QString modelString, Qt::CaseSensitivity sensitivity) const;
 
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
             //! Register metadata
             static void registerMetadata();
-
         };
 
     } //namespace

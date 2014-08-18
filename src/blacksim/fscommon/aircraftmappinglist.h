@@ -35,7 +35,12 @@ namespace BlackSim
             //! Virtual destructor
             virtual ~CAircraftMappingList() {}
 
-            //! \brief Unknown mapping
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
             //! Unknown mapping
             static const CAircraftMapping &UnknownMapping()
             {

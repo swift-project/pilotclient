@@ -11,7 +11,9 @@
 
 #ifndef BLACKMISC_AIRPORTICAO_H
 #define BLACKMISC_AIRPORTICAO_H
+
 #include "valueobject.h"
+#include "blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
@@ -36,6 +38,9 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Is empty?
             bool isEmpty() const { return this->m_icaoCode.isEmpty(); }

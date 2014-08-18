@@ -50,9 +50,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CTextMessageList(const CSequence<CTextMessage> &other);
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const { return QVariant::fromValue(*this); }
-
             //! Private messages
             CTextMessageList getPrivateMessages() const;
 
@@ -70,6 +67,12 @@ namespace BlackMisc
 
             //! Toggle all sender receivers
             void toggleSenderRecipients();
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Register metadata
             static void registerMetadata();

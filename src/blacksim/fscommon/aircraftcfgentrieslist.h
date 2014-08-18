@@ -77,7 +77,12 @@ namespace BlackSim
             //! Contains model with title?
             bool containsModeWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
 
-            //! \brief Unknown entries
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
             //! Unknown entries
             static const CAircraftCfgEntries &UnknownCfgEntries()
             {

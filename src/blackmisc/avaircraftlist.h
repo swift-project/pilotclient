@@ -37,9 +37,6 @@ namespace BlackMisc
             //! Construct from a base class object.
             CAircraftList(const CSequence<CAircraft> &other);
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Find 0..n stations by callsign
             CAircraftList findByCallsign(const CCallsign &callsign) const;
 
@@ -60,12 +57,18 @@ namespace BlackMisc
              */
             CAircraftList findWithinRange(const BlackMisc::Geo::ICoordinateGeodetic &coordinate, const BlackMisc::PhysicalQuantities::CLength &range) const;
 
-            //! Register metadata
-            static void registerMetadata();
-
             //! \brief Update aircraft with data from VATSIM data file
             //! \remarks The list used needs to contain the VATSIM data file objects
             bool updateWithVatsimDataFileData(CAircraft &aircraftToBeUpdated) const;
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
+            //! Register metadata
+            static void registerMetadata();
         };
 
     } //namespace

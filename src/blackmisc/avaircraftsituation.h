@@ -62,8 +62,11 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex(variant,index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! \copydoc CValueObject::toQVariant
+            //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Get position
             const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return this->m_position; }

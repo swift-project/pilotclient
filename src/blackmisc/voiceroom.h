@@ -10,6 +10,7 @@
 //! \file
 
 #include "propertyindex.h"
+#include "blackmiscfreefunctions.h"
 #include <QString>
 
 #ifndef BLACKMISC_VOICEROOM_H
@@ -45,9 +46,6 @@ namespace BlackMisc
 
             //! Constructor.
             CVoiceRoom(const QString &voiceRoomUrl, bool connected = false);
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
             //! Get the host name
             const QString &getHostname() const { return m_hostname; }
@@ -109,6 +107,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Register metadata
             static void registerMetadata();

@@ -17,6 +17,7 @@
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/mathematics.h"
 #include "blackmisc/pqstring.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include <QtDBus/QDBusMetaType>
 #include <QtGlobal>
 #include <QString>
@@ -204,6 +205,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override  { return QVariant::fromValue(*this->derived()); }
+
+            //! \copydoc CValueObject::fromQVariant
+            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant<PQ>(derived(), variant); }
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
