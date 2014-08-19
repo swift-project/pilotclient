@@ -87,6 +87,9 @@ namespace BlackCore
 
     void CInputManager::callFunctionsBy(const CHotkeyFunction &hotkeyFunction, bool isKeyDown)
     {
+        BlackMisc::Event::CEventHotkeyFunction hotkeyEvent(hotkeyFunction, isKeyDown);
+        if(m_eventForwardingEnabled) emit hotkeyFuncEvent(hotkeyEvent);
+
         if (!m_hashRegisteredFunctions.contains(hotkeyFunction)) return;
         auto func = m_hashRegisteredFunctions.value(hotkeyFunction);
         func(isKeyDown);

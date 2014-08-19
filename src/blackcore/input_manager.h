@@ -12,6 +12,7 @@
 #include "blackmisc/hwjoystickbutton.h"
 #include "blackmisc/hotkeyfunction.h"
 #include "blackmisc/setkeyboardhotkeylist.h"
+#include "blackmisc/eveventhotkeyfunction.h"
 #include <QObject>
 #include <QHash>
 #include <type_traits>
@@ -65,6 +66,9 @@ namespace BlackCore
         //! Deletes all registered hotkeys. Be careful with this method!
         void resetAllHotkeyFuncs() { m_hashRegisteredFunctions.clear(); }
 
+        //! Enable event forwarding to core
+        void setEventForwarding(bool enabled) { m_eventForwardingEnabled = enabled; }
+
         //! Creates a native keyboard handler object
         static CInputManager *getInstance();
 
@@ -75,6 +79,11 @@ namespace BlackCore
 
         //! Call functions by hotkeyfunction
         void callFunctionsBy(const BlackMisc::CHotkeyFunction &hotkeyFunction, bool isKeyDown);
+
+    signals:
+
+        //! Event hotkeyfunction occured
+        void hotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event);
 
     protected:
         //! Constructor
@@ -102,6 +111,8 @@ namespace BlackCore
         QHash<BlackMisc::CHotkeyFunction, std::function<void(bool)> > m_hashRegisteredFunctions;
         QHash<BlackMisc::Hardware::CKeyboardKey, BlackMisc::CHotkeyFunction> m_hashKeyboardKeyFunctions;
         QHash<BlackMisc::Hardware::CJoystickButton, BlackMisc::CHotkeyFunction> m_hashJoystickKeyFunctions;
+
+        bool m_eventForwardingEnabled = false;
     };
 }
 
