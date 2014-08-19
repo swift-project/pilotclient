@@ -99,6 +99,10 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::getAircraftModel()
             virtual BlackMisc::Network::CAircraftModel getAircraftModel() const override { return m_aircraftModel; }
 
+            //! \copydoc BlackCore::ISimulator::getInstalledModels
+            //! \todo
+            virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const override { return {}; }
+
             //! Airports in range
             virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 

@@ -10,7 +10,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/avairportlist.h"
-#include "blackmisc/nwaircraftmodel.h"
+#include "blackmisc/nwaircraftmodellist.h"
 #include "blackmisc/nwtextmessage.h"
 #include <QObject>
 
@@ -82,8 +82,11 @@ namespace BlackCore
         //! Display a text message
         virtual void displayTextMessage(const BlackMisc::Network::CTextMessage &message) const = 0;
 
-        //! Aircraft Model
+        //! Own aircraft Model
         virtual BlackMisc::Network::CAircraftModel getAircraftModel() const = 0;
+
+        //! Aircraft models for available remote aircraft
+        virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const = 0;
 
         //! Airports in range
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const = 0;

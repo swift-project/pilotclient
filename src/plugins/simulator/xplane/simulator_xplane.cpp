@@ -217,6 +217,12 @@ namespace BlackSimPlugin
             return { m_xplaneData.aircraftModelPath, true };
         }
 
+        BlackMisc::Network::CAircraftModelList CSimulatorXPlane::getInstalledModels() const
+        {
+            // TODO
+            return {};
+        }
+
         void CSimulatorXPlane::ps_setAirportsInRange(const QStringList &icaos, const QStringList &names, const BlackMisc::CSequence<double> &lats, const BlackMisc::CSequence<double> &lons, const BlackMisc::CSequence<double> &alts)
         {
             qDebug() << alts;
