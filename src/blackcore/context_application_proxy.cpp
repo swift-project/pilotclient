@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackcore/context_application_proxy.h"
+#include "blackcore/input_manager.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QObject>
 #include <QMetaEnum>
@@ -19,6 +20,11 @@ namespace BlackCore
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(serviceName , IContextApplication::ObjectPath(), IContextApplication::InterfaceName(), connection, this);
         this->relaySignals(serviceName, connection);
+
+        // Enable event forwarding from GUI process to core
+        CInputManager *inputManager = CInputManager::getInstance();
+        connect(inputManager, &CInputManager::hotkeyFuncEvent, this, &CContextApplicationProxy::processHotkeyFuncEvent);
+        inputManager->setEventForwarding(true);
     }
 
     /*
@@ -110,4 +116,10 @@ namespace BlackCore
         if (fileName.isEmpty()) return false;
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("existsFile"), fileName);
     }
+
+    void CContextApplicationProxy::processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("processHotkeyFuncEvent"), event);
+    }
+
 } // namespace

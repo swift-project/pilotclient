@@ -10,6 +10,7 @@
 
 #include "blackcore/context.h"
 #include "blackmisc/statusmessagelist.h"
+#include "blackmisc/eveventhotkeyfunction.h"
 #include <QObject>
 #include <QReadWriteLock>
 
@@ -149,6 +150,9 @@ namespace BlackCore
 
         //!  Remote enabled version of file exists
         virtual bool existsFile(const QString &fileName) = 0;
+
+        //! Process remote event
+        virtual void processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event) = 0;
 
         //! Change settings
         void changeSettings(uint typeValue);

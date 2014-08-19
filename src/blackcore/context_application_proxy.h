@@ -48,6 +48,9 @@ namespace BlackCore
         //! \copydoc IContextApplication::existsFile
         virtual bool existsFile(const QString &fileName) override;
 
+        //! \copydoc IContextApplication::processHotkeyFuncEvent
+        virtual void processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event) override;
+
     protected:
         //! Constructor
         CContextApplicationProxy(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextApplication(mode, runtime), m_dBusInterface(nullptr) {}

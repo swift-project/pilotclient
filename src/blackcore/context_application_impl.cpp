@@ -5,6 +5,7 @@
 
 #include "context_application_impl.h"
 #include "context_runtime.h"
+#include "input_manager.h"
 #include "blackmisc/settingutilities.h"
 #include <QtMsgHandler>
 #include <QFile>
@@ -104,6 +105,12 @@ namespace BlackCore
     {
         if (fileName.isEmpty()) return false;
         return QFile::exists(fileName);
+    }
+
+    void CContextApplication::processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event)
+    {
+        CInputManager::getInstance()->callFunctionsBy(event.getFunction(), event.getFunctionArgument());
+        qDebug() << "Calling function from origin" << event.getEventOriginator().toQString();
     }
 
 } // namespace
