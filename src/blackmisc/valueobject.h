@@ -230,7 +230,7 @@ namespace BlackMisc
         CValueObject(const CValueObject &) {}
 
         //! Copy assignment operator =
-        CValueObject &operator=(const CValueObject &) { return *this; }
+        // CValueObject &operator=(const CValueObject &) { return *this; }
 
         //! String for streaming operators
         virtual QString stringForStreaming() const;
