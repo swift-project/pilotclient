@@ -22,6 +22,7 @@
 #include "variant.h"
 #include "statusmessagelist.h"
 #include "iconlist.h"
+#include "eventallclasses.h"
 #include <QtNetwork/QHostInfo>
 #include <QProcessEnvironment>
 #include <QSysInfo>
@@ -148,6 +149,15 @@ void BlackMisc::Hardware::registerMetadata()
 }
 
 /*
+ * Metadata for Event
+ */
+void BlackMisc::Event::registerMetadata()
+{
+    COriginator::registerMetadata();
+    CEventHotkeyFunction::registerMetadata();
+}
+
+/*
  * Metadata for Blackmisc
  */
 void BlackMisc::registerMetadata()
@@ -173,6 +183,7 @@ void BlackMisc::registerMetadata()
     Settings::registerMetadata();
     Audio::registerMetadata();
     Hardware::registerMetadata();
+    Event::registerMetadata();
 
     // needed by XBus proxy class
     qRegisterMetaType<CSequence<double>>();

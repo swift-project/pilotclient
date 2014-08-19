@@ -87,6 +87,12 @@ namespace BlackMisc
         void registerMetadata();
     }
 
+    namespace Event
+    {
+        //! Register metadata for Event
+        void registerMetadata();
+    }
+
     //! Register all relevant metadata in BlackMisc
     void registerMetadata();
 
