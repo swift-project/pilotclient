@@ -52,6 +52,12 @@ namespace BlackInput
 
     public:
 
+        //! Copy Constructor
+        CJoystickWindows(CJoystickWindows const &) = delete;
+
+        //! Assignment operator
+        void operator=(CJoystickWindows const &) = delete;
+
         //! \brief Destructor
         virtual ~CJoystickWindows();
 
@@ -63,21 +69,15 @@ namespace BlackInput
 
     protected:
 
-        friend class IJoystick;
-
-        //! Destructor
-        CJoystickWindows(QObject *parent = nullptr);
-
-        //! Copy Constructor
-        CJoystickWindows(CJoystickWindows const &);
-
-        //! Assignment operator
-        void operator=(CJoystickWindows const &);
-
         //! Timer based updates
-        virtual void timerEvent(QTimerEvent *event);
+        virtual void timerEvent(QTimerEvent *event) override;
 
     private:
+
+        friend class IJoystick;
+
+        //! Constructor
+        CJoystickWindows(QObject *parent = nullptr);
 
         //! Initialize DirectInput
         HRESULT initDirectInput();
