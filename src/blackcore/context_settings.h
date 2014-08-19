@@ -11,7 +11,7 @@
 #include "blackcore/context.h"
 #include "blackcore/dbus_server.h"
 #include "blackinput/keyboard.h"
-#include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/setkeyboardhotkeylist.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/dbus.h"
 #include "blackmisc/variant.h"
@@ -143,7 +143,7 @@ namespace BlackCore
         virtual BlackSim::Settings::CSettingsSimulator getSimulatorSettings() const = 0;
 
         //! Hotkeys
-        virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const = 0;
+        virtual BlackMisc::Settings::CSettingKeyboardHotkeyList getHotkeys() const = 0;
 
         //! Save settings
         virtual BlackMisc::CStatusMessage write() const = 0;

@@ -21,7 +21,7 @@ namespace BlackGui
         {
             this->m_model = new CKeyboardKeyListModel(this);
             this->setModel(this->m_model); // via QTableView
-            this->m_model->setSortColumnByPropertyIndex(BlackMisc::Hardware::CKeyboardKey::IndexFunctionAsString);
+            this->m_model->setSortColumnByPropertyIndex(BlackMisc::Settings::CSettingKeyboardHotkey::IndexFunctionAsString);
             if (this->m_model->hasValidSortColumn())
                 this->horizontalHeader()->setSortIndicator(
                     this->m_model->getSortColumn(),

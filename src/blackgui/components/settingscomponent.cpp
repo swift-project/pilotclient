@@ -323,10 +323,10 @@ namespace BlackGui
         {
             QModelIndex i = this->ui->tvp_SettingsMiscHotkeys->currentIndex();
             if (i.row() < 0 || i.row() >= this->ui->tvp_SettingsMiscHotkeys->rowCount()) return;
-            BlackMisc::Hardware::CKeyboardKey key = this->ui->tvp_SettingsMiscHotkeys->at<BlackMisc::Hardware::CKeyboardKey>(i);
-            BlackMisc::Hardware::CKeyboardKey defaultKey;
-            defaultKey.setFunction(key.getFunction());
-            this->ui->tvp_SettingsMiscHotkeys->derivedModel()->update(i, defaultKey);
+            CSettingKeyboardHotkey hotkey = this->ui->tvp_SettingsMiscHotkeys->at<CSettingKeyboardHotkey>(i);
+            CSettingKeyboardHotkey defaultHotkey;
+            defaultHotkey.setFunction(hotkey.getFunction());
+            this->ui->tvp_SettingsMiscHotkeys->derivedModel()->update(i, defaultHotkey);
         }
 
         /*

@@ -186,7 +186,7 @@ namespace BlackCore
     /*
      * Hotkeys
      */
-    CKeyboardKeyList CContextSettings::getHotkeys() const
+    CSettingKeyboardHotkeyList CContextSettings::getHotkeys() const
     {
         return this->m_hotkeys;
     }
@@ -230,7 +230,7 @@ namespace BlackCore
             {
                 if (command == CSettingUtilities::CmdUpdate())
                 {
-                    BlackMisc::Hardware::CKeyboardKeyList hotkeys = value.value<BlackMisc::Hardware::CKeyboardKeyList>();
+                    BlackMisc::Settings::CSettingKeyboardHotkeyList hotkeys = value.value<BlackMisc::Settings::CSettingKeyboardHotkeyList>();
                     this->m_hotkeys = hotkeys;
                     msgs.push_back(this->write()); // write settings
                     emit this->changedSettings(static_cast<uint>(SettingsHotKeys));

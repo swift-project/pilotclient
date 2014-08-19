@@ -60,7 +60,7 @@ namespace BlackCore
         virtual BlackSim::Settings::CSettingsSimulator getSimulatorSettings() const override;
 
         //! \copydoc IContextSettings::getHotkeys()
-        virtual BlackMisc::Hardware::CKeyboardKeyList getHotkeys() const override;
+        virtual BlackMisc::Settings::CSettingKeyboardHotkeyList getHotkeys() const override;
 
         //! read settings
         virtual BlackMisc::CStatusMessage read() override;
@@ -81,7 +81,7 @@ namespace BlackCore
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
         BlackMisc::Settings::CSettingsAudio m_settingsAudio;
         BlackSim::Settings::CSettingsSimulator m_settingsSimulator;
-        BlackMisc::Hardware::CKeyboardKeyList m_hotkeys;
+        BlackMisc::Settings::CSettingKeyboardHotkeyList m_hotkeys;
         QJsonDocument toJsonDocument() const;
         void emitCompletelyChanged();
     };

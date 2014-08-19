@@ -527,17 +527,17 @@ void MainWindow::ps_registerHotkeyFunctions()
 
     m_inputManager->registerHotkeyFunc(CHotkeyFunction::Opacity50(), this, [ this ](bool isPressed)
     {
-        if (isPressed) this->changeWindowOpacity(50);
+        if (isPressed) this->ps_changeWindowOpacity(50);
     });
 
     m_inputManager->registerHotkeyFunc(CHotkeyFunction::Opacity100(), this, [ this ](bool isPressed)
     {
-        if (isPressed) this->changeWindowOpacity(100);
+        if (isPressed) this->ps_changeWindowOpacity(100);
     });
 
     m_inputManager->registerHotkeyFunc(CHotkeyFunction::ToogleWindowsStayOnTop(), this, [ this ](bool isPressed)
     {
-        if (isPressed) this->toogleWindowStayOnTop();
+        if (isPressed) this->ps_toogleWindowStayOnTop();
     });
 }
 

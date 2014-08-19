@@ -11,6 +11,7 @@
 #define BLACKGUI_KEYBOARDKEYLISTMODEL_H
 
 #include "blackmisc/hwkeyboardkeylist.h"
+#include "blackmisc/setkeyboardhotkeylist.h"
 #include "blackgui/models/listmodelbase.h"
 #include <QAbstractItemModel>
 #include <QDBusConnection>
@@ -24,7 +25,7 @@ namespace BlackGui
         /*!
          * Keyboard key list model
          */
-        class CKeyboardKeyListModel : public CListModelBase<BlackMisc::Hardware::CKeyboardKey, BlackMisc::Hardware::CKeyboardKeyList>
+        class CKeyboardKeyListModel : public CListModelBase<BlackMisc::Settings::CSettingKeyboardHotkey, BlackMisc::Settings::CSettingKeyboardHotkeyList>
         {
 
         public:
@@ -82,18 +83,18 @@ namespace BlackGui
 
         public:
             //! Constructor
-            CKeyboardLineEdit(BlackMisc::Hardware::CKeyboardKey &key, QWidget *parent = nullptr) :
-                QLineEdit(parent), m_key(key) { }
+            CKeyboardLineEdit(const BlackMisc::Settings::CSettingKeyboardHotkey &hotkey, QWidget *parent = nullptr) :
+                QLineEdit(parent), m_hotkey(hotkey) { }
 
             //! get key
-            BlackMisc::Hardware::CKeyboardKey getKey() const { return this->m_key; }
+            const BlackMisc::Settings::CSettingKeyboardHotkey &getKey() const { return this->m_hotkey; }
 
         protected:
             //! Overriding and handling key press
             virtual void keyPressEvent(QKeyEvent *event) override;
 
         private:
-            BlackMisc::Hardware::CKeyboardKey m_key;
+            BlackMisc::Settings::CSettingKeyboardHotkey m_hotkey;
         };
     }
 }

@@ -69,9 +69,9 @@ namespace BlackCore
     /*
      * Relay to DBus
      */
-    CKeyboardKeyList CContextSettingsProxy::getHotkeys() const
+    CSettingKeyboardHotkeyList CContextSettingsProxy::getHotkeys() const
     {
-        return this->m_dBusInterface->callDBusRet<CKeyboardKeyList>(QLatin1Literal("getHotkeys"));
+        return this->m_dBusInterface->callDBusRet<CSettingKeyboardHotkeyList>(QLatin1Literal("getHotkeys"));
     }
 
     /*

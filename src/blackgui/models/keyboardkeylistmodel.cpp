@@ -15,7 +15,7 @@
 #include <QEvent>
 #include <QKeyEvent>
 
-
+using namespace BlackMisc::Settings;
 using namespace BlackMisc::Hardware;
 
 namespace BlackGui
@@ -26,14 +26,14 @@ namespace BlackGui
          * Constructor
          */
         CKeyboardKeyListModel::CKeyboardKeyListModel(QObject *parent) :
-            CListModelBase<BlackMisc::Hardware::CKeyboardKey, BlackMisc::Hardware::CKeyboardKeyList>("ViewKeyboardKeyList", parent)
+            CListModelBase<CSettingKeyboardHotkey, CSettingKeyboardHotkeyList>("ViewKeyboardKeyList", parent)
         {
-            this->m_columns.addColumn(CColumn("key", CKeyboardKey::IndexKeyAsStringRepresentation, true));
-            this->m_columns.addColumn(CColumn("modifier 1", CKeyboardKey::IndexModifier1AsString, true));
-            this->m_columns.addColumn(CColumn("modifier 2", CKeyboardKey::IndexModifier2AsString, true));
-            this->m_columns.addColumn(CColumn("function", CKeyboardKey::IndexFunctionAsString));
+            this->m_columns.addColumn(CColumn("key", CSettingKeyboardHotkey::IndexKeyAsStringRepresentation, true));
+            this->m_columns.addColumn(CColumn("modifier 1", CSettingKeyboardHotkey::IndexModifier1AsString, true));
+            this->m_columns.addColumn(CColumn("modifier 2", CSettingKeyboardHotkey::IndexModifier2AsString, true));
+            this->m_columns.addColumn(CColumn("function", CSettingKeyboardHotkey::IndexFunctionAsString));
 
-            this->setSortColumnByPropertyIndex(CKeyboardKey::IndexFunctionAsString);
+            this->setSortColumnByPropertyIndex(CSettingKeyboardHotkey::IndexFunctionAsString);
             this->m_sortOrder = Qt::AscendingOrder;
 
             // force strings for translation in resource files
@@ -57,21 +57,21 @@ namespace BlackGui
             if (role == Qt::EditRole)
             {
                 int pi = this->indexToPropertyIndex(index);
-                if (pi == CKeyboardKey::IndexModifier1 || pi == CKeyboardKey::IndexModifier2 || pi == CKeyboardKey::IndexModifier1AsString || pi == CKeyboardKey::IndexModifier2AsString)
+                if (pi == CSettingKeyboardHotkey::IndexModifier1 || pi == CSettingKeyboardHotkey::IndexModifier2 || pi == CSettingKeyboardHotkey::IndexModifier1AsString || pi == CSettingKeyboardHotkey::IndexModifier2AsString)
                 {
                     if (index.row() >= this->m_container.size()) return true;
-                    CKeyboardKey key = this->m_container[index.row()];
+                    CSettingKeyboardHotkey key = this->m_container[index.row()];
                     key.setPropertyByIndex(value, pi);
                     key.cleanup();
                     this->m_container[index.row()] = key;
                     return true;
                 }
-                else if (pi == CKeyboardKey::IndexKey || pi == CKeyboardKey::IndexKeyAsString || pi == CKeyboardKey::IndexKeyAsStringRepresentation)
+                else if (pi == CSettingKeyboardHotkey::IndexKey || pi == CSettingKeyboardHotkey::IndexKeyAsString || pi == CSettingKeyboardHotkey::IndexKeyAsStringRepresentation)
                 {
-                    Q_ASSERT(value.canConvert<CKeyboardKey>());
+                    Q_ASSERT(value.canConvert<CSettingKeyboardHotkey>());
                     if (index.row() >= this->m_container.size()) return true;
-                    CKeyboardKey key = this->m_container[index.row()];
-                    key.setPropertyByIndex(value, CKeyboardKey::IndexKeyObject);
+                    CSettingKeyboardHotkey key = this->m_container[index.row()];
+                    key.setPropertyByIndex(value, CSettingKeyboardHotkey::IndexObject);
                     key.cleanup();
                     this->m_container[index.row()] = key;
                     return true;
@@ -88,20 +88,20 @@ namespace BlackGui
             if (index.row() < model->rowCount())
             {
                 int pi = model->indexToPropertyIndex(index);
-                if (pi == CKeyboardKey::IndexModifier1 || pi == CKeyboardKey::IndexModifier2 || pi == CKeyboardKey::IndexModifier1AsString || pi == CKeyboardKey::IndexModifier2AsString)
+                if (pi == CSettingKeyboardHotkey::IndexModifier1 || pi == CSettingKeyboardHotkey::IndexModifier2 || pi == CSettingKeyboardHotkey::IndexModifier1AsString || pi == CSettingKeyboardHotkey::IndexModifier2AsString)
                 {
-                    CKeyboardKey key = model->at(index);
-                    QString v = (pi == CKeyboardKey::IndexModifier1 || pi == CKeyboardKey::IndexModifier1AsString) ? key.getModifier1AsString() : key.getModifier2AsString();
+                    CSettingKeyboardHotkey key = model->at(index);
+                    QString v = (pi == CSettingKeyboardHotkey::IndexModifier1 || pi == CSettingKeyboardHotkey::IndexModifier1AsString) ? key.getModifier1AsString() : key.getModifier2AsString();
                     QComboBox *edit = new QComboBox(parent);
-                    edit->addItems(CKeyboardKey::modifiers());
+                    edit->addItems(CSettingKeyboardHotkey::modifiers());
                     edit->setCurrentText(v);
                     return edit;
                 }
-                else if (pi == CKeyboardKey::IndexKey || pi == CKeyboardKey::IndexKeyAsString || pi == CKeyboardKey::IndexKeyAsStringRepresentation)
+                else if (pi == CSettingKeyboardHotkey::IndexKey || pi == CSettingKeyboardHotkey::IndexKeyAsString || pi == CSettingKeyboardHotkey::IndexKeyAsStringRepresentation)
                 {
-                    CKeyboardKey key = model->at(index);
-                    CKeyboardLineEdit *edit = new CKeyboardLineEdit(key, parent);
-                    edit->setText(key.getKeyAsString());
+                    CSettingKeyboardHotkey hotkey = model->at(index);
+                    CKeyboardLineEdit *edit = new CKeyboardLineEdit(hotkey, parent);
+                    edit->setText(hotkey.getKey().getKeyAsString());
                     return edit;
                 }
             }
@@ -146,9 +146,10 @@ namespace BlackGui
         {
             const Qt::Key k = static_cast<Qt::Key>(event->key());
             if (k == Qt::Key_Shift || k == Qt::Key_Control || k == Qt::Key_Meta || k == Qt::Key_Alt || k == Qt::Key_CapsLock || k == Qt::Key_NumLock || k == Qt::Key_ScrollLock) return;
-            this->m_key.setKey(k);
-            this->m_key.setNativeVirtualKey(event->nativeVirtualKey());
-            this->setText(CKeyboardKey::toStringRepresentation(event->key()));
+            BlackMisc::Hardware::CKeyboardKey key;
+            key.setKey(k);
+            this->m_hotkey.setKey(key);
+            this->setText(CSettingKeyboardHotkey::toStringRepresentation(event->key()));
         }
 
     }
