@@ -282,6 +282,7 @@ namespace BlackCore
 
     void CContextSimulator::ps_statusMessageReceived(const CStatusMessage &statusMessage)
     {
+        if (!this->m_simulator) return;
         if (statusMessage.getSeverity() != CStatusMessage::SeverityError) return;
         this->m_simulator->displayStatusMessage(statusMessage);
     }
