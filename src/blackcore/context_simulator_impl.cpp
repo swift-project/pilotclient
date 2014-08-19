@@ -7,9 +7,10 @@
 #include "context_ownaircraft.h"
 #include "context_settings.h"
 #include "context_application.h"
+#include "context_network_impl.h"
+#include "context_runtime.h"
 #include <QPluginLoader>
 #include <QLibrary>
-#include "context_runtime.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -176,6 +177,15 @@ namespace BlackCore
             qFatal("No application context or application context not local");
         }
 
+        CAirspaceMonitor *airspace = this->getRuntime()->getCContextNetwork()->getAirspaceMonitor();
+        connect(airspace, &CAirspaceMonitor::addedAircraft, this, &CContextSimulator::ps_addRemoteAircraft);
+        connect(airspace, &CAirspaceMonitor::changedAircraftSituation, this, &CContextSimulator::ps_addAircraftSituation);
+        connect(airspace, &CAirspaceMonitor::removedAircraft, this, &CContextSimulator::ps_removeRemoteAircraft);
+        for (const auto &aircraft : airspace->getAircraftInRange())
+        {
+            m_simulator->addRemoteAircraft(aircraft.getCallsign(), aircraft.getSituation());
+        }
+
         // apply latest settings
         this->settingsChanged(static_cast<uint>(IContextSettings::SettingsSimulator));
 
@@ -221,6 +231,12 @@ namespace BlackCore
     {
         if (m_simulator)
         {
+            // depending on shutdown order, network might already have been deleted
+            if (CContextNetwork *network = this->getRuntime()->getCContextNetwork())
+            {
+                network->getAirspaceMonitor()->QObject::disconnect(this);
+            }
+
             this->QObject::disconnect(m_simulator); // disconnect as receiver straight away
             m_simulator->disconnectFrom(); // disconnect from simulator
             m_simulator->deleteLater();

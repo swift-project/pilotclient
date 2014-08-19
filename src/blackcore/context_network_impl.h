@@ -43,6 +43,9 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextNetwork();
 
+        //! Airspace monitor accessible to other contexts
+        CAirspaceMonitor *getAirspaceMonitor() const { return m_airspace; }
+
     public slots: // IContextNetwork overrides
 
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()

@@ -411,10 +411,6 @@ namespace BlackCore
             // only connect if simulator runs locally, no round trips
             if (this->m_contextNetwork && this->m_contextNetwork->usingLocalObjects())
             {
-                c = connect(this->m_contextNetwork, &IContextNetwork::changedAircraftSituation,
-                            this->getCContextSimulator(), &CContextSimulator::ps_addAircraftSituation);
-                Q_ASSERT(c);
-
                 c = connect(this->m_contextNetwork, &IContextNetwork::textMessagesReceived,
                             this->getCContextSimulator(), &CContextSimulator::ps_textMessagesReceived);
                 Q_ASSERT(c);
