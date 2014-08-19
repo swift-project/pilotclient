@@ -301,7 +301,7 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, QString::number(notification));
 
-        BlackSound::CNotificationSounds::Notification notificationSound = static_cast<BlackSound::CNotificationSounds::Notification>(notification);
+        auto notificationSound = static_cast<BlackSound::CNotificationSounds::Notification>(notification);
         if (considerSettings)
         {
             Q_ASSERT(this->getIContextSettings());
@@ -388,16 +388,12 @@ namespace BlackCore
             break;
         case IVoiceChannel::ConnectingFailed:
         case IVoiceChannel::DisconnectedError:
-            {
-                const QString e = QString("Voice room COM1 error");
-                qWarning(e.toUtf8().constData());
-
-                // no break here!
-            }
+            qWarning() << "Voice room COM1 error";
+            // intentional fall-through
         case IVoiceChannel::Disconnected:
-            // good chance to update aircraft
             if (this->getIContextOwnAircraft())
             {
+                // good chance to update aircraft
                 m_channelCom1->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
                 m_channelCom2->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
             }
@@ -423,16 +419,12 @@ namespace BlackCore
             break;
         case IVoiceChannel::ConnectingFailed:
         case IVoiceChannel::DisconnectedError:
-            {
-                const QString e = QString("Voice room COM2 error");
-                qWarning(e.toUtf8().constData());
-
-                // no break here!
-            }
+            qWarning() << "Voice room COM2 error";
+            // intentional fall-through
         case IVoiceChannel::Disconnected:
-            // good chance to update aircraft
             if (this->getIContextOwnAircraft())
             {
+                // good chance to update aircraft
                 m_channelCom1->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
                 m_channelCom2->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
             }

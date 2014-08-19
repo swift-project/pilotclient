@@ -305,7 +305,6 @@ namespace BlackCore
         this->connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CRuntime::gracefulShutdown);
 
         // upfront reading of settings, as DBus server already relies on settings
-        CContextSettings *settings = nullptr;
         QString dbusAddress;
         QMap<QString, int> times;
         QTime time;
@@ -316,7 +315,7 @@ namespace BlackCore
         if (config.hasDBusAddress()) dbusAddress = config.getDBusAddress(); // bootstrap / explicit
         if (config.hasLocalSettings())
         {
-            settings = new CContextSettings(config.getModeSettings(), this);
+            auto *settings = new CContextSettings(config.getModeSettings(), this);
             if (settings) settings->read();
             if (dbusAddress.isEmpty()) dbusAddress = settings->getNetworkSettings().getDBusServerAddress();
 
@@ -396,7 +395,7 @@ namespace BlackCore
 
     void CRuntime::initPostSetup()
     {
-        bool c;
+        bool c = false;
         Q_UNUSED(c); // for release version
 
         if (this->m_contextSettings && this->m_contextApplication)
@@ -548,11 +547,9 @@ namespace BlackCore
     void CRuntime::disconnectLogSignals(const QString &name)
     {
         if (!this->m_logSignalConnections.contains(name)) return;
-        QMultiMap<QString, QMetaObject::Connection>::const_iterator i = this->m_logSignalConnections.constFind(name);
-        while (i != this->m_logSignalConnections.end() && i.key() == name)
+        for (auto i = this->m_logSignalConnections.lowerBound(name), end = this->m_logSignalConnections.upperBound(name); i != end; ++i)
         {
             disconnect(i.value());
-            ++i;
         }
         this->m_logSignalConnections.remove(name);
     }

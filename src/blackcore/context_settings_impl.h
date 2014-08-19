@@ -43,9 +43,6 @@ namespace BlackCore
         //! Destructor
         virtual ~CContextSettings() {}
 
-        //! settings file
-        const QString &getSettingsDirectory() const { return BlackMisc::Settings::CSettingUtilities::getSettingsDirectory(); }
-
         //! \copydoc IContextSettings::value()
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const BlackMisc::CVariant &value) override;
 
@@ -78,6 +75,9 @@ namespace BlackCore
         virtual QString getSettingsAsJsonString() const override;
 
     private:
+        //! settings directory
+        const QString &getSettingsDirectory() const { return BlackMisc::Settings::CSettingUtilities::getSettingsDirectory(); }
+
         BlackMisc::Settings::CSettingsNetwork m_settingsNetwork;
         BlackMisc::Settings::CSettingsAudio m_settingsAudio;
         BlackSim::Settings::CSettingsSimulator m_settingsSimulator;

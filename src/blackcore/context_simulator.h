@@ -64,7 +64,7 @@ namespace BlackCore
 
     signals:
         //! Emitted when the simulator connection changes
-        void connectionChanged(bool value);
+        void connectionChanged(bool connected);
 
         //! Emitted when own aircraft model changes (TODO move to own aircraft context?)
         void ownAircraftModelChanged(BlackMisc::Network::CAircraftModel model);

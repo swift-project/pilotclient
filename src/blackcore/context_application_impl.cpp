@@ -61,14 +61,13 @@ namespace BlackCore
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { fileName, content.left(25) });
         if (fileName.isEmpty()) return false;
         QFile file(fileName);
-        bool success = false;
-        if ((success = file.open(QIODevice::WriteOnly | QIODevice::Text)))
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text))
         {
             QTextStream out(&file);
             out << content;
-            file.close();
+            return true;
         }
-        return success;
+        else return false;
     }
 
     /*
@@ -80,8 +79,7 @@ namespace BlackCore
         QFile file(fileName);
         QString content;
         if (fileName.isEmpty()) return content;
-        bool success = false;
-        if ((success = file.open(QIODevice::ReadOnly | QIODevice::Text)))
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             QTextStream in(&file);
             in >> content;

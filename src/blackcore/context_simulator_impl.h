@@ -75,7 +75,7 @@ namespace BlackCore
         virtual bool loadSimulatorPlugin(const BlackSim::CSimulatorInfo &simulatorInfo) override;
 
         //! \copydoc IContextSimulator::loadSimulatorPluginFromSettings()
-        virtual bool loadSimulatorPluginFromSettings();
+        virtual bool loadSimulatorPluginFromSettings() override;
 
         //! \copydoc IContextSimulator::unloadSimulatorPlugin()
         virtual void unloadSimulatorPlugin() override;

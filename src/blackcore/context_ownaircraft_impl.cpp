@@ -76,12 +76,10 @@ namespace BlackCore
         if (!this->getIContextAudio()) return; // no place to set rooms
         if (!this->m_automaticVoiceRoomResolution) return; // not responsible
 
-        CVoiceRoomList rooms;
-
         // requires correct frequencies set
         // but local network uses exactly this object here, so if frequencies are set here,
         // they are for network context as well
-        rooms = this->getIContextNetwork()->getSelectedVoiceRooms();
+        CVoiceRoomList rooms = this->getIContextNetwork()->getSelectedVoiceRooms();
 
         if (!this->m_voiceRoom1UrlOverride.isEmpty()) rooms[0] = CVoiceRoom(this->m_voiceRoom1UrlOverride);
         if (!this->m_voiceRoom2UrlOverride.isEmpty()) rooms[1] = CVoiceRoom(this->m_voiceRoom2UrlOverride);

@@ -140,8 +140,7 @@ namespace BlackCore
             return false;
         }
 
-        ISimulatorFactory *factory = nullptr;
-        QSet<ISimulatorFactory *>::iterator iterator = std::find_if(m_simulatorFactories.begin(), m_simulatorFactories.end(), [ = ](const ISimulatorFactory * factory)
+        auto iterator = std::find_if(m_simulatorFactories.begin(), m_simulatorFactories.end(), [ = ](const ISimulatorFactory * factory)
         {
             return factory->getSimulatorInfo() == simulatorInfo;
         });
@@ -155,7 +154,7 @@ namespace BlackCore
             return false;
         }
 
-        factory = *iterator;
+        ISimulatorFactory *factory = *iterator;
         Q_ASSERT(factory);
 
         ISimulator *newSimulator = factory->create(this);
@@ -164,7 +163,7 @@ namespace BlackCore
         this->unloadSimulatorPlugin(); // old plugin unloaded
         m_simulator = newSimulator;
 
-        connect(m_simulator, SIGNAL(statusChanged(ISimulator::Status)), this, SLOT(ps_setConnectionStatus(ISimulator::Status)));
+        connect(m_simulator, &ISimulator::statusChanged, this, &CContextSimulator::ps_setConnectionStatus);
         connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
         if (this->getIContextApplication() && this->getIContextApplication()->usingLocalObjects())
         {
@@ -194,6 +193,8 @@ namespace BlackCore
         Q_ASSERT(this->getIContextSettings());
         if (!this->getIContextSettings()) return false;
 
+        // TODO warnings if we didn't load the plugin which the settings asked for
+
         CSimulatorInfoList plugins = this->getAvailableSimulatorPlugins();
         if (plugins.size() == 1)
         {
@@ -220,7 +221,7 @@ namespace BlackCore
     {
         if (m_simulator)
         {
-            disconnect(m_simulator); // disconnect as receiver straight away
+            this->QObject::disconnect(m_simulator); // disconnect as receiver straight away
             m_simulator->disconnectFrom(); // disconnect from simulator
             m_simulator->deleteLater();
         }
@@ -308,7 +309,7 @@ namespace BlackCore
         Q_ASSERT(this->getIContextSettings());
         Q_ASSERT(this->m_simulator);
         if (!this->getIContextSettings()) return;
-        IContextSettings::SettingsType settingsType = static_cast<IContextSettings::SettingsType>(type);
+        auto settingsType = static_cast<IContextSettings::SettingsType>(type);
         if (settingsType != IContextSettings::SettingsSimulator) return;
 
         // plugin

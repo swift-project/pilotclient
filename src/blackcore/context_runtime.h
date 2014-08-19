@@ -225,10 +225,10 @@ namespace BlackCore
         const IContextAudio *getIContextAudio() const;
 
         //! Context for application
-        const IContextApplication *getIContextApplication() const;
+        IContextApplication *getIContextApplication();
 
         //! Context for application
-        IContextApplication *getIContextApplication();
+        const IContextApplication *getIContextApplication() const;
 
         //! Context for own aircraft
         IContextOwnAircraft *getIContextOwnAircraft();
@@ -243,10 +243,10 @@ namespace BlackCore
         const IContextSettings *getIContextSettings() const;
 
         //! Context for simulator
-        const IContextSimulator *getIContextSimulator() const;
+        IContextSimulator *getIContextSimulator();
 
         //! Context for simulator
-        IContextSimulator *getIContextSimulator();
+        const IContextSimulator *getIContextSimulator() const;
 
         // ------- Context as implementing (local) class
 

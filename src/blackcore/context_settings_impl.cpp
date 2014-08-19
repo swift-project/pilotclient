@@ -230,7 +230,7 @@ namespace BlackCore
             {
                 if (command == CSettingUtilities::CmdUpdate())
                 {
-                    BlackMisc::Settings::CSettingKeyboardHotkeyList hotkeys = value.value<BlackMisc::Settings::CSettingKeyboardHotkeyList>();
+                    auto hotkeys = value.value<BlackMisc::Settings::CSettingKeyboardHotkeyList>();
                     this->m_hotkeys = hotkeys;
                     msgs.push_back(this->write()); // write settings
                     emit this->changedSettings(static_cast<uint>(SettingsHotKeys));

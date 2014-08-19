@@ -88,7 +88,7 @@ namespace BlackCore
 
     void IContextApplication::changeSettings(uint typeValue)
     {
-        IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
+        auto type = static_cast<IContextSettings::SettingsType>(typeValue);
         switch (type)
         {
         case IContextSettings::SettingsHotKeys:
@@ -109,8 +109,7 @@ namespace BlackCore
     {
         if (IContextApplication::s_oldHandler) IContextApplication::s_oldHandler(type, messageContext, message);
         if (IContextApplication::s_contexts.isEmpty()) return;
-        IContextApplication *ctx;
-        foreach(ctx, IContextApplication::s_contexts)
+        foreach(IContextApplication *ctx, IContextApplication::s_contexts)
         {
             ctx->messageHandler(type, messageContext, message);
         }
