@@ -35,13 +35,10 @@ namespace BlackMisc
                 CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits)
             { }
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Valid aviation frequency?
-            bool isValidFrequency(PhysicalQuantities::CFrequency f) const
+            static bool isValidFrequency(PhysicalQuantities::CFrequency f)
             {
-                double fr = f.valueRounded(PhysicalQuantities::CFrequencyUnit::kHz(), this->m_digits);
+                double fr = f.valueRounded(PhysicalQuantities::CFrequencyUnit::kHz(), 3);
                 return fr >= 190.0 && fr <= 1750.0;
             }
 

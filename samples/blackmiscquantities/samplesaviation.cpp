@@ -44,8 +44,7 @@ namespace BlackMiscTest
         qDebug() << c1;
 
         // NAV system
-        CNavSystem nav1;
-        CNavSystem::tryGetNav1System(nav1, 110.0);
+        CNavSystem nav1 = CNavSystem::getNav1System(110.0);
         qDebug() << nav1;
 
         // Transponder tests

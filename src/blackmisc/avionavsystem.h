@@ -30,9 +30,6 @@ namespace BlackMisc
                 CModulator(name, activeFrequency, standbyFrequency, digits)
             { }
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Set active frequency
             void setFrequencyActiveMHz(double frequencyMHz)
             {
@@ -58,16 +55,16 @@ namespace BlackMisc
             }
 
             //! Valid civil aviation frequency?
-            bool isValidCivilNavigationFrequency(BlackMisc::PhysicalQuantities::CFrequency f) const
+            static bool isValidCivilNavigationFrequency(BlackMisc::PhysicalQuantities::CFrequency f)
             {
-                double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), this->m_digits);
+                double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
                 return fr >= 108.0 && fr <= 117.95;
             }
 
             //! Valid military aviation frequency?
-            bool isValidMilitaryNavigationFrequency(BlackMisc::PhysicalQuantities::CFrequency f) const
+            static bool isValidMilitaryNavigationFrequency(BlackMisc::PhysicalQuantities::CFrequency f)
             {
-                double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), this->m_digits);
+                double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
                 return fr >= 960.0 && fr <= 1215.0; // valid TACAN frequency
             }
 
@@ -107,6 +104,13 @@ namespace BlackMisc
                      this->isValidMilitaryNavigationFrequency(this->getFrequencyStandby()));
                 return v;
             }
+
+        private:
+            //! Easy access to derived class (CRTP template parameter)
+            CNavSystem const *derived() const { return static_cast<CNavSystem const *>(this); }
+
+            //! Easy access to derived class (CRTP template parameter)
+            CNavSystem *derived() { return static_cast<CNavSystem *>(this); }
         };
 
     } // namespace

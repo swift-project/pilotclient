@@ -68,10 +68,8 @@ namespace BlackMiscTest
         QVERIFY2(c1 != c2, "COM system shall not be equal");
         c1 = c2;
         QVERIFY2(c1 == c2, "COM system shall be equal");
-        CFrequency f(100.0, CFrequencyUnit::MHz());
-        CNavSystem nav1;
-        QVERIFY2(CNavSystem::tryGetNav1System(nav1, 110.0), "Expect NAV system");
-        QVERIFY2(!CNavSystem::tryGetNav1System(nav1, 200.0), "Expect no NAV system");
+        QVERIFY2(CNavSystem::isValidCivilNavigationFrequency(CFrequency(110.0, CFrequencyUnit::MHz())), "Expect valid nav frequency");
+        QVERIFY2(!CNavSystem::isValidCivilNavigationFrequency(CFrequency(200.0, CFrequencyUnit::MHz())), "Expect invalid nav frequency");
     }
 
     /*

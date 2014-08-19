@@ -12,7 +12,6 @@
 #ifndef BLACKMISC_AVIOTRANSPONDER_H
 #define BLACKMISC_AVIOTRANSPONDER_H
 #include "blackmisc/aviobase.h"
-#include <stdexcept>
 
 namespace BlackMisc
 {
@@ -116,10 +115,7 @@ namespace BlackMisc
             QString getTransponderCodeAndModeFormatted() const;
 
             //! Set transponder code
-            void setTransponderCode(qint32 transponderCode)
-            {
-                this->m_transponderCode = transponderCode;
-            }
+            void setTransponderCode(qint32 transponderCode) { this->m_transponderCode = transponderCode; }
 
             //! Set transponder code
             void setTransponderCode(const QString &transponderCode);
@@ -128,28 +124,16 @@ namespace BlackMisc
             static TransponderMode modeFromString(const QString &modeString);
 
             //! Set transponder mode
-            void setTransponderMode(TransponderMode mode)
-            {
-                this->m_transponderMode = mode ;
-            }
+            void setTransponderMode(TransponderMode mode) { this->m_transponderMode = mode ; }
 
             //! Set emergency
-            void setEmergency()
-            {
-                this->m_transponderCode = 7700;
-            }
+            void setEmergency() { this->m_transponderCode = 7700; }
 
             //! Set VFR
-            void setVFR()
-            {
-                this->m_transponderCode = 7000;
-            }
+            void setVFR() { this->m_transponderCode = 7000; }
 
             //! Set IFR
-            void setIFR()
-            {
-                this->m_transponderCode = 2000;
-            }
+            void setIFR() { this->m_transponderCode = 2000; }
 
             //! operator ==
             bool operator ==(const CTransponder &other) const
@@ -160,11 +144,8 @@ namespace BlackMisc
                     this->CAvionicsBase::operator ==(other);
             }
 
-            //! operator =!
-            bool operator !=(const CTransponder &other) const
-            {
-                return !((*this) == other);
-            }
+            //! operator !=
+            bool operator !=(const CTransponder &other) const { return !((*this) == other); }
 
             //! Transponder unit
             static CTransponder getStandardTransponder(qint32 transponderCode, TransponderMode mode)
