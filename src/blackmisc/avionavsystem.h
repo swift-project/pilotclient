@@ -26,8 +26,8 @@ namespace BlackMisc
             CNavSystem() : CModulator() {}
 
             //! Constructor
-            CNavSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits = 3):
-                CModulator(name, activeFrequency, standbyFrequency, digits)
+            CNavSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency):
+                CModulator(name, activeFrequency, standbyFrequency)
             { }
 
             //! Set active frequency

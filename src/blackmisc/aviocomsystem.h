@@ -35,8 +35,8 @@ namespace BlackMisc
             CComSystem() : CModulator(), m_channelSpacing(ChannelSpacing25KHz) {}
 
             //! Constructor
-            CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet(), int digits = 3):
-                CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency, digits), m_channelSpacing(ChannelSpacing25KHz)
+            CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
+                CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency), m_channelSpacing(ChannelSpacing25KHz)
             { }
 
             //! Set active frequency

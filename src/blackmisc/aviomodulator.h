@@ -121,15 +121,13 @@ namespace BlackMisc
             static const QStringList &jsonMembers();
 
         protected:
-            int m_digits; //!< digits used
-
             //! Default constructor
             CModulator() :
-                CAvionicsBase("default"), m_volumeInput(0), m_volumeOutput(0), m_enabled(true), m_digits(2) {}
+                CAvionicsBase("default") {}
 
             //! Constructor
-            CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits) :
-                CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency), m_volumeInput(0), m_volumeOutput(0), m_enabled(true), m_digits(digits) {}
+            CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) :
+                CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override
@@ -251,9 +249,9 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CModulator)
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyActive;  //!< active frequency
             BlackMisc::PhysicalQuantities::CFrequency m_frequencyStandby; //!< standby frequency
-            qint32 m_volumeInput;  //!< volume input
-            qint32 m_volumeOutput; //!< volume output
-            bool m_enabled; //!< is enabled, used e.g. for mute etc.
+            qint32 m_volumeInput = 0;  //!< volume input
+            qint32 m_volumeOutput = 0; //!< volume output
+            bool m_enabled = true;     //!< is enabled, used e.g. for mute etc.
 
             //! Easy access to derived class (CRTP template parameter)
             AVIO const *derived() const { return static_cast<AVIO const *>(this); }
