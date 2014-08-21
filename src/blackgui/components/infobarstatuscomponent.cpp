@@ -40,7 +40,7 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::initLeds()
         {
-            CLed::LedShapes shape = CLed::Circle;
+            CLed::LedShape shape = CLed::Circle;
             this->ui->led_DBus->setValues(CLed::Yellow, CLed::Black, shape, "DBus connected", "DBus disconnected", 14);
             this->ui->led_Network->setValues(CLed::Yellow, CLed::Black, shape, "Network connected", "Network disconnected", 14);
             this->ui->led_Simulator->setValues(CLed::Yellow, CLed::Black, shape, "Simulator connected", "Simulator disconnected", 14);
@@ -52,7 +52,7 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::setDBusStatus(bool dbus)
         {
-            this->ui->led_DBus->setValue(dbus);
+            this->ui->led_DBus->setOn(dbus);
         }
 
         void CInfoBarStatusComponent::setDBusTooltip(const QString &tooltip)
@@ -64,11 +64,11 @@ namespace BlackGui
         {
             if (volume < 1)
             {
-                this->ui->led_Audio->setValue(false);
+                this->ui->led_Audio->setOn(false);
             }
             else
             {
-                this->ui->led_Audio->setValue(true);
+                this->ui->led_Audio->setOn(true);
             }
         }
 
@@ -92,18 +92,18 @@ namespace BlackGui
             {
                 if (this->getIContextApplication()->usingLocalObjects())
                 {
-                    this->ui->led_DBus->setValue(false);
+                    this->ui->led_DBus->setOn(false);
                 }
                 else
                 {
-                    this->ui->led_DBus->setValue(true);
+                    this->ui->led_DBus->setOn(true);
                 }
             }
         }
 
         void CInfoBarStatusComponent::ps_simulatorConnectionChanged(bool connected)
         {
-            this->ui->led_Simulator->setValue(connected);
+            this->ui->led_Simulator->setOn(connected);
         }
 
         void CInfoBarStatusComponent::ps_networkConnectionChanged(uint from, uint to, const QString &message)
@@ -119,16 +119,16 @@ namespace BlackGui
             case INetwork::DisconnectedError:
             case INetwork::DisconnectedFailed:
             case INetwork::DisconnectedLost:
-                this->ui->led_Network->setValue(false);
+                this->ui->led_Network->setOn(false);
                 break;
             case INetwork::Connected:
-                this->ui->led_Network->setValue(true);
+                this->ui->led_Network->setOn(true);
                 break;
             case INetwork::Connecting:
                 this->ui->led_Network->setTemporaryColor(CLed::Yellow);
                 break;
             default:
-                this->ui->led_Network->setValue(false);
+                this->ui->led_Network->setOn(false);
                 break;
             }
         }

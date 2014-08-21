@@ -32,32 +32,35 @@ namespace BlackGui
     class CLed : public QWidget
     {
         Q_OBJECT
-        Q_ENUMS(LedColors)
-        Q_ENUMS(LedShapes)
+        Q_ENUMS(LedColor)
+        Q_ENUMS(LedShape)
 
         //! Value on/off
-        Q_PROPERTY(bool value READ value WRITE setValue)
+        Q_PROPERTY(bool value READ value WRITE setOn)
         //! Color when on
-        Q_PROPERTY(LedColors onColor READ onColor WRITE setOnColor)
+        Q_PROPERTY(LedColor onColor READ onColor WRITE setOnColor)
         //! Color when off
-        Q_PROPERTY(LedColors offColor READ offColor WRITE setOffColor)
+        Q_PROPERTY(LedColor offColor READ offColor WRITE setOffColor)
         //! Shape
-        Q_PROPERTY(LedShapes shape READ shape WRITE setShape)
+        Q_PROPERTY(LedShape shape READ shape WRITE setShape)
 
     public:
 
         //! Colors
         //! \remarks None has to be last entry
-        enum LedColors { Red = 0, Green, Yellow, Grey, Orange, Purple, Blue, Black, NoColor};
+        enum LedColor { Red = 0, Green, Yellow, Grey, Orange, Purple, Blue, Black, NoColor};
 
         //! Shapes
-        enum LedShapes { Circle = 0, Square, Triangle, Rounded};
+        enum LedShape { Circle = 0, Square, Triangle, Rounded};
+
+        //! States
+        enum State { On, Off, Temporary };
 
         //! Constructor
         CLed(QWidget *parent = nullptr);
 
         //! Constructor
-        CLed(bool on, LedColors onColor, LedColors offColor, LedShapes shape, QWidget *parent = nullptr);
+        CLed(bool on, LedColor onColor, LedColor offColor, LedShape shape, QWidget *parent = nullptr);
 
         //! Destructor
         virtual ~CLed();
@@ -66,25 +69,25 @@ namespace BlackGui
         bool value() const { return m_value; }
 
         //! On color
-        LedColors onColor() const { return m_onColor; }
+        LedColor onColor() const { return m_onColor; }
 
         //! Off color
-        LedColors offColor() const { return m_offColor; }
+        LedColor offColor() const { return m_offColor; }
 
         //! Shape
-        LedShapes shape() const { return m_shape; }
+        LedShape shape() const { return m_shape; }
 
         //! Allows to set the led value {true,false}
-        void setValue(bool);
+        void setOn(bool on);
 
         //! Allows to change the On color {Red,Green,Yellow,Grey,Orange,Purple,blue}
-        void setOnColor(LedColors color);
+        void setOnColor(LedColor color);
 
         //! Allows to change the Off color {Red,Green,Yellow,Grey,Orange,Purple,blue}
-        void setOffColor(LedColors color);
+        void setOffColor(LedColor color);
 
         //! Temporary color until next value change
-        void setTemporaryColor(LedColors color);
+        void setTemporaryColor(LedColor color);
 
         //! Tool tips
         void setToolTips(const QString &on, const QString &off);
@@ -93,22 +96,22 @@ namespace BlackGui
         void setOnToolTip(const QString &on);
 
         //! Allows to change the led shape {Circle,Square,Triangle,Rounded rectangle}
-        void setShape(LedShapes);
+        void setShape(LedShape);
 
         //! Target width
         void setTargetWidth(int width) { this->m_targetWidth = width; }
 
         //! New values
-        void setValues(LedColors onColor, LedColors offColor, LedShapes shape, const QString &toolTipOn, const QString &toolTipOff, int width = -1);
+        void setValues(LedColor onColor, LedColor offColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, int width = -1);
 
         //! Toggle on / off
         void toggleValue();
 
     protected:
-        bool m_value = false;        //!< current value
-        LedColors m_onColor = Red;   //!< On color
-        LedColors m_offColor = Grey; //!< Off color
-        LedShapes m_shape = Circle;  //!< shape
+        State m_value = Off;         //!< current value
+        LedColor m_onColor = Red;    //!< On color
+        LedColor m_offColor = Grey;  //!< Off color
+        LedShape m_shape = Circle;   //!< shape
         double m_whRatio = 1.0;      //!< width/height ratio
         int m_targetWidth = -1;      //!< TargetWidth
 
@@ -128,8 +131,8 @@ namespace BlackGui
         QSvgRenderer *m_renderer = nullptr;         //!< Renderer
         QString m_tooltipOn;
         QString m_tooltipOff;
-        void setLed(LedColors tempColor = NoColor); //!< Init LED
-        static const QString &colorString(LedColors color); //!<Color string
+        void setLed(LedColor ledColor = NoColor); //!< Init LED
+        static const QString &colorString(LedColor color); //!<Color string
     };
 }
 #endif

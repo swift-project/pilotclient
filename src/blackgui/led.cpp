@@ -23,7 +23,6 @@
 #include <QtSvg>
 #include <QSvgRenderer>
 
-
 namespace BlackGui
 {
     CLed::CLed(QWidget *parent) : QWidget(parent)
@@ -31,20 +30,20 @@ namespace BlackGui
         this->setLed();
     }
 
-    CLed::CLed(bool on, CLed::LedColors onColor, CLed::LedColors offColor, CLed::LedShapes shape, QWidget *parent) :
-        QWidget(parent), m_value(on), m_onColor(onColor), m_offColor(offColor), m_shape(shape)
+    CLed::CLed(bool on, CLed::LedColor onColor, CLed::LedColor offColor, CLed::LedShape shape, QWidget *parent) :
+        QWidget(parent), m_value(on ? On : Off), m_onColor(onColor), m_offColor(offColor), m_shape(shape)
     {
         this->setLed();
     }
 
-    void CLed::setLed(LedColors tempColor)
+    void CLed::setLed(LedColor ledColor)
     {
         // load image, init renderer
         QString ledShapeAndColor;
         ledShapeAndColor = shapes().at(static_cast<int>(this->m_shape));
-        if (tempColor == NoColor)
+        if (ledColor == NoColor)
         {
-            if (m_value)
+            if (m_value == On)
             {
                 this->setToolTip(this->m_tooltipOn);
                 ledShapeAndColor.append(CLed::colorString(this->m_onColor));
@@ -58,7 +57,7 @@ namespace BlackGui
         else
         {
             this->setToolTip("transition");
-            ledShapeAndColor.append(CLed::colorString(tempColor));
+            ledShapeAndColor.append(CLed::colorString(ledColor));
         }
 
         // init renderer, allow re-init
@@ -87,12 +86,12 @@ namespace BlackGui
 
         if (!firstTime)
         {
-            // re-init
+            // re-init widget (adjust size etc.)
             this->update();
         }
     }
 
-    const QString &CLed::colorString(CLed::LedColors color)
+    const QString &CLed::colorString(CLed::LedColor color)
     {
         static const QString empty;
         if (color == NoColor) return empty;
@@ -136,33 +135,34 @@ namespace BlackGui
         m_renderer->render(&painter);
     }
 
-    void CLed::setOnColor(LedColors color)
+    void CLed::setOnColor(LedColor color)
     {
         if (color == this->m_onColor) return;
         m_onColor = color;
         setLed();
     }
 
-    void CLed::setOffColor(LedColors color)
+    void CLed::setOffColor(LedColor color)
     {
         if (color == this->m_offColor) return;
         m_offColor = color;
         setLed();
     }
 
-    void CLed::setTemporaryColor(CLed::LedColors color)
+    void CLed::setTemporaryColor(CLed::LedColor color)
     {
+        m_value = Temporary;
         setLed(color);
     }
 
-    void CLed::setShape(LedShapes newShape)
+    void CLed::setShape(LedShape newShape)
     {
         if (newShape == this->m_shape) return;
         m_shape = newShape;
         setLed();
     }
 
-    void CLed::setValues(CLed::LedColors onColor, CLed::LedColors offColor, CLed::LedShapes shape, const QString &toolTipOn, const QString &toolTipOff, int width)
+    void CLed::setValues(CLed::LedColor onColor, CLed::LedColor offColor, CLed::LedShape shape, const QString &toolTipOn, const QString &toolTipOff, int width)
     {
         m_onColor = onColor;
         m_offColor = offColor;
@@ -173,16 +173,24 @@ namespace BlackGui
         setLed();
     }
 
-    void CLed::setValue(bool value)
+    void CLed::setOn(bool on)
     {
-        if (value == m_value) return;
-        m_value = value;
+        State s = on ? On : Off;
+        if (m_value == s) return;
+        m_value = s;
         setLed();
     }
 
     void CLed::toggleValue()
     {
-        m_value = !m_value;
+        if (m_value == Temporary || m_value == On)
+        {
+            m_value = Off;
+        }
+        else
+        {
+            m_value = Off;
+        }
         setLed();
     }
 
@@ -200,7 +208,7 @@ namespace BlackGui
 
     const QList<int> &CLed::widths()
     {
-        static const QList<int> widths({ 16 , 16, 16, 16});
+        static const QList<int> widths({ 16, 16, 16, 16});
         return widths;
     }
 }
