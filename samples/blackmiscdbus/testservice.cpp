@@ -10,6 +10,7 @@
 #include "testservice.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
@@ -243,7 +244,7 @@ namespace BlackMiscTest
      */
     CAircraftList Testservice::pingAircraftList(const CAircraftList &aircraftList)
     {
-        qDebug() << "Pid:" << ServiceTool::getPid() << "ping ATCs:" << aircraftList;
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping aircrafts:" << aircraftList;
         return aircraftList;
     }
 
@@ -254,6 +255,24 @@ namespace BlackMiscTest
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping airports:" << airportList;
         return airportList;
+    }
+
+    /*
+     * Ping property index
+     */
+    CPropertyIndex Testservice::pingPropertyIndex(const CPropertyIndex &properties)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping properties:" << properties;
+        return properties;
+    }
+
+    /*
+     * Ping index variant map
+     */
+    CIndexVariantMap Testservice::pingIndexVariantMap(const CIndexVariantMap &indexVariantMap)
+    {
+        qDebug() << "Pid:" << ServiceTool::getPid() << "ping properties:" << indexVariantMap;
+        return indexVariantMap;
     }
 
     /*

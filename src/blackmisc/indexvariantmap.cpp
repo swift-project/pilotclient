@@ -107,7 +107,7 @@ namespace BlackMisc
      */
     void CIndexVariantMap::unmarshallFromDbus(const QDBusArgument &argument)
     {
-        QList<int> indexes;
+        QList<CPropertyIndex> indexes;
         QList<CVariant> values;
         argument >> indexes;
         argument >> values;
@@ -127,6 +127,14 @@ namespace BlackMisc
     void CIndexVariantMap::addValue(const CPropertyIndex &index, const QVariant &value)
     {
         this->m_values.insert(index, value);
+    }
+
+    /*
+     * Add string by literal
+     */
+    void CIndexVariantMap::addValue(const CPropertyIndex &index, const char *str)
+    {
+        this->addValue(index, QString(str));
     }
 
     /*

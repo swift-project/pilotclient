@@ -143,6 +143,20 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("pingCVariant"), argumentList);
         }
 
+        inline QDBusPendingReply<BlackMisc::CPropertyIndex> pingPropertyIndex(BlackMisc::CPropertyIndex index)
+        {
+            QList<QVariant> argumentList;
+            argumentList << index.toQVariant();
+            return asyncCallWithArgumentList(QLatin1String("pingPropertyIndex"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackMisc::CIndexVariantMap> pingIndexVariantMap(BlackMisc::CIndexVariantMap indexVariantMap)
+        {
+            QList<QVariant> argumentList;
+            argumentList << indexVariantMap.toQVariant();
+            return asyncCallWithArgumentList(QLatin1String("pingIndexVariantMap"), argumentList);
+        }
+
         inline QDBusPendingReply<BlackMisc::Aviation::CAltitude> receiveAltitude(BlackMisc::Aviation::CAltitude altitude)
         {
             QList<QVariant> argumentList;

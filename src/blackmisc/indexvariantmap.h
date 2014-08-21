@@ -47,6 +47,9 @@ namespace BlackMisc
         //! Add a value
         void addValue(const CPropertyIndex &index, const QVariant &value);
 
+        //! Add QString as literal, disambiguate as I want to add QString
+        void addValue(const CPropertyIndex &index, const char* str);
+
         //! Add a value as non QVariant
         template<class T> void addValue(const CPropertyIndex &index, const T &value) { this->m_values.insert(index, CVariant::fromValue(value)); }
 

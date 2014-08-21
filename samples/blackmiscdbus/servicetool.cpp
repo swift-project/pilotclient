@@ -127,6 +127,9 @@ namespace BlackMiscTest
      */
     CAtcStationList ServiceTool::getStations(qint32 number)
     {
+        QElapsedTimer timer;
+        timer.start();
+
         BlackMisc::Aviation::CAtcStationList list;
         for (int i = 0; i < number; i++)
         {
@@ -138,6 +141,8 @@ namespace BlackMiscTest
             s.setPosition(CCoordinateGeodetic(i, i, i));
             list.push_back(s);
         }
+
+        qDebug() << number << "stations in" << timer.nsecsElapsed() / 1000000; // ms
         return list;
     }
 
@@ -329,6 +334,17 @@ namespace BlackMiscTest
             qDebug() << "Send geo position" << geoPos;
 
             qDebug() << "----------------- pings ----------------";
+            CPropertyIndex pi({ 1, 2, 3, 4, 5});
+            pi = testserviceInterface.pingPropertyIndex(pi);
+            qDebug() << "Pinged properties via interface" << pi;
+
+            CIndexVariantMap ivm;
+            ivm.addValue(1, "one");
+            ivm.addValue(2, "two");
+            ivm.addValue(3, "three");
+            ivm = testserviceInterface.pingIndexVariantMap(ivm);
+            qDebug() << "Pinged variant map via interface" << ivm;
+
             CAtcStation stationReceived  = testserviceInterface.pingAtcStation(station);
             qDebug() << "Pinged ATC station via interface"
                      << ((station == stationReceived) ? "OK" : "ERROR!") << stationReceived;
