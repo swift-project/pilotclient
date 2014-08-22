@@ -269,8 +269,18 @@ namespace BlackCore
      */
     void CContextNetwork::ps_FsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
     {
+
         this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { QString::number(from), QString::number(to) });
+        INetwork::ConnectionStatus fromOld = this->m_currentStatus;
         this->m_currentStatus = to;
+
+        if (fromOld == INetwork::Disconnecting)
+        {
+            // remark: vatlib does not know disconnecting. In vatlib's terminating connection method
+            // state Disconnecting is sent manually. We fix the vatlib state here regarding disconnecting
+            from = INetwork::Disconnecting;
+        }
+
         CStatusMessageList msgs;
         // send 1st position
         if (to == INetwork::Connected)
@@ -406,11 +416,6 @@ namespace BlackCore
         CAtcStation s2 = stations[1];
         rooms.push_back(s1.getVoiceRoom());
         rooms.push_back(s2.getVoiceRoom());
-
-        // KB_REMOVE
-        qDebug() << this->ownAircraft().getCom1System().getFrequencyActive() << s1.getCallsign() << s1.getFrequency() << s1.getVoiceRoom().getVoiceRoomUrl();
-        qDebug() << this->ownAircraft().getCom2System().getFrequencyActive() << s2.getCallsign() << s2.getFrequency() << s2.getVoiceRoom().getVoiceRoomUrl();
-
         return rooms;
     }
 
