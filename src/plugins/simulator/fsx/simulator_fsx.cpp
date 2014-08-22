@@ -148,12 +148,12 @@ namespace BlackSimPlugin
         void CSimulatorFsx::addRemoteAircraft(const CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation)
         {
             SIMCONNECT_DATA_INITPOSITION initialPosition;
-            initialPosition.Latitude = initialSituation.latitude().value();
-            initialPosition.Longitude = initialSituation.longitude().value();
-            initialPosition.Altitude = initialSituation.getAltitude().value();
-            initialPosition.Pitch = initialSituation.getPitch().value();
-            initialPosition.Bank = initialSituation.getBank().value();
-            initialPosition.Heading = initialSituation.getHeading().value();
+            initialPosition.Latitude = initialSituation.latitude().value(CAngleUnit::deg());
+            initialPosition.Longitude = initialSituation.longitude().value(CAngleUnit::deg());
+            initialPosition.Altitude = initialSituation.getAltitude().value(CLengthUnit::ft());
+            initialPosition.Pitch = initialSituation.getPitch().value(CAngleUnit::deg());
+            initialPosition.Bank = initialSituation.getBank().value(CAngleUnit::deg());
+            initialPosition.Heading = initialSituation.getHeading().value(CAngleUnit::deg());
             initialPosition.Airspeed = 0;
             initialPosition.OnGround = 0;
 
