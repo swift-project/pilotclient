@@ -281,21 +281,17 @@ namespace BlackSimPlugin
             return false;
         }
 
-        void CSimulatorXPlane::addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &type,
-                const BlackMisc::Aviation::CAircraftSituation &initialSituation)
+        void CSimulatorXPlane::addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situ)
         {
-            Q_UNUSED(initialSituation); // fixed gcc warning
             if (! isConnected()) { return; }
-            m_traffic->addPlane(callsign.asString(), type, "YYY", "YYY"); // TODO livery
-            //addAircraftSituation(callsign, initialSituation);
-            m_planes.insert(callsign.asString()); // FIXME should not be needed here IMHO
+            m_traffic->addPlane(callsign.asString(), "A320", "YYY", "YYY");
+            addAircraftSituation(callsign, situ);
         }
 
         void CSimulatorXPlane::addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftSituation &situ)
         {
             if (! isConnected()) { return; }
-            if (! m_planes.contains(callsign.asString())) { addRemoteAircraft(callsign, "A320", situ); } // FIXME should not be needed here IMHO
             using namespace BlackMisc::PhysicalQuantities;
             m_traffic->setPlanePosition(callsign.asString(),
                                         situ.latitude().value(CAngleUnit::deg()),

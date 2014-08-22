@@ -102,8 +102,14 @@ namespace BlackCore
         //! Update own aircraft, because simulator has changed something
         void ps_updateOwnAircraft();
 
+        //! \copydoc ISimulator::addRemoteAircraft
+        void ps_addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
+
         //! \copydoc ISimulator::addAircraftSituation
-        void ps_addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
+        void ps_addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        //! \copydoc ISimulator::removeRemoteAircraft
+        void ps_removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Update cockpit from context, because someone else has changed cockpit (e.g. GUI, 3rd party)
         //! \remarks set by runtime, only to be used locally (not via DBus)

@@ -247,11 +247,25 @@ namespace BlackCore
         }
     }
 
-    void CContextSimulator::ps_addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &initialSituation)
+    void CContextSimulator::ps_addRemoteAircraft(const CCallsign &callsign, const CAircraftSituation &initialSituation)
     {
         Q_ASSERT(this->m_simulator);
         if (!this->m_simulator) return;
-        this->m_simulator->addAircraftSituation(callsign, initialSituation);
+        this->m_simulator->addRemoteAircraft(callsign, initialSituation);
+    }
+
+    void CContextSimulator::ps_addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
+    {
+        Q_ASSERT(this->m_simulator);
+        if (!this->m_simulator) return;
+        this->m_simulator->addAircraftSituation(callsign, situation);
+    }
+
+    void CContextSimulator::ps_removeRemoteAircraft(const CCallsign &callsign)
+    {
+        Q_ASSERT(this->m_simulator);
+        if (!this->m_simulator) return;
+        this->m_simulator->removeRemoteAircraft(callsign);
     }
 
     void CContextSimulator::ps_updateCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)

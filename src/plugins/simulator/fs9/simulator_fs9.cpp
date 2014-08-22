@@ -99,8 +99,16 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFs9::addRemoteAircraft(const CCallsign &callsign, const QString & /* type */, const CAircraftSituation & /*initialSituation*/ )
+        void CSimulatorFs9::addRemoteAircraft(const CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation)
         {
+            if (m_hashFs9Clients.size() >= 20)
+            {
+                // Only add a maximum number of 20 clients.
+                // FIXME: We need a smart method to get the 20 nearest aircrafts. If someone logs in
+                // nearby we need to kick out the one with max distance.
+                return;
+            }
+
             // Create a new client thread, set update frequency to 25 ms and start it
             QThread *clientThread = new QThread(this);
             CFs9Client *client = new CFs9Client(callsign.toQString(), CTime(25, CTimeUnit::ms()));
@@ -112,22 +120,21 @@ namespace BlackSimPlugin
             m_fs9ClientThreads.insert(client, clientThread);
             m_hashFs9Clients.insert(callsign, client);
             clientThread->start();
+
+            addAircraftSituation(callsign, initialSituation);
         }
 
         void CSimulatorFs9::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
         {
-            // If this is a new guy, add him to the session
+            // FIXME: should be a Q_ASSERT
             if (!m_hashFs9Clients.contains(callsign))
             {
                 // Only add a maximum number of 20 clients.
                 // FIXME: We need a smart method to get the 20 nearest aircrafts. If someone logs in
                 // nearby we need to kick out the one with max distance.
-
-                if (m_hashFs9Clients.size() < 20)
-                    addRemoteAircraft(callsign, "Boeing 737-400 Paint1", situation);
+                return;
             }
 
-            // otherwise just add the new position
             CFs9Client *client = m_hashFs9Clients.value(callsign);
             if (!client)
                 return;

@@ -52,12 +52,12 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override;
 
             //! \copydoc BlackCore::ISimulator::addRemoteAircraft
-            virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &type,
+            virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign,
                 const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
 
             //! \copydoc BlackCore::ISimulator::addAircraftSituation
             virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign,
-                const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
+                const BlackMisc::Aviation::CAircraftSituation &situation) override;
 
             //! \copydoc BlackCore::ISimulator::removeRemoteAircraft
             virtual void removeRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign) override;
@@ -109,7 +109,6 @@ namespace BlackSimPlugin
             QTimer *m_slowTimer { nullptr };
 
             BlackMisc::Aviation::CAirportList m_airports;
-            QSet<QString> m_planes; // FIXME should not be needed here IMHO
 
             struct // data is written by DBus async method callbacks
             {

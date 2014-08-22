@@ -110,7 +110,7 @@ namespace BlackSimPlugin
             virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const override { return m_ownAircraft; }
 
             //! \copydoc ISimulator::addRemoteAircraft()
-            virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const QString &type, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
+            virtual void addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;
 
             //! \copydoc ISimulator::addAircraftSituation()
             virtual void addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation) override;

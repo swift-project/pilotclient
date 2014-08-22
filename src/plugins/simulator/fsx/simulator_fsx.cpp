@@ -145,10 +145,8 @@ namespace BlackSimPlugin
             return true;
         }
 
-        void CSimulatorFsx::addRemoteAircraft(const CCallsign &callsign, const QString &type, const CAircraftSituation &initialSituation)
+        void CSimulatorFsx::addRemoteAircraft(const CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation)
         {
-            Q_UNUSED(type);
-
             SIMCONNECT_DATA_INITPOSITION initialPosition;
             initialPosition.Latitude = initialSituation.latitude().value();
             initialPosition.Longitude = initialSituation.longitude().value();
@@ -163,21 +161,18 @@ namespace BlackSimPlugin
             simObj.setCallsign(callsign);
             simObj.setRequestId(m_nextObjID);
             simObj.setObjectId(0);
-            simObj.getInterpolator()->addAircraftSituation(initialSituation);
             m_simConnectObjects.insert(callsign, simObj);
             ++m_nextObjID;
 
-            HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, "Boeing 737-800 Paint1", callsign.toQString().left(12).toLatin1().constData(), initialPosition, simObj.getRequestId());
+            HRESULT hr = SimConnect_AICreateNonATCAircraft(m_hSimConnect, "Boeing 737-800 Paint1", qPrintable(callsign.toQString().left(12)), initialPosition, simObj.getRequestId());
             Q_UNUSED(hr);
+
+            addAircraftSituation(callsign, initialSituation);
         }
 
         void CSimulatorFsx::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
         {
-            if (!m_simConnectObjects.contains(callsign))
-            {
-                addRemoteAircraft(callsign, "Boeing 737-800 Paint1", situation);
-                return;
-            }
+            Q_ASSERT(m_simConnectObjects.contains(callsign));
 
             CSimConnectObject simObj = m_simConnectObjects.value(callsign);
             simObj.getInterpolator()->addAircraftSituation(situation);
