@@ -85,8 +85,14 @@ namespace BlackCore
         //! Aircrafts were changed
         void changedAircraftsInRange();
 
+        //! A new aircraft appeared
+        void addedAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
+
         //! An aircraft's situation was changed
-        void changedAircraftSituation(const BlackMisc::Aviation::CCallsign, const BlackMisc::Aviation::CAircraftSituation &situation);
+        void changedAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation);
+
+        //! An aircraft disappeared
+        void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Sent a status message
         void statusMessage(const BlackMisc::CStatusMessage &msg);

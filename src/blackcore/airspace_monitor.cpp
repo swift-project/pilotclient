@@ -484,6 +484,8 @@ namespace BlackCore
                 this->m_network->sendServerQuery(callsign);
                 this->sendFsipirCustomPacket(callsign); // own aircraft model
             }
+
+            emit this->addedAircraft(callsign, situation);
         }
         else
         {
@@ -495,18 +497,26 @@ namespace BlackCore
             vm.addValue(CAircraft::IndexSituation, situation);
             vm.addValue(CAircraft::IndexDistance, distance);
             this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual(&CAircraft::getCallsign, callsign), vm);
+
+            emit this->changedAircraftSituation(callsign, situation);
         }
 
         emit this->changedAircraftsInRange();
-        emit changedAircraftSituation(callsign, situation);
     }
 
     void CAirspaceMonitor::ps_pilotDisconnected(const CCallsign &callsign)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
 
+        bool contains = this->m_aircraftsInRange.contains(&CAircraft::getCallsign, callsign);
+
         this->m_aircraftsInRange.removeIf(&CAircraft::getCallsign, callsign);
         this->m_otherClients.removeIf(&CClient::getCallsign, callsign);
+
+        if (contains)
+        {
+            emit this->removedAircraft(callsign);
+        }
     }
 
     void CAirspaceMonitor::ps_frequencyReceived(const CCallsign &callsign, const CFrequency &frequency)
