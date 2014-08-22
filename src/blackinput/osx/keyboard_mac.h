@@ -21,7 +21,14 @@ namespace BlackInput
     class CKeyboardMac : public IKeyboard
     {
         Q_OBJECT
+
     public:
+
+        //! \brief Copy Constructor
+        CKeyboardMac(CKeyboardMac const&) = delete;
+
+        //! \brief Assignment operator
+        void operator=(CKeyboardMac const&) = delete;
 
         //! \brief Destructor
         virtual ~CKeyboardMac();
@@ -37,21 +44,15 @@ namespace BlackInput
 
     protected:
 
-        friend class IKeyboard;
-
-        //! \brief Constructor
-        CKeyboardMac(QObject *parent = nullptr);
-
-        //! \brief Copy Constructor
-        CKeyboardMac(CKeyboardMac const&);
-
         //! \copydoc IKeyboard::init()
         virtual bool init() override;
 
-        //! \brief Assignment operator
-        void operator=(CKeyboardMac const&);
-
     private:
+
+        friend class IKeyboard;
+
+        //! Constructor
+        CKeyboardMac(QObject *parent = nullptr);
 
         /*!
          * \brief Constructor

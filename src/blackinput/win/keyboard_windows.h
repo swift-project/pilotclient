@@ -28,6 +28,12 @@ namespace BlackInput
         Q_OBJECT
     public:
 
+        //! \brief Copy Constructor
+        CKeyboardWindows(CKeyboardWindows const&) = delete;
+
+        //! \brief Assignment operator
+        void operator=(CKeyboardWindows const&) = delete;
+
         //! \brief Destructor
         virtual ~CKeyboardWindows();
 
@@ -48,21 +54,15 @@ namespace BlackInput
 
     protected:
 
+        //! \copydoc IKeyboard::init()
+        virtual bool init() override;
+
+    private:
+
         friend class IKeyboard;
 
         //! \brief Constructor
         CKeyboardWindows(QObject *parent = nullptr);
-
-        //! \brief Copy Constructor
-        CKeyboardWindows(CKeyboardWindows const&);
-
-        //! \copydoc IKeyboard::init()
-        virtual bool init() override;
-
-        //! \brief Assignment operator
-        void operator=(CKeyboardWindows const&);
-
-    private:
 
         /*!
          * \brief Constructor

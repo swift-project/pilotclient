@@ -24,7 +24,14 @@ namespace BlackInput
     class CKeyboardLinux : public IKeyboard
     {
         Q_OBJECT
+
     public:
+
+        //! \brief Copy Constructor
+        CKeyboardLinux(CKeyboardLinux const&) = delete;
+
+        //! \brief Assignment operator
+        void operator=(CKeyboardLinux const&) = delete;
 
         //! \brief Destructor
         virtual ~CKeyboardLinux();
@@ -40,19 +47,8 @@ namespace BlackInput
 
     protected:
 
-        friend class IKeyboard;
-
-        //! \brief Constructor
-        CKeyboardLinux(QObject *parent = nullptr);
-
-        //! \brief Copy Constructor
-        CKeyboardLinux(CKeyboardLinux const&);
-
         //! \copydoc IKeyboard::init()
         virtual bool init() override;
-
-        //! \brief Assignment operator
-        void operator=(CKeyboardLinux const&);
 
     private slots:
 
@@ -63,6 +59,11 @@ namespace BlackInput
         void inputReadyRead(int);
 
     private:
+
+        friend class IKeyboard;
+
+        //! \brief Constructor
+        CKeyboardLinux(QObject *parent = nullptr);
 
         /*!
          * \brief Constructor
