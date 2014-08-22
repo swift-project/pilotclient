@@ -26,8 +26,14 @@ namespace BlackMiscTest
      */
     int CSamplesMetadata::samples()
     {
+        QTextStream cin(stdin);
+
         BlackMisc::registerMetadata();
         BlackMisc::displayAllUserMetatypesTypes();
+
+        cin.readLine();
+        qDebug() << "------- Enter --------";
+
         return 0;
     }
 

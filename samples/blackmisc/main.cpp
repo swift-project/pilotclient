@@ -12,6 +12,7 @@
 #include "samplesmetadata.h"
 #include "samplescontainer.h"
 #include "samplesjson.h"
+#include "samplesvariant.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqallquantities.h"
 
@@ -28,9 +29,11 @@ int main(int argc, char *argv[])
     Q_UNUSED(argv);
 
     BlackMisc::initResources();
+    BlackMisc::registerMetadata();
     CSamplesJson::samples();
     CSamplesChangeObject::samples();
     CSamplesContainer::samples();
     CSamplesMetadata::samples();
+    CSamplesVariant::samples();
     return 0;
 }

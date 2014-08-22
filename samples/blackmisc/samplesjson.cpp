@@ -85,7 +85,8 @@ namespace BlackMiscTest
         stations.fromJson(json);
         qDebug() << stations;
 
-        qDebug() << "-----------------------------------------------";
+        cin.readLine();
+        qDebug() << "------- Enter ---------------------------------";
         return 0;
     }
 
