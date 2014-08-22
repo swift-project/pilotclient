@@ -35,6 +35,11 @@ SOURCES += $$PWD/components/*.cpp
 FORMS   += $$PWD/components/*.ui
 FORMS   += $$PWD/*.ui
 
+win32 {
+    HEADERS += $$PWD/win/*.h
+    SOURCES += $$PWD/win/*.cpp
+}
+
 RESOURCES +=
 
 DESTDIR = ../../lib
