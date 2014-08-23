@@ -8,6 +8,7 @@
 #endif
 #include "traffic.h"
 #include "XPMPMultiplayer.h"
+#include "XPMPMultiplayerCSL.h"
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
 #include <QDateTime>
@@ -29,6 +30,22 @@ namespace XBus
         surfaces.lights.timeOffset = static_cast<quint16>(qrand() % 0xffff);
     }
 
+    QString g_xplanePath;
+    QString g_sep;
+
+    void initXPlanePath()
+    {
+        char xplanePath[512];
+        XPLMGetSystemPath(xplanePath);
+#ifdef Q_OS_MAC
+        HFS2PosixPath(xplanePath, xplanePath, sizeof(xplanePath));
+        g_sep = "/";
+#else
+        g_sep = XPLMGetDirectorySeparator();
+#endif
+        g_xplanePath = xplanePath;
+    }
+
     CTraffic::CTraffic(QObject *parent) : QObject(parent)
     {
     }
@@ -42,10 +59,8 @@ namespace XBus
 
     void CTraffic::initLegacyData()
     {
-        char xplanePath[512];
-        XPLMGetSystemPath(xplanePath);
-        auto dir = QString(xplanePath) + "Resources" + XPLMGetDirectorySeparator() + "plugins" + XPLMGetDirectorySeparator()
-            + "xbus" + XPLMGetDirectorySeparator() + "LegacyData" + XPLMGetDirectorySeparator();
+        initXPlanePath();
+        auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xbus" + g_sep + "LegacyData" + g_sep;
 
         auto err = XPMPMultiplayerInitLegacyData(qPrintable(dir + "CSL"), qPrintable(dir + "related.txt"),
             qPrintable(dir + "lights.png"), qPrintable(dir + "Doc8643.txt"), "C172", preferences, preferences);
@@ -103,10 +118,8 @@ namespace XBus
 
     bool CTraffic::loadPlanesPackage(const QString &path)
     {
-        char xplanePath[512];
-        XPLMGetSystemPath(xplanePath);
-        auto dir = QString(xplanePath) + "Resources" + XPLMGetDirectorySeparator() + "plugins" + XPLMGetDirectorySeparator()
-            + "xbus" + XPLMGetDirectorySeparator() + "LegacyData" + XPLMGetDirectorySeparator();
+        initXPlanePath();
+        auto dir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xbus" + g_sep + "LegacyData" + g_sep;
 
         auto err = XPMPLoadCSLPackage(qPrintable(path), qPrintable(dir + "related.txt"), qPrintable(dir + "Doc8643.txt"));
         if (*err) { return false; }
