@@ -1,8 +1,8 @@
 /* Copyright (C) 2013
- * swift Project Community / Contributors
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
- * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  */
@@ -31,60 +31,12 @@ namespace BlackMisc
          */
         template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CValueObject
         {
-
-        private:
-            double m_value; //!< numeric part
-            MU m_unit; //!< unit part
-
-            //! Which subclass of CMeasurementUnit is used?
-            typedef MU UnitClass;
-
-            //! Easy access to derived class (CRTP template parameter)
-            PQ const *derived() const
-            {
-                return static_cast<PQ const *>(this);
-            }
-
-            //! Easy access to derived class (CRTP template parameter)
-            PQ *derived()
-            {
-                return static_cast<PQ *>(this);
-            }
-
-        protected:
-            //! Constructor with double
-            CPhysicalQuantity(double value, const MU &unit);
-
-            //! Copy constructor
-            CPhysicalQuantity(const CPhysicalQuantity &other);
-
-            //! Constructor by parsed string, e.g. 10m
-            CPhysicalQuantity(const QString &unitString) : m_value(0.0), m_unit(MU::nullUnit())
-            {
-                this->parseFromString(unitString);
-            }
-
-            //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
         public:
             //! Virtual destructor
             virtual ~CPhysicalQuantity() {}
 
             //! Unit
-            MU getUnit() const
-            {
-                return this->m_unit;
-            }
+            MU getUnit() const { return this->m_unit; }
 
             /*!
              * \brief Simply set unit, do no calclulate conversion
@@ -169,10 +121,7 @@ namespace BlackMisc
             PQ operator *(double multiply) const;
 
             //! Operator to support commutative multiplication
-            friend PQ operator *(double factor, const PQ &other)
-            {
-                return other * factor;
-            }
+            friend PQ operator *(double factor, const PQ &other) { return other * factor; }
 
             //! Operator /
             PQ operator /(double divide) const;
@@ -208,10 +157,7 @@ namespace BlackMisc
             PQ operator -(const PQ &other) const;
 
             //! Quantity value <= epsilon
-            bool isZeroEpsilonConsidered() const
-            {
-                return this->m_unit.isEpsilon(this->m_value);
-            }
+            bool isZeroEpsilonConsidered() const { return this->m_unit.isEpsilon(this->m_value); }
 
             //! Value >= 0 epsilon considered
             bool isPositiveWithEpsilonConsidered() const
@@ -266,8 +212,45 @@ namespace BlackMisc
 
             //! Register metadata of unit and quantity
             static void registerMetadata();
-        };
 
+        protected:
+            //! Constructor with double
+            CPhysicalQuantity(double value, const MU &unit);
+
+            //! Copy constructor
+            CPhysicalQuantity(const CPhysicalQuantity &other);
+
+            //! Constructor by parsed string, e.g. 10m
+            CPhysicalQuantity(const QString &unitString) : m_value(0.0), m_unit(MU::nullUnit())
+            {
+                this->parseFromString(unitString);
+            }
+
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override;
+
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
+
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
+
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
+
+        private:
+            double m_value; //!< numeric part
+            MU m_unit;      //!< unit part
+
+            //! Which subclass of CMeasurementUnit is used?
+            typedef MU UnitClass;
+
+            //! Easy access to derived class (CRTP template parameter)
+            PQ const *derived() const { return static_cast<PQ const *>(this); }
+
+            //! Easy access to derived class (CRTP template parameter)
+            PQ *derived() { return static_cast<PQ *>(this); }
+        };
     } // namespace
 } // namespace
 

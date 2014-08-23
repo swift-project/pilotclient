@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_AVIONAVSYSTEM_H
 #define BLACKMISC_AVIONAVSYSTEM_H
@@ -11,53 +17,86 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
-        /*!
-         * \brief NAV system (radio navigation)
-         */
+        //! NAV system (radio navigation)
         class CNavSystem : public CModulator<CNavSystem>
         {
-        private:
-            /*!
-             * \brief Valid civil aviation frequency?
-             * \param f
-             * \return
-             */
+
+        public:
+            //! Default constructor
+            CNavSystem() : CModulator() {}
+
+            //! Constructor
+            CNavSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits = 3):
+                CModulator(name, activeFrequency, standbyFrequency, digits)
+            { }
+
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! Set active frequency
+            void setFrequencyActiveMHz(double frequencyMHz)
+            {
+                this->CModulator::setFrequencyActiveMHz(frequencyMHz);
+            }
+
+            //! Set standby frequency
+            void setFrequencyStandbyMHz(double frequencyMHz)
+            {
+                this->CModulator::setFrequencyStandbyMHz(frequencyMHz);
+            }
+
+            //! Equal operator ==
+            bool operator ==(const CNavSystem &other) const
+            {
+                return this->CModulator::operator ==(other);
+            }
+
+            //! Unequal operator !=
+            bool operator !=(const CNavSystem &other) const
+            {
+                return this->CModulator::operator !=(other);
+            }
+
+            //! Valid civil aviation frequency?
             bool isValidCivilNavigationFrequency(BlackMisc::PhysicalQuantities::CFrequency f) const
             {
                 double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), this->m_digits);
                 return fr >= 108.0 && fr <= 117.95;
             }
 
-            /*!
-             * \brief Valid military aviation frequency?
-             * \param f
-             * \return
-             */
+            //! Valid military aviation frequency?
             bool isValidMilitaryNavigationFrequency(BlackMisc::PhysicalQuantities::CFrequency f) const
             {
                 double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), this->m_digits);
                 return fr >= 960.0 && fr <= 1215.0; // valid TACAN frequency
             }
 
-            /*!
-             * \brief Constructor
-             * \param validate
-             * \param name
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \param digits
-             */
-            CNavSystem(bool validate, const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits = 3):
-                CModulator(name, activeFrequency, standbyFrequency, digits)
+            //! NAV1 unit
+            static CNavSystem getNav1System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
             {
-                this->validate(validate);
+                return CNavSystem(CModulator::NameNav1(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
+            }
+
+            //! NAV1 unit
+            static CNavSystem getNav1System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+            {
+                return CNavSystem(CModulator::NameNav1(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
+            }
+
+            //! NAV2 unit
+            static CNavSystem getNav2System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
+            {
+                return CNavSystem(CModulator::NameNav2(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
+            }
+
+            //! NAV2 unit
+            static CNavSystem getNav2System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
+            {
+                return CNavSystem(CModulator::NameNav2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
             }
 
         protected:
-            /*!
-             * \copydoc CAvionicsBase::validValues
-             */
+            //! \copydoc CAvionicsBase::validValues
             virtual bool validValues() const override
             {
                 if (this->isDefaultValue()) return true; // special case
@@ -67,222 +106,6 @@ namespace BlackMisc
                     (this->isValidCivilNavigationFrequency(this->getFrequencyStandby()) ||
                      this->isValidMilitaryNavigationFrequency(this->getFrequencyStandby()));
                 return v;
-            }
-
-            /*!
-             * \brief Validate values by assert and exception
-             * \param strict
-             * \throws std::range_error
-             * \remarks Cannot be virtual because used in constructor
-             * \return
-             */
-            bool validate(bool strict = true) const
-            {
-                if (this->isDefaultValue()) return true;
-                bool valid = this->validValues();
-                if (!strict) return valid;
-                Q_ASSERT_X(valid, "CModulator::validate", "illegal values");
-                if (!valid) throw std::range_error("Illegal values in CModulator::validate");
-                return true;
-            }
-
-        public:
-            /*!
-             * Default constructor
-             */
-            CNavSystem() : CModulator() {}
-
-            /*!
-             * \brief Copy constructor
-             * \param other
-             */
-            CNavSystem(const CNavSystem &other) : CModulator(other) {}
-
-            /*!
-             * \brief Constructor
-             * \param name
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \param digits
-             */
-            CNavSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency, int digits = 3):
-                CModulator(name, activeFrequency, standbyFrequency, digits)
-            {
-                this->validate(true);
-            }
-
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
-            /*!
-             * \brief Set active frequency
-             * \param frequencyMHz
-             */
-            void setFrequencyActiveMHz(double frequencyMHz)
-            {
-                this->CModulator::setFrequencyActiveMHz(frequencyMHz);
-                this->validate(true);
-            }
-
-            /*!
-             * \brief Set standby frequency
-             * \param frequencyMHz
-             */
-            void setFrequencyStandbyMHz(double frequencyMHz)
-            {
-                this->CModulator::setFrequencyStandbyMHz(frequencyMHz);
-                this->validate(true);
-            }
-
-            /*!
-             * \brief operator ==
-             * \param other
-             * \return
-             */
-            bool operator ==(const CNavSystem &other) const
-            {
-                return this->CModulator::operator ==(other);
-            }
-
-            /*!
-             * \brief operator ==
-             * \param other
-             * \return
-             */
-            bool operator !=(const CNavSystem &other) const
-            {
-                return this->CModulator::operator !=(other);
-            }
-
-            /*!
-             * Try to get a NAV unit with given name and frequency. Returns true in case an object
-             * has been sucessfully created,otherwise returns a default object.
-             * \param[out] o_navSystem
-             * \param name
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
-            static bool tryGetNavSystem(CNavSystem &o_navSystem, const QString &name, double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                o_navSystem = CNavSystem(false, name, BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
-                bool s;
-                if (!(s = o_navSystem.validate(false))) o_navSystem = CNavSystem(); // reset to default
-                return s;
-            }
-
-            /*!
-             * Try to get a NAV unit with given name and frequency. Returns true in case an object
-             * has been sucessfully created, otherwise returns a default object.
-             * \param[out] o_navSystem
-             * \param name
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
-            static bool tryGetNavSystem(CNavSystem &o_navSystem, const QString &name, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                o_navSystem = CNavSystem(false, name, activeFrequency, standbyFrequency);
-                bool s;
-                if (!(s = o_navSystem.validate(false))) o_navSystem = CNavSystem(); // reset to default
-                return s;
-            }
-
-            /*!
-             * \brief NAV1 unit
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
-            static CNavSystem getNav1System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                return CNavSystem(CModulator::NameNav1(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
-            }
-
-            /*!
-             * \brief NAV1 unit
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
-            static CNavSystem getNav1System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                return CNavSystem(CModulator::NameNav1(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
-            }
-
-            /*!
-             * \brief Try to get NAV unit
-             * \param[out] o_navSystem
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
-            static bool tryGetNav1System(CNavSystem &o_navSystem, double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                return CNavSystem::tryGetNavSystem(o_navSystem, CModulator::NameNav1(), activeFrequencyMHz, standbyFrequencyMHz);
-            }
-
-            /*!
-             * \brief Try to get NAV unit
-             * \param[out] o_navSystem
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
-            static bool tryGetNav1System(CNavSystem &o_navSystem, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                return CNavSystem::tryGetNavSystem(o_navSystem, CModulator::NameNav1(), activeFrequency, standbyFrequency);
-            }
-
-            /*!
-             * \brief NAV2 unit
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
-            static CNavSystem getNav2System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                return CNavSystem(CModulator::NameNav2(), BlackMisc::PhysicalQuantities::CFrequency(activeFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()), BlackMisc::PhysicalQuantities::CFrequency(standbyFrequencyMHz < 0 ? activeFrequencyMHz : standbyFrequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz()));
-            }
-
-            /*!
-             * \brief NAV2 unit
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
-            static CNavSystem getNav2System(BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                return CNavSystem(CModulator::NameNav2(), activeFrequency, standbyFrequency ==  CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency);
-            }
-
-            /*!
-             * \brief Try to get NAV unit
-             * \param[out] o_navSystem
-             * \param activeFrequencyMHz
-             * \param standbyFrequencyMHz
-             * \return
-             */
-            static bool tryGetNav2System(CNavSystem &o_navSystem, double activeFrequencyMHz, double standbyFrequencyMHz = -1)
-            {
-                return CNavSystem::tryGetNavSystem(o_navSystem, CModulator::NameNav2(), activeFrequencyMHz, standbyFrequencyMHz);
-            }
-
-            /*!
-             * \brief Try to get NAV unit
-             * \param[out] o_navSystem
-             * \param activeFrequency
-             * \param standbyFrequency
-             * \return
-             */
-            static bool tryGetNav2System(CNavSystem &o_navSystem, BlackMisc::PhysicalQuantities::CFrequency activeFrequency, BlackMisc::PhysicalQuantities::CFrequency standbyFrequency = CModulator::FrequencyNotSet())
-            {
-                return CNavSystem::tryGetNavSystem(o_navSystem, CModulator::NameNav2(), activeFrequency, standbyFrequency);
             }
         };
 

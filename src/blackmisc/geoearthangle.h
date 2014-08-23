@@ -1,8 +1,8 @@
 /* Copyright (C) 2013
- * swift Project Community / Contributors
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
- * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  */
@@ -22,42 +22,6 @@ namespace BlackMisc
          */
         template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
         {
-        protected:
-            //! Default constructor
-            CEarthAngle() : CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
-
-            //! Init by double value
-            CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit) {}
-
-            //! Init by CAngle value
-            CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CAngle(angle) {}
-
-            //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override
-            {
-                return this->valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CAngleUnit::deg(), 6, i18n);
-            }
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override
-            {
-                this->CAngle::marshallToDbus(argument);
-            }
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
-            {
-                this->CAngle::unmarshallFromDbus(argument);
-            }
 
         public:
             //! Virtual destructor
@@ -89,22 +53,14 @@ namespace BlackMisc
                 return *this;
             }
 
-            /*!
-             * Multiply operator *=
-             * \param multiply
-             * \return
-             */
+            //! Multiply operator *=
             CEarthAngle operator *=(double multiply)
             {
                 this->CAngle::operator *=(multiply);
                 return *this;
             }
 
-            /*!
-             * Greater operator >
-             * \param latOrLon
-             * \return
-             */
+            //! Greater operator >
             bool operator >(const CEarthAngle &latOrLon) const
             {
                 return this->CAngle::operator >(latOrLon);
@@ -144,11 +100,7 @@ namespace BlackMisc
                 return l;
             }
 
-            /*!
-             * Multiply operator *
-             * \param multiply
-             * \return
-             */
+            //! Multiply operator *
             LATorLON operator *(double multiply) const
             {
                 LATorLON l(*this);
@@ -168,6 +120,50 @@ namespace BlackMisc
              * \return
              */
             static LATorLON fromWgs84(const QString &wgsCoordinate);
+
+        protected:
+            //! Default constructor
+            CEarthAngle() : CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
+
+            //! Init by double value
+            CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit) {}
+
+            //! Init by CAngle value
+            CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CAngle(angle) {}
+
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override
+            {
+                return this->valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CAngleUnit::deg(), 6, i18n);
+            }
+
+            //! \copydoc CValueObject::getMetaTypeId
+            virtual int getMetaTypeId() const override;
+
+            //! \copydoc CValueObject::isA
+            virtual bool isA(int metaTypeId) const override;
+
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
+
+            //! \copydoc CValueObject::marshallToDbus
+            virtual void marshallToDbus(QDBusArgument &argument) const override
+            {
+                this->CAngle::marshallToDbus(argument);
+            }
+
+            //! \copydoc CValueObject::unmarshallFromDbus
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+            {
+                this->CAngle::unmarshallFromDbus(argument);
+            }
+
+        private:
+            //! Easy access to derived class (CRTP template parameter)
+            LATorLON const *derived() const { return static_cast<LATorLON const *>(this); }
+
+            //! Easy access to derived class (CRTP template parameter)
+            LATorLON *derived() { return static_cast<LATorLON *>(this); }
         };
 
     } // namespace

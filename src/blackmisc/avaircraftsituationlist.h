@@ -3,9 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKMISC_AVAIRCRAFTSITUATIONLIST_H
 #define BLACKMISC_AVAIRCRAFTSITUATIONLIST_H
@@ -17,14 +15,14 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        //! \brief Value object encapsulating a list of aircraft situations
+        //! Value object encapsulating a list of aircraft situations
         class CAircraftSituationList : public CSequence<CAircraftSituation>
         {
         public:
-            //! \brief Default constructor.
+            //! Default constructor.
             CAircraftSituationList();
 
-            //! \brief Construct from a base class object.
+            //! Construct from a base class object.
             CAircraftSituationList(const CSequence<CAircraftSituation> &other);
 
             //! \copydoc CValueObject::toQVariant()
@@ -34,27 +32,27 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Get a list of situations before dateTime
+             * Get a list of situations before dateTime
              * \param dateTime
              * \return
              */
             CAircraftSituationList findBefore (const QDateTime& dateTime) const;
 
             /*!
-             * \brief Get a list of situations after dateTime
+             * Get a list of situations after dateTime
              * \param dateTime
              * \return
              */
             CAircraftSituationList findAfter (const QDateTime& dateTime) const;
 
             /*!
-             * \brief Remove situations with timestamp before dateTime
+             * Remove situations with timestamp before dateTime
              * \param dateTime
              */
             void removeBefore(const QDateTime& dateTime);
 
             /*!
-             * \brief Remove situations older than seconds
+             * Remove situations older than seconds
              * \param seconds
              */
             void removeOlderThan(double seconds);

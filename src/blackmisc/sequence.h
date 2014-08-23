@@ -1,11 +1,13 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKMISC_SEQUENCE_H
 #define BLACKMISC_SEQUENCE_H
@@ -74,7 +76,7 @@ namespace BlackMisc
         /*!
          * \brief Move assignment.
          */
-        CSequence &operator =(CSequence &&other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
+        CSequence &operator =(CSequence && other) { m_pimpl.reset(other.m_pimpl.take()); return *this; }
 
         /*!
          * \brief Create a new sequence with a specific implementation type.
@@ -338,7 +340,7 @@ namespace BlackMisc
         template <class Predicate>
         void applyIf(Predicate p, const CIndexVariantMap &newValues)
         {
-            std::for_each(begin(), end(), [ &, p ](T &value) { if (p(value)) { value.apply(newValues); } });
+            std::for_each(begin(), end(), [ &, p ](T & value) { if (p(value)) { value.apply(newValues); } });
         }
 
         /*!
@@ -358,7 +360,7 @@ namespace BlackMisc
          */
         void applyIf(const CIndexVariantMap &pattern, const CIndexVariantMap &newValues)
         {
-            applyIf([ & ](const T &value) { return value == pattern; }, newValues);
+            applyIf([ & ](const T & value) { return value == pattern; }, newValues);
         }
 
         /*!
@@ -547,12 +549,12 @@ namespace BlackMisc
             size_type size() const override { return m_impl.size(); }
             bool empty() const override { return m_impl.empty(); }
             void clear() override { m_impl.clear(); }
-            iterator insert(iterator pos, const T &value) override { return iterator::fromImpl(m_impl.insert(*static_cast<const typename C::iterator*>(pos.getImpl()), value)); }
+            iterator insert(iterator pos, const T &value) override { return iterator::fromImpl(m_impl.insert(*static_cast<const typename C::iterator *>(pos.getImpl()), value)); }
             void push_back(const T &value) override { m_impl.push_back(value); }
             void push_back(T &&value) override { m_impl.push_back(std::move(value)); }
             void pop_back() override { m_impl.pop_back(); }
-            iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator*>(pos.getImpl()))); }
-            iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator*>(it1.getImpl()), *static_cast<const typename C::iterator*>(it2.getImpl()))); }
+            iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(pos.getImpl()))); }
+            iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()), *static_cast<const typename C::iterator *>(it2.getImpl()))); }
             bool operator ==(const PimplBase &other) const override { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.push_back(*i); return m_impl == copy.m_impl; }
             void *impl() override { return &m_impl; }
         private:

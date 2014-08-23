@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_PQBASE_H
 #define BLACKMISC_PQBASE_H
@@ -23,7 +29,7 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
         /*!
-         * \brief Base class for all units, such as meter, hertz.
+         * Base class for all units, such as meter, hertz.
          */
         class CMeasurementUnit : public CValueObject
         {
@@ -53,7 +59,7 @@ namespace BlackMisc
             };
 
             /*!
-             * \brief Converter for default values, such as None, used with public constructor
+             * Converter for default values, such as None, used with public constructor
              */
             struct NilConverter : public Converter
             {
@@ -148,49 +154,49 @@ namespace BlackMisc
             {
                 static double factor() { return 1; } //!< factor \return
             };
-            //! \brief 2 (two)
+            //! 2 (two)
             template <class Policy>
             struct Two
             {
                 static double factor() { return Policy::factor() * 2.0; } //!< factor \return
             };
-            //! \brief 10^-3
+            //! 10^-3
             template <class Policy>
             struct Milli
             {
                 static double factor() { return Policy::factor() / 1000.0; } //!< factor \return
             };
             template <class Policy>
-            //! \brief 10^-2
+            //! 10^-2
             struct Centi
             {
                 static double factor() { return Policy::factor() / 100.0; } //!< factor \return
             };
-            //! \brief 10^2
+            //! 10^2
             template <class Policy>
             struct Hecto
             {
                 static double factor() { return Policy::factor() * 100.0; } //!< factor \return
             };
-            //! \brief 10^3
+            //! 10^3
             template <class Policy>
             struct Kilo
             {
                 static double factor() { return Policy::factor() * 1000.0; } //!< factor \return
             };
-            //! \brief 10^6
+            //! 10^6
             template <class Policy>
             struct Mega
             {
                 static double factor() { return Policy::factor() * 1e+6; } //!< factor \return
             };
-            //! \brief 10^9
+            //! 10^9
             template <class Policy>
             struct Giga
             {
                 static double factor() { return Policy::factor() * 1e+9; } //!< factor \return
             };
-            //! \brief in each hundred
+            //! in each hundred
             template <int Subfactor>
             struct InEachHundred
             {
@@ -258,10 +264,8 @@ namespace BlackMisc
             }
 
         public:
-            /*!
-             * \brief Default constructor for meta system
-             * \remarks Only public because the need, to use this with the metasystem
-             */
+            //! Default constructor for meta system
+            //! \remarks Only public because the need, to use this with the metasystem
             CMeasurementUnit() : m_name("none"), m_symbol(""),  m_epsilon(0), m_displayDigits(0)
             {}
 
@@ -274,27 +278,19 @@ namespace BlackMisc
                 return QVariant::fromValue(*this);
             }
 
-            /*!
-             * \brief Equal operator ==
-             */
+            //! Equal operator ==
             bool operator == (const CMeasurementUnit &other) const;
 
-            /*!
-             * \brief Unequal operator !=
-             */
+            //! Unequal operator !=
             bool operator != (const CMeasurementUnit &other) const;
 
-            /*!
-             * \brief Name such as "meter"
-             */
+            //! Name such as "meter"
             QString getName(bool i18n = false) const
             {
                 return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_name.toStdString().c_str()) : this->m_name;
             }
 
-            /*!
-             * \brief Unit name such as "m"
-             */
+            //! Unit name such as "m"
             QString getSymbol(bool i18n = false) const
             {
                 return i18n ? QCoreApplication::translate("CMeasurementUnit", this->m_symbol.toStdString().c_str()) : this->m_symbol;
@@ -308,48 +304,31 @@ namespace BlackMisc
                 return qHash(this->getName());
             }
 
-            /*!
-             * \brief Rounded value
-             */
+            //! Rounded value
             double roundValue(double value, int digits = -1) const;
 
-            /*!
-             * Rounded string utility method, virtual so units can have
-             * specialized formatting
-             */
+            //! Rounded string utility method, virtual so units can have specialized formatting
             virtual QString makeRoundedQString(double value, int digits = -1, bool i18n = false) const;
 
-            /*!
-             * \brief Value rounded with unit, e.g. "5.00m", "30kHz"
-             */
+            //! Value rounded with unit, e.g. "5.00m", "30kHz"
             virtual QString makeRoundedQStringWithUnit(double value, int digits = -1, bool i18n = false) const;
 
-            /*!
-             * \brief Threshold for rounding
-             */
+            //! Threshold for rounding
             double getEpsilon() const
             {
                 return this->m_epsilon;
             }
 
-            /*!
-             * \brief getDisplayDigits
-             */
+            //! Display digits
             int getDisplayDigits() const
             {
                 return this->m_displayDigits;
             }
 
-            /*!
-             * Convert from other unit to this unit.
-             * \param value other value
-             * \param unit  other unit
-             */
+            //! Convert from other unit to this unit.
             double convertFrom(double value, const CMeasurementUnit &unit) const;
 
-            /*!
-             * \brief Is given value <= epsilon?
-             */
+            //! Is given value <= epsilon?
             bool isEpsilon(double value) const
             {
                 if (this->isNull()) return false;
@@ -357,9 +336,7 @@ namespace BlackMisc
                 return abs(value) <= this->m_epsilon;
             }
 
-            /*!
-             * \brief Is unit null?
-             */
+            //! Is unit null?
             bool isNull() const
             {
                 return this->m_converter.data() == nullptr;
@@ -370,7 +347,7 @@ namespace BlackMisc
             // --------------------------------------------------------------------
 
             /*!
-             * \brief Unit from symbol
+             * Unit from symbol
              * \param symbol must be a valid unit symbol (without i18n) or empty string (empty means default unit)
              * \param strict strict check means if unit is not found, program terminates
              */
@@ -387,7 +364,7 @@ namespace BlackMisc
             }
 
             /*!
-             * \brief Valid unit symbol?
+             * Valid unit symbol?
              * \param symbol to be tested
              * \param caseSensitivity check case sensitiv?
              */
@@ -403,18 +380,14 @@ namespace BlackMisc
                 return false;
             }
 
-            /*!
-             * \brief Dimensionless unit
-             */
+            //! Dimensionless unit
             static CMeasurementUnit &None()
             {
                 static CMeasurementUnit none("none", "", NilConverter(), 0, 0);
                 return none;
             }
 
-            /*!
-             * \brief Metadata, mainly needed for None
-             */
+            //! Metadata, mainly needed for None
             static void registerMetadata();
         };
 

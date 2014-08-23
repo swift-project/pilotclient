@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_POSMATRIX3X1_H
 #define BLACKMISC_POSMATRIX3X1_H
@@ -16,25 +22,16 @@ namespace BlackMisc
 
         class CMatrix3x3;
 
-        /*!
-         * \brief Matrix 3x1
-         */
+        //! Matrix 3x1
         class CMatrix3x1 : public CMatrixBase<CMatrix3x1, 3, 1>
         {
             friend class CMatrix3x3;
 
         public:
-            /*!
-             * \brief Constructor
-             */
+            //! Constructor
             CMatrix3x1() : CMatrixBase() {}
 
-            /*!
-             * \brief Constructor
-             * \param r1
-             * \param r2
-             * \param r3
-             */
+            //! Constructor
             CMatrix3x1(double r1, double r2, double r3) : CMatrixBase()
             {
                 this->m_matrix(0, 0) = r1;
@@ -42,39 +39,19 @@ namespace BlackMisc
                 this->m_matrix(2, 0) = r3;
             }
 
-            /*!
-             * \brief Copy constructor
-             */
+            //! Copy constructor
             CMatrix3x1(const CMatrix3x1 &other) : CMatrixBase(other) {}
 
-            /*!
-             * \brief Init by fill value
-             * \param fillValue
-             */
+            //! Init by fill value
             explicit CMatrix3x1(double fillValue) : CMatrixBase(fillValue) {}
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
-
-            /*!
-             * \brief Convert to vector
-             * \return
-             */
+            //! Convert to vector
             CVector3D toVector3D() const
             {
                 return CVector3D(this->getElement(0, 0), this->getElement(1, 0), this->getElement(2, 0));
             }
 
-            /*!
-             * \brief Convert from vector
-             * \return
-             */
+            //! Convert from vector
             void fromVector3D(const CVector3D &vector)
             {
                 this->m_matrix(0, 0) = vector.i();
@@ -82,7 +59,6 @@ namespace BlackMisc
                 this->m_matrix(2, 0) = vector.k();
             }
         };
-
     } // namespace
 } // namespace
 

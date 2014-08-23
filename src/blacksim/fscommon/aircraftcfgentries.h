@@ -1,12 +1,19 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKSIM_FSCOMMON_AIRCRAFTCFGENTRY_H
 #define BLACKSIM_FSCOMMON_AIRCRAFTCFGENTRY_H
 
-#include "blackmisc/valueobject.h"
+#include "blackmisc/propertyindex.h"
+
 #include <QVariant>
 
 namespace BlackSim
@@ -15,20 +22,104 @@ namespace BlackSim
     {
 
         /*!
-         * \brief Set of aircraft.cfg entries representing an aircraft (FSX)
+         * Set of aircraft.cfg entries representing an aircraft (FSX)
          * \remarks an entry in the aircraft.cfg is title, atc type, ... This class already bundles
          *          relevant entries, hence the class is named Entries (plural)
          */
         class CAircraftCfgEntries: public BlackMisc::CValueObject
         {
-        private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftCfgEntries)
-            qint32 m_index; //!< current index in given config
-            QString m_filePath; //!< file path of aircraft.cfg
-            QString m_title; //!< Title in aircraft.cfg
-            QString m_atcType; //!< ATC type
-            QString m_atcModel; //!< ATC model
-            QString m_atcParkingCode; //!< ATC parking code
+        public:
+
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexEntryIndex = BlackMisc::CPropertyIndex::GlobalIndexCAircraftModel,
+                IndexFilePath,
+                IndexTitle,
+                IndexAtcType,
+                IndexAtcModel,
+                IndexParkingCode
+            };
+
+            //! Default constructor
+            CAircraftCfgEntries() {}
+
+            /*!
+             * Entries representing an aircraft
+             * \param filePath
+             * \param index
+             * \param title
+             * \param atcType
+             * \param atcModel
+             * \param atcParkingCode
+             */
+            CAircraftCfgEntries(const QString &filePath, qint32 index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode);
+
+            //! Virtual destructor
+            virtual ~CAircraftCfgEntries() {}
+
+            //! operator ==
+            bool operator ==(const CAircraftCfgEntries &other) const;
+
+            //! operator !=
+            bool operator !=(const CAircraftCfgEntries &other) const;
+
+            //! \copydoc CValueObject::propertyByIndex
+            QVariant propertyByIndex(int index) const;
+
+            //! Filepath
+            QString getFilePath() const { return this->m_filePath; }
+
+            //! Title
+            QString getTitle() const { return this->m_title; }
+
+            //! Index
+            qint32 getIndex() const { return this->m_index; }
+
+            //! ATC model
+            QString getAtcModel() const { return this->m_atcModel; }
+
+            //! ATC type
+            QString getAtcType() const { return this->m_atcType; }
+
+            //! ATC parking code
+            QString getAtcParkingCode() const { return this->m_atcParkingCode; }
+
+            //! Filepath
+            void setFilePath(const QString &filePath) { this->m_filePath = filePath; }
+
+            //! Title
+            void setTitle(const QString &title) { this->m_title = title; }
+
+            //! Index
+            void setIndex(const qint32 index) { this->m_index = index; }
+
+            //! ATC model
+            void setAtcModel(const QString &atcModel) { this->m_atcModel = atcModel; }
+
+            //! ATC type
+            void setAtcType(const QString &atcType) { this->m_atcType = atcType; }
+
+            //! Parking code
+            void setAtcParkingCode(const QString &parkingCode) { this->m_atcParkingCode = parkingCode; }
+
+            //! \copydoc CValueObject::getValueHash()
+            virtual uint getValueHash() const override;
+
+            //! \copydoc CValueObject::toQVariant()
+            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
+
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            virtual void fromJson(const QJsonObject &json) override;
+
+            //! Register the metatypes
+            static void registerMetadata();
+
+            //! Members
+            static const QStringList &jsonMembers();
 
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -46,101 +137,15 @@ namespace BlackSim
             //! \copydoc CValueObject::getMetaTypeId()
             int getMetaTypeId() const override;
 
-        public:
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftCfgEntries)
+            qint32 m_index;     //!< current index in given config
+            QString m_filePath; //!< file path of aircraft.cfg
+            QString m_title;    //!< Title in aircraft.cfg
+            QString m_atcType;  //!< ATC type
+            QString m_atcModel; //!< ATC model
+            QString m_atcParkingCode; //!< ATC parking code
 
-            //! \brief Properties by index
-            enum ColumnIndex
-            {
-                IndexEntryIndex = 0,
-                IndexFilePath,
-                IndexTitle,
-                IndexAtcType,
-                IndexAtcModel,
-                IndexParkingCode
-            };
-
-            //! \brief Default constructor
-            CAircraftCfgEntries() {}
-
-            /*!
-             * \brief Entries representing an aircraft
-             * \param filePath
-             * \param index
-             * \param title
-             * \param atcType
-             * \param atcModel
-             * \param atcParkingCode
-             */
-            CAircraftCfgEntries(const QString &filePath, qint32 index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode);
-
-            //! \brief Virtual destructor
-            virtual ~CAircraftCfgEntries() {}
-
-            //! \brief operator ==
-            bool operator ==(const CAircraftCfgEntries &other) const;
-
-            //! \brief operator !=
-            bool operator !=(const CAircraftCfgEntries &other) const;
-
-            //! \copydoc CValueObject::propertyByIndex
-            QVariant propertyByIndex(int index) const;
-
-            //! \brief Filepath
-            QString getFilePath() const { return this->m_filePath; }
-
-            //! \brief Title
-            QString getTitle() const { return this->m_title; }
-
-            //! \brief Index
-            qint32 getIndex() const { return this->m_index; }
-
-            //! \brief ATC model
-            QString getAtcModel() const { return this->m_atcModel; }
-
-            //! \brief ATC type
-            QString getAtcType() const { return this->m_atcType; }
-
-            //! \brief ATC parking code
-            QString getAtcParkingCode() const { return this->m_atcParkingCode; }
-
-            //! \brief Filepath
-            void setFilePath(const QString &filePath) { this->m_filePath = filePath; }
-
-            //! \brief Title
-            void setTitle(const QString &title) { this->m_title = title; }
-
-            //! \brief Index
-            void setIndex(const qint32 index) { this->m_index = index; }
-
-            //! \brief ATC model
-            void setAtcModel(const QString &atcModel) { this->m_atcModel = atcModel; }
-
-            //! \brief ATC type
-            void setAtcType(const QString &atcType) { this->m_atcType = atcType; }
-
-            //! \brief Parking code
-            void setAtcParkingCode(const QString &parkingCode) { this->m_atcParkingCode = parkingCode; }
-
-            //! \copydoc CValueObject::getValueHash()
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
-            //! \brief Register the metatypes
-            static void registerMetadata();
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::fromJson
-            virtual void fromJson(const QJsonObject &json) override;
-
-            //! \brief Members
-            static const QStringList &jsonMembers();
         };
     }
 } // namespace

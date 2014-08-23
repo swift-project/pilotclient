@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKSIM_FSCOMMON_AIRCRAFTCFG_H
 #define BLACKSIM_FSCOMMON_AIRCRAFTCFG_H
@@ -19,22 +25,22 @@ namespace BlackSim
     namespace FsCommon
     {
 
-        //! \brief Utility, providing FSX aircraft.cfg entries
+        //! Utility, providing FSX aircraft.cfg entries
         class CAircraftCfgEntriesList : public BlackMisc::CSequence<CAircraftCfgEntries>
         {
         private:
             QString m_rootDirectory; //!< root directory reading aircraft.cfg files
             bool m_readForDirectory; //!< valid read for given directory
 
-            //! \brief Read all entries in one directory
+            //! Read all entries in one directory
             qint32 read(const QString &directory);
 
         public:
 
-            //! \brief Constructor
+            //! Constructor
             CAircraftCfgEntriesList(const QString &rootDirectory = "") : m_rootDirectory(rootDirectory), m_readForDirectory(false) {}
 
-            //! \brief Read all aircraft.cfg files starting from root directory
+            //! Read all aircraft.cfg files starting from root directory
             qint32 read()
             {
                 if (this->m_readForDirectory) return this->size();
@@ -45,7 +51,7 @@ namespace BlackSim
                 return this->read(this->m_rootDirectory);
             }
 
-            //! \brief Change the directory
+            //! Change the directory
             bool changeDirectory(const QString &directory)
             {
                 if (this->m_rootDirectory != directory)
@@ -56,29 +62,30 @@ namespace BlackSim
                 return !directory.isEmpty() && this->existsDir(directory);
             }
 
-            //! \brief Virtual destructor
+            //! Virtual destructor
             virtual ~CAircraftCfgEntriesList() {}
 
-            //! \brief Does the directory exist?
+            //! Does the directory exist?
             bool existsDir(const QString &directory = "") const;
 
-            //! \brief Has current directory been read?
+            //! Has current directory been read?
             bool hasReadDirectory() const {  return this->m_readForDirectory; }
 
-            //! \brief Current root directory
+            //! Current root directory
             QString getRootDirectory() const {  return this->m_rootDirectory; }
 
             //! Contains model with title?
             bool containsModeWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
 
             //! \brief Unknown entries
+            //! Unknown entries
             static const CAircraftCfgEntries &UnknownCfgEntries()
             {
                 static CAircraftCfgEntries entries;
                 return entries;
             }
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
         };
     }

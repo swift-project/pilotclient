@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_PQCONSTANTS_H
 #define BLACKMISC_PQCONSTANTS_H
@@ -10,108 +16,80 @@
 
 namespace BlackMisc
 {
-namespace PhysicalQuantities
-{
-
-/*!
- * \brief Physical quantities constants
- */
-class CPhysicalQuantitiesConstants
-{
-public:
-    /*!
-     * \brief Tripe point of purified water, 0.01°C
-     * \return
-     */
-    static const CTemperature& TemperatureTriplePointOfVSMOW()
+    namespace PhysicalQuantities
     {
-        static CTemperature t(-273.16, CTemperatureUnit::K());
-        return t;
-    }
 
-    /*!
-     * \brief Temperature absolute Zero in °C
-     * \return
-     */
-    static const CTemperature& TemperatureAbsoluteZeroC()
-    {
-        static CTemperature t(-273.15, CTemperatureUnit::C());
-        return t;
-    }
+        /*!
+         * Physical quantities constants
+         */
+        class CPhysicalQuantitiesConstants
+        {
+        public:
+            //! Triple point of purified water, 0.01°C
+            static const CTemperature &TemperatureTriplePointOfVSMOW()
+            {
+                static CTemperature t(-273.16, CTemperatureUnit::K());
+                return t;
+            }
 
-    /*!
-     * \brief International Standard Atmosphere pressure at mean sea level, 1013.25hPa
-     * \return
-     */
-    static const CPressure& ISASeaLevelPressure()
-    {
-        static CPressure p(1013.25, CPressureUnit::hPa());
-        return p;
-    }
+            //! Temperature absolute Zero in °C
+            static const CTemperature &TemperatureAbsoluteZeroC()
+            {
+                static CTemperature t(-273.15, CTemperatureUnit::C());
+                return t;
+            }
 
-    /*!
-     * \brief ICAO standard pressure datum for flight levels, 1013.2hPa
-     * \return
-     */
-    static const CPressure& ICAOFlightLevelPressure()
-    {
-        static CPressure p(1013.2, CPressureUnit::hPa());
-        return p;
-    }
+            //! International Standard Atmosphere pressure at mean sea level, 1013.25hPa
+            static const CPressure &ISASeaLevelPressure()
+            {
+                static CPressure p(1013.25, CPressureUnit::hPa());
+                return p;
+            }
 
-    /*!
-     * \brief Standard pressure datum for flight levels in USA, Canada, parts of Latin America, 29.92inHg
-     * \return
-     */
-    static const CPressure& USFlightLevelPressure()
-    {
-        static CPressure p(29.92, CPressureUnit::inHg());
-        return p;
-    }
+            //! ICAO standard pressure datum for flight levels, 1013.2hPa
+            static const CPressure &ICAOFlightLevelPressure()
+            {
+                static CPressure p(1013.2, CPressureUnit::hPa());
+                return p;
+            }
 
-    /*!
-     * \brief Standard pressure datum for flight levels expressed in mmHg, such as in Russia, 760mmHg
-     * \return
-     */
-    static const CPressure& RuFlightLevelPressure()
-    {
-        static CPressure p(760, CPressureUnit::mmHg());
-        return p;
-    }
+            //! Standard pressure datum for flight levels in USA, Canada, parts of Latin America, 29.92inHg
+            static const CPressure &USFlightLevelPressure()
+            {
+                static CPressure p(29.92, CPressureUnit::inHg());
+                return p;
+            }
 
-    /*!
-     * \brief Unicom frequency
-     * \return
-     */
-    static const CFrequency& FrequencyUnicom()
-    {
-        static CFrequency f(122.8, CFrequencyUnit::MHz());
-        return f;
-    }
+            //! Standard pressure datum for flight levels expressed in mmHg, such as in Russia, 760mmHg
+            static const CPressure &RuFlightLevelPressure()
+            {
+                static CPressure p(760, CPressureUnit::mmHg());
+                return p;
+            }
 
-    /*!
-     * \brief Civil aircraft emergency frequency
-     * \return
-     */
-    static const CFrequency& FrequencyInternationalAirDistress()
-    {
-        static CFrequency f(121.5, CFrequencyUnit::MHz());
-        return f;
-    }
+            //! Unicom frequency
+            static const CFrequency &FrequencyUnicom()
+            {
+                static CFrequency f(122.8, CFrequencyUnit::MHz());
+                return f;
+            }
 
-    /*!
-     * \brief Military aircraft emergency frequency
-     * \return
-     */
+            //! Civil aircraft emergency frequency
+            static const CFrequency &FrequencyInternationalAirDistress()
+            {
+                static CFrequency f(121.5, CFrequencyUnit::MHz());
+                return f;
+            }
 
-    static const CFrequency& FrequencyMilitaryAirDistress()
-    {
-        static CFrequency f(243.0, CFrequencyUnit::MHz());
-        return f;
-    }
-};
+            //! Military aircraft emergency frequency
+            static const CFrequency &FrequencyMilitaryAirDistress()
+            {
+                static CFrequency f(243.0, CFrequencyUnit::MHz());
+                return f;
+            }
+        };
 
-} // namespace
+    } // namespace
 } // namespace
 
 #endif // guard

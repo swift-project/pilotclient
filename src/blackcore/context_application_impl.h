@@ -50,7 +50,7 @@ namespace BlackCore
         virtual bool existsFile(const QString &fileName) override;
 
     protected:
-        static const auto c_logContext = CRuntime::LogForApplication;
+        static const auto c_logContext = CRuntime::LogForApplication; //!< identifier
 
         //! Constructor
         CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);

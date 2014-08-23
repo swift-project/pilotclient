@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_POSMATRIX3X3_H
 #define BLACKMISC_POSMATRIX3X3_H
@@ -14,41 +20,20 @@ namespace BlackMisc
     namespace Math
     {
 
-        /*!
-         * \brief 3x3 matrix
-         */
+        //! 3x3 matrix
         class CMatrix3x3 : public CMatrixBase<CMatrix3x3, 3, 3>
         {
         public:
-            /*!
-             * \brief CMatrix3D
-             */
+            //! Constructor
             CMatrix3x3() : CMatrixBase() {}
 
-            /*!
-             * \brief Copy constructor
-             * \param other
-             */
+            //! Copy constructor
             CMatrix3x3(const CMatrix3x3 &other) : CMatrixBase(other) {}
 
-            /*!
-             * \brief Init by fill value
-             * \param fillValue
-             */
+            //! Init by fill value
             explicit CMatrix3x3(double fillValue) : CMatrixBase(fillValue) {}
 
-            /*!
-             * \brief Stupid but handy constructor
-             * \param r1c1
-             * \param r1c2
-             * \param r1c3
-             * \param r2c1
-             * \param r2c2
-             * \param r2c3
-             * \param r3c1
-             * \param r3c2
-             * \param r3c3
-             */
+            //! Stupid, but handy constructor by single row column values
             explicit CMatrix3x3(double r1c1, double r1c2, double r1c3,
                                 double r2c1, double r2c2, double r2c3,
                                 double r3c1, double r3c2, double r3c3) : CMatrixBase()
@@ -64,42 +49,20 @@ namespace BlackMisc
                 this->setElement(2, 2, r3c3);
             }
 
-            /*!
-             * \copydoc CValueObject::toQVariant
-             */
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
-            /*!
-             * \brief Calculates the determinant of the matrix
-             * \return
-             */
+            //! Calculates the determinant of the matrix
             double determinant() const;
 
-            /*!
-             * \brief Calculate the inverse
-             * \param[out] o_isInvertible
-             * \return
-             */
+            //! Calculate the inverse and mark flag if successful
             CMatrix3x3 inverse(bool &o_isInvertible) const;
 
-            /*!
-             * \brief Operator *=
-             * \param other
-             * \return
-             */
+            //! Operator *=
             CMatrix3x3 &operator *=(const CMatrix3x3 &other)
             {
                 this->m_matrix = this->m_matrix * other.m_matrix;
                 return *this;
             }
-            /*!
-             * \brief Operator *
-             * \param other
-             * \return
-             */
+
+            //! Operator *
             CMatrix3x3 operator *(const CMatrix3x3 &other) const
             {
                 CMatrix3x3 m(*this);
@@ -107,11 +70,7 @@ namespace BlackMisc
                 return m;
             }
 
-            /*!
-             * \brief Operator *
-             * \param other
-             * \return
-             */
+            //! Operator *
             CMatrix3x1 operator *(const CMatrix3x1 &other) const
             {
                 CMatrix3x1 m;
@@ -119,32 +78,20 @@ namespace BlackMisc
                 return m;
             }
 
-            /*!
-             * \brief Multiply this matrix with vector
-             * \param vector
-             * \return
-             */
+            //! Multiply this matrix with vector
             CVector3D operator *(const CVector3D &vector) const
             {
                 return ((*this) * CMatrix3x1(vector.toMatrix3x1())).toVector3D();
             }
 
-            /*!
-             * \brief Multiply with factor
-             * \param factor
-             * \return
-             */
+            //! Multiply with factor
             CMatrix3x3 &operator *=(double factor)
             {
                 this->CMatrixBase::operator *=(factor);
                 return *this;
             }
 
-            /*!
-             * \brief Multiply with factor
-             * \param factor
-             * \return
-             */
+            //! Multiply with factor
             CMatrix3x3 operator *(double factor) const
             {
                 CMatrix3x3 m(*this);
@@ -152,10 +99,7 @@ namespace BlackMisc
                 return m;
             }
 
-            /*!
-             * \brief Transposed matrix
-             * \return
-             */
+            //! Transposed matrix
             CMatrix3x3 transposed() const
             {
                 CMatrix3x3 m(0);
@@ -163,18 +107,10 @@ namespace BlackMisc
                 return m;
             }
 
-            /*!
-             * \brief Get column
-             * \param column
-             * \return
-             */
+            //! Get column
             CMatrix3x1 getColumn(int column) const;
 
-            /*!
-             * \brief Get row
-             * \param row
-             * \return
-             */
+            //! Get row
             CMatrix1x3 getRow(int row) const;
         };
 

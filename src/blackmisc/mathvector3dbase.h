@@ -1,13 +1,21 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_MATHVECTOR3DBASE_H
 #define BLACKMISC_MATHVECTOR3DBASE_H
 
 #include "blackmisc/valueobject.h"
 #include "blackmisc/mathematics.h"
+#include "blackmisc/blackmiscfreefunctions.h"
+
 using namespace BlackMisc::Math;
 
 namespace BlackMisc
@@ -16,25 +24,189 @@ namespace BlackMisc
     {
         class CMatrix3x1;
 
-        /*!
-         * \brief 3D vector base (x, y, z)
-         */
+        //! 3D vector base (x, y, z)
         template <class ImplVector> class CVector3DBase : public CValueObject
         {
-        private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CVector3DBase)
+        public:
+            // getter and setters are implemented in the derived classes
+            // as they have different names (x, i, north)
 
-            //! \brief Easy access to derived class (CRTP template parameter)
-            ImplVector const *derived() const
+            //! Virtual destructor
+            virtual ~CVector3DBase() {}
+
+            //! Set zeros
+            void setZero();
+
+            //! Is zero?
+            bool isZero() const
             {
-                return static_cast<ImplVector const *>(this);
+                return this->m_i == 0 && this->m_j == 0 && this->m_k == 0;
             }
 
-            //! \brief Easy access to derived class (CRTP template parameter)
-            ImplVector *derived()
+            //! Is zero, epsilon considered.
+            bool isZeroEpsilon() const
             {
-                return static_cast<ImplVector *>(this);
+                ImplVector v;
+                v += *this;
+                v.round();
+                return v.isZero();
             }
+
+            //! Set all elements the same
+            void fill(double value);
+
+            //! Get element
+            double getElement(int row) const;
+
+            //! Set element
+            void setElement(int row, double value);
+
+            //! Operator []
+            double operator[](int row) const { return this->getElement(row); }
+
+            //! Operator [], mutable reference
+            double &operator[](int row) { return this->getElement(row); }
+
+            //! Equal operator ==
+            bool operator ==(const CVector3DBase &other) const
+            {
+                if (this == &other) return true;
+                return
+                    CMath::epsilonEqual(this->m_i, other.m_i, 1E-9) &&
+                    CMath::epsilonEqual(this->m_j, other.m_j, 1E-9) &&
+                    CMath::epsilonEqual(this->m_k, other.m_k, 1E-9);
+            }
+
+            //! Unequal operator !=
+            bool operator !=(const CVector3DBase &other) const
+            {
+                return !((*this) == other);
+            }
+
+            //! Operator +=
+            CVector3DBase &operator +=(const CVector3DBase &other)
+            {
+                this->m_i += other.m_i;
+                this->m_j += other.m_j;
+                this->m_k += other.m_k;
+                return *this;
+            }
+
+            //! Operator +
+            ImplVector operator +(const ImplVector &other) const
+            {
+                ImplVector v = *derived();
+                v += other;
+                return v;
+            }
+
+            //! Operator -=
+            CVector3DBase &operator -=(const CVector3DBase &other)
+            {
+                this->m_i -= other.m_i;
+                this->m_j -= other.m_j;
+                this->m_k -= other.m_k;
+                return *this;
+            }
+
+            //! Operator -
+            ImplVector operator -(const ImplVector &other) const
+            {
+                ImplVector v = *derived();
+                v -= other;
+                return v;
+            }
+
+            //! Multiply with scalar
+            CVector3DBase &operator *=(double factor)
+            {
+                this->m_i *= factor;
+                this->m_j *= factor;
+                this->m_k *= factor;
+                return *this;
+            }
+
+            //! Multiply with scalar
+            ImplVector operator *(double factor) const
+            {
+                ImplVector v = *derived();
+                v *= factor;
+                return v;
+            }
+
+            //! Operator to support commutative multiplication
+            friend ImplVector operator *(double factor, const ImplVector &other)
+            {
+                return other * factor;
+            }
+
+            //! Divide by scalar
+            CVector3DBase &operator /=(double divisor)
+            {
+                this->m_i /= divisor;
+                this->m_j /= divisor;
+                this->m_k /= divisor;
+                return *this;
+            }
+
+            //! Divide by scalar
+            ImplVector operator /(double divisor) const
+            {
+                ImplVector v = *derived();
+                v /= divisor;
+                return v;
+            }
+
+            //! Dot product
+            double dotProduct(const ImplVector &other) const;
+
+            //! Cross product
+            ImplVector crossProduct(const ImplVector &other) const;
+
+            //! Reciprocal value
+            ImplVector reciprocalValues() const
+            {
+                ImplVector v(1 / this->m_i, 1 / this->m_j, 1 / this->m_j);
+                return v;
+            }
+
+            //! Converted to matrix
+            CMatrix3x1 toMatrix3x1() const;
+
+            //! \copydoc CValueObject::getValueHash
+            virtual uint getValueHash() const override;
+
+            //! length / magnitude
+            double length() const
+            {
+                return sqrt(this->m_i * this->m_i + this->m_j * this->m_j + this->m_k * this->m_k);
+            }
+
+            //! Round this vector
+            void round()
+            {
+                const double epsilon = 1E-10;
+                this->m_i = BlackMisc::Math::CMath::roundEpsilon(this->m_i, epsilon);
+                this->m_j = BlackMisc::Math::CMath::roundEpsilon(this->m_j, epsilon);
+                this->m_k = BlackMisc::Math::CMath::roundEpsilon(this->m_k, epsilon);
+            }
+
+            //! Rounded vector
+            ImplVector rounded() const
+            {
+                ImplVector v = *derived();
+                v.round();
+                return v;
+            }
+
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::fromJson
+            void fromJson(const QJsonObject &json) override;
+
+            //! Register metadata
+            static void registerMetadata();
 
         protected:
             // using own value since Qt QVector3D stores internally as float
@@ -42,20 +214,16 @@ namespace BlackMisc
             double m_j; //!< Vector data j
             double m_k; //!< Vector data k
 
-            //! \brief Default constructor
+            //! Default constructor
             CVector3DBase() : m_i(0.0), m_j(0.0), m_k(0.0) {}
 
-            //! \brief Constructor by values
+            //! Constructor by values
             CVector3DBase(double i, double j, double k) : m_i(i), m_j(j), m_k(k) {}
 
-            //! \brief Constructor by value
+            //! Constructor by value
             explicit CVector3DBase(double value) : m_i(value), m_j(value), m_k(value) {}
 
-            /*!
-             * \brief Get element
-             * \param row
-             * \return Mutable reference
-             */
+            //! Get mutable element
             double &getElement(int row);
 
             //! \copydoc CValueObject::convertToQString
@@ -76,186 +244,21 @@ namespace BlackMisc
             //! \copydoc CValueObject::marshallToDbus
             virtual void marshallToDbus(QDBusArgument &argument) const override;
 
-        public:
-            // getter and setters are implemented in the derived classes
-            // as they have different names (x, i, north)
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CVector3DBase)
 
-            //! \brief Virtual destructor
-            virtual ~CVector3DBase() {}
-
-            //! \brief Set zeros
-            void setZero();
-
-            //! \brief Is zero?
-            bool isZero() const
+            //! Easy access to derived class (CRTP template parameter)
+            ImplVector const *derived() const
             {
-                return this->m_i == 0 && this->m_j == 0 && this->m_k == 0;
+                return static_cast<ImplVector const *>(this);
             }
 
-            //! \brief Is zero, epsilon considered.
-            bool isZeroEpsilon() const
+            //! Easy access to derived class (CRTP template parameter)
+            ImplVector *derived()
             {
-                ImplVector v;
-                v += *this;
-                v.round();
-                return v.isZero();
+                return static_cast<ImplVector *>(this);
             }
 
-            //! \brief Set all elements the same
-            void fill(double value);
-
-            //! \brief Get element
-            double getElement(int row) const;
-
-            //! \brief Set element
-            void setElement(int row, double value);
-
-            //! \brief Operator []
-            double operator[](int row) const { return this->getElement(row); }
-
-            //! \brief Operator [], mutable reference
-            double &operator[](int row) { return this->getElement(row); }
-
-            //! \brief Equal operator ==
-            bool operator ==(const CVector3DBase &other) const
-            {
-                if (this == &other) return true;
-                return
-                    CMath::epsilonEqual(this->m_i, other.m_i, 1E-9) &&
-                    CMath::epsilonEqual(this->m_j, other.m_j, 1E-9) &&
-                    CMath::epsilonEqual(this->m_k, other.m_k, 1E-9);
-            }
-
-            //! \brief Unequal operator !=
-            bool operator !=(const CVector3DBase &other) const
-            {
-                return !((*this) == other);
-            }
-
-            //! \brief Operator +=
-            CVector3DBase &operator +=(const CVector3DBase &other)
-            {
-                this->m_i += other.m_i;
-                this->m_j += other.m_j;
-                this->m_k += other.m_k;
-                return *this;
-            }
-
-            //! \brief Operator +
-            ImplVector operator +(const ImplVector &other) const
-            {
-                ImplVector v = *derived();
-                v += other;
-                return v;
-            }
-
-            //! \brief Operator -=
-            CVector3DBase &operator -=(const CVector3DBase &other)
-            {
-                this->m_i -= other.m_i;
-                this->m_j -= other.m_j;
-                this->m_k -= other.m_k;
-                return *this;
-            }
-
-            //! \brief Operator -
-            ImplVector operator -(const ImplVector &other) const
-            {
-                ImplVector v = *derived();
-                v -= other;
-                return v;
-            }
-
-            //! \brief Multiply with scalar
-            CVector3DBase &operator *=(double factor)
-            {
-                this->m_i *= factor;
-                this->m_j *= factor;
-                this->m_k *= factor;
-                return *this;
-            }
-
-            //! \brief Multiply with scalar
-            ImplVector operator *(double factor) const
-            {
-                ImplVector v = *derived();
-                v *= factor;
-                return v;
-            }
-
-            //! \brief Operator to support commutative multiplication
-            friend ImplVector operator *(double factor, const ImplVector &other)
-            {
-                return other * factor;
-            }
-
-            //! \brief Divide by scalar
-            CVector3DBase &operator /=(double divisor)
-            {
-                this->m_i /= divisor;
-                this->m_j /= divisor;
-                this->m_k /= divisor;
-                return *this;
-            }
-
-            //! \brief Divide by scalar
-            ImplVector operator /(double divisor) const
-            {
-                ImplVector v = *derived();
-                v /= divisor;
-                return v;
-            }
-
-            //! \brief Dot product
-            double dotProduct(const ImplVector &other) const;
-
-            //! \brief Cross product
-            ImplVector crossProduct(const ImplVector &other) const;
-
-            //! \brief Reciprocal value
-            ImplVector reciprocalValues() const
-            {
-                ImplVector v(1 / this->m_i, 1 / this->m_j, 1 / this->m_j);
-                return v;
-            }
-
-            //! \brief Converted to matrix
-            CMatrix3x1 toMatrix3x1() const;
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \brief length / magnitude
-            double length() const
-            {
-                return sqrt(this->m_i * this->m_i + this->m_j * this->m_j + this->m_k * this->m_k);
-            }
-
-            //! \brief Round this vector
-            void round()
-            {
-                const double epsilon = 1E-10;
-                this->m_i = BlackMisc::Math::CMath::roundEpsilon(this->m_i, epsilon);
-                this->m_j = BlackMisc::Math::CMath::roundEpsilon(this->m_j, epsilon);
-                this->m_k = BlackMisc::Math::CMath::roundEpsilon(this->m_k, epsilon);
-            }
-
-            //! \brief Rounded vector
-            ImplVector rounded() const
-            {
-                ImplVector v = *derived();
-                v.round();
-                return v;
-            }
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::fromJson
-            void fromJson(const QJsonObject &json) override;
-
-            //! \brief Register metadata
-            static void registerMetadata();
         };
 
     } // namespace

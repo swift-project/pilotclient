@@ -21,7 +21,7 @@ namespace BlackMisc
         class CUserList : public CSequence<CUser>
         {
         public:
-            //! \brief Default constructor.
+            //! Default constructor.
             CUserList();
 
             //! Construct from a base class object.

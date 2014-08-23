@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_AVTRACK_H
 #define BLACKMISC_AVTRACK_H
@@ -30,24 +36,6 @@ namespace BlackMisc
                 True = 1        //!< true north
             };
 
-        private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CTrack)
-            ReferenceNorth m_north; //!< magnetic or true?
-
-        protected:
-            //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::marshallFromDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-        public:
             //! \brief Default constructor: 0 Track magnetic
             CTrack() : BlackMisc::PhysicalQuantities::CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
@@ -100,6 +88,23 @@ namespace BlackMisc
 
             //! \brief Members
             static const QStringList &jsonMembers();
+
+        protected:
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override;
+
+            //! \copydoc CValueObject::marshallFromDbus()
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
+
+            //! \copydoc CValueObject::unmarshallFromDbus()
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
+
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
+
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CTrack)
+            ReferenceNorth m_north; //!< magnetic or true?
         };
 
     } // namespace

@@ -1,11 +1,13 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKMISC_AIRCRAFTICAO_H
 #define BLACKMISC_AIRCRAFTICAO_H
@@ -22,6 +24,17 @@ namespace BlackMisc
         class CAircraftIcao : public BlackMisc::CValueObject
         {
         public:
+
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexAircraftDesignator,
+                IndexCombinedAircraftType,
+                IndexAirlineDesignator,
+                IndexAircraftColor,
+                IndexAsString
+            };
+
             //! Default constructor.
             CAircraftIcao() {}
 
@@ -137,24 +150,6 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             virtual void fromJson(const QJsonObject &json) override;
 
-            //! Register metadata
-            static void registerMetadata();
-
-            //! Members
-            static const QStringList &jsonMembers();
-
-            /*!
-             * \brief Properties by index
-             */
-            enum ColumnIndex
-            {
-                IndexAircraftDesignator = 2000, // used, so it can be chained in aircraft
-                IndexCombinedAircraftType,
-                IndexAirlineDesignator,
-                IndexAircraftColor,
-                IndexAsString
-            };
-
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(int index) const override;
 
@@ -163,6 +158,12 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, int index) override;
+
+            //! Register metadata
+            static void registerMetadata();
+
+            //! Members
+            static const QStringList &jsonMembers();
 
             //! Valid designator?
             static bool isValidDesignator(const QString &designator);
@@ -188,11 +189,11 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcao)
-            QString m_aircraftDesignator; //!< "B737"
+            QString m_aircraftDesignator;   //!< "B737"
             QString m_aircraftCombinedType; //!< "L2J"
-            QString m_airlineDesignator; //!< "DLH"
+            QString m_airlineDesignator;    //!< "DLH"
             QString m_livery;
-            QString m_aircraftColor; //!< RGB Hex "330044"
+            QString m_aircraftColor;        //!< RGB Hex "330044"
         };
     } // namespace
 } // namespace

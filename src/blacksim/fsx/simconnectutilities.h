@@ -1,3 +1,14 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
 #ifndef BLACKSIM_FSX_SIMCONNECTUTILITIES_H
 #define BLACKSIM_FSX_SIMCONNECTUTILITIES_H
 
@@ -13,30 +24,26 @@
 #endif
 #include <Windows.h>
 #else
-typedef unsigned long   DWORD;
+typedef unsigned long   DWORD; //!< Fake Windows DWORD
 #endif
 
 namespace BlackSim
 {
     namespace Fsx
     {
-        //! \brief Utilities for SimConnect
+        //! Utilities for SimConnect
         class CSimConnectUtilities : public QObject
         {
             Q_OBJECT
             Q_ENUMS(SIMCONNECT_EXCEPTION)
             Q_ENUMS(SIMCONNECT_SURFACE)
 
-        private:
-            //! \brief CSimConnect
-            CSimConnectUtilities();
-
         public:
             //! Path to local config file
             static QString getLocalSimConnectCfgFilename();
 
             /*!
-             * \brief Content for FSX simconnect.cfg file
+             * Content for FSX simconnect.cfg file
              * \param ip IP address of FSX
              * \param port Port of FSX (e.g. 500)
              * \return content for simconnect.cfg
@@ -44,7 +51,7 @@ namespace BlackSim
             static QString simConnectCfg(const QString &ip, quint16 port = 500);
 
             /*!
-             * \brief Create a FSX simconnect.cfg file
+             * Create a FSX simconnect.cfg file
              * \param fileName and path
              * \param ip IP address of FSX
              * \param port Port of FSX (e.g. 500)
@@ -53,14 +60,14 @@ namespace BlackSim
             static bool writeSimConnectCfg(const QString &fileName, const QString &ip, quint16 port = 500);
 
             /*!
-             * \brief Resolve SimConnect exception (based on Qt metadata).
+             * Resolve SimConnect exception (based on Qt metadata).
              * \param id enum element
              * \return enum element's name
              */
             static const QString simConnectExceptionToString(const DWORD id);
 
             /*!
-             * \brief Resolve SimConnect surface (based on Qt metadata).
+             * Resolve SimConnect surface (based on Qt metadata).
              * \param type enum element
              * \param beautify remove "_"
              * \return
@@ -141,17 +148,21 @@ namespace BlackSim
                 SIMCONNECT_EXCEPTION_OBJECT_SCHEDULE
             };
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
         private:
             /*!
-             * \brief Resolve enum value to its cleartext (based on Qt metadata).
+             * Resolve enum value to its cleartext (based on Qt metadata).
              * \param id enum element
              * \param enumName name of the resolved enum
              * \return enum element's name
              */
             static const QString resolveEnumToString(const DWORD id, const char *enumName);
+
+            //! Hidden constructor
+            CSimConnectUtilities();
+
         };
     }
 }

@@ -1,11 +1,13 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
-/*!
-    \file
-*/
+//! \file
 
 #ifndef BLACKMISC_TEXTMESSAGELIST_H
 #define BLACKMISC_TEXTMESSAGELIST_H
@@ -27,87 +29,51 @@ namespace BlackMisc
         class CTextMessageList : public CSequence<CTextMessage>
         {
         public:
-            /*!
-             * \brief Empty constructor.
-             */
+            //! Default constructor.
             CTextMessageList();
 
-            /*!
-             * \brief Constructor, single private message
-             */
+            //! Constructor, single private message
             CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &recipientCallsign);
 
-            /*!
-             * \brief Constructor, single private message
-             */
+            //! Constructor, single private message
             CTextMessageList(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign);
 
-            /*!
-             * \brief Constructor, single radio message
-             */
+            //! Constructor, single radio message
             CTextMessageList(const QString &message, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Aviation::CCallsign &senderCallsign = BlackMisc::Aviation::CCallsign());
 
-            /*!
-             * \brief Constructor, single message
-             */
+            //! Constructor, single message
             CTextMessageList(const CTextMessage &message);
 
-            /*!
-             * \brief Constructor, multi-frequency radio messages
-             */
+            //! Constructor, multi-frequency radio messages
             CTextMessageList(const QString &message, const QList<BlackMisc::PhysicalQuantities::CFrequency> &frequencies, const BlackMisc::Aviation::CCallsign &sender = BlackMisc::Aviation::CCallsign());
 
-            /*!
-             * \brief Construct from a base class object.
-             */
+            //! Construct from a base class object.
             CTextMessageList(const CSequence<CTextMessage> &other);
 
-            /*!
-             * \brief QVariant, required for DBus QVariant lists
-             */
-            virtual QVariant toQVariant() const
-            {
-                return QVariant::fromValue(*this);
-            }
+            //! \copydoc CValueObject::toQVariant
+            virtual QVariant toQVariant() const { return QVariant::fromValue(*this); }
 
-            /*!
-             * \brief Private messages
-             */
+            //! Private messages
             CTextMessageList getPrivateMessages() const;
 
-            /*!
-             * \brief Contains private messages?
-             * \return
-             */
+            //! Contains private messages?
             bool containsPrivateMessages() const;
 
-            /*!
-             * \brief Public messages
-             */
+            //! Public messages
             CTextMessageList getRadioMessages() const;
 
-            /*!
-             * \brief Contains radio messages?
-             */
+            //! Contains radio messages?
             bool containsRadioMessages() const;
 
-            /*!
-             * \brief Find by frequency
-             */
+            //! Find by frequency
             CTextMessageList findByFrequency(const BlackMisc::PhysicalQuantities::CFrequency &frequency) const;
 
-            /*!
-             * \brief Toggle all sender receivers
-             */
+            //! Toggle all sender receivers
             void toggleSenderRecipients();
 
-            /*!
-             * \brief Register metadata
-             */
+            //! Register metadata
             static void registerMetadata();
-
         };
-
     } //namespace
 } // namespace
 

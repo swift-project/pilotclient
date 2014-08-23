@@ -1,8 +1,8 @@
 /* Copyright (C) 2013
- * swift Project Community / Contributors
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
- * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  */
@@ -29,7 +29,7 @@ namespace BlackMisc
         public:
 
             /*!
-             * \brief Properties by index
+             * Properties by index
              */
             enum ColumnIndex
             {
@@ -66,7 +66,7 @@ namespace BlackMisc
             //! Get full name.
             QString getRealName() const { return m_realname; }
 
-            //! \brief setRealName
+            //! setRealName
             void setRealName(const QString &realname) { m_realname = realname.trimmed(); }
 
             //! Get password
@@ -75,34 +75,34 @@ namespace BlackMisc
             //! Set password
             void setPassword(const QString &pw) { m_password = pw.trimmed(); }
 
-            //! \brief Valid user object?
+            //! Valid user object?
             bool isValid() const { return !this->m_realname.isEmpty() &&  !this->m_id.isEmpty(); }
 
-            //! \brief Valid credentials?
+            //! Valid credentials?
             bool hasValidCredentials() const { return this->isValid() && !this->m_password.isEmpty(); }
 
-            //! \brief Valid real name?
+            //! Valid real name?
             bool hasValidRealName() const { return !this->m_realname.isEmpty(); }
 
-            //! \brief Valid id?
+            //! Valid id?
             bool hasValidId() const { return !this->m_id.isEmpty(); }
 
-            //! \brief Has associated callsign?
+            //! Has associated callsign?
             bool hasValidCallsign() const { return !m_callsign.isEmpty(); }
 
-            //! \brief Get email.
+            //! Get email.
             QString getEmail() const { return m_email; }
 
-            //! \brief Set email.
+            //! Set email.
             void setEmail(const QString &email) { m_email = email.trimmed(); }
 
-            //! \brief Valid email?
+            //! Valid email?
             bool hasValidEmail() const { return !this->m_email.isEmpty(); }
 
-            //! \brief Get id.
+            //! Get id.
             QString getId() const { return m_id; }
 
-            //! \brief Set id
+            //! Set id
             void setId(const QString &id) { m_id = id.trimmed(); }
 
             //! Homebase
@@ -111,19 +111,19 @@ namespace BlackMisc
             //! Set homebase
             void setHomebase(const BlackMisc::Aviation::CAirportIcao &homebase) { this->m_homebase = homebase; }
 
-            //! \brief Get associated callsign.
+            //! Get associated callsign.
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return m_callsign; }
 
-            //! \brief Set associated callsign
+            //! Set associated callsign
             void setCallsign(const BlackMisc::Aviation::CCallsign &callsign) { m_callsign = callsign; }
 
             //! \copydoc CValueObject::toIcon()
             virtual BlackMisc::CIcon toIcon() const override { return this->getCallsign().toIcon(); }
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CUser &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CUser &other) const;
 
             //! \copydoc CValueObject::getValueHash()
@@ -135,10 +135,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
-            //! \brief Members
+            //! Members
             static const QStringList &jsonMembers();
 
             /*!

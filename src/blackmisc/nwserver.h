@@ -1,7 +1,13 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_SERVER_H
 #define BLACKMISC_SERVER_H
@@ -18,10 +24,22 @@ namespace BlackMisc
         class CServer : public BlackMisc::CValueObject
         {
         public:
-            //! \brief Default constructor.
+
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexName = 0,
+                IndexDescription,
+                IndexAddress,
+                IndexPort,
+                IndexUser,
+                IndexIsAcceptingConnections
+            };
+
+            //! Default constructor.
             CServer() : m_port(-1), m_isAcceptingConnections(true) {}
 
-            //! \brief Constructor.
+            //! Constructor.
             CServer(const QString &name, const QString &description, const QString &address, qint32 port, const CUser &user, bool isAcceptingConnections = true)
                 : m_name(name), m_description(description), m_address(address), m_port(port), m_user(user), m_isAcceptingConnections(isAcceptingConnections) {}
 
@@ -31,46 +49,46 @@ namespace BlackMisc
             //! Get address.
             const QString &getAddress() const { return m_address; }
 
-            //! \brief Set address (e.g. myserver.foo.com)
+            //! Set address (e.g. myserver.foo.com)
             void setAddress(const QString &address) { m_address = address; }
 
             //! Get user
             const CUser &getUser() const { return m_user; }
 
-            //! \brief Set user
+            //! Set user
             void setUser(const CUser &user) { m_user = user; }
 
-            //! \brief Get name
+            //! Get name
             const QString &getName() const { return m_name; }
 
-            //! \brief Set name
+            //! Set name
             void setName(const QString &name) { m_name = name; }
 
-            //! \brief Get description
+            //! Get description
             const QString &getDescription() const { return m_description; }
 
-            //! \brief Set description
+            //! Set description
             void setDescription(const QString &description) { m_description = description; }
 
-            //! \brief Get port
+            //! Get port
             qint32 getPort() const { return m_port; }
 
-            //! \brief Set port
+            //! Set port
             void setPort(qint32 port) { m_port = port; }
 
-            //! \brief Server is accepting connections
+            //! Server is accepting connections
             bool isAcceptingConnections() const { return m_isAcceptingConnections; }
 
-            //! \brief Set whether server is accepting connections
+            //! Set whether server is accepting connections
             void setIsAcceptingConnections(bool value) { m_isAcceptingConnections = value; }
 
-            //! \brief Is valid for login?
+            //! Is valid for login?
             bool isValidForLogin() const;
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CServer &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CServer &other) const;
 
             //! \copydoc CValueObject::getValueHash()
@@ -82,30 +100,17 @@ namespace BlackMisc
             //! \copydoc CValueObject::fromJson
             void fromJson(const QJsonObject &json) override;
 
-            //! \brief Register metadata
+            //! Register metadata
             static void registerMetadata();
 
             //! \copydoc TupleConverter<>::jsonMembers()
             static const QStringList &jsonMembers();
 
-            //! \brief Properties by index
-            enum ColumnIndex
-            {
-                IndexName = 0,
-                IndexDescription,
-                IndexAddress,
-                IndexPort,
-                IndexUserId,
-                IndexUserRealName,
-                IndexUserPassword,
-                IndexIsAcceptingConnections
-            };
-
             //! \copydoc CValueObject::propertyByIndex(int)
-            QVariant propertyByIndex(int index) const override;
+            QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
-            void setPropertyByIndex(const QVariant &variant, int index) override;
+            void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         protected:
             //! \copydoc CValueObject::convertToQString()

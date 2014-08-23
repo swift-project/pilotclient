@@ -1,8 +1,8 @@
 /* Copyright (C) 2013
- * Swift Project Community / Contributors
+ * swift project Community / Contributors
  *
  * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
- * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  */
@@ -28,8 +28,8 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn("frequency", CAircraft::IndexFrequencyCom1, Qt::AlignRight | Qt::AlignVCenter));
             this->m_columns.addColumn(CColumn("model", CAircraftIcao::IndexAsString));
             this->m_columns.addColumn(CColumn("transponder", CAircraft::IndexTansponderFormatted));
-            this->m_columns.addColumn(CColumn("latitude", CAircraftSituation::IndexPositionLatitude, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("longitude", CAircraftSituation::IndexPositionLongitude, Qt::AlignRight  | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn("latitude", CAircraftSituation::IndexLatitude, Qt::AlignRight | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn("longitude", CAircraftSituation::IndexLongitude, Qt::AlignRight  | Qt::AlignVCenter));
             this->m_columns.addColumn(CColumn("altitude", CAircraftSituation::IndexAltitude, Qt::AlignRight  | Qt::AlignVCenter));
             this->m_columns.addColumn(CColumn("groundspeed", CAircraftSituation::IndexGroundspeed, Qt::AlignRight  | Qt::AlignVCenter));
 

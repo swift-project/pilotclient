@@ -1,11 +1,13 @@
 /* Copyright (C) 2013
- * swift Project Community / Contributors
+ * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
- * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  */
+
+//! \file
 
 #ifndef BLACKMISC_VALUEOBJECT_H
 #define BLACKMISC_VALUEOBJECT_H
@@ -52,7 +54,7 @@ namespace BlackMisc
     }
 
     /*!
-     * \brief Base class for value objects.
+     * Base class for value objects.
      * Public non-virtual interface with protected virtual implementation.
      */
     class CValueObject
@@ -218,7 +220,7 @@ namespace BlackMisc
          */
         virtual QString propertyByIndexAsString(int index, bool i18n = false) const;
 
-        //! \brief The stored object as CValueObject
+        //! The stored object as CValueObject
         static const CValueObject *fromQVariant(const QVariant &qv);
 
     protected:
@@ -241,7 +243,7 @@ namespace BlackMisc
         virtual int getMetaTypeId() const = 0;
 
         /*!
-         * \brief Returns true if this object is an instance of the class with the given meta type ID,
+         * Returns true if this object is an instance of the class with the given meta type ID,
          *        or one of its subclasses.
          * \param metaTypeId
          * \return
@@ -249,7 +251,7 @@ namespace BlackMisc
         virtual bool isA(int metaTypeId) const { Q_UNUSED(metaTypeId); return false; }
 
         /*!
-         * \brief Compare this value with another value of the same type
+         * Compare this value with another value of the same type
          * \param other
          * \return Less than, equal to, or greater than zero if this is
          *         less than, equal to, or greather than other.
@@ -336,7 +338,7 @@ namespace BlackMisc
     }
 
     /*!
-     * \brief Non member, non friend operator << for JSON
+     * Non member, non friend operator << for JSON
      * \param json
      * \param value as pair name/value
      * \return

@@ -210,7 +210,7 @@ bool BlackMisc::equalQVariants(const QVariant &v1, const QVariant &v2)
 /*
  * Compare values
  */
-int BlackMisc:: compareQVariants(const QVariant &v1, const QVariant &v2)
+int BlackMisc::compareQVariants(const QVariant &v1, const QVariant &v2)
 {
     if (v1 == v2) return 0; // compares on primitives or on address
 

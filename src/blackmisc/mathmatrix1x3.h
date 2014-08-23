@@ -1,7 +1,13 @@
-/*  Copyright (C) 2013 VATSIM Community / authors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_POSMATRIX1x3_H
 #define BLACKMISC_POSMATRIX1x3_H
@@ -14,35 +20,21 @@ namespace BlackMisc
     namespace Math
     {
 
-        /*!
-         * \brief Matrix 1x3
-         */
+        //! Matrix 1x3
         class CMatrix1x3 : public CMatrixBase<CMatrix1x3, 1, 3>
         {
         public:
-            /*!
-             * \brief Constructor
-             */
+
+            //! Constructor
             CMatrix1x3() : CMatrixBase() {}
 
-            /*!
-             * \brief Copy constructor
-             * \param other
-             */
+            //! Copy constructor
             CMatrix1x3(const CMatrix1x3 &other) : CMatrixBase(other) {}
 
-            /*!
-             * \brief Init by fill value
-             * \param fillValue
-             */
+            //! Init by fill value
             explicit CMatrix1x3(double fillValue) : CMatrixBase(fillValue) {}
 
-            /*!
-             * \brief Constructor
-             * \param c1
-             * \param c2
-             * \param c3
-             */
+            //! Constructor
             CMatrix1x3(double c1, double c2, double c3) : CMatrixBase()
             {
                 this->m_matrix(0, 0) = c1;

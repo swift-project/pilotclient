@@ -1,3 +1,14 @@
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
 #ifndef BLACKMISC_CFILEDELETER_H
 #define BLACKMISC_CFILEDELETER_H
 
@@ -8,7 +19,7 @@ namespace BlackMisc
 {
 
     /*!
-     * \brief Utility class, deleting files when it is destroyed
+     * Utility class, deleting files when it is destroyed
      */
     class CFileDeleter
     {
@@ -16,21 +27,21 @@ namespace BlackMisc
     private:
         QStringList m_fileNames;
 
-        //! \brief File deleter
+        //! File deleter
         CFileDeleter() {}
 
-        //! \brief add given file for deletion
+        //! add given file for deletion
         void addFile(const QString &file);
 
     public:
 
-        //! \brief file deleter
+        //! file deleter
         static CFileDeleter &fileDeleter() { static CFileDeleter f; return f;}
 
-        //! \brief add a file (name)
+        //! add a file (name)
         static void addFileForDeletion(const QString &file);
 
-        //! \brief Destructor
+        //! Destructor
         ~CFileDeleter();
     };
 }

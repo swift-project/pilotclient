@@ -1,14 +1,16 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKMISC_AUDIODEVICE_H
 #define BLACKMISC_AUDIODEVICE_H
-
-/*!
-    \file
-*/
 
 #include "blackmiscfreefunctions.h"
 #include "valueobject.h"
@@ -27,7 +29,7 @@ namespace BlackMisc
         {
         public:
 
-            //! \brief Type
+            //! Type
             enum DeviceType : uint
             {
                 InputDevice,
@@ -63,10 +65,10 @@ namespace BlackMisc
             //! Valid audio device object?
             bool isValid() const { return m_deviceIndex >= -1 && !m_deviceName.isEmpty(); }
 
-            //! \brief Equal operator ==
+            //! Equal operator ==
             bool operator ==(const CAudioDevice &other) const;
 
-            //! \brief Unequal operator !=
+            //! Unequal operator !=
             bool operator !=(const CAudioDevice &other) const;
 
             //! \copydoc CValueObject::getValueHash
@@ -84,19 +86,19 @@ namespace BlackMisc
             //! \copydoc TupleConverter<>::jsonMembers()
             static const QStringList &jsonMembers();
 
-            //! \brief Device index for default device
+            //! Device index for default device
             static qint16 defaultDeviceIndex() {return -1;}
 
-            //! \brief Invalid device index
+            //! Invalid device index
             static qint16 invalidDeviceIndex() {return -2;}
 
-            //! \brief default output device
+            //! Default output device
             static CAudioDevice getDefaultOutputDevice()
             {
                 return CAudioDevice(OutputDevice, defaultDeviceIndex(), "default");
             }
 
-            //! \brief default input device
+            //! Default input device
             static CAudioDevice getDefaultInputDevice()
             {
                 return CAudioDevice(InputDevice, defaultDeviceIndex(), "default");
@@ -124,16 +126,16 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAudioDevice)
-            //! \brief Device type, @see CAudioDevice::DeviceType
+            //! Device type, @see CAudioDevice::DeviceType
             DeviceType m_type;
             /*!
              * deviceIndex is the number is the reference for the VVL. The device is selected by this index.
              * The managing class needs to take care, that indexes are valid.
              */
             qint16 m_deviceIndex;
-            //! \brief Device name
+            //! Device name
             QString m_deviceName;
-            //! \brief We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
+            //! We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
             QString m_hostName;
         };
 
