@@ -189,7 +189,7 @@ namespace BlackMisc
         /*
          * From Json
          */
-        void CAtcStation::fromJson(const QJsonObject &json)
+        void CAtcStation::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CAtcStation::jsonMembers(), TupleConverter<CAtcStation>::toTuple(*this));
         }
@@ -364,7 +364,7 @@ namespace BlackMisc
          */
         void CAtcStation::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index.isMyself()) { this->fromQVariant(variant); return; }
+            if (index.isMyself()) { this->convertFromQVariant(variant); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

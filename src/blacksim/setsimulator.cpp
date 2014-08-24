@@ -114,7 +114,7 @@ namespace BlackSim
         /*
          * From JSON
          */
-        void CSettingsSimulator::fromJson(const QJsonObject &json)
+        void CSettingsSimulator::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, TupleConverter<CSettingsSimulator>::toMetaTuple(*this));
         }

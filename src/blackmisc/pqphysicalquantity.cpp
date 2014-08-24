@@ -303,7 +303,7 @@ namespace BlackMisc
         /*
          * JSON Object
          */
-        template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::fromJson(const QJsonObject &json)
+        template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::convertFromJson(const QJsonObject &json)
         {
             const QString unitSymbol = json.value("unit").toString();
             this->setUnitBySymbol(unitSymbol);
@@ -345,7 +345,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

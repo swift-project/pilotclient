@@ -219,7 +219,7 @@ namespace BlackMisc
         /*
          * From Json
          */
-        void CTransponder::fromJson(const QJsonObject &json)
+        void CTransponder::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CTransponder::jsonMembers(), TupleConverter<CTransponder>::toTuple(*this));
         }
@@ -256,7 +256,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

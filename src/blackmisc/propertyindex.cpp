@@ -212,7 +212,7 @@ namespace BlackMisc
     /*
      * From JSON
      */
-    void CPropertyIndex::fromJson(const QJsonObject &json)
+    void CPropertyIndex::convertFromJson(const QJsonObject &json)
     {
         BlackMisc::deserializeJson(json, CPropertyIndex::jsonMembers(), TupleConverter<CPropertyIndex>::toTuple(*this));
         this->stringToList();

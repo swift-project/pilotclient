@@ -40,7 +40,7 @@ namespace BlackMisc
         /*
          * From Json
          */
-        void CSettingKeyboardHotkey::fromJson(const QJsonObject &json)
+        void CSettingKeyboardHotkey::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, TupleConverter<CSettingKeyboardHotkey>::toMetaTuple(*this));
         }
@@ -163,7 +163,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

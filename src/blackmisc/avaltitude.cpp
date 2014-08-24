@@ -155,9 +155,9 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        void CAltitude::fromJson(const QJsonObject &json)
+        void CAltitude::convertFromJson(const QJsonObject &json)
         {
-            CLength::fromJson(json);
+            CLength::convertFromJson(json);
             BlackMisc::deserializeJson(json, CAltitude::jsonMembers(), TupleConverter<CAltitude>::toTuple(*this));
         }
 

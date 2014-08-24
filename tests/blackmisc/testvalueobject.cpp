@@ -117,7 +117,7 @@ namespace BlackMisc
     {
         if (index.isMyself())
         {
-            this->fromQVariant(variant);
+            this->convertFromQVariant(variant);
             return;
         }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -163,7 +163,7 @@ namespace BlackMisc
     /*
      * From Json
      */
-    void CTestValueObject::fromJson(const QJsonObject &json)
+    void CTestValueObject::convertFromJson(const QJsonObject &json)
     {
         BlackMisc::deserializeJson(json, CTestValueObject::jsonMembers(), TupleConverter<CTestValueObject>::toTuple(*this));
     }

@@ -58,7 +58,7 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        void CAirportIcao::fromJson(const QJsonObject &json)
+        void CAirportIcao::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CAirportIcao::jsonMembers(), TupleConverter<CAirportIcao>::toTuple(*this));
         }

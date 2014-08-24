@@ -31,7 +31,7 @@ namespace BlackMiscTest
         CLength l(123.456, CLengthUnit::NM());
         QJsonObject json = l.toJson();
         l = CLength(); //convert back
-        l.fromJson(json);
+        l.convertFromJson(json);
         qDebug() << json << l;
         qDebug() << "-------";
         QDateTime dtFrom = QDateTime::currentDateTimeUtc();
@@ -45,7 +45,7 @@ namespace BlackMiscTest
         qDebug() << "-------";
 
         station = CAtcStation();
-        station.fromJson(json);
+        station.convertFromJson(json);
         qDebug() << station;
         qDebug() << "------- Enter -----";
         cin.readLine();
@@ -66,7 +66,7 @@ namespace BlackMiscTest
         qDebug() << "-------";
 
         aircraft = CAircraft();
-        aircraft.fromJson(json);
+        aircraft.convertFromJson(json);
         qDebug() << aircraft;
         qDebug() << "------- Enter -----";
         cin.readLine();
@@ -82,7 +82,7 @@ namespace BlackMiscTest
         cin.readLine();
 
         stations.clear();
-        stations.fromJson(json);
+        stations.convertFromJson(json);
         qDebug() << stations;
 
         cin.readLine();

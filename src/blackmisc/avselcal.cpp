@@ -232,7 +232,7 @@ namespace BlackMisc
         /*
          * From Json
          */
-        void CSelcal::fromJson(const QJsonObject &json)
+        void CSelcal::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CSelcal::jsonMembers(), TupleConverter<CSelcal>::toTuple(*this));
         }

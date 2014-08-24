@@ -94,7 +94,7 @@ namespace BlackMisc
             return BlackMisc::serializeJson(CFlightPlan::jsonMembers(), TupleConverter<CFlightPlan>::toTuple(*this));
         }
 
-        void CFlightPlan::fromJson(const QJsonObject &json)
+        void CFlightPlan::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CFlightPlan::jsonMembers(), TupleConverter<CFlightPlan>::toTuple(*this));
         }

@@ -53,8 +53,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Equal operator ==
             bool operator ==(const CAirport &other) const;
@@ -134,8 +134,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
-            //! \copydoc CValueObject::fromJson
-            void fromJson(const QJsonObject &json) override;
+            //! \copydoc CValueObject::convertFromJson
+            void convertFromJson(const QJsonObject &json) override;
 
             //! Register metadata
             static void registerMetadata();

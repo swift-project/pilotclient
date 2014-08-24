@@ -193,13 +193,13 @@ namespace BlackMisc
         virtual CVariant toCVariant() const { return CVariant(this->toQVariant()); }
 
         //! Set from QVariant
-        virtual void fromQVariant(const QVariant &variant) = 0;
+        virtual void convertFromQVariant(const QVariant &variant) = 0;
 
         //! Contribute to JSON object
         virtual QJsonObject toJson() const { QJsonObject json; return json;}
 
         //! Initialize from JSON object
-        virtual void fromJson(const QJsonObject &json) { Q_UNUSED(json); }
+        virtual void convertFromJson(const QJsonObject &json) { Q_UNUSED(json); }
 
         //! As icon, not implement by all classes
         virtual CIcon toIcon() const;
@@ -220,7 +220,7 @@ namespace BlackMisc
         virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
 
         //! The stored object as CValueObject
-        static const CValueObject *convertFromQVariant(const QVariant &variant);
+        static const CValueObject *fromQVariant(const QVariant &variant);
 
     protected:
         //! Default constructor
@@ -311,21 +311,21 @@ namespace BlackMisc
     //! Non member, non friend operator >> for JSON
     inline const QJsonObject &operator>>(const QJsonObject &json, CValueObject &valueObject)
     {
-        valueObject.fromJson(json);
+        valueObject.convertFromJson(json);
         return json;
     }
 
     //! Non member, non friend operator >> for JSON
     inline const QJsonValue &operator>>(const QJsonValue &json, CValueObject &valueObject)
     {
-        valueObject.fromJson(json.toObject());
+        valueObject.convertFromJson(json.toObject());
         return json;
     }
 
     //! Non member, non friend operator >> for JSON
     inline const QJsonValueRef &operator>>(const QJsonValueRef &json, CValueObject &valueObject)
     {
-        valueObject.fromJson(json.toObject());
+        valueObject.convertFromJson(json.toObject());
         return json;
     }
 

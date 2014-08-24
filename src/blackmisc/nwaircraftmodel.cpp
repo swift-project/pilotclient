@@ -120,7 +120,7 @@ namespace BlackMisc
         /*
          * From Json
          */
-        void CAircraftModel::fromJson(const QJsonObject &json)
+        void CAircraftModel::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CAircraftModel::jsonMembers(), TupleConverter<CAircraftModel>::toTuple(*this));
         }
@@ -153,7 +153,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

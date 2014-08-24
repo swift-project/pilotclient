@@ -119,7 +119,7 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        void CInformationMessage::fromJson(const QJsonObject &json)
+        void CInformationMessage::convertFromJson(const QJsonObject &json)
         {
             this->m_message = json.value("m_message").toString();
             this->m_type = static_cast<CInformationMessage::InformationType>(qRound(json.value("m_type").toDouble()));

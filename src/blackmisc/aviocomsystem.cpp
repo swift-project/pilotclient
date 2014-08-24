@@ -86,9 +86,9 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        void CComSystem::fromJson(const QJsonObject &json)
+        void CComSystem::convertFromJson(const QJsonObject &json)
         {
-            CModulator::fromJson(json);
+            CModulator::convertFromJson(json);
             BlackMisc::deserializeJson(json, CComSystem::jsonMembers(), TupleConverter<CComSystem>::toTuple(*this));
         }
 

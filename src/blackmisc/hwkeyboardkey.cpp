@@ -35,7 +35,7 @@ namespace BlackMisc
             return BlackMisc::serializeJson(TupleConverter<CKeyboardKey>::toMetaTuple(*this));
         }
 
-        void CKeyboardKey::fromJson(const QJsonObject &json)
+        void CKeyboardKey::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, TupleConverter<CKeyboardKey>::toMetaTuple(*this));
         }
@@ -344,7 +344,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

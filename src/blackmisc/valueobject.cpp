@@ -56,7 +56,7 @@ namespace BlackMisc
     {
         if (index.isMyself())
         {
-            this->fromQVariant(variant);
+            this->convertFromQVariant(variant);
             return;
         }
 
@@ -103,7 +103,7 @@ namespace BlackMisc
     /*
      * Return backing streamable object (if any)
      */
-    const CValueObject *CValueObject::convertFromQVariant(const QVariant &variant)
+    const CValueObject *CValueObject::fromQVariant(const QVariant &variant)
     {
         if (!variant.isValid()) return nullptr;
         QVariant::Type t = variant.type();

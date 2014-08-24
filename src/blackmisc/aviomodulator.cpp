@@ -51,7 +51,7 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        template <class AVIO> void CModulator<AVIO>::fromJson(const QJsonObject &json)
+        template <class AVIO> void CModulator<AVIO>::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CModulator::jsonMembers(), TupleConverter<CModulator>::toTuple(*this));
         }
@@ -87,7 +87,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

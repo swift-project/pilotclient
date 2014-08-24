@@ -113,7 +113,7 @@ namespace BlackMisc
         /*
          * From JSON
          */
-        void CSettingsAudio::fromJson(const QJsonObject &json)
+        void CSettingsAudio::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CSettingsAudio::jsonMembers(), TupleConverter<CSettingsAudio>::toTuple(*this));
         }

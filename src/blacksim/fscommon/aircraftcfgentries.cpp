@@ -87,7 +87,7 @@ namespace BlackSim
          */
         void CAircraftCfgEntries::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index.isMyself()) { this->fromQVariant(variant); return; }
+            if (index.isMyself()) { this->convertFromQVariant(variant); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -176,7 +176,7 @@ namespace BlackSim
         /*
          * To JSON
          */
-        void CAircraftCfgEntries::fromJson(const QJsonObject &json)
+        void CAircraftCfgEntries::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CAircraftCfgEntries::jsonMembers(), TupleConverter<CAircraftCfgEntries>::toTuple(*this));
         }

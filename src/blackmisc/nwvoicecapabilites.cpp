@@ -176,7 +176,7 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        void CVoiceCapabilities::fromJson(const QJsonObject &json)
+        void CVoiceCapabilities::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CVoiceCapabilities::jsonMembers(), TupleConverter<CVoiceCapabilities>::toTuple(*this));
         }

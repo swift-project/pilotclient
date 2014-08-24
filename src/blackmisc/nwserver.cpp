@@ -142,7 +142,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
 
@@ -201,7 +201,7 @@ namespace BlackMisc
         /*
          * From Json
          */
-        void CServer::fromJson(const QJsonObject &json)
+        void CServer::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CServer::jsonMembers(), TupleConverter<CServer>::toTuple(*this));
         }

@@ -94,8 +94,8 @@ namespace BlackMisc
         //! \copydoc BlackMisc::CValueObject::toQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(derived()); }
 
-        //! \copydoc CValueObject::fromQVariant
-        virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant< C<T> >(&derived(), variant); }
+        //! \copydoc CValueObject::convertFromQVariant
+        virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant< C<T> >(&derived(), variant); }
 
         //! \copydoc BlackMisc::CValueObject::getValueHash
         virtual uint getValueHash() const override { return qHash(&derived()); }
@@ -113,8 +113,8 @@ namespace BlackMisc
             return json;
         }
 
-        //! \copydoc CValueObject::fromJson
-        void fromJson(const QJsonObject &json) override
+        //! \copydoc CValueObject::convertFromJson
+        void convertFromJson(const QJsonObject &json) override
         {
             QJsonArray array = json.value("containerbase").toArray();
             for (auto i = array.begin(); i != array.end(); ++i)

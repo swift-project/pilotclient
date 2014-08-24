@@ -50,7 +50,7 @@ namespace BlackCore
         // init network
         if (jsonObject.contains(IContextSettings::PathNetworkSettings()))
         {
-            this->m_settingsNetwork.fromJson(
+            this->m_settingsNetwork.convertFromJson(
                 jsonObject.value(IContextSettings::PathNetworkSettings()).toObject()
             );
         }
@@ -62,7 +62,7 @@ namespace BlackCore
         // init audio
         if (jsonObject.contains(IContextSettings::PathAudioSettings()))
         {
-            this->m_settingsAudio.fromJson(
+            this->m_settingsAudio.convertFromJson(
                 jsonObject.value(IContextSettings::PathAudioSettings()).toObject()
             );
         }
@@ -74,7 +74,7 @@ namespace BlackCore
         // init simulator
         if (jsonObject.contains(IContextSettings::PathSimulatorSettings()))
         {
-            this->m_settingsSimulator.fromJson(
+            this->m_settingsSimulator.convertFromJson(
                 jsonObject.value(IContextSettings::PathSimulatorSettings()).toObject()
             );
         }
@@ -86,7 +86,7 @@ namespace BlackCore
         // init own members
         if (jsonObject.contains(IContextSettings::PathHotkeys()))
         {
-            this->m_hotkeys.fromJson(
+            this->m_hotkeys.convertFromJson(
                 jsonObject.value(IContextSettings::PathHotkeys()).toObject()
             );
         }

@@ -195,8 +195,8 @@ namespace BlackSim
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Current UTC timestamp
             static QString currentUtcTimestamp()
@@ -209,8 +209,8 @@ namespace BlackSim
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
-            //! \copydoc CValueObject::fromJson
-            virtual void fromJson(const QJsonObject &json) override;
+            //! \copydoc CValueObject::convertFromJson
+            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! Register metadata
             static void registerMetadata();

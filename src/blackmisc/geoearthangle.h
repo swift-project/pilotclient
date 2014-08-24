@@ -114,8 +114,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*derived()); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(derived(), variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(derived(), variant); }
 
             //! Register metadata
             static void registerMetadata();

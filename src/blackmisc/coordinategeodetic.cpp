@@ -119,7 +119,7 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        void CCoordinateGeodetic::fromJson(const QJsonObject &json)
+        void CCoordinateGeodetic::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CCoordinateGeodetic::jsonMembers(), TupleConverter<CCoordinateGeodetic>::toTuple(*this));
         }
@@ -275,7 +275,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

@@ -116,7 +116,7 @@ namespace BlackMisc
         /*
          * From JSON
          */
-        void CSettingsNetwork::fromJson(const QJsonObject &json)
+        void CSettingsNetwork::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CSettingsNetwork::jsonMembers(), TupleConverter<CSettingsNetwork>::toTuple(*this));
         }

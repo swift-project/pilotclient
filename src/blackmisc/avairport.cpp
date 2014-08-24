@@ -94,7 +94,7 @@ namespace BlackMisc
         /*
          * From Json
          */
-        void CAirport::fromJson(const QJsonObject &json)
+        void CAirport::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, TupleConverter<CAirport>::toMetaTuple(*this));
         }
@@ -199,7 +199,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

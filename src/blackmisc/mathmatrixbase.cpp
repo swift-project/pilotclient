@@ -249,7 +249,7 @@ namespace BlackMisc
         /*
          * From Json
          */
-        template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::fromJson(const QJsonObject &json)
+        template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::convertFromJson(const QJsonObject &json)
         {
             QJsonArray jsonArray = json.value("matrix").toArray();
             QList<double> list;

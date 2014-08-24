@@ -116,7 +116,7 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        void CCallsign::fromJson(const QJsonObject &json)
+        void CCallsign::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CCallsign::jsonMembers(), TupleConverter<CCallsign>::toTuple(*this));
         }
@@ -148,7 +148,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

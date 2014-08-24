@@ -255,7 +255,7 @@ namespace BlackSim
         /*
          * To JSON
          */
-        void CAircraftMapping::fromJson(const QJsonObject &json)
+        void CAircraftMapping::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CAircraftMapping::jsonMembers(), TupleConverter<CAircraftMapping>::toTuple(*this));
         }

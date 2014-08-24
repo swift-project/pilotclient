@@ -209,14 +209,14 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override  { return QVariant::fromValue(*this->derived()); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant<PQ>(derived(), variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant<PQ>(derived(), variant); }
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
-            //! \copydoc CValueObject::fromJson
-            virtual void fromJson(const QJsonObject &json) override;
+            //! \copydoc CValueObject::convertFromJson
+            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! Parse to string, with specified separator
             virtual void parseFromString(const QString &value, CPqString::SeparatorMode mode)

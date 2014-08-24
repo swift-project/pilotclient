@@ -111,9 +111,9 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        void CHeading::fromJson(const QJsonObject &json)
+        void CHeading::convertFromJson(const QJsonObject &json)
         {
-            CAngle::fromJson(json);
+            CAngle::convertFromJson(json);
             BlackMisc::deserializeJson(json, CHeading::jsonMembers(), TupleConverter<CHeading>::toTuple(*this));
         }
 

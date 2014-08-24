@@ -209,7 +209,7 @@ namespace BlackMiscTest
         // JSON
         QJsonObject jsonObject = d1.toJson();
         CValueObjectDictionary d4;
-        d4.fromJson(jsonObject);
+        d4.convertFromJson(jsonObject);
         QVERIFY2(d1 == d4, "JSON serialization/deserialization failed");
     }
 

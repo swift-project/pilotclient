@@ -64,7 +64,7 @@ namespace BlackMisc
         virtual QJsonObject toJson() const override;
 
         //! \copydoc CValueObject::fromJson
-        void fromJson(const QJsonObject &json) override;
+        void convertFromJson(const QJsonObject &json) override;
 
         //! Register metadata
         static void registerMetadata();
@@ -85,7 +85,7 @@ namespace BlackMisc
         }
 
         //! \copydoc CValueObject::fromQVariant
-        virtual void fromQVariant(const QVariant &variant) override
+        virtual void convertFromQVariant(const QVariant &variant) override
         {
             Q_ASSERT(variant.canConvert<CTestValueObject>());
             if (variant.canConvert<CTestValueObject>())

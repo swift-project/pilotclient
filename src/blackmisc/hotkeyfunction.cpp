@@ -52,7 +52,7 @@ namespace BlackMisc
     }
 
     // From Json
-    void CHotkeyFunction::fromJson(const QJsonObject &json)
+    void CHotkeyFunction::convertFromJson(const QJsonObject &json)
     {
         BlackMisc::deserializeJson(json, TupleConverter<CHotkeyFunction>::toMetaTuple(*this));
     }

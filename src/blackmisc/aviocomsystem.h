@@ -79,8 +79,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
-            //! \copydoc CValueObject::fromJson
-            virtual void fromJson(const QJsonObject &json) override;
+            //! \copydoc CValueObject::convertFromJson
+            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! Members
             static const QStringList &jsonMembers();

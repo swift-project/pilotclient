@@ -114,10 +114,10 @@ namespace BlackMisc
         /*
          * From Json
          */
-        void CTrack::fromJson(const QJsonObject &json)
+        void CTrack::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CTrack::jsonMembers(), TupleConverter<CTrack>::toTuple(*this));
-            CAngle::fromJson(json);
+            CAngle::convertFromJson(json);
         }
     } // namespace
 } // namespace

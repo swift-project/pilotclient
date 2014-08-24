@@ -133,7 +133,7 @@ namespace BlackMisc
     /*
      * From Json
      */
-    void CIcon::fromJson(const QJsonObject &json)
+    void CIcon::convertFromJson(const QJsonObject &json)
     {
         BlackMisc::deserializeJson(json, CIcon::jsonMembers(), TupleConverter<CIcon>::toTuple(*this));
     }

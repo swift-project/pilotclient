@@ -125,7 +125,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
 
@@ -156,7 +156,7 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        void CVoiceRoom::fromJson(const QJsonObject &json)
+        void CVoiceRoom::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CVoiceRoom::jsonMembers(), TupleConverter<CVoiceRoom>::toTuple(*this));
         }

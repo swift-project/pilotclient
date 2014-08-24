@@ -87,7 +87,7 @@ namespace BlackSim
         return BlackMisc::serializeJson(CSimulatorInfo::jsonMembers(), TupleConverter<CSimulatorInfo>::toTuple(*this));
     }
 
-    void CSimulatorInfo::fromJson(const QJsonObject &json)
+    void CSimulatorInfo::convertFromJson(const QJsonObject &json)
     {
         BlackMisc::deserializeJson(json, CSimulatorInfo::jsonMembers(), TupleConverter<CSimulatorInfo>::toTuple(*this));
     }

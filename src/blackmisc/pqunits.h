@@ -60,8 +60,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CLengthUnit &defaultUnit() { return m(); }
@@ -173,8 +173,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CAngleUnit &defaultUnit() { return deg(); }
@@ -269,8 +269,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CFrequencyUnit &defaultUnit() { return Hz(); }
@@ -358,8 +358,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CMassUnit &defaultUnit() { return kg(); }
@@ -457,8 +457,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CPressureUnit &defaultUnit() { return hPa(); }
@@ -577,8 +577,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CTemperatureUnit &defaultUnit() { return C(); }
@@ -661,8 +661,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CSpeedUnit &defaultUnit() { return m_s(); }
@@ -770,8 +770,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CTimeUnit &defaultUnit() { return s(); }
@@ -898,8 +898,8 @@ namespace BlackMisc
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
-            //! \copydoc CValueObject::fromQVariant
-            virtual void fromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Default unit
             static const CAccelerationUnit &defaultUnit() { return m_s2(); }

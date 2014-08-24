@@ -157,7 +157,7 @@ namespace BlackMisc
         {
             if (index.isMyself())
             {
-                this->fromQVariant(variant);
+                this->convertFromQVariant(variant);
                 return;
             }
 
@@ -212,7 +212,7 @@ namespace BlackMisc
         /*
          * To JSON
          */
-        void CAircraftIcao::fromJson(const QJsonObject &json)
+        void CAircraftIcao::convertFromJson(const QJsonObject &json)
         {
             BlackMisc::deserializeJson(json, CAircraftIcao::jsonMembers(), TupleConverter<CAircraftIcao>::toTuple(*this));
         }

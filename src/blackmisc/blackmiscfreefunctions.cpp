@@ -199,8 +199,8 @@ bool BlackMisc::equalQVariants(const QVariant &v1, const QVariant &v2)
     if (v1.userType() != v2.userType()) return false;
 
     // I have same types now
-    const CValueObject *cs1 = CValueObject::convertFromQVariant(v1);
-    const CValueObject *cs2 = CValueObject::convertFromQVariant(v2);
+    const CValueObject *cs1 = CValueObject::fromQVariant(v1);
+    const CValueObject *cs2 = CValueObject::fromQVariant(v2);
     if (cs1 && cs2)
     {
         int c = compare(*cs1, *cs2);
@@ -264,8 +264,8 @@ int BlackMisc::compareQVariants(const QVariant &v1, const QVariant &v2)
     // BlackObject
     if (v1.type() == QVariant::UserType)
     {
-        const CValueObject *cs1 = CValueObject::convertFromQVariant(v1);
-        const CValueObject *cs2 = CValueObject::convertFromQVariant(v2);
+        const CValueObject *cs1 = CValueObject::fromQVariant(v1);
+        const CValueObject *cs2 = CValueObject::fromQVariant(v2);
         if (cs1 && cs2)
         {
             return compare(*cs1, *cs2);
@@ -321,7 +321,7 @@ int BlackMisc::compareQVariants(const QVariant &v1, const QVariant &v2)
 QString BlackMisc::qVariantToString(const QVariant &qv, bool i18n)
 {
     if (qv.type() != QVariant::UserType) return qv.toString();
-    const CValueObject *s = CValueObject::convertFromQVariant(qv);
+    const CValueObject *s = CValueObject::fromQVariant(qv);
     if (s)
     {
         return s->toQString(i18n);

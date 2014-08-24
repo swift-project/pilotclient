@@ -40,20 +40,20 @@ namespace BlackMiscTest
         qDebug() << (*ap_angle) << ap_angle->toQVariant().userType();
 
         // This works, because ap is actually heading
-        ap_heading->fromQVariant(h2.toQVariant());
+        ap_heading->convertFromQVariant(h2.toQVariant());
         qDebug() << (*ap_heading) << ap_heading->toQVariant().userType();
 
         // This works, angle from variant angle
-        ap_angle->fromQVariant(a1.toQVariant());
+        ap_angle->convertFromQVariant(a1.toQVariant());
         qDebug() << (*ap_angle) << ap_angle->toQVariant().userType();
 
         // This gives me an unwanted(!) assert, canConvert is not smart enough to detect upcasting
         // because CValueObjects are not QObjects
-        ap_angle->fromQVariant(h2.toQVariant());
+        ap_angle->convertFromQVariant(h2.toQVariant());
         qDebug() << (*ap_angle) << ap_angle->toQVariant().userType();
 
         // This gives me the intended assert, because I assign angle to heading
-        ap_heading->fromQVariant(a1.toQVariant());
+        ap_heading->convertFromQVariant(a1.toQVariant());
         qDebug() << (*ap_heading) << ap_heading->toQVariant().userType();
 
         return 0;
