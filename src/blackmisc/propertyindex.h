@@ -111,7 +111,7 @@ namespace BlackMisc
         //! Register metadata
         static void registerMetadata();
 
-        //! Members
+        //! JSON member names
         static const QStringList &jsonMembers();
 
     protected:

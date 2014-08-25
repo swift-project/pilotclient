@@ -135,12 +135,12 @@ namespace BlackMisc
             virtual QJsonObject toJson() const override;
 
             //! \copydoc CValueObject::convertFromJson
-            void convertFromJson(const QJsonObject &json) override;
+            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! Register metadata
             static void registerMetadata();
 
-            //! \copydoc TupleConverter<>::jsonMembers()
+            //! \copydoc TupleConverter::jsonMembers()
             static const QStringList &jsonMembers();
 
         protected:

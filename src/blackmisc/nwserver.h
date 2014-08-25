@@ -109,7 +109,7 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! \copydoc TupleConverter<>::jsonMembers()
+            //! JSON member names
             static const QStringList &jsonMembers();
 
             //! Register metadata

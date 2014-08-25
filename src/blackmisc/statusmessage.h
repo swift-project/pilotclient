@@ -102,6 +102,12 @@ namespace BlackMisc
         //! Type as string
         const QString &getSeverityAsString() const;
 
+        //! \copydoc CValueObject::toJson
+        virtual QJsonObject toJson() const override;
+
+        //! \copydoc CValueObject::convertFromJson
+        virtual void convertFromJson(const QJsonObject &json) override;
+
         //! \copydoc CValueObject::propertyByIndex(int)
         virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
@@ -119,6 +125,9 @@ namespace BlackMisc
 
         //! Register metadata
         static void registerMetadata();
+
+        //! JSON member names
+        static const QStringList &jsonMembers();
 
         //! Validation error
         static CStatusMessage getValidationError(const QString &message);

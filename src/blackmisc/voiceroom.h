@@ -106,7 +106,7 @@ namespace BlackMisc
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! \copydoc CValueObject::convertFromJson
-            void convertFromJson(const QJsonObject &json) override;
+            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -117,7 +117,7 @@ namespace BlackMisc
             //! Register metadata
             static void registerMetadata();
 
-            //! \copydoc TupleConverter<>::jsonMembers()
+            //! JSON member names
             static const QStringList &jsonMembers();
 
             //! Protocol prefix "vvl"

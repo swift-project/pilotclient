@@ -163,7 +163,7 @@ namespace BlackMisc
             virtual QJsonObject toJson() const override;
 
             //! \copydoc CValueObject::convertFromJson
-            void convertFromJson(const QJsonObject &json) override;
+            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override  { return QVariant::fromValue(*this); }
@@ -177,7 +177,7 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! \copydoc TupleConverter<>::jsonMembers()
+            //! JSON member names
             static const QStringList &jsonMembers();
 
             //! Is valid transponder code?

@@ -114,7 +114,7 @@ namespace BlackMisc
         }
 
         //! \copydoc CValueObject::convertFromJson
-        void convertFromJson(const QJsonObject &json) override
+        virtual void convertFromJson(const QJsonObject &json) override
         {
             QJsonArray array = json.value("containerbase").toArray();
             for (auto i = array.begin(); i != array.end(); ++i)

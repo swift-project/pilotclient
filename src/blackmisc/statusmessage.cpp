@@ -122,6 +122,30 @@ namespace BlackMisc
     }
 
     /*
+     * To JSON
+     */
+    QJsonObject CStatusMessage::toJson() const
+    {
+        return BlackMisc::serializeJson(CStatusMessage::jsonMembers(), TupleConverter<CStatusMessage>::toTuple(*this));
+    }
+
+    /*
+     * From JSON
+     */
+    void CStatusMessage::convertFromJson(const QJsonObject &json)
+    {
+        BlackMisc::deserializeJson(json, CStatusMessage::jsonMembers(), TupleConverter<CStatusMessage>::toTuple(*this));
+    }
+
+    /*
+     * Members
+     */
+    const QStringList &CStatusMessage::jsonMembers()
+    {
+        return TupleConverter<CStatusMessage>::jsonMembers();
+    }
+
+    /*
      * Type
      */
     const QString &CStatusMessage::getTypeAsString() const
@@ -257,7 +281,7 @@ namespace BlackMisc
     }
 
     /*
-     * Equal
+     * Unequal
      */
     bool CStatusMessage::operator !=(const CStatusMessage &other) const
     {

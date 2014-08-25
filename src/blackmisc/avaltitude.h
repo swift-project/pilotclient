@@ -103,7 +103,7 @@ namespace BlackMisc
             virtual QJsonObject toJson() const override;
 
             //! \copydoc CValueObject::convertFromJson
-            void convertFromJson(const QJsonObject &json) override;
+            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -112,10 +112,10 @@ namespace BlackMisc
             virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::parseFromString(const QString &value)
-            void parseFromString(const QString &value) override;
+            virtual void parseFromString(const QString &value) override;
 
             //! \copydoc CValueObject::parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode)
-            void parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) override;
+            virtual void parseFromString(const QString &value, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) override;
 
             //! \copydoc CValueObject::toIcon
             BlackMisc::CIcon toIcon() const override;
@@ -123,7 +123,7 @@ namespace BlackMisc
             //! Register metadata
             static void registerMetadata();
 
-            //! \copydoc TupleConverter<>::jsonMembers()
+            //! JSON member names
             static const QStringList &jsonMembers();
         };
 

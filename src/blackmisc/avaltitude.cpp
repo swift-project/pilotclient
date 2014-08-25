@@ -153,7 +153,7 @@ namespace BlackMisc
         }
 
         /*
-         * To JSON
+         * From JSON
          */
         void CAltitude::convertFromJson(const QJsonObject &json)
         {

@@ -58,7 +58,7 @@ namespace BlackSim
         //! \copydoc CValueObject::convertFromJson
         virtual void convertFromJson(const QJsonObject &json) override;
 
-        //! Members
+        //! JSON member names
         static const QStringList &jsonMembers();
 
         //! Register the metatypes

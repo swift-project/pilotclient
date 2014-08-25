@@ -101,7 +101,7 @@ namespace BlackSim
             //! \copydoc CValueObject::registerMetadata
             static void registerMetadata();
 
-            //! \copydoc TupleConverter<>::jsonMembers()
+            //! JSON member names
             static const QStringList &jsonMembers();
 
         protected:

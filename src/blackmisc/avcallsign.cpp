@@ -114,7 +114,7 @@ namespace BlackMisc
         }
 
         /*
-         * To JSON
+         * From JSON
          */
         void CCallsign::convertFromJson(const QJsonObject &json)
         {

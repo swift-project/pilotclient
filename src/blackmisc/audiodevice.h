@@ -86,7 +86,7 @@ namespace BlackMisc
             //! Register metadata
             static void registerMetadata();
 
-            //! \copydoc TupleConverter<>::jsonMembers()
+            //! JSON member names
             static const QStringList &jsonMembers();
 
             //! Device index for default device

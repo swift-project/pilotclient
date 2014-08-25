@@ -123,7 +123,7 @@ namespace BlackSim
             //! Register the metatypes
             static void registerMetadata();
 
-            //! Members
+            //! JSON member names
             static const QStringList &jsonMembers();
 
         protected:

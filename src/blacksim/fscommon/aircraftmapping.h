@@ -215,7 +215,7 @@ namespace BlackSim
             //! Register metadata
             static void registerMetadata();
 
-            //! Members
+            //! JSON member names
             static const QStringList &jsonMembers();
         };
     } // namespace
