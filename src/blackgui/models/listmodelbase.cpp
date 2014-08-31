@@ -57,11 +57,20 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType> QVariant
         CListModelBase<ObjectType, ContainerType>::headerData(int section, Qt::Orientation orientation, int role) const
         {
-            if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
+            if (orientation == Qt::Horizontal)
             {
-                if (section < 0 || section >= this->m_columns.size()) return QVariant();
-                QString header = this->m_columns.at(section).getColumnName(false);
-                return QVariant(header);
+                if (role == Qt::DisplayRole)
+                {
+                    if (section < 0 || section >= this->m_columns.size()) { return QVariant(); }
+                    QString header = this->m_columns.at(section).getColumnName(false);
+                    return QVariant(header);
+                }
+                else if (role == Qt::ToolTipRole)
+                {
+                    if (section < 0 || section >= this->m_columns.size()) { return QVariant(); }
+                    QString header = this->m_columns.at(section).getColumnToolTip(false);
+                    return header.isEmpty() ? QVariant() : QVariant(header);
+                }
             }
             return QVariant();
         }
@@ -72,33 +81,16 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         QVariant CListModelBase<ObjectType,  ContainerType>::data(const QModelIndex &index, int role) const
         {
-            // checks
-            if (index.row() < 0 || index.row() >= this->m_container.size() ||
-                    index.column() < 0 || index.column() >= this->columnCount(index))
-            {
-                return QVariant();
-            }
+            // check / init
+            if (!this->isValidIndex(index)) { return QVariant(); }
+            const CDefaultFormatter *formatter = this->m_columns.getFormatter(index);
+            Q_ASSERT(formatter);
+            if (!formatter) { return QVariant(); }
 
-            if (role == Qt::DisplayRole)
-            {
-                if (this->m_columns.isIcon(index)) return QVariant();
-                ObjectType obj = this->m_container[index.row()];
-                BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
-                QString propertyString = obj.propertyByIndexAsString(propertyIndex, true);
-                return QVariant::fromValue(propertyString);
-            }
-            else if (role == Qt::DecorationRole)
-            {
-                if (!this->m_columns.isIcon(index)) return QVariant();
-                ObjectType obj = this->m_container[index.row()];
-                BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
-                return obj.propertyByIndex(propertyIndex);
-            }
-            else if (role == Qt::TextAlignmentRole)
-            {
-                return this->m_columns.aligmentAsQVariant(index);
-            }
-            return QVariant();
+            //! Formatted data
+            ObjectType obj = this->m_container[index.row()];
+            BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
+            return formatter->data(role, obj.propertyByIndex(propertyIndex));
         }
 
         /*
@@ -107,15 +99,11 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &container)
         {
-            ContainerType copyList = (container.size() > 1 && this->hasValidSortColumn() ?
-                                      this->sortListByColumn(container, this->getSortColumn(), this->m_sortOrder) :
-                                      container);
+            qDebug() << "update" << this->objectName() << "size" << container.size();
             this->beginResetModel();
-            this->m_container.clear();
-            foreach(ObjectType object, copyList)
-            {
-                this->m_container.push_back(object);
-            }
+            this->m_container = (container.size() > 1 && this->hasValidSortColumn() ?
+                                 this->sortListByColumn(container, this->getSortColumn(), this->m_sortOrder) :
+                                 container);
             this->endResetModel();
             return this->m_container.size();
         }
@@ -202,6 +190,7 @@ namespace BlackGui
             BlackMisc::CPropertyIndex propertyIndex = this->m_columns.columnToPropertyIndex(column);
             Q_ASSERT(!propertyIndex.isEmpty());
             if (propertyIndex.isEmpty()) return list; // at release build do nothing
+            qDebug() << "sort" << this->objectName() << "column" << column << propertyIndex.toQString();
 
             // sort the values
             return list.sorted

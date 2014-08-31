@@ -14,6 +14,7 @@
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackGui
 {
@@ -25,13 +26,13 @@ namespace BlackGui
         CAirportListModel::CAirportListModel(QObject *parent) :
             CListModelBase<BlackMisc::Aviation::CAirport, BlackMisc::Aviation::CAirportList>("ViewAirportList", parent)
         {
-            this->m_columns.addColumn(CColumn("ICAO", CAirport::IndexIcao));
-            this->m_columns.addColumn(CColumn("distance", CAirport::IndexDistance, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("bearing", CAirport::IndexBearing, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("name", CAirport::IndexDescriptiveName));
-            this->m_columns.addColumn(CColumn("elevation", CAirport::IndexElevation, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("latitude", CCoordinateGeodetic::IndexLatitude, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("longitude", CCoordinateGeodetic::IndexLongitude, Qt::AlignRight  | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn::standardValueObject("ICAO", CAirport::IndexIcao));
+            this->m_columns.addColumn(CColumn("distance", CAirport::IndexDistance, new CAirspaceDistanceFormatter()));
+            this->m_columns.addColumn(CColumn("bearing", CAirport::IndexBearing, new CAngleDegreeFormatter()));
+            this->m_columns.addColumn(CColumn::standardString("name", CAirport::IndexDescriptiveName));
+            this->m_columns.addColumn(CColumn("elevation", CAirport::IndexElevation, new CPhysiqalQuantiyFormatter<CLengthUnit, CLength>(CLengthUnit::ft(), 0)));
+            this->m_columns.addColumn(CColumn("latitude", CAirport::IndexLatitude, new CLatLonFormatter()));
+            this->m_columns.addColumn(CColumn("longitude", CAirport::IndexLatitude, new CLatLonFormatter()));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CAirport::IndexDistance);

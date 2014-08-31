@@ -54,8 +54,7 @@ namespace BlackGui
             }
 
             //! \copydoc CListModelBase::data
-            virtual QVariant data(const QModelIndex &index, int role) const;
-
+            virtual QVariant data(const QModelIndex &index, int role) const override;
         };
     }
 }

@@ -43,6 +43,9 @@ namespace BlackGui
             //! Set station mode
             void setStationMode(AtcStationMode stationMode);
 
+            //! Station mode
+            AtcStationMode getStationMode() const { return this->m_stationMode; }
+
         public slots:
             //! Used to quickly update single station (better response for the user)
             void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);

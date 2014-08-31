@@ -278,9 +278,6 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index) override;
 
-            //! \copydoc CValueObject::propertyByIndexAsString()
-            virtual QString propertyByIndexAsString(const BlackMisc::CPropertyIndex &index, bool i18n = false) const override;
-
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 

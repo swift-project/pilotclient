@@ -28,10 +28,11 @@ namespace BlackGui
         CKeyboardKeyListModel::CKeyboardKeyListModel(QObject *parent) :
             CListModelBase<CSettingKeyboardHotkey, CSettingKeyboardHotkeyList>("ViewKeyboardKeyList", parent)
         {
-            this->m_columns.addColumn(CColumn("key", CSettingKeyboardHotkey::IndexKeyAsStringRepresentation, true));
-            this->m_columns.addColumn(CColumn("modifier 1", CSettingKeyboardHotkey::IndexModifier1AsString, true));
-            this->m_columns.addColumn(CColumn("modifier 2", CSettingKeyboardHotkey::IndexModifier2AsString, true));
-            this->m_columns.addColumn(CColumn("function", CSettingKeyboardHotkey::IndexFunctionAsString));
+            const bool editable = true;
+            this->m_columns.addColumn(CColumn("key", CSettingKeyboardHotkey::IndexKeyAsStringRepresentation, new CStringFormatter(), editable));
+            this->m_columns.addColumn(CColumn("modifier 1", CSettingKeyboardHotkey::IndexModifier1AsString, new CStringFormatter(), editable));
+            this->m_columns.addColumn(CColumn("modifier 2", CSettingKeyboardHotkey::IndexModifier2AsString, new CStringFormatter(), editable));
+            this->m_columns.addColumn(CColumn::standardString("function", CSettingKeyboardHotkey::IndexFunctionAsString));
 
             this->setSortColumnByPropertyIndex(CSettingKeyboardHotkey::IndexFunctionAsString);
             this->m_sortOrder = Qt::AscendingOrder;

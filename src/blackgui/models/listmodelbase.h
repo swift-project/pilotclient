@@ -27,32 +27,6 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType> class CListModelBase : public QAbstractListModel
         {
 
-        protected:
-            ContainerType m_container; //!< used container
-            CColumns m_columns;        //!< columns metadata
-            int m_sortedColumn;        //!< current sort column
-            Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
-
-            /*!
-             * Constructor
-             * \param translationContext    I18N context
-             * \param parent
-             */
-            CListModelBase(const QString &translationContext, QObject *parent = nullptr)
-                : QAbstractListModel(parent), m_columns(translationContext), m_sortedColumn(-1), m_sortOrder(Qt::AscendingOrder)
-            {
-                // void
-            }
-
-            /*!
-             * Sort list by given order
-             * \param list      used list
-             * \param column    column inder
-             * \param order     sort order (asccending / descending)
-             * \return
-             */
-            ContainerType sortListByColumn(const ContainerType &list, int column, Qt::SortOrder order);
-
         public:
 
             //! Destructor
@@ -73,11 +47,16 @@ namespace BlackGui
                 return this->columnToPropertyIndex(index.column());
             }
 
-            //! Set sort column
-            virtual void setSortColumn(int column)
+            //! Valid index (in range)
+            virtual bool isValidIndex(const QModelIndex &index) const
             {
-                this->m_sortedColumn = column;
+                if (!index.isValid()) return false;
+                return (index.row() >= 0 && index.row() < this->m_container.size() &&
+                        index.column() >= 0 && index.column() < this->columnCount(index));
             }
+
+            //! Set sort column
+            virtual void setSortColumn(int column) { this->m_sortedColumn = column; }
 
             /*!
              * Set column for sorting
@@ -89,28 +68,19 @@ namespace BlackGui
             }
 
             //! Get sort column property index
-            virtual int getSortColumn() const
-            {
-                return this->m_sortedColumn;
-            }
+            virtual int getSortColumn() const { return this->m_sortedColumn; }
 
             //! Has valid sort column?
             virtual bool hasValidSortColumn() const
             {
-                return this->m_sortedColumn >=0 && this->m_sortedColumn < this->m_columns.size();
+                return this->m_sortedColumn >= 0 && this->m_sortedColumn < this->m_columns.size();
             }
 
             //! Get sort order
-            virtual Qt::SortOrder getSortOrder() const
-            {
-                return this->m_sortOrder;
-            }
+            virtual Qt::SortOrder getSortOrder() const { return this->m_sortOrder; }
 
             //! Used container data
-            virtual const ContainerType &getContainer() const
-            {
-                return this->m_container;
-            }
+            virtual const ContainerType &getContainer() const { return this->m_container; }
 
             //! \copydoc QAbstractListModel::data()
             virtual QVariant data(const QModelIndex &index, int role) const override;
@@ -122,6 +92,7 @@ namespace BlackGui
             Qt::ItemFlags flags(const QModelIndex &index) const override;
 
             //! Update by new container
+            //! \remarks a sorting is performed if a valid sort column is set
             virtual int update(const ContainerType &container);
 
             //! Update single element
@@ -138,7 +109,7 @@ namespace BlackGui
             {
                 if (index.row() < 0 || index.row() >= this->m_container.size())
                 {
-                    const static ObjectType def;
+                    const static ObjectType def; // default object
                     return def;
                 }
                 else
@@ -148,7 +119,7 @@ namespace BlackGui
             }
 
             //! \copydoc QAbstractListModel::sort()
-            virtual void sort(int column, Qt::SortOrder order);
+            virtual void sort(int column, Qt::SortOrder order) override;
 
             //! Similar to ContainerType::push_back
             virtual void push_back(const ObjectType &object);
@@ -161,6 +132,40 @@ namespace BlackGui
 
             //! Clear the list
             virtual void clear();
+
+            //! Translation context
+            virtual const QString &getTranslationContext() const
+            {
+                return m_columns.getTranslationContext();
+            }
+
+        protected:
+            ContainerType m_container; //!< used container
+            CColumns m_columns;        //!< columns metadata
+            int m_sortedColumn;        //!< current sort column
+            Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
+
+            /*!
+             * Constructor
+             * \param translationContext    I18N context
+             * \param parent
+             */
+            CListModelBase(const QString &translationContext, QObject *parent = nullptr)
+                : QAbstractListModel(parent), m_columns(translationContext), m_sortedColumn(-1), m_sortOrder(Qt::AscendingOrder)
+            {
+                // non unique default name, set translation context as default
+                this->setObjectName(translationContext);
+            }
+
+            /*!
+             * Sort container by given column / order. This is used by sort().
+             * \param list      used list
+             * \param column    column inder
+             * \param order     sort order (ascending / descending)
+             * \return
+             */
+            ContainerType sortListByColumn(const ContainerType &list, int column, Qt::SortOrder order);
+
         };
     }
 }

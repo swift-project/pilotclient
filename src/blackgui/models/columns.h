@@ -15,8 +15,11 @@
 #include "blackmisc/valueobject.h" // for qHash overload, include before Qt stuff due GCC issue
 #include "blackmisc/collection.h"
 #include "blackmisc/propertyindex.h"
+#include "columnformatters.h"
+#include <QModelIndex>
 #include <QObject>
 #include <QHash>
+#include <QScopedPointer>
 
 namespace BlackGui
 {
@@ -26,64 +29,63 @@ namespace BlackGui
         class CColumn
         {
         public:
-            /*!
-             * Constructor
-             * \param headerName
-             * \param propertyIndex as in CValueObject::propertyByIndex
-             * \param alignment Qt::Alignment
-             * \param editable
-             */
-            CColumn(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = -1, bool editable = false);
+            //! Constructor
+            CColumn(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false) :
+                CColumn(headerName, "", propertyIndex, formatter, editable)
+            { }
 
-            /*!
-             * Constructor
-             * \param headerName
-             * \param propertyIndex as in CValueObject::propertyByIndex
-             * \param editable
-             */
-            CColumn(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, bool editable);
+            //! Constructor
+            CColumn(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, CDefaultFormatter *formatter, bool editable = false);
 
-            /*!
-             * Constructor column is icon
-             * \remarks only make sense with isIcon as true
-             * \param propertyIndex as in CValueObject::propertyByIndex
-             * \param isIcon icon, should be used with true only
-             */
-            CColumn(const BlackMisc::CPropertyIndex &propertyIndex, bool isIcon);
+            //! Constructor, icon with tool tip
+            CColumn(const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex);
+
+            //! Constructor used for icons
+            CColumn(const BlackMisc::CPropertyIndex &propertyIndex);
 
             //! Alignment for this column?
-            bool hasAlignment() const { return this->m_alignment >= 0; }
+            bool hasAlignment() const { return (!this->m_formatter.isNull() && this->m_formatter->hasAlignment()); }
 
             //! Editable?
             bool isEditable() const { return this->m_editable; }
 
-            //! Icon?
-            bool isIcon() const { return this->m_icon; }
+            //! Formatter
+            void setFormatter(CDefaultFormatter *formatter) { Q_ASSERT(formatter); m_formatter.reset(formatter); }
+
+            //! Formatter
+            const CDefaultFormatter *getFormatter() const { return this->m_formatter.data(); }
 
             //! Aligment as QVariant
-            QVariant aligmentAsQVariant() const;
+            QVariant getAlignment() const;
 
             //! Column name
             QString getColumnName(bool i18n = false) const;
+
+            //! Column tooltip
+            QString getColumnToolTip(bool i18n = false) const;
 
             //! Property index
             const BlackMisc::CPropertyIndex &getPropertyIndex() const { return this->m_propertyIndex;}
 
             //! Translation context
-            void setTranslationContext(const QString &translationContext)
-            {
-                this->m_translationContext = translationContext;
-            }
+            void setTranslationContext(const QString &translationContext) { this->m_translationContext = translationContext; }
+
+            //! Get a standard value object formatted column
+            static CColumn standardValueObject(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+
+            //! Get a standard string object formatted column
+            static CColumn standardString(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
 
         private:
             QString m_translationContext;
             QString m_columnName;
-            int m_alignment;
+            QString m_columnToolTip;
+            QSharedPointer<CDefaultFormatter> m_formatter;
             BlackMisc::CPropertyIndex m_propertyIndex;
             bool m_editable;
-            bool m_icon;
             const char *getTranslationContextChar() const;
             const char *getColumnNameChar() const;
+            const char *getColumnToolTipChar() const;
         };
 
         /*!
@@ -129,11 +131,26 @@ namespace BlackGui
             //! Is this column editable?
             bool isEditable(const QModelIndex &index) const;
 
-            //! Is icon?
-            bool isIcon(const QModelIndex &index) const;
+            //! Valid column?
+            bool isValidColumn(const QModelIndex &index) const
+            {
+                return (index.column() >= 0 && index.column() < this->m_columns.size());
+            }
+
+            //! Valid column?
+            bool isValidColumn(int column) const
+            {
+                return column >= 0 && column < this->m_columns.size();
+            }
 
             //! Aligment as QVariant
-            QVariant aligmentAsQVariant(const QModelIndex &index) const;
+            QVariant getAlignment(const QModelIndex &index) const;
+
+            //! Translation context
+            const QString &getTranslationContext() const { return m_translationContext; }
+
+            //! Formatter
+            const CDefaultFormatter *getFormatter(const QModelIndex &index) const;
 
             //! Column at position
             const CColumn &at(int columnNumber) const { return this->m_columns.at(columnNumber); }

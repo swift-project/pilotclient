@@ -25,6 +25,7 @@ namespace BlackGui
             CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>("ViewUserList", parent), m_userMode(NotSet)
         {
             this->setUserMode(userMode);
+
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ViewUserList", "callsign");
             (void)QT_TRANSLATE_NOOP("ViewUserList", "realname");
@@ -44,17 +45,24 @@ namespace BlackGui
             {
             case NotSet:
             case UserDetailed:
-                this->m_columns.addColumn(CColumn(CUser::IndexPixmap, true));
-                this->m_columns.addColumn(CColumn("realname", CUser::IndexRealName));
-                this->m_columns.addColumn(CColumn("callsign", CUser::IndexCallsign));
-                this->m_columns.addColumn(CColumn("userid", CUser::IndexId));
-                // this->m_columns.addColumn(CUser::IndexEmail, "email");
+                this->m_columns.addColumn(CColumn(CUser::IndexIcon));
+                this->m_columns.addColumn(CColumn::standardString("realname", CUser::IndexRealName));
+                this->m_columns.addColumn(CColumn::standardValueObject("callsign", CUser::IndexCallsign));
+                this->m_columns.addColumn(CColumn::standardString("userid", CUser::IndexId));
+
+                // default sort order
+                this->setSortColumnByPropertyIndex(CUser::IndexRealName);
+                this->m_sortOrder = Qt::AscendingOrder;
                 break;
 
             case UserShort:
-                this->m_columns.addColumn(CColumn(CUser::IndexPixmap, true));
-                this->m_columns.addColumn(CColumn("realname", CUser::IndexRealName));
-                this->m_columns.addColumn(CColumn("callsign", CUser::IndexCallsign));
+                this->m_columns.addColumn(CColumn(CUser::IndexIcon));
+                this->m_columns.addColumn(CColumn::standardString("realname", CUser::IndexRealName));
+                this->m_columns.addColumn(CColumn::standardValueObject("callsign", CUser::IndexCallsign));
+
+                // default sort order
+                this->setSortColumnByPropertyIndex(CUser::IndexCallsign);
+                this->m_sortOrder = Qt::AscendingOrder;
                 break;
 
             default:

@@ -351,10 +351,7 @@ namespace BlackMisc
             case IndexVoiceRoom:
                 return QVariant(this->m_voiceRoom.propertyByIndex(index.copyFrontRemoved()));
             default:
-                if (ICoordinateGeodetic::canHandleIndex(index))
-                {
-                    return ICoordinateGeodetic::propertyByIndex(index);
-                }
+                if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
                 return CValueObject::propertyByIndex(index);
             }
         }
@@ -424,48 +421,7 @@ namespace BlackMisc
         bool CAtcStation::isA(int metaTypeId) const
         {
             if (metaTypeId == qMetaTypeId<CAtcStation>()) { return true; }
-
             return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Property as string by index
-         */
-        QString CAtcStation::propertyByIndexAsString(const BlackMisc::CPropertyIndex &index, bool i18n) const
-        {
-            QVariant qv = this->propertyByIndex(index);
-            ColumnIndex i = index.frontCasted<ColumnIndex>();
-
-            // special treatment
-            // this is required as it is possible an ATC station is not containing all
-            // properties
-            switch (i)
-            {
-            case IndexFrequency:
-                if (!CComSystem::isValidCivilAviationFrequency(qv.value<CFrequency>()))
-                    return "";
-                else
-                    return qv.value<CFrequency>().valueRoundedWithUnit(3, i18n);
-                break;
-            case IndexDistance:
-                {
-                    CLength distance = qv.value<CLength>();
-                    if (distance.isNegativeWithEpsilonConsidered()) return "";
-                    return distance.toQString(i18n);
-                }
-
-            case IndexBookedFrom:
-            case IndexBookedUntil:
-                {
-                    QDateTime dt = qv.value<QDateTime>();
-                    if (dt.isNull() || !dt.isValid()) return "";
-                    return dt.toString("yyyy-MM-dd HH:mm");
-                    break;
-                }
-            default:
-                break;
-            }
-            return BlackMisc::qVariantToString(qv, i18n);
         }
 
     } // namespace

@@ -30,10 +30,10 @@ namespace BlackGui
             this->m_columns.clear();
             if (withIcon)
             {
-                this->m_columns.addColumn(CColumn(CNameVariantPair::IndexPixmap, true));
+                this->m_columns.addColumn(CColumn(CNameVariantPair::IndexPixmap));
             }
-            this->m_columns.addColumn(CColumn("name", CNameVariantPair::IndexName));
-            this->m_columns.addColumn(CColumn("value", CNameVariantPair::IndexVariant));
+            this->m_columns.addColumn(CColumn::standardString("name", CNameVariantPair::IndexName));
+            this->m_columns.addColumn(CColumn("value", CNameVariantPair::IndexVariant, new CDefaultFormatter()));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CNameVariantPair::IndexName);

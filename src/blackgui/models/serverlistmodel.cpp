@@ -21,12 +21,12 @@ namespace BlackGui
         CServerListModel::CServerListModel(QObject *parent) :
             CListModelBase("ViewServerList", parent)
         {
-            this->m_columns.addColumn(CColumn("name", CServer::IndexName));
-            this->m_columns.addColumn(CColumn("description", CServer::IndexDescription));
-            this->m_columns.addColumn(CColumn("address", CServer::IndexAddress));
-            this->m_columns.addColumn(CColumn("port", CServer::IndexPort));
-            this->m_columns.addColumn(CColumn("realname", { CServer::IndexUser, CUser::IndexRealName}));
-            this->m_columns.addColumn(CColumn("userid", { CServer::IndexUser, CUser::IndexId}));
+            this->m_columns.addColumn(CColumn::standardString("name", CServer::IndexName));
+            this->m_columns.addColumn(CColumn::standardString("description", CServer::IndexDescription));
+            this->m_columns.addColumn(CColumn::standardString("address", CServer::IndexAddress));
+            this->m_columns.addColumn(CColumn::standardString("port", CServer::IndexPort));
+            this->m_columns.addColumn(CColumn::standardString("realname", { CServer::IndexUser, CUser::IndexRealName}));
+            this->m_columns.addColumn(CColumn::standardString("userid", { CServer::IndexUser, CUser::IndexId}));
 
             // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ViewServerList", "name");
@@ -61,5 +61,5 @@ namespace BlackGui
                 return CListModelBase::data(index, role);
             }
         }
-    }
-}
+    } // class
+} // namespace

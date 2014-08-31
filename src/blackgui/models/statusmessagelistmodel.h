@@ -36,7 +36,7 @@ namespace BlackGui
             virtual ~CStatusMessageListModel() {}
 
             //! \copydoc CListModelBase::data
-            QVariant data(const QModelIndex &modelIndex, int role = Qt::DisplayRole) const;
+            QVariant data(const QModelIndex &modelIndex, int role = Qt::DisplayRole) const override;
         };
     }
 }

@@ -9,7 +9,7 @@
 
 #include "clientlistmodel.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include "blackmisc/icon.h"
+#include "blackmisc/icons.h"
 #include <QMetaProperty>
 #include <QBrush>
 
@@ -26,14 +26,15 @@ namespace BlackGui
         CClientListModel::CClientListModel(QObject *parent) :
             CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>("ViewClientList", parent)
         {
-            this->m_columns.addColumn(CColumn(CClient::IndexPixmap, true));
-            this->m_columns.addColumn(CColumn("callsign", CClient::IndexCallsign));
-            this->m_columns.addColumn(CColumn("realname", { CClient::IndexUser, CUser::IndexRealName }));
-            this->m_columns.addColumn(CColumn(CClient::IndexVoiceCapabilitiesPixmap, true));
-            this->m_columns.addColumn(CColumn("capabilities", CClient::IndexCapabilitiesString));
-            this->m_columns.addColumn(CColumn("model", {CClient::IndexModel, CAircraftModel::IndexModelString}));
-            this->m_columns.addColumn(CColumn("queried?", {CClient::IndexModel, CAircraftModel::IndexIsQueriedModelString}));
-            this->m_columns.addColumn(CColumn("server", CClient::IndexServer));
+            this->m_columns.addColumn(CColumn("client", CClient::IndexIcon));
+            this->m_columns.addColumn(CColumn::standardValueObject("callsign", CClient::IndexCallsign));
+            this->m_columns.addColumn(CColumn::standardString("realname", { CClient::IndexUser, CUser::IndexRealName }));
+            this->m_columns.addColumn(CColumn("capabilities", CClient::IndexVoiceCapabilitiesIcon));
+            this->m_columns.addColumn(CColumn::standardString("capabilities", CClient::IndexCapabilitiesString));
+            this->m_columns.addColumn(CColumn::standardString("model", {CClient::IndexModel, CAircraftModel::IndexModelString}));
+            this->m_columns.addColumn(CColumn("q.?", "queried", {CClient::IndexModel, CAircraftModel::IndexIsQueriedModelString},
+                                              new CBoolIconFormatter(CIcons::StandardIconTick, CIcons::StandardIconCross, "queried", "not queried")));
+            this->m_columns.addColumn(CColumn::standardString("server", CClient::IndexServer));
 
             // force strings for translation in resource files
             // force strings for translation in resource files

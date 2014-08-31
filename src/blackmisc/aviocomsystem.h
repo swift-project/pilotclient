@@ -130,6 +130,7 @@ namespace BlackMisc
             //! Valid civil aviation frequency?
             static bool isValidCivilAviationFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
+                if (f.isNull()) return false;
                 double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
                 return fr >= 118.0 && fr <= 136.975;
             }
@@ -137,8 +138,15 @@ namespace BlackMisc
             //! Valid military aviation frequency?
             static bool isValidMilitaryFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
             {
+                if (f.isNull()) return false;
                 double fr = f.valueRounded(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3);
                 return fr >= 220.0 && fr <= 399.95;
+            }
+
+            //! Valid COM frequency (either civil or military)
+            static bool isValidComFrequency(const BlackMisc::PhysicalQuantities::CFrequency &f)
+            {
+                return isValidCivilAviationFrequency(f) || isValidMilitaryFrequency(f);
             }
 
             /*!

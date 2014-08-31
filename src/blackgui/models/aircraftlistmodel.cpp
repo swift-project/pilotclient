@@ -24,16 +24,16 @@ namespace BlackGui
          */
         CAircraftListModel::CAircraftListModel(QObject *parent) : CListModelBase("ViewAircraftList", parent)
         {
-            this->m_columns.addColumn(CColumn("callsign", CAircraft::IndexCallsign));
-            this->m_columns.addColumn(CColumn("pilotrealname", { CAircraft::IndexPilot, CUser::IndexRealName }));
-            this->m_columns.addColumn(CColumn("distance", CAircraft::IndexDistance, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("frequency", { CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("model", { CAircraft::IndexIcao, CAircraftIcao::IndexAsString}));
-            this->m_columns.addColumn(CColumn("transponder", { CAircraft::IndexTransponder, CTransponder::IndexTransponderCodeAndModeFormatted }));
-            this->m_columns.addColumn(CColumn("latitude", { CAircraft::IndexSituation, CAircraftSituation::IndexLatitude }, Qt::AlignRight | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("longitude", { CAircraft::IndexSituation, CAircraftSituation::IndexLongitude }, Qt::AlignRight  | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("altitude", { CAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, Qt::AlignRight  | Qt::AlignVCenter));
-            this->m_columns.addColumn(CColumn("groundspeed", { CAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, Qt::AlignRight  | Qt::AlignVCenter));
+            this->m_columns.addColumn(CColumn::standardValueObject("callsign", CAircraft::IndexCallsign));
+            this->m_columns.addColumn(CColumn::standardString("pilotrealname", { CAircraft::IndexPilot, CUser::IndexRealName }));
+            this->m_columns.addColumn(CColumn("distance", CAircraft::IndexDistance, new CAirspaceDistanceFormatter()));
+            this->m_columns.addColumn(CColumn("frequency", { CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, new CComFrequencyFormatter()));
+            this->m_columns.addColumn(CColumn::standardString("icao", { CAircraft::IndexIcao, CAircraftIcao::IndexAsString}));
+            this->m_columns.addColumn(CColumn::standardString("transponder", { CAircraft::IndexTransponder, CTransponder::IndexTransponderCodeAndModeFormatted }));
+            this->m_columns.addColumn(CColumn("latitude", { CAircraft::IndexSituation, CAircraftSituation::IndexLatitude }, new CLatLonFormatter()));
+            this->m_columns.addColumn(CColumn("longitude", { CAircraft::IndexSituation, CAircraftSituation::IndexLongitude }, new CLatLonFormatter()));
+            this->m_columns.addColumn(CColumn::standardValueObject("altitude", { CAircraft::IndexSituation, CAircraftSituation::IndexAltitude }, CDefaultFormatter::alignRightVCenter()));
+            this->m_columns.addColumn(CColumn("gs", { CAircraft::IndexSituation, CAircraftSituation::IndexGroundspeed }, new CAircraftSpeedFormatter()));
 
             // default sort order
             this->setSortColumnByPropertyIndex(CAircraft::IndexDistance);
@@ -49,7 +49,7 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ViewAircraftList", "height");
             (void)QT_TRANSLATE_NOOP("ViewAircraftList", "transponder");
             (void)QT_TRANSLATE_NOOP("ViewAircraftList", "groundspeed");
-            (void)QT_TRANSLATE_NOOP("ViewAircraftList", "model");
+            (void)QT_TRANSLATE_NOOP("ViewAircraftList", "icao");
         }
     }
 }
