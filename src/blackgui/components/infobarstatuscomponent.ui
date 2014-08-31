@@ -56,7 +56,7 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::CLed" name="led_Network" native="true"/>
+    <widget class="BlackGui::CLedWidget" name="led_Network" native="true"/>
    </item>
    <item>
     <widget class="QLabel" name="lbl_Simulator">
@@ -75,7 +75,7 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::CLed" name="led_Simulator" native="true">
+    <widget class="BlackGui::CLedWidget" name="led_Simulator" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -98,7 +98,7 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::CLed" name="led_DBus" native="true">
+    <widget class="BlackGui::CLedWidget" name="led_DBus" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -124,7 +124,7 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::CLed" name="led_Ptt" native="true"/>
+    <widget class="BlackGui::CLedWidget" name="led_Ptt" native="true"/>
    </item>
    <item>
     <widget class="QLabel" name="lbl_Audio">
@@ -143,7 +143,7 @@
     </widget>
    </item>
    <item>
-    <widget class="BlackGui::CLed" name="led_Audio" native="true"/>
+    <widget class="BlackGui::CLedWidget" name="led_Audio" native="true"/>
    </item>
    <item>
     <spacer name="hs_InfoStatusBar">
@@ -162,7 +162,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>BlackGui::CLed</class>
+   <class>BlackGui::CLedWidget</class>
    <extends>QWidget</extends>
    <header>blackgui/led.h</header>
    <container>1</container>

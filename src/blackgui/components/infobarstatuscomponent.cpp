@@ -40,14 +40,14 @@ namespace BlackGui
 
         void CInfoBarStatusComponent::initLeds()
         {
-            CLed::LedShape shape = CLed::Circle;
-            this->ui->led_DBus->setValues(CLed::Yellow, CLed::Black, shape, "DBus connected", "DBus disconnected", 14);
-            this->ui->led_Network->setValues(CLed::Yellow, CLed::Black, shape, "Network connected", "Network disconnected", 14);
-            this->ui->led_Simulator->setValues(CLed::Yellow, CLed::Black, shape, "Simulator connected", "Simulator disconnected", 14);
+            CLedWidget::LedShape shape = CLedWidget::Circle;
+            this->ui->led_DBus->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DBus connected", "DBus disconnected", 14);
+            this->ui->led_Network->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Network connected", "Network disconnected", 14);
+            this->ui->led_Simulator->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Simulator connected", "Simulator disconnected", 14);
 
-            shape = CLed::Rounded;
-            this->ui->led_Ptt->setValues(CLed::Yellow, CLed::Red, shape, "Ptt", "Silence", 18);
-            this->ui->led_Audio->setValues(CLed::Yellow, CLed::Red, shape, "On", "Muted", 18);
+            shape = CLedWidget::Rounded;
+            this->ui->led_Ptt->setValues(CLedWidget::Yellow, CLedWidget::Red, shape, "Ptt", "Silence", 18);
+            this->ui->led_Audio->setValues(CLedWidget::Yellow, CLedWidget::Red, shape, "On", "Muted", 18);
         }
 
         void CInfoBarStatusComponent::setDBusStatus(bool dbus)
@@ -125,7 +125,7 @@ namespace BlackGui
                 this->ui->led_Network->setOn(true);
                 break;
             case INetwork::Connecting:
-                this->ui->led_Network->setTemporaryColor(CLed::Yellow);
+                this->ui->led_Network->setTemporaryColor(CLedWidget::Yellow);
                 break;
             default:
                 this->ui->led_Network->setOn(false);

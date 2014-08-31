@@ -6,12 +6,7 @@
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  *
- * Copyright (C) 2010 by P. Sereno
- * http://www.sereno-online.com
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License
- * version 2.1 as published by the Free Software Foundation
+ * Class based on qLed: Copyright (C) 2010 by P. Sereno, http://www.sereno-online.com
  */
 
 //! \file
@@ -21,28 +16,18 @@
 
 #include <Qt>
 #include <QWidget>
-
-class QColor;
-class QSvgRenderer;
+#include <QSvgRenderer>
+#include <QColor>
 
 namespace BlackGui
 {
-    //! Displaying an LED
+    //! Displaying an LED as widget. Non copyable.
     //! \remarks Based on qLed
-    class CLed : public QWidget
+    class CLedWidget : public QWidget
     {
         Q_OBJECT
         Q_ENUMS(LedColor)
         Q_ENUMS(LedShape)
-
-        //! Value on/off
-        Q_PROPERTY(bool value READ value WRITE setOn)
-        //! Color when on
-        Q_PROPERTY(LedColor onColor READ onColor WRITE setOnColor)
-        //! Color when off
-        Q_PROPERTY(LedColor offColor READ offColor WRITE setOffColor)
-        //! Shape
-        Q_PROPERTY(LedShape shape READ shape WRITE setShape)
 
     public:
 
@@ -56,29 +41,32 @@ namespace BlackGui
         //! States
         enum State { On, Off, Temporary };
 
-        //! Constructor
-        CLed(QWidget *parent = nullptr);
+        //! Default constructor
+        CLedWidget(QWidget *parent = nullptr);
 
         //! Constructor
-        CLed(bool on, LedColor onColor, LedColor offColor, LedShape shape, QWidget *parent = nullptr);
+        CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName = "on", const QString &offName = "off", QWidget *parent = nullptr);
 
         //! Destructor
-        virtual ~CLed();
+        virtual ~CLedWidget();
 
         //! Value
         bool value() const { return m_value; }
 
-        //! On color
-        LedColor onColor() const { return m_onColor; }
+        //! Allows to set the led value {true,false}
+        void setOn(bool on);
 
-        //! Off color
-        LedColor offColor() const { return m_offColor; }
+        //! Toggle on / off
+        void toggleValue();
 
         //! Shape
         LedShape shape() const { return m_shape; }
 
-        //! Allows to set the led value {true,false}
-        void setOn(bool on);
+        //! On color
+        LedColor onColor() const { return m_colorOn; }
+
+        //! Off color
+        LedColor offColor() const { return m_colorOff; }
 
         //! Allows to change the On color {Red,Green,Yellow,Grey,Orange,Purple,blue}
         void setOnColor(LedColor color);
@@ -89,31 +77,52 @@ namespace BlackGui
         //! Temporary color until next value change
         void setTemporaryColor(LedColor color);
 
+        //! Allows to change the led shape {Circle,Square,Triangle,Rounded rectangle}
+        void setShape(LedShape);
+
+        //! Target width
+        void setTargetWidth(int width) { this->m_widthTarget = width; }
+
+        //! Tool tip
+        QString getOnToolTip() const { return m_tooltipOn; }
+
+        //! Tool tip
+        QString getOffToolTip() const { return m_tooltipOff; }
+
         //! Tool tips
         void setToolTips(const QString &on, const QString &off);
 
         //! On tool tip
         void setOnToolTip(const QString &on);
 
-        //! Allows to change the led shape {Circle,Square,Triangle,Rounded rectangle}
-        void setShape(LedShape);
-
-        //! Target width
-        void setTargetWidth(int width) { this->m_targetWidth = width; }
-
         //! New values
         void setValues(LedColor onColor, LedColor offColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, int width = -1);
 
-        //! Toggle on / off
-        void toggleValue();
+        //! Render as pixmap, so it can be used with TableViews
+        QPixmap asPixmap() const;
 
     protected:
         State m_value = Off;         //!< current value
-        LedColor m_onColor = Red;    //!< On color
-        LedColor m_offColor = Grey;  //!< Off color
+        LedColor m_colorOn = Red;    //!< On color
+        LedColor m_colorOff = Grey;  //!< Off color
         LedShape m_shape = Circle;   //!< shape
         double m_whRatio = 1.0;      //!< width/height ratio
-        int m_targetWidth = -1;      //!< TargetWidth
+        int m_widthTarget = -1;      //!< desired width
+        int m_heightCalculated = 1;  //!< calculated height
+
+        QString m_tooltipOn;         //!< tooltip when on
+        QString m_tooltipOff;        //!< tooltip when off
+        QString m_currentToolTip;    //!< currently used tooltip
+        QScopedPointer<QSvgRenderer> m_renderer; //!< Renderer
+
+        //! Paint event
+        virtual void paintEvent(QPaintEvent *event) override;
+
+        //! Set / init LED
+        void setLed(LedColor ledColor = NoColor);
+
+        //! Render to pixmap
+        QPixmap renderToPixmap() const;
 
         //! All shapes
         static const QStringList &shapes();
@@ -124,15 +133,13 @@ namespace BlackGui
         //! All target widths
         static const QList<int> &widths();
 
-        //! Paint event
-        void paintEvent(QPaintEvent *event);
+        //! Color string
+        static const QString &colorString(LedColor color); //!<Color string
 
     private:
-        QSvgRenderer *m_renderer = nullptr;         //!< Renderer
-        QString m_tooltipOn;
-        QString m_tooltipOff;
-        void setLed(LedColor ledColor = NoColor); //!< Init LED
-        static const QString &colorString(LedColor color); //!<Color string
+        //! Fix widget after widths calculated
+        void firstTimeReInit();
+
     };
 }
 #endif

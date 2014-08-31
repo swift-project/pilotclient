@@ -304,5 +304,7 @@
         <file>icons/qled/triang_purple.svg</file>
         <file>icons/qled/triang_red.svg</file>
         <file>icons/qled/triang_yellow.svg</file>
+        <file>icons/qled/round_black.svg</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>
