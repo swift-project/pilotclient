@@ -136,17 +136,17 @@ namespace BlackGui
         QVariant CDateTimeFormatter::displayRole(const QVariant &dateTime) const
         {
             if (dateTime.isNull()) return "";
-            if (dateTime.type() == QMetaType::QDateTime)
+            if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QDateTime)
             {
                 QDateTime dt = dateTime.value<QDateTime>();
                 return dt.toString(m_formatString);
             }
-            else if (dateTime.type() == QMetaType::QDate)
+            else if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QDate)
             {
                 QDate d = dateTime.value<QDate>();
                 return d.toString(m_formatString);
             }
-            else if (dateTime.type() == QMetaType::QTime)
+            else if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QTime)
             {
                 QTime t = dateTime.value<QTime>();
                 return t.toString(m_formatString);

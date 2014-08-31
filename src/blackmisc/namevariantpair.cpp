@@ -156,7 +156,7 @@ namespace BlackMisc
             this->m_variant = variant;
             break;
         case IndexIcon:
-            if (variant.type() == QMetaType::Int)
+            if (static_cast<QMetaType::Type>(variant.type()) == QMetaType::Int)
             {
                 CIcons::IconIndex index = static_cast<CIcons::IconIndex>(variant.toInt());
                 this->m_icon = CIconList::iconForIndex(index);

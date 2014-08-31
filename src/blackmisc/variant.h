@@ -134,6 +134,7 @@ namespace BlackMisc
         bool isValid() const { return m_v.isValid(); }
 
         //! Return the metatype ID of the value in this variant, or QMetaType::User if it is a user type.
+        // KB we should think about returning QMetaType::Type directly, as QVariant::Type is deprecated
         QVariant::Type type() const { return m_v.type(); }
 
         //! Return the typename of the value in this variant.

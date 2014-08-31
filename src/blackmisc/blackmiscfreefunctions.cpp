@@ -232,7 +232,8 @@ int BlackMisc::compareQVariants(const QVariant &v1, const QVariant &v2)
     if (v1.type() != v2.type()) qFatal("Mismatching types");
     if (v1.userType() != v2.userType()) qFatal("Mismatching user types");
 
-    switch (v1.type())
+    auto v1Type = static_cast<QMetaType::Type>(v1.type());
+    switch (v1Type)
     {
     case QMetaType::QString:
     case QMetaType::QChar:
@@ -274,7 +275,7 @@ int BlackMisc::compareQVariants(const QVariant &v1, const QVariant &v2)
     }
 
     // BlackObject
-    if (v1.type() == QVariant::UserType)
+    if (v1Type == QMetaType::User)
     {
         const CValueObject *cs1 = CValueObject::fromQVariant(v1);
         const CValueObject *cs2 = CValueObject::fromQVariant(v2);
@@ -285,28 +286,28 @@ int BlackMisc::compareQVariants(const QVariant &v1, const QVariant &v2)
     }
 
     // integer types, handling not as double for rounding issues
-    if (v1.type() == QVariant::Int)
+    if (v1Type == QMetaType::Int)
     {
         int i1 = v1.value<int>();
         int i2 = v2.value<int>();
         if (i1 == i2) return 0;
         return i1 < i2 ? -1 : 1;
     }
-    else if (v1.type() == QVariant::UInt)
+    else if (v1Type == QMetaType::UInt)
     {
         uint i1 = v1.value<uint>();
         uint i2 = v2.value<uint>();
         if (i1 == i2) return 0;
         return i1 < i2 ? -1 : 1;
     }
-    else if (v1.type() == QVariant::LongLong)
+    else if (v1Type == QMetaType::LongLong)
     {
         long long i1 = v1.value<long long>();
         long long i2 = v2.value<long long>();
         if (i1 == i2) return 0;
         return i1 < i2 ? -1 : 1;
     }
-    else if (v1.type() == QVariant::ULongLong)
+    else if (v1Type == QMetaType::ULongLong)
     {
         unsigned long long i1 = v1.value<unsigned long long>();
         unsigned long long i2 = v2.value<unsigned long long>();
