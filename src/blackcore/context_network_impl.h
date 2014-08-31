@@ -21,6 +21,7 @@
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/setnetwork.h"
 #include "blackmisc/nwclientlist.h"
+#include "blackmisc/digestsignal.h"
 
 #include <QMap>
 
@@ -46,7 +47,7 @@ namespace BlackCore
         //! Airspace monitor accessible to other contexts
         CAirspaceMonitor *getAirspaceMonitor() const { return m_airspace; }
 
-    public slots: // IContextNetwork overrides
+    public slots:
 
         //! \copydoc IContextNetwork::readAtcBookingsFromSource()
         virtual void readAtcBookingsFromSource() const override;
@@ -145,12 +146,16 @@ namespace BlackCore
     private:
         static const auto c_logContext = CRuntime::LogForNetwork;
 
-        CAirspaceMonitor *m_airspace;
+        CAirspaceMonitor    *m_airspace;
         BlackCore::INetwork *m_network;
         INetwork::ConnectionStatus m_currentStatus; //!< used to detect pending connections
 
+        BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 750, 2 };
+        BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 750, 2 };
+        BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged { this, &IContextNetwork::changedAircraftsInRange, &IContextNetwork::changedAircraftsInRangeDigest, 750, 2 };
+
         // for reading XML and VATSIM data files
-        CVatsimBookingReader *m_vatsimBookingReader;
+        CVatsimBookingReader  *m_vatsimBookingReader;
         CVatsimDataFileReader *m_vatsimDataFileReader;
         QTimer *m_dataUpdateTimer; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 

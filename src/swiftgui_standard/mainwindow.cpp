@@ -259,11 +259,12 @@ void MainWindow::ps_toggleNetworkConnection()
             this->ps_displayStatusMessageInGui(CStatusMessage::getInfoMessage("login in observer mode"));
         }
         msgs = this->getIContextNetwork()->connectToNetwork(static_cast<uint>(mode));
+        this->startUpdateTimersWhenConnected();
     }
     else
     {
         // disconnect from network
-        this->stopUpdateTimers(); // stop update timers, to avoid updates during disconnecting (a short time frame)
+        this->stopUpdateTimersWhenDisconnected(); // stop update timers, to avoid updates during disconnecting (a short time frame)
         if (this->m_contextAudioAvailable) this->getIContextAudio()->leaveAllVoiceRooms();
         msgs = this->getIContextNetwork()->disconnectFromNetwork();
     }

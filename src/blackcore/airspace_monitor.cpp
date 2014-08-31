@@ -248,7 +248,7 @@ namespace BlackCore
         if (callsign.isEmpty() || model.isEmpty()) return;
 
         // Request of other client, I can get the other's model from that
-        CIndexVariantMap vm( { CClient::IndexModel, CAircraftModel::IndexModelString }, QVariant(model));
+        CIndexVariantMap vm({ CClient::IndexModel, CAircraftModel::IndexModelString }, QVariant(model));
         vm.addValue({ CClient::IndexModel, CAircraftModel::IndexIsQueriedModelString }, QVariant(true));
         if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
         {
@@ -280,8 +280,8 @@ namespace BlackCore
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
         this->m_metarCache.insert(icaoCode, metar);
-        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsignTower)) emit this->changedAtcStationsOnline();
-        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsignTower)) emit this->changedAtcStationsBooked();
+        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsignTower)) { emit this->changedAtcStationsOnline(); }
+        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsignTower)) { emit this->changedAtcStationsBooked(); }
     }
 
     void CAirspaceMonitor::ps_flightplanReceived(const CCallsign &callsign, const CFlightPlan &flightPlan)
@@ -322,6 +322,7 @@ namespace BlackCore
             // into list
             this->m_atcStationsBooked.push_back(bookedStation);
         }
+        emit this->changedAtcStationsBooked(); // all booked stations reloaded
     }
 
     void CAirspaceMonitor::ps_atcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
@@ -385,9 +386,12 @@ namespace BlackCore
         if (callsign.isEmpty()) return;
         CIndexVariantMap vm(CAtcStation::IndexAtis, atisMessage.toQVariant());
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
+
+        // receiving an ATIS means station is online, update in bookings
+        vm.addValue(CAtcStation::IndexIsOnline, true);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
-        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
+        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign)) { emit this->changedAtcStationsOnline(); }
+        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) { emit this->changedAtcStationsBooked(); }
     }
 
     void CAirspaceMonitor::ps_atisVoiceRoomReceived(const CCallsign &callsign, const QString &url)
@@ -395,17 +399,19 @@ namespace BlackCore
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
         QString trimmedUrl = url.trimmed();
         CIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
-        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign))
-        {
-            this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-            emit this->changedAtcStationsBooked();
-        }
         if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign))
         {
             this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
             CAtcStation station = this->m_atcStationsOnline.findFirstByCallsign(callsign);
-            emit this->changedAtcStationsBooked();
+            emit this->changedAtcStationsOnline();  // single ATIS received
             emit this->changedAtcStationOnlineConnectionStatus(station, true);
+        }
+        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign))
+        {
+            // receiving a voice room means station is online, update in bookings
+            vm.addValue(CAtcStation::IndexIsOnline, true);
+            this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+            emit this->changedAtcStationsBooked(); // single ATIS received
         }
         vm = CIndexVariantMap(CClient::IndexVoiceCapabilities, CVoiceCapabilities(CVoiceCapabilities::Voice).toQVariant());
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
@@ -427,8 +433,8 @@ namespace BlackCore
             CIndexVariantMap vm(CAtcStation::IndexBookedUntil, logoffDateTime);
             this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
             this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-            if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
-            if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) emit this->changedAtcStationsBooked();
+            if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign)) { emit this->changedAtcStationsOnline(); }
+            if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) { emit this->changedAtcStationsBooked(); }
         }
     }
 

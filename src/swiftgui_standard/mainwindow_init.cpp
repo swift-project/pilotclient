@@ -144,7 +144,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->ps_registerHotkeyFunctions();
 
     // update timers
-    this->startUpdateTimers();
+    this->startUpdateTimersWhenConnected();
 
     // do this as last statement, so it can be used as flag
     // whether init has been completed
@@ -246,17 +246,17 @@ void MainWindow::initialDataReads()
 /*
  * Start update timers
  */
-void MainWindow::startUpdateTimers()
+void MainWindow::startUpdateTimersWhenConnected()
 {
-    this->ui->comp_MainInfoArea->getAircraftComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getAircraftUpdateIntervalSeconds());
     this->ui->comp_MainInfoArea->getAtcStationComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getAtcUpdateIntervalSeconds());
+    this->ui->comp_MainInfoArea->getAircraftComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getAircraftUpdateIntervalSeconds());
     this->ui->comp_MainInfoArea->getUserComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getUsersUpdateIntervalSeconds());
 }
 
 /*
  * Stop udate timers
  */
-void MainWindow::stopUpdateTimers()
+void MainWindow::stopUpdateTimersWhenDisconnected()
 {
     this->ui->comp_MainInfoArea->getAtcStationComponent()->stopTimer();
     this->ui->comp_MainInfoArea->getAircraftComponent()->stopTimer();
@@ -271,7 +271,7 @@ void MainWindow::stopAllTimers(bool disconnect)
     this->m_timerStatusBar->stop();
     this->m_timerContextWatchdog->stop();
     this->m_timerSimulator->stop();
-    this->stopUpdateTimers();
+    this->stopUpdateTimersWhenDisconnected();
     if (!disconnect) return;
     this->disconnect(this->m_timerStatusBar);
     this->disconnect(this->m_timerContextWatchdog);

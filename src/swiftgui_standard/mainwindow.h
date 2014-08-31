@@ -145,10 +145,10 @@ private:
     bool isMainPageSelected(MainPageIndex mainPage) const;
 
     //! Start all update timers
-    void startUpdateTimers();
+    void startUpdateTimersWhenConnected();
 
     //! Stop all update timers
-    void stopUpdateTimers();
+    void stopUpdateTimersWhenDisconnected();
 
     /*!
      * \brief Stop all timers

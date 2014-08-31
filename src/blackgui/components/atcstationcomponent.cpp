@@ -26,6 +26,9 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
+
+            // set station mode
+            this->ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
             this->ui->tvp_AtcStationsBooked->setStationMode(CAtcStationListModel::StationsBooked);
 
             // Signal / Slots
@@ -33,10 +36,10 @@ namespace BlackGui
             Q_ASSERT(connected);
             connected = this->connect(this->ui->pb_AtcStationsLoadMetar, SIGNAL(clicked()), this, SLOT(getMetar()));
             Q_ASSERT(connected);
-            this->connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::atcStationsTabChanged);
-            this->connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::onlineAtcStationSelected);
-            this->connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::requestAtis);
-            this->connect(this->ui->pb_ReloadAtcStationsBooked, &QPushButton::clicked, this, &CAtcStationComponent::reloadAtcStationsBooked);
+            this->connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::ps_atcStationsTabChanged);
+            this->connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::ps_onlineAtcStationSelected);
+            this->connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
+            this->connect(this->ui->pb_ReloadAtcStationsBooked, &QPushButton::clicked, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
         }
 
         CAtcStationComponent::~CAtcStationComponent()
@@ -50,10 +53,10 @@ namespace BlackGui
             Q_ASSERT(this->getIContextNetwork());
             if (this->getIContextNetwork())
             {
-                this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnline, this, &CAtcStationComponent::changedAtcStationsOnline);
-                this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsBooked, this, &CAtcStationComponent::changedAtcStationsBooked);
+                this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsOnlineDigest, this, &CAtcStationComponent::ps_changedAtcStationsOnline);
+                this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationsBookedDigest, this, &CAtcStationComponent::ps_changedAtcStationsBooked);
                 this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
-                this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::connectionStatusChanged);
+                this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::ps_connectionStatusChanged);
             }
         }
 
@@ -63,14 +66,17 @@ namespace BlackGui
             Q_ASSERT(this->ui->tvp_AtcStationsOnline);
             Q_ASSERT(this->getIContextNetwork());
 
-            // initial read for bookings
-            if (this->ui->tvp_AtcStationsBooked->isEmpty()) this->reloadAtcStationsBooked();
+            // bookings
+            if (this->m_timestampBookedStationsChanged > this->m_timestampLastReadBookedStations)
+            {
+                this->ps_reloadAtcStationsBooked();
+            }
 
+            // online stations, only when connected
             if (this->getIContextNetwork()->isConnected())
             {
                 // update
-                if (this->m_timestampOnlineStationsChanged.isNull() || this->m_timestampLastReadOnlineStations.isNull() ||
-                        (this->m_timestampOnlineStationsChanged > this->m_timestampLastReadOnlineStations))
+                if (this->m_timestampOnlineStationsChanged > this->m_timestampLastReadOnlineStations)
                 {
                     this->ui->tvp_AtcStationsOnline->updateContainer(this->getIContextNetwork()->getAtcStationsOnline());
                     this->m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
@@ -84,7 +90,7 @@ namespace BlackGui
             }
         }
 
-        void CAtcStationComponent::reloadAtcStationsBooked()
+        void CAtcStationComponent::ps_reloadAtcStationsBooked()
         {
             Q_ASSERT(this->ui->tvp_AtcStationsBooked);
             Q_ASSERT(this->getIContextNetwork());
@@ -92,8 +98,8 @@ namespace BlackGui
             QObject *sender = QObject::sender();
             if (sender == this->ui->pb_ReloadAtcStationsBooked && this->getIContextNetwork())
             {
-                this->getIContextNetwork()->readAtcBookingsFromSource(); // trigger new read
-                QTimer::singleShot(7500, this, SLOT(reloadAtcStationsBooked())); // deferred loading
+                // trigger new read, which takes some time. A signal will be received when this is done
+                this->getIContextNetwork()->readAtcBookingsFromSource();
             }
             else
             {
@@ -102,14 +108,23 @@ namespace BlackGui
             }
         }
 
-        void CAtcStationComponent::changedAtcStationsOnline()
+        void CAtcStationComponent::ps_changedAtcStationsOnline()
         {
-            // just update timestamp, data will be pulled by time
+            // just update timestamp, data will be pulled by timer
             // the timestamp will tell if there are any newer data
             this->m_timestampOnlineStationsChanged = QDateTime::currentDateTimeUtc();
         }
 
-        void CAtcStationComponent::connectionStatusChanged(uint from, uint to, const QString &message)
+        void CAtcStationComponent::ps_changedAtcStationsBooked()
+        {
+            // a change can mean a complete change of the bookings, or
+            // a single value is updated (e.g. online status)
+            // just update timestamp, data will be pulled by timer
+            // the timestamp will tell if there are any newer data
+            this->m_timestampBookedStationsChanged = QDateTime::currentDateTimeUtc();
+        }
+
+        void CAtcStationComponent::ps_connectionStatusChanged(uint from, uint to, const QString &message)
         {
             INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
             INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
@@ -125,11 +140,6 @@ namespace BlackGui
         void CAtcStationComponent::changedAtcStationOnlineConnectionStatus(const CAtcStation &station, bool added)
         {
             this->ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, added);
-        }
-
-        void CAtcStationComponent::changedAtcStationsBooked()
-        {
-            this->reloadAtcStationsBooked();
         }
 
         void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
@@ -154,7 +164,7 @@ namespace BlackGui
             }
         }
 
-        void CAtcStationComponent::onlineAtcStationSelected(QModelIndex index)
+        void CAtcStationComponent::ps_onlineAtcStationSelected(QModelIndex index)
         {
             this->ui->te_AtcStationsOnlineInfo->setText(""); // reset
             const CAtcStation stationClicked = this->ui->tvp_AtcStationsOnline->derivedModel()->at(index);
@@ -172,16 +182,16 @@ namespace BlackGui
             this->ui->te_AtcStationsOnlineInfo->setText(infoMessage);
         }
 
-        void CAtcStationComponent::atcStationsTabChanged()
+        void CAtcStationComponent::ps_atcStationsTabChanged()
         {
             if (this->currentWidget() == this->ui->tb_AtcStationsOnline)
             {
                 if (this->m_timestampLastReadBookedStations.isNull())
-                    this->reloadAtcStationsBooked();
+                    this->ps_reloadAtcStationsBooked();
             }
         }
 
-        void CAtcStationComponent::requestAtis()
+        void CAtcStationComponent::ps_requestAtis()
         {
             if (!this->getIContextNetwork()->isConnected()) return;
             this->getIContextNetwork()->requestAtisUpdates();

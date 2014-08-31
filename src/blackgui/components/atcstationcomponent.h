@@ -68,32 +68,33 @@ namespace BlackGui
         private slots:
 
             //! Request new ATIS
-            void requestAtis();
+            void ps_requestAtis();
 
             //! Online ATC station selected
-            void onlineAtcStationSelected(QModelIndex index);
+            void ps_onlineAtcStationSelected(QModelIndex index);
 
             //! Tab changed
-            void atcStationsTabChanged();
+            void ps_atcStationsTabChanged();
 
-            //! Booked stations
-            void reloadAtcStationsBooked();
+            //! Booked stations reloading
+            void ps_reloadAtcStationsBooked();
 
             //! Booked stations changed
-            void changedAtcStationsBooked();
+            void ps_changedAtcStationsBooked();
 
             //! Online stations changed
-            void changedAtcStationsOnline();
+            void ps_changedAtcStationsOnline();
 
             //! Connection status has been changed
-            void connectionStatusChanged(uint from, uint to, const QString &message);
+            void ps_connectionStatusChanged(uint from, uint to, const QString &message);
 
         private:
             Ui::CAtcStationComponent *ui;
             CTimerBasedComponent *m_timerComponent;
-            QDateTime m_timestampLastReadOnlineStations;
-            QDateTime m_timestampOnlineStationsChanged;
-            QDateTime m_timestampLastReadBookedStations;
+            QDateTime m_timestampLastReadOnlineStations = CTimerBasedComponent::epoch();  //!< stations read
+            QDateTime m_timestampOnlineStationsChanged = CTimerBasedComponent::epoch();   //!< stations marked as changed
+            QDateTime m_timestampLastReadBookedStations = CTimerBasedComponent::epoch();  //!< stations read
+            QDateTime m_timestampBookedStationsChanged = CTimerBasedComponent::epoch();   //!< stations marked as changed
         };
     }
 }

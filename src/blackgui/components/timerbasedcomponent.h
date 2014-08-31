@@ -13,6 +13,7 @@
 #define BLACKGUI_TIMERBASEDCOMPONENT_H
 
 #include <QTimer>
+#include <QDateTime>
 
 namespace BlackGui
 {
@@ -27,6 +28,13 @@ namespace BlackGui
 
             //! Destructor
             ~CTimerBasedComponent();
+
+            //! Date/time of 1/1/1970, used to init timestamp values as "outdated"
+            static const QDateTime &epoch()
+            {
+                static const QDateTime e = QDateTime::fromMSecsSinceEpoch(0);
+                return e;
+            }
 
         public slots:
             //! Update time, time < 100 stops updates
