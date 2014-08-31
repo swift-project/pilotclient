@@ -40,13 +40,14 @@ namespace BlackMisc
                 IndexCallsign,
                 IndexVoiceCapabilities,
                 IndexVoiceCapabilitiesString,
-                IndexVoiceCapabilitiesPixmap
+                IndexVoiceCapabilitiesPixmap,
+                IndexVoiceCapabilitiesIcon
             };
 
             //! The Capabilities enum
             enum Capabilities
             {
-                FsdWithInterimPositions,
+                FsdWithInterimPositions = BlackMisc::CPropertyIndex::GlobalIndexAbuseMode,
                 FsdWithModelDescription,
                 FsdAtisCanBeReceived
             };
@@ -59,7 +60,6 @@ namespace BlackMisc
 
             //! Constructor.
             CClient(const CUser &user) : m_user(user) {}
-
 
             //! Equal operator ==
             bool operator ==(const CClient &other) const;

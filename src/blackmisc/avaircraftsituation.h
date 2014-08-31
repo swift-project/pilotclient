@@ -29,6 +29,22 @@ namespace BlackMisc
         class CAircraftSituation : public BlackMisc::CValueObject, public BlackMisc::Geo::ICoordinateGeodetic
         {
         public:
+
+            //! Properties by index
+            enum ColumnIndex
+            {
+                IndexPosition = BlackMisc::CPropertyIndex::GlobalIndexCAircraftSituation,
+                IndexLatitude,
+                IndexLongitude,
+                IndexAltitude,
+                IndexHeading,
+                IndexBank,
+                IndexPitch,
+                IndexGroundspeed,
+                IndexTimeStamp,
+                IndexTimeStampFormatted
+            };
+
             //! Default constructor.
             CAircraftSituation() : m_timestamp(QDateTime::currentDateTimeUtc()) {}
 
@@ -40,21 +56,6 @@ namespace BlackMisc
                                const BlackMisc::PhysicalQuantities::CSpeed &gs = BlackMisc::PhysicalQuantities::CSpeed())
                 : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
                   m_bank(bank), m_groundspeed(gs), m_timestamp(QDateTime::currentDateTimeUtc()) {}
-
-            //! Properties by index
-            enum ColumnIndex
-            {
-                IndexPosition,
-                IndexLatitude,
-                IndexLongitude,
-                IndexAltitude,
-                IndexHeading,
-                IndexBank,
-                IndexPitch,
-                IndexGroundspeed,
-                IndexTimeStamp,
-                IndexTimeStampFormatted
-            };
 
             //! \copydoc CValueObject::propertyByIndex(index)
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;

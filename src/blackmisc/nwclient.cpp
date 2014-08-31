@@ -197,6 +197,10 @@ namespace BlackMisc
                 return this->m_voiceCapabilities.propertyByIndex(index.copyFrontRemoved());
             case IndexVoiceCapabilitiesPixmap:
                 return QVariant(this->m_voiceCapabilities.toPixmap());
+            case IndexVoiceCapabilitiesIcon:
+                return QVariant(this->m_voiceCapabilities.toIcon().toQVariant());
+            case IndexVoiceCapabilitiesString:
+                return QVariant(this->m_voiceCapabilities.toQString(true));
             default:
                 return CValueObject::propertyByIndex(index);
             }

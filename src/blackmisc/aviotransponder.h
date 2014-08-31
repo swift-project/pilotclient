@@ -35,8 +35,9 @@ namespace BlackMisc
             };
 
             //! Indexes
-            enum ColumnIndex {
-                IndexMode,
+            enum ColumnIndex
+            {
+                IndexMode = BlackMisc::CPropertyIndex::GlobalIndexCTransponder,
                 IndexModeAsString,
                 IndexTransponderCode,
                 IndexTransponderCodeFormatted,

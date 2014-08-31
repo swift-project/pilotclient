@@ -42,9 +42,6 @@ namespace BlackMisc
             //! Init by double value
             CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! Virtual destructor
             virtual ~CLongitude() {}
         };

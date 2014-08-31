@@ -32,7 +32,7 @@ namespace BlackSim
             //! Properties by index
             enum ColumnIndex
             {
-                IndexEntryIndex = BlackMisc::CPropertyIndex::GlobalIndexCAircraftModel,
+                IndexEntryIndex = BlackMisc::CPropertyIndex::GlobalIndexCAircraftCfgEntries,
                 IndexFilePath,
                 IndexTitle,
                 IndexAtcType,

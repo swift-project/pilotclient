@@ -127,17 +127,13 @@ namespace BlackMisc
             return QVariant(this->m_name);
         case IndexVariant:
             return this->m_variant.toQVariant();
-        case IndexCallsignIcon:
+        case IndexIcon:
             return this->m_icon.toQVariant();
         case IndexPixmap:
             return this->m_icon.toPixmap();
         default:
-            break;
+            return CValueObject::propertyByIndex(index);
         }
-
-        Q_ASSERT_X(false, "CNameVariantPair", "index unknown");
-        QString m = QString("no property, index ").append(index.toQString());
-        return QVariant::fromValue(m);
     }
 
     /*
@@ -159,8 +155,8 @@ namespace BlackMisc
         case IndexVariant:
             this->m_variant = variant;
             break;
-        case IndexCallsignIcon:
-            if (variant.canConvert<int>())
+        case IndexIcon:
+            if (variant.type() == QMetaType::Int)
             {
                 CIcons::IconIndex index = static_cast<CIcons::IconIndex>(variant.toInt());
                 this->m_icon = CIconList::iconForIndex(index);
@@ -171,7 +167,7 @@ namespace BlackMisc
             }
             break;
         default:
-            Q_ASSERT_X(false, "CNameVariantPair", "index unknown");
+            CValueObject::setPropertyByIndex(variant, index);
             break;
         }
     }

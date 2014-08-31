@@ -72,9 +72,9 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexName = 0,
+            IndexName = BlackMisc::CPropertyIndex::GlobalIndexCNameVariantPair,
             IndexVariant,
-            IndexCallsignIcon,
+            IndexIcon,
             IndexPixmap
         };
 

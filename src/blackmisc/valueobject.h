@@ -163,7 +163,7 @@ namespace BlackMisc
         //! Base class enums
         enum ColumnIndex
         {
-            IndexPixmap,
+            IndexPixmap = 10, // manually set to avoid circular dependencies
             IndexIcon,
             IndexString
         };

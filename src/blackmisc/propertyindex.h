@@ -33,23 +33,29 @@ namespace BlackMisc
         //! Global index, make sure the indexes are unqiue (for using them in class hierarchy)
         enum GlobalIndex
         {
-            GlobalIndexCValueObject        =    0,
-            GlobalIndexCPhysicalQuantity   =  100,
-            GlobalIndexCStatusMessage      =  200,
-            GlobalIndexCCallsign           = 1000,
-            GlobalIndexCAircraftIcao       = 1100,
-            GlobalIndexCAircraft           = 1200,
-            GlobalIndexCAtcStation         = 1300,
-            GlobalIndexCAirport            = 1400,
-            GlobalIndexCModulator          = 2000,
-            GlobalIndexICoordinateGeodetic = 3000,
-            GlobalIndexCCoordinateGeodetic = 3100,
-            GlobalIndexCClient             = 4000,
-            GlobalIndexCUser               = 4100,
-            GlobalIndexCAircraftModel      = 4200,
-            GlobalIndexCVoiceRoom          = 5000,
-            GlobalIndexCAircraftMapping    = 6000,
-            GlobalIndexCAircraftCfgEntries = 6100
+            GlobalIndexCValueObject           =   10, // GlobalIndexCValueObject needs to be set manually in CValueObject
+            GlobalIndexCPhysicalQuantity      =   100,
+            GlobalIndexCStatusMessage         =   200,
+            GlobalIndexCNameVariantPair       =   300,
+            GlobalIndexCCallsign              =  1000,
+            GlobalIndexCAircraftIcao          =  1100,
+            GlobalIndexCAircraft              =  1200,
+            GlobalIndexCAircraftSituation     =  1300,
+            GlobalIndexCAtcStation            =  1400,
+            GlobalIndexCAirport               =  1500,
+            GlobalIndexCModulator             =  2000,
+            GlobalIndexCTransponder           =  2100,
+            GlobalIndexICoordinateGeodetic    =  3000,
+            GlobalIndexCCoordinateGeodetic    =  3100,
+            GlobalIndexCClient                =  4000,
+            GlobalIndexCUser                  =  4100,
+            GlobalIndexCServer                =  4200,
+            GlobalIndexCAircraftModel         =  4300,
+            GlobalIndexCVoiceRoom             =  5000,
+            GlobalIndexCSettingKeyboardHotkey =  6000,
+            GlobalIndexCAircraftMapping       =  7000,
+            GlobalIndexCAircraftCfgEntries    =  7100,
+            GlobalIndexAbuseMode              = 20000 // property index abused as map key or otherwise
         };
 
         //! Default constructor.
@@ -64,7 +70,7 @@ namespace BlackMisc
         //! Construct from a base class object.
         CPropertyIndex(const QList<int> &indexes);
 
-		//! From string
+        //! From string
         CPropertyIndex(const QString &indexes);
 
         //! Copy with first element removed

@@ -28,7 +28,7 @@ namespace BlackMisc
             //! Properties by index
             enum ColumnIndex
             {
-                IndexName = 0,
+                IndexName = BlackMisc::CPropertyIndex::GlobalIndexCServer,
                 IndexDescription,
                 IndexAddress,
                 IndexPort,
