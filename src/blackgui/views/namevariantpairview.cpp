@@ -19,14 +19,7 @@ namespace BlackGui
     {
         CNameVariantPairView::CNameVariantPairView(QWidget *parent) : CViewBase(parent)
         {
-            this->m_model = new CNameVariantPairModel(true, this);
-            this->setModel(this->m_model); // via QTableView
-            this->m_model->setSortColumnByPropertyIndex(BlackMisc::CNameVariantPair::IndexName);
-            if (this->m_model->hasValidSortColumn())
-                this->horizontalHeader()->setSortIndicator(
-                    this->m_model->getSortColumn(),
-                    this->m_model->getSortOrder());
-            this->horizontalHeader()->setStretchLastSection(true);
+            this->standardInit(new CNameVariantPairModel(true, this));
         }
 
         void CNameVariantPairView::setIconMode(bool withIcon)
@@ -39,15 +32,13 @@ namespace BlackGui
         {
             Q_ASSERT(this->m_model);
             this->m_model->addOrUpdateByName(name, value, icon);
-            this->resizeColumnsToContents();
-            this->resizeRowsToContents();
+            this->resizeToContents();
         }
 
         void CNameVariantPairView::removeByName(const QString &name)
         {
             this->m_model->removeByName(name);
-            this->resizeColumnsToContents();
-            this->resizeRowsToContents();
+            this->resizeToContents();
         }
     }
 }

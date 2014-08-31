@@ -23,16 +23,7 @@ namespace BlackGui
          */
         CStatusMessageView::CStatusMessageView(QWidget *parent) : CViewBase(parent), m_contextMenu(nullptr)
         {
-            this->m_model = new CStatusMessageListModel(this);
-            this->setModel(this->m_model); // QTableView
-            this->m_model->setSortColumnByPropertyIndex(BlackMisc::CStatusMessage::IndexTimestamp);
-            if (this->m_model->hasValidSortColumn())
-            {
-                this->horizontalHeader()->setSortIndicator(
-                    this->m_model->getSortColumn(),
-                    this->m_model->getSortOrder());
-            }
-
+            this->standardInit(new CStatusMessageListModel(this));
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             this->m_contextMenu = new QMenu(this);
             this->m_contextMenu->addAction("Clear");
@@ -58,5 +49,5 @@ namespace BlackGui
                 }
             }
         }
-    }
-}
+    } // namespace
+} // namespace

@@ -9,6 +9,7 @@
 
 #include "clientview.h"
 #include <QHeaderView>
+#include <QDebug>
 
 using namespace BlackMisc;
 using namespace BlackGui::Models;
@@ -19,14 +20,7 @@ namespace BlackGui
     {
         CClientView::CClientView(QWidget *parent) : CViewBase(parent)
         {
-            this->m_model = new CClientListModel(this);
-            this->setModel(this->m_model); // via QTableView
-            this->m_model->setSortColumnByPropertyIndex( { BlackMisc::Network::CClient::IndexUser, BlackMisc::Network::CUser::IndexRealName });
-            if (this->m_model->hasValidSortColumn())
-                this->horizontalHeader()->setSortIndicator(
-                    this->m_model->getSortColumn(),
-                    this->m_model->getSortOrder());
-            this->horizontalHeader()->setStretchLastSection(true);
+            this->standardInit(new CClientListModel(this));
         }
     }
 }

@@ -22,20 +22,6 @@ namespace BlackGui
         template <class ModelClass> class CViewBase : public QTableView
         {
 
-        protected:
-
-            //! Constructor
-            CViewBase(QWidget *parent, ModelClass *model = nullptr) : QTableView(parent), m_model(model)
-            {
-                this->setSortingEnabled(true);
-                this->horizontalHeader()->setStretchLastSection(true);
-            }
-
-            //! Destructor
-            virtual ~CViewBase() {}
-
-            ModelClass *m_model; //!< corresponding model
-
         public:
 
             //! Model
@@ -95,6 +81,59 @@ namespace BlackGui
                 Q_ASSERT(this->m_model);
                 return this->m_model->rowCount() < 1;
             }
+
+            //! Set own name and the model's name
+            void setObjectName(const QString &name)
+            {
+                // then name here is mainly set for debugging purposes so each model can be identified
+                Q_ASSERT(m_model);
+                QTableView::setObjectName(name);
+                QString modelName = QString(name).append(':').append(this->m_model->getTranslationContext());
+                this->m_model->setObjectName(modelName);
+            }
+
+        protected:
+
+            //! Constructor
+            CViewBase(QWidget *parent, ModelClass *model = nullptr) : QTableView(parent), m_model(model)
+            {
+                this->setSortingEnabled(true);
+                if (model) { this->setModel(this->m_model); }
+            }
+
+            //! Destructor
+            virtual ~CViewBase() {}
+
+            //! Set the search indicator based on model
+            void setSortIndicator()
+            {
+                if (this->m_model->hasValidSortColumn())
+                {
+                    this->horizontalHeader()->setSortIndicator(
+                        this->m_model->getSortColumn(),
+                        this->m_model->getSortOrder());
+                }
+            }
+
+            //! Resize to content
+            void resizeToContents()
+            {
+                this->resizeColumnsToContents();
+                this->resizeRowsToContents();
+            }
+
+            //! Init
+            void standardInit(ModelClass *model = nullptr)
+            {
+                Q_ASSERT(model || this->m_model);
+                if (model) { this->m_model = model; }
+                this->setModel(this->m_model); // via QTableView
+                this->setSortIndicator();
+                this->horizontalHeader()->setStretchLastSection(true);
+            }
+
+            ModelClass *m_model = nullptr; //!< corresponding model
+
         };
     }
 }
