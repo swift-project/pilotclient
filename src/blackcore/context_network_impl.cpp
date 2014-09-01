@@ -350,7 +350,7 @@ namespace BlackCore
     }
 
     /*
-     * Update bookings
+     * Updated bookings
      */
     void CContextNetwork::ps_ReceivedBookings(const CAtcStationList &)
     {

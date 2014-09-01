@@ -1,3 +1,12 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #ifndef BLACKMISC_CPROJECT_H
 #define BLACKMISC_CPROJECT_H
 
@@ -7,7 +16,7 @@ namespace BlackMisc
 {
 
     /*!
-     * \brief Metadata about the project
+     * Metadata about the project
      */
     class CProject
     {
@@ -33,7 +42,7 @@ namespace BlackMisc
         //! with GUI?
         static bool isCompiledWithGui();
 
-        //! Compiled with as info string
+        //! Info string about compilation
         static const QString &compiledInfo();
 
         //! Simulator String info

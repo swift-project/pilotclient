@@ -37,7 +37,6 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn::standardString("server", CClient::IndexServer));
 
             // force strings for translation in resource files
-            // force strings for translation in resource files
             (void)QT_TRANSLATE_NOOP("ViewClientList", "callsign");
             (void)QT_TRANSLATE_NOOP("ViewClientList", "realname");
             (void)QT_TRANSLATE_NOOP("ViewClientList", "userid");

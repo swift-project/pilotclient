@@ -94,6 +94,8 @@ namespace BlackGui
 
         protected:
 
+            ModelClass *m_model = nullptr; //!< corresponding model
+
             //! Constructor
             CViewBase(QWidget *parent, ModelClass *model = nullptr) : QTableView(parent), m_model(model)
             {

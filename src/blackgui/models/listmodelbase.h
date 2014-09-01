@@ -167,6 +167,6 @@ namespace BlackGui
             ContainerType sortListByColumn(const ContainerType &list, int column, Qt::SortOrder order);
 
         };
-    }
-}
+    } // namespace
+} // namespace
 #endif // guard
