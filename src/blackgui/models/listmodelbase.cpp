@@ -99,6 +99,7 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &container)
         {
+            // KWB remove: qDebug() will be removed soon
             qDebug() << "update" << this->objectName() << "size" << container.size();
             this->beginResetModel();
             this->m_container = (container.size() > 1 && this->hasValidSortColumn() ?
@@ -190,6 +191,8 @@ namespace BlackGui
             BlackMisc::CPropertyIndex propertyIndex = this->m_columns.columnToPropertyIndex(column);
             Q_ASSERT(!propertyIndex.isEmpty());
             if (propertyIndex.isEmpty()) return list; // at release build do nothing
+
+            // KWB: qDebug() will be removed soon
             qDebug() << "sort" << this->objectName() << "column" << column << propertyIndex.toQString();
 
             // sort the values
