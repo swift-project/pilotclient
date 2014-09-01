@@ -27,82 +27,95 @@ namespace BlackMisc
         //! Index for each icon, allows to send them via DBus, efficiently store them, etc.
         enum IconIndex
         {
+            // keep indexes alphabetically sorted and in sync with CIconList
+            AviationAttitudeIndicator,
+            GeoPosition,
+            NetworkCapabilityTextOnly,
+            NetworkCapabilityUnknown,
+            NetworkCapabilityVoice,
+            NetworkCapabilityVoiceBackground,
+            NetworkCapabilityVoiceReceiveOnly,
+            NetworkCapabilityVoiceReceiveOnlyBackground,
+            NetworkRoleApproach,
+            NetworkRoleC1,
+            NetworkRoleC3,
+            NetworkRoleCenter,
+            NetworkRoleDelivery,
+            NetworkRoleGround,
+            NetworkRoleI1,
+            NetworkRoleI3,
+            NetworkRoleMnt,
+            NetworkRoleObs,
+            NetworkRolePilot,
+            NetworkRoleS1,
+            NetworkRoleS2,
+            NetworkRoleS3,
+            NetworkRoleSup,
+            NetworkRoleTower,
+            NetworkRoleUnknown,
             NotSet,
-            StandardIconInfo16,
-            StandardIconWarning16,
-            StandardIconGlobe16,
-            StandardIconError16,
-            StandardIconClose16,
-            StandardIconResize16,
-            StandardIconText16,
-            StandardIconHeadingOne16,
-            StandardIconUser16,
-            StandardIconUsers16,
-            StandardIconJoystick16,
-            StandardIconPlugin16,
-            StandardIconDockTop16,
-            StandardIconDockBottom16,
-            StandardIconFloatAll16,
-            StandardIconFloatOne16,
-            StandardIconVolumeHigh16,
-            StandardIconVolumeLow16,
-            StandardIconVolumeMuted16,
-            StandardIconWrench16,
-            StandardIconRadar16,
-            StandardIconTableRelationship16,
-            StandardIconPaperPlane16,
-            StandardIconTableSheet16,
-            StandardIconWeatherCloudy16,
-            StandardIconMonitorError16,
-            StandardIconStatusBar16,
-            StandardIconUnknown16,
+            StandardIconAppAircrafts16,
+            StandardIconAppAtc16,
+            StandardIconAppFlightPlan16,
+            StandardIconAppLog16,
+            StandardIconAppMappings16,
+            StandardIconAppSettings16,
+            StandardIconAppSimulator16,
+            StandardIconAppTextMessages16,
+            StandardIconAppUsers16,
+            StandardIconAppWeather16,
+            StandardIconArrowMediumEast16,
             StandardIconArrowMediumNorth16,
             StandardIconArrowMediumSouth16,
-            StandardIconArrowMediumEast16,
             StandardIconArrowMediumWest16,
+            StandardIconClose16,
+            StandardIconCross,
+            StandardIconCrossCircle,
+            StandardIconCrossSmall,
+            StandardIconCrossWhite,
+            StandardIconDelete16,
+            StandardIconDockBottom16,
+            StandardIconDockTop16,
             StandardIconEmpty,
             StandardIconEmpty16,
+            StandardIconError16,
+            StandardIconFloatAll16,
+            StandardIconFloatOne16,
+            StandardIconGlobe16,
+            StandardIconHeadingOne16,
+            StandardIconInfo16,
+            StandardIconJoystick16,
+            StandardIconMonitorError16,
+            StandardIconPaperPlane16,
+            StandardIconPlugin16,
+            StandardIconRadar16,
+            StandardIconRefresh16,
+            StandardIconResize16,
+            StandardIconStatusBar16,
             StandardIconSwift24,
             StandardIconSwift48,
             StandardIconSwiftNova24,
             StandardIconSwiftNova48,
-            StandardIconAppWeather16,
-            StandardIconAppSettings16,
-            StandardIconAppUsers16,
-            StandardIconAppFlightPlan16,
-            StandardIconAppSimulator16,
-            StandardIconAppTextMessages16,
-            StandardIconAppAtc16,
-            StandardIconAppAircrafts16,
-            StandardIconAppMappings16,
-            StandardIconAppLog16,
-            NetworkRoleC1,
-            NetworkRoleC3,
-            NetworkRoleI1,
-            NetworkRoleI3,
-            NetworkRoleS1,
-            NetworkRoleS2,
-            NetworkRoleS3,
-            NetworkRoleMnt,
-            NetworkRoleSup,
-            NetworkRoleObs,
-            NetworkRolePilot,
-            NetworkRoleApproach,
-            NetworkRoleGround,
-            NetworkRoleDelivery,
-            NetworkRoleTower,
-            NetworkRoleCenter,
-            NetworkRoleUnknown,
-            NetworkCapabilityVoice,
-            NetworkCapabilityVoiceReceiveOnly,
-            NetworkCapabilityTextOnly,
-            NetworkCapabilityUnknown,
-            AviationAttitudeIndicator,
-            GeoPosition
+            StandardIconTableRelationship16,
+            StandardIconTableSheet16,
+            StandardIconText16,
+            StandardIconTick,
+            StandardIconTickRed,
+            StandardIconTickSmall,
+            StandardIconTickWhite,
+            StandardIconUnknown16,
+            StandardIconUser16,
+            StandardIconUsers16,
+            StandardIconVolumeHigh16,
+            StandardIconVolumeLow16,
+            StandardIconVolumeMuted16,
+            StandardIconWarning16,
+            StandardIconWeatherCloudy16,
+            StandardIconWrench16
         };
 
         // -------------------------------------------------------------
-        // Standard icons
+        // Standard pixmaps
         // -------------------------------------------------------------
 
         //! Info
@@ -140,6 +153,13 @@ namespace BlackMisc
             return pm;
         }
 
+        //! Resize
+        static const QPixmap &refresh16()
+        {
+            static const QPixmap pm(":/pastel/icons/pastel/16/arrow-refresh.png");
+            return pm;
+        }
+
         //! Text
         static const QPixmap &text16()
         {
@@ -172,6 +192,69 @@ namespace BlackMisc
         static const QPixmap &users16()
         {
             static const QPixmap pm(":/diagona/icons/diagona/icons/users.png");
+            return pm;
+        }
+
+        //! Tick
+        static const QPixmap &tick16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/tick.png");
+            return pm;
+        }
+
+        //! Tick
+        static const QPixmap &tickRed16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/tick-red.png");
+            return pm;
+        }
+
+        //! Tick
+        static const QPixmap &tickWhite16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/tick-white.png");
+            return pm;
+        }
+
+        //! Tick
+        static const QPixmap &tickSmall16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/tick-small.png");
+            return pm;
+        }
+
+        //! Cross
+        static const QPixmap &cross16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/cross.png");
+            return pm;
+        }
+
+        //! Cross
+        static const QPixmap &crossWhite16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/cross-white.png");
+            return pm;
+        }
+
+        //! Cross
+        static const QPixmap &crossCircle16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/cross-circle.png");
+            return pm;
+        }
+
+        //! Cross
+        static const QPixmap &crossSmall16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/cross-small.png");
+            return pm;
+        }
+
+        //! Delete
+        static const QPixmap &delete16()
+        {
+            static const QPixmap pm(":/pastel/icons/pastel/16/delete.png");
             return pm;
         }
 
@@ -568,12 +651,18 @@ namespace BlackMisc
             return pm;
         }
 
+        //! Full voice capability
+        static const QPixmap &capabilityVoiceBackground();
+
         //! Voice receive only
         static const QPixmap &capabilityVoiceReceiveOnly()
         {
             static const QPixmap pm(":/diagona/icons/diagona/icons/headphone.png");
             return pm;
         }
+
+        //! Voice receive only
+        static const QPixmap &capabilityVoiceReceiveOnlyBackground();
 
         //! Text only
         static const QPixmap &capabilityTextOnly()
@@ -605,99 +694,13 @@ namespace BlackMisc
         // -------------------------------------------------------------
 
         //! Pixmap by given index
-        static const QPixmap &pixmapByIndex(IconIndex index)
-        {
-            switch (index)
-            {
-            case NotSet: return empty();
-            case StandardIconInfo16: return info16();
-            case StandardIconWarning16: return warning16();
-            case StandardIconError16: return error16();
-            case StandardIconClose16: return close16();
-            case StandardIconResize16: return resize16();
-            case StandardIconText16: return text16();
-            case StandardIconGlobe16: return globe16();
-            case StandardIconHeadingOne16: return headingOne16();
-            case StandardIconUser16: return user16();
-            case StandardIconUsers16: return users16();
-            case StandardIconJoystick16: return joystick16();
-            case StandardIconPlugin16: return plugin16();
-            case StandardIconDockTop16: return dockTop16();
-            case StandardIconDockBottom16: return dockBottom16();
-            case StandardIconFloatAll16: return floatAll16();
-            case StandardIconFloatOne16: return floatOne16();
-            case StandardIconVolumeHigh16: return volumeHigh16();
-            case StandardIconVolumeLow16: return volumeLow16();
-            case StandardIconVolumeMuted16: return volumeMuted16();
-            case StandardIconWrench16: return wrench16();
-            case StandardIconRadar16: return radar16();
-            case StandardIconTableRelationship16: return tableRelationship16();
-            case StandardIconPaperPlane16: return paperPlane16();
-            case StandardIconTableSheet16: return tableSheet16();
-            case StandardIconWeatherCloudy16: return weatherCloudy16();
-            case StandardIconMonitorError16: return monitorError16();
-            case StandardIconStatusBar16: return statusBar16();
-            case StandardIconUnknown16: return unknown16();
-            case StandardIconArrowMediumNorth16: return arrowMediumNorth16();
-            case StandardIconArrowMediumSouth16: return arrowMediumSouth16();
-            case StandardIconArrowMediumWest16: return arrowMediumWest16();
-            case StandardIconArrowMediumEast16: return arrowMediumEast16();
-            case StandardIconEmpty: return empty();
-            case StandardIconEmpty16: return empty16();
-            case StandardIconSwift24: return swift24();
-            case StandardIconSwift48: return swift48();
-            case StandardIconSwiftNova24: return swiftNova24();
-            case StandardIconSwiftNova48: return swiftNova48();
-            case StandardIconAppWeather16: return appWeather16();
-            case StandardIconAppSettings16: return appSettings16();
-            case StandardIconAppUsers16: return appUsers16();
-            case StandardIconAppFlightPlan16: return appFlightPlan16();
-            case StandardIconAppSimulator16: return appSimulator16();
-            case StandardIconAppTextMessages16: return appTextMessages16();
-            case StandardIconAppAtc16: return appAtc16();
-            case StandardIconAppAircrafts16: return appAircrafts16();
-            case StandardIconAppMappings16: return appMappings16();
-            case StandardIconAppLog16: return appLog16();
-            case NetworkRoleC1: return roleC1();
-            case NetworkRoleC3: return roleC3();
-            case NetworkRoleI1: return roleI1();
-            case NetworkRoleI3: return roleI3();
-            case NetworkRoleS1: return roleS1();
-            case NetworkRoleS2: return roleS2();
-            case NetworkRoleS3: return roleS3();
-            case NetworkRoleMnt: return roleMnt();
-            case NetworkRoleSup: return roleSup();
-            case NetworkRoleObs: return roleObs();
-            case NetworkRolePilot: return rolePilot();
-            case NetworkRoleApproach: return roleApproach();
-            case NetworkRoleGround: return roleGround();
-            case NetworkRoleDelivery: return roleDelivery();
-            case NetworkRoleTower: return roleTower();
-            case NetworkRoleCenter: return roleCenter();
-            case NetworkRoleUnknown: return roleUnknown();
-            case NetworkCapabilityVoice: return capabilityVoice();
-            case NetworkCapabilityVoiceReceiveOnly: return capabilityVoiceReceiveOnly();
-            case NetworkCapabilityTextOnly: return capabilityTextOnly();
-            case NetworkCapabilityUnknown: return capabilityUnknown();
-            case AviationAttitudeIndicator: return attitudeIndicator16();
-            case GeoPosition: return geoPosition16();
-            default: return empty();
-            }
-        }
+        static const QPixmap &pixmapByIndex(IconIndex index);
 
         //! Pixmap by given index rotated
-        static QPixmap pixmapByIndex(IconIndex index, int rotateDegrees)
-        {
-            const QPixmap original = pixmapByIndex(index);
-            if (rotateDegrees == 0) return original;
-            QMatrix rm;
-            rm.rotate(rotateDegrees);
-            QPixmap rotated = original.transformed(rm);
-            int xoffset = (rotated.width() - original.width()) / 2;
-            int yoffset = (rotated.height() - original.height()) / 2;
-            rotated = rotated.copy(xoffset, yoffset, original.width(), original.height());
-            return rotated;
-        }
+        static QPixmap pixmapByIndex(IconIndex index, int rotateDegrees);
+
+        //! Change color of resource
+        static QPixmap changeBackground(const QString resource, Qt::GlobalColor backgroundColor);
     };
 }
 #endif // guard

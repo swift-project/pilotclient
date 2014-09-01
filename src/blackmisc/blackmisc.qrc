@@ -53,6 +53,17 @@
         <file>icons/pastel/16/monitor-lightning.png</file>
         <file>icons/pastel/16/monitor-terminal.png</file>
         <file>icons/pastel/16/text-heading-1.png</file>
+        <file>icons/pastel/16/arrow-refresh.png</file>
+        <file>icons/pastel/16/arrow-refresh-small.png</file>
+        <file>icons/pastel/16/database-refresh.png</file>
+        <file>icons/pastel/16/table-refresh.png</file>
+        <file>icons/pastel/16/attach-delete.png</file>
+        <file>icons/pastel/16/book-delete.png</file>
+        <file>icons/pastel/16/delete.png</file>
+        <file>icons/pastel/16/folder-delete.png</file>
+        <file>icons/pastel/16/font-delete.png</file>
+        <file>icons/pastel/16/table-delete.png</file>
+        <file>icons/pastel/16/table-row-delete.png</file>
     </qresource>
     <qresource prefix="/vatsim">
         <file>icons/vatsim/C1.png</file>
@@ -247,6 +258,28 @@
         <file>icons/diagona/icons/arrow-315.png</file>
         <file>icons/diagona/icons/arrow-315-medium.png</file>
         <file>icons/diagona/icons/arrow-315-small.png</file>
+        <file>icons/diagona/icons/tick.png</file>
+        <file>icons/diagona/icons/tick-button.png</file>
+        <file>icons/diagona/icons/tick-circle.png</file>
+        <file>icons/diagona/icons/tick-circle-frame.png</file>
+        <file>icons/diagona/icons/tick-octagon.png</file>
+        <file>icons/diagona/icons/tick-octagon-frame.png</file>
+        <file>icons/diagona/icons/tick-red.png</file>
+        <file>icons/diagona/icons/tick-shield.png</file>
+        <file>icons/diagona/icons/tick-small.png</file>
+        <file>icons/diagona/icons/tick-small-circle.png</file>
+        <file>icons/diagona/icons/tick-small-red.png</file>
+        <file>icons/diagona/icons/tick-small-white.png</file>
+        <file>icons/diagona/icons/tick-white.png</file>
+        <file>icons/diagona/icons/cross-script.png</file>
+        <file>icons/diagona/icons/cross-small-circle.png</file>
+        <file>icons/diagona/icons/cross-small-white.png</file>
+        <file>icons/diagona/icons/headstone-cross.png</file>
+        <file>icons/diagona/icons/abacus.png</file>
+        <file>icons/diagona/icons/binocular.png</file>
+        <file>icons/diagona/icons/binocular--arrow.png</file>
+        <file>icons/diagona/icons/binocular--exclamation.png</file>
+        <file>icons/diagona/icons/binocular--minus.png</file>
     </qresource>
     <qresource prefix="/own">
         <file>icons/own/app.jpg</file>
@@ -306,5 +339,4 @@
         <file>icons/qled/triang_yellow.svg</file>
         <file>icons/qled/round_black.svg</file>
     </qresource>
-    <qresource prefix="/"/>
 </RCC>

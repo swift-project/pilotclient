@@ -30,8 +30,9 @@ namespace BlackMisc
         /*
          * Convert to string
          */
-        QString CVoiceCapabilities::convertToQString(bool /** i18n **/) const
+        QString CVoiceCapabilities::convertToQString(bool i18n) const
         {
+            Q_UNUSED(i18n);
             switch (this->m_voiceCapabilities)
             {
             case Voice:
@@ -126,13 +127,13 @@ namespace BlackMisc
             switch (this->m_voiceCapabilities)
             {
             case Voice:
-                return CIconList::iconForIndex(CIcons::NetworkCapabilityVoice);
+                return CIconList::iconForIndex(CIcons::NetworkCapabilityVoiceBackground);
             case TextOnly:
                 return CIconList::iconForIndex(CIcons::NetworkCapabilityTextOnly);
             case Unknown:
                 return CIconList::iconForIndex(CIcons::NetworkCapabilityUnknown);
             case VoiceReceivingOnly:
-                return CIconList::iconForIndex(CIcons::NetworkCapabilityVoiceReceiveOnly);
+                return CIconList::iconForIndex(CIcons::NetworkCapabilityVoiceReceiveOnlyBackground);
             default:
                 break;
             }

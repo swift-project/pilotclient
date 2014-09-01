@@ -49,6 +49,9 @@ namespace BlackMisc
         //! Rotate by given degrees
         void setRotation(const BlackMisc::PhysicalQuantities::CAngle &rotate);
 
+        //! Set descriptive text
+        void setDescriptiveText(const QString &text) { this->m_descriptiveText = text; }
+
         //! Equal operator ==
         bool operator ==(const CIcon &other) const;
 
