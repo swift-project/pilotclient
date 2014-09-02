@@ -145,23 +145,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::removeRemoteAircraft(const CCallsign &callsign)
         {
-            if(!m_hashFs9Clients.contains(callsign))
-                return;
-
-            CFs9Client *fs9Client = m_hashFs9Clients.value(callsign);
-
-            Q_ASSERT(m_fs9ClientThreads.contains(fs9Client));
-            QThread *fs9ClientThread = m_fs9ClientThreads.value(fs9Client);
-
-            QMetaObject::invokeMethod(fs9Client, "disconnectFrom");
-
-            m_fs9ClientThreads.remove(fs9Client);
-            m_hashFs9Clients.remove(callsign);
-
-            fs9ClientThread->wait(100);
-
-            /*fs9ClientThread->deleteLater();
-            fs9Client->deleteLater();*/
+            ps_removeAircraft(callsign.toQString());
         }
 
         bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft)
@@ -337,7 +321,23 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::ps_removeAircraft(const QString &callsign)
         {
-            removeRemoteAircraft(callsign);
+            if(!m_hashFs9Clients.contains(callsign)) return;
+
+            CFs9Client *fs9Client = m_hashFs9Clients.value(callsign);
+
+            Q_ASSERT(m_fs9ClientThreads.contains(fs9Client));
+            QThread *fs9ClientThread = m_fs9ClientThreads.value(fs9Client);
+
+            // Send an async disconnect signal. When finished we will clean up
+            QMetaObject::invokeMethod(fs9Client, "disconnectFrom");
+
+            m_fs9ClientThreads.remove(fs9Client);
+            m_hashFs9Clients.remove(callsign);
+
+            fs9ClientThread->wait(100);
+
+            /*fs9ClientThread->deleteLater();
+            fs9Client->deleteLater();*/
         }
 
         void CSimulatorFs9::updateOwnAircraftFromSim(const CAircraft &ownAircraft)

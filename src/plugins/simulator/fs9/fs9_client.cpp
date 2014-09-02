@@ -198,8 +198,6 @@ namespace BlackSimPlugin
 
             if(m_clientStatus == Connected) return hr;
 
-            DPN_APPLICATION_DESC dpAppDesc;
-
             QMutexLocker locker(&m_mutexHostList);
 
             QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[callsign.size() + 1]);
@@ -227,10 +225,10 @@ namespace BlackSimPlugin
             }
 
             // Now set up the Application Description
+            DPN_APPLICATION_DESC dpAppDesc;
             ZeroMemory(&dpAppDesc, sizeof(DPN_APPLICATION_DESC));
             dpAppDesc.dwSize = sizeof(DPN_APPLICATION_DESC);
             dpAppDesc.guidApplication = CFs9Sdk::guid();
-
 
             // We are now ready to host the app
             if( FAILED( hr = m_directPlayPeer->Connect( &dpAppDesc,    // AppDesc
