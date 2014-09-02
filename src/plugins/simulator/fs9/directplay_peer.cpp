@@ -40,6 +40,8 @@ namespace BlackSimPlugin
             }
 
             if (m_deviceAddress) m_deviceAddress->Release();
+
+            CoUninitialize();
         }
 
         HRESULT CDirectPlayPeer::directPlayMessageHandler(DWORD messageId, void *msgBuffer)
