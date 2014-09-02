@@ -284,7 +284,7 @@ namespace BlackSimPlugin
             emit aircraftModelChanged(m_aircraftModel);
         }
 
-        void CSimulatorFs9::ps_changeHostStatus(CFs9Host::HostStatus status)
+        void CSimulatorFs9::ps_changeHostStatus(BlackSimPlugin::Fs9::CFs9Host::HostStatus status)
         {
             switch (status)
             {

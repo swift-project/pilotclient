@@ -69,7 +69,7 @@ namespace BlackSimPlugin
             void clientTimedOut(const QString &callsign);
 
             //! Client status changed
-            void statusChanged(CFs9Client::ClientStatus);
+            void statusChanged(const QString &callsign, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
 
         protected slots:
 

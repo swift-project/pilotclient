@@ -55,7 +55,7 @@ namespace BlackSimPlugin
         signals:
 
             //! Hosting status changed
-            void statusChanged(CFs9Host::HostStatus);
+            void statusChanged(BlackSimPlugin::Fs9::CFs9Host::HostStatus);
 
         private:
 

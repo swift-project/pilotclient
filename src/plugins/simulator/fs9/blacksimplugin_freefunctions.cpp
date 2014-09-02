@@ -23,7 +23,6 @@ namespace BlackSimPlugin
         void registerMetadata()
         {
             qRegisterMetaType<CFs9Host::HostStatus>();
-            qRegisterMetaType<CFs9Host::HostStatus>("CFs9Host::HostStatus");
             qRegisterMetaType<CFs9Client::ClientStatus>();
         }
 
