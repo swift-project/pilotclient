@@ -58,8 +58,6 @@ namespace BlackSimPlugin
 
         void CFs9Client::disconnectFrom()
         {
-            qDebug() << "Disconnecting...";
-            killTimer(m_timerId);
             closeConnection();
         }
 
@@ -258,7 +256,7 @@ namespace BlackSimPlugin
             m_timerId = startTimer(m_updateInterval.value(CTimeUnit::ms()));
 
             m_clientStatus = Connected;
-            emit statusChanged(m_clientStatus);
+            emit statusChanged(m_callsign, m_clientStatus);
 
             return hr;
         }
@@ -276,7 +274,7 @@ namespace BlackSimPlugin
             }
 
             m_clientStatus = Disconnected;
-            emit statusChanged(m_clientStatus);
+            emit statusChanged(m_callsign, m_clientStatus);
             return hr;
         }
     }

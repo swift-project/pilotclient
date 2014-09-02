@@ -59,8 +59,12 @@ namespace BlackSimPlugin
 
         CSimulatorFs9::~CSimulatorFs9()
         {
+            disconnectFrom();
             m_hostThread.quit();
             m_hostThread.wait(1000);
+
+            QList<QThread *> clientThreads = m_fs9ClientThreads.values();
+            for (QThread *clientThread : clientThreads) clientThread->wait();
         }
 
         bool CSimulatorFs9::isConnected() const
@@ -118,6 +122,7 @@ namespace BlackSimPlugin
 
             connect(clientThread, &QThread::started, client, &CFs9Client::init);
             connect(client, &CFs9Client::clientTimedOut, this, &CSimulatorFs9::ps_removeAircraft);
+            connect(client, &CFs9Client::statusChanged, this, &CSimulatorFs9::ps_changeClientStatus);
             m_fs9ClientThreads.insert(client, clientThread);
             m_hashFs9Clients.insert(callsign, client);
             clientThread->start();
@@ -287,7 +292,9 @@ namespace BlackSimPlugin
                 }
                 case CFs9Host::Terminated:
                 {
+                    m_fs9Host->deleteLater();
                     qDebug() << "Quitting thread";
+                    connect(&m_hostThread, &QThread::finished, &m_hostThread, &QThread::deleteLater);
                     m_hostThread.quit();
                     m_isHosting = false;
                     emit statusChanged(Disconnected);
@@ -325,19 +332,8 @@ namespace BlackSimPlugin
 
             CFs9Client *fs9Client = m_hashFs9Clients.value(callsign);
 
-            Q_ASSERT(m_fs9ClientThreads.contains(fs9Client));
-            QThread *fs9ClientThread = m_fs9ClientThreads.value(fs9Client);
-
             // Send an async disconnect signal. When finished we will clean up
             QMetaObject::invokeMethod(fs9Client, "disconnectFrom");
-
-            m_fs9ClientThreads.remove(fs9Client);
-            m_hashFs9Clients.remove(callsign);
-
-            fs9ClientThread->wait(100);
-
-            /*fs9ClientThread->deleteLater();
-            fs9Client->deleteLater();*/
         }
 
         void CSimulatorFs9::updateOwnAircraftFromSim(const CAircraft &ownAircraft)
