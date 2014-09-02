@@ -137,6 +137,8 @@ namespace BlackSimPlugin
             //! Change DirectPlay host status
             void ps_changeHostStatus(CFs9Host::HostStatus status);
 
+            void ps_changeClientStatus(const QString &callsign, BlackSimPlugin::Fs9::CFs9Client::ClientStatus status);
+
             //! Remove client by callsign QString
             void ps_removeAircraft(const QString &callsign);
 

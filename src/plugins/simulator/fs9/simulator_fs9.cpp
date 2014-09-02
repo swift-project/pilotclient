@@ -313,6 +313,27 @@ namespace BlackSimPlugin
             }
         }
 
+        void CSimulatorFs9::ps_changeClientStatus(const QString &callsign, CFs9Client::ClientStatus status)
+        {
+            switch (status)
+            {
+                case CFs9Client::Disconnected:
+                {
+                    CFs9Client *client = m_hashFs9Clients.value(callsign);
+                    Q_ASSERT(m_fs9ClientThreads.contains(client));
+                    QThread *clientThread = m_fs9ClientThreads.value(client);
+
+                    // Cleanup
+                    client->deleteLater();
+                    connect(clientThread, &QThread::finished, clientThread, &QThread::deleteLater);
+                    clientThread->quit();
+
+                    m_fs9ClientThreads.remove(client);
+                    m_hashFs9Clients.remove(callsign);
+                }
+            }
+        }
+
         void CSimulatorFs9::ps_removeAircraft(const QString &callsign)
         {
             removeRemoteAircraft(callsign);
