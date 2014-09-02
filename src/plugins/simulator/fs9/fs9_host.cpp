@@ -9,11 +9,13 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
+#include "blacksimplugin_freefunctions.h"
 #include "fs9_host.h"
 #include "multiplayer_packet_parser.h"
 #include "multiplayer_packets.h"
 #include "blackmisc/project.h"
 #include <QScopedArrayPointer>
+#include <QVector>
 
 using namespace BlackMisc;
 
@@ -26,10 +28,45 @@ namespace BlackSimPlugin
         {
         }
 
+        QString CFs9Host::getHostAddress()
+        {
+            QString address;
+            if (m_hostStatus == Hosting)
+            {
+                DWORD dwNumAddresses = 0;
+
+                HRESULT hr;
+                QVector<LPDIRECTPLAY8ADDRESS> addresses(dwNumAddresses);
+                m_directPlayPeer->GetLocalHostAddresses(addresses.data(), &dwNumAddresses, 0);
+                addresses.resize(dwNumAddresses);
+                ZeroMemory( addresses.data(), dwNumAddresses * sizeof(LPDIRECTPLAY8ADDRESS) );
+                if (FAILED (hr = m_directPlayPeer->GetLocalHostAddresses(addresses.data(), &dwNumAddresses, 0)))
+                {
+                    printDirectPlayError(hr);
+                    return address;
+                }
+
+                char url[250];
+                DWORD size = 250;
+                addresses[0]->GetURLA(url, &size);
+                address = QString(url);
+
+                for (uint ii = 0; ii < dwNumAddresses; ++ii)
+                {
+                    LPDIRECTPLAY8ADDRESS pAddress = addresses[ii];
+                    if (pAddress)
+                    {
+                        pAddress->Release();
+                    }
+                }
+            }
+            return address;
+        }
+
         void CFs9Host::init()
         {
             initDirectPlay();
-            createDeviceAddress();
+            createHostAddress();
             startHosting(CProject::systemNameAndVersion(), m_callsign);
         }
 

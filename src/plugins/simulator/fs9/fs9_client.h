@@ -46,6 +46,9 @@ namespace BlackSimPlugin
             //! Destructor
             virtual ~CFs9Client();
 
+            //! Set DirectPlay host address
+            void setHostAddress(const QString &hostAddress);
+
             //! Add new aircraft situation
             void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 

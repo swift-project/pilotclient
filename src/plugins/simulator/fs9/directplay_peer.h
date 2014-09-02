@@ -71,6 +71,9 @@ namespace BlackSimPlugin
             //! Creates a new DirectPlay device address
             HRESULT createDeviceAddress();
 
+            //! Creates a new DirectPlay device address
+            HRESULT createHostAddress();
+
             QString m_callsign; //!< Peer callsign
 
             IDirectPlay8Peer *m_directPlayPeer = nullptr; //!< DirectPlay peer address

@@ -9,6 +9,7 @@
 
 #include "directplay_peer.h"
 #include "multiplayer_packet_parser.h"
+#include "blacksimplugin_freefunctions.h"
 #include <QDebug>
 #include <QTimer>
 #include <QFile>
@@ -251,6 +252,24 @@ namespace BlackSimPlugin
             }
 
             return hr;
+        }
+
+        HRESULT CDirectPlayPeer::createHostAddress()
+        {
+            HRESULT hr = S_OK;
+
+            // Create our IDirectPlay8Address Device Address
+            if( FAILED( hr = CoCreateInstance( CLSID_DirectPlay8Address, nullptr,
+                                               CLSCTX_INPROC_SERVER,
+                                               IID_IDirectPlay8Address,
+                                               reinterpret_cast<void**>(&m_deviceAddress) ) ) )
+                return printDirectPlayError(hr);
+
+            // Set the SP for our Device Address
+            if( FAILED( hr = m_deviceAddress->SetSP( &CLSID_DP8SP_TCPIP ) ) )
+                return printDirectPlayError(hr);
+
+            return S_OK;
         }
 
         HRESULT CDirectPlayPeer::sendMessage( const QByteArray &message)

@@ -41,7 +41,7 @@ namespace BlackSimPlugin
         {
             initDirectPlay();
             createDeviceAddress();
-            enumDirectPlayHosts();
+            //enumDirectPlayHosts();
             connectToSession(m_callsign);
         }
 
@@ -61,6 +61,27 @@ namespace BlackSimPlugin
             qDebug() << "Disconnecting...";
             killTimer(m_timerId);
             closeConnection();
+        }
+
+        void CFs9Client::setHostAddress(const QString &hostAddress)
+        {
+            HRESULT hr = S_OK;
+
+            // Create our IDirectPlay8Address Host Address
+            if( FAILED( hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
+                                            CLSCTX_INPROC_SERVER,
+                                            IID_IDirectPlay8Address,
+                                            reinterpret_cast<void **>(&m_hostAddress) ) ) )
+            {
+                printDirectPlayError(hr);
+                return;
+            }
+
+            if (FAILED (hr = m_hostAddress->BuildFromURLA(hostAddress.toLatin1().data())))
+            {
+                printDirectPlayError(hr);
+                return;
+            }
         }
 
         void CFs9Client::addAircraftSituation(const CAircraftSituation &situation)
@@ -181,20 +202,6 @@ namespace BlackSimPlugin
 
             QMutexLocker locker(&m_mutexHostList);
 
-            if (m_hostNodeList.size() == 0)
-            {
-                qWarning() << "Host node list is empty!";
-                return E_FAIL;
-            }
-
-            CHostNode hostNode = m_hostNodeList.first();
-
-            if (!hostNode.getHostAddress())
-            {
-                qWarning() << "Host address is invalid!";
-                return E_FAIL;
-            }
-
             QScopedArrayPointer<wchar_t> wszPlayername(new wchar_t[callsign.size() + 1]);
 
             callsign.toWCharArray(wszPlayername.data());
@@ -224,16 +231,10 @@ namespace BlackSimPlugin
             dpAppDesc.dwSize = sizeof(DPN_APPLICATION_DESC);
             dpAppDesc.guidApplication = CFs9Sdk::guid();
 
-            IDirectPlay8Address *hostAddress = nullptr;
-            if FAILED( hr = hostNode.getHostAddress()->Duplicate(&hostAddress))
-            {
-                qWarning() << "Failed to duplocate host address!";
-                return hr;
-            }
 
             // We are now ready to host the app
             if( FAILED( hr = m_directPlayPeer->Connect( &dpAppDesc,    // AppDesc
-                                                        hostAddress,
+                                                        m_hostAddress,
                                                         m_deviceAddress,
                                                         nullptr,
                                                         nullptr,

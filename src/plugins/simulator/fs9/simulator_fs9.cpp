@@ -112,6 +112,7 @@ namespace BlackSimPlugin
             // Create a new client thread, set update frequency to 25 ms and start it
             QThread *clientThread = new QThread(this);
             CFs9Client *client = new CFs9Client(callsign.toQString(), CTime(25, CTimeUnit::ms()));
+            client->setHostAddress(m_fs9Host->getHostAddress());
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
             client->moveToThread(clientThread);
 

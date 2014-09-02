@@ -38,6 +38,9 @@ namespace BlackSimPlugin
             //! Returns true if the users simulator is connected
             bool isConnected() const { return m_playerUser != 0; }
 
+            //! Get DirectPlay host url
+            QString getHostAddress();
+
         public slots:
 
             //! \copydoc CDirectPlayPeer::init
