@@ -27,6 +27,8 @@ namespace BlackSimPlugin
         MPPositionVelocity aircraftSituationtoFS9(const BlackMisc::Aviation::CAircraftSituation &oldSituation,
                                  const BlackMisc::Aviation::CAircraftSituation &newSituation,
                                  double updateInterval);
+
+        HRESULT printDirectPlayError(HRESULT error);
     }
 }
 

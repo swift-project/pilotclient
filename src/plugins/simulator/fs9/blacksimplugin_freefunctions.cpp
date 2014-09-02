@@ -136,5 +136,49 @@ namespace BlackSimPlugin
 
             return positionVelocity;
         }
+
+        HRESULT printDirectPlayError(HRESULT error)
+        {
+            switch(error)
+            {
+            case DPNERR_BUFFERTOOSMALL:
+                qWarning() << "The supplied buffer is not large enough to contain the requested data.";
+                break;
+            case DPNERR_DOESNOTEXIST:
+                qWarning() << "Requested element is not part of the address.";
+                break;
+            case DPNERR_INVALIDFLAGS:
+                qWarning() << "The flags passed to this method are invalid.";
+                break;
+            case DPNERR_INVALIDPARAM:
+                qWarning() << "One or more of the parameters passed to the method are invalid.";
+                break;
+            case DPNERR_INVALIDPOINTER:
+                qWarning() << "Pointer specified as a parameter is invalid.";
+                break;
+            case DPNERR_INVALIDURL:
+                qWarning() << "Specified string is not a valid DirectPlayURL.";
+                break;
+            case DPNERR_NOTALLOWED:
+                qWarning() << "This function is not allowed on this object.";
+                break;
+            case DPNERR_INVALIDOBJECT:
+                qWarning() << "The Microsoft DirectPlay object pointer is invalid.";
+                break;
+            case DPNERR_UNINITIALIZED:
+                qWarning() << "This function is not allowed on this object.";
+                break;
+            case DPNERR_UNSUPPORTED:
+                qWarning() << "The function or feature is not available in this implementation or on this service provider.";
+                break;
+            case DPNERR_NOTHOST:
+                qWarning() << "The client attempted to connect to a nonhost computer. Additionally, this error value may be returned by a nonhost that tried to set the application description.";
+                break;
+            default:
+                break;
+            }
+
+            return error;
+        }
     }
 }
