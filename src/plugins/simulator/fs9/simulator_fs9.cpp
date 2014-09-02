@@ -45,6 +45,7 @@ namespace BlackSimPlugin
             m_fs9Host(new CFs9Host),
             m_hostThread(this),
             m_simulatorInfo(CSimulatorInfo::FS9()),
+            m_lobbyClient(new CLobbyClient(this)),
             m_fsuipc(new FsCommon::CFsuipc())
         {
             // We move the host thread already in the constructor
@@ -76,7 +77,11 @@ namespace BlackSimPlugin
         {
             m_fsuipc->connect(); // connect FSUIPC too
 
-            // FIXME: This does start hosting only. Add lobby connection here.
+            // If we are already hosting, connect FS0 through lobby connection
+            if (m_isHosting) m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress());
+            // If not, deferre connection until host is setup
+            else m_startedLobbyConnection = true;
+
             return true;
         }
 
@@ -288,6 +293,11 @@ namespace BlackSimPlugin
                     m_isHosting = true;
                     startTimer(50);
                     emit statusChanged(Connected);
+                    if (m_startedLobbyConnection)
+                    {
+                        m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress());
+                        m_startedLobbyConnection = false;
+                    }
                     break;
                 }
                 case CFs9Host::Terminated:

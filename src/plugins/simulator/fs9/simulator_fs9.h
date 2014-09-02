@@ -12,6 +12,7 @@
 
 #include "fs9_host.h"
 #include "fs9_client.h"
+#include "lobby_client.h"
 #include "../fscommon/fsuipc.h"
 #include "blackcore/simulator.h"
 #include "blackcore/interpolator_linear.h"
@@ -153,12 +154,15 @@ namespace BlackSimPlugin
             CFs9Host *m_fs9Host = nullptr;
             QThread m_hostThread;
             bool    m_isHosting = false; //!< Is sim connected
+            bool    m_startedLobbyConnection = false;
             bool    m_syncTime = false;    //!< Time synchronized?
             int     m_syncDeferredCounter = 0; //!< Set when synchronized, used to wait some time
             bool    m_simPaused = false;   //!< Simulator paused?
 
             QHash<BlackMisc::Aviation::CCallsign, CFs9Client *> m_hashFs9Clients;
             QHash<CFs9Client *, QThread *> m_fs9ClientThreads;
+
+            CLobbyClient *m_lobbyClient;
 
             BlackSim::CSimulatorInfo m_simulatorInfo;
             BlackMisc::Aviation::CAircraft m_ownAircraft; //!< Object representing our own aircraft from simulator
