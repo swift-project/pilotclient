@@ -13,6 +13,7 @@
 #include "samplescontainer.h"
 #include "samplesjson.h"
 #include "samplesvariant.h"
+#include "samplesperformance.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqallquantities.h"
 
@@ -30,10 +31,28 @@ int main(int argc, char *argv[])
 
     BlackMisc::initResources();
     BlackMisc::registerMetadata();
-    CSamplesJson::samples();
-    CSamplesChangeObject::samples();
-    CSamplesContainer::samples();
-    CSamplesMetadata::samples();
-    CSamplesVariant::samples();
+
+    do
+    {
+        qDebug() << "1 .. JSON";
+        qDebug() << "2 .. Change object";
+        qDebug() << "3 .. Containers";
+        qDebug() << "4 .. Metadata";
+        qDebug() << "5 .. Variant";
+        qDebug() << "6 .. Performance";
+        qDebug() << "-----";
+        qDebug() << "x .. Bye";
+        QTextStream qtin(stdin);
+        QString s = qtin.readLine().toLower().trimmed();
+
+        if (s.startsWith("1")) { CSamplesJson::samples(); }
+        else if (s.startsWith("2")) { CSamplesChangeObject::samples(); }
+        else if (s.startsWith("3")) { CSamplesContainer::samples(); }
+        else if (s.startsWith("4")) { CSamplesMetadata::samples(); }
+        else if (s.startsWith("5")) { CSamplesVariant::samples(); }
+        else if (s.startsWith("6")) { CSamplesPerformance::samples(); }
+        else if (s.startsWith("x")) { break; }
+    }
+    while (true);
     return 0;
 }

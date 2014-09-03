@@ -31,7 +31,10 @@ namespace BlackMisc
 
         CAtcStation CTesting::createStation(int index, bool byPropertyIndex)
         {
-            // ATC station
+            // from WGS is slow, so static const (only 1 time init)
+            // https://dev.vatsim-germany.org/issues/322#note-2
+            static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(index, CLengthUnit::ft()));
+
             QString cs = QString("%1_TWR").arg(index);
             QString usr = QString("Joe %1").arg(index);
             QString id = QString("00000%1").arg(index).right(6);
@@ -39,11 +42,9 @@ namespace BlackMisc
 
             QDateTime dtFrom = QDateTime::currentDateTimeUtc();
             QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
-            CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(index, CLengthUnit::ft()));
 
             if (byPropertyIndex)
             {
-
                 CAtcStation station;
                 station.setPropertyByIndex(CCallsign(cs).toQVariant(), CAtcStation::IndexCallsign);
                 station.setPropertyByIndex(CUser(id, usr).toQVariant(), CAtcStation::IndexController);
@@ -125,15 +126,34 @@ namespace BlackMisc
 
         void CTesting::copy10kStations(int times)
         {
-            int s = 0;
             CAtcStationList stations;
             for (int i = 0; i < times; i++)
             {
                 stations = stations10k();
-                s += stations.size(); // make sure stations is used
+                stations.pop_back(); // make sure stations are really copied (copy-on-write)
             }
-            Q_ASSERT(s == times * 10000);
-            Q_UNUSED(s);
+        }
+
+
+        void CTesting::parseWgs(int times)
+        {
+            static QStringList wgsLatLng(
+            {
+                "12° 11′ 10″ N", "11° 22′ 33″ W",
+                "48° 21′ 13″ N", "11° 47′ 09″ E",
+                " 8° 21′ 13″ N", "11° 47′ 09″ W",
+                "18° 21′ 13″ S", "11° 47′ 09″ E",
+                "09° 12′ 13″ S", "11° 47′ 09″ W"
+            }
+            );
+
+            CCoordinateGeodetic c;
+            const CLength h(333, CLengthUnit::m());
+            for (int i = 0; i < times; i++)
+            {
+                int idx = (i % 5) * 2;
+                c = CCoordinateGeodetic::fromWgs84(wgsLatLng.at(idx), wgsLatLng.at(idx + 1), h);
+            }
         }
 
     } // namespace

@@ -32,6 +32,7 @@ namespace BlackMisc
         template <class LATorLON> LATorLON CEarthAngle<LATorLON>::fromWgs84(const QString &wgsCoordinate)
         {
             // http://www.regular-expressions.info/floatingpoint.html
+            const QString wgs = wgsCoordinate.simplified().trimmed();
             QRegExp rx("([-+]?[0-9]*\\.?[0-9]+)");
             qint32 deg = 0;
             qint32 min = 0;
@@ -40,7 +41,7 @@ namespace BlackMisc
             int fragmentLength = 0;
             int c = 0;
             int pos = 0;
-            while ((pos = rx.indexIn(wgsCoordinate, pos)) != -1)
+            while ((pos = rx.indexIn(wgs, pos)) != -1)
             {
                 QString cap = rx.cap(1);
                 pos += rx.matchedLength();
@@ -65,12 +66,12 @@ namespace BlackMisc
             }
             if (fragmentLength > 0)
             {
-                // we do have given ms
+                // we do have given ms in string
                 sec += secFragment / qPow(10, fragmentLength);
             }
 
-            if (wgsCoordinate.contains('S', Qt::CaseInsensitive) ||
-                    wgsCoordinate.contains('W', Qt::CaseInsensitive)) deg *= -1;
+            if (wgs.contains('S', Qt::CaseInsensitive) ||
+                    wgs.contains('W', Qt::CaseInsensitive)) deg *= -1;
 
             CAngle a(deg, min, sec);
             return LATorLON(a);

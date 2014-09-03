@@ -51,6 +51,8 @@ namespace BlackMisc
                 return s;
             }
 
+            //! parse coordinates from WGS
+            static void parseWgs(int times);
         };
 
     } // Aviation
