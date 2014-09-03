@@ -14,6 +14,7 @@
 
 #include "viewbase.h"
 #include "../models/atcstationlistmodel.h"
+#include "blackmisc/project.h"
 
 namespace BlackGui
 {
@@ -22,6 +23,7 @@ namespace BlackGui
         //! ATC stations view
         class CAtcStationView : public CViewBase<Models::CAtcStationListModel>
         {
+            Q_OBJECT
 
         public:
 
@@ -31,10 +33,21 @@ namespace BlackGui
             //! Set station mode
             void setStationMode(Models::CAtcStationListModel::AtcStationMode stationMode);
 
+        signals:
+            //! Request some dummy ATC stations
+            void testRequestDummyAtcOnlineStations(int number);
+
         public slots:
             //! \copydoc CAtcStationListModel::changedAtcStationConnectionStatus
             void changedAtcStationConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool added);
 
+        protected:
+            //! \copydoc CViewBase::customMenu
+            virtual void customMenu(QMenu &menu) const override;
+
+        private slots:
+            void ps_testRequest1kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(1000); }
+            void ps_testRequest3kAtcOnlineDummies() { emit this->testRequestDummyAtcOnlineStations(3000); }
         };
     }
 }

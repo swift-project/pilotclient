@@ -88,6 +88,9 @@ namespace BlackGui
             //! Connection status has been changed
             void ps_connectionStatusChanged(uint from, uint to, const QString &message);
 
+            //! Request dummy ATC online stations
+            void ps_testCreateDummyOnlineAtcStations(int number);
+
         private:
             Ui::CAtcStationComponent *ui;
             CTimerBasedComponent *m_timerComponent;

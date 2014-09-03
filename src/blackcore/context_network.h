@@ -183,6 +183,9 @@ namespace BlackCore
         //! Request ATIS updates (for all stations)
         virtual void requestAtisUpdates() = 0;
 
+        //! Create dummy ATC stations for performance tests etc.
+        virtual void testCreateDummyOnlineAtcStations(int number) = 0;
+
     protected:
         //! Constructor
         IContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}

@@ -66,6 +66,12 @@ namespace BlackMisc
         //! Version minor
         static int versionMinor();
 
+        //! Debug build?
+        static bool isDebugBuild();
+
+        //! Release build?
+        static bool isReleaseBuild();
+
     private:
         //! Constructor
         CProject() {}

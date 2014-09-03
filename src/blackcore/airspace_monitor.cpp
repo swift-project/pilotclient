@@ -10,6 +10,7 @@
 #include "airspace_monitor.h"
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/project.h"
+#include "blackmisc/testing.h"
 #include "blackmisc/indexvariantmap.h"
 
 namespace BlackCore
@@ -216,6 +217,14 @@ namespace BlackCore
         {
             this->m_network->sendAtisQuery(station.getCallsign());
         }
+    }
+
+    void CAirspaceMonitor::testCreateDummyOnlineAtcStations(int number)
+    {
+        this->m_atcStationsOnline.push_back(
+            BlackMisc::Aviation::CTesting::createAtcStations(number)
+        );
+        emit this->changedAtcStationsOnline();
     }
 
     void CAirspaceMonitor::ps_realNameReplyReceived(const CCallsign &callsign, const QString &realname)

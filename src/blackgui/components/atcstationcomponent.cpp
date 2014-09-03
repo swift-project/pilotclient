@@ -9,11 +9,13 @@
 
 #include "blackmisc/avinformationmessage.h"
 #include "atcstationcomponent.h"
+#include "../views/atcstationview.h"
 #include "ui_atcstationcomponent.h"
 
 //! \file
 
 using namespace BlackGui::Models;
+using namespace BlackGui::Views;
 using namespace BlackMisc::Aviation;
 using namespace BlackCore;
 
@@ -36,10 +38,11 @@ namespace BlackGui
             Q_ASSERT(connected);
             connected = this->connect(this->ui->pb_AtcStationsLoadMetar, SIGNAL(clicked()), this, SLOT(getMetar()));
             Q_ASSERT(connected);
-            this->connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::ps_atcStationsTabChanged);
-            this->connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::ps_onlineAtcStationSelected);
-            this->connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
-            this->connect(this->ui->pb_ReloadAtcStationsBooked, &QPushButton::clicked, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
+            connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::ps_atcStationsTabChanged);
+            connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::ps_onlineAtcStationSelected);
+            connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
+            connect(this->ui->pb_ReloadAtcStationsBooked, &QPushButton::clicked, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::ps_testCreateDummyOnlineAtcStations);
         }
 
         CAtcStationComponent::~CAtcStationComponent()
@@ -134,6 +137,14 @@ namespace BlackGui
             {
                 this->ui->tvp_AtcStationsOnline->clear();
                 this->ui->le_AtcStationsOnlineMetar->clear();
+            }
+        }
+
+        void CAtcStationComponent::ps_testCreateDummyOnlineAtcStations(int number)
+        {
+            if (this->getIContextNetwork())
+            {
+                this->getIContextNetwork()->testCreateDummyOnlineAtcStations(number);
             }
         }
 

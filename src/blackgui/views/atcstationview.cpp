@@ -8,6 +8,7 @@
  */
 
 #include "atcstationview.h"
+#include "blackmisc/testing.h"
 #include <QHeaderView>
 
 using namespace BlackMisc;
@@ -47,6 +48,16 @@ namespace BlackGui
             this->m_model->changedAtcStationConnectionStatus(station, added);
             this->resizeColumnsToContents();
             this->resizeRowsToContents();
+        }
+
+        void CAtcStationView::customMenu(QMenu &menu) const
+        {
+            if (BlackMisc::CProject::isDebugBuild())
+            {
+                menu.addAction("Test: 1k ATC online stations", this, SLOT(ps_testRequest1kAtcOnlineDummies()));
+                menu.addAction("Test: 3k ATC online stations", this, SLOT(ps_testRequest3kAtcOnlineDummies()));
+            }
+            CViewBase::customMenu(menu);
         }
     }
 }

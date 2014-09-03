@@ -106,6 +106,10 @@ namespace BlackCore
 
         //! \copydoc IContextNetwork::requestAtisUpdates
         virtual void requestAtisUpdates() override;
+
+        //! \copydoc IContextNetwork::testCreateDummyOnlineAtcStations
+        virtual void testCreateDummyOnlineAtcStations(int number) override;
+
     };
 }
 

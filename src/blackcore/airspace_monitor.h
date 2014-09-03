@@ -72,6 +72,9 @@ namespace BlackCore
         //! Request to update ATC stations' ATIS data from the network
         void requestAtisUpdates();
 
+        //! Create dummy entries for performance tests
+        void testCreateDummyOnlineAtcStations(int number);
+
     signals:
         //! Online ATC stations were changed
         void changedAtcStationsOnline();

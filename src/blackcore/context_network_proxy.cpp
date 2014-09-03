@@ -126,6 +126,11 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("requestAtisUpdates"));
     }
 
+    void CContextNetworkProxy::testCreateDummyOnlineAtcStations(int number)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("testCreateDummyOnlineAtcStations"), number);
+    }
+
     BlackMisc::CStatusMessageList CContextNetworkProxy::connectToNetwork(uint loginMode)
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("connectToNetwork"), loginMode);

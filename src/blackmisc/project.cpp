@@ -137,6 +137,26 @@ namespace BlackMisc
         return getMajorMinor(1);
     }
 
+    bool CProject::isDebugBuild()
+    {
+#ifdef QT_DEBUG
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    bool CProject::isReleaseBuild()
+    {
+#ifdef QT_NO_DEBUG
+        return true;
+#else
+        return false;
+#endif
+    }
+
+
+
     int CProject::getMajorMinor(int index)
     {
         QString v = version();

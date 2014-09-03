@@ -13,6 +13,8 @@
 //! \file
 
 #include <QTableView>
+#include <QMenu>
+#include <QPoint>
 
 namespace BlackGui
 {
@@ -101,6 +103,8 @@ namespace BlackGui
             {
                 this->setSortingEnabled(true);
                 if (model) { this->setModel(this->m_model); }
+                this->setContextMenuPolicy(Qt::CustomContextMenu);
+                connect(this, &QWidget::customContextMenuRequested, this, &CViewBase::ps_customMenuRequested);
             }
 
             //! Destructor
@@ -134,8 +138,24 @@ namespace BlackGui
                 this->horizontalHeader()->setStretchLastSection(true);
             }
 
-            ModelClass *m_model = nullptr; //!< corresponding model
+            //! Method creating the menu
+            //! \remarks override this method to contribute to the menu
+            virtual void customMenu(QMenu &menu) const
+            {
+                Q_UNUSED(menu);
+            }
 
+        private slots:
+            //! Custom menu was requested
+            void ps_customMenuRequested(QPoint pos)
+            {
+                QMenu menu;
+                this->customMenu(menu);
+                if (menu.isEmpty()) { return; }
+
+                QPoint globalPos = this->mapToGlobal(pos);
+                menu.exec(globalPos);
+            }
         };
     }
 }

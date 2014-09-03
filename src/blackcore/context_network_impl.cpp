@@ -382,6 +382,14 @@ namespace BlackCore
     }
 
     /*
+     * Create dummy ATC stations
+     */
+    void CContextNetwork::testCreateDummyOnlineAtcStations(int number)
+    {
+        this->m_airspace->testCreateDummyOnlineAtcStations(number);
+    }
+
+    /*
      * Request METAR
      */
     BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
