@@ -106,7 +106,7 @@ namespace BlackCore
 
         //! Own aircraft model updated
         void setOwnAircraftModel(const BlackMisc::Network::CAircraftModel &model) { m_ownAircraftModel = model; }
-            
+
     public:
         //! Clear the contents
         void clear()
@@ -122,16 +122,16 @@ namespace BlackCore
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
-        BlackMisc::Aviation::CAircraftList m_aircraftsInRange;
-        BlackMisc::Network::CClientList m_otherClients;
+        BlackMisc::Aviation::CAircraftList   m_aircraftsInRange;
+        BlackMisc::Network::CClientList      m_otherClients;
         QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache;
 
-        BlackMisc::Aviation::CAircraft m_ownAircraft;
+        BlackMisc::Aviation::CAircraft     m_ownAircraft;
         BlackMisc::Network::CAircraftModel m_ownAircraftModel;
 
         INetwork *m_network;
-        CVatsimBookingReader *m_vatsimBookingReader;
+        CVatsimBookingReader  *m_vatsimBookingReader;
         CVatsimDataFileReader *m_vatsimDataFileReader;
 
         // FIXME (MS) should be in INetwork
@@ -145,8 +145,7 @@ namespace BlackCore
         void ps_fsipirCustomPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &, const QString &, const QString &, const QString &model);
         void ps_serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);
         void ps_metarReceived(const QString &metarMessage);
-        void ps_flightplanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
-        void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void ps_flightPlanReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CFlightPlan &flightPlan);
         void ps_atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range);
         void ps_atcControllerDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void ps_atisReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CInformationMessage &atisMessage);
@@ -156,6 +155,10 @@ namespace BlackCore
         void ps_aircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
         void ps_pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
+
+        void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void ps_receivedDataFile();
+
     };
 
 } // namespace

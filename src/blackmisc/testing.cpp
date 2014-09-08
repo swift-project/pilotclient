@@ -8,6 +8,7 @@
  */
 
 #include "testing.h"
+#include "nwvoicecapabilities.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Geo;
@@ -34,20 +35,20 @@ namespace BlackMisc
             // from WGS is slow, so static const (only 1 time init)
             // https://dev.vatsim-germany.org/issues/322#note-2
             static const CCoordinateGeodetic geoPos = CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(index, CLengthUnit::ft()));
-
             QString cs = QString("%1_TWR").arg(index);
             QString usr = QString("Joe %1").arg(index);
             QString id = QString("00000%1").arg(index).right(6);
             double f = 118.0 + (index % 30) * 0.25;
 
-            QDateTime dtFrom = QDateTime::currentDateTimeUtc();
-            QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
+            const QDateTime dtFrom = QDateTime::currentDateTimeUtc();
+            const QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
+            const CUser user(id, usr);
 
             if (byPropertyIndex)
             {
                 CAtcStation station;
                 station.setPropertyByIndex(CCallsign(cs).toQVariant(), CAtcStation::IndexCallsign);
-                station.setPropertyByIndex(CUser(id, usr).toQVariant(), CAtcStation::IndexController);
+                station.setPropertyByIndex(user.toQVariant(), CAtcStation::IndexController);
                 station.setPropertyByIndex(CFrequency(f, CFrequencyUnit::MHz()).toQVariant(), CAtcStation::IndexFrequency);
                 station.setPropertyByIndex(CLength(50, CLengthUnit::km()).toQVariant(), CAtcStation::IndexRange);
                 station.setPropertyByIndex(geoPos.toQVariant(), CAtcStation::IndexPosition);
@@ -59,7 +60,7 @@ namespace BlackMisc
             }
             else
             {
-                CAtcStation station(CCallsign(cs), CUser(id, usr),
+                CAtcStation station(CCallsign(cs), user,
                                     CFrequency(f, CFrequencyUnit::MHz()),
                                     geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
                 station.setDistanceToPlane(CLength(index + 1, CLengthUnit::NM()));
@@ -133,7 +134,6 @@ namespace BlackMisc
                 stations.pop_back(); // make sure stations are really copied (copy-on-write)
             }
         }
-
 
         void CTesting::parseWgs(int times)
         {

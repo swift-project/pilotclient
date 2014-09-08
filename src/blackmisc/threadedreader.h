@@ -19,13 +19,13 @@
 #include <QFuture>
 #include <QCoreApplication>
 
-// Header only class, to avoid orward instantiation across subprojects
-
 namespace BlackMisc
 {
     /*!
      * Support for threaded based reading and parsing tasks such
      * as data files via http, or file system and parsing (such as FSX models)
+     *
+     * \remarks Header only class to avoid forward instantiations across subprojects
      */
     template <class FutureRet = void> class CThreadedReader
     {

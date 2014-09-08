@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_CONTEXTNETWORK_IMPL_H
 #define BLACKCORE_CONTEXTNETWORK_IMPL_H
-
-//! \file
 
 #include "blackcore/context_network.h"
 #include "blackcore/context_settings.h"
@@ -175,23 +175,23 @@ namespace BlackCore
 
     private slots:
         //! Own aircraft was updated
-        void ps_ChangedOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
+        void ps_changedOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
 
         //! ATC bookings received
-        void ps_ReceivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
+        void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
 
         //! Data file has been read
-        void ps_DataFileRead();
+        void ps_dataFileRead();
 
         /*!
          * \brief Connection status changed?
          * \param from  old status
          * \param to    new status
          */
-        void ps_FsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message);
+        void ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message);
 
         //! Radio text messages received
-        void ps_FsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
+        void ps_fsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);
     };
 }
 

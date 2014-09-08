@@ -12,8 +12,7 @@
 #ifndef BLACKMISC_TESTING_H
 #define BLACKMISC_TESTING_H
 
-#include "avallclasses.h"
-
+#include "avatcstationlist.h"
 
 /*!
  * Generate data for testing purposes.

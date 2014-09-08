@@ -457,7 +457,7 @@ namespace BlackCore
 
             // inject updated own aircraft to network
             c = this->connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraft,
-                              this->getCContextNetwork(),  &CContextNetwork::ps_ChangedOwnAircraft);
+                              this->getCContextNetwork(),  &CContextNetwork::ps_changedOwnAircraft);
             Q_ASSERT(c);
         }
     }

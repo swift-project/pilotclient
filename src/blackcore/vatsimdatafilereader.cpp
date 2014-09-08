@@ -304,7 +304,7 @@ namespace BlackCore
             } // read success
 
             nwReply->close();
-            nwReply->deleteLater(); // we are responsible for reading this
+            nwReply->deleteLater(); // we are responsible for deleting this
 
             emit this->dataRead();
             // warnings, if required

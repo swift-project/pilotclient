@@ -226,7 +226,9 @@ bool BlackMisc::equalQVariants(const QVariant &v1, const QVariant &v2)
  */
 int BlackMisc::compareQVariants(const QVariant &v1, const QVariant &v2)
 {
-    if (v1 == v2) return 0; // compares on primitives or on address
+    // Compares this QVariant with v and returns true if they are equal; otherwise returns false.
+    // In the case of custom types, their equalness operators are not called. Instead the values' addresses are compared.
+    if (v1 == v2) return 0;
 
     if (!v1.isValid() || !v2.isValid()) qFatal("Invalid variants");
     if (v1.type() != v2.type()) qFatal("Mismatching types");
@@ -274,7 +276,7 @@ int BlackMisc::compareQVariants(const QVariant &v1, const QVariant &v2)
         break;
     }
 
-    // BlackObject
+    // CValueObject
     if (v1Type == QMetaType::User)
     {
         const CValueObject *cs1 = CValueObject::fromQVariant(v1);

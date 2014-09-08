@@ -54,7 +54,8 @@ namespace BlackMisc
             //! Update distances to coordinate, usually own aircraft's position
             void calculateDistancesToPlane(const BlackMisc::Geo::CCoordinateGeodetic &position);
 
-            //! Merge with ATC station representing booking information
+            //! Merge with ATC station representing booking information.
+            //! Both sides (booking, online station) will be updated.
             //! \remarks Can be used if the stored data in this list are online ATC stations
             int mergeWithBooking(CAtcStation &bookedAtcStation);
 

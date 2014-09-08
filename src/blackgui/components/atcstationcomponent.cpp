@@ -40,9 +40,10 @@ namespace BlackGui
             Q_ASSERT(connected);
             connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::ps_atcStationsTabChanged);
             connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::ps_onlineAtcStationSelected);
-            connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
-            connect(this->ui->pb_ReloadAtcStationsBooked, &QPushButton::clicked, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::ps_testCreateDummyOnlineAtcStations);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this->m_timerComponent, &CTimerBasedComponent::fireTimer);
+            connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
+            connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
         }
 
         CAtcStationComponent::~CAtcStationComponent()

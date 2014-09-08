@@ -24,7 +24,7 @@ namespace BlackMisc
          */
         CVoiceCapabilities::CVoiceCapabilities(const QString &flightPlanRemarks)
         {
-            this->fromFlightPlanRemarks(flightPlanRemarks);
+            this->setFromFlightPlanRemarks(flightPlanRemarks);
         }
 
         /*
@@ -50,8 +50,8 @@ namespace BlackMisc
                     static const QString r("voice listening only");
                     return r;
                 }
-            default:
             case Unknown:
+            default:
                 {
                     static const QString u("unknown");
                     return u;
@@ -61,15 +61,16 @@ namespace BlackMisc
             return QString(""); // never reached
         }
 
-        void CVoiceCapabilities::fromFlightPlanRemarks(const QString &flightPlanRemarks)
+        void CVoiceCapabilities::setFromFlightPlanRemarks(const QString &flightPlanRemarks)
         {
+            // http://www.vatpac.org/cms/index.php?option=com_content&view=article&id=608&Itemid=213
             if (flightPlanRemarks.isEmpty())
             {
-                this->m_voiceCapabilities = Unknown;
+                this->setCapabilities(Unknown);
                 return;
             }
 
-            QString r = flightPlanRemarks.toLower();
+            const QString r = flightPlanRemarks.toLower();
             if (r.contains("/v/") || r.contains("/voice/"))
             {
                 this->setCapabilities(Voice);

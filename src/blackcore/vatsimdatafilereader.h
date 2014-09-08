@@ -37,7 +37,7 @@ namespace BlackCore
         //! Constructor
         explicit CVatsimDataFileReader(const QStringList &urls, QObject *parent = nullptr);
 
-        //! Read / re-read bookings
+        //! Read / re-read data file
         void read();
 
         //! Get aircrafts
@@ -92,9 +92,12 @@ namespace BlackCore
         QStringList m_serviceUrls; /*!< URL of the service */
         int m_currentUrlIndex;
         QNetworkAccessManager *m_networkManager;
-        BlackMisc::Network::CServerList m_voiceServers;
+        BlackMisc::Network::CServerList      m_voiceServers;
         BlackMisc::Aviation::CAtcStationList m_atcStations;
-        BlackMisc::Aviation::CAircraftList m_aircrafts;
+        BlackMisc::Aviation::CAircraftList   m_aircrafts;
+        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
+
+        //! Split line and assign values to their corresponding attribute names
         static const QMap<QString, QString> clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes);
 
         //! Section in file
@@ -112,7 +115,6 @@ namespace BlackCore
     signals:
         //! Data have been read
         void dataRead();
-
     };
 }
 

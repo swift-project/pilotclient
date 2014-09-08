@@ -17,7 +17,8 @@
 
 namespace BlackMisc
 {
-    /*! Wrapper container for shared lockable pointer.
+    /*!
+     *  Wrapper container for shared lockable pointer.
      *  Provides BasicLockable characteristics to be used
      *  with std::lock_guard
      */

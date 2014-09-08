@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_VATSIMBOOKINGREADER_H
 #define BLACKCORE_VATSIMBOOKINGREADER_H
-
-//! \file
 
 #include "blackmisc/threadedreader.h"
 #include "blackmisc/avatcstationlist.h"

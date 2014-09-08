@@ -27,7 +27,7 @@ namespace BlackMisc
         {
         public:
 
-            //!< Voice capabilities
+            //! Voice capabilities
             enum VoiceCapabilities
             {
                 Unknown,

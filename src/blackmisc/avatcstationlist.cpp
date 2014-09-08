@@ -104,9 +104,9 @@ namespace BlackMisc
         }
 
         /*
-         * Merge with booking
+         * Merge with booking, both (online/booking will be updated)
          */
-        int  CAtcStationList::mergeWithBooking(CAtcStation &bookedAtcStation)
+        int CAtcStationList::mergeWithBooking(CAtcStation &bookedAtcStation)
         {
             int c = 0;
             bookedAtcStation.setOnline(false); // reset
@@ -170,9 +170,13 @@ namespace BlackMisc
                 // both ways
                 onlineAtcStation.syncronizeControllerData(bookedAtcStation);
                 if (onlineAtcStation.hasValidDistance())
+                {
                     bookedAtcStation.setDistanceToPlane(onlineAtcStation.getDistanceToPlane());
+                }
                 else if (bookedAtcStation.hasValidDistance())
+                {
                     onlineAtcStation.setDistanceToPlane(bookedAtcStation.getDistanceToPlane());
+                }
 
                 // update
                 *i = onlineAtcStation;
@@ -181,6 +185,7 @@ namespace BlackMisc
 
             // normally 1 expected, as I should find
             // only one online station for this booking
+            Q_ASSERT(c == 0 || c == 1);
             return c;
         }
 

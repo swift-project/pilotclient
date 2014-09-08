@@ -31,7 +31,7 @@ namespace BlackCore
         this->connect(this->m_network, &INetwork::atisVoiceRoomReplyReceived, this, &CAirspaceMonitor::ps_atisVoiceRoomReceived);
         this->connect(this->m_network, &INetwork::atisLogoffTimeReplyReceived, this, &CAirspaceMonitor::ps_atisLogoffTimeReceived);
         this->connect(this->m_network, &INetwork::metarReplyReceived, this, &CAirspaceMonitor::ps_metarReceived);
-        this->connect(this->m_network, &INetwork::flightPlanReplyReceived, this, &CAirspaceMonitor::ps_flightplanReceived);
+        this->connect(this->m_network, &INetwork::flightPlanReplyReceived, this, &CAirspaceMonitor::ps_flightPlanReceived);
         this->connect(this->m_network, &INetwork::realNameReplyReceived, this, &CAirspaceMonitor::ps_realNameReplyReceived);
         this->connect(this->m_network, &INetwork::icaoCodesReplyReceived, this, &CAirspaceMonitor::ps_icaoCodesReceived);
         this->connect(this->m_network, &INetwork::pilotDisconnected, this, &CAirspaceMonitor::ps_pilotDisconnected);
@@ -434,9 +434,9 @@ namespace BlackCore
             // Logic to set logoff time
             bool ok;
             int h = zuluTime.left(2).toInt(&ok);
-            if (!ok) return;
+            if (!ok) { return; }
             int m = zuluTime.right(2).toInt(&ok);
-            if (!ok) return;
+            if (!ok) { return; }
             QDateTime logoffDateTime = QDateTime::currentDateTimeUtc();
             logoffDateTime.setTime(QTime(h, m));
             CIndexVariantMap vm(CAtcStation::IndexBookedUntil, logoffDateTime);

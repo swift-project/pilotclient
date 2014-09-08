@@ -95,7 +95,7 @@ namespace BlackCore
         void connectionTerminated();
 
         /*!
-         * \brief Connection status changed
+         * Connection status changed
          * \param from  old status
          * \param to    new status
          * \param message further details
@@ -113,7 +113,7 @@ namespace BlackCore
         virtual void readAtcBookingsFromSource() const = 0;
 
         /*!
-         * \brief The ATC list with online ATC controllers
+         * The ATC list with online ATC controllers
          * \remarks If I make this &getAtcStations XML is not generated correctly
          */
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const = 0;
@@ -140,19 +140,19 @@ namespace BlackCore
         virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const = 0;
 
         /*!
-         * \brief Connect to Network
+         * Connect to Network
          * \return messages gererated during connecting
          * \see INetwork::LoginMode
          */
         virtual BlackMisc::CStatusMessageList connectToNetwork(uint loginMode) = 0;
 
         /*!
-         * \brief Disconnect from network
+         * Disconnect from network
          * \return messages generated during disconnecting
          */
         virtual BlackMisc::CStatusMessageList disconnectFromNetwork() = 0;
 
-        //! \brief Network connected?
+        //! Network connected?
         virtual bool isConnected() const = 0;
 
         //! Text messages (radio and private chat messages)
@@ -165,7 +165,7 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
         /*!
-         * \brief Get METAR, if not available request it
+         * Get METAR, if not available request it
          * \param airportIcaoCode such as EDDF, KLAX
          * \return
          */
