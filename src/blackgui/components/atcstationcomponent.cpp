@@ -100,9 +100,10 @@ namespace BlackGui
             Q_ASSERT(this->getIContextNetwork());
 
             QObject *sender = QObject::sender();
-            if (sender == this->ui->pb_ReloadAtcStationsBooked && this->getIContextNetwork())
+            if (sender == this->ui->tvp_AtcStationsBooked && this->getIContextNetwork())
             {
                 // trigger new read, which takes some time. A signal will be received when this is done
+                this->sendStatusMessage(CStatusMessage::getInfoMessage("Requested new bookings", CStatusMessage::TypeTrafficNetwork));
                 this->getIContextNetwork()->readAtcBookingsFromSource();
             }
             else
@@ -199,7 +200,9 @@ namespace BlackGui
             if (this->currentWidget() == this->ui->tb_AtcStationsOnline)
             {
                 if (this->m_timestampLastReadBookedStations.isNull())
+                {
                     this->ps_reloadAtcStationsBooked();
+                }
             }
         }
 

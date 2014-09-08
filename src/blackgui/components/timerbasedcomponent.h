@@ -22,6 +22,8 @@ namespace BlackGui
         //! Timer based componenet
         class CTimerBasedComponent: public QObject
         {
+            Q_OBJECT
+
         public:
             //! Constructor
             CTimerBasedComponent(const char *slot, QObject *parent);
@@ -46,8 +48,12 @@ namespace BlackGui
             //! Stop timer
             void stopTimer() { this->setUpdateInterval(-1); }
 
+            //! Fire the timer straight away
+            void fireTimer();
+
         private:
             QTimer *m_timer;
+            QTimer *m_timerSingleShot;
         };
     }
 }

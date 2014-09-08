@@ -27,13 +27,6 @@ namespace BlackGui
 
             //! Constructor
             explicit CStatusMessageView(QWidget *parent = nullptr);
-
-        private:
-            QMenu *m_contextMenu;
-
-        private slots:
-            //! Context menu for message list
-            void contextMenu(const QPoint &position);
         };
     }
 }

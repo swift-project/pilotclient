@@ -16,8 +16,12 @@ namespace BlackGui
         CTimerBasedComponent::CTimerBasedComponent(const char *slot, QObject *parent) :
             QObject(parent), m_timer(nullptr)
         {
+            Q_ASSERT(parent);
             this->m_timer = new QTimer(this);
+            this->m_timerSingleShot = new QTimer(this);
+            this->m_timerSingleShot->setSingleShot(true);
             this->connect(this->m_timer, SIGNAL(timeout()), parent, slot);
+            this->connect(this->m_timerSingleShot, SIGNAL(timeout()), parent, slot);
         }
 
         CTimerBasedComponent::~CTimerBasedComponent()
@@ -37,6 +41,12 @@ namespace BlackGui
                 this->m_timer->setInterval(milliSeconds);
                 if (!this->m_timer->isActive()) this->m_timer->start();
             }
+        }
+
+        void CTimerBasedComponent::fireTimer()
+        {
+            Q_ASSERT(this->m_timerSingleShot);
+            this->m_timerSingleShot->start(10);
         }
     }
 } // guard

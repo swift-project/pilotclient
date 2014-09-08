@@ -54,8 +54,9 @@ namespace BlackGui
         {
             if (BlackMisc::CProject::isDebugBuild())
             {
-                menu.addAction("Test: 1k ATC online stations", this, SLOT(ps_testRequest1kAtcOnlineDummies()));
-                menu.addAction("Test: 3k ATC online stations", this, SLOT(ps_testRequest3kAtcOnlineDummies()));
+                menu.addAction(CIcons::tableSheet16(), "Test: 1k ATC online stations", this, SLOT(ps_testRequest1kAtcOnlineDummies()));
+                menu.addAction(CIcons::tableSheet16(), "Test: 3k ATC online stations", this, SLOT(ps_testRequest3kAtcOnlineDummies()));
+                menu.addSeparator();
             }
             CViewBase::customMenu(menu);
         }

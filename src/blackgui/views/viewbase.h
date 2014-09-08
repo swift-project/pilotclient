@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "blackmisc/icons.h"
 #include <QTableView>
 #include <QMenu>
 #include <QPoint>
@@ -20,8 +21,55 @@ namespace BlackGui
 {
     namespace Views
     {
-        //! List model
-        template <class ModelClass> class CViewBase : public QTableView
+
+        //! Non templated base class, allows Q_OBJECT and signals
+        class CViewBaseNonTemplate : public QTableView
+        {
+            Q_OBJECT
+
+        public:
+            //! Clear data
+            virtual void clear() = 0;
+
+        signals:
+            //! Ask for new data
+            void requestUpdate();
+
+        protected:
+            //! Constructor
+            CViewBaseNonTemplate(QWidget *parent) : QTableView(parent)
+            {
+                this->setContextMenuPolicy(Qt::CustomContextMenu);
+                connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::ps_customMenuRequested);
+            }
+
+            //! Method creating the menu
+            //! \remarks override this method to contribute to the menu
+            virtual void customMenu(QMenu &menu) const
+            {
+                menu.addAction(BlackMisc::CIcons::refresh16(),  "Update", this, SIGNAL(requestUpdate()));
+                menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, SLOT(ps_clear()));
+            }
+
+        private slots:
+            //! Custom menu was requested
+            void ps_customMenuRequested(QPoint pos)
+            {
+                QMenu menu;
+                this->customMenu(menu);
+                if (menu.isEmpty()) { return; }
+
+                QPoint globalPos = this->mapToGlobal(pos);
+                menu.exec(globalPos);
+            }
+
+            //! Clear the model
+            virtual void ps_clear() { this->clear(); }
+
+        };
+
+        //! Base class for views
+        template <class ModelClass> class CViewBase : public CViewBaseNonTemplate
         {
 
         public:
@@ -32,8 +80,8 @@ namespace BlackGui
             //! Model
             const ModelClass *derivedModel() const { return this->m_model; }
 
-            //! Clear
-            void clear() { Q_ASSERT(this->m_model); this->m_model->clear(); }
+            //! \copydoc CViewBaseNonTemplate::clear
+            virtual void clear() override { Q_ASSERT(this->m_model); this->m_model->clear(); }
 
             //! Update whole container
             template<class ContainerType> int updateContainer(const ContainerType &container, bool resize = true)
@@ -95,16 +143,13 @@ namespace BlackGui
             }
 
         protected:
-
             ModelClass *m_model = nullptr; //!< corresponding model
 
             //! Constructor
-            CViewBase(QWidget *parent, ModelClass *model = nullptr) : QTableView(parent), m_model(model)
+            CViewBase(QWidget *parent, ModelClass *model = nullptr) : CViewBaseNonTemplate(parent), m_model(model)
             {
                 this->setSortingEnabled(true);
                 if (model) { this->setModel(this->m_model); }
-                this->setContextMenuPolicy(Qt::CustomContextMenu);
-                connect(this, &QWidget::customContextMenuRequested, this, &CViewBase::ps_customMenuRequested);
             }
 
             //! Destructor
@@ -136,25 +181,6 @@ namespace BlackGui
                 this->setModel(this->m_model); // via QTableView
                 this->setSortIndicator();
                 this->horizontalHeader()->setStretchLastSection(true);
-            }
-
-            //! Method creating the menu
-            //! \remarks override this method to contribute to the menu
-            virtual void customMenu(QMenu &menu) const
-            {
-                Q_UNUSED(menu);
-            }
-
-        private slots:
-            //! Custom menu was requested
-            void ps_customMenuRequested(QPoint pos)
-            {
-                QMenu menu;
-                this->customMenu(menu);
-                if (menu.isEmpty()) { return; }
-
-                QPoint globalPos = this->mapToGlobal(pos);
-                menu.exec(globalPos);
             }
         };
     }
