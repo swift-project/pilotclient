@@ -63,6 +63,16 @@ macx-clang {
 }
 
 ###########################
+# Profile build
+###########################
+contains(BLACK_CONFIG, ProfileRelease) {
+    win32-msvc* {
+        QMAKE_CXXFLAGS_RELEASE *= /Zi
+        QMAKE_LFLAGS_RELEASE *= /DEBUG /PROFILE /INCREMENTAL:NO /OPT:REF /OPT:ICF
+    }
+}
+
+###########################
 # No FSX or FS9 for 64 bits
 ###########################
 
