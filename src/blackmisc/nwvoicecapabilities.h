@@ -51,6 +51,9 @@ namespace BlackMisc
             //! Set capabilites
             void setCapabilities(VoiceCapabilities capabilites) { m_voiceCapabilities = static_cast<int>(capabilites); }
 
+            //! Is capability known
+            bool isUnknown() const { return m_voiceCapabilities == Unknown; }
+
             //! \copydoc CValueObject::toIcon()
             virtual CIcon toIcon() const override;
 
@@ -81,6 +84,18 @@ namespace BlackMisc
             //! Members
             static const QStringList &jsonMembers();
 
+            //! From enum
+            static const CVoiceCapabilities &fromVoiceCapabilities(VoiceCapabilities capabilities);
+
+            //! From flight plan remarks
+            static CVoiceCapabilities fromFlightPlanRemarks(const QString &remarks)
+            {
+                return CVoiceCapabilities(remarks);
+            }
+
+            //! All capabilities as list
+            static const QList<CVoiceCapabilities> &allCapabilities();
+
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
@@ -105,7 +120,7 @@ namespace BlackMisc
             int m_voiceCapabilities = Unknown;
 
             //! Capabilites from flight plans remarks such as "/V/"
-            void fromFlightPlanRemarks(const QString &flightPlanRemarks);
+            void setFromFlightPlanRemarks(const QString &flightPlanRemarks);
         };
 
     } // namespace

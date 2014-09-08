@@ -87,6 +87,19 @@ namespace BlackCore
         return aircraft.getIcaoInfo();
     }
 
+    CVoiceCapabilities CVatsimDataFileReader::getVoiceCapabilityForCallsign(const CCallsign &callsign)
+    {
+        QReadLocker rl(&this->m_lock);
+        if (this->m_voiceCapabilities.contains(callsign))
+        {
+            return m_voiceCapabilities[callsign];
+        }
+        else
+        {
+            return CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Unknown);
+        }
+    }
+
     void CVatsimDataFileReader::updateWithVatsimDataFileData(CAircraft &aircraftToBeUdpated) const
     {
         this->getAircrafts().updateWithVatsimDataFileData(aircraftToBeUdpated);
@@ -158,9 +171,10 @@ namespace BlackCore
             if (lines.isEmpty()) return;
 
             // build on local vars for thread safety
-            CServerList voiceServers;
+            CServerList     voiceServers;
             CAtcStationList atcStations;
-            CAircraftList aircrafts;
+            CAircraftList   aircrafts;
+            QMap<CCallsign, CVoiceCapabilities> voiceCapabilities;
             QDateTime updateTimestampFromFile;
 
             QStringList clientSectionAttributes;
@@ -213,8 +227,9 @@ namespace BlackCore
                 case SectionClients:
                     {
                         QMap<QString, QString> clientPartsMap = clientPartsToMap(currentLine, clientSectionAttributes);
-                        BlackMisc::Network::CUser user(clientPartsMap["cid"], clientPartsMap["realname"], CCallsign(clientPartsMap["callsign"]));
-                        if (!user.hasValidCallsign()) continue;
+                        CCallsign callsign = CCallsign(clientPartsMap["callsign"]);
+                        if (callsign.isEmpty()) continue;
+                        BlackMisc::Network::CUser user(clientPartsMap["cid"], clientPartsMap["realname"], callsign);
                         const QString clientType = clientPartsMap["clienttype"].toLower();
                         if (clientType.isEmpty()) break; // sometimes type is empty
                         double lat = clientPartsMap["latitude"].toDouble();
@@ -223,7 +238,19 @@ namespace BlackCore
                         CFrequency frequency = CFrequency(clientPartsMap["frequency"].toDouble(), CFrequencyUnit::MHz());
                         CCoordinateGeodetic position(lat, lng, -1);
                         CAltitude altitude(alt, CAltitude::MeanSeaLevel, CLengthUnit::ft());
+                        QString flightPlanRemarks = clientPartsMap["planned_remarks"];
 
+                        // Voice capabilities
+                        if (!flightPlanRemarks.isEmpty())
+                        {
+                            CVoiceCapabilities vc(flightPlanRemarks);
+                            if (!vc.isUnknown())
+                            {
+                                voiceCapabilities.insert(callsign, vc);
+                            }
+                        }
+
+                        // set as per ATC/pilot
                         if (clientType.startsWith('p'))
                         {
                             // Pilot section
@@ -300,6 +327,7 @@ namespace BlackCore
                     this->m_aircrafts = aircrafts;
                     this->m_atcStations = atcStations;
                     this->m_voiceServers = voiceServers;
+                    this->m_voiceCapabilities = voiceCapabilities;
                 }
             } // read success
 

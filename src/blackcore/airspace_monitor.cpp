@@ -44,6 +44,7 @@ namespace BlackCore
 
         // AutoConnection: this should also avoid race conditions by updating the bookings
         this->connect(this->m_vatsimBookingReader, &CVatsimBookingReader::dataRead, this, &CAirspaceMonitor::ps_receivedBookings);
+        this->connect(this->m_vatsimDataFileReader, &CVatsimDataFileReader::dataRead, this, &CAirspaceMonitor::ps_receivedDataFile);
     }
 
     CFlightPlan CAirspaceMonitor::loadFlightPlanFromNetwork(const CCallsign &callsign)
@@ -237,7 +238,9 @@ namespace BlackCore
         vm = CIndexVariantMap({CAircraft::IndexPilot, CUser::IndexRealName}, realname);
         this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
 
+        // Client
         vm = CIndexVariantMap({CClient::IndexUser, CUser::IndexRealName}, realname);
+        this->addVoiceCapabilitiesFromDataFile(vm, callsign);
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 
@@ -249,6 +252,7 @@ namespace BlackCore
         capabilities.addValue(CClient::FsdWithInterimPositions, (flags & INetwork::SupportsInterimPosUpdates));
         capabilities.addValue(CClient::FsdWithModelDescription, (flags & INetwork::SupportsModelDescriptions));
         CIndexVariantMap vm(CClient::IndexCapabilities, capabilities.toQVariant());
+        this->addVoiceCapabilitiesFromDataFile(vm, callsign);
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 
@@ -293,7 +297,7 @@ namespace BlackCore
         if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsignTower)) { emit this->changedAtcStationsBooked(); }
     }
 
-    void CAirspaceMonitor::ps_flightplanReceived(const CCallsign &callsign, const CFlightPlan &flightPlan)
+    void CAirspaceMonitor::ps_flightPlanReceived(const CCallsign &callsign, const CFlightPlan &flightPlan)
     {
         CFlightPlan plan(flightPlan);
         plan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
@@ -318,6 +322,17 @@ namespace BlackCore
         this->m_network->sendFsipirCustomPacket(recipientCallsign, icao.getAirlineDesignator(), icao.getAircraftDesignator(), icao.getAircraftCombinedType(), modelString);
     }
 
+    void CAirspaceMonitor::addVoiceCapabilitiesFromDataFile(CIndexVariantMap &vm, const CCallsign &callsign)
+    {
+        Q_ASSERT(this->m_vatsimDataFileReader);
+        if (callsign.isEmpty()) return;
+        CVoiceCapabilities vc = this->m_vatsimDataFileReader->getVoiceCapabilityForCallsign(callsign);
+        if (!vc.isUnknown())
+        {
+            vm.addValue(CClient::IndexVoiceCapabilities, vc);
+        }
+    }
+
     void CAirspaceMonitor::ps_receivedBookings(const CAtcStationList &bookedStations)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
@@ -326,12 +341,26 @@ namespace BlackCore
         {
             // complete by VATSIM data file data
             this->m_vatsimDataFileReader->getAtcStations().updateFromVatsimDataFileStation(bookedStation);
-            // exchange booking and online data
+            // exchange booking and online data, both sides are updated
             this->m_atcStationsOnline.mergeWithBooking(bookedStation);
             // into list
             this->m_atcStationsBooked.push_back(bookedStation);
         }
         emit this->changedAtcStationsBooked(); // all booked stations reloaded
+    }
+
+    void CAirspaceMonitor::ps_receivedDataFile()
+    {
+        Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
+        for (auto i = this->m_otherClients.begin(); i != this->m_otherClients.end(); ++i)
+        {
+            CClient client = (*i);
+            if (client.hasSpecifiedVoiceCapabilities()) continue;
+            CVoiceCapabilities vc = this->m_vatsimDataFileReader->getVoiceCapabilityForCallsign(client.getCallsign());
+            if (vc.isUnknown()) continue;
+            client.setVoiceCapabilities(vc);
+            (*i) = client;
+        }
     }
 
     void CAirspaceMonitor::ps_atcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
@@ -422,7 +451,9 @@ namespace BlackCore
             this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
             emit this->changedAtcStationsBooked(); // single ATIS received
         }
-        vm = CIndexVariantMap(CClient::IndexVoiceCapabilities, CVoiceCapabilities(CVoiceCapabilities::Voice).toQVariant());
+
+        // receiving voice room means ATC has voice
+        vm = CIndexVariantMap(CClient::IndexVoiceCapabilities, CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice).toQVariant());
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 

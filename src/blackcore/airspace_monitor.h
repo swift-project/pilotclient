@@ -139,6 +139,9 @@ namespace BlackCore
         void sendFsipirCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
         QStringList createFsipiCustomPacketData() const;
 
+        //! Helper method, add voice capabilites if available
+        void addVoiceCapabilitiesFromDataFile(BlackMisc::CIndexVariantMap &vm, const BlackMisc::Aviation::CCallsign &callsign);
+
     private slots:
         void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);
         void ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags);

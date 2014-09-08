@@ -103,6 +103,9 @@ namespace BlackMisc
             //! Get voice capabilities
             const CVoiceCapabilities &getVoiceCapabilities() const { return m_voiceCapabilities;}
 
+            //! Has known voice capabilities?
+            bool hasSpecifiedVoiceCapabilities() const { return !m_voiceCapabilities.isUnknown();}
+
             //! Set voice capabilities
             void setVoiceCapabilities(const CVoiceCapabilities &voiceCapabilities) { m_voiceCapabilities = voiceCapabilities;}
 

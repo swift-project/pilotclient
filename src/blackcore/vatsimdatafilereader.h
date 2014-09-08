@@ -17,6 +17,7 @@
 #include "blackmisc/avaircraftlist.h"
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwuserlist.h"
+#include "blackmisc/nwvoicecapabilities.h"
 #include "blackmisc/avcallsignlist.h"
 
 #include <QObject>
@@ -79,6 +80,10 @@ namespace BlackCore
         //! ICAO info for callsign
         //! \threadsafe
         BlackMisc::Aviation::CAircraftIcao getIcaoInfo(const  BlackMisc::Aviation::CCallsign &callsign);
+
+        //! Voice capability for callsign
+        //! \threadsafe
+        BlackMisc::Network::CVoiceCapabilities getVoiceCapabilityForCallsign(const BlackMisc::Aviation::CCallsign &callsign);
 
         //! Update aircraft with VATSIM aircraft data from data file
         //! \threadsafe

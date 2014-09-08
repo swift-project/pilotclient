@@ -76,6 +76,20 @@ namespace BlackMisc
                 this->setCapabilities(Voice);
                 return;
             }
+
+            if (r.contains("/t/"))
+            {
+                this->setCapabilities(TextOnly);
+                return;
+            }
+
+            if (r.contains("/r/"))
+            {
+                this->setCapabilities(VoiceReceivingOnly);
+                return;
+            }
+
+            this->setCapabilities(Unknown);
         }
 
         /*
@@ -189,6 +203,39 @@ namespace BlackMisc
         const QStringList &CVoiceCapabilities::jsonMembers()
         {
             return TupleConverter<CVoiceCapabilities>::jsonMembers();
+        }
+
+        /*
+         * From enum
+         */
+        const CVoiceCapabilities &CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::VoiceCapabilities capabilities)
+        {
+            static const CVoiceCapabilities u(CVoiceCapabilities::Unknown);
+            static const CVoiceCapabilities to(CVoiceCapabilities::TextOnly);
+            static const CVoiceCapabilities v(CVoiceCapabilities::Voice);
+            static const CVoiceCapabilities vro(CVoiceCapabilities::VoiceReceivingOnly);
+
+            switch (capabilities)
+            {
+            case CVoiceCapabilities::TextOnly:
+                return to;
+            case CVoiceCapabilities::Voice:
+                return v;
+            case CVoiceCapabilities::VoiceReceivingOnly:
+                return vro;
+            case CVoiceCapabilities::Unknown:
+            default:
+                return u;
+            }
+        }
+
+        /*
+         * All
+         */
+        const QList<CVoiceCapabilities> &CVoiceCapabilities::allCapabilities()
+        {
+            static const QList<CVoiceCapabilities> all({fromVoiceCapabilities(Unknown), fromVoiceCapabilities(Voice), fromVoiceCapabilities(VoiceReceivingOnly), fromVoiceCapabilities(TextOnly)});
+            return all;
         }
 
         /*
