@@ -170,12 +170,15 @@ namespace BlackSimPlugin
             addAircraftSituation(callsign, initialSituation);
         }
 
-        void CSimulatorFsx::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
+        void CSimulatorFsx::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &initialSituation)
         {
-            Q_ASSERT(m_simConnectObjects.contains(callsign));
-
+            if (!m_simConnectObjects.contains(callsign)) {
+                // according to #324 this should not happen
+                Q_ASSERT(false);
+                this->addRemoteAircraft(callsign, initialSituation);
+            }
             CSimConnectObject simObj = m_simConnectObjects.value(callsign);
-            simObj.getInterpolator()->addAircraftSituation(situation);
+            simObj.getInterpolator()->addAircraftSituation(initialSituation);
             m_simConnectObjects.insert(callsign, simObj);
         }
 
