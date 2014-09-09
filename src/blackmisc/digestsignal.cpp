@@ -14,11 +14,7 @@ namespace BlackMisc
 
     void CDigestSignal::ps_inputSignal()
     {
-        if (m_timer.isActive())
-        {
-            m_timer.start();
-        }
-
+        m_timer.start(); // start or restart
         m_inputsCount++;
         if (m_inputsCount >= m_maxInputsPerDigest)
         {

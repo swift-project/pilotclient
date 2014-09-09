@@ -154,8 +154,8 @@ namespace BlackCore
         INetwork::ConnectionStatus m_currentStatus; //!< used to detect pending connections
 
         BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 750, 2 };
-        BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 750, 2 };
-        BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged { this, &IContextNetwork::changedAircraftsInRange, &IContextNetwork::changedAircraftsInRangeDigest, 750, 2 };
+        BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 750, 4 };
+        BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged { this, &IContextNetwork::changedAircraftsInRange, &IContextNetwork::changedAircraftsInRangeDigest, 750, 4 };
 
         // for reading XML and VATSIM data files
         CVatsimBookingReader  *m_vatsimBookingReader;
