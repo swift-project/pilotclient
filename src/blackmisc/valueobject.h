@@ -16,6 +16,7 @@
 #include "tuple.h"
 #include "json.h"
 #include "variant.h"
+#include "blackmiscfreefunctions.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>
 #include <QtGlobal>
@@ -267,6 +268,87 @@ namespace BlackMisc
 
         //! Parse from string, e.g. 100km/h
         virtual void parseFromString(const QString &) { qFatal("Not implemented"); }
+
+    };
+
+    //! Standard tuple enabled value object
+    //! CRTP based approach to avoid repetitive code
+    template <class VO> class CValueObjectStdTuple : public BlackMisc::CValueObject
+    {
+
+    public:
+
+        //! Default constructor.
+        CValueObjectStdTuple() : CValueObject() {}
+
+        //! \copydoc CValueObject::getValueHash()
+        virtual uint getValueHash() const override
+        {
+            return qHash(TupleConverter<VO>::toMetaTuple(*derived()));
+        }
+
+        //! \copydoc CValueObject::toJson
+        virtual QJsonObject toJson() const override
+        {
+            return BlackMisc::serializeJson(TupleConverter<VO>::toMetaTuple(*derived()));
+        }
+
+        //! \copydoc CValueObject::convertFromJson
+        virtual void convertFromJson(const QJsonObject &json) override
+        {
+            BlackMisc::deserializeJson(json, TupleConverter<VO>::toMetaTuple(*derived()));
+        }
+
+        //! \copydoc CValueObject::toQVariant()
+        virtual QVariant toQVariant() const override { return QVariant::fromValue(*derived()); }
+
+        //! \copydoc CValueObject::convertFromQVariant
+        virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(derived(), variant); }
+
+        //! Register metadata
+        static void registerMetadata()
+        {
+            qRegisterMetaType<VO>();
+            qDBusRegisterMetaType<VO>();
+        }
+
+    protected:
+
+        //! \copydoc CValueObject::getMetaTypeId
+        virtual int getMetaTypeId() const override { return qMetaTypeId<VO>(); }
+
+        //! \copydoc CValueObject::isA
+        virtual bool isA(int metaTypeId) const override
+        {
+            if (metaTypeId == qMetaTypeId<VO>()) { return true; }
+            return this->CValueObject::isA(metaTypeId);
+        }
+
+        //! \copydoc CValueObject::compareImpl(CValueObject &otherBase)
+        virtual int compareImpl(const CValueObject &otherBase) const override
+        {
+            const VO &other = static_cast<const VO &>(otherBase);
+            return compare(TupleConverter<VO>::toMetaTuple(*derived()), TupleConverter<VO>::toMetaTuple(other));
+        }
+
+        //! \copydoc CValueObject::marshallToDbus()
+        virtual void marshallToDbus(QDBusArgument &argument) const override
+        {
+            argument << TupleConverter<VO>::toMetaTuple(*derived());
+        }
+
+        //! \copydoc CValueObject::unmarshallFromDbus()
+        virtual void unmarshallFromDbus(const QDBusArgument &argument) override
+        {
+            argument >> TupleConverter<VO>::toMetaTuple(*derived());
+        }
+
+    private:
+        //! Easy access to derived class (CRTP template parameter)
+        VO const *derived() const { return static_cast<VO const *>(this); }
+
+        //! Easy access to derived class (CRTP template parameter)
+        VO *derived() { return static_cast<VO *>(this); }
 
     };
 
