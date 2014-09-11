@@ -24,6 +24,23 @@ namespace BlackMisc
     {  }
 
     /*
+     * Equal?
+     */
+    bool CStatusMessage::operator ==(const CStatusMessage &other) const
+    {
+        if (this == &other) return true;
+        return TupleConverter<CStatusMessage>::toTuple(*this) == TupleConverter<CStatusMessage>::toTuple(other);
+    }
+
+    /*
+     * Unequal?
+     */
+    bool CStatusMessage::operator !=(const CStatusMessage &other) const
+    {
+        return !((*this) == other);
+    }
+
+    /*
      * Constructor
      */
     CStatusMessage::CStatusMessage(StatusType type, StatusSeverity severity, const char *message)
@@ -47,32 +64,6 @@ namespace BlackMisc
 
         s.append(" ").append(this->m_message);
         return s;
-    }
-
-    /*
-     * metaTypeId
-     */
-    int CStatusMessage::getMetaTypeId() const
-    {
-        return qMetaTypeId<CStatusMessage>();
-    }
-
-    /*
-     * is a
-     */
-    bool CStatusMessage::isA(int metaTypeId) const
-    {
-        if (metaTypeId == qMetaTypeId<CStatusMessage>()) { return true; }
-        return this->CValueObject::isA(metaTypeId);
-    }
-
-    /*
-     * Metadata
-     */
-    void CStatusMessage::registerMetadata()
-    {
-        qRegisterMetaType<CStatusMessage>();
-        qDBusRegisterMetaType<CStatusMessage>();
     }
 
     /*
@@ -119,30 +110,6 @@ namespace BlackMisc
         case SeverityError: return CIconList::iconForIndex(CIcons::StandardIconError16);
         default: return CIconList::iconForIndex(CIcons::StandardIconInfo16);
         }
-    }
-
-    /*
-     * To JSON
-     */
-    QJsonObject CStatusMessage::toJson() const
-    {
-        return BlackMisc::serializeJson(CStatusMessage::jsonMembers(), TupleConverter<CStatusMessage>::toTuple(*this));
-    }
-
-    /*
-     * From JSON
-     */
-    void CStatusMessage::convertFromJson(const QJsonObject &json)
-    {
-        BlackMisc::deserializeJson(json, CStatusMessage::jsonMembers(), TupleConverter<CStatusMessage>::toTuple(*this));
-    }
-
-    /*
-     * Members
-     */
-    const QStringList &CStatusMessage::jsonMembers()
-    {
-        return TupleConverter<CStatusMessage>::jsonMembers();
     }
 
     /*
@@ -236,56 +203,6 @@ namespace BlackMisc
             qFatal("Unknown severity");
             return x; // just for compiler warning
         }
-    }
-
-    /*
-     * Compare
-     */
-    int CStatusMessage::compareImpl(const CValueObject &otherBase) const
-    {
-        const auto &other = static_cast<const CStatusMessage &>(otherBase);
-        return compare(TupleConverter<CStatusMessage>::toTuple(*this), TupleConverter<CStatusMessage>::toTuple(other));
-    }
-
-    /*
-     * Marshall to DBus
-     */
-    void CStatusMessage::marshallToDbus(QDBusArgument &argument) const
-    {
-        argument << TupleConverter<CStatusMessage>::toTuple(*this);
-    }
-
-    /*
-     * Unmarshall from DBus
-     */
-    void CStatusMessage::unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        argument >> TupleConverter<CStatusMessage>::toTuple(*this);
-    }
-
-    /*
-     * Hash
-     */
-    uint CStatusMessage::getValueHash() const
-    {
-        return qHash(TupleConverter<CStatusMessage>::toTuple(*this));
-    }
-
-    /*
-     * Equal?
-     */
-    bool CStatusMessage::operator ==(const CStatusMessage &other) const
-    {
-        if (this == &other) return true;
-        return TupleConverter<CStatusMessage>::toTuple(*this) == TupleConverter<CStatusMessage>::toTuple(other);
-    }
-
-    /*
-     * Unequal
-     */
-    bool CStatusMessage::operator !=(const CStatusMessage &other) const
-    {
-        return !(other == (*this));
     }
 
     /*

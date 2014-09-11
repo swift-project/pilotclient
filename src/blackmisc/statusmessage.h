@@ -22,7 +22,7 @@ namespace BlackMisc
     /*!
      * Streamable status message, e.g. from Core -> GUI
      */
-    class CStatusMessage : public CValueObject
+    class CStatusMessage : public CValueObjectStdTuple<CStatusMessage>
     {
     public:
         //! Status types
@@ -69,6 +69,12 @@ namespace BlackMisc
         //! Constructor
         CStatusMessage(StatusType type, StatusSeverity severity, const QString &message);
 
+        //! Equal operator ==
+        bool operator ==(const CStatusMessage &other) const;
+
+        //! Unequal operator !=
+        bool operator !=(const CStatusMessage &other) const;
+
         //! Status type
         StatusType getType() const { return this->m_type; }
 
@@ -80,15 +86,6 @@ namespace BlackMisc
 
         //! Message empty
         bool isEmpty() const { return this->m_message.isEmpty(); }
-
-        //! \copydoc CValueObject::getValueHash()
-        virtual uint getValueHash() const override;
-
-        //! \copydoc CValueObject::toQVariant()
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
         //! Type as string
         const QString &getTypeAsString() const;
@@ -102,12 +99,6 @@ namespace BlackMisc
         //! Type as string
         const QString &getSeverityAsString() const;
 
-        //! \copydoc CValueObject::toJson
-        virtual QJsonObject toJson() const override;
-
-        //! \copydoc CValueObject::convertFromJson
-        virtual void convertFromJson(const QJsonObject &json) override;
-
         //! \copydoc CValueObject::propertyByIndex(int)
         virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
@@ -116,18 +107,6 @@ namespace BlackMisc
 
         //! To HTML
         QString toHtml() const;
-
-        //! Equal operator ==
-        bool operator ==(const CStatusMessage &other) const;
-
-        //! Unequal operator !=
-        bool operator !=(const CStatusMessage &other) const;
-
-        //! Register metadata
-        static void registerMetadata();
-
-        //! JSON member names
-        static const QStringList &jsonMembers();
 
         //! Validation error
         static CStatusMessage getValidationError(const QString &message);
@@ -145,23 +124,8 @@ namespace BlackMisc
         static const CIcon &convertToIcon(const CStatusMessage &statusMessage);
 
     protected:
-        //! \copydoc CValueObject::marshallToDbus
-        virtual void marshallToDbus(QDBusArgument &arg) const override;
-
-        //! \copydoc CValueObject::unmarshallFromDbus
-        virtual void unmarshallFromDbus(const QDBusArgument &arg) override;
-
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
-
-        //! \copydoc CValueObject::getMetaTypeId
-        virtual int getMetaTypeId() const override;
-
-        //! \copydoc CValueObject::isA
-        virtual bool isA(int metaTypeId) const override;
-
-        //! \copydoc CValueObject::compareImpl
-        virtual int compareImpl(const CValueObject &other) const override;
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)
@@ -171,7 +135,8 @@ namespace BlackMisc
         QDateTime m_timestamp;
 
     };
-}
+} // namespace
+
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (o.m_type, o.m_severity, o.m_message, o.m_timestamp))
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)
