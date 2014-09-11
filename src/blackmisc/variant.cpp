@@ -8,6 +8,7 @@
  */
 
 #include "variant.h"
+#include "valueobject.h"
 #include "blackmiscfreefunctions.h"
 #include <QDBusArgument>
 #include <QDBusMetaType>

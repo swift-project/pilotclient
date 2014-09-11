@@ -7,6 +7,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QTranslator>
+#include <QDebug>
 
 /*!
  * \brief Main
