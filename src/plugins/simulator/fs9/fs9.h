@@ -121,7 +121,7 @@ namespace BlackSimPlugin
             qint32 lon_velocity = 0; //!< Longitude velocity
             qint32 alt_velocity = 0; //!< Altitude velocity
             quint32 ground_velocity = 0; //!< Ground velocity
-            std::array<quint8, 4> reserved = {{0, 0, 0, 0}}; //!< Reserved
+            std::array<quint8, 4> reserved = std::array<quint8, 4>{{0, 0, 0, 0}}; //!< Reserved
             qint32 pbh = 0; //!< Pitch/Bank/Heading
             qint32 lat_i = 0; //!< Latitude - integer
             qint32 lon_hi = 0; //!< Longitude - integer
