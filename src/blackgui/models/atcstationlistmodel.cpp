@@ -67,8 +67,8 @@ namespace BlackGui
 
             case StationsBooked:
                 this->m_columns.addColumn(CColumn::standardString("callsign", { CAtcStation::IndexCallsign, CCallsign::IndexCallsignStringAsSet }));
-                this->m_columns.addColumn(CColumn(CAtcStation::IndexIcon));
-                this->m_columns.addColumn(CColumn("", CAtcStation::IndexIsOnline, new CBoolLedFormatter("online", "offline")));
+                this->m_columns.addColumn(CColumn("type", CAtcStation::IndexIcon));
+                this->m_columns.addColumn(CColumn("", "on/offline", CAtcStation::IndexIsOnline, new CBoolLedFormatter("online", "offline")));
                 this->m_columns.addColumn(CColumn::standardString("controllername", { CAtcStation::IndexController, CUser::IndexRealName }));
                 this->m_columns.addColumn(CColumn("bookedfrom", CAtcStation::IndexBookedFrom,
                                                   new CDateTimeFormatter(CDateTimeFormatter::formatYmdhm())));
