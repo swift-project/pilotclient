@@ -87,6 +87,29 @@ namespace BlackGui
         }
     }
 
+    void CDockWidget::paintEvent(QPaintEvent *event)
+    {
+        // KB: Should give me style sheet compliance, however I did not notice any difference
+        // included for style sheet compliance
+        // QStyleOption opt;
+        // opt.init(this);
+        // QPainter p(this);
+        // style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+        QDockWidget::paintEvent(event);
+    }
+
+    void CDockWidget::hideEvent(QHideEvent *event)
+    {
+        qDebug() << "hide" << this->objectName() << "v:" << isVisible() << "h:" << isHidden();
+        QDockWidget::hideEvent(event);
+    }
+
+    void CDockWidget::showEvent(QShowEvent *event)
+    {
+        qDebug() << "show" << this->objectName() << "v:" << isVisible() << "h:" << isHidden();
+        QDockWidget::showEvent(event);
+    }
+
     void CDockWidget::addToContextMenu(QMenu *contextMenu) const
     {
         if (this->isFloating())
@@ -99,15 +122,22 @@ namespace BlackGui
         }
     }
 
-    void CDockWidget::paintEvent(QPaintEvent *event)
+    void CDockWidget::initalFloating()
     {
-        // KB: Should give me style sheet compliance, however I did not notice any difference
-        // included for style sheet compliance
-        // QStyleOption opt;
-        // opt.init(this);
-        // QPainter p(this);
-        // style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-        QDockWidget::paintEvent(event);
+        // for the first time resize
+        if (!this->m_preferredSizeWhenFloating.isNull())
+        {
+            this->resize(this->m_preferredSizeWhenFloating);
+        }
+
+        // and move
+        QPoint mainWindowPos = BlackGui::CGuiUtility::mainWindowPosition();
+        if (!mainWindowPos.isNull())
+        {
+            int x = mainWindowPos.x() + this->m_offsetWhenFloating.x();
+            int y = mainWindowPos.y() + this->m_offsetWhenFloating.y();
+            this->move(x, y);
+        }
     }
 
     void CDockWidget::ps_onTopLevelChanged(bool topLevel)
@@ -122,20 +152,7 @@ namespace BlackGui
             this->setContentsMargins(this->m_marginsWhenFloating);
             if (!this->m_wasAlreadyFloating)
             {
-                // for the first time resize
-                if (!this->m_preferredSizeWhenFloating.isNull())
-                {
-                    this->resize(this->m_preferredSizeWhenFloating);
-                }
-
-                // and move
-                QPoint mainWindowPos = BlackGui::CGuiUtility::mainWindowPosition();
-                if (!mainWindowPos.isNull())
-                {
-                    int x = mainWindowPos.x() + this->m_offsetWhenFloating.x();
-                    int y = mainWindowPos.y() + this->m_offsetWhenFloating.y();
-                    this->move(x, y);
-                }
+                this->initalFloating();
             }
             this->m_wasAlreadyFloating = true;
         }
@@ -182,7 +199,7 @@ namespace BlackGui
         Q_UNUSED(selectedItem);
     }
 
-    void CDockWidget::ps_onStyleSheetsChanged()
+    void CDockWidget::onStyleSheetsChanged()
     {
         // void
     }

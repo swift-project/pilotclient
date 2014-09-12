@@ -18,6 +18,8 @@ namespace BlackGui
 {
 
     //! Class for dock widgets in the info area, containing some specialized functionality
+    //! \sa CDockWidgetInfoArea
+    //! \sa CInfoArea
     class CDockWidgetInfoBar : public CDockWidget
     {
         Q_OBJECT

@@ -1,5 +1,5 @@
 /* Copyright (C) 2014
- * Swift Project Community / Contributors
+ * swift Project Community / Contributors
  *
  * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
@@ -21,22 +21,27 @@
 namespace BlackGui
 {
 
-    //! Our base class for dock widgets, containing some specialized functionality
+    //! \brief Our base class for dockable widgets containing some specialized functionality on top of QWidget.
+    //! \details We currently use dockable widgets either as "info area" or "info bar" dockable widget.
+    //! Info area widgets reside in an info are and represent a larger piece of information (e.g. all ATC stations, all aircrafts in range).
+    //! An info bar is meant to be a small info window displaying information about status, menu state etc.
+    //!
+    //! \sa CInfoArea
+    //! \sa CDockWidgetInfoArea
+    //! \sa CDockWidgetInfoBar
     class CDockWidget : public QDockWidget
     {
+        // KB TODO: Make this an interface, IDockWidget
         Q_OBJECT
 
     public:
-        //! Constructor
-        explicit CDockWidget(QWidget *parent = nullptr);
-
         //! Set original title bar
         void setOriginalTitleBar();
 
-        //! Set empty title bar
+        //! Set empty title bar (empty widget as title bar)
         void setEmptyTitleBar();
 
-        //! Set null title bar
+        //! Set null (nullptr) title bar
         void setNullTitleBar();
 
         //! Margins when window is floating
@@ -57,13 +62,16 @@ namespace BlackGui
         //! Window title when window is docked
         bool showTitleWhenDocked() const { return this->m_windowTitleWhenDocked; }
 
+        //! Selected when tabbed
+        bool isSelected() const { return this->m_selected; }
+
         //! Show the window title when docked
         void showTitleWhenDocked(bool show);
 
-        //! Reset first time floating
+        //! Reset first time floating, marked as never floated before
         void resetWasAlreadyFLoating() { this->m_wasAlreadyFloating = false; }
 
-        //! Was widget already floating
+        //! Was widget already floating?
         bool wasAlreadyFloating() const { return this->m_wasAlreadyFloating; }
 
         //! Size when floating first time
@@ -84,14 +92,28 @@ namespace BlackGui
         void widgetTopLevelChanged(CDockWidget *, bool topLevel);
 
     protected:
+        //! Constructor
+        explicit CDockWidget(QWidget *parent = nullptr);
+
         //! Override close event
         virtual void closeEvent(QCloseEvent *event) override;
+
+        //! Paint event
+        virtual void paintEvent(QPaintEvent *event) override;
+
+        //! Hide event
+        void hideEvent(QHideEvent *event) override;
+
+        //! Show event
+        void showEvent(QShowEvent *event) override;
 
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const;
 
-        //! Paint event
-        virtual void paintEvent(QPaintEvent *event) override;
+        //! Widget is initialized by being a floating window for a shot period.
+        //! \details Place where - when overidden - post initializations can take place.
+        //! The GUI is already initialized, so all widget data are available.
+        virtual void initalFloating();
 
     protected slots:
         //! Style sheet has changed
@@ -105,15 +127,17 @@ namespace BlackGui
         virtual void ps_showContextMenu(const QPoint &pos);
 
     private:
-        QWidget *m_emptyTitleBar = nullptr; //!< replacing default title bar
+        QWidget *m_emptyTitleBar    = nullptr; //!< replacing default title bar
         QWidget *m_titleBarOriginal = nullptr; //!< the original title bar
-        QMargins m_marginsWhenFloating; //!< Offsets when window is floating
-        QMargins m_marginsWhenDocked;   //!< Offsets when window is floating
-        QString m_windowTitleBackup;    //!< original title, even if the widget title is deleted for layout purposes
+        QMargins m_marginsWhenFloating;        //!< Offsets when window is floating
+        QMargins m_marginsWhenDocked;          //!< Offsets when window is floating
+        QString  m_windowTitleBackup;          //!< original title, even if the widget title is deleted for layout purposes
+        QSize m_preferredSizeWhenFloating;     //!< preferred size men floating 1st time
+        QPoint m_offsetWhenFloating;           //!< initial offset to main window when floating first time
         bool m_windowTitleWhenDocked = true;
-        bool m_wasAlreadyFloating = false;
-        QSize m_preferredSizeWhenFloating; //!< preferred size men floating 1st time
-        QPoint m_offsetWhenFloating;  //!< initial offset to main window when floating first time
+        bool m_wasAlreadyFloating    = false;
+        bool m_selected              = false;  //!< selected when tabbed
+
 
         //! Empty widget with no size
         void initTitleBarWidgets();

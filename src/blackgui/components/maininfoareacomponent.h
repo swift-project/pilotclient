@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_MAININFOAREACOMPONENT_H
 #define BLACKGUI_MAININFOAREACOMPONENT_H
 
-#include "../dockwidgetinfoarea.h"
+#include "../infoarea.h"
 #include "atcstationcomponent.h"
 #include "aircraftcomponent.h"
 #include "usercomponent.h"
@@ -21,7 +21,6 @@
 #include "flightplancomponent.h"
 #include "settingscomponent.h"
 #include "logcomponent.h"
-#include <QMainWindow>
 #include <QTabBar>
 #include <QPixmap>
 
@@ -33,7 +32,7 @@ namespace BlackGui
     {
 
         //! Main info area
-        class CMainInfoAreaComponent : public QMainWindow
+        class CMainInfoAreaComponent : public BlackGui::CInfoArea
         {
             Q_OBJECT
 
@@ -42,29 +41,24 @@ namespace BlackGui
             explicit CMainInfoAreaComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CMainInfoAreaComponent();
+            virtual ~CMainInfoAreaComponent();
 
             //! Info areas
             enum InfoArea
             {
                 // index must match tab index!
-                InfoAreaAircrafts = 0,
-                InfoAreaAtc = 1,
-                InfoAreaUsers = 2,
+                InfoAreaAircrafts    = 0,
+                InfoAreaAtc          = 1,
+                InfoAreaUsers        = 2,
                 InfoAreaTextMessages = 3,
-                InfoAreaSimulator = 4,
-                InfoAreaFlightPlan = 5,
-                InfoAreaWeather = 6,
-                InfoAreaMappings = 7,
-                InfoAreaLog = 8,
-                InfoAreaSettings = 9
+                InfoAreaSimulator    = 4,
+                InfoAreaFlightPlan   = 5,
+                InfoAreaWeather      = 6,
+                InfoAreaMappings     = 7,
+                InfoAreaLog          = 8,
+                InfoAreaSettings     = 9,
+                InfoAreaNone         = -1
             };
-
-            //! Add items to context menu
-            void addToContextMenu(QMenu *menu) const;
-
-            //! Is this area floating?
-            bool isFloating() const { return this->m_infoAreaFloating; }
 
             //! ATC stations
             CAtcStationComponent *getAtcStationComponent();
@@ -90,119 +84,29 @@ namespace BlackGui
             //! Text messages
             CTextMessageComponent *getTextMessageComponent();
 
+            //! Selected area of non floating areas
+            InfoArea getSelectedInfoArea() const { return static_cast<InfoArea>(getSelectedInfoAreaIndex()); }
+
         public slots:
-            //! Dock all widgets
-            void dockAllWidgets();
-
-            //! Adjust size for all dock widgets
-            void adjustSizeForAllDockWidgets();
-
-            //! All widgets floating
-            void floatAllWidgets();
-
-            //! Toggle dock / floating of the whole info area
-            void toggleFloating();
-
             //! Toggle floating of given area
-            void toggleFloating(InfoArea infoArea);
-
-            //! Toggle floating of index
-            void toggleFloating(int index);
+            void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloating(static_cast<int>(infoArea)); }
 
             //! Select area
-            void selectArea(InfoArea infoArea);
-
-            //! Select area
-            void selectArea(int index);
+            void selectArea(InfoArea infoArea) { CInfoArea::selectArea(static_cast<int>(infoArea)); }
 
             //! Select settings with given area
             void selectSettingsTab(int index);
 
         protected:
-            //! Override close event
-            virtual void closeEvent(QCloseEvent *event) override;
+            //! \copydoc CInfoArea::getPreferredSizeWhenFloating
+            virtual QSize getPreferredSizeWhenFloating(int areaIndex) const override;
+
+            //! \copydoc CInfoArea::indexToPixmap
+            virtual const QPixmap &indexToPixmap(int areaIndex) const override;
 
         private:
             Ui::CMainInfoAreaComponent *ui = nullptr;
-            QList<CDockWidgetInfoArea *> m_dockableWidgets ;
-            QTabBar *m_tabBar = nullptr;
-            bool m_showTabTexts = true;
-            bool m_infoAreaFloating = false; //!< whole info area floating
-            bool m_showTabBar = true; //!< auto ajdust the floating widgets
 
-            //! Tabify the widgets
-            void tabifyAllWidgets();
-
-            //! Untabify
-            void unTabifyAllWidgets();
-
-            //! The tab bar of the docked widgets
-            QTabBar *tabBarDockedWidgets() const;
-
-            //! Corresponding dockable widgets
-            QList<CDockWidgetInfoArea *> dockableWidgets() const;
-
-            //! Corresponding dockable widget for given tab index
-            CDockWidgetInfoArea *getDockableWidgetByTabIndex(int tabBarIndex) const;
-
-            //! Features of the dockable widgets
-            void setFeaturesForDockableWidgets(QDockWidget::DockWidgetFeatures features);
-
-            //! Number of tabbed widgets
-            int countDockedWidgets() const;
-
-            //! Widget to tab bar index
-            int widgetToTabBarIndex(const CDockWidgetInfoArea *dockWidget);
-
-            //! Set the tab's icons
-            void setTabPixmaps();
-
-            //! Connect all widgets
-            void connectAllWidgets();
-
-            //! Margins for the floating widgets
-            void setMarginsWhenFloating(int left, int top, int right, int bottom);
-
-            //! Margins for the dockable widgets
-            void setMarginsWhenDocked(int left, int top, int right, int bottom);
-
-            //! Set window sizes when floating
-            static QSize getPreferredSizeWhenFloating(InfoArea area);
-
-            //! Info area to icon
-            static const QPixmap &infoAreaToPixmap(InfoArea infoArea);
-
-        private slots:
-            //! Tab bar has been double clicked
-            void ps_tabBarDoubleClicked(int tabBarIndex);
-
-            //! A widget has changed its top level
-            void ps_onWidgetTopLevelChanged(CDockWidget *widget, bool topLevel);
-
-            //! Style sheet has been changed
-            void ps_onStyleSheetChanged();
-
-            //! Context menu
-            void ps_showContextMenu(const QPoint &pos);
-
-            //! Show the tab texts, or just the icons
-            void ps_showTabTexts(bool show);
-
-            //! Show tab bar
-            void ps_showTabBar(bool show);
-
-            //! Tab position for docked widgets tab
-            //! \remarks North or South working, East / West not
-            void ps_setTabBarPosition(QTabWidget::TabPosition position);
-
-            //! Toggle tab position North - South
-            void ps_toggleTabBarPosition();
-
-            //! Set dock area used
-            void ps_setDockArea(Qt::DockWidgetArea area);
-
-            //! Dock / floating of the whole info area
-            void ps_setInfoAreaFloating(bool floating);
         };
     }
 }
