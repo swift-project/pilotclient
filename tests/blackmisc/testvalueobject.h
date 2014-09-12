@@ -148,9 +148,7 @@ typedef BlackMisc::CDictionary<BlackMisc::CTestValueObject, BlackMisc::CTestValu
 typedef BlackMisc::CDictionary<BlackMisc::CNotHashable, QString> CNotHashableDictionary;
 typedef BlackMisc::CDictionary<BlackMisc::CNotHashable, QString, QMap> CNotHashableMapDictionary;
 Q_DECLARE_METATYPE(CValueObjectDictionary)
-Q_DECLARE_METATYPE(CValueObjectHashDictionary)
 Q_DECLARE_METATYPE(CNotHashableDictionary)
-Q_DECLARE_METATYPE(CNotHashableMapDictionary)
 
 // MSVC has trouble with these checks
 #if !defined(Q_CC_MSVC)
