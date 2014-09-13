@@ -95,6 +95,33 @@ namespace BlackGui
             }
         }
 
+        void CAtcStationComponent::changedAtcStationOnlineConnectionStatus(const CAtcStation &station, bool added)
+        {
+            this->ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, added);
+        }
+
+        void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
+        {
+            if (!this->getIContextNetwork()->isConnected())
+            {
+                this->ui->te_AtcStationsOnlineInfo->clear();
+                return;
+            }
+            QString icao = airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper();
+            this->ui->le_AtcStationsOnlineMetar->setText(icao);
+            if (icao.length() != 4) return;
+            CInformationMessage metar = this->getIContextNetwork()->getMetar(icao);
+            if (metar.getType() != CInformationMessage::METAR) return;
+            if (metar.isEmpty())
+            {
+                this->ui->te_AtcStationsOnlineInfo->clear();
+            }
+            else
+            {
+                this->ui->te_AtcStationsOnlineInfo->setText(metar.getMessage());
+            }
+        }
+
         void CAtcStationComponent::ps_reloadAtcStationsBooked()
         {
             Q_ASSERT(this->ui->tvp_AtcStationsBooked);
@@ -148,33 +175,6 @@ namespace BlackGui
             if (this->getIContextNetwork())
             {
                 this->getIContextNetwork()->testCreateDummyOnlineAtcStations(number);
-            }
-        }
-
-        void CAtcStationComponent::changedAtcStationOnlineConnectionStatus(const CAtcStation &station, bool added)
-        {
-            this->ui->tvp_AtcStationsOnline->changedAtcStationConnectionStatus(station, added);
-        }
-
-        void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
-        {
-            if (!this->getIContextNetwork()->isConnected())
-            {
-                this->ui->te_AtcStationsOnlineInfo->clear();
-                return;
-            }
-            QString icao = airportIcaoCode.isEmpty() ? this->ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() : airportIcaoCode.trimmed().toUpper();
-            this->ui->le_AtcStationsOnlineMetar->setText(icao);
-            if (icao.length() != 4) return;
-            CInformationMessage metar = this->getIContextNetwork()->getMetar(icao);
-            if (metar.getType() != CInformationMessage::METAR) return;
-            if (metar.isEmpty())
-            {
-                this->ui->te_AtcStationsOnlineInfo->clear();
-            }
-            else
-            {
-                this->ui->te_AtcStationsOnlineInfo->setText(metar.getMessage());
             }
         }
 

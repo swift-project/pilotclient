@@ -19,12 +19,12 @@ namespace BlackGui
 {
     CDockWidget::CDockWidget(QWidget *parent) : QDockWidget(parent)
     {
-        this->ps_onStyleSheetsChanged();
+        this->onStyleSheetsChanged();
         this->initTitleBarWidgets();
 
         // connect
         connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::ps_onTopLevelChanged);
-        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDockWidget::ps_onStyleSheetsChanged);
+        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDockWidget::onStyleSheetsChanged);
 
         // context menu
         this->setContextMenuPolicy(Qt::CustomContextMenu);

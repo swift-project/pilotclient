@@ -117,7 +117,7 @@ namespace BlackGui
 
     protected slots:
         //! Style sheet has changed
-        virtual void ps_onStyleSheetsChanged();
+        virtual void onStyleSheetsChanged();
 
     private slots:
         //! Top level has been chaged

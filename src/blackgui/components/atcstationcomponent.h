@@ -43,7 +43,7 @@ namespace BlackGui
             CTimerBasedComponent *getTimerComponent() { return this->m_timerComponent; }
 
         public slots:
-            //! Update users
+            //! Update stations
             void update();
 
             //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
@@ -95,9 +95,9 @@ namespace BlackGui
             Ui::CAtcStationComponent *ui;
             CTimerBasedComponent *m_timerComponent;
             QDateTime m_timestampLastReadOnlineStations = CTimerBasedComponent::epoch();  //!< stations read
-            QDateTime m_timestampOnlineStationsChanged = CTimerBasedComponent::epoch();   //!< stations marked as changed
+            QDateTime m_timestampOnlineStationsChanged  = CTimerBasedComponent::epoch();   //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations = CTimerBasedComponent::epoch();  //!< stations read
-            QDateTime m_timestampBookedStationsChanged = CTimerBasedComponent::epoch();   //!< stations marked as changed
+            QDateTime m_timestampBookedStationsChanged  = CTimerBasedComponent::epoch();   //!< stations marked as changed
         };
     }
 }

@@ -28,7 +28,7 @@ namespace BlackGui
 
     void CInfoArea::initInfoArea()
     {
-        // after(!) GUI established
+        // after(!) GUI is established
         if (this->m_dockableWidgets.isEmpty())
         {
             this->m_dockableWidgets = this->findChildren<CDockWidgetInfoArea *>();
