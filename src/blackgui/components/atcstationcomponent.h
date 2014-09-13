@@ -14,6 +14,8 @@
 
 #include "blackgui/components/runtimebasedcomponent.h"
 #include "blackgui/components/timerbasedcomponent.h"
+#include "blackgui/components/dockwidgetinfoareacomponent.h"
+
 #include "blackmisc/avatcstation.h"
 
 #include <QTabWidget>
@@ -28,7 +30,10 @@ namespace BlackGui
         /*!
          * ATC stations component
          */
-        class CAtcStationComponent : public QTabWidget, public CRuntimeBasedComponent
+        class CAtcStationComponent :
+            public QTabWidget,
+            public CDockWidgetInfoAreaComponent,
+            public CRuntimeBasedComponent
         {
             Q_OBJECT
 
@@ -66,7 +71,6 @@ namespace BlackGui
             void runtimeHasBeenSet() override;
 
         private slots:
-
             //! Request new ATIS
             void ps_requestAtis();
 

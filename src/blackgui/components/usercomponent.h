@@ -14,7 +14,7 @@
 
 #include "blackgui/components/runtimebasedcomponent.h"
 #include "blackgui/components/timerbasedcomponent.h"
-#include "blackmisc/nwuserlist.h"
+#include "blackgui/components/dockwidgetinfoareacomponent.h"
 
 #include <QTabWidget>
 #include <QTimer>
@@ -26,7 +26,10 @@ namespace BlackGui
     namespace Components
     {
         //! User componenet (users, clients)
-        class CUserComponent : public QTabWidget, public CRuntimeBasedComponent
+        class CUserComponent :
+            public QTabWidget,
+            public CDockWidgetInfoAreaComponent,
+            public CRuntimeBasedComponent
         {
             Q_OBJECT
 

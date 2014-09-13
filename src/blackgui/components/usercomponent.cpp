@@ -9,13 +9,17 @@
 
 #include "usercomponent.h"
 #include "ui_usercomponent.h"
+#include "blackmisc/nwuserlist.h"
 
 namespace BlackGui
 {
     namespace Components
     {
         CUserComponent::CUserComponent(QWidget *parent) :
-            QTabWidget(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CUserComponent), m_timerComponent(nullptr)
+            QTabWidget(parent),
+            CDockWidgetInfoAreaComponent(this),
+            CRuntimeBasedComponent(nullptr, false),
+            ui(new Ui::CUserComponent), m_timerComponent(nullptr)
         {
             ui->setupUi(this);
             this->m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
