@@ -47,6 +47,12 @@ namespace BlackGui
             //! Timer for updating
             CTimerBasedComponent *getTimerComponent() { return this->m_timerComponent; }
 
+            //! Number of booked stations
+            int countBookedStations() const;
+
+            //! Number of online stations
+            int countOnlineStations() const;
+
         public slots:
             //! Update stations
             void update();

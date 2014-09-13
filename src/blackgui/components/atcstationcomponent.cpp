@@ -55,6 +55,16 @@ namespace BlackGui
             delete ui;
         }
 
+        int CAtcStationComponent::countBookedStations() const
+        {
+            return ui->tvp_AtcStationsBooked->rowCount();
+        }
+
+        int CAtcStationComponent::countOnlineStations() const
+        {
+            return ui->tvp_AtcStationsOnline->rowCount();
+        }
+
         void CAtcStationComponent::runtimeHasBeenSet()
         {
             Q_ASSERT(this->getRuntime());
@@ -73,6 +83,14 @@ namespace BlackGui
             Q_ASSERT(this->ui->tvp_AtcStationsBooked);
             Q_ASSERT(this->ui->tvp_AtcStationsOnline);
             Q_ASSERT(this->getIContextNetwork());
+
+            // check if component is visible, if we have already data then skip udpate
+            bool hasData = this->countBookedStations() > 0 || this->countOnlineStations() > 0;
+            if (hasData && !this->isVisibleWidget())
+            {
+                qDebug() << this->objectName() << "Skipping update, not visible";
+                return;
+            }
 
             // bookings
             if (this->m_timestampBookedStationsChanged > this->m_timestampLastReadBookedStations)
