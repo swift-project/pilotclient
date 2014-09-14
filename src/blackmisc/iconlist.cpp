@@ -35,7 +35,9 @@ namespace BlackMisc
         static const CIconList icons(
         {
             // keep indexes alphabetically sorted and in sync with CIcons
+            CIcon(CIcons::AviationAtis, "ATIS"),
             CIcon(CIcons::AviationAttitudeIndicator, "attitude indicator"),
+            CIcon(CIcons::AviationMetar, "METAR"),
             CIcon(CIcons::GeoPosition, "geo position"),
             CIcon(CIcons::NetworkCapabilityTextOnly, "text only"),
             CIcon(CIcons::NetworkCapabilityUnknown, "unknown"),

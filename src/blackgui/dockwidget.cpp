@@ -100,13 +100,13 @@ namespace BlackGui
 
     void CDockWidget::hideEvent(QHideEvent *event)
     {
-        qDebug() << "hide" << this->objectName() << "v:" << isVisible() << "h:" << isHidden();
+        // qDebug() << "hide" << this->objectName() << "v:" << isVisible() << "h:" << isHidden();
         QDockWidget::hideEvent(event);
     }
 
     void CDockWidget::showEvent(QShowEvent *event)
     {
-        qDebug() << "show" << this->objectName() << "v:" << isVisible() << "h:" << isHidden();
+        // qDebug() << "show" << this->objectName() << "v:" << isVisible() << "h:" << isHidden();
         QDockWidget::showEvent(event);
     }
 

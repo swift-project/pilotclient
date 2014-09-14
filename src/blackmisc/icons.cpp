@@ -30,7 +30,9 @@ namespace BlackMisc
     {
         switch (index)
         {
+        case AviationAtis: return atis();
         case AviationAttitudeIndicator: return attitudeIndicator16();
+        case AviationMetar: return metar();
         case GeoPosition: return geoPosition16();
         case NetworkCapabilityTextOnly: return capabilityTextOnly();
         case NetworkCapabilityUnknown: return capabilityUnknown();

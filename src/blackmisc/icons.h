@@ -29,6 +29,8 @@ namespace BlackMisc
         {
             // keep indexes alphabetically sorted and in sync with CIconList
             AviationAttitudeIndicator,
+            AviationAtis,
+            AviationMetar,
             GeoPosition,
             NetworkCapabilityTextOnly,
             NetworkCapabilityUnknown,
@@ -681,6 +683,18 @@ namespace BlackMisc
         {
             static const QPixmap pm(":/own/icons/own/attitude_indicator_climbing_16.png");
             return pm;
+        }
+
+        //! METAR
+        static const QPixmap &metar()
+        {
+            return weatherCloudy16();
+        }
+
+        //! ATIS
+        static const QPixmap &atis()
+        {
+            return text16();
         }
 
         //! Geo position

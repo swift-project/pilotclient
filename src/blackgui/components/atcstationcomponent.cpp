@@ -33,6 +33,12 @@ namespace BlackGui
             ui->setupUi(this);
             this->m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
 
+            // some icons
+            this->ui->pb_AtcStationsAtisReload->setIcon(CIcons::atis());
+            this->ui->pb_AtcStationsAtisReload->setText("");
+            this->ui->pb_AtcStationsLoadMetar->setIcon(CIcons::metar());
+            this->ui->pb_AtcStationsLoadMetar->setText("");
+
             // set station mode
             this->ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
             this->ui->tvp_AtcStationsBooked->setStationMode(CAtcStationListModel::StationsBooked);
