@@ -94,6 +94,8 @@ namespace BlackMisc
             CIcon(CIcons::StandardIconHeadingOne16, "heading"),
             CIcon(CIcons::StandardIconInfo16, "info"),
             CIcon(CIcons::StandardIconJoystick16, "joystick"),
+            CIcon(CIcons::StandardIconLockClosed16, "lock"),
+            CIcon(CIcons::StandardIconLockOpen16, "lock open"),
             CIcon(CIcons::StandardIconMonitorError16, "monitor error"),
             CIcon(CIcons::StandardIconPaperPlane16, "plane"),
             CIcon(CIcons::StandardIconPlugin16, "plugin"),

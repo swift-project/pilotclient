@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_VIEWBASE_H
 #define BLACKGUI_VIEWBASE_H
-
-//! \file
 
 #include "blackmisc/icons.h"
 #include <QTableView>
@@ -22,7 +22,7 @@ namespace BlackGui
     namespace Views
     {
 
-        //! Non templated base class, allows Q_OBJECT and signals
+        //! Non templated base class, allows Q_OBJECT and signals to be used
         class CViewBaseNonTemplate : public QTableView
         {
             Q_OBJECT

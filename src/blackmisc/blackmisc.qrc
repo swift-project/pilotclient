@@ -64,6 +64,13 @@
         <file>icons/pastel/16/font-delete.png</file>
         <file>icons/pastel/16/table-delete.png</file>
         <file>icons/pastel/16/table-row-delete.png</file>
+        <file>icons/pastel/16/lock.png</file>
+        <file>icons/pastel/16/lock-add.png</file>
+        <file>icons/pastel/16/lock-broken.png</file>
+        <file>icons/pastel/16/lock-delete.png</file>
+        <file>icons/pastel/16/lock-edit.png</file>
+        <file>icons/pastel/16/lock-go.png</file>
+        <file>icons/pastel/16/lock-open.png</file>
     </qresource>
     <qresource prefix="/vatsim">
         <file>icons/vatsim/C1.png</file>

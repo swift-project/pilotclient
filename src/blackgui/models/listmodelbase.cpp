@@ -168,7 +168,7 @@ namespace BlackGui
         }
 
         /*
-         * Sort
+         * Sort requested by abstract model
          */
         template <typename ObjectType, typename ContainerType> void CListModelBase<ObjectType, ContainerType>::sort(int column, Qt::SortOrder order)
         {

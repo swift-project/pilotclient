@@ -7,13 +7,13 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #include "atcstationcomponent.h"
 #include "../views/atcstationview.h"
 #include "ui_atcstationcomponent.h"
 #include "blackmisc/avinformationmessage.h"
 #include "blackmisc/logmessage.h"
-
-//! \file
 
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
@@ -94,6 +94,7 @@ namespace BlackGui
             bool hasData = this->countBookedStations() > 0 || this->countOnlineStations() > 0;
             if (hasData && !this->isVisibleWidget())
             {
+                // KWB remove: qDebug() will be removed soo
                 qDebug() << this->objectName() << "Skipping update, not visible";
                 return;
             }
@@ -239,5 +240,5 @@ namespace BlackGui
             if (!this->getIContextNetwork()->isConnected()) return;
             this->getIContextNetwork()->requestAtisUpdates();
         }
-    }
-}
+    } // namespace
+} // namespace

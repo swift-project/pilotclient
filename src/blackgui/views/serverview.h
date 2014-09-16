@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_SERVERVIEW_H
 #define BLACKGUI_SERVERVIEW_H
-
-//! \file
 
 #include "viewbase.h"
 #include "../models/serverlistmodel.h"

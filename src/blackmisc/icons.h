@@ -87,6 +87,8 @@ namespace BlackMisc
             StandardIconHeadingOne16,
             StandardIconInfo16,
             StandardIconJoystick16,
+            StandardIconLockClosed16,
+            StandardIconLockOpen16,
             StandardIconMonitorError16,
             StandardIconPaperPlane16,
             StandardIconPlugin16,
@@ -264,6 +266,20 @@ namespace BlackMisc
         static const QPixmap &joystick16()
         {
             static const QPixmap pm(":/diagona/icons/diagona/icons/joystick.png");
+            return pm;
+        }
+
+        //! Lock
+        static const QPixmap &lockOpen16()
+        {
+            static const QPixmap pm(":/pastel/icons/pastel/16/lock-open.png");
+            return pm;
+        }
+
+        //! Lock
+        static const QPixmap &lockClosed16()
+        {
+            static const QPixmap pm(":/pastel/icons/pastel/16/lock.png");
             return pm;
         }
 

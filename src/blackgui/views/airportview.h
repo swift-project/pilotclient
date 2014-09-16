@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_AIRPORTVIEW_H
 #define BLACKGUI_AIRPORTVIEW_H
-
-//! \file
 
 #include "viewbase.h"
 #include "../models/airportlistmodel.h"

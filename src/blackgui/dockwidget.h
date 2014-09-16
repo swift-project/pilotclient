@@ -31,7 +31,7 @@ namespace BlackGui
     //! \sa CDockWidgetInfoBar
     class CDockWidget : public QDockWidget
     {
-        // KB TODO: Make this an interface, IDockWidget
+        // KB TODO: Make this an interface, IDockWidget?
         Q_OBJECT
 
     public:

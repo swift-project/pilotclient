@@ -41,7 +41,7 @@ namespace BlackGui
 
         //! Selected area of non floating areas
         //! \remarks -1 for no area
-        int getSelectedInfoAreaIndex() const;
+        int getSelectedTabBarIndex() const;
 
         //! Is given widget selected. Means it is not floating, and the one selected
         bool isSelectedInfoArea(const CDockWidgetInfoArea *infoArea) const;
@@ -102,7 +102,7 @@ namespace BlackGui
         QList<CDockWidgetInfoArea *> dockableWidgets() const;
 
         //! Corresponding dockable widget for given tab index
-        CDockWidgetInfoArea *getDockableWidgetByTabIndex(int tabBarIndex) const;
+        CDockWidgetInfoArea *getDockableWidgetByTabBarIndex(int tabBarIndex) const;
 
         //! Features of the dockable widgets
         void setFeaturesForDockableWidgets(QDockWidget::DockWidgetFeatures features);

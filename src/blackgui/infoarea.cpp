@@ -132,7 +132,7 @@ namespace BlackGui
         }
     }
 
-    int CInfoArea::getSelectedInfoAreaIndex() const
+    int CInfoArea::getSelectedTabBarIndex() const
     {
         Q_ASSERT(this->m_tabBar);
         if (!this->m_tabBar || this->m_tabBar->count() < 1) return -1;
@@ -347,7 +347,7 @@ namespace BlackGui
         return this->m_tabBar->count();
     }
 
-    CDockWidgetInfoArea *CInfoArea::getDockableWidgetByTabIndex(int tabBarIndex) const
+    CDockWidgetInfoArea *CInfoArea::getDockableWidgetByTabBarIndex(int tabBarIndex) const
     {
         if (tabBarIndex >= this->m_dockableWidgets.count() || tabBarIndex < 0) return nullptr;
         for (CDockWidgetInfoArea *dw : this->m_dockableWidgets)

@@ -16,7 +16,10 @@ namespace BlackGui
     {
 
         CAircraftComponent::CAircraftComponent(QWidget *parent) :
-            QTabWidget(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CAircraftComponent), m_timerComponent(nullptr)
+            QTabWidget(parent),
+            CDockWidgetInfoAreaComponent(this),
+            CRuntimeBasedComponent(nullptr, false),
+            ui(new Ui::CAircraftComponent), m_timerComponent(nullptr)
         {
             ui->setupUi(this);
             m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);

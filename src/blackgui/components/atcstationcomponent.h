@@ -101,13 +101,19 @@ namespace BlackGui
             //! Request dummy ATC online stations
             void ps_testCreateDummyOnlineAtcStations(int number);
 
+            //! Request udpate
+            void ps_requestOnlineStationsUpdate();
+
+            //! Info area tab bar has changed
+            void ps_infoAreaTabBarChanged(int index);
+
         private:
             Ui::CAtcStationComponent *ui;
             CTimerBasedComponent *m_timerComponent;
             QDateTime m_timestampLastReadOnlineStations = CTimerBasedComponent::epoch();  //!< stations read
-            QDateTime m_timestampOnlineStationsChanged  = CTimerBasedComponent::epoch();   //!< stations marked as changed
+            QDateTime m_timestampOnlineStationsChanged  = CTimerBasedComponent::epoch();  //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations = CTimerBasedComponent::epoch();  //!< stations read
-            QDateTime m_timestampBookedStationsChanged  = CTimerBasedComponent::epoch();   //!< stations marked as changed
+            QDateTime m_timestampBookedStationsChanged  = CTimerBasedComponent::epoch();  //!< stations marked as changed
         };
     }
 }
