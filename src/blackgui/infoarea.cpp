@@ -57,6 +57,14 @@ namespace BlackGui
         menu->addAction(CIcons::dockTop16(), "Dock all", this, SLOT(dockAllWidgets()));
         menu->addAction(CIcons::floatAll16(), "Float all", this, SLOT(floatAllWidgets()));
         menu->addAction(CIcons::floatOne16(), "Dock / float info area", this, SLOT(toggleFloating()));
+        QAction *lockTabBarMenuAction = new QAction(menu);
+        lockTabBarMenuAction->setObjectName(this->objectName().append("LockTabBar"));
+        lockTabBarMenuAction->setIconText("Lock tab bar");
+        lockTabBarMenuAction->setIcon(CIcons::lockClosed16());
+        lockTabBarMenuAction->setCheckable(true);
+        lockTabBarMenuAction->setChecked(this->m_lockTabBar);
+        menu->addAction(lockTabBarMenuAction);
+        connect(lockTabBarMenuAction, &QAction::toggled, this, &CInfoArea::ps_toggleTabBarLocked);
 
         bool c = false;
         if (!this->m_dockableWidgets.isEmpty())
@@ -143,9 +151,9 @@ namespace BlackGui
     {
         if (!infoArea) return false;
         if (infoArea->isFloating()) return false;
-        int i = getSelectedInfoAreaIndex();
-        if (i < 0 || i >= this->m_dockableWidgets.size()) return false;
-        return this->m_dockableWidgets.at(i) == infoArea;
+        int tabBarIndex = getSelectedTabBarIndex();
+        if (tabBarIndex < 0 || tabBarIndex >= this->m_dockableWidgets.size()) return false;
+        return this->getDockableWidgetByTabBarIndex(tabBarIndex) == infoArea;
     }
 
     void CInfoArea::dockAllWidgets()
@@ -294,7 +302,10 @@ namespace BlackGui
             // East / West does not work (shown, but area itself empty)
             // South does not have any effect
             this->m_tabBar->setShape(QTabBar::TriangularSouth);
+
+            // signals
             connect(this->m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CInfoArea::ps_tabBarDoubleClicked);
+            connect(this->m_tabBar, &QTabBar::currentChanged, this, &CInfoArea::tabBarCurrentChanged);
         }
 
         if (this->countDockedWidgets() > 0)
@@ -393,7 +404,8 @@ namespace BlackGui
 
     void CInfoArea::ps_tabBarDoubleClicked(int tabBarIndex)
     {
-        CDockWidgetInfoArea *dw = this->getDockableWidgetByTabIndex(tabBarIndex);
+        if (this->m_lockTabBar) return;
+        CDockWidgetInfoArea *dw = this->getDockableWidgetByTabBarIndex(tabBarIndex);
         if (!dw) return;
         dw->toggleFloating();
     }
@@ -447,6 +459,11 @@ namespace BlackGui
         this->m_tabBar->setVisible(show); // not working, but setting right value will not harm anything
         this->m_tabBar->setMaximumHeight(show ? 10000 : 0); // does the trick
         this->adjustSizeForAllDockWidgets();
+    }
+
+    void CInfoArea::ps_toggleTabBarLocked(bool locked)
+    {
+        this->m_lockTabBar = locked;
     }
 
     void CInfoArea::ps_setTabBarPosition(QTabWidget::TabPosition position)

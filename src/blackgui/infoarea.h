@@ -29,7 +29,6 @@ namespace BlackGui
         Q_OBJECT
 
     public:
-
         //! Destructor
         virtual ~CInfoArea() {}
 
@@ -45,6 +44,10 @@ namespace BlackGui
 
         //! Is given widget selected. Means it is not floating, and the one selected
         bool isSelectedInfoArea(const CDockWidgetInfoArea *infoArea) const;
+
+    signals:
+        //! Tab bar changed
+        void tabBarCurrentChanged(int index);
 
     public slots:
         //! Dock all widgets
@@ -88,6 +91,7 @@ namespace BlackGui
         bool m_showTabTexts = true;
         bool m_infoAreaFloating = false; //!< whole info area floating
         bool m_showTabBar = true;        //!< auto ajdust the floating widgets
+        bool m_lockTabBar = false;       //!< locked means no double clicks possible
 
         //! Tabify the widgets
         void tabifyAllWidgets();
@@ -143,6 +147,9 @@ namespace BlackGui
 
         //! Show tab bar
         void ps_showTabBar(bool show);
+
+        //! Toogle lock tabbar
+        void ps_toggleTabBarLocked(bool locked);
 
         //! Tab position for docked widgets tab
         //! \remarks North or South working, East / West not
