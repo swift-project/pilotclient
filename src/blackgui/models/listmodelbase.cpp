@@ -172,14 +172,15 @@ namespace BlackGui
          */
         template <typename ObjectType, typename ContainerType> void CListModelBase<ObjectType, ContainerType>::sort(int column, Qt::SortOrder order)
         {
+            if (column == this->m_sortedColumn && order == this->m_sortOrder) { return; }
+
+            // new order
             this->m_sortedColumn = column;
-            this->m_sortOrder = order;
+            this->m_sortOrder    = order;
             if (this->m_container.size() < 2) return; // nothing to do
 
             // sort the values
-            this->update(
-                this->sortListByColumn(this->m_container, column, order)
-            );
+            this->update(this->m_container, true);
         }
 
         /*
