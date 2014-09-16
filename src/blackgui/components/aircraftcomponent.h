@@ -14,6 +14,7 @@
 
 #include "blackgui/components/runtimebasedcomponent.h"
 #include "blackgui/components/timerbasedcomponent.h"
+#include "blackgui/components/dockwidgetinfoareacomponent.h"
 #include "blackmisc/avaircraft.h"
 
 #include <QTabWidget>
@@ -24,7 +25,10 @@ namespace BlackGui
     namespace Components
     {
         //! Aircraft widget
-        class CAircraftComponent : public QTabWidget, public CRuntimeBasedComponent
+        class CAircraftComponent :
+            public QTabWidget,
+            public CDockWidgetInfoAreaComponent,
+            public CRuntimeBasedComponent
         {
             Q_OBJECT
 
@@ -38,6 +42,12 @@ namespace BlackGui
             //! Timer for updating
             CTimerBasedComponent *getTimerComponent() { return this->m_timerComponent; }
 
+            //! Aircrafts in range
+            int countAircrafts() const;
+
+            //! Airports in range
+            int countAirportsInRange() const;
+
         public slots:
             //! Update users
             void update();
@@ -50,6 +60,14 @@ namespace BlackGui
 
             //! \copydoc CTimerBasedComponent::stopTimer
             void stopTimer() { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->stopTimer(); }
+
+        protected:
+            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+            void runtimeHasBeenSet() override;
+
+        private slots:
+            //! Info area tab bar has changed
+            void ps_infoAreaTabBarChanged(int index);
 
         private:
             Ui::CAircraftComponent *ui;
