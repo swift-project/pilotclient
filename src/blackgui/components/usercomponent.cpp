@@ -30,6 +30,18 @@ namespace BlackGui
             delete ui;
         }
 
+        int CUserComponent::countClients() const
+        {
+            Q_ASSERT(this->ui->tvp_Clients);
+            return this->ui->tvp_Clients->rowCount();
+        }
+
+        int CUserComponent::countUsers() const
+        {
+            Q_ASSERT(this->ui->tvp_AllUsers);
+            return this->ui->tvp_AllUsers->rowCount();
+        }
+
         void CUserComponent::update()
         {
             Q_ASSERT(this->ui->tvp_AllUsers);
@@ -38,6 +50,15 @@ namespace BlackGui
 
             if (this->getIContextNetwork()->isConnected())
             {
+                bool withData = countUsers() > 0 || countClients() > 0;
+                if (withData && !isVisibleWidget())
+                {
+                    // KWB remove: qDebug() will be removed soo
+                    qDebug() << this->objectName() << "Skipping update";
+                    return;
+                }
+
+                // load data
                 this->ui->tvp_Clients->updateContainer(this->getIContextNetwork()->getOtherClients());
                 this->ui->tvp_AllUsers->updateContainer(this->getIContextNetwork()->getUsers());
             }

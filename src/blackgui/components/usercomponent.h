@@ -43,6 +43,12 @@ namespace BlackGui
             //! Timer for updating
             CTimerBasedComponent *getTimerComponent() { return this->m_timerComponent; }
 
+            //! Number of clients
+            int countClients() const;
+
+            //! Number of users
+            int countUsers() const;
+
         public slots:
             //! Update users
             void update();
