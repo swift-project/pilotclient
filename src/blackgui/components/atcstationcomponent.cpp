@@ -51,7 +51,7 @@ namespace BlackGui
             connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::ps_atcStationsTabChanged);
             connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::ps_onlineAtcStationSelected);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::ps_testCreateDummyOnlineAtcStations);
-            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this->m_timerComponent, &CTimerBasedComponent::fireTimer);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_requestOnlineStationsUpdate);
             connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
         }
@@ -206,6 +206,23 @@ namespace BlackGui
             }
         }
 
+        void CAtcStationComponent::ps_requestOnlineStationsUpdate()
+        {
+            this->m_timerComponent->fireTimer();
+            this->m_timestampLastReadBookedStations = CTimerBasedComponent::epoch();
+        }
+
+        void CAtcStationComponent::ps_infoAreaTabBarChanged(int index)
+        {
+            // ignore in those cases
+            if (!this->isVisibleWidget()) return;
+            if (this->isParentDockWidgetFloating()) return;
+
+            // here I know I am the selected widget, update, but keep GUI responsive (hence
+            QTimer::singleShot(1000, this, SLOT(update()));
+            Q_UNUSED(index);
+        }
+
         void CAtcStationComponent::ps_onlineAtcStationSelected(QModelIndex index)
         {
             this->ui->te_AtcStationsOnlineInfo->setText(""); // reset
@@ -226,9 +243,9 @@ namespace BlackGui
 
         void CAtcStationComponent::ps_atcStationsTabChanged()
         {
-            if (this->currentWidget() == this->ui->tb_AtcStationsOnline)
+            if (this->currentWidget() == this->ui->tb_AtcStationsBooked)
             {
-                if (this->m_timestampLastReadBookedStations.isNull())
+                if (this->ui->tvp_AtcStationsBooked->isEmpty())
                 {
                     this->ps_reloadAtcStationsBooked();
                 }
