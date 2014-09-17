@@ -29,5 +29,5 @@ namespace BlackSim
                 if (!fsxPath.isEmpty()) this->m_setup.value(CSimulatorSetup::SetupSimPath, QVariant(fsxPath));
             }
         }
-    }
-}
+    } // namespace
+} // namespace

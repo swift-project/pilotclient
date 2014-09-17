@@ -19,18 +19,17 @@ namespace BlackSim
 {
     namespace Fsx
     {
-
         /*!
-         * \brief Simulator settings for FSX Flight sims
+         * Simulator settings for FSX Flight simulators
          */
         class CFsxSimulatorSetup : public BlackSim::CSimulatorSetup
         {
 
         public:
-
+            //! Setup values
             enum
             {
-                SetupSimConnectCfgFile = 1000, //!< location of simconnect.cfg file
+                SetupSimConnectCfgFile = (BlackMisc::CPropertyIndex::GlobalIndexAbuseMode + 100), //!< location of simconnect.cfg file
             };
 
 

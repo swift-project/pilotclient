@@ -36,10 +36,10 @@ namespace BlackSim
         CSimulatorSetup(const BlackMisc::CIndexVariantMap &map) : m_setup(map) {}
 
     public:
-
+        //! Specific values
         enum
         {
-            SetupSimPath
+            SetupSimPath = BlackMisc::CPropertyIndex::GlobalIndexAbuseMode
         };
 
         //! Settings
