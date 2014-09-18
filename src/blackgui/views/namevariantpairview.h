@@ -20,7 +20,7 @@ namespace BlackGui
     namespace Views
     {
         //! User view
-        class CNameVariantPairView : public CViewBase<Models::CNameVariantPairModel>
+        class CNameVariantPairView : public CViewBase<Models::CNameVariantPairModel, BlackMisc::CNameVariantPairList>
         {
 
         public:

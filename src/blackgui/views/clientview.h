@@ -20,7 +20,7 @@ namespace BlackGui
     namespace Views
     {
         //! Client view
-        class CClientView : public CViewBase<Models::CClientListModel>
+        class CClientView : public CViewBase<Models::CClientListModel, BlackMisc::Network::CClientList>
         {
         public:
             //! Constructor

@@ -20,7 +20,7 @@ namespace BlackGui
     namespace Views
     {
         //! Keyboard key view
-        class CKeyboardKeyView : public CViewBase<Models::CKeyboardKeyListModel>
+        class CKeyboardKeyView : public CViewBase<Models::CKeyboardKeyListModel, BlackMisc::Settings::CSettingKeyboardHotkeyList>
         {
 
         public:

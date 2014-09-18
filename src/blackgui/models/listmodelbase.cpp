@@ -26,36 +26,16 @@ namespace BlackGui
         /*
          * Column count
          */
-        template <typename ObjectType, typename ContainerType>
-        int CListModelBase<ObjectType, ContainerType>::columnCount(const QModelIndex & /** modelIndex **/) const
+        int CListModelBaseNonTemplate::columnCount(const QModelIndex & /** modelIndex **/) const
         {
             int c = this->m_columns.size();
             return c;
         }
 
         /*
-         * Row count
-         */
-        template <typename ObjectType, typename ContainerType>
-        int CListModelBase<ObjectType, ContainerType>::rowCount(const QModelIndex & /** parent */) const
-        {
-            return this->m_container.size();
-        }
-
-        /*
-         * Column to property index
-         */
-        template <typename ObjectType, typename ContainerType>
-        BlackMisc::CPropertyIndex CListModelBase<ObjectType, ContainerType>::columnToPropertyIndex(int column) const
-        {
-            return this->m_columns.columnToPropertyIndex(column);
-        }
-
-        /*
          * Header data
          */
-        template <typename ObjectType, typename ContainerType> QVariant
-        CListModelBase<ObjectType, ContainerType>::headerData(int section, Qt::Orientation orientation, int role) const
+        QVariant CListModelBaseNonTemplate::headerData(int section, Qt::Orientation orientation, int role) const
         {
             if (orientation == Qt::Horizontal)
             {
@@ -73,6 +53,54 @@ namespace BlackGui
                 }
             }
             return QVariant();
+        }
+
+        /*
+         * Column to property index
+         */
+        BlackMisc::CPropertyIndex CListModelBaseNonTemplate::columnToPropertyIndex(int column) const
+        {
+            return this->m_columns.columnToPropertyIndex(column);
+        }
+
+        /*
+         * Sort column?
+         */
+        bool CListModelBaseNonTemplate::hasValidSortColumn() const
+        {
+            return this->m_sortedColumn >= 0 && this->m_sortedColumn < this->m_columns.size();
+        }
+
+        /*
+         * Make editable
+         */
+        Qt::ItemFlags CListModelBaseNonTemplate::flags(const QModelIndex &index) const
+        {
+            Qt::ItemFlags f = QAbstractListModel::flags(index);
+            if (this->m_columns.isEditable(index))
+                return f | Qt::ItemIsEditable;
+            else
+                return f;
+        }
+
+        /*
+         * Row count
+         */
+        template <typename ObjectType, typename ContainerType>
+        int CListModelBase<ObjectType, ContainerType>::rowCount(const QModelIndex & /** parent */) const
+        {
+            return this->m_container.size();
+        }
+
+        /*
+         * Valid index?
+         */
+        template <typename ObjectType, typename ContainerType>
+        bool CListModelBase<ObjectType, ContainerType>::isValidIndex(const QModelIndex &index) const
+        {
+            if (!index.isValid()) return false;
+            return (index.row() >= 0 && index.row() < this->m_container.size() &&
+                    index.column() >= 0 && index.column() < this->columnCount(index));
         }
 
         /*
@@ -100,12 +128,26 @@ namespace BlackGui
         int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &container, bool sort)
         {
             // KWB remove: qDebug() will be removed soon
-            qDebug() << "update" << this->objectName() << "size" << container.size();
+            qDebug() << "update" << this->objectName() << "size" << container.size() << "thread:" << QThread::currentThreadId();
+
+            // Keep sorting out of begin/end reset model
+            QTime myTimer;
+
+            ContainerType sortedContainer;
+            bool performSort = sort && container.size() > 1 && this->hasValidSortColumn();
+            if (performSort)
+            {
+                myTimer.start();
+                sortedContainer = this->sortContainerByColumn(container, this->getSortColumn(), this->m_sortOrder);
+                qDebug() << this->objectName() << "Sort performed ms:" << myTimer.restart() << "thread:" << QThread::currentThreadId();
+            }
+
             this->beginResetModel();
-            this->m_container = (sort && container.size() > 1 && this->hasValidSortColumn() ?
-                                 this->sortListByColumn(container, this->getSortColumn(), this->m_sortOrder) :
-                                 container);
+            this->m_container = performSort ? sortedContainer : container;
             this->endResetModel();
+
+            // TODO: KWB remove
+            qDebug() << this->objectName() << "Reset performed ms:" << myTimer.restart() << "objects:" << this->m_container.size() << "thread:" << QThread::currentThreadId();
             return this->m_container.size();
         }
 
@@ -121,6 +163,56 @@ namespace BlackGui
             QModelIndex i1 = index.sibling(index.row(), 0);
             QModelIndex i2 = index.sibling(index.row(), this->columnCount(index) - 1);
             emit this->dataChanged(i1, i2); // which range has been changed
+        }
+
+        /*
+         * Async update
+         */
+        template <typename ObjectType, typename ContainerType>
+        BlackGui::IUpdateWorker *CListModelBase<ObjectType, ContainerType>::updateAsync(const ContainerType &container, bool sort)
+        {
+            // TODO: mutex
+            CModelUpdateWorker *worker = new CModelUpdateWorker(this, container, sort);
+            if (worker->start()) { return worker; }
+
+            // start failed, we have responsibility to clean up the worker
+            Q_ASSERT_X(false, "CModelBase", "cannot start worker");
+            worker->terminate();
+            return nullptr;
+        }
+
+        /*
+         * Container size decides async/sync
+         */
+        template <typename ObjectType, typename ContainerType>
+        void CListModelBase<ObjectType, ContainerType>::updateContainerMaybeAsync(const ContainerType &container, bool sort)
+        {
+            if (container.size() > asyncThreshold && sort)
+            {
+                // larger container with sorting
+                updateAsync(container, sort);
+            }
+            else
+            {
+                update(container, sort);
+            }
+        }
+
+        /*
+         * At
+         */
+        template <typename ObjectType, typename ContainerType>
+        const ObjectType &CListModelBase<ObjectType, ContainerType>::at(const QModelIndex &index) const
+        {
+            if (index.row() < 0 || index.row() >= this->m_container.size())
+            {
+                const static ObjectType def; // default object
+                return def;
+            }
+            else
+            {
+                return this->m_container[index.row()];
+            }
         }
 
         /*
@@ -159,12 +251,21 @@ namespace BlackGui
         /*
          * Clear
          */
-        template <typename ObjectType, typename ContainerType>
-        void CListModelBase<ObjectType, ContainerType>::clear()
+        template <typename ObjectType, typename ContainerType> void CListModelBase<ObjectType, ContainerType>::clear()
         {
             beginResetModel();
             this->m_container.clear();
             endResetModel();
+        }
+
+        /*
+         * Update on container
+         */
+        template <typename ObjectType, typename ContainerType> int CListModelBase<ObjectType, ContainerType>::performUpdateContainer(const QVariant &variant, bool sort)
+        {
+            ContainerType c;
+            c.convertFromQVariant(variant);
+            return this->update(c, sort);
         }
 
         /*
@@ -180,21 +281,23 @@ namespace BlackGui
             if (this->m_container.size() < 2) return; // nothing to do
 
             // sort the values
-            this->update(this->m_container, true);
+            this->updateContainerMaybeAsync(this->m_container, true);
         }
 
         /*
          * Sort list
          */
-        template <typename ObjectType, typename ContainerType> ContainerType CListModelBase<ObjectType, ContainerType>::sortListByColumn(const ContainerType &list, int column, Qt::SortOrder order)
+        template <typename ObjectType, typename ContainerType> ContainerType CListModelBase<ObjectType, ContainerType>::sortContainerByColumn(const ContainerType &container, int column, Qt::SortOrder order) const
         {
-            if (list.size() < 2) return list; // nothing to do
+            if (container.size() < 2) return container; // nothing to do
+
+            // this is the only part not really thread safe, but columns do not change so far
             BlackMisc::CPropertyIndex propertyIndex = this->m_columns.columnToPropertyIndex(column);
             Q_ASSERT(!propertyIndex.isEmpty());
-            if (propertyIndex.isEmpty()) return list; // at release build do nothing
+            if (propertyIndex.isEmpty()) return container; // at release build do nothing
 
             // sort the values
-            auto p = [ = ](const ObjectType & a, const ObjectType & b) -> bool
+            const auto p = [ = ](const ObjectType & a, const ObjectType & b) -> bool
             {
                 QVariant aQv = a.propertyByIndex(propertyIndex);
                 QVariant bQv = b.propertyByIndex(propertyIndex);
@@ -205,20 +308,11 @@ namespace BlackGui
             };
 
             // KWB: qDebug() will be removed soon
-            qDebug() << "sort" << this->objectName() << "column" << column << propertyIndex.toQString();
-            return list.sorted(p); // synchronous sorted
-        }
-
-        /*
-         * Make editable
-         */
-        template <typename ObjectType, typename ContainerType>  Qt::ItemFlags CListModelBase<ObjectType, ContainerType>::flags(const QModelIndex &index) const
-        {
-            Qt::ItemFlags f = QAbstractListModel::flags(index);
-            if (this->m_columns.isEditable(index))
-                return f | Qt::ItemIsEditable;
-            else
-                return f;
+            QTime t;
+            t.start();
+            const ContainerType sorted = container.sorted(p);
+            qDebug() << "Sort" << this->objectName() << "column" << column << "index:" << propertyIndex.toQString() << "ms:" << t.elapsed() << "thread:" << QThread::currentThreadId();
+            return sorted;
         }
 
         // see here for the reason of thess forward instantiations
@@ -232,5 +326,6 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>;
         template class CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
         template class CListModelBase<BlackMisc::Settings::CSettingKeyboardHotkey, BlackMisc::Settings::CSettingKeyboardHotkeyList>;
-    }
+
+    } // namespace
 } // namespace

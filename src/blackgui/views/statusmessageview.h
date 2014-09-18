@@ -20,7 +20,7 @@ namespace BlackGui
     namespace Views
     {
         //! Status message view
-        class CStatusMessageView : public CViewBase<Models::CStatusMessageListModel>
+        class CStatusMessageView : public CViewBase<Models::CStatusMessageListModel, BlackMisc::CStatusMessageList>
         {
 
         public:

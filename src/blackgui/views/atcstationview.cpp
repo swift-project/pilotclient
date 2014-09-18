@@ -46,8 +46,7 @@ namespace BlackGui
         void CAtcStationView::changedAtcStationConnectionStatus(const Aviation::CAtcStation &station, bool added)
         {
             this->m_model->changedAtcStationConnectionStatus(station, added);
-            this->resizeColumnsToContents();
-            this->resizeRowsToContents();
+            this->resizeToContents();
         }
 
         void CAtcStationView::customMenu(QMenu &menu) const

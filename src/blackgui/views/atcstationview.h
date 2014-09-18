@@ -21,7 +21,7 @@ namespace BlackGui
     namespace Views
     {
         //! ATC stations view
-        class CAtcStationView : public CViewBase<Models::CAtcStationListModel>
+        class CAtcStationView : public CViewBase<Models::CAtcStationListModel, BlackMisc::Aviation::CAtcStationList>
         {
             Q_OBJECT
 

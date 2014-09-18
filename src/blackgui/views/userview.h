@@ -20,7 +20,7 @@ namespace BlackGui
     namespace Views
     {
         //! User view
-        class CUserView : public CViewBase<Models::CUserListModel>
+        class CUserView : public CViewBase<Models::CUserListModel, BlackMisc::Network::CUserList>
         {
 
         public:
