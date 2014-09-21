@@ -82,6 +82,10 @@ namespace BlackGui
                 this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
                 this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::ps_connectionStatusChanged);
             }
+
+            bool connected = connect(this->getParentInfoArea(), &CInfoArea::tabBarCurrentChanged, this, &CAtcStationComponent::ps_infoAreaTabBarChanged);
+            Q_ASSERT(connected);
+
         }
 
         void CAtcStationComponent::update()
@@ -111,7 +115,7 @@ namespace BlackGui
                 // update
                 if (this->m_timestampOnlineStationsChanged > this->m_timestampLastReadOnlineStations)
                 {
-                    this->ui->tvp_AtcStationsOnline->updateContainer(this->getIContextNetwork()->getAtcStationsOnline());
+                    this->ui->tvp_AtcStationsOnline->updateContainerMaybeAsync(this->getIContextNetwork()->getAtcStationsOnline());
                     this->m_timestampLastReadOnlineStations = QDateTime::currentDateTimeUtc();
                     this->m_timestampOnlineStationsChanged = this->m_timestampLastReadOnlineStations;
                 }
@@ -209,7 +213,7 @@ namespace BlackGui
         void CAtcStationComponent::ps_requestOnlineStationsUpdate()
         {
             this->m_timerComponent->fireTimer();
-            this->m_timestampLastReadBookedStations = CTimerBasedComponent::epoch();
+            this->m_timestampLastReadOnlineStations = CTimerBasedComponent::epoch();
         }
 
         void CAtcStationComponent::ps_infoAreaTabBarChanged(int index)
@@ -218,7 +222,7 @@ namespace BlackGui
             if (!this->isVisibleWidget()) return;
             if (this->isParentDockWidgetFloating()) return;
 
-            // here I know I am the selected widget, update, but keep GUI responsive (hence
+            // here I know I am the selected widget, update, but keep GUI responsive (-> timer)
             QTimer::singleShot(1000, this, SLOT(update()));
             Q_UNUSED(index);
         }
