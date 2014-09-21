@@ -10,9 +10,11 @@
 #include "samplescontainer.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/avatcstationlist.h"
+#include "blackmisc/propertyindexallclasses.h"
 #include <QDebug>
 #include <QMetaType>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
@@ -31,10 +33,12 @@ namespace BlackMiscTest
         QDateTime dtUntil = dtFrom.addSecs(60 * 60.0); // 1 hour
         QDateTime dtFrom2 = dtUntil;
         QDateTime dtUntil2 = dtUntil.addSecs(60 * 60.0);
+        CFrequency freqEddmTwr(118.7, CFrequencyUnit::MHz());
+        CCallsign callsignEddmTwr("eddm_twr");
         CCoordinateGeodetic geoPos =
             CCoordinateGeodetic::fromWgs84("48° 21′ 13″ N", "11° 47′ 09″ E", CLength(1487, CLengthUnit::ft()));
-        CAtcStation station1(CCallsign("eddm_twr"), CUser("123456", "Joe Doe"),
-                             CFrequency(118.7, CFrequencyUnit::MHz()),
+        CAtcStation station1(callsignEddmTwr, CUser("123456", "Joe Doe"),
+                             freqEddmTwr,
                              geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
         CAtcStation station2(station1);
         CAtcStation station3(CCallsign("eddm_app"), CUser("654321", "Jen Doe"),
@@ -61,6 +65,31 @@ namespace BlackMiscTest
         qDebug() << atcListSort.toQString();
 
         qDebug() << "-----------------------------------------------";
+
+        // Apply if tests
+        atcList.clear();
+        atcList.push_back(station1);
+        CAtcStation station1Cpy(station1);
+        CFrequency changedFrequency(118.25, CFrequencyUnit::MHz());
+        CPropertyIndexVariantMap vm(CAtcStation::IndexFrequency, changedFrequency.toQVariant());
+
+
+        // demonstration apply
+        CPropertyIndexList changedProperties;
+        changedProperties = station1Cpy.apply(vm, true);
+        qDebug() << "apply, changed" << changedProperties << vm << "expected 1";
+        changedProperties = station1Cpy.apply(vm, true);
+        qDebug() << "apply, changed" << changedProperties << vm << "expected 0";
+
+        // applyIf
+        int changed;
+        changed = atcList.applyIf(&CAtcStation::getCallsign, callsignEddmTwr, vm);
+        qDebug() << "applyIf, changed" << changed << vm << "expected 1";
+        changed = atcList.applyIf(&CAtcStation::getCallsign, callsignEddmTwr, vm);
+        qDebug() << "applyIf, changed" << changed << vm << "expected 1";
+        changed = atcList.applyIf(&CAtcStation::getCallsign, callsignEddmTwr, vm, true);
+        qDebug() << "applyIf, changed" << changed << vm << "expected 0";
+
         return 0;
     }
 
