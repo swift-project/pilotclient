@@ -222,6 +222,7 @@ namespace BlackCore
 
     void CAirspaceMonitor::testCreateDummyOnlineAtcStations(int number)
     {
+        if (number < 1) return;
         this->m_atcStationsOnline.push_back(
             BlackMisc::Aviation::CTesting::createAtcStations(number)
         );
@@ -394,12 +395,12 @@ namespace BlackCore
         else
         {
             // update
-            CPropertyIndexVariantMap values;
-            values.addValue(CAtcStation::IndexFrequency, frequency);
-            values.addValue(CAtcStation::IndexPosition, position);
-            values.addValue(CAtcStation::IndexRange, range);
-            this->m_atcStationsOnline.applyIf(BlackMisc::Predicates::MemberEqual(&CAtcStation::getCallsign, callsign), values);
-            emit this->changedAtcStationsOnline();
+            CPropertyIndexVariantMap vm;
+            vm.addValue(CAtcStation::IndexFrequency, frequency);
+            vm.addValue(CAtcStation::IndexPosition, position);
+            vm.addValue(CAtcStation::IndexRange, range);
+            int changed = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm, true);
+            if (changed > 0) { emit this->changedAtcStationsOnline(); }
         }
     }
 
@@ -427,9 +428,9 @@ namespace BlackCore
 
         // receiving an ATIS means station is online, update in bookings
         vm.addValue(CAtcStation::IndexIsOnline, true);
-        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign)) { emit this->changedAtcStationsOnline(); }
-        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) { emit this->changedAtcStationsBooked(); }
+        int changedBooked = this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+        if (changedOnline > 0) { emit this->changedAtcStationsOnline(); }
+        if (changedBooked > 0) { emit this->changedAtcStationsBooked(); }
     }
 
     void CAirspaceMonitor::ps_atisVoiceRoomReceived(const CCallsign &callsign, const QString &url)
@@ -437,28 +438,25 @@ namespace BlackCore
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
         QString trimmedUrl = url.trimmed();
         CPropertyIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
-        int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
-        if (changedOnline > 0)
-        {
-            this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
-            CAtcStation station = this->m_atcStationsOnline.findFirstByCallsign(callsign);
-            emit this->changedAtcStationsOnline();  // single ATIS received
-            emit this->changedAtcStationOnlineConnectionStatus(station, true);
-        }
-        if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign))
+        int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm, true);
+        if (changedOnline < 1) { return; }
+
+        Q_ASSERT(changedOnline == 1);
+        CAtcStation station = this->m_atcStationsOnline.findFirstByCallsign(callsign);
+        emit this->changedAtcStationsOnline();
+        emit this->changedAtcStationOnlineConnectionStatus(station, true);
+
+        vm.addValue(CAtcStation::IndexIsOnline, true); // with voice room ATC is online
+        int changedBooked = this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm, true);
+        if (changedBooked > 0)
         {
             // receiving a voice room means station is online, update in bookings
-            vm.addValue(CAtcStation::IndexIsOnline, true);
-            this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-            emit this->changedAtcStationsBooked(); // single ATIS received
+            emit this->changedAtcStationsBooked();
         }
 
         // receiving voice room means ATC has voice
-        if (changedOnline > 0)
-        {
-            vm = CPropertyIndexVariantMap(CClient::IndexVoiceCapabilities, CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice).toQVariant());
-            this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
-        }
+        vm = CPropertyIndexVariantMap(CClient::IndexVoiceCapabilities, CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice).toQVariant());
+        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm, false);
     }
 
     void CAirspaceMonitor::ps_atisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
@@ -476,8 +474,8 @@ namespace BlackCore
             logoffDateTime.setTime(QTime(h, m));
 
             CPropertyIndexVariantMap vm(CAtcStation::IndexBookedUntil, logoffDateTime);
-            int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
-            int changedBooked = this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+            int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm, true);
+            int changedBooked = this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm, true);
 
             if (changedOnline > 0) { emit changedAtcStationsOnline(); }
             if (changedBooked > 0) { emit changedAtcStationsBooked(); }
@@ -498,8 +496,8 @@ namespace BlackCore
             if (!icaoDataDataFile.hasAircraftDesignator()) return; // give up!
             vm = CPropertyIndexVariantMap(CAircraft::IndexIcao, icaoData.toQVariant());
         }
-        this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual(&CAircraft::getCallsign, callsign), vm);
-        emit this->changedAircraftsInRange();
+        int changed = this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm, true);
+        if (changed > 0) {emit this->changedAircraftsInRange();}
     }
 
     void CAirspaceMonitor::ps_aircraftUpdateReceived(const CCallsign &callsign, const CAircraftSituation &situation, const CTransponder &transponder)
@@ -548,8 +546,9 @@ namespace BlackCore
             vm.addValue(CAircraft::IndexTransponder, transponder);
             vm.addValue(CAircraft::IndexSituation, situation);
             vm.addValue(CAircraft::IndexDistance, distance);
-            this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual(&CAircraft::getCallsign, callsign), vm);
 
+            // here I expect always a changed value
+            this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm, false);
             emit this->changedAircraftSituation(callsign, situation);
         }
 
@@ -559,14 +558,11 @@ namespace BlackCore
     void CAirspaceMonitor::ps_pilotDisconnected(const CCallsign &callsign)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
-
         bool contains = this->m_aircraftsInRange.contains(&CAircraft::getCallsign, callsign);
-
-        this->m_aircraftsInRange.removeIf(&CAircraft::getCallsign, callsign);
-        this->m_otherClients.removeIf(&CClient::getCallsign, callsign);
-
         if (contains)
         {
+            this->m_aircraftsInRange.removeIf(&CAircraft::getCallsign, callsign);
+            this->m_otherClients.removeIf(&CClient::getCallsign, callsign);
             emit this->removedAircraft(callsign);
         }
     }
@@ -577,8 +573,8 @@ namespace BlackCore
 
         // update
         CPropertyIndexVariantMap vm({CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, frequency.toQVariant());
-        this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual(&CAircraft::getCallsign, callsign), vm);
-        emit this->changedAircraftsInRange();
+        int changed = this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm, true);
+        if (changed > 0) { emit this->changedAircraftsInRange(); }
     }
 
 } // namespace
