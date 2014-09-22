@@ -47,7 +47,7 @@ namespace BlackGui
             //! Clear data
             virtual void clear() = 0;
 
-            //! Current rows resize mode
+            //! Resize mode
             ResizeMode getResizeMode() const { return m_resizeMode; }
 
             //! Set resize mode
@@ -100,8 +100,8 @@ namespace BlackGui
             //! \param resize
             virtual int performUpdateContainer(const QVariant &variant, bool sort, bool resize) = 0;
 
-            //! Skip resizing
-            virtual bool skipResize() const = 0;
+            //! Skip resizing because of size?
+            virtual bool reachedResizeThreshold() const = 0;
 
             //! Resize or skip resize?
             virtual bool resize() const;

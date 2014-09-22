@@ -129,10 +129,9 @@ namespace BlackGui
         {
             // KWB remove: qDebug() will be removed soon
             qDebug() << "update" << this->objectName() << "size" << container.size() << "thread:" << QThread::currentThreadId();
-
-            // Keep sorting out of begin/end reset model
             QTime myTimer;
 
+            // Keep sorting out of begin/end reset model
             ContainerType sortedContainer;
             bool performSort = sort && container.size() > 1 && this->hasValidSortColumn();
             if (performSort)

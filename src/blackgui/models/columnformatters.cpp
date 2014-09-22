@@ -133,6 +133,12 @@ namespace BlackGui
             return QVariant(cvo->toPixmap());
         }
 
+        CDateTimeFormatter::CDateTimeFormatter(const QString formatString, int alignment, bool i18n) :
+            CDefaultFormatter(alignment, i18n, { Qt::DisplayRole }), m_formatString(formatString)
+        {
+            // void
+        }
+
         QVariant CDateTimeFormatter::displayRole(const QVariant &dateTime) const
         {
             if (dateTime.isNull()) return "";

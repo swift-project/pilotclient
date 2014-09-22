@@ -201,6 +201,6 @@ namespace BlackGui
 
     void CDockWidget::onStyleSheetsChanged()
     {
-        // void
+        // void, for further extensions
     }
 }

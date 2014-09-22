@@ -355,6 +355,7 @@ namespace BlackMisc
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
          * \param newValues Values from this map will be put into each matching element.
+         * \param skipEqualValues Equal values will not be updated
          * \return The number of elements modified.
          */
         template <class K1, class V1>

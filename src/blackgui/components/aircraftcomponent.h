@@ -16,7 +16,6 @@
 #include "blackgui/components/timerbasedcomponent.h"
 #include "blackgui/components/dockwidgetinfoareacomponent.h"
 #include "blackmisc/avaircraft.h"
-
 #include <QTabWidget>
 
 namespace Ui { class CAircraftComponent; }
@@ -49,7 +48,7 @@ namespace BlackGui
             int countAirportsInRange() const;
 
         public slots:
-            //! Update users
+            //! Update aircrafts
             void update();
 
             //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
@@ -71,7 +70,7 @@ namespace BlackGui
 
         private:
             Ui::CAircraftComponent *ui;
-            CTimerBasedComponent *m_timerComponent;
+            CTimerBasedComponent   *m_timerComponent;
         };
     }
 }

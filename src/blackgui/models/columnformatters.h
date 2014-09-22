@@ -209,8 +209,7 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CDateTimeFormatter(const QString formatString = formatYmd(), int alignment = alignDefault(), bool i18n = true) :
-                CDefaultFormatter(alignment, i18n, { Qt::DisplayRole }), m_formatString(formatString) {}
+            CDateTimeFormatter(const QString formatString = formatYmd(), int alignment = alignDefault(), bool i18n = true);
 
             //! \copydoc CDefaultFormatter::displayRole
             virtual QVariant displayRole(const QVariant &dateTime) const override;

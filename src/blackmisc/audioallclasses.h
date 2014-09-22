@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#ifndef BLACKMISC_VOICEALLCLASSES_H
-#define BLACKMISC_VOICEALLCLASSES_H
+#ifndef BLACKMISC_AUDIOALLCLASSES_H
+#define BLACKMISC_AUDIOALLCLASSES_H
 
 #include "blackmisc/audiodevice.h"
 #include "blackmisc/audiodevicelist.h"

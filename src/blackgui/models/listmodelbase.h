@@ -54,7 +54,7 @@ namespace BlackGui
 
             /*!
              * Set column for sorting
-             * \param propertyIndex index of column to be sorted by
+             * \param propertyIndex index of column to be sorted
              */
             virtual void setSortColumnByPropertyIndex(const BlackMisc::CPropertyIndex &propertyIndex)
             {
@@ -85,6 +85,8 @@ namespace BlackGui
 
         protected slots:
             //! Helper method with template free signature
+            //! \param variant container is transferred in variant
+            //! \param sort
             int updateContainer(const QVariant &variant, bool sort)
             {
                 return this->performUpdateContainer(variant, sort);

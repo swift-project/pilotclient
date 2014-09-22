@@ -32,6 +32,7 @@ namespace BlackGui
         virtual ~IUpdateWorker() { terminateThread();}
 
     signals:
+        //! Update is completed
         void updateFinished();
 
     public slots:

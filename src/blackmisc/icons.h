@@ -95,6 +95,8 @@ namespace BlackMisc
             StandardIconRadar16,
             StandardIconRefresh16,
             StandardIconResize16,
+            StandardIconResizeHorizontal16,
+            StandardIconResizeVertical16,
             StandardIconStatusBar16,
             StandardIconSwift24,
             StandardIconSwift48,
@@ -110,6 +112,8 @@ namespace BlackMisc
             StandardIconUnknown16,
             StandardIconUser16,
             StandardIconUsers16,
+            StandardIconViewMulticolumn,
+            StandardIconViewTile,
             StandardIconVolumeHigh16,
             StandardIconVolumeLow16,
             StandardIconVolumeMuted16,
@@ -157,7 +161,21 @@ namespace BlackMisc
             return pm;
         }
 
-        //! Resize
+        //! Resize horizontally
+        static const QPixmap &resizeHorizontal16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-resize.png");
+            return pm;
+        }
+
+        //! Resize vertically
+        static const QPixmap &resizeVertical16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/arrow-resize-090.png");
+            return pm;
+        }
+
+        //! Refresh
         static const QPixmap &refresh16()
         {
             static const QPixmap pm(":/pastel/icons/pastel/16/arrow-refresh.png");
@@ -196,6 +214,20 @@ namespace BlackMisc
         static const QPixmap &users16()
         {
             static const QPixmap pm(":/diagona/icons/diagona/icons/users.png");
+            return pm;
+        }
+
+        //! View multicolumn
+        static const QPixmap &viewMultiColumn()
+        {
+            static const QPixmap pm(":/pastel/icons/pastel/16/application-view-multicolumns.png");
+            return pm;
+        }
+
+        //! View tile
+        static const QPixmap &viewTile()
+        {
+            static const QPixmap pm(":/pastel/icons/pastel/16/application-view-tile.png");
             return pm;
         }
 

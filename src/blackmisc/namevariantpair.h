@@ -24,6 +24,16 @@ namespace BlackMisc
     class CNameVariantPair : public BlackMisc::CValueObject
     {
     public:
+
+        //! Properties by index
+        enum ColumnIndex
+        {
+            IndexName = BlackMisc::CPropertyIndex::GlobalIndexCNameVariantPair,
+            IndexVariant,
+            IndexIcon,
+            IndexPixmap
+        };
+
         //! Default constructor.
         CNameVariantPair() {}
 
@@ -68,15 +78,6 @@ namespace BlackMisc
 
         //! Members
         static const QStringList &jsonMembers();
-
-        //! Properties by index
-        enum ColumnIndex
-        {
-            IndexName = BlackMisc::CPropertyIndex::GlobalIndexCNameVariantPair,
-            IndexVariant,
-            IndexIcon,
-            IndexPixmap
-        };
 
         //! \copydoc CValueObject::propertyByIndex()
         virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;

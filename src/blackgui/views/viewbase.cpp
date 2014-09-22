@@ -55,7 +55,7 @@ namespace BlackGui
             QAction *actionInteractiveResize = new QAction(&menu);
             actionInteractiveResize->setObjectName(this->objectName().append("ActionResizing"));
             actionInteractiveResize->setIconText("Resize (auto)");
-            actionInteractiveResize->setIcon(CIcons::viewMulticolumn());
+            actionInteractiveResize->setIcon(CIcons::viewMultiColumn());
             actionInteractiveResize->setCheckable(true);
             actionInteractiveResize->setChecked(this->m_resizeMode == ResizingAuto);
             actionInteractiveResize->setEnabled(enabled);

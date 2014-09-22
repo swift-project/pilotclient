@@ -105,7 +105,7 @@ namespace BlackMisc
     /*
      * Variant equal property index?
      */
-    bool CValueObject::equalPropertyByIndex(const QVariant &compareValue, const CPropertyIndex &index) const
+    bool CValueObject::equalsPropertyByIndex(const QVariant &compareValue, const CPropertyIndex &index) const
     {
         const QVariant myValue = this->propertyByIndex(index);
         return BlackMisc::equalQVariants(myValue, compareValue);
@@ -149,7 +149,7 @@ namespace BlackMisc
     }
 
     /*
-     * Variant map
+     * apply, return changed indexes
      */
     CPropertyIndexList CValueObject::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
     {
@@ -163,7 +163,7 @@ namespace BlackMisc
             const CPropertyIndex index = it.key();
             if (skipEqualValues)
             {
-                bool equal = this->equalPropertyByIndex(value, index);
+                bool equal = this->equalsPropertyByIndex(value, index);
                 if (equal) { continue; }
             }
             this->setPropertyByIndex(value, index);

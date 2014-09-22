@@ -48,12 +48,12 @@ namespace BlackGui
             Q_ASSERT(connected);
             connected = this->connect(this->ui->pb_AtcStationsLoadMetar, SIGNAL(clicked()), this, SLOT(getMetar()));
             Q_ASSERT(connected);
-            connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::ps_atcStationsTabChanged);
+            connect(this, &QTabWidget::currentChanged, this, &CAtcStationComponent::ps_atcStationsTabChanged); // "local" tab changed (booked, online)
             connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::ps_onlineAtcStationSelected);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::ps_testCreateDummyOnlineAtcStations);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_requestOnlineStationsUpdate);
-            connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
+            connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
         }
 
         CAtcStationComponent::~CAtcStationComponent()
@@ -82,10 +82,7 @@ namespace BlackGui
                 this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
                 this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::ps_connectionStatusChanged);
             }
-
-            bool connected = connect(this->getParentInfoArea(), &CInfoArea::tabBarCurrentChanged, this, &CAtcStationComponent::ps_infoAreaTabBarChanged);
-            Q_ASSERT(connected);
-
+            connect(this->getParentInfoArea(), &CInfoArea::tabBarCurrentChanged, this, &CAtcStationComponent::ps_infoAreaTabBarChanged);
         }
 
         void CAtcStationComponent::update()
@@ -98,7 +95,7 @@ namespace BlackGui
             bool hasData = this->countBookedStations() > 0 || this->countOnlineStations() > 0;
             if (hasData && !this->isVisibleWidget())
             {
-                // KWB remove: qDebug() will be removed soo
+                // KWB remove: qDebug() will be removed soon
                 qDebug() << this->objectName() << "Skipping update, not visible";
                 return;
             }

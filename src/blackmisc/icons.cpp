@@ -95,6 +95,8 @@ namespace BlackMisc
         case StandardIconRadar16: return radar16();
         case StandardIconRefresh16: return refresh16();
         case StandardIconResize16: return resize16();
+        case StandardIconResizeHorizontal16: return resizeHorizontal16();
+        case StandardIconResizeVertical16: return resizeVertical16();
         case StandardIconStatusBar16: return statusBar16();
         case StandardIconSwift24: return swift24();
         case StandardIconSwift48: return swift48();
@@ -110,6 +112,8 @@ namespace BlackMisc
         case StandardIconUnknown16: return unknown16();
         case StandardIconUser16: return user16();
         case StandardIconUsers16: return users16();
+        case StandardIconViewMulticolumn: return viewMultiColumn();
+        case StandardIconViewTile: return viewTile();
         case StandardIconVolumeHigh16: return volumeHigh16();
         case StandardIconVolumeLow16: return volumeLow16();
         case StandardIconVolumeMuted16: return volumeMuted16();

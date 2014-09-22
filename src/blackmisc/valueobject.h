@@ -211,11 +211,9 @@ namespace BlackMisc
         virtual QPixmap toPixmap() const;
 
         //! Set property by index
-        //! \remarks Intentionally not abstract, avoiding all classes need to implement this method
         virtual void setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index);
 
         //! Property by index
-        //! \remarks Intentionally not abstract, avoiding all classes need to implement this method
         virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
         //! Property by index as String
@@ -223,7 +221,7 @@ namespace BlackMisc
         virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
 
         //! Is given variant equal to value of property index?
-        virtual bool equalPropertyByIndex(const QVariant &compareValue, const CPropertyIndex &index) const;
+        virtual bool equalsPropertyByIndex(const QVariant &compareValue, const CPropertyIndex &index) const;
 
         //! The stored object as CValueObject
         static const CValueObject *fromQVariant(const QVariant &variant);

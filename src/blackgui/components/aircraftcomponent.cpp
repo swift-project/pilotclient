@@ -8,8 +8,9 @@
  */
 
 #include "aircraftcomponent.h"
-#include "dockwidgetinfoareacomponent.h"
 #include "ui_aircraftcomponent.h"
+#include "dockwidgetinfoareacomponent.h"
+#include "../guiutility.h"
 
 namespace BlackGui
 {
