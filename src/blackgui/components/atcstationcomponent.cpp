@@ -7,10 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "blackmisc/avinformationmessage.h"
 #include "atcstationcomponent.h"
 #include "../views/atcstationview.h"
 #include "ui_atcstationcomponent.h"
+#include "blackmisc/avinformationmessage.h"
 #include "blackmisc/logmessage.h"
 
 //! \file
