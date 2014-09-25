@@ -25,6 +25,9 @@ namespace BlackCore
         friend class IContextApplication;
 
     public slots:
+        //! \copydoc IContextApplication::logMessage
+        virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::Event::COriginator &origin) override;
+
         //! \copydoc IContextApplication::ping()
         virtual qint64 ping(qint64 token) const override;
 

@@ -8,6 +8,7 @@
 #include "input_manager.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/loghandler.h"
 #include <QtMsgHandler>
 #include <QFile>
 
@@ -21,6 +22,18 @@ namespace BlackCore
     CContextApplication::CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
         IContextApplication(mode, runtime)
     {}
+
+    /*
+     * Log a message
+     */
+    void CContextApplication::logMessage(const CStatusMessage &message, const Event::COriginator &origin)
+    {
+        if (!origin.isFromSameProcess())
+        {
+            CLogHandler::instance()->logRemoteMessage(message);
+        }
+        emit this->messageLogged(message, origin);
+    }
 
     /*
      * Ping, is DBus alive?

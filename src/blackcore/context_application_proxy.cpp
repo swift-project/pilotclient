@@ -6,6 +6,7 @@
 #include "blackcore/context_application_proxy.h"
 #include "blackcore/input_manager.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/loghandler.h"
 #include <QObject>
 #include <QMetaEnum>
 #include <QDBusConnection>
@@ -25,6 +26,14 @@ namespace BlackCore
         CInputManager *inputManager = CInputManager::getInstance();
         connect(inputManager, &CInputManager::hotkeyFuncEvent, this, &CContextApplicationProxy::processHotkeyFuncEvent);
         inputManager->setEventForwarding(true);
+
+        connect(this, &IContextApplication::messageLogged, this, [](const CStatusMessage &message, const Event::COriginator &origin)
+        {
+            if (!origin.isFromSameProcess())
+            {
+                CLogHandler::instance()->logRemoteMessage(message);
+            }
+        });
     }
 
     /*
@@ -34,9 +43,20 @@ namespace BlackCore
     {
         // signals originating from impl side
         bool s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
+                                    "messageLogged", this, SIGNAL(messageLogged(BlackMisc::CStatusMessage,BlackMisc::Event::COriginator)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "componentChanged", this, SIGNAL(componentChanged(uint, uint)));
         Q_ASSERT(s);
 
+    }
+
+    /*
+     * Log a message
+     */
+    void CContextApplicationProxy::logMessage(const CStatusMessage &message, const Event::COriginator &origin)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("logMessage"), message, origin);
     }
 
     /*

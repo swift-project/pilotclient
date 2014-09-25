@@ -11,6 +11,7 @@
 #include "blackcore/context.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/eveventhotkeyfunction.h"
+#include "blackmisc/evoriginator.h"
 #include <QObject>
 #include <QReadWriteLock>
 
@@ -86,7 +87,13 @@ namespace BlackCore
         //! A component changes
         void componentChanged(uint component, uint action);
 
+        //! A log message was logged
+        void messageLogged(const BlackMisc::CStatusMessage &message, const BlackMisc::Event::COriginator &origin);
+
     public slots:
+        //! Log a log message
+        //! \note Not pure because it can be called from the base class constructor.
+        virtual void logMessage(const BlackMisc::CStatusMessage &message, const BlackMisc::Event::COriginator &origin) { Q_UNUSED(message); Q_UNUSED(origin); }
 
         //! \brief Ping a token, used to check if application is alive
         virtual qint64 ping(qint64 token) const = 0;
