@@ -21,6 +21,7 @@
 #include "blackmisc/avselcal.h"
 #include "blackmisc/project.h"
 #include "blackmisc/hotkeyfunction.h"
+#include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include <QSortFilterProxyModel>
 #include <QSizeGrip>
@@ -109,6 +110,10 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedUsersUpdateInterval, this->ui->comp_MainInfoArea->getUserComponent(), &CUserComponent::setUpdateIntervalSeconds);
     this->connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAircraftsUpdateInterval, this->ui->comp_MainInfoArea->getAircraftComponent(), &CAircraftComponent::setUpdateIntervalSeconds);
     this->connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAtcStationsUpdateInterval, this->ui->comp_MainInfoArea->getAtcStationComponent(), &::CAtcStationComponent::setUpdateIntervalSeconds);
+
+    // log messages
+    this->connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, this, &MainWindow::ps_displayStatusMessageInGui);
+    this->connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, this, &MainWindow::ps_displayStatusMessageInGui);
 
     Q_ASSERT(connect);
     Q_UNUSED(connect); // suppress GCC warning in release build

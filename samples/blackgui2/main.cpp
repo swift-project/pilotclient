@@ -3,6 +3,7 @@
 #include "guimodeenums.h"
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/loghandler.h"
 #include <QtGlobal>
 #include <QApplication>
 #include <QMessageBox>
@@ -33,6 +34,7 @@ int main(int argc, char *argv[])
 
     // app
     QApplication a(argc, argv);
+    BlackMisc::CLogHandler::instance()->install();
     a.installTranslator(&translator);
 
     // modes

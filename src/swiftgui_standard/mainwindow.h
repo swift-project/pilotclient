@@ -182,10 +182,7 @@ private slots:
     bool ps_reloadOwnAircraft();
 
     //! Display status message
-    void ps_displayStatusMessageInGui(const BlackMisc::CStatusMessage &sendStatusMessage);
-
-    //! Display status messages
-    void ps_displayStatusMessagesInGui(const BlackMisc::CStatusMessageList &messages);
+    void ps_displayStatusMessageInGui(const BlackMisc::CStatusMessage &);
 
     //! Settings have been changed
     void ps_onChangedSetttings(uint typeValue);

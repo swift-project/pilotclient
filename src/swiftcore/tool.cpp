@@ -3,6 +3,7 @@
 #include "blackmisc/indexvariantmap.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/pqallquantities.h"
+#include "blackmisc/loghandler.h"
 #include "blacksound/soundgenerator.h"
 
 #include <QTextStream>
@@ -36,9 +37,13 @@ namespace BlackMiscTest
      */
     void Tool::serverLoop(BlackCore::CRuntime *runtime)
     {
+        CLogHandler::instance()->enableConsoleOutput(false);
+
         Q_ASSERT(runtime);
         QThread::sleep(3); // let the DBus server startup
-        qDebug() << "Running on server here" << Tool::getPid() << "thread:" << QThread::currentThreadId();
+
+        QTextStream qtout(stdout);
+        qtout << "Running on server here " << Tool::getPid() << " thread: " << QThread::currentThreadId() << endl;
 
         //
         // Server loop
@@ -52,145 +57,127 @@ namespace BlackMiscTest
             BlackCore::IContextSettings *settingsContext = runtime->getIContextSettings();
             BlackCore::IContextOwnAircraft *ownAircraftContext = runtime->getIContextOwnAircraft();
 
-            BlackCore::IContextApplication *applicationContext = runtime->getIContextApplication();
-
-            qDebug() << "-------------";
-            qDebug() << "Connected with network: " << networkContext->isConnected();
-            qDebug() << "Thread id:" << QThread::currentThreadId();
-            qDebug() << "-------------";
-            qDebug() << "x .. to exit              0 .. settings";
-            qDebug() << "1 .. ATC booked           2 .. ATC online";
-            qDebug() << "3 .. Aircrafts in range   4 .. my aircraft     5 .. voice rooms";
-            qDebug() << "6 .. vatlib audio devices 7 .. Qt audio devices";
-            qDebug() << "-------------";
-            qDebug() << "oe . redirect enabled     od . disable redirect";
-            qDebug() << "-------------";
-            qDebug() << "signal / slot logging:";
-            qDebug() << "sig + context + [e]nabled/[d]isabled";
-            qDebug() << "slo + context + [e]nabled/[d]isabled";
-            qDebug() << "contexts: app / aud / net / own (aircraft) / set / sim / all";
-            qDebug() << "examples: sigappd, slonete, slosimd, sloalle";
-            qDebug() << "-------------";
+            qtout << "-------------" << endl;
+            qtout << "Connected with network: " << networkContext->isConnected() << endl;
+            qtout << "Thread id: " << QThread::currentThreadId() << endl;
+            qtout << "-------------" << endl;
+            qtout << "x .. to exit              0 .. settings" << endl;
+            qtout << "1 .. ATC booked           2 .. ATC online" << endl;
+            qtout << "3 .. Aircrafts in range   4 .. my aircraft     5 .. voice rooms" << endl;
+            qtout << "6 .. vatlib audio devices 7 .. Qt audio devices" << endl;
+            qtout << "-------------" << endl;
+            qtout << "logging:" << endl;
+            qtout << "log + context + [e]nabled/[d]isabled" << endl;
+            qtout << "contexts: app / aud / net / own (aircraft) / set / sim / all" << endl;
+            qtout << "examples: logappd, lognete, logsimd, logalle" << endl;
+            qtout << "-------------" << endl;
 
             line = qtin.readLine().toLower().trimmed();
             if (line.startsWith("0"))
             {
-                qDebug() << "-------------";
+                qtout << "-------------" << endl;
                 QString ret1;
                 QMetaObject::invokeMethod(settingsContext, "getSettingsFileName",
                                           Qt::BlockingQueuedConnection,
                                           Q_RETURN_ARG(QString, ret1));
-                qDebug() << "Settings:" << ret1;
+                qtout << "Settings: " << ret1 << endl;
 
 
                 QMetaObject::invokeMethod(settingsContext, "getSettingsAsJsonString",
                                           Qt::BlockingQueuedConnection,
                                           Q_RETURN_ARG(QString, ret1));
-                qDebug() << "JSON" << ret1;
+                qtout << "JSON " << ret1 << endl;
             }
             else if (line.startsWith("1"))
             {
                 // remarks: use fully qualified name in Q_RETURN_ARG
-                qDebug() << "-------------";
-                qDebug() << "ATC booked";
+                qtout << "-------------" << endl;
+                qtout << "ATC booked" << endl;
                 CAtcStationList stations;
                 QMetaObject::invokeMethod(networkContext, "getAtcStationsBooked",
                                           Qt::BlockingQueuedConnection,
                                           Q_RETURN_ARG(BlackMisc::Aviation::CAtcStationList, stations));
-                qDebug() << stations;
+                qtout << stations << endl;
             }
             else if (line.startsWith("2"))
             {
-                qDebug() << "-------------";
-                qDebug() << "ATC online";
+                qtout << "-------------" << endl;
+                qtout << "ATC online" << endl;
                 CAtcStationList stations;
                 QMetaObject::invokeMethod(networkContext, "getAtcStationsOnline",
                                           Qt::BlockingQueuedConnection,
                                           Q_RETURN_ARG(BlackMisc::Aviation::CAtcStationList, stations));
-                qDebug() << stations;
+                qtout << stations << endl;
             }
             else if (line.startsWith("3"))
             {
-                qDebug() << "-------------";
-                qDebug() << "aircrafts in range";
+                qtout << "-------------" << endl;
+                qtout << "aircrafts in range" << endl;
                 CAircraftList aircrafts;
                 QMetaObject::invokeMethod(networkContext, "getAircraftsInRange",
                                           Qt::BlockingQueuedConnection,
                                           Q_RETURN_ARG(BlackMisc::Aviation::CAircraftList, aircrafts));
-                qDebug() << aircrafts;
+                qtout << aircrafts << endl;
             }
             else if (line.startsWith("4"))
             {
-                qDebug() << "-------------";
-                qDebug() << "my aircraft";
+                qtout << "-------------" << endl;
+                qtout << "my aircraft" << endl;
                 CAircraft aircraft;
                 QMetaObject::invokeMethod(ownAircraftContext, "getOwnAircraft",
                                           Qt::BlockingQueuedConnection,
                                           Q_RETURN_ARG(BlackMisc::Aviation::CAircraft, aircraft));
-                qDebug() << aircraft;
+                qtout << aircraft << endl;
 
             }
             else if (line.startsWith("5"))
             {
-                qDebug() << "-------------";
-                qDebug() << "voice rooms";
+                qtout << "-------------" << endl;
+                qtout << "voice rooms" << endl;
                 CVoiceRoomList voiceRooms;
                 QMetaObject::invokeMethod(audioContext, "getComVoiceRooms",
                                           Qt::BlockingQueuedConnection,
                                           Q_RETURN_ARG(BlackMisc::Audio::CVoiceRoomList, voiceRooms));
-                qDebug() << voiceRooms;
+                qtout << voiceRooms << endl;
             }
             else if (line.startsWith("6"))
             {
-                qDebug() << "-------------";
-                qDebug() << "vatlib audio devices";
+                qtout << "-------------" << endl;
+                qtout << "vatlib audio devices" << endl;
                 CAudioDeviceList devices;
                 QMetaObject::invokeMethod(audioContext, "getAudioDevices",
                                           Qt::BlockingQueuedConnection,
                                           Q_RETURN_ARG(BlackMisc::Audio::CAudioDeviceList, devices));
-                qDebug() << devices;
+                qtout << devices << endl;
             }
             else if (line.startsWith("7"))
             {
-                qDebug() << "-------------";
-                qDebug() << "Qt audio devices";
+                qtout << "-------------" << endl;
+                qtout << "Qt audio devices" << endl;
                 BlackSound::CSoundGenerator::printAllQtSoundDevices();
             }
-            else if (line.startsWith("oe"))
+            else if (line.startsWith("log"))
             {
-                applicationContext->setOutputRedirectionLevel(IContextApplication::RedirectAllOutput);
-                applicationContext->setStreamingForRedirectedOutputLevel(IContextApplication::RedirectAllOutput);
-            }
-            else if (line.startsWith("od"))
-            {
-                applicationContext->setOutputRedirectionLevel(IContextApplication::RedirectNone);
-                applicationContext->setStreamingForRedirectedOutputLevel(IContextApplication::RedirectNone);
-            }
-            else if (line.startsWith("sig"))
-            {
-                line.replace("signal", "");
-                line.replace("sig", "");
+                line.replace("log", "");
                 bool enable = line.endsWith("e");
-                if (line.startsWith("app")) runtime->signalLogForApplication(enable);
-                else if (line.startsWith("aud")) runtime->signalLogForAudio(enable);
-                else if (line.startsWith("net")) runtime->signalLogForNetwork(enable);
-                else if (line.startsWith("own")) runtime->signalLogForOwnAircraft(enable);
-                else if (line.startsWith("set")) runtime->signalLogForSettings(enable);
-                else if (line.startsWith("sim")) runtime->signalLogForSimulator(enable);
-                else if (line.startsWith("all")) runtime->signalLog(enable);
-            }
-            else if (line.startsWith("slo"))
-            {
-                line.replace("slot", "");
-                line.replace("slo", "");
-                bool enable = line.endsWith("e");
-                if (line.startsWith("app")) runtime->slotLogForApplication(enable);
-                else if (line.startsWith("aud")) runtime->slotLogForAudio(enable);
-                else if (line.startsWith("net")) runtime->slotLogForNetwork(enable);
-                else if (line.startsWith("own")) runtime->slotLogForOwnAircraft(enable);
-                else if (line.startsWith("set")) runtime->slotLogForSettings(enable);
-                else if (line.startsWith("sim")) runtime->slotLogForSimulator(enable);
-                else if (line.startsWith("all")) runtime->slotLog(enable);
+                if (line.startsWith("all"))
+                {
+                    BlackMisc::CLogHandler::instance()->enableConsoleOutput(enable);
+                }
+                else
+                {
+                    QString category;
+                    if (line.startsWith("app")) category = IContextApplication::getMessageCategory();
+                    else if (line.startsWith("aud")) category = IContextAudio::getMessageCategory();
+                    else if (line.startsWith("net")) category = IContextNetwork::getMessageCategory();
+                    else if (line.startsWith("own")) category = IContextOwnAircraft::getMessageCategory();
+                    else if (line.startsWith("set")) category = IContextSettings::getMessageCategory();
+                    else if (line.startsWith("sim")) category = IContextSimulator::getMessageCategory();
+                    if (! category.isEmpty())
+                    {
+                        BlackMisc::CLogHandler::instance()->handlerForCategory(category)->enableConsoleOutput(enable);
+                    }
+                }
             }
         }
         QCoreApplication::quit();

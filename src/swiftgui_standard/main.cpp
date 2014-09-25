@@ -7,6 +7,7 @@
 #include "blacksim/blacksimfreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/icons.h"
+#include "blackmisc/loghandler.h"
 
 #include <QtGlobal>
 #include <QApplication>
@@ -41,6 +42,7 @@ int main(int argc, char *argv[])
 
     // application
     QApplication a(argc, argv);
+    CLogHandler::instance()->install();
     QIcon icon(BlackMisc::CIcons::swift24());
     QApplication::setWindowIcon(icon);
     const QString s = CStyleSheetUtility::instance().styles(

@@ -6,6 +6,7 @@
 #include "blackcore/voice_vatlib.h"
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/loghandler.h"
 
 #include "client.h"
 #include "reader.h"
@@ -19,6 +20,7 @@ using namespace BlackMisc::Audio;
 int main(int argc, char *argv[])
 {
     QCoreApplication app (argc, argv);
+    BlackMisc::CLogHandler::instance()->install();
     Client client(&app);
     BlackMisc::registerMetadata();
     BlackCore::registerMetadata();

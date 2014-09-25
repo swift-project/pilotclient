@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "blackcore/network_vatlib.h"
+#include "blackmisc/loghandler.h"
 #include "client.h"
 #include "reader.h"
 #include <QCoreApplication>
@@ -12,6 +13,7 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication app (argc, argv);
+    BlackMisc::CLogHandler::instance()->install();
 
     Client client(&app);
     LineReader reader;

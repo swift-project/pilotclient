@@ -297,6 +297,9 @@ bool MainWindow::isContextAudioAvailableCheck()
  */
 void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
+    if (statusMessage.isRedundant()) return;
+    if (statusMessage.getSeverity() == CStatusMessage::SeverityDebug) return;
+
     if (!this->m_init) return;
     this->ui->sb_MainStatusBar->show();
     this->m_timerStatusBar->start(3000);
@@ -307,19 +310,10 @@ void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessag
     this->ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToList(statusMessage);
 
     // display overlay for errors, but not for validation
-    if (statusMessage.getSeverity() == CStatusMessage::SeverityError && statusMessage.getType() != CStatusMessage::TypeValidation)
-        this->m_compInfoWindow->displayStatusMessage(statusMessage);
-}
-
-/*
- * Display a status message
- */
-void MainWindow::ps_displayStatusMessagesInGui(const CStatusMessageList &messages)
-{
-    if (!this->m_init || messages.isEmpty()) return;
-    foreach(CStatusMessage msg, messages)
+    // TODO smarter use of CLogCategoryHandler to dispatch different categories of message to different MainWindow slots
+    if (statusMessage.getSeverity() == CStatusMessage::SeverityError && ! statusMessage.getCategory().endsWith(".validation"))
     {
-        this->ps_displayStatusMessageInGui(msg);
+        this->m_compInfoWindow->displayStatusMessage(statusMessage);
     }
 }
 

@@ -16,6 +16,7 @@
 #include "blackmisc/networkutils.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/project.h"
+#include "blackmisc/loghandler.h"
 #include <QtConcurrent/QtConcurrent>
 #include <QMetaType>
 #include <QMetaMethod>
@@ -31,6 +32,7 @@ int main(int argc, char *argv[])
 {
     // metadata are registered in runtime
     QApplication a(argc, argv); // not QCoreApplication because of icon, http://qt-project.org/forums/viewthread/15412
+    CLogHandler::instance()->install();
     QIcon icon(BlackMisc::CIcons::swiftNova24());
     QApplication::setWindowIcon(icon);
     QTextStream cin(stdin);

@@ -502,16 +502,18 @@ namespace BlackSound
 
     void CSoundGenerator::printAllQtSoundDevices()
     {
-        qDebug() << "output";
+        QTextStream qtout(stdout);
+
+        qtout << "output" << endl;
         foreach(QAudioDeviceInfo qd, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
         {
-            qDebug() << qd.deviceName();
+            qtout << qd.deviceName() << endl;
         }
 
-        qDebug() << "input";
+        qtout << "input" << endl;
         foreach(QAudioDeviceInfo qd, QAudioDeviceInfo::availableDevices(QAudio::AudioInput))
         {
-            qDebug() << qd.deviceName();
+            qtout << qd.deviceName() << endl;
         }
 
 
