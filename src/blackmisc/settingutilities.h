@@ -77,27 +77,6 @@ namespace BlackMisc
                 return cmd;
             }
 
-            //! Wrong path message
-            static BlackMisc::CStatusMessage wrongPathMessage(const QString &path = "");
-
-            //! Wrong path messages
-            static BlackMisc::CStatusMessageList wrongPathMessages(const QString &path = "");
-
-            //! Wrong command message
-            static BlackMisc::CStatusMessage wrongCommandMessage(const QString &command);
-
-            //! Wrong command messages
-            static BlackMisc::CStatusMessageList wrongCommandMessages(const QString &command);
-
-            //! Value not changed message
-            static BlackMisc::CStatusMessage valueNotChangedMessage(const QString &valueName);
-
-            //! Value changed message with flag
-            static CStatusMessage valueChangedMessage(bool changed, const QString &valueName);
-
-            //! Value changed message
-            static BlackMisc::CStatusMessage valueChangedMessage(const QString &valueName);
-
             //! Remove leading path
             static QString removeLeadingPath(const QString &path);
 
