@@ -93,7 +93,7 @@ namespace BlackMisc
             //! Unequal operator !=
             bool operator !=(const CSettingsNetwork &other) const;
 
-            //! \copydoc BlackCore::IContextSettings
+            //! \copydoc BlackCore::IContextSettings::value
             virtual BlackMisc::CStatusMessage value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag);
 
             //! \copydoc CValueObject::getValueHash

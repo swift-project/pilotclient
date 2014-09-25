@@ -57,7 +57,7 @@ namespace BlackMisc
             //! Unequal operator !=
             bool operator !=(const CSettingsAudio &other) const;
 
-            //! \copydoc BlackCore::IContextSettings
+            //! \copydoc BlackCore::IContextSettings::value
             virtual BlackMisc::CStatusMessage value(const QString &path, const QString &command, const BlackMisc::CVariant &value, bool &changedFlag);
 
             //! \copydoc CValueObject::getValueHash

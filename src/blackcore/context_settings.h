@@ -125,14 +125,7 @@ namespace BlackCore
         void changedSettings(uint type);
 
     public slots:
-
-        /*!
-         * Handle value
-         * \param path      where value belongs to
-         * \param command   what to do with value
-         * \param value
-         * \return          messages generated during handling
-         */
+        //! Handle value
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const BlackMisc::CVariant &value) = 0;
 
         //! Network settings
