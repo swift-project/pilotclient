@@ -5,6 +5,7 @@
 #include "blacksim/simulatorinfolist.h"
 #include "blacksim/setsimulator.h"
 #include "blackmisc/settingutilities.h"
+#include "blackmisc/logmessage.h"
 
 #include <QComboBox>
 
@@ -93,21 +94,19 @@ namespace BlackGui
             CSimulatorInfoList simDrivers = this->getIContextSimulator()->getAvailableSimulatorPlugins();
             if (simDrivers.isEmpty())
             {
-                this->sendStatusMessage(CStatusMessage::getErrorMessage("No drivers available", CStatusMessage::TypeSimulator));
+                CLogMessage().error(this, "No drivers available");
                 return;
             }
             if (simDrivers.size() <= index)
             {
-                this->sendStatusMessage(CStatusMessage::getErrorMessage("Wrong driver index", CStatusMessage::TypeSimulator));
+                CLogMessage().error(this, "Wrong driver index");
                 return;
             }
 
             // update
             CSimulatorInfo currentDriver = simDrivers[index];
             const QString path = CSettingUtilities::appendPaths(IContextSettings::PathSimulatorSettings(), CSettingsSimulator::ValueSelectedDriver());
-            this->sendStatusMessages(
-                this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), currentDriver.toCVariant())
-            );
+            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), currentDriver.toCVariant());
         }
 
         void CSettingsSimulatorComponent::ps_settingsHaveChanged(uint settingsType)
@@ -131,11 +130,10 @@ namespace BlackGui
             if (!sender) return;
 
             const QString ps = IContextSettings::PathSimulatorSettings();
-            CStatusMessageList msgs;
             if (sender == this->ui->cb_TimeSync)
             {
                 bool timeSync = this->ui->cb_TimeSync->isChecked();
-                msgs = this->getIContextSettings()->value(CSettingUtilities::appendPaths(ps, CSettingsSimulator::ValueSyncTime()), CSettingUtilities::CmdUpdate(), QVariant(timeSync));
+                this->getIContextSettings()->value(CSettingUtilities::appendPaths(ps, CSettingsSimulator::ValueSyncTime()), CSettingUtilities::CmdUpdate(), QVariant(timeSync));
             }
             else if (sender == this->ui->le_TimeSyncOffset)
             {
@@ -147,16 +145,12 @@ namespace BlackGui
                 }
                 if (ost.isNull())
                 {
-                    msgs.push_back(CStatusMessage::getValidationError("Invalid offset time"));
+                    CLogMessage().error(validationMessageCategory(), "Invalid offset time");
                 }
                 else
                 {
-                    msgs = this->getIContextSettings()->value(CSettingUtilities::appendPaths(ps, CSettingsSimulator::ValueSyncTimeOffset()), CSettingUtilities::CmdUpdate(), ost.toQVariant());
+                    this->getIContextSettings()->value(CSettingUtilities::appendPaths(ps, CSettingsSimulator::ValueSyncTimeOffset()), CSettingUtilities::CmdUpdate(), ost.toQVariant());
                 }
-            }
-            if (!msgs.isEmpty())
-            {
-                this->getIContextApplication()->sendStatusMessages(msgs);
             }
         }
     }

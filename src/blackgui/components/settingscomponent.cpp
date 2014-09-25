@@ -15,6 +15,7 @@
 #include "blackcore/context_network.h"
 #include "blackmisc/hwkeyboardkeylist.h"
 #include "blackmisc/setaudio.h"
+#include "blackmisc/logmessage.h"
 #include <QColorDialog>
 
 using namespace BlackCore;
@@ -233,29 +234,24 @@ namespace BlackGui
             CServer server = this->ps_selectedServerFromTextboxes();
             if (!server.isValidForLogin())
             {
-                const CStatusMessage validation = CStatusMessage::getValidationError("Wrong settings for server");
-                this->sendStatusMessage(validation);
+                CLogMessage().error(validationMessageCategory(), "Wrong settings for server");
                 return;
             }
 
             const QString path = CSettingUtilities::appendPaths(IContextSettings::PathNetworkSettings(), CSettingsNetwork::ValueTrafficServers());
             QObject *sender = QObject::sender();
-            CStatusMessageList msgs;
             if (sender == this->ui->pb_SettingsTnCurrentServer)
             {
-                msgs = this->getIContextSettings()->value(path, CSettingsNetwork::CmdSetCurrentServer(), server.toQVariant());
+                this->getIContextSettings()->value(path, CSettingsNetwork::CmdSetCurrentServer(), server.toQVariant());
             }
             else if (sender == this->ui->pb_SettingsTnRemoveServer)
             {
-                msgs = this->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), server.toQVariant());
+                this->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), server.toQVariant());
             }
             else if (sender == this->ui->pb_SettingsTnSaveServer)
             {
-                msgs = this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), server.toQVariant());
+                this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), server.toQVariant());
             }
-
-            // status messages
-            this->sendStatusMessages(msgs);
         }
 
         /*
@@ -310,10 +306,7 @@ namespace BlackGui
         void CSettingsComponent::ps_saveHotkeys()
         {
             const QString path = CSettingUtilities::appendPaths(IContextSettings::PathRoot(), IContextSettings::PathHotkeys());
-            CStatusMessageList msgs = this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer().toQVariant());
-
-            // status messages
-            this->sendStatusMessages(msgs);
+            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer().toQVariant());
         }
 
         /*
@@ -380,11 +373,11 @@ namespace BlackGui
             bool ok = CStyleSheetUtility::instance().updateFonts(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
             if (ok)
             {
-                this->sendStatusMessage(CStatusMessage::getInfoMessage("Updated font style", CStatusMessage::TypeSettings));
+                CLogMessage().info(this, "Updated font style");
             }
             else
             {
-                this->sendStatusMessage(CStatusMessage::getErrorMessage("Updating style failed", CStatusMessage::TypeSettings));
+                CLogMessage().info(this, "Updating style failed");
             }
         }
 
@@ -407,14 +400,12 @@ namespace BlackGui
         {
             if (!this->getIContextAudio())
             {
-                CStatusMessage m(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "voice context not available");
-                this->sendStatusMessage(m);
+                CLogMessage().error(this, "voice context not available");
                 return;
             }
             if (this->m_timerAudioTests->isActive())
             {
-                CStatusMessage m(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "test running, wait until completed");
-                this->sendStatusMessage(m);
+                CLogMessage().error(this, "test running, wait until completed");
                 return;
             }
 

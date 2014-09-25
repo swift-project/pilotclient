@@ -16,6 +16,7 @@
 
 #include "blackmisc/networkutils.h"
 #include "blackmisc/statusmessage.h"
+#include "blackmisc/logmessage.h"
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/fsx/simconnectutilities.h"
 
@@ -54,29 +55,28 @@ namespace BlackGui
 
             if (address.isEmpty() || port.isEmpty())
             {
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "no address or port"));
+                CLogMessage().warning(this, "no address or port");
                 return;
             }
             if (!CNetworkUtils::isValidIPv4Address(address))
             {
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "IPv4 address invalid"));
+                CLogMessage().warning(this, "IPv4 address invalid");
                 return;
             }
             if (!CNetworkUtils::isValidPort(port))
             {
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "invalid port"));
+                CLogMessage().warning(this, "invalid port");
                 return;
             }
             quint16 p = port.toUInt();
             QString msg;
             if (!CNetworkUtils::canConnect(address, p, msg))
             {
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, msg));
+                CLogMessage().warning(this, msg);
                 return;
             }
 
-            msg = QString("Connected to %1:%2").arg(address).arg(port);
-            this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, msg));
+            CLogMessage().info(this, "Connected to %1:%2") << address << port;
         }
 
         /*
@@ -86,7 +86,7 @@ namespace BlackGui
         {
             if (!this->getIContextSimulator() || !this->getIContextSimulator()->isSimulatorAvailable())
             {
-                this->sendStatusMessage(CStatusMessage::getErrorMessage("Simulator not available", CStatusMessage::TypeSimulator));
+                CLogMessage().error(this, "Simulator not available");
                 return;
             }
             QString address = this->ui->le_SettingsFsxAddress->text().trimmed();
@@ -94,17 +94,17 @@ namespace BlackGui
 
             if (address.isEmpty() || port.isEmpty())
             {
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "no address or port"));
+                CLogMessage().warning(this, "no address or port");
                 return;
             }
             if (!CNetworkUtils::isValidIPv4Address(address))
             {
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "IPv4 address invalid"));
+                CLogMessage().warning(this, "IPv4 address invalid");
                 return;
             }
             if (!CNetworkUtils::isValidPort(port))
             {
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "invalid port"));
+                CLogMessage().warning(this, "invalid port");
                 return;
             }
             quint16 p = port.toUInt();
@@ -117,13 +117,11 @@ namespace BlackGui
                            this->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p));
             if (success)
             {
-                QString m = QString("Written ").append(local ? " local " : "remote ").append(fileName);
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, m));
+                CLogMessage().info(this, local ? "Written local %1" : "Written remote %1") << fileName;
             }
             else
             {
-                QString m = QString("Cannot write ").append(fileName);
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, m));
+                CLogMessage().error(this, "Cannot write %1") << fileName;
             }
             this->ui->pb_SettingsFsxExistsSimconncetCfg->click(); // update status
         }
@@ -135,7 +133,7 @@ namespace BlackGui
         {
             if (!this->getIContextSimulator() || !this->getIContextSimulator()->isSimulatorAvailable())
             {
-                this->sendStatusMessage(CStatusMessage::getErrorMessage("Simulator not available", CStatusMessage::TypeSimulator));
+                CLogMessage().error(this, "Simulator not available");
                 return;
             }
 
@@ -155,14 +153,13 @@ namespace BlackGui
                 {
                     QFile f(fileName);
                     f.remove();
-                    m = m.arg("locally");
+                    CLogMessage().info(this, "Deleted locally %1") << fileName;
                 }
                 else
                 {
                     this->getIContextApplication()->removeFile(fileName);
-                    m = m.arg("remotely");
+                    CLogMessage().info(this, "Deleted remotely %1") << fileName;
                 }
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeSimulator, CStatusMessage::SeverityInfo, m));
                 this->ui->pb_SettingsFsxExistsSimconncetCfg->click(); // update status
             }
             else if (sender == this->ui->pb_SettingsFsxExistsSimconncetCfg)

@@ -33,6 +33,9 @@ namespace BlackGui
             //! Destructor
             ~CSettingsFsxComponent();
 
+            //! Log message category
+            static QString getMessageCategory() { return "swift.gui.component.settings.simulator.fsx"; }
+
         private slots:
             //! Test the SIM connect connectivity
             void testSimConnectConnection();

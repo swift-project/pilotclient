@@ -15,6 +15,7 @@
 #include "blackcore/context_ownaircraft_impl.h"
 #include "blackcore/context_network.h"
 #include "blackmisc/voiceroom.h"
+#include "blackmisc/logmessage.h"
 
 using namespace BlackCore;
 using namespace BlackMisc;
@@ -221,7 +222,7 @@ namespace BlackGui
             }
             else
             {
-                this->sendStatusMessage(CStatusMessage::getValidationError("Wrong transponder code, reset"));
+                CLogMessage().error(validationMessageCategory(), "Wrong transponder code, reset");
                 this->ui->ds_CockpitTransponder->setValue(transponder.getTransponderCode());
             }
             transponder.setTransponderMode(this->ui->cbp_CockpitTransponderMode->getSelectedTransponderMode());
@@ -391,7 +392,7 @@ namespace BlackGui
             QString selcalCode = this->getSelcalCode();
             if (!CSelcal::isValidCode(selcalCode))
             {
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityWarning, "Invalid SELCAL codde"));
+                CLogMessage().error(validationMessageCategory(), "Invalid SELCAL codde");
             }
             else if (this->getIContextAudio())
             {
@@ -400,7 +401,7 @@ namespace BlackGui
             }
             else
             {
-                this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeAudio, CStatusMessage::SeverityError, "No audio available"));
+                CLogMessage().error(validationMessageCategory(), "No audio available");
             }
         }
 

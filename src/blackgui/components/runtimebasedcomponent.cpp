@@ -42,18 +42,6 @@ namespace BlackGui
             this->m_runtimeOwner = true;
         }
 
-        void CRuntimeBasedComponent::sendStatusMessage(const BlackMisc::CStatusMessage &statusMessage)
-        {
-            if (!this->getIContextApplication()) return;
-            this->getIContextApplication()->sendStatusMessage(statusMessage);
-        }
-
-        void CRuntimeBasedComponent::sendStatusMessages(const BlackMisc::CStatusMessageList &statusMessages)
-        {
-            if (!this->getIContextApplication()) return;
-            this->getIContextApplication()->sendStatusMessages(statusMessages);
-        }
-
         const BlackCore::IContextApplication *CRuntimeBasedComponent::getIContextApplication() const
         {
             if (!this->m_runtime) return nullptr;

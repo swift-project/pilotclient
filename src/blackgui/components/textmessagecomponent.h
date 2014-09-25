@@ -47,6 +47,9 @@ namespace BlackGui
             //! Destructor
             ~CTextMessageComponent();
 
+            //! Log message category
+            static QString getMessageCategory() { return "swift.gui.component.textMessages"; }
+
             //! SELCAL callback, SELCAL is obtained by that
             void setSelcalCallback(const std::function<const QString(void)> &selcalCallback) { this->m_selcalCallback = selcalCallback; }
 

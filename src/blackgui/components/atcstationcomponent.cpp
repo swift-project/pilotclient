@@ -11,6 +11,7 @@
 #include "atcstationcomponent.h"
 #include "../views/atcstationview.h"
 #include "ui_atcstationcomponent.h"
+#include "blackmisc/logmessage.h"
 
 //! \file
 
@@ -103,7 +104,7 @@ namespace BlackGui
             if (sender == this->ui->tvp_AtcStationsBooked && this->getIContextNetwork())
             {
                 // trigger new read, which takes some time. A signal will be received when this is done
-                this->sendStatusMessage(CStatusMessage::getInfoMessage("Requested new bookings", CStatusMessage::TypeTrafficNetwork));
+                CLogMessage().info(this, "Requested new bookings");
                 this->getIContextNetwork()->readAtcBookingsFromSource();
             }
             else

@@ -10,6 +10,7 @@
 #include "textmessagecomponent.h"
 #include "blackmisc/nwuser.h"
 #include "blackmisc/notificationsounds.h"
+#include "blackmisc/logmessage.h"
 #include "ui_textmessagecomponent.h"
 
 #include <QPushButton>
@@ -92,7 +93,7 @@ namespace BlackGui
                         }
                         else
                         {
-                            emit this->displayInInfoWindow(CStatusMessage::getInfoMessage("SELCAL received", CStatusMessage::TypeGui).toCVariant(), 3 * 1000);
+                            emit this->displayInInfoWindow(CLogMessage().info(this, "SELCAL received"), 3 * 1000);
                         }
                     }
                     continue; // not displayed
@@ -381,12 +382,12 @@ namespace BlackGui
             {
                 if (!this->getIContextNetwork() || !this->getIContextNetwork()->isConnected())
                 {
-                    this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "network needs to be connected"));
+                    CLogMessage().error(this, "network needs to be connected");
                     return;
                 }
                 if (parts.length() < 3)
                 {
-                    this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityError, "incorrect message"));
+                    CLogMessage().error(this, "incorrect message");
                     return;
                 }
                 QString p = parts[1].trimmed(); // receiver
@@ -415,10 +416,7 @@ namespace BlackGui
                 int index = cmdLine.indexOf(tm.getRecipientCallsign().getStringAsSet(), 0, Qt::CaseInsensitive);
                 if (index < 0)
                 {
-                    this->sendStatusMessage(
-                        CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityError,
-                                       "incomplete message")
-                    );
+                    CLogMessage().error(this, "incomplete message");
                     return;
                 }
                 QString msg(cmdLine.mid(index + tm.getRecipientCallsign().asString().length() + 1));
@@ -440,20 +438,20 @@ namespace BlackGui
                 // line is considered to be a message to the selected channel, send
                 if (!this->isNetworkConnected())
                 {
-                    this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "network needs to be connected"));
+                    CLogMessage().error(this, "network needs to be connected");
                     return;
                 }
 
                 if (!this->isVisible())
                 {
-                    this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, "text messages can only be sent from corresponding page"));
+                    CLogMessage().error(this, "text messages can only be sent from corresponding page");
                     return;
                 }
 
                 int index = this->currentIndex();
                 if (index < 0 || index == this->indexOf(this->ui->tb_TextMessagesAll))
                 {
-                    this->sendStatusMessage(CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityError, "incorrect channel"));
+                    CLogMessage().error(this, "incorrect channel");
                 }
                 else
                 {

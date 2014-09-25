@@ -37,6 +37,12 @@ namespace BlackGui
             //! Set runtime for each CRuntimeBasedComponent
             static void setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent);
 
+            //! Log message category
+            static QString getMessageCategory() { return "swift.gui.component"; }
+
+            //! Validation log message category
+            static QString validationMessageCategory() { return "swift.gui.component.validation"; }
+
         protected:
             //! Constructor
             //! \remarks Usually runtime will be provided later, not at initialization time.
@@ -89,12 +95,6 @@ namespace BlackGui
 
             //! Context for simulator
             BlackCore::IContextSimulator *getIContextSimulator();
-
-            //! Send status message (via application context)
-            void sendStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
-
-            //! Send status message (via application context)
-            void sendStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
 
             //! Owner?
             bool isRuntimeOwner() const { return this->m_runtimeOwner; }
