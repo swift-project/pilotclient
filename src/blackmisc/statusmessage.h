@@ -25,24 +25,10 @@ namespace BlackMisc
     class CStatusMessage : public CValueObjectStdTuple<CStatusMessage>
     {
     public:
-        //! Status types
-        enum StatusType
-        {
-            TypeUnknown,    //!< not set
-            TypeUnspecific, //!< intentionally set, but not specific
-            TypeValidation,
-            TypeTrafficNetwork,
-            TypeSimulator,
-            TypeSettings,
-            TypeCore,
-            TypeAudio,
-            TypeGui,
-            TypeStdoutRedirect
-        };
-
         //! Status severities
         enum StatusSeverity
         {
+            SeverityDebug,
             SeverityInfo,
             SeverityWarning,
             SeverityError
@@ -51,8 +37,7 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexType = BlackMisc::CPropertyIndex::GlobalIndexCStatusMessage,
-            IndexTypeAsString,
+            IndexCategory = BlackMisc::CPropertyIndex::GlobalIndexCStatusMessage,
             IndexSeverity,
             IndexSeverityAsString,
             IndexMessage,
@@ -61,13 +46,24 @@ namespace BlackMisc
         };
 
         //! Constructor
-        CStatusMessage() : m_type(TypeUnknown), m_severity(SeverityInfo) {}
+        CStatusMessage();
 
         //! Constructor
-        CStatusMessage(StatusType type, StatusSeverity severity, const char *message);
+        CStatusMessage(const QString &message);
 
         //! Constructor
-        CStatusMessage(StatusType type, StatusSeverity severity, const QString &message);
+        CStatusMessage(StatusSeverity severity, const QString &message);
+
+        //! Constructor
+        CStatusMessage(const QString &category, StatusSeverity severity, const QString &message);
+
+        //! Construct from a Qt logging triple
+        //! \sa QtMessageHandler
+        CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message);
+
+        //! Convert to a Qt logging triple
+        //! \sa QtMessageHandler
+        void toQtLogTriple(QtMsgType *o_type, QString *o_category, QString *o_message) const;
 
         //! Equal operator ==
         bool operator ==(const CStatusMessage &other) const;
@@ -75,10 +71,10 @@ namespace BlackMisc
         //! Unequal operator !=
         bool operator !=(const CStatusMessage &other) const;
 
-        //! Status type
-        StatusType getType() const { return this->m_type; }
+        //! Message category
+        QString getCategory() const { return this->m_category; }
 
-        //! Status severity
+        //! Message severity
         StatusSeverity getSeverity() const { return this->m_severity; }
 
         //! Message
@@ -87,8 +83,8 @@ namespace BlackMisc
         //! Message empty
         bool isEmpty() const { return this->m_message.isEmpty(); }
 
-        //! Type as string
-        const QString &getTypeAsString() const;
+        //! Message may already have been handled directly
+        bool isRedundant() const { return this->m_redundant; }
 
         //! Severity
         void setSeverity(StatusSeverity severity) { this->m_severity = severity; }
@@ -108,18 +104,6 @@ namespace BlackMisc
         //! To HTML
         QString toHtml() const;
 
-        //! Validation error
-        static CStatusMessage getValidationError(const QString &message);
-
-        //! (Unspecific) Info message
-        static CStatusMessage getInfoMessage(const QString &message, StatusType type = CStatusMessage::TypeUnspecific);
-
-        //! (Unspecific) Warning message
-        static CStatusMessage getWarningMessage(const QString &message, StatusType type = CStatusMessage::TypeUnspecific);
-
-        //! (Unspecific) Error message
-        static CStatusMessage getErrorMessage(const QString &message, StatusType type = CStatusMessage::TypeUnspecific);
-
         //! Representing icon
         static const CIcon &convertToIcon(const CStatusMessage &statusMessage);
 
@@ -129,16 +113,16 @@ namespace BlackMisc
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)
-        StatusType m_type;
+        QString m_category;
         StatusSeverity m_severity;
         QString m_message;
         QDateTime m_timestamp;
-
+        bool m_redundant = false;
     };
 } // namespace
 
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (o.m_type, o.m_severity, o.m_message, o.m_timestamp))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (o.m_category, o.m_severity, o.m_message, o.m_timestamp, o.m_redundant))
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)
 
 #endif // guard

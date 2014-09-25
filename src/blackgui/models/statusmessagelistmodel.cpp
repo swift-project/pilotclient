@@ -29,7 +29,7 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn("time", CStatusMessage::IndexTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
             this->m_columns.addColumn(CColumn("severity", CStatusMessage::IndexSeverity));
             this->m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
-            this->m_columns.addColumn(CColumn::standardString("type", CStatusMessage::IndexTypeAsString));
+            this->m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategory));
 
             this->m_sortedColumn = CStatusMessage::IndexTimestamp;
             this->m_sortOrder = Qt::DescendingOrder;

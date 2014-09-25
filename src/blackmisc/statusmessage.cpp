@@ -11,17 +11,57 @@
 #include "blackmiscfreefunctions.h"
 #include "propertyindex.h"
 #include "iconlist.h"
+#include "loghandler.h"
+#include "logmessage.h"
 #include <QMetaEnum>
 
 namespace BlackMisc
 {
 
     /*
-     * Constructor
+     * Constructors
      */
-    CStatusMessage::CStatusMessage(StatusType type, StatusSeverity severity, const QString &message)
-        : m_type(type), m_severity(severity), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
-    {  }
+    CStatusMessage::CStatusMessage()
+        : m_timestamp(QDateTime::currentDateTimeUtc())
+    {}
+
+    CStatusMessage::CStatusMessage(const QString &message)
+        : m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
+    {}
+
+    CStatusMessage::CStatusMessage(StatusSeverity severity, const QString &message)
+        : m_severity(severity), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
+    {}
+
+    CStatusMessage::CStatusMessage(const QString &category, StatusSeverity severity, const QString &message)
+        : m_category(category), m_severity(severity), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
+    {}
+
+    CStatusMessage::CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)
+        : CStatusMessage(context.category, SeverityInfo, message)
+    {
+        m_redundant = CLogMessageHelper::hasRedundantFlag(m_category);
+        bool debug = CLogMessageHelper::hasDebugFlag(m_category);
+        m_category = CLogMessageHelper::stripFlags(m_category);
+
+        switch(type)
+        {
+        default:
+        case QtDebugMsg:
+            if (debug)
+                this->m_severity = SeverityDebug;
+            else
+                this->m_severity = SeverityInfo;
+            break;
+        case QtWarningMsg:
+            this->m_severity = SeverityWarning;
+            break;
+        case QtCriticalMsg:
+        case QtFatalMsg:
+            this->m_severity = SeverityError;
+            break;
+        }
+    }
 
     /*
      * Equal?
@@ -41,11 +81,38 @@ namespace BlackMisc
     }
 
     /*
-     * Constructor
+     * Conversion
      */
-    CStatusMessage::CStatusMessage(StatusType type, StatusSeverity severity, const char *message)
-        : m_type(type), m_severity(severity), m_message(QString(message)), m_timestamp(QDateTime::currentDateTimeUtc())
-    {  }
+    void CStatusMessage::toQtLogTriple(QtMsgType *o_type, QString *o_category, QString *o_message) const
+    {
+        QString category = m_category;
+        if (this->m_severity == SeverityDebug && ! category.isEmpty())
+        {
+            category = CLogMessageHelper::addDebugFlag(category);
+        }
+        if (this->m_redundant)
+        {
+            category = CLogMessageHelper::addRedundantFlag(category);
+        }
+
+        *o_category = category;
+        *o_message = this->m_message;
+
+        switch (this->m_severity)
+        {
+        default:
+        case SeverityDebug:
+        case SeverityInfo:
+            *o_type = QtDebugMsg;
+            break;
+        case SeverityWarning:
+            *o_type = QtWarningMsg;
+            break;
+        case SeverityError:
+            *o_type = QtCriticalMsg;
+            break;
+        }
+    }
 
     /*
      * To string
@@ -53,8 +120,8 @@ namespace BlackMisc
     QString CStatusMessage::convertToQString(bool /** i18n */) const
     {
 
-        QString s("Index: ");
-        s.append(QString::number(this->m_type));
+        QString s("Category: ");
+        s.append(this->m_category);
 
         s.append(" Severity: ");
         s.append(QString::number(this->m_severity));
@@ -67,112 +134,17 @@ namespace BlackMisc
     }
 
     /*
-     * Validation Error
-     */
-    CStatusMessage CStatusMessage::getValidationError(const QString &message)
-    {
-        return CStatusMessage(CStatusMessage::TypeValidation, CStatusMessage::SeverityError, message);
-    }
-
-    /*
-     * Unspecific info message
-     */
-    CStatusMessage CStatusMessage::getInfoMessage(const QString &message, StatusType type)
-    {
-        return CStatusMessage(type, CStatusMessage::SeverityInfo, message);
-    }
-
-    /*
-     * Unspecific warning message
-     */
-    CStatusMessage CStatusMessage::getWarningMessage(const QString &message, StatusType type)
-    {
-        return CStatusMessage(type, CStatusMessage::SeverityWarning, message);
-    }
-
-    /*
-     * Unspecific error message
-     */
-    CStatusMessage CStatusMessage::getErrorMessage(const QString &message, StatusType type)
-    {
-        return CStatusMessage(type, CStatusMessage::SeverityError, message);
-    }
-
-    /*
      *  Pixmap
      */
     const CIcon &CStatusMessage::convertToIcon(const CStatusMessage &statusMessage)
     {
         switch (statusMessage.getSeverity())
         {
+        case SeverityDebug: return CIconList::iconForIndex(CIcons::StandardIconUnknown16); // TODO
         case SeverityInfo: return CIconList::iconForIndex(CIcons::StandardIconInfo16);
         case SeverityWarning: return CIconList::iconForIndex(CIcons::StandardIconWarning16);
         case SeverityError: return CIconList::iconForIndex(CIcons::StandardIconError16);
         default: return CIconList::iconForIndex(CIcons::StandardIconInfo16);
-        }
-    }
-
-    /*
-     * Type
-     */
-    const QString &CStatusMessage::getTypeAsString() const
-    {
-        switch (this->m_type)
-        {
-        case TypeAudio:
-            {
-                static QString t("audio");
-                return t;
-            }
-        case TypeCore:
-            {
-                static QString t("core");
-                return t;
-            }
-        case TypeGui:
-            {
-                static QString t("gui");
-                return t;
-            }
-        case TypeSettings:
-            {
-                static QString t("settings");
-                return t;
-            }
-        case TypeSimulator:
-            {
-                static QString t("simulator");
-                return t;
-            }
-        case TypeStdoutRedirect:
-            {
-                static QString t("redirection");
-                return t;
-            }
-        case TypeTrafficNetwork:
-            {
-                static QString t("traffic network");
-                return t;
-            }
-        case TypeUnknown:
-            {
-                static QString t("unknown");
-                return t;
-            }
-        case TypeUnspecific:
-            {
-                static QString t("unspecific");
-                return t;
-            }
-        case TypeValidation:
-            {
-                static QString t("validation");
-                return t;
-            }
-        default:
-            static QString x("unknown type");
-            qFatal("Unknown type");
-            return x;
         }
     }
 
@@ -227,10 +199,8 @@ namespace BlackMisc
                 if (this->m_timestamp.isNull() || !this->m_timestamp.isValid()) return "";
                 return this->m_timestamp.toString("HH:mm::ss.zzz");
             }
-        case IndexType:
-            return QVariant(static_cast<uint>(this->m_type));
-        case IndexTypeAsString:
-            return QVariant(this->getTypeAsString());
+        case IndexCategory:
+            return QVariant(this->m_category);
         default:
             break;
         }
@@ -262,8 +232,8 @@ namespace BlackMisc
         case IndexSeverity:
             this->m_severity = static_cast<StatusSeverity>(variant.value<uint>());
             break;
-        case IndexType:
-            this->m_type = static_cast<StatusType>(variant.value<uint>());
+        case IndexCategory:
+            this->m_category = variant.value<QString>();
             break;
         default:
             CValueObject::setPropertyByIndex(variant, index);

@@ -42,6 +42,9 @@ namespace BlackMisc
             CTextMessage(const QString &message, const BlackMisc::Aviation::CCallsign &senderCallsign, const BlackMisc::Aviation::CCallsign &recipientCallsign = BlackMisc::Aviation::CCallsign())
                 : m_message(message), m_received(QDateTime::currentDateTimeUtc()), m_senderCallsign(senderCallsign), m_recipientCallsign(recipientCallsign), m_frequency(0, BlackMisc::PhysicalQuantities::CFrequencyUnit::nullUnit()) {}
 
+            //! Logging category
+            static QString getMessageCategory() { return "swift.textMessage"; }
+
             //! \brief Get callsign (from)
             const BlackMisc::Aviation::CCallsign &getSenderCallsign() const
             {
