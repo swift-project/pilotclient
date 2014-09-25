@@ -83,6 +83,9 @@ namespace BlackGui
             //! Asynchronous update finished
             void asyncUpdateFinished();
 
+            //! Number of elements changed
+            void rowCountChanged(int count);
+
         protected slots:
             //! Helper method with template free signature
             //! \param variant container is transferred in variant
@@ -112,7 +115,6 @@ namespace BlackGui
             int m_sortedColumn;        //!< current sort column
             Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
         };
-
 
         /*!
          * List model
@@ -181,6 +183,15 @@ namespace BlackGui
 
             //! Remove object
             virtual void remove(const ObjectType &object);
+
+            //! \copydoc ContainerBase::removeIf
+            template <class K0, class V0, class... KeysValues>
+            int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
+            {
+                int c = m_container.removeIf(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
+                if (c > 0) { emit rowCountChanged(this->rowCount());}
+                return c;
+            }
 
             //! Clear the list
             virtual void clear();

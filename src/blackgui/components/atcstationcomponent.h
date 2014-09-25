@@ -107,6 +107,9 @@ namespace BlackGui
             //! Info area tab bar has changed
             void ps_infoAreaTabBarChanged(int index);
 
+            //! Count has been changed
+            void ps_countChanged(int count);
+
         private:
             Ui::CAtcStationComponent *ui;
             CTimerBasedComponent *m_timerComponent;

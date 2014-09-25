@@ -62,6 +62,10 @@ namespace BlackGui
             //! \copydoc CTimerBasedComponent::stopTimer
             void stopTimer() { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->stopTimer(); }
 
+        private slots:
+            //! Number of elements changed
+            void ps_countChanged(int count);
+
         private:
             Ui::CUserComponent *ui;
             CTimerBasedComponent *m_timerComponent;

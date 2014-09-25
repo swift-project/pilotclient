@@ -68,6 +68,9 @@ namespace BlackGui
             //! Info area tab bar has changed
             void ps_infoAreaTabBarChanged(int index);
 
+            //! Number of elements changed
+            void ps_countChanged(int count);
+
         private:
             Ui::CAircraftComponent *ui;
             CTimerBasedComponent   *m_timerComponent;

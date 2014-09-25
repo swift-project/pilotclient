@@ -11,10 +11,12 @@
 
 #include "atcstationcomponent.h"
 #include "../views/atcstationview.h"
+#include "../guiutility.h"
 #include "ui_atcstationcomponent.h"
 #include "blackmisc/avinformationmessage.h"
 #include "blackmisc/logmessage.h"
 
+using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
 using namespace BlackMisc::Aviation;
@@ -42,6 +44,7 @@ namespace BlackGui
             // set station mode
             this->ui->tvp_AtcStationsOnline->setStationMode(CAtcStationListModel::StationsOnline);
             this->ui->tvp_AtcStationsBooked->setStationMode(CAtcStationListModel::StationsBooked);
+            this->ui->tvp_AtcStationsBooked->setResizeMode(CAtcStationView::ResizingOnce);
 
             // Signal / Slots
             bool connected = this->connect(this->ui->le_AtcStationsOnlineMetar, SIGNAL(returnPressed()), this, SLOT(getMetar()));
@@ -52,7 +55,12 @@ namespace BlackGui
             connect(this->ui->tvp_AtcStationsOnline, &QTableView::clicked, this, &CAtcStationComponent::ps_onlineAtcStationSelected);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::testRequestDummyAtcOnlineStations, this, &CAtcStationComponent::ps_testCreateDummyOnlineAtcStations);
             connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_requestOnlineStationsUpdate);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::countChanged, this, &CAtcStationComponent::ps_countChanged);
+            connect(this->ui->tvp_AtcStationsOnline, &CAtcStationView::countChanged, this, &CAtcStationComponent::ps_countChanged);
+
             connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::requestUpdate, this, &CAtcStationComponent::ps_reloadAtcStationsBooked);
+            connect(this->ui->tvp_AtcStationsBooked, &CAtcStationView::countChanged, this, &CAtcStationComponent::ps_countChanged);
+
             connect(this->ui->pb_AtcStationsAtisReload, &QPushButton::clicked, this, &CAtcStationComponent::ps_requestAtis);
         }
 
@@ -222,6 +230,19 @@ namespace BlackGui
             // here I know I am the selected widget, update, but keep GUI responsive (-> timer)
             QTimer::singleShot(1000, this, SLOT(update()));
             Q_UNUSED(index);
+        }
+
+        void CAtcStationComponent::ps_countChanged(int count)
+        {
+            Q_UNUSED(count);
+            int io = this->indexOf(this->ui->tb_AtcStationsOnline);
+            int ib = this->indexOf(this->ui->tb_AtcStationsBooked);
+            QString o = this->tabBar()->tabText(io);
+            QString b = this->tabBar()->tabText(ib);
+            o = CGuiUtility::replaceTabCountValue(o, this->countOnlineStations());
+            b = CGuiUtility::replaceTabCountValue(b, this->countBookedStations());
+            this->tabBar()->setTabText(io, o);
+            this->tabBar()->setTabText(ib, b);
         }
 
         void CAtcStationComponent::ps_onlineAtcStationSelected(QModelIndex index)

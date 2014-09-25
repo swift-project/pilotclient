@@ -12,6 +12,9 @@
 #include "dockwidgetinfoareacomponent.h"
 #include "../guiutility.h"
 
+using namespace BlackGui;
+using namespace BlackGui::Views;
+
 namespace BlackGui
 {
     namespace Components
@@ -25,6 +28,9 @@ namespace BlackGui
         {
             ui->setupUi(this);
             m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
+
+            connect(this->ui->tvp_AircraftsInRange, &CAircraftView::countChanged, this, &CAircraftComponent::ps_countChanged);
+            connect(this->ui->tvp_AirportsInRange, &CAircraftView::countChanged, this, &CAircraftComponent::ps_countChanged);
         }
 
         CAircraftComponent::~CAircraftComponent()
@@ -91,6 +97,20 @@ namespace BlackGui
             QTimer::singleShot(1000, this, SLOT(update()));
             Q_UNUSED(index);
         }
+
+        void CAircraftComponent::ps_countChanged(int count)
+        {
+            Q_UNUSED(count);
+            int ac = this->indexOf(this->ui->tb_AircraftsInRange);
+            int ap = this->indexOf(this->ui->tb_AirportsInRange);
+            QString acs = this->tabBar()->tabText(ac);
+            QString aps = this->tabBar()->tabText(ap);
+            acs = CGuiUtility::replaceTabCountValue(acs, this->countAircrafts());
+            aps = CGuiUtility::replaceTabCountValue(aps, this->countAirportsInRange());
+            this->tabBar()->setTabText(ac, acs);
+            this->tabBar()->setTabText(ap, aps);
+        }
+
 
     } // namespace
 } // namespace

@@ -9,7 +9,11 @@
 
 #include "usercomponent.h"
 #include "ui_usercomponent.h"
+#include "../guiutility.h"
 #include "blackmisc/nwuserlist.h"
+
+using namespace BlackGui;
+using namespace BlackGui::Views;
 
 namespace BlackGui
 {
@@ -23,6 +27,9 @@ namespace BlackGui
         {
             ui->setupUi(this);
             this->m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
+
+            connect(this->ui->tvp_AllUsers, &CUserView::countChanged, this, &CUserComponent::ps_countChanged);
+            connect(this->ui->tvp_Clients, &CClientView::countChanged, this, &CUserComponent::ps_countChanged);
         }
 
         CUserComponent::~CUserComponent()
@@ -63,5 +70,19 @@ namespace BlackGui
                 this->ui->tvp_AllUsers->updateContainer(this->getIContextNetwork()->getUsers());
             }
         }
-    }
-} // guard
+
+        void CUserComponent::ps_countChanged(int count)
+        {
+            Q_UNUSED(count);
+            int iu = this->indexOf(this->ui->tb_AllUsers);
+            int ic = this->indexOf(this->ui->tb_Clients);
+            QString u = this->tabBar()->tabText(iu);
+            QString c = this->tabBar()->tabText(ic);
+            u = CGuiUtility::replaceTabCountValue(u, this->countUsers());
+            c = CGuiUtility::replaceTabCountValue(c, this->countClients());
+            this->tabBar()->setTabText(iu, u);
+            this->tabBar()->setTabText(ic, c);
+        }
+
+    } // namespace
+} // namespace

@@ -61,4 +61,14 @@ namespace BlackGui
         QPoint p = mainWindowPosition();
         return (p.isNull()) ? introWindowPosition() : p;
     }
+
+    QString CGuiUtility::replaceTabCountValue(const QString &oldName, int count)
+    {
+        const QString v = QString("(").append(QString::number(count)).append(")");
+        if (oldName.isEmpty()) {return v; }
+        int index = oldName.lastIndexOf('(');
+        if (index == 0) { return v; }
+        if (index < 0) { return QString(oldName).append(" ").append(v); }
+        return QString(oldName.left(index)).append(" ").append(v);
+    }
 }

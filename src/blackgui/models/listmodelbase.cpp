@@ -127,27 +127,22 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &container, bool sort)
         {
-            // KWB remove: qDebug() will be removed soon
-            qDebug() << "update" << this->objectName() << "size" << container.size() << "thread:" << QThread::currentThreadId();
-            QTime myTimer;
-
             // Keep sorting out of begin/end reset model
             ContainerType sortedContainer;
+            int oldSize = this->m_container.size();
             bool performSort = sort && container.size() > 1 && this->hasValidSortColumn();
             if (performSort)
             {
-                myTimer.start();
                 sortedContainer = this->sortContainerByColumn(container, this->getSortColumn(), this->m_sortOrder);
-                qDebug() << this->objectName() << "Sort performed ms:" << myTimer.restart() << "thread:" << QThread::currentThreadId();
             }
 
             this->beginResetModel();
             this->m_container = performSort ? sortedContainer : container;
             this->endResetModel();
 
-            // TODO: KWB remove
-            qDebug() << this->objectName() << "Reset performed ms:" << myTimer.restart() << "objects:" << this->m_container.size() << "thread:" << QThread::currentThreadId();
-            return this->m_container.size();
+            int newSize = this->m_container.size();
+            if (oldSize != newSize) {  rowCountChanged(newSize); }
+            return newSize;
         }
 
         /*
@@ -223,6 +218,7 @@ namespace BlackGui
             beginInsertRows(QModelIndex(), this->m_container.size(), this->m_container.size());
             this->m_container.push_back(object);
             endInsertRows();
+            emit rowCountChanged(this->m_container.size());
         }
 
         /*
@@ -234,6 +230,8 @@ namespace BlackGui
             beginInsertRows(QModelIndex(), 0, 0);
             this->m_container.insert(this->m_container.begin(), object);
             endInsertRows();
+            int newSize = this->m_container.size();
+            emit rowCountChanged(newSize);
         }
 
         /*
@@ -242,9 +240,12 @@ namespace BlackGui
         template <typename ObjectType, typename ContainerType>
         void CListModelBase<ObjectType, ContainerType>::remove(const ObjectType &object)
         {
+            int oldSize = this->m_container.size();
             beginRemoveRows(QModelIndex(), 0, 0);
             this->m_container.remove(object);
             endRemoveRows();
+            int newSize = this->m_container.size();
+            if (oldSize != newSize) { emit rowCountChanged(newSize); }
         }
 
         /*
@@ -252,9 +253,11 @@ namespace BlackGui
          */
         template <typename ObjectType, typename ContainerType> void CListModelBase<ObjectType, ContainerType>::clear()
         {
+            int oldSize = this->m_container.size();
             beginResetModel();
             this->m_container.clear();
             endResetModel();
+            if (oldSize > 0) { emit rowCountChanged(0);}
         }
 
         /*

@@ -69,6 +69,9 @@ namespace BlackGui
             //! Asynchronous update finished
             void asyncUpdateFinished();
 
+            //! Number of elements changed
+            void countChanged(int count);
+
         public slots:
             //! Resize to contents, strategy depends on container size
             virtual void resizeToContents();
