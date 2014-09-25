@@ -11,6 +11,7 @@
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/project.h"
 #include "blackmisc/avairportlist.h"
+#include "blackmisc/logmessage.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
@@ -37,7 +38,7 @@ namespace BlackSimPlugin
                                                      .arg(event->szApplicationName)
                                                      .arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor)
                                                      .arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
-                    simulatorFsx->displayStatusMessage(CStatusMessage::getInfoMessage(CProject::systemNameAndVersion()));
+                    CLogMessage().info(CSimulatorFsx::getMessageCategory(), CProject::systemNameAndVersion());
                     break;
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:

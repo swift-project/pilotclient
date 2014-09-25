@@ -4,6 +4,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/variant.h"
+#include "blackmisc/logmessage.h"
 
 using namespace BlackMisc::Network;
 
@@ -156,11 +157,10 @@ namespace BlackMisc
         /*
          * Value
          */
-        BlackMisc::CStatusMessageList CSettingsNetwork::value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag)
+        BlackMisc::CStatusMessage CSettingsNetwork::value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag)
         {
             // TODO: This needs to be refactored to a smarter way to delegate commands
             changedFlag = false;
-            CStatusMessageList msgs;
             if (path == CSettingsNetwork::ValueTrafficServers())
             {
                 const CServer server = value.value<CServer>();
@@ -183,8 +183,7 @@ namespace BlackMisc
                     changedFlag = this->m_trafficNetworkServers.contains(&CServer::getName, server.getName());
                     this->m_trafficNetworkServers.removeIf(&CServer::getName, server.getName());
                 }
-                msgs.push_back(CStatusMessage::getInfoMessage("Set current server", CStatusMessage::TypeSettings));
-                return msgs;
+                return CLogMessage().info(CSettingUtilities::updateMessageCategory(), "Set current server");
             }
             else if (path == CSettingsNetwork::ValueBookingServiceUrl())
             {
@@ -192,12 +191,11 @@ namespace BlackMisc
                 {
                     QString v = value.toString();
                     changedFlag = (v != this->m_bookingServiceUrl);
-                    msgs.push_back(CSettingUtilities::valueChangedMessage(changedFlag, "booking URL"));
                     this->m_bookingServiceUrl = v;
-                    return msgs;
+                    return CLogMessage().info(CSettingUtilities::updateMessageCategory(), "booking URL%1 changed") << (changedFlag ? "" : " not");
                 }
             }
-            return CSettingUtilities::wrongPathMessages(path);
+            return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong path: %1") << path;
         }
     } // namespace
 } // namespace

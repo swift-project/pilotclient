@@ -1,4 +1,5 @@
 #include "setaudio.h"
+#include "logmessage.h"
 using namespace BlackSound;
 
 namespace BlackMisc
@@ -160,11 +161,10 @@ namespace BlackMisc
         /*
          * Value
          */
-        BlackMisc::CStatusMessageList CSettingsAudio::value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag)
+        BlackMisc::CStatusMessage CSettingsAudio::value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag)
         {
             // TODO: This needs to be refactored to a smarter way to delegate commands
             changedFlag = false;
-            CStatusMessageList msgs;
             if (path == CSettingsAudio::ValueNotificationFlag())
             {
                 if (command == CSettingUtilities::CmdSetTrue() || command == CSettingUtilities::CmdSetFalse())
@@ -173,10 +173,10 @@ namespace BlackMisc
                     char value = (command == CSettingUtilities::CmdSetTrue()) ? '1' : '0' ;
                     this->initNotificationFlags();
                     this->m_notificationFlags.replace(index, 1, value);
-                    return msgs;
+                    return {};
                 }
             }
-            return CSettingUtilities::wrongPathMessages(path);
+            return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong path: %1") << path;
         }
     } // namespace
 } // namespace

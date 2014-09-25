@@ -11,6 +11,7 @@
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/project.h"
 #include "blackmisc/avairportlist.h"
+#include "blackmisc/logmessage.h"
 
 #include <QTimer>
 #include <QtConcurrent>
@@ -550,8 +551,7 @@ namespace BlackSimPlugin
             }
 
             m_syncDeferredCounter = 5; // allow some time to sync
-            QString msg = QString("Synchronized time to UTC: %1").arg(myTime.toString());
-            this->sendStatusMessage(CStatusMessage::getInfoMessage(msg, CStatusMessage::TypeSimulator));
+            CLogMessage().info(this, "Synchronized time to UTC: %1") << myTime.toString();
         }
     }
 }

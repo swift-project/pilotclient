@@ -8,6 +8,7 @@
  */
 
 #include "setsimulator.h"
+#include "blackmisc/logmessage.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::Settings;
@@ -149,22 +150,20 @@ namespace BlackSim
         /*
          * Value
          */
-        BlackMisc::CStatusMessageList CSettingsSimulator::value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag)
+        BlackMisc::CStatusMessage CSettingsSimulator::value(const QString &path, const QString &command, const CVariant &value, bool &changedFlag)
         {
             // TODO: This needs to be refactored to a smarter way to delegate commands
             changedFlag = false;
-            CStatusMessageList msgs;
             if (path == CSettingsSimulator::ValueSelectedDriver())
             {
                 if (command == CSettingUtilities::CmdAdd() || command == CSettingUtilities::CmdUpdate())
                 {
                     CSimulatorInfo v = value.value<CSimulatorInfo>();
                     changedFlag = (v != this->m_selectedPlugin);
-                    msgs.push_back(CSettingUtilities::valueChangedMessage(changedFlag, "selected driver"));
                     this->m_selectedPlugin = v;
-                    return msgs;
+                    return CLogMessage().info(CSettingUtilities::updateMessageCategory(), "selected driver%1 changed") << (changedFlag ? "" : " not");
                 }
-                return CSettingUtilities::wrongCommandMessages(command);
+                return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong command: %1") << command;
             }
             else if (path == CSettingsSimulator::ValueSyncTime())
             {
@@ -172,11 +171,10 @@ namespace BlackSim
                 {
                     bool v = value.value<bool>();
                     changedFlag = (v != this->m_timeSync);
-                    msgs.push_back(CSettingUtilities::valueChangedMessage(changedFlag, "time synchronization"));
                     this->m_timeSync = v;
-                    return msgs;
+                    return CLogMessage().info(CSettingUtilities::updateMessageCategory(), "time synchronization%1 changed") << (changedFlag ? "" : " not");
                 }
-                return CSettingUtilities::wrongCommandMessages(command);
+                return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong command: %1") << command;
             }
             else if (path == CSettingsSimulator::ValueSyncTimeOffset())
             {
@@ -184,15 +182,14 @@ namespace BlackSim
                 {
                     CTime v = value.value<CTime>();
                     changedFlag = (v != this->m_timeSyncOffset);
-                    msgs.push_back(CSettingUtilities::valueChangedMessage(changedFlag, "time synchronization offset"));
                     this->m_timeSyncOffset = v;
-                    return msgs;
+                    return CLogMessage().info(CSettingUtilities::updateMessageCategory(), "time synchronization offset%1 changed") << (changedFlag ? "" : " not");
                 }
-                return CSettingUtilities::wrongCommandMessages(command);
+                return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong command: %1") << command;
             }
             else
             {
-                return CSettingUtilities::wrongPathMessages(path);
+                return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong path: %1") << path;
             }
         }
     } // namespace

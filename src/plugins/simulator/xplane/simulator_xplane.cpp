@@ -6,6 +6,7 @@
 #include "simulator_xplane.h"
 #include "xbus_service_proxy.h"
 #include "xbus_traffic_proxy.h"
+#include "blackmisc/logmessage.h"
 #include <QDBusServiceWatcher>
 #include <QTimer>
 
@@ -254,7 +255,7 @@ namespace BlackSimPlugin
         {
             if (enable)
             {
-                emit displayStatusMessage(CStatusMessage::getWarningMessage("X-Plane already provides real time synchronization", CStatusMessage::TypeSimulator));
+                CLogMessage().warning(this, "X-Plane already provides real time synchronization");
             }
         }
 
