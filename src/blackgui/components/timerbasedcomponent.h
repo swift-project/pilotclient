@@ -46,7 +46,7 @@ namespace BlackGui
             void setUpdateIntervalSeconds(int seconds) { this->setUpdateInterval(1000 * seconds); }
 
             //! Stop timer
-            void stopTimer() { this->setUpdateInterval(-1); }
+            void stopTimer() { this->setUpdateInterval(-1); this->m_timerSingleShot->stop(); }
 
             //! Fire the timer straight away
             void fireTimer();

@@ -46,6 +46,7 @@ namespace BlackGui
         void CTimerBasedComponent::fireTimer()
         {
             Q_ASSERT(this->m_timerSingleShot);
+            this->m_timer->start(); // restart other timer
             this->m_timerSingleShot->start(10);
         }
     }
