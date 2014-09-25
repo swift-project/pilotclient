@@ -113,12 +113,6 @@ namespace BlackCore
         void changeSettings(uint typeValue);
 
     private:
-        //! Previous message handler
-        static QtMessageHandler s_oldHandler;
-
-        //! Handle output dispatch, handles all contexts
-        //! \threadsafe
-        static void messageHandlerDispatch(QtMsgType type, const QMessageLogContext &messageContext, const QString &message);
         mutable QReadWriteLock m_lock; //!< thread safety
     };
 }

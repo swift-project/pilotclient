@@ -13,8 +13,6 @@ using namespace BlackMisc::Settings;
 namespace BlackCore
 {
 
-    QtMessageHandler IContextApplication::s_oldHandler = nullptr;
-
     IContextApplication *IContextApplication::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn)
     {
         switch (mode)
@@ -36,12 +34,6 @@ namespace BlackCore
     IContextApplication::IContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
         CContext(mode, runtime)
     {
-        if (IContextApplication::s_contexts.isEmpty())
-        {
-            IContextApplication::s_oldHandler = qInstallMessageHandler(IContextApplication::messageHandlerDispatch);
-        }
-        IContextApplication::s_contexts.append(this);
-
         changeSettings(IContextSettings::SettingsHotKeys);
     }
 
@@ -59,13 +51,6 @@ namespace BlackCore
         default:
             break;
         }
-    }
-
-    /*
-     *  Dispatch message
-     */
-    void IContextApplication::messageHandlerDispatch(QtMsgType type, const QMessageLogContext &messageContext, const QString &message)
-    {
     }
 
 } // namespace
