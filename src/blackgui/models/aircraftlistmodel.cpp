@@ -24,8 +24,8 @@ namespace BlackGui
          */
         CAircraftListModel::CAircraftListModel(QObject *parent) : CListModelBase("ViewAircraftList", parent)
         {
-            this->m_columns.addColumn(CColumn::standardValueObject("callsign", CAircraft::IndexCallsign));
-            this->m_columns.addColumn(CColumn::standardString("pilotrealname", { CAircraft::IndexPilot, CUser::IndexRealName }));
+            this->m_columns.addColumn(CColumn::standardValueObject("call", "callsign", CAircraft::IndexCallsign));
+            this->m_columns.addColumn(CColumn::standardString("realname", "pilot's real name", { CAircraft::IndexPilot, CUser::IndexRealName }));
             this->m_columns.addColumn(CColumn("distance", CAircraft::IndexDistance, new CAirspaceDistanceFormatter()));
             this->m_columns.addColumn(CColumn("frequency", { CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency }, new CComFrequencyFormatter()));
             this->m_columns.addColumn(CColumn::standardString("icao", { CAircraft::IndexIcao, CAircraftIcao::IndexAsString}));
@@ -51,5 +51,5 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ViewAircraftList", "groundspeed");
             (void)QT_TRANSLATE_NOOP("ViewAircraftList", "icao");
         }
-    }
-}
+    } // namespace
+} // namespace

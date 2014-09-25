@@ -60,9 +60,19 @@ namespace BlackGui
             return CColumn(headerName, propertyIndex, new CValueObjectFormatter(alignment));
         }
 
+        CColumn CColumn::standardValueObject(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment)
+        {
+            return CColumn(headerName, toolTip, propertyIndex, new CValueObjectFormatter(alignment));
+        }
+
         CColumn CColumn::standardString(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment)
         {
             return CColumn(headerName, propertyIndex, new CStringFormatter(alignment));
+        }
+
+        CColumn CColumn::standardString(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment)
+        {
+            return CColumn(headerName, toolTip, propertyIndex, new CStringFormatter(alignment));
         }
 
         // --------------- columns ----------------------------------------------

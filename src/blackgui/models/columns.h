@@ -73,8 +73,14 @@ namespace BlackGui
             //! Get a standard value object formatted column
             static CColumn standardValueObject(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
 
+            //! Get a standard value object formatted column
+            static CColumn standardValueObject(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+
             //! Get a standard string object formatted column
             static CColumn standardString(const QString &headerName, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
+
+            //! Get a standard string object formatted column
+            static CColumn standardString(const QString &headerName, const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex, int alignment = CDefaultFormatter::alignDefault());
 
         private:
             QString m_translationContext;
