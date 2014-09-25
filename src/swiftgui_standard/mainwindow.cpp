@@ -17,6 +17,7 @@
 #include "blackcore/context_application.h"
 #include "blackcore/network.h"
 #include "blackmisc/avaircraft.h"
+#include "blackmisc/logmessage.h"
 #include <QMouseEvent>
 
 using namespace BlackCore;
@@ -229,7 +230,6 @@ bool MainWindow::isMainPageSelected(MainWindow::MainPageIndex mainPage) const
  */
 void MainWindow::ps_toggleNetworkConnection()
 {
-    CStatusMessageList msgs;
     if (!this->isContextNetworkAvailableCheck()) return;
     if (!this->getIContextNetwork()->isConnected())
     {
@@ -251,14 +251,15 @@ void MainWindow::ps_toggleNetworkConnection()
         if (this->ui->comp_MainInfoArea->getSettingsComponent()->loginStealth())
         {
             mode = INetwork::LoginStealth;
-            this->ps_displayStatusMessageInGui(CStatusMessage::getInfoMessage("login in stealth mode"));
+            this->ps_displayStatusMessageInGui(CLogMessage().info(this, "login in stealth mode"));
         }
         else if (this->ui->comp_MainInfoArea->getSettingsComponent()->loginAsObserver())
         {
             mode = INetwork::LoginAsObserver;
-            this->ps_displayStatusMessageInGui(CStatusMessage::getInfoMessage("login in observer mode"));
+            this->ps_displayStatusMessageInGui(CLogMessage().info(this, "login in observer mode"));
         }
-        msgs = this->getIContextNetwork()->connectToNetwork(static_cast<uint>(mode));
+        CStatusMessage msg = this->getIContextNetwork()->connectToNetwork(static_cast<uint>(mode));
+        this->ps_displayStatusMessageInGui(msg);
         this->startUpdateTimersWhenConnected();
     }
     else
@@ -266,9 +267,9 @@ void MainWindow::ps_toggleNetworkConnection()
         // disconnect from network
         this->stopUpdateTimersWhenDisconnected(); // stop update timers, to avoid updates during disconnecting (a short time frame)
         if (this->m_contextAudioAvailable) this->getIContextAudio()->leaveAllVoiceRooms();
-        msgs = this->getIContextNetwork()->disconnectFromNetwork();
+        CStatusMessage msg = this->getIContextNetwork()->disconnectFromNetwork();
+        this->ps_displayStatusMessageInGui(msg);
     }
-    if (!msgs.isEmpty()) this->ps_displayStatusMessagesInGui(msgs);
 }
 
 /*
@@ -277,7 +278,7 @@ void MainWindow::ps_toggleNetworkConnection()
 bool MainWindow::isContextNetworkAvailableCheck()
 {
     if (this->m_contextNetworkAvailable) return true;
-    this->ps_displayStatusMessageInGui(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError, "Network context not available, no updates this time"));
+    this->ps_displayStatusMessageInGui(CLogMessage().error(this, "Network context not available, no updates this time"));
     return false;
 }
 
@@ -287,7 +288,7 @@ bool MainWindow::isContextNetworkAvailableCheck()
 bool MainWindow::isContextAudioAvailableCheck()
 {
     if (this->m_contextAudioAvailable) return true;
-    this->ps_displayStatusMessageInGui(CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError, "Voice context not available"));
+    this->ps_displayStatusMessageInGui(CLogMessage().error(this, "Voice context not available"));
     return false;
 }
 
@@ -507,13 +508,13 @@ void MainWindow::ps_toogleWindowStayOnTop()
     {
         flags ^= Qt::WindowStaysOnTopHint;
         flags |= Qt::WindowStaysOnBottomHint;
-        this->ps_displayStatusMessageInGui(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "Window on bottom"));
+        this->ps_displayStatusMessageInGui(CLogMessage().info(this, "Window on bottom"));
     }
     else
     {
         flags ^= Qt::WindowStaysOnBottomHint;
         flags |= Qt::WindowStaysOnTopHint;
-        this->ps_displayStatusMessageInGui(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "Window on top"));
+        this->ps_displayStatusMessageInGui(CLogMessage().info(this, "Window on top"));
     }
     this->setWindowFlags(flags);
     this->show();

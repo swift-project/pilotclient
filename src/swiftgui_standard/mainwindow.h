@@ -60,6 +60,9 @@ public:
     //! Graceful shutdown
     void gracefulShutdown();
 
+    //! Log message category
+    static QString getMessageCategory() { return "swift.gui.component.mainwindow"; }
+
 protected:
     //! Close event, e.g. when window is closed
     void closeEvent(QCloseEvent *event);

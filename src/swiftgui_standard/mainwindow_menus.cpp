@@ -3,6 +3,7 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avaltitude.h"
+#include "blackmisc/logmessage.h"
 #include <QPoint>
 #include <QMenu>
 #include <QDesktopServices>
@@ -20,7 +21,6 @@ using namespace BlackMisc::Aviation;
 void MainWindow::ps_onMenuClicked()
 {
     QObject *sender = QObject::sender();
-    CStatusMessageList msgs;
 
     if (sender == this->ui->menu_TestLocationsEDRY)
     {
@@ -41,7 +41,7 @@ void MainWindow::ps_onMenuClicked()
     else if (sender == this->ui->menu_ReloadSettings)
     {
         this->ui->comp_MainInfoArea->getSettingsComponent()->reloadSettings();
-        msgs.insert(CStatusMessage::getInfoMessage("Settings reloaded"));
+        this->ps_displayStatusMessageInGui(CLogMessage().info(this, "Settings reloaded"));
     }
     else if (sender == this->ui->menu_FileReloadStyleSheets)
     {
@@ -54,7 +54,7 @@ void MainWindow::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_FileClose)
     {
-        msgs.insert(CStatusMessage::getInfoMessage("Closing"));
+        this->ps_displayStatusMessageInGui(CLogMessage().info(this, "Closing"));
         this->close();
     }
     else if (sender == this->ui->menu_FileSettingsDirectory)
@@ -65,7 +65,6 @@ void MainWindow::ps_onMenuClicked()
     else if (sender == this->ui->menu_FileResetSettings)
     {
         Q_ASSERT(this->getIContextSettings());
-        msgs.insert(this->getIContextSettings()->reset(true));
+        this->getIContextSettings()->reset(true);
     }
-    if (!msgs.isEmpty()) this->ps_displayStatusMessagesInGui(msgs);
 }

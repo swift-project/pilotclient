@@ -21,6 +21,7 @@
 #include "blackmisc/avselcal.h"
 #include "blackmisc/project.h"
 #include "blackmisc/hotkeyfunction.h"
+#include "blackmisc/logmessage.h"
 #include <QSortFilterProxyModel>
 #include <QSizeGrip>
 #include <QHBoxLayout>
@@ -233,14 +234,13 @@ void MainWindow::initialDataReads()
     this->m_coreAvailable = (this->getIContextNetwork()->usingLocalObjects() || (this->getIContextApplication()->ping(t) == t));
     if (!this->m_coreAvailable)
     {
-        this->ps_displayStatusMessageInGui(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityError,
-                                           "no initial data read as network context is not available"));
+        this->ps_displayStatusMessageInGui(CLogMessage().error(this, "no initial data read as network context is not available"));
         return;
     }
 
     this->ui->comp_MainInfoArea->getSettingsComponent()->reloadSettings(); // init read
     this->ps_reloadOwnAircraft(); // init read, independent of traffic network
-    this->ps_displayStatusMessageInGui(CStatusMessage(CStatusMessage::TypeGui, CStatusMessage::SeverityInfo, "initial data read"));
+    this->ps_displayStatusMessageInGui(CLogMessage().info(this, "initial data read"));
 }
 
 /*
