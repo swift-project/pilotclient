@@ -323,13 +323,6 @@ void MainWindow::ps_displayStatusMessagesInGui(const CStatusMessageList &message
     }
 }
 
-void MainWindow::displayRedirectedOutput(const CStatusMessage &statusMessage, qint64 contextId)
-{
-    if (!this->getIContextApplication()) return;
-    if (this->getIContextApplication()->getUniqueId() == contextId) return; //self triggered
-    this->ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToConsole(statusMessage);
-}
-
 void MainWindow::ps_onChangedSetttings(uint typeValue)
 {
     IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);

@@ -187,9 +187,6 @@ private slots:
     //! Display status messages
     void ps_displayStatusMessagesInGui(const BlackMisc::CStatusMessageList &messages);
 
-    //! Redirected output
-    void displayRedirectedOutput(const BlackMisc::CStatusMessage &sendStatusMessage, qint64 contextId);
-
     //! Settings have been changed
     void ps_onChangedSetttings(uint typeValue);
 

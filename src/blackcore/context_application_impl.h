@@ -53,8 +53,6 @@ namespace BlackCore
         virtual void processHotkeyFuncEvent(const BlackMisc::Event::CEventHotkeyFunction &event) override;
 
     protected:
-        static const auto c_logContext = CRuntime::LogForApplication; //!< identifier
-
         //! Constructor
         CContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 

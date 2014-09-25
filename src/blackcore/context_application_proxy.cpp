@@ -40,9 +40,6 @@ namespace BlackCore
                                "statusMessages", this, SIGNAL(statusMessages(BlackMisc::CStatusMessageList)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                               "redirectedOutput", this, SIGNAL(redirectedOutput(BlackMisc::CStatusMessage, qint64)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "componentChanged", this, SIGNAL(componentChanged(uint, uint)));
         Q_ASSERT(s);
 

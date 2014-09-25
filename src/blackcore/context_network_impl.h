@@ -148,8 +148,6 @@ namespace BlackCore
         }
 
     private:
-        static const auto c_logContext = CRuntime::LogForNetwork;
-
         CAirspaceMonitor    *m_airspace;
         BlackCore::INetwork *m_network;
         INetwork::ConnectionStatus m_currentStatus; //!< used to detect pending connections

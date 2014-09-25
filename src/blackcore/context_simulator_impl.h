@@ -128,8 +128,6 @@ namespace BlackCore
         void ps_textMessagesReceived(const BlackMisc::Network::CTextMessageList &textMessages);
 
     private:
-        static const auto c_logContext = CRuntime::LogForSimulator;
-
         //! \brief find and catalog all simulator plugins
         void findSimulatorPlugins();
 
