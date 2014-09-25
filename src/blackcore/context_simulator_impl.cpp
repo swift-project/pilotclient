@@ -10,6 +10,7 @@
 #include "context_network_impl.h"
 #include "context_runtime.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/loghandler.h"
 #include <QPluginLoader>
 #include <QLibrary>
 
@@ -165,6 +166,8 @@ namespace BlackCore
 
         connect(m_simulator, &ISimulator::statusChanged, this, &CContextSimulator::ps_setConnectionStatus);
         connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
+        connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_simulator, &ISimulator::displayStatusMessage);
+        connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_simulator, &ISimulator::displayStatusMessage);
 
         CAirspaceMonitor *airspace = this->getRuntime()->getCContextNetwork()->getAirspaceMonitor();
         connect(airspace, &CAirspaceMonitor::addedAircraft, this, &CContextSimulator::ps_addRemoteAircraft);
