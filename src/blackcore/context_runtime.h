@@ -52,14 +52,6 @@ namespace BlackCore
         //! Clean up (will be connected to signal QCoreApplication::aboutToQuit)
         void gracefulShutdown();
 
-        //! \copydoc IContextApplication::sendStatusMessage
-        //! \remarks fail safe
-        void sendStatusMessage(const BlackMisc::CStatusMessage &message);
-
-        //! \copydoc IContextApplication::sendStatusMessage
-        //! \remarks fail safe
-        void sendStatusMessages(const BlackMisc::CStatusMessageList &messages);
-
         // ------- Context as interface, normal way to access a context
 
         //! Context for network

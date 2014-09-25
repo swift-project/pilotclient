@@ -27,12 +27,6 @@ namespace BlackCore
         //! \copydoc IContextApplication::ping()
         virtual qint64 ping(qint64 token) const override;
 
-        //! Status message
-        virtual void sendStatusMessage(const BlackMisc::CStatusMessage &message) override;
-
-        //! Send status messages
-        virtual void sendStatusMessages(const BlackMisc::CStatusMessageList &messages) override;
-
         //! \copydoc IContextApplication::notifyAboutComponentChange
         virtual void notifyAboutComponentChange(uint component, uint action) override;
 

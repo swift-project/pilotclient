@@ -31,22 +31,6 @@ namespace BlackCore
     }
 
     /*
-     * Status message
-     */
-    void CContextApplication::sendStatusMessage(const CStatusMessage &message)
-    {
-        emit this->statusMessage(message);
-    }
-
-    /*
-     * Status messages
-     */
-    void CContextApplication::sendStatusMessages(const CStatusMessageList &messages)
-    {
-        emit this->statusMessages(messages);
-    }
-
-    /*
      * Component has changed
      */
     void CContextApplication::notifyAboutComponentChange(uint component, uint action)

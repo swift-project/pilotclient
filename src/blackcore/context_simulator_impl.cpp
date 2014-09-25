@@ -165,16 +165,6 @@ namespace BlackCore
 
         connect(m_simulator, &ISimulator::statusChanged, this, &CContextSimulator::ps_setConnectionStatus);
         connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
-        if (this->getIContextApplication() && this->getIContextApplication()->usingLocalObjects())
-        {
-            // relay status messages
-            connect(m_simulator, &ISimulator::sendStatusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
-            connect(m_simulator, &ISimulator::sendStatusMessages, this->getIContextApplication(), &IContextApplication::sendStatusMessages);
-        }
-        else
-        {
-            qFatal("No application context or application context not local");
-        }
 
         CAirspaceMonitor *airspace = this->getRuntime()->getCContextNetwork()->getAirspaceMonitor();
         connect(airspace, &CAirspaceMonitor::addedAircraft, this, &CContextSimulator::ps_addRemoteAircraft);

@@ -118,12 +118,6 @@ namespace BlackCore
 
         //! Simulator stopped;
         void simulatorStopped();
-
-        //! Send a message to be displayed (from simulator to contexts)
-        void sendStatusMessage(const BlackMisc::CStatusMessage &message);
-
-        //! Send messages to be displayed (from simulator to contexts)
-        void sendStatusMessages(const BlackMisc::CStatusMessageList &messages);
     };
 
     //! Factory pattern class to create instances of ISimulator

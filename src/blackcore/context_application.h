@@ -83,14 +83,6 @@ namespace BlackCore
         virtual ~IContextApplication() {}
 
     signals:
-        //! \brief Status message
-        //! \remarks not to be called directly, use IContextApplication::sendStatusMessage
-        void statusMessage(const BlackMisc::CStatusMessage &message);
-
-        //! Send status messages
-        //! \remarks not to be called directly, use IContextApplication::sendStatusMessage(s)
-        void statusMessages(const BlackMisc::CStatusMessageList &messages);
-
         //! A component changes
         void componentChanged(uint component, uint action);
 
@@ -98,12 +90,6 @@ namespace BlackCore
 
         //! \brief Ping a token, used to check if application is alive
         virtual qint64 ping(qint64 token) const = 0;
-
-        //! Status message
-        virtual void sendStatusMessage(const BlackMisc::CStatusMessage &message) = 0;
-
-        //! Send status messages
-        virtual void sendStatusMessages(const BlackMisc::CStatusMessageList &messages) = 0;
 
         //! A component has changed its state
         virtual void notifyAboutComponentChange(uint component, uint action) = 0;

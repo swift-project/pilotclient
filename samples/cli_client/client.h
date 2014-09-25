@@ -109,7 +109,6 @@ public slots: //to receive from INetwork
     void pongReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CTime &elapsedTime);
     void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages);
     void customPacketReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &packetId, const QStringList &data);
-    void statusMessage(const BlackMisc::CStatusMessage &message);
 
 private:
     QMap<QString, std::function<void(QTextStream &)>> m_commands;

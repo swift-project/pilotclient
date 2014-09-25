@@ -48,7 +48,6 @@ namespace BlackCore
         connect(this->m_voice, &CVoiceVatlib::micTestFinished, this, &CContextAudio::audioTestCompleted);
         connect(this->m_voice, &CVoiceVatlib::squelchTestFinished, this, &CContextAudio::audioTestCompleted);
         //connect(this->m_voice, &CVoiceVatlib::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
-        if (this->getIContextApplication()) this->connect(this->m_voice, &IVoice::statusMessage, this->getIContextApplication(), &IContextApplication::sendStatusMessage);
 
         m_channelCom1 = m_voice->getVoiceChannel(0);
         m_channelCom1->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());

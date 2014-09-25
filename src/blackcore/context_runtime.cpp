@@ -159,18 +159,6 @@ namespace BlackCore
                 Q_ASSERT(c);
             }
 
-            // only if application runs locally
-            if (this->m_contextApplication && this->m_contextApplication->usingLocalObjects())
-            {
-                c = connect(this->m_contextApplication, &IContextApplication::statusMessage,
-                            this->getCContextSimulator(), &CContextSimulator::ps_statusMessageReceived);
-                Q_ASSERT(c);
-
-                c = connect(this->m_contextApplication, &IContextApplication::statusMessages,
-                            this->getCContextSimulator(), &CContextSimulator::ps_statusMessagesReceived);
-                Q_ASSERT(c);
-            }
-
             // connect local simulator and settings and load plugin
             if (this->m_contextSettings)
             {
@@ -256,18 +244,6 @@ namespace BlackCore
             this->getIContextApplication()->deleteLater();
             this->m_contextApplication = nullptr;
         }
-    }
-
-    void CRuntime::sendStatusMessage(const CStatusMessage &message)
-    {
-        if (!this->getIContextApplication()) return;
-        this->getIContextApplication()->sendStatusMessage(message);
-    }
-
-    void CRuntime::sendStatusMessages(const CStatusMessageList &messages)
-    {
-        if (!this->getIContextApplication()) return;
-        this->getIContextApplication()->sendStatusMessages(messages);
     }
 
     void CRuntime::initDBusConnection(const QString &address)

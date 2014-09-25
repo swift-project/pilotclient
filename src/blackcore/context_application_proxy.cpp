@@ -34,12 +34,6 @@ namespace BlackCore
     {
         // signals originating from impl side
         bool s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                                    "statusMessage", this, SIGNAL(statusMessage(BlackMisc::CStatusMessage)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
-                               "statusMessages", this, SIGNAL(statusMessages(BlackMisc::CStatusMessageList)));
-        Q_ASSERT(s);
-        s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "componentChanged", this, SIGNAL(componentChanged(uint, uint)));
         Q_ASSERT(s);
 
@@ -52,22 +46,6 @@ namespace BlackCore
     {
         qint64 t = this->m_dBusInterface->callDBusRet<qint64>(QLatin1Literal("ping"), token);
         return t;
-    }
-
-    /*
-     * Status messages
-     */
-    void CContextApplicationProxy::sendStatusMessage(const BlackMisc::CStatusMessage &message)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("sendStatusMessage"), message);
-    }
-
-    /*
-     * Status messages
-     */
-    void CContextApplicationProxy::sendStatusMessages(const BlackMisc::CStatusMessageList &messages)
-    {
-        this->m_dBusInterface->callDBus(QLatin1Literal("sendStatusMessages"), messages);
     }
 
     /*

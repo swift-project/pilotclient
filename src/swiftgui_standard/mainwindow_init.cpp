@@ -96,8 +96,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // signal / slots contexts / timers
     bool connect;
-    this->connect(this->getIContextApplication(), &IContextApplication::statusMessage, this, &MainWindow::ps_displayStatusMessageInGui);
-    this->connect(this->getIContextApplication(), &IContextApplication::statusMessages, this, &MainWindow::ps_displayStatusMessagesInGui);
     this->connect(this->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &MainWindow::ps_onConnectionTerminated);
     this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &MainWindow::ps_onConnectionStatusChanged);
     connect = this->connect(this->getIContextNetwork(), SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this->ui->comp_MainInfoArea->getTextMessageComponent(), SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));

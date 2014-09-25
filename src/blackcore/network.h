@@ -17,7 +17,6 @@
 #include "blackmisc/pqtime.h"
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwtextmessagelist.h"
-#include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avinformationmessage.h"
 #include "blackmisc/avflightplan.h"
 #include <QObject>
@@ -475,11 +474,6 @@ namespace BlackCore
         //! \name Network signals
         //! @{
         ////////////////////////////////////////////////////////////////
-
-        /*!
-         * We sent a message about the status of the network connection, for the attention of the user.
-         */
-        void statusMessage(const BlackMisc::CStatusMessage &message);
 
         /*!
          * We were kicked from the network. (A connectionStatusChanged signal will also be sent.)
