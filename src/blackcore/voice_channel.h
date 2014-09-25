@@ -27,6 +27,8 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+        //! Log message category
+        static QString getMessageCategory() { return "swift.voice.channel"; }
 
         //! Com status
         enum ConnectionStatus

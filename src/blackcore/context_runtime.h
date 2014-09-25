@@ -34,6 +34,8 @@ namespace BlackCore
         Q_OBJECT
 
     public:
+        //! Log message category
+        static QString getMessageCategory() { return "swift.runtime"; }
         //! Tags to identify the context when logging a slot
         enum LogContext
         {

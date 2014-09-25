@@ -19,6 +19,7 @@
 
 #include "blackmisc/networkutils.h"
 #include "blackmisc/avatcstationlist.h"
+#include "blackmisc/logmessage.h"
 
 #include <QtXml/QDomElement>
 #include <QNetworkReply>
@@ -104,32 +105,31 @@ namespace BlackCore
     /*
      * Connect to network
      */
-    CStatusMessageList CContextNetwork::connectToNetwork(uint loginMode)
+    CStatusMessage CContextNetwork::connectToNetwork(uint loginMode)
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
-        CStatusMessageList msgs;
-        QString msg;
+        CLogMessage().debug(this) << Q_FUNC_INFO;
         CServer currentServer = this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer();
 
+        QString msg;
         if (!currentServer.getUser().isValid())
         {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Invalid user credentials"));
+            return CLogMessage().error(this, "Invalid user credentials");
         }
         else if (!this->ownAircraft().getIcaoInfo().hasAircraftAndAirlineDesignator())
         {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Invalid ICAO data for own aircraft"));
+            return CLogMessage().error(this, "Invalid ICAO data for own aircraft");
         }
         else if (!CNetworkUtils::canConnect(currentServer, msg, 2000))
         {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityError, msg));
+            return CLogMessage().error(this, msg);
         }
         else if (this->m_network->isConnected())
         {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Already connected"));
+            return CLogMessage().error(this, "Already connected");
         }
         else if (this->isPendingConnection())
         {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Pending connection, please wait"));
+            return CLogMessage().error(this, "Pending connection, please wait");
         }
         else
         {
@@ -143,36 +143,31 @@ namespace BlackCore
             this->m_network->presetIcaoCodes(ownAircraft.getIcaoInfo());
             this->m_network->setOwnAircraft(ownAircraft);
             this->m_network->initiateConnection();
-            msg = "Connection pending ";
-            msg.append(" ").append(currentServer.getAddress()).append(" ").append(QString::number(currentServer.getPort()));
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, msg));
+            return CLogMessage().info(this, "Connection pending %1 %2") << currentServer.getAddress() << currentServer.getPort();
         }
-        return msgs;
     }
 
     /*
      * Disconnect from network
      */
-    CStatusMessageList CContextNetwork::disconnectFromNetwork()
+    CStatusMessage CContextNetwork::disconnectFromNetwork()
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
-        CStatusMessageList msgs;
+        CLogMessage().debug(this) << Q_FUNC_INFO;
         if (this->m_network->isConnected())
         {
             this->m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
             this->m_network->terminateConnection();
             this->m_airspace->clear();
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, "Connection terminating"));
+            return CLogMessage().info(this, "Connection terminating");
         }
         else if (this->isPendingConnection())
         {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Pending connection, please wait"));
+            return CLogMessage().warning(this, "Pending connection, please wait");
         }
         else
         {
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityWarning, "Already disconnected"));
+            return CLogMessage().warning(this, "Already disconnected");
         }
-        return msgs;
     }
 
     /*
@@ -180,7 +175,7 @@ namespace BlackCore
      */
     bool CContextNetwork::isConnected() const
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+        CLogMessage().debug(this) << Q_FUNC_INFO;
         return this->m_network->isConnected();
     }
 
@@ -198,7 +193,7 @@ namespace BlackCore
      */
     void CContextNetwork::sendTextMessages(const CTextMessageList &textMessages)
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, textMessages.toQString());
+        CLogMessage().debug(this) << Q_FUNC_INFO << textMessages;
         this->m_network->sendTextMessages(textMessages);
     }
 
@@ -207,14 +202,14 @@ namespace BlackCore
      */
     void CContextNetwork::sendFlightPlan(const CFlightPlan &flightPlan)
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, flightPlan.toQString());
+        CLogMessage().debug(this) << Q_FUNC_INFO << flightPlan;
         this->m_network->sendFlightPlan(flightPlan);
         this->m_network->sendFlightPlanQuery(this->ownAircraft().getCallsign());
     }
 
     CFlightPlan CContextNetwork::loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+        CLogMessage().debug(this) << Q_FUNC_INFO;
         return this->m_airspace->loadFlightPlanFromNetwork(callsign);
     }
 
@@ -269,8 +264,8 @@ namespace BlackCore
      */
     void CContextNetwork::ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { QString::number(from), QString::number(to) });
-        INetwork::ConnectionStatus fromOld = this->m_currentStatus;
+        CLogMessage().debug(this) << Q_FUNC_INFO << from << to;
+        auto fromOld = this->m_currentStatus;
         this->m_currentStatus = to;
 
         if (fromOld == INetwork::Disconnecting)
@@ -280,26 +275,20 @@ namespace BlackCore
             from = INetwork::Disconnecting;
         }
 
-        CStatusMessageList msgs;
         // send 1st position
         if (to == INetwork::Connected)
         {
-            QString m("Connected, own aircraft ");
-            m.append(this->ownAircraft().toQString(true));
-            msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork, CStatusMessage::SeverityInfo, m));
+            CLogMessage().info(this, "Connected, own aircraft %1") << this->ownAircraft().toQString();
         }
 
         // send as message
-        QString m("Connection status changed from %1 to %2");
-        m = m.arg(INetwork::connectionStatusToString(from), INetwork::connectionStatusToString(to));
-        if (!message.isEmpty()) m.append(" ").append(message);
-        msgs.push_back(CStatusMessage(CStatusMessage::TypeTrafficNetwork,
-                                      to == INetwork::DisconnectedError ? CStatusMessage::SeverityError : CStatusMessage::SeverityInfo, m));
-        // FIXME (MS) conditional increases the number of scenarios which must be considered and continuously tested
-        // This is more a guard than a real conditional, e.g. when system shuts down
-        if (this->getIContextApplication())
+        if (to == INetwork::DisconnectedError)
         {
-            this->getIContextApplication()->sendStatusMessages(msgs);
+            CLogMessage().error(this, "Connection status changed from %1 to %2 %3") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to) << message;
+        }
+        else
+        {
+            CLogMessage().info(this, "Connection status changed from %1 to %2 %3") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to) << message;
         }
 
         // send as own signal
@@ -311,11 +300,8 @@ namespace BlackCore
      */
     void CContextNetwork::ps_dataFileRead()
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
-        if (this->getIContextApplication())
-        {
-            this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage("Read VATSIM data file", CStatusMessage::TypeTrafficNetwork));
-        }
+        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage().info(this, "Read VATSIM data file");
     }
 
     /*
@@ -323,7 +309,7 @@ namespace BlackCore
      */
     void CContextNetwork::ps_fsdTextMessageReceived(const CTextMessageList &messages)
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, messages.toQString());
+        CLogMessage().debug(this) << Q_FUNC_INFO << messages;
         this->textMessagesReceived(messages); // relay
     }
 
@@ -355,8 +341,7 @@ namespace BlackCore
      */
     void CContextNetwork::ps_receivedBookings(const CAtcStationList &)
     {
-        // TODO (MS) no test for if (this->getIContextApplication()) here?
-        this->getIContextApplication()->sendStatusMessage(CStatusMessage::getInfoMessage("Read bookings from network", CStatusMessage::TypeTrafficNetwork));
+        CLogMessage().info(this, "Read bookings from network");
     }
 
     /*
@@ -395,7 +380,7 @@ namespace BlackCore
      */
     BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, airportIcaoCode.toQString());
+        CLogMessage().debug(this) << Q_FUNC_INFO << airportIcaoCode;
         return m_airspace->getMetar(airportIcaoCode);
     }
 

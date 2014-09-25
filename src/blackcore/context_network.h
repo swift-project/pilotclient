@@ -43,6 +43,9 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTNETWORK_INTERFACENAME)
 
     public:
+        //! Log message category
+        static QString getMessageCategory() { return "swift.context.network"; }
+
         //! DBus interface name
         static const QString &InterfaceName()
         {
@@ -144,13 +147,13 @@ namespace BlackCore
          * \return messages gererated during connecting
          * \see INetwork::LoginMode
          */
-        virtual BlackMisc::CStatusMessageList connectToNetwork(uint loginMode) = 0;
+        virtual BlackMisc::CStatusMessage connectToNetwork(uint loginMode) = 0;
 
         /*!
          * Disconnect from network
          * \return messages generated during disconnecting
          */
-        virtual BlackMisc::CStatusMessageList disconnectFromNetwork() = 0;
+        virtual BlackMisc::CStatusMessage disconnectFromNetwork() = 0;
 
         //! Network connected?
         virtual bool isConnected() const = 0;

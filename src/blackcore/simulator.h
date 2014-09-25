@@ -25,6 +25,8 @@ namespace BlackCore
         Q_ENUMS(Status)
 
     public:
+        //! Log message category
+        static QString getMessageCategory() { return "swift.simulator"; }
 
         //! ISimulator connection
         enum Status

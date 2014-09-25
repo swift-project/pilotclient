@@ -39,6 +39,9 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTSIMULATOR_INTERFACENAME)
 
     public:
+        //! Log message category
+        static QString getMessageCategory() { return "swift.context.simulator"; }
+
         //! Service name
         static const QString &InterfaceName()
         {

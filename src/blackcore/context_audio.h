@@ -43,6 +43,9 @@ namespace BlackCore
         IContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
 
     public:
+        //! Log message category
+        static QString getMessageCategory() { return "swift.context.audio"; }
+
         //! \brief Interface name
         static const QString &InterfaceName()
         {

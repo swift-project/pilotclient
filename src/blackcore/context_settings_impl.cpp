@@ -8,6 +8,7 @@
 
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/logmessage.h"
 #include <QFile>
 #include <QJsonDocument>
 
@@ -32,8 +33,7 @@ namespace BlackCore
     {
         if (!CSettingUtilities::initSettingsDirectory())
         {
-            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError,
-                                  QString("Cannot init directory: %1").arg(this->getSettingsDirectory()));
+            return CLogMessage().error(this, "Cannot init directory: %1") << this->getSettingsDirectory();
         }
         bool ok = false;
         QFile jsonFile(this->getSettingsFileName());
@@ -94,13 +94,11 @@ namespace BlackCore
 
         if (ok)
         {
-            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityInfo,
-                                  QString("Read settings: %1").arg(this->getSettingsFileName()));
+            return CLogMessage().info(this, "Read settings: %1") << this->getSettingsFileName();
         }
         else
         {
-            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError,
-                                  QString("Problem reading settings: %1").arg(this->getSettingsFileName()));
+            return CLogMessage().error(this, "Problem reading settings: %1") << this->getSettingsFileName();
         }
     }
 
@@ -111,8 +109,7 @@ namespace BlackCore
     {
         if (!CSettingUtilities::initSettingsDirectory())
         {
-            return CStatusMessage(CStatusMessage::TypeCore, CStatusMessage::SeverityError,
-                                  QString("Cannot init directory: %1").arg(this->getSettingsDirectory()));
+            return CLogMessage().error(this, "Cannot init directory: %1") << this->getSettingsDirectory();
         }
         QFile jsonFile(this->getSettingsFileName());
         bool ok = false;
@@ -124,13 +121,11 @@ namespace BlackCore
         }
         if (ok)
         {
-            return CStatusMessage(CStatusMessage::TypeSettings, CStatusMessage::SeverityInfo,
-                                  QString("Written settings: %1").arg(this->getSettingsFileName()));
+            return CLogMessage().info(this, "Written settings: %1") << this->getSettingsFileName();
         }
         else
         {
-            return CStatusMessage(CStatusMessage::TypeSettings, CStatusMessage::SeverityError,
-                                  QString("Problem writing settings: %1").arg(this->getSettingsFileName()));
+            return CLogMessage().error(this, "Problem writing settings: %1") << this->getSettingsFileName();
         }
     }
 
@@ -147,9 +142,7 @@ namespace BlackCore
         if (write)
             return this->write();
         else
-            return CStatusMessage(CStatusMessage::TypeSettings, CStatusMessage::SeverityInfo,
-                                  QString("Reset settings data, not written"));
-
+            return CLogMessage().info(this, "Reset settings data, not written");
     }
 
     QString CContextSettings::getSettingsAsJsonString() const
@@ -244,7 +237,7 @@ namespace BlackCore
         bool changed = false;
         if (path.startsWith(IContextSettings::PathNetworkSettings()))
         {
-            msgs = this->m_settingsNetwork.value(nextLevelPath, command, value, changed);
+            msgs.push_back(this->m_settingsNetwork.value(nextLevelPath, command, value, changed));
             if (changed)
             {
                 msgs.push_back(this->write());
@@ -253,7 +246,7 @@ namespace BlackCore
         }
         else if (path.startsWith(IContextSettings::PathAudioSettings()))
         {
-            msgs = this->m_settingsAudio.value(nextLevelPath, command, value, changed);
+            msgs.push_back(this->m_settingsAudio.value(nextLevelPath, command, value, changed));
             if (changed)
             {
                 msgs.push_back(this->write());
@@ -262,7 +255,7 @@ namespace BlackCore
         }
         else if (path.startsWith(IContextSettings::PathSimulatorSettings()))
         {
-            msgs = this->m_settingsSimulator.value(nextLevelPath, command, value, changed);
+            msgs.push_back(this->m_settingsSimulator.value(nextLevelPath, command, value, changed));
             if (changed)
             {
                 msgs.push_back(this->write());
@@ -271,8 +264,7 @@ namespace BlackCore
         }
         else
         {
-            // wrong path
-            msgs  = CSettingUtilities::wrongPathMessages(path);
+            msgs.push_back(CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong path: %1") << path);
         }
         return msgs;
     }

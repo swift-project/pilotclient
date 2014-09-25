@@ -9,6 +9,7 @@
 #include "context_application.h"
 #include "context_network_impl.h"
 #include "context_runtime.h"
+#include "blackmisc/logmessage.h"
 #include <QPluginLoader>
 #include <QLibrary>
 
@@ -52,42 +53,42 @@ namespace BlackCore
 
     bool CContextSimulator::isConnected() const
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+        CLogMessage().debug(this) << Q_FUNC_INFO;
         if (!m_simulator) return false;
         return m_simulator->isConnected();
     }
 
     bool CContextSimulator::canConnect()
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+        CLogMessage().debug(this) << Q_FUNC_INFO;
         if (!m_simulator) return false;
         return m_simulator->canConnect();
     }
 
     bool CContextSimulator::connectTo()
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+        CLogMessage().debug(this) << Q_FUNC_INFO;
         if (!m_simulator) return false;
         return m_simulator->connectTo();
     }
 
     void CContextSimulator::asyncConnectTo()
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+        CLogMessage().debug(this) << Q_FUNC_INFO;
         if (!m_simulator || m_canConnectResult.isRunning()) return; // already checking
         m_simulator->asyncConnectTo();
     }
 
     bool CContextSimulator::disconnectFrom()
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+        CLogMessage().debug(this) << Q_FUNC_INFO;
         if (!m_simulator) return false;
         return m_simulator->disconnectFrom();
     }
 
     BlackSim::CSimulatorInfo CContextSimulator::getSimulatorInfo() const
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+        CLogMessage().debug(this) << Q_FUNC_INFO;
         if (!m_simulator) return BlackSim::CSimulatorInfo::UnspecifiedSim();
         return m_simulator->getSimulatorInfo();
     }
@@ -137,7 +138,7 @@ namespace BlackCore
         // warning if we do not have any plugins
         if (m_simulatorFactories.isEmpty())
         {
-            this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage("No simulator plugins", CStatusMessage::TypeSimulator));
+            CLogMessage().error(this, "No simulator plugins");
             return false;
         }
 
@@ -149,9 +150,7 @@ namespace BlackCore
         // no plugin found
         if (iterator == m_simulatorFactories.end())
         {
-            QString m = QString("Plugin not found: '%1'").arg(simulatorInfo.toQString(true));
-            this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
-            qCritical() << m;
+            CLogMessage().error(this, "Plugin not found: '%1'") << simulatorInfo.toQString(true);
             return false;
         }
 
@@ -193,8 +192,7 @@ namespace BlackCore
         asyncConnectTo();
 
         // info about what is going on
-        QString m = QString("Simulator plugin loaded: '%1'").arg(this->m_simulator->getSimulatorInfo().toQString(true));
-        this->getRuntime()->sendStatusMessage(CStatusMessage::getInfoMessage(m, CStatusMessage::TypeSimulator));
+        CLogMessage().info(this, "Simulator plugin loaded: '%1'") << this->m_simulator->getSimulatorInfo().toQString(true);
         return true;
     }
 
@@ -349,13 +347,11 @@ namespace BlackCore
         {
             if (this->loadSimulatorPlugin(plugin))
             {
-                QString m = QString("Plugin loaded: '%1'").arg(plugin.toQString(true));
-                this->getRuntime()->sendStatusMessage(CStatusMessage::getInfoMessage(m, CStatusMessage::TypeSimulator));
+                CLogMessage().info(this, "Plugin loaded: '%1'") << plugin.toQString(true);
             }
             else
             {
-                QString m = QString("Cannot load driver: '%1'").arg(plugin.toQString(true));
-                this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
+                CLogMessage().error(this, "Cannot load driver: '%1'") << plugin.toQString(true);
             }
         }
 
@@ -377,9 +373,7 @@ namespace BlackCore
         m_pluginsDir = QDir(path);
         if (!m_pluginsDir.exists())
         {
-            QString m = QString("No plugin directory: %1").arg(m_pluginsDir.currentPath());
-            qWarning() <<  m;
-            this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
+            CLogMessage().error(this, "No plugin directory: %1") << m_pluginsDir.currentPath();
             return;
         }
 
@@ -403,9 +397,7 @@ namespace BlackCore
             }
             else
             {
-                QString m = loader.errorString();
-                this->getRuntime()->sendStatusMessage(CStatusMessage::getErrorMessage(m, CStatusMessage::TypeSimulator));
-                qDebug() << m;
+                CLogMessage().error(this, loader.errorString());
                 qDebug() << "Also check if required dll/libs of plugin exists";
             }
         }

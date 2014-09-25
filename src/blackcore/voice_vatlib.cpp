@@ -5,6 +5,7 @@
 
 #include "voice_vatlib.h"
 #include "voice_channel_vatlib.h"
+#include "blackmisc/logmessage.h"
 #include <QDebug>
 #include <QTimer>
 
@@ -429,27 +430,22 @@ namespace BlackCore
         catch (const NetworkNotConnectedException &e)
         {
             // this could be caused by a race condition during normal operation, so not an error
-            msg.append("NetworkNotConnectedException").append(" ").append(e.what());
-            emit this->statusMessage(CStatusMessage::getErrorMessage(msg, CStatusMessage::TypeAudio));
-            qDebug() << "NetworkNotConnectedException caught in " << caller << "\n" << e.what();
+            CLogMessage().debug(this) << "NetworkNotConnectedException" << e.what() << "in" << caller;
         }
         catch (const VatlibException &e)
         {
-            msg.append("VatlibException").append(" ").append(e.what());
-            emit this->statusMessage(CStatusMessage::getErrorMessage(msg, CStatusMessage::TypeAudio));
-            qFatal("VatlibException caught in %s\n%s", caller, e.what());
+            CLogMessage().error(this, "VatlibException %1 in %2") << e.what() << caller;
+            Q_ASSERT(false);
         }
         catch (const std::exception &e)
         {
-            msg.append("std::exception").append(" ").append(e.what());
-            emit this->statusMessage(CStatusMessage::getErrorMessage(msg, CStatusMessage::TypeAudio));
-            qFatal("std::exception caught in %s\n%s", caller, e.what());
+            CLogMessage().error(this, "std::exception %1 in %2") << e.what() << caller;
+            Q_ASSERT(false);
         }
         catch (...)
         {
-            msg.append("unknown exception");
-            emit this->statusMessage(CStatusMessage::getErrorMessage(msg, CStatusMessage::TypeAudio));
-            qFatal("Unknown exception caught in %s", caller);
+            CLogMessage().error(this, "Unknown exception in %1") << caller;
+            Q_ASSERT(false);
         }
     }
 

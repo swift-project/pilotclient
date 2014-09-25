@@ -7,6 +7,7 @@
 #include "context_runtime.h"
 #include "input_manager.h"
 #include "blackmisc/settingutilities.h"
+#include "blackmisc/logmessage.h"
 #include <QtMsgHandler>
 #include <QFile>
 
@@ -50,7 +51,7 @@ namespace BlackCore
      */
     void CContextApplication::notifyAboutComponentChange(uint component, uint action)
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { QString::number(component), QString::number(action) });
+        CLogMessage().debug(this) << Q_FUNC_INFO << QString::number(component) << QString::number(action);
         this->componentChanged(component, action);
     }
 
@@ -59,7 +60,7 @@ namespace BlackCore
      */
     bool CContextApplication::writeToFile(const QString &fileName, const QString &content)
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, { fileName, content.left(25) });
+        CLogMessage().debug(this) << Q_FUNC_INFO << fileName << content.left(25);
         if (fileName.isEmpty()) return false;
         QFile file(fileName);
         if (file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -76,7 +77,7 @@ namespace BlackCore
      */
     QString CContextApplication::readFromFile(const QString &fileName)
     {
-        this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO, fileName);
+        CLogMessage().debug(this) << Q_FUNC_INFO << fileName;
         QFile file(fileName);
         QString content;
         if (fileName.isEmpty()) return content;

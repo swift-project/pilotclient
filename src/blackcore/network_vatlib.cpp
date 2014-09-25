@@ -5,6 +5,7 @@
 
 #include "network_vatlib.h"
 #include "blackmisc/project.h"
+#include "blackmisc/logmessage.h"
 #include <vector>
 #include <exception>
 #include <type_traits>
@@ -1083,42 +1084,34 @@ namespace BlackCore
         //TODO
     }
 
-    void CNetworkVatlib::onErrorReceived(Cvatlib_Network *, Cvatlib_Network::error type, const char *msgData, const char *data, void *cbvar)
+    void CNetworkVatlib::onErrorReceived(Cvatlib_Network *, Cvatlib_Network::error type, const char *msg, const char *data, void *cbvar)
     {
-        QString msg;
-
+        auto *self = cbvar_cast(cbvar);
         switch (type)
         {
-        case Cvatlib_Network::error_CallsignTaken:          msg = "The requested callsign is already taken"; goto terminate;
-        case Cvatlib_Network::error_CallsignInvalid:        msg = "The requested callsign is not valid"; goto terminate;
-        case Cvatlib_Network::error_CIDPasswdInvalid:       msg = "Wrong user ID or password"; goto terminate;
-        case Cvatlib_Network::error_ProtoVersion:           msg = "This server does not support our protocol version"; goto terminate;
-        case Cvatlib_Network::error_LevelTooHigh:           msg = "You are not authorized to use the requested pilot rating"; goto terminate;
-        case Cvatlib_Network::error_ServerFull:             msg = "The server is full"; goto terminate;
-        case Cvatlib_Network::error_CIDSuspended:           msg = "Your user account is suspended"; goto terminate;
-        case Cvatlib_Network::error_InvalidPosition:        msg = "You are not authorized to use the requested pilot rating"; goto terminate;
-        case Cvatlib_Network::error_SoftwareNotAuthorized:  msg = "This client software has not been authorized for use on this network"; goto terminate;
+        case Cvatlib_Network::error_CallsignTaken:          CLogMessage().error(self, "The requested callsign is already taken"); emit self->terminate(); break;
+        case Cvatlib_Network::error_CallsignInvalid:        CLogMessage().error(self, "The requested callsign is not valid"); emit self->terminate(); break;
+        case Cvatlib_Network::error_CIDPasswdInvalid:       CLogMessage().error(self, "Wrong user ID or password"); emit self->terminate(); break;
+        case Cvatlib_Network::error_ProtoVersion:           CLogMessage().error(self, "This server does not support our protocol version"); emit self->terminate(); break;
+        case Cvatlib_Network::error_LevelTooHigh:           CLogMessage().error(self, "You are not authorized to use the requested pilot rating"); emit self->terminate(); break;
+        case Cvatlib_Network::error_ServerFull:             CLogMessage().error(self, "The server is full"); emit self->terminate(); break;
+        case Cvatlib_Network::error_CIDSuspended:           CLogMessage().error(self, "Your user account is suspended"); emit self->terminate(); break;
+        case Cvatlib_Network::error_InvalidPosition:        CLogMessage().error(self, "You are not authorized to use the requested pilot rating"); emit self->terminate(); break;
+        case Cvatlib_Network::error_SoftwareNotAuthorized:  CLogMessage().error(self, "This software is not authorized for use on this network"); emit self->terminate(); break;
 
-        case Cvatlib_Network::error_Ok:                     msg = "OK"; break;
-        case Cvatlib_Network::error_Syntax:                 msg = "Malformed packet: Syntax error: "; msg.append(cbvar_cast(cbvar)->fromFSD(data)); break;
-        case Cvatlib_Network::error_SourceInvalid:          msg = "Server: source invalid "; msg.append(cbvar_cast(cbvar)->fromFSD(data)); break;
-        case Cvatlib_Network::error_CallsignNotExists:      msg = "Shim lib: "; msg.append(cbvar_cast(cbvar)->fromFSD(msgData)).append(" (").append(cbvar_cast(cbvar)->fromFSD(data)).append(")"); break;
-        case Cvatlib_Network::error_NoFP:                   msg = "Server: no flight plan"; break;
-        case Cvatlib_Network::error_NoWeather:              msg = "Server: requested weather profile does not exist"; break;
+        case Cvatlib_Network::error_Ok:                     CLogMessage().info(self, "OK"); break;
+        case Cvatlib_Network::error_Syntax:                 CLogMessage().info(self, "Malformed packet: Syntax error: %1") << self->fromFSD(data); break;
+        case Cvatlib_Network::error_SourceInvalid:          CLogMessage().info(self, "Server: source invalid %1") << self->fromFSD(data); break;
+        case Cvatlib_Network::error_CallsignNotExists:      CLogMessage().info(self, "Shim lib: %1 (%2)") << self->fromFSD(msg) << self->fromFSD(data); break;
+        case Cvatlib_Network::error_NoFP:                   CLogMessage().info(self, "Server: no flight plan"); break;
+        case Cvatlib_Network::error_NoWeather:              CLogMessage().info(self, "Server: requested weather profile does not exist"); break;
 
         // we have no idea what these mean
         case Cvatlib_Network::error_Registered:
-        case Cvatlib_Network::error_InvalidControl:         msg = "Server: "; msg.append(cbvar_cast(cbvar)->fromFSD(msgData)); break;
+        case Cvatlib_Network::error_InvalidControl:         CLogMessage().info(self, "Server: ") << self->fromFSD(msg); break;
 
-        default:                                            qFatal("VATSIM shim library: %s (error %d)", qPrintable(msg), type); goto terminate;
+        default:                                            qFatal("VATSIM shim library: %s (error %d)", msg, type); emit self->terminate();
         }
-
-        emit cbvar_cast(cbvar)->statusMessage(BlackMisc::CStatusMessage(BlackMisc::CStatusMessage::TypeTrafficNetwork, BlackMisc::CStatusMessage::SeverityInfo, msg));
-        return;
-
-    terminate:
-        emit cbvar_cast(cbvar)->statusMessage(BlackMisc::CStatusMessage(BlackMisc::CStatusMessage::TypeTrafficNetwork, BlackMisc::CStatusMessage::SeverityError, msg));
-        emit cbvar_cast(cbvar)->terminate(); // private, will be handled during the next pass of the Qt event loop
     }
 
     void CNetworkVatlib::onWindDataReceived(Cvatlib_Network *, Cvatlib_Network::WindLayer /** layers **/[4], void * /** cbvar **/)

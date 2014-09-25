@@ -22,6 +22,7 @@
 #include "blackmisc/setnetwork.h"
 #include "blackmisc/nwclientlist.h"
 #include "blackmisc/digestsignal.h"
+#include "blackmisc/logmessage.h"
 
 #include <QMap>
 
@@ -55,29 +56,29 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getAtcStationsOnline()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override
         {
-            this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+            BlackMisc::CLogMessage().debug(this) << Q_FUNC_INFO;
             return this->m_airspace->getAtcStationsOnline();
         }
 
         //! \copydoc IContextNetwork::getAtcStationsBooked()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override
         {
-            this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+            BlackMisc::CLogMessage().debug(this) << Q_FUNC_INFO;
             return this->m_airspace->getAtcStationsBooked();
         }
 
         //! \copydoc IContextNetwork::getAircraftsInRange()
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const override
         {
-            this->getRuntime()->logSlot(c_logContext, Q_FUNC_INFO);
+            BlackMisc::CLogMessage().debug(this) << Q_FUNC_INFO;
             return this->m_airspace->getAircraftInRange();
         }
 
         //! \copydoc IContextNetwork::connectToNetwork()
-        virtual BlackMisc::CStatusMessageList connectToNetwork(uint mode) override;
+        virtual BlackMisc::CStatusMessage connectToNetwork(uint mode) override;
 
         //! \copydoc IContextNetwork::disconnectFromNetwork()
-        virtual BlackMisc::CStatusMessageList disconnectFromNetwork() override;
+        virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;
 
         //! \copydoc IContextNetwork::isConnected()
         virtual bool isConnected() const override;

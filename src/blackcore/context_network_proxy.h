@@ -60,10 +60,10 @@ namespace BlackCore
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const override;
 
         //! \copydoc IContextNetwork::connectToNetwork()
-        virtual BlackMisc::CStatusMessageList connectToNetwork(uint mode) override;
+        virtual BlackMisc::CStatusMessage connectToNetwork(uint mode) override;
 
         //! \copydoc IContextNetwork::disconnectFromNetwork()
-        virtual BlackMisc::CStatusMessageList disconnectFromNetwork() override;
+        virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;
 
         //! \copydoc IContextNetwork::isConnected()
         virtual bool isConnected() const override;

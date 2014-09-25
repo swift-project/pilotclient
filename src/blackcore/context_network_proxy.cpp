@@ -131,14 +131,14 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("testCreateDummyOnlineAtcStations"), number);
     }
 
-    BlackMisc::CStatusMessageList CContextNetworkProxy::connectToNetwork(uint loginMode)
+    BlackMisc::CStatusMessage CContextNetworkProxy::connectToNetwork(uint loginMode)
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("connectToNetwork"), loginMode);
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("connectToNetwork"), loginMode);
     }
 
-    BlackMisc::CStatusMessageList CContextNetworkProxy::disconnectFromNetwork()
+    BlackMisc::CStatusMessage CContextNetworkProxy::disconnectFromNetwork()
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessageList>(QLatin1Literal("disconnectFromNetwork"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("disconnectFromNetwork"));
     }
 
     bool CContextNetworkProxy::isConnected() const

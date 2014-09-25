@@ -8,6 +8,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/logmessage.h"
 #include "blackcore/context_runtime.h"
 
 #include <QDebug>
@@ -442,8 +443,7 @@ namespace BlackCore
                 connect(this->m_contextSettings, &IContextSettings::changedSettings, this->m_contextSimulator, &IContextSimulator::settingsChanged);
                 if (!this->m_contextSimulator->loadSimulatorPluginFromSettings())
                 {
-                    qWarning() << "No simulator plugin loaded";
-                    this->sendStatusMessage(CStatusMessage::getWarningMessage("No simulator plugin loaded", CStatusMessage::TypeSimulator));
+                    CLogMessage().warning(this, "No simulator plugin loaded");
                 }
             }
         }

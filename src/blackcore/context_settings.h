@@ -56,6 +56,8 @@ namespace BlackCore
         {}
 
     public:
+        //! Log message category
+        static QString getMessageCategory() { return "swift.context.settings"; }
 
         //! Service name
         static const QString &InterfaceName()

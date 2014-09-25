@@ -66,6 +66,11 @@ namespace BlackCore
         virtual ~INetwork() {}
 
         /*!
+         * Log message category.
+         */
+        static QString getMessageCategory() { return "swift.trafficNetwork"; }
+
+        /*!
          * Flags for capabilities bitfield.
          */
         enum
