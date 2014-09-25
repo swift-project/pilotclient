@@ -261,6 +261,8 @@ namespace BlackSimPlugin
             SIMCONNECT_TEXT_TYPE type = SIMCONNECT_TEXT_TYPE_PRINT_BLACK;
             switch (message.getSeverity())
             {
+            case CStatusMessage::SeverityDebug:
+                return;
             case CStatusMessage::SeverityInfo:
                 type = SIMCONNECT_TEXT_TYPE_PRINT_GREEN;
                 break;

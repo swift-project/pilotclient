@@ -216,7 +216,10 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::displayStatusMessage(const BlackMisc::CStatusMessage &message) const
         {
-            QMetaObject::invokeMethod(m_fs9Host, "sendTextMessage", Q_ARG(QString, message.toQString()));
+            if (message.getSeverity() != BlackMisc::CStatusMessage::SeverityDebug)
+            {
+                QMetaObject::invokeMethod(m_fs9Host, "sendTextMessage", Q_ARG(QString, message.toQString()));
+            }
         }
 
         void CSimulatorFs9::displayTextMessage(const BlackMisc::Network::CTextMessage &message) const
