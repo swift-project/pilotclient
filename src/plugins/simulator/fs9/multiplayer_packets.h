@@ -21,6 +21,41 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
+        //! Multiplayer param packet - aircraft configuration
+        struct MPParam : public MULTIPLAYER_PACKET_PARAMS
+        {
+            //! Return tuple of member variables
+            std::tuple<quint32 &, quint32 &,
+                       quint8 &, quint8 &, quint8 &, quint8 &,
+                       quint8 &, quint8 &, quint8 &, quint8 &,
+                       quint8 &, quint8 &, quint8 &, quint8 &,
+                       quint8 &, quint8 &, quint8 &, quint8 &,
+                       quint8 &, quint8 &, quint8 &, quint8 &> getTuple()
+            {
+                return std::tie(application_time, packet_index,
+                                unknown8, unknown9, flaps_left, flaps_right, unknown12, unknown13, unknown14, unknown15,
+                                unknown16, unknown17, unknown18, unknown19, gear_center, gear_left, gear_right,
+                                engine_1, engine_2, unknown25, unknown26, unknown27);
+            }
+
+            //! Return const tuple of member variables
+            std::tuple<const quint32 &, const quint32 &,
+                       const quint8 &, const quint8 &, const quint8 &, const quint8 &,
+                       const quint8 &, const quint8 &, const quint8 &, const quint8 &,
+                       const quint8 &, const quint8 &, const quint8 &, const quint8 &,
+                       const quint8 &, const quint8 &, const quint8 &, const quint8 &,
+                       const quint8 &, const quint8 &, const quint8 &, const quint8 &>
+                        getTuple() const
+            {
+                return std::tie(application_time, packet_index,
+                                unknown8, unknown9, flaps_left, flaps_right, unknown12, unknown13, unknown14, unknown15,
+                                unknown16, unknown17, unknown18, unknown19, gear_center, gear_left, gear_right,
+                                engine_1, engine_2, unknown25, unknown26, unknown27);
+            }
+
+            qint32 size() { return 28; }
+        };
+
         //! Multiplayer packet - change player plane
         struct MPChangePlayerPlane : public MULTIPLAYER_PACKET_CHANGE_PLAYER_PLANE
         {

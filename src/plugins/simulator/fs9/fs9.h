@@ -85,6 +85,43 @@ namespace BlackSimPlugin
             quint32 data_size = 0; //!< Message size
         };
 
+        /*!
+         * Multiplayer packet aircraft parameter
+         *
+         * Most of the data is still unknown and needs to be further
+         * reverse enginered.
+         *
+         * Data most likely to be part of it:
+         * \li Wing animation
+         *
+         * Max value for fully extended gear seems to be 0xA1
+         */
+        struct MULTIPLAYER_PACKET_PARAMS
+        {
+            quint32 application_time = 0; //!< Application time - ignored
+            quint32 packet_index = 0; //!< Packet index
+            quint8 unknown8 = 0; //!< Unknown data
+            quint8 unknown9 = 0; //!< Unknown data
+            quint8 flaps_left = 0xDF; //!< Flaps left
+            quint8 flaps_right = 0xDF; //!< Flaps right
+            quint8 unknown12 = 0; //!< Unknown data
+            quint8 unknown13 = 0; //!< Unknown data
+            quint8 unknown14 = 0xFF; //!< Unknown data
+            quint8 unknown15 = 0; //!< Unknown data
+            quint8 unknown16 = 0; //!< Unknown data
+            quint8 unknown17 = 0; //!< Unknown data
+            quint8 unknown18 = 0; //!< Unknown data
+            quint8 unknown19 = 0; //!< Unknown data
+            quint8 gear_center = 0xA1; //!< Gear center
+            quint8 gear_left = 0xA1; //!< Gear left
+            quint8 gear_right = 0xA1; //!< Gear right
+            quint8 engine_1 = 0xFF; //!< Engine 1 N1 in %
+            quint8 engine_2 = 0xFF; //!< Engine 2 N1 in %
+            quint8 unknown25 = 0; //!< Unknown data
+            quint8 unknown26 = 0; //!< Unknown data
+            quint8 unknown27 = 0; //!< Unknown data
+        };
+
         //! Multiplayer chat message
         struct MULTIPLAYER_PACKET_CHAT_TEXT
         {

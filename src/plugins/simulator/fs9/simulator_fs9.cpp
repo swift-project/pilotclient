@@ -252,6 +252,10 @@ namespace BlackSimPlugin
 
             switch (messageType)
             {
+                case CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS:
+                {
+                    break;
+                }
                 case CFs9Sdk::MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE:
                 {
                     MPChangePlayerPlane mpChangePlayerPlane;
