@@ -110,6 +110,15 @@ namespace BlackSimPlugin
 
                 sendMessage(positionMessage);
 
+                QByteArray paramMessage;
+                MPParam param;
+                MultiPlayerPacketParser::writeType(paramMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_PARAMS);
+                MultiPlayerPacketParser::writeSize(paramMessage, param.size());
+                param.packet_index = m_packetIndex;
+                ++m_packetIndex;
+                paramMessage = MultiPlayerPacketParser::writeMessage(paramMessage, param);
+                sendMessage(paramMessage);
+
                 m_lastAircraftSituation = situation;
             }
         }
