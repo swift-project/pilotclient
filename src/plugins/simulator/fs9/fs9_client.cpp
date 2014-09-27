@@ -97,16 +97,16 @@ namespace BlackSimPlugin
             if (m_interpolator.hasEnoughAircraftSituations())
             {
                 CAircraftSituation situation = m_interpolator.getCurrentSituation();
-                MPPositionVelocity positioneVelocity = aircraftSituationtoFS9(m_lastAircraftSituation,
+                MPPositionVelocity positionVelocity = aircraftSituationtoFS9(m_lastAircraftSituation,
                                                              situation,
                                                              m_updateInterval.value(CTimeUnit::s()));
 
                 QByteArray positionMessage;
                 MultiPlayerPacketParser::writeType(positionMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_VELOCITY);
                 MultiPlayerPacketParser::writeSize(positionMessage, positionVelocity.size());
-                positioneVelocity.packet_index = m_packetIndex;
+                positionVelocity.packet_index = m_packetIndex;
                 ++m_packetIndex;
-                positionMessage = MultiPlayerPacketParser::writeMessage(positionMessage, positioneVelocity);
+                positionMessage = MultiPlayerPacketParser::writeMessage(positionMessage, positionVelocity);
 
                 sendMessage(positionMessage);
 
