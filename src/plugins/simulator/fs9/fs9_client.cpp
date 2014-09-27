@@ -51,7 +51,7 @@ namespace BlackSimPlugin
             mpChatText.chat_data = textMessage;
             QByteArray message;
             MultiPlayerPacketParser::writeType(message, CFs9Sdk::MPCHAT_PACKET_ID_CHAT_TEXT_SEND);
-            MultiPlayerPacketParser::writeSize(message, mpChatText.chat_data.size() + 1);
+            MultiPlayerPacketParser::writeSize(message, mpChatText.size());
             message = MultiPlayerPacketParser::writeMessage(message, mpChatText);
             sendMessage(message);
         }
@@ -103,7 +103,7 @@ namespace BlackSimPlugin
 
                 QByteArray positionMessage;
                 MultiPlayerPacketParser::writeType(positionMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_VELOCITY);
-                MultiPlayerPacketParser::writeSize(positionMessage, 52);
+                MultiPlayerPacketParser::writeSize(positionMessage, positionVelocity.size());
                 positioneVelocity.packet_index = m_packetIndex;
                 ++m_packetIndex;
                 positionMessage = MultiPlayerPacketParser::writeMessage(positionMessage, positioneVelocity);
@@ -252,7 +252,7 @@ namespace BlackSimPlugin
             mpChangePlayerPlane.aircraft_name = "Boeing 737-400";
             QByteArray message;
             MultiPlayerPacketParser::writeType(message, CFs9Sdk::MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE);
-            MultiPlayerPacketParser::writeSize(message, mpChangePlayerPlane.aircraft_name.size() + 1);
+            MultiPlayerPacketParser::writeSize(message, mpChangePlayerPlane.size());
             message = MultiPlayerPacketParser::writeMessage(message, mpChangePlayerPlane);
             sendMessage(message);
 

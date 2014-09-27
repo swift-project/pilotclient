@@ -53,6 +53,7 @@ namespace BlackSimPlugin
                                 engine_1, engine_2, unknown25, unknown26, unknown27);
             }
 
+            //! Struct size
             qint32 size() { return 28; }
         };
 
@@ -70,6 +71,9 @@ namespace BlackSimPlugin
             {
                 return std::tie(engine, aircraft_name);
             }
+
+            //! Struct size
+            qint32 size() { return sizeof(CFs9Sdk::EngineType) + aircraft_name.size() + 1; }
         };
 
         //! Multiplayer packet - chat text
@@ -86,6 +90,9 @@ namespace BlackSimPlugin
             {
                 return std::tie(chat_data);
             }
+
+            //! Struct size
+            qint32 size() { return chat_data.size() + 1; }
         };
 
         //! Multiplayer packet - position and velocity
@@ -116,6 +123,9 @@ namespace BlackSimPlugin
                                 reserved[0], reserved[1], reserved[2], reserved[3],
                                 pbh, lat_i, lon_hi, alt_i, lat_f, lon_lo, alt_f);
             }
+
+            //! Struct size
+            qint32 size() { return 52; }
         };
     }
 }
