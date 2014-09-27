@@ -19,6 +19,7 @@ namespace BlackGui
             QFrame(parent), ui(new Ui::CLogComponent)
         {
             ui->setupUi(this);
+            this->ui->tvp_StatusMessages->setAutoResizeFrequency(3);
         }
 
         CLogComponent::~CLogComponent()

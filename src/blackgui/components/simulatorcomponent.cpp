@@ -16,10 +16,13 @@ namespace BlackGui
     namespace Components
     {
         CSimulatorComponent::CSimulatorComponent(QWidget *parent) :
-            QTabWidget(parent), ui(new Ui::CSimulatorComponent)
+            QTabWidget(parent),
+            CDockWidgetInfoAreaComponent(this),
+            ui(new Ui::CSimulatorComponent)
         {
             ui->setupUi(this);
             this->ui->tvp_LiveData->setIconMode(true);
+            this->ui->tvp_LiveData->setAutoResizeFrequency(10); // only resize every n-th time
             this->addOrUpdateByName("info", "no data yet", CIcons::StandardIconWarning16);
         }
 
@@ -30,7 +33,8 @@ namespace BlackGui
 
         void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, const CIcon &icon)
         {
-            this->ui->tvp_LiveData->addOrUpdateByName(name, value, icon);
+            bool resize = this->currentWidget() == this->ui->tb_LiveData; // simulator live data selected?
+            this->ui->tvp_LiveData->addOrUpdateByName(name, value, icon, resize, false);
         }
 
         void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, CIcons::IconIndex iconIndex)

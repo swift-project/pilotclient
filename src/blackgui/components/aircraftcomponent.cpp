@@ -27,6 +27,7 @@ namespace BlackGui
             ui(new Ui::CAircraftComponent), m_timerComponent(nullptr)
         {
             ui->setupUi(this);
+            this->ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
             m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
 
             connect(this->ui->tvp_AircraftsInRange, &CAircraftView::countChanged, this, &CAircraftComponent::ps_countChanged);
@@ -58,7 +59,8 @@ namespace BlackGui
 
             if (this->getIContextNetwork()->isConnected())
             {
-                if (this->countAircrafts() < 1 || this->isVisibleWidget())
+                bool visible = (this->isVisibleWidget() && this->currentWidget() == this->ui->tb_AircraftsInRange);
+                if (this->countAircrafts() < 1 || visible)
                 {
                     this->ui->tvp_AircraftsInRange->updateContainer(this->getIContextNetwork()->getAircraftsInRange());
                 }
@@ -70,7 +72,8 @@ namespace BlackGui
             }
             if (this->getIContextSimulator()->isConnected())
             {
-                if (this->countAirportsInRange() < 1 || this->isVisibleWidget())
+                bool visible = (this->isVisibleWidget() && this->currentWidget() == this->ui->tb_AirportsInRange);
+                if (this->countAirportsInRange() < 1 || visible)
                 {
                     this->ui->tvp_AirportsInRange->updateContainer(this->getIContextSimulator()->getAirportsInRange());
                 }
@@ -110,7 +113,6 @@ namespace BlackGui
             this->tabBar()->setTabText(ac, acs);
             this->tabBar()->setTabText(ap, aps);
         }
-
 
     } // namespace
 } // namespace

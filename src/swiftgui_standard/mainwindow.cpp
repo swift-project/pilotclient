@@ -443,6 +443,8 @@ void MainWindow::updateSimulatorData()
 {
     CSimulatorComponent *simComp = this->ui->comp_MainInfoArea->getSimulatorComponent();
     Q_ASSERT(simComp);
+
+    if (!simComp->isVisibleWidget()) return; // no updates on invisible widgets
     if (!this->getIContextSimulator()->isConnected())
     {
         simComp->clear();
