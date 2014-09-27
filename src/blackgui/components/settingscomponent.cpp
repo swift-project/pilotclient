@@ -38,10 +38,13 @@ namespace BlackGui
          * Constructor
          */
         CSettingsComponent::CSettingsComponent(QWidget *parent) :
-            QTabWidget(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CSettingsComponent),
+            QTabWidget(parent),
+            CRuntimeBasedComponent(nullptr, false),
+            ui(new Ui::CSettingsComponent),
             m_audioTestRunning(NoAudioTest)
         {
             ui->setupUi(this);
+            this->tabBar()->setExpanding(false);
             this->ui->prb_SettingsAudioTestProgress->setVisible(false);
             this->m_timerAudioTests = new QTimer(this);
         }

@@ -26,6 +26,7 @@ namespace BlackGui
             ui(new Ui::CUserComponent), m_timerComponent(nullptr)
         {
             ui->setupUi(this);
+            this->tabBar()->setExpanding(false);
             this->m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
 
             connect(this->ui->tvp_AllUsers, &CUserView::countChanged, this, &CUserComponent::ps_countChanged);

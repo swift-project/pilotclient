@@ -198,14 +198,19 @@ QMenuBar::item:selected { /* when selected using mouse or keyboard */
 }
 
 QMenuBar::item:pressed {
-        background: black;
+    background: black;
 }
 
 QMenu {
-        border: 2px solid darkslategray; /* reserve space for selection border */
-        background: lightgray;
-        color: black;
-        padding: 2px;
+    border: 2px solid darkslategray; /* reserve space for selection border */
+    background: lightgray;
+    color: black;
+    padding: 2px;
+}
+
+QScrollArea {
+    border: 1px solid green;
+    border-radius: 5px;
 }
 
 QScrollBar:horizontal {

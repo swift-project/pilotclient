@@ -21,7 +21,8 @@ namespace BlackGui
     namespace Components
     {
         CSettingsSimulatorComponent::CSettingsSimulatorComponent(QWidget *parent) :
-            QFrame(parent), CRuntimeBasedComponent(nullptr, false),
+            QFrame(parent),
+            CRuntimeBasedComponent(nullptr, false),
             ui(new Ui::CSettingsSimulatorComponent)
         {
             ui->setupUi(this);

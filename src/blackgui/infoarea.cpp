@@ -296,7 +296,6 @@ namespace BlackGui
             this->m_tabBar->setObjectName("comp_MainInfoAreaDockWidgetTab");
             this->m_tabBar->setMovable(false);
             this->m_tabBar->setElideMode(Qt::ElideNone);
-            this->setDocumentMode(true); // did not notice any effect
             this->setTabPixmaps();
 
             // East / West does not work (shown, but area itself empty)

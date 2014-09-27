@@ -33,6 +33,7 @@ namespace BlackGui
             ui(new Ui::CAtcStationComponent), m_timerComponent(nullptr)
         {
             ui->setupUi(this);
+            this->tabBar()->setExpanding(false);
             this->m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
 
             // some icons

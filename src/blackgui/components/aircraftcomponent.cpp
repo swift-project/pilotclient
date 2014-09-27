@@ -27,6 +27,7 @@ namespace BlackGui
             ui(new Ui::CAircraftComponent), m_timerComponent(nullptr)
         {
             ui->setupUi(this);
+            this->tabBar()->setExpanding(false);
             this->ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
             m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
 
