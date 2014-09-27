@@ -55,6 +55,10 @@ namespace BlackSimPlugin
                                  const BlackMisc::Aviation::CAircraftSituation &newSituation,
                                  double updateInterval);
 
+        //! Convert an aircraft situation to a FS9 struct
+        MPPositionSlewMode aircraftSituationtoFS9(const BlackMisc::Aviation::CAircraftSituation &situation);
+
+
         HRESULT printDirectPlayError(HRESULT error);
 
 

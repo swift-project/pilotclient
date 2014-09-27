@@ -136,6 +136,35 @@ namespace BlackSimPlugin
             return positionVelocity;
         }
 
+        MPPositionSlewMode aircraftSituationtoFS9(const CAircraftSituation &situation)
+        {
+            MPPositionSlewMode positionSlewMode;
+
+            // Latitude - integer and decimal places
+            double latitude = situation.getPosition().latitude().value(CAngleUnit::deg()) * 10001750.0 / 90.0;
+            positionSlewMode.lat_i = static_cast<qint32>(latitude);
+            positionSlewMode.lat_f = qAbs((latitude - positionSlewMode.lat_i) * 65536);
+
+            // Longitude - integer and decimal places
+            double longitude = situation.getPosition().longitude().value(CAngleUnit::deg()) * ( 65536.0 * 65536.0) / 360.0;
+            positionSlewMode.lon_hi = static_cast<qint32>(longitude);
+            positionSlewMode.lon_lo = qAbs((longitude - positionSlewMode.lon_hi) * 65536);
+
+            // Altitude - integer and decimal places
+            double altitude = situation.getAltitude().value(CLengthUnit::m());
+            positionSlewMode.alt_i = static_cast<qint32>(altitude);
+            positionSlewMode.alt_f = (altitude - positionSlewMode.alt_i) * 65536;
+
+            // Pitch, Bank and Heading
+            FS_PBH pbhstrct;
+            pbhstrct.hdg = situation.getHeading().value(CAngleUnit::deg()) * CFs9Sdk::headingMultiplier();
+            pbhstrct.pitch = situation.getPitch().value(CAngleUnit::deg()) * CFs9Sdk::pitchMultiplier();
+            pbhstrct.bank = situation.getBank().value(CAngleUnit::deg()) * CFs9Sdk::bankMultiplier();
+            positionSlewMode.pbh = pbhstrct.pbh;
+
+            return positionSlewMode;
+        }
+
         HRESULT printDirectPlayError(HRESULT error)
         {
             switch(error)
