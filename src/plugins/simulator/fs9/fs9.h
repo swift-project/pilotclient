@@ -46,6 +46,7 @@ namespace BlackSimPlugin
                 MULTIPLAYER_PACKET_ID_BASE = 0x1000,
                 MULTIPLAYER_PACKET_ID_PARAMS = MULTIPLAYER_PACKET_ID_BASE,
                 MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE = 0x1003,
+                MULTIPLAYER_PACKET_ID_POSITION_SLEWMODE = 0x100C,
                 MULTIPLAYER_PACKET_ID_POSITION_VELOCITY = 0x100D,
                 MPCHAT_PACKET_ID_CHAT_TEXT_SEND = 0x1017,
             };
@@ -147,7 +148,25 @@ namespace BlackSimPlugin
             quint16 alt_f = 0; //!< Altitude value - decimal part
         };
 
-        //! Full pultiplayer position and velocity packet
+        //! Multiplayer position packet in slew mode
+        struct MULTIPLAYER_PACKET_POSITION_SLEWMODE
+        {
+            MULTIPLAYER_PACKET_POSITION_SLEWMODE() {}
+
+            quint32 application_time = 0; //!< Application time - ignored
+            quint32 packet_index = 0; //!< Packet index
+            std::array<quint8, 4> reserved = std::array<quint8, 4>{{0, 0, 0, 0}}; //!< Reserved
+            qint32 pbh = 0; //!< Pitch/Bank/Heading
+            qint32 lat_i = 0; //!< Latitude - integer
+            qint32 lon_hi = 0; //!< Longitude - integer
+            qint32 alt_i = 0; //!< Altitude - integer
+            quint16 lat_f = 0; //!< Latitude - fraction
+            quint16 lon_lo = 0; //!< Longitude - fraction
+            quint16 alt_f = 0; //!< Altitude - fraction
+            std::array<quint8, 2> unknown = std::array<quint8, 2>{{0, 0}}; //!< Unknown packet
+        };
+
+        //! Full multiplayer position and velocity packet
         struct MULTIPLAYER_PACKET_POSITION_VELOCITY
         {
             MULTIPLAYER_PACKET_POSITION_VELOCITY() {}

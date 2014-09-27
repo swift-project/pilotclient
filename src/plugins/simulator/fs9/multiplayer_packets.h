@@ -95,6 +95,37 @@ namespace BlackSimPlugin
             qint32 size() { return chat_data.size() + 1; }
         };
 
+        //! Multiplayer packet in slew mode
+         struct MPPositionSlewMode : public MULTIPLAYER_PACKET_POSITION_SLEWMODE
+         {
+             //! Return tuple of member variables
+             std::tuple<quint32 &, quint32 &,
+                 quint8 &, quint8 &, quint8 &, quint8 &,
+                 qint32 &, qint32 &, qint32 &, qint32 &,
+                 quint16 &, quint16 &, quint16 &> getTuple()
+             {
+                 return std::tie(application_time, packet_index,
+                                 reserved[0], reserved[1], reserved[2], reserved[3],
+                                 pbh, lat_i, lon_hi, alt_i,
+                                 lat_f, lon_lo, alt_f);
+             }
+
+             //! Return const tuple of member variables
+             std::tuple<const quint32 &, const quint32 &,
+             const quint8 &, const quint8 &, const quint8 &, const quint8 &,
+             const qint32 &, const qint32 &, const qint32 &, const qint32 &,
+             const quint16 &, const quint16 &, const quint16 &> getTuple() const
+             {
+                 return std::tie(application_time, packet_index,
+                                 reserved[0], reserved[1], reserved[2], reserved[3],
+                                 pbh, lat_i, lon_hi, alt_i,
+                                 lat_f, lon_lo, alt_f);
+             }
+
+             //! Struct size
+             qint32 size() { return 36; }
+         };
+
         //! Multiplayer packet - position and velocity
         struct MPPositionVelocity : public MULTIPLAYER_PACKET_POSITION_VELOCITY
         {
