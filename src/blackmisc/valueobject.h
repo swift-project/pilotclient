@@ -195,6 +195,9 @@ namespace BlackMisc
         //! Virtual method to return CVariant
         virtual CVariant toCVariant() const { return CVariant(this->toQVariant()); }
 
+        //! Equals another CValueObject in QVariant?
+        virtual bool equalsQVariant(const QVariant &qVariant) const;
+
         //! Set from QVariant
         virtual void convertFromQVariant(const QVariant &variant) = 0;
 

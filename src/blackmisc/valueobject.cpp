@@ -173,6 +173,14 @@ namespace BlackMisc
     }
 
     /*
+     * equals QVariant?
+     */
+    bool CValueObject::equalsQVariant(const QVariant &qVariant) const
+    {
+        return BlackMisc::equalQVariants(this->toQVariant(), qVariant);
+    }
+
+    /*
      * Icon
      */
     CIcon CValueObject::toIcon() const

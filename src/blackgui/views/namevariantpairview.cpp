@@ -28,17 +28,23 @@ namespace BlackGui
             this->m_model->setIconMode(withIcon);
         }
 
-        void CNameVariantPairView::addOrUpdateByName(const QString &name, const QString &value, const CIcon &icon)
+        bool CNameVariantPairView::addOrUpdateByName(const QString &name, const QVariant &value, const CIcon &icon, bool resize, bool skipEqualValues)
         {
             Q_ASSERT(this->m_model);
-            this->m_model->addOrUpdateByName(name, value, icon);
-            this->resizeToContents();
+            bool changed = this->m_model->addOrUpdateByName(name, value, icon, skipEqualValues);
+            if (resize && changed) { this->resizeToContents(); }
+            return changed;
         }
 
-        void CNameVariantPairView::removeByName(const QString &name)
+        void CNameVariantPairView::removeByName(const QString &name, bool resize)
         {
             this->m_model->removeByName(name);
-            this->resizeToContents();
+            if (resize) { this->resizeToContents(); }
+        }
+
+        bool CNameVariantPairView::containsName(const QString &name)
+        {
+            return this->m_model->containsName(name);
         }
     }
 }

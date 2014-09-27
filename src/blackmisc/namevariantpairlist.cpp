@@ -27,7 +27,7 @@ namespace BlackMisc
     /*
      * Name contained?
      */
-    bool CNameVariantPairList::containsName(const QString &name)
+    bool CNameVariantPairList::containsName(const QString &name)const
     {
         return this->contains(&CNameVariantPair::getName, name);
     }
@@ -35,7 +35,7 @@ namespace BlackMisc
     /*
      * Name index
      */
-    int CNameVariantPairList::getNameRowIndex(const QString &name)
+    int CNameVariantPairList::getNameRowIndex(const QString &name) const
     {
         for (int i = 0; i < this->size(); i++)
         {

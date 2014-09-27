@@ -33,20 +33,26 @@ namespace BlackGui
             //! Constructor
             explicit CNameVariantPairModel(bool withIcon, QObject *parent = nullptr);
 
+            //! Destructor
+            virtual ~CNameVariantPairModel() {}
+
             //! Icon on / off
             void setIconMode(bool withIcon);
 
             //! Remove by given name
             void removeByName(const QString &name);
 
+            //! Contains name already?
+            bool containsName(const QString &name) const;
+
+            //! Contains name / value?
+            bool containsNameValue(const QString &name, const QVariant &value) const;
+
             //! Add our update a value
-            void addOrUpdateByName(const QString &name, const QString &value, const BlackMisc::CIcon &icon);
+            bool addOrUpdateByName(const QString &name, const QVariant &value, const BlackMisc::CIcon &icon, bool skipEqualValues);
 
             //! Current row index of given name
-            int getNameRowIndex(const QString &name);
-
-            //! Destructor
-            virtual ~CNameVariantPairModel() {}
+            int getRowIndexForName(const QString &name) const;
 
         };
     }

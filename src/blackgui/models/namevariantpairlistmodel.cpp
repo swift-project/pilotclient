@@ -40,25 +40,27 @@ namespace BlackGui
             this->m_sortOrder = Qt::AscendingOrder;
         }
 
-        void CNameVariantPairModel::addOrUpdateByName(const QString &name, const QString &value, const CIcon &icon)
+        bool CNameVariantPairModel::addOrUpdateByName(const QString &name, const QVariant &value, const CIcon &icon, bool skipEqualValues)
         {
-            int index = this->getNameRowIndex(name);
-            QVariant qv(value);
-            CNameVariantPair pair(name, qv, icon);
+            int index = this->getRowIndexForName(name);
+            CNameVariantPair pair(name, value, icon);
 
             if (index < 0)
             {
                 // not in the list yet, append
                 this->push_back(pair);
+                return true;
             }
             else
             {
                 // already in list, update
+                if (skipEqualValues  && this->containsNameValue(name, value)) { return false; }
                 this->update(index, pair);
+                return true;
             }
         }
 
-        int CNameVariantPairModel::getNameRowIndex(const QString &name)
+        int CNameVariantPairModel::getRowIndexForName(const QString &name) const
         {
             int rowIndex = this->m_container.getNameRowIndex(name);
             return rowIndex;
@@ -66,10 +68,24 @@ namespace BlackGui
 
         void CNameVariantPairModel::removeByName(const QString &name)
         {
-            int rowIndex = this->getNameRowIndex(name);
+            int rowIndex = this->getRowIndexForName(name);
             if (rowIndex < 0) return;
             QModelIndex i = this->index(rowIndex, 0);
             this->remove(this->at(i));
         }
-    }
-}
+
+        bool CNameVariantPairModel::containsName(const QString &name) const
+        {
+            return this->m_container.containsName(name);
+        }
+
+        bool CNameVariantPairModel::containsNameValue(const QString &name, const QVariant &value) const
+        {
+            int rowIndex = this->getRowIndexForName(name);
+            if (rowIndex < 0) return false;
+            QModelIndex i = this->index(rowIndex, 0);
+            const CNameVariantPair cv = this->at(i);
+            return BlackMisc::equalQVariants(value, cv.toQVariant());
+        }
+    } // namespace
+} // namespace
