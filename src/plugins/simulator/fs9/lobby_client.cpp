@@ -204,8 +204,12 @@ namespace BlackSimPlugin
             SafeDeleteArray(pSettings->pwszPlayerName);
             SafeDeleteArray(pSettings->dpnAppDesc.pwszSessionName);
             SafeDeleteArray(pSettings->dpnAppDesc.pwszPassword);
-            SafeDeleteArray(pSettings->dpnAppDesc.pvReservedData);
-            SafeDeleteArray(pSettings->dpnAppDesc.pvApplicationReservedData);
+
+            // The following two lines came from DX9 SDK samples, but they don't make sense.
+            // Deleteing a void* pointer is considered unsafe. If you really had to pass
+            // anything non-void here, make sure the original object is cleaned up properly.
+            // SafeDeleteArray(pSettings->dpnAppDesc.pvReservedData);
+            // SafeDeleteArray(pSettings->dpnAppDesc.pvApplicationReservedData);
             SafeRelease(pSettings->pdp8HostAddress);
             SafeRelease(pSettings->ppdp8DeviceAddresses[0]);
             SafeDeleteArray(pSettings->ppdp8DeviceAddresses);
@@ -225,6 +229,7 @@ namespace BlackSimPlugin
                 {
                     PDPL_MESSAGE_DISCONNECT pDisconnectMsg;
                     pDisconnectMsg = (PDPL_MESSAGE_DISCONNECT)msgBuffer;
+                    Q_UNUSED(pDisconnectMsg)
 
                     // We should free any data associated with the
                     // app here, but there is none.
@@ -235,6 +240,7 @@ namespace BlackSimPlugin
                 {
                     PDPL_MESSAGE_RECEIVE pReceiveMsg;
                     pReceiveMsg = (PDPL_MESSAGE_RECEIVE)msgBuffer;
+                    Q_UNUSED(pReceiveMsg)
 
                     // The lobby app sent us data.  This sample doesn't
                     // expected data from the app, but it is useful
@@ -275,6 +281,7 @@ namespace BlackSimPlugin
                 {
                     PDPL_MESSAGE_CONNECTION_SETTINGS pConnectionStatusMsg;
                     pConnectionStatusMsg = (PDPL_MESSAGE_CONNECTION_SETTINGS)msgBuffer;
+                    Q_UNUSED(pConnectionStatusMsg)
 
                     // The app has changed the connection settings.
                     // This simple client doesn't handle this, but more complex clients may

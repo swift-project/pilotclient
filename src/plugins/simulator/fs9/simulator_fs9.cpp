@@ -44,8 +44,8 @@ namespace BlackSimPlugin
             ISimulator(parent),
             m_fs9Host(new CFs9Host),
             m_hostThread(this),
-            m_simulatorInfo(CSimulatorInfo::FS9()),
             m_lobbyClient(new CLobbyClient(this)),
+            m_simulatorInfo(CSimulatorInfo::FS9()),
             m_fsuipc(new FsCommon::CFsuipc())
         {
             // We move the host thread already in the constructor
@@ -332,7 +332,10 @@ namespace BlackSimPlugin
 
                     m_fs9ClientThreads.remove(client);
                     m_hashFs9Clients.remove(callsign);
+                    break;
                 }
+            default:
+                break;
             }
         }
 
