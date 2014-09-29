@@ -171,7 +171,7 @@ namespace BlackGui
              * \param container used list
              * \param column    column inder
              * \param order     sort order (ascending / descending)
-             * \threadsafe
+             * \threadsafe under normal conditions thread safe as long as the column metadata are not changed
              */
             ContainerType sortContainerByColumn(const ContainerType &container, int column, Qt::SortOrder order) const;
 
@@ -247,6 +247,7 @@ namespace BlackGui
                             m_container = m_model->sortContainerByColumn(m_container, m_sortColumn, m_sortOrder);
                         }
                         // now update model itself thread safe, but time for sort was saved
+                        // the invoked method itself will run in the main thread's event loop again
                         QMetaObject::invokeMethod(m_model, "updateContainer", Qt::QueuedConnection,
                                                   Q_ARG(QVariant, m_container.toQVariant()), Q_ARG(bool, false));
                     }

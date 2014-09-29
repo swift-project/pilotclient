@@ -18,7 +18,8 @@
 
 namespace BlackGui
 {
-    //! Base class for workers
+    //! Base class for workers. Runs itself in newly created thread when started.
+    //! Provides access to related thread and cleans up itself when done.
     class IUpdateWorker : public QObject
     {
         Q_OBJECT
@@ -45,15 +46,19 @@ namespace BlackGui
         }
 
         //! Start thread, return nullptr if cannot be started
-        //! \remarks If start fails, object needs to be terminated manually
+        //! \remarks If start fails (false), object needs to be terminated manually
         bool start()
         {
+            qDebug() << "before init thread" << QThread::currentThreadId();
             if (!m_thread) { initializeThread(); }
-            m_thread->start();
+            m_thread->start(); // starting, not yet doing anything
+
+            // m_thread will start with invocation by event loop
+            // invokeMethod "schedules" an update running in the newly created thread
             bool ok = QMetaObject::invokeMethod(this, "ps_runUpdate", Qt::QueuedConnection);
             if (ok) { return true; }
 
-            // startup failed
+            // invocation failed, so I can clean up thread straight away
             this->terminateThread();
             return false;
         }
@@ -71,7 +76,7 @@ namespace BlackGui
         //! Update, call virtual method so inheriting class needs no slots
         void ps_runUpdate()
         {
-            this->update();
+            this->update(); // call overridden method doing work
             emit this->updateFinished();
             this->terminate(); // clean up thread, delete worker (myself)
         }
