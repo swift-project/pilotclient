@@ -27,7 +27,7 @@ namespace BlackMisc
         //! Index for each icon, allows to send them via DBus, efficiently store them, etc.
         enum IconIndex
         {
-            // keep indexes alphabetically sorted and in sync with CIconList
+            // !! keep indexes alphabetically sorted and in sync with CIconList
             AviationAttitudeIndicator,
             AviationAtis,
             AviationMetar,
@@ -71,10 +71,10 @@ namespace BlackMisc
             StandardIconArrowMediumSouth16,
             StandardIconArrowMediumWest16,
             StandardIconClose16,
-            StandardIconCross,
-            StandardIconCrossCircle,
-            StandardIconCrossSmall,
-            StandardIconCrossWhite,
+            StandardIconCross16,
+            StandardIconCrossCircle16,
+            StandardIconCrossSmall16,
+            StandardIconCrossWhite16,
             StandardIconDelete16,
             StandardIconDockBottom16,
             StandardIconDockTop16,
@@ -97,6 +97,7 @@ namespace BlackMisc
             StandardIconResize16,
             StandardIconResizeHorizontal16,
             StandardIconResizeVertical16,
+            StandardIconSpeakerNetwork16,
             StandardIconStatusBar16,
             StandardIconSwift24,
             StandardIconSwift48,
@@ -105,15 +106,15 @@ namespace BlackMisc
             StandardIconTableRelationship16,
             StandardIconTableSheet16,
             StandardIconText16,
-            StandardIconTick,
-            StandardIconTickRed,
-            StandardIconTickSmall,
-            StandardIconTickWhite,
+            StandardIconTick16,
+            StandardIconTickRed16,
+            StandardIconTickSmall16,
+            StandardIconTickWhite16,
             StandardIconUnknown16,
             StandardIconUser16,
             StandardIconUsers16,
-            StandardIconViewMulticolumn,
-            StandardIconViewTile,
+            StandardIconViewMulticolumn16,
+            StandardIconViewTile16,
             StandardIconVolumeHigh16,
             StandardIconVolumeLow16,
             StandardIconVolumeMuted16,
@@ -291,6 +292,20 @@ namespace BlackMisc
         static const QPixmap &delete16()
         {
             static const QPixmap pm(":/pastel/icons/pastel/16/delete.png");
+            return pm;
+        }
+
+        //! Radio
+        static const QPixmap &radio16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/radio.png");
+            return pm;
+        }
+
+        //! Speaker (network)
+        static const QPixmap &speakerNetwork16()
+        {
+            static const QPixmap pm(":/diagona/icons/diagona/icons/speaker-network.png");
             return pm;
         }
 
@@ -562,6 +577,18 @@ namespace BlackMisc
         static const QPixmap &appLog16()
         {
             return monitorError16();
+        }
+
+        //! Application audio
+        static const QPixmap &appAudio16()
+        {
+            return speakerNetwork16();
+        }
+
+        //! Voice rooms
+        static const QPixmap &appVoiceRooms16()
+        {
+            return tableRelationship16();
         }
 
         // -------------------------------------------------------------

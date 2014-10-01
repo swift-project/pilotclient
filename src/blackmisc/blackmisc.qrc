@@ -287,6 +287,23 @@
         <file>icons/diagona/icons/binocular--arrow.png</file>
         <file>icons/diagona/icons/binocular--exclamation.png</file>
         <file>icons/diagona/icons/binocular--minus.png</file>
+        <file>icons/diagona/icons/arrow-circle.png</file>
+        <file>icons/diagona/icons/arrow-circle-045-left.png</file>
+        <file>icons/diagona/icons/arrow-circle-135.png</file>
+        <file>icons/diagona/icons/arrow-circle-135-left.png</file>
+        <file>icons/diagona/icons/arrow-circle-225.png</file>
+        <file>icons/diagona/icons/arrow-circle-225-left.png</file>
+        <file>icons/diagona/icons/arrow-circle-315.png</file>
+        <file>icons/diagona/icons/arrow-circle-315-left.png</file>
+        <file>icons/diagona/icons/arrow-circle-double.png</file>
+        <file>icons/diagona/icons/arrow-circle-double-135.png</file>
+        <file>icons/diagona/icons/speaker.png</file>
+        <file>icons/diagona/icons/speaker--arrow.png</file>
+        <file>icons/diagona/icons/speaker--exclamation.png</file>
+        <file>icons/diagona/icons/speaker--minus.png</file>
+        <file>icons/diagona/icons/speaker-network.png</file>
+        <file>icons/diagona/icons/speaker--pencil.png</file>
+        <file>icons/diagona/icons/speaker--plus.png</file>
     </qresource>
     <qresource prefix="/own">
         <file>icons/own/app.jpg</file>
@@ -306,6 +323,9 @@
         <file>icons/own/swift/swiftCartoonNova24.png</file>
         <file>icons/own/swift/swiftCartoonNova48.png</file>
         <file>icons/own/twr.jpg</file>
+        <file>icons/own/transparent1px.png</file>
+        <file>icons/own/arrowWide300x10down.png</file>
+        <file>icons/own/arrowWide300x10up.png</file>
     </qresource>
     <qresource prefix="/qled">
         <file>icons/qled/circle_black.svg</file>
@@ -345,5 +365,9 @@
         <file>icons/qled/triang_red.svg</file>
         <file>icons/qled/triang_yellow.svg</file>
         <file>icons/qled/round_black.svg</file>
+    </qresource>
+    <qresource prefix="/textures">
+        <file>icons/textures/texture-inner.jpg</file>
+        <file>icons/textures/texture-outer.jpg</file>
     </qresource>
 </RCC>
