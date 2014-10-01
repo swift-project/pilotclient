@@ -15,6 +15,7 @@
 #include <QListIterator>
 #include <QSignalMapper>
 #include <QCloseEvent>
+#include <QStatusBar>
 
 using namespace BlackMisc;
 
@@ -154,6 +155,12 @@ namespace BlackGui
         int tabBarIndex = getSelectedTabBarIndex();
         if (tabBarIndex < 0 || tabBarIndex >= this->m_dockableWidgets.size()) return false;
         return this->getDockableWidgetByTabBarIndex(tabBarIndex) == infoArea;
+    }
+
+    void CInfoArea::paintEvent(QPaintEvent *event)
+    {
+        Q_UNUSED(event);
+        CStyleSheetUtility::useStyleSheetInDerivedWidget(this);
     }
 
     void CInfoArea::dockAllWidgets()
@@ -421,8 +428,6 @@ namespace BlackGui
 
     void CInfoArea::ps_onStyleSheetChanged()
     {
-        QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameMainInfoArea());
-        this->setStyleSheet(qss);
         if (this->m_tabBar)
         {
             QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameDockWidgetTab());

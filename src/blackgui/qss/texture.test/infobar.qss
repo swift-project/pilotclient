@@ -5,7 +5,7 @@ QFrame {
     padding-bottom: 0px;
 }
 
-/** mainframeless is dynamic property**/
+/** mainframeless dynamic property**/
 QDockWidget[mainframeless="true"] QFrame {
-    background-color: darkslategray;
+	background-color: darkslategray;
 }

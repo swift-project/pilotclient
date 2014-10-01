@@ -8,6 +8,7 @@
  */
 
 #include "flightplancomponent.h"
+#include "../stylesheetutility.h"
 #include "ui_flightplancomponent.h"
 #include "blackmisc/logmessage.h"
 #include "blackcore/context_network.h"
@@ -16,6 +17,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackGui;
 
 namespace BlackGui
 {
@@ -25,6 +27,8 @@ namespace BlackGui
             QTabWidget(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CFlightPlanComponent)
         {
             ui->setupUi(this);
+
+            // fix style
             this->tabBar()->setExpanding(false);
 
             connect(this->ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan);

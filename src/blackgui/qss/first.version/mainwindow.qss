@@ -1,118 +1,13 @@
-/**
-Resources:
-http://qt-project.org/doc/qt-5.3/stylesheet-examples.html
-http://web.forret.com/tools/color.asp?RGB=2F4F4F&name=Dark+slate+gray
+/** http://qt-project.org/doc/qt-5.3/stylesheet-examples.html **/
+/** http://web.forret.com/tools/color.asp?RGB=2F4F4F&name=Dark+slate+gray **/
 
-Remarks:
-there is no opacity with background image, so we need semitransparent images
-use -- instead of :: for namespaces
-
-Used dynamic properties
-mainframeless (infobar.qss)
-**/
-
-/** putting background here works for framed, but not for frameless window **/
 #MainWindow {
-    background-image: url(:/textures/icons/textures/texture-outer.jpg);
     background-color: darkslategray;
+    /** rgba(47,79,79,10%); darkslategray **/
 }
 
-/** required when dock widget is floating **/
-#sw_MainMiddle QDockWidget {
-    background-image: url(:/textures/icons/textures/texture-inner.jpg);
+QWidget {
     background-color: black;
-}
-
-/** required when info area is floating **/
-BlackGui--CInfoArea {
-    background-image: url(:/textures/icons/textures/texture-inner.jpg);
-    background-color: black;
-}
-
-/** fix scroll areas **/
-/** in flight plan **/
-QAbstractScrollArea #qw_FlightPlanTabMain { background-color: black; }
-QAbstractScrollArea #qw_RemarksGenerator { background-color: black; }
-
-/** in log component **/
-QAbstractScrollArea #pg_StatusPageMessages { background-color: black; }
-QAbstractScrollArea #pg_StatusPageConsole { background-color: black; }
-
-/** main GUI parts **/
-
-#dw_InfoBarStatus {
-    background-image: url(:/textures/icons/textures/texture-outer.jpg);
-    background-color: darkslategray;
-}
-
-#wi_CentralWidgetOutside {
-    background-image: url(:/textures/icons/textures/texture-outer.jpg);
-    background-color: darkslategray;
-    margin: 0px;
-    padding: 5px;
-}
-
-#fr_CentralFrameInside {
-    margin: 5px;
-}
-
-#gb_AtcStationsOnlineInfo {
-    border-style: none;
-}
-
-#sw_MainMiddle {
-    padding: 3px;
-    border: 1px solid green;
-    border-radius: 10px;
-    background-image: url(:/textures/icons/textures/texture-inner.jpg);
-}
-
-#sw_MainMiddle QPushButton {
-    background-color: rgba(0, 0, 255, 128);
-    border-style: none;
-    border-radius:3px;
-    color: yellow;
-    padding: 3px;
-}
-
-#wi_MainKeypadArea QPushButton {
-    /** background-image: url(:/textures/icons/textures/texture-inner.jpg); **/
-    /** need to fix pressed button first **/
-    background: black;
-    border-style: solid;
-    border-width: 1px;
-    border-radius:6px;
-    border-color: green;
-    max-height:20px;
-    min-width:60px;
-    min-height:20px;
-}
-
-/** cockpit needs to come after sw_MainMiddle **/
-#comp_CockpitComComponent QPushButton {
-    background-color: transparent;
-    border-style: solid;
-    border-radius:3px;
-    border-width: 0px;
-    border-color: blue;
-    color: lightblue;
-    padding: 1px;
-    margin: 2px;
-}
-
-#wip_CockpitComPanelShowHideBar QPushButton {
-    background-color: transparent;
-    border-style: solid;
-    border-radius:3px;
-    border-width: 0px;
-    border-color: blue;
-}
-
-#le_CommandLineInput {
-    background-image: url(:/textures/icons/textures/texture-inner.jpg);
-    margin-bottom: 5px;
-    padding: 3px;
-    border-radius: 5px;
 }
 
 QProgressBar {
@@ -127,6 +22,70 @@ QProgressBar::chunk {
     background-color: darkblue;
     width: 10px;
     margin: 0.5px;
+}
+
+#wi_CentralWidgetOutside {
+    /** there is no opacity with background image, so we need semitransparent images **/
+    /** background-image: url(:/blackgui/icons/titaniumtexture.jpg) **/
+    /** border: 2px solid green; **/
+    /** border-radius: 20px; **/
+    background-color: darkslategray;
+    margin: 0px;
+    padding: 5px;
+}
+
+#fr_CentralFrameInside {
+    background-color: darkslategray;
+    margin: 5px;
+}
+
+#wi_MainKeypadArea {
+    background-color: darkslategray;
+}
+
+#gb_AtcStationsOnlineInfo {
+    border-style: none;
+}
+
+#sw_MainMiddle {
+    padding: 3px;
+    border: 0px;
+    border-radius: 10px;
+}
+
+#sw_MainMiddle QPushButton {
+    background-color: rgba(0, 0, 255, 128);
+    border-style: none;
+    border-radius:3px;
+    color: yellow;
+    padding: 3px;
+}
+
+/* No style for Dial
+#sw_MainMiddel QDial {
+    background-color: rgba(0, 0, 255, 128);
+}
+*/
+
+#wi_MainKeypadArea QPushButton {
+    background-color: black;
+    border-style: solid;
+    border-width:1px;
+    border-radius:6px;
+    border-color: green;
+    max-height:20px;
+    min-width:60px;
+    min-height:20px;
+}
+
+#wi_MainKeypadAreaWindow {
+    background-color: darkslategray;
+}
+
+#le_CommandLineInput {
+    margin-bottom: 5px;
+    padding: 3px;
+    border-radius: 5px;
 }
 
 QTabWidget::pane { /* The tab widget frame */
@@ -152,32 +111,22 @@ QTabBar::tab::selected {
     background-color: rgba(0, 0, 255, 128);
 }
 
-QTabBar::tear {
-    image: url(:/own/icons/own/transparent1px.png);
-    max-width: 1px;
-}
-
-QTabBar QToolButton { /* the scroll buttons are tool buttons */
-    background-color: rgba(0, 0, 255, 200);
-    border: 1px solid green;
-}
-
 QLabel {
     background: transparent;
 }
 
 QLineEdit {
-    background: transparent;
+    background: black;
     border: 1px solid green;
     border-radius: 5px;
 }
 
 QLineEdit[readOnly="true"] {
-    background: transparent;
+    background: black;
 }
 
 QCheckBox {
-    border: 0px solid green; /** also borders label **/
+    border: 0px solid green;
     background: transparent;
 }
 
@@ -199,9 +148,13 @@ QGroupBox {
 }
 
 QGroupBox::title {
-    subcontrol-origin: margin;
-    subcontrol-position: middle center; /* position at the top center */
-    padding: 0 3px;
+        subcontrol-origin: margin;
+        subcontrol-position: middle center; /* position at the top center */
+        padding: 0 3px;
+}
+
+QToolBox {
+    border: none;
 }
 
 QToolBox::tab {
@@ -217,22 +170,11 @@ QToolBox::tab::selected {
     background-color: rgba(0, 0, 255, 128);
 }
 
-/** no border on page */
-QToolBox > QWidget {
-    border: 0px;
-}
-
 QComboBox {
     border: 1px solid green;
     border-radius: 5px;
     padding: 1px;
     background: transparent;
-}
-
-/** drop down list **/
-QComboBox QAbstractItemView {
-    background-color: lightgray;
-    color: black;
 }
 
 QDoubleSpinBox  {
@@ -243,8 +185,7 @@ QDoubleSpinBox  {
 }
 
 QMenuBar {
-    background-image: url(:/textures/icons/textures/texture-outer.jpg);
-    background-color: darkslategray;
+    background: darkslategray;
 }
 
 QMenuBar::item {
@@ -340,14 +281,13 @@ QHeaderView::section {
 QTableView {
     border: 1px solid green;
     border-radius: 5px;
-    background-color: transparent;
+    background-color: black;
     alternate-background-color: darkslategray;
     selection-background-color: blue;
     margin-left: 2px;
-    margin-right: 2px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    padding:0px;
+    margin-top: 1px;
+    margin-bottom: 0;
+    padding:0;
 }
 
 QSlider::groove:horizontal {
@@ -371,8 +311,7 @@ QSizeGrip {
 }
 
 QStatusBar {
-    background-image: url(:/textures/icons/textures/texture-outer.jpg);
-    background-color: darkslategray;
+    background: darkslategray;
 }
 
 QStatusBar::item {

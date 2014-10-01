@@ -7,6 +7,7 @@
  * contained in the LICENSE file.
  */
 
+#include "guiutility.h"
 #include "dockwidgetinfobar.h"
 #include "components/maininfoareacomponent.h"
 #include "stylesheetutility.h"
@@ -21,6 +22,7 @@ namespace BlackGui
 {
     CDockWidgetInfoBar::CDockWidgetInfoBar(QWidget *parent) : CDockWidget(parent)
     {
+        this->setProperty("mainframeless", CGuiUtility::isMainWindowFrameless());
         this->setMarginsWhenDocked(0, 0, 0, -1);
         this->setWindowTitle("Info bar");
         this->setWindowIcon(CIcons::swift24());

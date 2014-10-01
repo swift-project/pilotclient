@@ -27,6 +27,14 @@ namespace BlackGui
         return nullptr;
     }
 
+    bool CGuiUtility::isMainWindowFrameless()
+    {
+        QMainWindow *mw = mainWindow();
+        Q_ASSERT(mw); // there should be a main window
+        if (!mw) return false;
+        return (mw->windowFlags() & Qt::FramelessWindowHint);
+    }
+
     QWidgetList CGuiUtility::topLevelApplicationWidgetsWithName()
     {
         QWidgetList tlw = QApplication::topLevelWidgets();

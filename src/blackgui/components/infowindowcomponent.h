@@ -68,6 +68,10 @@ namespace BlackGui
 
             //! Current page
             void setCurrentPage(QWidget *widget);
+
+        private slots:
+            //! Style sheet changed
+            void onStyleSheetsChanged();
         };
     }
 }

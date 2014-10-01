@@ -1,23 +1,32 @@
-QWidget {
-        font-family: arial-rounded;
-        font: bold 10px;
-        color: black; /** font **/
+QFrame#fr_InfoWindow {
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgba(0,0,0,200);
+}
+
+QStackedWidget {
+    font-family: arial-rounded;
+    font: bold 10px;
+    color: white; /** font not in text edit **/
 }
 
 QPushButton {
-        background-color: rgba(255, 255, 0, 175);
-        border-style: solid;
-        border-width:1px;
-        border-radius:0px;
-        border-color: green;
-        max-height:20px;
+    background-color: transparent;
+    border-style: solid;
+    border-width: 0px;
+    border-radius:3px;
+    border-color: green;
+    max-height:20px;
 }
 
 QTextEdit {
-        background-color: rgba(255, 255, 0, 175);
-        border-style: solid;
-        border-width:1px;
-        border-radius:6px;
-        border-color: green;
-        opacity: 0.5;
+    background-color: rgba(255, 255, 0, 240); /* transparent yellow */
+    border-style: solid;
+    border-width:1px;
+    border-radius:6px;
+    border-color: green;
+    opacity: 0.5;
+    color: black; /** font **/
 }

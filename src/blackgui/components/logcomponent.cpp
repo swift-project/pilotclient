@@ -9,6 +9,9 @@
 
 #include "logcomponent.h"
 #include "ui_logcomponent.h"
+#include "../stylesheetutility.h"
+
+using namespace BlackGui;
 
 namespace BlackGui
 {

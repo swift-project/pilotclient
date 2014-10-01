@@ -13,6 +13,8 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QRegExp>
+#include <QStyleOption>
+#include <QPainter>
 
 namespace BlackGui
 {
@@ -120,7 +122,7 @@ namespace BlackGui
     QString CStyleSheetUtility::style(const QString &fileName) const
     {
         if (!this->containsStyle(fileName)) return QString();
-        return this->m_styleSheets[fileName.toLower()];
+        return this->m_styleSheets[fileName.toLower()].trimmed();
     }
 
     QString CStyleSheetUtility::styles(const QStringList &fileNames) const
@@ -129,7 +131,7 @@ namespace BlackGui
         foreach(QString fileName, fileNames)
         {
             if (!this->containsStyle(fileName)) continue;
-            QString s = this->m_styleSheets[fileName.toLower()];
+            QString s = this->m_styleSheets[fileName.toLower()].trimmed();
             if (s.isEmpty()) continue;
             if (!style.isEmpty()) style.append("\n\n");
             style.append("/** file: ").append(fileName).append(" **/\n");
@@ -218,5 +220,17 @@ namespace BlackGui
         if (!dirPath.endsWith('/')) dirPath.append('/');
         dirPath.append("qss");
         return dirPath;
+    }
+
+    void CStyleSheetUtility::useStyleSheetInDerivedWidget(QWidget *usedWidget)
+    {
+        Q_ASSERT(usedWidget);
+        if (!usedWidget) { return; }
+        Q_ASSERT(usedWidget->style());
+        if (!usedWidget->style()) { return; }
+        QStyleOption opt;
+        opt.initFrom(usedWidget);
+        QPainter p(usedWidget);
+        usedWidget->style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, usedWidget);
     }
 }

@@ -38,8 +38,8 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <property name="horizontalSpacing">
-    <number>3</number>
+   <property name="spacing">
+    <number>0</number>
    </property>
    <item row="0" column="0">
     <widget class="QToolBox" name="tb_StatusPage">
@@ -97,8 +97,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>71</height>
+        <width>398</width>
+        <height>250</height>
        </rect>
       </property>
       <attribute name="label">

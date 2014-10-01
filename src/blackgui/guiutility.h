@@ -26,6 +26,9 @@ namespace BlackGui
         //! Main application window
         static QMainWindow *mainWindow();
 
+        //! Is main window frameless?
+        static bool isMainWindowFrameless();
+
         //! Top level widgets with names
         static QWidgetList topLevelApplicationWidgetsWithName();
 

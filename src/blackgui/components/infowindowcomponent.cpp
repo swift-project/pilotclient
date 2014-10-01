@@ -9,12 +9,14 @@
 
 #include "infowindowcomponent.h"
 #include "ui_infowindowcomponent.h"
+#include "../stylesheetutility.h"
 #include "blackmisc/icon.h"
 #include <QTimer>
 #include <QDesktopWidget>
 
 using namespace BlackMisc;
 using namespace BlackMisc::Network;
+
 
 namespace BlackGui
 {
@@ -31,8 +33,11 @@ namespace BlackGui
             this->hide();
             this->m_hideTimer = new QTimer(this);
             this->m_hideTimer->setSingleShot(true);
+            this->onStyleSheetsChanged();
+
             connect(this->m_hideTimer, &QTimer::timeout, this, &CInfoWindowComponent::hide);
             connect(this->ui->pb_Close, &QPushButton::pressed, this, &CInfoWindowComponent::hide);
+            connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CInfoWindowComponent::onStyleSheetsChanged);
         }
 
         /*
@@ -144,6 +149,15 @@ namespace BlackGui
         void CInfoWindowComponent::setCurrentPage(QWidget *widget)
         {
             this->ui->sw_DifferentModes->setCurrentWidget(widget);
+        }
+
+        /*
+         * Style sheet changed
+         */
+        void CInfoWindowComponent::onStyleSheetsChanged()
+        {
+            QString st = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameInfoWindow());
+            this->setStyleSheet(st);
         }
     }
 } // namespace

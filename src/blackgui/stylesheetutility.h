@@ -89,9 +89,9 @@ namespace BlackGui
         }
 
         //! File name maininfoarea.qss
-        static const QString &fileNameMainInfoArea()
+        static const QString &fileNameInfoWindow()
         {
-            static const QString f("maininfoarea.qss");
+            static const QString f("stylesheetinfo.qss");
             return f;
         }
 
@@ -109,6 +109,13 @@ namespace BlackGui
             return s;
         }
 
+        //! Transparent background color
+        static const QString &transparentBackgroundColor()
+        {
+            static const QString t = "background-color: transparent;";
+            return t;
+        }
+
         //! qss directory
         static QString qssDirectory();
 
@@ -120,6 +127,10 @@ namespace BlackGui
 
         //! Font as combined weight and style
         static QString fontAsCombinedWeightStyle(const QFont &font);
+
+        //! Use style sheets in derived widgets
+        //! \sa QWidget::paintEvent
+        static void useStyleSheetInDerivedWidget(QWidget *derivedWidget);
 
     signals:
         //! Sheets have been changed
