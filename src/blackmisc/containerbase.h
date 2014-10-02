@@ -67,15 +67,18 @@ namespace BlackMisc
         /*!
          * \brief Remove elements for which a given predicate returns true.
          * \pre The sequence must be initialized.
+         * \return The number of elements removed.
          */
         template <class Predicate>
-        void removeIf(Predicate p)
+        int removeIf(Predicate p)
         {
+            int count = 0;
             for (auto it = derived().begin(); it != derived().end();)
             {
-                if (p(*it)) { it = derived().erase(it); }
+                if (p(*it)) { it = derived().erase(it); count++; }
                 else { ++it; }
             }
+            return count;
         }
 
         /*!
@@ -83,11 +86,12 @@ namespace BlackMisc
          * \param k0 A pointer to a member function of T.
          * \param v0 A value to compare against the value returned by k0.
          * \param keysValues Zero or more additional pairs of { pointer to member function of T, value to compare it against }.
+         * \return The number of elements removed.
          */
         template <class K0, class V0, class... KeysValues>
-        void removeIf(K0 k0, V0 v0, KeysValues... keysValues)
+        int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
         {
-            removeIf(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
+            return removeIf(BlackMisc::Predicates::MemberEqual(k0, v0, keysValues...));
         }
 
     public:

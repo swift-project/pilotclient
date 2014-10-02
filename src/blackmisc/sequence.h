@@ -337,11 +337,17 @@ namespace BlackMisc
 
         /*!
          * \brief Modify by applying a value map to each element for which a given predicate returns true.
+         * \return The number of elements modified.
          */
         template <class Predicate>
-        void applyIf(Predicate p, const CIndexVariantMap &newValues)
+        int applyIf(Predicate p, const CPropertyIndexVariantMap &newValues, bool skipEqualValues = false)
         {
-            std::for_each(begin(), end(), [ &, p ](T & value) { if (p(value)) { value.apply(newValues); } });
+            int count = 0;
+            for (auto &value : *this)
+            {
+                if (p(value) && ! value.apply(newValues, skipEqualValues).isEmpty()) { count++; }
+            }
+            return count;
         }
 
         /*!
@@ -349,45 +355,63 @@ namespace BlackMisc
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
          * \param newValues Values from this map will be put into each matching element.
+         * \return The number of elements modified.
          */
         template <class K1, class V1>
-        void applyIf(K1 key1, V1 value1, const CIndexVariantMap &newValues)
+        int applyIf(K1 key1, V1 value1, const CPropertyIndexVariantMap &newValues, bool skipEqualValues = false)
         {
-            applyIf(BlackMisc::Predicates::MemberEqual(key1, value1), newValues);
+            return applyIf(BlackMisc::Predicates::MemberEqual(key1, value1), newValues, skipEqualValues);
         }
 
         /*!
          * \brief Modify by applying a value map to each element matching a given value map.
+         * \return The number of elements modified.
          */
-        void applyIf(const CIndexVariantMap &pattern, const CIndexVariantMap &newValues)
+        int applyIf(const CPropertyIndexVariantMap &pattern, const CPropertyIndexVariantMap &newValues, bool skipEqualValues = false)
         {
-            applyIf([ & ](const T & value) { return value == pattern; }, newValues);
+            return applyIf([ & ](const T &value) { return value == pattern; }, newValues, skipEqualValues);
         }
 
         /*!
-         * \brief Remove the given object, if it is contained.
+         * \brief Remove all elements equal to the given object, if it is contained.
          * \pre The sequence must be initialized.
+         * \return The number of elements removed.
          */
-        void remove(const T &object)
+        int remove(const T &object)
         {
-            erase(std::remove(begin(), end(), object), end());
+            const auto newEnd = std::remove(begin(), end(), object);
+            int count = std::distance(newEnd, end());
+            erase(newEnd, end());
+            return count;
         }
 
         /*!
          * \brief Replace elements matching the given element with a replacement.
+         * \return The number of elements replaced.
          */
-        void replace(const T &original, const T &replacement)
+        int replace(const T &original, const T &replacement)
         {
-            std::replace(begin(), end(), original, replacement);
+            int count = 0;
+            for (auto &element : *this)
+            {
+                if (element == original) { element = replacement; count++; }
+            }
+            return count;
         }
 
         /*!
          * \brief Replace elements for which a given predicate returns true.
+         * \return The number of elements replaced.
          */
         template <class Predicate>
-        void replaceIf(Predicate p, const T &replacement)
+        int replaceIf(Predicate p, const T &replacement)
         {
-            std::replace_if(begin(), end(), p, replacement);
+            int count = 0;
+            for (auto &element : *this)
+            {
+                if (p(element)) { element = replacement; count++; }
+            }
+            return count;
         }
 
         /*!
@@ -395,11 +419,12 @@ namespace BlackMisc
          * \param key1 A pointer to a member function of T.
          * \param value1 Will be compared to the return value of key1.
          * \param replacement All matching elements will be replaced by copies of this one.
+         * \return The number of elements replaced.
          */
         template <class K1, class V1>
-        void replaceIf(K1 key1, V1 value1, const T &replacement)
+        int replaceIf(K1 key1, V1 value1, const T &replacement)
         {
-            replaceIf(BlackMisc::Predicates::MemberEqual(key1, value1), replacement);
+            return replaceIf(BlackMisc::Predicates::MemberEqual(key1, value1), replacement);
         }
 
         /*!
