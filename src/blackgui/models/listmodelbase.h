@@ -92,8 +92,8 @@ namespace BlackGui
             Qt::ItemFlags flags(const QModelIndex &index) const override;
 
             //! Update by new container
-            //! \remarks a sorting is performed if a valid sort column is set
-            virtual int update(const ContainerType &container);
+            //! \remarks a sorting is performed only if a valid sort column is set
+            virtual int update(const ContainerType &container, bool sort = true);
 
             //! Update single element
             virtual void update(const QModelIndex &index, const ObjectType &object);

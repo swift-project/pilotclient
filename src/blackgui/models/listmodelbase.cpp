@@ -97,12 +97,12 @@ namespace BlackGui
          * Update
          */
         template <typename ObjectType, typename ContainerType>
-        int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &container)
+        int CListModelBase<ObjectType, ContainerType>::update(const ContainerType &container, bool sort)
         {
             // KWB remove: qDebug() will be removed soon
             qDebug() << "update" << this->objectName() << "size" << container.size();
             this->beginResetModel();
-            this->m_container = (container.size() > 1 && this->hasValidSortColumn() ?
+            this->m_container = (sort && container.size() > 1 && this->hasValidSortColumn() ?
                                  this->sortListByColumn(container, this->getSortColumn(), this->m_sortOrder) :
                                  container);
             this->endResetModel();
@@ -192,12 +192,8 @@ namespace BlackGui
             Q_ASSERT(!propertyIndex.isEmpty());
             if (propertyIndex.isEmpty()) return list; // at release build do nothing
 
-            // KWB: qDebug() will be removed soon
-            qDebug() << "sort" << this->objectName() << "column" << column << propertyIndex.toQString();
-
             // sort the values
-            return list.sorted
-                   ([ = ](const ObjectType & a, const ObjectType & b) -> bool
+            auto p = [ = ](const ObjectType & a, const ObjectType & b) -> bool
             {
                 QVariant aQv = a.propertyByIndex(propertyIndex);
                 QVariant bQv = b.propertyByIndex(propertyIndex);
@@ -205,8 +201,11 @@ namespace BlackGui
                 BlackMisc::compareQVariants(aQv, bQv) :
                 BlackMisc::compareQVariants(bQv, aQv);
                 return compare < 0;
-            }
-                   ); // sorted
+            };
+
+            // KWB: qDebug() will be removed soon
+            qDebug() << "sort" << this->objectName() << "column" << column << propertyIndex.toQString();
+            return list.sorted(p); // synchronous sorted
         }
 
         /*

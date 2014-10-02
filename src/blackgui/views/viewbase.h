@@ -84,10 +84,10 @@ namespace BlackGui
             virtual void clear() override { Q_ASSERT(this->m_model); this->m_model->clear(); }
 
             //! Update whole container
-            template<class ContainerType> int updateContainer(const ContainerType &container, bool resize = true)
+            template<class ContainerType> int updateContainer(const ContainerType &container, bool sort = true, bool resize = true)
             {
                 Q_ASSERT(this->m_model);
-                int c = this->m_model->update(container);
+                int c = this->m_model->update(container, sort);
                 if (!resize) return c;
                 this->resizeColumnsToContents();
                 this->resizeRowsToContents();
