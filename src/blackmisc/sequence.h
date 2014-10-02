@@ -494,23 +494,17 @@ namespace BlackMisc
 
         /*!
          * \brief Return a copy as derived container sorted by a given comparator predicate.
-         */
-        template <class TargetContainer, class Predicate>
-        TargetContainer sortedDerived(Predicate p) const
-        {
-            CSequence result = *this;
-            result.sort(p);
-            return result;
-        }
-
-        /*!
-         * \brief Return a copy as derived container sorted by a given comparator predicate.
          * \remarks Sorts in background.
          */
         template <class TargetContainer, class Predicate>
         QFuture<TargetContainer> sortedAsync(Predicate p) const
         {
-            QFuture<TargetContainer> f = QtConcurrent::run(this, &CSequence::sortedDerived<TargetContainer, Predicate>, p);
+            TargetContainer result = *this;
+            QFuture<TargetContainer> f = QtConcurrent::run([=]()
+            {
+                result.sort(p);
+                return result;
+            });
             return f;
         }
 
