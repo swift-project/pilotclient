@@ -12,7 +12,7 @@
 #ifndef BLACKSIM_SIMSETUP_H
 #define BLACKSIM_SIMSETUP_H
 
-#include "blackmisc/indexvariantmap.h"
+#include "blackmisc/propertyindexvariantmap.h"
 #include <QMap>
 #include <QString>
 
@@ -26,14 +26,14 @@ namespace BlackSim
     class CSimulatorSetup
     {
     protected:
-        BlackMisc::CIndexVariantMap m_setup; //!< values describing the simulator setup (path, config files)
+        BlackMisc::CPropertyIndexVariantMap m_setup; //!< values describing the simulator setup (path, config files)
 
     protected:
         //! Default constructor
         CSimulatorSetup() {}
 
         //! Constructor
-        CSimulatorSetup(const BlackMisc::CIndexVariantMap &map) : m_setup(map) {}
+        CSimulatorSetup(const BlackMisc::CPropertyIndexVariantMap &map) : m_setup(map) {}
 
     public:
         //! Specific values
@@ -43,10 +43,10 @@ namespace BlackSim
         };
 
         //! Settings
-        BlackMisc::CIndexVariantMap getSettings() const { return this->m_setup;}
+        BlackMisc::CPropertyIndexVariantMap getSettings() const { return this->m_setup;}
 
         //! Settings
-        void setSettings(const BlackMisc::CIndexVariantMap &map);
+        void setSettings(const BlackMisc::CPropertyIndexVariantMap &map);
 
         //! Init, to be used where simulator runs
         void init();

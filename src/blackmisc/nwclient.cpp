@@ -143,7 +143,7 @@ namespace BlackMisc
         /*
          * Capabilities
          */
-        void CClient::setCapabilities(const CIndexVariantMap &capabilities)
+        void CClient::setCapabilities(const CPropertyIndexVariantMap &capabilities)
         {
             this->m_capabilities = capabilities;
         }
@@ -220,7 +220,7 @@ namespace BlackMisc
             switch (i)
             {
             case IndexCapabilities:
-                this->m_capabilities = variant.value<CIndexVariantMap>();
+                this->m_capabilities = variant.value<CPropertyIndexVariantMap>();
                 break;
             case IndexModel:
                 this->m_model.setPropertyByIndex(variant, index.copyFrontRemoved());;

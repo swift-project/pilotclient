@@ -7,21 +7,21 @@
  * contained in the LICENSE file.
  */
 
-#include "indexvariantmap.h"
+#include "propertyindexvariantmap.h"
+#include "propertyindexlist.h"
 #include "blackmiscfreefunctions.h"
-#include "avaltitude.h"
 
 namespace BlackMisc
 {
     /*
      * Constructor
      */
-    CIndexVariantMap::CIndexVariantMap(bool wildcard) : m_wildcard(wildcard) {}
+    CPropertyIndexVariantMap::CPropertyIndexVariantMap(bool wildcard) : m_wildcard(wildcard) {}
 
     /*
      * Constructor single value
      */
-    CIndexVariantMap::CIndexVariantMap(const CPropertyIndex &index, const QVariant &value)
+    CPropertyIndexVariantMap::CPropertyIndexVariantMap(const CPropertyIndex &index, const QVariant &value)
     {
         this->addValue(index, value);
     }
@@ -29,7 +29,7 @@ namespace BlackMisc
     /*
      * ==
      */
-    bool CIndexVariantMap::operator ==(const CIndexVariantMap &other) const
+    bool CPropertyIndexVariantMap::operator ==(const CPropertyIndexVariantMap &other) const
     {
         return this->m_wildcard == other.m_wildcard && this->m_values == other.m_values;
     }
@@ -37,7 +37,7 @@ namespace BlackMisc
     /*
      * !=
      */
-    bool CIndexVariantMap::operator !=(const CIndexVariantMap &other) const
+    bool CPropertyIndexVariantMap::operator !=(const CPropertyIndexVariantMap &other) const
     {
         return !(*this == other);
     }
@@ -45,7 +45,7 @@ namespace BlackMisc
     /*
      * Convert to string
      */
-    QString CIndexVariantMap::convertToQString(bool i18n) const
+    QString CPropertyIndexVariantMap::convertToQString(bool i18n) const
     {
         if (this->isEmpty()) return QString("{wildcard: %1}").arg(this->m_wildcard ? "true" : "false");
         QString s;
@@ -70,24 +70,24 @@ namespace BlackMisc
     /*
      * metaTypeId
      */
-    int CIndexVariantMap::getMetaTypeId() const
+    int CPropertyIndexVariantMap::getMetaTypeId() const
     {
-        return qMetaTypeId<CIndexVariantMap>();
+        return qMetaTypeId<CPropertyIndexVariantMap>();
     }
 
     /*
      * is a
      */
-    bool CIndexVariantMap::isA(int metaTypeId) const
+    bool CPropertyIndexVariantMap::isA(int metaTypeId) const
     {
-        if (metaTypeId == qMetaTypeId<CIndexVariantMap>()) { return true; }
+        if (metaTypeId == qMetaTypeId<CPropertyIndexVariantMap>()) { return true; }
         return this->CValueObject::isA(metaTypeId);
     }
 
     /*
      * Compare
      */
-    int CIndexVariantMap::compareImpl(const CValueObject &/*otherBase*/) const
+    int CPropertyIndexVariantMap::compareImpl(const CValueObject &/*otherBase*/) const
     {
         qFatal("not implemented");
         return 0;
@@ -96,7 +96,7 @@ namespace BlackMisc
     /*
      * Marshall to DBus
      */
-    void CIndexVariantMap::marshallToDbus(QDBusArgument &argument) const
+    void CPropertyIndexVariantMap::marshallToDbus(QDBusArgument &argument) const
     {
         argument << this->m_values.keys();
         argument << this->m_values.values();
@@ -105,7 +105,7 @@ namespace BlackMisc
     /*
      * Unmarshall from DBus
      */
-    void CIndexVariantMap::unmarshallFromDbus(const QDBusArgument &argument)
+    void CPropertyIndexVariantMap::unmarshallFromDbus(const QDBusArgument &argument)
     {
         QList<CPropertyIndex> indexes;
         QList<CVariant> values;
@@ -124,7 +124,7 @@ namespace BlackMisc
     /*
      * Add value
      */
-    void CIndexVariantMap::addValue(const CPropertyIndex &index, const QVariant &value)
+    void CPropertyIndexVariantMap::addValue(const CPropertyIndex &index, const QVariant &value)
     {
         this->m_values.insert(index, value);
     }
@@ -132,24 +132,32 @@ namespace BlackMisc
     /*
      * Add string by literal
      */
-    void CIndexVariantMap::addValue(const CPropertyIndex &index, const char *str)
+    void CPropertyIndexVariantMap::addValue(const CPropertyIndex &index, const char *str)
     {
         this->addValue(index, QString(str));
     }
 
     /*
+     * Indexes
+     */
+    CPropertyIndexList CPropertyIndexVariantMap::indexes() const
+    {
+        return CPropertyIndexList::fromImpl(this->m_values.keys());
+    }
+
+    /*
      * Register metadata
      */
-    void CIndexVariantMap::registerMetadata()
+    void CPropertyIndexVariantMap::registerMetadata()
     {
-        qRegisterMetaType<CIndexVariantMap>();
-        qDBusRegisterMetaType<CIndexVariantMap>();
+        qRegisterMetaType<CPropertyIndexVariantMap>();
+        qDBusRegisterMetaType<CPropertyIndexVariantMap>();
     }
 
     /*
      * Hash
      */
-    uint CIndexVariantMap::getValueHash() const
+    uint CPropertyIndexVariantMap::getValueHash() const
     {
         // there is no hash for map, so I use this workaround here
         const QString s = this->toQString(false);

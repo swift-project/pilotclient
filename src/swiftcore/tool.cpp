@@ -1,6 +1,6 @@
 #include "tool.h"
 #include "blackcore/context_all_interfaces.h"
-#include "blackmisc/indexvariantmap.h"
+#include "blackmisc/propertyindexallclasses.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/pqallquantities.h"
 #include "blackmisc/loghandler.h"

@@ -5,7 +5,7 @@
 
 #include "testvariantandmap.h"
 #include "blackmisc/avatcstation.h"
-#include "blackmisc/indexvariantmap.h"
+#include "blackmisc/propertyindexallclasses.h"
 #include "blackmisc/tuple.h"
 #include <QList>
 #include <QString>
@@ -85,10 +85,10 @@ namespace BlackMiscTest
                              geoPos, CLength(50, CLengthUnit::km()), false, dtFrom, dtUntil);
 
         // value maps
-        CIndexVariantMap vmWildcard(true);
-        CIndexVariantMap vmNoWildcard(false);
-        CIndexVariantMap vm;
-        CIndexVariantMap vmCopy(vmWildcard);
+        CPropertyIndexVariantMap vmWildcard(true);
+        CPropertyIndexVariantMap vmNoWildcard(false);
+        CPropertyIndexVariantMap vm;
+        CPropertyIndexVariantMap vmCopy(vmWildcard);
 
         // remark: Shortcoming here, as the callsign will automatically set for user in station
         // I have to set this as well, otherwise, not match.

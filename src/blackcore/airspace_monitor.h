@@ -140,7 +140,7 @@ namespace BlackCore
         QStringList createFsipiCustomPacketData() const;
 
         //! Helper method, add voice capabilites if available
-        void addVoiceCapabilitiesFromDataFile(BlackMisc::CIndexVariantMap &vm, const BlackMisc::Aviation::CCallsign &callsign);
+        void addVoiceCapabilitiesFromDataFile(BlackMisc::CPropertyIndexVariantMap &vm, const BlackMisc::Aviation::CCallsign &callsign);
 
     private slots:
         void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);

@@ -14,7 +14,7 @@
 
 #include "valueobject.h"
 #include "range.h"
-#include "indexvariantmap.h"
+#include "propertyindexvariantmap.h"
 #include "blackmiscfreefunctions.h"
 #include "predicates.h"
 #include "json.h"

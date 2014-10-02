@@ -16,7 +16,7 @@
 #include "nwaircraftmodel.h"
 #include "nwvoicecapabilities.h"
 #include "propertyindex.h"
-#include "indexvariantmap.h"
+#include "propertyindexvariantmap.h"
 
 namespace BlackMisc
 {
@@ -86,13 +86,13 @@ namespace BlackMisc
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_user.getCallsign(); }
 
             //! Get capabilities
-            CIndexVariantMap getCapabilities() const { return this->m_capabilities; }
+            CPropertyIndexVariantMap getCapabilities() const { return this->m_capabilities; }
 
             //! Set capability
             void setCapability(bool hasCapability, Capabilities capability);
 
             //! Set capabilities
-            void setCapabilities(const CIndexVariantMap &capabilities);
+            void setCapabilities(const CPropertyIndexVariantMap &capabilities);
 
             //! Get capabilities
             QString getCapabilitiesAsString() const;
@@ -168,7 +168,7 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CClient)
             CUser m_user;
             CAircraftModel m_model;
-            CIndexVariantMap m_capabilities;
+            CPropertyIndexVariantMap m_capabilities;
             QString m_server;
             CVoiceCapabilities m_voiceCapabilities;
 

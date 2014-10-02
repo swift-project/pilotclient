@@ -11,7 +11,7 @@
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/project.h"
 #include "blackmisc/testing.h"
-#include "blackmisc/indexvariantmap.h"
+#include "blackmisc/propertyindexallclasses.h"
 
 namespace BlackCore
 {
@@ -231,15 +231,15 @@ namespace BlackCore
     void CAirspaceMonitor::ps_realNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
         if (realname.isEmpty()) return;
-        CIndexVariantMap vm({CAtcStation::IndexController, CUser::IndexRealName}, realname);
+        CPropertyIndexVariantMap vm({CAtcStation::IndexController, CUser::IndexRealName}, realname);
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
 
-        vm = CIndexVariantMap({CAircraft::IndexPilot, CUser::IndexRealName}, realname);
+        vm = CPropertyIndexVariantMap({CAircraft::IndexPilot, CUser::IndexRealName}, realname);
         this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
 
         // Client
-        vm = CIndexVariantMap({CClient::IndexUser, CUser::IndexRealName}, realname);
+        vm = CPropertyIndexVariantMap({CClient::IndexUser, CUser::IndexRealName}, realname);
         this->addVoiceCapabilitiesFromDataFile(vm, callsign);
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
@@ -247,11 +247,11 @@ namespace BlackCore
     void CAirspaceMonitor::ps_capabilitiesReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, quint32 flags)
     {
         if (callsign.isEmpty()) return;
-        CIndexVariantMap capabilities;
+        CPropertyIndexVariantMap capabilities;
         capabilities.addValue(CClient::FsdAtisCanBeReceived, (flags & INetwork::AcceptsAtisResponses));
         capabilities.addValue(CClient::FsdWithInterimPositions, (flags & INetwork::SupportsInterimPosUpdates));
         capabilities.addValue(CClient::FsdWithModelDescription, (flags & INetwork::SupportsModelDescriptions));
-        CIndexVariantMap vm(CClient::IndexCapabilities, capabilities.toQVariant());
+        CPropertyIndexVariantMap vm(CClient::IndexCapabilities, capabilities.toQVariant());
         this->addVoiceCapabilitiesFromDataFile(vm, callsign);
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
@@ -261,7 +261,7 @@ namespace BlackCore
         if (callsign.isEmpty() || model.isEmpty()) return;
 
         // Request of other client, I can get the other's model from that
-        CIndexVariantMap vm({ CClient::IndexModel, CAircraftModel::IndexModelString }, QVariant(model));
+        CPropertyIndexVariantMap vm({ CClient::IndexModel, CAircraftModel::IndexModelString }, QVariant(model));
         vm.addValue({ CClient::IndexModel, CAircraftModel::IndexIsQueriedModelString }, QVariant(true));
         if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
         {
@@ -276,7 +276,7 @@ namespace BlackCore
     void CAirspaceMonitor::ps_serverReplyReceived(const CCallsign &callsign, const QString &server)
     {
         if (callsign.isEmpty() || server.isEmpty()) return;
-        CIndexVariantMap vm(CClient::IndexServer, QVariant(server));
+        CPropertyIndexVariantMap vm(CClient::IndexServer, QVariant(server));
         this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
     }
 
@@ -289,7 +289,7 @@ namespace BlackCore
         CInformationMessage metar(CInformationMessage::METAR, metarMessage);
 
         // add METAR to existing stations
-        CIndexVariantMap vm(CAtcStation::IndexMetar, metar.toQVariant());
+        CPropertyIndexVariantMap vm(CAtcStation::IndexMetar, metar.toQVariant());
         this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsignTower, vm);
         this->m_metarCache.insert(icaoCode, metar);
@@ -322,7 +322,7 @@ namespace BlackCore
         this->m_network->sendFsipirCustomPacket(recipientCallsign, icao.getAirlineDesignator(), icao.getAircraftDesignator(), icao.getAircraftCombinedType(), modelString);
     }
 
-    void CAirspaceMonitor::addVoiceCapabilitiesFromDataFile(CIndexVariantMap &vm, const CCallsign &callsign)
+    void CAirspaceMonitor::addVoiceCapabilitiesFromDataFile(CPropertyIndexVariantMap &vm, const CCallsign &callsign)
     {
         Q_ASSERT(this->m_vatsimDataFileReader);
         if (callsign.isEmpty()) return;
@@ -394,7 +394,7 @@ namespace BlackCore
         else
         {
             // update
-            CIndexVariantMap values;
+            CPropertyIndexVariantMap values;
             values.addValue(CAtcStation::IndexFrequency, frequency);
             values.addValue(CAtcStation::IndexPosition, position);
             values.addValue(CAtcStation::IndexRange, range);
@@ -415,15 +415,15 @@ namespace BlackCore
         }
 
         // booked
-        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, CIndexVariantMap(CAtcStation::IndexIsOnline, QVariant(false)));
+        this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, CPropertyIndexVariantMap(CAtcStation::IndexIsOnline, QVariant(false)));
     }
 
     void CAirspaceMonitor::ps_atisReceived(const CCallsign &callsign, const CInformationMessage &atisMessage)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
         if (callsign.isEmpty()) return;
-        CIndexVariantMap vm(CAtcStation::IndexAtis, atisMessage.toQVariant());
-        this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
+        CPropertyIndexVariantMap vm(CAtcStation::IndexAtis, atisMessage.toQVariant());
+        int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
 
         // receiving an ATIS means station is online, update in bookings
         vm.addValue(CAtcStation::IndexIsOnline, true);
@@ -436,8 +436,9 @@ namespace BlackCore
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
         QString trimmedUrl = url.trimmed();
-        CIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
-        if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign))
+        CPropertyIndexVariantMap vm({ CAtcStation::IndexVoiceRoom, CVoiceRoom::IndexUrl }, trimmedUrl);
+        int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
+        if (changedOnline > 0)
         {
             this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
             CAtcStation station = this->m_atcStationsOnline.findFirstByCallsign(callsign);
@@ -453,8 +454,11 @@ namespace BlackCore
         }
 
         // receiving voice room means ATC has voice
-        vm = CIndexVariantMap(CClient::IndexVoiceCapabilities, CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice).toQVariant());
-        this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
+        if (changedOnline > 0)
+        {
+            vm = CPropertyIndexVariantMap(CClient::IndexVoiceCapabilities, CVoiceCapabilities::fromVoiceCapabilities(CVoiceCapabilities::Voice).toQVariant());
+            this->m_otherClients.applyIf(&CClient::getCallsign, callsign, vm);
+        }
     }
 
     void CAirspaceMonitor::ps_atisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
@@ -470,11 +474,13 @@ namespace BlackCore
             if (!ok) { return; }
             QDateTime logoffDateTime = QDateTime::currentDateTimeUtc();
             logoffDateTime.setTime(QTime(h, m));
-            CIndexVariantMap vm(CAtcStation::IndexBookedUntil, logoffDateTime);
-            this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
-            this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
-            if (this->m_atcStationsOnline.contains(&CAtcStation::getCallsign, callsign)) { emit this->changedAtcStationsOnline(); }
-            if (this->m_atcStationsBooked.contains(&CAtcStation::getCallsign, callsign)) { emit this->changedAtcStationsBooked(); }
+
+            CPropertyIndexVariantMap vm(CAtcStation::IndexBookedUntil, logoffDateTime);
+            int changedOnline = this->m_atcStationsOnline.applyIf(&CAtcStation::getCallsign, callsign, vm);
+            int changedBooked = this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
+
+            if (changedOnline > 0) { emit changedAtcStationsOnline(); }
+            if (changedBooked > 0) { emit changedAtcStationsBooked(); }
         }
     }
 
@@ -483,14 +489,14 @@ namespace BlackCore
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
 
         // update
-        CIndexVariantMap vm(CAircraft::IndexIcao, icaoData.toQVariant());
+        CPropertyIndexVariantMap vm(CAircraft::IndexIcao, icaoData.toQVariant());
         if (!icaoData.hasAircraftDesignator())
         {
             // empty so far, try to fetch from data file
             qDebug() << "Empty ICAO info for " << callsign << icaoData;
             CAircraftIcao icaoDataDataFile = this->m_vatsimDataFileReader->getIcaoInfo(callsign);
             if (!icaoDataDataFile.hasAircraftDesignator()) return; // give up!
-            vm = CIndexVariantMap(CAircraft::IndexIcao, icaoData.toQVariant());
+            vm = CPropertyIndexVariantMap(CAircraft::IndexIcao, icaoData.toQVariant());
         }
         this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual(&CAircraft::getCallsign, callsign), vm);
         emit this->changedAircraftsInRange();
@@ -538,7 +544,7 @@ namespace BlackCore
             // update
             CLength distance = this->m_ownAircraft.calculcateDistanceToPosition(situation.getPosition());
             distance.switchUnit(CLengthUnit::NM());
-            CIndexVariantMap vm;
+            CPropertyIndexVariantMap vm;
             vm.addValue(CAircraft::IndexTransponder, transponder);
             vm.addValue(CAircraft::IndexSituation, situation);
             vm.addValue(CAircraft::IndexDistance, distance);
@@ -570,7 +576,7 @@ namespace BlackCore
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
 
         // update
-        CIndexVariantMap vm({CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, frequency.toQVariant());
+        CPropertyIndexVariantMap vm({CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, frequency.toQVariant());
         this->m_aircraftsInRange.applyIf(BlackMisc::Predicates::MemberEqual(&CAircraft::getCallsign, callsign), vm);
         emit this->changedAircraftsInRange();
     }

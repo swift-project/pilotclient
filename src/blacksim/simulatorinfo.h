@@ -1,7 +1,7 @@
 #ifndef BLACKSIM_SIMULATORINFO_H
 #define BLACKSIM_SIMULATORINFO_H
 
-#include "blackmisc/indexvariantmap.h"
+#include "blackmisc/propertyindexvariantmap.h"
 #include "blackmisc/valueobject.h"
 
 namespace BlackSim
@@ -32,7 +32,7 @@ namespace BlackSim
         QString getSimulatorSetupValueAsString(int index) const;
 
         //! Set single settings
-        void setSimulatorSetup(const BlackMisc::CIndexVariantMap &setup);
+        void setSimulatorSetup(const BlackMisc::CPropertyIndexVariantMap &setup);
 
         //! Short name
         const QString &getShortName() const { return m_shortName; }
@@ -112,7 +112,7 @@ namespace BlackSim
         BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorInfo)
         QString m_fullName;
         QString m_shortName;
-        BlackMisc::CIndexVariantMap m_simsetup; //!< allows to access simulator keys requried on remote side
+        BlackMisc::CPropertyIndexVariantMap m_simsetup; //!< allows to access simulator keys requried on remote side
     };
 }
 

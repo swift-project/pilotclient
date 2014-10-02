@@ -16,8 +16,8 @@
 #include "audioallclasses.h"
 #include "hwallclasses.h"
 #include "settingsblackmiscclasses.h"
-#include "propertyindex.h"
-#include "indexvariantmap.h"
+#include "propertyindexlist.h"
+#include "propertyindexvariantmap.h"
 #include "namevariantpairlist.h"
 #include "variant.h"
 #include "statusmessagelist.h"
@@ -26,7 +26,6 @@
 #include <QtNetwork/QHostInfo>
 #include <QProcessEnvironment>
 #include <QSysInfo>
-
 
 /*
  * Metadata for PQs
@@ -165,7 +164,8 @@ void BlackMisc::registerMetadata()
     CPropertyIndex::registerMetadata();
     CVariant::registerMetadata();
     CPropertyIndex::registerMetadata();
-    CIndexVariantMap::registerMetadata();
+    CPropertyIndexList::registerMetadata();
+    CPropertyIndexVariantMap::registerMetadata();
     CNameVariantPair::registerMetadata();
     CNameVariantPairList::registerMetadata();
     CStatusMessage::registerMetadata();
@@ -204,21 +204,18 @@ void BlackMisc::initResources()
  */
 bool BlackMisc::equalQVariants(const QVariant &v1, const QVariant &v2)
 {
-    // prephase, shortcuts
-    if (v1 == v2) return true; // compares on primitives or on address
+    // Compares this QVariant with v and returns true if they are equal; otherwise returns false.
+    // In the case of custom types, their equalness operators are not called. Instead the values' addresses are compared.
+    if (v1 == v2) return true;
+
+    // shortcuts
     if (!v1.isValid() || !v2.isValid()) return false;
     if (v1.type() != v2.type()) return false;
     if (v1.userType() != v2.userType()) return false;
 
     // I have same types now
-    const CValueObject *cs1 = CValueObject::fromQVariant(v1);
-    const CValueObject *cs2 = CValueObject::fromQVariant(v2);
-    if (cs1 && cs2)
-    {
-        int c = compare(*cs1, *cs2);
-        return c == 0;
-    }
-    return  false;
+    int c = compareQVariants(v1, v2);
+    return  c == 0;
 }
 
 /*

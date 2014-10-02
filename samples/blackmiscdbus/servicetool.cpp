@@ -338,7 +338,7 @@ namespace BlackMiscTest
             pi = testserviceInterface.pingPropertyIndex(pi);
             qDebug() << "Pinged properties via interface" << pi;
 
-            CIndexVariantMap ivm;
+            CPropertyIndexVariantMap ivm;
             ivm.addValue(1, "one");
             ivm.addValue(2, "two");
             ivm.addValue(3, "three");
@@ -399,7 +399,7 @@ namespace BlackMiscTest
             // Value map
             qDebug() << "----------------- index variant map ----------------";
 
-            CIndexVariantMap valueMap;
+            CPropertyIndexVariantMap valueMap;
             valueMap.addValue(1, 111.222);
             valueMap.addValue(2, callsign);
             valueMap.addValue(3, alt);

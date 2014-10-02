@@ -28,7 +28,7 @@ namespace BlackSim
         return qv.toString();
     }
 
-    void CSimulatorInfo::setSimulatorSetup(const BlackMisc::CIndexVariantMap &setup)
+    void CSimulatorInfo::setSimulatorSetup(const BlackMisc::CPropertyIndexVariantMap &setup)
     {
         this->m_simsetup = setup;
     }

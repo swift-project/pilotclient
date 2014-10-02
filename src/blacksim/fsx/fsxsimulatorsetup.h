@@ -37,7 +37,7 @@ namespace BlackSim
             CFsxSimulatorSetup() : BlackSim::CSimulatorSetup() {}
 
             //! Constructor
-            CFsxSimulatorSetup(const BlackMisc::CIndexVariantMap &map) : BlackSim::CSimulatorSetup(map) {}
+            CFsxSimulatorSetup(const BlackMisc::CPropertyIndexVariantMap &map) : BlackSim::CSimulatorSetup(map) {}
 
             //! Init, to be used where FSX runs
             void init();

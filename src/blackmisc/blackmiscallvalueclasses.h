@@ -10,7 +10,7 @@
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/geoallclasses.h"
 #include "blackmisc/settingsblackmiscclasses.h"
-#include "blackmisc/indexvariantmap.h"
+#include "blackmisc/propertyindexallclasses.h"
 #include "blackmisc/networkallclasses.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/statusmessage.h"

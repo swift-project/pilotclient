@@ -33,7 +33,8 @@ namespace BlackMisc
 {
     // forward declaration
     class CPropertyIndex;
-    class CIndexVariantMap;
+    class CPropertyIndexList;
+    class CPropertyIndexVariantMap;
     class CIcon;
 
     namespace PhysicalQuantities
@@ -104,16 +105,16 @@ namespace BlackMisc
         friend QDBusArgument &operator<<(QDBusArgument &argument, const CValueObject &valueObject);
 
         //! Operator == with value map
-        friend bool operator==(const CIndexVariantMap &valueMap, const CValueObject &valueObject);
+        friend bool operator==(const CPropertyIndexVariantMap &valueMap, const CValueObject &valueObject);
 
         //! Operator != with value map
-        friend bool operator!=(const CIndexVariantMap &valueMap, const CValueObject &valueObject);
+        friend bool operator!=(const CPropertyIndexVariantMap &valueMap, const CValueObject &valueObject);
 
         //! Operator == with value map
-        friend bool operator==(const CValueObject &valueObject, const CIndexVariantMap &valueMap);
+        friend bool operator==(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap);
 
         //! Operator != with value map
-        friend bool operator!=(const CValueObject &valueObject, const CIndexVariantMap &valueMap);
+        friend bool operator!=(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap);
 
         //! Comparison operator to allow valueobjects be used as keys in QMap and std::set.
         template <class T> friend typename std::enable_if < std::is_base_of<CValueObject, T>::value  &&! PhysicalQuantities::IsQuantity<T>::value, bool >::type
@@ -182,7 +183,8 @@ namespace BlackMisc
         std::string toStdString(bool i18n = false) const;
 
         //! Update by variant map
-        int apply(const BlackMisc::CIndexVariantMap &indexMap);
+        //! \return number of values changed, with skipEqualValues equal values will not be changed
+        CPropertyIndexList apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues = false);
 
         //! Value hash, allows comparisons between QVariants
         virtual uint getValueHash() const = 0;
@@ -220,6 +222,9 @@ namespace BlackMisc
         //! Intentionally not abstract, avoiding all classes need to implement this method
         virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
 
+        //! Is given variant equal to value of property index?
+        virtual bool equalPropertyByIndex(const QVariant &compareValue, const CPropertyIndex &index) const;
+
         //! The stored object as CValueObject
         static const CValueObject *fromQVariant(const QVariant &variant);
 
@@ -229,9 +234,6 @@ namespace BlackMisc
 
         //! Copy constructor
         CValueObject(const CValueObject &) {}
-
-        //! Copy assignment operator =
-        // CValueObject &operator=(const CValueObject &) { return *this; }
 
         //! String for streaming operators
         virtual QString stringForStreaming() const;

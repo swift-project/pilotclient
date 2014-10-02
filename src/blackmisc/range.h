@@ -12,7 +12,7 @@
 #ifndef BLACKMISC_RANGE_H
 #define BLACKMISC_RANGE_H
 
-#include "indexvariantmap.h"
+#include "propertyindexvariantmap.h"
 #include "iterator.h"
 #include "predicates.h"
 #include <QtGlobal>
@@ -73,7 +73,7 @@ namespace BlackMisc
         /*!
          * \brief Return a copy containing only those elements matching a given value map.
          */
-        inline auto findBy(CIndexVariantMap valueMap) const
+        inline auto findBy(CPropertyIndexVariantMap valueMap) const
             -> CRange<Iterators::ConditionalIterator<CIt, decltype(BlackMisc::Predicates::Equals(std::move(valueMap)))>>;
 
         /*!
@@ -268,7 +268,7 @@ namespace BlackMisc
     }
 
     template <class Derived, class CIt>
-    auto CRangeBase<Derived, CIt>::findBy(CIndexVariantMap valueMap) const
+    auto CRangeBase<Derived, CIt>::findBy(CPropertyIndexVariantMap valueMap) const
         -> CRange<Iterators::ConditionalIterator<CIt, decltype(BlackMisc::Predicates::Equals(std::move(valueMap)))>>
     {
         return findBy(BlackMisc::Predicates::Equals(std::move(valueMap)));

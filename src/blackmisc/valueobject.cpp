@@ -7,11 +7,13 @@
  * contained in the LICENSE file.
  */
 
+
 #include "valueobject.h"
+#include "propertyindexvariantmap.h"
+#include "propertyindexlist.h"
 #include "propertyindex.h"
-#include "indexvariantmap.h"
-#include "blackmiscfreefunctions.h"
 #include "iconlist.h"
+#include "blackmiscfreefunctions.h"
 
 namespace BlackMisc
 {
@@ -101,6 +103,15 @@ namespace BlackMisc
     }
 
     /*
+     * Variant equal property index?
+     */
+    bool CValueObject::equalPropertyByIndex(const QVariant &compareValue, const CPropertyIndex &index) const
+    {
+        const QVariant myValue = this->propertyByIndex(index);
+        return BlackMisc::equalQVariants(myValue, compareValue);
+    }
+
+    /*
      * Return backing streamable object (if any)
      */
     const CValueObject *CValueObject::fromQVariant(const QVariant &variant)
@@ -140,17 +151,25 @@ namespace BlackMisc
     /*
      * Variant map
      */
-    int CValueObject::apply(const BlackMisc::CIndexVariantMap &indexMap)
+    CPropertyIndexList CValueObject::apply(const BlackMisc::CPropertyIndexVariantMap &indexMap, bool skipEqualValues)
     {
-        if (indexMap.isEmpty()) return 0;
-        int c = 0;
+        CPropertyIndexList changed;
+        if (indexMap.isEmpty()) return changed;
 
         const auto &map = indexMap.map();
         for (auto it = map.begin(); it != map.end(); ++it)
         {
-            this->setPropertyByIndex(it.value().toQVariant(), it.key());
+            const QVariant value = it.value().toQVariant();
+            const CPropertyIndex index = it.key();
+            if (skipEqualValues)
+            {
+                bool equal = this->equalPropertyByIndex(value, index);
+                if (equal) { continue; }
+            }
+            this->setPropertyByIndex(value, index);
+            changed.push_back(index);
         }
-        return c;
+        return changed;
     }
 
     /*
@@ -172,7 +191,7 @@ namespace BlackMisc
     /*
      * Compare with value map
      */
-    bool operator==(const CIndexVariantMap &indexMap, const CValueObject &valueObject)
+    bool operator==(const CPropertyIndexVariantMap &indexMap, const CValueObject &valueObject)
     {
         if (indexMap.isEmpty()) return indexMap.isWildcard();
         const auto &map = indexMap.map();
@@ -189,7 +208,7 @@ namespace BlackMisc
     /*
      * Compare with map
      */
-    bool operator!=(const CIndexVariantMap &indexMap, const CValueObject &valueObject)
+    bool operator!=(const CPropertyIndexVariantMap &indexMap, const CValueObject &valueObject)
     {
         return !(indexMap == valueObject);
     }
@@ -197,7 +216,7 @@ namespace BlackMisc
     /*
      * Compare with map
      */
-    bool operator==(const CValueObject &valueObject, const CIndexVariantMap &valueMap)
+    bool operator==(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap)
     {
         return valueMap == valueObject;
     }
@@ -205,7 +224,7 @@ namespace BlackMisc
     /*
      * Compare with map
      */
-    bool operator!=(const CValueObject &valueObject, const CIndexVariantMap &valueMap)
+    bool operator!=(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap)
     {
         return !(valueMap == valueObject);
     }

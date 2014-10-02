@@ -196,7 +196,7 @@ namespace BlackMiscTest
     /*
      * Receive value map
      */
-    void Testservice::receiveValueMap(const BlackMisc::CIndexVariantMap &valueMap) const
+    void Testservice::receiveValueMap(const BlackMisc::CPropertyIndexVariantMap &valueMap) const
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "Received value map:" << valueMap;
     }
@@ -269,7 +269,7 @@ namespace BlackMiscTest
     /*
      * Ping index variant map
      */
-    CIndexVariantMap Testservice::pingIndexVariantMap(const CIndexVariantMap &indexVariantMap)
+    CPropertyIndexVariantMap Testservice::pingIndexVariantMap(const CPropertyIndexVariantMap &indexVariantMap)
     {
         qDebug() << "Pid:" << ServiceTool::getPid() << "ping properties:" << indexVariantMap;
         return indexVariantMap;

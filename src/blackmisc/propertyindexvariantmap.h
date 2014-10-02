@@ -10,24 +10,29 @@
 //! \file
 
 #include "variant.h"
-#include "propertyindex.h"
 #include "valueobject.h"
+#include "propertyindex.h"
+
+// a) "propertyindex.h" needed for QMap below, despite forward declaration
+// b) "propertyindexlist.h" here causes circular dependencies
+
 #include <QVariantMap>
 #include <QDBusArgument>
 
-#ifndef BLACKMISC_INDEXVARIANTMAP_H
-#define BLACKMISC_INDEXVARIANTMAP_H
+#ifndef BLACKMISC_PROPERTYINDEXVARIANTMAP_H
+#define BLACKMISC_PROPERTYINDEXVARIANTMAP_H
 
 namespace BlackMisc
 {
-    // Forward declaration
+    // forward declaration
     class CPropertyIndex;
+    class CPropertyIndexList;
 
     /*!
      * Specialized value object compliant map for variants,
-     * based on Column indexes
+     * based on indexes
      */
-    class CIndexVariantMap : public CValueObject
+    class CPropertyIndexVariantMap : public CValueObject
     {
 
     public:
@@ -36,19 +41,19 @@ namespace BlackMisc
          * Constructor
          * \param wildcard when used in search, for setting values irrelevant
          */
-        CIndexVariantMap(bool wildcard = false);
+        CPropertyIndexVariantMap(bool wildcard = false);
 
         //! Single value constructor
-        CIndexVariantMap(const CPropertyIndex &index, const QVariant &value);
+        CPropertyIndexVariantMap(const CPropertyIndex &index, const QVariant &value);
 
         //! Destructor
-        virtual ~CIndexVariantMap() {}
+        virtual ~CPropertyIndexVariantMap() {}
 
         //! Add a value
         void addValue(const CPropertyIndex &index, const QVariant &value);
 
         //! Add QString as literal, disambiguate as I want to add QString
-        void addValue(const CPropertyIndex &index, const char* str);
+        void addValue(const CPropertyIndex &index, const char *str);
 
         //! Add a value as non QVariant
         template<class T> void addValue(const CPropertyIndex &index, const T &value) { this->m_values.insert(index, CVariant::fromValue(value)); }
@@ -63,7 +68,7 @@ namespace BlackMisc
         void value(const CPropertyIndex &index, const QVariant &value) { this->m_values.value(index, value); }
 
         //! Indexes
-        QList<CPropertyIndex> indexes() const { return this->m_values.keys(); }
+        CPropertyIndexList indexes() const;
 
         //! Contains index?
         bool contains(const CPropertyIndex &index) const { return this->m_values.contains(index); }
@@ -81,10 +86,10 @@ namespace BlackMisc
         void clear() { this->m_values.clear(); }
 
         //! Equal operator, required if maps are directly compared, not with CValueObject
-        bool operator ==(const CIndexVariantMap &other) const;
+        bool operator ==(const CPropertyIndexVariantMap &other) const;
 
         //! Equal operator, required if maps are directly compared, not with CValueObject
-        bool operator !=(const CIndexVariantMap &other) const;
+        bool operator !=(const CPropertyIndexVariantMap &other) const;
 
         //! Map
         const QMap<CPropertyIndex, CVariant> &map() const { return this->m_values; }
@@ -102,6 +107,7 @@ namespace BlackMisc
         static void registerMetadata();
 
     protected:
+
         QMap<CPropertyIndex, CVariant> m_values; //!< values
         bool m_wildcard; //!< wildcard
 
@@ -125,6 +131,6 @@ namespace BlackMisc
     };
 }
 
-Q_DECLARE_METATYPE(BlackMisc::CIndexVariantMap)
+Q_DECLARE_METATYPE(BlackMisc::CPropertyIndexVariantMap)
 
 #endif // guard

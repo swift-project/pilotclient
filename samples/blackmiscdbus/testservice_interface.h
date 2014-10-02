@@ -150,7 +150,7 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("pingPropertyIndex"), argumentList);
         }
 
-        inline QDBusPendingReply<BlackMisc::CIndexVariantMap> pingIndexVariantMap(BlackMisc::CIndexVariantMap indexVariantMap)
+        inline QDBusPendingReply<BlackMisc::CPropertyIndexVariantMap> pingIndexVariantMap(BlackMisc::CPropertyIndexVariantMap indexVariantMap)
         {
             QList<QVariant> argumentList;
             argumentList << indexVariantMap.toQVariant();
@@ -262,7 +262,7 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("receiveTransponder"), argumentList);
         }
 
-        inline QDBusPendingReply<> receiveValueMap(BlackMisc::CIndexVariantMap valueMap)
+        inline QDBusPendingReply<> receiveValueMap(BlackMisc::CPropertyIndexVariantMap valueMap)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(valueMap);
