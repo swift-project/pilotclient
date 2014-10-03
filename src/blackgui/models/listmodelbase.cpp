@@ -163,16 +163,18 @@ namespace BlackGui
          * Async update
          */
         template <typename ObjectType, typename ContainerType>
-        BlackGui::IUpdateWorker *CListModelBase<ObjectType, ContainerType>::updateAsync(const ContainerType &container, bool sort)
+        BlackMisc::CWorker *CListModelBase<ObjectType, ContainerType>::updateAsync(const ContainerType &container, bool sort)
         {
-            // TODO: mutex
-            CModelUpdateWorker *worker = new CModelUpdateWorker(this, container, sort);
-            if (worker->start()) { return worker; }
-
-            // start failed, we have responsibility to clean up the worker
-            Q_ASSERT_X(false, "CModelBase", "cannot start worker");
-            worker->terminate();
-            return nullptr;
+            auto sortColumn = this->getSortColumn();
+            auto sortOrder = this->getSortOrder();
+            BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "ModelSort", [this, container, sort, sortColumn, sortOrder]()
+            {
+                ContainerType sortedContainer = this->sortContainerByColumn(container, sortColumn, sortOrder);
+                QMetaObject::invokeMethod(this, "updateContainer",
+                    Q_ARG(QVariant, sortedContainer.toQVariant()), Q_ARG(bool, false));
+            });
+            worker->then(this, &CListModelBase::asyncUpdateFinished);
+            return worker;
         }
 
         /*

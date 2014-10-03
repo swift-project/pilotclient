@@ -13,7 +13,7 @@
 #define BLACKGUI_VIEWBASE_H
 
 #include "blackmisc/icons.h"
-#include "blackgui/updateworker.h"
+#include "blackmisc/worker.h"
 #include <QTableView>
 #include <QHeaderView>
 #include <QMenu>
@@ -156,8 +156,7 @@ namespace BlackGui
             int updateContainer(const ContainerType &container, bool sort = true, bool resize = true);
 
             //! Update whole container in background
-            //! \returns Worker or nullptr if worker cannot be started
-            IUpdateWorker *updateContainerAsync(const ContainerType &container, bool sort = true, bool resize = true);
+            BlackMisc::CWorker *updateContainerAsync(const ContainerType &container, bool sort = true, bool resize = true);
 
             //! Based on size call sync / async update
             void updateContainerMaybeAsync(const ContainerType &container, bool sort = true, bool resize = true);
@@ -213,61 +212,6 @@ namespace BlackGui
 
             //! \copydoc CViewBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const QVariant &variant, bool sort, bool resize) override;
-
-            // ---- worker -----------------------------------------------------------------------------------
-
-            //! Worker class performing update and sorting in background
-            class CViewUpdateWorker : public BlackGui::IUpdateWorker
-            {
-
-            public:
-                //! Constructor
-                CViewUpdateWorker(CViewBase *view, const ContainerType &container, bool sort, bool resize) :
-                    BlackGui::IUpdateWorker(sort), m_view(view), m_container(container), m_resize(resize)
-                {
-                    Q_ASSERT(view);
-                    this->m_sortColumn = view->derivedModel()->getSortColumn();
-                    this->m_sortOrder = view->derivedModel()->getSortOrder();
-                    this->setObjectName(view->objectName().append(":CViewUpdateWorker"));
-                    connect(this, &CViewUpdateWorker::updateFinished, view, &CViewBase::asyncUpdateFinished, Qt::QueuedConnection);
-                }
-
-                //! Destructor
-                virtual ~CViewUpdateWorker() {}
-
-            protected:
-                //! \copydoc CUpdateWorkerPrivate::update
-                virtual void update() override
-                {
-                    Q_ASSERT(m_view);
-                    Q_ASSERT(m_view->derivedModel());
-                    if (m_view)
-                    {
-                        // KWB remove later
-                        qDebug() << this->objectName() << "worker thread:" << QThread::currentThreadId();
-
-                        // resize has to be in main thread
-                        ModelClass *model = m_view->derivedModel();
-                        if (m_sort)
-                        {
-                            // thread safe sort:
-                            // 1) the container itself is copied when worker is created and hence thread safe
-                            // 2) the sort order itself is not really thread safe,
-                            //    but always represents the latest value from CListModelBase/QAbstractListModel::sort()
-                            m_container = model->sortContainerByColumn(m_container, m_sortColumn, m_sortOrder);
-                        }
-                        // now update view itself thread safe, but time for sort was saved
-                        QMetaObject::invokeMethod(m_view, "updateContainer", Qt::QueuedConnection,
-                                                  Q_ARG(QVariant, m_container.toQVariant()), Q_ARG(bool, false), Q_ARG(bool, m_resize));
-                    }
-                }
-
-                CViewBase    *m_view = nullptr; //!< view to be updated, actually const but invokeMethod does not allow const
-                ContainerType m_container;      //!< container with data
-                bool          m_resize;         //!< with resizing
-            };
-
-            // ---- worker -----------------------------------------------------------------------------------
 
         };
     } // namespace

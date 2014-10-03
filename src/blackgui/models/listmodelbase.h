@@ -13,7 +13,7 @@
 #define BLACKGUI_LISTMODELBASE_H
 
 #include "blackgui/models/columns.h"
-#include "blackgui/updateworker.h"
+#include "blackmisc/worker.h"
 #include "blackmisc/propertyindex.h"
 #include <QAbstractItemModel>
 #include <QThread>
@@ -144,8 +144,7 @@ namespace BlackGui
             virtual int update(const ContainerType &container, bool sort = true);
 
             //! Asynchronous update
-            //! \return worker or nullptr if worker could not be started
-            virtual BlackGui::IUpdateWorker *updateAsync(const ContainerType &container, bool sort = true);
+            virtual BlackMisc::CWorker *updateAsync(const ContainerType &container, bool sort = true);
 
             //! Update by new container
             virtual void updateContainerMaybeAsync(const ContainerType &container, bool sort = true);
@@ -210,55 +209,6 @@ namespace BlackGui
 
             //! \copydoc CModelBaseNonTemplate::performUpdateContainer
             virtual int performUpdateContainer(const QVariant &variant, bool sort) override;
-
-            // ---- worker -----------------------------------------------------------------------------------
-
-            //! Worker class performing update and sorting in background
-            class CModelUpdateWorker : public BlackGui::IUpdateWorker
-            {
-
-            public:
-                //! Constructor
-                CModelUpdateWorker(CListModelBase *model, const ContainerType &container, bool sort) :
-                    BlackGui::IUpdateWorker(sort), m_model(model), m_container(container)
-                {
-
-                    Q_ASSERT(model);
-                    this->m_sortColumn = model->getSortColumn();
-                    this->m_sortOrder = model->getSortOrder();
-                    connect(this, &CModelUpdateWorker::updateFinished, model, &CListModelBase::asyncUpdateFinished, Qt::QueuedConnection);
-                    this->setObjectName(model->objectName().append(":CModelUpdateWorker"));
-                }
-
-                //! Destructor
-                virtual ~CModelUpdateWorker() {}
-
-            protected:
-                //! \copydoc CUpdateWorkerPrivate::update
-                virtual void update() override
-                {
-                    // KWB remove later
-                    qDebug() << this->objectName() << "thread:" << QThread::currentThreadId();
-                    if (m_model)
-                    {
-                        if (m_sort)
-                        {
-                            // almost thread safe sorting in background
-                            m_container = m_model->sortContainerByColumn(m_container, m_sortColumn, m_sortOrder);
-                        }
-                        // now update model itself thread safe, but time for sort was saved
-                        // the invoked method itself will run in the main thread's event loop again
-                        QMetaObject::invokeMethod(m_model, "updateContainer", Qt::QueuedConnection,
-                                                  Q_ARG(QVariant, m_container.toQVariant()), Q_ARG(bool, false));
-                    }
-                }
-
-                CListModelBase *m_model = nullptr; //!< model to be updated, actually const but invokeMethod does not allow const
-                ContainerType   m_container;       //!< container with data
-            };
-
-            // ---- worker -----------------------------------------------------------------------------------
-
         };
 
     } // namespace

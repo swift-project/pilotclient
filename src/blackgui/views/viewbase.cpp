@@ -149,16 +149,19 @@ namespace BlackGui
             return c;
         }
 
-        template <class ModelClass, class ContainerType> IUpdateWorker *CViewBase<ModelClass, ContainerType>::updateContainerAsync(const ContainerType &container, bool sort, bool resize)
+        template <class ModelClass, class ContainerType> BlackMisc::CWorker *CViewBase<ModelClass, ContainerType>::updateContainerAsync(const ContainerType &container, bool sort, bool resize)
         {
-            // TODO: mutex
-            CViewUpdateWorker *worker = new CViewUpdateWorker(this, container, sort, resize);
-            if (worker->start()) { return worker; }
-
-            // start failed, we have responsibility to clean up the worker
-            Q_ASSERT_X(false, "CViewBase", "cannot start worker");
-            worker->terminate();
-            return nullptr;
+            ModelClass *model = this->derivedModel();
+            auto sortColumn = model->getSortColumn();
+            auto sortOrder = model->getSortOrder();
+            BlackMisc::CWorker *worker = BlackMisc::CWorker::fromTask(this, "ViewSort", [this, model, container, sort, resize, sortColumn, sortOrder]()
+            {
+                ContainerType sortedContainer = model->sortContainerByColumn(container, sortColumn, sortOrder);
+                QMetaObject::invokeMethod(this, "updateContainer",
+                    Q_ARG(QVariant, sortedContainer.toQVariant()), Q_ARG(bool, false), Q_ARG(bool, resize));
+            });
+            worker->then(this, &CViewBase::asyncUpdateFinished);
+            return worker;
         }
 
         template <class ModelClass, class ContainerType> void CViewBase<ModelClass, ContainerType>::updateContainerMaybeAsync(const ContainerType &container, bool sort, bool resize)
