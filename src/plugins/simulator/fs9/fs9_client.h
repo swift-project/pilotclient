@@ -65,9 +65,6 @@ namespace BlackSimPlugin
 
         signals:
 
-            //! Client timed out
-            void clientTimedOut(const QString &callsign);
-
             //! Client status changed
             void statusChanged(const QString &callsign, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
 

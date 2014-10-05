@@ -482,12 +482,6 @@ namespace BlackSimPlugin
         {
             foreach(CSimConnectObject simObj, m_simConnectObjects)
             {
-                if (simObj.getInterpolator()->getTimeOfLastReceivedSituation().secsTo(QDateTime::currentDateTimeUtc()) > 15)
-                {
-                    removeRemoteAircraft(simObj);
-                    continue;
-                }
-
                 if (simObj.getInterpolator()->hasEnoughAircraftSituations())
                 {
                     SIMCONNECT_DATA_INITPOSITION position;

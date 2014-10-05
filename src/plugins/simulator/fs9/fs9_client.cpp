@@ -94,12 +94,6 @@ namespace BlackSimPlugin
 
             QMutexLocker locker(&m_mutexInterpolator);
 
-            if (m_interpolator.getTimeOfLastReceivedSituation().secsTo(QDateTime::currentDateTimeUtc()) > 15)
-            {
-                emit clientTimedOut(m_callsign);
-                return;
-            }
-
             if (m_interpolator.hasEnoughAircraftSituations())
             {
                 CAircraftSituation situation = m_interpolator.getCurrentSituation();
