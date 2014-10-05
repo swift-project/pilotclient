@@ -21,6 +21,7 @@
 #include "network.h"
 #include "vatsimbookingreader.h"
 #include "vatsimdatafilereader.h"
+#include "airspace_watchdog.h"
 
 namespace BlackCore
 {
@@ -133,6 +134,8 @@ namespace BlackCore
         INetwork *m_network;
         CVatsimBookingReader  *m_vatsimBookingReader;
         CVatsimDataFileReader *m_vatsimDataFileReader;
+        CAirspaceWatchdog m_atcWatchdog;
+        CAirspaceWatchdog m_aircraftWatchdog;
 
         // FIXME (MS) should be in INetwork
         void sendFsipiCustomPacket(const BlackMisc::Aviation::CCallsign &recipientCallsign) const;
