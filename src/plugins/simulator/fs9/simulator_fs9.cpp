@@ -136,14 +136,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
         {
-            // FIXME: should be a Q_ASSERT
-            if (!m_hashFs9Clients.contains(callsign))
-            {
-                // Only add a maximum number of 20 clients.
-                // FIXME: We need a smart method to get the 20 nearest aircrafts. If someone logs in
-                // nearby we need to kick out the one with max distance.
-                return;
-            }
+            Q_ASSERT(m_hashFs9Clients.contains(callsign));
 
             CFs9Client *client = m_hashFs9Clients.value(callsign);
             if (!client)
