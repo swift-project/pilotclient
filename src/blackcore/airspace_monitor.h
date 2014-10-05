@@ -112,10 +112,9 @@ namespace BlackCore
         //! Clear the contents
         void clear()
         {
-            m_atcStationsOnline.clear();
-            m_atcStationsBooked.clear();
-            m_aircraftsInRange.clear();
-            m_otherClients.clear();
+            removeAllAtcStations();
+            removeAllAircrafts();
+            removeAllOtherClients();
             m_metarCache.clear();
             m_flightPlanCache.clear();
         }
@@ -144,6 +143,10 @@ namespace BlackCore
 
         //! Helper method, add voice capabilites if available
         void addVoiceCapabilitiesFromDataFile(BlackMisc::CPropertyIndexVariantMap &vm, const BlackMisc::Aviation::CCallsign &callsign);
+
+        void removeAllAtcStations();
+        void removeAllAircrafts();
+        void removeAllOtherClients();
 
     private slots:
         void ps_realNameReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &realname);

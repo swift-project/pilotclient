@@ -341,6 +341,26 @@ namespace BlackCore
         }
     }
 
+    void CAirspaceMonitor::removeAllAtcStations()
+    {
+        m_atcWatchdog.removeAll();
+        m_atcStationsOnline.clear();
+    }
+
+    void CAirspaceMonitor::removeAllAircrafts()
+    {
+        m_aircraftWatchdog.removeAll();
+        for(CAircraft aircraft : m_aircraftsInRange)
+            emit removedAircraft(aircraft.getCallsign());
+
+        m_aircraftsInRange.clear();
+    }
+
+    void CAirspaceMonitor::removeAllOtherClients()
+    {
+        m_otherClients.clear();
+    }
+
     void CAirspaceMonitor::ps_receivedBookings(const CAtcStationList &bookedStations)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
