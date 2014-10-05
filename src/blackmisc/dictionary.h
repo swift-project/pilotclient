@@ -14,6 +14,8 @@
 
 #include "valueobject.h"
 #include "iterator.h"
+#include "range.h"
+#include "containerbase.h"
 #include <QHash>
 #include <utility>
 #include <initializer_list>
