@@ -34,7 +34,7 @@ namespace BlackGui
     {
 
         /*!
-         * \brief Component, which provides reference to runtime object
+         * \brief Component, which provides references to runtime objects
          * \details Access to runtime allows to encapsualate many aspects of data access and makes
          *          the component widely independent from a central data provideer
          * \sa BlackCore::CRuntime

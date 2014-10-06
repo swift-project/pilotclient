@@ -24,13 +24,16 @@ namespace BlackGui
     namespace Components
     {
         CFlightPlanComponent::CFlightPlanComponent(QWidget *parent) :
-            QTabWidget(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CFlightPlanComponent)
+            QTabWidget(parent),
+            CRuntimeBasedComponent(nullptr, false),
+            ui(new Ui::CFlightPlanComponent)
         {
             ui->setupUi(this);
 
             // fix style
             this->tabBar()->setExpanding(false);
 
+            // connect
             connect(this->ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan);
             connect(this->ui->pb_Load, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork);
             connect(this->ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan);

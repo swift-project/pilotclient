@@ -25,7 +25,9 @@ namespace BlackGui
     {
 
         //! Flight plan widget
-        class CFlightPlanComponent : public QTabWidget, public CRuntimeBasedComponent
+        class CFlightPlanComponent :
+            public QTabWidget,
+            public CRuntimeBasedComponent
         {
             Q_OBJECT
 

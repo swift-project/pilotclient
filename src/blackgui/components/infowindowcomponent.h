@@ -27,7 +27,7 @@ namespace BlackGui
     {
 
         /*!
-         * Multi purpose info window (pop up window)
+         * Multi purpose info window (like pop up window)
          */
         class CInfoWindowComponent : public QWizardPage
         {
@@ -73,6 +73,6 @@ namespace BlackGui
             //! Style sheet changed
             void onStyleSheetsChanged();
         };
-    }
-}
+    } // namespace
+} // namespace
 #endif // guard

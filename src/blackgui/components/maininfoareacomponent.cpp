@@ -25,7 +25,8 @@ namespace BlackGui
     namespace Components
     {
         CMainInfoAreaComponent::CMainInfoAreaComponent(QWidget *parent) :
-            CInfoArea(parent), ui(new Ui::CMainInfoAreaComponent)
+            CInfoArea(parent),
+            ui(new Ui::CMainInfoAreaComponent)
         {
             ui->setupUi(this);
             initInfoArea();

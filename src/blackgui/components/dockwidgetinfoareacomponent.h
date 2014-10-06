@@ -21,8 +21,8 @@ namespace BlackGui
     namespace Components
     {
 
-        //! Component is residing in an dockable widget. This helper class provides access to
-        //! to its info area and dockable widget.
+        //! Helper class: Component is residing in an dockable widget.
+        //! This class provides access to its info area and dockable widget.
         class CDockWidgetInfoAreaComponent
         {
         public:
@@ -53,6 +53,7 @@ namespace BlackGui
 
         private:
             BlackGui::CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget
+
         };
     }
 } // namespace

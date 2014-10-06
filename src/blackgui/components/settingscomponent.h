@@ -27,7 +27,9 @@ namespace BlackGui
     {
 
         //! Settings component
-        class CSettingsComponent : public QTabWidget, public CRuntimeBasedComponent
+        class CSettingsComponent :
+            public QTabWidget,
+            public CRuntimeBasedComponent
         {
             Q_OBJECT
 

@@ -26,8 +26,10 @@ namespace BlackGui
     namespace Components
     {
 
-        //! User componenet (users, clients)
-        class CCockpitV1Component : public QWidget, public CRuntimeBasedComponent
+        //! Cockpit component
+        class CCockpitV1Component :
+            public QWidget,
+            public CRuntimeBasedComponent
         {
             Q_OBJECT
 

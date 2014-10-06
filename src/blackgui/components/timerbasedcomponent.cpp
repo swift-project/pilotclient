@@ -14,7 +14,7 @@ namespace BlackGui
     namespace Components
     {
         CTimerBasedComponent::CTimerBasedComponent(const char *slot, QObject *parent) :
-            QObject(parent), m_timer(nullptr)
+            QObject(parent)
         {
             Q_ASSERT(parent);
             this->m_timer = new QTimer(this);

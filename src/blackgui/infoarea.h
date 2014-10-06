@@ -60,7 +60,7 @@ namespace BlackGui
         void floatAllWidgets();
 
         //! Toggle dock / floating of the whole info area
-        void toggleFloating();
+        virtual void toggleFloating();
 
         //! Toggle floating of index
         void toggleFloating(int areaIndex);
@@ -75,6 +75,9 @@ namespace BlackGui
         //! Override close event
         virtual void closeEvent(QCloseEvent *event) override;
 
+        //! \copydoc QWidget::paintEvent
+        virtual void paintEvent(QPaintEvent *event) override;
+
         //! Preferred size when floating
         virtual QSize getPreferredSizeWhenFloating(int areaIndex) const = 0;
 
@@ -88,10 +91,10 @@ namespace BlackGui
         Ui::CInfoArea *ui = nullptr;
         QList<CDockWidgetInfoArea *> m_dockableWidgets ;
         QTabBar *m_tabBar = nullptr;
-        bool m_showTabTexts = true;
-        bool m_infoAreaFloating = false; //!< whole info area floating
-        bool m_showTabBar = true;        //!< auto ajdust the floating widgets
-        bool m_lockTabBar = false;       //!< locked means no double clicks possible
+        bool m_showTabTexts     = true;   //!< texts for tabs
+        bool m_infoAreaFloating = false;  //!< whole info area floating
+        bool m_showTabBar       = true;   //!< auto ajdust the floating widgets
+        bool m_lockTabBar       = false;  //!< locked means no double clicks possible
 
         //! Tabify the widgets
         void tabifyAllWidgets();
@@ -129,6 +132,12 @@ namespace BlackGui
         //! Margins for the dockable widgets
         void setMarginsWhenDocked(int left, int top, int right, int bottom);
 
+        //! Nested info areas
+        QList<CInfoArea *> getChildInfoAreas() { return this->findChildren<CInfoArea *>(); }
+
+        //! Direct dock widget areas, not the nested dock widget areas
+        QList<CDockWidgetInfoArea *> getOwnDockWidgetAreas();
+
     private slots:
         //! Tab bar has been double clicked
         void ps_tabBarDoubleClicked(int tabBarIndex);
@@ -163,7 +172,8 @@ namespace BlackGui
 
         //! Dock / floating of the whole info area
         void ps_setInfoAreaFloating(bool floating);
+
     };
-}
+} // namespace
 
 #endif // guard

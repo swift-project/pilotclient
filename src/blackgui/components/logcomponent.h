@@ -24,7 +24,9 @@ namespace BlackGui
     {
 
         //! GUI displaying log and status messages
-        class CLogComponent : public QFrame, public CRuntimeBasedComponent
+        class CLogComponent :
+            public QFrame,
+            public CRuntimeBasedComponent
         {
             Q_OBJECT
 

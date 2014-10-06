@@ -19,7 +19,7 @@ namespace BlackGui
 {
     namespace Components
     {
-        //! Timer based componenet
+        //! Helper class: Timer based componenet
         class CTimerBasedComponent: public QObject
         {
             Q_OBJECT
@@ -52,8 +52,8 @@ namespace BlackGui
             void fireTimer();
 
         private:
-            QTimer *m_timer;
-            QTimer *m_timerSingleShot;
+            QTimer *m_timer = nullptr;
+            QTimer *m_timerSingleShot = nullptr;
         };
     }
 }

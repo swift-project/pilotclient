@@ -93,6 +93,7 @@ namespace BlackMisc
             StandardIconPaperPlane16,
             StandardIconPlugin16,
             StandardIconRadar16,
+            StandardIconRadio16,
             StandardIconRefresh16,
             StandardIconResize16,
             StandardIconResizeHorizontal16,
@@ -541,6 +542,12 @@ namespace BlackMisc
         static const QPixmap &appFlightPlan16()
         {
             return tableSheet16();
+        }
+
+        //! Application cockpit
+        static const QPixmap &appCockpit16()
+        {
+            return radio16();
         }
 
         //! Application simulator

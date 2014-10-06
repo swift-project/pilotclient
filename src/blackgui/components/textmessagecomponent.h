@@ -13,7 +13,6 @@
 #define BLACKGUI_TEXTMESSAGECOMPONENT_H
 
 #include "blackgui/components/runtimebasedcomponent.h"
-#include "blackgui/components/timerbasedcomponent.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/nwtextmessagelist.h"
@@ -29,7 +28,9 @@ namespace BlackGui
     namespace Components
     {
         //! Text message widget
-        class CTextMessageComponent : public QTabWidget, public CRuntimeBasedComponent
+        class CTextMessageComponent :
+            public QTabWidget,
+            public CRuntimeBasedComponent
         {
             Q_OBJECT
 

@@ -176,20 +176,6 @@ namespace BlackGui
         this->setTitleBarWidget(this->m_emptyTitleBar);
     }
 
-    QList<QWidget *> CDockWidget::findEmbeddedRuntimeComponents() const
-    {
-        QList<QWidget *> widgets = this->findChildren<QWidget *>();
-        QList<QWidget *> widgetsWithRuntimeComponent;
-        foreach(QWidget * w, widgets)
-        {
-            if (dynamic_cast<Components::CRuntimeBasedComponent *>(w))
-            {
-                widgetsWithRuntimeComponent.append(w);
-            }
-        }
-        return widgetsWithRuntimeComponent;
-    }
-
     void CDockWidget::ps_showContextMenu(const QPoint &pos)
     {
         QPoint globalPos = this->mapToGlobal(pos);

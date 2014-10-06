@@ -98,13 +98,13 @@ namespace BlackGui
         //! Override close event
         virtual void closeEvent(QCloseEvent *event) override;
 
-        //! Paint event
+        //! \copydoc QWidget::paintEvent
         virtual void paintEvent(QPaintEvent *event) override;
 
-        //! Hide event
+        //! \copydoc QWidget::hideEvent
         void hideEvent(QHideEvent *event) override;
 
-        //! Show event
+        //! \copydoc QWidget::showEvent
         void showEvent(QShowEvent *event) override;
 
         //! Contribute to menu
@@ -138,13 +138,8 @@ namespace BlackGui
         bool m_wasAlreadyFloating    = false;
         bool m_selected              = false;  //!< selected when tabbed
 
-
         //! Empty widget with no size
         void initTitleBarWidgets();
-
-        //! Find all embedded runtime components
-        QList<QWidget *> findEmbeddedRuntimeComponents() const;
-
     };
 
 } // namespace

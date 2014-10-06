@@ -100,6 +100,7 @@ namespace BlackMisc
             CIcon(CIcons::StandardIconPaperPlane16, "plane"),
             CIcon(CIcons::StandardIconPlugin16, "plugin"),
             CIcon(CIcons::StandardIconRadar16, "radar"),
+            CIcon(CIcons::StandardIconRadio16, "radio"),
             CIcon(CIcons::StandardIconRefresh16, "refresh"),
             CIcon(CIcons::StandardIconResize16, "resize"),
             CIcon(CIcons::StandardIconResizeHorizontal16, "resize (horizontal)"),

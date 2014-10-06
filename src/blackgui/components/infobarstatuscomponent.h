@@ -22,7 +22,9 @@ namespace BlackGui
     namespace Components
     {
         //! Info bar displaying status (Network, Simulator, DBus)
-        class CInfoBarStatusComponent : public QFrame, public CRuntimeBasedComponent
+        class CInfoBarStatusComponent :
+            public QFrame,
+            public CRuntimeBasedComponent
         {
             Q_OBJECT
 
