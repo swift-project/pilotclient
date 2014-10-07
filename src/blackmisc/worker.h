@@ -98,7 +98,7 @@ namespace BlackMisc
         //! Executes some code (in the caller's thread) if the task has finished.
         //! \threadsafe
         template <typename F>
-        bool doIfFinished(F functor) const
+        void doIfFinished(F functor) const
         {
             QMutexLocker lock(&m_finishedMutex);
             if (m_finished) { functor(); }
@@ -107,7 +107,7 @@ namespace BlackMisc
         //! Executes some code (in the caller's thread) if the task has not finished.
         //! \threadsafe
         template <typename F>
-        bool doIfNotFinished(F functor) const
+        void doIfNotFinished(F functor) const
         {
             QMutexLocker lock(&m_finishedMutex);
             if (! m_finished) { functor(); }
@@ -116,7 +116,7 @@ namespace BlackMisc
         //! Executes some code (in the caller's thread) if the task has not finished and some different code if it has finished.
         //! \threadsafe
         template <typename F1, typename F2>
-        bool doIfFinishedElse(F1 ifFunctor, F2 elseFunctor) const
+        void doIfFinishedElse(F1 ifFunctor, F2 elseFunctor) const
         {
             QMutexLocker lock(&m_finishedMutex);
             if (m_finished) { ifFunctor(); } else { elseFunctor(); }
