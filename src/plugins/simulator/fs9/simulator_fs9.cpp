@@ -110,13 +110,6 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::addRemoteAircraft(const CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation)
         {
-            if (m_hashFs9Clients.size() >= 20)
-            {
-                // Only add a maximum number of 20 clients.
-                // FIXME: We need a smart method to get the 20 nearest aircrafts. If someone logs in
-                // nearby we need to kick out the one with max distance.
-                return;
-            }
 
             // Create a new client thread, set update frequency to 25 ms and start it
             QThread *clientThread = new QThread(this);
