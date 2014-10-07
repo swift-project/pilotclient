@@ -13,6 +13,7 @@
 #define BLACKMISC_WORKER_H
 
 #include <QThread>
+#include <QMutex>
 #include <functional>
 #include <atomic>
 
