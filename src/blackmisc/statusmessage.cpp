@@ -254,8 +254,14 @@ namespace BlackMisc
             break;
         case SeverityWarning:
             html = "<font color=\"yellow\">";
+            break;
         case SeverityError:
             html = "<font color=\"red\">";
+            break;
+        case SeverityDebug:
+            break;
+        default:
+            break;
         }
         html.append(this->getMessage());
         if (this->getSeverity() == SeverityInfo) return html;
