@@ -32,7 +32,7 @@ namespace BlackGui
         // after(!) GUI is established
         if (this->m_dockableWidgets.isEmpty())
         {
-            this->m_dockableWidgets = this->findChildren<CDockWidgetInfoArea *>();
+            this->m_dockableWidgets = this->getOwnDockWidgetAreas();
             Q_ASSERT(!this->m_dockableWidgets.isEmpty());
         }
 
@@ -50,32 +50,40 @@ namespace BlackGui
 
         // initial style sheet setting
         this->ps_onStyleSheetChanged();
+
+        // status bar
+        if (this->statusBar())
+        {
+            this->statusBar()->hide();
+            this->statusBar()->setMaximumHeight(0);
+        }
     }
 
     void CInfoArea::addToContextMenu(QMenu *menu) const
     {
         if (!menu) return;
-        menu->addAction(CIcons::dockTop16(), "Dock all", this, SLOT(dockAllWidgets()));
-        menu->addAction(CIcons::floatAll16(), "Float all", this, SLOT(floatAllWidgets()));
-        menu->addAction(CIcons::floatOne16(), "Dock / float info area", this, SLOT(toggleFloating()));
-        QAction *lockTabBarMenuAction = new QAction(menu);
-        lockTabBarMenuAction->setObjectName(this->objectName().append("LockTabBar"));
-        lockTabBarMenuAction->setIconText("Lock tab bar");
-        lockTabBarMenuAction->setIcon(CIcons::lockClosed16());
-        lockTabBarMenuAction->setCheckable(true);
-        lockTabBarMenuAction->setChecked(this->m_lockTabBar);
-        menu->addAction(lockTabBarMenuAction);
-        connect(lockTabBarMenuAction, &QAction::toggled, this, &CInfoArea::ps_toggleTabBarLocked);
+        bool hasWidgets = this->countDockedWidgets() > 0;
 
-        if (!this->m_dockableWidgets.isEmpty())
+        if (hasWidgets)
         {
-            bool c = false;
+            menu->addAction(CIcons::dockTop16(), "Dock all", this, SLOT(dockAllWidgets()));
+            menu->addAction(CIcons::floatAll16(), "Float all", this, SLOT(floatAllWidgets()));
+            menu->addAction(CIcons::floatOne16(), "Dock / float info area", this, SLOT(toggleFloating()));
+            QAction *lockTabBarMenuAction = new QAction(menu);
+            lockTabBarMenuAction->setObjectName(this->objectName().append("LockTabBar"));
+            lockTabBarMenuAction->setIconText("Lock tab bar");
+            lockTabBarMenuAction->setIcon(CIcons::lockClosed16());
+            lockTabBarMenuAction->setCheckable(true);
+            lockTabBarMenuAction->setChecked(this->m_lockTabBar);
+            menu->addAction(lockTabBarMenuAction);
+            connect(lockTabBarMenuAction, &QAction::toggled, this, &CInfoArea::ps_toggleTabBarLocked);
             menu->addSeparator();
             QMenu *subMenuToggleFloat = new QMenu("Toggle Float/Dock", menu);
             QMenu *subMenuDisplay = new QMenu("Display", menu);
 
             QSignalMapper *signalMapperToggleFloating = new QSignalMapper(menu);
             QSignalMapper *signalMapperDisplay = new QSignalMapper(menu);
+            bool c = false;
 
             for (int i = 0; i < this->m_dockableWidgets.size(); i++)
             {
@@ -263,55 +271,62 @@ namespace BlackGui
         this->setTabPosition(Qt::LeftDockWidgetArea, QTabWidget::East);
         bool init = this->m_tabBar ? false : true;
 
-        if (!this->m_dockableWidgets.isEmpty())
+        for (int i = 0; i < this->m_dockableWidgets.size(); i++)
         {
-            for (int i = 0; i < this->m_dockableWidgets.size(); i++)
-            {
-                CDockWidgetInfoArea *first = i > 0 ? this->m_dockableWidgets.at(i - 1) : nullptr;
-                CDockWidgetInfoArea *after = this->m_dockableWidgets.at(i);
-                Q_ASSERT(after);
+            CDockWidgetInfoArea *first = i > 0 ? this->m_dockableWidgets.at(i - 1) : nullptr;
+            CDockWidgetInfoArea *after = this->m_dockableWidgets.at(i);
+            Q_ASSERT(after);
 
-                // trick, init widget as floating
-                // this completely initializes the tab bar and all docked widgets
-                if (init)
-                {
-                    QPoint offset(i * 25, i * 20);
-                    after->setVisible(false);
-                    after->setFloating(true);
-                    after->setOffsetWhenFloating(offset);
-                    after->setPreferredSizeWhenFloating(getPreferredSizeWhenFloating(i));
-                    after->setFloating(false);
-                    after->setVisible(true);
-                    after->resetWasAlreadyFLoating();
-                }
-                else
-                {
-                    after->setFloating(false);
-                }
-                if (!first) { continue; }
-                this->tabifyDockWidget(first, after);
+            // trick, init widget as floating
+            // this completely initializes the tab bar and all docked widgets
+            if (init)
+            {
+                QPoint offset(i * 25, i * 20);
+                after->setVisible(false);
+                after->setFloating(true);
+                after->setOffsetWhenFloating(offset);
+                after->setPreferredSizeWhenFloating(getPreferredSizeWhenFloating(i));
+                after->setFloating(false);
+                after->setVisible(true);
+                after->resetWasAlreadyFLoating();
             }
+            else
+            {
+                after->setFloating(false);
+            }
+            if (!first) { continue; }
+            this->tabifyDockWidget(first, after);
         }
 
         // as now tabified, now set tab
         if (!this->m_tabBar)
         {
             this->m_tabBar = this->findChild<QTabBar *>();
-            Q_ASSERT(m_tabBar);
-            QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameDockWidgetTab());
-            this->m_tabBar->setStyleSheet(qss);
-            this->m_tabBar->setObjectName("comp_MainInfoAreaDockWidgetTab");
-            this->m_tabBar->setMovable(false);
-            this->m_tabBar->setElideMode(Qt::ElideNone);
-            this->setTabPixmaps();
 
-            // East / West does not work (shown, but area itself empty)
-            // South does not have any effect
-            this->m_tabBar->setShape(QTabBar::TriangularSouth);
+            // if we have > 1 docked widgets, we have a tab bar
+            if (this->m_tabBar)
+            {
+                QString qss = CStyleSheetUtility::instance().style(CStyleSheetUtility::fileNameDockWidgetTab());
+                this->m_tabBar->setStyleSheet(qss);
+                this->m_tabBar->setObjectName("comp_MainInfoAreaDockWidgetTab");
+                this->m_tabBar->setMovable(false);
+                this->m_tabBar->setElideMode(Qt::ElideNone);
+                this->setTabPixmaps();
 
-            // signals
-            connect(this->m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CInfoArea::ps_tabBarDoubleClicked);
-            connect(this->m_tabBar, &QTabBar::currentChanged, this, &CInfoArea::tabBarCurrentChanged);
+                // East / West does not work (shown, but area itself empty)
+                // South does not have any effect
+                this->m_tabBar->setShape(QTabBar::TriangularSouth);
+
+                // signals
+                connect(this->m_tabBar, &QTabBar::tabBarDoubleClicked, this, &CInfoArea::ps_tabBarDoubleClicked);
+                connect(this->m_tabBar, &QTabBar::currentChanged, this, &CInfoArea::tabBarCurrentChanged);
+            }
+            else
+            {
+                // <= 1 dock widget
+                this->m_tabBar = new QTabBar(this);
+                this->m_tabBar->hide();
+            }
         }
 
         if (this->countDockedWidgets() > 0)
@@ -356,6 +371,30 @@ namespace BlackGui
             //! Margins when window is docked
             dw->setMarginsWhenDocked(left, top, right, bottom);
         }
+    }
+
+    QList<CDockWidgetInfoArea *> CInfoArea::getOwnDockWidgetAreas()
+    {
+        QList<CDockWidgetInfoArea *> infoAreas = this->findChildren<CDockWidgetInfoArea *>();
+        if (infoAreas.isEmpty()) { return infoAreas; }
+
+        // nested info areas?
+        QList<CInfoArea *> childInfoAreas = this->getChildInfoAreas();
+        if (childInfoAreas.isEmpty()) { return infoAreas; }
+
+        // we have child info areas (nested), we need to remove those from the list
+        for (CInfoArea *ia : childInfoAreas)
+        {
+            QList<CDockWidgetInfoArea *> nestedDockWidgets = ia->getOwnDockWidgetAreas();
+            if (nestedDockWidgets.isEmpty()) { continue; }
+            for (CDockWidgetInfoArea *ndw : nestedDockWidgets)
+            {
+                bool r = infoAreas.removeOne(ndw);
+                Q_ASSERT(r);
+                Q_UNUSED(r);
+            }
+        }
+        return infoAreas;
     }
 
     int CInfoArea::countDockedWidgets() const

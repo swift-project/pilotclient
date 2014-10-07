@@ -33,9 +33,7 @@ namespace BlackGui
         }
 
         CMainInfoAreaComponent::~CMainInfoAreaComponent()
-        {
-            delete ui;
-        }
+        { }
 
         CAtcStationComponent *CMainInfoAreaComponent::getAtcStationComponent()
         {
@@ -82,6 +80,7 @@ namespace BlackGui
             InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
+            case InfoAreaCockpit:
             case InfoAreaAircrafts:
             case InfoAreaAtc:
             case InfoAreaUsers:
@@ -112,6 +111,8 @@ namespace BlackGui
             InfoArea area = static_cast<InfoArea>(areaIndex);
             switch (area)
             {
+            case InfoAreaCockpit:
+                return CIcons::appCockpit16();
             case InfoAreaUsers:
                 return CIcons::appUsers16();
             case InfoAreaWeather:
@@ -136,5 +137,5 @@ namespace BlackGui
                 return CIcons::empty();
             }
         }
-    }
-}
+    } // namespace
+} // namespace

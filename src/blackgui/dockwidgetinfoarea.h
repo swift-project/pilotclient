@@ -51,8 +51,13 @@ namespace BlackGui
         virtual void initalFloating() override;
 
     private:
-        //! Find all embedded runtime components
-        QList<Components::CDockWidgetInfoAreaComponent *> findEmbeddedDockWidgetInfoAreaComponents() const;
+        //! Find all embedded dock widget components. These are components marked as CDockWidgetInfoAreaComponent
+        //! \remarks Only directly embedded info area components, not those of nested info areas
+        QList<Components::CDockWidgetInfoAreaComponent *> findEmbeddedDockWidgetInfoAreaComponents();
+
+        //! Nested info areas
+        QList<CDockWidgetInfoArea *> findNestedInfoAreas();
+
     };
 
 } // namespace

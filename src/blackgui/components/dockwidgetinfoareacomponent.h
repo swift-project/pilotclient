@@ -33,7 +33,8 @@ namespace BlackGui
             const BlackGui::CDockWidgetInfoArea *getDockWidget() const { return m_parentDockableInfoArea; }
 
             //! Corresponding dockable widget in info area
-            void setParentDockableWidget(BlackGui::CDockWidgetInfoArea *parentDockableWidget) { m_parentDockableInfoArea = parentDockableWidget; }
+            //! \remarks Usually set from CDockWidgetInfoArea when it is fully initialized
+            bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget);
 
             //! The parent info area
             const CInfoArea *getParentInfoArea() const;

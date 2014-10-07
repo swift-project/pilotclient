@@ -76,15 +76,18 @@ namespace BlackGui
 
     void CDockWidgetInfoArea::initalFloating()
     {
-        CDockWidget::initalFloating();
+        CDockWidget::initalFloating(); // initial floating to init position & size
         QList<CDockWidgetInfoAreaComponent *> infoAreaDockWidgets = this->findEmbeddedDockWidgetInfoAreaComponents();
         foreach(CDockWidgetInfoAreaComponent * dwia, infoAreaDockWidgets)
         {
-            dwia->setParentDockableWidget(this);
+            // KWB: potentially a risk when this object is deleted
+            //      put under normal situations the child object will be deleted as well, and we have
+            //      no multi-threaded GUI
+            dwia->setParentDockWidgetInfoArea(this);
         }
     }
 
-    QList<CDockWidgetInfoAreaComponent *> CDockWidgetInfoArea::findEmbeddedDockWidgetInfoAreaComponents() const
+    QList<CDockWidgetInfoAreaComponent *> CDockWidgetInfoArea::findEmbeddedDockWidgetInfoAreaComponents()
     {
         QList<QWidget *> widgets = this->findChildren<QWidget *>();
         QList<CDockWidgetInfoAreaComponent *> widgetsWithDockWidgetInfoAreaComponent;
@@ -96,6 +99,27 @@ namespace BlackGui
                 widgetsWithDockWidgetInfoAreaComponent.append(dwc);
             }
         }
+        QList<CDockWidgetInfoArea *> nestedInfoAreas = this->findNestedInfoAreas();
+        if (nestedInfoAreas.isEmpty()) return widgetsWithDockWidgetInfoAreaComponent;
+
+        // we have to exclude the nested embedded areas
+        foreach(CDockWidgetInfoArea * ia, nestedInfoAreas)
+        {
+            QList<CDockWidgetInfoAreaComponent *> nestedInfoAreaComponents = ia->findEmbeddedDockWidgetInfoAreaComponents();
+            if (nestedInfoAreaComponents.isEmpty()) continue;
+            foreach(CDockWidgetInfoAreaComponent * iac, nestedInfoAreaComponents)
+            {
+                bool r = widgetsWithDockWidgetInfoAreaComponent.removeOne(iac);
+                Q_ASSERT(r); // why is the nested component not in the child list?
+                Q_UNUSED(r);
+            }
+        }
         return widgetsWithDockWidgetInfoAreaComponent;
+    }
+
+    QList<CDockWidgetInfoArea *> CDockWidgetInfoArea::findNestedInfoAreas()
+    {
+        QList<CDockWidgetInfoArea *> nestedInfoAreas = this->findChildren<CDockWidgetInfoArea *>();
+        return nestedInfoAreas;
     }
 }

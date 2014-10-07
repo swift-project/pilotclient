@@ -17,11 +17,27 @@ namespace BlackGui
         CDockWidgetInfoAreaComponent::CDockWidgetInfoAreaComponent(QWidget *parent)
         {
             // it the parent is already an info area at this time, we keep it
+            // otherwise we expect the info area to set it later
             CDockWidgetInfoArea *ia = dynamic_cast<CDockWidgetInfoArea *>(parent);
             if (ia)
             {
                 this->m_parentDockableInfoArea = ia;
             }
+        }
+
+        bool CDockWidgetInfoAreaComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
+        {
+            // sanity check
+            if (this->m_parentDockableInfoArea)
+            {
+                // we already have a value
+                // changes should not happen
+                Q_ASSERT(this->m_parentDockableInfoArea == parentDockableWidget);
+                return this->m_parentDockableInfoArea == parentDockableWidget;
+            }
+
+            m_parentDockableInfoArea = parentDockableWidget;
+            return true;
         }
 
         const CInfoArea *CDockWidgetInfoAreaComponent::getParentInfoArea() const

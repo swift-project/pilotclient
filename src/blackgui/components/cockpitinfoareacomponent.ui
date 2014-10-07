@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CCockpitInfoAreaComponent</class>
+ <widget class="QMainWindow" name="CCockpitInfoAreaComponent">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>80</width>
+    <height>75</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="qw_CockpitInfoAreaComComponent">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="BlackGui::Components::CCockpitComComponent" name="comp_CockpitComComponent">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="sb_CockpitInfoAreaStatusBar"/>
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dw_CockpitVoiceRooms">
+   <property name="allowedAreas">
+    <set>Qt::TopDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Voice rooms</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="qw_CockpitVoiceRooms">
+    <layout class="QVBoxLayout" name="vl_CockpitMainArea">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="BlackGui::Components::CVoiceRoomsComponent" name="comp_VoiceRooms">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::CDockWidgetInfoArea</class>
+   <extends>QDockWidget</extends>
+   <header>blackgui/dockwidgetinfoarea.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCockpitComComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/cockpitcomcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CVoiceRoomsComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/voiceroomscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

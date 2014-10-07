@@ -23,9 +23,9 @@
 #include "logcomponent.h"
 #include <QTabBar>
 #include <QPixmap>
+#include <QScopedPointer>
 
 namespace Ui { class CMainInfoAreaComponent; }
-
 namespace BlackGui
 {
     namespace Components
@@ -47,16 +47,17 @@ namespace BlackGui
             enum InfoArea
             {
                 // index must match tab index!
-                InfoAreaAircrafts    = 0,
-                InfoAreaAtc          = 1,
-                InfoAreaUsers        = 2,
-                InfoAreaTextMessages = 3,
-                InfoAreaSimulator    = 4,
-                InfoAreaFlightPlan   = 5,
-                InfoAreaWeather      = 6,
-                InfoAreaMappings     = 7,
-                InfoAreaLog          = 8,
-                InfoAreaSettings     = 9,
+                InfoAreaCockpit      = 0,
+                InfoAreaAircrafts    = 1,
+                InfoAreaAtc          = 2,
+                InfoAreaUsers        = 3,
+                InfoAreaTextMessages = 4,
+                InfoAreaSimulator    = 5,
+                InfoAreaFlightPlan   = 6,
+                InfoAreaWeather      = 7,
+                InfoAreaMappings     = 8,
+                InfoAreaLog          = 9,
+                InfoAreaSettings     = 10,
                 InfoAreaNone         = -1
             };
 
@@ -105,8 +106,7 @@ namespace BlackGui
             virtual const QPixmap &indexToPixmap(int areaIndex) const override;
 
         private:
-            Ui::CMainInfoAreaComponent *ui = nullptr;
-
+            QScopedPointer<Ui::CMainInfoAreaComponent> ui;
         };
     }
 }

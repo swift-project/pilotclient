@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1207</width>
-    <height>97</height>
+    <width>1266</width>
+    <height>55</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -39,11 +39,44 @@
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="qw_centralWidgetEmpty"/>
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Cockpit">
+   <property name="allowedAreas">
+    <set>Qt::TopDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Cockpit</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dw_CockpitInner">
+    <layout class="QVBoxLayout" name="vl_Cockpit">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="BlackGui::Components::CCockpitInfoAreaComponent" name="comp_CockpitInfoArea" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Aircrafts">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>127</width>
+     <height>38</height>
     </size>
    </property>
    <property name="features">
@@ -103,8 +136,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_AtcStations">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>127</width>
+     <height>38</height>
     </size>
    </property>
    <property name="floating">
@@ -164,8 +197,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Users">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>127</width>
+     <height>38</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -210,8 +243,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_TextMessages">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>127</width>
+     <height>38</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -256,8 +289,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Simulator">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>127</width>
+     <height>38</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -302,8 +335,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_FlightPlan">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>127</width>
+     <height>38</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -348,8 +381,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Weather">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>80</width>
+     <height>38</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -397,8 +430,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Mappings">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>127</width>
+     <height>38</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -443,8 +476,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Log">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>80</width>
+     <height>38</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -489,8 +522,8 @@
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Settings">
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>127</width>
+     <height>38</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -535,6 +568,18 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::CDockWidgetInfoArea</class>
+   <extends>QDockWidget</extends>
+   <header>blackgui/dockwidgetinfoarea.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCockpitInfoAreaComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/cockpitinfoareacomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::Components::CAtcStationComponent</class>
    <extends>QTabWidget</extends>
    <header>blackgui/components/atcstationcomponent.h</header>
@@ -568,12 +613,6 @@
    <class>BlackGui::Components::CSettingsComponent</class>
    <extends>QTabWidget</extends>
    <header>blackgui/components/settingscomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::CDockWidgetInfoArea</class>
-   <extends>QDockWidget</extends>
-   <header>blackgui/dockwidgetinfoarea.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
