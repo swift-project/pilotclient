@@ -90,7 +90,7 @@ namespace BlackGui
 
             if (this->getIContextApplication())
             {
-                if (this->getIContextApplication()->usingLocalObjects())
+                if (this->getIContextApplication()->isUsingImplementingObject())
                 {
                     this->ui->led_DBus->setOn(false);
                 }

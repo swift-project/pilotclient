@@ -383,8 +383,8 @@ void MainWindow::setContextAvailability()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
     this->m_coreAvailable = this->getIContextApplication()->ping(t) == t;
-    this->m_contextNetworkAvailable = this->m_coreAvailable || this->getIContextNetwork()->usingLocalObjects();
-    this->m_contextAudioAvailable = this->m_coreAvailable || this->getIContextAudio()->usingLocalObjects();
+    this->m_contextNetworkAvailable = this->m_coreAvailable || this->getIContextNetwork()->isUsingImplementingObject();
+    this->m_contextAudioAvailable = this->m_coreAvailable || this->getIContextAudio()->isUsingImplementingObject();
 }
 
 /*
@@ -396,7 +396,7 @@ void MainWindow::updateGuiStatusInformation()
     QString network("unavailable");
     if (this->m_contextNetworkAvailable)
     {
-        bool dbus = !this->getIContextNetwork()->usingLocalObjects();
+        bool dbus = !this->getIContextNetwork()->isUsingImplementingObject();
         network =  dbus ? now : "local";
         this->ui->comp_InfoBarStatus->setDBusStatus(dbus);
     }

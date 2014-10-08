@@ -111,13 +111,13 @@ namespace BlackGui
             QString fileName = this->getIContextSimulator()->getSimulatorInfo().getSimulatorSetupValueAsString(CFsxSimulatorSetup::SetupSimConnectCfgFile);
             Q_ASSERT(!fileName.isEmpty());
             // write either local or remote file
-            bool local = this->getIContextSimulator()->usingLocalObjects();
-            bool success = local ?
+            bool localSimulatorObject = this->getIContextSimulator()->isUsingImplementingObject();
+            bool success = localSimulatorObject ?
                            BlackSim::Fsx::CSimConnectUtilities::writeSimConnectCfg(fileName, address, p) :
                            this->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p));
             if (success)
             {
-                CLogMessage().info(this, local ? "Written local %1" : "Written remote %1") << fileName;
+                CLogMessage().info(this, localSimulatorObject ? "Written local %1" : "Written remote %1") << fileName;
             }
             else
             {
@@ -149,7 +149,7 @@ namespace BlackGui
                 if (!this->getIContextSimulator()) return;
                 QString fileName = BlackSim::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
                 QString m = QString("Deleted %1 ").append(fileName);
-                if (this->getIContextSimulator()->usingLocalObjects())
+                if (this->getIContextSimulator()->isUsingImplementingObject())
                 {
                     QFile f(fileName);
                     f.remove();
@@ -166,7 +166,7 @@ namespace BlackGui
             {
                 if (!this->getIContextSimulator()) return;
                 QString fileName = BlackSim::Fsx::CSimConnectUtilities::getLocalSimConnectCfgFilename();
-                bool exists = this->getIContextSimulator()->usingLocalObjects() ?
+                bool exists = this->getIContextSimulator()->isUsingImplementingObject() ?
                               QFile::exists(fileName) :
                               this->getIContextApplication()->existsFile(fileName);
                 if (exists)

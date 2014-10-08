@@ -233,7 +233,7 @@ void MainWindow::initGuiSignals()
 void MainWindow::initialDataReads()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
-    this->m_coreAvailable = (this->getIContextNetwork()->usingLocalObjects() || (this->getIContextApplication()->ping(t) == t));
+    this->m_coreAvailable = (this->getIContextNetwork()->isUsingImplementingObject() || (this->getIContextApplication()->ping(t) == t));
     if (!this->m_coreAvailable)
     {
         this->ps_displayStatusMessageInGui(CLogMessage().error(this, "no initial data read as network context is not available"));

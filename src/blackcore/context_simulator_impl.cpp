@@ -131,7 +131,7 @@ namespace BlackCore
     bool CContextSimulator::loadSimulatorPlugin(const CSimulatorInfo &simulatorInfo)
     {
         Q_ASSERT(this->getIContextApplication());
-        Q_ASSERT(this->getIContextApplication()->usingLocalObjects());
+        Q_ASSERT(this->getIContextApplication()->isUsingImplementingObject());
 
         if (this->m_simulator && this->m_simulator->getSimulatorInfo() == simulatorInfo) { return true; } // already loaded
         if (simulatorInfo.isUnspecified()) { return false; }
@@ -223,8 +223,9 @@ namespace BlackCore
         if (m_simulator)
         {
             // depending on shutdown order, network might already have been deleted
-            if (CContextNetwork *network = this->getRuntime()->getCContextNetwork())
+            if (this->getRuntime()->getIContextNetwork()->isUsingImplementingObject())
             {
+                CContextNetwork *network = this->getRuntime()->getCContextNetwork();
                 network->getAirspaceMonitor()->QObject::disconnect(this);
             }
 

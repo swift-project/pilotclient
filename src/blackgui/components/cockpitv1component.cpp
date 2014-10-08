@@ -152,7 +152,7 @@ namespace BlackGui
         {
             Q_ASSERT(this->getIContextOwnAircraft());
             // direct object from local context
-            if (this->getIContextOwnAircraft()->usingLocalObjects()) return this->getRuntime()->getCContextOwnAircraft()->ownAircraft();
+            if (this->getIContextOwnAircraft()->isUsingImplementingObject()) return this->getRuntime()->getCContextOwnAircraft()->ownAircraft();
 
             // non local
             if (this->canPingApplicationContext()) return this->getIContextOwnAircraft()->getOwnAircraft();
