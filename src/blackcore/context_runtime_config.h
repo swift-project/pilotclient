@@ -13,10 +13,10 @@ namespace BlackCore
         //! How to handle a given context
         enum ContextMode
         {
-            NotUsed,
-            Local,
-            LocalInDbusServer,
-            Remote
+            NotUsed,           //!< during shutdown or not used at all
+            Local,             //!< in same process
+            LocalInDbusServer, //!< in same process, also registered in DBus, will be accessed by proxy objects too
+            Remote             //!< proxy object
         };
 
     private:

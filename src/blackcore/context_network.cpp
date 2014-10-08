@@ -10,22 +10,24 @@
 #include "context_network.h"
 #include "context_network_impl.h"
 #include "context_network_proxy.h"
+#include "context_network_empty.h"
 
 namespace BlackCore
 {
 
-    IContextNetwork *IContextNetwork::create(CRuntime *parent, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn)
+    IContextNetwork *IContextNetwork::create(CRuntime *runtime, CRuntimeConfig::ContextMode mode, CDBusServer *server, QDBusConnection &conn)
     {
         switch (mode)
         {
         case CRuntimeConfig::Local:
         case CRuntimeConfig::LocalInDbusServer:
-            return (new CContextNetwork(mode, parent))->registerWithDBus(server);
+            return (new CContextNetwork(mode, runtime))->registerWithDBus(server);
         case CRuntimeConfig::Remote:
-            return new BlackCore::CContextNetworkProxy(BlackCore::CDBusServer::ServiceName, conn, mode, parent);
+            return new BlackCore::CContextNetworkProxy(BlackCore::CDBusServer::ServiceName, conn, mode, runtime);
+        case CRuntimeConfig::NotUsed:
         default:
-            return nullptr; // network not mandatory
+            return new BlackCore::CContextNetworkEmpty(true, runtime);
         }
     }
 
-}
+} // namesapce

@@ -1,3 +1,12 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #ifndef BLACKCORE_CONTEXT_H
 #define BLACKCORE_CONTEXT_H
 
@@ -17,10 +26,22 @@ namespace BlackCore
         //! Destructor
         ~CContext() {}
 
-        //! Using local objects?
-        bool usingLocalObjects() const
+        //! Using local implementing object?
+        bool isUsingImplementingObject() const
         {
             return m_mode == CRuntimeConfig::Local || m_mode == CRuntimeConfig::LocalInDbusServer;
+        }
+
+        //! Local or remote object?
+        bool isLocalObject() const
+        {
+            return isUsingImplementingObject() || m_mode == CRuntimeConfig::NotUsed;
+        }
+
+        //! Empty object?
+        bool isEmptyObject() const
+        {
+            return m_mode == CRuntimeConfig::NotUsed;
         }
 
         //! Runtime
@@ -98,11 +119,11 @@ namespace BlackCore
         //! Path and context id
         QString buildPathAndContextId(const QString &path) const
         {
-            return QString(path).
-                   append(':').
-                   append(QString::number(this->getUniqueId()));
+            return QString(path) + ":" + QString::number(this->getUniqueId());
         }
 
+        //! Standard message when status message is returned in empty context
+        static const BlackMisc::CStatusMessage &statusMessageEmptyContext();
     };
 }
 #endif // guard

@@ -1,3 +1,14 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
 #ifndef BLACKCORE_CONTEXT_RUNTIME_H
 #define BLACKCORE_CONTEXT_RUNTIME_H
 
@@ -142,17 +153,40 @@ namespace BlackCore
         bool canPingApplicationContext() const;
 
     private:
-        bool m_init; /*!< flag */
-        CDBusServer *m_dbusServer;
-        bool m_initDBusConnection;
-        QDBusConnection m_dbusConnection;
-        IContextApplication *m_contextApplication;
-        IContextAudio *m_contextAudio;
-        IContextNetwork *m_contextNetwork;
-        IContextOwnAircraft *m_contextOwnAircraft;
-        IContextSettings *m_contextSettings;
-        IContextSimulator *m_contextSimulator;
+        bool m_init = false; /*!< flag */
+
+        // DBus
+        CDBusServer *m_dbusServer = nullptr;
+        QDBusConnection m_dbusConnection = QDBusConnection("default");
+        bool m_initDBusConnection   = false;
+
+        // logging on signals / slots
+        bool m_signalLogApplication = false;
+        bool m_signalLogAudio       = false;
+        bool m_signalLogNetwork     = false;
+        bool m_signalLogOwnAircraft = false;
+        bool m_signalLogSettings    = false;
+        bool m_signalLogSimulator   = false;
+        bool m_slotLogApplication   = false;
+        bool m_slotLogAudio         = false;
+        bool m_slotLogNetwork       = false;
+        bool m_slotLogOwnAircraft   = false;
+        bool m_slotLogSettings      = false;
+        bool m_slotLogSimulator     = false;
+        QMultiMap<QString, QMetaObject::Connection> m_logSignalConnections;
+
+        // thread safety for logging
         mutable QReadWriteLock m_lock;
+
+        // contexts:
+        // There is a reason why we do not use smart pointers here. When the context is deleted
+        // we need to use deleteLater to gracefully shut the context
+        IContextApplication *m_contextApplication = nullptr;
+        IContextAudio       *m_contextAudio       = nullptr;
+        IContextNetwork     *m_contextNetwork     = nullptr;
+        IContextOwnAircraft *m_contextOwnAircraft = nullptr;
+        IContextSettings    *m_contextSettings    = nullptr;
+        IContextSimulator   *m_contextSimulator   = nullptr;
 
         //! initialization of DBus connection (where applicable)
         void initDBusConnection(const QString &address);
@@ -163,5 +197,5 @@ namespace BlackCore
         //! post init tasks, mainly connecting context signal slots
         void initPostSetup();
     };
-}
+} // namespace
 #endif // guard

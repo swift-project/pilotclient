@@ -192,7 +192,6 @@ namespace BlackCore
     protected:
         //! Constructor
         IContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}
-
     };
 }
 

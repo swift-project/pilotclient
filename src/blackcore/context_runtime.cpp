@@ -1,9 +1,17 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #include "blackcore/context_all_impl.h"
 #include "blackcore/context_all_proxies.h"
+#include "blackcore/context_all_empties.h"
 #include "blackcore/blackcorefreefunctions.h"
-
 #include "blacksim/blacksimfreefunctions.h"
-
 #include "blackmisc/nwserver.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avaircraft.h"
@@ -18,10 +26,7 @@ namespace BlackCore
     /*
      * Constructor
      */
-    CRuntime::CRuntime(const CRuntimeConfig &config, QObject *parent) :
-        QObject(parent), m_init(false), m_dbusServer(nullptr), m_initDBusConnection(false),
-        m_dbusConnection(QDBusConnection("default")),
-        m_contextApplication(nullptr), m_contextAudio(nullptr), m_contextNetwork(nullptr), m_contextSettings(nullptr), m_contextSimulator(nullptr)
+    CRuntime::CRuntime(const CRuntimeConfig &config, QObject *parent) : QObject(parent)
     {
         this->init(config);
     }
@@ -94,10 +99,10 @@ namespace BlackCore
 
         // checks --------------
         // 1. own aircraft and simulator should reside in same location
-        Q_ASSERT(!this->m_contextSimulator || (this->m_contextOwnAircraft->usingLocalObjects() == this->m_contextSimulator->usingLocalObjects()));
+        Q_ASSERT(!this->m_contextSimulator || (this->m_contextOwnAircraft->isUsingImplementingObject() == this->m_contextSimulator->isUsingImplementingObject()));
 
         // 2. own aircraft and network should reside in same location
-        Q_ASSERT(!this->m_contextNetwork || (this->m_contextOwnAircraft->usingLocalObjects() == this->m_contextNetwork->usingLocalObjects()));
+        Q_ASSERT(!this->m_contextNetwork || (this->m_contextOwnAircraft->isUsingImplementingObject() == this->m_contextNetwork->isUsingImplementingObject()));
 
         // post inits, wiring things among context (e.g. signal slots)
         this->initPostSetup();
@@ -110,13 +115,13 @@ namespace BlackCore
     bool CRuntime::hasRemoteApplicationContext() const
     {
         Q_ASSERT(this->m_contextApplication);
-        return !this->m_contextApplication->usingLocalObjects();
+        return !this->m_contextApplication->isUsingImplementingObject();
     }
 
     bool CRuntime::canPingApplicationContext() const
     {
         Q_ASSERT(this->m_contextApplication);
-        if (this->m_contextApplication->usingLocalObjects()) return true;
+        if (this->m_contextApplication->isUsingImplementingObject()) return true;
         qint64 token = QDateTime::currentMSecsSinceEpoch();
         return (token == this->m_contextApplication->ping(token));
     }
@@ -141,10 +146,10 @@ namespace BlackCore
         }
 
         // local simulator?
-        if (this->m_contextSimulator && this->m_contextSimulator->usingLocalObjects())
+        if (this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject())
         {
             // only connect if simulator runs locally, no round trips
-            if (this->m_contextNetwork && this->m_contextNetwork->usingLocalObjects())
+            if (this->m_contextNetwork && this->m_contextNetwork->isUsingImplementingObject())
             {
                 c = connect(this->m_contextNetwork, &IContextNetwork::textMessagesReceived,
                             this->getCContextSimulator(), &CContextSimulator::ps_textMessagesReceived);
@@ -152,7 +157,7 @@ namespace BlackCore
             }
 
             // only if own aircraft runs locally
-            if (this->m_contextOwnAircraft && this->m_contextOwnAircraft->usingLocalObjects())
+            if (this->m_contextOwnAircraft && this->m_contextOwnAircraft->isUsingImplementingObject())
             {
                 c = connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit,
                             this->getCContextSimulator(), &CContextSimulator::ps_updateCockpitFromContext);
@@ -171,7 +176,7 @@ namespace BlackCore
         }
 
         // only where network and(!) own aircraft run locally
-        if (this->m_contextNetwork && this->m_contextOwnAircraft && this->m_contextNetwork->usingLocalObjects() && this->m_contextOwnAircraft->usingLocalObjects())
+        if (this->m_contextNetwork && this->m_contextOwnAircraft && this->m_contextNetwork->isUsingImplementingObject() && this->m_contextOwnAircraft->isUsingImplementingObject())
         {
             c = this->connect(this->m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
                               this->getCContextOwnAircraft(),  &CContextOwnAircraft::ps_changedAtcStationOnlineConnectionStatus);
@@ -209,12 +214,13 @@ namespace BlackCore
         {
             disconnect(this->getIContextNetwork());
             this->getIContextNetwork()->disconnectFromNetwork();
-            if (this->m_contextNetwork->usingLocalObjects())
+            if (this->m_contextNetwork->isUsingImplementingObject())
             {
                 this->getCContextNetwork()->gracefulShutdown(); // for threads
             }
             this->getIContextNetwork()->deleteLater();
-            this->m_contextNetwork = nullptr;
+            // replace by dummy object avoiding nullptr issues during shutdown phase
+            this->m_contextNetwork = IContextNetwork::create(this, CRuntimeConfig::NotUsed, nullptr, this->m_dbusConnection);
         }
 
         if (this->getIContextAudio())
@@ -319,61 +325,61 @@ namespace BlackCore
 
     CContextAudio *CRuntime::getCContextAudio()
     {
-        Q_ASSERT_X(!this->m_contextAudio || this->m_contextAudio->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        Q_ASSERT_X(this->m_contextAudio && this->m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextAudio *>(this->m_contextAudio);
     }
 
     const CContextAudio *CRuntime::getCContextAudio() const
     {
-        Q_ASSERT_X(!this->m_contextAudio || this->m_contextAudio->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        Q_ASSERT_X(this->m_contextAudio && this->m_contextAudio->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextAudio *>(this->m_contextAudio);
     }
 
     CContextApplication *CRuntime::getCContextApplication()
     {
-        Q_ASSERT_X(!this->m_contextApplication || this->m_contextApplication->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        Q_ASSERT_X(this->m_contextApplication && this->m_contextApplication->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextApplication *>(this->m_contextApplication);
     }
 
     const CContextApplication *CRuntime::getCContextApplication() const
     {
-        Q_ASSERT_X(!this->m_contextApplication || this->m_contextApplication->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        Q_ASSERT_X(this->m_contextApplication && this->m_contextApplication->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextApplication *>(this->m_contextApplication);
     }
 
     CContextNetwork *CRuntime::getCContextNetwork()
     {
-        Q_ASSERT_X(!this->m_contextApplication || this->m_contextNetwork->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        Q_ASSERT_X(this->m_contextNetwork && this->m_contextNetwork->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextNetwork *>(this->m_contextNetwork);
     }
 
     const CContextNetwork *CRuntime::getCContextNetwork() const
     {
-        Q_ASSERT_X(!this->m_contextApplication || this->m_contextNetwork->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        Q_ASSERT_X(this->m_contextNetwork && this->m_contextNetwork->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextNetwork *>(this->m_contextNetwork);
     }
 
     CContextOwnAircraft *CRuntime::getCContextOwnAircraft()
     {
-        Q_ASSERT_X(!this->m_contextOwnAircraft || this->m_contextOwnAircraft->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        Q_ASSERT_X(this->m_contextOwnAircraft && this->m_contextOwnAircraft->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextOwnAircraft *>(this->m_contextOwnAircraft);
     }
 
     const CContextOwnAircraft *CRuntime::getCContextOwnAircraft() const
     {
-        Q_ASSERT_X(!this->m_contextOwnAircraft || this->m_contextOwnAircraft->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        Q_ASSERT_X(this->m_contextOwnAircraft && this->m_contextOwnAircraft->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextOwnAircraft *>(this->m_contextOwnAircraft);
     }
 
     CContextSimulator *CRuntime::getCContextSimulator()
     {
-        Q_ASSERT_X(!this->m_contextSimulator || this->m_contextSimulator->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        Q_ASSERT_X(this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextSimulator *>(this->m_contextSimulator);
     }
 
     const CContextSimulator *CRuntime::getCContextSimulator() const
     {
-        Q_ASSERT_X(!this->m_contextSimulator || this->m_contextSimulator->usingLocalObjects(), "CCoreRuntime", "Cannot downcast to local object");
+        Q_ASSERT_X(this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject(), "CCoreRuntime", "Cannot downcast to local object");
         return static_cast<CContextSimulator *>(this->m_contextSimulator);
     }
 
@@ -428,4 +434,4 @@ namespace BlackCore
         cfg.m_audio = CRuntimeConfig::Local;
         return cfg;
     }
-}
+} // namespace
