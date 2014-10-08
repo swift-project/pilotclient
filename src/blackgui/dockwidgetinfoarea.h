@@ -58,6 +58,9 @@ namespace BlackGui
         //! Nested info areas
         QList<CDockWidgetInfoArea *> findNestedInfoAreas();
 
+        //! The parent info areas
+        const QList<const CInfoArea *> findParentInfoAreas() const;
+
     };
 
 } // namespace

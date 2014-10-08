@@ -62,16 +62,16 @@ namespace BlackGui
 
     void CDockWidgetInfoArea::addToContextMenu(QMenu *contextMenu) const
     {
-        Components::CMainInfoAreaComponent *mainWidget = qobject_cast<CMainInfoAreaComponent *>(parentWidget());
-        Q_ASSERT(mainWidget);
-        if (!mainWidget) return;
+        QList<const CInfoArea *> parentInfoAreas = this->findParentInfoAreas();
+        Q_ASSERT(!parentInfoAreas.isEmpty());
+        if (parentInfoAreas.isEmpty()) return;
 
         // Dockable widget's context menu
         CDockWidget::addToContextMenu(contextMenu);
 
         // from main component (info area)
         contextMenu->addSeparator();
-        mainWidget->addToContextMenu(contextMenu);
+        parentInfoAreas.last()->addToContextMenu(contextMenu);
     }
 
     void CDockWidgetInfoArea::initalFloating()
@@ -122,4 +122,17 @@ namespace BlackGui
         QList<CDockWidgetInfoArea *> nestedInfoAreas = this->findChildren<CDockWidgetInfoArea *>();
         return nestedInfoAreas;
     }
-}
+
+    const QList<const CInfoArea *> CDockWidgetInfoArea::findParentInfoAreas() const
+    {
+        QList<const CInfoArea *> parents;
+        QWidget *currentWidget = this->parentWidget();
+        while (currentWidget)
+        {
+            const CInfoArea *ia = qobject_cast<CInfoArea *>(currentWidget);
+            if (ia) { parents.append(ia); }
+            currentWidget = currentWidget->parentWidget();
+        }
+        return parents;
+    }
+} // namespace
