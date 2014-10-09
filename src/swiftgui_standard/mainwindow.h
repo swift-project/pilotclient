@@ -84,35 +84,35 @@ protected:
 
 private:
     QScopedPointer<Ui::MainWindow> ui;
-    BlackGui::Components::CInfoWindowComponent *m_compInfoWindow;
-    bool m_init;
+    BlackGui::Components::CInfoWindowComponent *m_compInfoWindow = nullptr; //!< the info window (popup
+    bool m_init = false;
     GuiModes::WindowMode m_windowMode;
-    BlackInput::IKeyboard *m_keyboard; //!< hotkeys
+    BlackInput::IKeyboard *m_keyboard = nullptr; //!< hotkeys
 
     BlackMisc::CLogSubscriber m_logSubscriber { this, &MainWindow::ps_displayStatusMessageInGui };
 
     // contexts
-    bool m_coreAvailable;
-    bool m_contextNetworkAvailable;
-    bool m_contextAudioAvailable;
-    BlackMisc::Aviation::CAircraft m_ownAircraft; /*!< own aircraft's state */
-    QTimer *m_timerContextWatchdog; /*!< core available? */
-    QTimer *m_timerStatusBar; /*!< cleaning up status bar */
-    QTimer *m_timerSimulator; /*!< update simulator data */
+    bool m_coreAvailable           = false;
+    bool m_contextNetworkAvailable = false;
+    bool m_contextAudioAvailable   = false;
+    BlackMisc::Aviation::CAircraft m_ownAircraft; //!< own aircraft's state
+    QTimer *m_timerContextWatchdog = nullptr;     //!< core available?
+    QTimer *m_timerStatusBar       = nullptr;     //!< cleaning up status bar
+    QTimer *m_timerSimulator       = nullptr;     //!< update simulator data
 
     // frameless window
     QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
 
     // context menus
-    QMenu *m_contextMenuStatusMessageList; /*!< context menu for status message list */
+    QMenu *m_contextMenuStatusMessageList = nullptr; /*!< context menu for status message list */
 
     // cockpit
-    QString m_transponderResetValue; /*!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas */
-    QWidget *m_inputFocusedWidget; /*!< currently used widget for input, mainly used with cockpit */
+    QString m_transponderResetValue;         //!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas
+    QWidget *m_inputFocusedWidget = nullptr; //!< currently used widget for input, mainly used with cockpit
 
     // status bar
-    QLabel *m_statusBarIcon; /*!< status bar icon */
-    QLabel *m_statusBarLabel; /*!< status bar label */
+    QLabel *m_statusBarIcon  = nullptr; //!< status bar icon
+    QLabel *m_statusBarLabel = nullptr; //!< status bar label
 
     //! GUI status update
     void updateGuiStatusInformation();

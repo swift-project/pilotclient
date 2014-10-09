@@ -39,20 +39,7 @@ using namespace BlackMisc::Hardware;
 MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
     QMainWindow(parent, windowMode == GuiModes::WindowFrameless ? (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint) : (Qt::Tool | Qt::WindowStaysOnTopHint)),
     ui(new Ui::MainWindow),
-    m_compInfoWindow(nullptr),
-    m_init(false), m_windowMode(windowMode), m_keyboard(nullptr),
-    // contexts and runtime
-    m_coreAvailable(false), m_contextNetworkAvailable(false), m_contextAudioAvailable(false),
-
-    // timers
-    m_timerContextWatchdog(nullptr),
-    m_timerStatusBar(nullptr), m_timerSimulator(nullptr),
-    // context menus
-    m_contextMenuStatusMessageList(nullptr),
-    // cockpit
-    m_inputFocusedWidget(nullptr),
-    // status bar
-    m_statusBarIcon(nullptr), m_statusBarLabel(nullptr)
+    m_windowMode(windowMode)
 {
     if (windowMode == GuiModes::WindowFrameless)
     {
