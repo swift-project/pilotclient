@@ -43,18 +43,18 @@ namespace BlackCore
         IContextApplication(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
 
     public:
-        //! Components
-        enum Component : uint
+        //! Parts of the application
+        enum Application : uint
         {
-            ComponentGui,
-            ComponentCore
+            ApplicationGui,
+            ApplicationCore
         };
 
-        //! What a component does
+        //! State of application
         enum Actions : uint
         {
-            ActionStarts,
-            ActionStops
+            ApplicationStarts,
+            ApplicationStops
         };
 
         //! Service name

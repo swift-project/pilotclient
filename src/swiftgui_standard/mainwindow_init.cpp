@@ -132,7 +132,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->ps_setMainPage(true);
 
     // starting
-    this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ComponentGui, IContextApplication::ActionStarts);
+    this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStarts);
 
     // We don't receive signals from the past. So ask for it simulate an initial signal
     ps_onSimulatorConnectionChanged(this->getIContextSimulator()->isConnected());
