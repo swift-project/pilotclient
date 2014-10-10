@@ -18,6 +18,7 @@
 
 #include <QTabWidget>
 #include <QTimer>
+#include <QScopedPointer>
 
 namespace Ui { class CUserComponent; }
 
@@ -67,7 +68,7 @@ namespace BlackGui
             void ps_countChanged(int count);
 
         private:
-            Ui::CUserComponent *ui;
+            QScopedPointer<Ui::CUserComponent> ui;
             CTimerBasedComponent *m_timerComponent;
         };
     }

@@ -38,9 +38,7 @@ namespace BlackGui
         }
 
         CAircraftComponent::~CAircraftComponent()
-        {
-            delete ui;
-        }
+        { }
 
         int CAircraftComponent::countAircrafts() const
         {

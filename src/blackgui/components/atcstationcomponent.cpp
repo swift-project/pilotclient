@@ -67,9 +67,7 @@ namespace BlackGui
         }
 
         CAtcStationComponent::~CAtcStationComponent()
-        {
-            delete ui;
-        }
+        { }
 
         int CAtcStationComponent::countBookedStations() const
         {

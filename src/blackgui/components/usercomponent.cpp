@@ -35,9 +35,7 @@ namespace BlackGui
         }
 
         CUserComponent::~CUserComponent()
-        {
-            delete ui;
-        }
+        { }
 
         int CUserComponent::countClients() const
         {

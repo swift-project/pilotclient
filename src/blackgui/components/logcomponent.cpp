@@ -26,9 +26,7 @@ namespace BlackGui
         }
 
         CLogComponent::~CLogComponent()
-        {
-            delete ui;
-        }
+        { }
 
         void CLogComponent::appendStatusMessageToConsole(const CStatusMessage &statusMessage)
         {
@@ -47,4 +45,4 @@ namespace BlackGui
             this->ui->tvp_StatusMessages->insert(statusMessage);
         }
     }
-}
+} // namespace

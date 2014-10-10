@@ -49,7 +49,7 @@ namespace BlackGui
             BlackMisc::Aviation::CFlightPlan getFlightPlan() const;
 
         private:
-            Ui::CFlightPlanComponent *ui;
+            QScopedPointer<Ui::CFlightPlanComponent> ui;
 
             //! My flight plan
             BlackMisc::Aviation::CFlightPlan m_flightPlan;

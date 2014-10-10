@@ -27,9 +27,7 @@ namespace BlackGui
         }
 
         CSimulatorComponent::~CSimulatorComponent()
-        {
-            delete ui;
-        }
+        { }
 
         void CSimulatorComponent::addOrUpdateByName(const QString &name, const QString &value, const CIcon &icon)
         {
@@ -52,4 +50,4 @@ namespace BlackGui
             this->ui->tvp_LiveData->clear();
         }
     }
-}
+} // namespace

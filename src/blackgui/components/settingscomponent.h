@@ -18,6 +18,7 @@
 #include <QTabWidget>
 #include <QModelIndex>
 #include <QTimer>
+#include <QScopedPointer>
 
 namespace Ui { class CSettingsComponent; }
 
@@ -156,10 +157,10 @@ namespace BlackGui
                 MicrophoneTest
             };
 
-            Ui::CSettingsComponent *ui;
-            QTimer *m_timerAudioTests; //!< audio tests: progress bar, disable/enable buttons
+            QScopedPointer<Ui::CSettingsComponent> ui;
+            QTimer   *m_timerAudioTests; //!< audio tests: progress bar, disable/enable buttons
             AudioTest m_audioTestRunning;
-            QColor m_fontColor;
+            QColor    m_fontColor;
 
             //! Audio device lists from settings
             void initAudioDeviceLists();

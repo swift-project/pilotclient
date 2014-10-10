@@ -15,7 +15,9 @@
 #include "runtimebasedcomponent.h"
 #include "blackmisc/icon.h"
 #include "blackgui/components/dockwidgetinfoareacomponent.h"
+
 #include <QTabWidget>
+#include <QScopedPointer>
 
 namespace Ui { class CSimulatorComponent; }
 namespace BlackGui
@@ -25,9 +27,9 @@ namespace BlackGui
 
         //! Simulator component
         class CSimulatorComponent :
-                public QTabWidget,
-                public CDockWidgetInfoAreaComponent,
-                public CRuntimeBasedComponent
+            public QTabWidget,
+            public CDockWidgetInfoAreaComponent,
+            public CRuntimeBasedComponent
         {
             Q_OBJECT
 
@@ -52,7 +54,7 @@ namespace BlackGui
             void clear();
 
         private:
-            Ui::CSimulatorComponent *ui;
+            QScopedPointer<Ui::CSimulatorComponent> ui;
         };
     }
 }

@@ -14,7 +14,9 @@
 
 #include "runtimebasedcomponent.h"
 #include "blackmisc/statusmessagelist.h"
+
 #include <QFrame>
+#include <QScopedPointer>
 
 namespace Ui { class CLogComponent; }
 
@@ -49,7 +51,7 @@ namespace BlackGui
 
 
         private:
-            Ui::CLogComponent *ui;
+            QScopedPointer<Ui::CLogComponent> ui;
         };
     }
 }

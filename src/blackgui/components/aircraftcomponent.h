@@ -16,7 +16,9 @@
 #include "blackgui/components/timerbasedcomponent.h"
 #include "blackgui/components/dockwidgetinfoareacomponent.h"
 #include "blackmisc/avaircraft.h"
+
 #include <QTabWidget>
+#include <QScopedPointer>
 
 namespace Ui { class CAircraftComponent; }
 namespace BlackGui
@@ -72,7 +74,7 @@ namespace BlackGui
             void ps_countChanged(int count);
 
         private:
-            Ui::CAircraftComponent *ui;
+            QScopedPointer<Ui::CAircraftComponent> ui;
             CTimerBasedComponent   *m_timerComponent;
         };
     }

@@ -69,9 +69,7 @@ namespace BlackGui
         }
 
         CFlightPlanComponent::~CFlightPlanComponent()
-        {
-            delete ui;
-        }
+        { }
 
         void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Aviation::CAircraft &ownAircraft)
         {

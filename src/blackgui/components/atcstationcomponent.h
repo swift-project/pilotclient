@@ -20,6 +20,7 @@
 
 #include <QTabWidget>
 #include <QModelIndex>
+#include <QScopedPointer>
 
 namespace Ui { class CAtcStationComponent; }
 
@@ -111,7 +112,7 @@ namespace BlackGui
             void ps_countChanged(int count);
 
         private:
-            Ui::CAtcStationComponent *ui;
+            QScopedPointer<Ui::CAtcStationComponent> ui;
             CTimerBasedComponent *m_timerComponent;
             QDateTime m_timestampLastReadOnlineStations = CTimerBasedComponent::epoch();  //!< stations read
             QDateTime m_timestampOnlineStationsChanged  = CTimerBasedComponent::epoch();  //!< stations marked as changed

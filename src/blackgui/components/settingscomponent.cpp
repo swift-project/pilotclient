@@ -56,9 +56,7 @@ namespace BlackGui
          * Destructor
          */
         CSettingsComponent::~CSettingsComponent()
-        {
-            delete ui;
-        }
+        { }
 
         /*
          * Update own ICAO data from GUI
