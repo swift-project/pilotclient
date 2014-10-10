@@ -89,13 +89,8 @@ namespace BlackGui
 
     void CDockWidget::paintEvent(QPaintEvent *event)
     {
-        // KB: Should give me style sheet compliance, however I did not notice any difference
-        // included for style sheet compliance
-        // QStyleOption opt;
-        // opt.init(this);
-        // QPainter p(this);
-        // style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-        QDockWidget::paintEvent(event);
+        Q_UNUSED(event);
+        CStyleSheetUtility::useStyleSheetInDerivedWidget(this);
     }
 
     void CDockWidget::hideEvent(QHideEvent *event)
