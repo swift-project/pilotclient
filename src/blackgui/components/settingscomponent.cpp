@@ -42,7 +42,7 @@ namespace BlackGui
          */
         CSettingsComponent::CSettingsComponent(QWidget *parent) :
             QTabWidget(parent),
-            CRuntimeBasedComponent(nullptr, false),
+            CEnableForRuntime(nullptr, false),
             ui(new Ui::CSettingsComponent),
             m_audioTestRunning(NoAudioTest)
         {

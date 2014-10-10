@@ -75,7 +75,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // context
     this->createRuntime(runtimeConfig, this);
-    CRuntimeBasedComponent::setRuntimeForComponents(this->getRuntime(), this);
+    CEnableForRuntime::setRuntimeForComponents(this->getRuntime(), this);
 
     // wire GUI signals
     this->initGuiSignals();

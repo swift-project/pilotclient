@@ -7,13 +7,13 @@
  * contained in the LICENSE file.
  */
 
-#include "timerbasedcomponent.h"
+#include "updatetimer.h"
 
 namespace BlackGui
 {
     namespace Components
     {
-        CTimerBasedComponent::CTimerBasedComponent(const char *slot, QObject *parent) :
+        CUpdateTimer::CUpdateTimer(const char *slot, QObject *parent) :
             QObject(parent)
         {
             Q_ASSERT(parent);
@@ -24,13 +24,14 @@ namespace BlackGui
             this->connect(this->m_timerSingleShot, SIGNAL(timeout()), parent, slot);
         }
 
-        CTimerBasedComponent::~CTimerBasedComponent()
+        CUpdateTimer::~CUpdateTimer()
         {
             this->m_timer->stop();
+            this->m_timerSingleShot->stop();
             if (this->parent()) this->disconnect(this->parent());
         }
 
-        void CTimerBasedComponent::setUpdateInterval(int milliSeconds)
+        void CUpdateTimer::setUpdateInterval(int milliSeconds)
         {
             if (milliSeconds < 100)
             {
@@ -43,11 +44,11 @@ namespace BlackGui
             }
         }
 
-        void CTimerBasedComponent::fireTimer()
+        void CUpdateTimer::fireTimer()
         {
             Q_ASSERT(this->m_timerSingleShot);
             this->m_timer->start(); // restart other timer
             this->m_timerSingleShot->start(10);
         }
     }
-} // guard
+} // namespace

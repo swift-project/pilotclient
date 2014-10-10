@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_LOGCOMPONENT_H
 #define BLACKGUI_LOGCOMPONENT_H
 
-#include "runtimebasedcomponent.h"
+#include "enableforruntime.h"
 #include "blackmisc/statusmessagelist.h"
 
 #include <QFrame>
@@ -28,7 +28,7 @@ namespace BlackGui
         //! GUI displaying log and status messages
         class CLogComponent :
             public QFrame,
-            public CRuntimeBasedComponent
+            public CEnableForRuntime
         {
             Q_OBJECT
 

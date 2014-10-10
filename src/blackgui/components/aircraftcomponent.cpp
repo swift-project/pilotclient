@@ -9,7 +9,7 @@
 
 #include "aircraftcomponent.h"
 #include "ui_aircraftcomponent.h"
-#include "dockwidgetinfoareacomponent.h"
+#include "enablefordockwidgetinfoarea.h"
 #include "../guiutility.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_simulator.h"
@@ -24,14 +24,14 @@ namespace BlackGui
 
         CAircraftComponent::CAircraftComponent(QWidget *parent) :
             QTabWidget(parent),
-            CDockWidgetInfoAreaComponent(this),
-            CRuntimeBasedComponent(nullptr, false),
-            ui(new Ui::CAircraftComponent), m_timerComponent(nullptr)
+            CEnableForDockWidgetInfoArea(this),
+            CEnableForRuntime(nullptr, false),
+            ui(new Ui::CAircraftComponent), m_updateTimer(nullptr)
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
             this->ui->tvp_AirportsInRange->setResizeMode(CAirportView::ResizingOnce);
-            m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
+            m_updateTimer = new CUpdateTimer(SLOT(update()), this);
 
             connect(this->ui->tvp_AircraftsInRange, &CAircraftView::countChanged, this, &CAircraftComponent::ps_countChanged);
             connect(this->ui->tvp_AirportsInRange, &CAircraftView::countChanged, this, &CAircraftComponent::ps_countChanged);

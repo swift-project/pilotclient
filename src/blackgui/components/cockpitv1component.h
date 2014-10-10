@@ -13,6 +13,7 @@
 #define BLACKGUI_COCKPITV1COMPONENT_H
 
 #include "blackgui/components/runtimebasedcomponent.h"
+#include "blackgui/components/enableforruntime.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/aviocomsystem.h"
 #include "blackmisc/voiceroomlist.h"
@@ -29,7 +30,7 @@ namespace BlackGui
         //! Cockpit component
         class CCockpitV1Component :
             public QWidget,
-            public CRuntimeBasedComponent
+            public CEnableForRuntime
         {
             Q_OBJECT
 

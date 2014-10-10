@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_INFOBARSTATUSCOMPONENT_H
 #define BLACKGUI_INFOBARSTATUSCOMPONENT_H
 
-#include "runtimebasedcomponent.h"
+#include "enableforruntime.h"
 #include "../led.h"
 #include <QFrame>
 
@@ -24,7 +24,7 @@ namespace BlackGui
         //! Info bar displaying status (Network, Simulator, DBus)
         class CInfoBarStatusComponent :
             public QFrame,
-            public CRuntimeBasedComponent
+            public CEnableForRuntime
         {
             Q_OBJECT
 

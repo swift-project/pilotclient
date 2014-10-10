@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_TEXTMESSAGECOMPONENT_H
 #define BLACKGUI_TEXTMESSAGECOMPONENT_H
 
-#include "blackgui/components/runtimebasedcomponent.h"
+#include "blackgui/components/enableforruntime.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/nwtextmessagelist.h"
@@ -30,7 +30,7 @@ namespace BlackGui
         //! Text message widget
         class CTextMessageComponent :
             public QTabWidget,
-            public CRuntimeBasedComponent
+            public CEnableForRuntime
         {
             Q_OBJECT
 

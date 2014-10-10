@@ -34,7 +34,7 @@ namespace BlackGui
 
     protected slots:
         //! \copydoc CDockWidget::ps_onStyleSheetsChanged
-        virtual void onStyleSheetsChanged() override;
+        virtual void ps_onStyleSheetsChanged() override;
 
     };
 

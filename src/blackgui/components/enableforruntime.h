@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_RUNTIMEBASEDCOMPONENT_H
-#define BLACKGUI_RUNTIMEBASEDCOMPONENT_H
+#ifndef BLACKGUI_ENABLEFORRUNTIME_H
+#define BLACKGUI_ENABLEFORRUNTIME_H
 
 #include "blackcore/context_runtime.h"
 #include "blackmisc/notificationsounds.h"
@@ -39,7 +39,7 @@ namespace BlackGui
          *          the component widely independent from a central data provideer
          * \sa BlackCore::CRuntime
          */
-        class CRuntimeBasedComponent
+        class CEnableForRuntime
         {
         public:
             //! Set runtime, usually set by runtime owner (must only be one, usually main window)
@@ -59,7 +59,7 @@ namespace BlackGui
             //! Constructor
             //! \remarks Usually runtime will be provided later, not at initialization time.
             //!          If runtime is provided right now, make sure to call runtimeHasBeenSet afterwards
-            CRuntimeBasedComponent(BlackCore::CRuntime *runtime = nullptr, bool runtimeOwner = false) :
+            CEnableForRuntime(BlackCore::CRuntime *runtime = nullptr, bool runtimeOwner = false) :
                 m_runtime(runtime), m_runtimeOwner(runtimeOwner)
             {}
 

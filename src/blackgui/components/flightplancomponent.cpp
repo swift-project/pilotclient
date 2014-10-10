@@ -25,7 +25,7 @@ namespace BlackGui
     {
         CFlightPlanComponent::CFlightPlanComponent(QWidget *parent) :
             QTabWidget(parent),
-            CRuntimeBasedComponent(nullptr, false),
+            CEnableForRuntime(nullptr, false),
             ui(new Ui::CFlightPlanComponent)
         {
             ui->setupUi(this);

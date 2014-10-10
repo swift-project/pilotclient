@@ -77,8 +77,8 @@ namespace BlackGui
     void CDockWidgetInfoArea::initalFloating()
     {
         CDockWidget::initalFloating(); // initial floating to init position & size
-        QList<CDockWidgetInfoAreaComponent *> infoAreaDockWidgets = this->findEmbeddedDockWidgetInfoAreaComponents();
-        foreach(CDockWidgetInfoAreaComponent * dwia, infoAreaDockWidgets)
+        QList<CEnableForDockWidgetInfoArea *> infoAreaDockWidgets = this->findEmbeddedDockWidgetInfoAreaComponents();
+        foreach(CEnableForDockWidgetInfoArea * dwia, infoAreaDockWidgets)
         {
             // KWB: potentially a risk when this object is deleted
             //      put under normal situations the child object will be deleted as well, and we have
@@ -87,13 +87,13 @@ namespace BlackGui
         }
     }
 
-    QList<CDockWidgetInfoAreaComponent *> CDockWidgetInfoArea::findEmbeddedDockWidgetInfoAreaComponents()
+    QList<CEnableForDockWidgetInfoArea *> CDockWidgetInfoArea::findEmbeddedDockWidgetInfoAreaComponents()
     {
         QList<QWidget *> widgets = this->findChildren<QWidget *>();
-        QList<CDockWidgetInfoAreaComponent *> widgetsWithDockWidgetInfoAreaComponent;
+        QList<CEnableForDockWidgetInfoArea *> widgetsWithDockWidgetInfoAreaComponent;
         foreach(QWidget * w, widgets)
         {
-            CDockWidgetInfoAreaComponent *dwc = dynamic_cast<Components::CDockWidgetInfoAreaComponent *>(w);
+            CEnableForDockWidgetInfoArea *dwc = dynamic_cast<Components::CEnableForDockWidgetInfoArea *>(w);
             if (dwc)
             {
                 widgetsWithDockWidgetInfoAreaComponent.append(dwc);
@@ -105,9 +105,9 @@ namespace BlackGui
         // we have to exclude the nested embedded areas
         foreach(CDockWidgetInfoArea * ia, nestedInfoAreas)
         {
-            QList<CDockWidgetInfoAreaComponent *> nestedInfoAreaComponents = ia->findEmbeddedDockWidgetInfoAreaComponents();
+            QList<CEnableForDockWidgetInfoArea *> nestedInfoAreaComponents = ia->findEmbeddedDockWidgetInfoAreaComponents();
             if (nestedInfoAreaComponents.isEmpty()) continue;
-            foreach(CDockWidgetInfoAreaComponent * iac, nestedInfoAreaComponents)
+            foreach(CEnableForDockWidgetInfoArea * iac, nestedInfoAreaComponents)
             {
                 bool r = widgetsWithDockWidgetInfoAreaComponent.removeOne(iac);
                 Q_ASSERT(r); // why is the nested component not in the child list?

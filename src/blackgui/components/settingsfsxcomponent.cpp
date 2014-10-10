@@ -30,7 +30,7 @@ namespace BlackGui
     namespace Components
     {
         CSettingsFsxComponent::CSettingsFsxComponent(QWidget *parent) :
-            QFrame(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CSettingsFsxComponent)
+            QFrame(parent), CEnableForRuntime(nullptr, false), ui(new Ui::CSettingsFsxComponent)
         {
             ui->setupUi(this);
 

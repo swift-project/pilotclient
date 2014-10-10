@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_DOCKWIDGETINFOAREACOMPONENT_H
-#define BLACKGUI_DOCKWIDGETINFOAREACOMPONENT_H
+#ifndef BLACKGUI_ENABLEFORDOCKWIDGETINFOAREA_H
+#define BLACKGUI_ENABLEFORDOCKWIDGETINFOAREA_H
 
 #include "../dockwidgetinfoarea.h"
 #include "../infoarea.h"
@@ -21,16 +21,16 @@ namespace BlackGui
     namespace Components
     {
 
-        //! Helper class: Component is residing in an dockable widget.
+        //! Helper class: If a component is residing in an dockable widget.
         //! This class provides access to its info area and dockable widget.
-        class CDockWidgetInfoAreaComponent
+        class CEnableForDockWidgetInfoArea
         {
         public:
             //! Corresponding dockable widget in info area
-            BlackGui::CDockWidgetInfoArea *getDockWidget() { return m_parentDockableInfoArea; }
+            BlackGui::CDockWidgetInfoArea *getDockWidgetInfoArea() { return m_parentDockableInfoArea; }
 
             //! Corresponding dockable widget in info area
-            const BlackGui::CDockWidgetInfoArea *getDockWidget() const { return m_parentDockableInfoArea; }
+            const BlackGui::CDockWidgetInfoArea *getDockWidgetInfoArea() const { return m_parentDockableInfoArea; }
 
             //! Corresponding dockable widget in info area
             //! \remarks Usually set from CDockWidgetInfoArea when it is fully initialized
@@ -50,7 +50,7 @@ namespace BlackGui
 
         protected:
             //! Constructor
-            CDockWidgetInfoAreaComponent(QWidget *parent);
+            CEnableForDockWidgetInfoArea(QWidget *parent);
 
         private:
             BlackGui::CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget

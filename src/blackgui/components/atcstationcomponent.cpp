@@ -29,13 +29,13 @@ namespace BlackGui
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
             QTabWidget(parent),
-            CDockWidgetInfoAreaComponent(this),
-            CRuntimeBasedComponent(nullptr, false),
-            ui(new Ui::CAtcStationComponent), m_timerComponent(nullptr)
+            CEnableForDockWidgetInfoArea(this),
+            CEnableForRuntime(nullptr, false),
+            ui(new Ui::CAtcStationComponent), m_updateTimer(nullptr)
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
-            this->m_timerComponent = new CTimerBasedComponent(SLOT(update()), this);
+            this->m_updateTimer = new CUpdateTimer(SLOT(update()), this);
 
             // some icons
             this->ui->pb_AtcStationsAtisReload->setIcon(CIcons::atis());
@@ -217,8 +217,8 @@ namespace BlackGui
 
         void CAtcStationComponent::ps_requestOnlineStationsUpdate()
         {
-            this->m_timerComponent->fireTimer();
-            this->m_timestampLastReadOnlineStations = CTimerBasedComponent::epoch();
+            this->m_updateTimer->fireTimer();
+            this->m_timestampLastReadOnlineStations = CUpdateTimer::epoch();
         }
 
         void CAtcStationComponent::ps_infoAreaTabBarChanged(int index)

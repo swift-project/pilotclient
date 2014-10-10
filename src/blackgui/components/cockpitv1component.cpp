@@ -35,7 +35,7 @@ namespace BlackGui
     namespace Components
     {
         CCockpitV1Component::CCockpitV1Component(QWidget *parent) :
-            QWidget(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CCockpitV1Component), m_externalCockpitIdentButton(nullptr), m_voiceRoomMembersTimer(nullptr)
+            QWidget(parent), CEnableForRuntime(nullptr, false), ui(new Ui::CCockpitV1Component), m_externalCockpitIdentButton(nullptr), m_voiceRoomMembersTimer(nullptr)
         {
             ui->setupUi(this);
 

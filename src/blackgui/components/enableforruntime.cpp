@@ -7,7 +7,7 @@
  * contained in the LICENSE file.
  */
 
-#include "runtimebasedcomponent.h"
+#include "enableforruntime.h"
 #include "blackcore/context_all_interfaces.h"
 #include <QWidget>
 
@@ -15,7 +15,7 @@ namespace BlackGui
 {
     namespace Components
     {
-        void CRuntimeBasedComponent::setRuntime(BlackCore::CRuntime *runtime, bool runtimeOwner)
+        void CEnableForRuntime::setRuntime(BlackCore::CRuntime *runtime, bool runtimeOwner)
         {
             Q_ASSERT(runtime);
             this->m_runtime = runtime;
@@ -23,7 +23,7 @@ namespace BlackGui
             this->runtimeHasBeenSet();
         }
 
-        void CRuntimeBasedComponent::setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent)
+        void CEnableForRuntime::setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent)
         {
             if (!parent) return;
 
@@ -32,90 +32,90 @@ namespace BlackGui
             foreach(QWidget * widget, children)
             {
                 if (widget->objectName().isEmpty()) continue; // rule out unamed widgets
-                CRuntimeBasedComponent *rbc = dynamic_cast<CRuntimeBasedComponent *>(widget);
+                CEnableForRuntime *rbc = dynamic_cast<CEnableForRuntime *>(widget);
                 if (rbc) rbc->setRuntime(runtime, false);
             }
         }
 
-        void CRuntimeBasedComponent::createRuntime(const BlackCore::CRuntimeConfig &config, QObject *parent)
+        void CEnableForRuntime::createRuntime(const BlackCore::CRuntimeConfig &config, QObject *parent)
         {
             this->m_runtime = new BlackCore::CRuntime(config, parent);
             this->m_runtimeOwner = true;
         }
 
-        const BlackCore::IContextApplication *CRuntimeBasedComponent::getIContextApplication() const
+        const BlackCore::IContextApplication *CEnableForRuntime::getIContextApplication() const
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextApplication();
         }
 
-        BlackCore::IContextApplication *CRuntimeBasedComponent::getIContextApplication()
+        BlackCore::IContextApplication *CEnableForRuntime::getIContextApplication()
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextApplication();
         }
 
-        BlackCore::IContextAudio *CRuntimeBasedComponent::getIContextAudio()
+        BlackCore::IContextAudio *CEnableForRuntime::getIContextAudio()
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextAudio();
         }
 
-        const BlackCore::IContextAudio *CRuntimeBasedComponent::getIContextAudio() const
+        const BlackCore::IContextAudio *CEnableForRuntime::getIContextAudio() const
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextAudio();
         }
 
-        BlackCore::IContextNetwork *CRuntimeBasedComponent::getIContextNetwork()
+        BlackCore::IContextNetwork *CEnableForRuntime::getIContextNetwork()
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextNetwork();
         }
 
-        const BlackCore::IContextNetwork *CRuntimeBasedComponent::getIContextNetwork() const
+        const BlackCore::IContextNetwork *CEnableForRuntime::getIContextNetwork() const
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextNetwork();
         }
 
-        BlackCore::IContextOwnAircraft *CRuntimeBasedComponent::getIContextOwnAircraft()
+        BlackCore::IContextOwnAircraft *CEnableForRuntime::getIContextOwnAircraft()
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextOwnAircraft();
         }
 
-        const BlackCore::IContextOwnAircraft *CRuntimeBasedComponent::getIContextOwnAircraft() const
+        const BlackCore::IContextOwnAircraft *CEnableForRuntime::getIContextOwnAircraft() const
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextOwnAircraft();
         }
 
-        BlackCore::IContextSettings *CRuntimeBasedComponent::getIContextSettings()
+        BlackCore::IContextSettings *CEnableForRuntime::getIContextSettings()
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextSettings();
         }
 
-        const BlackCore::IContextSettings *CRuntimeBasedComponent::getIContextSettings() const
+        const BlackCore::IContextSettings *CEnableForRuntime::getIContextSettings() const
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextSettings();
         }
 
-        const BlackCore::IContextSimulator *CRuntimeBasedComponent::getIContextSimulator() const
+        const BlackCore::IContextSimulator *CEnableForRuntime::getIContextSimulator() const
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextSimulator();
         }
 
-        BlackCore::IContextSimulator *CRuntimeBasedComponent::getIContextSimulator()
+        BlackCore::IContextSimulator *CEnableForRuntime::getIContextSimulator()
         {
             if (!this->m_runtime) return nullptr;
             return this->m_runtime->getIContextSimulator();
         }
 
-        void CRuntimeBasedComponent::playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const
+        void CEnableForRuntime::playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const
         {
             if (!this->getIContextAudio()) return;
             this->getIContextAudio()->playNotification(static_cast<uint>(notification), true);

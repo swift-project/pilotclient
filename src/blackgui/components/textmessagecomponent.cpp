@@ -31,7 +31,7 @@ namespace BlackGui
     {
 
         CTextMessageComponent::CTextMessageComponent(QWidget *parent) :
-            QTabWidget(parent), CRuntimeBasedComponent(nullptr, false), ui(new Ui::CTextMessageComponent), m_selcalCallback(nullptr), m_clearTextEditAction(nullptr), m_currentTextEdit(nullptr)
+            QTabWidget(parent), CEnableForRuntime(nullptr, false), ui(new Ui::CTextMessageComponent), m_selcalCallback(nullptr), m_clearTextEditAction(nullptr), m_currentTextEdit(nullptr)
         {
             ui->setupUi(this);
             this->m_clearTextEditAction = new QAction("Clear", this);

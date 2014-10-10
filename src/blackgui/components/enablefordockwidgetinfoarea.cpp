@@ -7,14 +7,14 @@
  * contained in the LICENSE file.
  */
 
-#include "dockwidgetinfoareacomponent.h"
+#include "enablefordockwidgetinfoarea.h"
 
 namespace BlackGui
 {
     namespace Components
     {
 
-        CDockWidgetInfoAreaComponent::CDockWidgetInfoAreaComponent(QWidget *parent)
+        CEnableForDockWidgetInfoArea::CEnableForDockWidgetInfoArea(QWidget *parent)
         {
             // it the parent is already an info area at this time, we keep it
             // otherwise we expect the info area to set it later
@@ -25,7 +25,7 @@ namespace BlackGui
             }
         }
 
-        bool CDockWidgetInfoAreaComponent::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
+        bool CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)
         {
             // sanity check
             if (this->m_parentDockableInfoArea)
@@ -40,28 +40,28 @@ namespace BlackGui
             return true;
         }
 
-        const CInfoArea *CDockWidgetInfoAreaComponent::getParentInfoArea() const
+        const CInfoArea *CEnableForDockWidgetInfoArea::getParentInfoArea() const
         {
             Q_ASSERT(this->m_parentDockableInfoArea);
             if (!this->m_parentDockableInfoArea) return nullptr;
             return this->m_parentDockableInfoArea->getParentInfoArea();
         }
 
-        CInfoArea *CDockWidgetInfoAreaComponent::getParentInfoArea()
+        CInfoArea *CEnableForDockWidgetInfoArea::getParentInfoArea()
         {
             Q_ASSERT(this->m_parentDockableInfoArea);
             if (!this->m_parentDockableInfoArea) return nullptr;
             return this->m_parentDockableInfoArea->getParentInfoArea();
         }
 
-        bool CDockWidgetInfoAreaComponent::isParentDockWidgetFloating() const
+        bool CEnableForDockWidgetInfoArea::isParentDockWidgetFloating() const
         {
             Q_ASSERT(this->m_parentDockableInfoArea);
             if (!this->m_parentDockableInfoArea) return false;
             return this->m_parentDockableInfoArea->isFloating();
         }
 
-        bool CDockWidgetInfoAreaComponent::isVisibleWidget() const
+        bool CEnableForDockWidgetInfoArea::isVisibleWidget() const
         {
             Q_ASSERT(this->m_parentDockableInfoArea);
             if (!this->m_parentDockableInfoArea) return false;

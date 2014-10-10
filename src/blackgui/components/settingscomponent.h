@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_SETTINGSCOMPONENT_H
 #define BLACKGUI_SETTINGSCOMPONENT_H
 
-#include "blackgui/components/runtimebasedcomponent.h"
+#include "blackgui/components/enableforruntime.h"
 #include "blackmisc/nwserver.h"
 #include "blackmisc/avaircrafticao.h"
 #include <QTabWidget>
@@ -30,7 +30,7 @@ namespace BlackGui
         //! Settings component
         class CSettingsComponent :
             public QTabWidget,
-            public CRuntimeBasedComponent
+            public CEnableForRuntime
         {
             Q_OBJECT
 

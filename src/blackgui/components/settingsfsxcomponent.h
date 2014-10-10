@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_SETTINGSFSXCOMPONENT_H
 #define BLACKGUI_SETTINGSFSXCOMPONENT_H
 
-#include "blackgui/components/runtimebasedcomponent.h"
+#include "blackgui/components/enableforruntime.h"
 #include <QFrame>
 
 namespace Ui { class CSettingsFsxComponent; }
@@ -22,7 +22,7 @@ namespace BlackGui
     namespace Components
     {
         //! Settings for FSX
-        class CSettingsFsxComponent : public QFrame, public CRuntimeBasedComponent
+        class CSettingsFsxComponent : public QFrame, public CEnableForRuntime
         {
             Q_OBJECT
 

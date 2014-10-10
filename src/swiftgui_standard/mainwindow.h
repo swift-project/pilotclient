@@ -22,7 +22,7 @@
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_runtime.h"
 #include "blackcore/input_manager.h"
-#include "blackgui/components/runtimebasedcomponent.h"
+#include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/infowindowcomponent.h"
 #include "blackgui/transpondermodeselector.h"
 #include "blackgui/models/atcstationlistmodel.h"
@@ -44,7 +44,7 @@
 namespace Ui { class MainWindow; }
 
 //! swift GUI
-class MainWindow : public QMainWindow, public BlackGui::Components::CRuntimeBasedComponent
+class MainWindow : public QMainWindow, public BlackGui::Components::CEnableForRuntime
 {
     Q_OBJECT
 

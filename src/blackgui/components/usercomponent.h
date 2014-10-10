@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_USERCOMPONENT_H
 #define BLACKGUI_USERCOMPONENT_H
 
-#include "blackgui/components/runtimebasedcomponent.h"
-#include "blackgui/components/timerbasedcomponent.h"
-#include "blackgui/components/dockwidgetinfoareacomponent.h"
+#include "blackgui/components/enableforruntime.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/components/updatetimer.h"
 
 #include <QTabWidget>
 #include <QTimer>
@@ -29,8 +29,8 @@ namespace BlackGui
         //! User componenet (users, clients)
         class CUserComponent :
             public QTabWidget,
-            public CDockWidgetInfoAreaComponent,
-            public CRuntimeBasedComponent
+            public CEnableForDockWidgetInfoArea,
+            public CEnableForRuntime
         {
             Q_OBJECT
 
@@ -42,7 +42,7 @@ namespace BlackGui
             ~CUserComponent();
 
             //! Timer for updating
-            CTimerBasedComponent *getTimerComponent() { return this->m_timerComponent; }
+            CUpdateTimer *getTimerComponent() { return this->m_updateTimer; }
 
             //! Number of clients
             int countClients() const;
@@ -55,13 +55,13 @@ namespace BlackGui
             void update();
 
             //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
-            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->setUpdateIntervalSeconds(seconds); }
+            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
 
             //! \copydoc CTimerBasedComponent::setUpdateInterval
-            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->setUpdateInterval(milliSeconds); }
+            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateInterval(milliSeconds); }
 
             //! \copydoc CTimerBasedComponent::stopTimer
-            void stopTimer() { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->stopTimer(); }
+            void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
 
         private slots:
             //! Number of elements changed
@@ -69,7 +69,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CUserComponent> ui;
-            CTimerBasedComponent *m_timerComponent;
+            CUpdateTimer *m_updateTimer;
         };
     }
 }

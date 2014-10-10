@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_AIRCRAFTCOMPONENT_H
 #define BLACKGUI_AIRCRAFTCOMPONENT_H
 
-#include "blackgui/components/runtimebasedcomponent.h"
-#include "blackgui/components/timerbasedcomponent.h"
-#include "blackgui/components/dockwidgetinfoareacomponent.h"
+#include "blackgui/components/enableforruntime.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/components/updatetimer.h"
 #include "blackmisc/avaircraft.h"
 
 #include <QTabWidget>
@@ -28,8 +28,8 @@ namespace BlackGui
         //! Aircraft widget
         class CAircraftComponent :
             public QTabWidget,
-            public CDockWidgetInfoAreaComponent,
-            public CRuntimeBasedComponent
+            public CEnableForDockWidgetInfoArea,
+            public CEnableForRuntime
         {
             Q_OBJECT
 
@@ -41,7 +41,7 @@ namespace BlackGui
             ~CAircraftComponent();
 
             //! Timer for updating
-            CTimerBasedComponent *getTimerComponent() { return this->m_timerComponent; }
+            CUpdateTimer *getTimerComponent() { return this->m_updateTimer; }
 
             //! Aircrafts in range
             int countAircrafts() const;
@@ -54,13 +54,13 @@ namespace BlackGui
             void update();
 
             //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
-            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->setUpdateIntervalSeconds(seconds); }
+            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
 
             //! \copydoc CTimerBasedComponent::setUpdateInterval
-            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->setUpdateInterval(milliSeconds); }
+            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateInterval(milliSeconds); }
 
             //! \copydoc CTimerBasedComponent::stopTimer
-            void stopTimer() { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->stopTimer(); }
+            void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
 
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
@@ -75,7 +75,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAircraftComponent> ui;
-            CTimerBasedComponent   *m_timerComponent;
+            CUpdateTimer *m_updateTimer;
         };
     }
 }

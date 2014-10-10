@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef BLACKGUI_TIMERBASEDCOMPONENT_H
-#define BLACKGUI_TIMERBASEDCOMPONENT_H
+#ifndef BLACKGUI_UPDATETIMER_H
+#define BLACKGUI_UPDATETIMER_H
 
 #include <QTimer>
 #include <QDateTime>
@@ -19,17 +19,17 @@ namespace BlackGui
 {
     namespace Components
     {
-        //! Helper class: Timer based componenet
-        class CTimerBasedComponent: public QObject
+        //! Timer used in components for updates
+        class CUpdateTimer: public QObject
         {
             Q_OBJECT
 
         public:
             //! Constructor
-            CTimerBasedComponent(const char *slot, QObject *parent);
+            CUpdateTimer(const char *slot, QObject *parent);
 
             //! Destructor
-            ~CTimerBasedComponent();
+            ~CUpdateTimer();
 
             //! Date/time of 1/1/1970, used to init timestamp values as "outdated"
             static const QDateTime &epoch()
@@ -52,8 +52,8 @@ namespace BlackGui
             void fireTimer();
 
         private:
-            QTimer *m_timer = nullptr;
-            QTimer *m_timerSingleShot = nullptr;
+            QTimer *m_timer = nullptr;           //!< periodically updating
+            QTimer *m_timerSingleShot = nullptr; //!< single update
         };
     }
 }

@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_SIMULATORCOMPONENT_H
 #define BLACKGUI_SIMULATORCOMPONENT_H
 
-#include "runtimebasedcomponent.h"
+#include "enableforruntime.h"
 #include "blackmisc/icon.h"
-#include "blackgui/components/dockwidgetinfoareacomponent.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
 
 #include <QTabWidget>
 #include <QScopedPointer>
@@ -28,8 +28,8 @@ namespace BlackGui
         //! Simulator component
         class CSimulatorComponent :
             public QTabWidget,
-            public CDockWidgetInfoAreaComponent,
-            public CRuntimeBasedComponent
+            public CEnableForDockWidgetInfoArea,
+            public CEnableForRuntime
         {
             Q_OBJECT
 

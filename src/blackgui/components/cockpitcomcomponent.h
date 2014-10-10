@@ -10,7 +10,7 @@
 #ifndef BLACKGUI_COCKPITCOMCOMPONENT_H
 #define BLACKGUI_COCKPITCOMCOMPONENT_H
 
-#include "dockwidgetinfoareacomponent.h"
+#include "enablefordockwidgetinfoarea.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -23,7 +23,7 @@ namespace BlackGui
         //! The main cockpit area
         class CCockpitComComponent :
             public QFrame,
-            public CDockWidgetInfoAreaComponent
+            public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -34,6 +34,7 @@ namespace BlackGui
             //! Destructor
             ~CCockpitComComponent();
 
+        protected:
             //! \copydoc QWidget::paintEvent
             virtual void paintEvent(QPaintEvent *event) override;
 

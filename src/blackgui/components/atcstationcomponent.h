@@ -12,9 +12,9 @@
 #ifndef BLACKGUI_ATCSTATIONCOMPONENT_H
 #define BLACKGUI_ATCSTATIONCOMPONENT_H
 
-#include "blackgui/components/runtimebasedcomponent.h"
-#include "blackgui/components/timerbasedcomponent.h"
-#include "blackgui/components/dockwidgetinfoareacomponent.h"
+#include "blackgui/components/enableforruntime.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/components/updatetimer.h"
 
 #include "blackmisc/avatcstation.h"
 
@@ -33,8 +33,8 @@ namespace BlackGui
          */
         class CAtcStationComponent :
             public QTabWidget,
-            public CDockWidgetInfoAreaComponent,
-            public CRuntimeBasedComponent
+            public CEnableForDockWidgetInfoArea,
+            public CEnableForRuntime
         {
             Q_OBJECT
 
@@ -46,7 +46,7 @@ namespace BlackGui
             ~CAtcStationComponent();
 
             //! Timer for updating
-            CTimerBasedComponent *getTimerComponent() { return this->m_timerComponent; }
+            CUpdateTimer *getTimerComponent() { return this->m_updateTimer; }
 
             //! Number of booked stations
             int countBookedStations() const;
@@ -59,13 +59,13 @@ namespace BlackGui
             void update();
 
             //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
-            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->setUpdateIntervalSeconds(seconds); }
+            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
 
             //! \copydoc CTimerBasedComponent::setUpdateInterval
-            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->setUpdateInterval(milliSeconds); }
+            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateInterval(milliSeconds); }
 
             //! \copydoc CTimerBasedComponent::stopTimer
-            void stopTimer() { Q_ASSERT(this->m_timerComponent); this->m_timerComponent->stopTimer(); }
+            void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
 
             //! Get METAR for given ICAO airport code
             void getMetar(const QString &airportIcaoCode = "");
@@ -113,11 +113,11 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAtcStationComponent> ui;
-            CTimerBasedComponent *m_timerComponent;
-            QDateTime m_timestampLastReadOnlineStations = CTimerBasedComponent::epoch();  //!< stations read
-            QDateTime m_timestampOnlineStationsChanged  = CTimerBasedComponent::epoch();  //!< stations marked as changed
-            QDateTime m_timestampLastReadBookedStations = CTimerBasedComponent::epoch();  //!< stations read
-            QDateTime m_timestampBookedStationsChanged  = CTimerBasedComponent::epoch();  //!< stations marked as changed
+            CUpdateTimer *m_updateTimer;
+            QDateTime m_timestampLastReadOnlineStations = CUpdateTimer::epoch();  //!< stations read
+            QDateTime m_timestampOnlineStationsChanged  = CUpdateTimer::epoch();  //!< stations marked as changed
+            QDateTime m_timestampLastReadBookedStations = CUpdateTimer::epoch();  //!< stations read
+            QDateTime m_timestampBookedStationsChanged  = CUpdateTimer::epoch();  //!< stations marked as changed
         };
     }
 }

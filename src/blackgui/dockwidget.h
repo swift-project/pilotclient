@@ -12,7 +12,7 @@
 #ifndef BLACKGUI_DOCKWIDGET_H
 #define BLACKGUI_DOCKWIDGET_H
 
-#include "components/runtimebasedcomponent.h"
+#include "components/enableforruntime.h"
 #include <QDockWidget>
 #include <QTabWidget>
 #include <QMenu>

@@ -25,7 +25,6 @@ namespace BlackGui
     //! \sa CDockWidgetInfoArea
     class CInfoArea : public QMainWindow
     {
-        // KB: TODO, make this an interface, IInfoArea?
         Q_OBJECT
 
     public:
@@ -92,9 +91,9 @@ namespace BlackGui
         QList<CDockWidgetInfoArea *> m_dockableWidgets ;
         QTabBar *m_tabBar = nullptr;
         bool m_showTabTexts     = true;   //!< texts for tabs
-        bool m_infoAreaFloating = false;  //!< whole info area floating
-        bool m_showTabBar       = true;   //!< auto ajdust the floating widgets
-        bool m_lockTabBar       = false;  //!< locked means no double clicks possible
+        bool m_infoAreaFloating = false;  //!< whole info area floating?
+        bool m_showTabBar       = true;   //!< show the tab bar?
+        bool m_lockTabBar       = false;  //!< locked: means double clicks ignored
 
         //! Tabify the widgets
         void tabifyAllWidgets();
