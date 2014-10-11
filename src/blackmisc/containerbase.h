@@ -135,8 +135,7 @@ namespace BlackMisc
         virtual QString convertToQString(bool i18n = false) const override
         {
             QString str;
-            // qualifying stringify with this-> to workaround bug in GCC 4.7.2 http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56402
-            std::for_each(derived().cbegin(), derived().cend(), [ & ](const T & value) { str += (str.isEmpty() ? "{" : ", ") + CContainerHelper::stringify(value, i18n); });
+            for (const auto &value : derived()) { str += (str.isEmpty() ? "{" : ", ") + CContainerHelper::stringify(value, i18n); }
             if (str.isEmpty()) { str = "{"; }
             return str += "}";
         }

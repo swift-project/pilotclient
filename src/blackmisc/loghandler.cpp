@@ -80,7 +80,7 @@ namespace BlackMisc
 
     bool CLogHandler::isFallThroughEnabled(const QList<CLogCategoryHandler *> &handlers) const
     {
-        for (auto *handler : handlers)
+        for (const auto *handler : handlers)
         {
             if (handler->m_enableFallThrough != m_enableFallThrough)
             {

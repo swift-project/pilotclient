@@ -152,7 +152,7 @@ namespace BlackMisc
 
     private:
         QMessageLogger m_logger;
-        CStatusMessage::StatusSeverity m_severity { CStatusMessage::SeverityDebug };
+        CStatusMessage::StatusSeverity m_severity = CStatusMessage::SeverityDebug;
         QString m_category;
         QString m_message;
         QStringList m_args;
@@ -173,6 +173,6 @@ namespace BlackMisc
  * Convenience macro to construct a CLogMessage with the filename, line number, and function name,
  * for verbose debug messages.
  */
-#define BLACK_LOG (BlackMisc::CLogMessage{ __FILE__, __LINE__, Q_FUNC_INFO })
+#define BLACK_LOG (BlackMisc::CLogMessage { __FILE__, __LINE__, Q_FUNC_INFO })
 
 #endif

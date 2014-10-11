@@ -111,7 +111,7 @@ namespace BlackMisc
         /*
          * Formatted string
          */
-        QString CTextMessage::asString(bool withSender, bool withRecipient, const QString separator) const
+        QString CTextMessage::asString(bool withSender, bool withRecipient, const QString &separator) const
         {
             QString s = this->receivedTime();
             if (withSender)
@@ -150,7 +150,7 @@ namespace BlackMisc
         /*
          * As status message
          */
-        CStatusMessage CTextMessage::asStatusMessage(bool withSender, bool withRecipient, const QString separator) const
+        CStatusMessage CTextMessage::asStatusMessage(bool withSender, bool withRecipient, const QString &separator) const
         {
             QString m = this->asString(withSender, withRecipient, separator);
             return { this->getMessageCategory(), CStatusMessage::SeverityInfo, m };

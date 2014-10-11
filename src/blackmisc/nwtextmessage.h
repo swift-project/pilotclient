@@ -132,7 +132,7 @@ namespace BlackMisc
              * \param separator         values separated by given value
              * \return
              */
-            QString asString(bool withSender, bool withRecipient, const QString separator = ", ") const;
+            QString asString(bool withSender, bool withRecipient, const QString &separator = ", ") const;
 
             /*!
              * Whole message as BlackMisc::CStatusMessage.
@@ -142,7 +142,7 @@ namespace BlackMisc
              * \param separator         values separated by given value
              * \return
              */
-            BlackMisc::CStatusMessage asStatusMessage(bool withSender, bool withRecipient, const QString separator = ", ") const;
+            BlackMisc::CStatusMessage asStatusMessage(bool withSender, bool withRecipient, const QString &separator = ", ") const;
 
             //! \brief Toggle sender receiver, can be used to ping my own message
             void toggleSenderRecipient();
