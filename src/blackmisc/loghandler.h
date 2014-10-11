@@ -41,8 +41,8 @@ namespace BlackMisc
         //! Tell the CLogHandler to install itself with qInstallMessageHandler.
         void install();
 
-        //! Return a category handler for subscribing to all messages whose category string starts with the given prefix.
-        CLogCategoryHandler *handlerForCategory(const QString &prefix);
+        //! Return a category handler for subscribing to all messages with a category starting with the given prefix.
+        CLogCategoryHandler *handlerForCategoryPrefix(const QString &prefix);
 
         //! Enable or disable the default Qt handler.
         void enableConsoleOutput(bool enable);
@@ -66,7 +66,7 @@ namespace BlackMisc
         QtMessageHandler m_oldHandler = nullptr;
         bool m_enableFallThrough = true;
         bool isFallThroughEnabled(const QList<CLogCategoryHandler *> &handlers) const;
-        QMap<QString, CLogCategoryHandler *> m_categoryHandlers;
+        QMap<QString, CLogCategoryHandler *> m_categoryPrefixHandlers;
         QList<CLogCategoryHandler *> handlersForCategory(const QString &category) const;
     };
 

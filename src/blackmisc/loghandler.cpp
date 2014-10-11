@@ -46,20 +46,20 @@ namespace BlackMisc
         }
     }
 
-    CLogCategoryHandler *CLogHandler::handlerForCategory(const QString &category)
+    CLogCategoryHandler *CLogHandler::handlerForCategoryPrefix(const QString &category)
     {
-        if (! m_categoryHandlers.contains(category))
+        if (! m_categoryPrefixHandlers.contains(category))
         {
-            m_categoryHandlers[category] = new CLogCategoryHandler(this, m_enableFallThrough);
+            m_categoryPrefixHandlers[category] = new CLogCategoryHandler(this, m_enableFallThrough);
         }
 
-        return m_categoryHandlers[category];
+        return m_categoryPrefixHandlers[category];
     }
 
     QList<CLogCategoryHandler *> CLogHandler::handlersForCategory(const QString &category) const
     {
         QList<CLogCategoryHandler *> m_handlers;
-        for (auto i = m_categoryHandlers.begin(); i != m_categoryHandlers.end(); ++i)
+        for (auto i = m_categoryPrefixHandlers.begin(); i != m_categoryPrefixHandlers.end(); ++i)
         {
             if (category.startsWith(i.key()))
             {
@@ -72,7 +72,7 @@ namespace BlackMisc
     void CLogHandler::enableConsoleOutput(bool enable)
     {
         m_enableFallThrough = enable;
-        for (auto *handler : m_categoryHandlers.values())
+        for (auto *handler : m_categoryPrefixHandlers.values())
         {
             handler->enableConsoleOutput(enable);
         }
