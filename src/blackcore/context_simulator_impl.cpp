@@ -306,12 +306,16 @@ namespace BlackCore
     {
         if (!this->m_simulator) return;
         if (statusMessage.getSeverity() != CStatusMessage::SeverityError) return;
+
+        if (statusMessage.wasHandledBy(this)) return;
+        statusMessage.markAsHandledBy(this);
+
         this->m_simulator->displayStatusMessage(statusMessage);
     }
 
     void CContextSimulator::ps_statusMessagesReceived(const CStatusMessageList &statusMessages)
     {
-        foreach(CStatusMessage m, statusMessages)
+        for(const CStatusMessage &m : statusMessages)
         {
             this->ps_statusMessageReceived(m);
         }

@@ -93,6 +93,12 @@ namespace BlackMisc
          * Emitted when a message is logged in a relevant category.
          *
          * When all slots are disconnected from this signal, the CLogCategoryHandler is allowed to delete itself.
+         *
+         * Note that if a message matches more that one category handler, then this signal will be emitted for all of them,
+         * so if a slot is connected to all of them then it will be called multiple times. Use the methods
+         * CStatusMessage::markAsHandledBy() and CStatusMessage::wasHandledBy() to detect this case in the slot and avoid
+         * multiple handlings of the same message. Caveat: for this to work, the slot must take its argument by non-const
+         * reference, and be connected by Qt::DirectConnection (i.e. the receiver is in the same thread as the CLogHandler).
          */
         void messageLogged(const CStatusMessage &message);
 

@@ -300,6 +300,9 @@ void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessag
     if (statusMessage.isRedundant()) return;
     if (statusMessage.getSeverity() == CStatusMessage::SeverityDebug) return;
 
+    if (statusMessage.wasHandledBy(this)) return;
+    statusMessage.markAsHandledBy(this);
+
     if (!this->m_init) return;
     this->ui->sb_MainStatusBar->show();
     this->m_timerStatusBar->start(3000);

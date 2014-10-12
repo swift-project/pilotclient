@@ -115,6 +115,18 @@ namespace BlackMisc
     }
 
     /*
+     * Handled by
+     */
+    void CStatusMessage::markAsHandledBy(const QObject *object) const
+    {
+        this->m_handledByObjects.push_back(quintptr(object));
+    }
+    bool CStatusMessage::wasHandledBy(const QObject *object) const
+    {
+        return this->m_handledByObjects.contains(quintptr(object));
+    }
+
+    /*
      * To string
      */
     QString CStatusMessage::convertToQString(bool /** i18n */) const

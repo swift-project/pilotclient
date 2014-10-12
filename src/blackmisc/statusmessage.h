@@ -86,6 +86,12 @@ namespace BlackMisc
         //! Message may already have been handled directly
         bool isRedundant() const { return this->m_redundant; }
 
+        //! Mark the message as having been handled by the given object
+        void markAsHandledBy(const QObject *object) const;
+
+        //! Returns true if the message was marked as having been handled by the given object
+        bool wasHandledBy(const QObject *object) const;
+
         //! Severity
         void setSeverity(StatusSeverity severity) { this->m_severity = severity; }
 
@@ -118,11 +124,19 @@ namespace BlackMisc
         QString m_message;
         QDateTime m_timestamp;
         bool m_redundant = false;
+        mutable QVector<quintptr> m_handledByObjects;
     };
 } // namespace
 
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (o.m_category, o.m_severity, o.m_message, o.m_timestamp, o.m_redundant))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (
+    o.m_category,
+    o.m_severity,
+    o.m_message,
+    o.m_timestamp,
+    o.m_redundant,
+    attr(o.m_handledByObjects, flags<DisabledForHashing | DisabledForJson | DisabledForComparison | DisabledForMarshalling>())
+))
 Q_DECLARE_METATYPE(BlackMisc::CStatusMessage)
 
 #endif // guard
