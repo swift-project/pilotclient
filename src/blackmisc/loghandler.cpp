@@ -48,9 +48,17 @@ namespace BlackMisc
 
     CLogCategoryHandler *CLogHandler::handlerForCategoryPrefix(const QString &category)
     {
+        Q_ASSERT(thread() == QThread::currentThread());
+
         if (! m_categoryPrefixHandlers.contains(category))
         {
             m_categoryPrefixHandlers[category] = new CLogCategoryHandler(this, m_enableFallThrough);
+
+            connect(m_categoryPrefixHandlers[category], &CLogCategoryHandler::ps_canBeDeleted, [this](CLogCategoryHandler *handler)
+            {
+                m_categoryPrefixHandlers.remove(m_categoryPrefixHandlers.key(handler));
+                QMetaObject::invokeMethod(handler, "deleteLater");
+            });
         }
 
         return m_categoryPrefixHandlers[category];
@@ -71,6 +79,8 @@ namespace BlackMisc
 
     void CLogHandler::enableConsoleOutput(bool enable)
     {
+        Q_ASSERT(thread() == QThread::currentThread());
+
         m_enableFallThrough = enable;
         for (auto *handler : m_categoryPrefixHandlers.values())
         {

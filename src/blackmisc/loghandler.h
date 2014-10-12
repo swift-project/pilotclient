@@ -42,9 +42,11 @@ namespace BlackMisc
         void install();
 
         //! Return a category handler for subscribing to all messages with a category starting with the given prefix.
+        //! \warning This must only be called from the main thread.
         CLogCategoryHandler *handlerForCategoryPrefix(const QString &prefix);
 
         //! Enable or disable the default Qt handler.
+        //! \warning This must only be called from the main thread.
         void enableConsoleOutput(bool enable);
 
     signals:
@@ -82,14 +84,32 @@ namespace BlackMisc
         /*!
          * Enable or disable the default Qt handler for messages in relevant categories.
          * This can override the setting of the parent CLogHandler.
+         * \warning This must only be called from the main thread.
          */
-        void enableConsoleOutput(bool enable) { m_enableFallThrough = enable; }
+        void enableConsoleOutput(bool enable) { Q_ASSERT(thread() == QThread::currentThread()); m_enableFallThrough = enable; }
 
     signals:
         /*!
          * Emitted when a message is logged in a relevant category.
+         *
+         * When all slots are disconnected from this signal, the CLogCategoryHandler is allowed to delete itself.
          */
         void messageLogged(const CStatusMessage &message);
+
+        /*!
+         * Emitted when there are no more slots connected to the messageLogged signal.
+         */
+        void ps_canBeDeleted(CLogCategoryHandler *handler);
+
+    protected:
+        /*!
+         * \copydoc QObject::disconnectNotify
+         */
+        virtual void disconnectNotify(const QMetaMethod &) override
+        {
+            static const QMetaMethod signal = QMetaMethod::fromSignal(&CLogCategoryHandler::messageLogged);
+            if (! isSignalConnected(signal)) { emit ps_canBeDeleted(this); }
+        }
 
     private:
         friend class CLogHandler;
