@@ -52,10 +52,12 @@ namespace BlackMiscTest
         QString line;
         while (line != "x" && runtime)
         {
+            BlackCore::IContextApplication *applicationContext = runtime->getIContextApplication();
             BlackCore::IContextNetwork *networkContext = runtime->getIContextNetwork();
             BlackCore::IContextAudio *audioContext = runtime->getIContextAudio();
             BlackCore::IContextSettings *settingsContext = runtime->getIContextSettings();
             BlackCore::IContextOwnAircraft *ownAircraftContext = runtime->getIContextOwnAircraft();
+            BlackCore::IContextSimulator *simulatorContext = runtime->getIContextSimulator();
 
             qtout << "-------------" << endl;
             qtout << "Connected with network: " << networkContext->isConnected() << endl;
@@ -167,15 +169,15 @@ namespace BlackMiscTest
                 else
                 {
                     QString category;
-                    if (line.startsWith("app")) category = IContextApplication::getMessageCategory();
-                    else if (line.startsWith("aud")) category = IContextAudio::getMessageCategory();
-                    else if (line.startsWith("net")) category = IContextNetwork::getMessageCategory();
-                    else if (line.startsWith("own")) category = IContextOwnAircraft::getMessageCategory();
-                    else if (line.startsWith("set")) category = IContextSettings::getMessageCategory();
-                    else if (line.startsWith("sim")) category = IContextSimulator::getMessageCategory();
+                    if (line.startsWith("app")) category = CLogCategoryList(applicationContext).back().toQString();
+                    else if (line.startsWith("aud")) category = CLogCategoryList(audioContext).back().toQString();
+                    else if (line.startsWith("net")) category = CLogCategoryList(networkContext).back().toQString();
+                    else if (line.startsWith("own")) category = CLogCategoryList(ownAircraftContext).back().toQString();
+                    else if (line.startsWith("set")) category = CLogCategoryList(settingsContext).back().toQString();
+                    else if (line.startsWith("sim")) category = CLogCategoryList(simulatorContext).back().toQString();
                     if (! category.isEmpty())
                     {
-                        BlackMisc::CLogHandler::instance()->handlerForCategory(category)->enableConsoleOutput(enable);
+                        BlackMisc::CLogHandler::instance()->handlerForCategoryPrefix(category)->enableConsoleOutput(enable);
                     }
                 }
             }
