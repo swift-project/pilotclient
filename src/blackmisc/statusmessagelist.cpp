@@ -22,9 +22,9 @@ namespace BlackMisc
     /*
      * Messages by type
      */
-    CStatusMessageList CStatusMessageList::findByCategory(const QString &category) const
+    CStatusMessageList CStatusMessageList::findByCategory(const CLogCategory &category) const
     {
-        return this->findBy(&CStatusMessage::getCategory, category);
+        return this->findBy([ & ](const CStatusMessage &msg) { return msg.getCategories().contains(category); });
     }
 
     /*

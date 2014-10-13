@@ -69,7 +69,7 @@ namespace BlackMisc
         bool m_enableFallThrough = true;
         bool isFallThroughEnabled(const QList<CLogCategoryHandler *> &handlers) const;
         QMap<QString, CLogCategoryHandler *> m_categoryPrefixHandlers;
-        QList<CLogCategoryHandler *> handlersForCategory(const QString &category) const;
+        QList<CLogCategoryHandler *> handlersForCategories(const CLogCategoryList &categories) const;
     };
 
     /*!

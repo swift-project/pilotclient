@@ -13,6 +13,7 @@
 //! \file
 
 #include "statusmessage.h"
+#include "logcategorylist.h"
 #include "index_sequence.h"
 #include <QDebug>
 #include <QLoggingCategory>
@@ -64,16 +65,29 @@ namespace BlackMisc
      * The member functions debug, info, warning, error, and the stream operators all return a reference to <tt>*this</tt>,
      * so they can be chained together.
      *
-     * The category string identifies the origin of the message (e.g. network system) or its subtype (e.g. validation).
+     * The categories are arbitrary string tags which can be attached to the message to categorize it.
+     * A message can have more than one category. The categories can be used for filtering by message handlers.
      */
     class CLogMessage
     {
     public:
-        //! Constructor.
+        //! Construct a message with the "uncategorized" category.
         CLogMessage() {}
 
-        //! Constructor taking filename, line number, and function name, for verbose debug messages.
-        CLogMessage(const char *file, int line, const char *function): m_logger(file, line, function) {}
+        //! Constructor taking filename, line number, and function name, for uncategorized verbose debug messages.
+        CLogMessage(const char *file, int line, const char *function) : m_logger(file, line, function) {}
+
+        //! Construct a message with some specific category.
+        CLogMessage(const CLogCategory &category) : m_categories({ category }) {}
+
+        //! Construct a message with some specific categories.
+        CLogMessage(const CLogCategoryList &categories) : m_categories(categories) {}
+
+        //! Construct a message with some specific categories.
+        CLogMessage(const CLogCategoryList &categories, const CLogCategory &extra) : CLogMessage(categories) { m_categories.push_back(extra); }
+
+        //! Construct a message with some specific categories.
+        CLogMessage(const CLogCategoryList &categories, const CLogCategoryList &extra) : CLogMessage(categories) { m_categories.push_back(extra); }
 
         //! Destructor. This actually emits the message.
         ~CLogMessage();
@@ -84,48 +98,17 @@ namespace BlackMisc
         //! Convert to CVariant for returning the message directly from the function which generated it.
         operator CVariant();
 
-        //! Set the severity to debug, with the default category.
-        CLogMessage &debug() { return debugImpl(""); }
+        //! Set the severity to debug.
+        CLogMessage &debug();
 
-        //! Set the severity to debug, with a category string.
-        CLogMessage &debug(QString category) { return debugImpl("", category); }
+        //! Set the severity to info, providing a format string.
+        CLogMessage &info(QString format);
 
-        //! Set the severity to debug, with the category string obtained from the getMessageCategory method of the sender.
-        //! \note To avoid overload ambiguity, this method is disabled if T is not a class type.
-        template <class T, class = typename std::enable_if<std::is_class<typename std::decay<T>::type>::value>::type>
-        CLogMessage &debug(T *sender) { Q_UNUSED(sender); return debugImpl("", sender->getMessageCategory()); }
+        //! Set the severity to warning, providing a format string.
+        CLogMessage &warning(QString format);
 
-        //! Set the severity to info, providing a format string, with the default category.
-        CLogMessage &info(QString format) { return infoImpl(format); }
-
-        //! Set the severity to info, providing a format string and category string.
-        CLogMessage &info(QString category, QString format) { return infoImpl(format, category); }
-
-        //! Set the severity to info, providing a format string, with the category string obtained from the getMessageCategory method of the sender.
-        //! \note To avoid overload ambiguity, this method is disabled if T is not a class type.
-        template <class T, class = typename std::enable_if<std::is_class<typename std::decay<T>::type>::value>::type>
-        CLogMessage &info(T *sender, QString format) { Q_UNUSED(sender); return infoImpl(format, sender->getMessageCategory()); }
-
-        //! Set the severity to warning, providing a format string, with the default category.
-        CLogMessage &warning(QString format) { return warningImpl(format); }
-
-        //! Set the severity to warning, providing a format string and category string.
-        CLogMessage &warning(QString category, QString format) { return warningImpl(format, category); }
-
-        //! Set the severity to warning, providing a format string, with the category string obtained from the getMessageCategory method of the sender.
-        //! \note To avoid overload ambiguity, this method is disabled if T is not a class type.
-        template <class T, class = typename std::enable_if<std::is_class<typename std::decay<T>::type>::value>::type>
-        CLogMessage &warning(T *sender, QString format) { Q_UNUSED(sender); return warningImpl(format, sender->getMessageCategory()); }
-
-        //! Set the severity to error, providing a format string, with the default category.
-        CLogMessage &error(QString format) { return errorImpl(format); }
-
-        //! Set the severity to error, providing a format string and category string.
-        CLogMessage &error(QString category, QString format) { return errorImpl(format, category); }
-
-        //! Set the severity to error, providing a format string, with the category string obtained from the getMessageCategory method of the sender.
-        template <class T, class = typename std::enable_if<std::is_class<typename std::decay<T>::type>::value>::type>
-        CLogMessage &error(T *sender, QString format) { Q_UNUSED(sender); return errorImpl(format, sender->getMessageCategory()); }
+        //! Set the severity to error, providing a format string.
+        CLogMessage &error(QString format);
 
         //! Streaming operators.
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
@@ -147,24 +130,17 @@ namespace BlackMisc
         CLogMessage &operator <<(const CValueObject &v) { return arg(v.toQString()); }
         //! @}
 
-        //! The default message category which is used if a category is not provided.
-        static const char *defaultMessageCategory() { return "swift"; }
-
     private:
         QMessageLogger m_logger;
         CStatusMessage::StatusSeverity m_severity = CStatusMessage::SeverityDebug;
-        QString m_category;
+        CLogCategoryList m_categories = CLogCategoryList { CLogCategory::uncategorized() };
         QString m_message;
         QStringList m_args;
         bool m_redundant = false;
 
-        CLogMessage &debugImpl(QString format, QString category = defaultMessageCategory());
-        CLogMessage &infoImpl(QString format, QString category = defaultMessageCategory());
-        CLogMessage &warningImpl(QString format, QString category = defaultMessageCategory());
-        CLogMessage &errorImpl(QString format, QString category = defaultMessageCategory());
         CLogMessage &arg(QString value) { m_args.push_back(value); return *this; }
         QString message() const;
-        QByteArray encodedCategory() const;
+        QByteArray qtCategory() const;
         QDebug ostream(const QByteArray &category) const;
     };
 }

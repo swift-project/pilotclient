@@ -33,7 +33,7 @@ namespace BlackMisc
         CStatusMessageList(const CSequence<CStatusMessage> &other);
 
         //! Find by type
-        CStatusMessageList findByCategory(const QString &category) const;
+        CStatusMessageList findByCategory(const CLogCategory &category) const;
 
         //! Find by severity
         CStatusMessageList findBySeverity(CStatusMessage::StatusSeverity severity) const;

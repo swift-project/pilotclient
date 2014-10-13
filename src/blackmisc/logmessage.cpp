@@ -13,34 +13,29 @@
 namespace BlackMisc
 {
 
-    CLogMessage &CLogMessage::debugImpl(QString format, QString category)
+    CLogMessage &CLogMessage::debug()
     {
         m_severity = CStatusMessage::SeverityDebug;
-        m_category = category;
-        m_message = format;
         return *this;
     }
 
-    CLogMessage &CLogMessage::infoImpl(QString format, QString category)
+    CLogMessage &CLogMessage::info(QString format)
     {
         m_severity = CStatusMessage::SeverityInfo;
-        m_category = category;
         m_message = format;
         return *this;
     }
 
-    CLogMessage &CLogMessage::warningImpl(QString format, QString category)
+    CLogMessage &CLogMessage::warning(QString format)
     {
         m_severity = CStatusMessage::SeverityWarning;
-        m_category = category;
         m_message = format;
         return *this;
     }
 
-    CLogMessage &CLogMessage::errorImpl(QString format, QString category)
+    CLogMessage &CLogMessage::error(QString format)
     {
         m_severity = CStatusMessage::SeverityError;
-        m_category = category;
         m_message = format;
         return *this;
     }
@@ -48,7 +43,7 @@ namespace BlackMisc
     CLogMessage::operator CStatusMessage()
     {
         m_redundant = true;
-        return { m_category, m_severity, message() };
+        return { m_categories, m_severity, message() };
     }
 
     CLogMessage::operator CVariant()
@@ -62,21 +57,21 @@ namespace BlackMisc
 
         // FIXME hack to avoid putting quote characters around the message
         // should be safe, but still it's horrible, we could directly call qt_message_output instead
-        QByteArray category = encodedCategory();
+        QByteArray category = qtCategory();
         QDebug debug = ostream(category);
         auto &stream = **reinterpret_cast<QTextStream**>(&debug); // should be safe because it is relying on Qt's guarantee of ABI compatibility
         stream << message();
     }
 
-    QByteArray CLogMessage::encodedCategory() const
+    QByteArray CLogMessage::qtCategory() const
     {
-        if (m_category.isEmpty())
+        if (m_categories.isEmpty())
         {
             return {};
         }
         else
         {
-            QString category = m_category;
+            QString category = m_categories.toQString();
             if (m_severity == CStatusMessage::SeverityDebug) { category = CLogMessageHelper::addDebugFlag(category); }
             if (m_redundant) { category = CLogMessageHelper::addRedundantFlag(category); }
             return category.toLatin1();
@@ -85,7 +80,7 @@ namespace BlackMisc
 
     QDebug CLogMessage::ostream(const QByteArray &category) const
     {
-        if (m_category.isEmpty())
+        if (m_categories.isEmpty())
         {
             switch (m_severity)
             {

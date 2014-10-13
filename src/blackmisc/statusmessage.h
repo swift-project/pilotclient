@@ -14,6 +14,7 @@
 
 #include "icon.h"
 #include "propertyindex.h"
+#include "logcategorylist.h"
 #include <QDateTime>
 
 namespace BlackMisc
@@ -55,7 +56,7 @@ namespace BlackMisc
         CStatusMessage(StatusSeverity severity, const QString &message);
 
         //! Constructor
-        CStatusMessage(const QString &category, StatusSeverity severity, const QString &message);
+        CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message);
 
         //! Construct from a Qt logging triple
         //! \sa QtMessageHandler
@@ -72,7 +73,7 @@ namespace BlackMisc
         bool operator !=(const CStatusMessage &other) const;
 
         //! Message category
-        QString getCategory() const { return this->m_category; }
+        const CLogCategoryList &getCategories() const { return this->m_categories; }
 
         //! Message severity
         StatusSeverity getSeverity() const { return this->m_severity; }
@@ -119,7 +120,7 @@ namespace BlackMisc
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)
-        QString m_category;
+        CLogCategoryList m_categories;
         StatusSeverity m_severity;
         QString m_message;
         QDateTime m_timestamp;
@@ -130,7 +131,7 @@ namespace BlackMisc
 
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::CStatusMessage, (
-    o.m_category,
+    o.m_categories,
     o.m_severity,
     o.m_message,
     o.m_timestamp,

@@ -64,12 +64,12 @@ namespace BlackMisc
         return m_categoryPrefixHandlers[category];
     }
 
-    QList<CLogCategoryHandler *> CLogHandler::handlersForCategory(const QString &category) const
+    QList<CLogCategoryHandler *> CLogHandler::handlersForCategories(const CLogCategoryList &categories) const
     {
         QList<CLogCategoryHandler *> m_handlers;
         for (auto i = m_categoryPrefixHandlers.begin(); i != m_categoryPrefixHandlers.end(); ++i)
         {
-            if (category.startsWith(i.key()))
+            if (categories.anyStartWith(i.key()))
             {
                 m_handlers.push_back(i.value());
             }
@@ -114,7 +114,7 @@ namespace BlackMisc
 
     void CLogHandler::logMessage(const CStatusMessage &statusMessage)
     {
-        auto handlers = handlersForCategory(statusMessage.getCategory());
+        auto handlers = handlersForCategories(statusMessage.getCategories());
 
         if (isFallThroughEnabled(handlers))
         {

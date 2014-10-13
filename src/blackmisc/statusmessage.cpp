@@ -33,16 +33,17 @@ namespace BlackMisc
         : m_severity(severity), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
     {}
 
-    CStatusMessage::CStatusMessage(const QString &category, StatusSeverity severity, const QString &message)
-        : m_category(category), m_severity(severity), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
+    CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message)
+        : m_categories(categories), m_severity(severity), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
     {}
 
     CStatusMessage::CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)
-        : CStatusMessage(context.category, SeverityInfo, message)
+        : CStatusMessage(message)
     {
-        m_redundant = CLogMessageHelper::hasRedundantFlag(m_category);
-        bool debug = CLogMessageHelper::hasDebugFlag(m_category);
-        m_category = CLogMessageHelper::stripFlags(m_category);
+        m_redundant = CLogMessageHelper::hasRedundantFlag(context.category);
+        bool debug = CLogMessageHelper::hasDebugFlag(context.category);
+        auto categories = CLogMessageHelper::stripFlags(context.category);
+        m_categories = CLogCategoryList::fromQString(categories);
 
         switch(type)
         {
@@ -85,7 +86,7 @@ namespace BlackMisc
      */
     void CStatusMessage::toQtLogTriple(QtMsgType *o_type, QString *o_category, QString *o_message) const
     {
-        QString category = m_category;
+        auto category = m_categories.toQString();
         if (this->m_severity == SeverityDebug && ! category.isEmpty())
         {
             category = CLogMessageHelper::addDebugFlag(category);
@@ -133,7 +134,7 @@ namespace BlackMisc
     {
 
         QString s("Category: ");
-        s.append(this->m_category);
+        s.append(this->m_categories.toQString());
 
         s.append(" Severity: ");
         s.append(QString::number(this->m_severity));
@@ -212,7 +213,7 @@ namespace BlackMisc
                 return this->m_timestamp.toString("HH:mm::ss.zzz");
             }
         case IndexCategory:
-            return QVariant(this->m_category);
+            return QVariant(this->m_categories.toQString());
         default:
             break;
         }
@@ -245,7 +246,7 @@ namespace BlackMisc
             this->m_severity = static_cast<StatusSeverity>(variant.value<uint>());
             break;
         case IndexCategory:
-            this->m_category = variant.value<QString>();
+            this->m_categories = variant.value<CLogCategoryList>();
             break;
         default:
             CValueObject::setPropertyByIndex(variant, index);

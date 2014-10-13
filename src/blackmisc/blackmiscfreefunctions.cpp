@@ -173,6 +173,8 @@ void BlackMisc::registerMetadata()
     CIcon::registerMetadata();
     CIconList::registerMetadata();
     CHotkeyFunction::registerMetadata();
+    CLogCategory::registerMetadata();
+    CLogCategoryList::registerMetadata();
 
     // sub namespaces
     PhysicalQuantities::registerMetadata();
