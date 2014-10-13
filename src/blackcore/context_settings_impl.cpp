@@ -33,7 +33,7 @@ namespace BlackCore
     {
         if (!CSettingUtilities::initSettingsDirectory())
         {
-            return CLogMessage().error(this, "Cannot init directory: %1") << this->getSettingsDirectory();
+            return CLogMessage(this).error("Cannot init directory: %1") << this->getSettingsDirectory();
         }
         bool ok = false;
         QFile jsonFile(this->getSettingsFileName());
@@ -94,11 +94,11 @@ namespace BlackCore
 
         if (ok)
         {
-            return CLogMessage().info(this, "Read settings: %1") << this->getSettingsFileName();
+            return CLogMessage(this).info("Read settings: %1") << this->getSettingsFileName();
         }
         else
         {
-            return CLogMessage().error(this, "Problem reading settings: %1") << this->getSettingsFileName();
+            return CLogMessage(this).error("Problem reading settings: %1") << this->getSettingsFileName();
         }
     }
 
@@ -109,7 +109,7 @@ namespace BlackCore
     {
         if (!CSettingUtilities::initSettingsDirectory())
         {
-            return CLogMessage().error(this, "Cannot init directory: %1") << this->getSettingsDirectory();
+            return CLogMessage(this).error("Cannot init directory: %1") << this->getSettingsDirectory();
         }
         QFile jsonFile(this->getSettingsFileName());
         bool ok = false;
@@ -121,11 +121,11 @@ namespace BlackCore
         }
         if (ok)
         {
-            return CLogMessage().info(this, "Written settings: %1") << this->getSettingsFileName();
+            return CLogMessage(this).info("Written settings: %1") << this->getSettingsFileName();
         }
         else
         {
-            return CLogMessage().error(this, "Problem writing settings: %1") << this->getSettingsFileName();
+            return CLogMessage(this).error("Problem writing settings: %1") << this->getSettingsFileName();
         }
     }
 
@@ -142,7 +142,7 @@ namespace BlackCore
         if (write)
             return this->write();
         else
-            return CLogMessage().info(this, "Reset settings data, not written");
+            return CLogMessage(this).info("Reset settings data, not written");
     }
 
     QString CContextSettings::getSettingsAsJsonString() const
@@ -264,7 +264,7 @@ namespace BlackCore
         }
         else
         {
-            msgs.push_back(CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong path: %1") << path);
+            msgs.push_back(CLogMessage(CLogCategory::validation()).error("wrong path: %1") << path);
         }
         return msgs;
     }

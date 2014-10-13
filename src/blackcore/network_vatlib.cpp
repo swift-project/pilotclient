@@ -1089,26 +1089,26 @@ namespace BlackCore
         auto *self = cbvar_cast(cbvar);
         switch (type)
         {
-        case Cvatlib_Network::error_CallsignTaken:          CLogMessage().error(self, "The requested callsign is already taken"); emit self->terminate(); break;
-        case Cvatlib_Network::error_CallsignInvalid:        CLogMessage().error(self, "The requested callsign is not valid"); emit self->terminate(); break;
-        case Cvatlib_Network::error_CIDPasswdInvalid:       CLogMessage().error(self, "Wrong user ID or password"); emit self->terminate(); break;
-        case Cvatlib_Network::error_ProtoVersion:           CLogMessage().error(self, "This server does not support our protocol version"); emit self->terminate(); break;
-        case Cvatlib_Network::error_LevelTooHigh:           CLogMessage().error(self, "You are not authorized to use the requested pilot rating"); emit self->terminate(); break;
-        case Cvatlib_Network::error_ServerFull:             CLogMessage().error(self, "The server is full"); emit self->terminate(); break;
-        case Cvatlib_Network::error_CIDSuspended:           CLogMessage().error(self, "Your user account is suspended"); emit self->terminate(); break;
-        case Cvatlib_Network::error_InvalidPosition:        CLogMessage().error(self, "You are not authorized to use the requested pilot rating"); emit self->terminate(); break;
-        case Cvatlib_Network::error_SoftwareNotAuthorized:  CLogMessage().error(self, "This software is not authorized for use on this network"); emit self->terminate(); break;
+        case Cvatlib_Network::error_CallsignTaken:          CLogMessage(self).error("The requested callsign is already taken"); emit self->terminate(); break;
+        case Cvatlib_Network::error_CallsignInvalid:        CLogMessage(self).error("The requested callsign is not valid"); emit self->terminate(); break;
+        case Cvatlib_Network::error_CIDPasswdInvalid:       CLogMessage(self).error("Wrong user ID or password"); emit self->terminate(); break;
+        case Cvatlib_Network::error_ProtoVersion:           CLogMessage(self).error("This server does not support our protocol version"); emit self->terminate(); break;
+        case Cvatlib_Network::error_LevelTooHigh:           CLogMessage(self).error("You are not authorized to use the requested pilot rating"); emit self->terminate(); break;
+        case Cvatlib_Network::error_ServerFull:             CLogMessage(self).error("The server is full"); emit self->terminate(); break;
+        case Cvatlib_Network::error_CIDSuspended:           CLogMessage(self).error("Your user account is suspended"); emit self->terminate(); break;
+        case Cvatlib_Network::error_InvalidPosition:        CLogMessage(self).error("You are not authorized to use the requested pilot rating"); emit self->terminate(); break;
+        case Cvatlib_Network::error_SoftwareNotAuthorized:  CLogMessage(self).error("This software is not authorized for use on this network"); emit self->terminate(); break;
 
-        case Cvatlib_Network::error_Ok:                     CLogMessage().info(self, "OK"); break;
-        case Cvatlib_Network::error_Syntax:                 CLogMessage().info(self, "Malformed packet: Syntax error: %1") << self->fromFSD(data); break;
-        case Cvatlib_Network::error_SourceInvalid:          CLogMessage().info(self, "Server: source invalid %1") << self->fromFSD(data); break;
-        case Cvatlib_Network::error_CallsignNotExists:      CLogMessage().info(self, "Shim lib: %1 (%2)") << self->fromFSD(msg) << self->fromFSD(data); break;
-        case Cvatlib_Network::error_NoFP:                   CLogMessage().info(self, "Server: no flight plan"); break;
-        case Cvatlib_Network::error_NoWeather:              CLogMessage().info(self, "Server: requested weather profile does not exist"); break;
+        case Cvatlib_Network::error_Ok:                     CLogMessage(self).info("OK"); break;
+        case Cvatlib_Network::error_Syntax:                 CLogMessage(self).info("Malformed packet: Syntax error: %1") << self->fromFSD(data); break;
+        case Cvatlib_Network::error_SourceInvalid:          CLogMessage(self).info("Server: source invalid %1") << self->fromFSD(data); break;
+        case Cvatlib_Network::error_CallsignNotExists:      CLogMessage(self).info("Shim lib: %1 (%2)") << self->fromFSD(msg) << self->fromFSD(data); break;
+        case Cvatlib_Network::error_NoFP:                   CLogMessage(self).info("Server: no flight plan"); break;
+        case Cvatlib_Network::error_NoWeather:              CLogMessage(self).info("Server: requested weather profile does not exist"); break;
 
         // we have no idea what these mean
         case Cvatlib_Network::error_Registered:
-        case Cvatlib_Network::error_InvalidControl:         CLogMessage().info(self, "Server: ") << self->fromFSD(msg); break;
+        case Cvatlib_Network::error_InvalidControl:         CLogMessage(self).info("Server: ") << self->fromFSD(msg); break;
 
         default:                                            qFatal("VATSIM shim library: %s (error %d)", msg, type); emit self->terminate();
         }

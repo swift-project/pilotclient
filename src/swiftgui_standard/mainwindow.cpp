@@ -251,12 +251,12 @@ void MainWindow::ps_toggleNetworkConnection()
         if (this->ui->comp_MainInfoArea->getSettingsComponent()->loginStealth())
         {
             mode = INetwork::LoginStealth;
-            this->ps_displayStatusMessageInGui(CLogMessage().info(this, "login in stealth mode"));
+            this->ps_displayStatusMessageInGui(CLogMessage(this).info("login in stealth mode"));
         }
         else if (this->ui->comp_MainInfoArea->getSettingsComponent()->loginAsObserver())
         {
             mode = INetwork::LoginAsObserver;
-            this->ps_displayStatusMessageInGui(CLogMessage().info(this, "login in observer mode"));
+            this->ps_displayStatusMessageInGui(CLogMessage(this).info("login in observer mode"));
         }
         CStatusMessage msg = this->getIContextNetwork()->connectToNetwork(static_cast<uint>(mode));
         this->ps_displayStatusMessageInGui(msg);
@@ -278,7 +278,7 @@ void MainWindow::ps_toggleNetworkConnection()
 bool MainWindow::isContextNetworkAvailableCheck()
 {
     if (this->m_contextNetworkAvailable) return true;
-    this->ps_displayStatusMessageInGui(CLogMessage().error(this, "Network context not available, no updates this time"));
+    this->ps_displayStatusMessageInGui(CLogMessage(this).error("Network context not available, no updates this time"));
     return false;
 }
 
@@ -288,7 +288,7 @@ bool MainWindow::isContextNetworkAvailableCheck()
 bool MainWindow::isContextAudioAvailableCheck()
 {
     if (this->m_contextAudioAvailable) return true;
-    this->ps_displayStatusMessageInGui(CLogMessage().error(this, "Voice context not available"));
+    this->ps_displayStatusMessageInGui(CLogMessage(this).error("Voice context not available"));
     return false;
 }
 
@@ -500,13 +500,13 @@ void MainWindow::ps_toogleWindowStayOnTop()
     {
         flags ^= Qt::WindowStaysOnTopHint;
         flags |= Qt::WindowStaysOnBottomHint;
-        this->ps_displayStatusMessageInGui(CLogMessage().info(this, "Window on bottom"));
+        this->ps_displayStatusMessageInGui(CLogMessage(this).info("Window on bottom"));
     }
     else
     {
         flags ^= Qt::WindowStaysOnBottomHint;
         flags |= Qt::WindowStaysOnTopHint;
-        this->ps_displayStatusMessageInGui(CLogMessage().info(this, "Window on top"));
+        this->ps_displayStatusMessageInGui(CLogMessage(this).info("Window on top"));
     }
     this->setWindowFlags(flags);
     this->show();

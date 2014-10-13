@@ -26,6 +26,13 @@ namespace BlackCore
         //! Destructor
         ~CContext() {}
 
+        //! Log category
+        static const CLogCategoryList &getLogCategories()
+        {
+            static const CLogCategoryList cats { CLogCategory::context() };
+            return cats;
+        }
+
         //! Using local implementing object?
         bool isUsingImplementingObject() const
         {

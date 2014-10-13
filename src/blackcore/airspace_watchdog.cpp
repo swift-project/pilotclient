@@ -63,7 +63,7 @@ namespace BlackCore
             QDateTime timestamp = m_callsignTimestamps.value(callsign);
             if (timestamp.secsTo(QDateTime::currentDateTimeUtc()) > m_timeout.value(CTimeUnit::s()))
             {
-                CLogMessage().debug(this) << "Aircraft " << callsign.toQString() << "timed out!";
+                CLogMessage(this).debug() << "Aircraft " << callsign.toQString() << "timed out!";
                 m_callsignTimestamps.remove(callsign);
                 emit timeout(callsign);
             }

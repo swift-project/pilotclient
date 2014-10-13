@@ -170,7 +170,7 @@ namespace BlackCore
                 connect(this->m_contextSettings, &IContextSettings::changedSettings, this->m_contextSimulator, &IContextSimulator::settingsChanged);
                 if (!this->m_contextSimulator->loadSimulatorPluginFromSettings())
                 {
-                    CLogMessage().warning(this, "No simulator plugin loaded");
+                    CLogMessage(this).warning("No simulator plugin loaded");
                 }
             }
         }

@@ -237,7 +237,7 @@ namespace BlackGui
             CServer server = this->ps_selectedServerFromTextboxes();
             if (!server.isValidForLogin())
             {
-                CLogMessage().error(validationMessageCategory(), "Wrong settings for server");
+                CLogMessage(CLogCategory::validation()).error("Wrong settings for server");
                 return;
             }
 
@@ -376,11 +376,11 @@ namespace BlackGui
             bool ok = CStyleSheetUtility::instance().updateFonts(fontFamily, fontSize, CStyleSheetUtility::fontStyle(fontStyleCombined), CStyleSheetUtility::fontWeight(fontStyleCombined), fontColor);
             if (ok)
             {
-                CLogMessage().info(this, "Updated font style");
+                CLogMessage(this).info("Updated font style");
             }
             else
             {
-                CLogMessage().info(this, "Updating style failed");
+                CLogMessage(this).info("Updating style failed");
             }
         }
 
@@ -403,12 +403,12 @@ namespace BlackGui
         {
             if (!this->getIContextAudio())
             {
-                CLogMessage().error(this, "voice context not available");
+                CLogMessage(this).error("voice context not available");
                 return;
             }
             if (this->m_timerAudioTests->isActive())
             {
-                CLogMessage().error(this, "test running, wait until completed");
+                CLogMessage(this).error("test running, wait until completed");
                 return;
             }
 

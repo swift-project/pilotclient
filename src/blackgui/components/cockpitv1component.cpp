@@ -222,7 +222,7 @@ namespace BlackGui
             }
             else
             {
-                CLogMessage().error(validationMessageCategory(), "Wrong transponder code, reset");
+                CLogMessage(CLogCategory::validation()).error("Wrong transponder code, reset");
                 this->ui->ds_CockpitTransponder->setValue(transponder.getTransponderCode());
             }
             transponder.setTransponderMode(this->ui->cbp_CockpitTransponderMode->getSelectedTransponderMode());
@@ -392,7 +392,7 @@ namespace BlackGui
             QString selcalCode = this->getSelcalCode();
             if (!CSelcal::isValidCode(selcalCode))
             {
-                CLogMessage().error(validationMessageCategory(), "Invalid SELCAL codde");
+                CLogMessage(CLogCategory::validation()).error("Invalid SELCAL codde");
             }
             else if (this->getIContextAudio())
             {
@@ -401,7 +401,7 @@ namespace BlackGui
             }
             else
             {
-                CLogMessage().error(validationMessageCategory(), "No audio available");
+                CLogMessage(CLogCategory::validation()).error("No audio available");
             }
         }
 

@@ -544,7 +544,7 @@ namespace BlackSimPlugin
             }
 
             m_syncDeferredCounter = 5; // allow some time to sync
-            CLogMessage().info(this, "Synchronized time to UTC: %1") << myTime.toString();
+            CLogMessage(this).info("Synchronized time to UTC: %1") << myTime.toString();
         }
     }
 }

@@ -38,10 +38,11 @@ namespace BlackGui
             static void setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent);
 
             //! Log message category
-            static QString getMessageCategory() { return "swift.gui.component"; }
-
-            //! Validation log message category
-            static QString validationMessageCategory() { return "swift.gui.component.validation"; }
+            static const CLogCategoryList &getLogCategories()
+            {
+                static const CLogCategoryList cats { CLogCategory::guiComponent() };
+                return cats;
+            }
 
         protected:
             //! Constructor

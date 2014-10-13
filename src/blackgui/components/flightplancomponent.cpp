@@ -110,17 +110,17 @@ namespace BlackGui
             v = ui->le_Callsign->text().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Missing %1") << this->ui->lbl_Callsign->text());
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_Callsign->text());
             }
 
             v = ui->pte_Route->toPlainText().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Missing flight plan route"));
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing flight plan route"));
             }
             else if (v.length() > CFlightPlan::MaxRouteLength)
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Flight plan route length exceeded (%1 chars max.)") << CFlightPlan::MaxRouteLength);
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Flight plan route length exceeded (%1 chars max.)") << CFlightPlan::MaxRouteLength);
             }
             else
                 flightPlan.setRoute(v);
@@ -128,11 +128,11 @@ namespace BlackGui
             v = ui->pte_Remarks->toPlainText().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "No remarks, voice capabilities are mandatory"));
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("No remarks, voice capabilities are mandatory"));
             }
             else if (v.length() > CFlightPlan::MaxRemarksLength)
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Flight plan remarks length exceeded (%1 chars max.)") << CFlightPlan::MaxRemarksLength);
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Flight plan remarks length exceeded (%1 chars max.)") << CFlightPlan::MaxRemarksLength);
             }
             else
                 flightPlan.setRemarks(v);
@@ -140,7 +140,7 @@ namespace BlackGui
             v = ui->le_EstimatedTimeEnroute->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Missing %1") << this->ui->lbl_EstimatedTimeEnroute->text());
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_EstimatedTimeEnroute->text());
             }
             else
                 flightPlan.setEnrouteTime(v);
@@ -148,7 +148,7 @@ namespace BlackGui
             v = ui->le_FuelOnBoard->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Missing %1") << this->ui->lbl_FuelOnBorad->text());
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_FuelOnBorad->text());
             }
             else
                 flightPlan.setFuelTime(v);
@@ -156,7 +156,7 @@ namespace BlackGui
             v = ui->le_TakeOffTimePlanned->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Missing %1") << this->ui->lbl_TakeOffTimePlanned->text());
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_TakeOffTimePlanned->text());
             }
             else
                 flightPlan.setTakeoffTimePlanned(v);
@@ -172,7 +172,7 @@ namespace BlackGui
             CAltitude cruisingAltitude(v, CPqString::SeparatorsLocale);
             if (v.isEmpty() || cruisingAltitude.isNull())
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Wrong %1") << this->ui->lbl_CrusingAltitude->text());
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Wrong %1") << this->ui->lbl_CrusingAltitude->text());
             }
             else
                 flightPlan.setCruiseAltitude(cruisingAltitude);
@@ -180,7 +180,7 @@ namespace BlackGui
             v = this->ui->le_AlternateAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Missing %1") << this->ui->lbl_AlternateAirport->text());
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_AlternateAirport->text());
                 flightPlan.setAlternateAirportIcao(defaultIcao());
             }
             else
@@ -189,7 +189,7 @@ namespace BlackGui
             v = this->ui->le_DestinationAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Missing %1") << this->ui->lbl_DestinationAirport->text());
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_DestinationAirport->text());
                 flightPlan.setDestinationAirportIcao(defaultIcao());
             }
             else
@@ -200,7 +200,7 @@ namespace BlackGui
             cruiseTAS.parseFromString(v, CPqString::SeparatorsLocale);
             if (cruiseTAS.isNull())
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Wrong TAS, %1") << this->ui->lbl_CruiseTrueAirspeed->text());
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Wrong TAS, %1") << this->ui->lbl_CruiseTrueAirspeed->text());
                 flightPlan.setDestinationAirportIcao(defaultIcao());
             }
             else
@@ -209,7 +209,7 @@ namespace BlackGui
             v = this->ui->le_OriginAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
-                messages.push_back(CLogMessage().error(validationMessageCategory(), "Missing %1") << this->ui->lbl_OriginAirport->text());
+                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_OriginAirport->text());
                 flightPlan.setOriginAirportIcao(defaultIcao());
             }
             else
@@ -230,13 +230,13 @@ namespace BlackGui
                     flightPlan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
                     this->getIContextNetwork()->sendFlightPlan(flightPlan);
                     this->ui->le_LastSent->setText(flightPlan.whenLastSentOrLoaded().toString());
-                    CLogMessage().info(this, "Sent flight plan");
+                    CLogMessage(this).info("Sent flight plan");
                 }
                 else
                 {
                     flightPlan.setWhenLastSentOrLoaded(QDateTime()); // empty
                     this->ui->le_LastSent->clear();
-                    CLogMessage().error(this, "No errors, but not connected, cannot send flight plan");
+                    CLogMessage(this).error("No errors, but not connected, cannot send flight plan");
                 }
                 this->m_flightPlan = flightPlan; // last valid FP
             }
@@ -272,12 +272,12 @@ namespace BlackGui
         {
             if (!this->getIContextNetwork())
             {
-                CLogMessage().info(this, "Cannot load flight plan, network not available");
+                CLogMessage(this).info("Cannot load flight plan, network not available");
                 return;
             }
             if (!this->getIContextNetwork()->isConnected())
             {
-                CLogMessage().warning(this, "Cannot load flight plan, network not connected");
+                CLogMessage(this).warning("Cannot load flight plan, network not connected");
                 return;
             }
 
@@ -286,11 +286,11 @@ namespace BlackGui
             if (loadedPlan.wasSentOrLoaded())
             {
                 this->fillWithFlightPlanData(loadedPlan);
-                CLogMessage().info(this, "Updated with loaded flight plan");
+                CLogMessage(this).info("Updated with loaded flight plan");
             }
             else
             {
-                CLogMessage().warning(this, "No flight plan data");
+                CLogMessage(this).warning("No flight plan data");
             }
         }
 
@@ -370,7 +370,7 @@ namespace BlackGui
         void CFlightPlanComponent::copyRemarks()
         {
             this->ui->pte_Remarks->setPlainText(this->ui->pte_RemarksGenerated->toPlainText());
-            CLogMessage().info(this, "Copied remarks");
+            CLogMessage(this).info("Copied remarks");
         }
 
         void CFlightPlanComponent::currentTabGenerator()

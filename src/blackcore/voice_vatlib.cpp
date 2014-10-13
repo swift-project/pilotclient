@@ -430,21 +430,21 @@ namespace BlackCore
         catch (const NetworkNotConnectedException &e)
         {
             // this could be caused by a race condition during normal operation, so not an error
-            CLogMessage().debug(this) << "NetworkNotConnectedException" << e.what() << "in" << caller;
+            CLogMessage(this).debug() << "NetworkNotConnectedException" << e.what() << "in" << caller;
         }
         catch (const VatlibException &e)
         {
-            CLogMessage().error(this, "VatlibException %1 in %2") << e.what() << caller;
+            CLogMessage(this).error("VatlibException %1 in %2") << e.what() << caller;
             Q_ASSERT(false);
         }
         catch (const std::exception &e)
         {
-            CLogMessage().error(this, "std::exception %1 in %2") << e.what() << caller;
+            CLogMessage(this).error("std::exception %1 in %2") << e.what() << caller;
             Q_ASSERT(false);
         }
         catch (...)
         {
-            CLogMessage().error(this, "Unknown exception in %1") << caller;
+            CLogMessage(this).error("Unknown exception in %1") << caller;
             Q_ASSERT(false);
         }
     }

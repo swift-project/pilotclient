@@ -71,7 +71,7 @@ namespace BlackCore
      */
     void CContextOwnAircraft::resolveVoiceRooms()
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (this->m_voiceRoom1UrlOverride.isEmpty() && this->m_voiceRoom2UrlOverride.isEmpty() && !this->m_automaticVoiceRoomResolution) return;
         if (!this->getIContextNetwork()) return; // no chance to resolve rooms
         if (!this->getIContextAudio()) return; // no place to set rooms
@@ -94,7 +94,7 @@ namespace BlackCore
      */
     void CContextOwnAircraft::updateOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << ownAircraft() << originator;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << ownAircraft() << originator;
 
         // trigger the correct signals
         bool changedCockpit = this->updateOwnCockpit(aircraft.getCom1System(), aircraft.getCom2System(), aircraft.getTransponder(), originator);
@@ -121,7 +121,7 @@ namespace BlackCore
      */
     bool CContextOwnAircraft::updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << position << altitude << originator;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << position << altitude << originator;
         bool changed = (this->m_ownAircraft.getPosition() != position);
         if (changed) this->m_ownAircraft.setPosition(position);
 
@@ -144,7 +144,7 @@ namespace BlackCore
      */
     bool CContextOwnAircraft::updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << situation;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << situation;
         bool changed = this->m_ownAircraft.getSituation() != situation;
         if (!changed) return changed;
 
@@ -162,7 +162,7 @@ namespace BlackCore
      */
     bool CContextOwnAircraft::updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << com1 << com2 << transponder;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << com1 << com2 << transponder;
         bool changed = this->m_ownAircraft.hasChangedCockpitData(com1, com2, transponder);
         if (changed)
         {
@@ -184,7 +184,7 @@ namespace BlackCore
 
     void CContextOwnAircraft::setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << outputVolumeCom1 << outputVolumeCom2;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << outputVolumeCom1 << outputVolumeCom2;
 
         CComSystem com1 = this->m_ownAircraft.getCom1System();
         com1.setVolumeOutput(outputVolumeCom1);
@@ -214,7 +214,7 @@ namespace BlackCore
      */
     void CContextOwnAircraft::setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << voiceRoom1Url << voiceRoom2Url;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << voiceRoom1Url << voiceRoom2Url;
 
         this->m_voiceRoom1UrlOverride = voiceRoom1Url.trimmed();
         this->m_voiceRoom2UrlOverride = voiceRoom2Url.trimmed();
@@ -226,7 +226,7 @@ namespace BlackCore
      */
     void CContextOwnAircraft::enableAutomaticVoiceRoomResolution(bool enable)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << enable;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << enable;
         this->m_automaticVoiceRoomResolution = enable;
     }
 
@@ -235,7 +235,7 @@ namespace BlackCore
      */
     CAircraft CContextOwnAircraft::getOwnAircraft() const
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << this->m_ownAircraft;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << this->m_ownAircraft;
         return this->m_ownAircraft;
     }
 

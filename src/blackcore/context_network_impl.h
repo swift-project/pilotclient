@@ -56,21 +56,21 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getAtcStationsOnline()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsOnline() const override
         {
-            BlackMisc::CLogMessage().debug(this) << Q_FUNC_INFO;
+            BlackMisc::CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
             return this->m_airspace->getAtcStationsOnline();
         }
 
         //! \copydoc IContextNetwork::getAtcStationsBooked()
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const override
         {
-            BlackMisc::CLogMessage().debug(this) << Q_FUNC_INFO;
+            BlackMisc::CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
             return this->m_airspace->getAtcStationsBooked();
         }
 
         //! \copydoc IContextNetwork::getAircraftsInRange()
         virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const override
         {
-            BlackMisc::CLogMessage().debug(this) << Q_FUNC_INFO;
+            BlackMisc::CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
             return this->m_airspace->getAircraftInRange();
         }
 

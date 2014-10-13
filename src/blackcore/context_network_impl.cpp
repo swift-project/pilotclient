@@ -101,29 +101,29 @@ namespace BlackCore
      */
     CStatusMessage CContextNetwork::connectToNetwork(uint loginMode)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         CServer currentServer = this->getIContextSettings()->getNetworkSettings().getCurrentTrafficNetworkServer();
 
         QString msg;
         if (!currentServer.getUser().isValid())
         {
-            return CLogMessage().error(this, "Invalid user credentials");
+            return CLogMessage(this).error("Invalid user credentials");
         }
         else if (!this->ownAircraft().getIcaoInfo().hasAircraftAndAirlineDesignator())
         {
-            return CLogMessage().error(this, "Invalid ICAO data for own aircraft");
+            return CLogMessage(this).error("Invalid ICAO data for own aircraft");
         }
         else if (!CNetworkUtils::canConnect(currentServer, msg, 2000))
         {
-            return CLogMessage().error(this, msg);
+            return CLogMessage(this).error(msg);
         }
         else if (this->m_network->isConnected())
         {
-            return CLogMessage().error(this, "Already connected");
+            return CLogMessage(this).error("Already connected");
         }
         else if (this->isPendingConnection())
         {
-            return CLogMessage().error(this, "Pending connection, please wait");
+            return CLogMessage(this).error("Pending connection, please wait");
         }
         else
         {
@@ -137,7 +137,7 @@ namespace BlackCore
             this->m_network->presetIcaoCodes(ownAircraft.getIcaoInfo());
             this->m_network->setOwnAircraft(ownAircraft);
             this->m_network->initiateConnection();
-            return CLogMessage().info(this, "Connection pending %1 %2") << currentServer.getAddress() << currentServer.getPort();
+            return CLogMessage(this).info("Connection pending %1 %2") << currentServer.getAddress() << currentServer.getPort();
         }
     }
 
@@ -146,21 +146,21 @@ namespace BlackCore
      */
     CStatusMessage CContextNetwork::disconnectFromNetwork()
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (this->m_network->isConnected())
         {
             this->m_currentStatus = INetwork::Disconnecting; // as semaphore we are going to disconnect
             this->m_network->terminateConnection();
             this->m_airspace->clear();
-            return CLogMessage().info(this, "Connection terminating");
+            return CLogMessage(this).info("Connection terminating");
         }
         else if (this->isPendingConnection())
         {
-            return CLogMessage().warning(this, "Pending connection, please wait");
+            return CLogMessage(this).warning("Pending connection, please wait");
         }
         else
         {
-            return CLogMessage().warning(this, "Already disconnected");
+            return CLogMessage(this).warning("Already disconnected");
         }
     }
 
@@ -169,7 +169,7 @@ namespace BlackCore
      */
     bool CContextNetwork::isConnected() const
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         return this->m_network->isConnected();
     }
 
@@ -187,7 +187,7 @@ namespace BlackCore
      */
     void CContextNetwork::sendTextMessages(const CTextMessageList &textMessages)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << textMessages;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << textMessages;
         this->m_network->sendTextMessages(textMessages);
     }
 
@@ -196,14 +196,14 @@ namespace BlackCore
      */
     void CContextNetwork::sendFlightPlan(const CFlightPlan &flightPlan)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << flightPlan;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << flightPlan;
         this->m_network->sendFlightPlan(flightPlan);
         this->m_network->sendFlightPlanQuery(this->ownAircraft().getCallsign());
     }
 
     CFlightPlan CContextNetwork::loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         return this->m_airspace->loadFlightPlanFromNetwork(callsign);
     }
 
@@ -258,7 +258,7 @@ namespace BlackCore
      */
     void CContextNetwork::ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << from << to;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << from << to;
         auto fromOld = this->m_currentStatus;
         this->m_currentStatus = to;
 
@@ -272,17 +272,17 @@ namespace BlackCore
         // send 1st position
         if (to == INetwork::Connected)
         {
-            CLogMessage().info(this, "Connected, own aircraft %1") << this->ownAircraft().toQString();
+            CLogMessage(this).info("Connected, own aircraft %1") << this->ownAircraft().toQString();
         }
 
         // send as message
         if (to == INetwork::DisconnectedError)
         {
-            CLogMessage().error(this, "Connection status changed from %1 to %2 %3") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to) << message;
+            CLogMessage(this).error("Connection status changed from %1 to %2 %3") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to) << message;
         }
         else
         {
-            CLogMessage().info(this, "Connection status changed from %1 to %2 %3") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to) << message;
+            CLogMessage(this).info("Connection status changed from %1 to %2 %3") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to) << message;
         }
 
         // send as own signal
@@ -294,8 +294,8 @@ namespace BlackCore
      */
     void CContextNetwork::ps_dataFileRead()
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
-        CLogMessage().info(this, "Read VATSIM data file");
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        CLogMessage(this).info("Read VATSIM data file");
     }
 
     /*
@@ -303,7 +303,7 @@ namespace BlackCore
      */
     void CContextNetwork::ps_fsdTextMessageReceived(const CTextMessageList &messages)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << messages;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << messages;
         this->textMessagesReceived(messages); // relay
     }
 
@@ -335,7 +335,7 @@ namespace BlackCore
      */
     void CContextNetwork::ps_receivedBookings(const CAtcStationList &)
     {
-        CLogMessage().info(this, "Read bookings from network");
+        CLogMessage(this).info("Read bookings from network");
     }
 
     /*
@@ -374,7 +374,7 @@ namespace BlackCore
      */
     BlackMisc::Aviation::CInformationMessage CContextNetwork::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << airportIcaoCode;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << airportIcaoCode;
         return m_airspace->getMetar(airportIcaoCode);
     }
 

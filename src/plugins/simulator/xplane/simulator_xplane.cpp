@@ -255,7 +255,7 @@ namespace BlackSimPlugin
         {
             if (enable)
             {
-                CLogMessage().warning(this, "X-Plane already provides real time synchronization");
+                CLogMessage(this).warning("X-Plane already provides real time synchronization");
             }
         }
 

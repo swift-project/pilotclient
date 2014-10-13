@@ -161,9 +161,9 @@ namespace BlackSim
                     CSimulatorInfo v = value.value<CSimulatorInfo>();
                     changedFlag = (v != this->m_selectedPlugin);
                     this->m_selectedPlugin = v;
-                    return CLogMessage().info(CSettingUtilities::updateMessageCategory(), "selected driver%1 changed") << (changedFlag ? "" : " not");
+                    return CLogMessage(CLogCategory::settingsUpdate()).info("selected driver%1 changed") << (changedFlag ? "" : " not");
                 }
-                return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong command: %1") << command;
+                return CLogMessage(CLogCategory::validation()).error("wrong command: %1") << command;
             }
             else if (path == CSettingsSimulator::ValueSyncTime())
             {
@@ -172,9 +172,9 @@ namespace BlackSim
                     bool v = value.value<bool>();
                     changedFlag = (v != this->m_timeSync);
                     this->m_timeSync = v;
-                    return CLogMessage().info(CSettingUtilities::updateMessageCategory(), "time synchronization%1 changed") << (changedFlag ? "" : " not");
+                    return CLogMessage(CLogCategory::settingsUpdate()).info("time synchronization%1 changed") << (changedFlag ? "" : " not");
                 }
-                return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong command: %1") << command;
+                return CLogMessage(CLogCategory::validation()).error("wrong command: %1") << command;
             }
             else if (path == CSettingsSimulator::ValueSyncTimeOffset())
             {
@@ -183,13 +183,13 @@ namespace BlackSim
                     CTime v = value.value<CTime>();
                     changedFlag = (v != this->m_timeSyncOffset);
                     this->m_timeSyncOffset = v;
-                    return CLogMessage().info(CSettingUtilities::updateMessageCategory(), "time synchronization offset%1 changed") << (changedFlag ? "" : " not");
+                    return CLogMessage(CLogCategory::settingsUpdate()).info("time synchronization offset%1 changed") << (changedFlag ? "" : " not");
                 }
-                return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong command: %1") << command;
+                return CLogMessage(CLogCategory::validation()).error("wrong command: %1") << command;
             }
             else
             {
-                return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong path: %1") << path;
+                return CLogMessage(CLogCategory::validation()).error("wrong path: %1") << path;
             }
         }
     } // namespace

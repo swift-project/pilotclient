@@ -48,7 +48,7 @@ namespace BlackCore
      */
     void CContextApplication::notifyAboutComponentChange(uint component, uint action)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << QString::number(component) << QString::number(action);
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << QString::number(component) << QString::number(action);
         this->componentChanged(component, action);
     }
 
@@ -57,7 +57,7 @@ namespace BlackCore
      */
     bool CContextApplication::writeToFile(const QString &fileName, const QString &content)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << fileName << content.left(25);
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName << content.left(25);
         if (fileName.isEmpty()) return false;
         QFile file(fileName);
         if (file.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -74,7 +74,7 @@ namespace BlackCore
      */
     QString CContextApplication::readFromFile(const QString &fileName)
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO << fileName;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << fileName;
         QFile file(fileName);
         QString content;
         if (fileName.isEmpty()) return content;

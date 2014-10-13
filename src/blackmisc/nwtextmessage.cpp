@@ -153,7 +153,7 @@ namespace BlackMisc
         CStatusMessage CTextMessage::asStatusMessage(bool withSender, bool withRecipient, const QString &separator) const
         {
             QString m = this->asString(withSender, withRecipient, separator);
-            return { this->getMessageCategory(), CStatusMessage::SeverityInfo, m };
+            return { this, CStatusMessage::SeverityInfo, m };
         }
 
         /*

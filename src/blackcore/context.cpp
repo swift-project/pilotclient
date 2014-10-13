@@ -76,7 +76,7 @@ namespace BlackCore
 
     const CStatusMessage &CContext::statusMessageEmptyContext()
     {
-        static const CStatusMessage m("swift.context.emptycontext", CStatusMessage::SeverityWarning, "empty context");
+        static const CStatusMessage m(getLogCategories(), CStatusMessage::SeverityWarning, "empty context");
         return m;
     }
 } // namespace

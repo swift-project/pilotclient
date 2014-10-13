@@ -176,7 +176,7 @@ namespace BlackMisc
                     return {};
                 }
             }
-            return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong path: %1") << path;
+            return CLogMessage(CLogCategory::validation()).error("wrong path: %1") << path;
         }
     } // namespace
 } // namespace

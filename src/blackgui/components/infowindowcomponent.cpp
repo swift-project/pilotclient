@@ -90,7 +90,7 @@ namespace BlackGui
             }
 
             this->ui->le_SmSeverity->setText(statusMessage.getSeverityAsString());
-            this->ui->le_SmType->setText(statusMessage.getCategory()); // TODO should be called ui->le_SmCategory
+            this->ui->le_SmType->setText(statusMessage.getCategories().toQString()); // TODO should be called ui->le_SmCategories
             this->ui->te_SmStatusMessage->setText(statusMessage.getMessage());
             this->ui->lbl_SmSeverityIcon->setPixmap(statusMessage.toPixmap());
 

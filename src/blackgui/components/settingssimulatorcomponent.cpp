@@ -95,12 +95,12 @@ namespace BlackGui
             CSimulatorInfoList simDrivers = this->getIContextSimulator()->getAvailableSimulatorPlugins();
             if (simDrivers.isEmpty())
             {
-                CLogMessage().error(this, "No drivers available");
+                CLogMessage(this).error("No drivers available");
                 return;
             }
             if (simDrivers.size() <= index)
             {
-                CLogMessage().error(this, "Wrong driver index");
+                CLogMessage(this).error("Wrong driver index");
                 return;
             }
 
@@ -146,7 +146,7 @@ namespace BlackGui
                 }
                 if (ost.isNull())
                 {
-                    CLogMessage().error(validationMessageCategory(), "Invalid offset time");
+                    CLogMessage(CLogCategory::validation()).error("Invalid offset time");
                 }
                 else
                 {

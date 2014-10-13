@@ -183,7 +183,7 @@ namespace BlackMisc
                     changedFlag = this->m_trafficNetworkServers.contains(&CServer::getName, server.getName());
                     this->m_trafficNetworkServers.removeIf(&CServer::getName, server.getName());
                 }
-                return CLogMessage().info(CSettingUtilities::updateMessageCategory(), "Set current server");
+                return CLogMessage(CLogCategory::settingsUpdate()).info("Set current server");
             }
             else if (path == CSettingsNetwork::ValueBookingServiceUrl())
             {
@@ -192,10 +192,10 @@ namespace BlackMisc
                     QString v = value.toString();
                     changedFlag = (v != this->m_bookingServiceUrl);
                     this->m_bookingServiceUrl = v;
-                    return CLogMessage().info(CSettingUtilities::updateMessageCategory(), "booking URL%1 changed") << (changedFlag ? "" : " not");
+                    return CLogMessage(CLogCategory::settingsUpdate()).info("booking URL%1 changed") << (changedFlag ? "" : " not");
                 }
             }
-            return CLogMessage().error(CSettingUtilities::validationMessageCategory(), "wrong path: %1") << path;
+            return CLogMessage(CLogCategory::validation()).error("wrong path: %1") << path;
         }
     } // namespace
 } // namespace

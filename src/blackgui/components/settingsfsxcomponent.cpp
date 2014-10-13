@@ -55,28 +55,28 @@ namespace BlackGui
 
             if (address.isEmpty() || port.isEmpty())
             {
-                CLogMessage().warning(this, "no address or port");
+                CLogMessage(this).warning("no address or port");
                 return;
             }
             if (!CNetworkUtils::isValidIPv4Address(address))
             {
-                CLogMessage().warning(this, "IPv4 address invalid");
+                CLogMessage(this).warning("IPv4 address invalid");
                 return;
             }
             if (!CNetworkUtils::isValidPort(port))
             {
-                CLogMessage().warning(this, "invalid port");
+                CLogMessage(this).warning("invalid port");
                 return;
             }
             quint16 p = port.toUInt();
             QString msg;
             if (!CNetworkUtils::canConnect(address, p, msg))
             {
-                CLogMessage().warning(this, msg);
+                CLogMessage(this).warning(msg);
                 return;
             }
 
-            CLogMessage().info(this, "Connected to %1:%2") << address << port;
+            CLogMessage(this).info("Connected to %1:%2") << address << port;
         }
 
         /*
@@ -86,7 +86,7 @@ namespace BlackGui
         {
             if (!this->getIContextSimulator() || !this->getIContextSimulator()->isSimulatorAvailable())
             {
-                CLogMessage().error(this, "Simulator not available");
+                CLogMessage(this).error("Simulator not available");
                 return;
             }
             QString address = this->ui->le_SettingsFsxAddress->text().trimmed();
@@ -94,17 +94,17 @@ namespace BlackGui
 
             if (address.isEmpty() || port.isEmpty())
             {
-                CLogMessage().warning(this, "no address or port");
+                CLogMessage(this).warning("no address or port");
                 return;
             }
             if (!CNetworkUtils::isValidIPv4Address(address))
             {
-                CLogMessage().warning(this, "IPv4 address invalid");
+                CLogMessage(this).warning("IPv4 address invalid");
                 return;
             }
             if (!CNetworkUtils::isValidPort(port))
             {
-                CLogMessage().warning(this, "invalid port");
+                CLogMessage(this).warning("invalid port");
                 return;
             }
             quint16 p = port.toUInt();
@@ -117,11 +117,11 @@ namespace BlackGui
                            this->getIContextApplication()->writeToFile(fileName, CSimConnectUtilities::simConnectCfg(address, p));
             if (success)
             {
-                CLogMessage().info(this, localSimulatorObject ? "Written local %1" : "Written remote %1") << fileName;
+                CLogMessage(this).info(localSimulatorObject ? "Written local %1" : "Written remote %1") << fileName;
             }
             else
             {
-                CLogMessage().error(this, "Cannot write %1") << fileName;
+                CLogMessage(this).error("Cannot write %1") << fileName;
             }
             this->ui->pb_SettingsFsxExistsSimconncetCfg->click(); // update status
         }
@@ -133,7 +133,7 @@ namespace BlackGui
         {
             if (!this->getIContextSimulator() || !this->getIContextSimulator()->isSimulatorAvailable())
             {
-                CLogMessage().error(this, "Simulator not available");
+                CLogMessage(this).error("Simulator not available");
                 return;
             }
 
@@ -153,12 +153,12 @@ namespace BlackGui
                 {
                     QFile f(fileName);
                     f.remove();
-                    CLogMessage().info(this, "Deleted locally %1") << fileName;
+                    CLogMessage(this).info("Deleted locally %1") << fileName;
                 }
                 else
                 {
                     this->getIContextApplication()->removeFile(fileName);
-                    CLogMessage().info(this, "Deleted remotely %1") << fileName;
+                    CLogMessage(this).info("Deleted remotely %1") << fileName;
                 }
                 this->ui->pb_SettingsFsxExistsSimconncetCfg->click(); // update status
             }

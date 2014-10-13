@@ -54,42 +54,42 @@ namespace BlackCore
 
     bool CContextSimulator::isConnected() const
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return false;
         return m_simulator->isConnected();
     }
 
     bool CContextSimulator::canConnect()
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return false;
         return m_simulator->canConnect();
     }
 
     bool CContextSimulator::connectTo()
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return false;
         return m_simulator->connectTo();
     }
 
     void CContextSimulator::asyncConnectTo()
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator || m_canConnectResult.isRunning()) return; // already checking
         m_simulator->asyncConnectTo();
     }
 
     bool CContextSimulator::disconnectFrom()
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return false;
         return m_simulator->disconnectFrom();
     }
 
     BlackSim::CSimulatorInfo CContextSimulator::getSimulatorInfo() const
     {
-        CLogMessage().debug(this) << Q_FUNC_INFO;
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return BlackSim::CSimulatorInfo::UnspecifiedSim();
         return m_simulator->getSimulatorInfo();
     }
@@ -139,7 +139,7 @@ namespace BlackCore
         // warning if we do not have any plugins
         if (m_simulatorFactories.isEmpty())
         {
-            CLogMessage().error(this, "No simulator plugins");
+            CLogMessage(this).error("No simulator plugins");
             return false;
         }
 
@@ -151,7 +151,7 @@ namespace BlackCore
         // no plugin found
         if (iterator == m_simulatorFactories.end())
         {
-            CLogMessage().error(this, "Plugin not found: '%1'") << simulatorInfo.toQString(true);
+            CLogMessage(this).error("Plugin not found: '%1'") << simulatorInfo.toQString(true);
             return false;
         }
 
@@ -185,7 +185,7 @@ namespace BlackCore
         asyncConnectTo();
 
         // info about what is going on
-        CLogMessage().info(this, "Simulator plugin loaded: '%1'") << this->m_simulator->getSimulatorInfo().toQString(true);
+        CLogMessage(this).info("Simulator plugin loaded: '%1'") << this->m_simulator->getSimulatorInfo().toQString(true);
         return true;
     }
 
@@ -345,11 +345,11 @@ namespace BlackCore
         {
             if (this->loadSimulatorPlugin(plugin))
             {
-                CLogMessage().info(this, "Plugin loaded: '%1'") << plugin.toQString(true);
+                CLogMessage(this).info("Plugin loaded: '%1'") << plugin.toQString(true);
             }
             else
             {
-                CLogMessage().error(this, "Cannot load driver: '%1'") << plugin.toQString(true);
+                CLogMessage(this).error("Cannot load driver: '%1'") << plugin.toQString(true);
             }
         }
 
@@ -371,7 +371,7 @@ namespace BlackCore
         m_pluginsDir = QDir(path);
         if (!m_pluginsDir.exists())
         {
-            CLogMessage().error(this, "No plugin directory: %1") << m_pluginsDir.currentPath();
+            CLogMessage(this).error("No plugin directory: %1") << m_pluginsDir.currentPath();
             return;
         }
 
@@ -395,7 +395,7 @@ namespace BlackCore
             }
             else
             {
-                CLogMessage().error(this, loader.errorString());
+                CLogMessage(this).error(loader.errorString());
                 qDebug() << "Also check if required dll/libs of plugin exists";
             }
         }
