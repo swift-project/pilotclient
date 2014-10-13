@@ -111,6 +111,38 @@ namespace BlackMiscTest
         ms = timer.elapsed();
         qDebug() << "Copied 10k stations" << number << "times in" << ms << "ms";
 
+        // Regex pattern matching with lists of 10000 strings containing random hex numbers
+        auto generator = []() { return QString::number(qrand() | (qrand() << 16), 16); };
+        QStringList strList1, strList2, strList3, strList4;
+        std::generate_n(std::back_inserter(strList1), 100000, generator);
+        std::generate_n(std::back_inserter(strList2), 100000, generator);
+        std::generate_n(std::back_inserter(strList3), 100000, generator);
+        std::generate_n(std::back_inserter(strList4), 100000, generator);
+        QRegularExpression newRegex("^.*aaa.*$", QRegularExpression::CaseInsensitiveOption);
+        QRegExp fullRegex(".*aaa.*", Qt::CaseInsensitive);
+        QRegExp wildcardRegex("*aaa*", Qt::CaseInsensitive, QRegExp::Wildcard);
+        QString containsStr("aaa");
+        number = 0;
+        timer.start();
+        for (const auto &str : strList1) { if (newRegex.match(str).hasMatch()) number++; }
+        ms = timer.elapsed();
+        qDebug() << "new regex matched" << number << "of" << strList1.size() << "strings in" << ms << "ms";
+        number = 0;
+        timer.start();
+        for (const auto &str : strList2) { if (fullRegex.exactMatch(str)) number++; }
+        ms = timer.elapsed();
+        qDebug() << "full regex matched" << number << "of" << strList2.size() << "strings in" << ms << "ms";
+        number = 0;
+        timer.start();
+        for (const auto &str : strList3) { if (wildcardRegex.exactMatch(str)) number++; }
+        ms = timer.elapsed();
+        qDebug() << "wildcard matched" << number << "of" << strList3.size() << "strings in" << ms << "ms";
+        number = 0;
+        timer.start();
+        for (const auto &str : strList4) { if (str.contains(containsStr)) number++; }
+        ms = timer.elapsed();
+        qDebug() << "contains matched" << number << "of" << strList4.size() << "strings in" << ms << "ms";
+
         qDebug() << "-----------------------------------------------";
         return 0;
     }
