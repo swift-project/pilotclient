@@ -314,7 +314,7 @@ void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessag
 
     // display overlay for errors, but not for validation
     // TODO smarter use of CLogCategoryHandler to dispatch different categories of message to different MainWindow slots
-    if (statusMessage.getSeverity() == CStatusMessage::SeverityError && ! statusMessage.getCategory().endsWith(".validation"))
+    if (statusMessage.getSeverity() == CStatusMessage::SeverityError && ! statusMessage.getCategories().contains(CLogCategory::validation()))
     {
         this->m_compInfoWindow->displayStatusMessage(statusMessage);
     }
