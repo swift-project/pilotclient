@@ -14,6 +14,7 @@
 #include "samplesjson.h"
 #include "samplesvariant.h"
 #include "samplesperformance.h"
+#include "samplesalgorithm.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/pqallquantities.h"
 
@@ -40,6 +41,7 @@ int main(int argc, char *argv[])
         qDebug() << "4 .. Metadata";
         qDebug() << "5 .. Variant";
         qDebug() << "6 .. Performance";
+        qDebug() << "7 .. Algorithms";
         qDebug() << "-----";
         qDebug() << "x .. Bye";
         QTextStream qtin(stdin);
@@ -51,6 +53,7 @@ int main(int argc, char *argv[])
         else if (s.startsWith("4")) { CSamplesMetadata::samples(); }
         else if (s.startsWith("5")) { CSamplesVariant::samples(); }
         else if (s.startsWith("6")) { CSamplesPerformance::samples(); }
+        else if (s.startsWith("7")) { CSamplesAlgorithm::samples(); }
         else if (s.startsWith("x")) { break; }
     }
     while (true);
