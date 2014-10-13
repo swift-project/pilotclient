@@ -57,9 +57,6 @@ namespace BlackCore
             ActionStops
         };
 
-        //! Log message category
-        static QString getMessageCategory() { return "swift.context.application"; }
-
         //! Service name
         static const QString &InterfaceName()
         {

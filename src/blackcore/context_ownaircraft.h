@@ -34,9 +34,6 @@ namespace BlackCore
         Q_CLASSINFO("D-Bus Interface", BLACKCORE_CONTEXTOWNAIRCRAFT_INTERFACENAME)
 
     public:
-        //! Log message category
-        static QString getMessageCategory() { return "swift.context.ownaircraft"; }
-
         //! DBus interface name
         static const QString &InterfaceName()
         {

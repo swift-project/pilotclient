@@ -50,9 +50,6 @@ namespace BlackCore
         IVoice(QObject *parent = nullptr);
 
     public:
-        //! Log message category
-        static QString getMessageCategory() { return "swift.voice"; }
-
         //! Virtual destructor.
         virtual ~IVoice() {}
 

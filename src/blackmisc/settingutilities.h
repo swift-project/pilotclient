@@ -25,16 +25,6 @@ namespace BlackMisc
             CSettingUtilities() {}
 
         public:
-
-            //! Log message category for anything related to settings
-            static QString getMessageCategory() { return "swift.settings"; }
-
-            //! Log message category for settings validation messages
-            static QString validationMessageCategory() { return "swift.settings.validation"; }
-
-            //! Log message category for settings update messages
-            static QString updateMessageCategory() { return "swift.settings.update"; }
-
             //! Command validate
             static const QString &CmdValidate()
             {

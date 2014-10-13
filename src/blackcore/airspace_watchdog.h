@@ -41,9 +41,6 @@ namespace BlackCore
         //! Constructor
         CAirspaceWatchdog(const BlackMisc::PhysicalQuantities::CTime & initialTimeOut, QObject *parent);
 
-        //! Log message category
-        static QString getMessageCategory() { return "swift.airspacewatchdog"; }
-
         //! Sets the maximum time, after a client is considered timed out
         void setTimeout(const BlackMisc::PhysicalQuantities::CTime &value) { m_timeout = value; }
 

@@ -45,9 +45,6 @@ namespace BlackCore
         Q_OBJECT
 
     public:
-        //! Log message category
-        static QString getMessageCategory() { return "swift.runtime"; }
-
         //! Constructor
         CRuntime(const CRuntimeConfig &config, QObject *parent = nullptr);
 
