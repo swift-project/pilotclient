@@ -146,7 +146,7 @@ namespace BlackGui
                 }
                 if (ost.isNull())
                 {
-                    CLogMessage(CLogCategory::validation()).error("Invalid offset time");
+                    CLogMessage().validationWarning("Invalid offset time");
                 }
                 else
                 {

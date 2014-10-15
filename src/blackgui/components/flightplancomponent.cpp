@@ -110,17 +110,17 @@ namespace BlackGui
             v = ui->le_Callsign->text().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_Callsign->text());
+                messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_Callsign->text());
             }
 
             v = ui->pte_Route->toPlainText().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing flight plan route"));
+                messages.push_back(CLogMessage().validationWarning("Missing flight plan route"));
             }
             else if (v.length() > CFlightPlan::MaxRouteLength)
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Flight plan route length exceeded (%1 chars max.)") << CFlightPlan::MaxRouteLength);
+                messages.push_back(CLogMessage().validationWarning("Flight plan route length exceeded (%1 chars max.)") << CFlightPlan::MaxRouteLength);
             }
             else
                 flightPlan.setRoute(v);
@@ -128,11 +128,11 @@ namespace BlackGui
             v = ui->pte_Remarks->toPlainText().trimmed();
             if (v.isEmpty())
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("No remarks, voice capabilities are mandatory"));
+                messages.push_back(CLogMessage().validationWarning("No remarks, voice capabilities are mandatory"));
             }
             else if (v.length() > CFlightPlan::MaxRemarksLength)
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Flight plan remarks length exceeded (%1 chars max.)") << CFlightPlan::MaxRemarksLength);
+                messages.push_back(CLogMessage().validationWarning("Flight plan remarks length exceeded (%1 chars max.)") << CFlightPlan::MaxRemarksLength);
             }
             else
                 flightPlan.setRemarks(v);
@@ -140,7 +140,7 @@ namespace BlackGui
             v = ui->le_EstimatedTimeEnroute->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_EstimatedTimeEnroute->text());
+                messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_EstimatedTimeEnroute->text());
             }
             else
                 flightPlan.setEnrouteTime(v);
@@ -148,7 +148,7 @@ namespace BlackGui
             v = ui->le_FuelOnBoard->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_FuelOnBorad->text());
+                messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_FuelOnBorad->text());
             }
             else
                 flightPlan.setFuelTime(v);
@@ -156,7 +156,7 @@ namespace BlackGui
             v = ui->le_TakeOffTimePlanned->text();
             if (v.isEmpty() || v == defaultTime())
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_TakeOffTimePlanned->text());
+                messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_TakeOffTimePlanned->text());
             }
             else
                 flightPlan.setTakeoffTimePlanned(v);
@@ -172,7 +172,7 @@ namespace BlackGui
             CAltitude cruisingAltitude(v, CPqString::SeparatorsLocale);
             if (v.isEmpty() || cruisingAltitude.isNull())
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Wrong %1") << this->ui->lbl_CrusingAltitude->text());
+                messages.push_back(CLogMessage().validationWarning("Wrong %1") << this->ui->lbl_CrusingAltitude->text());
             }
             else
                 flightPlan.setCruiseAltitude(cruisingAltitude);
@@ -180,7 +180,7 @@ namespace BlackGui
             v = this->ui->le_AlternateAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_AlternateAirport->text());
+                messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_AlternateAirport->text());
                 flightPlan.setAlternateAirportIcao(defaultIcao());
             }
             else
@@ -189,7 +189,7 @@ namespace BlackGui
             v = this->ui->le_DestinationAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_DestinationAirport->text());
+                messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_DestinationAirport->text());
                 flightPlan.setDestinationAirportIcao(defaultIcao());
             }
             else
@@ -200,7 +200,7 @@ namespace BlackGui
             cruiseTAS.parseFromString(v, CPqString::SeparatorsLocale);
             if (cruiseTAS.isNull())
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Wrong TAS, %1") << this->ui->lbl_CruiseTrueAirspeed->text());
+                messages.push_back(CLogMessage().validationWarning("Wrong TAS, %1") << this->ui->lbl_CruiseTrueAirspeed->text());
                 flightPlan.setDestinationAirportIcao(defaultIcao());
             }
             else
@@ -209,7 +209,7 @@ namespace BlackGui
             v = this->ui->le_OriginAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
             {
-                messages.push_back(CLogMessage(CLogCategory::validation()).error("Missing %1") << this->ui->lbl_OriginAirport->text());
+                messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_OriginAirport->text());
                 flightPlan.setOriginAirportIcao(defaultIcao());
             }
             else

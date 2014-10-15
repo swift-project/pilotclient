@@ -110,6 +110,15 @@ namespace BlackMisc
         //! Set the severity to error, providing a format string.
         CLogMessage &error(QString format);
 
+        //! Set the severity to info, providing a format string, and adding the validation category.
+        CLogMessage &validationInfo(QString format);
+
+        //! Set the severity to warning, providing a format string, and adding the validation category.
+        CLogMessage &validationWarning(QString format);
+
+        //! Set the severity to error, providing a format string, and adding the validation category.
+        CLogMessage &validationError(QString format);
+
         //! Streaming operators.
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
         //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.

@@ -40,6 +40,27 @@ namespace BlackMisc
         return *this;
     }
 
+    CLogMessage &CLogMessage::validationInfo(QString format)
+    {
+        m_categories.remove(CLogCategory::uncategorized());
+        m_categories.push_back(CLogCategory::validation());
+        return info(format);
+    }
+
+    CLogMessage &CLogMessage::validationWarning(QString format)
+    {
+        m_categories.remove(CLogCategory::uncategorized());
+        m_categories.push_back(CLogCategory::validation());
+        return warning(format);
+    }
+
+    CLogMessage &CLogMessage::validationError(QString format)
+    {
+        m_categories.remove(CLogCategory::uncategorized());
+        m_categories.push_back(CLogCategory::validation());
+        return error(format);
+    }
+
     CLogMessage::operator CStatusMessage()
     {
         m_redundant = true;

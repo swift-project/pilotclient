@@ -237,7 +237,7 @@ namespace BlackGui
             CServer server = this->ps_selectedServerFromTextboxes();
             if (!server.isValidForLogin())
             {
-                CLogMessage(CLogCategory::validation()).error("Wrong settings for server");
+                CLogMessage().validationWarning("Wrong settings for server");
                 return;
             }
 
