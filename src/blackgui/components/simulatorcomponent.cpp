@@ -17,7 +17,7 @@ namespace BlackGui
     {
         CSimulatorComponent::CSimulatorComponent(QWidget *parent) :
             QTabWidget(parent),
-            CEnableForDockWidgetInfoArea(this),
+            CEnableForDockWidgetInfoArea(),
             ui(new Ui::CSimulatorComponent)
         {
             ui->setupUi(this);

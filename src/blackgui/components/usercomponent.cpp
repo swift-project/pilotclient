@@ -22,7 +22,7 @@ namespace BlackGui
     {
         CUserComponent::CUserComponent(QWidget *parent) :
             QTabWidget(parent),
-            CEnableForDockWidgetInfoArea(this),
+            CEnableForDockWidgetInfoArea(),
             CEnableForRuntime(nullptr, false),
             ui(new Ui::CUserComponent), m_updateTimer(nullptr)
         {

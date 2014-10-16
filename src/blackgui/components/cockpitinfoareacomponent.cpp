@@ -24,19 +24,11 @@ namespace BlackGui
         {
             ui->setupUi(this);
             initInfoArea();
-            if (this->statusBar())
-            {
-                this->statusBar()->hide();
-            }
+            this->ps_setTabBarPosition(QTabWidget::North);
         }
 
         CCockpitInfoAreaComponent::~CCockpitInfoAreaComponent()
         { }
-
-        void CCockpitInfoAreaComponent::toggleFloating()
-        {
-            CInfoArea::toggleFloating();
-        }
 
         QSize CCockpitInfoAreaComponent::getPreferredSizeWhenFloating(int areaIndex) const
         {
@@ -46,8 +38,16 @@ namespace BlackGui
 
         const QPixmap &CCockpitInfoAreaComponent::indexToPixmap(int areaIndex) const
         {
-            Q_UNUSED(areaIndex);
-            return CIcons::empty16();
+            InfoArea area = static_cast<InfoArea>(areaIndex);
+            switch (area)
+            {
+            case InfoAreaAudio:
+                return CIcons::appAudio16();
+            case InfoAreaVoiceRooms:
+                return CIcons::appVoiceRooms16();
+            default:
+                return CIcons::empty();
+            }
         }
 
     } // namespace

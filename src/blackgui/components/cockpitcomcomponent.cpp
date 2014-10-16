@@ -19,7 +19,7 @@ namespace BlackGui
     {
         CCockpitComComponent::CCockpitComComponent(QWidget *parent) :
             QFrame(parent),
-            CEnableForDockWidgetInfoArea(this),
+            CEnableForDockWidgetInfoArea(),
             ui(new Ui::CCockpitMainComponent)
         {
             ui->setupUi(this);

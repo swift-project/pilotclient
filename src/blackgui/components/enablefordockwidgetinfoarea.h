@@ -34,7 +34,7 @@ namespace BlackGui
 
             //! Corresponding dockable widget in info area
             //! \remarks Usually set from CDockWidgetInfoArea when it is fully initialized
-            bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget);
+            virtual bool setParentDockWidgetInfoArea(BlackGui::CDockWidgetInfoArea *parentDockableWidget);
 
             //! The parent info area
             const CInfoArea *getParentInfoArea() const;
@@ -50,7 +50,8 @@ namespace BlackGui
 
         protected:
             //! Constructor
-            CEnableForDockWidgetInfoArea(QWidget *parent);
+            //! \remarks Normally the infoa area will be provided later \sa setParentDockWidgetInfoArea
+            CEnableForDockWidgetInfoArea(CDockWidgetInfoArea *parentInfoArea = nullptr);
 
         private:
             BlackGui::CDockWidgetInfoArea *m_parentDockableInfoArea = nullptr; //!< my parent dockable widget

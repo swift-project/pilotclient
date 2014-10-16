@@ -14,15 +14,11 @@ namespace BlackGui
     namespace Components
     {
 
-        CEnableForDockWidgetInfoArea::CEnableForDockWidgetInfoArea(QWidget *parent)
+        CEnableForDockWidgetInfoArea::CEnableForDockWidgetInfoArea(CDockWidgetInfoArea *parentInfoArea)
         {
             // it the parent is already an info area at this time, we keep it
             // otherwise we expect the info area to set it later
-            CDockWidgetInfoArea *ia = dynamic_cast<CDockWidgetInfoArea *>(parent);
-            if (ia)
-            {
-                this->m_parentDockableInfoArea = ia;
-            }
+            this->m_parentDockableInfoArea = parentInfoArea;
         }
 
         bool CEnableForDockWidgetInfoArea::setParentDockWidgetInfoArea(CDockWidgetInfoArea *parentDockableWidget)

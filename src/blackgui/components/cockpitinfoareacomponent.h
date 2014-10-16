@@ -23,7 +23,7 @@ namespace BlackGui
     {
         //! The cockpit itself is part of the main info area, but itself also an info area.
         //! hence windows can be docked in the cockpit too.
-        class CCockpitInfoAreaComponent : public CInfoArea
+        class CCockpitInfoAreaComponent : public BlackGui::CInfoArea
         {
             Q_OBJECT
 
@@ -34,9 +34,21 @@ namespace BlackGui
             //! Destructor
             ~CCockpitInfoAreaComponent();
 
+            //! Info areas
+            enum InfoArea
+            {
+                // index must match tab index!
+                InfoAreaVoiceRooms   =  0,
+                InfoAreaAudio        =  1,
+                InfoAreaNone         = -1
+            };
+
         public slots:
-            //! CInfoArea::toggleFloating
-            virtual void toggleFloating() override;
+            //! Toggle floating of given area
+            void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloating(static_cast<int>(infoArea)); }
+
+            //! Select area
+            void selectArea(InfoArea infoArea) { CInfoArea::selectArea(static_cast<int>(infoArea)); }
 
         protected:
             //! \copydoc CInfoArea::getPreferredSizeWhenFloating

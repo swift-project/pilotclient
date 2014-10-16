@@ -24,7 +24,7 @@ namespace BlackGui
 
         CAircraftComponent::CAircraftComponent(QWidget *parent) :
             QTabWidget(parent),
-            CEnableForDockWidgetInfoArea(this),
+            CEnableForDockWidgetInfoArea(),
             CEnableForRuntime(nullptr, false),
             ui(new Ui::CAircraftComponent), m_updateTimer(nullptr)
         {

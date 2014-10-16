@@ -27,16 +27,16 @@
    <string notr="true"/>
   </property>
   <property name="animated">
-   <bool>true</bool>
+   <bool>false</bool>
   </property>
   <property name="documentMode">
-   <bool>true</bool>
+   <bool>false</bool>
   </property>
   <property name="dockNestingEnabled">
    <bool>false</bool>
   </property>
   <property name="dockOptions">
-   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="qw_centralWidgetEmpty"/>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Cockpit">
@@ -67,7 +67,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CCockpitInfoAreaComponent" name="comp_CockpitInfoArea" native="true"/>
+      <widget class="BlackGui::Components::CCockpitComponent" name="comp_CockpitInfoArea" native="true"/>
      </item>
     </layout>
    </widget>
@@ -574,12 +574,6 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CCockpitInfoAreaComponent</class>
-   <extends>QWidget</extends>
-   <header>blackgui/components/cockpitinfoareacomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CAtcStationComponent</class>
    <extends>QTabWidget</extends>
    <header>blackgui/components/atcstationcomponent.h</header>
@@ -625,6 +619,12 @@
    <class>BlackGui::Components::CSimulatorComponent</class>
    <extends>QTabWidget</extends>
    <header>blackgui/components/simulatorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CCockpitComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/cockpitcomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

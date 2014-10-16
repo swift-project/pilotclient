@@ -86,7 +86,7 @@ namespace BlackGui
             CTextMessageComponent *getTextMessageComponent();
 
             //! Selected area of non floating areas
-            InfoArea getSelectedInfoArea() const { return static_cast<InfoArea>(getSelectedTabBarIndex()); }
+//            InfoArea getSelectedInfoArea() const { return static_cast<InfoArea>(getSelectedTabBarIndex()); }
 
         public slots:
             //! Toggle floating of given area

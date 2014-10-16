@@ -29,7 +29,7 @@ namespace BlackGui
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
             QTabWidget(parent),
-            CEnableForDockWidgetInfoArea(this),
+            CEnableForDockWidgetInfoArea(),
             CEnableForRuntime(nullptr, false),
             ui(new Ui::CAtcStationComponent), m_updateTimer(nullptr)
         {

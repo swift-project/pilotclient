@@ -6,46 +6,45 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>80</width>
-    <height>75</height>
+    <width>161</width>
+    <height>67</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Cockpit info area</string>
+  </property>
+  <property name="animated">
+   <bool>false</bool>
+  </property>
+  <property name="documentMode">
+   <bool>false</bool>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::ForceTabbedDocks</set>
   </property>
   <widget class="QWidget" name="qw_CockpitInfoAreaComComponent">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <property name="spacing">
-     <number>0</number>
-    </property>
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
-    <item>
-     <widget class="BlackGui::Components::CCockpitComComponent" name="comp_CockpitComComponent">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
   </widget>
-  <widget class="QStatusBar" name="sb_CockpitInfoAreaStatusBar"/>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_CockpitVoiceRooms">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetFloatable</set>
+   </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::BottomDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Voice rooms</string>
@@ -83,6 +82,37 @@
     </layout>
    </widget>
   </widget>
+  <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Audio">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetFloatable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Audio</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="qw_Audio">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="BlackGui::Components::CAudioComponent" name="comp_Audio">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -92,15 +122,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CCockpitComComponent</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/cockpitcomcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CVoiceRoomsComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/voiceroomscomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CAudioComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/audiocomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
