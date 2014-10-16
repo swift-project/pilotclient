@@ -12,6 +12,8 @@
 #ifndef BLACKGUI_VOICEROOMSCOMPONENT_H
 #define BLACKGUI_VOICEROOMSCOMPONENT_H
 
+#include "enableforruntime.h"
+#include "blackmisc/voiceroomlist.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -23,7 +25,8 @@ namespace BlackGui
     {
         //! Displays the voice rooms
         class CVoiceRoomsComponent :
-            public QFrame
+            public QFrame,
+            public CEnableForRuntime
         {
             Q_OBJECT
 
@@ -34,7 +37,28 @@ namespace BlackGui
             //! Destructor
             ~CVoiceRoomsComponent();
 
+        protected:
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
+            virtual void runtimeHasBeenSet() override;
+
+        private slots:
+            //! Override for voice was changed
+            void ps_voiceRoomOverrideChanged(bool checked);
+
+            //! Return pressed
+            void ps_voiceRoomUrlsReturnPressed();
+
+            //! set the voice room url fields (checkboxes, line edits)
+            void ps_updateAudioVoiceRoomsFromContext(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
+
         private:
+            //! Set the URL fields
+            void setVoiceRoomUrlFields();
+
+            //! Update voice room views
+            void updateVoiceRoomMembers();
+
+
             QScopedPointer<Ui::CVoiceRoomsComponent> ui;
         };
 

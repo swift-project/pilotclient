@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>522</width>
+    <height>226</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Voice rooms</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -19,7 +19,7 @@
   <property name="frameShadow">
    <enum>QFrame::Raised</enum>
   </property>
-  <layout class="QVBoxLayout" name="vl_voiceRoomsComponent">
+  <layout class="QVBoxLayout" name="vl_VoiceRoomsComponent">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -38,8 +38,8 @@
    <item>
     <layout class="QGridLayout" name="ql_CockpitVoiceRooms">
      <item row="0" column="1">
-      <widget class="QWidget" name="qi_CokpitViewRoom2" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <widget class="QWidget" name="qi_CockpitViewRoom2" native="true">
+       <layout class="QHBoxLayout" name="hl_CockpitRoom1">
         <property name="spacing">
          <number>2</number>
         </property>
@@ -57,6 +57,12 @@
         </property>
         <item>
          <widget class="QLineEdit" name="le_CockpitVoiceRoomCom2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="font">
            <font>
             <weight>75</weight>
@@ -69,8 +75,14 @@
           </property>
          </widget>
         </item>
-        <item>
+        <item alignment="Qt::AlignRight">
          <widget class="QCheckBox" name="cb_CockpitVoiceRoom2Override">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Ovr.</string>
           </property>
@@ -80,8 +92,8 @@
       </widget>
      </item>
      <item row="0" column="0">
-      <widget class="QWidget" name="qi_CokpitViewRoom1" native="true">
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <widget class="QWidget" name="qi_CockpitViewRoom1" native="true">
+       <layout class="QHBoxLayout" name="hl_CockpitViewRoom1">
         <property name="spacing">
          <number>2</number>
         </property>
@@ -99,6 +111,12 @@
         </property>
         <item>
          <widget class="QLineEdit" name="le_CockpitVoiceRoomCom1">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="font">
            <font>
             <weight>75</weight>
@@ -111,7 +129,7 @@
           </property>
          </widget>
         </item>
-        <item>
+        <item alignment="Qt::AlignRight">
          <widget class="QCheckBox" name="cb_CockpitVoiceRoom1Override">
           <property name="text">
            <string>Ovr.</string>
@@ -123,6 +141,12 @@
      </item>
      <item row="1" column="0">
       <widget class="BlackGui::Views::CUserView" name="tvp_CockpitVoiceRoom1">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::SingleSelection</enum>
        </property>
@@ -136,6 +160,12 @@
      </item>
      <item row="1" column="1">
       <widget class="BlackGui::Views::CUserView" name="tvp_CockpitVoiceRoom2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::SingleSelection</enum>
        </property>
