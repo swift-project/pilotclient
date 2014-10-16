@@ -94,7 +94,7 @@ namespace BlackMisc
             //! Overloaded method taking the coordinates in a different form.
             //! @{
             void insert(const CLatitude &lat, const CLongitude &lon, const T &value) { insert(lat.value(PhysicalQuantities::CAngleUnit::rad()), lon.value(PhysicalQuantities::CAngleUnit::rad()), value); }
-            void insert(const ICoordinateGeodetic &coord, const T &value) { insert(coord.latitude(), coord.longitude()); }
+            void insert(const ICoordinateGeodetic &coord, const T &value) { insert(coord.latitude(), coord.longitude(), value); }
             CRange<const_iterator> inTileAt(const CLatitude &lat, const CLongitude &lon) const { return inTileAt(lat.value(PhysicalQuantities::CAngleUnit::rad()), lon.value(PhysicalQuantities::CAngleUnit::rad())); }
             CRange<const_iterator> inTileAt(const ICoordinateGeodetic &coord) const { return inTileAt(coord.latitude(), coord.longitude()); }
             CRange<Iterators::ConcatIterator<const_iterator>> inAdjacentTiles(const CLatitude &lat, const CLongitude &lon, int degree = 1) const { return inAdjacentTiles(lat.value(PhysicalQuantities::CAngleUnit::rad()), lon.value(PhysicalQuantities::CAngleUnit::rad()), degree); }

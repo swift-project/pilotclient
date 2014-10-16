@@ -313,7 +313,7 @@ namespace BlackMisc
         iterator find(const Key &key) { return m_impl.find(key); }
 
         //! Returns true if dictionary contains an item with key, otherwise false
-        bool contains (const Key &key) const {return m_impl.contains(); }
+        bool contains (const Key &key) const {return m_impl.contains(key); }
 
         //! Returns the number of items with key
         int count(const Key &key) const { return m_impl.count(key); }
@@ -355,7 +355,7 @@ namespace BlackMisc
         const Value	value(const Key &key) const { return m_impl.value(key); }
 
         //! Returns the value associated with the key or if key is not found defaultValue
-        const Value	value(const Key &key, const Value &defaultValue) const { return m_impl.value(key); }
+        const Value	value(const Key &key, const Value &defaultValue) const { return m_impl.value(key, defaultValue); }
 
         //! Return a range of all values
         CRange<const_iterator> values() const { return makeRange(begin(), end()); }
