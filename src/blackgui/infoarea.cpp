@@ -29,8 +29,8 @@ namespace BlackGui
 
     void CInfoArea::initInfoArea()
     {
-        // after(!) GUI is established
-        if (this->m_dockableWidgets.isEmpty())
+        // after(!) GUI is setup
+        if (this->m_dockWidgetInfoAreas.isEmpty())
         {
             this->m_dockableWidgets = this->getOwnDockWidgetAreas();
             Q_ASSERT(!this->m_dockableWidgets.isEmpty());

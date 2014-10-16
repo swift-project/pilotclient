@@ -21,7 +21,7 @@
 namespace BlackGui
 {
 
-    //! \brief Our base class for dockable widgets containing some specialized functionality on top of QWidget.
+    //! \brief Our base class for dockable widgets containing some specialized functionality on top of QDockWidget.
     //! \details We currently use dockable widgets either as "info area" or "info bar" dockable widget.
     //! Info area widgets reside in an info are and represent a larger piece of information (e.g. all ATC stations, all aircrafts in range).
     //! An info bar is meant to be a small info window displaying information about status, menu state etc.
@@ -31,7 +31,6 @@ namespace BlackGui
     //! \sa CDockWidgetInfoBar
     class CDockWidget : public QDockWidget
     {
-        // KB TODO: Make this an interface, IDockWidget?
         Q_OBJECT
 
     public:
@@ -117,7 +116,7 @@ namespace BlackGui
 
     protected slots:
         //! Style sheet has changed
-        virtual void onStyleSheetsChanged();
+        virtual void ps_onStyleSheetsChanged();
 
     private slots:
         //! Top level has been chaged

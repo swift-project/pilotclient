@@ -19,7 +19,7 @@ namespace BlackGui
 {
     CDockWidget::CDockWidget(QWidget *parent) : QDockWidget(parent)
     {
-        this->onStyleSheetsChanged();
+        this->ps_onStyleSheetsChanged();
         this->initTitleBarWidgets();
 
         // connect

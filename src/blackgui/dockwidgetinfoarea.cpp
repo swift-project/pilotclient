@@ -39,7 +39,7 @@ namespace BlackGui
     {
         const CInfoArea *ia = getParentInfoArea();
         if (!ia) return false;
-        return ia->isSelectedInfoArea(this);
+        return ia->isSelectedDockWidgetInfoArea(this);
     }
 
     bool CDockWidgetInfoArea::isVisibleWidget() const

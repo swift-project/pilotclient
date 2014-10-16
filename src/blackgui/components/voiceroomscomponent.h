@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKGUI_VOICEROOMSCOMPONENT_H
 #define BLACKGUI_VOICEROOMSCOMPONENT_H
 

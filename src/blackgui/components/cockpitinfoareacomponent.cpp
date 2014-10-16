@@ -23,7 +23,7 @@ namespace BlackGui
             ui(new Ui::CCockpitInfoAreaComponent)
         {
             ui->setupUi(this);
-            initInfoArea();
+            this->initInfoArea();
             this->ps_setTabBarPosition(QTabWidget::North);
         }
 

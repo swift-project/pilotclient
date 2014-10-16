@@ -71,13 +71,13 @@ namespace BlackGui
         //! Constructor
         explicit CInfoArea(QWidget *parent = nullptr);
 
-        //! Override close event
+        //! \copydoc QWidget::closeEvent
         virtual void closeEvent(QCloseEvent *event) override;
 
         //! \copydoc QWidget::paintEvent
         virtual void paintEvent(QPaintEvent *event) override;
 
-        //! Preferred size when floating
+        //! Preferred size when floating (size hint)
         virtual QSize getPreferredSizeWhenFloating(int areaIndex) const = 0;
 
         //! Info area (index) to icon
