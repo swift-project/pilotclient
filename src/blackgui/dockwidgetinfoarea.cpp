@@ -68,10 +68,26 @@ namespace BlackGui
 
         // Dockable widget's context menu
         CDockWidget::addToContextMenu(contextMenu);
+        if (!contextMenu->isEmpty()) { contextMenu->addSeparator(); }
 
-        // from main component (info area)
+        // first info area, myself's direct parent info area
+        parentInfoAreas.first()->addToContextMenu(contextMenu);
+
+        // top info areas other than direct parent
+        // (parent's parent when nested info areas are used)
+        if (parentInfoAreas.size() < 2)  { return; }
         contextMenu->addSeparator();
-        parentInfoAreas.last()->addToContextMenu(contextMenu);
+        for (int i = 1; i < parentInfoAreas.size(); i++)
+        {
+            const CInfoArea *infoArea = parentInfoAreas.at(i);
+            QString title(infoArea->windowTitle());
+            if (title.isEmpty())
+            {
+                title = infoArea->objectName();
+            }
+            QMenu *m = contextMenu->addMenu(title);
+            infoArea->addToContextMenu(m);
+        }
     }
 
     void CDockWidgetInfoArea::initalFloating()
