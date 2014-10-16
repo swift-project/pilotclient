@@ -64,6 +64,10 @@ namespace BlackGui
         //! Selected when tabbed
         bool isSelected() const { return this->m_selected; }
 
+        //! Is widget visible? Not to be confused with \sa QWidget::isVisbible
+        //! \remarks Logical vsibility as in \sa QDockWidget::visibilityChanged
+        bool isWidgetVisible() const { return this->m_dockWidgetVisible && this->isVisible(); }
+
         //! Show the window title when docked
         void showTitleWhenDocked(bool show);
 
@@ -83,6 +87,9 @@ namespace BlackGui
         //! Toggle floating
         void toggleFloating();
 
+        //! Toggle visibility
+        void toggleVisibility();
+
         //! Set title and internally keep a backup
         void setWindowTitle(const QString &title);
 
@@ -99,12 +106,6 @@ namespace BlackGui
 
         //! \copydoc QWidget::paintEvent
         virtual void paintEvent(QPaintEvent *event) override;
-
-        //! \copydoc QWidget::hideEvent
-        void hideEvent(QHideEvent *event) override;
-
-        //! \copydoc QWidget::showEvent
-        void showEvent(QShowEvent *event) override;
 
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const;
@@ -125,6 +126,9 @@ namespace BlackGui
         //! Context menu
         virtual void ps_showContextMenu(const QPoint &pos);
 
+        //! Visibility has changed
+        virtual void ps_onVisibilityChanged(bool visible);
+
     private:
         QWidget *m_emptyTitleBar    = nullptr; //!< replacing default title bar
         QWidget *m_titleBarOriginal = nullptr; //!< the original title bar
@@ -136,9 +140,11 @@ namespace BlackGui
         bool m_windowTitleWhenDocked = true;
         bool m_wasAlreadyFloating    = false;
         bool m_selected              = false;  //!< selected when tabbed
+        bool m_dockWidgetVisible     = false;  //!< logical visible, not to be confused with QDockWidget::isVisible()
 
         //! Empty widget with no size
         void initTitleBarWidgets();
+
     };
 
 } // namespace

@@ -24,7 +24,8 @@ namespace BlackGui
 
         // connect
         connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::ps_onTopLevelChanged);
-        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDockWidget::onStyleSheetsChanged);
+        connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDockWidget::ps_onStyleSheetsChanged);
+        connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::ps_onVisibilityChanged);
 
         // context menu
         this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -74,6 +75,18 @@ namespace BlackGui
         this->setFloating(!this->isFloating());
     }
 
+    void CDockWidget::toggleVisibility()
+    {
+        if (this->isVisible())
+        {
+            this->hide();
+        }
+        else
+        {
+            this->show();
+        }
+    }
+
     void CDockWidget::closeEvent(QCloseEvent *event)
     {
         if (this->isFloating())
@@ -91,18 +104,6 @@ namespace BlackGui
     {
         Q_UNUSED(event);
         CStyleSheetUtility::useStyleSheetInDerivedWidget(this);
-    }
-
-    void CDockWidget::hideEvent(QHideEvent *event)
-    {
-        // qDebug() << "hide" << this->objectName() << "v:" << isVisible() << "h:" << isHidden();
-        QDockWidget::hideEvent(event);
-    }
-
-    void CDockWidget::showEvent(QShowEvent *event)
-    {
-        // qDebug() << "show" << this->objectName() << "v:" << isVisible() << "h:" << isHidden();
-        QDockWidget::showEvent(event);
     }
 
     void CDockWidget::addToContextMenu(QMenu *contextMenu) const
@@ -180,7 +181,12 @@ namespace BlackGui
         Q_UNUSED(selectedItem);
     }
 
-    void CDockWidget::onStyleSheetsChanged()
+    void CDockWidget::ps_onVisibilityChanged(bool visible)
+    {
+        this->m_dockWidgetVisible = visible;
+    }
+
+    void CDockWidget::ps_onStyleSheetsChanged()
     {
         // void, for further extensions
     }
