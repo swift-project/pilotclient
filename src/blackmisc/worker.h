@@ -14,11 +14,32 @@
 
 #include <QThread>
 #include <QMutex>
+#include <QTimer>
 #include <functional>
 #include <atomic>
 
 namespace BlackMisc
 {
+
+    /*!
+     * Starts a single-shot timer which will run in an existing thread and call a task when it times out.
+     *
+     * Useful when a worker thread wants to push small sub-tasks back to the thread which spawned it.
+     * \see QTimer::singleShot()
+     */
+    template <typename F>
+    void singleShot(int msec, QThread *target, F task)
+    {
+        auto *timer = new QTimer;
+        timer->setSingleShot(true);
+        timer->moveToThread(target);
+        QObject::connect(timer, &QTimer::timeout, [ = ]()
+        {
+            task();
+            timer->deleteLater();
+        });
+        QMetaObject::invokeMethod(timer, "start", Q_ARG(int, msec));
+    }
 
     /*!
      * Just a subclass of QThread whose destructor waits for the thread to finish.

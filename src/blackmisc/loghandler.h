@@ -45,10 +45,6 @@ namespace BlackMisc
         //! \warning This must only be called from the main thread.
         CLogCategoryHandler *handlerForCategoryPrefix(const QString &prefix);
 
-        //! Enable or disable the default Qt handler.
-        //! \warning This must only be called from the main thread.
-        void enableConsoleOutput(bool enable);
-
     signals:
         //! Emitted when a message is logged in this process.
         void localMessageLogged(const BlackMisc::CStatusMessage &message);
@@ -62,6 +58,9 @@ namespace BlackMisc
 
         //! Called by the context to relay a message.
         void logRemoteMessage(const BlackMisc::CStatusMessage &message);
+
+        //! Enable or disable the default Qt handler.
+        void enableConsoleOutput(bool enable);
 
     private:
         void logMessage(const BlackMisc::CStatusMessage &message);
@@ -80,11 +79,10 @@ namespace BlackMisc
     {
         Q_OBJECT
 
-    public:
+    public slots:
         /*!
          * Enable or disable the default Qt handler for messages in relevant categories.
          * This can override the setting of the parent CLogHandler.
-         * \warning This must only be called from the main thread.
          */
         void enableConsoleOutput(bool enable) { Q_ASSERT(thread() == QThread::currentThread()); m_enableFallThrough = enable; }
 

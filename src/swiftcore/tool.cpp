@@ -4,6 +4,7 @@
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/pqallquantities.h"
 #include "blackmisc/loghandler.h"
+#include "blackmisc/worker.h"
 #include "blacksound/soundgenerator.h"
 
 #include <QTextStream>
@@ -37,7 +38,7 @@ namespace BlackMiscTest
      */
     void Tool::serverLoop(BlackCore::CRuntime *runtime)
     {
-        CLogHandler::instance()->enableConsoleOutput(false);
+        QMetaObject::invokeMethod(CLogHandler::instance(), "enableConsoleOutput", Q_ARG(bool, false));
 
         Q_ASSERT(runtime);
         QThread::sleep(3); // let the DBus server startup
@@ -164,7 +165,7 @@ namespace BlackMiscTest
                 bool enable = line.endsWith("e");
                 if (line.startsWith("all"))
                 {
-                    BlackMisc::CLogHandler::instance()->enableConsoleOutput(enable);
+                    QMetaObject::invokeMethod(CLogHandler::instance(), "enableConsoleOutput", Q_ARG(bool, enable));
                 }
                 else
                 {
@@ -177,7 +178,10 @@ namespace BlackMiscTest
                     else if (line.startsWith("sim")) category = CLogCategoryList(simulatorContext).back().toQString();
                     if (! category.isEmpty())
                     {
-                        BlackMisc::CLogHandler::instance()->handlerForCategoryPrefix(category)->enableConsoleOutput(enable);
+                        BlackMisc::singleShot(0, BlackMisc::CLogHandler::instance()->thread(), [ = ]()
+                        {
+                            BlackMisc::CLogHandler::instance()->handlerForCategoryPrefix(category)->enableConsoleOutput(enable);
+                        });
                     }
                 }
             }

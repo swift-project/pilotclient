@@ -40,10 +40,7 @@ namespace BlackMisc
 
     CLogHandler::~CLogHandler()
     {
-        if (m_oldHandler)
-        {
-            qInstallMessageHandler(m_oldHandler);
-        }
+        qInstallMessageHandler(m_oldHandler);
     }
 
     CLogCategoryHandler *CLogHandler::handlerForCategoryPrefix(const QString &category)
