@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>354</width>
+    <width>338</width>
     <height>323</height>
    </rect>
   </property>
@@ -355,213 +355,54 @@
    <attribute name="title">
     <string>Audio</string>
    </attribute>
-   <layout class="QVBoxLayout" name="verticalLayout_14">
+   <layout class="QVBoxLayout" name="vl_SettingsAudio">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="leftMargin">
-     <number>2</number>
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>2</number>
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
     </property>
     <item>
-     <layout class="QFormLayout" name="fl_SettingsAudio">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+     <widget class="BlackGui::Components::CAudioSetup" name="comp_AudioSetup">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
-      <property name="leftMargin">
-       <number>2</number>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
-      <property name="topMargin">
-       <number>4</number>
-      </property>
-      <property name="rightMargin">
-       <number>2</number>
-      </property>
-      <property name="bottomMargin">
-       <number>2</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="lbl_SettingsAudioInputDevice">
-        <property name="text">
-         <string>In</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="cb_SettingsAudioInputDevice"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="lbl_SettingsAudioOutputDevice">
-        <property name="text">
-         <string>Out</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="cb_SettingsAudioOutputDevice"/>
-      </item>
-      <item row="2" column="1">
-       <spacer name="vs_SettingsAudioVoiceTests">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="lbl_SettingsAudioVoiceTests">
-        <property name="text">
-         <string>Tests</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QWidget" name="wi_SettingsAudioTests" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <layout class="QHBoxLayout" name="hl_SettingsAudioTests">
-           <item>
-            <widget class="QPushButton" name="pb_SettingsAudioSquelchTest">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Squelch test</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pb_SettingsAudioMicrophoneTest">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Mic. test</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="lbl_SettingsAudioTestActionAndResult">
-        <property name="text">
-         <string>Result</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QPlainTextEdit" name="pte_SettingsAudioTestActionAndResult">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QProgressBar" name="prb_SettingsAudioTestProgress">
-        <property name="value">
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <spacer name="vs_SettingsAudioMisc">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="8" column="1">
-       <widget class="QCheckBox" name="cb_SettingsAudioPlayNotificationSounds">
-        <property name="text">
-         <string>play notification sounds</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="1">
-       <widget class="QCheckBox" name="cb_SettingsAudioNotificationTextMessage">
-        <property name="text">
-         <string>notification for text messages</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0" colspan="2">
-       <widget class="QLabel" name="lbl_SettingsAudioNotificationSounds">
-        <property name="text">
-         <string>Notification sounds</string>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="1">
-       <widget class="QCheckBox" name="cb_SettingsAudioNotificationVoiceRoom">
-        <property name="text">
-         <string>notification for join/leave voice room</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="tb_SettingsSimulatorFsx">
+  <widget class="QWidget" name="tb_SettingsSimulator">
    <attribute name="title">
     <string>Simulator</string>
    </attribute>
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="vl_SettingsSimulator">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="BlackGui::Components::CSettingsSimulatorComponent" name="comp_SettingsSimulator">
       <property name="frameShape">
@@ -578,7 +419,19 @@
    <attribute name="title">
     <string>GUI</string>
    </attribute>
-   <layout class="QVBoxLayout" name="verticalLayout_7">
+   <layout class="QVBoxLayout" name="vl_SettingsGui">
+    <property name="leftMargin">
+     <number>1</number>
+    </property>
+    <property name="topMargin">
+     <number>1</number>
+    </property>
+    <property name="rightMargin">
+     <number>1</number>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
     <item>
      <layout class="QFormLayout" name="fl_SettingsGui">
       <property name="fieldGrowthPolicy">
@@ -731,7 +584,7 @@
       <item row="4" column="1">
        <widget class="QFontComboBox" name="cb_SettingsGuiFont">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -843,6 +696,12 @@
         </item>
         <item>
          <widget class="QLineEdit" name="le_SettingsGuiFontColor">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="readOnly">
            <bool>true</bool>
           </property>
@@ -892,7 +751,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="hl_SettingsMisc">
        <item>
         <widget class="QPushButton" name="pb_SettingsMiscSave">
          <property name="text">
@@ -947,6 +806,12 @@
    <class>BlackGui::Components::CSettingsSimulatorComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingssimulatorcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CAudioSetup</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/audiosetup.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -40,6 +40,12 @@
   </property>
   <widget class="QWidget" name="qw_centralWidgetEmpty"/>
   <widget class="BlackGui::CDockWidgetInfoArea" name="dw_Cockpit">
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>524287</height>
+    </size>
+   </property>
    <property name="allowedAreas">
     <set>Qt::TopDockWidgetArea</set>
    </property>
@@ -67,7 +73,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="BlackGui::Components::CCockpitComponent" name="comp_CockpitInfoArea" native="true"/>
+      <widget class="BlackGui::Components::CCockpitComponent" name="comp_Cockpit" native="true"/>
      </item>
     </layout>
    </widget>

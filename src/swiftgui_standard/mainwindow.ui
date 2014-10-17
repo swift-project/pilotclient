@@ -41,6 +41,9 @@
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
   </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::ForceTabbedDocks</set>
+  </property>
   <widget class="QWidget" name="wi_CentralWidgetOutside">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -482,8 +485,8 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="pg_Foo">
-          <layout class="QVBoxLayout" name="vl_Foo">
+         <widget class="QWidget" name="pg_MainInfoArea">
+          <layout class="QVBoxLayout" name="vl_MainInfoArea">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -605,7 +608,7 @@
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="allowedAreas">
-    <set>Qt::BottomDockWidgetArea|Qt::TopDockWidgetArea</set>
+    <set>Qt::TopDockWidgetArea</set>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>

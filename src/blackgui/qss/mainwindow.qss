@@ -30,6 +30,7 @@ BlackGui--CInfoArea {
 }
 
 /** fix scroll areas **/
+
 /** in flight plan **/
 QAbstractScrollArea #qw_FlightPlanTabMain { background-color: black; }
 QAbstractScrollArea #qw_RemarksGenerator { background-color: black; }
@@ -100,6 +101,14 @@ QAbstractScrollArea #pg_StatusPageConsole { background-color: black; }
     margin: 2px;
 }
 
+/** fixes scroll area for audio setup and inner background **/
+#sa_AudioSetup { background-color: black; }
+#saAudioSetupInner {
+        background-image: url(:/textures/icons/textures/texture-inner.jpg);
+        background-color: black;
+}
+
+/** COM panel **/
 #wip_CockpitComPanelShowHideBar QPushButton {
     background-color: transparent;
     border-style: solid;
@@ -118,6 +127,7 @@ QAbstractScrollArea #pg_StatusPageConsole { background-color: black; }
 QProgressBar {
     border: 1px solid green;
     border-radius: 5px;
+        background-color: black;
     text-align: center;
     padding: 0px;
     height: 16px;
