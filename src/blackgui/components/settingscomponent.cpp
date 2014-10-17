@@ -16,7 +16,6 @@
 #include "blackcore/context_settings.h"
 #include "blackcore/context_audio.h"
 #include "blackmisc/hwkeyboardkeylist.h"
-#include "blackmisc/setaudio.h"
 #include "blackmisc/logmessage.h"
 #include "blackmisc/settingsblackmiscclasses.h"
 #include <QColorDialog>
@@ -36,27 +35,22 @@ namespace BlackGui
 {
     namespace Components
     {
-
-        /*
-         * Constructor
-         */
         CSettingsComponent::CSettingsComponent(QWidget *parent) :
             QTabWidget(parent),
             CEnableForRuntime(nullptr, false),
-            ui(new Ui::CSettingsComponent),
-            m_audioTestRunning(NoAudioTest)
+            ui(new Ui::CSettingsComponent)
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);
-            this->ui->prb_SettingsAudioTestProgress->setVisible(false);
-            this->m_timerAudioTests = new QTimer(this);
         }
 
-        /*
-         * Destructor
-         */
         CSettingsComponent::~CSettingsComponent()
         { }
+
+        bool CSettingsComponent::playNotificationSounds() const
+        {
+            return ui->comp_AudioSetup->playNotificationSounds();
+        }
 
         /*
          * Update own ICAO data from GUI
@@ -68,65 +62,36 @@ namespace BlackGui
             icao.setAircraftCombinedType(this->ui->le_SettingsIcaoCombinedType->text());
         }
 
-        /*
-         * Opacity
-         */
         void CSettingsComponent::setGuiOpacity(double value)
         {
             this->ui->hs_SettingsGuiOpacity->setValue(value);
         }
 
-        /*
-         * Login as observer
-         */
         bool CSettingsComponent::loginAsObserver() const
         {
             return this->ui->rb_SettingsLoginStealthMode->isChecked();
         }
 
-        /*
-         * Stealth
-         */
         bool CSettingsComponent::loginStealth() const
         {
             return this->ui->rb_SettingsLoginStealthMode->isChecked();
         }
 
-        /*
-         * Notification sounds
-         */
-        bool CSettingsComponent::playNotificationSounds() const
-        {
-            return this->ui->cb_SettingsAudioPlayNotificationSounds->isChecked();
-        }
-
-        /*
-         * Update interval
-         */
         int CSettingsComponent::getAtcUpdateIntervalSeconds() const
         {
             return this->ui->hs_SettingsGuiAtcRefreshTime->value();
         }
 
-        /*
-         * Update interval
-         */
         int CSettingsComponent::getAircraftUpdateIntervalSeconds() const
         {
             return this->ui->hs_SettingsGuiAircraftRefreshTime->value();
         }
 
-        /*
-         * Update interval
-         */
         int CSettingsComponent::getUsersUpdateIntervalSeconds() const
         {
             return this->ui->hs_SettingsGuiUserRefreshTime->value();
         }
 
-        /*
-         * Own callsign
-         */
         QString CSettingsComponent::getOwnCallsignFromGui() const
         {
             return this->ui->le_SettingsAircraftCallsign->text();
@@ -139,7 +104,6 @@ namespace BlackGui
         {
             // local copy
             CSettingsNetwork nws = this->getIContextSettings()->getNetworkSettings();
-            CSettingsAudio as = this->getIContextSettings()->getAudioSettings();
 
             // update servers
             this->ui->tvp_SettingsTnServers->setSelectedServer(nws.getCurrentTrafficNetworkServer());
@@ -147,11 +111,6 @@ namespace BlackGui
 
             // update hot keys
             this->ui->tvp_SettingsMiscHotkeys->updateContainer(this->getIContextSettings()->getHotkeys());
-
-            // fake setting for sound notifications
-            this->ui->cb_SettingsAudioPlayNotificationSounds->setChecked(true);
-            this->ui->cb_SettingsAudioNotificationTextMessage->setChecked(as.getNotificationFlag(BlackSound::CNotificationSounds::NotificationTextMessagePrivate));
-            this->ui->cb_SettingsAudioNotificationVoiceRoom->setChecked(as.getNotificationFlag(BlackSound::CNotificationSounds::NotificationVoiceRoomJoined));
         }
 
         /*
@@ -168,27 +127,10 @@ namespace BlackGui
         void CSettingsComponent::runtimeHasBeenSet()
         {
             if (!this->getIContextSettings()) qFatal("Settings missing");
-
             this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CSettingsComponent::ps_changedSettings);
-            this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &CSettingsComponent::ps_audioTestUpdate);
-
-            // based on audio context
-            Q_ASSERT(this->getIContextAudio());
-            bool connected = false;
-            if (this->getIContextAudio())
-            {
-                this->initAudioDeviceLists();
-                connected = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &CSettingsComponent::ps_audioTestUpdate);
-                Q_ASSERT(connected);
-                connected = this->connect(this->ui->cb_SettingsAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
-                Q_ASSERT(connected);
-                connected = this->connect(this->ui->cb_SettingsAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
-                Q_ASSERT(connected);
-                this->connect(this->ui->pb_SettingsAudioMicrophoneTest, &QPushButton::clicked, this, &CSettingsComponent::ps_startAudioTest);
-                this->connect(this->ui->pb_SettingsAudioSquelchTest, &QPushButton::clicked, this, &CSettingsComponent::ps_startAudioTest);
-            }
 
             // Opacity, intervals
+            bool connected = false;
             this->connect(this->ui->hs_SettingsGuiOpacity, &QSlider::valueChanged, this, &CSettingsComponent::changedWindowsOpacity);
             this->connect(this->ui->hs_SettingsGuiAircraftRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAircraftsUpdateInterval);
             this->connect(this->ui->hs_SettingsGuiAtcRefreshTime, &QSlider::valueChanged, this, &CSettingsComponent::changedAtcStationsUpdateInterval);
@@ -259,7 +201,7 @@ namespace BlackGui
         }
 
         /*
-         * Settings did changed
+         * Settings did change
          */
         void CSettingsComponent::ps_changedSettings(uint typeValue)
         {
@@ -327,40 +269,6 @@ namespace BlackGui
         }
 
         /*
-         * Set audio device lists
-         */
-        void CSettingsComponent::initAudioDeviceLists()
-        {
-            if (!this->getIContextAudio()) return;
-            this->ui->cb_SettingsAudioOutputDevice->clear();
-            this->ui->cb_SettingsAudioInputDevice->clear();
-
-            foreach(CAudioDevice device, this->getIContextAudio()->getAudioDevices())
-            {
-                if (device.getType() == CAudioDevice::InputDevice)
-                {
-                    this->ui->cb_SettingsAudioInputDevice->addItem(device.toQString(true));
-                }
-                else if (device.getType() == CAudioDevice::OutputDevice)
-                {
-                    this->ui->cb_SettingsAudioOutputDevice->addItem(device.toQString(true));
-                }
-            }
-
-            foreach(CAudioDevice device, this->getIContextAudio()->getCurrentAudioDevices())
-            {
-                if (device.getType() == CAudioDevice::InputDevice)
-                {
-                    this->ui->cb_SettingsAudioInputDevice->setCurrentText(device.toQString(true));
-                }
-                else if (device.getType() == CAudioDevice::OutputDevice)
-                {
-                    this->ui->cb_SettingsAudioOutputDevice->setCurrentText(device.toQString(true));
-                }
-            }
-        }
-
-        /*
          * Font has been changed
          */
         void CSettingsComponent::ps_fontChanged()
@@ -395,113 +303,6 @@ namespace BlackGui
             this->m_fontColor = c;
             this->ui->le_SettingsGuiFontColor->setText(this->m_fontColor.name());
             this->ps_fontChanged();
-        }
-
-        /*
-         * Start the voice tests
-         */
-        void CSettingsComponent::ps_startAudioTest()
-        {
-            if (!this->getIContextAudio())
-            {
-                CLogMessage(this).error("voice context not available");
-                return;
-            }
-            if (this->m_timerAudioTests->isActive())
-            {
-                CLogMessage(this).error("test running, wait until completed");
-                return;
-            }
-
-            QObject *sender = QObject::sender();
-            this->m_timerAudioTests->start(600); // I let this run for <x>ms, so there is enough overhead to really complete it
-            this->ui->prb_SettingsAudioTestProgress->setValue(0);
-            this->ui->pte_SettingsAudioTestActionAndResult->clear();
-            if (sender == this->ui->pb_SettingsAudioMicrophoneTest)
-            {
-                this->m_audioTestRunning = MicrophoneTest;
-                this->getIContextAudio()->runMicrophoneTest();
-                this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText("Speak normally for 5 seconds");
-            }
-            else if (sender == this->ui->pb_SettingsAudioSquelchTest)
-            {
-                this->m_audioTestRunning = SquelchTest;
-                this->getIContextAudio()->runSquelchTest();
-                this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText("Silence for 5 seconds");
-            }
-            this->ui->prb_SettingsAudioTestProgress->setVisible(true);
-            this->ui->pb_SettingsAudioMicrophoneTest->setEnabled(false);
-            this->ui->pb_SettingsAudioSquelchTest->setEnabled(false);
-        }
-
-        /*
-         * Start the voice tests
-         */
-        void CSettingsComponent::ps_audioTestUpdate()
-        {
-            Q_ASSERT(this->getIContextAudio());
-            if (!this->getIContextAudio()) return;
-            int v = this->ui->prb_SettingsAudioTestProgress->value();
-            QObject *sender = this->sender();
-
-            if (v < 100 && (sender == m_timerAudioTests))
-            {
-                // timer update, increasing progress
-                this->ui->prb_SettingsAudioTestProgress->setValue(v + 10);
-            }
-            else
-            {
-                this->m_timerAudioTests->stop();
-                this->ui->prb_SettingsAudioTestProgress->setValue(100);
-                if (sender == m_timerAudioTests) return; // just timer update
-
-                // getting here we assume the audio test finished signal
-                // fetch results
-                this->ui->pte_SettingsAudioTestActionAndResult->clear();
-                if (this->m_audioTestRunning == SquelchTest)
-                {
-                    double s = this->getIContextAudio()->getSquelchValue();
-                    this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText(QString::number(s));
-                }
-                else if (this->m_audioTestRunning == MicrophoneTest)
-                {
-                    QString m = this->getIContextAudio()->getMicrophoneTestResult();
-                    this->ui->pte_SettingsAudioTestActionAndResult->appendPlainText(m);
-                }
-                this->m_audioTestRunning = NoAudioTest;
-                this->m_timerAudioTests->stop();
-                this->ui->pb_SettingsAudioMicrophoneTest->setEnabled(true);
-                this->ui->pb_SettingsAudioSquelchTest->setEnabled(true);
-                this->ui->prb_SettingsAudioTestProgress->setVisible(false);
-            }
-        }
-
-        /*
-         * Select audio device
-         */
-        void CSettingsComponent::ps_audioDeviceSelected(int index)
-        {
-            if (!this->getIContextAudio()) return;
-            if (index < 0)return;
-
-            CAudioDeviceList devices = this->getIContextAudio()->getAudioDevices();
-            if (devices.isEmpty()) return;
-            CAudioDevice selectedDevice;
-            QObject *sender = QObject::sender();
-            if (sender == this->ui->cb_SettingsAudioInputDevice)
-            {
-                CAudioDeviceList inputDevices = devices.getInputDevices();
-                if (index >= inputDevices.size()) return;
-                selectedDevice = inputDevices[index];
-                this->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
-            }
-            else if (sender == this->ui->cb_SettingsAudioOutputDevice)
-            {
-                CAudioDeviceList outputDevices = devices.getOutputDevices();
-                if (index >= outputDevices.size()) return;
-                selectedDevice = outputDevices[index];
-                this->getIContextAudio()->setCurrentAudioDevice(selectedDevice);
-            }
         }
     }
 } // namespace

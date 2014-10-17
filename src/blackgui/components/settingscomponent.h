@@ -53,6 +53,9 @@ namespace BlackGui
             //! Destructor
             ~CSettingsComponent();
 
+            //! \copydoc CAudioSetupComponent::playNotificationSounds
+            bool playNotificationSounds() const;
+
             //! ICAO data from GUI
             void setOwnAircraftIcaoDataFromGui(BlackMisc::Aviation::CAircraftIcao &icao) const;
 
@@ -64,9 +67,6 @@ namespace BlackGui
 
             //! Login as observer
             bool loginStealth() const;
-
-            //! Play notification sounds (at all)
-            bool playNotificationSounds() const;
 
             //! ATC refresh time
             int getAtcUpdateIntervalSeconds() const;
@@ -130,18 +130,6 @@ namespace BlackGui
             //! Clear single hotkey
             void ps_clearHotkey();
 
-            //! start the MIC tests (Squelch)
-            void ps_startAudioTest();
-
-            //! Audio test updates (timer) for progressbar and fetching results
-            void ps_audioTestUpdate();
-
-            /*!
-             * \brief Audio device selected
-             * \param index audio device index (COM1, COM2)
-             */
-            void ps_audioDeviceSelected(int index);
-
             //! Font has been changed
             void ps_fontChanged();
 
@@ -149,22 +137,8 @@ namespace BlackGui
             void ps_fontColorDialog();
 
         private:
-            //! Audio test modes
-            enum AudioTest
-            {
-                NoAudioTest,
-                SquelchTest,
-                MicrophoneTest
-            };
-
             QScopedPointer<Ui::CSettingsComponent> ui;
-            QTimer   *m_timerAudioTests; //!< audio tests: progress bar, disable/enable buttons
-            AudioTest m_audioTestRunning;
-            QColor    m_fontColor;
-
-            //! Audio device lists from settings
-            void initAudioDeviceLists();
-
+            QColor m_fontColor;
         };
     }
 } // namespace

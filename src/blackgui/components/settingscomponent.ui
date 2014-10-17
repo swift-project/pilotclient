@@ -372,7 +372,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="BlackGui::Components::CAudioSetup" name="comp_AudioSetup">
+     <widget class="BlackGui::Components::CAudioSetupComponent" name="comp_AudioSetup">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -468,8 +468,11 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="lbl_SettingsGuiAircraftRefreshTime">
-        <property name="text">
+        <property name="toolTip">
          <string>Aircraft refresh time (5-30s)</string>
+        </property>
+        <property name="text">
+         <string>Aircraft rt (5-30s)</string>
         </property>
        </widget>
       </item>
@@ -506,8 +509,11 @@
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="lbl_SettingsGuiAtcRefreshTime">
-        <property name="text">
+        <property name="toolTip">
          <string>ATC refresh time (5-30s)</string>
+        </property>
+        <property name="text">
+         <string>ATC rt (5-30s)</string>
         </property>
        </widget>
       </item>
@@ -541,8 +547,11 @@
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="lbl_SettingsGuiUserRefreshTime">
-        <property name="text">
+        <property name="toolTip">
          <string>User refresh time (5-30s)</string>
+        </property>
+        <property name="text">
+         <string>User rt (5-30s)</string>
         </property>
        </widget>
       </item>
@@ -588,6 +597,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToMinimumContentsLength</enum>
         </property>
        </widget>
       </item>
@@ -793,6 +805,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>BlackGui::Components::CAudioSetupComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/audiosetupcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>BlackGui::Views::CKeyboardKeyView</class>
    <extends>QTableView</extends>
    <header>blackgui/views/keyboardkeyview.h</header>
@@ -806,12 +824,6 @@
    <class>BlackGui::Components::CSettingsSimulatorComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/settingssimulatorcomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BlackGui::Components::CAudioSetup</class>
-   <extends>QFrame</extends>
-   <header>blackgui/components/audiosetup.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
