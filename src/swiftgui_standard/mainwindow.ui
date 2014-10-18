@@ -461,7 +461,7 @@
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="pg_Cockpit">
           <layout class="QVBoxLayout" name="vl_CockpitPage">

@@ -37,7 +37,9 @@ using namespace BlackMisc::Hardware;
  * Constructor
  */
 MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
-    QMainWindow(parent, windowMode == GuiModes::WindowFrameless ? (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint) : (Qt::Tool | Qt::WindowStaysOnTopHint)),
+    QMainWindow(parent, windowMode == GuiModes::WindowFrameless ?
+                (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint) :
+                (Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint)),
     ui(new Ui::MainWindow),
     m_windowMode(windowMode)
 {
@@ -154,7 +156,7 @@ void MainWindow::ps_setMainPage(bool start)
     }
     else
     {
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageFoo);
+        this->ui->sw_MainMiddle->setCurrentIndex(MainPageInfoArea);
 
         if (sender == this->ui->pb_MainAircrafts)
         {

@@ -78,8 +78,8 @@ protected:
     //! \remarks keep the values in sync with the real tab indexes
     enum MainPageIndex
     {
-        MainPageCockpit = 0,
-        MainPageFoo = 1
+        MainPageCockpit  = 0,
+        MainPageInfoArea = 1
     };
 
 private:

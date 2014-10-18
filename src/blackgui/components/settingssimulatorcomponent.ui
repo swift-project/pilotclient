@@ -63,12 +63,19 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="cb_Plugins"/>
+        <widget class="QComboBox" name="cb_Plugins">
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+         </property>
+        </widget>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="lbl_TimeSync">
-         <property name="text">
+         <property name="toolTip">
           <string>Time synchronization</string>
+         </property>
+         <property name="text">
+          <string>Time synch.</string>
          </property>
         </widget>
        </item>
