@@ -12,13 +12,14 @@
 
 //! \file
 
+#include "logpattern.h"
 #include "statusmessage.h"
 #include <QObject>
 #include <QMap>
 
 namespace BlackMisc
 {
-    class CLogCategoryHandler;
+    class CLogPatternHandler;
 
     /*!
      * Class for subscribing to log messages.
@@ -41,9 +42,9 @@ namespace BlackMisc
         //! Tell the CLogHandler to install itself with qInstallMessageHandler.
         void install();
 
-        //! Return a category handler for subscribing to all messages with a category starting with the given prefix.
+        //! Return a pattern handler for subscribing to all messages which match the given pattern.
         //! \warning This must only be called from the main thread.
-        CLogCategoryHandler *handlerForCategoryPrefix(const QString &prefix);
+        CLogPatternHandler *handlerForPattern(const CLogPattern &pattern);
 
     signals:
         //! Emitted when a message is logged in this process.
@@ -67,34 +68,38 @@ namespace BlackMisc
         void collectGarbage();
         QtMessageHandler m_oldHandler = nullptr;
         bool m_enableFallThrough = true;
-        bool isFallThroughEnabled(const QList<CLogCategoryHandler *> &handlers) const;
-        QMap<QString, CLogCategoryHandler *> m_categoryPrefixHandlers;
-        QList<CLogCategoryHandler *> handlersForCategories(const CLogCategoryList &categories) const;
+        bool isFallThroughEnabled(const QList<CLogPatternHandler *> &handlers) const;
+        using PatternPair = std::pair<CLogPattern, CLogPatternHandler *>;
+        QList<PatternPair> m_patternHandlers;
+        QList<CLogPatternHandler *> handlersForMessage(const CStatusMessage &message) const;
     };
 
     /*!
-     * A class for subscribing to log messages in particular categories.
-     * \sa CLogHandler::handlerForCategory
+     * A class for subscribing to log messages which match particular patterns.
+     * \see CLogHandler::handlerForPattern
      */
-    class CLogCategoryHandler : public QObject
+    class CLogPatternHandler : public QObject
     {
         Q_OBJECT
 
     public slots:
         /*!
-         * Enable or disable the default Qt handler for messages in relevant categories.
-         * This can override the setting of the parent CLogHandler.
+         * Enable or disable the default Qt handler for messages which match the relevant pattern.
+         *
+         * The setting of this property in one CLogPatternHandler can override the setting in another
+         * CLogPatternHandler or the base CLogHandler, if this handler's pattern is a subset of the
+         * other handler's pattern. Which is to say, more specific patterns can override less specific patterns.
          */
         void enableConsoleOutput(bool enable) { Q_ASSERT(thread() == QThread::currentThread()); m_enableFallThrough = enable; }
 
     signals:
         /*!
-         * Emitted when a message is logged in a relevant category.
+         * Emitted when a message is logged which matches the relevant pattern.
          *
-         * When all slots are disconnected from this signal, the CLogCategoryHandler could be deleted.
+         * When all slots are disconnected from this signal, the CLogPatternHandler could be deleted.
          *
-         * Note that if a message matches more that one category handler, then this signal will be emitted for all of them,
-         * so if a slot is connected to all of them then it will be called multiple times. Use the methods
+         * Note that if a message matches more that one handler's pattern, then this signal will be emitted for all of
+         * those handlers, so if a slot is connected to all of them then it will be called multiple times. Use the methods
          * CStatusMessage::markAsHandledBy() and CStatusMessage::wasHandledBy() to detect this case in the slot and avoid
          * multiple handlings of the same message. Caveat: for this to work, the slot must take its argument by non-const
          * reference, and be connected by Qt::DirectConnection (i.e. the receiver is in the same thread as the CLogHandler).
@@ -103,7 +108,7 @@ namespace BlackMisc
 
     private:
         friend class CLogHandler;
-        CLogCategoryHandler(QObject *parent, bool enableFallThrough) : QObject(parent), m_enableFallThrough(enableFallThrough) {}
+        CLogPatternHandler(QObject *parent, bool enableFallThrough) : QObject(parent), m_enableFallThrough(enableFallThrough) {}
         bool m_enableFallThrough;
 
         bool canBeDeleted()

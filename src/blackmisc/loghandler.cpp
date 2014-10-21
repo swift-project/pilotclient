@@ -8,6 +8,7 @@
  */
 
 #include "loghandler.h"
+#include "algorithm.h"
 #include <QCoreApplication>
 #include <QMetaMethod>
 
@@ -43,27 +44,34 @@ namespace BlackMisc
         qInstallMessageHandler(m_oldHandler);
     }
 
-    CLogCategoryHandler *CLogHandler::handlerForCategoryPrefix(const QString &category)
+    CLogPatternHandler *CLogHandler::handlerForPattern(const CLogPattern &pattern)
     {
         Q_ASSERT(thread() == QThread::currentThread());
 
-        if (! m_categoryPrefixHandlers.contains(category))
+        auto finder = [ & ](const PatternPair &pair) { return pair.first == pattern; };
+        auto comparator = [](const PatternPair &a, const PatternPair &b) { return a.first.isProperSubsetOf(b.first); };
+
+        auto it = std::find_if(m_patternHandlers.begin(), m_patternHandlers.end(), finder);
+        if (it == m_patternHandlers.end())
         {
-            m_categoryPrefixHandlers[category] = new CLogCategoryHandler(this, m_enableFallThrough);
-
+            auto *handler = new CLogPatternHandler(this, m_enableFallThrough);
+            topologicallySortedInsert(m_patternHandlers, PatternPair(pattern, handler), comparator);
+            return handler;
         }
-
-        return m_categoryPrefixHandlers[category];
+        else
+        {
+            return (*it).second;
+        }
     }
 
-    QList<CLogCategoryHandler *> CLogHandler::handlersForCategories(const CLogCategoryList &categories) const
+    QList<CLogPatternHandler *> CLogHandler::handlersForMessage(const CStatusMessage &message) const
     {
-        QList<CLogCategoryHandler *> m_handlers;
-        for (auto i = m_categoryPrefixHandlers.begin(); i != m_categoryPrefixHandlers.end(); ++i)
+        QList<CLogPatternHandler *> m_handlers;
+        for (const auto &pair : m_patternHandlers)
         {
-            if (categories.anyStartWith(i.key()))
+            if (pair.first.match(message))
             {
-                m_handlers.push_back(i.value());
+                m_handlers.push_back(pair.second);
             }
         }
         return m_handlers;
@@ -74,13 +82,13 @@ namespace BlackMisc
         Q_ASSERT(thread() == QThread::currentThread());
 
         m_enableFallThrough = enable;
-        for (auto *handler : m_categoryPrefixHandlers.values())
+        for (const auto &pair : m_patternHandlers)
         {
-            handler->enableConsoleOutput(enable);
+            pair.second->enableConsoleOutput(enable);
         }
     }
 
-    bool CLogHandler::isFallThroughEnabled(const QList<CLogCategoryHandler *> &handlers) const
+    bool CLogHandler::isFallThroughEnabled(const QList<CLogPatternHandler *> &handlers) const
     {
         for (const auto *handler : handlers)
         {
@@ -108,7 +116,7 @@ namespace BlackMisc
     {
         collectGarbage();
 
-        auto handlers = handlersForCategories(statusMessage.getCategories());
+        auto handlers = handlersForMessage(statusMessage);
 
         if (isFallThroughEnabled(handlers))
         {
