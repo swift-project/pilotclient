@@ -64,6 +64,7 @@ namespace BlackMisc
 
     private:
         void logMessage(const BlackMisc::CStatusMessage &message);
+        void collectGarbage();
         QtMessageHandler m_oldHandler = nullptr;
         bool m_enableFallThrough = true;
         bool isFallThroughEnabled(const QList<CLogCategoryHandler *> &handlers) const;
@@ -90,7 +91,7 @@ namespace BlackMisc
         /*!
          * Emitted when a message is logged in a relevant category.
          *
-         * When all slots are disconnected from this signal, the CLogCategoryHandler is allowed to delete itself.
+         * When all slots are disconnected from this signal, the CLogCategoryHandler could be deleted.
          *
          * Note that if a message matches more that one category handler, then this signal will be emitted for all of them,
          * so if a slot is connected to all of them then it will be called multiple times. Use the methods
@@ -100,25 +101,16 @@ namespace BlackMisc
          */
         void messageLogged(const CStatusMessage &message);
 
-        /*!
-         * Emitted when there are no more slots connected to the messageLogged signal.
-         */
-        void ps_canBeDeleted(CLogCategoryHandler *handler);
-
-    protected:
-        /*!
-         * \copydoc QObject::disconnectNotify
-         */
-        virtual void disconnectNotify(const QMetaMethod &) override
-        {
-            static const QMetaMethod signal = QMetaMethod::fromSignal(&CLogCategoryHandler::messageLogged);
-            if (! isSignalConnected(signal)) { emit ps_canBeDeleted(this); }
-        }
-
     private:
         friend class CLogHandler;
         CLogCategoryHandler(QObject *parent, bool enableFallThrough) : QObject(parent), m_enableFallThrough(enableFallThrough) {}
         bool m_enableFallThrough;
+
+        bool canBeDeleted()
+        {
+            static const auto signal = QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged);
+            return ! isSignalConnected(signal);
+        }
     };
 }
 

@@ -51,11 +51,6 @@ namespace BlackMisc
         {
             m_categoryPrefixHandlers[category] = new CLogCategoryHandler(this, m_enableFallThrough);
 
-            connect(m_categoryPrefixHandlers[category], &CLogCategoryHandler::ps_canBeDeleted, [this](CLogCategoryHandler *handler)
-            {
-                m_categoryPrefixHandlers.remove(m_categoryPrefixHandlers.key(handler));
-                QMetaObject::invokeMethod(handler, "deleteLater");
-            });
         }
 
         return m_categoryPrefixHandlers[category];
@@ -111,6 +106,8 @@ namespace BlackMisc
 
     void CLogHandler::logMessage(const CStatusMessage &statusMessage)
     {
+        collectGarbage();
+
         auto handlers = handlersForCategories(statusMessage.getCategories());
 
         if (isFallThroughEnabled(handlers))
@@ -126,6 +123,16 @@ namespace BlackMisc
         {
             emit handler->messageLogged(statusMessage);
         }
+    }
+
+    void CLogHandler::collectGarbage()
+    {
+        auto newEnd = std::stable_partition(m_patternHandlers.begin(), m_patternHandlers.end(), [](const PatternPair &pair)
+        {
+            return ! pair.second->canBeDeleted();
+        });
+        std::for_each(newEnd, m_patternHandlers.end(), [](const PatternPair &pair) { pair.second->deleteLater(); });
+        m_patternHandlers.erase(newEnd, m_patternHandlers.end());
     }
 
 }
