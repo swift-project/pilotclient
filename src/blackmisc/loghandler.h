@@ -61,7 +61,11 @@ namespace BlackMisc
         void logRemoteMessage(const BlackMisc::CStatusMessage &message);
 
         //! Enable or disable the default Qt handler.
-        void enableConsoleOutput(bool enable);
+        void enableConsoleOutput(bool enable)
+        {
+            Q_ASSERT(thread() == QThread::currentThread());
+            m_enableFallThrough = enable;
+        }
 
     private:
         void logMessage(const BlackMisc::CStatusMessage &message);
@@ -90,7 +94,25 @@ namespace BlackMisc
          * CLogPatternHandler or the base CLogHandler, if this handler's pattern is a subset of the
          * other handler's pattern. Which is to say, more specific patterns can override less specific patterns.
          */
-        void enableConsoleOutput(bool enable) { Q_ASSERT(thread() == QThread::currentThread()); m_enableFallThrough = enable; }
+        void enableConsoleOutput(bool enable)
+        {
+            Q_ASSERT(thread() == QThread::currentThread());
+            m_inheritFallThrough = false;
+            m_enableFallThrough = enable;
+        }
+
+        /*!
+         * The policy of whether to enable or disable the default Qt handler for messages which match
+         * the relevant pattern will be inherited from the base CLogHandler, or from another CLogPatternHandler
+         * which matches a superset of the messages which this one matches.
+         *
+         * This is the default, but can be used to reverse the effect of calling enableConsoleOutput.
+         */
+        void inheritConsoleOutput()
+        {
+            Q_ASSERT(thread() == QThread::currentThread());
+            m_inheritFallThrough = true;
+        }
 
     signals:
         /*!
@@ -108,8 +130,9 @@ namespace BlackMisc
 
     private:
         friend class CLogHandler;
-        CLogPatternHandler(QObject *parent, bool enableFallThrough) : QObject(parent), m_enableFallThrough(enableFallThrough) {}
-        bool m_enableFallThrough;
+        CLogPatternHandler(QObject *parent) : QObject(parent) {}
+        bool m_inheritFallThrough = true;
+        bool m_enableFallThrough = true;
 
         bool canBeDeleted()
         {

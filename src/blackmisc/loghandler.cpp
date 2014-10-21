@@ -54,7 +54,7 @@ namespace BlackMisc
         auto it = std::find_if(m_patternHandlers.begin(), m_patternHandlers.end(), finder);
         if (it == m_patternHandlers.end())
         {
-            auto *handler = new CLogPatternHandler(this, m_enableFallThrough);
+            auto *handler = new CLogPatternHandler(this);
             topologicallySortedInsert(m_patternHandlers, PatternPair(pattern, handler), comparator);
             return handler;
         }
@@ -77,22 +77,11 @@ namespace BlackMisc
         return m_handlers;
     }
 
-    void CLogHandler::enableConsoleOutput(bool enable)
-    {
-        Q_ASSERT(thread() == QThread::currentThread());
-
-        m_enableFallThrough = enable;
-        for (const auto &pair : m_patternHandlers)
-        {
-            pair.second->enableConsoleOutput(enable);
-        }
-    }
-
     bool CLogHandler::isFallThroughEnabled(const QList<CLogPatternHandler *> &handlers) const
     {
         for (const auto *handler : handlers)
         {
-            if (handler->m_enableFallThrough != m_enableFallThrough)
+            if (! handler->m_inheritFallThrough)
             {
                 return handler->m_enableFallThrough;
             }
