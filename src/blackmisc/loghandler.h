@@ -46,6 +46,13 @@ namespace BlackMisc
         //! \warning This must only be called from the main thread.
         CLogPatternHandler *handlerForPattern(const CLogPattern &pattern);
 
+        //! Return a pattern handler for subscribing to all validation warnings and errors.
+        //! \warning This must only be called from the main thread.
+        CLogPatternHandler *handlerForValidation()
+        {
+            return handlerForPattern(CLogPattern::exactMatch(CLogCategory::validation()).withSeverityAtOrAbove(CStatusMessage::SeverityWarning));
+        }
+
     signals:
         //! Emitted when a message is logged in this process.
         void localMessageLogged(const BlackMisc::CStatusMessage &message);
@@ -127,6 +134,25 @@ namespace BlackMisc
          * reference, and be connected by Qt::DirectConnection (i.e. the receiver is in the same thread as the CLogHandler).
          */
         void messageLogged(const CStatusMessage &message);
+
+    public:
+        /*!
+         * Convenience method to connect the messageLogged signal to a slot in the given receiver object.
+         */
+        template <typename T, typename F>
+        QMetaObject::Connection subscribe(T *receiver, F slot)
+        {
+            return connect(this, &CLogPatternHandler::messageLogged, receiver, slot);
+        }
+
+        /*!
+         * Convenience method to connect the messageLogged signal to a functor.
+         */
+        template <typename F>
+        QMetaObject::Connection subscribe(F slot)
+        {
+            return connect(this, &CLogPatternHandler::messageLogged, slot);
+        }
 
     private:
         friend class CLogHandler;

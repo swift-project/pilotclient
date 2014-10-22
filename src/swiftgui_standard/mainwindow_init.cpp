@@ -112,8 +112,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAtcStationsUpdateInterval, this->ui->comp_MainInfoArea->getAtcStationComponent(), &::CAtcStationComponent::setUpdateIntervalSeconds);
 
     // log messages
-    auto *logHandler = CLogHandler::instance()->handlerForPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
-    this->connect(logHandler, &CLogPatternHandler::messageLogged, this, &MainWindow::ps_displayStatusMessageInGui);
+    CLogHandler::instance()->handlerForPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo))->subscribe(this, &MainWindow::ps_displayStatusMessageInGui);
 
     Q_ASSERT(connect);
     Q_UNUSED(connect); // suppress GCC warning in release build
