@@ -74,6 +74,16 @@ namespace BlackCore
         //! \details the flag indicates, whether a room got connected or disconnected
         void changedVoiceRooms(const BlackMisc::Audio::CVoiceRoomList &voiceRooms, bool connected);
 
+        //! Volumes changed (COM1, COM2)
+        //! \sa setVolumes
+        // KB: Is see some potential changes here, which we should do when we have the new 2.0 vatlib
+        // 1. volume integrated in voice room?
+        // 2. Value object for volumes CVolume / CVolumeList?
+        void changedAudioVolumes(QList<qint32> volumes);
+
+        //! Mute changed
+        void changedMute(bool muted);
+
     public slots:
         //! Get voice rooms for COM1, COM2:
         virtual BlackMisc::Audio::CVoiceRoomList getComVoiceRoomsWithAudioStatus() const = 0;
@@ -134,6 +144,12 @@ namespace BlackCore
          * \see BlackMisc::Aviation::CComSystem::setVolumeOutput()
          */
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2) = 0;
+
+        //! Set the volumes (0..100)
+        virtual void setVolumes(qint32 volumeCom1, qint32 volumeCom2) = 0;
+
+        //! Set mute state
+        virtual void setMute(bool mute) = 0;
 
         //! Is muted?
         virtual bool isMuted() const = 0;

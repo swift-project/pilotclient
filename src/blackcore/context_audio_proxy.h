@@ -87,6 +87,12 @@ namespace BlackCore
         //! \copydoc IContextAudio::setVolumes()
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2) override;
 
+        //!\copydoc IContextAudio::setVolumes
+        virtual void setVolumes(qint32 com1Volume, qint32 com2Volume) override;
+
+        //! \copydoc IContextAudio::setMute
+        virtual void setMute(bool muted) override;
+
         //! \copydoc IContextAudio::isMuted()
         virtual bool isMuted() const override;
 

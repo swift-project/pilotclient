@@ -30,24 +30,21 @@ namespace BlackCore
      * Init this context
      */
     CContextAudio::CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextAudio(mode, runtime), m_voice(nullptr), m_inputManager(nullptr)
+        IContextAudio(mode, runtime),
+        m_voice(new CVoiceVatlib())
     {
         // 1. Init by "voice driver"
-        this->m_voice = new CVoiceVatlib();
         m_voice->moveToThread(&m_threadVoice);
         m_threadVoice.start();
 
         // 2. Register PTT hotkey function
+        CVoiceVatlib *voice = m_voice.data();
         m_inputManager = CInputManager::getInstance();
-        m_handlePtt = m_inputManager->registerHotkeyFunc(CHotkeyFunction::Ptt(), m_voice, &CVoiceVatlib::handlePushToTalk);
+        m_handlePtt = m_inputManager->registerHotkeyFunc(CHotkeyFunction::Ptt(), voice, &CVoiceVatlib::handlePushToTalk);
 
-        // 3. own aircraft, if possible
-        //if (this->getIContextOwnAircraft()) m_voice->setMyAircraftCallsign(this->getIContextOwnAircraft()->getOwnAircraft().getCallsign());
-
-        // 4. Signal / slots
-        connect(this->m_voice, &CVoiceVatlib::micTestFinished, this, &CContextAudio::audioTestCompleted);
-        connect(this->m_voice, &CVoiceVatlib::squelchTestFinished, this, &CContextAudio::audioTestCompleted);
-        //connect(this->m_voice, &CVoiceVatlib::connectionStatusChanged, this, &CContextAudio::ps_connectionStatusChanged);
+        // 3. Signal / slots
+        connect(voice, &CVoiceVatlib::micTestFinished, this, &CContextAudio::audioTestCompleted);
+        connect(voice, &CVoiceVatlib::squelchTestFinished, this, &CContextAudio::audioTestCompleted);
 
         m_channelCom1 = m_voice->getVoiceChannel(0);
         m_channelCom1->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
@@ -56,7 +53,7 @@ namespace BlackCore
         m_channelCom2->setMyAircraftCallsign(getIContextOwnAircraft()->getOwnAircraft().getCallsign());
         connect(m_channelCom2.data(), &IVoiceChannel::connectionStatusChanged, this, &CContextAudio::ps_com2ConnectionStatusChanged);
 
-        // 5. load sounds (init), not possible in own thread
+        // 4. load sounds (init), not possible in own thread
         QTimer::singleShot(10 * 1000, this, SLOT(ps_initNotificationSounds()));
     }
 
@@ -178,12 +175,30 @@ namespace BlackCore
         // volumes
         qint32 vol1 = com1.getVolumeOutput();
         qint32 vol2 = com2.getVolumeOutput();
-        m_channelCom1->setRoomOutputVolume(vol1);
-        m_channelCom2->setRoomOutputVolume(vol2);
+        this->setVolumes(vol1, vol2);
 
         // enable / disable in the same step
         m_channelCom1->switchAudioOutput(com1.isEnabled());
         m_channelCom2->switchAudioOutput(com2.isEnabled());
+    }
+
+    void CContextAudio::setVolumes(qint32 com1Volume, qint32 com2Volume)
+    {
+        if (m_channelCom1->getVolume() == com1Volume && m_channelCom2->getVolume() == com2Volume) { return; }
+
+        m_channelCom1->setRoomOutputVolume(com1Volume);
+        m_channelCom2->setRoomOutputVolume(com2Volume);
+        m_channelCom1->switchAudioOutput(com1Volume < 1);
+        m_channelCom2->switchAudioOutput(com2Volume < 1);
+        emit changedAudioVolumes(QList<qint32>({com1Volume, com2Volume}));
+    }
+
+    void CContextAudio::setMute(bool muted)
+    {
+        if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
+        m_channelCom1->switchAudioOutput(!muted);
+        m_channelCom2->switchAudioOutput(!muted);
+        emit changedMute(muted);
     }
 
     /*
@@ -389,7 +404,7 @@ namespace BlackCore
         case IVoiceChannel::ConnectingFailed:
         case IVoiceChannel::DisconnectedError:
             qWarning() << "Voice room COM1 error";
-            // intentional fall-through
+        // intentional fall-through
         case IVoiceChannel::Disconnected:
             if (this->getIContextOwnAircraft())
             {
@@ -420,7 +435,7 @@ namespace BlackCore
         case IVoiceChannel::ConnectingFailed:
         case IVoiceChannel::DisconnectedError:
             qWarning() << "Voice room COM2 error";
-            // intentional fall-through
+        // intentional fall-through
         case IVoiceChannel::Disconnected:
             if (this->getIContextOwnAircraft())
             {

@@ -19,13 +19,12 @@ namespace BlackCore
     CContextAudioProxy::CContextAudioProxy(const QString &serviceName, QDBusConnection &connection, CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextAudio(mode, runtime), m_dBusInterface(nullptr)
     {
         this->m_dBusInterface = new BlackMisc::CGenericDBusInterface(
-            serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-            connection, this);
+            serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(), connection, this);
         this->relaySignals(serviceName, connection);
     }
 
     /*
-     * Workaround for signals, not working without, but why?
+     * Relaying signals
      */
     void CContextAudioProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
     {
@@ -33,7 +32,13 @@ namespace BlackCore
                                     "audioTestCompleted", this, SIGNAL(audioTestCompleted()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                                    "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList, bool)));
+                               "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList, bool)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                               "changedAudioVolumes", this, SIGNAL(changedAudioVolumes(QList<qint32>)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                               "changedMute", this, SIGNAL(changedMute(bool)));
         Q_ASSERT(s);
         Q_UNUSED(s);
     }
@@ -196,6 +201,22 @@ namespace BlackCore
     void CContextAudioProxy::setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("setVolumes"), com1, com2);
+    }
+
+    /*
+     * Volumes
+     */
+    void CContextAudioProxy::setVolumes(qint32 com1Volume, qint32 com2Volume)
+    {
+        this->m_dBusInterface->callDBus(QLatin1Literal("setVolumes"), com1Volume, com2Volume);
+    }
+
+    /*
+     * Toggle mute
+     */
+    void CContextAudioProxy::setMute(bool muted)
+    {
+        return this->m_dBusInterface->callDBus(QLatin1Literal("setMute"), muted);
     }
 
     /*

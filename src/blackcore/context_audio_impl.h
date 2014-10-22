@@ -19,6 +19,7 @@
 #include <QThread>
 #include <QQueue>
 #include <QPointer>
+#include <QScopedPointer>
 
 namespace BlackCore
 {
@@ -81,6 +82,12 @@ namespace BlackCore
         //! \copydoc IContextAudio::setVolumes
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2) override;
 
+        //!\copydoc IContext::setVolumes
+        virtual void setVolumes(qint32 com1Volume, qint32 com2Volume) override;
+
+        //! \copydoc ICOntext::setMute
+        virtual void setMute(bool muted) override;
+
         //! \copydoc IContextAudio::isMuted()
         virtual bool isMuted() const override;
 
@@ -134,8 +141,10 @@ namespace BlackCore
         //! Connection in transition
         bool inTransitionState() const;
 
-        CVoiceVatlib *m_voice; //!< underlying voice lib
-        CInputManager *m_inputManager;
+        // TODO: see #339, MS' comment on deletion in another thread
+        QScopedPointer<CVoiceVatlib> m_voice; //!< underlying voice lib
+
+        CInputManager *m_inputManager = nullptr;
         CInputManager::RegistrationHandle m_handlePtt;
         QThread m_threadVoice;
         QPointer<IVoiceChannel> m_channelCom1;
