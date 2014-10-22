@@ -9,21 +9,22 @@
 
 //! \file
 
-#ifndef BLACKGUI_AUDIOSETUP_H
-#define BLACKGUI_AUDIOSETUP_H
+#ifndef BLACKGUI_AUDIOSETUPCOMPONENT_H
+#define BLACKGUI_AUDIOSETUPCOMPONENT_H
 
 #include "enableforruntime.h"
+#include "blackmisc/audiodevicelist.h"
 #include <QFrame>
 #include <QScopedPointer>
 
-namespace Ui { class CAudioSetup; }
+namespace Ui { class CAudioSetupComponent; }
 
 namespace BlackGui
 {
     namespace Components
     {
         //! Audio setup such as input / output devices
-        class CAudioSetup :
+        class CAudioSetupComponent :
             public QFrame,
             public CEnableForRuntime
         {
@@ -31,10 +32,10 @@ namespace BlackGui
 
         public:
             //! Constructor
-            explicit CAudioSetup(QWidget *parent = nullptr);
+            explicit CAudioSetupComponent(QWidget *parent = nullptr);
 
             //! Destructor
-            ~CAudioSetup();
+            ~CAudioSetupComponent();
 
             //! Play notification sounds (at all)
             bool playNotificationSounds() const;
@@ -76,7 +77,7 @@ namespace BlackGui
             //! Audio device lists from settings
             void initAudioDeviceLists();
 
-            QScopedPointer<Ui::CAudioSetup> ui;
+            QScopedPointer<Ui::CAudioSetupComponent> ui;
             QTimer   *m_timerAudioTests; //!< audio tests: progress bar, disable/enable buttons
             AudioTest m_audioTestRunning = NoAudioTest;
         };

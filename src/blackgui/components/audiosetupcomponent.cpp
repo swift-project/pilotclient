@@ -7,8 +7,10 @@
  * contained in the LICENSE file.
  */
 
-#include "audiosetup.h"
-#include "ui_audiosetup.h"
+#include "audiosetupcomponent.h"
+#include "ui_audiosetupcomponent.h"
+#include "blackcore/context_settings.h"
+#include "blackcore/context_audio.h"
 #include "blackmisc/setaudio.h"
 #include "blackmisc/logmessage.h"
 
@@ -24,27 +26,27 @@ namespace BlackGui
 {
     namespace Components
     {
-        CAudioSetup::CAudioSetup(QWidget *parent) :
+        CAudioSetupComponent::CAudioSetupComponent(QWidget *parent) :
             QFrame(parent),
             CEnableForRuntime(nullptr, false),
-            ui(new Ui::CAudioSetup)
+            ui(new Ui::CAudioSetupComponent)
         {
             ui->setupUi(this);
             this->ui->prb_SetupAudioTestProgress->hide();
             this->m_timerAudioTests = new QTimer(this);
         }
 
-        CAudioSetup::~CAudioSetup()
+        CAudioSetupComponent::~CAudioSetupComponent()
         { }
 
         /*
          * Runtime set
          */
-        void CAudioSetup::runtimeHasBeenSet()
+        void CAudioSetupComponent::runtimeHasBeenSet()
         {
             if (!this->getIContextSettings()) qFatal("Settings missing");
-            this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CAudioSetup::ps_changedSettings);
-            this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &CAudioSetup::ps_audioTestUpdate);
+            this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &CAudioSetupComponent::ps_changedSettings);
+            this->connect(this->m_timerAudioTests, &QTimer::timeout, this, &CAudioSetupComponent::ps_audioTestUpdate);
 
             // based on audio context
             Q_ASSERT(this->getIContextAudio());
@@ -52,19 +54,19 @@ namespace BlackGui
             if (this->getIContextAudio())
             {
                 this->initAudioDeviceLists();
-                connected = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &CAudioSetup::ps_audioTestUpdate);
+                connected = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &CAudioSetupComponent::ps_audioTestUpdate);
                 Q_ASSERT(connected);
                 connected = this->connect(this->ui->cb_SetupAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
                 Q_ASSERT(connected);
                 connected = this->connect(this->ui->cb_SetupAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
                 Q_ASSERT(connected);
-                this->connect(this->ui->pb_SetupAudioMicrophoneTest, &QPushButton::clicked, this, &CAudioSetup::ps_startAudioTest);
-                this->connect(this->ui->pb_SetupAudioSquelchTest, &QPushButton::clicked, this, &CAudioSetup::ps_startAudioTest);
+                this->connect(this->ui->pb_SetupAudioMicrophoneTest, &QPushButton::clicked, this, &CAudioSetupComponent::ps_startAudioTest);
+                this->connect(this->ui->pb_SetupAudioSquelchTest, &QPushButton::clicked, this, &CAudioSetupComponent::ps_startAudioTest);
             }
             this->reloadSettings();
         }
 
-        void CAudioSetup::ps_changedSettings(uint typeValue)
+        void CAudioSetupComponent::ps_changedSettings(uint typeValue)
         {
             IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
             this->reloadSettings();
@@ -74,7 +76,7 @@ namespace BlackGui
         /*
          * Reload settings
          */
-        void CAudioSetup::reloadSettings()
+        void CAudioSetupComponent::reloadSettings()
         {
             // local copy
             CSettingsAudio as = this->getIContextSettings()->getAudioSettings();
@@ -88,7 +90,7 @@ namespace BlackGui
         /*
          * Set audio device lists
          */
-        void CAudioSetup::initAudioDeviceLists()
+        void CAudioSetupComponent::initAudioDeviceLists()
         {
             if (!this->getIContextAudio()) return;
             this->ui->cb_SetupAudioOutputDevice->clear();
@@ -122,7 +124,7 @@ namespace BlackGui
         /*
          * Notification sounds
          */
-        bool CAudioSetup::playNotificationSounds() const
+        bool CAudioSetupComponent::playNotificationSounds() const
         {
             return this->ui->cb_SetupAudioPlayNotificationSounds->isChecked();
         }
@@ -130,7 +132,7 @@ namespace BlackGui
         /*
          * Start the voice tests
          */
-        void CAudioSetup::ps_startAudioTest()
+        void CAudioSetupComponent::ps_startAudioTest()
         {
             if (!this->getIContextAudio())
             {
@@ -167,7 +169,7 @@ namespace BlackGui
         /*
          * Start the voice tests
          */
-        void CAudioSetup::ps_audioTestUpdate()
+        void CAudioSetupComponent::ps_audioTestUpdate()
         {
             Q_ASSERT(this->getIContextAudio());
             if (!this->getIContextAudio()) return;
@@ -209,7 +211,7 @@ namespace BlackGui
         /*
          * Select audio device
          */
-        void CAudioSetup::ps_audioDeviceSelected(int index)
+        void CAudioSetupComponent::ps_audioDeviceSelected(int index)
         {
             if (!this->getIContextAudio()) return;
             if (index < 0)return;

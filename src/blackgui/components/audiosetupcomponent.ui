@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CAudioSetup</class>
- <widget class="QFrame" name="CAudioSetup">
+ <class>CAudioSetupComponent</class>
+ <widget class="QFrame" name="CAudioSetupComponent">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -39,6 +39,9 @@
     <layout class="QFormLayout" name="fl_SetupAudio">
      <property name="fieldGrowthPolicy">
       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+     </property>
+     <property name="horizontalSpacing">
+      <number>10</number>
      </property>
      <property name="leftMargin">
       <number>2</number>
