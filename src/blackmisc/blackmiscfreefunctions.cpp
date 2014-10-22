@@ -26,6 +26,7 @@
 #include <QtNetwork/QHostInfo>
 #include <QProcessEnvironment>
 #include <QSysInfo>
+#include <QProcess>
 
 /*
  * Metadata for Math
@@ -486,4 +487,11 @@ const QString &BlackMisc::localHostNameEnvVariable()
         QProcessEnvironment::systemEnvironment().value("COMPUTERNAME",
                 QProcessEnvironment::systemEnvironment().value("HOSTNAME"));
     return hostName;
+}
+
+
+bool BlackMisc::Audio::startWindowsMixer()
+{
+    QStringList parameterlist;
+    return QProcess::startDetached("SndVol.exe", parameterlist);
 }

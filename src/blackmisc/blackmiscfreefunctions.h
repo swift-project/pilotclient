@@ -78,6 +78,9 @@ namespace BlackMisc
     {
         //! Register metadata for audio / voice
         void registerMetadata();
+
+        //! Start the Windows mixer
+        bool startWindowsMixer();
     }
 
     namespace Hardware

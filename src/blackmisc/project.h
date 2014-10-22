@@ -72,6 +72,9 @@ namespace BlackMisc
         //! Release build?
         static bool isReleaseBuild();
 
+        //! Running on Windows NT platform?
+        static bool isRunningOnWindowsNtPlatform();
+
     private:
         //! Constructor
         CProject() {}

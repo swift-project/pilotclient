@@ -155,7 +155,15 @@ namespace BlackMisc
 #endif
     }
 
-
+    bool CProject::isRunningOnWindowsNtPlatform()
+    {
+#ifdef Q_OS_WIN
+        // QSysInfo::WindowsVersion only available on Win platforms
+        return (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based) ? true : false;
+#elif
+        return false;
+#endif
+    }
 
     int CProject::getMajorMinor(int index)
     {
