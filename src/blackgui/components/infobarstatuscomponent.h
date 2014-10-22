@@ -15,6 +15,7 @@
 #include "enableforruntime.h"
 #include "../led.h"
 #include <QFrame>
+#include <QScopedPointer>
 
 namespace Ui { class CInfoBarStatusComponent; }
 namespace BlackGui
@@ -44,25 +45,28 @@ namespace BlackGui
             //! Tooltip for DBus
             void setDBusTooltip(const QString &tooltip);
 
-            //! Volume 0.100
-            void setVolume(int volume);
-
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
             virtual void runtimeHasBeenSet() override;
 
         private:
-            Ui::CInfoBarStatusComponent *ui;
+            QScopedPointer<Ui::CInfoBarStatusComponent> ui;
 
         private slots:
             //! Simulator connection has been changed
-            void ps_simulatorConnectionChanged(bool connected);
+            void ps_onSimulatorConnectionChanged(bool connected);
 
             //! Network connection has been changed
-            void ps_networkConnectionChanged(uint from, uint to, const QString &message);
+            void ps_onNetworkConnectionChanged(uint from, uint to, const QString &message);
 
             //! Context menu requested
             void ps_customAudioContextMenuRequested(const QPoint &position);
+
+            //! Volumes changed 0..100
+            void ps_onVolumesChanged(QList<qint32> volumes);
+
+            //! Mute changed
+            void ps_onMuteChanged(bool muted);
         };
     }
 }

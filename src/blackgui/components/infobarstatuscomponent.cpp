@@ -9,10 +9,12 @@
 
 #include "infobarstatuscomponent.h"
 #include "ui_infobarstatuscomponent.h"
-#include "blackmisc/icons.h"
 #include "blackcore/context_simulator.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_application.h"
+#include "blackcore/context_audio.h"
+#include "blackmisc/project.h"
+#include "blackmisc/icons.h"
 
 #include <QPoint>
 #include <QMenu>
@@ -37,9 +39,7 @@ namespace BlackGui
         }
 
         CInfoBarStatusComponent::~CInfoBarStatusComponent()
-        {
-            delete ui;
-        }
+        { }
 
         void CInfoBarStatusComponent::initLeds()
         {
@@ -63,53 +63,45 @@ namespace BlackGui
             this->ui->led_DBus->setOnToolTip(tooltip);
         }
 
-        void CInfoBarStatusComponent::setVolume(int volume)
-        {
-            if (volume < 1)
-            {
-                this->ui->led_Audio->setOn(false);
-            }
-            else
-            {
-                this->ui->led_Audio->setOn(true);
-            }
-        }
-
         void CInfoBarStatusComponent::runtimeHasBeenSet()
         {
+            if (getIContextApplication()->isEmptyObject()) return;
+
+            // TODO: remove checks when empty contexts are fully introduced
             Q_ASSERT(getIContextSimulator());
             Q_ASSERT(getIContextAudio());
             Q_ASSERT(getIContextNetwork());
 
             if (this->getIContextSimulator())
             {
-                connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &CInfoBarStatusComponent::ps_simulatorConnectionChanged);
+                connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &CInfoBarStatusComponent::ps_onSimulatorConnectionChanged);
             }
 
             if (this->getIContextNetwork())
             {
-                connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatusComponent::ps_networkConnectionChanged);
+                this->ui->led_Simulator->setOn(this->getIContextSimulator()->isConnected());
+                connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CInfoBarStatusComponent::ps_onNetworkConnectionChanged);
             }
 
             if (this->getIContextApplication())
             {
-                if (this->getIContextApplication()->isUsingImplementingObject())
-                {
-                    this->ui->led_DBus->setOn(false);
-                }
-                else
-                {
-                    this->ui->led_DBus->setOn(true);
-                }
+                this->ui->led_DBus->setOn(this->getIContextApplication()->isUsingImplementingObject());
+            }
+
+            if (this->getIContextAudio())
+            {
+                this->ui->led_Audio->setOn(!this->getIContextAudio()->isMuted());
+                connect(getIContextAudio(), &IContextAudio::changedMute, this, &CInfoBarStatusComponent::ps_onMuteChanged);
+                connect(getIContextAudio(), &IContextAudio::changedAudioVolumes, this, &CInfoBarStatusComponent::ps_onVolumesChanged);
             }
         }
 
-        void CInfoBarStatusComponent::ps_simulatorConnectionChanged(bool connected)
+        void CInfoBarStatusComponent::ps_onSimulatorConnectionChanged(bool connected)
         {
             this->ui->led_Simulator->setOn(connected);
         }
 
-        void CInfoBarStatusComponent::ps_networkConnectionChanged(uint from, uint to, const QString &message)
+        void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(uint from, uint to, const QString &message)
         {
             INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
             INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
@@ -145,13 +137,10 @@ namespace BlackGui
             QMenu menuAudio(this);
             menuAudio.addAction("Toogle mute");
 
-#if defined(Q_OS_WIN)
-            // QSysInfo::WindowsVersion only available on Win platforms
-            if (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based)
+            if (CProject::isRunningOnWindowsNtPlatform())
             {
                 menuAudio.addAction("Mixer");
             }
-#endif
 
             QAction *selectedItem = menuAudio.exec(globalPosition);
             if (selectedItem)
@@ -160,14 +149,28 @@ namespace BlackGui
                 const QList<QAction *> actions = menuAudio.actions();
                 if (selectedItem == actions.at(0))
                 {
-                    // TODO: toogle mute
+                    this->getIContextAudio()->setMute(!this->getIContextAudio()->isMuted());
                 }
                 else if (actions.size() > 1 && selectedItem == actions.at(1))
                 {
-                    QStringList parameterlist;
-                    QProcess::startDetached("SndVol.exe", parameterlist);
+                    BlackMisc::Audio::startWindowsMixer();
                 }
             }
-        } // custom menu
+        }
+
+        void CInfoBarStatusComponent::ps_onVolumesChanged(QList<qint32> volumes)
+        {
+            Q_ASSERT(volumes.count() == 2);
+            if (volumes.count() != 2) { return; }
+            qint32 v1 = volumes.at(0);
+            qint32 v2 = volumes.at(1);
+            bool pseudoMute = (v1 < 1 && v2 < 1);
+            this->ps_onMuteChanged(pseudoMute);
+        }
+
+        void CInfoBarStatusComponent::ps_onMuteChanged(bool muted)
+        {
+            this->ui->led_Audio->setOn(!muted);
+        }
     }
 }
