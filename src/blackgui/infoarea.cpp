@@ -16,6 +16,10 @@
 #include <QSignalMapper>
 #include <QCloseEvent>
 #include <QStatusBar>
+#include <QAction>
+#include <QShortcut>
+#include <QKeySequence>
+#include <QIcon>
 
 using namespace BlackMisc;
 
@@ -82,9 +86,9 @@ namespace BlackGui
             menu->addSeparator();
             QMenu *subMenuToggleFloat = new QMenu("Toggle Float/Dock", menu);
             QMenu *subMenuDisplay = new QMenu("Display", menu);
+            subMenuDisplay->addActions(this->getInfoAreaSelectActions(subMenuDisplay));
 
             QSignalMapper *signalMapperToggleFloating = new QSignalMapper(menu);
-            QSignalMapper *signalMapperDisplay = new QSignalMapper(menu);
             bool c = false;
 
             for (int i = 0; i < this->m_dockWidgetInfoAreas.size(); i++)
@@ -103,23 +107,8 @@ namespace BlackGui
                 c = connect(toggleFloatingMenuAction, SIGNAL(toggled(bool)), signalMapperToggleFloating, SLOT(map()));
                 Q_ASSERT(c);
                 signalMapperToggleFloating->setMapping(toggleFloatingMenuAction, i);
-
-                QAction *displayMenuAction = new QAction(menu);
-                displayMenuAction->setObjectName(QString(t).append("DisplayAction"));
-                displayMenuAction->setIconText(t);
-                displayMenuAction->setIcon(pm);
-                displayMenuAction->setData(QVariant(i));
-                displayMenuAction->setCheckable(false);
-
-                subMenuDisplay->addAction(displayMenuAction);
-                c = connect(displayMenuAction, SIGNAL(triggered(bool)), signalMapperDisplay, SLOT(map()));
-                Q_ASSERT(c);
-                signalMapperDisplay->setMapping(displayMenuAction, i); // action to index
             }
             c = connect(signalMapperToggleFloating, SIGNAL(mapped(int)), this, SLOT(toggleFloating(int)));
-            Q_ASSERT(c);
-
-            c = connect(signalMapperDisplay, SIGNAL(mapped(int)), this, SLOT(selectArea(int)));
             Q_ASSERT(c);
 
             menu->addMenu(subMenuDisplay);
@@ -182,10 +171,42 @@ namespace BlackGui
         return constDockWidgets;
     }
 
+    QList<QAction *> CInfoArea::getInfoAreaSelectActions(QWidget *parent) const
+    {
+        int i = 0;
+        QList<QAction *> actions;
+        foreach(const CDockWidgetInfoArea * dockWidgetInfoArea, m_dockWidgetInfoAreas)
+        {
+            const QPixmap pm = this->indexToPixmap(i);
+            QAction *action = new QAction(QIcon(pm), dockWidgetInfoArea->windowTitleBackup(), parent);
+            action->setData(i);
+            connect(action, &QAction::triggered, this, &CInfoArea::selectAreaByAction);
+            actions.append(action);
+            i++;
+        }
+        return actions;
+    }
+
     void CInfoArea::paintEvent(QPaintEvent *event)
     {
         Q_UNUSED(event);
         CStyleSheetUtility::useStyleSheetInDerivedWidget(this);
+    }
+
+    void CInfoArea::keyPressEvent(QKeyEvent *event)
+    {
+        if (event->key() == Qt::Key_Right)
+        {
+            this->selectRightTab();
+        }
+        else if (event->key() == Qt::Key_Left)
+        {
+            this->selectLeftTab();
+        }
+        else
+        {
+            QWidget::keyPressEvent(event);
+        }
     }
 
     void CInfoArea::dockAllWidgets()
@@ -250,6 +271,44 @@ namespace BlackGui
             this->setCurrentTabIndex(dw);
         }
     }
+
+    void CInfoArea::selectAreaByAction()
+    {
+        const QObject *sender = QObject::sender();
+        Q_ASSERT(sender);
+        const QAction *action = qobject_cast<const QAction *>(sender);
+        Q_ASSERT(action);
+        this->selectArea(action->data().toInt());
+    }
+
+    void CInfoArea::selectLeftTab()
+    {
+        if (!this->m_tabBar) return;
+        if (this->m_tabBar->count() < 2) return;
+        if (this->m_tabBar->currentIndex() > 0)
+        {
+            this->m_tabBar->setCurrentIndex(this->m_tabBar->currentIndex() - 1);
+        }
+        else
+        {
+            this->m_tabBar->setCurrentIndex(this->m_tabBar->count() - 1);
+        }
+    }
+
+    void CInfoArea::selectRightTab()
+    {
+        if (!this->m_tabBar) return;
+        if (this->m_tabBar->count() < 2) return;
+        if (this->m_tabBar->currentIndex() < this->m_tabBar->count() - 2)
+        {
+            this->m_tabBar->setCurrentIndex(this->m_tabBar->currentIndex() + 1);
+        }
+        else
+        {
+            this->m_tabBar->setCurrentIndex(0);
+        }
+    }
+
 
     void CInfoArea::ps_setDockArea(Qt::DockWidgetArea area)
     {

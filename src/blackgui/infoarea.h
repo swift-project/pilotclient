@@ -46,6 +46,11 @@ namespace BlackGui
         //! Own dockable widgets
         QList<const CDockWidgetInfoArea *> getDockWidgetInfoAreas() const;
 
+        //! Create a list of actions to select the info areas. This could be used in a menu
+        //! or somewhere else.
+        //! \param parent which will own the action (deletion)
+        QList<QAction *> getInfoAreaSelectActions(QWidget *parent) const;
+
     signals:
         //! Tab bar changed
         void tabBarCurrentChanged(int index);
@@ -72,6 +77,15 @@ namespace BlackGui
         //! Select area
         void selectArea(int areaIndex);
 
+        //! Select area (sender is QAction)
+        void selectAreaByAction();
+
+        //! Select next left tab
+        void selectLeftTab();
+
+        //! Select next right tab
+        void selectRightTab();
+
     protected:
         //! Constructor
         explicit CInfoArea(QWidget *parent = nullptr);
@@ -81,6 +95,10 @@ namespace BlackGui
 
         //! \copydoc QWidget::paintEvent
         virtual void paintEvent(QPaintEvent *event) override;
+
+        //! \copydoc QWidget::keyPressEvent
+        //! \remarks nor fully sufficient, as the info area is hardly having focus
+        virtual void keyPressEvent(QKeyEvent * event) override;
 
         //! Preferred size when floating (size hint)
         virtual QSize getPreferredSizeWhenFloating(int areaIndex) const = 0;
