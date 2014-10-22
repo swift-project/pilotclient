@@ -169,18 +169,18 @@ namespace BlackMiscTest
                 }
                 else
                 {
-                    QString category;
-                    if (line.startsWith("app")) category = CLogCategoryList(applicationContext).back().toQString();
-                    else if (line.startsWith("aud")) category = CLogCategoryList(audioContext).back().toQString();
-                    else if (line.startsWith("net")) category = CLogCategoryList(networkContext).back().toQString();
-                    else if (line.startsWith("own")) category = CLogCategoryList(ownAircraftContext).back().toQString();
-                    else if (line.startsWith("set")) category = CLogCategoryList(settingsContext).back().toQString();
-                    else if (line.startsWith("sim")) category = CLogCategoryList(simulatorContext).back().toQString();
-                    if (! category.isEmpty())
+                    CLogCategoryList categories;
+                    if (line.startsWith("app")) categories = applicationContext;
+                    else if (line.startsWith("aud")) categories = audioContext;
+                    else if (line.startsWith("net")) categories = networkContext;
+                    else if (line.startsWith("own")) categories = ownAircraftContext;
+                    else if (line.startsWith("set")) categories = settingsContext;
+                    else if (line.startsWith("sim")) categories = simulatorContext;
+                    if (! categories.isEmpty())
                     {
                         BlackMisc::singleShot(0, BlackMisc::CLogHandler::instance()->thread(), [ = ]()
                         {
-                            BlackMisc::CLogHandler::instance()->handlerForCategoryPrefix(category)->enableConsoleOutput(enable);
+                            BlackMisc::CLogHandler::instance()->handlerForPattern(CLogPattern::allOf(categories))->enableConsoleOutput(enable);
                         });
                     }
                 }

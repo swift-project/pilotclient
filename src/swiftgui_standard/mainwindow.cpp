@@ -298,7 +298,6 @@ bool MainWindow::isContextAudioAvailableCheck()
 void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
     if (statusMessage.isRedundant()) return;
-    if (statusMessage.getSeverity() == CStatusMessage::SeverityDebug) return;
 
     if (statusMessage.wasHandledBy(this)) return;
     statusMessage.markAsHandledBy(this);
@@ -313,7 +312,6 @@ void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessag
     this->ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToList(statusMessage);
 
     // display overlay for errors, but not for validation
-    // TODO smarter use of CLogCategoryHandler to dispatch different categories of message to different MainWindow slots
     if (statusMessage.getSeverity() == CStatusMessage::SeverityError && ! statusMessage.getCategories().contains(CLogCategory::validation()))
     {
         this->m_compInfoWindow->displayStatusMessage(statusMessage);
