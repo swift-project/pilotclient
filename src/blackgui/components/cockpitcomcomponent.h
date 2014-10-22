@@ -11,6 +11,7 @@
 #define BLACKGUI_COCKPITCOMCOMPONENT_H
 
 #include "enablefordockwidgetinfoarea.h"
+#include "enableforruntime.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -23,7 +24,8 @@ namespace BlackGui
         //! The main cockpit area
         class CCockpitComComponent :
             public QFrame,
-            public CEnableForDockWidgetInfoArea
+            public CEnableForDockWidgetInfoArea,
+            public CEnableForRuntime
         {
             Q_OBJECT
 
@@ -38,7 +40,42 @@ namespace BlackGui
             //! \copydoc QWidget::paintEvent
             virtual void paintEvent(QPaintEvent *event) override;
 
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
+            virtual void runtimeHasBeenSet() override;
+
+        private slots:
+            //! Cockpit values have been changed in GUI
+            void ps_guiChangedCockpitValues();
+
+            //! Update cockpit from context
+            void ps_updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
+
+            //! Cockpit values have been changed in GUI
+            void ps_testSelcal();
+
         private:
+            //! Init LEDs
+            void initLeds();
+
+            //! Cockpit values to aircraft
+            BlackMisc::Aviation::CAircraft cockpitValuesToAircraftObject();
+
+            //! Get own aircraft
+            BlackMisc::Aviation::CAircraft getOwnAircraft() const;
+
+            //! Current SELCAL code
+            QString getSelcalCode() const;
+
+            //! Cockpit updates
+            bool updateOwnCockpitInContext(const BlackMisc::Aviation::CAircraft &ownAircraft);
+
+            //! COM frequencies displayed
+            void updateComFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+
+            //! Identifies sender of cockpit updates
+            // TODO: Check if to be migrated to COriginator
+            static const QString cockpitOriginator();
+
             QScopedPointer<Ui::CCockpitMainComponent> ui;
         };
 
