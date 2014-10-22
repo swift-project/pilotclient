@@ -21,7 +21,6 @@ using namespace BlackMisc::Aviation;
 void MainWindow::ps_onMenuClicked()
 {
     QObject *sender = QObject::sender();
-
     if (sender == this->ui->menu_TestLocationsEDRY)
     {
         this->setTestPosition("N 049° 18' 17", "E 008° 27' 05", CAltitude(312, CAltitude::MeanSeaLevel, CLengthUnit::ft()));
@@ -67,4 +66,12 @@ void MainWindow::ps_onMenuClicked()
         Q_ASSERT(this->getIContextSettings());
         this->getIContextSettings()->reset(true);
     }
+}
+
+
+void MainWindow::initDynamicMenus()
+{
+    Q_ASSERT(this->ui->menu_InfoAreas);
+    Q_ASSERT(this->ui->comp_MainInfoArea);
+    this->ui->menu_InfoAreas->addActions(this->ui->comp_MainInfoArea->getInfoAreaSelectActions(this->ui->menu_InfoAreas));
 }

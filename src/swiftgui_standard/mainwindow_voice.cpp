@@ -76,7 +76,6 @@ void MainWindow::ps_setAudioVolumes()
     com1.setEnabled(!muted);
     com2.setEnabled(!muted);
     this->ui->pb_SoundMute->setText(muted ? "Unmute" : "Mute");
-    this->ui->comp_InfoBarStatus->setVolume(muted ? 0 : 66); // TODO
     this->ui->comp_Cockpit->setCockpitVoiceStatusPixmap(muted ? CIcons::volumeMuted16() : CIcons::volumeHigh16());
     this->ui->pb_SoundMute->setStyleSheet(muted ? "background-color: red;" : "");
     if (muted) this->m_compInfoWindow->displayStringMessage("Sound is muted!");

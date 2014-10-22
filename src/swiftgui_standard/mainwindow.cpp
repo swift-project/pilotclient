@@ -233,7 +233,7 @@ void MainWindow::ps_toggleNetworkConnection()
         this->m_ownAircraft.setIcaoInfo(icao);
 
         // set latest aircraft
-        this->getIContextOwnAircraft()->updateOwnAircraft(this->m_ownAircraft, MainWindow::sampleBlackGuiOriginator());
+        this->getIContextOwnAircraft()->updateOwnAircraft(this->m_ownAircraft, MainWindow::swiftGuiStandardOriginator());
 
         // flight plan
         this->ui->comp_MainInfoArea->getFlightPlanComponent()->prefillWithAircraftData(this->m_ownAircraft);

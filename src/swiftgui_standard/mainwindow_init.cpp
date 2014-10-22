@@ -128,8 +128,9 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     // data
     this->initialDataReads();
 
-    // start screen
+    // start screen and complete menu
     this->ps_setMainPage(true);
+    this->initDynamicMenus();
 
     // starting
     this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStarts);

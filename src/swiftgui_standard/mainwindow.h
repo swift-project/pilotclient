@@ -123,6 +123,9 @@ private:
     //! Init GUI signals
     void initGuiSignals();
 
+    //! Init dynamic menus
+    void initDynamicMenus();
+
     //! Context network availability check, otherwise status message
     bool isContextNetworkAvailableCheck();
 
@@ -169,9 +172,10 @@ private:
     void updateSimulatorData();
 
     //! Originator for aircraft context
-    static const QString &sampleBlackGuiOriginator()
+    static const QString &swiftGuiStandardOriginator()
     {
-        static const QString o = QString("GUISAMPLE1:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
+        // one time init, timestamp allows "multiple swift GUIs"
+        static const QString o = QString("SWIFTGUISTANDARD:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
         return o;
     }
 
