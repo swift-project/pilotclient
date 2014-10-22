@@ -71,16 +71,16 @@ namespace BlackMisc
                 this->m_frequencyStandby = frequency;
             }
 
-            //! Output volume
+            //! Output volume 0..100
             qint32 getVolumeOutput() const { return this->m_volumeOutput; }
 
-            //! Input volume
+            //! Input volume 0..100
             qint32 getVolumeInput() const { return this->m_volumeInput; }
 
-            //! Output volume
+            //! Output volume 0.100
             void setVolumeOutput(qint32 volume) { this->m_volumeOutput = volume; }
 
-            //! Input volume
+            //! Input volume 0..100
             void setVolumeInput(qint32 volume) { this->m_volumeInput = volume; }
 
             //! Enabled?

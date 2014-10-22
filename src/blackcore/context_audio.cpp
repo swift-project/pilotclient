@@ -23,5 +23,4 @@ namespace BlackCore
             return nullptr; // audio not mandatory
         }
     }
-
-}
+} // namespace

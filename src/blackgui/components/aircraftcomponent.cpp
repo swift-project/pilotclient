@@ -67,7 +67,7 @@ namespace BlackGui
                 }
                 else
                 {
-                    // KWB remove: qDebug() will be removed soo
+                    // KWB remove: qDebug() will be removed soon
                     qDebug() << this->objectName() << "Skipping update (aircrafts)";
                 }
             }

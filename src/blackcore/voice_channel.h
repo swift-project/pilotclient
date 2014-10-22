@@ -71,10 +71,10 @@ namespace BlackCore
         //! Is channel muted?
         virtual bool isMuted() const = 0;
 
-        //! Set channel volume
+        //! Set channel volume 0..100
         virtual void setVolume(quint32 volume) = 0;
 
-        //! Get channel volume
+        //! Get channel volume 0..100
         virtual quint32 getVolume() const = 0;
 
         //! Update room status

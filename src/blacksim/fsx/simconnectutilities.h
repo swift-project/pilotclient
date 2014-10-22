@@ -15,9 +15,9 @@
 #include <QString>
 #include <QMetaEnum>
 
-// apart from the below definitions, the following code is OS independent,
+// Apart from the below definitions, the following code is OS independent,
 // though it does not make sense to be used on non WIN machines.
-// But it allows parts as GUI to comile
+// But it allows such parts to compile on all platforms.
 #ifdef Q_OS_WIN
 #ifndef NOMINMAX
 #define NOMINMAX
