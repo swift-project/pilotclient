@@ -99,8 +99,17 @@ namespace BlackMisc
         //! Representing icon
         virtual CIcon toIcon() const override { return CStatusMessage::convertToIcon(*this); }
 
-        //! Type as string
+        //! Severity as string
         const QString &getSeverityAsString() const;
+
+        //! Severity as string
+        static const QString &severityToString(StatusSeverity severity);
+
+        //! Severity as string
+        static StatusSeverity stringToSeverity(const QString &severityString);
+
+        //! Severities as strings
+        static const QStringList &allSeverityStrings();
 
         //! \copydoc CValueObject::propertyByIndex(int)
         virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;

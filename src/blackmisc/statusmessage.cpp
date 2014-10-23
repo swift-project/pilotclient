@@ -164,9 +164,37 @@ namespace BlackMisc
     /*
      *  Severity
      */
-    const QString &CStatusMessage::getSeverityAsString() const
+    CStatusMessage::StatusSeverity CStatusMessage::stringToSeverity(const QString &severity)
     {
-        switch (this->m_severity)
+        if (severity.compare(severityToString(SeverityDebug), Qt::CaseInsensitive) == 0)
+        {
+            return SeverityDebug;
+        }
+        else if (severity.compare(severityToString(SeverityInfo), Qt::CaseInsensitive) == 0)
+        {
+            return SeverityInfo;
+        }
+        else if (severity.compare(severityToString(SeverityWarning), Qt::CaseInsensitive) == 0)
+        {
+            return SeverityWarning;
+        }
+        else if (severity.compare(severityToString(SeverityError), Qt::CaseInsensitive) == 0)
+        {
+            return SeverityError;
+        }
+        else
+        {
+            qFatal("Unknown severity string");
+            return SeverityError;
+        }
+    }
+
+    /*
+     *  Severity
+     */
+    const QString &CStatusMessage::severityToString(CStatusMessage::StatusSeverity severity)
+    {
+        switch (severity)
         {
         case SeverityDebug:
             {
@@ -193,6 +221,23 @@ namespace BlackMisc
             qFatal("Unknown severity");
             return x; // just for compiler warning
         }
+    }
+
+    /*
+     *  Severity
+     */
+    const QString &CStatusMessage::getSeverityAsString() const
+    {
+        return severityToString(this->m_severity);
+    }
+
+    /*
+     *  Severity
+     */
+    const QStringList &CStatusMessage::allSeverityStrings()
+    {
+        static const QStringList all { severityToString(SeverityDebug), severityToString(SeverityInfo), severityToString(SeverityWarning), severityToString(SeverityError) };
+        return all;
     }
 
     /*
