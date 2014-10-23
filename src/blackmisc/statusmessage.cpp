@@ -168,6 +168,11 @@ namespace BlackMisc
     {
         switch (this->m_severity)
         {
+        case SeverityDebug:
+            {
+                static QString d("debug");
+                return d;
+            }
         case SeverityInfo:
             {
                 static QString i("info");
