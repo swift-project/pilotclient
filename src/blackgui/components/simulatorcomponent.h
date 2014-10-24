@@ -15,6 +15,7 @@
 #include "enableforruntime.h"
 #include "blackmisc/icon.h"
 #include "blackgui/components/enablefordockwidgetinfoarea.h"
+#include "blackgui/components/updatetimer.h"
 
 #include <QTabWidget>
 #include <QScopedPointer>
@@ -53,8 +54,33 @@ namespace BlackGui
             //! Clear
             void clear();
 
+        public slots:
+            //! Update simulator
+            void update();
+
+            //! \copydoc CTimerBasedComponent::setUpdateIntervalSeconds
+            void setUpdateIntervalSeconds(int seconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateIntervalSeconds(seconds); }
+
+            //! \copydoc CTimerBasedComponent::setUpdateInterval
+            void setUpdateInterval(int milliSeconds) { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->setUpdateInterval(milliSeconds); }
+
+            //! \copydoc CTimerBasedComponent::stopTimer
+            void stopTimer() { Q_ASSERT(this->m_updateTimer); this->m_updateTimer->stopTimer(); }
+
+        protected:
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
+            void runtimeHasBeenSet() override;
+
+        private slots:
+            //! \copydoc ISimulator::
+            void ps_onSimulatorConnectionChanged(bool isAvailable);
+
         private:
+            //! Update interval
+            int getUpdateIntervalMs() const;
+
             QScopedPointer<Ui::CSimulatorComponent> ui;
+            CUpdateTimer *m_updateTimer = nullptr;
         };
     }
 }
