@@ -132,4 +132,46 @@ namespace BlackMisc
         m_patternHandlers.erase(newEnd, m_patternHandlers.end());
     }
 
+    void CLogSubscriber::changeSubscription(const CLogPattern &pattern)
+    {
+        Q_ASSERT(CLogHandler::instance()->thread() == QThread::currentThread());
+        unsubscribe();
+        m_handler = CLogHandler::instance()->handlerForPattern(pattern);
+
+        if (! m_inheritFallThrough)
+        {
+            m_handler->enableConsoleOutput(m_enableFallThrough);
+        }
+        connect(m_handler, &CLogPatternHandler::messageLogged, this, &CLogSubscriber::ps_logMessage);
+    }
+
+    void CLogSubscriber::unsubscribe()
+    {
+        Q_ASSERT(CLogHandler::instance()->thread() == QThread::currentThread());
+        if (m_handler)
+        {
+            m_handler->disconnect(this);
+        }
+    }
+
+    void CLogSubscriber::inheritConsoleOutput()
+    {
+        Q_ASSERT(CLogHandler::instance()->thread() == QThread::currentThread());
+        m_inheritFallThrough = true;
+        if (m_handler)
+        {
+            m_handler->inheritConsoleOutput();
+        }
+    }
+
+    void CLogSubscriber::enableConsoleOutput(bool enable)
+    {
+        Q_ASSERT(CLogHandler::instance()->thread() == QThread::currentThread());
+        m_inheritFallThrough = false;
+        m_enableFallThrough = enable;
+        if (m_handler)
+        {
+            m_handler->enableConsoleOutput(enable);
+        }
+    }
 }

@@ -16,6 +16,7 @@
 #include "statusmessage.h"
 #include <QObject>
 #include <QMap>
+#include <QPointer>
 
 namespace BlackMisc
 {
@@ -165,6 +166,48 @@ namespace BlackMisc
             static const auto signal = QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged);
             return ! isSignalConnected(signal);
         }
+    };
+
+    /*!
+     * A helper class for subscribing to log messages matching a particular pattern, with the ability to
+     * change the pattern at runtime.
+     */
+    class CLogSubscriber : public QObject
+    {
+        Q_OBJECT
+
+    public:
+        //! Construct a subscriber which forwards messages to the given slot of parent.
+        template <typename T, typename F>
+        CLogSubscriber(T *parent, F slot) : QObject(parent)
+        {
+            Q_ASSERT(CLogHandler::instance()->thread() == QThread::currentThread());
+            QObject::connect(this, &CLogSubscriber::ps_messageLogged, parent, slot);
+        }
+
+        //! Change the pattern which you want to subscribe to.
+        void changeSubscription(const CLogPattern &pattern);
+
+        //! Unsubscribe from all messages.
+        void unsubscribe();
+
+        //! \copydoc CLogPatternHandler::enableConsoleOutput
+        void enableConsoleOutput(bool enable);
+
+        //! \copydoc CLogPatternHandler::inheritConsoleOutput
+        void inheritConsoleOutput();
+
+    signals:
+        //! \private
+        void ps_messageLogged(const CStatusMessage &message);
+
+    private slots:
+        void ps_logMessage(const CStatusMessage &message) { emit ps_messageLogged(message); }
+
+    private:
+        QPointer<CLogPatternHandler> m_handler;
+        bool m_inheritFallThrough = true;
+        bool m_enableFallThrough = true;
     };
 }
 

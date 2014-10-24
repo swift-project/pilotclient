@@ -21,7 +21,6 @@
 #include "blackmisc/avselcal.h"
 #include "blackmisc/project.h"
 #include "blackmisc/hotkeyfunction.h"
-#include "blackmisc/loghandler.h"
 #include "blackmisc/logmessage.h"
 #include <QSortFilterProxyModel>
 #include <QSizeGrip>
@@ -112,7 +111,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAtcStationsUpdateInterval, this->ui->comp_MainInfoArea->getAtcStationComponent(), &::CAtcStationComponent::setUpdateIntervalSeconds);
 
     // log messages
-    CLogHandler::instance()->handlerForPattern(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo))->subscribe(this, &MainWindow::ps_displayStatusMessageInGui);
+    m_logSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
 
     Q_ASSERT(connect);
     Q_UNUSED(connect); // suppress GCC warning in release build

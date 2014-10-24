@@ -32,6 +32,7 @@
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackmisc/nwtextmessage.h"
+#include "blackmisc/loghandler.h"
 #include "blacksound/soundgenerator.h"
 #include <QMainWindow>
 #include <QTextEdit>
@@ -87,6 +88,8 @@ private:
     bool m_init;
     GuiModes::WindowMode m_windowMode;
     BlackInput::IKeyboard *m_keyboard; //!< hotkeys
+
+    BlackMisc::CLogSubscriber m_logSubscriber { this, &MainWindow::ps_displayStatusMessageInGui };
 
     // contexts
     bool m_coreAvailable;
