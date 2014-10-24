@@ -12,9 +12,12 @@
 #ifndef BLACKGUI_MAINKEYPADAREACOMPONENT_H
 #define BLACKGUI_MAINKEYPADAREACOMPONENT_H
 
+#include "maininfoareacomponent.h"
+#include "enableforruntime.h"
+#include "blackmisc/avaircraft.h"
+
 #include <QFrame>
 #include <QScopedPointer>
-#include "maininfoareacomponent.h"
 
 namespace Ui { class CMainKeypadAreaComponent; }
 namespace BlackGui
@@ -24,7 +27,9 @@ namespace BlackGui
 
         //! Main keypad area as used with main info area
         //! \sa CMainInfoAreaComponent
-        class CMainKeypadAreaComponent : public QFrame
+        class CMainKeypadAreaComponent :
+            public QFrame,
+            public CEnableForRuntime
         {
             Q_OBJECT
 
@@ -38,7 +43,23 @@ namespace BlackGui
         signals:
             //! Button to select main info area has been pressed
             //! \sa CMainInfoAreaComponent
-            void selectMainInfoAreaDockWidget(CMainInfoAreaComponent::InfoArea infoArea);
+            void selectedMainInfoAreaDockWidget(CMainInfoAreaComponent::InfoArea infoArea);
+
+            //! Change opacity 0..30
+            void changedOpacity(int opacity);
+
+            //! Command was entered
+            void commandEntered(const QString &commandLine);
+
+            //! Connect was pressed
+            void connectPressed();
+
+            //! Ident pressed
+            void identPressed();
+
+        protected:
+            //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
+            virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Button was clicked
@@ -47,9 +68,21 @@ namespace BlackGui
             //! Button was double clicked
             void ps_buttonDoubleClicked();
 
+            //! \copydoc BlackCore::IContextNetwork::connectionStatusChanged
+            void ps_connectionStatusChanged(uint from, uint to, const QString &message);
+
+            //! Command line entered
+            void ps_commandEntered();
+
+            //! \copydoc BlackCore::IContextOwnAircraft::changedAircraftCockpit
+            void ps_ownAircraftCockpitChanged(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
+
         private:
-            // if button is info area, identify it
+            //! If button is info area, identify it
             CMainInfoAreaComponent::InfoArea buttonToMainInfoArea(const QObject *button) const;
+
+            //! Own aircraft
+            BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
             QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
         };

@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
-    <height>144</height>
+    <width>389</width>
+    <height>122</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Frame</string>
+   <string>Main keypad area</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -51,7 +51,7 @@
        <number>2</number>
       </property>
       <property name="topMargin">
-       <number>6</number>
+       <number>0</number>
       </property>
       <property name="rightMargin">
        <number>2</number>
@@ -80,7 +80,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -89,7 +89,7 @@
        </widget>
       </item>
       <item row="2" column="4">
-       <widget class="QPushButton" name="pb_MainKeypadOpacity050">
+       <widget class="QPushButton" name="pb_Opacity050">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -105,7 +105,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -114,7 +114,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QPushButton" name="pb_MainConnect">
+       <widget class="QPushButton" name="pb_Connect">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -124,7 +124,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -137,7 +137,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="statusTip">
@@ -149,7 +149,7 @@
        </widget>
       </item>
       <item row="1" column="4">
-       <widget class="QPushButton" name="pb_MainKeypadOpacity100">
+       <widget class="QPushButton" name="pb_Opacity100">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -165,7 +165,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -184,7 +184,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -203,7 +203,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -213,6 +213,12 @@
       </item>
       <item row="4" column="0">
        <widget class="QPushButton" name="pb_MainUsers">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Users</string>
         </property>
@@ -229,7 +235,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -239,6 +245,12 @@
       </item>
       <item row="2" column="3">
        <widget class="QPushButton" name="pb_CockpitIdent">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Ident</string>
         </property>
@@ -255,7 +267,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -265,6 +277,12 @@
       </item>
       <item row="2" column="1">
        <widget class="QPushButton" name="pb_MainSimulator">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Simulator</string>
         </property>
@@ -281,7 +299,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -300,7 +318,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -319,7 +337,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
@@ -338,7 +356,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="layoutDirection">
@@ -360,7 +378,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>22</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="text">
