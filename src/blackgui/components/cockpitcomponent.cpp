@@ -45,6 +45,11 @@ namespace BlackGui
             return this->ui->wip_CockpitComPanelShowHideBar->isShown();
         }
 
+        void CCockpitComponent::setSelectedTransponderModeStateIdent()
+        {
+            this->ui->comp_CockpitComComponent->setSelectedTransponderModeStateIdent();
+        }
+
         void CCockpitComponent::ps_onToggleShowHideDetails(bool show)
         {
             Q_ASSERT(this->isParentDockWidgetFloating()); // show hide should not be visible if docked

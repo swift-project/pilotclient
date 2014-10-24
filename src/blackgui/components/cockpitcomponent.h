@@ -40,6 +40,10 @@ namespace BlackGui
             //! Is the info area shown?
             bool isInfoAreaShown() const;
 
+        public slots:
+            //! \copydoc BlackGui::CTransponderModeSelector::setSelectedTransponderModeStateIdent
+            void setSelectedTransponderModeStateIdent();
+
         private slots:
             //! Show or hide cockpit details
             void ps_onToggleShowHideDetails(bool show);

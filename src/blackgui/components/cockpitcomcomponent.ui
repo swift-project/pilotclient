@@ -513,7 +513,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QDoubleSpinBox" name="ds_ComPanelTransponder">
+            <widget class="BlackGui::CTransponderCodeSpinBox" name="sbp_ComPanelTransponder">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                <horstretch>0</horstretch>
@@ -526,14 +526,11 @@
                <height>18</height>
               </size>
              </property>
-             <property name="decimals">
-              <number>0</number>
-             </property>
              <property name="maximum">
-              <double>7777.000000000000000</double>
+              <number>7777</number>
              </property>
              <property name="value">
-              <double>7000.000000000000000</double>
+              <number>7000</number>
              </property>
             </widget>
            </item>
@@ -645,6 +642,11 @@
    <extends>QWidget</extends>
    <header>blackgui/led.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::CTransponderCodeSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>blackgui/transpondercodespinbox.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -12,6 +12,9 @@
 
 #include "enablefordockwidgetinfoarea.h"
 #include "enableforruntime.h"
+#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviotransponder.h"
+#include "blackmisc/voiceroomlist.h"
 #include <QFrame>
 #include <QScopedPointer>
 
@@ -36,6 +39,17 @@ namespace BlackGui
             //! Destructor
             ~CCockpitComComponent();
 
+        signals:
+            //! \copydoc BlackGui::CTransponderModeSelector::transponderModeChanged
+            void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
+
+            //! \copydoc BlackGui::CTransponderModeSelector::transponderStateIdentEnded
+            void transponderStateIdentEnded();
+
+        public slots:
+            //!\ Set to ident
+            void setSelectedTransponderModeStateIdent();
+
         protected:
             //! \copydoc QWidget::paintEvent
             virtual void paintEvent(QPaintEvent *event) override;
@@ -52,6 +66,9 @@ namespace BlackGui
 
             //! Cockpit values have been changed in GUI
             void ps_testSelcal();
+
+            //! Update voice room related information
+            void ps_onChangedVoiceRoomStatus(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
 
         private:
             //! Init LEDs
@@ -70,7 +87,7 @@ namespace BlackGui
             bool updateOwnCockpitInContext(const BlackMisc::Aviation::CAircraft &ownAircraft);
 
             //! COM frequencies displayed
-            void updateComFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
+            void updateFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
             //! Identifies sender of cockpit updates
             // TODO: Check if to be migrated to COriginator

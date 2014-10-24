@@ -11,7 +11,10 @@
 #include "ui_cockpitcomcomponent.h"
 #include "../stylesheetutility.h"
 #include "blackcore/context_network.h"
+#include "blackcore/context_ownaircraft.h"
+#include "blackcore/context_audio.h"
 #include "blackmisc/avaircraft.h"
+#include "blackmisc/voiceroomlist.h"
 #include "blackmisc/logmessage.h"
 
 #include <QDoubleSpinBox>
@@ -19,6 +22,7 @@
 
 using namespace BlackGui;
 using namespace BlackCore;
+using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -28,15 +32,21 @@ namespace BlackGui
     {
         CCockpitComComponent::CCockpitComComponent(QWidget *parent) :
             QFrame(parent),
-            CEnableForDockWidgetInfoArea(),
             ui(new Ui::CCockpitMainComponent)
         {
             ui->setupUi(this);
             this->initLeds();
+            QObject::connect(this->ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComComponent::transponderModeChanged);
+            QObject::connect(this->ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderStateIdentEnded, this, &CCockpitComComponent::transponderStateIdentEnded);
         }
 
         CCockpitComComponent::~CCockpitComComponent()
         { }
+
+        void CCockpitComComponent::setSelectedTransponderModeStateIdent()
+        {
+            this->ui->cbp_ComPanelTransponderMode->setSelectedTransponderModeStateIdent();
+        }
 
         void CCockpitComComponent::paintEvent(QPaintEvent *event)
         {
@@ -62,12 +72,16 @@ namespace BlackGui
             connect(this->ui->ds_ComPanelCom2Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->ds_ComPanelCom1Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->ds_ComPanelCom2Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(this->ui->ds_ComPanelTransponder, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-            connect(this->ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::valueChanged, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
+            connect(this->ui->sbp_ComPanelTransponder, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
+            connect(this->ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
 
             // hook up with changes from own aircraft context
             Q_ASSERT(this->getIContextOwnAircraft());
             this->connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitComComponent::ps_updateCockpitFromContext);
+
+            // hook up with audio context
+            Q_ASSERT(this->getIContextAudio());
+            this->connect(this->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::ps_onChangedVoiceRoomStatus);
         }
 
         void CCockpitComComponent::ps_guiChangedCockpitValues()
@@ -111,12 +125,12 @@ namespace BlackGui
             const CTransponder transponder = ownAircraft.getTransponder();
 
             // update the frequencies
-            this->updateComFrequencyDisplaysFromComSystems(com1, com2);
+            this->updateFrequencyDisplaysFromComSystems(com1, com2);
 
             // update transponder
             qint32 tc = transponder.getTransponderCode();
-            if (tc != static_cast<qint32>(this->ui->ds_ComPanelTransponder->value()))
-                this->ui->ds_ComPanelTransponder->setValue(tc);
+            if (tc != static_cast<qint32>(this->ui->sbp_ComPanelTransponder->value()))
+                this->ui->sbp_ComPanelTransponder->setValue(tc);
 
             this->ui->cbp_ComPanelTransponderMode->setSelectedTransponderMode(transponder.getTransponderMode());
 
@@ -190,7 +204,7 @@ namespace BlackGui
             //
             // Transponder
             //
-            QString transponderCode = QString::number(qRound(this->ui->ds_ComPanelTransponder->value()));
+            QString transponderCode = QString::number(this->ui->sbp_ComPanelTransponder->value());
             if (CTransponder::isValidTransponderCode(transponderCode))
             {
                 transponder.setTransponderCode(transponderCode);
@@ -198,7 +212,7 @@ namespace BlackGui
             else
             {
                 CLogMessage().validationWarning("Wrong transponder code, reset");
-                this->ui->ds_ComPanelTransponder->setValue(transponder.getTransponderCode());
+                this->ui->sbp_ComPanelTransponder->setValue(transponder.getTransponderCode());
             }
             transponder.setTransponderMode(this->ui->cbp_ComPanelTransponderMode->getSelectedTransponderMode());
 
@@ -209,7 +223,7 @@ namespace BlackGui
             com1.setFrequencyStandbyMHz(this->ui->ds_ComPanelCom1Standby->value());
             com2.setFrequencyActiveMHz(this->ui->ds_ComPanelCom2Active->value());
             com2.setFrequencyStandbyMHz(this->ui->ds_ComPanelCom2Standby->value());
-            this->updateComFrequencyDisplaysFromComSystems(com1, com2); // back annotation after rounding
+            this->updateFrequencyDisplaysFromComSystems(com1, com2); // back annotation after rounding
 
             ownAircraft.setCom1System(com1);
             ownAircraft.setCom2System(com2);
@@ -229,7 +243,7 @@ namespace BlackGui
             return this->getIContextOwnAircraft()->updateOwnCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), ownAircraft.getTransponder(), CCockpitComComponent::cockpitOriginator());
         }
 
-        void CCockpitComComponent::updateComFrequencyDisplaysFromComSystems(const CComSystem &com1, const CComSystem &com2)
+        void CCockpitComComponent::updateFrequencyDisplaysFromComSystems(const CComSystem &com1, const CComSystem &com2)
         {
             double freq = com1.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
             if (freq != this->ui->ds_ComPanelCom1Active->value())
@@ -254,6 +268,16 @@ namespace BlackGui
             {
                 this->ui->ds_ComPanelCom2Standby->setValue(freq);
             }
+        }
+
+        void CCockpitComComponent::ps_onChangedVoiceRoomStatus(const CVoiceRoomList &selectedVoiceRooms, bool connected)
+        {
+            Q_ASSERT(selectedVoiceRooms.size() == 2);
+            CVoiceRoom room1 = selectedVoiceRooms[0];
+            CVoiceRoom room2 = selectedVoiceRooms[1];
+            this->ui->led_ComPanelCom1->setOn(room1.isConnected());
+            this->ui->led_ComPanelCom2->setOn(room2.isConnected());
+            Q_UNUSED(connected);
         }
 
         const QString CCockpitComComponent::cockpitOriginator()
