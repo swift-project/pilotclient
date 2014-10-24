@@ -44,7 +44,9 @@
 namespace Ui { class MainWindow; }
 
 //! swift GUI
-class MainWindow : public QMainWindow, public BlackGui::Components::CEnableForRuntime
+class MainWindow :
+    public QMainWindow,
+    public BlackGui::Components::CEnableForRuntime
 {
     Q_OBJECT
 
@@ -98,7 +100,6 @@ private:
     BlackMisc::Aviation::CAircraft m_ownAircraft; //!< own aircraft's state
     QTimer *m_timerContextWatchdog = nullptr;     //!< core available?
     QTimer *m_timerStatusBar       = nullptr;     //!< cleaning up status bar
-    QTimer *m_timerSimulator       = nullptr;     //!< update simulator data
 
     // frameless window
     QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
@@ -168,9 +169,6 @@ private:
     //! Play notifcation sound
     void playNotifcationSound(BlackSound::CNotificationSounds::Notification notification) const;
 
-    //! Update simulator page with latest user aircraft data
-    void updateSimulatorData();
-
     //! Originator for aircraft context
     static const QString &swiftGuiStandardOriginator()
     {
@@ -201,23 +199,14 @@ private slots:
      */
     void ps_onConnectionStatusChanged(uint from, uint to, const QString &message);
 
-    //! Simulator available
-    void ps_onSimulatorConnectionChanged(bool isAvailable);
-
     //
     // GUI related slots
     //
 
-    /*!
-     * \brief Set the main page
-     * \param start Startup phase
-     */
-    void ps_setMainPage(bool start = false);
+    //! Set \sa MainPageInfoArea
+    void ps_setMainPage() { this->ps_setMainPage(MainPageInfoArea); }
 
-    /*!
-     * \brief setMainPage
-     * \param mainPage
-     */
+    //! Set one of the main pages
     void ps_setMainPage(MainPageIndex mainPage);
 
     //! Connect to network
@@ -231,9 +220,6 @@ private slots:
 
     //! Update timer
     void ps_handleTimerBasedUpdates();
-
-    //! Audio volume handling and mute
-    void ps_setAudioVolumes();
 
     /*!
      * \brief changeOpacity

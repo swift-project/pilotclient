@@ -99,9 +99,6 @@ void MainWindow::gracefulShutdown()
             this->getIContextNetwork()->disconnect(this); // avoid any status update signals, etc.
         }
     }
-
-    if (this->getIContextSimulator())
-        this->disconnect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::ps_onSimulatorConnectionChanged);
 }
 
 /*
@@ -136,69 +133,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         return;
     }
     QWidget::mousePressEvent(event);
-}
-
-/*
- * Select correct main page
- */
-void MainWindow::ps_setMainPage(bool start)
-{
-    if (start)
-    {
-        this->ui->sw_MainMiddle->setCurrentIndex(0);
-        return;
-    }
-
-    QObject *sender = QObject::sender();
-    if (sender == this->ui->pb_MainCockpit)
-    {
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageCockpit);
-    }
-    else
-    {
-        this->ui->sw_MainMiddle->setCurrentIndex(MainPageInfoArea);
-
-        if (sender == this->ui->pb_MainAircrafts)
-        {
-            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaAircrafts);
-        }
-        if (sender == this->ui->pb_MainAtc)
-        {
-            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaAtc);
-        }
-        else if (sender == this->ui->pb_MainUsers)
-        {
-            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaUsers);
-        }
-        else if (sender == this->ui->pb_MainTextMessages)
-        {
-            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaTextMessages);
-        }
-        else if (sender == this->ui->pb_MainFlightplan)
-        {
-            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaFlightPlan);
-        }
-        else if (sender == this->ui->pb_MainSettings)
-        {
-            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaSettings);
-        }
-        else if (sender == this->ui->pb_MainSimulator)
-        {
-            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaSimulator);
-        }
-        else if (sender == this->ui->pb_MainWeather)
-        {
-            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaWeather);
-        }
-        else if (sender == this->ui->pb_MainLog)
-        {
-            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaLog);
-        }
-        else if (sender == this->ui->pb_MainMappings)
-        {
-            this->ui->comp_MainInfoArea->selectArea(CMainInfoAreaComponent::InfoAreaMappings);
-        }
-    }
 }
 
 /*
@@ -360,10 +294,6 @@ void MainWindow::ps_handleTimerBasedUpdates()
         this->setContextAvailability();
         this->updateGuiStatusInformation();
     }
-    else if (sender == this->m_timerSimulator)
-    {
-        this->updateSimulatorData();
-    }
 
     // own aircraft
     this->ps_reloadOwnAircraft(); // regular updates
@@ -398,17 +328,6 @@ void MainWindow::updateGuiStatusInformation()
     QString s = QString("network: %1").arg(network);
     this->ui->comp_InfoBarStatus->setDBusTooltip(s);
 
-    // Connected button
-    if (this->m_contextNetworkAvailable && this->getIContextNetwork()->isConnected())
-    {
-        this->ui->pb_MainConnect->setText("Disconnect");
-        this->ui->pb_MainConnect->setStyleSheet("background-color: green");
-    }
-    else
-    {
-        this->ui->pb_MainConnect->setText("Connect");
-        this->ui->pb_MainConnect->setStyleSheet("background-color: ");
-    }
 }
 
 /*
@@ -416,68 +335,11 @@ void MainWindow::updateGuiStatusInformation()
  */
 void MainWindow::ps_changeWindowOpacity(int opacity)
 {
-    if (opacity < 0)
-    {
-        QObject *sender = QObject::sender();
-        if (sender == this->ui->pb_MainKeypadOpacity050)
-            opacity = 50;
-        else if (sender == this->ui->pb_MainKeypadOpacity100)
-            opacity = 100;
-        else
-            return;
-    }
     qreal o = opacity / 100.0;
     o = o < 0.3 ? 0.3 : o;
+    o = o > 1.0 ? 1.0 : o;
     QWidget::setWindowOpacity(o);
     this->ui->comp_MainInfoArea->getSettingsComponent()->setGuiOpacity(o * 100.0);
-}
-
-void MainWindow::updateSimulatorData()
-{
-    CSimulatorComponent *simComp = this->ui->comp_MainInfoArea->getSimulatorComponent();
-    Q_ASSERT(simComp);
-
-    if (!simComp->isVisibleWidget()) return; // no updates on invisible widgets
-    if (!this->getIContextSimulator()->isConnected())
-    {
-        simComp->clear();
-        simComp->addOrUpdateByName("info", "sim not connected", CIcons::StandardIconWarning16);
-        return;
-    }
-
-    // clear old warnings / information
-    if (simComp->rowCount() < 5)
-    {
-        simComp->clear();
-    }
-
-    CAircraft ownAircraft = this->getIContextOwnAircraft()->getOwnAircraft();
-    CAircraftSituation s = ownAircraft.getSituation();
-    CComSystem c1 = ownAircraft.getCom1System();
-    CComSystem c2 = ownAircraft.getCom2System();
-
-    simComp->addOrUpdateByName("latitude", s.latitude().toFormattedQString(), s.latitude().toIcon());
-    simComp->addOrUpdateByName("longitude", s.longitude().toFormattedQString(), s.longitude().toIcon());
-    simComp->addOrUpdateByName("altitude", s.getAltitude().toFormattedQString(), s.getAltitude().toIcon());
-    simComp->addOrUpdateByName("pitch", s.getPitch().toFormattedQString(), CIcons::AviationAttitudeIndicator);
-    simComp->addOrUpdateByName("bank", s.getBank().toFormattedQString(), CIcons::AviationAttitudeIndicator);
-    simComp->addOrUpdateByName("heading", s.getHeading().toFormattedQString(), s.getHeading().toIcon());
-    simComp->addOrUpdateByName("ground speed", s.getGroundSpeed().toFormattedQString(), s.getGroundSpeed().toIcon());
-
-    simComp->addOrUpdateByName("COM1 active", c1.getFrequencyActive().toFormattedQString(), c1.getFrequencyActive().toIcon());
-    simComp->addOrUpdateByName("COM2 active", c2.getFrequencyActive().toFormattedQString(), c2.getFrequencyActive().toIcon());
-    simComp->addOrUpdateByName("COM1 standby", c1.getFrequencyStandby().toFormattedQString(), c1.getFrequencyStandby().toIcon());
-    simComp->addOrUpdateByName("COM2 standby", c2.getFrequencyStandby().toFormattedQString(), c2.getFrequencyStandby().toIcon());
-    simComp->addOrUpdateByName("Transponder", ownAircraft.getTransponderCodeFormatted(), ownAircraft.getTransponder().toIcon());
-}
-
-void MainWindow::ps_onSimulatorConnectionChanged(bool isAvailable)
-{
-    // Simulator timer, TODO remove later
-    if (isAvailable)
-        this->m_timerSimulator->start(500);
-    else
-        this->m_timerSimulator->stop();
 }
 
 /*

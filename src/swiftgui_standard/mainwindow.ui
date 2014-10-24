@@ -103,360 +103,6 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="1" column="0">
-        <widget class="QWidget" name="wi_MainKeypadArea" native="true">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <layout class="QGridLayout" name="gl_MainKeypadArea">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetDefaultConstraint</enum>
-          </property>
-          <property name="leftMargin">
-           <number>2</number>
-          </property>
-          <property name="topMargin">
-           <number>6</number>
-          </property>
-          <property name="rightMargin">
-           <number>2</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <property name="spacing">
-           <number>2</number>
-          </property>
-          <item row="0" column="0" colspan="5">
-           <widget class="QLineEdit" name="le_CommandLineInput">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>&lt;commands go here&gt;</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="4">
-           <widget class="QPushButton" name="pb_SoundMute">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Mute</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="4">
-           <widget class="QPushButton" name="pb_MainKeypadOpacity050">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>62</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>50%</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="pb_MainConnect">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Connect</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="4">
-           <widget class="QPushButton" name="pb_SoundMaxVolume">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="statusTip">
-             <string>Maximum volume</string>
-            </property>
-            <property name="text">
-             <string>Max.vol.</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4">
-           <widget class="QPushButton" name="pb_MainKeypadOpacity100">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>62</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>100%</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="pb_MainAircrafts">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>&amp;Aircrafts</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QPushButton" name="pb_MainAtc">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>A&amp;TC</string>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+K</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="pb_MainUsers">
-            <property name="text">
-             <string>Users</string>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+I, U</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3">
-           <widget class="QPushButton" name="pb_MainCockpit">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Cockpit</string>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+I, C</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3">
-           <widget class="QPushButton" name="pb_CockpitIdent">
-            <property name="text">
-             <string>Ident</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="pb_MainTextMessages">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Text/Chat</string>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+I, T</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="pb_MainSimulator">
-            <property name="text">
-             <string>Simulator</string>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+I, S</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="pb_MainWeather">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Weather</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QPushButton" name="pb_MainFlightplan">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Flightplan</string>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+I, F</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="pb_MainMappings">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Mappings</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QPushButton" name="pb_MainSettings">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="layoutDirection">
-             <enum>Qt::LeftToRight</enum>
-            </property>
-            <property name="text">
-             <string>Settings</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QPushButton" name="pb_MainLog">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Log</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
        <item row="0" column="0">
         <widget class="QStackedWidget" name="sw_MainMiddle">
          <property name="sizePolicy">
@@ -479,7 +125,7 @@
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="pg_Cockpit">
           <layout class="QVBoxLayout" name="vl_CockpitPage">
@@ -525,6 +171,22 @@
            </item>
           </layout>
          </widget>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="BlackGui::Components::CMainKeypadAreaComponent" name="comp_MainKeypadArea">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
         </widget>
        </item>
       </layout>
@@ -716,15 +378,13 @@
    <header>blackgui/components/infobarstatuscomponent.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CMainKeypadAreaComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/mainkeypadareacomponent.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>le_CommandLineInput</tabstop>
-  <tabstop>pb_MainConnect</tabstop>
-  <tabstop>pb_MainKeypadOpacity100</tabstop>
-  <tabstop>pb_MainKeypadOpacity050</tabstop>
-  <tabstop>pb_SoundMute</tabstop>
-  <tabstop>pb_SoundMaxVolume</tabstop>
- </tabstops>
  <resources/>
  <connections/>
  <slots>

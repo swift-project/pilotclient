@@ -1,20 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "blackcore/dbus_server.h"
-#include "blackcore/context_network_impl.h"
-#include "blackcore/context_network_proxy.h"
-#include "blackcore/context_simulator_impl.h"
-#include "blackcore/context_simulator_proxy.h"
-#include "blackcore/context_application_impl.h"
-#include "blackcore/context_application_proxy.h"
-#include "blackcore/context_settings_impl.h"
-#include "blackcore/context_settings_proxy.h"
-#include "blackcore/context_audio_impl.h"
-#include "blackcore/context_audio_proxy.h"
-#include "blackcore/context_runtime.h"
+#include "blackcore/context_all_interfaces.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/guiutility.h"
 #include "blackgui/components/textmessagecomponent.h"
+#include "blackgui/components/cockpitcomponent.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"
 #include "blackmisc/icons.h"
@@ -71,7 +62,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // timers
     if (this->m_timerContextWatchdog == nullptr) this->m_timerContextWatchdog = new QTimer(this);
-    if (this->m_timerSimulator == nullptr) this->m_timerSimulator = new QTimer(this);
 
     // context
     this->createRuntime(runtimeConfig, this);
@@ -100,9 +90,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &MainWindow::ps_onConnectionStatusChanged);
     connect = this->connect(this->getIContextNetwork(), SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)), this->ui->comp_MainInfoArea->getTextMessageComponent(), SLOT(appendTextMessagesToGui(BlackMisc::Network::CTextMessageList)));
     Q_ASSERT(connect);
-    this->connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &MainWindow::ps_onSimulatorConnectionChanged);
     this->connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::ps_handleTimerBasedUpdates);
-    this->connect(this->m_timerSimulator, &QTimer::timeout, this, &MainWindow::ps_handleTimerBasedUpdates);
     this->connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &MainWindow::ps_onChangedSetttings);
 
     // sliders
@@ -122,21 +110,18 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     // init availability
     this->setContextAvailability();
 
-    // cockpit external buttons
-    this->ui->comp_Cockpit->setExternalIdentButton(this->ui->pb_CockpitIdent);
+    // key pad area
+    QObject::connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::selectedMainInfoAreaDockWidget, this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::selectArea);
 
     // data
     this->initialDataReads();
 
     // start screen and complete menu
-    this->ps_setMainPage(true);
+    this->ps_setMainPage();
     this->initDynamicMenus();
 
     // starting
     this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStarts);
-
-    // We don't receive signals from the past. So ask for it simulate an initial signal
-    ps_onSimulatorConnectionChanged(this->getIContextSimulator()->isConnected());
 
     // info
     this->ui->comp_MainInfoArea->getLogComponent()->appendPlainTextToConsole(CProject::systemNameAndVersion());
@@ -158,47 +143,14 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 //
 void MainWindow::initGuiSignals()
 {
-    bool connected;
-
     // Remark: With new style, only methods of same signature can be connected
     // This is why we still have some "old" SIGNAL/SLOT connections here
 
-    // MAIN buttons
-    connected = this->connect(this->ui->pb_MainAircrafts, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainAtc, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainCockpit, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainConnect, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainConnect, SIGNAL(released()), this, SLOT(ps_toggleNetworkConnection()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainFlightplan, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainSettings, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainSimulator, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainUsers, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainTextMessages, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainWeather, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainMappings, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainLog, SIGNAL(released()), this, SLOT(ps_setMainPage()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainKeypadOpacity050, SIGNAL(clicked()), this, SLOT(ps_changeWindowOpacity()));
-    Q_ASSERT(connected);
-    connected = this->connect(this->ui->pb_MainKeypadOpacity100, SIGNAL(clicked()), this, SLOT(ps_changeWindowOpacity()));
-    Q_ASSERT(connected);
-
-    // Sound buttons
-    this->connect(this->ui->pb_SoundMute, &QPushButton::clicked, this, &MainWindow::ps_setAudioVolumes);
-    this->connect(this->ui->pb_SoundMaxVolume, &QPushButton::clicked, this, &MainWindow::ps_setAudioVolumes);
-    this->connect(this->ui->comp_Cockpit, &CCockpitV1Component::audioVolumeChanged, this, &MainWindow::ps_setAudioVolumes);
+    // Main buttons
+    this->connect(this->ui->comp_MainKeypadArea, SIGNAL(selectedMainInfoAreaDockWidget(CMainInfoAreaComponent::InfoArea)), this, SLOT(ps_setMainPage()));
+    this->connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &MainWindow::ps_toggleNetworkConnection);
+    this->connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &MainWindow::ps_changeWindowOpacity);
+    this->connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, this->ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
 
     // menu
     this->connect(this->ui->menu_ReloadSettings, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
@@ -213,17 +165,12 @@ void MainWindow::initGuiSignals()
     this->connect(this->ui->menu_FileFont, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
 
     // command line / text messages
-    connected = this->connect(this->ui->le_CommandLineInput, SIGNAL(returnPressed()), this->ui->comp_MainInfoArea->getTextMessageComponent(), SLOT(commandEntered()));
-    Q_ASSERT(connected);
     this->connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->m_compInfoWindow, &CInfoWindowComponent::display);
     this->ui->comp_MainInfoArea->getTextMessageComponent()->setSelcalCallback(std::bind(&CCockpitV1Component::getSelcalCode, this->ui->comp_Cockpit));
 
     // settings (GUI component), styles
     this->connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &MainWindow::ps_changeWindowOpacity);
     this->connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &MainWindow::ps_onStyleSheetsChanged);
-
-    // no warnings in release build
-    Q_UNUSED(connected);
 }
 
 /*
@@ -271,10 +218,8 @@ void MainWindow::stopAllTimers(bool disconnect)
 {
     this->m_timerStatusBar->stop();
     this->m_timerContextWatchdog->stop();
-    this->m_timerSimulator->stop();
     this->stopUpdateTimersWhenDisconnected();
     if (!disconnect) return;
     this->disconnect(this->m_timerStatusBar);
     this->disconnect(this->m_timerContextWatchdog);
-    this->disconnect(this->m_timerSimulator);
 }
