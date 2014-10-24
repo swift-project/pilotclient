@@ -50,6 +50,11 @@ namespace BlackGui
             return this->ui->comp_Users;
         }
 
+        CCockpitComponent *CMainInfoAreaComponent::getCockpitComponent()
+        {
+            return this->ui->comp_Cockpit;
+        }
+
         CFlightPlanComponent *CMainInfoAreaComponent::getFlightPlanComponent()
         {
             return this->ui->comp_FlightPlan;

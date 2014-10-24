@@ -13,14 +13,7 @@
 #define BLACKGUI_MAININFOAREACOMPONENT_H
 
 #include "../infoarea.h"
-#include "atcstationcomponent.h"
-#include "aircraftcomponent.h"
-#include "usercomponent.h"
-#include "textmessagecomponent.h"
-#include "simulatorcomponent.h"
-#include "flightplancomponent.h"
-#include "settingscomponent.h"
-#include "logcomponent.h"
+#include "allmaininfoareacomponents.h"
 #include <QTabBar>
 #include <QPixmap>
 #include <QScopedPointer>
@@ -30,7 +23,6 @@ namespace BlackGui
 {
     namespace Components
     {
-
         //! Main info area
         class CMainInfoAreaComponent : public BlackGui::CInfoArea
         {
@@ -61,6 +53,9 @@ namespace BlackGui
                 InfoAreaNone         = -1
             };
 
+            //! Cockpit
+            CCockpitComponent *getCockpitComponent();
+
             //! ATC stations
             CAtcStationComponent *getAtcStationComponent();
 
@@ -84,9 +79,6 @@ namespace BlackGui
 
             //! Text messages
             CTextMessageComponent *getTextMessageComponent();
-
-            //! Selected area of non floating areas
-//            InfoArea getSelectedInfoArea() const { return static_cast<InfoArea>(getSelectedTabBarIndex()); }
 
         public slots:
             //! Toggle floating of given area
