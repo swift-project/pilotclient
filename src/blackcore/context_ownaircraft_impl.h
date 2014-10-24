@@ -80,9 +80,9 @@ namespace BlackCore
 
     private:
         BlackMisc::Aviation::CAircraft m_ownAircraft; //!< my aircraft
-        bool m_automaticVoiceRoomResolution; //!< voice room override
-        QString m_voiceRoom1UrlOverride; //!< overridden voice room url
-        QString m_voiceRoom2UrlOverride; //!< overridden voice room url
+        bool m_automaticVoiceRoomResolution = true;   //!< automatic voice room resolution, or disable for override
+        QString m_voiceRoom1UrlOverride;              //!< overridden voice room url
+        QString m_voiceRoom2UrlOverride;              //!< overridden voice room url
 
         //! Init my very own aircraft with some defaults, before overridden by simulator
         void initOwnAircraft();

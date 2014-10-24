@@ -59,7 +59,7 @@ namespace BlackCore
         virtual ~IContextOwnAircraft() {}
 
     signals:
-        //! \brief Aircraft changed
+        //! Aircraft changed
         //! \remarks local only
         void changedAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
 

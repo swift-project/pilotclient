@@ -185,7 +185,7 @@ namespace BlackMisc
      */
     CIcon CValueObject::toIcon() const
     {
-        return CIconList::iconForIndex(CIcons::StandardIconUnknown16);
+        return CIconList::iconByIndex(CIcons::StandardIconUnknown16);
     }
 
     /*

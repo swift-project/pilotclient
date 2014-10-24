@@ -115,7 +115,7 @@ namespace BlackMisc
          */
         CIcon CAltitude::toIcon() const
         {
-            return BlackMisc::CIconList::iconForIndex(CIcons::GeoPosition);
+            return BlackMisc::CIconList::iconByIndex(CIcons::GeoPosition);
         }
 
     } // namespace

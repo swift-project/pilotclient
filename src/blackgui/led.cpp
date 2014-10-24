@@ -169,14 +169,7 @@ namespace BlackGui
 
     void CLedWidget::toggleValue()
     {
-        if (m_value == Temporary || m_value == On)
-        {
-            m_value = Off;
-        }
-        else
-        {
-            m_value = Off;
-        }
+        m_value = (m_value == Off) ? m_value = On : m_value = Off;
         setLed();
     }
 

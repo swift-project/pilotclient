@@ -46,10 +46,10 @@ namespace BlackMisc
         static const CIconList &allIcons();
 
         //! Icon for given index
-        static const CIcon &iconForIndex(CIcons::IconIndex index);
+        static const CIcon &iconByIndex(CIcons::IconIndex index);
 
         //! Icon for given index
-        static const CIcon &iconForIndex(int index);
+        static const CIcon &iconByIndex(int index);
 
     };
 }

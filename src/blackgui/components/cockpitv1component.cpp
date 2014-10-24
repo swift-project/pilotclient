@@ -64,7 +64,7 @@ namespace BlackGui
             this->connect(this->ui->pb_CockpitToggleCom2, &QPushButton::clicked, this, &CCockpitV1Component::cockpitValuesChanged);
             this->connect(this->ui->pb_CockpitSelcalTest, &QPushButton::clicked, this, &CCockpitV1Component::testSelcal);
 
-            this->connect(this->ui->cbp_CockpitTransponderMode, &CTransponderModeSelector::valueChanged, this, &CCockpitV1Component::cockpitValuesChanged);
+            this->connect(this->ui->cbp_CockpitTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitV1Component::cockpitValuesChanged);
 
             this->connect(this->ui->di_CockpitCom1Volume, &QDial::valueChanged, this, &CCockpitV1Component::setCom1Volume);
             this->connect(this->ui->di_CockpitCom2Volume, &QDial::valueChanged, this, &CCockpitV1Component::setCom2Volume);

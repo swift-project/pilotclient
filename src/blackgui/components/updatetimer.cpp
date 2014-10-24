@@ -20,8 +20,12 @@ namespace BlackGui
             this->m_timer = new QTimer(this);
             this->m_timerSingleShot = new QTimer(this);
             this->m_timerSingleShot->setSingleShot(true);
-            this->connect(this->m_timer, SIGNAL(timeout()), parent, slot);
-            this->connect(this->m_timerSingleShot, SIGNAL(timeout()), parent, slot);
+
+            bool c = this->connect(this->m_timer, SIGNAL(timeout()), parent, slot);
+            Q_ASSERT(c);
+            c = this->connect(this->m_timerSingleShot, SIGNAL(timeout()), parent, slot);
+            Q_ASSERT(c);
+            Q_UNUSED(c);
         }
 
         CUpdateTimer::~CUpdateTimer()

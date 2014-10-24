@@ -24,7 +24,7 @@ namespace BlackCore
      * Init this context
      */
     CContextOwnAircraft::CContextOwnAircraft(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextOwnAircraft(mode, runtime), m_automaticVoiceRoomResolution(true)
+        IContextOwnAircraft(mode, runtime)
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getIContextSettings());
@@ -123,7 +123,7 @@ namespace BlackCore
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << position << altitude << originator;
         bool changed = (this->m_ownAircraft.getPosition() != position);
-        if (changed) this->m_ownAircraft.setPosition(position);
+        if (changed) { this->m_ownAircraft.setPosition(position); }
 
         if (this->m_ownAircraft.getAltitude() != altitude)
         {

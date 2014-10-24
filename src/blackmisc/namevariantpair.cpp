@@ -92,7 +92,7 @@ namespace BlackMisc
             if (static_cast<QMetaType::Type>(variant.type()) == QMetaType::Int)
             {
                 CIcons::IconIndex index = static_cast<CIcons::IconIndex>(variant.toInt());
-                this->m_icon = CIconList::iconForIndex(index);
+                this->m_icon = CIconList::iconByIndex(index);
             }
             else
             {

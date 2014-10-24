@@ -38,23 +38,23 @@ namespace BlackMisc
         const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)
         {
             QString t = callsign.asString().toUpper();
-            if (t.length() < 3) return CIconList::iconForIndex(CIcons::NetworkRoleUnknown);
+            if (t.length() < 3) return CIconList::iconByIndex(CIcons::NetworkRoleUnknown);
             t = t.right(3);
 
             if (callsign.getStringAsSet().contains("_"))
             {
-                if ("APP" == t) return CIconList::iconForIndex(CIcons::NetworkRoleApproach);
-                if ("GND" == t) return CIconList::iconForIndex(CIcons::NetworkRoleGround);
-                if ("TWR" == t) return CIconList::iconForIndex(CIcons::NetworkRoleTower);
-                if ("DEL" == t) return CIconList::iconForIndex(CIcons::NetworkRoleDelivery);
-                if ("CTR" == t) return CIconList::iconForIndex(CIcons::NetworkRoleCenter);
-                if ("SUP" == t) return CIconList::iconForIndex(CIcons::NetworkRoleSup);
-                if ("OBS" == t) return CIconList::iconForIndex(CIcons::NetworkRoleApproach);
-                return CIconList::iconForIndex(CIcons::NetworkRoleUnknown);
+                if ("APP" == t) return CIconList::iconByIndex(CIcons::NetworkRoleApproach);
+                if ("GND" == t) return CIconList::iconByIndex(CIcons::NetworkRoleGround);
+                if ("TWR" == t) return CIconList::iconByIndex(CIcons::NetworkRoleTower);
+                if ("DEL" == t) return CIconList::iconByIndex(CIcons::NetworkRoleDelivery);
+                if ("CTR" == t) return CIconList::iconByIndex(CIcons::NetworkRoleCenter);
+                if ("SUP" == t) return CIconList::iconByIndex(CIcons::NetworkRoleSup);
+                if ("OBS" == t) return CIconList::iconByIndex(CIcons::NetworkRoleApproach);
+                return CIconList::iconByIndex(CIcons::NetworkRoleUnknown);
             }
             else
             {
-                return CIconList::iconForIndex(CIcons::NetworkRolePilot);
+                return CIconList::iconByIndex(CIcons::NetworkRolePilot);
             }
         }
 

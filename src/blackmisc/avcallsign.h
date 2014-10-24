@@ -67,7 +67,7 @@ namespace BlackMisc
             bool equalsString(const QString &callsignString) const;
 
             //! \copydoc CValueObject::toIcon()
-            virtual BlackMisc::CIcon toIcon() const override { return CCallsign::convertToIcon(*this); }
+            virtual BlackMisc::CIcon toIcon() const override { return convertToIcon(*this); }
 
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;

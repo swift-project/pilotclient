@@ -49,8 +49,8 @@ namespace BlackGui
             this->ui->led_Simulator->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Simulator connected", "Simulator disconnected", 14);
 
             shape = CLedWidget::Rounded;
-            this->ui->led_Ptt->setValues(CLedWidget::Yellow, CLedWidget::Red, shape, "Ptt", "Silence", 18);
-            this->ui->led_Audio->setValues(CLedWidget::Yellow, CLedWidget::Red, shape, "On", "Muted", 18);
+            this->ui->led_Ptt->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Ptt", "Silence", 18);
+            this->ui->led_Audio->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "On", "Muted", 18);
         }
 
         void CInfoBarStatusComponent::setDBusStatus(bool dbus)

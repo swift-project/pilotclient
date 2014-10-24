@@ -35,6 +35,17 @@ namespace BlackMisc
         static const CIconList icons(
         {
             // keep indexes alphabetically sorted and in sync with CIcons
+            CIcon(CIcons::ApplicationIconAircrafts, "aircrafts"),
+            CIcon(CIcons::ApplicationIconAtc, "ATC"),
+            CIcon(CIcons::ApplicationIconAudio, "audio"),
+            CIcon(CIcons::ApplicationIconCockpit, "cockpit"),
+            CIcon(CIcons::ApplicationIconFlightPlan, "flightplan"),
+            CIcon(CIcons::ApplicationIconLog, "log"),
+            CIcon(CIcons::ApplicationIconMappings, "mappings"),
+            CIcon(CIcons::ApplicationIconSettings, "settings"),
+            CIcon(CIcons::ApplicationIconSimulator, "simulator"),
+            CIcon(CIcons::ApplicationIconTextMessages, "text messages"),
+            CIcon(CIcons::ApplicationIconWeather, "weather"),
             CIcon(CIcons::AviationAtis, "ATIS"),
             CIcon(CIcons::AviationAttitudeIndicator, "attitude indicator"),
             CIcon(CIcons::AviationMetar, "METAR"),
@@ -133,12 +144,12 @@ namespace BlackMisc
         return icons;
     }
 
-    const CIcon &CIconList::iconForIndex(CIcons::IconIndex index)
+    const CIcon &CIconList::iconByIndex(CIcons::IconIndex index)
     {
-        return iconForIndex(static_cast<int>(index));
+        return iconByIndex(static_cast<int>(index));
     }
 
-    const CIcon &CIconList::iconForIndex(int index)
+    const CIcon &CIconList::iconByIndex(int index)
     {
         // changed to index / at based approach during #322 (after Sleepy profiling)
         // this seems to be faster as the findBy approach previously used, but required synced indexes

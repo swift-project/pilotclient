@@ -38,11 +38,11 @@ namespace BlackGui
             {
                 ResizingAuto,  //!< always resizing, \sa m_resizeAutoNthTime
                 ResizingOnce,  //!< only one time
-                ResizingOff
+                ResizingOff    //!< never
             };
 
-            //! When to use asynchronous updates
-            static const int asyncThreshold = 50;
+            //! When (rows count) to use asynchronous updates
+            static const int asyncRowsCountThreshold = 50;
 
             //! Clear data
             virtual void clear() = 0;
@@ -101,21 +101,22 @@ namespace BlackGui
             //! \param variant contains the container
             //! \param sort
             //! \param resize
-            virtual int performUpdateContainer(const QVariant &variant, bool sort, bool resize) = 0;
+            virtual int performUpdateContainer(const QVariant &variant, bool sort, bool performResizing) = 0;
 
             //! Skip resizing because of size?
             virtual bool reachedResizeThreshold() const = 0;
 
             //! Resize or skip resize?
-            virtual bool resize() const;
+            virtual bool performResizing() const;
 
             //! Init default values
             virtual void standardInit();
 
             ResizeMode m_resizeMode   = ResizingAuto; //!< mode
-            int        m_resizeCount  = 0;            //!< flag / counter,how many resize activities
-            int m_skipResizeThreshold = 40;           //!< when to skip resize
+            int        m_resizeCount  = 0;            //!< flag / counter, how many resize activities
+            int m_skipResizeThreshold = 40;           //!< when to skip resize (rows count)
             int m_resizeAutoNthTime   = 1;            //!< with ResizeAuto, resize every n-th time
+            bool m_forceStretchLastColumnWhenResized  = false; //! a small table might (few columns) might to fail stretching, force again
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker
@@ -153,13 +154,13 @@ namespace BlackGui
             virtual void clear() override { Q_ASSERT(this->m_model); this->m_model->clear(); }
 
             //! Update whole container
-            int updateContainer(const ContainerType &container, bool sort = true, bool resize = true);
+            int updateContainer(const ContainerType &container, bool sort = true, bool performResizing = true);
 
             //! Update whole container in background
-            BlackMisc::CWorker *updateContainerAsync(const ContainerType &container, bool sort = true, bool resize = true);
+            BlackMisc::CWorker *updateContainerAsync(const ContainerType &container, bool sort = true, bool performResizing = true);
 
             //! Based on size call sync / async update
-            void updateContainerMaybeAsync(const ContainerType &container, bool sort = true, bool resize = true);
+            void updateContainerMaybeAsync(const ContainerType &container, bool sort = true, bool performResizing = true);
 
             //! Insert
             template<class ObjectType> void insert(const ObjectType &value, bool resize = true)
@@ -211,7 +212,7 @@ namespace BlackGui
             virtual void performResizeToContents() override;
 
             //! \copydoc CViewBaseNonTemplate::performUpdateContainer
-            virtual int performUpdateContainer(const QVariant &variant, bool sort, bool resize) override;
+            virtual int performUpdateContainer(const QVariant &variant, bool sort, bool performResizing) override;
 
         };
     } // namespace

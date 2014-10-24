@@ -40,6 +40,11 @@ namespace BlackGui
         {
             this->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(this, &QWidget::customContextMenuRequested, this, &CViewBaseNonTemplate::ps_customMenuRequested);
+
+            // scroll modes
+            this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+            this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+
         }
 
         void CViewBaseNonTemplate::customMenu(QMenu &menu) const
@@ -82,8 +87,8 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::initRowsResizeModeToInteractive()
         {
-            const int h = this->verticalHeader()->minimumSectionSize();
-            this->setRowsResizeModeToInteractive(h);
+            const int height = this->verticalHeader()->minimumSectionSize();
+            this->setRowsResizeModeToInteractive(height);
         }
 
         void CViewBaseNonTemplate::setRowsResizeModeToInteractive(int height)
@@ -94,8 +99,9 @@ namespace BlackGui
             verticalHeader->setDefaultSectionSize(height);
         }
 
-        bool CViewBaseNonTemplate::resize() const
+        bool CViewBaseNonTemplate::performResizing() const
         {
+            if (m_resizeMode == ResizingOff) { return false; }
             if (m_resizeMode == ResizingOnce) { return m_resizeCount < 1; }
             if (m_resizeMode == ResizingAuto)
             {
@@ -103,7 +109,7 @@ namespace BlackGui
                 if (m_resizeAutoNthTime < 2) return true;
                 return (m_resizeCount % m_resizeAutoNthTime) == 0;
             }
-            return m_resizeMode == ResizingOff;
+            return false;
         }
 
         void CViewBaseNonTemplate::fullResizeToContents()
@@ -115,7 +121,11 @@ namespace BlackGui
             m_resizeCount++;
             this->resizeColumnsToContents();
             this->resizeRowsToContents();
-
+            if (m_forceStretchLastColumnWhenResized)
+            {
+                // re-stretch
+                this->horizontalHeader()->setStretchLastSection(true);
+            }
             qDebug() << this->objectName() << "resize ms:" << t.elapsed() << QThread::currentThreadId();
         }
 
@@ -158,7 +168,7 @@ namespace BlackGui
             {
                 ContainerType sortedContainer = model->sortContainerByColumn(container, sortColumn, sortOrder);
                 QMetaObject::invokeMethod(this, "updateContainer",
-                    Q_ARG(QVariant, sortedContainer.toQVariant()), Q_ARG(bool, false), Q_ARG(bool, resize));
+                                          Q_ARG(QVariant, sortedContainer.toQVariant()), Q_ARG(bool, false), Q_ARG(bool, resize));
             });
             worker->then(this, &CViewBase::asyncUpdateFinished);
             return worker;
@@ -166,7 +176,7 @@ namespace BlackGui
 
         template <class ModelClass, class ContainerType> void CViewBase<ModelClass, ContainerType>::updateContainerMaybeAsync(const ContainerType &container, bool sort, bool resize)
         {
-            if (container.size() > asyncThreshold && sort)
+            if (container.size() > asyncRowsCountThreshold && sort)
             {
                 // larger container with sorting
                 updateContainerAsync(container, sort, resize);
@@ -231,7 +241,7 @@ namespace BlackGui
         template <class ModelClass, class ContainerType>  void CViewBase<ModelClass, ContainerType>::performResizeToContents()
         {
             // small set or large set?
-            if (this->resize())
+            if (this->performResizing())
             {
                 this->fullResizeToContents();
             }

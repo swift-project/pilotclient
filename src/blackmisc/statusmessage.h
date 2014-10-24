@@ -91,7 +91,7 @@ namespace BlackMisc
         void setSeverity(StatusSeverity severity) { this->m_severity = severity; }
 
         //! Representing icon
-        virtual CIcon toIcon() const override { return CStatusMessage::convertToIcon(*this); }
+        virtual CIcon toIcon() const override { return convertToIcon(*this); }
 
         //! Severity as string
         const QString &getSeverityAsString() const;

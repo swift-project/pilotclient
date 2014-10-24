@@ -132,11 +132,11 @@ namespace BlackMisc
     {
         switch (statusMessage.getSeverity())
         {
-        case SeverityDebug: return CIconList::iconForIndex(CIcons::StandardIconUnknown16); // TODO
-        case SeverityInfo: return CIconList::iconForIndex(CIcons::StandardIconInfo16);
-        case SeverityWarning: return CIconList::iconForIndex(CIcons::StandardIconWarning16);
-        case SeverityError: return CIconList::iconForIndex(CIcons::StandardIconError16);
-        default: return CIconList::iconForIndex(CIcons::StandardIconInfo16);
+        case SeverityDebug: return CIconList::iconByIndex(CIcons::StandardIconUnknown16); // TODO
+        case SeverityInfo: return CIconList::iconByIndex(CIcons::StandardIconInfo16);
+        case SeverityWarning: return CIconList::iconByIndex(CIcons::StandardIconWarning16);
+        case SeverityError: return CIconList::iconByIndex(CIcons::StandardIconError16);
+        default: return CIconList::iconByIndex(CIcons::StandardIconInfo16);
         }
     }
 

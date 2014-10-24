@@ -18,7 +18,7 @@ namespace Ui { class CShowHideBar; }
 
 namespace BlackGui
 {
-    //! Show or hide another section
+    //! Show or hide (expand / collapse) another section
     class CShowHideBar : public QFrame
     {
         Q_OBJECT

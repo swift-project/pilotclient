@@ -30,6 +30,17 @@ namespace BlackMisc
     {
         switch (index)
         {
+        case ApplicationIconAircrafts: return appAircrafts16();
+        case ApplicationIconAtc: return appAtc16();
+        case ApplicationIconAudio: return appAudio16();
+        case ApplicationIconCockpit: return appCockpit16();
+        case ApplicationIconFlightPlan: return appFlightPlan16();
+        case ApplicationIconLog: return appLog16();
+        case ApplicationIconMappings: return appMappings16();
+        case ApplicationIconSettings: return appSettings16();
+        case ApplicationIconSimulator: return appSimulator16();
+        case ApplicationIconTextMessages: return appTextMessages16();
+        case ApplicationIconWeather: return appWeather16();
         case AviationAtis: return atis();
         case AviationAttitudeIndicator: return attitudeIndicator16();
         case AviationMetar: return metar();
@@ -93,6 +104,7 @@ namespace BlackMisc
         case StandardIconPaperPlane16: return paperPlane16();
         case StandardIconPlugin16: return plugin16();
         case StandardIconRadar16: return radar16();
+        case StandardIconRadio16: return radio16();
         case StandardIconRefresh16: return refresh16();
         case StandardIconResize16: return resize16();
         case StandardIconResizeHorizontal16: return resizeHorizontal16();

@@ -40,7 +40,7 @@ namespace BlackMisc
             CSelcal(const char *code) : m_code(code) {}
 
             //! Is valid?
-            bool isValid() const { return CSelcal::isValidCode(this->m_code); }
+            bool isValid() const { return isValidCode(this->m_code); }
 
             //! Get SELCAL code
             const QString &getCode() const { return this->m_code; }

@@ -1,12 +1,19 @@
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #include "transpondermodeselector.h"
 
 using namespace BlackMisc::Aviation;
 
 namespace BlackGui
 {
-
-    CTransponderModeSelector::CTransponderModeSelector(QWidget *parent) : QComboBox(parent),
-        m_currentMode(CTransponder::StateStandby), m_resetMode(CTransponder::StateStandby)
+    CTransponderModeSelector::CTransponderModeSelector(QWidget *parent) : QComboBox(parent)
     {
         QComboBox::insertItems(0, CTransponderModeSelector::modes());
         connect(&this->m_resetTimer, &QTimer::timeout, this, &CTransponderModeSelector::resetTransponderMode);
@@ -51,9 +58,9 @@ namespace BlackGui
 
     void CTransponderModeSelector::setSelectedTransponderMode(CTransponder::TransponderMode mode)
     {
-        if (mode != CTransponder::StateIdent) this->m_resetMode = mode;
-        if (this->m_currentMode == mode) return;
-        if (this->m_currentMode == CTransponder::StateIdent) emit this->identEnded();
+        if (mode != CTransponder::StateIdent) { this->m_resetMode = mode; }
+        if (this->m_currentMode == mode) { return; }
+        if (this->m_currentMode == CTransponder::StateIdent) { emit this->transponderStateIdentEnded(); }
         this->m_currentMode = mode;
         QString m = CTransponder::modeAsString(mode);
         QComboBox::setCurrentText(m);
@@ -65,7 +72,12 @@ namespace BlackGui
         {
             this->m_resetTimer.stop();
         }
-        emit this->valueChanged();
+        emit this->transponderModeChanged(this->m_currentMode);
+    }
+
+    void CTransponderModeSelector::setSelectedTransponderModeStateIdent()
+    {
+        this->setSelectedTransponderMode(BlackMisc::Aviation::CTransponder::StateIdent);
     }
 
     void CTransponderModeSelector::setSelectedTransponderModeAsString(const QString &mode)

@@ -19,6 +19,7 @@ namespace BlackGui
     {
         CNameVariantPairView::CNameVariantPairView(QWidget *parent) : CViewBase(parent)
         {
+            m_forceStretchLastColumnWhenResized = true;
             this->standardInit(new CNameVariantPairModel(true, this));
         }
 
@@ -47,4 +48,4 @@ namespace BlackGui
             return this->m_model->containsName(name);
         }
     }
-}
+} // namespace

@@ -73,7 +73,7 @@ namespace BlackMisc
          */
         template <class LATorLON> CIcon CEarthAngle<LATorLON>::toIcon() const
         {
-            return BlackMisc::CIconList::iconForIndex(CIcons::GeoPosition);
+            return BlackMisc::CIconList::iconByIndex(CIcons::GeoPosition);
         }
 
         // see here for the reason of thess forward instantiations

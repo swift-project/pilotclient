@@ -277,7 +277,7 @@ namespace BlackGui
         { }
 
         CBoolIconFormatter::CBoolIconFormatter(CIcons::IconIndex onIcon, CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment) :
-            CBoolIconFormatter(CIconList::iconForIndex(onIcon), CIconList::iconForIndex(offIcon), onName, offName, alignment)
+            CBoolIconFormatter(CIconList::iconByIndex(onIcon), CIconList::iconByIndex(offIcon), onName, offName, alignment)
         { }
 
         CBoolIconFormatter::CBoolIconFormatter(const CIcon &onIcon, const CIcon &offIcon, const QString &onName, const QString &offName, int alignment) :

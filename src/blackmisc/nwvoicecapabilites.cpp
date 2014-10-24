@@ -100,18 +100,18 @@ namespace BlackMisc
             switch (this->m_voiceCapabilities)
             {
             case Voice:
-                return CIconList::iconForIndex(CIcons::NetworkCapabilityVoiceBackground);
+                return CIconList::iconByIndex(CIcons::NetworkCapabilityVoiceBackground);
             case TextOnly:
-                return CIconList::iconForIndex(CIcons::NetworkCapabilityTextOnly);
+                return CIconList::iconByIndex(CIcons::NetworkCapabilityTextOnly);
             case Unknown:
-                return CIconList::iconForIndex(CIcons::NetworkCapabilityUnknown);
+                return CIconList::iconByIndex(CIcons::NetworkCapabilityUnknown);
             case VoiceReceivingOnly:
-                return CIconList::iconForIndex(CIcons::NetworkCapabilityVoiceReceiveOnlyBackground);
+                return CIconList::iconByIndex(CIcons::NetworkCapabilityVoiceReceiveOnlyBackground);
             default:
                 break;
             }
             Q_ASSERT(false);
-            return CIconList::iconForIndex(CIcons::NetworkCapabilityUnknown); // never reached
+            return CIconList::iconByIndex(CIcons::NetworkCapabilityUnknown); // never reached
         }
 
         /*

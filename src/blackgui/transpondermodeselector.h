@@ -1,3 +1,14 @@
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
 #ifndef BLACKGUI_TRANSPONDERMODESELECTOR_H
 #define BLACKGUI_TRANSPONDERMODESELECTOR_H
 
@@ -11,65 +22,62 @@
 namespace BlackGui
 {
 
-    /*!
-     * \brief Selector for the transponder mode
-     */
+    //! Selector for the transponder mode
+    //! \remarks features ident reset
     class CTransponderModeSelector : public QComboBox
     {
         Q_OBJECT
 
-    private:
-        BlackMisc::Aviation::CTransponder::TransponderMode m_currentMode;
-        BlackMisc::Aviation::CTransponder::TransponderMode m_resetMode;
-        QTimer m_resetTimer;
 
     public:
-        //! \brief Constructor
+        //! Constructor
         explicit CTransponderModeSelector(QWidget *parent = nullptr);
 
-        //! \brief Standby string
+        //! Standby string
         static const QString &transponderStateStandby();
 
-        //! \brief Ident string
+        //! Ident string
         static const QString &transponderStateIdent();
 
-        //! \brief Mode C string
+        //! Mode C string
         static const QString &transponderModeC();
 
-        //! \brief All relevant modes for GUI
+        //! All relevant modes for GUI
         static const QStringList &modes();
 
-        //! \brief Selected transponder mode
+        //! Selected transponder mode
         BlackMisc::Aviation::CTransponder::TransponderMode getSelectedTransponderMode() const;
 
-        //! \brief Selected transponder mode
-        void setSelectedTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode);
-
-        //!\ brief Set to ident
-        void setSelectedTransponderModeStateIdent()
-        {
-            this->setSelectedTransponderMode(BlackMisc::Aviation::CTransponder::StateIdent);
-        }
-
-        //! \brief Ident selected
+        //! Ident selected
         bool isIdentSelected() const
         {
             return this->getSelectedTransponderMode() == BlackMisc::Aviation::CTransponder::StateIdent;
         }
 
     public slots:
-        //! \brief reset to last mode (unequal ident)
+        //! reset to last mode (unequal ident)
         void resetTransponderMode();
 
-        //! \brief Selected transponder mode
+        //! Selected transponder mode
         void setSelectedTransponderModeAsString(const QString &mode);
 
-    signals:
-        //! Singal, which makes sure the value is already updated internally
-        void valueChanged();
+        //! Selected transponder mode
+        void setSelectedTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode);
 
-        //! \brief Ident ended
-        void identEnded();
+        //! Set to ident (transponder state)
+        void setSelectedTransponderModeStateIdent();
+
+    signals:
+        //! Mode / state has been changed
+        void transponderModeChanged(BlackMisc::Aviation::CTransponder::TransponderMode newMode);
+
+        //! Ident phase ended
+        void transponderStateIdentEnded();
+
+    private:
+        BlackMisc::Aviation::CTransponder::TransponderMode m_currentMode = BlackMisc::Aviation::CTransponder::StateStandby;
+        BlackMisc::Aviation::CTransponder::TransponderMode m_resetMode   = BlackMisc::Aviation::CTransponder::StateStandby;
+        QTimer m_resetTimer;
 
     };
 } // namespace

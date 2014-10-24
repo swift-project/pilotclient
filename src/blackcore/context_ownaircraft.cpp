@@ -24,5 +24,4 @@ namespace BlackCore
             return nullptr;
         }
     }
-
-}
+} // namespace

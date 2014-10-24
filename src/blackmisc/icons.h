@@ -28,6 +28,17 @@ namespace BlackMisc
         enum IconIndex
         {
             // !! keep indexes alphabetically sorted and in sync with CIconList
+            ApplicationIconAircrafts,
+            ApplicationIconAtc,
+            ApplicationIconAudio,
+            ApplicationIconCockpit,
+            ApplicationIconFlightPlan,
+            ApplicationIconLog,
+            ApplicationIconMappings,
+            ApplicationIconSettings,
+            ApplicationIconSimulator,
+            ApplicationIconTextMessages,
+            ApplicationIconWeather,
             AviationAttitudeIndicator,
             AviationAtis,
             AviationMetar,
@@ -751,13 +762,13 @@ namespace BlackMisc
         //! Text only
         static const QPixmap &capabilityTextOnly()
         {
-            return CIcons::appTextMessages16();
+            return appTextMessages16();
         }
 
         //! Text only
         static const QPixmap &capabilityUnknown()
         {
-            return CIcons::unknown16();
+            return unknown16();
         }
 
         //! Attitude indicator
