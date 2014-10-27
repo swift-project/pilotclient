@@ -51,7 +51,7 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignTop">
     <widget class="BlackGui::CShowHideBar" name="wip_CockpitComPanelShowHideBar" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">

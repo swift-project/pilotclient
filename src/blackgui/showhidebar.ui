@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>314</width>
+    <width>56</width>
     <height>12</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -44,7 +44,7 @@
    <item>
     <widget class="QPushButton" name="pb_ShowHidePushButton">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -52,7 +52,7 @@
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>10</height>
+       <height>16777215</height>
       </size>
      </property>
      <property name="toolTip">
@@ -63,13 +63,13 @@
      </property>
      <property name="icon">
       <iconset resource="../blackmisc/blackmisc.qrc">
-       <normaloff>:/own/icons/own/arrowWide300x10down.png</normaloff>
-       <normalon>:/own/icons/own/arrowWide300x10up.png</normalon>:/own/icons/own/arrowWide300x10down.png</iconset>
+       <normaloff>:/own/icons/own/gripdown42x15.png</normaloff>
+       <normalon>:/own/icons/own/gripup42x15.png</normalon>:/own/icons/own/gripdown42x15.png</iconset>
      </property>
      <property name="iconSize">
       <size>
-       <width>300</width>
-       <height>10</height>
+       <width>42</width>
+       <height>15</height>
       </size>
      </property>
      <property name="checkable">

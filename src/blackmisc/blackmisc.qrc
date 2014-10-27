@@ -326,6 +326,8 @@
         <file>icons/own/transparent1px.png</file>
         <file>icons/own/arrowWide300x10down.png</file>
         <file>icons/own/arrowWide300x10up.png</file>
+        <file>icons/own/gripdown42x15.png</file>
+        <file>icons/own/gripup42x15.png</file>
     </qresource>
     <qresource prefix="/qled">
         <file>icons/qled/circle_black.svg</file>
