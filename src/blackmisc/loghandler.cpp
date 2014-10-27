@@ -142,7 +142,7 @@ namespace BlackMisc
         {
             m_handler->enableConsoleOutput(m_enableFallThrough);
         }
-        connect(m_handler, &CLogPatternHandler::messageLogged, this, &CLogSubscriber::ps_logMessage);
+        connect(m_handler.data(), &CLogPatternHandler::messageLogged, this, &CLogSubscriber::ps_logMessage);
     }
 
     void CLogSubscriber::unsubscribe()
