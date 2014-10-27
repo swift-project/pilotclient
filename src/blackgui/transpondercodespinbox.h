@@ -22,6 +22,7 @@ namespace BlackGui
     {
         Q_OBJECT
     public:
+        //! Constructor
         explicit CTransponderCodeSpinBox(QWidget *parent = nullptr);
 
         //! \copydoc QDoubleSpinBox::textFromValue

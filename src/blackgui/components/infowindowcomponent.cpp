@@ -27,7 +27,7 @@ namespace BlackGui
          * Constructor
          */
         CInfoWindowComponent::CInfoWindowComponent(QWidget *parent) :
-            QWizardPage(parent), ui(new Ui::InfoWindow), m_hideTimer(nullptr)
+            QWizardPage(parent), ui(new Ui::InfoWindow)
         {
             ui->setupUi(this);
             this->hide();

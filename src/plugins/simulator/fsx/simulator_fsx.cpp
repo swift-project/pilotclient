@@ -112,8 +112,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::disconnectFrom()
         {
-            if (!m_isConnected)
-                return true;
+            if (!m_isConnected) { return true; }
 
             emit statusChanged(Disconnected);
             if (m_hSimConnect)
@@ -142,7 +141,6 @@ namespace BlackSimPlugin
                 return false;
             }
             SimConnect_Close(m_hSimConnect);
-
             return true;
         }
 

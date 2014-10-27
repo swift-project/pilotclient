@@ -173,6 +173,9 @@ namespace BlackCore
         return this->m_network->isConnected();
     }
 
+    /*
+     * Pending connection
+     */
     bool CContextNetwork::isPendingConnection() const
     {
         // if underlying class says pending, we believe it. But not all states (e.g. disconnecting) are covered

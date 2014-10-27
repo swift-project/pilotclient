@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_AVIOCOMSYSTEM_H
 #define BLACKMISC_AVIOCOMSYSTEM_H
+
 #include "blackmisc/aviomodulator.h"
 
 namespace BlackMisc
@@ -62,13 +63,13 @@ namespace BlackMisc
             //! Is active frequency within 8.3383kHz channel?
             bool isActiveFrequencyWithin8_33kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const
             {
-                return CComSystem::isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing8_33KHz);
+                return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing8_33KHz);
             }
 
             //! Is active frequency within 25kHz channel?
             bool isActiveFrequencyWithin25kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const
             {
-                return CComSystem::isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing25KHz);
+                return isWithinChannelSpacing(this->getFrequencyActive(), comFrequency, ChannelSpacing25KHz);
             }
 
             //! Set UNICOM frequency as active

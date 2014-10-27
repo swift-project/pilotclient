@@ -164,7 +164,7 @@ namespace BlackCore
         this->unloadSimulatorPlugin(); // old plugin unloaded
         m_simulator = newSimulator;
 
-        connect(m_simulator, &ISimulator::statusChanged, this, &CContextSimulator::ps_setConnectionStatus);
+        connect(m_simulator, &ISimulator::statusChanged, this, &CContextSimulator::ps_onConnectionStatusChanged);
         connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
         connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_simulator, &ISimulator::displayStatusMessage);
         connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_simulator, &ISimulator::displayStatusMessage);
@@ -288,7 +288,7 @@ namespace BlackCore
         this->m_simulator->updateOwnSimulatorCockpit(ownAircraft);
     }
 
-    void CContextSimulator::ps_setConnectionStatus(ISimulator::Status status)
+    void CContextSimulator::ps_onConnectionStatusChanged(ISimulator::Status status)
     {
         if (status == ISimulator::Connected)
         {

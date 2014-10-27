@@ -61,11 +61,17 @@ namespace BlackGui
             //! Cockpit values have been changed in GUI
             void ps_guiChangedCockpitValues();
 
+            //! SELCAL changed in GUI
+            void ps_guiChangedSelcal();
+
             //! Update cockpit from context
             void ps_updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
 
             //! Cockpit values have been changed in GUI
             void ps_testSelcal();
+
+            //! SELCAL was changed
+            void ps_onChangedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator);
 
             //! Update voice room related information
             void ps_onChangedVoiceRoomStatus(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
@@ -90,8 +96,7 @@ namespace BlackGui
             void updateFrequencyDisplaysFromComSystems(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2);
 
             //! Identifies sender of cockpit updates
-            // TODO: Check if to be migrated to COriginator
-            static const QString cockpitOriginator();
+            static const QString &cockpitOriginator();
 
             QScopedPointer<Ui::CCockpitMainComponent> ui;
         };

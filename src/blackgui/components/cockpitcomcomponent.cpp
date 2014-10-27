@@ -280,10 +280,10 @@ namespace BlackGui
             Q_UNUSED(connected);
         }
 
-        const QString CCockpitComComponent::cockpitOriginator()
+        const QString &CCockpitComComponent::cockpitOriginator()
         {
             // string is generated once, the timestamp allows to use multiple
-            // components (as long as they are not generated in the same ms)
+            // components (as long as they are not generated at the same ms)
             static const QString o = QString("COCKPITCOMCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
             return o;
         }

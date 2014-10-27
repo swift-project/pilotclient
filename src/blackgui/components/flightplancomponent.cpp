@@ -225,7 +225,7 @@ namespace BlackGui
             return messages;
         }
 
-        void CFlightPlanComponent::sendFlightPlan()
+        void CFlightPlanComponent::ps_sendFlightPlan()
         {
             CFlightPlan flightPlan;
             CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
@@ -249,13 +249,13 @@ namespace BlackGui
             }
         }
 
-        void CFlightPlanComponent::validateFlightPlan()
+        void CFlightPlanComponent::ps_validateFlightPlan()
         {
             CFlightPlan flightPlan;
             CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
         }
 
-        void CFlightPlanComponent::resetFlightPlan()
+        void CFlightPlanComponent::ps_resetFlightPlan()
         {
             if (this->getIContextNetwork())
             {
@@ -275,7 +275,9 @@ namespace BlackGui
             this->ui->le_TakeOffTimePlanned->setText(QDateTime::currentDateTimeUtc().addSecs(30 * 60).toString("hh:mm"));
         }
 
-        void CFlightPlanComponent::loadFlightPlanFromNetwork()
+        void CFlightPlanComponent::ps_setSelcalInOwnAircraft()
+        {
+        void CFlightPlanComponent::ps_loadFlightPlanFromNetwork()
         {
             if (!this->getIContextNetwork())
             {
@@ -301,7 +303,7 @@ namespace BlackGui
             }
         }
 
-        void CFlightPlanComponent::buildRemarkString()
+        void CFlightPlanComponent::ps_buildRemarksString()
         {
             QString rem;
             QString v = this->ui->cb_VoiceCapabilities->currentText().toUpper();
@@ -374,13 +376,13 @@ namespace BlackGui
             this->ui->pte_RemarksGenerated->setPlainText(rem);
         }
 
-        void CFlightPlanComponent::copyRemarks()
+        void CFlightPlanComponent::ps_copyRemarks()
         {
             this->ui->pte_Remarks->setPlainText(this->ui->pte_RemarksGenerated->toPlainText());
             CLogMessage(this).info("Copied remarks");
         }
 
-        void CFlightPlanComponent::currentTabGenerator()
+        void CFlightPlanComponent::ps_currentTabGenerator()
         {
             this->setCurrentWidget(this->ui->tb_RemarksGenerator);
         }

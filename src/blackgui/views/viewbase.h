@@ -100,7 +100,7 @@ namespace BlackGui
             //! Helper method with template free signature
             //! \param variant contains the container
             //! \param sort
-            //! \param resize
+            //! \param performResizing
             virtual int performUpdateContainer(const QVariant &variant, bool sort, bool performResizing) = 0;
 
             //! Skip resizing because of size?
@@ -116,7 +116,7 @@ namespace BlackGui
             int        m_resizeCount  = 0;            //!< flag / counter, how many resize activities
             int m_skipResizeThreshold = 40;           //!< when to skip resize (rows count)
             int m_resizeAutoNthTime   = 1;            //!< with ResizeAuto, resize every n-th time
-            bool m_forceStretchLastColumnWhenResized  = false; //! a small table might (few columns) might to fail stretching, force again
+            bool m_forceStretchLastColumnWhenResized  = false; //!< a small table might (few columns) might to fail stretching, force again
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker

@@ -58,7 +58,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::InfoWindow> ui; //!< user interface
-            QTimer *m_hideTimer;
+            QTimer *m_hideTimer = nullptr;
 
             //! Init the window
             void initWindow();

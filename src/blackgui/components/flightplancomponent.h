@@ -65,25 +65,28 @@ namespace BlackGui
 
         private slots:
             //! Send flightplan
-            void sendFlightPlan();
+            void ps_sendFlightPlan();
 
             //! Reset Flightplan
-            void resetFlightPlan();
+            void ps_resetFlightPlan();
+
+            //! Set SELCAL in own aircrafr
+            void ps_setSelcalInOwnAircraft();
 
             //! Load Flightplan
-            void loadFlightPlanFromNetwork();
+            void ps_loadFlightPlanFromNetwork();
 
             //! Validate Flightplan
-            void validateFlightPlan();
+            void ps_validateFlightPlan();
 
             //! Remark
-            void buildRemarkString();
+            void ps_buildRemarksString();
 
             //! Copy over
-            void copyRemarks();
+            void ps_copyRemarks();
 
             //! Show generator tab page
-            void currentTabGenerator();
+            void ps_currentTabGenerator();
 
         };
     }
