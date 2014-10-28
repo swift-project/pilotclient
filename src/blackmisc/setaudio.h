@@ -29,9 +29,6 @@ namespace BlackMisc
             //! Default constructor.
             CSettingsAudio();
 
-            //! Destructor.
-            virtual ~CSettingsAudio() {}
-
             //! Path
             static const QString &ValueNotificationFlag()
             {

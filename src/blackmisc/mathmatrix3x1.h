@@ -29,7 +29,7 @@ namespace BlackMisc
 
         public:
             //! Constructor
-            CMatrix3x1() : CMatrixBase() {}
+            CMatrix3x1() = default;
 
             //! Constructor
             CMatrix3x1(double r1, double r2, double r3) : CMatrixBase()
@@ -38,9 +38,6 @@ namespace BlackMisc
                 this->m_matrix(1, 0) = r2;
                 this->m_matrix(2, 0) = r3;
             }
-
-            //! Copy constructor
-            CMatrix3x1(const CMatrix3x1 &other) : CMatrixBase(other) {}
 
             //! Init by fill value
             explicit CMatrix3x1(double fillValue) : CMatrixBase(fillValue) {}
@@ -59,8 +56,9 @@ namespace BlackMisc
                 this->m_matrix(2, 0) = vector.k();
             }
         };
-    } // namespace
-} // namespace
+
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::Math::CMatrix3x1)
 

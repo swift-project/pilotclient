@@ -6,7 +6,8 @@
 #ifndef BLACKMISC_AVIOBASE_H
 #define BLACKMISC_AVIOBASE_H
 
-// QtGlobal is required for asserts
+//! \file
+
 #include "blackmisc/valueobject.h"
 #include "blackmisc/pqconstants.h"
 #include <QtGlobal>
@@ -59,9 +60,6 @@ namespace BlackMisc
             virtual uint getValueHash() const override;
 
         public:
-            //! \brief Virtual destructor
-            virtual ~CAvionicsBase() {}
-
             //! \brief Name
             QString getName() const
             {
@@ -78,8 +76,8 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CAvionicsBase)
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAvionicsBase, (o.m_name))
 

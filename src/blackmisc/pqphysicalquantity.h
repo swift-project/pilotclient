@@ -46,9 +46,6 @@ namespace BlackMisc
                 IndexValueRounded6DigitsWithUnit
             };
 
-            //! Virtual destructor
-            virtual ~CPhysicalQuantity() {}
-
             //! Unit
             MU getUnit() const { return this->m_unit; }
 
@@ -244,7 +241,7 @@ namespace BlackMisc
             CPhysicalQuantity(double value, const MU &unit);
 
             //! Copy constructor
-            CPhysicalQuantity(const CPhysicalQuantity &other);
+            CPhysicalQuantity(const CPhysicalQuantity &other) = default;
 
             //! Constructor by parsed string, e.g. 10m
             CPhysicalQuantity(const QString &unitString) : m_value(0.0), m_unit(MU::nullUnit())
@@ -277,7 +274,7 @@ namespace BlackMisc
             //! Easy access to derived class (CRTP template parameter)
             PQ *derived() { return static_cast<PQ *>(this); }
         };
-    } // namespace
-} // namespace
+    }
+}
 
 #endif // guard

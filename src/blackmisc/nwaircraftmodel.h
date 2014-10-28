@@ -24,9 +24,7 @@ namespace BlackMisc
          */
         class CAircraftModel : public BlackMisc::CValueObject
         {
-
         public:
-
             //! Indexes
             enum ColumnIndex
             {

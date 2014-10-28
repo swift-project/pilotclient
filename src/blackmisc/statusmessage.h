@@ -47,7 +47,7 @@ namespace BlackMisc
         };
 
         //! Constructor
-        CStatusMessage();
+        CStatusMessage() = default;
 
         //! Constructor
         CStatusMessage(const QString &message);
@@ -130,9 +130,9 @@ namespace BlackMisc
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)
         CLogCategoryList m_categories;
-        StatusSeverity m_severity;
+        StatusSeverity m_severity = SeverityDebug;
         QString m_message;
-        QDateTime m_timestamp;
+        QDateTime m_timestamp = QDateTime::currentDateTimeUtc();
         bool m_redundant = false;
         mutable QVector<quintptr> m_handledByObjects;
     };

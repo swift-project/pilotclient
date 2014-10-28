@@ -37,20 +37,17 @@ namespace BlackMisc
 
         public:
             //! Default constructor
-            CLatitude() : CEarthAngle() {}
+            CLatitude() = default;
 
             //! Constructor
             explicit CLatitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
             //! Init by double value
             CLatitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
-
-            //! Virtual destructor
-            virtual ~CLatitude() {}
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CLatitude)
 

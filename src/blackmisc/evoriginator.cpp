@@ -23,18 +23,6 @@ namespace BlackMisc
         {
         }
 
-        // Copy Constructor
-        COriginator::COriginator(const COriginator &other)
-            : CValueObject(other),
-              m_originatorName(other.m_originatorName),
-              m_machineId(other.m_machineId),
-              m_primaryIpAddress(other.m_primaryIpAddress),
-              m_objectId(other.m_objectId),
-              m_processId(other.m_processId),
-              m_processName(other.m_processName)
-        {
-        }
-
         // Hash
         uint COriginator::getValueHash() const
         {
@@ -120,5 +108,5 @@ namespace BlackMisc
         {
             argument >> TupleConverter<COriginator>::toTuple(*this);
         }
-    } // namespace Event
+    }
 }

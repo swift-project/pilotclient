@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_PQFREQUENCY_H
 #define BLACKMISC_PQFREQUENCY_H
+
 #include "pqphysicalquantity.h"
 
 namespace BlackMisc
@@ -34,13 +35,9 @@ namespace BlackMisc
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CFrequency(const QString &unitString) : CPhysicalQuantity(unitString) {}
-
-            //! Virtual destructor
-            virtual ~CFrequency() {}
         };
-
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CFrequency)
 

@@ -29,7 +29,6 @@ namespace BlackMisc
         class CAircraftSituation : public BlackMisc::CValueObject, public BlackMisc::Geo::ICoordinateGeodetic
         {
         public:
-
             //! Properties by index
             enum ColumnIndex
             {
@@ -160,7 +159,6 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CAngle m_bank;
             BlackMisc::PhysicalQuantities::CSpeed m_groundspeed;
             QDateTime m_timestamp;
-
         };
     } // namespace
 } // namespace

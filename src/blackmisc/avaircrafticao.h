@@ -25,7 +25,6 @@ namespace BlackMisc
         class CAircraftIcao : public BlackMisc::CValueObject
         {
         public:
-
             //! Properties by index
             enum ColumnIndex
             {
@@ -37,7 +36,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CAircraftIcao() {}
+            CAircraftIcao() = default;
 
             //! Constructor.
             explicit CAircraftIcao(const QString &icao) : m_aircraftDesignator(icao.trimmed().toUpper()) {}

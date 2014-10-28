@@ -23,7 +23,6 @@ namespace BlackMisc
         //! Value object encapsulating information of a callsign.
         class CCallsign : public BlackMisc::CValueObject
         {
-
         public:
             //! Indexes
             enum ColumnIndex
@@ -34,7 +33,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CCallsign() {}
+            CCallsign() = default;
 
             //! Constructor
             CCallsign(const QString &callsign, const QString &telephonyDesignator = "")
@@ -125,11 +124,7 @@ namespace BlackMisc
             //! \copydoc CValueObject::unmarshallFromDbus()
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
-            /*!
-             * Unify the callsign
-             * \param callsign
-             * \return unified callsign
-             */
+            //! Unify the callsign
             static QString unifyCallsign(const QString &callsign);
 
             //! representing icon

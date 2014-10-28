@@ -32,9 +32,6 @@ namespace BlackMisc
             //! Default constructor.
             CSettingsNetwork();
 
-            //! Destructor.
-            virtual ~CSettingsNetwork() {}
-
             //! Update
             static const QString &CmdSetCurrentServer()
             {
@@ -146,6 +143,5 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::Settings::CSettingsNetwork)
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Settings::CSettingsNetwork, (o.m_trafficNetworkServers, o.m_trafficNetworkServerCurrent, o.m_bookingServiceUrl, o.m_dbusServerAddress))
-
 
 #endif // guard

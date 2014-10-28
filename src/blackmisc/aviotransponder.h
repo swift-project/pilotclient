@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_AVIOTRANSPONDER_H
 #define BLACKMISC_AVIOTRANSPONDER_H
+
 #include "blackmisc/aviobase.h"
 
 namespace BlackMisc
@@ -46,10 +47,6 @@ namespace BlackMisc
 
             //! Default constructor
             CTransponder() : CAvionicsBase("transponder"), m_transponderCode(0), m_transponderMode(StateStandby) {}
-
-            //! Copy constructor
-            CTransponder(const CTransponder &other) : CAvionicsBase(other.getName()),
-                m_transponderCode(other.m_transponderCode), m_transponderMode(other.m_transponderMode) {}
 
             //! Constructor
             CTransponder(const QString &name, qint32 transponderCode, TransponderMode transponderMode) :
@@ -210,10 +207,10 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CTransponder)
             qint32 m_transponderCode;          //!< Transponder code
             TransponderMode m_transponderMode; //!< Transponder mode
-
         };
-    } // namespace
-} // namespace
+
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CTransponder, (o.m_transponderCode, o.m_transponderMode))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTransponder)

@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_POSMATRIX3X3_H
 #define BLACKMISC_POSMATRIX3X3_H
+
 #include "blackmisc/mathmatrix1x3.h"
 #include "blackmisc/mathmatrix3x1.h"
 #include <stdexcept>
@@ -25,10 +26,7 @@ namespace BlackMisc
         {
         public:
             //! Constructor
-            CMatrix3x3() : CMatrixBase() {}
-
-            //! Copy constructor
-            CMatrix3x3(const CMatrix3x3 &other) : CMatrixBase(other) {}
+            CMatrix3x3() = default;
 
             //! Init by fill value
             explicit CMatrix3x3(double fillValue) : CMatrixBase(fillValue) {}
@@ -36,7 +34,7 @@ namespace BlackMisc
             //! Stupid, but handy constructor by single row column values
             explicit CMatrix3x3(double r1c1, double r1c2, double r1c3,
                                 double r2c1, double r2c2, double r2c3,
-                                double r3c1, double r3c2, double r3c3) : CMatrixBase()
+                                double r3c1, double r3c2, double r3c3)
             {
                 this->setElement(0, 0, r1c1);
                 this->setElement(0, 1, r1c2);
@@ -114,8 +112,8 @@ namespace BlackMisc
             CMatrix1x3 getRow(int row) const;
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::Math::CMatrix3x3)
 

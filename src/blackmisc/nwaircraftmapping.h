@@ -58,13 +58,10 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CAircraftMapping() {}
+            CAircraftMapping() = default;
 
             //! Constructor
             CAircraftMapping(const QString &aircraftDesignator, const QString &airlineDesignator, const QString &model);
-
-            //! Virtual destructor
-            virtual ~CAircraftMapping() {}
 
             //! operator ==
             bool operator ==(const CAircraftMapping &other) const;
@@ -118,7 +115,7 @@ namespace BlackMisc
             static const QStringList &jsonMembers();
         };
     }
-} // namespace
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CAircraftMapping, (o.m_icao, o.m_model))
 Q_DECLARE_METATYPE(BlackMisc::Network::CAircraftMapping)

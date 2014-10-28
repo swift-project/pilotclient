@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_GEOEARTHANGLE_H
 #define BLACKMISC_GEOEARTHANGLE_H
+
 #include "blackmisc/pqangle.h"
 
 namespace BlackMisc
@@ -22,11 +23,7 @@ namespace BlackMisc
          */
         template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
         {
-
         public:
-            //! Virtual destructor
-            virtual ~CEarthAngle() {}
-
             //! Equal operator ==
             bool operator==(const CEarthAngle &latOrLon) const
             {
@@ -171,8 +168,7 @@ namespace BlackMisc
             //! Easy access to derived class (CRTP template parameter)
             LATorLON *derived() { return static_cast<LATorLON *>(this); }
         };
-
-    } // namespace
-} // namespace
+    }
+}
 
 #endif // guard

@@ -34,7 +34,6 @@ namespace BlackMisc
          */
         class CAtcStation : public BlackMisc::CValueObject, public BlackMisc::Geo::ICoordinateGeodetic
         {
-
         public:
             //! Properties by index
             enum ColumnIndex
@@ -152,7 +151,6 @@ namespace BlackMisc
             /*!
              * Syncronize controller data
              * Updates two stations (namely a booked and online ATC station) with complementary data
-             * \param otherStation
              */
             void syncronizeControllerData(CAtcStation &otherStation);
 
@@ -232,7 +230,6 @@ namespace BlackMisc
              * negative values mean booking in past,
              * positive values mean booking in future,
              * no booking dates will result in - 1 year
-             * \return
              */
             BlackMisc::PhysicalQuantities::CTime bookedWhen() const;
 
@@ -324,7 +321,6 @@ namespace BlackMisc
             CInformationMessage m_metar;
             BlackMisc::Audio::CVoiceRoom m_voiceRoom;
         };
-
     } // namespace
 } // namespace
 

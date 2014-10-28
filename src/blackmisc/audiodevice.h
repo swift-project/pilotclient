@@ -28,7 +28,6 @@ namespace BlackMisc
         class CAudioDevice : public BlackMisc::CValueObject
         {
         public:
-
             //! Type
             enum DeviceType : uint
             {
@@ -141,9 +140,8 @@ namespace BlackMisc
             //! We use a DBus based system. Hence an audio device can reside on a differen computers, this here is its name
             QString m_hostName;
         };
-
-    } // Audio
-} // BlackMisc
+    } // namespace
+} // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Audio::CAudioDevice, (o.m_type, o.m_deviceIndex, o.m_deviceName, o.m_hostName))
 Q_DECLARE_METATYPE(BlackMisc::Audio::CAudioDevice)

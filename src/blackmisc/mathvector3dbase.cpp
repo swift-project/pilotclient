@@ -12,7 +12,6 @@
 #include "blackmisc/coordinateecef.h"
 #include "blackmisc/coordinatened.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include <tuple>
 
 namespace BlackMisc
 {

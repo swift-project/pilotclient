@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_CTEMPERATURE_H
 #define BLACKMISC_CTEMPERATURE_H
+
 #include "pqphysicalquantity.h"
 
 namespace BlackMisc
@@ -32,13 +33,10 @@ namespace BlackMisc
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CTemperature(const QString &unitString) : CPhysicalQuantity(unitString) {}
-
-            //! Destructor
-            virtual ~CTemperature() {}
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTemperature)
 

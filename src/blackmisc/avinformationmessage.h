@@ -48,8 +48,6 @@ namespace BlackMisc
 
             /*!
              * Information message of type
-             * \param type
-             * \param message
              */
             CInformationMessage(InformationType type, const QString &message)
                 : m_type(type), m_message(message)

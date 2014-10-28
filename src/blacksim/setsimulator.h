@@ -29,9 +29,6 @@ namespace BlackSim
             //! Default constructor.
             CSettingsSimulator();
 
-            //! Destructor.
-            virtual ~CSettingsSimulator() {}
-
             //! Path
             static const QString &ValueSelectedDriver()
             {

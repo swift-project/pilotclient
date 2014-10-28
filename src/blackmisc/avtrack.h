@@ -18,7 +18,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         /*!
          * \brief Track as used in aviation, can be true or magnetic Track
          * \remarks Intentionally allowing +/- BlackMisc::PhysicalQuantities::CAngle ,
@@ -107,8 +106,8 @@ namespace BlackMisc
             ReferenceNorth m_north; //!< magnetic or true?
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CTrack, (o.m_north))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CTrack)

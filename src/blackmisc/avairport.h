@@ -25,7 +25,6 @@ namespace BlackMisc
          */
         class CAirport : public BlackMisc::CValueObject, public BlackMisc::Geo::ICoordinateGeodetic
         {
-
         public:
             //! Properties by index
             enum ColumnIndex
@@ -170,7 +169,6 @@ namespace BlackMisc
             BlackMisc::PhysicalQuantities::CAngle m_bearingToPlane;
             BlackMisc::PhysicalQuantities::CLength m_distanceToPlane; // make mutable ?
         };
-
     } // namespace
 } // namespace
 

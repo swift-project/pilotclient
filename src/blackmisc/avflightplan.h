@@ -43,7 +43,7 @@ namespace BlackMisc
             static const int MaxRouteLength = 150; //!< Max route length
 
             //! Default constructor
-            CFlightPlan() {}
+            CFlightPlan() = default;
 
             //! Constructor
             CFlightPlan(const QString &equipmentIcao, const CAirportIcao &originAirportIcao, const CAirportIcao &destinationAirportIcao, const CAirportIcao &alternateAirportIcao,

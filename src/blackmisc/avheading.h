@@ -34,10 +34,6 @@ namespace BlackMisc
                 True = 1        //!< true north
             };
 
-        private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CHeading)
-            ReferenceNorth m_north; //!< magnetic or true?
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
@@ -55,12 +51,7 @@ namespace BlackMisc
             //! \brief Default constructor: 0 heading true
             CHeading() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
-            /*!
-             * \brief Constructor
-             * \param value
-             * \param north
-             * \param unit
-             */
+            //! \brief Constructor
             CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
 
             //! \brief Constructor by CAngle
@@ -84,6 +75,9 @@ namespace BlackMisc
             //! \brief Get reference north (magnetic or true)
             ReferenceNorth getReferenceNorth() const { return m_north; }
 
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CHeading)
+            ReferenceNorth m_north; //!< magnetic or true?
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 
@@ -102,9 +96,8 @@ namespace BlackMisc
             //! JSON member names
             static const QStringList &jsonMembers();
         };
-
-    } // namespace
-} // namespace
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CHeading, (o.m_north))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CHeading)

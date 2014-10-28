@@ -18,7 +18,6 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-
         /*
          * Constructor
          */

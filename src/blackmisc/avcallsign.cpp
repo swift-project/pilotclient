@@ -84,7 +84,6 @@ namespace BlackMisc
          */
         int CCallsign::compareImpl(const CValueObject &otherBase) const
         {
-            // intentionally compare on string only!
             const auto &other = static_cast<const CCallsign &>(otherBase);
             return this->m_callsign.compare(other.m_callsign, Qt::CaseInsensitive);
         }
@@ -182,7 +181,6 @@ namespace BlackMisc
         bool CCallsign::operator ==(const CCallsign &other) const
         {
             if (this == &other) return true;
-            // intentionally not via Tupel converter, compare on string only
             return this->asString().compare(other.asString(), Qt::CaseInsensitive) == 0;
         }
 

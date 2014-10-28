@@ -95,12 +95,6 @@ namespace BlackMisc
                 IndexGeodeticHeightAsString
             };
 
-        private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)
-            BlackMisc::Geo::CLatitude m_latitude; //!< Latitude
-            BlackMisc::Geo::CLongitude m_longitude; //!< Longitude
-            BlackMisc::PhysicalQuantities::CLength m_geodeticHeight; //!< height, ellipsoidal or geodetic height
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
@@ -122,7 +116,7 @@ namespace BlackMisc
 
         public:
             //! Default constructor
-            CCoordinateGeodetic() : m_latitude(), m_longitude(), m_geodeticHeight() {}
+            CCoordinateGeodetic() = default;
 
             //! Constructor by values
             CCoordinateGeodetic(CLatitude latitude, CLongitude longitude, BlackMisc::PhysicalQuantities::CLength height) :
@@ -204,10 +198,15 @@ namespace BlackMisc
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength &geodeticHeight = {});
 
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateGeodetic)
+            BlackMisc::Geo::CLatitude m_latitude; //!< Latitude
+            BlackMisc::Geo::CLongitude m_longitude; //!< Longitude
+            BlackMisc::PhysicalQuantities::CLength m_geodeticHeight; //!< height, ellipsoidal or geodetic height
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Geo::CCoordinateGeodetic, (o.m_latitude, o.m_longitude, o.m_geodeticHeight))
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateGeodetic)

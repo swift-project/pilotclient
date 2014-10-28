@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_PQMASS_H
 #define BLACKMISC_PQMASS_H
+
 #include "blackmisc/pqphysicalquantity.h"
 
 namespace BlackMisc
@@ -32,13 +33,10 @@ namespace BlackMisc
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CMass(const QString &unitString) : CPhysicalQuantity(unitString) {}
-
-            //! Virtual destructor
-            virtual ~CMass() {}
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMass)
 

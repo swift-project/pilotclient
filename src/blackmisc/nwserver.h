@@ -24,7 +24,6 @@ namespace BlackMisc
         class CServer : public BlackMisc::CValueObject
         {
         public:
-
             //! Properties by index
             enum ColumnIndex
             {

@@ -27,7 +27,6 @@ namespace BlackMisc
          */
         class CClient : public BlackMisc::CValueObject
         {
-
         public:
             //! Properties by index
             enum ColumnIndex
@@ -53,7 +52,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CClient() {}
+            CClient() = default;
 
             //! Construct by callsign
             CClient(const BlackMisc::Aviation::CCallsign &callsign) : m_user(CUser(callsign)) {}

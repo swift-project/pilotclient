@@ -25,7 +25,6 @@ namespace BlackMisc
         class CKeyboardKey : public CValueObject
         {
         public:
-
             //! Properties by index
             enum ColumnIndex
             {
@@ -61,9 +60,6 @@ namespace BlackMisc
 
             //! Constructor
             CKeyboardKey(Qt::Key keyCode, Modifier modifier1 = ModifierNone, Modifier modifier2 = ModifierNone);
-
-            //! Destructor
-            ~CKeyboardKey() {}
 
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -230,8 +226,6 @@ namespace BlackMisc
 
             /*!
              * CKeyboardKey::toStringRepresentation
-             * \param key
-             * \return
              */
             static QString toStringRepresentation(int key);
 
@@ -260,8 +254,8 @@ namespace BlackMisc
             Modifier m_modifier1;
             Modifier m_modifier2;
         };
-    } // class
-} // BlackMisc
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Hardware::CKeyboardKey, (o.m_qtKey, o.m_modifier1, o.m_modifier2))
 Q_DECLARE_METATYPE(BlackMisc::Hardware::CKeyboardKey)

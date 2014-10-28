@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_PQACCELERATION_H
 #define BLACKMISC_PQACCELERATION_H
+
 #include "blackmisc/pqphysicalquantity.h"
 
 namespace BlackMisc
@@ -30,13 +31,10 @@ namespace BlackMisc
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CAcceleration(const QString &unitString) : CPhysicalQuantity(unitString) {}
-
-            //! Virtual destructor
-            virtual ~CAcceleration() {}
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAcceleration)
 

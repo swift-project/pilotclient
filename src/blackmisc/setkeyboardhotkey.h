@@ -27,7 +27,6 @@ namespace BlackMisc
         class CSettingKeyboardHotkey : public CValueObject
         {
         public:
-
             //! Properties by index
             enum ColumnIndex
             {
@@ -44,7 +43,7 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CSettingKeyboardHotkey() {}
+            CSettingKeyboardHotkey() = default;
 
             //! Constructor
             CSettingKeyboardHotkey(const CHotkeyFunction &function);
@@ -138,10 +137,9 @@ namespace BlackMisc
             BLACK_ENABLE_TUPLE_CONVERSION(CSettingKeyboardHotkey)
             Hardware::CKeyboardKey m_key; //!< code similar to Qt::Key
             CHotkeyFunction m_hotkeyFunction; //!< hotkey function
-
         };
-    } // class
-} // BlackMisc
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Settings::CSettingKeyboardHotkey, (o.m_key, o.m_hotkeyFunction))
 Q_DECLARE_METATYPE(BlackMisc::Settings::CSettingKeyboardHotkey)

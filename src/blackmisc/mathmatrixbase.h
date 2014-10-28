@@ -6,6 +6,8 @@
 #ifndef BLACKMISC_MATHMATRIXBASE_H
 #define BLACKMISC_MATHMATRIXBASE_H
 
+//! \file
+
 #include "blackmisc/valueobject.h"
 #include "blackmisc/mathvector3dbase.h"
 #include "blackmisc/blackmiscfreefunctions.h"
@@ -21,25 +23,6 @@ namespace BlackMisc
          */
         template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public BlackMisc::CValueObject
         {
-        private:
-            /*!
-             * \brief Easy access to derived class (CRTP template parameter)
-             * \return
-             */
-            ImplMatrix const *derived() const
-            {
-                return static_cast<ImplMatrix const *>(this);
-            }
-
-            /*!
-             * \brief Easy access to derived class (CRTP template parameter)
-             * \return
-             */
-            ImplMatrix *derived()
-            {
-                return static_cast<ImplMatrix *>(this);
-            }
-
         protected:
             // no bug, Qt expects columns rows
             QGenericMatrix<Columns, Rows, double> m_matrix; //!< backing data
@@ -64,19 +47,13 @@ namespace BlackMisc
 
         public:
             //! \brief Default constructor
-            CMatrixBase() : m_matrix() {}
+            CMatrixBase() = default;
 
-            /*!
-             * \brief Fill with value
-             * \param fillValue
-             */
-            explicit CMatrixBase(double fillValue) : m_matrix()
+            //! \brief Fill with value
+            explicit CMatrixBase(double fillValue)
             {
                 this->fill(fillValue);
             }
-
-            //! \brief Virtual destructor
-            virtual ~CMatrixBase() {}
 
             //! \brief List of values
             QList<double> toList() const;
@@ -252,6 +229,18 @@ namespace BlackMisc
             virtual void convertFromJson(const QJsonObject &json) override;
 
         private:
+            //! \brief Easy access to derived class (CRTP template parameter)
+            ImplMatrix const *derived() const
+            {
+                return static_cast<ImplMatrix const *>(this);
+            }
+
+            //! \brief Easy access to derived class (CRTP template parameter)
+            ImplMatrix *derived()
+            {
+                return static_cast<ImplMatrix *>(this);
+            }
+
             //! \brief Check range of row / column
             void checkRange(int row, int column) const;
         };

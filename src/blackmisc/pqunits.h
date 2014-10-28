@@ -962,4 +962,5 @@ Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTimeUnit)
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAccelerationUnit)
 
 #pragma pop_macro("min")
+
 #endif // guard

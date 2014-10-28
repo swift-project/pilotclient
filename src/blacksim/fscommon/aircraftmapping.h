@@ -22,17 +22,11 @@ namespace BlackSim
 {
     namespace FsCommon
     {
-
         //! Aircraft mapping class, represents one particular mapping
         class CAircraftMapping : public BlackMisc::CValueObject
         {
-
         public:
             static const qint32 InvalidId = -1; //!< Invalid mapping id
-
-        protected:
-            //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const;
 
             //! \copydoc CValueObject::marshallToDbus
             virtual void marshallToDbus(QDBusArgument &) const override;
@@ -45,20 +39,6 @@ namespace BlackSim
 
             //! \copydoc CValueObject::compareImpl
             int compareImpl(const CValueObject &otherBase) const override;
-
-        private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftMapping)
-            qint32 m_mappingId;  //!< Kind of primary key for this particular mapping
-            qint32 m_proposalId; //!< If proposal id of the proposal
-            QString m_fsAircraftKey;          //!< Id by which the simulator can create the aircraft
-            QString m_aircraftDesignator;     //!< Aircraft designator such as B737
-            QString m_airlineDesignator;      //!< Airline designator such as DLH
-            QString m_aircraftCombinedType;   //!< Engine, type, number of engines L2J, L1P
-            QString m_wakeTurbulenceCategory; //!< Wake turbulence category H, L, M
-            QString m_aircraftColor; //!< Aircrafts painting designator, could be same as airline or specific
-            QString m_lastChanged;   //!< Simple timestamp as YYYYMMDDhhmmss
-            BlackSim::CSimulatorInfo m_simulatorInfo; //!< Mapping is for simulator
-            bool m_changed; //! Changed flag
 
         public:
             //! Columns
@@ -206,9 +186,25 @@ namespace BlackSim
                 return dateTimeString;
             }
 
+        protected:
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const;
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftMapping)
+            qint32 m_mappingId;  //!< Kind of primary key for this particular mapping
+            qint32 m_proposalId; //!< If proposal id of the proposal
+            QString m_fsAircraftKey;          //!< Id by which the simulator can create the aircraft
+            QString m_aircraftDesignator;     //!< Aircraft designator such as B737
+            QString m_airlineDesignator;      //!< Airline designator such as DLH
+            QString m_aircraftCombinedType;   //!< Engine, type, number of engines L2J, L1P
+            QString m_wakeTurbulenceCategory; //!< Wake turbulence category H, L, M
+            QString m_aircraftColor; //!< Aircrafts painting designator, could be same as airline or specific
+            QString m_lastChanged;   //!< Simple timestamp as YYYYMMDDhhmmss
+            BlackSim::CSimulatorInfo m_simulatorInfo; //!< Mapping is for simulator
+            bool m_changed; //! Changed flag
             //! \copydoc CValueObject::convertFromJson
             virtual void convertFromJson(const QJsonObject &json) override;
 

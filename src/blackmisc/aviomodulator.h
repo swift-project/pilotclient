@@ -17,8 +17,6 @@
 #include "blackmisc/mathematics.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
-using namespace BlackMisc::Math;
-
 namespace BlackMisc
 {
     namespace Aviation
@@ -29,9 +27,7 @@ namespace BlackMisc
          */
         template <class AVIO> class CModulator : public CAvionicsBase
         {
-
         public:
-
             //! Column indexes
             enum ColumnIndex
             {
@@ -41,9 +37,6 @@ namespace BlackMisc
                 IndexInputVolume,
                 IndexEnabled
             };
-
-            //! Virtual destructor
-            virtual ~CModulator() {}
 
             //! Default value?
             virtual bool isDefaultValue() const
@@ -153,14 +146,14 @@ namespace BlackMisc
             //! Set active frequency
             void setFrequencyActiveMHz(double frequencyMHz)
             {
-                frequencyMHz = CMath::round(frequencyMHz, 3);
+                frequencyMHz = Math::CMath::round(frequencyMHz, 3);
                 this->m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
 
             //! Set standby frequency
             void setFrequencyStandbyMHz(double frequencyMHz)
             {
-                frequencyMHz = CMath::round(frequencyMHz, 3);
+                frequencyMHz = Math::CMath::round(frequencyMHz, 3);
                 this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
 
@@ -258,11 +251,10 @@ namespace BlackMisc
 
             //! Easy access to derived class (CRTP template parameter)
             AVIO *derived() { return static_cast<AVIO *>(this); }
-
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION_TEMPLATE(BlackMisc::Aviation::CModulator, (o.m_frequencyActive, o.m_frequencyStandby, o.m_volumeInput , o.m_volumeOutput, o.m_enabled))
 

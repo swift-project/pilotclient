@@ -28,10 +28,6 @@ namespace BlackMisc
          */
         class CPqString : public BlackMisc::CValueObject
         {
-        private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CPqString)
-            QString m_string;
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
@@ -65,7 +61,7 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CPqString() {}
+            CPqString() = default;
 
             //! Constructor, for values such as 10km/h
             CPqString(const QString &value) : m_string(value) {}
@@ -107,10 +103,14 @@ namespace BlackMisc
                 }
                 return invalid;
             }
+
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CPqString)
+            QString m_string;
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::PhysicalQuantities::CPqString, (o.m_string))
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CPqString)

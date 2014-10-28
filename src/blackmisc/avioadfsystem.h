@@ -25,10 +25,9 @@ namespace BlackMisc
          */
         class CAdfSystem : public CModulator<CAdfSystem>
         {
-
         public:
             //! Default constructor
-            CAdfSystem() : CModulator() {}
+            CAdfSystem() = default;
 
             //! Constructor
             CAdfSystem(const QString &name, const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
@@ -88,11 +87,10 @@ namespace BlackMisc
                     this->isValidFrequency(this->getFrequencyActive()) &&
                     this->isValidFrequency(this->getFrequencyStandby());
             }
-
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAdfSystem)
 

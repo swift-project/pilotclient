@@ -34,20 +34,17 @@ namespace BlackMisc
 
         public:
             //! Default constructor
-            CLongitude() : CEarthAngle() {}
+            CLongitude() = default;
 
             //! Constructor
             explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
 
             //! Init by double value
             CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
-
-            //! Virtual destructor
-            virtual ~CLongitude() {}
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CLongitude)
 

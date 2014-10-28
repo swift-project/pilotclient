@@ -11,6 +11,7 @@
 #include "blackmisc/aviocomsystem.h"
 
 using namespace BlackMisc::PhysicalQuantities;
+using namespace BlackMisc::Math;
 
 namespace BlackMisc
 {

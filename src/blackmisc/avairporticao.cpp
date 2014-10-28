@@ -26,7 +26,6 @@ namespace BlackMisc
          */
         int CAirportIcao::compareImpl(const CValueObject &otherBase) const
         {
-            // intentionally compare on string only!
             const auto &other = static_cast<const CAirportIcao &>(otherBase);
             return this->m_icaoCode.compare(other.m_icaoCode, Qt::CaseInsensitive);
         }
@@ -97,7 +96,6 @@ namespace BlackMisc
         bool CAirportIcao::operator ==(const CAirportIcao &other) const
         {
             if (this == &other) return true;
-            // intentionally not via Tupel converter, compare on string only
             return this->asString().compare(other.asString(), Qt::CaseInsensitive) == 0;
         }
 

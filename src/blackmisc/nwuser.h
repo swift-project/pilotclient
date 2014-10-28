@@ -28,7 +28,6 @@ namespace BlackMisc
         class CUser : public BlackMisc::CValueObject
         {
         public:
-
             /*!
              * Properties by index
              */
@@ -42,7 +41,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CUser() {}
+            CUser() = default;
 
             //! Constructor by callsign
             CUser(const BlackMisc::Aviation::CCallsign &callsign) : m_callsign(callsign) {}
@@ -144,7 +143,6 @@ namespace BlackMisc
             /*!
              * This and another user exchange missing data.
              * This user has priority and overrides first.
-             * \param otherUser
              */
             void syncronizeData(CUser &otherUser);
 
@@ -182,9 +180,7 @@ namespace BlackMisc
             BlackMisc::Aviation::CCallsign m_callsign;
             BlackMisc::Aviation::CAirportIcao m_homebase;
         };
-
     } // namespace
-
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CUser, (o.m_id, o.m_realname, o.m_email, o.m_password, o.m_callsign, o.m_homebase))

@@ -21,7 +21,6 @@ namespace BlackMisc
     class CHotkeyFunction : public CValueObject
     {
     public:
-
         //! Function type
         enum Function
         {

@@ -32,7 +32,7 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CComSystem() : CModulator(), m_channelSpacing(ChannelSpacing25KHz) {}
+            CComSystem() : m_channelSpacing(ChannelSpacing25KHz) {}
 
             //! Constructor
             CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
@@ -180,10 +180,9 @@ namespace BlackMisc
              * \remarks Just a helper method, that is why no CFrequency is returned
              */
             static double channelSpacingToFrequencyKHz(ChannelSpacing channelSpacing);
-
         };
-    } // namespace
-} // namespace
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CComSystem, (o.m_channelSpacing))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CComSystem)

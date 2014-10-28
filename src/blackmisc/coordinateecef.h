@@ -5,6 +5,9 @@
 
 #ifndef BLACKMISC_COORDINATEECEF_H
 #define BLACKMISC_COORDINATEECEF_H
+
+//! \file
+
 #include "blackmisc/mathvector3d.h"
 
 namespace BlackMisc
@@ -21,19 +24,15 @@ namespace BlackMisc
             /*!
              * \brief Default constructor
              */
-            CCoordinateEcef() : CVector3DBase() {}
+            CCoordinateEcef() = default;
 
             /*!
              * \brief Constructor by values
-             * \param x
-             * \param y
-             * \param z
              */
             CCoordinateEcef(double x, double y, double z) : CVector3DBase(x, y, z) {}
 
             /*!
              * \brief Constructor by math vector
-             * \param vector
              */
             explicit CCoordinateEcef(const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()) {}
 
@@ -78,7 +77,6 @@ namespace BlackMisc
 
             /*!
              * \brief Concrete implementation of a 3D vector
-             * \return
              */
             BlackMisc::Math::CVector3D toMathVector() const
             {
@@ -98,8 +96,8 @@ namespace BlackMisc
             }
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateEcef)
 

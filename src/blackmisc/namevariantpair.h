@@ -24,7 +24,6 @@ namespace BlackMisc
     class CNameVariantPair : public BlackMisc::CValueObject
     {
     public:
-
         //! Properties by index
         enum ColumnIndex
         {
@@ -35,7 +34,7 @@ namespace BlackMisc
         };
 
         //! Default constructor.
-        CNameVariantPair() {}
+        CNameVariantPair() = default;
 
         //! Constructor.
         CNameVariantPair(const QString &name, const CVariant &variant, const CIcon &icon = CIcon());

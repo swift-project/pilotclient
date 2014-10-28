@@ -21,20 +21,16 @@ namespace BlackMisc
     /*
      * Constructors
      */
-    CStatusMessage::CStatusMessage()
-        : m_severity(SeverityDebug), m_timestamp(QDateTime::currentDateTimeUtc())
-    {}
-
     CStatusMessage::CStatusMessage(const QString &message)
-        : m_severity(SeverityDebug), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
+        : m_message(message)
     {}
 
     CStatusMessage::CStatusMessage(StatusSeverity severity, const QString &message)
-        : m_severity(severity), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
+        : m_severity(severity), m_message(message)
     {}
 
     CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message)
-        : m_categories(categories), m_severity(severity), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
+        : m_categories(categories), m_severity(severity), m_message(message)
     {}
 
     CStatusMessage::CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)

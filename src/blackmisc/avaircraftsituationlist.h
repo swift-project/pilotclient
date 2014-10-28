@@ -27,21 +27,16 @@ namespace BlackMisc
 
             /*!
              * Get a list of situations before dateTime
-             * \param dateTime
-             * \return
              */
             CAircraftSituationList findBefore (const QDateTime& dateTime) const;
 
             /*!
              * Get a list of situations after dateTime
-             * \param dateTime
-             * \return
              */
             CAircraftSituationList findAfter (const QDateTime& dateTime) const;
 
             /*!
              * Remove situations with timestamp before dateTime
-             * \param dateTime
              */
             void removeBefore(const QDateTime& dateTime);
 

@@ -19,14 +19,12 @@ namespace BlackMisc
 {
     namespace Network
     {
-
         /*!
          * Value object encapsulating information for voice capabilities.
          */
         class CVoiceCapabilities : public BlackMisc::CValueObject
         {
         public:
-
             //! Voice capabilities
             enum VoiceCapabilities
             {
@@ -37,7 +35,7 @@ namespace BlackMisc
             };
 
             //! Default constructor.
-            CVoiceCapabilities() {}
+            CVoiceCapabilities() = default;
 
             //! Constructor by callsign
             CVoiceCapabilities(VoiceCapabilities capabilities) : m_voiceCapabilities(static_cast<int>(capabilities)) {}
@@ -122,9 +120,7 @@ namespace BlackMisc
             //! Capabilites from flight plans remarks such as "/V/"
             void setFromFlightPlanRemarks(const QString &flightPlanRemarks);
         };
-
     } // namespace
-
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CVoiceCapabilities, (o.m_voiceCapabilities))

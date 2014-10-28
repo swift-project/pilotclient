@@ -13,11 +13,6 @@ namespace BlackMisc
 {
     namespace Event
     {
-        CEventHotkeyFunction::CEventHotkeyFunction()
-        {
-
-        }
-
         CEventHotkeyFunction::CEventHotkeyFunction(CHotkeyFunction func, bool argument)
             : m_hotkeyFunc(func), m_hotkeyFuncArgument(argument)
         {

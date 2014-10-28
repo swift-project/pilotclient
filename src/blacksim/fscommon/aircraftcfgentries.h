@@ -19,7 +19,6 @@ namespace BlackSim
 {
     namespace FsCommon
     {
-
         /*!
          * Set of aircraft.cfg entries representing an aircraft (FSX)
          * \remarks an entry in the aircraft.cfg is title, atc type, ... This class already bundles
@@ -28,7 +27,6 @@ namespace BlackSim
         class CAircraftCfgEntries: public BlackMisc::CValueObject
         {
         public:
-
             //! Properties by index
             enum ColumnIndex
             {
@@ -41,7 +39,7 @@ namespace BlackSim
             };
 
             //! Default constructor
-            CAircraftCfgEntries() {}
+            CAircraftCfgEntries() = default;
 
             /*!
              * Entries representing an aircraft
@@ -53,9 +51,6 @@ namespace BlackSim
              * \param atcParkingCode
              */
             CAircraftCfgEntries(const QString &filePath, qint32 index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode);
-
-            //! Virtual destructor
-            virtual ~CAircraftCfgEntries() {}
 
             //! operator ==
             bool operator ==(const CAircraftCfgEntries &other) const;
@@ -153,7 +148,7 @@ namespace BlackSim
 
         };
     }
-} // namespace
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::FsCommon::CAircraftCfgEntries, (o.m_index, o.m_filePath, o.m_title, o.m_atcType, o.m_atcModel, o.m_atcParkingCode))
 Q_DECLARE_METATYPE(BlackSim::FsCommon::CAircraftCfgEntries)

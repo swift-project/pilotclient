@@ -35,9 +35,6 @@ namespace BlackMisc
             /*!
              * \brief Init as sexagesimal degrees, minutes, seconds
              * The sign of all parameters must be the same, either all positive or all negative.
-             * \param degrees
-             * \param minutes
-             * \param seconds
              */
             CAngle(int degrees, int minutes, double seconds) :
                 CPhysicalQuantity(
@@ -47,17 +44,12 @@ namespace BlackMisc
             /*!
              * \brief Init as sexagesimal degrees, minutes
              * The sign of both parameters must be the same, either both positive or both negative.
-             * \param degrees
-             * \param minutes
              */
             CAngle(int degrees, double minutes) :
                 CPhysicalQuantity(
                     degrees + minutes / 100.0,
                     CAngleUnit::sexagesimalDegMin()) {}
 
-            //! Virtual destructor
-            virtual ~CAngle() {}
-					
             //! \copydoc CValueObject::toIcon
             virtual BlackMisc::CIcon toIcon() const override;
 
@@ -72,10 +64,9 @@ namespace BlackMisc
 
             //! PI as convenience method
             static const double &PI();
-
         };
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CAngle)
 

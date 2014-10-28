@@ -24,7 +24,6 @@ namespace BlackMisc
         class CJoystickButton : public CValueObject
         {
         public:
-
             //! Properties by index
             enum ColumnIndex
             {
@@ -34,13 +33,10 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CJoystickButton() {}
+            CJoystickButton() = default;
 
             //! Constructor
             CJoystickButton(qint32 buttonIndex);
-
-            //! Destructor
-            ~CJoystickButton() {}
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override
@@ -126,12 +122,9 @@ namespace BlackMisc
             qint32 m_buttonIndex = m_invalidIndex; //!< code similar to Qt::Key
 
             static const qint32 m_invalidIndex = -1;
-
         };
-
-    } // class
-
-} // BlackMisc
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Hardware::CJoystickButton, (o.m_buttonIndex))
 Q_DECLARE_METATYPE(BlackMisc::Hardware::CJoystickButton)

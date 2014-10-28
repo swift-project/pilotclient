@@ -26,10 +26,9 @@ namespace BlackMisc
          */
         class CSelcal : public BlackMisc::CValueObject
         {
-
         public:
             //! Default constructor.
-            CSelcal() {}
+            CSelcal() = default;
 
             //! Constructor.
             CSelcal(const QString &code) : m_code(code.trimmed()) {}

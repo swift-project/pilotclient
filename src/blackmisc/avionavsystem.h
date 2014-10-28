@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_AVIONAVSYSTEM_H
 #define BLACKMISC_AVIONAVSYSTEM_H
+
 #include "blackmisc/aviomodulator.h"
 
 namespace BlackMisc
@@ -20,10 +21,9 @@ namespace BlackMisc
         //! NAV system (radio navigation)
         class CNavSystem : public CModulator<CNavSystem>
         {
-
         public:
             //! Default constructor
-            CNavSystem() : CModulator() {}
+            CNavSystem() = default;
 
             //! Constructor
             CNavSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency):

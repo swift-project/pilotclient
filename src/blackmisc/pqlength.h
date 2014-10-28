@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_PQLENGTH_H
 #define BLACKMISC_PQLENGTH_H
+
 #include "blackmisc/pqphysicalquantity.h"
 
 namespace BlackMisc
@@ -30,13 +31,10 @@ namespace BlackMisc
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CLength(const QString &unitString) : CPhysicalQuantity(unitString) {}
-
-            //! Virtual destructor
-            virtual ~CLength() {}
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CLength)
 

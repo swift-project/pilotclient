@@ -26,12 +26,8 @@ namespace BlackMisc
         class COriginator : public BlackMisc::CValueObject
         {
         public:
-
             //! Default constructor.
             COriginator();
-
-            //! Copy constructor
-            COriginator(const COriginator &other);
 
             //! Get machine id
             QByteArray getMachineId() const {return m_machineId;}
@@ -91,7 +87,7 @@ namespace BlackMisc
             qint32 m_processId;
             QString m_processName;
         };
-    } // namespace Event
+    }
 }
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Event::COriginator, (o.m_originatorName, o.m_machineId, o.m_primaryIpAddress, o.m_objectId, o.m_processId, o.m_processName))

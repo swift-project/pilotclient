@@ -272,7 +272,6 @@ namespace BlackMisc
             BlackMisc::Aviation::CTransponder m_transponder;
             CAircraftIcao m_icao;
             BlackMisc::PhysicalQuantities::CLength m_distanceToPlane;
-
         };
     } // namespace
 } // namespace

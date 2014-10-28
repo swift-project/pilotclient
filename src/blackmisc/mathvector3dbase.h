@@ -16,8 +16,6 @@
 #include "blackmisc/mathematics.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
-using namespace BlackMisc::Math;
-
 namespace BlackMisc
 {
     namespace Math
@@ -30,9 +28,6 @@ namespace BlackMisc
         public:
             // getter and setters are implemented in the derived classes
             // as they have different names (x, i, north)
-
-            //! Virtual destructor
-            virtual ~CVector3DBase() {}
 
             //! Set zeros
             void setZero();
@@ -267,8 +262,8 @@ namespace BlackMisc
 
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION_TEMPLATE(BlackMisc::Math::CVector3DBase, (o.m_i, o.m_j, o.m_k))
 

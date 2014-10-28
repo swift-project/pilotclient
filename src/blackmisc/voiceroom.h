@@ -26,7 +26,6 @@ namespace BlackMisc
         class CVoiceRoom : public BlackMisc::CValueObject
         {
         public:
-
             //! Properties by index
             enum ColumnIndex
             {

@@ -31,7 +31,6 @@
 
 namespace BlackMisc
 {
-    // forward declaration
     class CPropertyIndex;
     class CPropertyIndexList;
     class CPropertyIndexVariantMap;
@@ -39,7 +38,7 @@ namespace BlackMisc
 
     namespace PhysicalQuantities
     {
-        template <class MU, class PQ> class CPhysicalQuantity; // forward declaration
+        template <class MU, class PQ> class CPhysicalQuantity;
 
         //! Traits class to test whether a class is a physical quantity class. Useful for enable_if.
         template <class T>
@@ -57,12 +56,10 @@ namespace BlackMisc
     }
 
     /*!
-     * Base class for value objects.
-     * Public non-virtual interface with protected virtual implementation.
+     * Base class for value types.
      */
     class CValueObject
     {
-
         //! Stream << overload to be used in debugging messages
         friend QDebug operator<<(QDebug debug, const CValueObject &uc)
         {
@@ -156,7 +153,6 @@ namespace BlackMisc
          * Compares two instances of related classes
          * and returns an integer less than, equal to, or greater than zero
          * if v1 is less than, equal to, or greater than v2.
-         * \return
          * \pre The runtime types of the two objects must be the same or related by inheritance.
          */
         friend int compare(const CValueObject &v1, const CValueObject &v2);
@@ -220,7 +216,7 @@ namespace BlackMisc
         virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
         //! Property by index as String
-        //! Intentionally not abstract, avoiding all classes need to implement this method
+        //! \details Intentionally not abstract, avoiding all classes need to implement this method
         virtual QString propertyByIndexAsString(const CPropertyIndex &index, bool i18n = false) const;
 
         //! Is given variant equal to value of property index?
@@ -230,11 +226,14 @@ namespace BlackMisc
         static const CValueObject *fromQVariant(const QVariant &variant);
 
     protected:
-        //! Default constructor
-        CValueObject() {}
+        //! Default constructor.
+        CValueObject() = default;
 
-        //! Copy constructor
-        CValueObject(const CValueObject &) {}
+        //! Copy constructor.
+        CValueObject(const CValueObject &) = default;
+
+        //! Copy assignment operator.
+        CValueObject &operator =(const CValueObject &) = default;
 
         //! String for streaming operators
         virtual QString stringForStreaming() const;
@@ -247,9 +246,7 @@ namespace BlackMisc
 
         /*!
          * Returns true if this object is an instance of the class with the given meta type ID,
-         *        or one of its subclasses.
-         * \param metaTypeId
-         * \return
+         * or one of its subclasses.
          */
         virtual bool isA(int metaTypeId) const { Q_UNUSED(metaTypeId); return false; }
 
@@ -274,85 +271,97 @@ namespace BlackMisc
 
     };
 
-    //! Standard tuple enabled value object
-    //! CRTP based approach to avoid repetitive code
-    template <class VO> class CValueObjectStdTuple : public BlackMisc::CValueObject
+    /*!
+     * Standard implementation of CValueObject using meta tuple system.
+     *
+     * \tparam Derived  The class which is inheriting from this one (CRTP).
+     */
+    template <class Derived> class CValueObjectStdTuple : public CValueObject
     {
 
     public:
-
-        //! Default constructor.
-        CValueObjectStdTuple() : CValueObject() {}
-
         //! \copydoc CValueObject::getValueHash()
         virtual uint getValueHash() const override
         {
-            return qHash(TupleConverter<VO>::toMetaTuple(*derived()));
+            return qHash(TupleConverter<Derived>::toMetaTuple(*derived()));
         }
 
         //! \copydoc CValueObject::toJson
         virtual QJsonObject toJson() const override
         {
-            return BlackMisc::serializeJson(TupleConverter<VO>::toMetaTuple(*derived()));
+            return BlackMisc::serializeJson(TupleConverter<Derived>::toMetaTuple(*derived()));
         }
 
         //! \copydoc CValueObject::convertFromJson
         virtual void convertFromJson(const QJsonObject &json) override
         {
-            BlackMisc::deserializeJson(json, TupleConverter<VO>::toMetaTuple(*derived()));
+            BlackMisc::deserializeJson(json, TupleConverter<Derived>::toMetaTuple(*derived()));
         }
 
         //! \copydoc CValueObject::toQVariant()
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*derived()); }
+        virtual QVariant toQVariant() const override
+        {
+            return QVariant::fromValue(*derived());
+        }
 
         //! \copydoc CValueObject::convertFromQVariant
-        virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(derived(), variant); }
+        virtual void convertFromQVariant(const QVariant &variant) override
+        {
+            BlackMisc::setFromQVariant(derived(), variant);
+        }
 
         //! Register metadata
         static void registerMetadata()
         {
-            qRegisterMetaType<VO>();
-            qDBusRegisterMetaType<VO>();
+            qRegisterMetaType<Derived>();
+            qDBusRegisterMetaType<Derived>();
         }
 
     protected:
+        //! Default constructor.
+        CValueObjectStdTuple() = default;
+
+        //! Copy constructor.
+        CValueObjectStdTuple(const CValueObjectStdTuple &) = default;
+
+        //! Copy assignment operator.
+        CValueObjectStdTuple &operator =(const CValueObjectStdTuple &) = default;
 
         //! \copydoc CValueObject::getMetaTypeId
-        virtual int getMetaTypeId() const override { return qMetaTypeId<VO>(); }
+        virtual int getMetaTypeId() const override
+        {
+            return qMetaTypeId<Derived>();
+        }
 
         //! \copydoc CValueObject::isA
         virtual bool isA(int metaTypeId) const override
         {
-            if (metaTypeId == qMetaTypeId<VO>()) { return true; }
+            if (metaTypeId == qMetaTypeId<Derived>()) { return true; }
             return this->CValueObject::isA(metaTypeId);
         }
 
-        //! \copydoc CValueObject::compareImpl(CValueObject &otherBase)
-        virtual int compareImpl(const CValueObject &otherBase) const override
+        //! \copydoc CValueObject::compareImpl
+        virtual int compareImpl(const CValueObject &other) const override
         {
-            const VO &other = static_cast<const VO &>(otherBase);
-            return compare(TupleConverter<VO>::toMetaTuple(*derived()), TupleConverter<VO>::toMetaTuple(other));
+            const auto &otherDerived = static_cast<const Derived &>(other);
+            return compare(TupleConverter<Derived>::toMetaTuple(*derived()), TupleConverter<Derived>::toMetaTuple(otherDerived));
         }
 
         //! \copydoc CValueObject::marshallToDbus()
         virtual void marshallToDbus(QDBusArgument &argument) const override
         {
-            argument << TupleConverter<VO>::toMetaTuple(*derived());
+            argument << TupleConverter<Derived>::toMetaTuple(*derived());
         }
 
         //! \copydoc CValueObject::unmarshallFromDbus()
         virtual void unmarshallFromDbus(const QDBusArgument &argument) override
         {
-            argument >> TupleConverter<VO>::toMetaTuple(*derived());
+            argument >> TupleConverter<Derived>::toMetaTuple(*derived());
         }
 
     private:
-        //! Easy access to derived class (CRTP template parameter)
-        VO const *derived() const { return static_cast<VO const *>(this); }
-
-        //! Easy access to derived class (CRTP template parameter)
-        VO *derived() { return static_cast<VO *>(this); }
-
+        const Derived *derived() const { return static_cast<const Derived *>(this); }
+        Derived *derived() { return static_cast<Derived *>(this); }
     };
 
     /*!
@@ -360,13 +369,6 @@ namespace BlackMisc
      * Needed because we can't rely on the friend operator in some cases due to
      * an unrelated template for streaming Container<T> in QtDBus/qdbusargument.h
      * which matches more types than it can actually handle.
-     *
-     * <a href="https://dev.vatsim-germany.org/boards/15/topics/26?r=891#message-891">Forum</a>
-     * <a href="https://dev.vatsim-germany.org/boards/15/topics/26?r=865#message-865">Forum</a>
-     *
-     * \param argument
-     * \param valueObject
-     * \return
      */
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QDBusArgument>::type const &
     operator>>(const QDBusArgument &argument, T &valueObject)
@@ -379,13 +381,6 @@ namespace BlackMisc
      * Needed because we can't rely on the friend operator in some cases due to
      * an unrelated template for streaming Container<T> in QtDBus/qdbusargument.h
      * which matches more types than it can actually handle.
-     *
-     * <a href="https://dev.vatsim-germany.org/boards/15/topics/26?r=891#message-891">Forum</a>
-     * <a href="https://dev.vatsim-germany.org/boards/15/topics/26?r=865#message-865">Forum</a>
-     *
-     * \param argument
-     * \param valueObject
-     * \return
      */
     template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, QDBusArgument>::type &
     operator<<(QDBusArgument &argument, const T &valueObject)

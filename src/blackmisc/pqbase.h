@@ -47,14 +47,10 @@ namespace BlackMisc
                 virtual ~Converter() {}
                 /*!
                  * Convert from this unit to default unit.
-                 * \param factor
-                 * \return
                  */
                 virtual double toDefault(double factor) const = 0;
                 /*!
                  * Convert from default unit to this unit.
-                 * \param factor
-                 * \return
                  */
                 virtual double fromDefault(double factor) const = 0;
             };
@@ -153,56 +149,56 @@ namespace BlackMisc
             //! @{
             struct One
             {
-                static double factor() { return 1; } //!< factor \return
+                static double factor() { return 1; } //!< factor
             };
             //! 2 (two)
             template <class Policy>
             struct Two
             {
-                static double factor() { return Policy::factor() * 2.0; } //!< factor \return
+                static double factor() { return Policy::factor() * 2.0; } //!< factor
             };
             //! 10^-3
             template <class Policy>
             struct Milli
             {
-                static double factor() { return Policy::factor() / 1000.0; } //!< factor \return
+                static double factor() { return Policy::factor() / 1000.0; } //!< factor
             };
             template <class Policy>
             //! 10^-2
             struct Centi
             {
-                static double factor() { return Policy::factor() / 100.0; } //!< factor \return
+                static double factor() { return Policy::factor() / 100.0; } //!< factor
             };
             //! 10^2
             template <class Policy>
             struct Hecto
             {
-                static double factor() { return Policy::factor() * 100.0; } //!< factor \return
+                static double factor() { return Policy::factor() * 100.0; } //!< factor
             };
             //! 10^3
             template <class Policy>
             struct Kilo
             {
-                static double factor() { return Policy::factor() * 1000.0; } //!< factor \return
+                static double factor() { return Policy::factor() * 1000.0; } //!< factor
             };
             //! 10^6
             template <class Policy>
             struct Mega
             {
-                static double factor() { return Policy::factor() * 1e+6; } //!< factor \return
+                static double factor() { return Policy::factor() * 1e+6; } //!< factor
             };
             //! 10^9
             template <class Policy>
             struct Giga
             {
-                static double factor() { return Policy::factor() * 1e+9; } //!< factor \return
+                static double factor() { return Policy::factor() * 1e+9; } //!< factor
             };
             //! in each hundred
             template <int Subfactor>
             struct InEachHundred
             {
-                static double fraction() { return 100.0f; } //!< fraction \return
-                static double subfactor() { return float(Subfactor); } //!< subfactor \return
+                static double fraction() { return 100.0f; } //!< fraction
+                static double subfactor() { return float(Subfactor); } //!< subfactor
             };
             //! @}
 
@@ -382,13 +378,10 @@ namespace BlackMisc
                 static CMeasurementUnit none("none", "", NilConverter(), 0, 0);
                 return none;
             }
-
-            //! Metadata, mainly needed for None
-            static void registerMetadata();
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CMeasurementUnit)
 

@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_CSPEED_H
 #define BLACKMISC_CSPEED_H
+
 #include "pqphysicalquantity.h"
 
 namespace BlackMisc
@@ -23,7 +24,6 @@ namespace BlackMisc
          */
         class CSpeed : public CPhysicalQuantity<CSpeedUnit, CSpeed>
         {
-
         public:
             //! Default constructor
             CSpeed() : CPhysicalQuantity(0, CSpeedUnit::defaultUnit()) {}
@@ -33,13 +33,10 @@ namespace BlackMisc
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CSpeed(const QString &unitString) : CPhysicalQuantity(unitString) {}
-
-            //! Destructor
-            virtual ~CSpeed() {}
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CSpeed)
 

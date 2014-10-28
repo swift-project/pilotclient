@@ -25,7 +25,6 @@ namespace BlackMisc
         class CTime : public CPhysicalQuantity<CTimeUnit, CTime>
         {
         public:
-
             //! Parts
             enum Parts
             {
@@ -49,9 +48,6 @@ namespace BlackMisc
             //! \copydoc CPhysicalQuantity(const QString &unitString)
             CTime(const QString &unitString) : CPhysicalQuantity(0, CTimeUnit::nullUnit()) { this->parseFromString(unitString); }
 
-            //! Destructor
-            virtual ~CTime() {}
-
             //! From string hh:mm, or hh:mm:ss, or time units such as s, min
             virtual void parseFromString(const QString &time) override;
 
@@ -68,11 +64,10 @@ namespace BlackMisc
 
             //! Formatted as hh:mm
             QString formattedHrsMin() const;
-
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::PhysicalQuantities::CTime)
 

@@ -11,6 +11,7 @@
 
 #ifndef BLACKMISC_AVALTITUDE_H
 #define BLACKMISC_AVALTITUDE_H
+
 #include "blackmisc/pqlength.h"
 
 namespace BlackMisc
@@ -33,10 +34,6 @@ namespace BlackMisc
                 AboveGround,        //!< AGL
                 FlightLevel         //!< Flight level
             };
-
-        private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAltitude)
-            ReferenceDatum m_datum; //!< MSL or AGL?
 
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -61,12 +58,7 @@ namespace BlackMisc
             //! Default constructor: 0 Altitude true
             CAltitude() : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
 
-            /*!
-             * Constructor
-             * \param value
-             * \param datum MSL or AGL?
-             * \param unit
-             */
+            //! Constructor
             CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : BlackMisc::PhysicalQuantities::CLength(value, unit), m_datum(datum) {}
 
             //! Altitude as string
@@ -120,15 +112,17 @@ namespace BlackMisc
             //! \copydoc CValueObject::toIcon
             BlackMisc::CIcon toIcon() const override;
 
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAltitude)
+            ReferenceDatum m_datum; //!< MSL or AGL?
             //! Register metadata
             static void registerMetadata();
 
             //! JSON member names
             static const QStringList &jsonMembers();
         };
-
-    } // namespace
-} // namespace
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAltitude, (o.m_datum))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAltitude)

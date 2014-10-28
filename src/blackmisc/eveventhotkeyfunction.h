@@ -25,9 +25,8 @@ namespace BlackMisc
         class CEventHotkeyFunction : public BlackMisc::CValueObject
         {
         public:
-
             //! Default constructor.
-            CEventHotkeyFunction();
+            CEventHotkeyFunction() = default;
 
             //! Constructor.
             CEventHotkeyFunction(CHotkeyFunction func, bool argument);

@@ -22,10 +22,9 @@ namespace BlackMisc
      */
     class CIcon : public BlackMisc::CValueObject
     {
-
     public:
         //! Default constructor.
-        CIcon() {}
+        CIcon() = default;
 
         //! Constructor.
         CIcon( CIcons::IconIndex index, const QString &descriptiveText) :

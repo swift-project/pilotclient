@@ -22,19 +22,15 @@ namespace BlackMisc
         //! Value object encapsulating information of a callsign.
         class CAirportIcao : public BlackMisc::CValueObject
         {
-
         public:
             //! Default constructor.
-            CAirportIcao() {}
+            CAirportIcao() = default;
 
             //! Constructor
-            CAirportIcao(const QString &icaoCode) : m_icaoCode(CAirportIcao::unifyAirportCode(icaoCode))
-            {}
+            CAirportIcao(const QString &icaoCode) : m_icaoCode(CAirportIcao::unifyAirportCode(icaoCode)) {}
 
             //! Constructor, needed to disambiguate implicit conversion from string literal.
-            CAirportIcao(const char *icaoCode)
-                : m_icaoCode(CAirportIcao::unifyAirportCode(icaoCode))
-            {}
+            CAirportIcao(const char *icaoCode) : m_icaoCode(CAirportIcao::unifyAirportCode(icaoCode)) {}
 
             //! \copydoc CValueObject::toQVariant()
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }

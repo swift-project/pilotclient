@@ -1,5 +1,16 @@
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #ifndef BLACKMISC_MATHVECTOR3D_H
 #define BLACKMISC_MATHVECTOR3D_H
+
+//! \file
 
 #include "blackmisc/mathvector3dbase.h"
 
@@ -17,31 +28,20 @@ namespace BlackMisc
             /*!
              * \brief Default constructor
              */
-            CVector3D() : CVector3DBase() {}
+            CVector3D() = default;
 
             /*!
              * \brief Constructor by value
-             * \param i
-             * \param j
-             * \param k
              */
             CVector3D(double i, double j, double k) : CVector3DBase(i, j, k) {}
 
             /*!
              * \brief Constructor by value
-             * \param value
              */
             explicit CVector3D(double value) : CVector3DBase(value) {}
 
             /*!
-             * \brief Copy constructor
-             * \param other
-             */
-            CVector3D(const CVector3D &other) : CVector3DBase(other) {}
-
-            /*!
              * \brief i
-             * \return
              */
             double i() const
             {
@@ -50,7 +50,6 @@ namespace BlackMisc
 
             /*!
              * \brief j
-             * \return
              */
             double j() const
             {
@@ -59,7 +58,6 @@ namespace BlackMisc
 
             /*!
              * \brief k
-             * \return
              */
             double k() const
             {
@@ -68,7 +66,6 @@ namespace BlackMisc
 
             /*!
              * \brief Set i
-             * \param i
              */
             void setI(double i)
             {
@@ -77,7 +74,6 @@ namespace BlackMisc
 
             /*!
              * \brief Set j
-             * \param j
              */
             void setJ(double j)
             {
@@ -86,17 +82,15 @@ namespace BlackMisc
 
             /*!
              * \brief Set k
-             * \param k
              */
             void setK(double k)
             {
                 this->m_k = k;
             }
-
         };
 
-    } // namespace
-} // namespace
+    }
+}
 
 Q_DECLARE_METATYPE(BlackMisc::Math::CVector3D)
 

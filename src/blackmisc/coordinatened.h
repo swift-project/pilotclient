@@ -5,6 +5,9 @@
 
 #ifndef BLACKMISC_COORDINATENED_H
 #define BLACKMISC_COORDINATENED_H
+
+//! \file
+
 #include "blackmisc/mathvector3d.h"
 #include "blackmisc/mathmatrix3x3.h"
 #include "blackmisc/coordinategeodetic.h"
@@ -19,11 +22,6 @@ namespace BlackMisc
          */
         class CCoordinateNed : public BlackMisc::Math::CVector3DBase<CCoordinateNed>
         {
-        private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateNed)
-            CCoordinateGeodetic m_referencePosition; //!< geodetic reference position
-            bool m_hasReferencePosition; //!< valid reference position?
-
         protected:
             //! \copydoc CValueObject::marshallFromDbus()
             virtual void marshallToDbus(QDBusArgument &argument) const override;
@@ -49,45 +47,30 @@ namespace BlackMisc
             /*!
              * \brief Default constructor
              */
-            CCoordinateNed() : CVector3DBase(), m_referencePosition(), m_hasReferencePosition(false) {}
+            CCoordinateNed() : m_hasReferencePosition(false) {}
 
             /*!
              * \brief Constructor with reference position
-             * \param referencePosition
              */
-            CCoordinateNed(const CCoordinateGeodetic &referencePosition) : CVector3DBase(), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
+            CCoordinateNed(const CCoordinateGeodetic &referencePosition) : m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
             /*!
              * \brief Constructor by values
-             * \param referencePosition
-             * \param north
-             * \param east
-             * \param down
              */
             CCoordinateNed(const CCoordinateGeodetic &referencePosition, double north, double east, double down) : CVector3DBase(north, east, down), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
             /*!
              * \brief Constructor by values
-             * \param north
-             * \param east
-             * \param down
              */
             CCoordinateNed(double north, double east, double down) : CVector3DBase(north, east, down), m_referencePosition(), m_hasReferencePosition(false) {}
 
-            //! \brief Copy constructor
-            CCoordinateNed(const CCoordinateNed &other) :
-                CVector3DBase(other), m_referencePosition(other.m_referencePosition), m_hasReferencePosition(other.m_hasReferencePosition) {}
-
             /*!
              * \brief Constructor by math vector
-             * \param vector
              */
             explicit CCoordinateNed(const BlackMisc::Math::CVector3D &vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(), m_hasReferencePosition(false) {}
 
             /*!
              * \brief Constructor by math vector and reference position
-             * \param referencePosition
-             * \param vector
              */
             CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D &vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
@@ -119,7 +102,6 @@ namespace BlackMisc
 
             /*!
              * \brief Corresponding reference position
-             * \return
              */
             CCoordinateGeodetic referencePosition() const
             {
@@ -128,7 +110,6 @@ namespace BlackMisc
 
             /*!
              * \brief Corresponding reference position
-             * \return
              */
             bool hasReferencePosition() const
             {
@@ -137,7 +118,6 @@ namespace BlackMisc
 
             /*!
              * \brief North
-             * \return
              */
             double north() const
             {
@@ -146,7 +126,6 @@ namespace BlackMisc
 
             /*!
              * \brief East
-             * \return
              */
             double east() const
             {
@@ -155,7 +134,6 @@ namespace BlackMisc
 
             /*!
              * \brief Down
-             * \return
              */
             double down() const
             {
@@ -164,7 +142,6 @@ namespace BlackMisc
 
             /*!
              * \brief Set north
-             * \param north
              */
             void setNorth(double north)
             {
@@ -173,7 +150,6 @@ namespace BlackMisc
 
             /*!
              * \brief Set east
-             * \param east
              */
             void setEast(double east)
             {
@@ -182,7 +158,6 @@ namespace BlackMisc
 
             /*!
              * \brief Set down
-             * \param down
              */
             void setDown(double down)
             {
@@ -191,7 +166,6 @@ namespace BlackMisc
 
             /*!
              * \brief Corresponding reference position
-             * \param referencePosition
              */
             void setReferencePosition(const CCoordinateGeodetic &referencePosition)
             {
@@ -201,16 +175,19 @@ namespace BlackMisc
 
             /*!
              * \brief Concrete implementation of a 3D vector
-             * \return
              */
             BlackMisc::Math::CVector3D toMathVector() const
             {
                 return BlackMisc::Math::CVector3D(this->north(), this->east(), this->down());
             }
-        };
 
-    } // namespace
-} // namespace
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CCoordinateNed)
+            CCoordinateGeodetic m_referencePosition; //!< geodetic reference position
+            bool m_hasReferencePosition; //!< valid reference position?
+        };
+    }
+}
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Geo::CCoordinateNed, (o.m_referencePosition, o.m_hasReferencePosition))
 Q_DECLARE_METATYPE(BlackMisc::Geo::CCoordinateNed)
