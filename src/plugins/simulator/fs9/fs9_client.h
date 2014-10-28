@@ -91,6 +91,9 @@ namespace BlackSimPlugin
             QMutex m_mutexInterpolator;
             IDirectPlay8Address *m_hostAddress = nullptr;
             ClientStatus m_clientStatus = Disconnected;
+
+            PLAYER_INFO_STRUCT m_playerInfo;
+            DPN_PLAYER_INFO m_player;
         };
     }
 }

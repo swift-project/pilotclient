@@ -204,20 +204,18 @@ namespace BlackSimPlugin
             callsign.toWCharArray(wszPlayername.data());
             wszPlayername[callsign.size()] = 0;
 
-            PLAYER_INFO_STRUCT playerInfo;
-            ZeroMemory(&playerInfo, sizeof (PLAYER_INFO_STRUCT) );
-                strcpy (playerInfo.szAircraft, "Boeing 737-400 Paint1");
-            playerInfo.dwFlags = 6;
+            ZeroMemory(&m_playerInfo, sizeof (PLAYER_INFO_STRUCT) );
+                strcpy (m_playerInfo.szAircraft, "Boeing 737-400 Paint1");
+            m_playerInfo.dwFlags = 6;
 
             // Prepare and set the player information structure.
-            DPN_PLAYER_INFO player;
-            ZeroMemory( &player, sizeof( DPN_PLAYER_INFO ) );
-            player.dwSize = sizeof( DPN_PLAYER_INFO );
-            player.pvData = &playerInfo;
-            player.dwDataSize = sizeof( PLAYER_INFO_STRUCT );
-            player.dwInfoFlags = DPNINFO_NAME | DPNINFO_DATA;
-            player.pwszName = wszPlayername.data();
-            if( FAILED( hr = m_directPlayPeer->SetPeerInfo( &player, nullptr, nullptr, DPNSETPEERINFO_SYNC ) ) )
+            ZeroMemory( &m_player, sizeof( DPN_PLAYER_INFO ) );
+            m_player.dwSize = sizeof( DPN_PLAYER_INFO );
+            m_player.pvData = &m_playerInfo;
+            m_player.dwDataSize = sizeof( PLAYER_INFO_STRUCT );
+            m_player.dwInfoFlags = DPNINFO_NAME | DPNINFO_DATA;
+            m_player.pwszName = wszPlayername.data();
+            if( FAILED( hr = m_directPlayPeer->SetPeerInfo( &m_player, nullptr, nullptr, DPNSETPEERINFO_SYNC ) ) )
             {
                 qWarning() << "Failed to set peer info!";
                 return hr;
