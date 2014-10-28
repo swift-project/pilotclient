@@ -61,23 +61,6 @@ namespace BlackMisc
     }
 
     /*
-     * Equal?
-     */
-    bool CStatusMessage::operator ==(const CStatusMessage &other) const
-    {
-        if (this == &other) return true;
-        return TupleConverter<CStatusMessage>::toTuple(*this) == TupleConverter<CStatusMessage>::toTuple(other);
-    }
-
-    /*
-     * Unequal?
-     */
-    bool CStatusMessage::operator !=(const CStatusMessage &other) const
-    {
-        return !((*this) == other);
-    }
-
-    /*
      * Conversion
      */
     void CStatusMessage::toQtLogTriple(QtMsgType *o_type, QString *o_category, QString *o_message) const

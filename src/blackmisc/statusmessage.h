@@ -66,12 +66,6 @@ namespace BlackMisc
         //! \sa QtMessageHandler
         void toQtLogTriple(QtMsgType *o_type, QString *o_category, QString *o_message) const;
 
-        //! Equal operator ==
-        bool operator ==(const CStatusMessage &other) const;
-
-        //! Unequal operator !=
-        bool operator !=(const CStatusMessage &other) const;
-
         //! Message category
         const CLogCategoryList &getCategories() const { return this->m_categories; }
 

@@ -278,6 +278,15 @@ namespace BlackMisc
      */
     template <class Derived> class CValueObjectStdTuple : public CValueObject
     {
+        friend bool operator ==(const Derived &a, const Derived &b)
+        {
+            return equals(a, b);
+        }
+
+        friend bool operator !=(const Derived &a, const Derived &b)
+        {
+            return !(a == b);
+        }
 
     public:
         //! \copydoc CValueObject::getValueHash()
@@ -362,6 +371,14 @@ namespace BlackMisc
     private:
         const Derived *derived() const { return static_cast<const Derived *>(this); }
         Derived *derived() { return static_cast<Derived *>(this); }
+
+        // Friend functions are implemented in terms of private static member functions, because
+        // friendship is not transitive: friends of CValueObjectStdTuple are not friends of TupleConverter.
+        static bool equals(const Derived &a, const Derived &b)
+        {
+            if (&a == &b) { return true; }
+            return TupleConverter<Derived>::toMetaTuple(a) == TupleConverter<Derived>::toMetaTuple(b);
+        }
     };
 
     /*!
