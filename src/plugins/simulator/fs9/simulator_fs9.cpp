@@ -188,7 +188,8 @@ namespace BlackSimPlugin
         {
             if (message.getSeverity() != BlackMisc::CStatusMessage::SeverityDebug)
             {
-                QMetaObject::invokeMethod(m_fs9Host, "sendTextMessage", Q_ARG(QString, message.toQString()));
+                if (m_fs9Host)
+                    QMetaObject::invokeMethod(m_fs9Host, "sendTextMessage", Q_ARG(QString, message.toQString()));
             }
         }
 
