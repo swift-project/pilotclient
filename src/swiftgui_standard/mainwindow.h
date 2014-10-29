@@ -15,12 +15,7 @@
 #undef interface
 
 #include "guimodeenums.h"
-#include "blackcore/context_audio.h"
-#include "blackcore/context_network.h"
-#include "blackcore/context_settings.h"
-#include "blackcore/context_application.h"
-#include "blackcore/context_simulator.h"
-#include "blackcore/context_runtime.h"
+#include "blackcore/context_all_interfaces.h"
 #include "blackcore/input_manager.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/infowindowcomponent.h"
@@ -80,7 +75,7 @@ protected:
     //! \remarks keep the values in sync with the real tab indexes
     enum MainPageIndex
     {
-        MainPageCockpit  = 0,
+        MainPageLogin  = 0,
         MainPageInfoArea = 1
     };
 
@@ -88,7 +83,7 @@ private:
     QScopedPointer<Ui::MainWindow> ui;
     BlackGui::Components::CInfoWindowComponent *m_compInfoWindow = nullptr; //!< the info window (popup
     bool m_init = false;
-    GuiModes::WindowMode m_windowMode;
+    GuiModes::WindowMode m_windowMode = GuiModes::WindowNormal;
     BlackInput::IKeyboard *m_keyboard = nullptr; //!< hotkeys
 
     BlackMisc::CLogSubscriber m_logSubscriber { this, &MainWindow::ps_displayStatusMessageInGui };

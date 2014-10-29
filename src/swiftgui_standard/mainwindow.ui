@@ -125,9 +125,9 @@
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
-         <widget class="QWidget" name="pg_Cockpit">
+         <widget class="QWidget" name="pg_LoginConfirmation">
           <layout class="QVBoxLayout" name="vl_CockpitPage">
            <property name="spacing">
             <number>0</number>
@@ -144,9 +144,6 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item>
-            <widget class="BlackGui::Components::CCockpitV1Component" name="comp_Cockpit" native="true"/>
-           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="pg_MainInfoArea">
@@ -354,12 +351,6 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
-  <customwidget>
-   <class>BlackGui::Components::CCockpitV1Component</class>
-   <extends>QWidget</extends>
-   <header>blackgui/components/cockpitv1component.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>BlackGui::Components::CMainInfoAreaComponent</class>
    <extends>QWidget</extends>
