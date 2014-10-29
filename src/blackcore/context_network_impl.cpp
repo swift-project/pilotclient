@@ -20,6 +20,7 @@
 #include "blackmisc/networkutils.h"
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/simplecommandparser.h"
 
 #include <QtXml/QDomElement>
 #include <QNetworkReply>
@@ -183,6 +184,15 @@ namespace BlackCore
 
         // now check out own extra states, e.g. disconnecting
         return INetwork::isPendingStatus(this->m_currentStatus);
+    }
+
+    /*
+     * Command line entered
+     */
+    bool CContextNetwork::parseCommandLine(const QString &commandLine)
+    {
+        Q_UNUSED(commandLine);
+        return false;
     }
 
     /*

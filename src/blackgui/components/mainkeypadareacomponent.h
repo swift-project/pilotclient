@@ -65,9 +65,6 @@ namespace BlackGui
             //! Button was clicked
             void ps_buttonPressed();
 
-            //! Button was double clicked
-            void ps_buttonDoubleClicked();
-
             //! \copydoc BlackCore::IContextNetwork::connectionStatusChanged
             void ps_connectionStatusChanged(uint from, uint to, const QString &message);
 

@@ -117,6 +117,9 @@ namespace BlackCore
         //! Automatic voice room resolution for frequencies
         virtual void enableAutomaticVoiceRoomResolution(bool enable) = 0;
 
+        //! Parse command line
+        virtual bool parseCommandLine(const QString &commandLine) = 0;
+
     protected:
         //! Constructor
         IContextOwnAircraft(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : CContext(mode, runtime) {}

@@ -86,4 +86,9 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("enableAutomaticVoiceRoomResolution"), enable);
     }
 
+    bool CContextOwnAircraftProxy::parseCommandLine(const QString &commandLine)
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine);
+    }
+
 } // namespace

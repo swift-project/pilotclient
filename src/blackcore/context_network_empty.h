@@ -173,6 +173,14 @@ namespace BlackCore
             if (m_log) { qDebug() << Q_FUNC_INFO << number; }
         }
 
+        //! \copydoc IContextNetwork::parseCommandLine
+        virtual bool parseCommandLine(const QString &commandLine) override
+        {
+            if (m_log) { qDebug() << Q_FUNC_INFO << commandLine; }
+            return false;
+        }
+
+
     private:
         bool m_log = true;
 

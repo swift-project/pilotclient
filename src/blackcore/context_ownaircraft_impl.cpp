@@ -8,6 +8,7 @@
 #include "context_audio.h"
 #include "context_runtime.h"
 #include "context_settings.h"
+#include "blackmisc/simplecommandparser.h"
 #include "blackmisc/logmessage.h"
 
 using namespace BlackMisc;
@@ -245,6 +246,74 @@ namespace BlackCore
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << this->m_ownAircraft;
         return this->m_ownAircraft;
+    }
+
+    /*
+     * Command line entered
+     */
+    bool CContextOwnAircraft::parseCommandLine(const QString &commandLine)
+    {
+        static CSimpleCommandParser parser(
+        {
+            ".x", ".xpdr",    // transponder
+            ".com1", ".com2", // com1, com2 frequencies
+            ".selcal"
+        });
+        if (commandLine.isEmpty()) return false;
+        parser.parse(commandLine);
+        if (!parser.isKnownCommand()) return false;
+
+        CAircraft ownAircraft = this->getOwnAircraft();
+        if (parser.matchesCommand(".x", ".xpdr")  && parser.countParts() > 1)
+        {
+            CTransponder transponder = ownAircraft.getTransponder();
+            int xprCode = parser.toInt(1);
+            if (CTransponder::isValidTransponderCode(xprCode))
+            {
+                transponder.setTransponderCode(xprCode);
+                this->updateOwnCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), transponder, "commandline");
+                return true;
+            }
+            else
+            {
+                CTransponder::TransponderMode mode = CTransponder::modeFromString(parser.part(1));
+                transponder.setTransponderMode(mode);
+                this->updateOwnCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(), transponder, "commandline");
+                return true;
+            }
+        }
+        else if (parser.commandStartsWith("com"))
+        {
+            CFrequency frequency(parser.toDouble(1), CFrequencyUnit::MHz());
+            if (CComSystem::isValidComFrequency(frequency))
+            {
+                CComSystem com1 = ownAircraft.getCom1System();
+                CComSystem com2 = ownAircraft.getCom2System();
+                if (parser.commandEndsWith("1"))
+                {
+                    com1.setFrequencyActive(frequency);
+                }
+                else if (parser.commandEndsWith("2"))
+                {
+                    com2.setFrequencyActive(frequency);
+                }
+                else
+                {
+                    return false;
+                }
+                this->updateOwnCockpit(com1, com2, ownAircraft.getTransponder(), "commandline");
+                return true;
+            }
+        }
+        else if (parser.matchesCommand(".selcal"))
+        {
+            if (CSelcal::isValidCode(parser.part(1)))
+            {
+                this->updateSelcal(parser.part(1), "commandline");
+                return true;
+            }
+        }
+        return false;
     }
 
 } // namespace

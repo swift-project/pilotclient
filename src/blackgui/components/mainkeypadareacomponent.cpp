@@ -58,7 +58,9 @@ namespace BlackGui
             Q_ASSERT(this->getIContextOwnAircraft());
             Q_ASSERT(this->getIContextNetwork());
             connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::ps_connectionStatusChanged);
+            connect(this, &CMainKeypadAreaComponent::commandEntered, this->getIContextNetwork(), &IContextNetwork::parseCommandLine);
             connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged);
+            connect(this, &CMainKeypadAreaComponent::commandEntered, this->getIContextOwnAircraft(), &IContextOwnAircraft::parseCommandLine);
         }
 
         void CMainKeypadAreaComponent::ps_buttonPressed()
@@ -97,11 +99,6 @@ namespace BlackGui
             }
         }
 
-        void CMainKeypadAreaComponent::ps_buttonDoubleClicked()
-        {
-
-        }
-
         void CMainKeypadAreaComponent::ps_connectionStatusChanged(uint from, uint to, const QString &message)
         {
             INetwork::ConnectionStatus statusFrom = static_cast<INetwork::ConnectionStatus>(from);
@@ -128,6 +125,7 @@ namespace BlackGui
             QString c = this->ui->le_CommandLineInput->text().trimmed();
             if (c.isEmpty()) return;
             emit this->commandEntered(c);
+            this->ui->le_CommandLineInput->clear();
         }
 
         void CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged(const CAircraft &aircraft, const QString &originator)

@@ -165,6 +165,9 @@ namespace BlackCore
         //! Load flight plan (from network)
         virtual BlackMisc::Aviation::CFlightPlan loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const = 0;
 
+        //! Command line was entered
+        virtual bool parseCommandLine(const QString &commandLine) = 0;
+
         /*!
          * Get METAR, if not available request it
          * \param airportIcaoCode such as EDDF, KLAX
