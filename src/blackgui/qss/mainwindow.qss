@@ -32,8 +32,14 @@ BlackGui--CInfoArea {
 /** fix scroll areas **/
 
 /** in flight plan **/
-QAbstractScrollArea #qw_FlightPlanTabMain { background-color: black; }
-QAbstractScrollArea #qw_RemarksGenerator { background-color: black; }
+QAbstractScrollArea #qw_FlightPlanTabMain {
+        background-color: black;
+        background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+QAbstractScrollArea #qw_RemarksGenerator {
+        background-color: transparent;
+        background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
 
 /** in log component **/
 QAbstractScrollArea #pg_StatusPageMessages { background-color: black; }
