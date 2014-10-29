@@ -21,6 +21,7 @@
 #include <QTabWidget>
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QScopedPointer>
 
 namespace Ui { class CTextMessageComponent; }
 namespace BlackGui
@@ -50,37 +51,32 @@ namespace BlackGui
             //! Destructor
             ~CTextMessageComponent();
 
-            //! SELCAL callback, SELCAL is obtained by that
-            void setSelcalCallback(const std::function<const QString(void)> &selcalCallback) { this->m_selcalCallback = selcalCallback; }
-
         signals:
             //! Message to be displayed in info window
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
 
         public slots:
-            //! Command entered
-            void commandEntered();
+            //! \addtogroup commandline
+            //! @{
+            //! <pre>
+            //! .m  .msg   message text  set transponder code    CTextMessageComponent
+            //! </pre>
+            //! @}
+            //! \copydoc IContextOwnAircraft::parseCommandLine
+            bool parseCommandLine(const QString &commandLine);
 
-            /*!
-             * \brief Append text messages (received, to be sent) to GUI
-             * \param messages
-             * \param sending
-             */
-            void appendTextMessagesToGui(const BlackMisc::Network::CTextMessageList &messages, bool sending = false);
-
-            //! Cockpit values changed, used to updated some components
-            void changedAircraftCockpit();
+            //! Text messages received
+            void onTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages) { this->textMessagesReceived(messages); }
 
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
             void runtimeHasBeenSet() override;
 
         private:
-            Ui::CTextMessageComponent *ui;
-            QWidget *getTab(Tab tab); //!< enum to widget
-            std::function<const QString(void)> m_selcalCallback; //!< obtain SELCAL by that
-            QAction *m_clearTextEditAction;
-            QTextEdit *m_currentTextEdit;
+            QScopedPointer<Ui::CTextMessageComponent> ui;
+            QWidget   *getTabWidget(Tab tab); //!< enum to widget
+            QAction   *m_clearTextEditAction = nullptr;
+            QTextEdit *m_currentTextEdit     = nullptr;
 
             /*!
              * \brief Add new text message tab
@@ -117,15 +113,26 @@ namespace BlackGui
             //! Show current frequencies
             void showCurrentFrequenciesFromCockpit();
 
+            /*!
+             * \brief Append text messages (received, to be sent) to GUI
+             * \param messages
+             * \param sending
+             */
+            void textMessagesReceived(const BlackMisc::Network::CTextMessageList &messages, bool sending = false);
+
         private slots:
+
+            //! Cockpit values changed, used to updated some components
+            void ps_onChangedAircraftCockpit();
+
             //! Close text message tab
-            void closeTextMessageTab();
+            void ps_closeTextMessageTab();
 
             //! Context menu for text edit including clear
-            void showContextMenuForTextEdit(const QPoint &pt);
+            void ps_showContextMenuForTextEdit(const QPoint &pt);
 
             //! Clear text edit
-            void clearTextEdit();
+            void ps_clearTextEdit();
         };
     }
 }
