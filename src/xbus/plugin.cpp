@@ -13,8 +13,8 @@ namespace XBus
 {
 
     CPlugin::CPlugin()
+        : m_menu(CMenu::mainMenu().subMenu("XBus"))
     {
-        m_menu = CMenu::mainMenu().subMenu("XBus");
         m_startServerMenuItems.push_back(m_menu.item("Start server on session bus", [this]{ startServer(BlackCore::CDBusServer::sessionDBusServer()); }));
         m_startServerMenuItems.push_back(m_menu.item("Start server on system bus", [this]{ startServer(BlackCore::CDBusServer::systemDBusServer()); }));
         m_startServerMenuItems.push_back(m_menu.item("Start server on localhost P2P", [this]{ startServer(BlackCore::CDBusServer::p2pAddress()); }));
