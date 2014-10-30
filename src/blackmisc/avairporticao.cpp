@@ -22,55 +22,6 @@ namespace BlackMisc
         }
 
         /*
-         * Compare
-         */
-        int CAirportIcao::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAirportIcao &>(otherBase);
-            return compare(TupleConverter<CAirportIcao>::toMetaTuple(*this), TupleConverter<CAirportIcao>::toMetaTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CAirportIcao::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CAirportIcao>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAirportIcao::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CAirportIcao>::toTuple(*this);
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CAirportIcao::toJson() const
-        {
-            return BlackMisc::serializeJson(CAirportIcao::jsonMembers(), TupleConverter<CAirportIcao>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        void CAirportIcao::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CAirportIcao::jsonMembers(), TupleConverter<CAirportIcao>::toTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CAirportIcao::jsonMembers()
-        {
-            return TupleConverter<CAirportIcao>::jsonMembers();
-        }
-
-        /*
          * Unify ICAO code
          */
         QString CAirportIcao::unifyAirportCode(const QString &icaoCode)
@@ -88,66 +39,6 @@ namespace BlackMisc
         {
             QString icao = unifyAirportCode(icaoCode);
             return icao.length() == 4;
-        }
-
-        /*
-         * Equal?
-         */
-        bool CAirportIcao::operator ==(const CAirportIcao &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CAirportIcao>::toMetaTuple(*this) == TupleConverter<CAirportIcao>::toMetaTuple(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CAirportIcao::operator !=(const CAirportIcao &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CAirportIcao::getValueHash() const
-        {
-            return qHash(TupleConverter<CAirportIcao>::toTuple(*this));
-        }
-
-        /*
-         * Less than?
-         */
-        bool CAirportIcao::operator <(const CAirportIcao &other) const
-        {
-            return this->m_icaoCode < other.m_icaoCode;
-        }
-
-        /*
-         * metaTypeId
-         */
-        int CAirportIcao::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAirportIcao>();
-        }
-
-        /*
-         * is a
-         */
-        bool CAirportIcao::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CAirportIcao>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Register metadata
-         */
-        void CAirportIcao::registerMetadata()
-        {
-            qRegisterMetaType<CAirportIcao>();
-            qDBusRegisterMetaType<CAirportIcao>();
         }
 
     } // namespace

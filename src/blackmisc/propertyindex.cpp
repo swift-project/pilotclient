@@ -76,64 +76,12 @@ namespace BlackMisc
     }
 
     /*
-     * Register metadata
-     */
-    void CPropertyIndex::registerMetadata()
-    {
-        qRegisterMetaType<CPropertyIndex>();
-        qDBusRegisterMetaType<CPropertyIndex>();
-    }
-
-    /*
      * Convert to string
      */
     QString CPropertyIndex::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
         return this->m_indexString;
-    }
-
-    /*
-     * metaTypeId
-     */
-    int CPropertyIndex::getMetaTypeId() const
-    {
-        return qMetaTypeId<CPropertyIndex>();
-    }
-
-    /*
-     * is a
-     */
-    bool CPropertyIndex::isA(int metaTypeId) const
-    {
-        if (metaTypeId == qMetaTypeId<CPropertyIndex>()) { return true; }
-        return this->CValueObject::isA(metaTypeId);
-    }
-
-    /*
-     * Compare
-     */
-    int CPropertyIndex::compareImpl(const CValueObject &otherBase) const
-    {
-        const auto &other = static_cast<const CPropertyIndex &>(otherBase);
-        return compare(TupleConverter<CPropertyIndex>::toTuple(*this), TupleConverter<CPropertyIndex>::toTuple(other));
-    }
-
-    /*
-     * Marshall to DBus
-     */
-    void CPropertyIndex::marshallToDbus(QDBusArgument &argument) const
-    {
-        argument << TupleConverter<CPropertyIndex>::toTuple(*this);
-    }
-
-    /*
-     * Unmarshall from DBus
-     */
-    void CPropertyIndex::unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        argument >> TupleConverter<CPropertyIndex>::toTuple(*this);
-        this->stringToList();
     }
 
     /*
@@ -177,56 +125,6 @@ namespace BlackMisc
             Q_ASSERT(i >= static_cast<int>(GlobalIndexCValueObject));
             this->m_indexes.append(i);
         }
-    }
-
-    /*
-     * Equal?
-     */
-    bool CPropertyIndex::operator ==(const CPropertyIndex &other) const
-    {
-        if (this == &other) return true;
-        return TupleConverter<CPropertyIndex>::toTuple(*this) == TupleConverter<CPropertyIndex>::toTuple(other);
-    }
-
-    /*
-     * Unequal?
-     */
-    bool CPropertyIndex::operator !=(const CPropertyIndex &other) const
-    {
-        return !((*this) == other);
-    }
-
-    /*
-     * Hash
-     */
-    uint CPropertyIndex::getValueHash() const
-    {
-        return qHash(TupleConverter<CPropertyIndex>::toTuple(*this));
-    }
-
-    /*
-     * To JSON
-     */
-    QJsonObject CPropertyIndex::toJson() const
-    {
-        return BlackMisc::serializeJson(CPropertyIndex::jsonMembers(), TupleConverter<CPropertyIndex>::toTuple(*this));
-    }
-
-    /*
-     * From JSON
-     */
-    void CPropertyIndex::convertFromJson(const QJsonObject &json)
-    {
-        BlackMisc::deserializeJson(json, CPropertyIndex::jsonMembers(), TupleConverter<CPropertyIndex>::toTuple(*this));
-        this->stringToList();
-    }
-
-    /*
-     * Members
-     */
-    const QStringList &CPropertyIndex::jsonMembers()
-    {
-        return TupleConverter<CPropertyIndex>::jsonMembers();
     }
 
 } // namespace

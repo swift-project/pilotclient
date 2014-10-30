@@ -35,111 +35,11 @@ namespace BlackMisc
         }
 
         /*
-         * Compare
-         */
-        int CAircraftMapping::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAircraftMapping &>(otherBase);
-            return compare(TupleConverter<CAircraftMapping>::toTuple(*this), TupleConverter<CAircraftMapping>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CAircraftMapping::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CAircraftMapping>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAircraftMapping::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CAircraftMapping>::toTuple(*this);
-        }
-
-        /*
-         * Hash
-         */
-        uint CAircraftMapping::getValueHash() const
-        {
-            return qHash(TupleConverter<CAircraftMapping>::toTuple(*this));
-        }
-
-        /*
          * Model string?
          */
         bool CAircraftMapping::matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
         {
             return this->m_model.matchesModelString(modelString, sensitivity);
-        }
-
-        /*
-         * Equal?
-         */
-        bool CAircraftMapping::operator ==(const CAircraftMapping &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CAircraftMapping>::toTuple(*this) == TupleConverter<CAircraftMapping>::toTuple(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CAircraftMapping::operator !=(const CAircraftMapping &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * metaTypeId
-         */
-        int CAircraftMapping::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAircraftMapping>();
-        }
-
-        /*
-         * is a
-         */
-        bool CAircraftMapping::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CAircraftMapping>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Register metadata
-         */
-        void CAircraftMapping::registerMetadata()
-        {
-            qRegisterMetaType<CAircraftMapping>();
-            qDBusRegisterMetaType<CAircraftMapping>();
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CAircraftMapping::jsonMembers()
-        {
-            return TupleConverter<CAircraftMapping>::jsonMembers();
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CAircraftMapping::toJson() const
-        {
-            return BlackMisc::serializeJson(CAircraftMapping::jsonMembers(), TupleConverter<CAircraftMapping>::toTuple(*this));
-        }
-
-        /*
-         * From Json
-         */
-        void CAircraftMapping::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CAircraftMapping::jsonMembers(), TupleConverter<CAircraftMapping>::toTuple(*this));
         }
 
         /*

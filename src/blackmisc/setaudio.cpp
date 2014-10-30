@@ -37,97 +37,6 @@ namespace BlackMisc
         }
 
         /*
-         * metaTypeId
-         */
-        int CSettingsAudio::getMetaTypeId() const
-        {
-            return qMetaTypeId<CSettingsAudio>();
-        }
-
-        /*
-         * is a
-         */
-        bool CSettingsAudio::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CSettingsAudio>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CSettingsAudio::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CSettingsAudio &>(otherBase);
-            return compare(TupleConverter<CSettingsAudio>::toTuple(*this), TupleConverter<CSettingsAudio>::toTuple(other));
-        }
-
-        /*
-         * Marshall
-         */
-        void CSettingsAudio::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CSettingsAudio>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall
-         */
-        void CSettingsAudio::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CSettingsAudio>::toTuple(*this);
-        }
-
-        /*
-         * Equal?
-         */
-        bool CSettingsAudio::operator ==(const CSettingsAudio &other) const
-        {
-            if (this == &other) return true;
-            return compare(*this, other) == 0;
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CSettingsAudio::operator !=(const CSettingsAudio &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CSettingsAudio::getValueHash() const
-        {
-            return qHash(TupleConverter<CSettingsAudio>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CSettingsAudio::toJson() const
-        {
-            return BlackMisc::serializeJson(CSettingsAudio::jsonMembers(), TupleConverter<CSettingsAudio>::toTuple(*this));
-        }
-
-        /*
-         * From JSON
-         */
-        void CSettingsAudio::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CSettingsAudio::jsonMembers(), TupleConverter<CSettingsAudio>::toTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CSettingsAudio::jsonMembers()
-        {
-            return TupleConverter<CSettingsAudio>::jsonMembers();
-        }
-
-        /*
          * Default values
          */
         void CSettingsAudio::initDefaultValues()
@@ -147,15 +56,6 @@ namespace BlackMisc
                 int cl = m_notificationFlags.length();
                 this->m_notificationFlags.append(QString(l - cl, '1'));
             }
-        }
-
-        /*
-         * Register metadata
-         */
-        void CSettingsAudio::registerMetadata()
-        {
-            qRegisterMetaType<CSettingsAudio>();
-            qDBusRegisterMetaType<CSettingsAudio>();
         }
 
         /*

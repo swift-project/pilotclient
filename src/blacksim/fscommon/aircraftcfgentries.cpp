@@ -28,24 +28,6 @@ namespace BlackSim
         }
 
         /*
-         * Operator ==
-         */
-        bool CAircraftCfgEntries::operator ==(const CAircraftCfgEntries &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CAircraftCfgEntries>::toTuple(*this) == TupleConverter<CAircraftCfgEntries>::toTuple(other);
-        }
-
-        /*
-         * Operator !=
-         */
-        bool CAircraftCfgEntries::operator !=(const CAircraftCfgEntries &other) const
-        {
-            if (this == &other) return false;
-            return !((*this) == other);
-        }
-
-        /*
          * String representation
          */
         QString CAircraftCfgEntries::convertToQString(bool) const
@@ -113,80 +95,6 @@ namespace BlackSim
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
-        }
-
-        /*
-         * Hash
-         */
-        uint CAircraftCfgEntries::getValueHash() const
-        {
-            return qHash(TupleConverter<CAircraftCfgEntries>::toTuple(*this));
-        }
-
-        /*
-         *  Register metadata
-         */
-        void CAircraftCfgEntries::registerMetadata()
-        {
-            qRegisterMetaType<CAircraftCfgEntries>();
-            qDBusRegisterMetaType<CAircraftCfgEntries>();
-        }
-
-        /*
-         * Compare
-         */
-        int CAircraftCfgEntries::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAircraftCfgEntries &>(otherBase);
-            return compare(TupleConverter<CAircraftCfgEntries>::toTuple(*this), TupleConverter<CAircraftCfgEntries>::toTuple(other));
-        }
-
-        /*
-         * Metatype
-         */
-        int CAircraftCfgEntries::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAircraftCfgEntries>();
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CAircraftCfgEntries::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CAircraftCfgEntries>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAircraftCfgEntries::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CAircraftCfgEntries>::toTuple(*this);
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CAircraftCfgEntries::toJson() const
-        {
-            return BlackMisc::serializeJson(CAircraftCfgEntries::jsonMembers(), TupleConverter<CAircraftCfgEntries>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        void CAircraftCfgEntries::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CAircraftCfgEntries::jsonMembers(), TupleConverter<CAircraftCfgEntries>::toTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CAircraftCfgEntries::jsonMembers()
-        {
-            return TupleConverter<CAircraftCfgEntries>::jsonMembers();
         }
 
     }

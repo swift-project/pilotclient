@@ -93,48 +93,6 @@ namespace BlackMisc
         }
 
         /*
-         * metaTypeId
-         */
-        int CVoiceCapabilities::getMetaTypeId() const
-        {
-            return qMetaTypeId<CVoiceCapabilities>();
-        }
-
-        /*
-         * is a
-         */
-        bool CVoiceCapabilities::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CVoiceCapabilities>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CVoiceCapabilities::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CVoiceCapabilities &>(otherBase);
-            return compare(TupleConverter<CVoiceCapabilities>::toTuple(*this), TupleConverter<CVoiceCapabilities>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CVoiceCapabilities::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CVoiceCapabilities>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CVoiceCapabilities::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CVoiceCapabilities>::toTuple(*this);
-        }
-
-        /*
          * Icon
          */
         CIcon CVoiceCapabilities::toIcon() const
@@ -154,55 +112,6 @@ namespace BlackMisc
             }
             Q_ASSERT(false);
             return CIconList::iconForIndex(CIcons::NetworkCapabilityUnknown); // never reached
-        }
-
-        /*
-         * Equal?
-         */
-        bool CVoiceCapabilities::operator ==(const CVoiceCapabilities &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CVoiceCapabilities>::toTuple(*this) == TupleConverter<CVoiceCapabilities>::toTuple(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CVoiceCapabilities::operator !=(const CVoiceCapabilities &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CVoiceCapabilities::getValueHash() const
-        {
-            return qHash(TupleConverter<CVoiceCapabilities>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CVoiceCapabilities::toJson() const
-        {
-            return BlackMisc::serializeJson(CVoiceCapabilities::jsonMembers(), TupleConverter<CVoiceCapabilities>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        void CVoiceCapabilities::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CVoiceCapabilities::jsonMembers(), TupleConverter<CVoiceCapabilities>::toTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CVoiceCapabilities::jsonMembers()
-        {
-            return TupleConverter<CVoiceCapabilities>::jsonMembers();
         }
 
         /*
@@ -236,15 +145,6 @@ namespace BlackMisc
         {
             static const QList<CVoiceCapabilities> all({fromVoiceCapabilities(Unknown), fromVoiceCapabilities(Voice), fromVoiceCapabilities(VoiceReceivingOnly), fromVoiceCapabilities(TextOnly)});
             return all;
-        }
-
-        /*
-         * Register metadata
-         */
-        void CVoiceCapabilities::registerMetadata()
-        {
-            qRegisterMetaType<CVoiceCapabilities>();
-            qDBusRegisterMetaType<CVoiceCapabilities>();
         }
 
     } // namespace

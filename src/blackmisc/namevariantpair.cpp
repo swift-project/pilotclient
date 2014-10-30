@@ -48,73 +48,6 @@ namespace BlackMisc
     }
 
     /*
-     * Marshall to DBus
-     */
-    void CNameVariantPair::marshallToDbus(QDBusArgument &argument) const
-    {
-        argument << TupleConverter<CNameVariantPair>::toTuple(*this);
-    }
-
-    /*
-     * Unmarshall from DBus
-     */
-    void CNameVariantPair::unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        argument >> TupleConverter<CNameVariantPair>::toTuple(*this);
-    }
-
-    /*
-     * Equal?
-     */
-    bool CNameVariantPair::operator ==(const CNameVariantPair &other) const
-    {
-        if (this == &other) return true;
-        return TupleConverter<CNameVariantPair>::toTuple(*this) == TupleConverter<CNameVariantPair>::toTuple(other);
-    }
-
-    /*
-     * Unequal?
-     */
-    bool CNameVariantPair::operator !=(const CNameVariantPair &other) const
-    {
-        return !((*this) == other);
-    }
-
-    /*
-     * Hash
-     */
-    uint CNameVariantPair::getValueHash() const
-    {
-        return qHash(TupleConverter<CNameVariantPair>::toTuple(*this));
-    }
-
-    /*
-     * metaTypeId
-     */
-    int CNameVariantPair::getMetaTypeId() const
-    {
-        return qMetaTypeId<CNameVariantPair>();
-    }
-
-    /*
-     * is a
-     */
-    bool CNameVariantPair::isA(int metaTypeId) const
-    {
-        if (metaTypeId == qMetaTypeId<CNameVariantPair>()) { return true; }
-        return this->CValueObject::isA(metaTypeId);
-    }
-
-    /*
-     * Compare
-     */
-    int CNameVariantPair::compareImpl(const CValueObject &otherBase) const
-    {
-        const auto &other = static_cast<const CNameVariantPair &>(otherBase);
-        return compare(TupleConverter<CNameVariantPair>::toTuple(*this), TupleConverter<CNameVariantPair>::toTuple(other));
-    }
-
-    /*
      * Property by index
      */
     QVariant CNameVariantPair::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -170,39 +103,6 @@ namespace BlackMisc
             CValueObject::setPropertyByIndex(variant, index);
             break;
         }
-    }
-
-    /*
-     * Register metadata
-     */
-    void CNameVariantPair::registerMetadata()
-    {
-        qRegisterMetaType<CNameVariantPair>();
-        qDBusRegisterMetaType<CNameVariantPair>();
-    }
-
-    /*
-     * To JSON
-     */
-    QJsonObject CNameVariantPair::toJson() const
-    {
-        return BlackMisc::serializeJson(TupleConverter<CNameVariantPair>::toMetaTuple(*this));
-    }
-
-    /*
-     * From JSON
-     */
-    void CNameVariantPair::convertFromJson(const QJsonObject &json)
-    {
-        BlackMisc::deserializeJson(json, TupleConverter<CNameVariantPair>::toMetaTuple(*this));
-    }
-
-    /*
-     * Members
-     */
-    const QStringList &CNameVariantPair::jsonMembers()
-    {
-        return TupleConverter<CNameVariantPair>::jsonMembers();
     }
 
 } // namespace

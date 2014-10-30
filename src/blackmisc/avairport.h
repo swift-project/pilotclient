@@ -23,7 +23,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information about an airpot.
          */
-        class CAirport : public BlackMisc::CValueObject, public BlackMisc::Geo::ICoordinateGeodetic
+        class CAirport : public CValueObjectStdTuple<CAirport>, public Geo::ICoordinateGeodetic
         {
         public:
             //! Properties by index
@@ -48,18 +48,6 @@ namespace BlackMisc
 
             //! ATC station constructor
             CAirport(const CAirportIcao &icao, const BlackMisc::Geo::CCoordinateGeodetic &position, const QString &descriptiveName);
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Equal operator ==
-            bool operator ==(const CAirport &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CAirport &other) const;
 
             //! Get ICAO code.
             const CAirportIcao &getIcao() const { return m_icao; }
@@ -121,45 +109,15 @@ namespace BlackMisc
                 return this->getPosition().longitude();
             }
 
-            //! \copydoc CValueObject::getValueHash()
-            virtual uint getValueHash() const override;
-
             //! \copydoc CValueObject::propertyByIndex()
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! Register metadata
-            static void registerMetadata();
-
-            //! \copydoc TupleConverter::jsonMembers()
-            static const QStringList &jsonMembers();
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAirport)

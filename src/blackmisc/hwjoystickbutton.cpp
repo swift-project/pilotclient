@@ -19,33 +19,6 @@ namespace BlackMisc
             m_buttonIndex(buttonIndex)
         {}
 
-        /*
-         * Hash
-         */
-        uint CJoystickButton::getValueHash() const
-        {
-            return qHash(TupleConverter<CJoystickButton>::toMetaTuple(*this));
-        }
-
-        // To JSON
-        QJsonObject CJoystickButton::toJson() const
-        {
-            return BlackMisc::serializeJson(TupleConverter<CJoystickButton>::toMetaTuple(*this));
-        }
-
-        // From Json
-        void CJoystickButton::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, TupleConverter<CJoystickButton>::toMetaTuple(*this));
-        }
-
-        // Meta data
-        void CJoystickButton::registerMetadata()
-        {
-            qRegisterMetaType<CJoystickButton>();
-            qDBusRegisterMetaType<CJoystickButton>();
-        }
-
         void CJoystickButton::setButtonIndex(qint32 buttonIndex)
         {
             m_buttonIndex = buttonIndex;
@@ -114,67 +87,10 @@ namespace BlackMisc
             return name.toInt();
         }
 
-        /*
-         * Equal?
-         */
-        bool CJoystickButton::operator ==(const CJoystickButton &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CJoystickButton>::toMetaTuple(*this) == TupleConverter<CJoystickButton>::toMetaTuple(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CJoystickButton::operator !=(const CJoystickButton &other) const
-        {
-            return !((*this) == other);
-        }
-
-        bool CJoystickButton::operator< (CJoystickButton const &other) const
-        {
-            return TupleConverter<CJoystickButton>::toMetaTuple(*this) < TupleConverter<CJoystickButton>::toMetaTuple(other);
-        }
-
         QString CJoystickButton::convertToQString(bool /* i18n */) const
         {
             QString s = getButtonAsString();
             return s.trimmed();
-        }
-
-        int CJoystickButton::getMetaTypeId() const
-        {
-            return qMetaTypeId<CJoystickButton>();
-        }
-
-        bool CJoystickButton::isA(int metaTypeId) const
-        {
-            return (metaTypeId == qMetaTypeId<CJoystickButton>());
-        }
-
-        /*
-         * Compare
-         */
-        int CJoystickButton::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CJoystickButton &>(otherBase);
-            return compare(TupleConverter<CJoystickButton>::toMetaTuple(*this), TupleConverter<CJoystickButton>::toMetaTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CJoystickButton::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CJoystickButton>::toMetaTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CJoystickButton::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CJoystickButton>::toMetaTuple(*this);
         }
 
     } // namespace Hardware

@@ -66,89 +66,6 @@ namespace BlackMisc
         }
 
         /*
-         * Register metadata
-         */
-        void CAirport::registerMetadata()
-        {
-            qRegisterMetaType<CAirport>();
-            qDBusRegisterMetaType<CAirport>();
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CAirport::jsonMembers()
-        {
-            return TupleConverter<CAirport>::jsonMembers();
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CAirport::toJson() const
-        {
-            return BlackMisc::serializeJson(TupleConverter<CAirport>::toMetaTuple(*this));
-        }
-
-        /*
-         * From Json
-         */
-        void CAirport::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, TupleConverter<CAirport>::toMetaTuple(*this));
-        }
-
-        /*
-         * Compare
-         */
-        int CAirport::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAirport &>(otherBase);
-            return compare(TupleConverter<CAirport>::toTuple(*this), TupleConverter<CAirport>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CAirport::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CAirport>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAirport::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CAirport>::toTuple(*this);
-        }
-
-        /*
-         * Equal?
-         */
-        bool CAirport::operator ==(const CAirport &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CAirport>::toTuple(*this) == TupleConverter<CAirport>::toTuple(other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CAirport::getValueHash() const
-        {
-            return qHash(TupleConverter<CAirport>::toTuple(*this));
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CAirport::operator !=(const CAirport &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
          * Distance to planne
          */
         CLength CAirport::calculcateDistanceAndBearingToPlane(const CCoordinateGeodetic &position, bool updateValues)
@@ -223,23 +140,6 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
-        }
-
-        /*
-         * metaTypeId
-         */
-        int CAirport::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAirport>();
-        }
-
-        /*
-         * is a
-         */
-        bool CAirport::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CAirport>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
         }
 
     } // namespace

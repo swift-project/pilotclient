@@ -40,97 +40,6 @@ namespace BlackMisc
         }
 
         /*
-         * metaTypeId
-         */
-        int CSettingsNetwork::getMetaTypeId() const
-        {
-            return qMetaTypeId<CSettingsNetwork>();
-        }
-
-        /*
-         * is a
-         */
-        bool CSettingsNetwork::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CSettingsNetwork>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CSettingsNetwork::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CSettingsNetwork &>(otherBase);
-            return compare(TupleConverter<CSettingsNetwork>::toTuple(*this), TupleConverter<CSettingsNetwork>::toTuple(other));
-        }
-
-        /*
-         * Marshall
-         */
-        void CSettingsNetwork::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CSettingsNetwork>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall
-         */
-        void CSettingsNetwork::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CSettingsNetwork>::toTuple(*this);
-        }
-
-        /*
-         * Equal?
-         */
-        bool CSettingsNetwork::operator ==(const CSettingsNetwork &other) const
-        {
-            if (this == &other) return true;
-            return compare(*this, other) == 0;
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CSettingsNetwork::operator !=(const CSettingsNetwork &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CSettingsNetwork::getValueHash() const
-        {
-            return qHash(TupleConverter<CSettingsNetwork>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CSettingsNetwork::toJson() const
-        {
-            return BlackMisc::serializeJson(CSettingsNetwork::jsonMembers(), TupleConverter<CSettingsNetwork>::toTuple(*this));
-        }
-
-        /*
-         * From JSON
-         */
-        void CSettingsNetwork::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CSettingsNetwork::jsonMembers(), TupleConverter<CSettingsNetwork>::toTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CSettingsNetwork::jsonMembers()
-        {
-            return TupleConverter<CSettingsNetwork>::jsonMembers();
-        }
-
-        /*
          * Default values
          */
         void CSettingsNetwork::initDefaultValues()
@@ -143,15 +52,6 @@ namespace BlackMisc
             this->addTrafficNetworkServer(CServer("Europe CC", "VATSIM Server", "5.9.155.43", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
             this->addTrafficNetworkServer(CServer("UK", "VATSIM Server", "109.169.48.148", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
             this->addTrafficNetworkServer(CServer("USA-W", "VATSIM Server", "64.151.108.52", 6809, CUser("vatsimid", "Black Client", "", "vatsimpw")));
-        }
-
-        /*
-         * Register metadata
-         */
-        void CSettingsNetwork::registerMetadata()
-        {
-            qRegisterMetaType<CSettingsNetwork>();
-            qDBusRegisterMetaType<CSettingsNetwork>();
         }
 
         /*

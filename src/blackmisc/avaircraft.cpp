@@ -42,22 +42,6 @@ namespace BlackMisc
         }
 
         /*
-         * Marshall to DBus
-         */
-        void CAircraft::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CAircraft>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAircraft::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CAircraft>::toTuple(*this);
-        }
-
-        /*
          * Distance to plane
          */
         const PhysicalQuantities::CLength &CAircraft::setCalculcatedDistanceToPosition(const Geo::CCoordinateGeodetic &position)
@@ -143,58 +127,6 @@ namespace BlackMisc
         }
 
         /*
-         * Equal?
-         */
-        bool CAircraft::operator ==(const CAircraft &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CAircraft>::toTuple(*this) == TupleConverter<CAircraft>::toTuple(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CAircraft::operator !=(const CAircraft &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CAircraft::getValueHash() const
-        {
-            return qHash(TupleConverter<CAircraft>::toTuple(*this));
-        }
-
-        /*
-         * metaTypeId
-         */
-        int CAircraft::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAircraft>();
-        }
-
-        /*
-         * is a
-         */
-        bool CAircraft::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CAircraft>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CAircraft::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAircraft &>(otherBase);
-            return compare(TupleConverter<CAircraft>::toTuple(*this), TupleConverter<CAircraft>::toTuple(other));
-        }
-
-        /*
          * Property by index
          */
         QVariant CAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -269,38 +201,6 @@ namespace BlackMisc
             }
         }
 
-        /*
-         * Register metadata
-         */
-        void CAircraft::registerMetadata()
-        {
-            qRegisterMetaType<CAircraft>();
-            qDBusRegisterMetaType<CAircraft>();
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CAircraft::toJson() const
-        {
-            return BlackMisc::serializeJson(TupleConverter<CAircraft>::toMetaTuple(*this));
-        }
-
-        /*
-         * From JSON
-         */
-        void CAircraft::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, TupleConverter<CAircraft>::toMetaTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CAircraft::jsonMembers()
-        {
-            return TupleConverter<CAircraft>::jsonMembers();
-        }
 
     } // namespace
 } // namespace

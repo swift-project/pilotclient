@@ -23,7 +23,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of a voice room
          */
-        class CVoiceRoom : public BlackMisc::CValueObject
+        class CVoiceRoom : public CValueObjectStdTuple<CVoiceRoom>
         {
         public:
             //! Properties by index
@@ -86,38 +86,11 @@ namespace BlackMisc
             //! Is ATIS voice channel
             bool isAtis() const;
 
-            //! Equal operator ==
-            bool operator ==(const CVoiceRoom &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CVoiceRoom &other) const;
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
 
             //! Protocol prefix "vvl"
             static const QString &protocol() { static QString p("vvl"); return p; }
@@ -129,24 +102,8 @@ namespace BlackMisc
             static const QString &protocolComplete() { static QString p("vvl://"); return p; }
 
         protected:
-
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CVoiceRoom)

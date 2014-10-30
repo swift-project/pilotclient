@@ -21,7 +21,7 @@ namespace BlackMisc
      *
      * A log handler can filter messages based on their categories.
      */
-    class CLogCategory : public CValueObject
+    class CLogCategory : public CValueObjectStdTuple<CLogCategory>
     {
     public:
         //! \name Predefined special categories (public static methods)
@@ -104,42 +104,9 @@ namespace BlackMisc
         //! Returns true if the category string contains the given substring.
         bool contains(const QString &substring) const { return m_string.contains(substring); }
 
-        //! Register metadata
-        static void registerMetadata();
-
-        //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-        //! \copydoc CValueObject::getValueHash
-        virtual uint getValueHash() const override;
-
-        //! Equal operator
-        bool operator ==(const CLogCategory &other) const;
-
-        //! Not equal operator
-        bool operator !=(const CLogCategory &other) const;
-
     protected:
         //! \copydoc CValueObject::convertToQString()
         virtual QString convertToQString(bool i18n = false) const override;
-
-        //! \copydoc CValueObject::getMetaTypeId
-        virtual int getMetaTypeId() const override;
-
-        //! \copydoc CValueObject::isA
-        virtual bool isA(int metaTypeId) const override;
-
-        //! \copydoc CValueObject::compareImpl
-        virtual int compareImpl(const CValueObject &other) const override;
-
-        //! \copydoc CValueObject::marshallToDbus()
-        virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-        //! \copydoc CValueObject::marshallFromDbus()
-        virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CLogCategory)

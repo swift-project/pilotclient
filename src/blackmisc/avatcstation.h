@@ -32,7 +32,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information about an ATC station.
          */
-        class CAtcStation : public BlackMisc::CValueObject, public BlackMisc::Geo::ICoordinateGeodetic
+        class CAtcStation : public CValueObjectStdTuple<CAtcStation>, public Geo::ICoordinateGeodetic
         {
         public:
             //! Properties by index
@@ -67,20 +67,8 @@ namespace BlackMisc
                         bool isOnline = false, const QDateTime &bookedFromUtc = QDateTime(),  const QDateTime &bookedUntilUtc = QDateTime(),
                         const CInformationMessage &atis = CInformationMessage(CInformationMessage::ATIS), const CInformationMessage &metar = CInformationMessage(CInformationMessage::METAR));
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
             //! \copydoc CValueObject::toIcon()
             virtual BlackMisc::CIcon toIcon() const override { return this->m_callsign.toIcon(); }
-
-            //! Equal operator ==
-            bool operator ==(const CAtcStation &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CAtcStation &other) const;
 
             //! Has booking times?
             bool hasBookingTimes() const
@@ -266,45 +254,15 @@ namespace BlackMisc
                 return this->getPosition().longitude();
             }
 
-            //! \copydoc CValueObject::getValueHash()
-            virtual uint getValueHash() const override;
-
             //! \copydoc CValueObject::propertyByIndex()
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index) override;
 
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! Register metadata
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAtcStation)

@@ -28,73 +28,6 @@ namespace BlackMisc
         }
 
         /*
-         * Compare
-         */
-        int CVoiceRoom::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CVoiceRoom &>(otherBase);
-            return compare(TupleConverter<CVoiceRoom>::toTuple(*this), TupleConverter<CVoiceRoom>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CVoiceRoom::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CVoiceRoom>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CVoiceRoom::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CVoiceRoom>::toTuple(*this);
-        }
-
-        /*
-         * Hash
-         */
-        uint CVoiceRoom::getValueHash() const
-        {
-            return qHash(TupleConverter<CVoiceRoom>::toTuple(*this));
-        }
-
-        /*
-         * Equal?
-         */
-        bool CVoiceRoom::operator ==(const CVoiceRoom &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CVoiceRoom>::toTuple(*this) == TupleConverter<CVoiceRoom>::toTuple(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CVoiceRoom::operator !=(const CVoiceRoom &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Metadata
-         */
-        void CVoiceRoom::registerMetadata()
-        {
-            qRegisterMetaType<CVoiceRoom>();
-            qDBusRegisterMetaType<CVoiceRoom>();
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CVoiceRoom::toJson() const
-        {
-            return BlackMisc::serializeJson(CVoiceRoom::jsonMembers(), TupleConverter<CVoiceRoom>::toTuple(*this));
-        }
-
-        /*
          * Property by index
          */
         QVariant CVoiceRoom::propertyByIndex(const CPropertyIndex &index) const
@@ -154,22 +87,6 @@ namespace BlackMisc
         }
 
         /*
-         * To JSON
-         */
-        void CVoiceRoom::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CVoiceRoom::jsonMembers(), TupleConverter<CVoiceRoom>::toTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CVoiceRoom::jsonMembers()
-        {
-            return TupleConverter<CVoiceRoom>::jsonMembers();
-        }
-
-        /*
          * To string
          */
         QString CVoiceRoom::convertToQString(bool /* i18n */) const
@@ -179,24 +96,6 @@ namespace BlackMisc
             s.append(this ->isConnected() ? " connected" : " unconnected");
             if (this->m_audioPlaying) s.append(" playing");
             return s;
-        }
-
-        /*
-         * metaTypeId
-         */
-        int CVoiceRoom::getMetaTypeId() const
-        {
-            return qMetaTypeId<CVoiceRoom>();
-        }
-
-        /*
-         * is a
-         */
-        bool CVoiceRoom::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CVoiceRoom>()) { return true; }
-
-            return CValueObject::isA(metaTypeId);
         }
 
         /*

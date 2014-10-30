@@ -21,7 +21,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! Value object encapsulating information of a callsign.
-        class CCallsign : public BlackMisc::CValueObject
+        class CCallsign : public CValueObjectStdTuple<CCallsign>
         {
         public:
             //! Indexes
@@ -66,30 +66,6 @@ namespace BlackMisc
             //! Equals callsign string?
             bool equalsString(const QString &callsignString) const;
 
-            //! Equal operator ==
-            bool operator ==(const CCallsign &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CCallsign &other) const;
-
-            //! Less than operator < for sorting
-            bool operator <(const CCallsign &other) const;
-
-            //! \copydoc CValueObject::getValueHash()
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
             //! \copydoc CValueObject::toIcon()
             virtual BlackMisc::CIcon toIcon() const override { return CCallsign::convertToIcon(*this); }
 
@@ -99,30 +75,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! Register metadata
-            static void registerMetadata();
-
-            //! Members
-            static const QStringList &jsonMembers();
-
         protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
             //! Unify the callsign
             static QString unifyCallsign(const QString &callsign);

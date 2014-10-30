@@ -39,68 +39,8 @@ namespace BlackMisc
         }
     }
 
-    // Hash
-    uint CHotkeyFunction::getValueHash() const
-    {
-        return qHash(TupleConverter<CHotkeyFunction>::toMetaTuple(*this));
-    }
-
-    // To JSON
-    QJsonObject CHotkeyFunction::toJson() const
-    {
-        return BlackMisc::serializeJson(TupleConverter<CHotkeyFunction>::toMetaTuple(*this));
-    }
-
-    // From Json
-    void CHotkeyFunction::convertFromJson(const QJsonObject &json)
-    {
-        BlackMisc::deserializeJson(json, TupleConverter<CHotkeyFunction>::toMetaTuple(*this));
-    }
-
-    void CHotkeyFunction::registerMetadata()
-    {
-        qRegisterMetaType<CHotkeyFunction>();
-        qDBusRegisterMetaType<CHotkeyFunction>();
-    }
-
-    // Equal?
-    bool CHotkeyFunction::operator ==(const CHotkeyFunction &other) const
-    {
-        if (this == &other) return true;
-        return TupleConverter<CHotkeyFunction>::toMetaTuple(*this) == TupleConverter<CHotkeyFunction>::toMetaTuple(other);
-    }
-
     QString CHotkeyFunction::convertToQString(bool /* i18n */) const
     {
         return getFunctionAsString();
-    }
-
-    int CHotkeyFunction::getMetaTypeId() const
-    {
-        return qMetaTypeId<CHotkeyFunction>();
-    }
-
-    bool CHotkeyFunction::isA(int metaTypeId) const
-    {
-        return (metaTypeId == qMetaTypeId<CHotkeyFunction>());
-    }
-
-    // Compare
-    int CHotkeyFunction::compareImpl(const CValueObject &otherBase) const
-    {
-        const auto &other = static_cast<const CHotkeyFunction &>(otherBase);
-        return compare(TupleConverter<CHotkeyFunction>::toMetaTuple(*this), TupleConverter<CHotkeyFunction>::toMetaTuple(other));
-    }
-
-    // Marshall to DBus
-    void CHotkeyFunction::marshallToDbus(QDBusArgument &argument) const
-    {
-        argument << TupleConverter<CHotkeyFunction>::toMetaTuple(*this);
-    }
-
-    // Unmarshall from DBus
-    void CHotkeyFunction::unmarshallFromDbus(const QDBusArgument &argument)
-    {
-        argument >> TupleConverter<CHotkeyFunction>::toMetaTuple(*this);
     }
 }

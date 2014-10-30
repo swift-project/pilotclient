@@ -26,7 +26,7 @@ namespace BlackMisc
         /*!
          * Value object for a flight plan
          */
-        class CFlightPlan : public BlackMisc::CValueObject
+        class CFlightPlan : public CValueObjectStdTuple<CFlightPlan>
         {
         public:
             /*!
@@ -181,54 +181,12 @@ namespace BlackMisc
             //! Get remarks string
             const QString &getRemarks() const { return m_remarks; }
 
-            //! Equals operator
-            bool operator ==(const CFlightPlan &other) const;
-
-            //! Not equals operator
-            bool operator !=(const CFlightPlan &other) const;
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
             //! \copydoc CValueObject::toIcon
             virtual CIcon toIcon() const override;
-
-            //! Register metadata
-            static void registerMetadata();
-
-            //! Members
-            static const QStringList &jsonMembers();
 
         protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::marshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CFlightPlan)

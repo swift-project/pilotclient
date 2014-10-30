@@ -39,24 +39,6 @@ namespace BlackMisc
         }
 
         /*
-         * metaTypeId
-         */
-        int CTextMessage::getMetaTypeId() const
-        {
-            return qMetaTypeId<CTextMessage>();
-        }
-
-        /*
-         * is a
-         */
-        bool CTextMessage::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CTextMessage>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
          * Private message?
          */
         bool CTextMessage::isPrivateMessage() const
@@ -205,65 +187,6 @@ namespace BlackMisc
             if (candidate.length() != 10) return invalid;
             if (!candidate.startsWith("SELCAL")) return invalid;
             return candidate.right(4);
-        }
-
-        /*
-         * Compare
-         */
-        int CTextMessage::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CTextMessage &>(otherBase);
-            return compare(TupleConverter<CTextMessage>::toTuple(*this), TupleConverter<CTextMessage>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CTextMessage::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CTextMessage>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CTextMessage::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CTextMessage>::toTuple(*this);
-        }
-
-        /*
-         * Hash
-         */
-        uint CTextMessage::getValueHash() const
-        {
-            return qHash(TupleConverter<CTextMessage>::toTuple(*this));
-        }
-
-        /*
-         * Equal?
-         */
-        bool CTextMessage::operator ==(const CTextMessage &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CTextMessage>::toTuple(*this) == TupleConverter<CTextMessage>::toTuple(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CTextMessage::operator !=(const CTextMessage &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Register metadata
-         */
-        void CTextMessage::registerMetadata()
-        {
-            qRegisterMetaType<CTextMessage>();
-            qDBusRegisterMetaType<CTextMessage>();
         }
 
     } // namespace

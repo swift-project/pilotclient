@@ -36,57 +36,6 @@ namespace BlackMisc
         }
 
         /*
-         * Compare
-         */
-        int CAudioDevice::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAudioDevice &>(otherBase);
-            return compare(TupleConverter<CAudioDevice>::toTuple(*this), TupleConverter<CAudioDevice>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CAudioDevice::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CAudioDevice>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAudioDevice::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CAudioDevice>::toTuple(*this);
-        }
-
-        /*
-         * Hash
-         */
-        uint CAudioDevice::getValueHash() const
-        {
-            return qHash(TupleConverter<CAudioDevice>::toTuple(*this));
-        }
-
-        /*
-         * Equal?
-         */
-        bool CAudioDevice::operator ==(const CAudioDevice &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CAudioDevice>::toTuple(*this) == TupleConverter<CAudioDevice>::toTuple(other);
-        }
-
-
-        /*
-         * Unequal?
-         */
-        bool CAudioDevice::operator !=(const CAudioDevice &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
          * As String
          */
         QString CAudioDevice::convertToQString(bool /* i18n */) const
@@ -97,57 +46,6 @@ namespace BlackMisc
             s.append(this->getHostName());
             s.append("]");
             return s;
-        }
-
-        /*
-         * metaTypeId
-         */
-        int CAudioDevice::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAudioDevice>();
-        }
-
-        /*
-         * is a
-         */
-        bool CAudioDevice::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CAudioDevice>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Register
-         */
-        void CAudioDevice::registerMetadata()
-        {
-            qRegisterMetaType<CAudioDevice>();
-            qDBusRegisterMetaType<CAudioDevice>();
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CAudioDevice::jsonMembers()
-        {
-            return TupleConverter<CAudioDevice>::jsonMembers();
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CAudioDevice::toJson() const
-        {
-            return BlackMisc::serializeJson(CAudioDevice::jsonMembers(), TupleConverter<CAudioDevice>::toTuple(*this));
-        }
-
-        /*
-         * From Json
-         */
-        void CAudioDevice::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CAudioDevice::jsonMembers(), TupleConverter<CAudioDevice>::toTuple(*this));
         }
 
     } // Voice

@@ -22,7 +22,7 @@ namespace BlackMisc
     namespace Event
     {
         //! Value object encapsulating a hotkey function for distribution
-        class CEventHotkeyFunction : public BlackMisc::CValueObject
+        class CEventHotkeyFunction : public CValueObjectStdTuple<CEventHotkeyFunction>
         {
         public:
             //! Default constructor.
@@ -30,18 +30,6 @@ namespace BlackMisc
 
             //! Constructor.
             CEventHotkeyFunction(CHotkeyFunction func, bool argument);
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! Register metadata
-            static void registerMetadata();
 
             //! Get the event originator
             const COriginator &getEventOriginator() const {return m_eventOriginator;}
@@ -55,21 +43,6 @@ namespace BlackMisc
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CEventHotkeyFunction)

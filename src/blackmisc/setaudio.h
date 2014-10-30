@@ -23,7 +23,7 @@ namespace BlackMisc
     namespace Settings
     {
         //! Value object encapsulating information of audio related settings.
-        class CSettingsAudio : public BlackMisc::CValueObject
+        class CSettingsAudio : public CValueObjectStdTuple<CSettingsAudio>
         {
         public:
             //! Default constructor.
@@ -36,63 +36,21 @@ namespace BlackMisc
                 return value;
             }
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
             //! Notification flag (play notification?)
             bool getNotificationFlag(BlackSound::CNotificationSounds::Notification notification) const;
 
             //! Notification flag (play notification?)
             void setNotificationFlag(BlackSound::CNotificationSounds::Notification notification, bool value);
 
-            //! Equal operator ==
-            bool operator ==(const CSettingsAudio &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CSettingsAudio &other) const;
-
             //! \copydoc BlackCore::IContextSettings::value
             virtual BlackMisc::CStatusMessage value(const QString &path, const QString &command, const BlackMisc::CVariant &value, bool &changedFlag);
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! Init with meaningful default values
             void initDefaultValues();
 
-            //! \copydoc CValueObject::registerMetadata
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSettingsAudio)

@@ -24,7 +24,7 @@ namespace BlackMisc
     namespace Settings
     {
         //! Value object encapsulating the keyboard hotkey assignment
-        class CSettingKeyboardHotkey : public CValueObject
+        class CSettingKeyboardHotkey : public CValueObjectStdTuple<CSettingKeyboardHotkey>
         {
         public:
             //! Properties by index
@@ -50,33 +50,6 @@ namespace BlackMisc
 
             //! Constructor
             CSettingKeyboardHotkey(const Hardware::CKeyboardKey &key, const CHotkeyFunction &function);
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! Register metadata
-            static void registerMetadata();
-
-            //! Equal?
-            bool operator ==(const CSettingKeyboardHotkey &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CSettingKeyboardHotkey &other) const;
-
-            //! <
-            bool operator<(CSettingKeyboardHotkey const &other) const;
 
             //! Get key code
             const Hardware::CKeyboardKey &getKey() const { return m_key; }
@@ -117,21 +90,6 @@ namespace BlackMisc
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl(otherBase)
-            virtual int compareImpl(const CValueObject &otherBase) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSettingKeyboardHotkey)

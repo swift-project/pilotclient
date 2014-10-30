@@ -22,7 +22,7 @@ namespace BlackMisc
         /*!
          * Value object for ICAO classification
          */
-        class CAircraftIcao : public BlackMisc::CValueObject
+        class CAircraftIcao : public CValueObjectStdTuple<CAircraftIcao>
         {
         public:
             //! Properties by index
@@ -61,12 +61,6 @@ namespace BlackMisc
             CAircraftIcao(const QString &icao, const QString &combinedType, const QString &airline, const QString &livery, const QString &color)
                 : m_aircraftDesignator(icao.trimmed().toUpper()), m_aircraftCombinedType(combinedType.trimmed().toUpper()), m_airlineDesignator(airline.trimmed().toUpper()),
                   m_livery(livery.trimmed().toUpper()), m_aircraftColor(color.trimmed().toUpper()) {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Get ICAO designator, e.g. "B737"
             const QString &getAircraftDesignator() const { return m_aircraftDesignator; }
@@ -132,23 +126,8 @@ namespace BlackMisc
             //! Set type
             void setAircraftCombinedType(const QString &type) { this->m_aircraftCombinedType = type.trimmed().toUpper(); }
 
-            //! Equal operator ==
-            bool operator ==(const CAircraftIcao &other) const;
-
             //! Matches wildcard icao object
             bool matchesWildcardIcao(const CAircraftIcao &otherIcao) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CAircraftIcao &other) const;
-
-            //! Value hash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -156,33 +135,12 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! Register metadata
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
-
             //! Valid designator?
             static bool isValidDesignator(const QString &designator);
 
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftIcao)

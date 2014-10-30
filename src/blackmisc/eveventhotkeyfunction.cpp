@@ -18,19 +18,6 @@ namespace BlackMisc
         {
         }
 
-        // Hash
-        uint CEventHotkeyFunction::getValueHash() const
-        {
-            return qHash(TupleConverter<CEventHotkeyFunction>::toMetaTuple(*this));
-        }
-
-        // Register metadata
-        void CEventHotkeyFunction::registerMetadata()
-        {
-            qRegisterMetaType<CEventHotkeyFunction>();
-            qDBusRegisterMetaType<CEventHotkeyFunction>();
-        }
-
         /*
          * Convert to string
          */
@@ -40,49 +27,6 @@ namespace BlackMisc
             s.append(m_eventOriginator.toQString(i18n));
             s.append(" ").append(m_hotkeyFunc.toQString(i18n));
             return s;
-        }
-
-        /*
-         * metaTypeId
-         */
-        int CEventHotkeyFunction::getMetaTypeId() const
-        {
-            return qMetaTypeId<CEventHotkeyFunction>();
-        }
-
-        /*
-         * is a
-         */
-        bool CEventHotkeyFunction::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CEventHotkeyFunction>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CEventHotkeyFunction::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CEventHotkeyFunction &>(otherBase);
-            return compare(TupleConverter<CEventHotkeyFunction>::toMetaTuple(*this), TupleConverter<CEventHotkeyFunction>::toMetaTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CEventHotkeyFunction::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CEventHotkeyFunction>::toMetaTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CEventHotkeyFunction::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CEventHotkeyFunction>::toMetaTuple(*this);
         }
     }
 }

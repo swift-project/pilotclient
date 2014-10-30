@@ -35,75 +35,6 @@ namespace BlackMisc
         }
 
         /*
-         * metaTypeId
-         */
-        int CAircraftSituation::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAircraftSituation>();
-        }
-
-        /*
-         * is a
-         */
-        bool CAircraftSituation::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CAircraftSituation>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CAircraftSituation::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAircraftSituation &>(otherBase);
-
-            return compare(TupleConverter<CAircraftSituation>::toTuple(*this), TupleConverter<CAircraftSituation>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CAircraftSituation::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CAircraftSituation>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAircraftSituation::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CAircraftSituation>::toTuple(*this);
-        }
-
-        /*
-         * Equal?
-         */
-        bool CAircraftSituation::operator ==(const CAircraftSituation &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CAircraftSituation>::toTuple(*this) == TupleConverter<CAircraftSituation>::toTuple(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CAircraftSituation::operator !=(const CAircraftSituation &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CAircraftSituation::getValueHash() const
-        {
-            return qHash(TupleConverter<CAircraftSituation>::toTuple(*this));
-        }
-
-        /*
          * Property by index
          */
         QVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
@@ -174,15 +105,6 @@ namespace BlackMisc
                 Q_ASSERT_X(false, "CAircraftSituation", "index unknown (setter)");
                 break;
             }
-        }
-
-        /*
-         * Register metadata
-         */
-        void CAircraftSituation::registerMetadata()
-        {
-            qRegisterMetaType<CAircraftSituation>();
-            qDBusRegisterMetaType<CAircraftSituation>();
         }
 
     } // namespace

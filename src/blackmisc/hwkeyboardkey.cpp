@@ -24,38 +24,12 @@ namespace BlackMisc
             m_qtKey(keyCode), m_modifier1(modifier1), m_modifier2(modifier2)
         {}
 
-        void CKeyboardKey::registerMetadata()
-        {
-            qRegisterMetaType<CKeyboardKey>();
-            qDBusRegisterMetaType<CKeyboardKey>();
-        }
-
-        QJsonObject CKeyboardKey::toJson() const
-        {
-            return BlackMisc::serializeJson(TupleConverter<CKeyboardKey>::toMetaTuple(*this));
-        }
-
-        void CKeyboardKey::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, TupleConverter<CKeyboardKey>::toMetaTuple(*this));
-        }
-
         QString CKeyboardKey::convertToQString(bool /* i18n */) const
         {
             QString s = this->getModifier1AsString();
             s.append(" ").append(this->getModifier2AsString()).append(" ");
             if (this->m_qtKey != 0) s.append(" ").append(this->getKeyAsStringRepresentation());
             return s.trimmed();
-        }
-
-        int CKeyboardKey::getMetaTypeId() const
-        {
-            return qMetaTypeId<CKeyboardKey>();
-        }
-
-        bool CKeyboardKey::isA(int metaTypeId) const
-        {
-            return (metaTypeId == qMetaTypeId<CKeyboardKey>());
         }
 
         QString CKeyboardKey::modifierToString(CKeyboardKey::Modifier modifier)
@@ -130,46 +104,6 @@ namespace BlackMisc
                 modifiers << modifierToString(ModifierMeta);
             }
             return modifiers;
-        }
-
-        int CKeyboardKey::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CKeyboardKey &>(otherBase);
-            return compare(TupleConverter<CKeyboardKey>::toMetaTuple(*this), TupleConverter<CKeyboardKey>::toMetaTuple(other));
-        }
-
-        void CKeyboardKey::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CKeyboardKey>::toMetaTuple(*this);
-        }
-
-        void CKeyboardKey::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CKeyboardKey>::toMetaTuple(*this);
-        }
-
-        uint CKeyboardKey::getValueHash() const
-        {
-            return qHash(TupleConverter<CKeyboardKey>::toMetaTuple(*this));
-        }
-
-        bool CKeyboardKey::operator ==(const CKeyboardKey &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CKeyboardKey>::toMetaTuple(*this) == TupleConverter<CKeyboardKey>::toMetaTuple(other);
-        }
-
-        bool CKeyboardKey::operator !=(const CKeyboardKey &other) const
-        {
-            return !((*this) == other);
-        }
-
-        bool CKeyboardKey::operator< (CKeyboardKey const &other) const
-        {
-            if (this->getKey() < other.getKey())
-                return true;
-            else
-                return false;
         }
 
         void CKeyboardKey::cleanup()

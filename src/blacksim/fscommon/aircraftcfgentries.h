@@ -24,7 +24,7 @@ namespace BlackSim
          * \remarks an entry in the aircraft.cfg is title, atc type, ... This class already bundles
          *          relevant entries, hence the class is named Entries (plural)
          */
-        class CAircraftCfgEntries: public BlackMisc::CValueObject
+        class CAircraftCfgEntries: public BlackMisc::CValueObjectStdTuple<CAircraftCfgEntries>
         {
         public:
             //! Properties by index
@@ -51,12 +51,6 @@ namespace BlackSim
              * \param atcParkingCode
              */
             CAircraftCfgEntries(const QString &filePath, qint32 index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode);
-
-            //! operator ==
-            bool operator ==(const CAircraftCfgEntries &other) const;
-
-            //! operator !=
-            bool operator !=(const CAircraftCfgEntries &other) const;
 
             //! Filepath
             QString getFilePath() const { return this->m_filePath; }
@@ -94,48 +88,15 @@ namespace BlackSim
             //! Parking code
             void setAtcParkingCode(const QString &parkingCode) { this->m_atcParkingCode = parkingCode; }
 
-            //! \copydoc CValueObject::getValueHash()
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! Register the metatypes
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &) override;
-
-            //! \copydoc CValueObject::compareImpl
-            int compareImpl(const CValueObject &otherBase) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId()
-            int getMetaTypeId() const override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftCfgEntries)

@@ -16,7 +16,7 @@
 namespace BlackSim
 {
     //! Describing a simulator
-    class CSimulatorInfo : public BlackMisc::CValueObject
+    class CSimulatorInfo : public BlackMisc::CValueObjectStdTuple<CSimulatorInfo>
     {
     public:
         //! Default constructor
@@ -27,12 +27,6 @@ namespace BlackSim
 
         //! Unspecified simulator
         bool isUnspecified() const { return this->m_shortName.isEmpty() || this->m_shortName.startsWith("Unspecified", Qt::CaseInsensitive); }
-
-        //! Equal operator ==
-        bool operator ==(const CSimulatorInfo &other) const;
-
-        //! Unequal operator !=
-        bool operator !=(const CSimulatorInfo &other) const;
 
         //! Single setting value
         QVariant getSimulatorSetupValue(int index) const;
@@ -51,27 +45,6 @@ namespace BlackSim
 
         //! Compare on names only, ignore setup
         bool isSameSimulator(const CSimulatorInfo &otherSimulator) const;
-
-        //! \copydoc CValueObject::getValueHash()
-        virtual uint getValueHash() const override;
-
-        //! \copydoc CValueObject::toQVariant()
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-        //! \copydoc CValueObject::toJson
-        virtual QJsonObject toJson() const override;
-
-        //! \copydoc CValueObject::convertFromJson
-        virtual void convertFromJson(const QJsonObject &json) override;
-
-        //! JSON member names
-        static const QStringList &jsonMembers();
-
-        //! Register the metatypes
-        static void registerMetadata();
 
         //! Simulator is FS9 - Microsoft Flight Simulator 2004
         static const CSimulatorInfo &FS9()
@@ -104,18 +77,6 @@ namespace BlackSim
     protected:
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
-
-        //! \copydoc CValueObject::getMetaTypeId
-        virtual int getMetaTypeId() const override;
-
-        //! \copydoc CValueObject::compareImpl
-        virtual int compareImpl(const CValueObject &otherBase) const override;
-
-        //! \copydoc CValueObject::marshallToDbus()
-        virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-        //! \copydoc CValueObject::unmarshallFromDbus()
-        virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CSimulatorInfo)

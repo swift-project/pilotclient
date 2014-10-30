@@ -26,7 +26,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of an aircraft's situation
          */
-        class CAircraftSituation : public BlackMisc::CValueObject, public BlackMisc::Geo::ICoordinateGeodetic
+        class CAircraftSituation : public CValueObjectStdTuple<CAircraftSituation>, public Geo::ICoordinateGeodetic
         {
         public:
             //! Properties by index
@@ -61,12 +61,6 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::setPropertyByIndex(variant,index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Get position
             const BlackMisc::Geo::CCoordinateGeodetic &getPosition() const { return this->m_position; }
@@ -119,36 +113,9 @@ namespace BlackMisc
             //! Timestamp
             const QDateTime &getTimestamp() const { return this->m_timestamp;}
 
-            //! Equal operator ==
-            bool operator ==(const CAircraftSituation &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CAircraftSituation &other) const;
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! Register metadata
-            static void registerMetadata();
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftSituation)

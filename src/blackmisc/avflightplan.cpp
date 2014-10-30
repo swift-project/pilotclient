@@ -15,21 +15,6 @@ namespace BlackMisc
     namespace Aviation
     {
 
-        bool CFlightPlan::operator ==(const CFlightPlan &other) const
-        {
-            return TupleConverter<CFlightPlan>::toTuple(*this) == TupleConverter<CFlightPlan>::toTuple(other);
-        }
-
-        bool CFlightPlan::operator !=(const CFlightPlan &other) const
-        {
-            return !(*this == other);
-        }
-
-        uint CFlightPlan::getValueHash() const
-        {
-            return qHash(TupleConverter<CFlightPlan>::toTuple(*this));
-        }
-
         QString CFlightPlan::convertToQString(bool i18n) const
         {
             QString s;
@@ -55,59 +40,9 @@ namespace BlackMisc
             return s;
         }
 
-        int CFlightPlan::getMetaTypeId() const
-        {
-            return qMetaTypeId<CFlightPlan>();
-        }
-
-        bool CFlightPlan::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CFlightPlan>()) { return true; }
-
-            return CValueObject::isA(metaTypeId);
-        }
-
-        int CFlightPlan::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CFlightPlan &>(otherBase);
-
-            return compare(TupleConverter<CFlightPlan>::toTuple(*this), TupleConverter<CFlightPlan>::toTuple(other));
-        }
-
-        void CFlightPlan::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CFlightPlan>::toTuple(*this);
-        }
-
-        void CFlightPlan::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CFlightPlan>::toTuple(*this);
-        }
-
-        const QStringList &CFlightPlan::jsonMembers()
-        {
-            return TupleConverter<CFlightPlan>::jsonMembers();
-        }
-
-        QJsonObject CFlightPlan::toJson() const
-        {
-            return BlackMisc::serializeJson(CFlightPlan::jsonMembers(), TupleConverter<CFlightPlan>::toTuple(*this));
-        }
-
-        void CFlightPlan::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CFlightPlan::jsonMembers(), TupleConverter<CFlightPlan>::toTuple(*this));
-        }
-
         BlackMisc::CIcon CFlightPlan::toIcon() const
         {
             return BlackMisc::CIconList::iconForIndex(CIcons::StandardIconAppFlightPlan16);
-        }
-
-        void CFlightPlan::registerMetadata()
-        {
-            qRegisterMetaType<CFlightPlan>();
-            qDBusRegisterMetaType<CFlightPlan>();
         }
 
     } // namespace

@@ -80,47 +80,6 @@ namespace BlackMisc
         }
 
         /*
-         * Compare
-         */
-        int CCallsign::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CCallsign &>(otherBase);
-            return compare(TupleConverter<CCallsign>::toMetaTuple(*this), TupleConverter<CCallsign>::toMetaTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CCallsign::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CCallsign>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CCallsign::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CCallsign>::toTuple(*this);
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CCallsign::toJson() const
-        {
-            return BlackMisc::serializeJson(CCallsign::jsonMembers(), TupleConverter<CCallsign>::toTuple(*this));
-        }
-
-        /*
-         * From JSON
-         */
-        void CCallsign::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CCallsign::jsonMembers(), TupleConverter<CCallsign>::toTuple(*this));
-        }
-
-        /*
          * Index
          */
         QVariant CCallsign::propertyByIndex(const CPropertyIndex &index) const
@@ -165,74 +124,6 @@ namespace BlackMisc
             default:
                 return CValueObject::setPropertyByIndex(variant, index);
             }
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CCallsign::jsonMembers()
-        {
-            return TupleConverter<CCallsign>::jsonMembers();
-        }
-
-        /*
-         * Equal?
-         */
-        bool CCallsign::operator ==(const CCallsign &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CCallsign>::toMetaTuple(*this) == TupleConverter<CCallsign>::toMetaTuple(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CCallsign::operator !=(const CCallsign &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CCallsign::getValueHash() const
-        {
-            return qHash(TupleConverter<CCallsign>::toTuple(*this));
-        }
-
-        /*
-         * Less than?
-         */
-        bool CCallsign::operator <(const CCallsign &other) const
-        {
-            return this->m_callsign < other.m_callsign;
-        }
-
-        /*
-         * metaTypeId
-         */
-        int CCallsign::getMetaTypeId() const
-        {
-            return qMetaTypeId<CCallsign>();
-        }
-
-        /*
-         * is a
-         */
-        bool CCallsign::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CCallsign>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Register metadata
-         */
-        void CCallsign::registerMetadata()
-        {
-            qRegisterMetaType<CCallsign>();
-            qDBusRegisterMetaType<CCallsign>();
         }
 
     } // namespace

@@ -21,7 +21,7 @@ namespace BlackMisc
     namespace Hardware
     {
         //! Value object representing a joystick button
-        class CJoystickButton : public CValueObject
+        class CJoystickButton : public CValueObjectStdTuple<CJoystickButton>
         {
         public:
             //! Properties by index
@@ -37,27 +37,6 @@ namespace BlackMisc
 
             //! Constructor
             CJoystickButton(qint32 buttonIndex);
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! Register metadata
-            static void registerMetadata();
 
             //! Get button index
             qint32 getButtonIndex() const { return m_buttonIndex; }
@@ -89,33 +68,9 @@ namespace BlackMisc
             //! Invalid button index
             static qint32 getInvalidIndex() { return m_invalidIndex; }
 
-            //! Equal?
-            bool operator ==(const CJoystickButton &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CJoystickButton &other) const;
-
-            //! <
-            bool operator<(CJoystickButton const &other) const;
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl(otherBase)
-            virtual int compareImpl(const CValueObject &otherBase) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CJoystickButton)

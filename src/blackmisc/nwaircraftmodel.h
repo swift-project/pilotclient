@@ -22,7 +22,7 @@ namespace BlackMisc
         /*!
          * Another pilot's aircraft model
          */
-        class CAircraftModel : public BlackMisc::CValueObject
+        class CAircraftModel : public CValueObjectStdTuple<CAircraftModel>
         {
         public:
             //! Indexes
@@ -37,27 +37,6 @@ namespace BlackMisc
 
             //! Constructor.
             CAircraftModel(const QString &model, bool isQueriedString) : m_modelString(model), m_queriedModelStringFlag(isQueriedString) {}
-
-            //! Equal operator ==
-            bool operator ==(const CAircraftModel &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CAircraftModel &other) const;
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! \copydoc CValueObject::propertyByIndex(int)
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -80,30 +59,9 @@ namespace BlackMisc
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
-            //! Register metadata
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftModel)

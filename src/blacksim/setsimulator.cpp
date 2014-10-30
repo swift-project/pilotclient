@@ -38,97 +38,6 @@ namespace BlackSim
         }
 
         /*
-         * metaTypeId
-         */
-        int CSettingsSimulator::getMetaTypeId() const
-        {
-            return qMetaTypeId<CSettingsSimulator>();
-        }
-
-        /*
-         * is a
-         */
-        bool CSettingsSimulator::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CSettingsSimulator>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CSettingsSimulator::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CSettingsSimulator &>(otherBase);
-            return compare(TupleConverter<CSettingsSimulator>::toTuple(*this), TupleConverter<CSettingsSimulator>::toTuple(other));
-        }
-
-        /*
-         * Marshall
-         */
-        void CSettingsSimulator::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CSettingsSimulator>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall
-         */
-        void CSettingsSimulator::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CSettingsSimulator>::toTuple(*this);
-        }
-
-        /*
-         * Equal?
-         */
-        bool CSettingsSimulator::operator ==(const CSettingsSimulator &other) const
-        {
-            if (this == &other) return true;
-            return compare(*this, other) == 0;
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CSettingsSimulator::operator !=(const CSettingsSimulator &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CSettingsSimulator::getValueHash() const
-        {
-            return qHash(TupleConverter<CSettingsSimulator>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CSettingsSimulator::toJson() const
-        {
-            return BlackMisc::serializeJson(TupleConverter<CSettingsSimulator>::toMetaTuple(*this));
-        }
-
-        /*
-         * From JSON
-         */
-        void CSettingsSimulator::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, TupleConverter<CSettingsSimulator>::toMetaTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CSettingsSimulator::jsonMembers()
-        {
-            return TupleConverter<CSettingsSimulator>::jsonMembers();
-        }
-
-        /*
          * Default values
          */
         void CSettingsSimulator::initDefaultValues()
@@ -136,15 +45,6 @@ namespace BlackSim
             this->m_selectedPlugin = CSimulatorInfo::FSX();
             this->m_timeSyncOffset = CTime(0, CTimeUnit::hrmin());
             this->m_timeSync = false;
-        }
-
-        /*
-         * Register metadata
-         */
-        void CSettingsSimulator::registerMetadata()
-        {
-            qRegisterMetaType<CSettingsSimulator>();
-            qDBusRegisterMetaType<CSettingsSimulator>();
         }
 
         /*

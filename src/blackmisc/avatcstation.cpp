@@ -162,89 +162,6 @@ namespace BlackMisc
         }
 
         /*
-         * Register metadata
-         */
-        void CAtcStation::registerMetadata()
-        {
-            qRegisterMetaType<CAtcStation>();
-            qDBusRegisterMetaType<CAtcStation>();
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CAtcStation::jsonMembers()
-        {
-            return TupleConverter<CAtcStation>::jsonMembers();
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CAtcStation::toJson() const
-        {
-            return BlackMisc::serializeJson(CAtcStation::jsonMembers(), TupleConverter<CAtcStation>::toTuple(*this));
-        }
-
-        /*
-         * From Json
-         */
-        void CAtcStation::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CAtcStation::jsonMembers(), TupleConverter<CAtcStation>::toTuple(*this));
-        }
-
-        /*
-         * Compare
-         */
-        int CAtcStation::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAtcStation &>(otherBase);
-            return compare(TupleConverter<CAtcStation>::toTuple(*this), TupleConverter<CAtcStation>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CAtcStation::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CAtcStation>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAtcStation::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CAtcStation>::toTuple(*this);
-        }
-
-        /*
-         * Equal?
-         */
-        bool CAtcStation::operator ==(const CAtcStation &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CAtcStation>::toTuple(*this) == TupleConverter<CAtcStation>::toTuple(other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CAtcStation::getValueHash() const
-        {
-            return qHash(TupleConverter<CAtcStation>::toTuple(*this));
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CAtcStation::operator !=(const CAtcStation &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
          * Frequency
          */
         void CAtcStation::setFrequency(const CFrequency &frequency)
@@ -405,23 +322,6 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
-        }
-
-        /*
-         * metaTypeId
-         */
-        int CAtcStation::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAtcStation>();
-        }
-
-        /*
-         * is a
-         */
-        bool CAtcStation::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CAtcStation>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
         }
 
     } // namespace

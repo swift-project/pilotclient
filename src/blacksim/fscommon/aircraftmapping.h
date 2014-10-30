@@ -23,24 +23,11 @@ namespace BlackSim
     namespace FsCommon
     {
         //! Aircraft mapping class, represents one particular mapping
-        class CAircraftMapping : public BlackMisc::CValueObject
+        class CAircraftMapping : public BlackMisc::CValueObjectStdTuple<CAircraftMapping>
         {
         public:
             static const qint32 InvalidId = -1; //!< Invalid mapping id
 
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &) override;
-
-            //! \copydoc CValueObject::getMetaTypeId()
-            int getMetaTypeId() const;
-
-            //! \copydoc CValueObject::compareImpl
-            int compareImpl(const CValueObject &otherBase) const override;
-
-        public:
             //! Columns
             enum ColumnIndex
             {
@@ -73,16 +60,6 @@ namespace BlackSim
              * \param simulator
              */
             CAircraftMapping(qint32 mappingId, qint32 proposalId, const QString &fsAircraftKey, const QString &icaoAircraftDesignator, const QString &icaoAirline, const QString &icaoAircraftType, const QString &icaoWakeTurbulenceCategory, const QString &painting, const QString &lastChanged, CSimulatorInfo simulator);
-
-            //! Virtual destructor
-            virtual ~CAircraftMapping()
-            {}
-
-            //! operator ==
-            bool operator ==(const CAircraftMapping &otherMapping) const;
-
-            //! operator !=
-            bool operator !=(const CAircraftMapping &otherMapping) const;
 
             //! Mapping id
             qint32 getMappingId() const { return this->m_mappingId; }
@@ -172,12 +149,6 @@ namespace BlackSim
             //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
             //! Current UTC timestamp
             static QString currentUtcTimestamp()
             {
@@ -189,8 +160,6 @@ namespace BlackSim
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const;
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftMapping)
@@ -205,14 +174,6 @@ namespace BlackSim
             QString m_lastChanged;   //!< Simple timestamp as YYYYMMDDhhmmss
             BlackSim::CSimulatorInfo m_simulatorInfo; //!< Mapping is for simulator
             bool m_changed; //! Changed flag
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! Register metadata
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
         };
     } // namespace
 } // namespace

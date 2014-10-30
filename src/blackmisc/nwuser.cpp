@@ -36,65 +36,6 @@ namespace BlackMisc
         }
 
         /*
-         * metaTypeId
-         */
-        int CUser::getMetaTypeId() const
-        {
-            return qMetaTypeId<CUser>();
-        }
-
-        /*
-         * is a
-         */
-        bool CUser::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CUser>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CUser::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CUser &>(otherBase);
-            return compare(TupleConverter<CUser>::toTuple(*this), TupleConverter<CUser>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CUser::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CUser>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CUser::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CUser>::toTuple(*this);
-        }
-
-        /*
-         * Equal?
-         */
-        bool CUser::operator ==(const CUser &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CUser>::toTuple(*this) == TupleConverter<CUser>::toTuple(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CUser::operator !=(const CUser &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
          * Exchange data
          */
         void CUser::syncronizeData(CUser &otherUser)
@@ -120,47 +61,6 @@ namespace BlackMisc
                 otherUser.setCallsign(this->getCallsign());
             else if (otherUser.hasValidCallsign())
                 this->setCallsign(otherUser.getCallsign());
-        }
-
-        /*
-         * Hash
-         */
-        uint CUser::getValueHash() const
-        {
-            return qHash(TupleConverter<CUser>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CUser::toJson() const
-        {
-            return BlackMisc::serializeJson(CUser::jsonMembers(), TupleConverter<CUser>::toTuple(*this));
-        }
-
-        /*
-         * From JSON
-         */
-        void CUser::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CUser::jsonMembers(), TupleConverter<CUser>::toTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CUser::jsonMembers()
-        {
-            return TupleConverter<CUser>::jsonMembers();
-        }
-
-        /*
-         * Register metadata
-         */
-        void CUser::registerMetadata()
-        {
-            qRegisterMetaType<CUser>();
-            qDBusRegisterMetaType<CUser>();
         }
 
         /*

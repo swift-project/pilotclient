@@ -43,24 +43,6 @@ namespace BlackSim
         }
 
         /*
-         * Operator ==
-         */
-        bool CAircraftMapping::operator ==(const CAircraftMapping &otherMapping) const
-        {
-            if (this == &otherMapping) return true;
-            return TupleConverter<CAircraftMapping>::toTuple(*this) == TupleConverter<CAircraftMapping>::toTuple(otherMapping);
-        }
-
-        /*
-         * Operator !=
-         */
-        bool CAircraftMapping::operator !=(const CAircraftMapping &otherMapping) const
-        {
-            if (this == &otherMapping) return false;
-            return !((*this) == otherMapping);
-        }
-
-        /*
          * String for converter
          */
         QString CAircraftMapping::convertToQString(bool i18n) const
@@ -202,72 +184,6 @@ namespace BlackSim
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
-        }
-
-        /*
-         * Marshall to Dbus
-         */
-        void CAircraftMapping::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CAircraftMapping>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from Dbus
-         */
-        void CAircraftMapping::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CAircraftMapping>::toTuple(*this);
-        }
-
-        /*
-         *  Metatype id
-         */
-        int CAircraftMapping::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAircraftCfgEntries>();
-        }
-
-        /*
-         * Compare
-         */
-        int CAircraftMapping::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAircraftMapping &>(otherBase);
-            return compare(TupleConverter<CAircraftMapping>::toTuple(*this), TupleConverter<CAircraftMapping>::toTuple(other));
-        }
-
-        /*
-         * Register metadata
-         */
-        void CAircraftMapping::registerMetadata()
-        {
-            qRegisterMetaType<CAircraftMapping>();
-            qDBusRegisterMetaType<CAircraftMapping>();
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CAircraftMapping::toJson() const
-        {
-            return BlackMisc::serializeJson(CAircraftMapping::jsonMembers(), TupleConverter<CAircraftMapping>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        void CAircraftMapping::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CAircraftMapping::jsonMembers(), TupleConverter<CAircraftMapping>::toTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CAircraftMapping::jsonMembers()
-        {
-            return TupleConverter<CAircraftMapping>::jsonMembers();
         }
 
     } // namespace

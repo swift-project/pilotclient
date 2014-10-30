@@ -23,7 +23,7 @@ namespace BlackMisc
         /*!
          * Mapping
          */
-        class CAircraftMapping: public BlackMisc::CValueObject
+        class CAircraftMapping : public CValueObjectStdTuple<CAircraftMapping>
         {
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftMapping)
@@ -33,21 +33,6 @@ namespace BlackMisc
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &) override;
-
-            //! \copydoc CValueObject::compareImpl(const CValueObject &)
-            int compareImpl(const CValueObject &otherBase) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId()
-            int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
 
         public:
             //! Properties
@@ -62,12 +47,6 @@ namespace BlackMisc
 
             //! Constructor
             CAircraftMapping(const QString &aircraftDesignator, const QString &airlineDesignator, const QString &model);
-
-            //! operator ==
-            bool operator ==(const CAircraftMapping &other) const;
-
-            //! operator !=
-            bool operator !=(const CAircraftMapping &other) const;
 
             //! \copydoc CValueObject::propertyByIndex
             QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -87,32 +66,11 @@ namespace BlackMisc
             //! Model
             const BlackMisc::Network::CAircraftModel &getModel() const { return this->m_model; }
 
-            //! \copydoc CValueObject::getValueHash()
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
             //! Matches model string?
             bool matchesModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const;
 
             //! Matches wildcard icao object
             bool matchesWildcardIcao(const BlackMisc::Aviation::CAircraftIcao &otherIcao) const { return m_icao.matchesWildcardIcao(otherIcao); }
-
-            //! Register the metatypes
-            static void registerMetadata();
-
-            //! Members
-            static const QStringList &jsonMembers();
         };
     }
 }

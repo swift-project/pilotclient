@@ -24,7 +24,7 @@ namespace BlackMisc
          * \see http://en.wikipedia.org/wiki/SELCAL
          * \see http://www.asri.aero/our-services/selcal/ User Guide
          */
-        class CSelcal : public BlackMisc::CValueObject
+        class CSelcal : public CValueObjectStdTuple<CSelcal>
         {
         public:
             //! Default constructor.
@@ -39,12 +39,6 @@ namespace BlackMisc
              */
             CSelcal(const char *code) : m_code(code) {}
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
             //! Is valid?
             bool isValid() const { return CSelcal::isValidCode(this->m_code); }
 
@@ -56,27 +50,6 @@ namespace BlackMisc
              * \return  either 4 frequencies, or empty list
              */
             QList<BlackMisc::PhysicalQuantities::CFrequency> getFrequencies() const;
-
-            //! Equal operator ==
-            bool operator ==(const CSelcal &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CSelcal &other) const;
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! Register metadata
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
 
             //! Equals given string
             bool equalsString(const QString &code) const;
@@ -99,21 +72,6 @@ namespace BlackMisc
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CSelcal)

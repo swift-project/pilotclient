@@ -21,7 +21,7 @@ namespace BlackMisc
         /*!
          * Value object encapsulating information of a server
          */
-        class CServer : public BlackMisc::CValueObject
+        class CServer : public CValueObjectStdTuple<CServer>
         {
         public:
             //! Properties by index
@@ -81,57 +81,15 @@ namespace BlackMisc
             //! Is valid for login?
             bool isValidForLogin() const;
 
-            //! Equal operator ==
-            bool operator ==(const CServer &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CServer &other) const;
-
-            //! \copydoc CValueObject::getValueHash()
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
             //! \copydoc CValueObject::propertyByIndex(int)
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! JSON member names
-            static const QStringList &jsonMembers();
-
-            //! Register metadata
-            static void registerMetadata();
-
         protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CServer)

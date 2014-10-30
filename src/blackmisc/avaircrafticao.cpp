@@ -32,48 +32,6 @@ namespace BlackMisc
         }
 
         /*
-         * metaTypeId
-         */
-        int CAircraftIcao::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAircraftIcao>();
-        }
-
-        /*
-         * is a
-         */
-        bool CAircraftIcao::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CAircraftIcao>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CAircraftIcao::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAircraftIcao &>(otherBase);
-            return compare(TupleConverter<CAircraftIcao>::toTuple(*this), TupleConverter<CAircraftIcao>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void CAircraftIcao::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CAircraftIcao>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAircraftIcao::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CAircraftIcao>::toTuple(*this);
-        }
-
-        /*
          * As string
          */
         QString CAircraftIcao::asString() const
@@ -93,12 +51,6 @@ namespace BlackMisc
             return s;
         }
 
-        bool CAircraftIcao::operator ==(const CAircraftIcao &other) const
-        {
-            if (this == &other) return true;
-            return TupleConverter<CAircraftIcao>::toTuple(*this) == TupleConverter<CAircraftIcao>::toTuple(other);
-        }
-
         bool CAircraftIcao::matchesWildcardIcao(const CAircraftIcao &otherIcao) const
         {
             if ((*this) == otherIcao) return true;
@@ -108,22 +60,6 @@ namespace BlackMisc
             if (otherIcao.hasLivery() && otherIcao.getLivery() != this->getLivery()) return false;
             if (otherIcao.hasAircraftColor() && otherIcao.getAircraftColor() != this->getAircraftColor()) return false;
             return true;
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CAircraftIcao::operator !=(const CAircraftIcao &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
-         * Hash
-         */
-        uint CAircraftIcao::getValueHash() const
-        {
-            return qHash(TupleConverter<CAircraftIcao>::toTuple(*this));
         }
 
         /*
@@ -190,39 +126,6 @@ namespace BlackMisc
             static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
             if (designator.length() < 2 || designator.length() > 5) return false;
             return (regexp.match(designator).hasMatch());
-        }
-
-        /*
-         * Register metadata
-         */
-        void CAircraftIcao::registerMetadata()
-        {
-            qRegisterMetaType<CAircraftIcao>();
-            qDBusRegisterMetaType<CAircraftIcao>();
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CAircraftIcao::toJson() const
-        {
-            return BlackMisc::serializeJson(CAircraftIcao::jsonMembers(), TupleConverter<CAircraftIcao>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        void CAircraftIcao::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CAircraftIcao::jsonMembers(), TupleConverter<CAircraftIcao>::toTuple(*this));
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CAircraftIcao::jsonMembers()
-        {
-            return TupleConverter<CAircraftIcao>::jsonMembers();
         }
 
     } // namespace

@@ -25,7 +25,7 @@ namespace BlackMisc
          * If you want to safe this object, use the name instead of the index, since the index can change after
          * a restart.
          */
-        class CAudioDevice : public BlackMisc::CValueObject
+        class CAudioDevice : public CValueObjectStdTuple<CAudioDevice>
         {
         public:
             //! Type
@@ -61,33 +61,6 @@ namespace BlackMisc
             //! Valid audio device object?
             bool isValid() const { return m_deviceIndex >= -1 && !m_deviceName.isEmpty(); }
 
-            //! Equal operator ==
-            bool operator ==(const CAudioDevice &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CAudioDevice &other) const;
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! Register metadata
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
-
             //! Device index for default device
             static qint16 defaultDeviceIndex() {return -1;}
 
@@ -107,24 +80,8 @@ namespace BlackMisc
             }
 
         protected:
-
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAudioDevice)
