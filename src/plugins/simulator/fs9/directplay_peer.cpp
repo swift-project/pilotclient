@@ -199,12 +199,11 @@ namespace BlackSimPlugin
 
         bool CDirectPlayPeer::isServiceProviderValid(const GUID* /*pGuidSP*/)
         {
-            HRESULT hr = S_OK;
             DWORD dwItems = 0;
             DWORD dwSize = 0;
 
             // The first call is to retrieve the size of the DPN_SERVICE_PROVIDER_INFO array
-            hr = m_directPlayPeer->EnumServiceProviders(&CLSID_DP8SP_TCPIP, nullptr, nullptr, &dwSize, &dwItems, 0);
+            HRESULT hr = m_directPlayPeer->EnumServiceProviders(&CLSID_DP8SP_TCPIP, nullptr, nullptr, &dwSize, &dwItems, 0);
 
             if( hr != DPNERR_BUFFERTOOSMALL)
             {
