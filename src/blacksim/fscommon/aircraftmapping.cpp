@@ -21,7 +21,9 @@ namespace BlackSim
          * Constructor
          */
         CAircraftMapping::CAircraftMapping() :
-            m_mappingId(CAircraftMapping::InvalidId), m_proposalId(CAircraftMapping::InvalidId), m_lastChanged(-1), m_simulatorInfo(BlackSim::CSimulatorInfo::UnspecifiedSim())
+            m_mappingId(CAircraftMapping::InvalidId), m_proposalId(CAircraftMapping::InvalidId),
+            m_lastChanged(-1), m_simulatorInfo(BlackSim::CSimulatorInfo::UnspecifiedSim()),
+            m_changed(false)
         {
             // void
         }
