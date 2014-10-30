@@ -135,11 +135,11 @@ namespace BlackMisc
         /*
          * From WGS84 coordinates
          */
-        CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CLength height)
+        CCoordinateGeodetic CCoordinateGeodetic::fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const CLength &geodeticHeight)
         {
             CLatitude lat = CLatitude::fromWgs84(latitudeWgs84);
             CLongitude lon = CLongitude::fromWgs84(longitudeWgs84);
-            return CCoordinateGeodetic(lat, lon, height);
+            return CCoordinateGeodetic(lat, lon, geodeticHeight);
         }
 
         /*

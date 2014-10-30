@@ -202,7 +202,7 @@ namespace BlackMisc
             static const QStringList &jsonMembers();
 
             //! Coordinate by WGS84 position data
-            static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength geodeticHeight = BlackMisc::PhysicalQuantities::CLength());
+            static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength &geodeticHeight = {});
 
         };
 
