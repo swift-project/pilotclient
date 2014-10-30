@@ -66,9 +66,9 @@ namespace BlackGui
         menu->addAction(lockTabBarMenuAction);
         connect(lockTabBarMenuAction, &QAction::toggled, this, &CInfoArea::ps_toggleTabBarLocked);
 
-        bool c = false;
         if (!this->m_dockableWidgets.isEmpty())
         {
+            bool c = false;
             menu->addSeparator();
             QMenu *subMenuToggleFloat = new QMenu("Toggle Float/Dock", menu);
             QMenu *subMenuDisplay = new QMenu("Display", menu);

@@ -56,7 +56,6 @@ int main(int argc, char *argv[])
 
     // modes
     GuiModes::WindowMode windowMode;
-    GuiModes::CoreMode coreMode;
 
     // Dialog to decide external or internal core
     CIntroWindow intro;
@@ -68,7 +67,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        coreMode = intro.getCoreMode();
+        GuiModes::CoreMode coreMode = intro.getCoreMode();
         windowMode = intro.getWindowMode();
         QString dbusAddress = BlackCore::CDBusServer::fixAddressToDBusAddress(intro.getDBusAddress());
         switch (coreMode)
