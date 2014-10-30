@@ -22,11 +22,11 @@ namespace BlackMisc
      * Constructors
      */
     CStatusMessage::CStatusMessage()
-        : m_timestamp(QDateTime::currentDateTimeUtc())
+        : m_severity(SeverityDebug), m_timestamp(QDateTime::currentDateTimeUtc())
     {}
 
     CStatusMessage::CStatusMessage(const QString &message)
-        : m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
+        : m_severity(SeverityDebug), m_message(message), m_timestamp(QDateTime::currentDateTimeUtc())
     {}
 
     CStatusMessage::CStatusMessage(StatusSeverity severity, const QString &message)
