@@ -55,7 +55,6 @@ namespace BlackMiscTest
 
         // relaxed checks
         key = CKeyboardKey(Qt::Key_1, CKeyboardKey::ModifierCtrlLeft, CKeyboardKey::ModifierNone);
-        key2 = CKeyboardKey(Qt::Key_1, CKeyboardKey::ModifierCtrlLeft, CKeyboardKey::ModifierNone);
         key2 = key;
         key2.setModifier1(CKeyboardKey::ModifierCtrlAny);
         QVERIFY2(key != key2, "Modifiers differs, values shall be unequal");
