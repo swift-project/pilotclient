@@ -77,8 +77,19 @@ namespace BlackSimPlugin
             if (m_hostStatus == Terminated) return hr;
 
             qDebug() << "Terminating host";
-            hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0);
-            hr = m_directPlayPeer->Close(0);
+
+            if (FAILED(hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0)))
+            {
+                qWarning() << "Failed to terminate session!";
+                return hr;
+            }
+
+            if (FAILED(hr = m_directPlayPeer->Close(0)))
+            {
+                qWarning() << "Failed to close peer!";
+                return hr;
+            }
+
             m_hostStatus = Terminated;
 
             emit statusChanged(m_hostStatus);
