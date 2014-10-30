@@ -27,8 +27,6 @@ namespace BlackSimPlugin
               m_mutexHostList(QMutex::Recursive),
               m_callbackWrapper(this, &CDirectPlayPeer::directPlayMessageHandler)
         {
-            m_playerLocal = 0;
-            m_playerUser = 0;
         }
 
         CDirectPlayPeer::~CDirectPlayPeer()

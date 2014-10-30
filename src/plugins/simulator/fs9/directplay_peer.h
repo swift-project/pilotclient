@@ -83,9 +83,9 @@ namespace BlackSimPlugin
             quint32 m_packetIndex = 0; //!< Multiplayer packet index
 
             // DirectPlay Player Id's
-            std::atomic<DPNID> m_playerLocal; //!< Local player Id
+            std::atomic<DPNID> m_playerLocal = {0}; //!< Local player Id
             // We need the Id of the users player, because we are sending packets only to him
-            std::atomic<DPNID> m_playerUser; //!< User player Id
+            std::atomic<DPNID> m_playerUser = {0}; //!< User player Id
 
             QMutex m_mutexHostList; //!< Host list mutex
 
