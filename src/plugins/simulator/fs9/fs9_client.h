@@ -97,10 +97,6 @@ namespace BlackSimPlugin
             QMutex m_mutexInterpolator;
             IDirectPlay8Address *m_hostAddress = nullptr;
             ClientStatus m_clientStatus = Disconnected;
-
-            typedef CallbackWrapper<CFs9Client, HRESULT, DWORD, void *> TCallbackWrapper;
-            TCallbackWrapper m_callbackWrapper;
-
         };
     }
 }

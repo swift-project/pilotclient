@@ -26,8 +26,7 @@ namespace BlackSimPlugin
     {
         CFs9Client::CFs9Client(const QString &callsign, const CTime &updateInterval, QObject *parent) :
             CDirectPlayPeer(callsign, parent),
-            m_updateInterval(updateInterval),
-            m_callbackWrapper(this, &CFs9Client::directPlayMessageHandler)
+            m_updateInterval(updateInterval)
         {
         }
 
