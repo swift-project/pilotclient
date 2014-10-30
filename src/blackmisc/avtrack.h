@@ -63,15 +63,15 @@ namespace BlackMisc
             //! \brief Magnetic Track?
             bool isMagneticTrack() const
             {
-                return Magnetic == this->m_north;
                 (void)QT_TRANSLATE_NOOP("Aviation", "magnetic");
+                return Magnetic == this->m_north;
             }
 
             //! \brief True Track?
             bool isTrueTrack() const
             {
-                return True == this->m_north;
                 (void)QT_TRANSLATE_NOOP("Aviation", "true");
+                return True == this->m_north;
             }
 
             //! \brief Get reference north (magnetic or true)
