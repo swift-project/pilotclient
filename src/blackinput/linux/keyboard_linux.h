@@ -31,7 +31,7 @@ namespace BlackInput
         CKeyboardLinux(CKeyboardLinux const&) = delete;
 
         //! \brief Assignment operator
-        void operator=(CKeyboardLinux const&) = delete;
+        CKeyboardLinux &operator=(CKeyboardLinux const&) = delete;
 
         //! \brief Destructor
         virtual ~CKeyboardLinux();

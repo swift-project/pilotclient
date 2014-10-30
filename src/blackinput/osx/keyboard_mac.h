@@ -28,7 +28,7 @@ namespace BlackInput
         CKeyboardMac(CKeyboardMac const&) = delete;
 
         //! \brief Assignment operator
-        void operator=(CKeyboardMac const&) = delete;
+        CKeyboardMac &operator=(CKeyboardMac const&) = delete;
 
         //! \brief Destructor
         virtual ~CKeyboardMac();

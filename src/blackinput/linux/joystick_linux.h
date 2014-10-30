@@ -30,7 +30,7 @@ namespace BlackInput
         CJoystickLinux(CJoystickLinux const &) = delete;
 
         //! Assignment operator
-        void operator=(CJoystickLinux const &) = delete;
+        CJoystickLinux &operator=(CJoystickLinux const &) = delete;
 
         //! \brief Destructor
         virtual ~CJoystickLinux();

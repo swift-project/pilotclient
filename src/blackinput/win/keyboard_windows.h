@@ -32,7 +32,7 @@ namespace BlackInput
         CKeyboardWindows(CKeyboardWindows const&) = delete;
 
         //! \brief Assignment operator
-        void operator=(CKeyboardWindows const&) = delete;
+        CKeyboardWindows &operator=(CKeyboardWindows const&) = delete;
 
         //! \brief Destructor
         virtual ~CKeyboardWindows();

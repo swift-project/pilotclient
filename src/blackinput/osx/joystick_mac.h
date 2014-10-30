@@ -30,7 +30,7 @@ namespace BlackInput
         CJoystickMac(CJoystickMac const &) = delete;
 
         //! Assignment operator
-        void operator=(CJoystickMac const &) = delete;
+        CJoystickMac &operator=(CJoystickMac const &) = delete;
 
         //! \brief Destructor
         virtual ~CJoystickMac();

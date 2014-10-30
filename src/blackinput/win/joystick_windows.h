@@ -56,7 +56,7 @@ namespace BlackInput
         CJoystickWindows(CJoystickWindows const &) = delete;
 
         //! Assignment operator
-        void operator=(CJoystickWindows const &) = delete;
+        CJoystickWindows &operator=(CJoystickWindows const &) = delete;
 
         //! \brief Destructor
         virtual ~CJoystickWindows();
