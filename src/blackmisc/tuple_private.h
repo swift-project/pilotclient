@@ -128,12 +128,12 @@ namespace BlackMisc
             T &m_obj;
             QString m_jsonName;
 
-            bool operator ==(const Attribute &other) const { return m_obj == other.m_obj; }
-            bool operator !=(const Attribute &other) const { return m_obj != other.m_obj; }
-            bool operator <(const Attribute &other) const { return m_obj < other.m_obj; }
-            bool operator <=(const Attribute &other) const { return m_obj <= other.m_obj; }
-            bool operator >(const Attribute &other) const { return m_obj > other.m_obj; }
-            bool operator >=(const Attribute &other) const { return m_obj >= other.m_obj; }
+            friend bool operator ==(const Attribute &a, const Attribute &b) { return a.m_obj == b.m_obj; }
+            friend bool operator !=(const Attribute &a, const Attribute &b) { return a.m_obj != b.m_obj; }
+            friend bool operator <(const Attribute &a, const Attribute &b) { return a.m_obj < b.m_obj; }
+            friend bool operator <=(const Attribute &a, const Attribute &b) { return a.m_obj <= b.m_obj; }
+            friend bool operator >(const Attribute &a, const Attribute &b) { return a.m_obj > b.m_obj; }
+            friend bool operator >=(const Attribute &a, const Attribute &b) { return a.m_obj >= b.m_obj; }
         };
 
         // Helpers used in tie(), tieMeta(), and elsewhere, which arrange for the correct types to be passed to std::make_tuple.
