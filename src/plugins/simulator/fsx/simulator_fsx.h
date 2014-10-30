@@ -33,7 +33,7 @@ namespace BlackSimPlugin
     namespace Fsx
     {
         //! Factory implementation to create CSimulatorFsx instances
-        class Q_DECL_EXPORT CSimulatorFsxFactory : public QObject, public BlackCore::ISimulatorFactory
+        class CSimulatorFsxFactory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
             // TODO: @RW, move this string into CProject please

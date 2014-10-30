@@ -32,7 +32,7 @@ namespace BlackSimPlugin
     namespace Fs9
     {
         //! Factory implementation to create CSimulatorFs9 instances
-        class Q_DECL_EXPORT CSimulatorFs9Factory : public QObject, public BlackCore::ISimulatorFactory
+        class CSimulatorFs9Factory : public QObject, public BlackCore::ISimulatorFactory
         {
             Q_OBJECT
             Q_PLUGIN_METADATA(IID "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
