@@ -105,6 +105,7 @@
         template <class... U> class TupleConverter<T<U...>> : TupleConverterBase \
         {                                                                       \
             friend class T<U...>;                                               \
+            friend class BlackMisc::CValueObjectStdTuple<T<U...>>;              \
             static_assert(Private::HasEnabledTupleConversion<T<U...>>::value,   \
                           "Missing BLACK_ENABLE_TUPLE_CONVERSION macro in " #T); \
             static auto toTuple(const T<U...> &o) -> decltype(BlackMisc::tie MEMBERS) \
