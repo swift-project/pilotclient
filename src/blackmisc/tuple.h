@@ -12,11 +12,25 @@
 #ifndef BLACKMISC_TUPLE_H
 #define BLACKMISC_TUPLE_H
 
-#include "tuple_private.h"
-
 /*!
  * \defgroup Tuples Tuple conversion of object data members
  */
+
+namespace BlackMisc
+{
+    //! Metadata flags attached to tuple elements.
+    //! \ingroup Tuples
+    enum TupleConverterFlags
+    {
+        DisabledForComparison = 1 << 0,     //!< Element will be ignored by compare() and comparison operators
+        DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus marshalling
+        DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
+        DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
+        DisabledForJson = 1 << 4            //!< Element will be ignored during JSON serialization
+    };
+}
+
+#include "tuple_private.h"
 
 /*!
  * \brief   Macro to make a class available to TupleConverter.
@@ -155,17 +169,6 @@ namespace BlackMisc
      */
     class TupleConverterBase
     {
-    public:
-        //! \brief   Metadata flags attached to tuple elements.
-        enum Flags
-        {
-            DisabledForComparison = 1 << 0,     //!< Element will be ignored by compare(), but not by operators
-            DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus marshalling
-            DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
-            DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
-            DisabledForJson = 1 << 4            //!< Element will be ignored during JSON serialization
-        };
-
     protected:
         //! \brief   A shorthand alias for passing flags as a compile-time constant.
         template <qint64 F = 0>
@@ -305,7 +308,7 @@ namespace BlackMisc
         auto valuesA = Private::stripMeta(a, Private::make_index_sequence<sizeof...(Ts)>());
         auto valuesB = Private::stripMeta(b, Private::make_index_sequence<sizeof...(Ts)>());
         auto metaTu = Private::recoverMeta(a, Private::make_index_sequence<sizeof...(Ts)>());
-        return Private::TupleHelper::compare(valuesA, valuesB, Private::skipFlaggedIndices<TupleConverterBase::DisabledForComparison>(metaTu));
+        return Private::TupleHelper::compare(valuesA, valuesB, Private::skipFlaggedIndices<DisabledForComparison>(metaTu));
     }
 
     /*!
@@ -317,7 +320,7 @@ namespace BlackMisc
     {
         auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
         auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
-        return Private::TupleHelper::marshall(arg, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForMarshalling>(metaTu));
+        return Private::TupleHelper::marshall(arg, valueTu, Private::skipFlaggedIndices<DisabledForMarshalling>(metaTu));
     }
 
     /*!
@@ -329,7 +332,7 @@ namespace BlackMisc
     {
         auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
         auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
-        return Private::TupleHelper::unmarshall(arg, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForMarshalling>(metaTu));
+        return Private::TupleHelper::unmarshall(arg, valueTu, Private::skipFlaggedIndices<DisabledForMarshalling>(metaTu));
     }
 
     /*!
@@ -341,7 +344,7 @@ namespace BlackMisc
     {
         auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
         auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
-        return Private::TupleHelper::debug(debug, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForDebugging>(metaTu));
+        return Private::TupleHelper::debug(debug, valueTu, Private::skipFlaggedIndices<DisabledForDebugging>(metaTu));
     }
 
     /*!
@@ -364,7 +367,7 @@ namespace BlackMisc
     {
         auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
         auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
-        return Private::TupleHelper::hash(valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForHashing>(metaTu));
+        return Private::TupleHelper::hash(valueTu, Private::skipFlaggedIndices<DisabledForHashing>(metaTu));
     }
 
     /*!
@@ -378,7 +381,7 @@ namespace BlackMisc
         QJsonObject json;
         auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
         auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
-        Private::TupleHelper::serializeJson(json, members, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(metaTu));
+        Private::TupleHelper::serializeJson(json, members, valueTu, Private::skipFlaggedIndices<DisabledForJson>(metaTu));
         return json;
     }
 
@@ -392,7 +395,7 @@ namespace BlackMisc
     {
         auto valueTu = Private::stripMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
         auto metaTu = Private::recoverMeta(tu, Private::make_index_sequence<sizeof...(Ts)>());
-        Private::TupleHelper::deserializeJson(json, members, valueTu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(metaTu));
+        Private::TupleHelper::deserializeJson(json, members, valueTu, Private::skipFlaggedIndices<DisabledForJson>(metaTu));
     }
 
     /*!
@@ -404,7 +407,7 @@ namespace BlackMisc
     {
         QJsonObject json;
         Private::assertMeta(tu);
-        Private::TupleHelper::serializeJson(json, tu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(tu));
+        Private::TupleHelper::serializeJson(json, tu, Private::skipFlaggedIndices<DisabledForJson>(tu));
         return json;
     }
 
@@ -416,7 +419,7 @@ namespace BlackMisc
     void deserializeJson(const QJsonObject &json, std::tuple<Ts...> tu)
     {
         Private::assertMeta(tu);
-        Private::TupleHelper::deserializeJson(json, tu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(tu));
+        Private::TupleHelper::deserializeJson(json, tu, Private::skipFlaggedIndices<DisabledForJson>(tu));
     }
 
 } // namespace BlackMisc
