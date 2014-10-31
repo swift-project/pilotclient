@@ -27,7 +27,7 @@ namespace BlackMisc
         int CAirportIcao::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CAirportIcao &>(otherBase);
-            return this->m_icaoCode.compare(other.m_icaoCode, Qt::CaseInsensitive);
+            return compare(TupleConverter<CAirportIcao>::toMetaTuple(*this), TupleConverter<CAirportIcao>::toMetaTuple(other));
         }
 
         /*
@@ -96,7 +96,7 @@ namespace BlackMisc
         bool CAirportIcao::operator ==(const CAirportIcao &other) const
         {
             if (this == &other) return true;
-            return this->asString().compare(other.asString(), Qt::CaseInsensitive) == 0;
+            return TupleConverter<CAirportIcao>::toMetaTuple(*this) == TupleConverter<CAirportIcao>::toMetaTuple(other);
         }
 
         /*

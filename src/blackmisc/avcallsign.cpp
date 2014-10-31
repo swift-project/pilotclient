@@ -85,7 +85,7 @@ namespace BlackMisc
         int CCallsign::compareImpl(const CValueObject &otherBase) const
         {
             const auto &other = static_cast<const CCallsign &>(otherBase);
-            return this->m_callsign.compare(other.m_callsign, Qt::CaseInsensitive);
+            return compare(TupleConverter<CCallsign>::toMetaTuple(*this), TupleConverter<CCallsign>::toMetaTuple(other));
         }
 
         /*
@@ -181,7 +181,7 @@ namespace BlackMisc
         bool CCallsign::operator ==(const CCallsign &other) const
         {
             if (this == &other) return true;
-            return this->asString().compare(other.asString(), Qt::CaseInsensitive) == 0;
+            return TupleConverter<CCallsign>::toMetaTuple(*this) == TupleConverter<CCallsign>::toMetaTuple(other);
         }
 
         /*

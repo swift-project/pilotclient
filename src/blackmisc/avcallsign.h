@@ -139,7 +139,11 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CCallsign, (o.m_callsign, o.m_callsignAsSet, o.m_telephonyDesignator))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CCallsign, (
+    attr(o.m_callsign, flags<CaseInsensitiveComparison>()),
+    attr(o.m_callsignAsSet, flags<DisabledForComparison>()),
+    attr(o.m_telephonyDesignator, flags<DisabledForComparison>())
+))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CCallsign)
 
 #endif // guard

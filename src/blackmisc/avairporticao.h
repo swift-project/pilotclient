@@ -106,7 +106,9 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirportIcao, (o.m_icaoCode))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Aviation::CAirportIcao, (
+    attr(o.m_icaoCode, flags<CaseInsensitiveComparison>())
+))
 Q_DECLARE_METATYPE(BlackMisc::Aviation::CAirportIcao)
 
 #endif // guard

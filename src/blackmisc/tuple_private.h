@@ -116,9 +116,47 @@ namespace BlackMisc
             return {};
         }
 
+        // CRTP base class for Attribute, to select appropriate method of comparison.
+        template <class Derived, bool AlwaysEqual, bool CaseInsensitive>
+        struct AttributeComparable;
+        template <class Derived, bool CaseInsensitive>
+        struct AttributeComparable<Derived, true, CaseInsensitive>
+        {
+            friend int compare(const Derived &, const Derived &) { return 0; }
+            friend bool operator ==(const Derived &, const Derived &) { return true; }
+            friend bool operator !=(const Derived &, const Derived &) { return false; }
+            friend bool operator <(const Derived &, const Derived &) { return false; }
+            friend bool operator <=(const Derived &, const Derived &) { return true; }
+            friend bool operator >(const Derived &, const Derived &) { return false; }
+            friend bool operator >=(const Derived &, const Derived &) { return true; }
+        };
+        template <class Derived>
+        struct AttributeComparable<Derived, false, false>
+        {
+            template <class T> using isCValueObject = typename std::is_base_of<CValueObject, T>::type;
+            friend int compare(const Derived &a, const Derived &b) { return compareHelper(a.m_obj, b.m_obj, isCValueObject<decltype(a.m_obj)>()); }
+            friend bool operator ==(const Derived &a, const Derived &b) { return a.m_obj == b.m_obj; }
+            friend bool operator !=(const Derived &a, const Derived &b) { return a.m_obj != b.m_obj; }
+            friend bool operator <(const Derived &a, const Derived &b) { return a.m_obj < b.m_obj; }
+            friend bool operator <=(const Derived &a, const Derived &b) { return a.m_obj <= b.m_obj; }
+            friend bool operator >(const Derived &a, const Derived &b) { return a.m_obj > b.m_obj; }
+            friend bool operator >=(const Derived &a, const Derived &b) { return a.m_obj >= b.m_obj; }
+        };
+        template <class Derived>
+        struct AttributeComparable<Derived, false, true>
+        {
+            friend int compare(const Derived &a, const Derived &b) { return a.m_obj.compare(b.m_obj, Qt::CaseInsensitive); }
+            friend bool operator ==(const Derived &a, const Derived &b) { return a.m_obj.compare(b.m_obj, Qt::CaseInsensitive) == 0; }
+            friend bool operator !=(const Derived &a, const Derived &b) { return a.m_obj.compare(b.m_obj, Qt::CaseInsensitive) != 0; }
+            friend bool operator <(const Derived &a, const Derived &b) { return a.m_obj.compare(b.m_obj, Qt::CaseInsensitive) < 0; }
+            friend bool operator <=(const Derived &a, const Derived &b) { return a.m_obj.compare(b.m_obj, Qt::CaseInsensitive) <= 0; }
+            friend bool operator >(const Derived &a, const Derived &b) { return a.m_obj.compare(b.m_obj, Qt::CaseInsensitive) > 0; }
+            friend bool operator >=(const Derived &a, const Derived &b) { return a.m_obj.compare(b.m_obj, Qt::CaseInsensitive) >= 0; }
+        };
+
         // A tuple element with attached metadata.
         template <class T, qint64 Flags = 0>
-        struct Attribute
+        struct Attribute : public AttributeComparable<Attribute<T, Flags>, Flags & DisabledForComparison, Flags & CaseInsensitiveComparison>
         {
             typedef T type;
             static const qint64 flags = Flags;
@@ -127,13 +165,6 @@ namespace BlackMisc
             void extend(QString jsonName) { if (m_jsonName.isEmpty()) m_jsonName = jsonName; }
             T &m_obj;
             QString m_jsonName;
-
-            friend bool operator ==(const Attribute &a, const Attribute &b) { return a.m_obj == b.m_obj; }
-            friend bool operator !=(const Attribute &a, const Attribute &b) { return a.m_obj != b.m_obj; }
-            friend bool operator <(const Attribute &a, const Attribute &b) { return a.m_obj < b.m_obj; }
-            friend bool operator <=(const Attribute &a, const Attribute &b) { return a.m_obj <= b.m_obj; }
-            friend bool operator >(const Attribute &a, const Attribute &b) { return a.m_obj > b.m_obj; }
-            friend bool operator >=(const Attribute &a, const Attribute &b) { return a.m_obj >= b.m_obj; }
         };
 
         // Helpers used in tie(), tieMeta(), and elsewhere, which arrange for the correct types to be passed to std::make_tuple.
@@ -193,9 +224,9 @@ namespace BlackMisc
         {
         public:
             template <class Tu, size_t... Is>
-            static int compare(const Tu &a, const Tu &b, index_sequence<Is...>)
+            static int compare_(const Tu &a, const Tu &b, index_sequence<Is...>) // underscore to avoid hiding the name "compare" in other scopes
             {
-                return compareImpl(std::make_pair(get_ref<Is>(a), get_ref<Is>(b))...);
+                return compareImpl(std::make_pair(std::get<Is>(a), std::get<Is>(b))...);
             }
 
             template <class Tu, size_t... Is>
@@ -260,7 +291,7 @@ namespace BlackMisc
             template <class T, class... Ts>
             static int compareImpl(const std::pair<T, T> &head, const Ts &... tail)
             {
-                int result = compareHelper(head.first, head.second, typename std::is_base_of<CValueObject, typename std::decay<T>::type>::type());
+                int result = compare(head.first, head.second);
                 if (result) return result;
                 return compareImpl(tail...);
             }

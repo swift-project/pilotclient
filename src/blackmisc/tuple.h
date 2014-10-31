@@ -26,7 +26,8 @@ namespace BlackMisc
         DisabledForMarshalling = 1 << 1,    //!< Element will be ignored during DBus marshalling
         DisabledForDebugging = 1 << 2,      //!< Element will be ignored when streaming to QDebug
         DisabledForHashing = 1 << 3,        //!< Element will be ignored by qHash()
-        DisabledForJson = 1 << 4            //!< Element will be ignored during JSON serialization
+        DisabledForJson = 1 << 4,           //!< Element will be ignored during JSON serialization
+        CaseInsensitiveComparison = 1 << 5  //!< Element will be compared case insensitively (must be a QString)
     };
 }
 
@@ -305,10 +306,9 @@ namespace BlackMisc
     template <class... Ts>
     int compare(std::tuple<Ts...> a, std::tuple<Ts...> b)
     {
-        auto valuesA = Private::stripMeta(a, Private::make_index_sequence<sizeof...(Ts)>());
-        auto valuesB = Private::stripMeta(b, Private::make_index_sequence<sizeof...(Ts)>());
-        auto metaTu = Private::recoverMeta(a, Private::make_index_sequence<sizeof...(Ts)>());
-        return Private::TupleHelper::compare(valuesA, valuesB, Private::skipFlaggedIndices<DisabledForComparison>(metaTu));
+        auto metaA = Private::recoverMeta(a, Private::make_index_sequence<sizeof...(Ts)>());
+        auto metaB = Private::recoverMeta(b, Private::make_index_sequence<sizeof...(Ts)>());
+        return Private::TupleHelper::compare_(metaA, metaB, Private::skipFlaggedIndices<DisabledForComparison>(metaA));
     }
 
     /*!
