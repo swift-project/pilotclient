@@ -46,7 +46,7 @@ namespace BlackGui
             CLedWidget::LedShape shape = CLedWidget::Circle;
             this->ui->led_DBus->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "DBus connected", "DBus disconnected", 14);
             this->ui->led_Network->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Network connected", "Network disconnected", 14);
-            this->ui->led_Simulator->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Simulator connected", "Simulator disconnected", 14);
+            this->ui->led_Simulator->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, shape, "Simulator running", "Simulator disconnected", "Simulator connected", 14);
 
             shape = CLedWidget::Rounded;
             this->ui->led_Ptt->setValues(CLedWidget::Yellow, CLedWidget::Black, shape, "Ptt", "Silence", 18);
@@ -74,7 +74,7 @@ namespace BlackGui
 
             if (this->getIContextSimulator())
             {
-                connect(this->getIContextSimulator(), &IContextSimulator::connectionChanged, this, &CInfoBarStatusComponent::ps_onSimulatorConnectionChanged);
+                connect(this->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this, &CInfoBarStatusComponent::ps_onSimulatorStatusChanged);
             }
 
             if (this->getIContextNetwork())
@@ -96,9 +96,21 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatusComponent::ps_onSimulatorConnectionChanged(bool connected)
+        void CInfoBarStatusComponent::ps_onSimulatorStatusChanged(bool connected, bool running, bool paused)
         {
-            this->ui->led_Simulator->setOn(connected);
+            if (connected && running)
+            {
+                this->ui->led_Simulator->setOn(true);
+            }
+            else if (connected)
+            {
+                this->ui->led_Simulator->setTriState();
+            }
+            else
+            {
+                this->ui->led_Simulator->setOn(false);
+            }
+            Q_UNUSED(paused);
         }
 
         void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(uint from, uint to, const QString &message)
@@ -120,7 +132,7 @@ namespace BlackGui
                 this->ui->led_Network->setOn(true);
                 break;
             case INetwork::Connecting:
-                this->ui->led_Network->setTemporaryColor(CLedWidget::Yellow);
+                this->ui->led_Network->setTriStateColor(CLedWidget::Yellow);
                 break;
             default:
                 this->ui->led_Network->setOn(false);

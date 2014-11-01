@@ -54,7 +54,7 @@ namespace BlackGui
 
         private slots:
             //! Simulator connection has been changed
-            void ps_onSimulatorConnectionChanged(bool connected);
+            void ps_onSimulatorStatusChanged(bool connected, bool running, bool paused);
 
             //! Network connection has been changed
             void ps_onNetworkConnectionChanged(uint from, uint to, const QString &message);
