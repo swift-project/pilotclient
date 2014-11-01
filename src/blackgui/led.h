@@ -39,7 +39,7 @@ namespace BlackGui
         enum LedShape { Circle = 0, Square, Triangle, Rounded};
 
         //! States
-        enum State { On, Off, Temporary };
+        enum State { On, Off, TriState };
 
         //! Default constructor
         CLedWidget(QWidget *parent = nullptr);
@@ -53,8 +53,11 @@ namespace BlackGui
         //! Value
         bool value() const { return m_value; }
 
-        //! Allows to set the led value {true,false}
+        //! Allows to set the led value {true, false}
         void setOn(bool on);
+
+        //! Sets the 3rd state
+        void setTriState();
 
         //! Toggle on / off
         void toggleValue();
@@ -68,6 +71,9 @@ namespace BlackGui
         //! Off color
         LedColor offColor() const { return m_colorOff; }
 
+        //! Tri-state color
+        LedColor triStateColor() const { return m_colorTriState; }
+
         //! Allows to change the On color {Red,Green,Yellow,Grey,Orange,Purple,blue}
         void setOnColor(LedColor color);
 
@@ -75,7 +81,7 @@ namespace BlackGui
         void setOffColor(LedColor color);
 
         //! Temporary color until next value change
-        void setTemporaryColor(LedColor color);
+        void setTriStateColor(LedColor color);
 
         //! Allows to change the led shape {Circle,Square,Triangle,Rounded rectangle}
         void setShape(LedShape);
@@ -89,30 +95,44 @@ namespace BlackGui
         //! Tool tip
         QString getOffToolTip() const { return m_tooltipOff; }
 
+        //! Tool tip
+        QString getTriStateToolTip() const { return m_tooltipTriState; }
+
         //! Tool tips
-        void setToolTips(const QString &on, const QString &off);
+        void setToolTips(const QString &on, const QString &off, const QString &triState = "tri-state");
 
         //! On tool tip
         void setOnToolTip(const QString &on);
 
-        //! New values
+        //! Off tool tip
+        void setOffToolTip(const QString &off);
+
+        //! Tri-state tool tip
+        void setTriStateToolTip(const QString &triState);
+
+        //! New values dual state
         void setValues(LedColor onColor, LedColor offColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, int width = -1);
+
+        //! New values tri-state
+        void setValues(LedColor onColor, LedColor offColor, LedColor triStateColor, LedShape shape, const QString &toolTipOn, const QString &toolTipOff, const QString &toolTipTriState, int width = -1);
 
         //! Render as pixmap, so it can be used with TableViews
         QPixmap asPixmap() const;
 
     protected:
         State m_value = Off;         //!< current value
-        LedColor m_colorOn = Red;    //!< On color
-        LedColor m_colorOff = Grey;  //!< Off color
+        LedColor m_colorOn = Yellow; //!< On color
+        LedColor m_colorOff = Black; //!< Off color
+        LedColor m_colorTriState = Blue; //!< tri-state color
         LedShape m_shape = Circle;   //!< shape
         double m_whRatio = 1.0;      //!< width/height ratio
         int m_widthTarget = -1;      //!< desired width
         int m_heightCalculated = 1;  //!< calculated height
 
-        QString m_tooltipOn;         //!< tooltip when on
-        QString m_tooltipOff;        //!< tooltip when off
-        QString m_currentToolTip;    //!< currently used tooltip
+        QString m_tooltipOn = "on";        //!< tooltip when on
+        QString m_tooltipOff = "off";      //!< tooltip when off
+        QString m_tooltipTriState = "tri-state"; //!< tooltip tri state
+        QString m_currentToolTip = "off";  //!< currently used tooltip
         QScopedPointer<QSvgRenderer> m_renderer; //!< Renderer
 
         //! Paint event
