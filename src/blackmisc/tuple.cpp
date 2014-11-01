@@ -17,7 +17,7 @@ namespace BlackMisc
         for (const auto c : string)
         {
             if (c == '(') { level++; }
-            if (c == ')') { level++; }
+            if (c == ')') { level--; }
             if (c == ',' && level == 0) { m_raw.push_back(current.trimmed()); current.clear(); }
             else { current += c; }
         }
