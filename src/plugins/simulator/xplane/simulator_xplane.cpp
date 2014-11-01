@@ -71,14 +71,12 @@ namespace BlackSimPlugin
             return m_service && m_traffic;
         }
 
-        bool CSimulatorXPlane::canConnect()
+        bool CSimulatorXPlane::canConnect() const
         {
             if (isConnected()) { return true; }
             auto conn = QDBusConnection::sessionBus(); // TODO make this configurable
-            auto dummy = new CXBusServiceProxy(conn, this, true);
-            bool ok = dummy->isValid();
-            delete dummy;
-            return ok;
+            CXBusServiceProxy dummy(conn, nullptr, true);
+            return dummy.isValid();
         }
 
         bool CSimulatorXPlane::connectTo()
@@ -94,7 +92,7 @@ namespace BlackSimPlugin
                 connect(m_service, &CXBusServiceProxy::airportsInRangeUpdated, this, &CSimulatorXPlane::ps_setAirportsInRange);
                 m_service->updateAirportsInRange();
                 m_watcher->setConnection(m_conn);
-                emit statusChanged(ISimulator::Connected);
+                emit connectionStatusChanged(ISimulator::Connected);
                 return true;
             }
             else
@@ -116,7 +114,7 @@ namespace BlackSimPlugin
             {
                 m_traffic->cleanup();
             }
-            emit statusChanged(ISimulator::Disconnected);
+            emit connectionStatusChanged(ISimulator::Disconnected);
             m_conn = QDBusConnection { "default" };
             m_watcher->setConnection(m_conn);
             delete m_service;
@@ -144,7 +142,7 @@ namespace BlackSimPlugin
             }
             if (m_service && m_traffic)
             {
-                emit statusChanged(ISimulator::Connected);
+                emit connectionStatusChanged(ISimulator::Connected);
             }
         }
 
@@ -154,7 +152,7 @@ namespace BlackSimPlugin
             delete m_traffic;
             m_service = nullptr;
             m_traffic = nullptr;
-            emit statusChanged(ISimulator::Disconnected);
+            emit connectionStatusChanged(ISimulator::Disconnected);
         }
 
         void CSimulatorXPlane::ps_emitAircraftModelChanged(const QString &path, const QString &filename, const QString &livery, const QString &icao)

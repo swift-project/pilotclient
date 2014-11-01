@@ -28,11 +28,11 @@ namespace BlackCore
     class ISimulator : public QObject
     {
         Q_OBJECT
-        Q_ENUMS(Status)
+        Q_ENUMS(ConnectionStatus)
 
     public:
         //! ISimulator connection
-        enum Status
+        enum ConnectionStatus
         {
             Disconnected,
             Connected,
@@ -49,7 +49,17 @@ namespace BlackCore
         virtual bool isConnected() const = 0;
 
         //! Can we connect?
-        virtual bool canConnect() = 0;
+        //! \todo currently some code in XPlane implementation prevents to make the function const, can we fix this
+        virtual bool canConnect() const = 0;
+
+        //! Is time synchronization on?
+        virtual bool isTimeSynchronized() const = 0;
+
+        //! Simulator paused?
+        virtual bool isPaused() const = 0;
+
+        //! Simulator running?
+        virtual bool isRunning() const = 0;
 
     public slots:
 
@@ -100,27 +110,31 @@ namespace BlackCore
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
         virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) = 0;
 
-        //! Is time synchronization on?
-        virtual bool isTimeSynchronized() const = 0;
-
         //! Time synchronization offset
         virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const = 0;
 
-        //! Simulator paused?
-        virtual bool isSimPaused() const = 0;
-
     signals:
         //! Emitted when the connection status has changed
-        void statusChanged(ISimulator::Status status);
+        void connectionStatusChanged(ISimulator::ConnectionStatus status);
 
         //! Emitted when own aircraft model has changed
         void aircraftModelChanged(BlackMisc::Network::CAircraftModel model);
+
+        //! Simulator combined status
+        void simulatorStatusChanged(bool connected, bool running, bool paused);
 
         //! Simulator started
         void simulatorStarted();
 
         //! Simulator stopped;
         void simulatorStopped();
+
+
+    protected:
+        //! Emit the combined status
+        //! \sa simulatorStatusChanged;
+        void emitSimulatorCombinedStatus();
+
     };
 
     //! Factory pattern class to create instances of ISimulator
@@ -142,6 +156,6 @@ namespace BlackCore
 
 // TODO: Use CProject to store this string
 Q_DECLARE_INTERFACE(BlackCore::ISimulatorFactory, "net.vatsim.PilotClient.BlackCore.SimulatorInterface")
-Q_DECLARE_METATYPE(BlackCore::ISimulator::Status)
+Q_DECLARE_METATYPE(BlackCore::ISimulator::ConnectionStatus)
 
 #endif // guard

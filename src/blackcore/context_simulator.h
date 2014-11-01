@@ -70,7 +70,14 @@ namespace BlackCore
         //! Emitted when the simulator connection changes
         void connectionChanged(bool connected);
 
-        //! Emitted when own aircraft model changes (TODO move to own aircraft context?)
+        //! Simulator started or stopped
+        void startedChanged(bool startedChanged);
+
+        //! Simulator combined status
+        void simulatorStatusChanged(bool connected, bool running, bool paused);
+
+        //! Emitted when own aircraft model changes
+        //! \todo move to own aircraft context?
         void ownAircraftModelChanged(BlackMisc::Network::CAircraftModel model);
 
     public slots:
@@ -82,7 +89,7 @@ namespace BlackCore
         virtual bool isConnected() const = 0;
 
         //! Can we connect?
-        virtual bool canConnect() = 0;
+        virtual bool canConnect() const = 0;
 
         //! Connect to simulator
         virtual bool connectTo() = 0;
@@ -92,6 +99,9 @@ namespace BlackCore
 
         //! Disconnect from simulator
         virtual bool disconnectFrom() = 0;
+
+        //! Returns true when simulator is running
+        virtual bool isRunning() const = 0;
 
         //! Simulator info
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const = 0;
@@ -125,7 +135,7 @@ namespace BlackCore
         bool isSimulatorAvailable() const { return BlackMisc::CProject::isCompiledWithFlightSimulatorSupport() && !getSimulatorInfo().isUnspecified(); }
 
         //! Simulator paused?
-        virtual bool isSimulatorPaused() const = 0;
+        virtual bool isPaused() const = 0;
 
         //! Settings have been changed
         virtual void settingsChanged(uint type) = 0;

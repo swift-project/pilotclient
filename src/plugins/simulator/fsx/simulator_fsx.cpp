@@ -45,9 +45,9 @@ namespace BlackSimPlugin
 
         CSimulatorFsx::CSimulatorFsx(QObject *parent) :
             ISimulator(parent),
-            m_isConnected(false),
+            m_simConnected(false),
             m_simRunning(false),
-            m_syncTime(false),
+            m_simTimeSynced(false),
             m_hSimConnect(nullptr),
             m_nextObjID(1),
             m_simulatorInfo(CSimulatorInfo::FSX()),
@@ -67,7 +67,12 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::isConnected() const
         {
-            return m_isConnected;
+            return m_simConnected;
+        }
+
+        bool CSimulatorFsx::isRunning() const
+        {
+            return m_simRunning;
         }
 
         bool CSimulatorFsx::isFsuipcConnected() const
@@ -77,11 +82,12 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::connectTo()
         {
-            if (m_isConnected) return true;
+            if (m_simConnected) return true;
 
             if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
             {
-                emit statusChanged(ConnectionFailed);
+                emit connectionStatusChanged(ConnectionFailed);
+                emitSimulatorCombinedStatus();
                 return false;
             }
             else
@@ -92,9 +98,10 @@ namespace BlackSimPlugin
             initEvents();
             initDataDefinitions();
             m_simconnectTimerId = startTimer(10);
-            m_isConnected = true;
+            m_simConnected = true;
 
-            emit statusChanged(Connected);
+            emit connectionStatusChanged(Connected);
+            emitSimulatorCombinedStatus();
             return true;
         }
 
@@ -116,9 +123,8 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::disconnectFrom()
         {
-            if (!m_isConnected) { return true; }
+            if (!m_simConnected) { return true; }
 
-            emit statusChanged(Disconnected);
             if (m_hSimConnect)
             {
                 SimConnect_Close(m_hSimConnect);
@@ -126,26 +132,34 @@ namespace BlackSimPlugin
             }
 
             if (m_simconnectTimerId)
+            {
                 killTimer(m_simconnectTimerId);
+            }
 
             m_hSimConnect = nullptr;
             m_simconnectTimerId = -1;
-            m_isConnected = false;
+            m_simConnected = false;
 
+            emit connectionStatusChanged(Disconnected);
+            emitSimulatorCombinedStatus();
             return true;
         }
 
-        bool CSimulatorFsx::canConnect()
+        bool CSimulatorFsx::canConnect() const
         {
-            if (m_isConnected)
-                return true;
-
-            if (FAILED(SimConnect_Open(&m_hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
+            if (m_simConnected) { return true; }
+            HANDLE hSimConnect; // temporary handle
+            bool connect = false;
+            if (FAILED(SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0)))
             {
-                return false;
+                connect = false;
             }
-            SimConnect_Close(m_hSimConnect);
-            return true;
+            else
+            {
+                connect = true;
+            }
+            SimConnect_Close(hSimConnect);
+            return connect;
         }
 
         void CSimulatorFsx::addRemoteAircraft(const CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation)
@@ -291,7 +305,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset)
         {
-            this->m_syncTime = enable;
+            this->m_simTimeSynced = enable;
             this->m_syncTimeOffset = offset;
         }
 
@@ -314,6 +328,7 @@ namespace BlackSimPlugin
                                               SIMCONNECT_DATA_REQUEST_FLAG_CHANGED);
 
             emit simulatorStarted();
+            emitSimulatorCombinedStatus();
         }
 
         void CSimulatorFsx::onSimStopped()
@@ -321,6 +336,7 @@ namespace BlackSimPlugin
             if (!m_simRunning) return;
             m_simRunning = false;
             emit simulatorStopped();
+            emitSimulatorCombinedStatus();
         }
 
         void CSimulatorFsx::onSimFrame()
@@ -414,12 +430,17 @@ namespace BlackSimPlugin
                 initEvents();
                 initDataDefinitions();
                 m_simconnectTimerId = startTimer(50);
-                m_isConnected = true;
+                m_simConnected = true;
 
-                emit statusChanged(Connected);
+                emit connectionStatusChanged(Connected);
+                emitSimulatorCombinedStatus();
             }
             else
-                emit statusChanged(ConnectionFailed);
+            {
+                m_simConnected = false;
+                emit connectionStatusChanged(ConnectionFailed);
+                emitSimulatorCombinedStatus();
+            }
         }
 
         void CSimulatorFsx::removeRemoteAircraft(const CSimConnectObject &simObject)
@@ -515,7 +536,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFsx::synchronizeTime(const CTime &zuluTimeSim, const CTime &localTimeSim)
         {
-            if (!this->m_syncTime) return;
+            if (!this->m_simTimeSynced) return;
             if (!this->isConnected()) return;
             if (m_syncDeferredCounter > 0)
             {

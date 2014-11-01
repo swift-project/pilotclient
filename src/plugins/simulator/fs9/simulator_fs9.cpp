@@ -97,15 +97,10 @@ namespace BlackSimPlugin
 
             // We tell the host to terminate and stop the thread afterwards
             QMetaObject::invokeMethod(m_fs9Host, "stopHosting");
-            emit statusChanged(ISimulator::Disconnected);
+            emit connectionStatusChanged(ISimulator::Disconnected);
             m_fsuipc->disconnect();
 
             return false;
-        }
-
-        bool CSimulatorFs9::canConnect()
-        {
-            return true;
         }
 
         void CSimulatorFs9::addRemoteAircraft(const CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation)
@@ -289,7 +284,7 @@ namespace BlackSimPlugin
                 {
                     m_isHosting = true;
                     startTimer(50);
-                    emit statusChanged(Connected);
+                    emit connectionStatusChanged(Connected);
                     if (m_startedLobbyConnection)
                     {
                         m_lobbyClient->connectFs9ToHost(m_fs9Host->getHostAddress());
@@ -304,7 +299,7 @@ namespace BlackSimPlugin
                     connect(&m_hostThread, &QThread::finished, &m_hostThread, &QThread::deleteLater);
                     m_hostThread.quit();
                     m_isHosting = false;
-                    emit statusChanged(Disconnected);
+                    emit connectionStatusChanged(Disconnected);
                     break;
                 }
                 default:

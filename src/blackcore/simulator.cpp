@@ -13,4 +13,9 @@ namespace BlackCore
 {
     ISimulator::ISimulator(QObject *parent) : QObject(parent)
     { }
+
+    void ISimulator::emitSimulatorCombinedStatus()
+    {
+        emit simulatorStatusChanged(isConnected(), isRunning(), isPaused());
+    }
 }

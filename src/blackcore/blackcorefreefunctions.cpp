@@ -13,8 +13,8 @@ namespace BlackCore
     void registerMetadata()
     {
         // for some reasons (ask RW) these are registered twice
-        qRegisterMetaType<ISimulator::Status>();
-        qRegisterMetaType<ISimulator::Status>("Status");
+        qRegisterMetaType<ISimulator::ConnectionStatus>();
+        qRegisterMetaType<ISimulator::ConnectionStatus>("Status");
         qRegisterMetaType<IVoiceChannel::ConnectionStatus>();
         qRegisterMetaType<IVoiceChannel::ConnectionStatus>("ConnectionStatus");
     }

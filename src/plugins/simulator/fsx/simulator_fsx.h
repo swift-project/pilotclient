@@ -92,11 +92,14 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::isConnected()
             virtual bool isConnected() const override;
 
+            //! \copydoc ISimulator::isRunning
+            virtual bool isRunning() const override;
+
             //! FSUIPC connected?
             bool isFsuipcConnected() const;
 
             //! \copydoc ISimulator::canConnect()
-            virtual bool canConnect() override;
+            virtual bool canConnect() const override;
 
             //! SimConnect Callback
             static void CALLBACK SimConnectProc(SIMCONNECT_RECV *pData, DWORD cbData, void *pContext);
@@ -150,13 +153,13 @@ namespace BlackSimPlugin
             virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
             //! \copydoc ISimulator::isTimeSynchronized
-            virtual bool isTimeSynchronized() const override { return m_syncTime; }
+            virtual bool isTimeSynchronized() const override { return m_simTimeSynced; }
 
             //! \copydoc ISimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return m_syncTimeOffset; }
 
             //! \copydoc ISimulator::isSimPaused
-            virtual bool isSimPaused() const override { return m_simPaused; }
+            virtual bool isPaused() const override { return m_simPaused; }
 
             //! Called when sim has started
             void onSimRunning();
@@ -213,10 +216,10 @@ namespace BlackSimPlugin
             void synchronizeTime(const BlackMisc::PhysicalQuantities::CTime &zuluTimeSim, const BlackMisc::PhysicalQuantities::CTime &localTimeSim);
 
             static const int SkipUpdateCyclesForCockpit = 10; //!< skip x cycles before updating cockpit again
-            bool    m_isConnected = false; //!< Is simulator connected?
-            bool    m_simRunning = false;  //!< Simulator running?
-            bool    m_simPaused = false;   //!< Simulator paused?
-            bool    m_syncTime = false;    //!< Time synchronized?
+            bool    m_simConnected = false;    //!< Is simulator connected?
+            bool    m_simRunning = false;      //!< Simulator running?
+            bool    m_simPaused = false;       //!< Simulator paused?
+            bool    m_simTimeSynced = false;   //!< Time synchronized?
             int     m_syncDeferredCounter = 0; //!< Set when synchronized, used to wait some time
             BlackMisc::PhysicalQuantities::CTime m_syncTimeOffset;
             HANDLE  m_hSimConnect; //!< Handle to SimConnect object

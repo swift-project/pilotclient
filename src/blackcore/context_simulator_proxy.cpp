@@ -25,8 +25,23 @@ namespace BlackCore
         this->relaySignals(serviceName, connection);
     }
 
-    void CContextSimulatorProxy::relaySignals(const QString &/*serviceName*/, QDBusConnection &/*connection*/)
-    { }
+    void CContextSimulatorProxy::relaySignals(const QString &serviceName, QDBusConnection &connection)
+    {
+        bool s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                                    "connectionChanged", this, SIGNAL(connectionChanged(bool)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                               "startedChanged", this, SIGNAL(startedChanged(bool)));
+
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                               "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(bool,bool,bool)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                               "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(BlackMisc::Network::CAircraftModel)));
+        Q_ASSERT(s);
+        Q_UNUSED(s);
+    }
 
     CSimulatorInfoList CContextSimulatorProxy::getAvailableSimulatorPlugins() const
     {
@@ -38,7 +53,7 @@ namespace BlackCore
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isConnected"));
     }
 
-    bool CContextSimulatorProxy::canConnect()
+    bool CContextSimulatorProxy::canConnect() const
     {
         return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("canConnect"));
     }
@@ -108,9 +123,14 @@ namespace BlackCore
         m_dBusInterface->callDBus(QLatin1Literal("settingsChanged"), type);
     }
 
-    bool CContextSimulatorProxy::isSimulatorPaused() const
+    bool CContextSimulatorProxy::isPaused() const
     {
-        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isSimulatorPaused"));
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isPaused"));
+    }
+
+    bool CContextSimulatorProxy::isRunning() const
+    {
+        return m_dBusInterface->callDBusRet<bool>(QLatin1Literal("isRunning"));
     }
 
 } // namespace BlackCore

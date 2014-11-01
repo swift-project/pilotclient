@@ -36,7 +36,16 @@ namespace BlackSimPlugin
             virtual bool isConnected() const override;
 
             //! \copydoc BlackCore::ISimulator::canConnect
-            virtual bool canConnect() override;
+            virtual bool canConnect() const override;
+
+            //! \copydoc ISimulator::isTimeSynchronized
+            virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
+
+            //! \copydoc ISimulator::isSimPaused
+            virtual bool isPaused() const override { return false; }
+
+            //! \copydoc ISimulator::isRunning
+            virtual bool isRunning() const override { return isConnected(); }
 
         public slots:
             //! \copydoc BlackCore::ISimulator::connectTo
@@ -86,14 +95,8 @@ namespace BlackSimPlugin
             //! \copydoc ISimulator::setTimeSynchronization
             virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
-            //! \copydoc ISimulator::isTimeSynchronized
-            virtual bool isTimeSynchronized() const override { return false; } // TODO: Can we query the XP intrinisc feature?
-
             //! \copydoc ISimulator::getTimeSynchronizationOffset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return BlackMisc::PhysicalQuantities::CTime(0, BlackMisc::PhysicalQuantities::CTimeUnit::hrmin()); }
-
-            //! \copydoc ISimulator::isSimPaused
-            virtual bool isSimPaused() const override { return false; }
 
         private slots:
             void ps_serviceRegistered(const QString &serviceName);

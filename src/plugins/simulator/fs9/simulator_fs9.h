@@ -60,7 +60,17 @@ namespace BlackSimPlugin
             virtual bool isConnected() const override;
 
             //! \copydoc ISimulator::canConnect()
-            virtual bool canConnect() override;
+            virtual bool canConnect() const override { return true; }
+
+            //! \copydoc ISimulator::isPaused
+            virtual bool isPaused() const override { return m_simPaused; }
+
+            //! \copydoc ISimulator::isRunning
+            //! \todo RW fix, set better state here
+            virtual bool isRunning() const override { return true; }
+
+            //! Is time synchronization on?
+            virtual bool isTimeSynchronized() const override { return m_syncTime; }
 
         public slots:
 
@@ -111,14 +121,8 @@ namespace BlackSimPlugin
             //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
             virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
-            //! Is time synchronization on?
-            virtual bool isTimeSynchronized() const override { return m_syncTime; }
-
             //! Time synchronization offset
             virtual BlackMisc::PhysicalQuantities::CTime getTimeSynchronizationOffset() const override { return m_syncTimeOffset; }
-
-            //! Simulator paused?
-            virtual bool isSimPaused() const override { return m_simPaused; }
 
         protected:
             //! Timer event
@@ -138,6 +142,7 @@ namespace BlackSimPlugin
             //! Change DirectPlay host status
             void ps_changeHostStatus(BlackSimPlugin::Fs9::CFs9Host::HostStatus status);
 
+            //! Change client status for callsign
             void ps_changeClientStatus(const QString &callsign, BlackSimPlugin::Fs9::CFs9Client::ClientStatus status);
 
         private:
@@ -150,11 +155,11 @@ namespace BlackSimPlugin
             // DirectPlay object handling
             CFs9Host *m_fs9Host = nullptr;
             QThread m_hostThread;
-            bool    m_isHosting = false; //!< Is sim connected
+            bool    m_isHosting = false;        //!< Is sim connected
             bool    m_startedLobbyConnection = false;
-            bool    m_syncTime = false;    //!< Time synchronized?
-            int     m_syncDeferredCounter = 0; //!< Set when synchronized, used to wait some time
-            bool    m_simPaused = false;   //!< Simulator paused?
+            bool    m_syncTime = false;         //!< Time synchronized?
+            int     m_syncDeferredCounter = 0;  //!< Set when synchronized, used to wait some time
+            bool    m_simPaused = false;        //!< Simulator paused?
 
             QHash<BlackMisc::Aviation::CCallsign, CFs9Client *> m_hashFs9Clients;
             QHash<CFs9Client *, QThread *> m_fs9ClientThreads;

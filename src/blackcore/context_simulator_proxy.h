@@ -50,7 +50,7 @@ namespace BlackCore
         virtual bool isConnected() const override;
 
         //! \copydoc IContextSimulator::canConnect
-        virtual bool canConnect() override;
+        virtual bool canConnect() const override;
 
         //! \copydoc IContextSimulator::connectTo
         virtual bool connectTo() override;
@@ -60,6 +60,12 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::disconnectFrom
         virtual bool disconnectFrom() override;
+
+        //! \copydoc IContextSimulator::isRunning
+        virtual bool isRunning() const override;
+
+        //! \copydoc IContextSimulator::isPaused
+        virtual bool isPaused() const override;
 
         //! \copydoc IContextSimulator::getAircraftModel()
         virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const override;
@@ -90,9 +96,6 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::settingsChanged
         virtual void settingsChanged(uint type) override;
-
-        //! \copydoc IContextSimulator::isSimulatorPaused
-        virtual bool isSimulatorPaused() const override;
 
     };
 

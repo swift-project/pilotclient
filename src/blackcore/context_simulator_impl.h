@@ -48,7 +48,7 @@ namespace BlackCore
         virtual bool isConnected() const override;
 
         //! \copydoc IContextSimulator::canConnect
-        virtual bool canConnect() override;
+        virtual bool canConnect() const override;
 
         //! \copydoc IContextSimulator::connectTo
         virtual bool connectTo() override;
@@ -58,6 +58,12 @@ namespace BlackCore
 
         //! \copydoc IContextSimulator::disconnectFrom
         virtual bool disconnectFrom() override;
+
+        //! \copydoc IContextSimulator::isPaused
+        virtual bool isPaused() const override;
+
+        //! \copydoc IContextSimulator::isRunning
+        virtual bool isRunning() const override;
 
         //! \copydoc IContextSimulator::getSimulatorInfo()
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
@@ -89,9 +95,6 @@ namespace BlackCore
         //! \copydoc IContextSimulator::settingsChanged
         virtual void settingsChanged(uint type) override;
 
-        //! \copydoc IContextSimulator::isSimulatorPaused
-        virtual bool isSimulatorPaused() const override;
-
     protected:
         //! \brief Constructor
         CContextSimulator(CRuntimeConfig::ContextMode, CRuntime *runtime);
@@ -122,7 +125,7 @@ namespace BlackCore
         void ps_updateCockpitFromContext(const BlackMisc::Aviation::CAircraft &ownAircraft, const QString &originator);
 
         //! Handle new connection status
-        void ps_onConnectionStatusChanged(ISimulator::Status status);
+        void ps_onConnectionStatusChanged(ISimulator::ConnectionStatus status);
 
         //! Status message received
         void ps_statusMessageReceived(const BlackMisc::CStatusMessage &statusMessage);
@@ -139,10 +142,10 @@ namespace BlackCore
 
         BlackMisc::Network::CAircraftModel m_aircraftModel;
         BlackMisc::Aviation::CAircraft m_ownAircraft;
-        BlackCore::ISimulator *m_simulator;
+        BlackCore::ISimulator *m_simulator = nullptr;
 
-        QTimer *m_updateTimer;
-        QDir m_pluginsDir;
+        QTimer *m_updateTimer = nullptr;
+        QDir m_pluginsDir     = nullptr;
         QSet<ISimulatorFactory *> m_simulatorFactories;
         QFuture<bool> m_canConnectResult;
     };

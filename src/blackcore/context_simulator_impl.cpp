@@ -28,8 +28,7 @@ using namespace BlackSim::Settings;
 
 namespace BlackCore
 {
-    CContextSimulator::CContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSimulator(mode, runtime),
-        m_simulator(nullptr), m_updateTimer(nullptr)
+    CContextSimulator::CContextSimulator(CRuntimeConfig::ContextMode mode, CRuntime *runtime) : IContextSimulator(mode, runtime)
     {
         m_updateTimer = new QTimer(this);
         findSimulatorPlugins();
@@ -63,7 +62,7 @@ namespace BlackCore
         return m_simulator->isConnected();
     }
 
-    bool CContextSimulator::canConnect()
+    bool CContextSimulator::canConnect() const
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return false;
@@ -168,11 +167,15 @@ namespace BlackCore
         this->unloadSimulatorPlugin(); // old plugin unloaded
         m_simulator = newSimulator;
 
-        connect(m_simulator, &ISimulator::statusChanged, this, &CContextSimulator::ps_onConnectionStatusChanged);
+        connect(m_simulator, &ISimulator::connectionStatusChanged, this, &CContextSimulator::ps_onConnectionStatusChanged);
+        connect(m_simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::simulatorStatusChanged);
         connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
+
+        // log
         connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_simulator, &ISimulator::displayStatusMessage);
         connect(CLogHandler::instance(), &CLogHandler::remoteMessageLogged, m_simulator, &ISimulator::displayStatusMessage);
 
+        // connect with network
         CAirspaceMonitor *airspace = this->getRuntime()->getCContextNetwork()->getAirspaceMonitor();
         connect(airspace, &CAirspaceMonitor::addedAircraft, this, &CContextSimulator::ps_addRemoteAircraft);
         connect(airspace, &CAirspaceMonitor::changedAircraftSituation, this, &CContextSimulator::ps_addAircraftSituation);
@@ -292,18 +295,20 @@ namespace BlackCore
         this->m_simulator->updateOwnSimulatorCockpit(ownAircraft);
     }
 
-    void CContextSimulator::ps_onConnectionStatusChanged(ISimulator::Status status)
+    void CContextSimulator::ps_onConnectionStatusChanged(ISimulator::ConnectionStatus status)
     {
+        bool connected;
         if (status == ISimulator::Connected)
         {
+            connected = true;
             m_updateTimer->start(100);
-            emit connectionChanged(true);
         }
         else
         {
+            connected = false;
             m_updateTimer->stop();
-            emit connectionChanged(false);
         }
+        emit connectionChanged(connected);
     }
 
     void CContextSimulator::ps_statusMessageReceived(const CStatusMessage &statusMessage)
@@ -319,7 +324,7 @@ namespace BlackCore
 
     void CContextSimulator::ps_statusMessagesReceived(const CStatusMessageList &statusMessages)
     {
-        for(const CStatusMessage &m : statusMessages)
+        for (const CStatusMessage &m : statusMessages)
         {
             this->ps_statusMessageReceived(m);
         }
@@ -363,10 +368,16 @@ namespace BlackCore
         this->m_simulator->setTimeSynchronization(timeSync, syncOffset);
     }
 
-    bool CContextSimulator::isSimulatorPaused() const
+    bool CContextSimulator::isPaused() const
     {
         if (!this->m_simulator) return false;
-        return this->m_simulator->isSimPaused();
+        return this->m_simulator->isPaused();
+    }
+
+    bool CContextSimulator::isRunning() const
+    {
+        if (!this->m_simulator) return false;
+        return this->m_simulator->isRunning();
     }
 
     void CContextSimulator::findSimulatorPlugins()

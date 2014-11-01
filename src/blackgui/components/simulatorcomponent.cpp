@@ -59,11 +59,11 @@ namespace BlackGui
         {
             if (!this->isVisibleWidget()) return; // no updates on invisible widgets
             if (!this->getIContextOwnAircraft()) return;
-            if (!this->getIContextSimulator()->isConnected())
+            if (!this->getIContextSimulator()->isRunning())
             {
                 if (this->rowCount() == 1) return;
                 this->clear();
-                this->addOrUpdateByName("info", "sim not connected", CIcons::StandardIconWarning16);
+                this->addOrUpdateByName("info", "sim not running", CIcons::StandardIconWarning16);
                 return;
             }
 

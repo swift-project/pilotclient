@@ -23,5 +23,4 @@ namespace BlackCore
             return nullptr; // simulator not mandatory
         }
     }
-
-}
+} // namespace
