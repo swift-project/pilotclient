@@ -11,6 +11,7 @@
 #include "fs9_host.h"
 #include "fs9_client.h"
 #include "blackmisc/mathematics.h"
+#include "blackmisc/logmessage.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
@@ -167,44 +168,47 @@ namespace BlackSimPlugin
 
         HRESULT printDirectPlayError(HRESULT error)
         {
+            QString errorMessage;
             switch(error)
             {
             case DPNERR_BUFFERTOOSMALL:
-                qWarning() << "The supplied buffer is not large enough to contain the requested data.";
+                errorMessage = "The supplied buffer is not large enough to contain the requested data.";
                 break;
             case DPNERR_DOESNOTEXIST:
-                qWarning() << "Requested element is not part of the address.";
+                errorMessage = "Requested element is not part of the address.";
                 break;
             case DPNERR_INVALIDFLAGS:
-                qWarning() << "The flags passed to this method are invalid.";
+                errorMessage = "The flags passed to this method are invalid.";
                 break;
             case DPNERR_INVALIDPARAM:
-                qWarning() << "One or more of the parameters passed to the method are invalid.";
+                errorMessage = "One or more of the parameters passed to the method are invalid.";
                 break;
             case DPNERR_INVALIDPOINTER:
-                qWarning() << "Pointer specified as a parameter is invalid.";
+                errorMessage = "Pointer specified as a parameter is invalid.";
                 break;
             case DPNERR_INVALIDURL:
-                qWarning() << "Specified string is not a valid DirectPlayURL.";
+                errorMessage = "Specified string is not a valid DirectPlayURL.";
                 break;
             case DPNERR_NOTALLOWED:
-                qWarning() << "This function is not allowed on this object.";
+                errorMessage = "This function is not allowed on this object.";
                 break;
             case DPNERR_INVALIDOBJECT:
-                qWarning() << "The Microsoft DirectPlay object pointer is invalid.";
+                errorMessage = "The Microsoft DirectPlay object pointer is invalid.";
                 break;
             case DPNERR_UNINITIALIZED:
-                qWarning() << "This function is not allowed on this object.";
+                errorMessage = "This function is not allowed on this object.";
                 break;
             case DPNERR_UNSUPPORTED:
-                qWarning() << "The function or feature is not available in this implementation or on this service provider.";
+                errorMessage = "The function or feature is not available in this implementation or on this service provider.";
                 break;
             case DPNERR_NOTHOST:
-                qWarning() << "The client attempted to connect to a nonhost computer. Additionally, this error value may be returned by a nonhost that tried to set the application description.";
+                errorMessage = "The client attempted to connect to a nonhost computer. Additionally, this error value may be returned by a nonhost that tried to set the application description.";
                 break;
             default:
                 break;
             }
+
+            BlackMisc::CLogMessage().error(errorMessage);
 
             return error;
         }

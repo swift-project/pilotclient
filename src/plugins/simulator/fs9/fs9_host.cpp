@@ -14,6 +14,7 @@
 #include "multiplayer_packet_parser.h"
 #include "multiplayer_packets.h"
 #include "blackmisc/project.h"
+#include "blackmisc/logmessage.h"
 #include <QScopedArrayPointer>
 #include <QVector>
 
@@ -120,7 +121,7 @@ namespace BlackSimPlugin
             player.pwszName = wszPlayername.data();
             if (FAILED(hr = m_directPlayPeer->SetPeerInfo(&player, nullptr, nullptr, DPNSETPEERINFO_SYNC)))
             {
-                qWarning() << "Failed to set peer info!";
+                printDirectPlayError(hr);
                 return hr;
             }
 
@@ -138,12 +139,12 @@ namespace BlackSimPlugin
                                                    nullptr,                          // Player Context
                                                    0)))                              // dwFlags
             {
-                qWarning() << "Failed to start hosting!";
+                printDirectPlayError(hr);
                 return hr;
             }
             else
             {
-                qDebug() << "Host successfully started";
+                BlackMisc::CLogMessage(this).info("Hosting successfully started");
                 m_hostStatus = Hosting;
             }
 
@@ -157,7 +158,7 @@ namespace BlackSimPlugin
 
             if (m_hostStatus == Terminated) return hr;
 
-            qDebug() << "Terminating host";
+            BlackMisc::CLogMessage(this).info("Hosting terminated!");
             hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0);
             hr = m_directPlayPeer->Close(0);
             m_hostStatus = Terminated;

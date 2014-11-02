@@ -15,6 +15,7 @@
 #include "blacksimplugin_freefunctions.h"
 #include "blackmisc/avaircraftsituation.h"
 #include "blackmisc/coordinategeodetic.h"
+#include "blackmisc/logmessage.h"
 #include <QScopedArrayPointer>
 
 using namespace BlackMisc;
@@ -149,8 +150,7 @@ namespace BlackSimPlugin
                                                 nullptr,                        // pAsyncHandle
                                                 DPNENUMHOSTS_SYNC ) ) )         // dwFlags
             {
-                qWarning() << "Failed to enum hosts!";
-                return hr;
+                return printDirectPlayError(hr);
             }
             return hr;
         }
@@ -165,15 +165,13 @@ namespace BlackSimPlugin
                                             IID_IDirectPlay8Address,
                                             reinterpret_cast<void **>(&m_hostAddress) ) ) )
             {
-                qWarning() << "Failed to create DirectPlay8Address!";
-                return hr;
+                return printDirectPlayError(hr);
             }
 
             // Set the SP for our Host Address
             if( FAILED( hr = m_hostAddress->SetSP(&CLSID_DP8SP_TCPIP ) ) )
             {
-                qWarning() << "Failed to set SP!";
-                return hr;
+                return printDirectPlayError(hr);
             }
 
             // FIXME: Test if this is also working via network or if we have to use the IP address
@@ -184,8 +182,7 @@ namespace BlackSimPlugin
                                                             2*(wcslen(hostname) + 1), /*bytes*/
                                                             DPNA_DATATYPE_STRING ) ) )
             {
-                qWarning() << "Failed to add component!";
-                return hr;
+                return printDirectPlayError(hr);
             }
 
             return hr;
@@ -217,8 +214,7 @@ namespace BlackSimPlugin
             m_player.pwszName = wszPlayername.data();
             if( FAILED( hr = m_directPlayPeer->SetPeerInfo( &m_player, nullptr, nullptr, DPNSETPEERINFO_SYNC ) ) )
             {
-                qWarning() << "Failed to set peer info!";
-                return hr;
+                return printDirectPlayError(hr);
             }
 
             // Now set up the Application Description
@@ -239,8 +235,7 @@ namespace BlackSimPlugin
                                                         nullptr,
                                                         DPNCONNECT_SYNC ) ) )
             {
-                qWarning() << "Failed to connect to host!";
-                return hr;
+                return printDirectPlayError(hr);
             }
 
             MPChangePlayerPlane mpChangePlayerPlane;
@@ -267,10 +262,10 @@ namespace BlackSimPlugin
 
             if (m_clientStatus == Disconnected) return hr;
 
-            qDebug() << "Closing connection for " << m_callsign;
+            BlackMisc::CLogMessage(this).debug() << "Closing DirectPlay connection for " << m_callsign;
             if( FAILED( hr = m_directPlayPeer->Close(0) ))
             {
-                qWarning() << "Failed to close connection!";
+                return printDirectPlayError(hr);
             }
 
             m_clientStatus = Disconnected;
