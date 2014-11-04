@@ -33,6 +33,24 @@ namespace BlackSimPlugin
 
         CLobbyClient::~CLobbyClient()
         {
+            if (m_directPlayPeer)
+            {
+                m_directPlayPeer->Close(DPNCLOSE_IMMEDIATE);
+                m_directPlayPeer->Release();
+            }
+
+            if (m_deviceAddress)
+                m_deviceAddress->Release();
+
+            if (m_hostAddress)
+                m_hostAddress->Release();
+
+            if (m_dpLobbyClient)
+            {
+                m_dpLobbyClient->ReleaseApplication(DPLHANDLE_ALLCONNECTIONS, 0);
+                m_dpLobbyClient->Close(0);
+            }
+
             CoUninitialize();
         }
 
