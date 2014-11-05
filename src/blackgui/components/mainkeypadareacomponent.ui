@@ -190,6 +190,9 @@
         <property name="text">
          <string>Aircrafts</string>
         </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="3" column="0">
@@ -209,6 +212,12 @@
         <property name="text">
          <string>ATC</string>
         </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="4" column="0">
@@ -221,6 +230,9 @@
         </property>
         <property name="text">
          <string>Users</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -240,6 +252,9 @@
         </property>
         <property name="text">
          <string>Cockpit</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -273,6 +288,9 @@
         <property name="text">
          <string>Text/Chat</string>
         </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="2" column="1">
@@ -285,6 +303,9 @@
         </property>
         <property name="text">
          <string>Simulator</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -305,6 +326,9 @@
         <property name="text">
          <string>Weather</string>
         </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="3" column="1">
@@ -324,6 +348,9 @@
         <property name="text">
          <string>Flightplan</string>
         </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="1" column="2">
@@ -342,6 +369,9 @@
         </property>
         <property name="text">
          <string>Mappings</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -365,6 +395,9 @@
         <property name="text">
          <string>Settings</string>
         </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="2" column="2">
@@ -383,6 +416,9 @@
         </property>
         <property name="text">
          <string>Log</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

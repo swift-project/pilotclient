@@ -17,7 +17,9 @@
 #include "blackmisc/avaircraft.h"
 
 #include <QFrame>
+#include <QPushButton>
 #include <QScopedPointer>
+#include <QList>
 
 namespace Ui { class CMainKeypadAreaComponent; }
 namespace BlackGui
@@ -57,13 +59,17 @@ namespace BlackGui
             //! Ident pressed
             void identPressed();
 
+        public slots:
+            //! Main info area changed
+            void onMainInfoAreaChanged(int currentTabIndex, QList<int> dockedIndexes, QList<int> floatingIndexes);
+
         protected:
             //! \copydoc CRuntimeBasedComponent::runtimeHasBeenSet
             virtual void runtimeHasBeenSet() override;
 
         private slots:
             //! Button was clicked
-            void ps_buttonPressed();
+            void ps_buttonSelected();
 
             //! \copydoc BlackCore::IContextNetwork::connectionStatusChanged
             void ps_connectionStatusChanged(uint from, uint to, const QString &message);
@@ -78,8 +84,14 @@ namespace BlackGui
             //! If button is info area, identify it
             CMainInfoAreaComponent::InfoArea buttonToMainInfoArea(const QObject *button) const;
 
+            //! Main info area to corresponding button
+            QPushButton *mainInfoAreaToButton(CMainInfoAreaComponent::InfoArea area) const;
+
             //! Own aircraft
             BlackMisc::Aviation::CAircraft getOwnAircraft() const;
+
+            //! Info area buttons
+            void unsetInfoAreaButtons();
 
             QScopedPointer<Ui::CMainKeypadAreaComponent> ui;
         };
