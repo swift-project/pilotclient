@@ -14,36 +14,39 @@
 #include <QCloseEvent>
 #include <QStyleOption>
 #include <QPainter>
+#include <QLayout>
 
 namespace BlackGui
 {
     CDockWidget::CDockWidget(QWidget *parent) : QDockWidget(parent)
     {
+
         this->ps_onStyleSheetsChanged();
         this->initTitleBarWidgets();
+
+        // context menu
+        this->setContextMenuPolicy(Qt::CustomContextMenu);
+        connect(this, &CDockWidget::customContextMenuRequested, this, &CDockWidget::ps_showContextMenu);
 
         // connect
         connect(this, &QDockWidget::topLevelChanged, this, &CDockWidget::ps_onTopLevelChanged);
         connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &CDockWidget::ps_onStyleSheetsChanged);
         connect(this, &QDockWidget::visibilityChanged, this, &CDockWidget::ps_onVisibilityChanged);
 
-        // context menu
-        this->setContextMenuPolicy(Qt::CustomContextMenu);
-        connect(this, &CDockWidget::customContextMenuRequested, this, &CDockWidget::ps_showContextMenu);
     }
 
     void CDockWidget::setOriginalTitleBar()
     {
-        if (!this->m_titleBarOriginal) { this->initTitleBarWidgets(); }
-        if (this->titleBarWidget() == this->m_titleBarOriginal) return; // on purpose, as I do not know what happens when I call setTitleBar
-        this->setTitleBarWidget(this->m_titleBarOriginal);
+        if (!this->m_titleBarWidgetOriginal) { this->initTitleBarWidgets(); }
+        if (this->titleBarWidget() == this->m_titleBarWidgetOriginal) return; // on purpose, as I do not know what happens when I call setTitleBar
+        this->setTitleBarWidget(this->m_titleBarWidgetOriginal);
     }
 
     void CDockWidget::setEmptyTitleBar()
     {
-        if (!this->m_titleBarOriginal) { this->initTitleBarWidgets(); }
-        if (this->titleBarWidget() == this->m_emptyTitleBar) return; // on purpose, as I do not know what happens when I call setTitleBar
-        this->setTitleBarWidget(this->m_emptyTitleBar);
+        if (!this->m_titleBarWidgetOriginal) { this->initTitleBarWidgets(); }
+        if (this->titleBarWidget() == this->m_titleBarWidgetEmpty) return; // on purpose, as I do not know what happens when I call setTitleBar
+        this->setTitleBarWidget(this->m_titleBarWidgetEmpty);
     }
 
     void CDockWidget::setNullTitleBar()
@@ -55,6 +58,18 @@ namespace BlackGui
     {
         this->m_windowTitleBackup = title;
         QDockWidget::setWindowTitle(title);
+    }
+
+    void CDockWidget::displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage)
+    {
+        if (!this->isFloating()) { return; }
+        this->m_statusBar.displayStatusMessage(statusMessage);
+    }
+
+    void CDockWidget::displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages)
+    {
+        if (!this->isFloating()) { return; }
+        this->m_statusBar.displayStatusMessages(statusMessages);
     }
 
     void CDockWidget::showTitleWhenDocked(bool show)
@@ -121,6 +136,9 @@ namespace BlackGui
     void CDockWidget::initialFloating()
     {
 
+        // init status bar, as we have now all structure set
+        this->initStatusBar();
+
         // for the first time resize
         if (!this->m_preferredSizeWhenFloating.isNull())
         {
@@ -149,8 +167,9 @@ namespace BlackGui
             this->setContentsMargins(this->m_marginsWhenFloating);
             if (!this->m_wasAlreadyFloating)
             {
-                this->initalFloating();
+                this->initialFloating();
             }
+            this->m_statusBar.show();
             this->m_wasAlreadyFloating = true;
         }
         else
@@ -160,6 +179,7 @@ namespace BlackGui
                 QDockWidget::setWindowTitle("");
             }
 
+            this->m_statusBar.hide();
             this->setEmptyTitleBar();
             this->setContentsMargins(this->m_marginsWhenDocked);
         }
@@ -168,9 +188,33 @@ namespace BlackGui
 
     void CDockWidget::initTitleBarWidgets()
     {
-        this->m_titleBarOriginal = this->titleBarWidget();
-        this->m_emptyTitleBar = new QWidget(this);
-        this->setTitleBarWidget(this->m_emptyTitleBar);
+        this->m_titleBarWidgetOriginal = this->titleBarWidget();
+        this->m_titleBarWidgetEmpty = new QWidget(this);
+        this->setTitleBarWidget(this->m_titleBarWidgetEmpty);
+    }
+
+    void CDockWidget::initStatusBar()
+    {
+        if (this->m_statusBar.getStatusBar()) { return; }
+        if (!this->m_allowStatusBar) { return; }
+        this->m_statusBar.initStatusBar();
+
+        QWidget *innerDockWidget = this->widget(); // the inner widget containing the layout
+        Q_ASSERT(innerDockWidget);
+        if (!innerDockWidget) { return; }
+        QVBoxLayout *vLayout = qobject_cast<QVBoxLayout *>(innerDockWidget->layout());
+        Q_ASSERT(vLayout);
+        if (!vLayout) { return; }
+        vLayout->addWidget(this->m_statusBar.getStatusBar(), 0, Qt::AlignBottom);
+
+        // adjust stretching of the original widget. It was the only widget so far
+        // and should occupy maximum space
+        QWidget *compWidget = innerDockWidget->findChild<QWidget *>(QString(), Qt::FindDirectChildrenOnly);
+        Q_ASSERT(compWidget);
+        if (!compWidget) { return; }
+        QSizePolicy sizePolicy = compWidget->sizePolicy();
+        sizePolicy.setVerticalStretch(1);
+        compWidget->setSizePolicy(sizePolicy);
     }
 
     void CDockWidget::ps_showContextMenu(const QPoint &pos)
@@ -191,4 +235,4 @@ namespace BlackGui
     {
         // void, for further extensions
     }
-}
+} // namespace

@@ -12,9 +12,11 @@
 #ifndef BLACKGUI_DOCKWIDGET_H
 #define BLACKGUI_DOCKWIDGET_H
 
-#include "components/enableforruntime.h"
+#include "managedstatusbar.h"
+
 #include <QDockWidget>
 #include <QTabWidget>
+#include <QStatusBar>
 #include <QMenu>
 #include <QLabel>
 
@@ -68,6 +70,9 @@ namespace BlackGui
         //! \remarks Logical vsibility as in \sa QDockWidget::visibilityChanged
         bool isWidgetVisible() const { return this->m_dockWidgetVisible && this->isVisible(); }
 
+        //! Allow a status bar to be displayed
+        void allowStatusBar(bool allow) { this->m_allowStatusBar = allow; }
+
         //! Show the window title when docked
         void showTitleWhenDocked(bool show);
 
@@ -92,6 +97,12 @@ namespace BlackGui
 
         //! Set title and internally keep a backup
         void setWindowTitle(const QString &title);
+
+        //! Display status message
+        void displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
+
+        //! Display status messages
+        void displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
 
     signals:
         //! Top level has changed for given widget
@@ -130,21 +141,25 @@ namespace BlackGui
         virtual void ps_onVisibilityChanged(bool visible);
 
     private:
-        QWidget *m_emptyTitleBar    = nullptr; //!< replacing default title bar
-        QWidget *m_titleBarOriginal = nullptr; //!< the original title bar
-        QMargins m_marginsWhenFloating;        //!< Offsets when window is floating
-        QMargins m_marginsWhenDocked;          //!< Offsets when window is floating
-        QString  m_windowTitleBackup;          //!< original title, even if the widget title is deleted for layout purposes
-        QSize m_preferredSizeWhenFloating;     //!< preferred size men floating 1st time
-        QPoint m_offsetWhenFloating;           //!< initial offset to main window when floating first time
+        QWidget *m_titleBarWidgetEmpty    = nullptr; //!< replacing default title bar
+        QWidget *m_titleBarWidgetOriginal = nullptr; //!< the original title bar
+        QMargins m_marginsWhenFloating;              //!< Offsets when window is floating
+        QMargins m_marginsWhenDocked;                //!< Offsets when window is docked
+        CManagedStatusBar m_statusBar;               //!< Status bar when floating
+        QString  m_windowTitleBackup;                //!< original title, even if the widget title is deleted for layout purposes
+        QSize m_preferredSizeWhenFloating;           //!< preferred size when floating 1st time
+        QPoint m_offsetWhenFloating;                 //!< initial offset to main window when floating first time
+        bool m_allowStatusBar        = true;
         bool m_windowTitleWhenDocked = true;
         bool m_wasAlreadyFloating    = false;
-        bool m_selected              = false;  //!< selected when tabbed
-        bool m_dockWidgetVisible     = false;  //!< logical visible, not to be confused with QDockWidget::isVisible()
+        bool m_selected              = false;        //!< selected when tabbed
+        bool m_dockWidgetVisible     = false;        //!< logical visible, not to be confused with QDockWidget::isVisible()
 
         //! Empty widget with no size
         void initTitleBarWidgets();
 
+        //! Init status bar
+        void initStatusBar();
     };
 
 } // namespace

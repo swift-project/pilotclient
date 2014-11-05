@@ -67,10 +67,8 @@ namespace BlackGui
             {
                 if (!this->m_sizeFloatingShown.isValid())
                 {
-                    // minimumSizeHint() not as good as expected
+                    // manually setting size, all other approaches failed
                     QSize m(300, 400);
-                    this->setMinimumSize(m);
-                    this->window()->setMinimumSize(m);
                     this->window()->resize(m);
                     this->m_sizeFloatingShown = this->window()->size();
                 }
@@ -78,6 +76,7 @@ namespace BlackGui
                 {
                     this->window()->resize(m_sizeFloatingShown);
                 }
+
                 if (this->m_sizeFloatingHidden.isValid())
                 {
                     // was already initialized, override
@@ -88,17 +87,18 @@ namespace BlackGui
             {
                 if (!this->m_sizeFloatingHidden.isValid())
                 {
-                    // minimumSizeHint() not as good as expected
-                    QSize m(300, 125);
-                    this->setMinimumSize(m);
+                    // manually setting size, all other approaches failed
+                    QSize m(300, 150);
                     this->window()->setMinimumSize(m);
                     this->window()->resize(m);
                     this->m_sizeFloatingHidden = this->window()->size();
                 }
                 else
                 {
+                    this->window()->setMinimumSize(m_sizeFloatingHidden);
                     this->window()->resize(m_sizeFloatingHidden);
                 }
+
                 if (this->m_sizeFloatingShown.isValid())
                 {
                     // was already initialized, override

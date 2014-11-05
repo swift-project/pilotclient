@@ -16,8 +16,7 @@
 #include <QMainWindow>
 #include <QTabBar>
 #include <QPixmap>
-
-namespace Ui { class CInfoArea; }
+#include <QList>
 
 namespace BlackGui
 {
@@ -43,17 +42,26 @@ namespace BlackGui
         //! Get the selected info area (non floating, selected in tabbar)
         const CDockWidgetInfoArea *getSelectedDockInfoArea() const;
 
+        //! Get the selected info area (non floating, selected in tabbar)
+        int getSelectedDockInfoAreaIndex() const;
+
         //! Own dockable widgets
         QList<const CDockWidgetInfoArea *> getDockWidgetInfoAreas() const;
 
-        //! Create a list of actions to select the info areas. This could be used in a menu
-        //! or somewhere else.
+        //! Create a list of actions to select the info areas.
+        //! This could be used in a menu or somewhere else.
         //! \param parent which will own the action (deletion)
         QList<QAction *> getInfoAreaSelectActions(QWidget *parent) const;
 
+        //! Docked area indexes
+        QList<int> getAreaIndexesDockedOrFloating(bool floating) const;
+
     signals:
         //! Tab bar changed
-        void tabBarCurrentChanged(int index);
+        void changedInfoAreaTabBarIndex(int index);
+
+        //! Status of info area changed
+        void changedInfoAreaStatus(int currentTabIndex, QList<int> dockedAreas, QList<int> floatingAreas);
 
     public slots:
         //! Dock all widgets
@@ -86,6 +94,12 @@ namespace BlackGui
         //! Select next right tab
         void selectRightTab();
 
+        //! Display status message
+        void displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
+
+        //! Display status messages
+        void displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
+
     protected:
         //! Constructor
         explicit CInfoArea(QWidget *parent = nullptr);
@@ -98,7 +112,7 @@ namespace BlackGui
 
         //! \copydoc QWidget::keyPressEvent
         //! \remarks nor fully sufficient, as the info area is hardly having focus
-        virtual void keyPressEvent(QKeyEvent * event) override;
+        virtual void keyPressEvent(QKeyEvent *event) override;
 
         //! Preferred size when floating (size hint)
         virtual QSize getPreferredSizeWhenFloating(int areaIndex) const = 0;
@@ -115,7 +129,6 @@ namespace BlackGui
         void ps_setTabBarPosition(QTabWidget::TabPosition position);
 
     private:
-        Ui::CInfoArea *ui = nullptr;
         QList<CDockWidgetInfoArea *> m_dockWidgetInfoAreas ;
         QTabBar *m_tabBar = nullptr;
         bool m_showTabTexts     = true;   //!< texts for tabs
@@ -139,7 +152,7 @@ namespace BlackGui
         CDockWidgetInfoArea *getDockWidgetInfoAreaByWindowTitle(const QString &title);
 
         //! Corresponding dockable widget for given window title
-        int getAreaIndexByWindowTitle(const QString &title);
+        int getAreaIndexByWindowTitle(const QString &title) const;
 
         //! Tab bar index by title
         int getTabBarIndexByTitle(const QString &title) const;
@@ -205,6 +218,12 @@ namespace BlackGui
 
         //! Dock / floating of the whole info area
         void ps_setInfoAreaFloating(bool floating);
+
+        //! Emit current status, \sa changedInfoAreaStatus
+        void ps_emitInfoAreaStatus();
+
+        //! Tab bar index changed
+        void ps_onTabBarIndexChanged(int tabBarIndex);
 
     };
 } // namespace

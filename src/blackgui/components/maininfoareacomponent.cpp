@@ -96,8 +96,10 @@ namespace BlackGui
             case InfoAreaMappings:
             case InfoAreaSettings:
             case InfoAreaTextMessages:
-            case InfoAreaFlightPlan:
                 return QSize(600, 400);
+                break;
+            case InfoAreaFlightPlan:
+                return QSize(625, 500);
                 break;
             default:
                 return QSize(400, 300);
