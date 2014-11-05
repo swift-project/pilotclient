@@ -223,16 +223,12 @@ bool MainWindow::isContextAudioAvailableCheck()
  */
 void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
+    if (!this->m_init) return;
     if (statusMessage.isRedundant()) return;
-
     if (statusMessage.wasHandledBy(this)) return;
     statusMessage.markAsHandledBy(this);
-
-    if (!this->m_init) return;
-    this->ui->sb_MainStatusBar->show();
-    this->m_timerStatusBar->start(3000);
-    this->m_statusBarIcon->setPixmap(statusMessage.toPixmap());
-    this->m_statusBarLabel->setText(statusMessage.getMessage());
+    this->m_statusBar.displayStatusMessage(statusMessage);
+    this->ui->comp_MainInfoArea->displayStatusMessage(statusMessage);
 
     // list
     this->ui->comp_MainInfoArea->getLogComponent()->appendStatusMessageToList(statusMessage);
@@ -327,7 +323,6 @@ void MainWindow::updateGuiStatusInformation()
     // update status fields
     QString s = QString("network: %1").arg(network);
     this->ui->comp_InfoBarStatus->setDBusTooltip(s);
-
 }
 
 /*

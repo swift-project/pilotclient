@@ -26,6 +26,7 @@
 #include "blackgui/models/userlistmodel.h"
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"
+#include "blackgui/managedstatusbar.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/loghandler.h"
 #include "blacksound/soundgenerator.h"
@@ -81,20 +82,19 @@ protected:
 
 private:
     QScopedPointer<Ui::MainWindow> ui;
-    BlackGui::Components::CInfoWindowComponent *m_compInfoWindow = nullptr; //!< the info window (popup
     bool m_init = false;
-    GuiModes::WindowMode m_windowMode = GuiModes::WindowNormal;
-    BlackInput::IKeyboard *m_keyboard = nullptr; //!< hotkeys
-
-    BlackMisc::CLogSubscriber m_logSubscriber { this, &MainWindow::ps_displayStatusMessageInGui };
+    BlackGui::Components::CInfoWindowComponent *m_compInfoWindow = nullptr; //!< the info window (popup
+    BlackGui::CManagedStatusBar m_statusBar;
+    GuiModes::WindowMode        m_windowMode = GuiModes::WindowNormal;
+    BlackInput::IKeyboard      *m_keyboard = nullptr; //!< hotkeys
+    BlackMisc::CLogSubscriber   m_logSubscriber { this, &MainWindow::ps_displayStatusMessageInGui };
 
     // contexts
     bool m_coreAvailable           = false;
     bool m_contextNetworkAvailable = false;
     bool m_contextAudioAvailable   = false;
-    BlackMisc::Aviation::CAircraft m_ownAircraft; //!< own aircraft's state
     QTimer *m_timerContextWatchdog = nullptr;     //!< core available?
-    QTimer *m_timerStatusBar       = nullptr;     //!< cleaning up status bar
+    BlackMisc::Aviation::CAircraft m_ownAircraft; //!< own aircraft's state
 
     // frameless window
     QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
@@ -105,10 +105,6 @@ private:
     // cockpit
     QString m_transponderResetValue;         //!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas
     QWidget *m_inputFocusedWidget = nullptr; //!< currently used widget for input, mainly used with cockpit
-
-    // status bar
-    QLabel *m_statusBarIcon  = nullptr; //!< status bar icon
-    QLabel *m_statusBarLabel = nullptr; //!< status bar label
 
     //! GUI status update
     void updateGuiStatusInformation();

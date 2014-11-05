@@ -96,6 +96,15 @@ QAbstractScrollArea #pg_StatusPageConsole { background-color: black; }
     min-height:20px;
 }
 
+#wi_MainKeypadArea QPushButton::checked {
+    /** background-image: url(:/textures/icons/textures/texture-inner.jpg); **/
+    /** need to fix pressed button first **/
+    border-style: solid;
+    border-color: yellow;
+        font: bold;
+        color: yellow;
+}
+
 /** cockpit needs to come after sw_MainMiddle **/
 #comp_CockpitComComponent QPushButton {
     background-color: transparent;
@@ -395,14 +404,13 @@ QSlider::handle:horizontal {
 }
 
 QSizeGrip {
-    image: url(:/diagona/icons/diagona/icons/arrow-resize-135.png);
+    image: url(:/diagona/icons/diagona/icons/arrow-in-out.png);
     width: 16px;
     height: 16px;
 }
 
 QStatusBar {
-    background-image: url(:/textures/icons/textures/texture-outer.jpg);
-    background-color: darkslategray;
+    background: transparent;
 }
 
 QStatusBar::item {

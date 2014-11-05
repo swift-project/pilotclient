@@ -13,7 +13,6 @@
 #include "blackmisc/project.h"
 #include "blackmisc/hotkeyfunction.h"
 #include "blackmisc/logmessage.h"
-#include <QSortFilterProxyModel>
 #include <QSizeGrip>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -72,18 +71,8 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->initGuiSignals();
 
     // status bar
-    if (!this->m_statusBarLabel)
-    {
-        // also subject of style sheet
-        this->m_statusBarIcon = new QLabel(this);
-        this->m_statusBarLabel = new QLabel(this);
-        this->m_timerStatusBar = new QTimer(this);
-        this->m_statusBarLabel->setMinimumHeight(16);
-        connect(this->m_timerStatusBar, &QTimer::timeout, this->m_statusBarIcon, &QLabel::clear);
-        connect(this->m_timerStatusBar, &QTimer::timeout, this->m_statusBarLabel, &QLabel::clear);
-        this->ui->sb_MainStatusBar->addWidget(this->m_statusBarIcon, 0);
-        this->ui->sb_MainStatusBar->addWidget(this->m_statusBarLabel, 1);
-    }
+    this->ui->dw_InfoBarStatus->allowStatusBar(false);
+    this->m_statusBar.initStatusBar(this->ui->sb_MainStatusBar);
 
     // signal / slots contexts / timers
     connect(this->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &MainWindow::ps_onConnectionTerminated);
@@ -139,12 +128,15 @@ void MainWindow::initGuiSignals()
     // Remark: With new style, only methods of same signature can be connected
     // This is why we still have some "old" SIGNAL/SLOT connections here
 
-    // Main keypad
+    // main keypad
     connect(this->ui->comp_MainKeypadArea, SIGNAL(selectedMainInfoAreaDockWidget(CMainInfoAreaComponent::InfoArea)), this, SLOT(ps_setMainPage()));
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &MainWindow::ps_toggleNetworkConnection);
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &MainWindow::ps_changeWindowOpacity);
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, this->ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::selectedMainInfoAreaDockWidget, this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::selectArea);
+    connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
+
+    // command line
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::commandEntered, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::parseCommandLine);
 
     // menu
@@ -210,10 +202,8 @@ void MainWindow::stopUpdateTimersWhenDisconnected()
  */
 void MainWindow::stopAllTimers(bool disconnect)
 {
-    this->m_timerStatusBar->stop();
     this->m_timerContextWatchdog->stop();
     this->stopUpdateTimersWhenDisconnected();
     if (!disconnect) return;
-    this->disconnect(this->m_timerStatusBar);
     this->disconnect(this->m_timerContextWatchdog);
 }
