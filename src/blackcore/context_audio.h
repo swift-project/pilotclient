@@ -83,10 +83,16 @@ namespace BlackCore
         // KB: Is see some potential changes here, which we should do when we have the new 2.0 vatlib
         // 1. volume integrated in voice room?
         // 2. Value object for volumes CVolume / CVolumeList?
-        void changedAudioVolumes(QList<qint32> volumes);
+        void changedAudioVolumes(qint32 com1Volume, qint32 com2Volume);
 
         //! Mute changed
         void changedMute(bool muted);
+
+        //! Changed audio devices (e.g. device enabled/disable)
+        void changedAudioDevices(const BlackMisc::Audio::CAudioDeviceList &devices);
+
+        //! Changed slection of audio devices
+        void changedSelectedAudioDevices(const BlackMisc::Audio::CAudioDeviceList &devices);
 
     public slots:
         //! Get voice rooms for COM1, COM2:
@@ -182,6 +188,9 @@ namespace BlackCore
 
         //! Enable audio loopback
         virtual void enableAudioLoopback(bool enable = true) = 0;
+
+        //! Command line was entered
+        virtual bool parseCommandLine(const QString &commandLine) = 0;
     };
 }
 

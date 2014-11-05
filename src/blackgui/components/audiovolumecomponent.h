@@ -44,11 +44,14 @@ namespace BlackGui
             //! Mute toggle
             void ps_onMuteChanged(bool muted);
 
-            //! Volumes changed
-            void ps_onVolumeChanged(QList<qint32> volumes);
+            //! Volumes changed (elsewhere)
+            void ps_onVolumesChanged(qint32 com1Volume, qint32 com2Volume);
+
+            //! Change values because of volume GUI controls
+            void ps_changeVolume();
 
             //! Requested windows mixer
-            void ps_onWindowsMixer();
+            void ps_onWindowsMixerRequested();
 
         private:
             QScopedPointer<Ui::CAudioVolumeComponent> ui;

@@ -118,6 +118,19 @@ namespace BlackCore
         //! \copydoc IContextAudio::enableAudioLoopback()
         virtual void enableAudioLoopback(bool enable = true) override;
 
+        //! \addtogroup commandline
+        //! @{
+        //! <pre>
+        //! .mute                          mute             CContextAudio
+        //! .unmute                        unmute           CContextAudio
+        //! .vol .volume   volume 0..100   set volume       CContextAudio
+        //! .vol1 .volume1 volume 0..100   set volume COM1  CContextAudio
+        //! .vol2 .volume2 volume 0..100   set volume COM2  CContextAudio
+        //! </pre>
+        //! @}
+        //! \copydoc IContextAudio::parseCommandLine
+        virtual bool parseCommandLine(const QString &commandLine) override;
+
     protected:
         //! Constructor
         CContextAudio(CRuntimeConfig::ContextMode mode, CRuntime *runtime);
@@ -144,6 +157,9 @@ namespace BlackCore
         void ps_initNotificationSounds();
 
     private:
+        const qint32 MinUnmuteVolume = 20; //!< minimum volume when unmuted
+        const qint32 VoiceRoomEnabledVolume = 95; //!< voice room volume when enabled
+
         //! Connection in transition
         bool inTransitionState() const;
 
@@ -156,6 +172,6 @@ namespace BlackCore
         QPointer<IVoiceChannel> m_channelCom1;
         QPointer<IVoiceChannel> m_channelCom2;
     };
-}
+} // namespace
 
 #endif // guard

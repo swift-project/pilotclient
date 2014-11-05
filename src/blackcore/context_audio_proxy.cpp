@@ -39,7 +39,13 @@ namespace BlackCore
                                "changedVoiceRooms", this, SIGNAL(changedVoiceRooms(BlackMisc::Audio::CVoiceRoomList, bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
-                               "changedAudioVolumes", this, SIGNAL(changedAudioVolumes(QList<qint32>)));
+                               "changedAudioVolumes", this, SIGNAL(changedAudioVolumes(qint32, qint32)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                               "changedAudioDevices", this, SIGNAL(changedAudioDevices(BlackMisc::Audio::CAudioDeviceList)));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
+                               "changedSelectedAudioDevices", this, SIGNAL(changedSelectedAudioDevices(BlackMisc::Audio::CAudioDeviceList)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextAudio::ObjectPath(), IContextAudio::InterfaceName(),
                                "changedMute", this, SIGNAL(changedMute(bool)));
@@ -237,6 +243,14 @@ namespace BlackCore
     void CContextAudioProxy::enableAudioLoopback(bool enable)
     {
         return this->m_dBusInterface->callDBus(QLatin1Literal("enableAudioLoopback"), enable);
+    }
+
+    /*
+     * Parse command line
+     */
+    bool CContextAudioProxy::parseCommandLine(const QString &commandLine)
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("parseCommandLine"), commandLine);
     }
 
 } // namespace

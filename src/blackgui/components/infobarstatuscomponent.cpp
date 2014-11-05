@@ -170,13 +170,9 @@ namespace BlackGui
             }
         }
 
-        void CInfoBarStatusComponent::ps_onVolumesChanged(QList<qint32> volumes)
+        void CInfoBarStatusComponent::ps_onVolumesChanged(qint32 com1Volume, qint32 com2Volume)
         {
-            Q_ASSERT(volumes.count() == 2);
-            if (volumes.count() != 2) { return; }
-            qint32 v1 = volumes.at(0);
-            qint32 v2 = volumes.at(1);
-            bool pseudoMute = (v1 < 1 && v2 < 1);
+            bool pseudoMute = (com1Volume < 1 && com2Volume < 1);
             this->ps_onMuteChanged(pseudoMute);
         }
 
@@ -184,5 +180,5 @@ namespace BlackGui
         {
             this->ui->led_Audio->setOn(!muted);
         }
-    }
-}
+    } // namespace
+} // namespace

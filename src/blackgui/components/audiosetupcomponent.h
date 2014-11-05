@@ -65,6 +65,12 @@ namespace BlackGui
              */
             void ps_audioDeviceSelected(int index);
 
+            //! Current audio devices changed
+            void ps_onCurrentAudioDevicesChanged(const Audio::CAudioDeviceList &devices);
+
+            //! Audio devices changed
+            void ps_onAudioDevicesChanged(const Audio::CAudioDeviceList &devices);
+
         private:
             //! Audio test modes
             enum AudioTest

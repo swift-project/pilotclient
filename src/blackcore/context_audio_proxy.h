@@ -122,6 +122,10 @@ namespace BlackCore
 
         //! \copydoc IContextAudio::enableAudioLoopback()
         virtual void enableAudioLoopback(bool enable = true) override;
+
+        //! \copydoc IContextOwnAircraft::parseCommandLine
+        virtual bool parseCommandLine(const QString &commandLine) override;
+
     };
 }
 

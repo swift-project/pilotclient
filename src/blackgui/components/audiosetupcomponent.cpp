@@ -50,18 +50,23 @@ namespace BlackGui
 
             // based on audio context
             Q_ASSERT(this->getIContextAudio());
-            bool connected = false;
             if (this->getIContextAudio())
             {
                 this->initAudioDeviceLists();
-                connected = this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &CAudioSetupComponent::ps_audioTestUpdate);
-                Q_ASSERT(connected);
-                connected = this->connect(this->ui->cb_SetupAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
+
+                // the connects depend on initAudioDeviceLists
+                bool connected = this->connect(this->ui->cb_SetupAudioInputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
                 Q_ASSERT(connected);
                 connected = this->connect(this->ui->cb_SetupAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
                 Q_ASSERT(connected);
+
                 this->connect(this->ui->pb_SetupAudioMicrophoneTest, &QPushButton::clicked, this, &CAudioSetupComponent::ps_startAudioTest);
                 this->connect(this->ui->pb_SetupAudioSquelchTest, &QPushButton::clicked, this, &CAudioSetupComponent::ps_startAudioTest);
+
+                // context
+                this->connect(this->getIContextAudio(), &IContextAudio::audioTestCompleted, this, &CAudioSetupComponent::ps_audioTestUpdate);
+                this->connect(this->getIContextAudio(), &IContextAudio::changedAudioDevices, this, &CAudioSetupComponent::ps_onAudioDevicesChanged);
+                this->connect(this->getIContextAudio(), &IContextAudio::changedSelectedAudioDevices, this, &CAudioSetupComponent::ps_onCurrentAudioDevicesChanged);
             }
             this->reloadSettings();
         }
@@ -92,33 +97,9 @@ namespace BlackGui
          */
         void CAudioSetupComponent::initAudioDeviceLists()
         {
-            if (!this->getIContextAudio()) return;
-            this->ui->cb_SetupAudioOutputDevice->clear();
-            this->ui->cb_SetupAudioInputDevice->clear();
-
-            foreach(CAudioDevice device, this->getIContextAudio()->getAudioDevices())
-            {
-                if (device.getType() == CAudioDevice::InputDevice)
-                {
-                    this->ui->cb_SetupAudioInputDevice->addItem(device.toQString(true));
-                }
-                else if (device.getType() == CAudioDevice::OutputDevice)
-                {
-                    this->ui->cb_SetupAudioOutputDevice->addItem(device.toQString(true));
-                }
-            }
-
-            foreach(CAudioDevice device, this->getIContextAudio()->getCurrentAudioDevices())
-            {
-                if (device.getType() == CAudioDevice::InputDevice)
-                {
-                    this->ui->cb_SetupAudioInputDevice->setCurrentText(device.toQString(true));
-                }
-                else if (device.getType() == CAudioDevice::OutputDevice)
-                {
-                    this->ui->cb_SetupAudioOutputDevice->setCurrentText(device.toQString(true));
-                }
-            }
+            if (!this->getIContextAudio()) { return; }
+            this->ps_onAudioDevicesChanged(this->getIContextAudio()->getAudioDevices());
+            this->ps_onCurrentAudioDevicesChanged(this->getIContextAudio()->getCurrentAudioDevices());
         }
 
         /*
@@ -236,6 +217,38 @@ namespace BlackGui
             }
         }
 
+        void CAudioSetupComponent::ps_onCurrentAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceList &devices)
+        {
+            foreach(CAudioDevice device, devices)
+            {
+                if (device.getType() == CAudioDevice::InputDevice)
+                {
+                    this->ui->cb_SetupAudioInputDevice->setCurrentText(device.toQString(true));
+                }
+                else if (device.getType() == CAudioDevice::OutputDevice)
+                {
+                    this->ui->cb_SetupAudioOutputDevice->setCurrentText(device.toQString(true));
+                }
+            }
+        }
+
+        void CAudioSetupComponent::ps_onAudioDevicesChanged(const BlackMisc::Audio::CAudioDeviceList &devices)
+        {
+            this->ui->cb_SetupAudioOutputDevice->clear();
+            this->ui->cb_SetupAudioInputDevice->clear();
+
+            foreach(CAudioDevice device, devices)
+            {
+                if (device.getType() == CAudioDevice::InputDevice)
+                {
+                    this->ui->cb_SetupAudioInputDevice->addItem(device.toQString(true));
+                }
+                else if (device.getType() == CAudioDevice::OutputDevice)
+                {
+                    this->ui->cb_SetupAudioOutputDevice->addItem(device.toQString(true));
+                }
+            }
+        }
+
     } // namespace
 } // namespace
-

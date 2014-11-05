@@ -63,7 +63,7 @@ namespace BlackGui
             void ps_customAudioContextMenuRequested(const QPoint &position);
 
             //! Volumes changed 0..100
-            void ps_onVolumesChanged(QList<qint32> volumes);
+            void ps_onVolumesChanged(qint32 com1Volume, qint32 com2Volume);
 
             //! Mute changed
             void ps_onMuteChanged(bool muted);

@@ -14,6 +14,7 @@
 #include "blackmisc/voiceroomlist.h"
 #include "blackmisc/hotkeyfunction.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/simplecommandparser.h"
 
 #include <QTimer>
 
@@ -154,13 +155,27 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         Q_ASSERT(audioDevice.getType() != CAudioDevice::Unknown);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << audioDevice;
+        bool changed = false;
         if (audioDevice.getType() == CAudioDevice::InputDevice)
         {
-            this->m_voice->setInputDevice(audioDevice);
+            if (this->m_voice->getCurrentInputDevice() != audioDevice)
+            {
+                this->m_voice->setInputDevice(audioDevice);
+                changed = true;
+            }
         }
         else
         {
-            this->m_voice->setOutputDevice(audioDevice);
+            if (this->m_voice->getCurrentOutputDevice() != audioDevice)
+            {
+                this->m_voice->setOutputDevice(audioDevice);
+                changed = true;
+            }
+        }
+
+        if (changed)
+        {
+            emit changedSelectedAudioDevices(this->getCurrentAudioDevices());
         }
     }
 
@@ -176,28 +191,45 @@ namespace BlackCore
         qint32 vol1 = com1.getVolumeOutput();
         qint32 vol2 = com2.getVolumeOutput();
         this->setVolumes(vol1, vol2);
-
-        // enable / disable in the same step
-        m_channelCom1->switchAudioOutput(com1.isEnabled());
-        m_channelCom2->switchAudioOutput(com2.isEnabled());
     }
 
     void CContextAudio::setVolumes(qint32 com1Volume, qint32 com2Volume)
     {
         if (m_channelCom1->getVolume() == com1Volume && m_channelCom2->getVolume() == com2Volume) { return; }
 
-        m_channelCom1->setRoomOutputVolume(com1Volume);
-        m_channelCom2->setRoomOutputVolume(com2Volume);
-        m_channelCom1->switchAudioOutput(com1Volume < 1);
-        m_channelCom2->switchAudioOutput(com2Volume < 1);
-        emit changedAudioVolumes(QList<qint32>({com1Volume, com2Volume}));
+        bool enable1 = com1Volume > 0;
+        bool enable2 = com2Volume > 0;
+        bool muted = !enable1 && !enable2;
+
+        //! \todo m_channelCom1->setVolume here crashed, also what is correct setRoomOutputVolume or setVolume
+        m_channelCom1->setVolume(com1Volume);
+        m_channelCom2->setVolume(com2Volume);
+        this->setMute(muted);
+
+        emit changedAudioVolumes(com1Volume, com2Volume);
     }
 
     void CContextAudio::setMute(bool muted)
     {
         if (this->isMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
+
         m_channelCom1->switchAudioOutput(!muted);
         m_channelCom2->switchAudioOutput(!muted);
+        m_channelCom1->setRoomOutputVolume(muted ? 0 : VoiceRoomEnabledVolume);
+        m_channelCom2->setRoomOutputVolume(muted ? 0 : VoiceRoomEnabledVolume);
+
+        // adjust volume when unmuted
+        if (!muted)
+        {
+            bool adjusted = false;
+            qint32 v1 = this->m_channelCom1->getVolume();
+            qint32 v2 = this->m_channelCom2->getVolume();
+            if (this->m_channelCom1->getVolume() < MinUnmuteVolume) { v1 = MinUnmuteVolume; adjusted = true; }
+            if (this->m_channelCom2->getVolume() < MinUnmuteVolume) { v2 = MinUnmuteVolume; adjusted = true; }
+            if (adjusted) { this->setVolumes(v1, v2); }
+        }
+
+        // signal
         emit changedMute(muted);
     }
 
@@ -383,6 +415,54 @@ namespace BlackCore
         Q_ASSERT(this->m_voice);
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         m_voice->enableAudioLoopback(enable);
+    }
+
+    bool CContextAudio::parseCommandLine(const QString &commandLine)
+    {
+        static CSimpleCommandParser parser(
+        {
+            ".vol", ".volume",    // all volumes
+            ".vol1", ".volume1",  // COM1 volume
+            ".vol2", ".volume2",  // COM2 volume
+            ".mute",              // mute
+            ".unmute"             // unmute
+        });
+        if (commandLine.isEmpty()) return false;
+        parser.parse(commandLine);
+        if (!parser.isKnownCommand()) return false;
+
+        if (parser.matchesCommand(".mute"))
+        {
+            this->setMute(true);
+            return true;
+        }
+        else if (parser.matchesCommand(".unmute"))
+        {
+            this->setMute(false);
+            return true;
+        }
+        else if (parser.commandStartsWith("vol") && parser.countParts() > 1)
+        {
+            qint32 v = parser.toInt(1);
+            if (v >= 0 && v <= 100)
+            {
+                qint32 v1 = this->m_channelCom1->getVolume();
+                qint32 v2 = this->m_channelCom2->getVolume();
+                if (parser.commandEndsWith("1"))
+                {
+                    this->setVolumes(v, v2);
+                }
+                else if (parser.commandEndsWith("2"))
+                {
+                    this->setVolumes(v1, v);
+                }
+                else
+                {
+                    this->setVolumes(v, v);
+                }
+            }
+        }
+        return false;
     }
 
     /*

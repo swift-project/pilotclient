@@ -23,8 +23,16 @@ namespace BlackGui
             ui(new Ui::CAudioVolumeComponent)
         {
             ui->setupUi(this);
-            bool c = connect(this->ui->pb_ShowWinMixer, &QPushButton::pressed, this, &CAudioVolumeComponent::ps_onWindowsMixer);
+            bool c = connect(this->ui->pb_ShowWinMixer, &QPushButton::pressed, this, &CAudioVolumeComponent::ps_onWindowsMixerRequested);
             Q_ASSERT(c);
+
+            c = connect(this->ui->hs_VolumeCom1, &QSlider::sliderReleased, this, &CAudioVolumeComponent::ps_changeVolume);
+            Q_ASSERT(c);
+
+            c = connect(this->ui->hs_VolumeCom2, &QSlider::sliderReleased, this, &CAudioVolumeComponent::ps_changeVolume);
+            Q_ASSERT(c);
+
+            Q_UNUSED(c);
         }
 
         CAudioVolumeComponent::~CAudioVolumeComponent()
@@ -32,8 +40,13 @@ namespace BlackGui
 
         void CAudioVolumeComponent::runtimeHasBeenSet()
         {
+            // from audio context
             bool c = connect(this->getIContextAudio(), &IContextAudio::changedMute, this, &CAudioVolumeComponent::ps_onMuteChanged);
             Q_ASSERT(c);
+            connect(this->getIContextAudio(), &IContextAudio::changedAudioVolumes, this, &CAudioVolumeComponent::ps_onVolumesChanged);
+            Q_ASSERT(c);
+
+            // to audio audio context
             c = connect(this->ui->pb_Mute, &QPushButton::toggled, this->getIContextAudio(), &IContextAudio::setMute);
             Q_ASSERT(c);
         }
@@ -44,15 +57,24 @@ namespace BlackGui
             this->ui->pb_Mute->setChecked(muted);
         }
 
-        void CAudioVolumeComponent::ps_onVolumeChanged(QList<qint32> volumes)
+        void CAudioVolumeComponent::ps_onVolumesChanged(qint32 com1Volume, qint32 com2Volume)
         {
-            Q_ASSERT(volumes.length() == 2);
-            if (volumes.length() != 2) return;
-            this->ui->hs_VolumeCom1->setValue(volumes.at(0));
-            this->ui->hs_VolumeCom2->setValue(volumes.at(1));
+            this->ui->hs_VolumeCom1->setValue(com1Volume);
+            this->ui->hs_VolumeCom2->setValue(com2Volume);
+            this->ui->hs_VolumeCom1->setToolTip(QString::number(com1Volume));
+            this->ui->hs_VolumeCom2->setToolTip(QString::number(com2Volume));
         }
 
-        void CAudioVolumeComponent::ps_onWindowsMixer()
+        void CAudioVolumeComponent::ps_changeVolume()
+        {
+            qint32 v1 = this->ui->hs_VolumeCom1->value();
+            qint32 v2 = this->ui->hs_VolumeCom2->value();
+            this->ui->hs_VolumeCom1->setToolTip(QString::number(v1));
+            this->ui->hs_VolumeCom2->setToolTip(QString::number(v2));
+            this->getIContextAudio()->setVolumes(v1, v2);
+        }
+
+        void CAudioVolumeComponent::ps_onWindowsMixerRequested()
         {
             BlackMisc::Audio::startWindowsMixer();
         }
