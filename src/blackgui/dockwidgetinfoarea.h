@@ -48,7 +48,7 @@ namespace BlackGui
         virtual void addToContextMenu(QMenu *contextMenu) const override;
 
         //! \copydoc CDockWidget::initalFloating
-        virtual void initalFloating() override;
+        virtual void initialFloating() override;
 
     private:
         //! Find all embedded dock widget components. These are components marked as CDockWidgetInfoAreaComponent

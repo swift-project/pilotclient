@@ -85,7 +85,7 @@ namespace BlackGui
 
         void CAircraftComponent::runtimeHasBeenSet()
         {
-            connect(this->getParentInfoArea(), &CInfoArea::tabBarCurrentChanged, this, &CAircraftComponent::ps_infoAreaTabBarChanged);
+            connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAircraftComponent::ps_infoAreaTabBarChanged);
         }
 
         void CAircraftComponent::ps_infoAreaTabBarChanged(int index)

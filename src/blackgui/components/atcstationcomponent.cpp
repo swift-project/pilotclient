@@ -90,7 +90,7 @@ namespace BlackGui
                 this->connect(this->getIContextNetwork(), &IContextNetwork::changedAtcStationOnlineConnectionStatus, this, &CAtcStationComponent::changedAtcStationOnlineConnectionStatus);
                 this->connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CAtcStationComponent::ps_connectionStatusChanged);
             }
-            connect(this->getParentInfoArea(), &CInfoArea::tabBarCurrentChanged, this, &CAtcStationComponent::ps_infoAreaTabBarChanged);
+            connect(this->getParentInfoArea(), &CInfoArea::changedInfoAreaTabBarIndex, this, &CAtcStationComponent::ps_infoAreaTabBarChanged);
         }
 
         void CAtcStationComponent::update()

@@ -90,9 +90,9 @@ namespace BlackGui
         }
     }
 
-    void CDockWidgetInfoArea::initalFloating()
+    void CDockWidgetInfoArea::initialFloating()
     {
-        CDockWidget::initalFloating(); // initial floating to init position & size
+        CDockWidget::initialFloating(); // initial floating to init position & size
         QList<CEnableForDockWidgetInfoArea *> infoAreaDockWidgets = this->findEmbeddedDockWidgetInfoAreaComponents();
         foreach(CEnableForDockWidgetInfoArea * dwia, infoAreaDockWidgets)
         {

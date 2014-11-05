@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKCORE_VOICE_CHANNEL_H
 #define BLACKCORE_VOICE_CHANNEL_H
 

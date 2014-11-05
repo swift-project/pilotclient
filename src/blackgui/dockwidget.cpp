@@ -118,8 +118,9 @@ namespace BlackGui
         }
     }
 
-    void CDockWidget::initalFloating()
+    void CDockWidget::initialFloating()
     {
+
         // for the first time resize
         if (!this->m_preferredSizeWhenFloating.isNull())
         {

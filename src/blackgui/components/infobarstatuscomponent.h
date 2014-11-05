@@ -33,7 +33,7 @@ namespace BlackGui
             //! Constructor
             explicit CInfoBarStatusComponent(QWidget *parent = nullptr);
 
-            //!Constructor
+            //!Destructor
             ~CInfoBarStatusComponent();
 
             //! Init the LEDs

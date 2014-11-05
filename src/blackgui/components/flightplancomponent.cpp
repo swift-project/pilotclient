@@ -108,9 +108,13 @@ namespace BlackGui
 
             CFlightPlan::FlightRules rule = CFlightPlan::IFR;
             if (this->ui->rb_TypeIfr->isChecked())
+            {
                 rule = CFlightPlan::IFR;
+            }
             else if (this->ui->rb_TypeVfr->isChecked())
+            {
                 rule = CFlightPlan::VFR;
+            }
             flightPlan.setFlightRule(rule);
 
             v = ui->le_Callsign->text().trimmed();
@@ -129,7 +133,9 @@ namespace BlackGui
                 messages.push_back(CLogMessage().validationWarning("Flight plan route length exceeded (%1 chars max.)") << CFlightPlan::MaxRouteLength);
             }
             else
+            {
                 flightPlan.setRoute(v);
+            }
 
             v = ui->pte_Remarks->toPlainText().trimmed();
             if (v.isEmpty())
@@ -141,7 +147,9 @@ namespace BlackGui
                 messages.push_back(CLogMessage().validationWarning("Flight plan remarks length exceeded (%1 chars max.)") << CFlightPlan::MaxRemarksLength);
             }
             else
+            {
                 flightPlan.setRemarks(v);
+            }
 
             v = ui->le_EstimatedTimeEnroute->text();
             if (v.isEmpty() || v == defaultTime())
@@ -149,7 +157,9 @@ namespace BlackGui
                 messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_EstimatedTimeEnroute->text());
             }
             else
+            {
                 flightPlan.setEnrouteTime(v);
+            }
 
             v = ui->le_FuelOnBoard->text();
             if (v.isEmpty() || v == defaultTime())
@@ -157,7 +167,9 @@ namespace BlackGui
                 messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_FuelOnBorad->text());
             }
             else
+            {
                 flightPlan.setFuelTime(v);
+            }
 
             v = ui->le_TakeOffTimePlanned->text();
             if (v.isEmpty() || v == defaultTime())
@@ -165,7 +177,9 @@ namespace BlackGui
                 messages.push_back(CLogMessage().validationWarning("Missing %1") << this->ui->lbl_TakeOffTimePlanned->text());
             }
             else
+            {
                 flightPlan.setTakeoffTimePlanned(v);
+            }
 
             static const QRegExp withUnit("\\D+");
             v = ui->le_CrusingAltitude->text().trimmed();
@@ -181,7 +195,9 @@ namespace BlackGui
                 messages.push_back(CLogMessage().validationWarning("Wrong %1") << this->ui->lbl_CrusingAltitude->text());
             }
             else
+            {
                 flightPlan.setCruiseAltitude(cruisingAltitude);
+            }
 
             v = this->ui->le_AlternateAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
@@ -190,7 +206,9 @@ namespace BlackGui
                 flightPlan.setAlternateAirportIcao(defaultIcao());
             }
             else
+            {
                 flightPlan.setAlternateAirportIcao(v);
+            }
 
             v = this->ui->le_DestinationAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
@@ -199,7 +217,9 @@ namespace BlackGui
                 flightPlan.setDestinationAirportIcao(defaultIcao());
             }
             else
+            {
                 flightPlan.setDestinationAirportIcao(v);
+            }
 
             v = this->ui->le_CruiseTrueAirspeed->text();
             BlackMisc::PhysicalQuantities::CSpeed cruiseTAS;
@@ -210,7 +230,9 @@ namespace BlackGui
                 flightPlan.setDestinationAirportIcao(defaultIcao());
             }
             else
+            {
                 flightPlan.setCruiseTrueAirspeed(cruiseTAS);
+            }
 
             v = this->ui->le_OriginAirport->text();
             if (v.isEmpty() || v.endsWith(defaultIcao(), Qt::CaseInsensitive))
@@ -219,7 +241,9 @@ namespace BlackGui
                 flightPlan.setOriginAirportIcao(defaultIcao());
             }
             else
+            {
                 flightPlan.setOriginAirportIcao(v);
+            }
 
             return messages;
         }

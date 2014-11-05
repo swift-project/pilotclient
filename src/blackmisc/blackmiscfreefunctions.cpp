@@ -483,13 +483,13 @@ const QString &BlackMisc::localHostName()
  */
 const QString &BlackMisc::localHostNameEnvVariable()
 {
-    static const QString hostName =
-        QProcessEnvironment::systemEnvironment().value("COMPUTERNAME",
-                QProcessEnvironment::systemEnvironment().value("HOSTNAME"));
+    static const QString hostName = QProcessEnvironment::systemEnvironment().value("COMPUTERNAME", QProcessEnvironment::systemEnvironment().value("HOSTNAME"));
     return hostName;
 }
 
-
+/*
+ * Window mixer
+ */
 bool BlackMisc::Audio::startWindowsMixer()
 {
     QStringList parameterlist;

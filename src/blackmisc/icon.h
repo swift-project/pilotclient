@@ -27,7 +27,7 @@ namespace BlackMisc
         CIcon() = default;
 
         //! Constructor.
-        CIcon( CIcons::IconIndex index, const QString &descriptiveText) :
+        CIcon(CIcons::IconIndex index, const QString &descriptiveText) :
             m_index(static_cast<int>(index)), m_descriptiveText(descriptiveText) {}
 
         //! Get descriptive text
@@ -40,7 +40,7 @@ namespace BlackMisc
         QPixmap toPixmap() const;
 
         //! Icon set?
-        bool isSet() const { return this->m_index != static_cast<int>(CIcons::NotSet);}
+        bool isSet() const { return (this->m_index != static_cast<int>(CIcons::NotSet));}
 
         //! Rotate by n degrees
         void setRotation(int degrees) { this->m_rotateDegrees = degrees; }
@@ -52,7 +52,7 @@ namespace BlackMisc
         void setDescriptiveText(const QString &text) { this->m_descriptiveText = text; }
 
         //! Implicit conversion
-        operator QPixmap () const { return this->toPixmap(); }
+        operator QPixmap() const { return this->toPixmap(); }
 
     protected:
         //! \copydoc CValueObject::convertToQString

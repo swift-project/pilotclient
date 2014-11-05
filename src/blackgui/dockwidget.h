@@ -113,7 +113,7 @@ namespace BlackGui
         //! Widget is initialized by being a floating window for a shot period.
         //! \details Place where - when overidden - post initializations can take place.
         //! The GUI is already initialized, so all widget data are available.
-        virtual void initalFloating();
+        virtual void initialFloating();
 
     protected slots:
         //! Style sheet has changed
