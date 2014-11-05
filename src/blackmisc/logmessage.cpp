@@ -61,6 +61,30 @@ namespace BlackMisc
         return error(format);
     }
 
+    CLogMessage &CLogMessage::validation(const CStatusMessage &statusMessage)
+    {
+        switch (statusMessage.getSeverity())
+        {
+        case CStatusMessage::SeverityDebug:
+        case CStatusMessage::SeverityInfo:
+            return validationInfo(statusMessage.getMessage());
+        case CStatusMessage::SeverityWarning:
+            return validation(statusMessage.getMessage());
+        case CStatusMessage::SeverityError:
+            return error(statusMessage.getMessage());
+        default:
+            return validationInfo(statusMessage.getMessage());
+        }
+    }
+
+    void CLogMessage::validations(const CStatusMessageList &statusMessages)
+    {
+        foreach(CStatusMessage msg, statusMessages)
+        {
+            validation(msg);
+        }
+    }
+
     CLogMessage::operator CStatusMessage()
     {
         m_redundant = true;
@@ -80,7 +104,7 @@ namespace BlackMisc
         // should be safe, but still it's horrible, we could directly call qt_message_output instead
         QByteArray category = qtCategory();
         QDebug debug = ostream(category);
-        auto &stream = **reinterpret_cast<QTextStream**>(&debug); // should be safe because it is relying on Qt's guarantee of ABI compatibility
+        auto &stream = **reinterpret_cast<QTextStream **>(&debug); // should be safe because it is relying on Qt's guarantee of ABI compatibility
         stream << message();
     }
 
@@ -164,7 +188,10 @@ namespace BlackMisc
     QString CLogMessageHelper::addDebugFlag(const QString &category) { return addFlag(category, "debug"); }
     QString CLogMessageHelper::stripFlags(const QString &category) { return category.section("/", 0, 1); }
     bool CLogMessageHelper::hasRedundantFlag(const QString &category) { return hasFlag(category, "redundant"); }
-    bool CLogMessageHelper::hasDebugFlag(const QString &category) { return hasFlag(category, "debug") || category.isEmpty()
-        || (QLoggingCategory::defaultCategory() && category == QLoggingCategory::defaultCategory()->categoryName()); }
+    bool CLogMessageHelper::hasDebugFlag(const QString &category)
+    {
+        return hasFlag(category, "debug") || category.isEmpty()
+               || (QLoggingCategory::defaultCategory() && category == QLoggingCategory::defaultCategory()->categoryName());
+    }
 
 }
