@@ -40,9 +40,10 @@ namespace BlackMisc
          */
         CTransponder::TransponderMode CTransponder::modeFromString(const QString &modeString)
         {
-            if (modeString.startsWith("Ident", Qt::CaseInsensitive)) return StateIdent;
-            if (modeString.startsWith("Standby", Qt::CaseInsensitive) || modeString.startsWith("Stdby", Qt::CaseInsensitive)) return StateStandby;
+            if (modeString.startsWith("I", Qt::CaseInsensitive)) return StateIdent;
+            if (modeString.startsWith("S", Qt::CaseInsensitive)) return StateStandby;
             if (modeString.startsWith("Mode C", Qt::CaseInsensitive)) return ModeC;
+            if (modeString.startsWith("C", Qt::CaseInsensitive)) return ModeC;
             if (modeString.startsWith("Mode S", Qt::CaseInsensitive)) return ModeS;
             if (modeString.contains("Mode 1", Qt::CaseInsensitive)) return ModeMil1;
             if (modeString.contains("Mode 2", Qt::CaseInsensitive)) return ModeMil2;
