@@ -163,9 +163,9 @@ namespace BlackMisc
 
         // Compile-time assert for functions which require a meta tuple
         template <class Tu>
-        struct assertMeta { static_assert(std::is_void<Tu>::value, "Function expected a meta tuple, got a value tuple"); };
+        void assertMeta(const Tu &) { static_assert(std::is_void<Tu>::value, "Function expected a meta tuple, got a value tuple"); }
         template <class... Ts, qint64... Fs>
-        struct assertMeta<std::tuple<Attribute<Ts, Fs>...>> {};
+        void assertMeta(const std::tuple<Attribute<Ts, Fs>...> &) {}
 
         // Convert a meta tuple to a value tuple
         template <class Tu, size_t... Is>

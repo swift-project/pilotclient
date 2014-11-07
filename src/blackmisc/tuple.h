@@ -239,9 +239,9 @@ namespace BlackMisc
          *          Can be used like <CODE> std::tie </CODE>.
          */
         //! @{
-        static std::tuple<> toTuple(const T &object);
-        static std::tuple<> toTuple(T &object);
-        static std::tuple<> constToTuple(const T &object);
+        static std::tuple<> toTuple(const T &object) = delete;
+        static std::tuple<> toTuple(T &object) = delete;
+        static std::tuple<> constToTuple(const T &object) = delete;
         //! @}
 
         /*!
@@ -249,22 +249,22 @@ namespace BlackMisc
          * \brief   Returns a tuple of structs, each of which contains a reference to one of object's data members and its attched metadata.
          */
         //! @{
-        static std::tuple<> toMetaTuple(const T &object);
-        static std::tuple<> toMetaTuple(T &object);
+        static std::tuple<> toMetaTuple(const T &object) = delete;
+        static std::tuple<> toMetaTuple(T &object) = delete;
         //! @}
 
         /*!
          * \name    Static Private Member Functions
          * \brief   Returns an object with information extracted from the stringified macro argument.
          */
-        static const Parser &parser();
+        static const Parser &parser() = delete;
 
         /*!
          * \name    Static Private Member Functions
          * \brief   Returns a list of the names of the tuple members.
          * \deprecated This information is now embedded in the meta tuples.
          */
-        static const QStringList &jsonMembers();
+        static const QStringList &jsonMembers() = delete;
     };
 
     // Needed so that our qHash overload doesn't hide the qHash overloads in the global namespace.
@@ -402,7 +402,7 @@ namespace BlackMisc
     QJsonObject serializeJson(std::tuple<Ts...> tu)
     {
         QJsonObject json;
-        Private::assertMeta<std::tuple<Ts...>>();
+        Private::assertMeta(tu);
         Private::TupleHelper::serializeJson(json, tu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(tu));
         return json;
     }
@@ -414,7 +414,7 @@ namespace BlackMisc
     template <class... Ts>
     void deserializeJson(const QJsonObject &json, std::tuple<Ts...> tu)
     {
-        Private::assertMeta<std::tuple<Ts...>>();
+        Private::assertMeta(tu);
         Private::TupleHelper::deserializeJson(json, tu, Private::skipFlaggedIndices<TupleConverterBase::DisabledForJson>(tu));
     }
 
