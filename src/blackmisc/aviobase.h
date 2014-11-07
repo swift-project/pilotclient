@@ -18,7 +18,7 @@ namespace BlackMisc
     {
 
         //! \brief Base class for avionics
-        class CAvionicsBase : public BlackMisc::CValueObject
+        class CAvionicsBase : public CValueObjectStdTuple<CAvionicsBase>
         {
         protected:
             QString m_name; //!< name of the unit
@@ -32,32 +32,8 @@ namespace BlackMisc
                 this->m_name = name;
             }
 
-            //! \brief operator ==
-            bool operator ==(const CAvionicsBase &other) const;
-
-            //! \brief operator !=
-            bool operator !=(const CAvionicsBase &other) const
-            {
-                return !(other == (*this));
-            }
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override { return 0; }
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override { return this->CValueObject::isA(metaTypeId); }
-
-            //! \copydoc CValueObject::compareImpl(otherBase)
-            virtual int compareImpl(const CValueObject &otherBase) const override;
-
-            //! \copydoc CValueObject::marshallToDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::getValueHash()
-            virtual uint getValueHash() const override;
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override { Q_UNUSED(i18n); return ""; }
 
         public:
             //! \brief Name

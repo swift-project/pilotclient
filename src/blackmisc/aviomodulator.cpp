@@ -32,31 +32,6 @@ namespace BlackMisc
         }
 
         /*
-         * Register metadata
-         */
-        template <class AVIO> void CModulator<AVIO>::registerMetadata()
-        {
-            qRegisterMetaType<AVIO>();
-            qDBusRegisterMetaType<AVIO>();
-        }
-
-        /*
-         * To JSON
-         */
-        template <class AVIO> QJsonObject CModulator<AVIO>::toJson() const
-        {
-            return BlackMisc::serializeJson(CModulator::jsonMembers(), TupleConverter<CModulator>::toTuple(*this));
-        }
-
-        /*
-         * To JSON
-         */
-        template <class AVIO> void CModulator<AVIO>::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CModulator::jsonMembers(), TupleConverter<CModulator>::toTuple(*this));
-        }
-
-        /*
          * Property by index
          */
         template <class AVIO> QVariant CModulator<AVIO>::propertyByIndex(const CPropertyIndex &index) const
@@ -112,71 +87,6 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
-        }
-
-        /*
-         * Members
-         */
-        template <class AVIO> const QStringList &CModulator<AVIO>::jsonMembers()
-        {
-            return TupleConverter<CModulator>::jsonMembers();
-        }
-
-        /*
-         * Equal operator ==
-         */
-        template <class AVIO> bool CModulator<AVIO>::operator ==(const CModulator<AVIO> &other) const
-        {
-            if (this == &other) return true;
-            if (!CAvionicsBase::operator ==(other)) return false;
-            return TupleConverter<CModulator>::toTuple(*this) == TupleConverter<CModulator>::toTuple(other);
-        }
-
-        /*
-         * Equal operator !=
-         */
-        template <class AVIO> bool CModulator<AVIO>::operator !=(const CModulator<AVIO> &other) const
-        {
-            return !(other == (*this));
-        }
-
-        /*
-         * To DBus
-         */
-        template <class AVIO> void CModulator<AVIO>::marshallToDbus(QDBusArgument &argument) const
-        {
-            CAvionicsBase::marshallToDbus(argument);
-            argument << TupleConverter<CModulator>::toTuple(*this);
-        }
-
-        /*
-         * From DBus
-         */
-        template <class AVIO> void CModulator<AVIO>::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            CAvionicsBase::unmarshallFromDbus(argument);
-            argument >> TupleConverter<CModulator>::toTuple(*this);
-        }
-
-        /*
-         * Compare
-         */
-        template <class AVIO> int CModulator<AVIO>::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CModulator &>(otherBase);
-            int result = compare(TupleConverter<CModulator>::toTuple(*this), TupleConverter<CModulator>::toTuple(other));
-            return result == 0 ? CAvionicsBase::compareImpl(otherBase) : result;
-        }
-
-        /*
-         * Value hash
-         */
-        template <class AVIO> uint CModulator<AVIO>::getValueHash() const
-        {
-            QList<uint> hashs;
-            hashs << CAvionicsBase::getValueHash();
-            hashs << qHash(TupleConverter<CModulator>::toTuple(*this));
-            return BlackMisc::calculateHash(hashs, "CModulator");
         }
 
         // see here for the reason of thess forward instantiations

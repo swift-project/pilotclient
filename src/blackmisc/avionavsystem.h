@@ -19,7 +19,7 @@ namespace BlackMisc
     namespace Aviation
     {
         //! NAV system (radio navigation)
-        class CNavSystem : public CModulator<CNavSystem>
+        class CNavSystem : public CValueObjectStdTuple<CNavSystem, CModulator<CNavSystem>>
         {
         public:
             //! Default constructor
@@ -27,7 +27,7 @@ namespace BlackMisc
 
             //! Constructor
             CNavSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency):
-                CModulator(name, activeFrequency, standbyFrequency)
+                CValueObjectStdTuple(name, activeFrequency, standbyFrequency)
             { }
 
             //! Set active frequency
@@ -40,18 +40,6 @@ namespace BlackMisc
             void setFrequencyStandbyMHz(double frequencyMHz)
             {
                 this->CModulator::setFrequencyStandbyMHz(frequencyMHz);
-            }
-
-            //! Equal operator ==
-            bool operator ==(const CNavSystem &other) const
-            {
-                return this->CModulator::operator ==(other);
-            }
-
-            //! Unequal operator !=
-            bool operator !=(const CNavSystem &other) const
-            {
-                return this->CModulator::operator !=(other);
             }
 
             //! Valid civil aviation frequency?

@@ -23,7 +23,7 @@ namespace BlackMisc
         /*!
          * ADF system ("for NDBs")
          */
-        class CAdfSystem : public CModulator<CAdfSystem>
+        class CAdfSystem : public CValueObjectStdTuple<CAdfSystem, CModulator<CAdfSystem>>
         {
         public:
             //! Default constructor
@@ -31,7 +31,7 @@ namespace BlackMisc
 
             //! Constructor
             CAdfSystem(const QString &name, const PhysicalQuantities::CFrequency &activeFrequency, const PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
-                CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
+                CValueObjectStdTuple(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency)
             { }
 
             //! Valid aviation frequency?
@@ -40,19 +40,6 @@ namespace BlackMisc
                 double fr = f.valueRounded(PhysicalQuantities::CFrequencyUnit::kHz(), 3);
                 return fr >= 190.0 && fr <= 1750.0;
             }
-
-            //! Equal operator ==
-            bool operator ==(const CAdfSystem &otherSystem) const
-            {
-                return this->CModulator::operator ==(otherSystem);
-            }
-
-            //! Equal operator !=
-            bool operator !=(const CAdfSystem &otherSystem) const
-            {
-                return this->CModulator::operator !=(otherSystem);
-            }
-
 
             //! ADF1 unit
             static CAdfSystem GetAdf1System(double activeFrequencyKHz, double standbyFrequencyKHz = -1)

@@ -25,7 +25,7 @@ namespace BlackMisc
         /*!
          * Base class for COM, NAV, Squawk units.
          */
-        template <class AVIO> class CModulator : public CAvionicsBase
+        template <class AVIO> class CModulator : public CValueObjectStdTuple<CModulator<AVIO>, CAvionicsBase>
         {
         public:
             //! Column indexes
@@ -89,38 +89,20 @@ namespace BlackMisc
             //! Enabled?
             void setEnabled(bool enable) { this->m_enabled = enable;}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this->derived()); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(derived(), variant); }
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! Register metadata
-            static void registerMetadata();
-
-            //! Members
-            static const QStringList &jsonMembers();
-
         protected:
             //! Default constructor
             CModulator() :
-                CAvionicsBase("default") {}
+                CModulator::CValueObjectStdTuple("default") {}
 
             //! Constructor
             CModulator(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency) :
-                CAvionicsBase(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
+                CModulator::CValueObjectStdTuple(name), m_frequencyActive(activeFrequency), m_frequencyStandby(standbyFrequency) {}
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override
@@ -156,15 +138,6 @@ namespace BlackMisc
                 frequencyMHz = Math::CMath::round(frequencyMHz, 3);
                 this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
-
-            //! operator ==
-            bool operator ==(const CModulator &other) const;
-
-            //! operator !=
-            bool operator !=(const CModulator &other) const;
-
-            //! \copydoc CValueObject::compareImpl(otherBase)
-            virtual int compareImpl(const CValueObject &otherBase) const override;
 
             //! COM1
             static const QString &NameCom1()
@@ -228,15 +201,6 @@ namespace BlackMisc
                 static BlackMisc::PhysicalQuantities::CFrequency f;
                 return f;
             }
-
-            //! \copydoc CValueObject::marshallFromDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::getValueHash()
-            virtual uint getValueHash() const override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CModulator)

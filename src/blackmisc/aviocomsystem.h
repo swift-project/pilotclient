@@ -20,7 +20,7 @@ namespace BlackMisc
         /*!
          * COM system (aka "radio")
          */
-        class CComSystem : public CModulator<CComSystem>
+        class CComSystem : public CValueObjectStdTuple<CComSystem, CModulator<CComSystem>>
         {
         public:
             //! Channel spacing frequency
@@ -36,7 +36,7 @@ namespace BlackMisc
 
             //! Constructor
             CComSystem(const QString &name, const BlackMisc::PhysicalQuantities::CFrequency &activeFrequency, const BlackMisc::PhysicalQuantities::CFrequency &standbyFrequency = CModulator::FrequencyNotSet()):
-                CModulator(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency), m_channelSpacing(ChannelSpacing25KHz)
+                CValueObjectStdTuple(name, activeFrequency, standbyFrequency == CModulator::FrequencyNotSet() ? activeFrequency : standbyFrequency), m_channelSpacing(ChannelSpacing25KHz)
             { }
 
             //! Set active frequency
@@ -72,24 +72,6 @@ namespace BlackMisc
                 this->toggleActiveStandby();
                 this->setFrequencyActive(BlackMisc::PhysicalQuantities::CPhysicalQuantitiesConstants::FrequencyInternationalAirDistress());
             }
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! Members
-            static const QStringList &jsonMembers();
-
-            //! operator ==
-            bool operator ==(const CComSystem &other) const;
-
-            //! operator !=
-            bool operator !=(const CComSystem &other) const;
 
             //! COM1 unit
             static CComSystem getCom1System(double activeFrequencyMHz, double standbyFrequencyMHz = -1)
@@ -161,15 +143,6 @@ namespace BlackMisc
         protected:
             //! \copydoc CAvionicsBase::validValues
             virtual bool validValues() const override;
-
-            //! \copydoc CValueObject::marshallFromDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CComSystem)

@@ -21,7 +21,7 @@ namespace BlackMisc
         /*!
          * Transponder
          */
-        class CTransponder : public CAvionicsBase
+        class CTransponder : public CValueObjectStdTuple<CTransponder, CAvionicsBase>
         {
         public:
             //! Transponder codes
@@ -46,23 +46,23 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CTransponder() : CAvionicsBase("transponder"), m_transponderCode(0), m_transponderMode(StateStandby) {}
+            CTransponder() : CValueObjectStdTuple("transponder"), m_transponderCode(0), m_transponderMode(StateStandby) {}
 
             //! Constructor
             CTransponder(const QString &name, qint32 transponderCode, TransponderMode transponderMode) :
-                CAvionicsBase(name), m_transponderCode(transponderCode), m_transponderMode(transponderMode)
+                CValueObjectStdTuple(name), m_transponderCode(transponderCode), m_transponderMode(transponderMode)
             {  }
 
             //! Constructor with transponder mode as string
             CTransponder(const QString &name, qint32 transponderCode, QString transponderMode) :
-                CAvionicsBase(name), m_transponderCode(transponderCode), m_transponderMode(StateStandby)
+                CValueObjectStdTuple(name), m_transponderCode(transponderCode), m_transponderMode(StateStandby)
             {
                 this->setModeAsString(transponderMode);
             }
 
             //! Constructor, code as string
             CTransponder(const QString &name, QString transponderCode, TransponderMode transponderMode) :
-                CAvionicsBase(name), m_transponderCode(0), m_transponderMode(transponderMode)
+                CValueObjectStdTuple(name), m_transponderCode(0), m_transponderMode(transponderMode)
             {
                 bool ok = false;
                 this->m_transponderCode = transponderCode.toUInt(&ok);
@@ -71,7 +71,7 @@ namespace BlackMisc
 
             //! Constructor
             CTransponder(const QString &name, QString transponderCode, QString transponderMode) :
-                CAvionicsBase(name), m_transponderCode(0), m_transponderMode(StateStandby)
+                CValueObjectStdTuple(name), m_transponderCode(0), m_transponderMode(StateStandby)
             {
                 bool ok = false;
                 this->m_transponderCode = transponderCode.toUInt(&ok);
@@ -136,38 +136,11 @@ namespace BlackMisc
             //! Set IFR
             void setIFR() { this->m_transponderCode = 2000; }
 
-            //! operator ==
-            bool operator ==(const CTransponder &other) const
-            {
-                return
-                    this->m_transponderCode == other.m_transponderCode &&
-                    this->getTransponderMode() == other.getTransponderMode() &&
-                    this->CAvionicsBase::operator ==(other);
-            }
-
-            //! operator !=
-            bool operator !=(const CTransponder &other) const { return !((*this) == other); }
-
             //! Transponder unit
             static CTransponder getStandardTransponder(qint32 transponderCode, TransponderMode mode)
             {
                 return CTransponder("Transponder", transponderCode, mode);
             }
-
-            //! \copydoc CValueObject::getValueHash()
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override  { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -175,17 +148,11 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! JSON member names
-            static const QStringList &jsonMembers();
-
             //! Is valid transponder code?
             static bool isValidTransponderCode(const QString &transponderCode);
 
             //! Is valid transponder code?
             static bool isValidTransponderCode(qint32 transponderMode);
-
-            //! Register metadata
-            static void registerMetadata();
 
         protected:
             //! Default value?
@@ -193,15 +160,6 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::marshallFromDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CTransponder)

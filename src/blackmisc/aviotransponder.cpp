@@ -112,54 +112,6 @@ namespace BlackMisc
         }
 
         /*
-         * Marshall
-         */
-        void CTransponder::marshallToDbus(QDBusArgument &argument) const
-        {
-            CAvionicsBase::marshallToDbus(argument);
-            argument << TupleConverter<CTransponder>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall
-         */
-        void CTransponder::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            CAvionicsBase::unmarshallFromDbus(argument);
-            argument >> TupleConverter<CTransponder>::toTuple(*this);
-        }
-
-        /*
-         * Hash
-         */
-        uint CTransponder::getValueHash() const
-        {
-            QList<uint> hashs;
-            hashs << CAvionicsBase::getValueHash();
-            hashs << qHash(TupleConverter<CTransponder>::toTuple(*this));
-            return BlackMisc::calculateHash(hashs, "CTransponder");
-        }
-
-        /*
-         * Compare
-         */
-        int CTransponder::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CTransponder &>(otherBase);
-            int result = compare(TupleConverter<CTransponder>::toTuple(*this), TupleConverter<CTransponder>::toTuple(other));
-            return result == 0 ? CAvionicsBase::compareImpl(otherBase) : result;
-        }
-
-        /*
-         * Register metadata of unit and quantity
-         */
-        void CTransponder::registerMetadata()
-        {
-            qRegisterMetaType<CTransponder>();
-            qDBusRegisterMetaType<CTransponder>();
-        }
-
-        /*
          * Mode as readable string
          */
         const QString &CTransponder::modeAsString(CTransponder::TransponderMode mode)
@@ -198,30 +150,6 @@ namespace BlackMisc
                 qFatal("Illegal Transponder Mode");
             }
             return m;
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CTransponder::jsonMembers()
-        {
-            return TupleConverter<CTransponder>::jsonMembers();
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CTransponder::toJson() const
-        {
-            return BlackMisc::serializeJson(CTransponder::jsonMembers(), TupleConverter<CTransponder>::toTuple(*this));
-        }
-
-        /*
-         * From Json
-         */
-        void CTransponder::convertFromJson(const QJsonObject &json)
-        {
-            BlackMisc::deserializeJson(json, CTransponder::jsonMembers(), TupleConverter<CTransponder>::toTuple(*this));
         }
 
         /*
