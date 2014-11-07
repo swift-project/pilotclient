@@ -41,8 +41,26 @@
    <item>
     <widget class="QComboBox" name="cb_SelcalPairs2"/>
    </item>
+   <item>
+    <widget class="QLabel" name="lbl_ValidCodeIcon">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../blackmisc/blackmisc.qrc">:/diagona/icons/diagona/icons/tick-button.png</pixmap>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../blackmisc/blackmisc.qrc"/>
+ </resources>
  <connections/>
 </ui>

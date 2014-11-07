@@ -10,7 +10,9 @@
 #include "selcalcodeselector.h"
 #include "ui_selcalcodeselector.h"
 #include "blackmisc/avselcal.h"
+#include "blackmisc/icons.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 
 namespace BlackGui
@@ -20,12 +22,14 @@ namespace BlackGui
     {
         this->ui->setupUi(this);
         this->resetSelcalCodes(true);
+        this->setValidityHint();
 
         bool c;
-        c = connect(this->ui->cb_SelcalPairs1, SIGNAL(currentIndexChanged(int)), this, SIGNAL(valueChanged()));
+        c = connect(this->ui->cb_SelcalPairs1, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_selcalIndexChanged()));
         Q_ASSERT(c);
-        c = connect(this->ui->cb_SelcalPairs2, SIGNAL(currentIndexChanged(int)), this, SIGNAL(valueChanged()));
+        c = connect(this->ui->cb_SelcalPairs2, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_selcalIndexChanged()));
         Q_ASSERT(c);
+        Q_UNUSED(c);
     }
 
     CSelcalCodeSelector::~CSelcalCodeSelector()
@@ -90,4 +94,24 @@ namespace BlackGui
         this->ui->cb_SelcalPairs1->setCurrentIndex(0);
         this->ui->cb_SelcalPairs2->setCurrentIndex(0);
     }
-}
+
+    void CSelcalCodeSelector::ps_selcalIndexChanged()
+    {
+        this->setValidityHint();
+        emit valueChanged();
+    }
+
+    void CSelcalCodeSelector::setValidityHint()
+    {
+        if (this->hasValidCode())
+        {
+            this->ui->lbl_ValidCodeIcon->setPixmap(CIcons::tick16());
+            this->ui->lbl_ValidCodeIcon->setToolTip("valid SELCAL");
+        }
+        else
+        {
+            this->ui->lbl_ValidCodeIcon->setPixmap(CIcons::cross16());
+            this->ui->lbl_ValidCodeIcon->setToolTip("invalid SELCAL");
+        }
+    }
+}  // namespace

@@ -57,8 +57,15 @@ namespace BlackGui
         //! Value has been changed
         void valueChanged();
 
+    private slots:
+        //! SELCAL changed
+        void ps_selcalIndexChanged();
+
     private:
         QScopedPointer<Ui::CSelcalCodeSelector> ui;
+
+        //! Set valid/invalid icon
+        void setValidityHint();
     };
 }
 
