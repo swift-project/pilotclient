@@ -171,7 +171,7 @@ namespace BlackGui
             CSelcal selcal = this->getSelcal();
             if (!selcal.isValid())
             {
-                CLogMessage().validationWarning("Invalid SELCAL codde");
+                CLogMessage().validationWarning("Invalid SELCAL code");
             }
             else if (this->getIContextAudio())
             {
