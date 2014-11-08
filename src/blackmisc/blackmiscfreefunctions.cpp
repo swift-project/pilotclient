@@ -28,61 +28,6 @@
 #include <QSysInfo>
 
 /*
- * Metadata for PQs
- */
-void BlackMisc::PhysicalQuantities::registerMetadata()
-{
-    CMeasurementUnit::registerMetadata();
-    CAcceleration::registerMetadata();
-    CAccelerationUnit::registerMetadata();
-    CAngle::registerMetadata();
-    CAngleUnit::registerMetadata();
-    CFrequency::registerMetadata();
-    CFrequencyUnit::registerMetadata();
-    CLength::registerMetadata();
-    CLengthUnit::registerMetadata();
-    CMass::registerMetadata();
-    CMassUnit::registerMetadata();
-    CPressure::registerMetadata();
-    CPressureUnit::registerMetadata();
-    CSpeed::registerMetadata();
-    CSpeedUnit::registerMetadata();
-    CTemperature::registerMetadata();
-    CTemperatureUnit::registerMetadata();
-    CTime::registerMetadata();
-    CTimeUnit::registerMetadata();
-    CPqString::registerMetadata();
-}
-
-/*
- * Metadata for aviation
- */
-void BlackMisc::Aviation::registerMetadata()
-{
-    CComSystem::registerMetadata();
-    CNavSystem::registerMetadata();
-    CAdfSystem::registerMetadata();
-    CAltitude::registerMetadata();
-    CTransponder::registerMetadata();
-    CHeading::registerMetadata();
-    CTrack::registerMetadata();
-    CInformationMessage::registerMetadata();
-    CCallsign::registerMetadata();
-    CCallsignList::registerMetadata();
-    CAtcStation::registerMetadata();
-    CAtcStationList::registerMetadata();
-    CAircraft::registerMetadata();
-    CAircraftList::registerMetadata();
-    CAirport::registerMetadata();
-    CAirportList::registerMetadata();
-    CAircraftSituation::registerMetadata();
-    CAircraftIcao::registerMetadata();
-    CAirportIcao::registerMetadata();
-    CSelcal::registerMetadata();
-    CFlightPlan::registerMetadata();
-}
-
-/*
  * Metadata for Math
  */
 void BlackMisc::Math::registerMetadata()
@@ -103,25 +48,6 @@ void BlackMisc::Geo::registerMetadata()
     CCoordinateGeodetic::registerMetadata();
     CLatitude::registerMetadata();
     CLongitude::registerMetadata();
-}
-
-/*
- * Metadata for Network
- */
-void BlackMisc::Network::registerMetadata()
-{
-    CUser::registerMetadata();
-    CUserList::registerMetadata();
-    CServer::registerMetadata();
-    CServerList::registerMetadata();
-    CTextMessage::registerMetadata();
-    CTextMessageList::registerMetadata();
-    CClient::registerMetadata();
-    CClientList::registerMetadata();
-    CAircraftModel::registerMetadata();
-    CVoiceCapabilities::registerMetadata();
-    CAircraftMapping::registerMetadata();
-    CAircraftMappingList::registerMetadata();
 }
 
 /*
