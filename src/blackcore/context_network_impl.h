@@ -126,6 +126,12 @@ namespace BlackCore
         //! \copydoc IContextNetwork::getOtherClientForCallsigns
         virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const override;
 
+        //! \copydoc IContextNetwork::getVatsimFsdServers
+        virtual BlackMisc::Network::CServerList getVatsimFsdServers() const override;
+
+        //! \copydoc IContextNetwork::getVatsimVoiceServers
+        virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const override;
+
         //! \copydoc IContextNetwork::requestDataUpdates
         virtual void requestDataUpdates()override;
 
@@ -151,18 +157,18 @@ namespace BlackCore
         }
 
     private:
-        CAirspaceMonitor    *m_airspace;
-        BlackCore::INetwork *m_network;
-        INetwork::ConnectionStatus m_currentStatus; //!< used to detect pending connections
+        CAirspaceMonitor    *m_airspace = nullptr;
+        BlackCore::INetwork *m_network  = nullptr;
+        INetwork::ConnectionStatus m_currentStatus = INetwork::Disconnected; //!< used to detect pending connections
 
         BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 750, 2 };
         BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 750, 4 };
-        BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged { this, &IContextNetwork::changedAircraftsInRange, &IContextNetwork::changedAircraftsInRangeDigest, 750, 4 };
+        BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftsInRange, &IContextNetwork::changedAircraftsInRangeDigest, 750, 4 };
 
         // for reading XML and VATSIM data files
-        CVatsimBookingReader  *m_vatsimBookingReader;
-        CVatsimDataFileReader *m_vatsimDataFileReader;
-        QTimer *m_dataUpdateTimer; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
+        CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;
+        CVatsimDataFileReader *m_vatsimDataFileReader = nullptr;
+        QTimer *m_dataUpdateTimer = nullptr; //!< general updates such as ATIS, frequencies, see requestDataUpdates()
 
         //! Get network settings
         BlackMisc::Settings::CSettingsNetwork getNetworkSettings() const

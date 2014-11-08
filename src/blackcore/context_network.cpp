@@ -26,7 +26,7 @@ namespace BlackCore
             return new BlackCore::CContextNetworkProxy(BlackCore::CDBusServer::ServiceName, conn, mode, runtime);
         case CRuntimeConfig::NotUsed:
         default:
-            return new BlackCore::CContextNetworkEmpty(true, runtime);
+            return new BlackCore::CContextNetworkEmpty(runtime);
         }
     }
 

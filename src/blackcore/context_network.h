@@ -137,8 +137,14 @@ namespace BlackCore
         //! Information about other clients
         virtual BlackMisc::Network::CClientList getOtherClients() const = 0;
 
-        //! Clients for given callsign, e.g. to test direct model
+        //! Clients for given callsign, e.g. to test/fetch direct aircraft model
         virtual BlackMisc::Network::CClientList getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const = 0;
+
+        //! Known voice servers, available when data file was first read
+        virtual BlackMisc::Network::CServerList getVatsimVoiceServers() const = 0;
+
+        //! Known FSD servers, available when data file was first read
+        virtual BlackMisc::Network::CServerList getVatsimFsdServers() const = 0;
 
         /*!
          * Connect to Network

@@ -12,14 +12,13 @@
 
 #include "blackcore/context_runtime_config.h"
 #include "blackcore/context_runtime.h"
+#include "blackmisc/logmessage.h"
 #include <QObject>
 #include <QDateTime>
 
 namespace BlackCore
 {
-    /*!
-     * \brief Base for all context classes
-     */
+    //! Base for all context classes
     class CContext : public QObject
     {
     public:
@@ -127,6 +126,12 @@ namespace BlackCore
         QString buildPathAndContextId(const QString &path) const
         {
             return QString(path) + ":" + QString::number(this->getUniqueId());
+        }
+
+        //! Empty context called
+        void logEmptyContextWarning(const QString &functionName) const
+        {
+            CLogMessage(this, CLogCategory::contextSlot()).warning("Empty context called, details: %1") << functionName;
         }
 
         //! Standard message when status message is returned in empty context

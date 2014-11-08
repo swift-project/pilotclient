@@ -39,8 +39,7 @@ namespace BlackCore
      * Init this context
      */
     CContextNetwork::CContextNetwork(CRuntimeConfig::ContextMode mode, CRuntime *runtime) :
-        IContextNetwork(mode, runtime), m_airspace(nullptr), m_network(nullptr), m_currentStatus(INetwork::Disconnected),
-        m_vatsimBookingReader(nullptr), m_vatsimDataFileReader(nullptr), m_dataUpdateTimer(nullptr)
+        IContextNetwork(mode, runtime)
     {
         Q_ASSERT(this->getRuntime());
         Q_ASSERT(this->getRuntime()->getIContextSettings());
@@ -259,11 +258,31 @@ namespace BlackCore
     }
 
     /*
-     * Other clients
+     * Other clients for callsign
      */
     CClientList CContextNetwork::getOtherClientsForCallsigns(const CCallsignList &callsigns) const
     {
         return this->m_airspace->getOtherClientsForCallsigns(callsigns);
+    }
+
+    /*
+     * VATSIM FSD servers
+     */
+    CServerList CContextNetwork::getVatsimFsdServers() const
+    {
+        Q_ASSERT(this->m_vatsimDataFileReader);
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        return this->m_vatsimDataFileReader->getFsdServers();
+    }
+
+    /*
+     * VATSIM Voice servers
+     */
+    CServerList CContextNetwork::getVatsimVoiceServers() const
+    {
+        Q_ASSERT(this->m_vatsimDataFileReader);
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        return this->m_vatsimDataFileReader->getVoiceServers();
     }
 
     /*

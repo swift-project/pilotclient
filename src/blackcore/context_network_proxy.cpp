@@ -101,6 +101,16 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1Literal("getOtherClients"));
     }
 
+    BlackMisc::Network::CServerList CContextNetworkProxy::getVatsimFsdServers() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1Literal("getVatsimFsdServers"));
+    }
+
+    BlackMisc::Network::CServerList CContextNetworkProxy::getVatsimVoiceServers() const
+    {
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CServerList>(QLatin1Literal("getVatsimVoiceServers"));
+    }
+
     BlackMisc::Network::CClientList CContextNetworkProxy::getOtherClientsForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Network::CClientList>(QLatin1Literal("getOtherClientsForCallsigns"), callsigns);
