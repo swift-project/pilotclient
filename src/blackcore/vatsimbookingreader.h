@@ -46,7 +46,7 @@ namespace BlackCore
 
         //! Parse received bookings
         //! \threadsafe
-        void parseBookings(QNetworkReply *nwReply);
+        void parseBookings(QNetworkReply *nwReplyPtr);
 
     signals:
         //! Bookings have been read and converted to BlackMisc::Aviation::CAtcStationList

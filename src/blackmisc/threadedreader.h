@@ -34,8 +34,8 @@ namespace BlackMisc
         //! Destructor
         virtual ~CThreadedReader()
         {
-            delete m_updateTimer;
             this->stop();
+            delete m_updateTimer;
         }
 
         //! Thread safe, set update timestamp
@@ -59,10 +59,13 @@ namespace BlackMisc
         virtual void stop()
         {
             if (this->isStopped()) return;
+
+            // thread safe stopping timer and mark as stopped
             this->setStopFlag();
             this->setInterval(0);
 
             // shutdown pending
+            QWriteLocker(&this->m_lock);
             if (this->m_pendingFuture.isRunning())
             {
                 // cancel does not work with all futures, especially not with QConcurrent::run
@@ -78,7 +81,6 @@ namespace BlackMisc
 
             // cancel or stop flag above should terminate QFuture
             this->m_pendingFuture.waitForFinished();
-
         }
 
         //! Thread safe, is in state stopped?
@@ -114,8 +116,7 @@ namespace BlackMisc
 
     protected:
         //! Constructor
-        CThreadedReader() :
-            m_updateTimer(nullptr), m_stopped(false), m_pendingNetworkReply(nullptr), m_lock(QReadWriteLock::Recursive)
+        CThreadedReader() : m_lock(QReadWriteLock::Recursive)
         {
             this->m_updateTimer = new QTimer();
         }
@@ -144,12 +145,14 @@ namespace BlackMisc
             this->m_stopped = true;
         }
 
-        QDateTime m_updateTimestamp; //!< when was file / resource read
-        QTimer *m_updateTimer;       //!< update times
-        bool m_stopped;              //!< mark as stopped, threads should terminate
-        QFuture<FutureRet> m_pendingFuture;   //!< optional future to be stopped
-        QNetworkReply *m_pendingNetworkReply; //!< optional future to be stopped
-        mutable QReadWriteLock m_lock;        //!< lock
+        QTimer *m_updateTimer = nullptr;                //!< update timer
+        mutable QReadWriteLock m_lock;                  //!< lock
+
+    private:
+        QDateTime m_updateTimestamp;                    //!< when was file / resource read
+        bool m_stopped = false;                         //!< mark as stopped, threads should terminate
+        QFuture<FutureRet> m_pendingFuture;             //!< optional future to be stopped
+        QNetworkReply *m_pendingNetworkReply = nullptr; //!< optional network reply to be stopped
     };
 } // namespace
 

@@ -10,6 +10,7 @@
 #include "blackmisc/sequence.h"
 #include "blackmisc/avatcstation.h"
 #include "blackmisc/nwuser.h"
+#include "blackmisc/logmessage.h"
 #include "vatsimbookingreader.h"
 
 #include <QtXml/QDomElement>
@@ -56,12 +57,17 @@ namespace BlackCore
     /*
      * Parse bookings
      */
-    void CVatsimBookingReader::parseBookings(QNetworkReply *nwReply)
+    void CVatsimBookingReader::parseBookings(QNetworkReply *nwReplyPtr)
     {
+        // wrap pointer, make sure any exit cleans up reply
+        // required to use delete later as object is created in a different thread
+        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+
         // Worker thread, make sure to write no members here!
         if (this->isStopped())
         {
-            qDebug() << "terminated" << Q_FUNC_INFO;
+            CLogMessage(this).debug() << Q_FUNC_INFO;
+            CLogMessage(this).info("terminated booking parsing process"); // for users
             return; // stop, terminate straight away, ending thread
         }
 
@@ -69,6 +75,7 @@ namespace BlackCore
         {
             static const QString timestampFormat("yyyy-MM-dd HH:mm:ss");
             QString xmlData = nwReply->readAll();
+            nwReply->close(); // close asap
             QDomDocument doc;
             QDateTime updateTimestamp = QDateTime::currentDateTimeUtc();
 
@@ -95,7 +102,8 @@ namespace BlackCore
                 {
                     if (this->isStopped())
                     {
-                        qDebug() << "terminated" << Q_FUNC_INFO;
+                        CLogMessage(this).debug() << Q_FUNC_INFO;
+                        CLogMessage(this).info("terminated booking parsing process"); // for users
                         return; // stop, terminate straight away, ending thread
                     }
 
@@ -148,11 +156,10 @@ namespace BlackCore
                 this->setUpdateTimestamp(updateTimestamp); // thread safe update
                 emit this->dataRead(bookedStations);
             } // node
-        } // content
-
-        nwReply->close();
-        nwReply->deleteLater();
-
+        } else {
+            // with errors
+            nwReply->abort();
+        }
     } // method
 
 } // namespace

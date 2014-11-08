@@ -53,6 +53,10 @@ namespace BlackCore
         //! \threadsafe
         BlackMisc::Network::CServerList getVoiceServers() const;
 
+        //! Get all FSD servers
+        //! \threadsafe
+        BlackMisc::Network::CServerList getFsdServers() const;
+
         //! Users for callsign(s)
         //! \threadsafe
         BlackMisc::Network::CUserList getUsersForCallsigns(const BlackMisc::Aviation::CCallsignList &callsigns);
@@ -98,6 +102,7 @@ namespace BlackCore
         int m_currentUrlIndex;
         QNetworkAccessManager *m_networkManager;
         BlackMisc::Network::CServerList      m_voiceServers;
+        BlackMisc::Network::CServerList      m_fsdServers;
         BlackMisc::Aviation::CAtcStationList m_atcStations;
         BlackMisc::Aviation::CAircraftList   m_aircrafts;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
@@ -109,13 +114,17 @@ namespace BlackCore
         enum Section
         {
             SectionNone,
-            SectionVoiceServer,
+            SectionFsdServers,
+            SectionVoiceServers,
             SectionClients,
             SectionGeneral
         };
 
+        //! Get current section
+        static Section currentLineToSection(const QString &currentLine);
+
         //! Parse the VATSIM data file in backgroun
-        void parseVatsimFileInBackground(QNetworkReply *nwReply);
+        void parseVatsimFileInBackground(QNetworkReply *nwReplyPtr);
 
     signals:
         //! Data have been read

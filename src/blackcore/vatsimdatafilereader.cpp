@@ -11,6 +11,7 @@
 #include "blackmisc/avatcstation.h"
 #include "blackmisc/nwuser.h"
 #include "blackmisc/nwserver.h"
+#include "blackmisc/logmessage.h"
 #include "vatsimdatafilereader.h"
 
 #include <QRegularExpression>
@@ -67,6 +68,12 @@ namespace BlackCore
     {
         QReadLocker rl(&this->m_lock);
         return this->m_voiceServers;
+    }
+
+    CServerList CVatsimDataFileReader::getFsdServers() const
+    {
+        QReadLocker rl(&this->m_lock);
+        return this->m_fsdServers;
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignList &callsigns)
@@ -153,12 +160,17 @@ namespace BlackCore
      * Data file read from XML
      * Example: http://info.vroute.net/vatsim-data.txt
      */
-    void CVatsimDataFileReader::parseVatsimFileInBackground(QNetworkReply *nwReply)
+    void CVatsimDataFileReader::parseVatsimFileInBackground(QNetworkReply *nwReplyPtr)
     {
+        // wrap pointer, make sure any exit cleans up reply
+        // required to use delete later as object is created in a different thread
+        QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+
         // Worker thread, make sure to write only synced here!
         if (this->isStopped())
         {
-            qDebug() << "terminated" << Q_FUNC_INFO;
+            CLogMessage(this).debug() << Q_FUNC_INFO;
+            CLogMessage(this).info("terminated VATSIM file parsing process"); // for users
             return; // stop, terminate straight away, ending thread
         }
 
@@ -166,12 +178,15 @@ namespace BlackCore
         if (nwReply->error() == QNetworkReply::NoError)
         {
             const QString dataFileData = nwReply->readAll();
+            nwReply->close(); // close asap
+
             if (dataFileData.isEmpty()) return;
             QStringList lines = dataFileData.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
             if (lines.isEmpty()) return;
 
             // build on local vars for thread safety
             CServerList     voiceServers;
+            CServerList     fsdServers;
             CAtcStationList atcStations;
             CAircraftList   aircrafts;
             QMap<CCallsign, CVoiceCapabilities> voiceCapabilities;
@@ -183,7 +198,8 @@ namespace BlackCore
             {
                 if (this->isStopped())
                 {
-                    qDebug() << "terminated" << Q_FUNC_INFO;
+                    CLogMessage(this).debug() << Q_FUNC_INFO;
+                    CLogMessage(this).info("terminated booking parsing process"); // for users
                     return; // stop, terminate straight away, ending thread
                 }
 
@@ -204,24 +220,10 @@ namespace BlackCore
                 }
                 else if (currentLine.startsWith("!"))
                 {
-                    if (currentLine.contains("GENERAL", Qt::CaseInsensitive))
-                    {
-                        section = SectionGeneral;
-                    }
-                    else if (currentLine.contains("VOICE SERVERS", Qt::CaseInsensitive))
-                    {
-                        section = SectionVoiceServer;
-                    }
-                    else if (currentLine.contains("CLIENTS", Qt::CaseInsensitive))
-                    {
-                        section = SectionClients;
-                    }
-                    else
-                    {
-                        section = SectionNone;
-                    }
+                    section = currentLineToSection(currentLine);
                     continue;
                 }
+
                 switch (section)
                 {
                 case SectionClients:
@@ -305,42 +307,61 @@ namespace BlackCore
                             bool alreadyRead = (updateTimestampFromFile == this->getUpdateTimestamp());
                             if (alreadyRead) { return; }// still same data, terminate
                         }
-                        break;
-                    case SectionVoiceServer:
-                        {
-                            QStringList voiceServerParts = currentLine.split(':');
-                            if (voiceServerParts.size() < 3) continue;
-                            BlackMisc::Network::CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1, CUser());
-                            voiceServers.push_back(voiceServer);
-                        }
-                        break;
-                    case SectionNone:
-                    default:
-                        break;
                     }
-                } // for each
+                    break;
+                case SectionFsdServers:
+                    {
+                        // ident:hostname_or_IP:location:name:clients_connection_allowed:
+                        QStringList fsdServerParts = currentLine.split(':');
+                        if (fsdServerParts.size() < 4) continue;
+                        if (!fsdServerParts.at(3).trimmed().contains('1')) continue; // allowed?
+                        BlackMisc::Network::CServer fsdServer(fsdServerParts.at(0), fsdServerParts.at(2), fsdServerParts.at(1), 6809, CUser("id", "real name", "email", "password"));
+                        fsdServers.push_back(fsdServer);
+                    }
+                    break;
+                case SectionVoiceServers:
+                    {
+                        // hostname_or_IP:location:name:clients_connection_allowed:type_of_voice_server:
+                        QStringList voiceServerParts = currentLine.split(':');
+                        if (voiceServerParts.size() < 3) continue;
+                        if (!voiceServerParts.at(3).trimmed().contains('1')) continue; // allowed?
+                        BlackMisc::Network::CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1, CUser());
+                        voiceServers.push_back(voiceServer);
+                    }
+                    break;
+                case SectionNone:
+                default:
+                    break;
+
+                } // switch section
 
                 // this part needs to be synchronized
                 {
                     QWriteLocker wl(&this->m_lock);
-                    this->m_updateTimestamp = updateTimestampFromFile;
+                    this->setUpdateTimestamp(updateTimestampFromFile);
                     this->m_aircrafts = aircrafts;
                     this->m_atcStations = atcStations;
                     this->m_voiceServers = voiceServers;
+                    this->m_fsdServers = fsdServers;
                     this->m_voiceCapabilities = voiceCapabilities;
                 }
-            } // read success
+            } // for each line
 
-            nwReply->close();
-            nwReply->deleteLater(); // we are responsible for deleting this
-
-            emit this->dataRead();
             // warnings, if required
             if (!illegalIcaoCodes.isEmpty())
             {
-                qWarning() << "Illegal ICAO code(s) in VATSIM data file:" << illegalIcaoCodes.join(", ");
+                CLogMessage(this).info("Illegal / ignored ICAO code(s) in VATSIM data file: %1") << illegalIcaoCodes.join(", ");
             }
+
+            // data read finished
+            emit this->dataRead();
         }
+        else
+        {
+            // network error
+            nwReply->abort();
+        }
+
     }
 
     const QMap<QString, QString> CVatsimDataFileReader::clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes)
@@ -354,5 +375,14 @@ namespace BlackCore
             parts.insert(clientSectionAttributes.at(i).toLower(), clientParts.at(i));
         }
         return parts;
+    }
+
+    CVatsimDataFileReader::Section CVatsimDataFileReader::currentLineToSection(const QString &currentLine)
+    {
+        if (currentLine.contains("!GENERAL", Qt::CaseInsensitive)) { return SectionGeneral; }
+        if (currentLine.contains("!VOICE SERVERS", Qt::CaseInsensitive)) { return SectionVoiceServers; }
+        if (currentLine.contains("!SERVERS", Qt::CaseInsensitive)) { return SectionFsdServers; }
+        if (currentLine.contains("!CLIENTS", Qt::CaseInsensitive)) { return SectionClients; }
+        return SectionNone;
     }
 } // namespace
