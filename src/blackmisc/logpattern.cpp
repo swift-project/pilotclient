@@ -198,6 +198,7 @@ namespace BlackMisc
             case StartsWith:    return getString().startsWith(other.getPrefix());
             case EndsWith:      return getString().endsWith(other.getSuffix());
             case Contains:      return getString().contains(other.getSubstring());
+            default:            ;
             }
         case AnyOf:
             switch (other.m_strategy)
@@ -206,6 +207,7 @@ namespace BlackMisc
             case StartsWith:    return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.startsWith(other.getPrefix()); });
             case EndsWith:      return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.endsWith(other.getSuffix()); });
             case Contains:      return std::all_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.contains(other.getSubstring()); });
+            default:            ;
             }
         case AllOf:
             switch (other.m_strategy)
@@ -216,24 +218,29 @@ namespace BlackMisc
             case StartsWith:    return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.startsWith(other.getPrefix()); });
             case EndsWith:      return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.endsWith(other.getSuffix()); });
             case Contains:      return std::any_of(m_strings.begin(), m_strings.end(), [ & ](const QString &s) { return s.contains(other.getSubstring()); });
+            default:            ;
             }
         case StartsWith:
             switch (other.m_strategy)
             {
             case StartsWith:    return getPrefix().startsWith(other.getPrefix()) && getPrefix().size() > other.getPrefix().size();
             case Contains:      return getPrefix().contains(other.getSubstring());
+            default:            ;
             }
         case EndsWith:
             switch (other.m_strategy)
             {
             case EndsWith:      return getSuffix().endsWith(other.getSuffix()) && getSuffix().size() > other.getSuffix().size();
             case Contains:      return getSuffix().contains(other.getSubstring());
+            default:            ;
             }
         case Contains:
             switch (other.m_strategy)
             {
             case Contains:      return getSubstring().contains(other.getSubstring()) && getSubstring().size() > other.getSubstring().size();
+            default:            ;
             }
+        default:;
         }
         return false;
     }
