@@ -22,14 +22,14 @@ namespace BlackMisc
     {
 
         //! 3x3 matrix
-        class CMatrix3x3 : public CMatrixBase<CMatrix3x3, 3, 3>
+        class CMatrix3x3 : public CValueObjectStdTuple<CMatrix3x3, CMatrixBase<CMatrix3x3, 3, 3>>
         {
         public:
             //! Constructor
             CMatrix3x3() = default;
 
             //! Init by fill value
-            explicit CMatrix3x3(double fillValue) : CMatrixBase(fillValue) {}
+            explicit CMatrix3x3(double fillValue) : CValueObjectStdTuple(fillValue) {}
 
             //! Stupid, but handy constructor by single row column values
             explicit CMatrix3x3(double r1c1, double r1c2, double r1c3,

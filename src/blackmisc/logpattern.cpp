@@ -245,53 +245,14 @@ namespace BlackMisc
         return false;
     }
 
-    void CLogPattern::registerMetadata()
-    {
-        qRegisterMetaType<CLogPattern>();
-        qDBusRegisterMetaType<CLogPattern>();
-    }
-
-    uint CLogPattern::getValueHash() const
-    {
-        return 0; //TODO qHash(TupleConverter<CLogPattern>::toMetaTuple(*this));
-    }
-
-    bool CLogPattern::operator ==(const CLogPattern &other) const
-    {
-        return TupleConverter<CLogPattern>::toMetaTuple(*this) == TupleConverter<CLogPattern>::toMetaTuple(other);
-    }
-
-    bool CLogPattern::operator !=(const CLogPattern &other) const
-    {
-        return TupleConverter<CLogPattern>::toMetaTuple(*this) != TupleConverter<CLogPattern>::toMetaTuple(other);
-    }
-
     QString CLogPattern::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
         return {}; //TODO
     }
 
-    int CLogPattern::getMetaTypeId() const
-    {
-        return qMetaTypeId<CLogPattern>();
-    }
-
-    bool CLogPattern::isA(int metaTypeId) const
-    {
-        if (metaTypeId == qMetaTypeId<CLogPattern>()) { return true; }
-        return this->CValueObject::isA(metaTypeId);
-    }
-
-    int CLogPattern::compareImpl(const CValueObject &otherBase) const
-    {
-        //const auto &other = static_cast<const CLogPattern &>(otherBase);
-        return 0; //TODO compare(TupleConverter<CLogPattern>::toMetaTuple(*this), TupleConverter<CLogPattern>::toMetaTuple(other));
-    }
-
     void CLogPattern::marshallToDbus(QDBusArgument &argument) const
     {
-        //TODO argument << TupleConverter<CLogPattern>::toMetaTuple(*this);
         auto begin = Iterators::makeTransformIterator(m_severities.begin(), [](CStatusMessage::StatusSeverity s) { return static_cast<int>(s); });
         QList<int> severities = makeRange(begin, m_severities.end());
         argument << severities << m_strategy << m_strings.toList();
@@ -299,7 +260,6 @@ namespace BlackMisc
 
     void CLogPattern::unmarshallFromDbus(const QDBusArgument &argument)
     {
-        //TODO argument >> TupleConverter<CLogPattern>::toMetaTuple(*this);
         QList<int> severities;
         QStringList strings;
         argument >> severities >> m_strategy >> strings;

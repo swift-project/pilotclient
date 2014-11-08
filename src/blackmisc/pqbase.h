@@ -27,12 +27,26 @@
 
 namespace BlackMisc
 {
+    namespace PhysicalQuantities { class CMeasurementUnit; }
+
+    //! \private
+    template <> struct CValueObjectStdTuplePolicy<PhysicalQuantities::CMeasurementUnit> : public CValueObjectStdTuplePolicy<>
+    {
+        using MetaType = Policy::MetaType::DefaultAndQList;
+        using Equals = Policy::Equals::None;
+        using LessThan = Policy::LessThan::None;
+        using Compare = Policy::Compare::None;
+        using Hash = Policy::Hash::Own;
+        using DBus = Policy::DBus::Own;
+        using Json = Policy::Json::None;
+    };
+
     namespace PhysicalQuantities
     {
         /*!
          * Base class for all units, such as meter, hertz.
          */
-        class CMeasurementUnit : public CValueObject
+        class CMeasurementUnit : public CValueObjectStdTuple<CMeasurementUnit>
         {
         protected:
             /*!
@@ -237,15 +251,6 @@ namespace BlackMisc
                 return this->getSymbol(i18n);
             }
 
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
             //! \copydoc CValueObject::marshallToDbus
             virtual void marshallToDbus(QDBusArgument &argument) const override
             {
@@ -271,12 +276,6 @@ namespace BlackMisc
 
             //! Unequal operator !=
             bool operator != (const CMeasurementUnit &other) const;
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override

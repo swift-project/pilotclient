@@ -26,12 +26,26 @@
 
 namespace BlackMisc
 {
+    namespace PhysicalQuantities { template <class, class> class CPhysicalQuantity; }
+
+    //! \private
+    template <class MU, class PQ> struct CValueObjectStdTuplePolicy<PhysicalQuantities::CPhysicalQuantity<MU, PQ>> : public CValueObjectStdTuplePolicy<>
+    {
+        using MetaType = Policy::MetaType::DefaultAndQList;
+        using Equals = Policy::Equals::None;
+        using LessThan = Policy::LessThan::None;
+        using Compare = Policy::Compare::Own;
+        using Hash = Policy::Hash::Own;
+        using DBus = Policy::DBus::Own;
+        using Json = Policy::Json::Own;
+    };
+
     namespace PhysicalQuantities
     {
         /*!
          * A physical quantity such as "5m", "20s", "1500ft/s"
          */
-        template <class MU, class PQ> class CPhysicalQuantity : public BlackMisc::CValueObject
+        template <class MU, class PQ> class CPhysicalQuantity : public CValueObjectStdTuple<CPhysicalQuantity<MU, PQ>>
         {
         public:
             //! Index
@@ -203,12 +217,6 @@ namespace BlackMisc
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override  { return QVariant::fromValue(*this->derived()); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant<PQ>(derived(), variant); }
-
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
@@ -233,15 +241,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex(const QVariant, int)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
-            //! Register metadata of unit and quantity
-            static void registerMetadata();
-
         protected:
             //! Constructor with double
             CPhysicalQuantity(double value, const MU &unit);
-
-            //! Copy constructor
-            CPhysicalQuantity(const CPhysicalQuantity &other) = default;
 
             //! Constructor by parsed string, e.g. 10m
             CPhysicalQuantity(const QString &unitString) : m_value(0.0), m_unit(MU::nullUnit())
@@ -251,12 +253,6 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
 
             //! \copydoc CValueObject::compareImpl
             virtual int compareImpl(const CValueObject &other) const override;

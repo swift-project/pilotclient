@@ -21,20 +21,20 @@ namespace BlackMisc
         /*!
          * Physical unit frequency
          */
-        class CFrequency : public CPhysicalQuantity<CFrequencyUnit, CFrequency>
+        class CFrequency : public CValueObjectStdTuple<CFrequency, CPhysicalQuantity<CFrequencyUnit, CFrequency>>
         {
         public:
             //! Default constructor
-            CFrequency() : CPhysicalQuantity(0, CFrequencyUnit::defaultUnit()) {}
+            CFrequency() : CValueObjectStdTuple(0, CFrequencyUnit::defaultUnit()) {}
 
             //! Init by double value
-            CFrequency(double value, const CFrequencyUnit &unit) : CPhysicalQuantity(value, unit) {}
+            CFrequency(double value, const CFrequencyUnit &unit) : CValueObjectStdTuple(value, unit) {}
 
             //! Init by int value converted to double
             CFrequency(int value, const CFrequencyUnit &unit) : CFrequency(double(value), unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CFrequency(const QString &unitString) : CPhysicalQuantity(unitString) {}
+            CFrequency(const QString &unitString) : CValueObjectStdTuple(unitString) {}
         };
     }
 }

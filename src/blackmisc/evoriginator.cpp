@@ -23,19 +23,6 @@ namespace BlackMisc
         {
         }
 
-        // Hash
-        uint COriginator::getValueHash() const
-        {
-            return qHash(TupleConverter<COriginator>::toTuple(*this));
-        }
-
-        // Register metadata
-        void COriginator::registerMetadata()
-        {
-            qRegisterMetaType<COriginator>();
-            qDBusRegisterMetaType<COriginator>();
-        }
-
         bool COriginator::isFromLocalMachine() const
         {
             return QDBusConnection::localMachineId() == getMachineId();
@@ -66,47 +53,5 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * metaTypeId
-         */
-        int COriginator::getMetaTypeId() const
-        {
-            return qMetaTypeId<COriginator>();
-        }
-
-        /*
-         * is a
-         */
-        bool COriginator::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<COriginator>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int COriginator::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const COriginator &>(otherBase);
-            return compare(TupleConverter<COriginator>::toTuple(*this), TupleConverter<COriginator>::toTuple(other));
-        }
-
-        /*
-         * Marshall to DBus
-         */
-        void COriginator::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<COriginator>::toTuple(*this);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void COriginator::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<COriginator>::toTuple(*this);
-        }
     }
 }

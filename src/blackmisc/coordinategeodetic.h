@@ -81,7 +81,7 @@ namespace BlackMisc
         //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
         //! \sa http://http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf (page 5)
         //! \sa http://en.wikipedia.org/wiki/Geodetic_datum#Vertical_datum
-        class CCoordinateGeodetic : public CValueObject, public ICoordinateGeodetic
+        class CCoordinateGeodetic : public CValueObjectStdTuple<CCoordinateGeodetic>, public ICoordinateGeodetic
         {
         public:
             //! Properties by index
@@ -98,21 +98,6 @@ namespace BlackMisc
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         public:
             //! Default constructor
@@ -137,12 +122,6 @@ namespace BlackMisc
             //! \sa see http://www.gmat.unsw.edu.au/snap/gps/clynch_pdfs/coordcvt.pdf page 5
             //! \sa http://www.esri.com/news/arcuser/0703/geoid1of3.html
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const { return this->m_geodeticHeight; }
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override  { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -173,27 +152,6 @@ namespace BlackMisc
 
             //! Set height (ellipsoidal or geodetic height)
             void setGeodeticHeight(const BlackMisc::PhysicalQuantities::CLength &height) { this->m_geodeticHeight = height; }
-
-            //! Equal operator ==
-            bool operator ==(const CCoordinateGeodetic &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CCoordinateGeodetic &other) const;
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! Register metadata
-            static void registerMetadata();
-
-            //! Members
-            static const QStringList &jsonMembers();
 
             //! Coordinate by WGS84 position data
             static CCoordinateGeodetic fromWgs84(const QString &latitudeWgs84, const QString &longitudeWgs84, const BlackMisc::PhysicalQuantities::CLength &geodeticHeight = {});

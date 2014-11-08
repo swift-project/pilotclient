@@ -12,13 +12,24 @@
 
 namespace BlackMisc
 {
+    namespace Geo { class CCoordinateEcef; }
+
+    //! \private
+    template <> struct CValueObjectStdTuplePolicy<Geo::CCoordinateEcef> : public CValueObjectStdTuplePolicy<>
+    {
+        using Compare = Policy::Compare::Own;
+        using Hash = Policy::Hash::Own;
+        using DBus = Policy::DBus::Own;
+        using Json = Policy::Json::Own;
+    };
+
     namespace Geo
     {
 
         /*!
          * \brief Earth centered, earth fixed position
          */
-        class CCoordinateEcef : public BlackMisc::Math::CVector3DBase<CCoordinateEcef>
+        class CCoordinateEcef : public CValueObjectStdTuple<CCoordinateEcef, Math::CVector3DBase<CCoordinateEcef>>
         {
         public:
             /*!
@@ -29,12 +40,12 @@ namespace BlackMisc
             /*!
              * \brief Constructor by values
              */
-            CCoordinateEcef(double x, double y, double z) : CVector3DBase(x, y, z) {}
+            CCoordinateEcef(double x, double y, double z) : CValueObjectStdTuple(x, y, z) {}
 
             /*!
              * \brief Constructor by math vector
              */
-            explicit CCoordinateEcef(const BlackMisc::Math::CVector3D vector) : CVector3DBase(vector.i(), vector.j(), vector.k()) {}
+            explicit CCoordinateEcef(const BlackMisc::Math::CVector3D vector) : CValueObjectStdTuple(vector.i(), vector.j(), vector.k()) {}
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }

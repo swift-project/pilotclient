@@ -21,64 +21,52 @@ namespace BlackMisc
         /*!
          * Base class for latitude / longitude
          */
-        template <class LATorLON> class CEarthAngle : public BlackMisc::PhysicalQuantities::CAngle
+        template <class LATorLON> class CEarthAngle : public CValueObjectStdTuple<CEarthAngle<LATorLON>, PhysicalQuantities::CAngle>
         {
         public:
-            //! Equal operator ==
-            bool operator==(const CEarthAngle &latOrLon) const
-            {
-                return this->CAngle::operator ==(latOrLon);
-            }
-
-            //! Not equal operator !=
-            bool operator!=(const CEarthAngle &latOrLon) const
-            {
-                return this->CAngle::operator !=(latOrLon);
-            }
-
             //! Plus operator +=
             CEarthAngle &operator +=(const CEarthAngle &latOrLon)
             {
-                this->CAngle::operator +=(latOrLon);
+                this->PhysicalQuantities::CAngle::operator +=(latOrLon);
                 return *this;
             }
 
             //! Minus operator-=
             CEarthAngle &operator -=(const CEarthAngle &latOrLon)
             {
-                this->CAngle::operator -=(latOrLon);
+                this->PhysicalQuantities::CAngle::operator -=(latOrLon);
                 return *this;
             }
 
             //! Multiply operator *=
             CEarthAngle operator *=(double multiply)
             {
-                this->CAngle::operator *=(multiply);
+                this->PhysicalQuantities::CAngle::operator *=(multiply);
                 return *this;
             }
 
             //! Greater operator >
             bool operator >(const CEarthAngle &latOrLon) const
             {
-                return this->CAngle::operator >(latOrLon);
+                return this->PhysicalQuantities::CAngle::operator >(latOrLon);
             }
 
             //! Less operator <
             bool operator <(const CEarthAngle &latOrLon) const
             {
-                return this->CAngle::operator >(latOrLon);
+                return this->PhysicalQuantities::CAngle::operator >(latOrLon);
             }
 
             //! Less equal operator <=
             bool operator <=(const CEarthAngle &latOrLon) const
             {
-                return this->CAngle::operator <=(latOrLon);
+                return this->PhysicalQuantities::CAngle::operator <=(latOrLon);
             }
 
             //! Greater equal operator >=
             bool operator >=(const CEarthAngle &latOrLon) const
             {
-                return this->CAngle::operator >=(latOrLon);
+                return this->PhysicalQuantities::CAngle::operator >=(latOrLon);
             }
 
             //! Plus operator +
@@ -108,15 +96,6 @@ namespace BlackMisc
             //! \copydoc CValueObject::toIcon
             CIcon toIcon() const override;
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*derived()); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(derived(), variant); }
-
-            //! Register metadata
-            static void registerMetadata();
-
             /*!
              * Latitude / Longitude from a WGS string such as
              * \param wgsCoordinate 50° 2′ 0″ N / 8° 34′ 14″ E
@@ -126,39 +105,18 @@ namespace BlackMisc
 
         protected:
             //! Default constructor
-            CEarthAngle() : CAngle(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
+            CEarthAngle() : CEarthAngle::CValueObjectStdTuple(0.0, BlackMisc::PhysicalQuantities::CAngleUnit::deg()) {}
 
             //! Init by double value
-            CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit) {}
+            CEarthAngle(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle::CValueObjectStdTuple(value, unit) {}
 
             //! Init by CAngle value
-            CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CAngle(angle) {}
+            CEarthAngle(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle::CValueObjectStdTuple(angle) {}
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override
             {
                 return this->valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CAngleUnit::deg(), 6, i18n);
-            }
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override
-            {
-                this->CAngle::marshallToDbus(argument);
-            }
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override
-            {
-                this->CAngle::unmarshallFromDbus(argument);
             }
 
         private:

@@ -17,6 +17,20 @@
 
 namespace BlackMisc
 {
+    namespace Aviation { class CAdfSystem; }
+
+    //! \private
+    template <> struct CValueObjectStdTuplePolicy<Aviation::CAdfSystem> : public CValueObjectStdTuplePolicy<>
+    {
+        using MetaType = Policy::MetaType::Default;
+        using Equals = Policy::Equals::None;
+        using LessThan = Policy::LessThan::None;
+        using Compare = Policy::Compare::Own;
+        using Hash = Policy::Hash::Own;
+        using DBus = Policy::DBus::Own;
+        using Json = Policy::Json::Own;
+    };
+
     namespace Aviation
     {
 

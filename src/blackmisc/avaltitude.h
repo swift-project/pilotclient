@@ -16,13 +16,24 @@
 
 namespace BlackMisc
 {
+    namespace Aviation { class CAltitude; }
+
+    //! \private
+    template <> struct CValueObjectStdTuplePolicy<Aviation::CAltitude> : public CValueObjectStdTuplePolicy<>
+    {
+        using Compare = Policy::Compare::MetaTuple;
+        using Hash = Policy::Hash::MetaTuple;
+        using DBus = Policy::DBus::MetaTuple;
+        using Json = Policy::Json::MetaTuple;
+    };
+
     namespace Aviation
     {
         /*!
          * Altitude as used in aviation, can be AGL or MSL altitude
          * \remarks Intentionally allowing +/- CLength , and >= / <= CLength.
          */
-        class CAltitude : public BlackMisc::PhysicalQuantities::CLength
+        class CAltitude : public CValueObjectStdTuple<CAltitude, PhysicalQuantities::CLength>
         {
         public:
             /*!
@@ -39,39 +50,18 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n) const override;
 
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
         public:
             //! Default constructor: 0 Altitude true
-            CAltitude() : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
+            CAltitude() : CValueObjectStdTuple(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel) {}
 
             //! Constructor
-            CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : BlackMisc::PhysicalQuantities::CLength(value, unit), m_datum(datum) {}
+            CAltitude(double value, ReferenceDatum datum, const BlackMisc::PhysicalQuantities::CLengthUnit &unit) : CValueObjectStdTuple(value, unit), m_datum(datum) {}
 
             //! Altitude as string
             CAltitude(const QString &altitudeAsString, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode = BlackMisc::PhysicalQuantities::CPqString::SeparatorsLocale);
 
             //! Constructor by CLength
-            CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, ReferenceDatum datum) : BlackMisc::PhysicalQuantities::CLength(altitude), m_datum(datum) {}
-
-            //! Equal operator ==
-            bool operator ==(const CAltitude &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CAltitude &other) const;
+            CAltitude(BlackMisc::PhysicalQuantities::CLength altitude, ReferenceDatum datum) : CValueObjectStdTuple(altitude), m_datum(datum) {}
 
             //! AGL Above ground level?
             bool isAboveGroundLevel() const { return AboveGround == this->m_datum; }
@@ -91,18 +81,6 @@ namespace BlackMisc
             //! Flightlevel to MSL
             void toMeanSeaLevel();
 
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
             //! \copydoc CValueObject::parseFromString(const QString &value)
             virtual void parseFromString(const QString &value) override;
 
@@ -115,11 +93,6 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAltitude)
             ReferenceDatum m_datum; //!< MSL or AGL?
-            //! Register metadata
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
         };
     }
 }

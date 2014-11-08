@@ -22,17 +22,17 @@ namespace BlackMisc
         /*!
          * Speed class, e.g. "m/s", "NM/h", "km/h", "ft/s"
          */
-        class CSpeed : public CPhysicalQuantity<CSpeedUnit, CSpeed>
+        class CSpeed : public CValueObjectStdTuple<CSpeed, CPhysicalQuantity<CSpeedUnit, CSpeed>>
         {
         public:
             //! Default constructor
-            CSpeed() : CPhysicalQuantity(0, CSpeedUnit::defaultUnit()) {}
+            CSpeed() : CValueObjectStdTuple(0, CSpeedUnit::defaultUnit()) {}
 
             //! Init by double value
-            CSpeed(double value, const CSpeedUnit &unit) : CPhysicalQuantity(value, unit) {}
+            CSpeed(double value, const CSpeedUnit &unit) : CValueObjectStdTuple(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CSpeed(const QString &unitString) : CPhysicalQuantity(unitString) {}
+            CSpeed(const QString &unitString) : CValueObjectStdTuple(unitString) {}
         };
 
     }

@@ -13,7 +13,7 @@ namespace BlackMisc
 {
     namespace PhysicalQuantities
     {
-        CTime::CTime(int hours, int minutes, int seconds) : CPhysicalQuantity(0, CTimeUnit::nullUnit())
+        CTime::CTime(int hours, int minutes, int seconds) : CValueObjectStdTuple(0, CTimeUnit::nullUnit())
         {
             bool negative = (hours < 0);
             double value = qAbs(hours) + minutes / 100.0 + seconds / 10000.0;
@@ -34,7 +34,7 @@ namespace BlackMisc
             }
         }
 
-        CTime::CTime(const QTime &time, bool negative) : CPhysicalQuantity(0, CTimeUnit::nullUnit())
+        CTime::CTime(const QTime &time, bool negative) : CValueObjectStdTuple(0, CTimeUnit::nullUnit())
         {
             CTime converted(time.hour(), time.minute(), time.second());
             (*this) = converted;

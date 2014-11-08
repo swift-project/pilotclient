@@ -20,17 +20,17 @@ namespace BlackMisc
     {
 
         //! Acceleration
-        class CAcceleration : public CPhysicalQuantity<CAccelerationUnit, CAcceleration>
+        class CAcceleration : public CValueObjectStdTuple<CAcceleration, CPhysicalQuantity<CAccelerationUnit, CAcceleration>>
         {
         public:
             //! Default constructor
-            CAcceleration() : CPhysicalQuantity(0, CAccelerationUnit::defaultUnit()) {}
+            CAcceleration() : CValueObjectStdTuple(0, CAccelerationUnit::defaultUnit()) {}
 
             //! Init by double value
-            CAcceleration(double value, const CAccelerationUnit &unit) : CPhysicalQuantity(value, unit) {}
+            CAcceleration(double value, const CAccelerationUnit &unit) : CValueObjectStdTuple(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CAcceleration(const QString &unitString) : CPhysicalQuantity(unitString) {}
+            CAcceleration(const QString &unitString) : CValueObjectStdTuple(unitString) {}
         };
 
     }

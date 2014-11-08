@@ -31,34 +31,6 @@ namespace BlackMisc
         }
 
         /*
-         * metaTypeId
-         */
-        template <class ImplVector> int CVector3DBase<ImplVector>::getMetaTypeId() const
-        {
-            return qMetaTypeId<ImplVector>();
-        }
-
-        /*
-         * is a
-         */
-        template <class ImplVector> bool CVector3DBase<ImplVector>::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<ImplVector>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        template <class ImplVector> int CVector3DBase<ImplVector>::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CVector3DBase &>(otherBase);
-
-            return compare(TupleConverter<CVector3DBase>::toTuple(*this), TupleConverter<CVector3DBase>::toTuple(other));
-        }
-
-        /*
          * Vector to zero
          */
         template <class ImplVector> void CVector3DBase<ImplVector>::setZero()
@@ -155,22 +127,6 @@ namespace BlackMisc
         }
 
         /*
-         * Stream to DBus
-         */
-        template <class ImplVector> void CVector3DBase<ImplVector>::marshallToDbus(QDBusArgument &argument) const
-        {
-            argument << TupleConverter<CVector3DBase>::toTuple(*this);
-        }
-
-        /*
-         * Stream from DBus
-         */
-        template <class ImplVector> void CVector3DBase<ImplVector>::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            argument >> TupleConverter<CVector3DBase>::toTuple(*this);
-        }
-
-        /*
          * getValueHash()
          */
         template <class ImplVector> uint CVector3DBase<ImplVector>::getValueHash() const
@@ -180,15 +136,6 @@ namespace BlackMisc
             hashs << qHash(static_cast<long>(this->m_j));
             hashs << qHash(static_cast<long>(this->m_k));
             return BlackMisc::calculateHash(hashs, "CVector3DBase");
-        }
-
-        /*
-         * Register metadata
-         */
-        template <class ImplVector> void CVector3DBase<ImplVector>::registerMetadata()
-        {
-            qRegisterMetaType<ImplVector>();
-            qDBusRegisterMetaType<ImplVector>();
         }
 
         /*

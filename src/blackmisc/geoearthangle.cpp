@@ -18,15 +18,6 @@ namespace BlackMisc
     {
 
         /*
-         * Register metadata
-         */
-        template <class LATorLON> void CEarthAngle<LATorLON>::registerMetadata()
-        {
-            qRegisterMetaType<LATorLON>();
-            qDBusRegisterMetaType<LATorLON>();
-        }
-
-        /*
          * Latitude or Longitude from a WGS string
          */
         template <class LATorLON> LATorLON CEarthAngle<LATorLON>::fromWgs84(const QString &wgsCoordinate)
@@ -73,35 +64,8 @@ namespace BlackMisc
             if (wgs.contains('S', Qt::CaseInsensitive) ||
                     wgs.contains('W', Qt::CaseInsensitive)) deg *= -1;
 
-            CAngle a(deg, min, sec);
+            PhysicalQuantities::CAngle a(deg, min, sec);
             return LATorLON(a);
-        }
-
-        /*
-         * metaTypeId
-         */
-        template <class LATorLON> int CEarthAngle<LATorLON>::getMetaTypeId() const
-        {
-            return qMetaTypeId<LATorLON>();
-        }
-
-        /*
-         * is a
-         */
-        template <class LATorLON> bool CEarthAngle<LATorLON>::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<LATorLON>()) { return true; }
-
-            return this->CAngle::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        template <class LATorLON> int CEarthAngle<LATorLON>::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAngle &>(otherBase);
-            return CAngle::compareImpl(other);
         }
 
         /*

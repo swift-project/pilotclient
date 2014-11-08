@@ -21,7 +21,7 @@ namespace BlackMisc
     {
 
         //! Matrix 1x3
-        class CMatrix1x3 : public CMatrixBase<CMatrix1x3, 1, 3>
+        class CMatrix1x3 : public CValueObjectStdTuple<CMatrix1x3, CMatrixBase<CMatrix1x3, 1, 3>>
         {
         public:
 
@@ -29,7 +29,7 @@ namespace BlackMisc
             CMatrix1x3() = default;
 
             //! Init by fill value
-            explicit CMatrix1x3(double fillValue) : CMatrixBase(fillValue) {}
+            explicit CMatrix1x3(double fillValue) : CValueObjectStdTuple(fillValue) {}
 
             //! Constructor
             CMatrix1x3(double c1, double c2, double c3)

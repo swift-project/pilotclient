@@ -20,10 +20,22 @@ namespace BlackMisc
     class CLogCategory;
     class CLogCategoryList;
 
+    class CLogPattern;
+
+    //! \private
+    template <> struct CValueObjectStdTuplePolicy<CLogPattern> : public CValueObjectStdTuplePolicy<>
+    {
+        using LessThan = Policy::LessThan::None;
+        using Compare = Policy::Compare::None;
+        using Hash = Policy::Hash::None;
+        using DBus = Policy::DBus::Own;
+        using Json = Policy::Json::None;
+    };
+
     /*!
      * Value class for matching log messages based on their categories.
      */
-    class CLogPattern : public CValueObject
+    class CLogPattern : public CValueObjectStdTuple<CLogPattern>
     {
     public:
         //! Default constructed CLogPattern will match any message.
@@ -69,36 +81,9 @@ namespace BlackMisc
         //!          topological sorting algorithm, to sort patterns by their generality.
         bool isProperSubsetOf(const CLogPattern &other) const;
 
-        //! Register metadata
-        static void registerMetadata();
-
-        //! \copydoc CValueObject::toQVariant
-        virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-        //! \copydoc CValueObject::convertFromQVariant
-        virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-        //! \copydoc CValueObject::getValueHash
-        virtual uint getValueHash() const override;
-
-        //! Equal operator
-        bool operator ==(const CLogPattern &other) const;
-
-        //! Not equal operator
-        bool operator !=(const CLogPattern &other) const;
-
     protected:
         //! \copydoc CValueObject::convertToQString()
         virtual QString convertToQString(bool i18n = false) const override;
-
-        //! \copydoc CValueObject::getMetaTypeId
-        virtual int getMetaTypeId() const override;
-
-        //! \copydoc CValueObject::isA
-        virtual bool isA(int metaTypeId) const override;
-
-        //! \copydoc CValueObject::compareImpl
-        virtual int compareImpl(const CValueObject &other) const override;
 
         //! \copydoc CValueObject::marshallToDbus()
         virtual void marshallToDbus(QDBusArgument &argument) const override;

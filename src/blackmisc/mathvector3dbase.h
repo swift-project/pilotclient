@@ -18,12 +18,23 @@
 
 namespace BlackMisc
 {
+    namespace Math { template <class> class CVector3DBase; }
+
+    //! \private
+    template <class ImplVector> struct CValueObjectStdTuplePolicy<Math::CVector3DBase<ImplVector>> : public CValueObjectStdTuplePolicy<>
+    {
+        using Equals = Policy::Equals::None;
+        using LessThan = Policy::LessThan::None;
+        using Hash = Policy::Hash::Own;
+        using Json = Policy::Json::Own;
+    };
+
     namespace Math
     {
         class CMatrix3x1;
 
         //! 3D vector base (x, y, z)
-        template <class ImplVector> class CVector3DBase : public CValueObject
+        template <class ImplVector> class CVector3DBase : public CValueObjectStdTuple<CVector3DBase<ImplVector>>
         {
         public:
             // getter and setters are implemented in the derived classes
@@ -200,15 +211,6 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertFromJson
             virtual void convertFromJson(const QJsonObject &json) override;
 
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*derived()); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant<ImplVector>(derived(), variant); }
-
-            //! Register metadata
-            static void registerMetadata();
-
         protected:
             // using own value since Qt QVector3D stores internally as float
             double m_i; //!< Vector data i
@@ -229,21 +231,6 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CVector3DBase)

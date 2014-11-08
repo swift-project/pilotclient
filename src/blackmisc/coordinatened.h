@@ -20,18 +20,9 @@ namespace BlackMisc
         /*!
          * \brief North, East, Down
          */
-        class CCoordinateNed : public BlackMisc::Math::CVector3DBase<CCoordinateNed>
+        class CCoordinateNed : public CValueObjectStdTuple<CCoordinateNed, Math::CVector3DBase<CCoordinateNed>>
         {
         protected:
-            //! \copydoc CValueObject::marshallFromDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override
             {
@@ -57,48 +48,22 @@ namespace BlackMisc
             /*!
              * \brief Constructor by values
              */
-            CCoordinateNed(const CCoordinateGeodetic &referencePosition, double north, double east, double down) : CVector3DBase(north, east, down), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
+            CCoordinateNed(const CCoordinateGeodetic &referencePosition, double north, double east, double down) : CValueObjectStdTuple(north, east, down), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
             /*!
              * \brief Constructor by values
              */
-            CCoordinateNed(double north, double east, double down) : CVector3DBase(north, east, down), m_referencePosition(), m_hasReferencePosition(false) {}
+            CCoordinateNed(double north, double east, double down) : CValueObjectStdTuple(north, east, down), m_referencePosition(), m_hasReferencePosition(false) {}
 
             /*!
              * \brief Constructor by math vector
              */
-            explicit CCoordinateNed(const BlackMisc::Math::CVector3D &vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(), m_hasReferencePosition(false) {}
+            explicit CCoordinateNed(const BlackMisc::Math::CVector3D &vector) : CValueObjectStdTuple(vector.i(), vector.j(), vector.k()), m_referencePosition(), m_hasReferencePosition(false) {}
 
             /*!
              * \brief Constructor by math vector and reference position
              */
-            CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D &vector) : CVector3DBase(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override
-            {
-                return QVariant::fromValue(*this);
-            }
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            /*!
-             * \brief Equal operator ==
-             * \param other
-             * \return
-             */
-            bool operator ==(const CCoordinateNed &other) const;
-
-            /*!
-             * \brief Unequal operator !=
-             * \param other
-             * \return
-             */
-            bool operator !=(const CCoordinateNed &other) const
-            {
-                return !((*this) == other);
-            }
+            CCoordinateNed(const CCoordinateGeodetic &referencePosition, const BlackMisc::Math::CVector3D &vector) : CValueObjectStdTuple(vector.i(), vector.j(), vector.k()), m_referencePosition(referencePosition), m_hasReferencePosition(true) {}
 
             /*!
              * \brief Corresponding reference position

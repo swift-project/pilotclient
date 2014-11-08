@@ -23,7 +23,7 @@ namespace BlackMisc
         class CMatrix3x3;
 
         //! Matrix 3x1
-        class CMatrix3x1 : public CMatrixBase<CMatrix3x1, 3, 1>
+        class CMatrix3x1 : public CValueObjectStdTuple<CMatrix3x1, CMatrixBase<CMatrix3x1, 3, 1>>
         {
             friend class CMatrix3x3;
 
@@ -32,7 +32,7 @@ namespace BlackMisc
             CMatrix3x1() = default;
 
             //! Constructor
-            CMatrix3x1(double r1, double r2, double r3) : CMatrixBase()
+            CMatrix3x1(double r1, double r2, double r3)
             {
                 this->m_matrix(0, 0) = r1;
                 this->m_matrix(1, 0) = r2;
@@ -40,7 +40,7 @@ namespace BlackMisc
             }
 
             //! Init by fill value
-            explicit CMatrix3x1(double fillValue) : CMatrixBase(fillValue) {}
+            explicit CMatrix3x1(double fillValue) : CValueObjectStdTuple(fillValue) {}
 
             //! Convert to vector
             CVector3D toVector3D() const

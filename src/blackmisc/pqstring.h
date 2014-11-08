@@ -26,23 +26,11 @@ namespace BlackMisc
          * \details Used to parse strings into physical quantities, validate strings
          * \sa BlackMisc::PhysicalQuantity
          */
-        class CPqString : public BlackMisc::CValueObject
+        class CPqString : public CValueObjectStdTuple<CPqString>
         {
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::marshallFromDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
 
         public:
             //! Number separators / group separators
@@ -65,27 +53,6 @@ namespace BlackMisc
 
             //! Constructor, for values such as 10km/h
             CPqString(const QString &value) : m_string(value) {}
-
-            //! \copydoc CValueObject::getMetaTypeId
-            int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! Equal operator ==
-            bool operator ==(const CPqString &other) const;
-
-            //! Unequal operator !=
-            bool operator !=(const CPqString &other) const;
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! Register metadata
-            static void registerMetadata();
 
             //! Parse a string value like "100m", "10.3Mhz"
             static QVariant parseToVariant(const QString &value, SeparatorMode mode = SeparatorsCLocale);

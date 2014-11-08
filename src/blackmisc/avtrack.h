@@ -16,6 +16,17 @@
 
 namespace BlackMisc
 {
+    namespace Aviation { class CTrack; }
+
+    //! \private
+    template <> struct CValueObjectStdTuplePolicy<Aviation::CTrack> : public CValueObjectStdTuplePolicy<>
+    {
+        using Compare = Policy::Compare::MetaTuple;
+        using Hash = Policy::Hash::MetaTuple;
+        using DBus = Policy::DBus::MetaTuple;
+        using Json = Policy::Json::MetaTuple;
+    };
+
     namespace Aviation
     {
         /*!
@@ -23,7 +34,7 @@ namespace BlackMisc
          * \remarks Intentionally allowing +/- BlackMisc::PhysicalQuantities::CAngle ,
          *          and >= / <= CAngle.
          */
-        class CTrack : public BlackMisc::PhysicalQuantities::CAngle
+        class CTrack : public CValueObjectStdTuple<CTrack, PhysicalQuantities::CAngle>
         {
         public:
             /*!
@@ -36,28 +47,13 @@ namespace BlackMisc
             };
 
             //! \brief Default constructor: 0 Track magnetic
-            CTrack() : BlackMisc::PhysicalQuantities::CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
+            CTrack() : CValueObjectStdTuple(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
             //! \brief Constructor
-            CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : BlackMisc::PhysicalQuantities::CAngle(value, unit), m_north(north) {}
+            CTrack(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObjectStdTuple(value, unit), m_north(north) {}
 
             //! \brief Constructor by CAngle
-            CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : BlackMisc::PhysicalQuantities::CAngle(track), m_north(north) {}
-
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \brief Equal operator ==
-            bool operator ==(const CTrack &other) const;
-
-            //! \brief Unequal operator !=
-            bool operator !=(const CTrack &other) const;
+            CTrack(BlackMisc::PhysicalQuantities::CAngle track, ReferenceNorth north) : CValueObjectStdTuple(track), m_north(north) {}
 
             //! \brief Magnetic Track?
             bool isMagneticTrack() const
@@ -76,36 +72,14 @@ namespace BlackMisc
             //! \brief Get reference north (magnetic or true)
             ReferenceNorth getReferenceNorth() const { return m_north; }
 
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! \brief Register metadata
-            static void registerMetadata();
-
-            //! \brief Members
-            static const QStringList &jsonMembers();
-
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::marshallFromDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CTrack)
             ReferenceNorth m_north; //!< magnetic or true?
         };
-
     }
 }
 

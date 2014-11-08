@@ -20,24 +20,24 @@ namespace BlackMisc
     namespace PhysicalQuantities
     {
         //! Physical unit angle (radians, degrees)
-        class CAngle : public CPhysicalQuantity<CAngleUnit, CAngle>
+        class CAngle : public CValueObjectStdTuple<CAngle, CPhysicalQuantity<CAngleUnit, CAngle>>
         {
         public:
             //! Default constructor
-            CAngle() : CPhysicalQuantity(0, CAngleUnit::defaultUnit()) {}
+            CAngle() : CValueObjectStdTuple(0, CAngleUnit::defaultUnit()) {}
 
             //! Init by double value
-            CAngle(double value, const CAngleUnit &unit): CPhysicalQuantity(value, unit) {}
+            CAngle(double value, const CAngleUnit &unit): CValueObjectStdTuple(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CAngle(const QString &unitString) : CPhysicalQuantity(unitString) {}
+            CAngle(const QString &unitString) : CValueObjectStdTuple(unitString) {}
 
             /*!
              * \brief Init as sexagesimal degrees, minutes, seconds
              * The sign of all parameters must be the same, either all positive or all negative.
              */
             CAngle(int degrees, int minutes, double seconds) :
-                CPhysicalQuantity(
+                CValueObjectStdTuple(
                     degrees + minutes / 100.0 + seconds / 10000.0,
                     CAngleUnit::sexagesimalDeg()) {}
 
@@ -46,18 +46,12 @@ namespace BlackMisc
              * The sign of both parameters must be the same, either both positive or both negative.
              */
             CAngle(int degrees, double minutes) :
-                CPhysicalQuantity(
+                CValueObjectStdTuple(
                     degrees + minutes / 100.0,
                     CAngleUnit::sexagesimalDegMin()) {}
 
             //! \copydoc CValueObject::toIcon
             virtual BlackMisc::CIcon toIcon() const override;
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
 
             //! Value as factor of PI (e.g. 0.5PI)
             double piFactor() const;

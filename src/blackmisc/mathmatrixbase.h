@@ -15,36 +15,27 @@
 
 namespace BlackMisc
 {
+    namespace Math { template <class, int, int> class CMatrixBase; }
+
+    //! \private
+    template <class ImplMatrix, int Rows, int Columns> struct CValueObjectStdTuplePolicy<Math::CMatrixBase<ImplMatrix, Rows, Columns>> : public CValueObjectStdTuplePolicy<>
+    {
+        using Equals = Policy::Equals::None;
+        using LessThan = Policy::LessThan::None;
+        using Compare = Policy::Compare::Own;
+        using Hash = Policy::Hash::Own;
+        using DBus = Policy::DBus::Own;
+        using Json = Policy::Json::Own;
+    };
+
     namespace Math
     {
 
         /*!
          * \brief Base functionality of a matrix
          */
-        template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public BlackMisc::CValueObject
+        template<class ImplMatrix, int Rows, int Columns> class CMatrixBase : public CValueObjectStdTuple<CMatrixBase<ImplMatrix, Rows, Columns>>
         {
-        protected:
-            // no bug, Qt expects columns rows
-            QGenericMatrix<Columns, Rows, double> m_matrix; //!< backing data
-
-            //! \copydoc CValueObject::convertToQString
-            virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
         public:
             //! \brief Default constructor
             CMatrixBase() = default;
@@ -63,12 +54,6 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::getValueHash
             virtual uint getValueHash() const override;
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*derived()); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant<ImplMatrix>(derived(), variant); }
 
             //! \brief Equal operator ==
             bool operator ==(const ImplMatrix &other) const
@@ -219,14 +204,27 @@ namespace BlackMisc
                 return this->getElement(row, column);
             }
 
-            //! \brief Register metadata
-            static void registerMetadata();
+        protected:
+            // no bug, Qt expects columns rows
+            QGenericMatrix<Columns, Rows, double> m_matrix; //!< backing data
+
+            //! \copydoc CValueObject::compareImpl
+            virtual int compareImpl(const CValueObject &other) const override;
+
+            //! \copydoc CValueObject::marshallToDbus
+            virtual void marshallToDbus(QDBusArgument &argument) const override;
+
+            //! \copydoc CValueObject::unmarshallFromDbus
+            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
             //! \copydoc CValueObject::toJson
             virtual QJsonObject toJson() const override;
 
             //! \copydoc CValueObject::convertFromJson
             virtual void convertFromJson(const QJsonObject &json) override;
+
+            //! \copydoc CValueObject::convertToQString
+            virtual QString convertToQString(bool i18n = false) const override;
 
         private:
             //! \brief Easy access to derived class (CRTP template parameter)

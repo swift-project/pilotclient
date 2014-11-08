@@ -16,13 +16,24 @@
 
 namespace BlackMisc
 {
+    namespace Aviation { class CHeading; }
+
+    //! \private
+    template <> struct CValueObjectStdTuplePolicy<Aviation::CHeading> : public CValueObjectStdTuplePolicy<>
+    {
+        using Compare = Policy::Compare::MetaTuple;
+        using Hash = Policy::Hash::MetaTuple;
+        using DBus = Policy::DBus::MetaTuple;
+        using Json = Policy::Json::MetaTuple;
+    };
+
     namespace Aviation
     {
         /*!
          * \brief Heading as used in aviation, can be true or magnetic heading
          * \remarks Intentionally allowing +/- CAngle , and >= / <= CAngle.
          */
-        class CHeading : public BlackMisc::PhysicalQuantities::CAngle
+        class CHeading : public CValueObjectStdTuple<CHeading, PhysicalQuantities::CAngle>
         {
         public:
             /*!
@@ -38,33 +49,15 @@ namespace BlackMisc
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
 
-            //! \copydoc CValueObject::marshallFromDbus()
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus()
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
         public:
             //! \brief Default constructor: 0 heading true
-            CHeading() : CAngle(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
+            CHeading() : CValueObjectStdTuple(0, BlackMisc::PhysicalQuantities::CAngleUnit::rad()), m_north(Magnetic) {}
 
             //! \brief Constructor
-            CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CAngle(value, unit), m_north(north) {}
+            CHeading(double value, ReferenceNorth north, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObjectStdTuple(value, unit), m_north(north) {}
 
             //! \brief Constructor by CAngle
-            CHeading(CAngle heading, ReferenceNorth north) : CAngle(heading), m_north(north) {}
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \brief Equal operator ==
-            bool operator ==(const CHeading &other) const;
-
-            //! \brief Unequal operator !=
-            bool operator !=(const CHeading &other) const;
+            CHeading(CAngle heading, ReferenceNorth north) : CValueObjectStdTuple(heading), m_north(north) {}
 
             //! \brief Magnetic heading?
             bool isMagneticHeading() const { return Magnetic == this->m_north; }
@@ -78,23 +71,6 @@ namespace BlackMisc
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CHeading)
             ReferenceNorth m_north; //!< magnetic or true?
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
-
-            //! \brief Register metadata
-            static void registerMetadata();
-
-            //! JSON member names
-            static const QStringList &jsonMembers();
         };
     }
 }

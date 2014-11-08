@@ -34,17 +34,17 @@ namespace BlackMisc
     {
 
         //! Specialized class for distance units (meter, foot, nautical miles).
-        class CLengthUnit : public CMeasurementUnit
+        class CLengthUnit : public CValueObjectStdTuple<CLengthUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
             CLengthUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+                CValueObjectStdTuple(name, symbol, converter, displayDigits, epsilon)
             {}
 
             //! null constructor
             CLengthUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CMeasurementUnit(name, symbol, nullptr)
+                CValueObjectStdTuple(name, symbol, nullptr)
             {}
 
             struct NauticalMilesToMeters    { static double factor() { return 1852.0;    } };
@@ -55,13 +55,7 @@ namespace BlackMisc
 
         public:
             //! Default constructor, required for Qt Metasystem
-            CLengthUnit() : CMeasurementUnit(defaultUnit()) {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            CLengthUnit() : CValueObjectStdTuple(defaultUnit()) {}
 
             //! Default unit
             static const CLengthUnit &defaultUnit() { return m(); }
@@ -151,16 +145,16 @@ namespace BlackMisc
         };
 
         //! Specialized class for angles (degrees, radian).
-        class CAngleUnit : public CMeasurementUnit
+        class CAngleUnit : public CValueObjectStdTuple<CAngleUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
             CAngleUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+                CValueObjectStdTuple(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CAngleUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CMeasurementUnit(name, symbol, nullptr)
+                CValueObjectStdTuple(name, symbol, nullptr)
             {}
 
             struct RadiansToDegrees { static double factor() { return 180.0 / M_PI; } };
@@ -168,13 +162,7 @@ namespace BlackMisc
 
         public:
             //!  Default constructor, required for Qt Metasystem
-            CAngleUnit() : CMeasurementUnit(defaultUnit()) {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            CAngleUnit() : CValueObjectStdTuple(defaultUnit()) {}
 
             //! Default unit
             static const CAngleUnit &defaultUnit() { return deg(); }
@@ -248,29 +236,23 @@ namespace BlackMisc
         };
 
         //! Specialized class for frequency (hertz, mega hertz, kilo hertz).
-        class CFrequencyUnit : public CMeasurementUnit
+        class CFrequencyUnit : public CValueObjectStdTuple<CFrequencyUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
             CFrequencyUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+                CValueObjectStdTuple(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CFrequencyUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CMeasurementUnit(name, symbol, nullptr)
+                CValueObjectStdTuple(name, symbol, nullptr)
             {}
 
             typedef One HertzToHertz;
 
         public:
             //! Default constructor, required for Qt Metasystem
-            CFrequencyUnit() : CMeasurementUnit(defaultUnit()) {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            CFrequencyUnit() : CValueObjectStdTuple(defaultUnit()) {}
 
             //! Default unit
             static const CFrequencyUnit &defaultUnit() { return Hz(); }
@@ -336,16 +318,16 @@ namespace BlackMisc
         };
 
         //! Specialized class for mass units (kg, lbs).
-        class CMassUnit : public CMeasurementUnit
+        class CMassUnit : public CValueObjectStdTuple<CMassUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
             CMassUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+                CValueObjectStdTuple(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CMassUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CMeasurementUnit(name, symbol, nullptr)
+                CValueObjectStdTuple(name, symbol, nullptr)
             {}
 
             typedef Milli<One> GramsToKilograms;
@@ -353,13 +335,7 @@ namespace BlackMisc
 
         public:
             //! Default constructor, required for Qt Metasystem
-            CMassUnit() : CMeasurementUnit(defaultUnit()) {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            CMassUnit() : CValueObjectStdTuple(defaultUnit()) {}
 
             //! Default unit
             static const CMassUnit &defaultUnit() { return kg(); }
@@ -433,16 +409,16 @@ namespace BlackMisc
         };
 
         //! Specialized class for pressure (psi, hPa, bar).
-        class CPressureUnit : public CMeasurementUnit
+        class CPressureUnit : public CValueObjectStdTuple<CPressureUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
             CPressureUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+                CValueObjectStdTuple(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CPressureUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CMeasurementUnit(name, symbol, nullptr)
+                CValueObjectStdTuple(name, symbol, nullptr)
             {}
 
             typedef Centi<One> PascalsToHectopascals;
@@ -452,13 +428,7 @@ namespace BlackMisc
 
         public:
             //! Default constructor, required for Qt Metasystem
-            CPressureUnit() : CMeasurementUnit(defaultUnit()) {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            CPressureUnit() : CValueObjectStdTuple(defaultUnit()) {}
 
             //! Default unit
             static const CPressureUnit &defaultUnit() { return hPa(); }
@@ -547,16 +517,16 @@ namespace BlackMisc
         };
 
         //! Specialized class for temperatur units (kelvin, centidegree).
-        class CTemperatureUnit : public CMeasurementUnit
+        class CTemperatureUnit : public CValueObjectStdTuple<CTemperatureUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
             CTemperatureUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+                CValueObjectStdTuple(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CTemperatureUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CMeasurementUnit(name, symbol, nullptr)
+                CValueObjectStdTuple(name, symbol, nullptr)
             {}
 
             struct KelvinToCentigrade
@@ -572,13 +542,7 @@ namespace BlackMisc
 
         public:
             //! Default constructor, required for Qt Metasystem
-            CTemperatureUnit() : CMeasurementUnit(defaultUnit()) {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            CTemperatureUnit() : CValueObjectStdTuple(defaultUnit()) {}
 
             //! Default unit
             static const CTemperatureUnit &defaultUnit() { return C(); }
@@ -636,16 +600,16 @@ namespace BlackMisc
         };
 
         //! Specialized class for speed units (m/s, ft/s, NM/h).
-        class CSpeedUnit : public CMeasurementUnit
+        class CSpeedUnit : public CValueObjectStdTuple<CSpeedUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
             CSpeedUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+                CValueObjectStdTuple(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CSpeedUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CMeasurementUnit(name, symbol, nullptr)
+                CValueObjectStdTuple(name, symbol, nullptr)
             {}
 
             struct KnotsToMps       { static double factor() { return 1852.0    / 3600.0; } };
@@ -656,13 +620,7 @@ namespace BlackMisc
         public:
 
             //! Default constructor, required for Qt Metasystem
-            CSpeedUnit() : CMeasurementUnit(defaultUnit()) {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            CSpeedUnit() : CValueObjectStdTuple(defaultUnit()) {}
 
             //! Default unit
             static const CSpeedUnit &defaultUnit() { return m_s(); }
@@ -734,7 +692,6 @@ namespace BlackMisc
             }
 
         protected:
-
             //! \copydoc CValueObject::unmarshallFromDbus
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override
             {
@@ -745,16 +702,16 @@ namespace BlackMisc
         };
 
         //! Specialized class for time units (ms, hour, min).
-        class CTimeUnit : public CMeasurementUnit
+        class CTimeUnit : public CValueObjectStdTuple<CTimeUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
             CTimeUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+                CValueObjectStdTuple(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CTimeUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CMeasurementUnit(name, symbol, nullptr)
+                CValueObjectStdTuple(name, symbol, nullptr)
             {}
 
             typedef One SecondsToSeconds;
@@ -765,13 +722,7 @@ namespace BlackMisc
         public:
 
             //! Default constructor, required for Qt Metasystem
-            CTimeUnit() : CMeasurementUnit(defaultUnit()) {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            CTimeUnit() : CValueObjectStdTuple(defaultUnit()) {}
 
             //! Default unit
             static const CTimeUnit &defaultUnit() { return s(); }
@@ -877,29 +828,23 @@ namespace BlackMisc
         };
 
         //! Specialized class for acceleration units (m/s2, ft/s2).
-        class CAccelerationUnit : public CMeasurementUnit
+        class CAccelerationUnit : public CValueObjectStdTuple<CAccelerationUnit, CMeasurementUnit>
         {
         private:
             template <class Converter>
             CAccelerationUnit(const QString &name, const QString &symbol, const Converter &converter, int displayDigits = 2, double epsilon = 1E-9) :
-                CMeasurementUnit(name, symbol, converter, displayDigits, epsilon)
+                CValueObjectStdTuple(name, symbol, converter, displayDigits, epsilon)
             {}
 
             CAccelerationUnit(const QString &name, const QString &symbol, std::nullptr_t) :
-                CMeasurementUnit(name, symbol, nullptr)
+                CValueObjectStdTuple(name, symbol, nullptr)
             {}
 
             struct FeetToMeters { static double factor() { return 0.3048; } };
 
         public:
             //! Default constructor, required for Qt Metasystem
-            CAccelerationUnit() : CMeasurementUnit(defaultUnit()) {}
-
-            //! \copydoc CValueObject::toQVariant()
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+            CAccelerationUnit() : CValueObjectStdTuple(defaultUnit()) {}
 
             //! Default unit
             static const CAccelerationUnit &defaultUnit() { return m_s2(); }

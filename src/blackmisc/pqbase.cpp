@@ -74,41 +74,5 @@ namespace BlackMisc
             return s;
         }
 
-        /*
-         * metaTypeId
-         */
-        int CMeasurementUnit::getMetaTypeId() const
-        {
-            return qMetaTypeId<CMeasurementUnit>();
-        }
-
-        /*
-         * is a
-         */
-        bool CMeasurementUnit::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CMeasurementUnit>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CMeasurementUnit::compareImpl(const CValueObject &/*otherBase*/) const
-        {
-            qFatal("not implemented");
-            return 0;
-        }
-
-        /*
-         * Register metadata of unit and quantity
-         */
-        void CMeasurementUnit::registerMetadata()
-        {
-            qRegisterMetaType<CMeasurementUnit>();
-            qDBusRegisterMetaType<CMeasurementUnit>();
-        }
-
     } // namespace
 } // namespace

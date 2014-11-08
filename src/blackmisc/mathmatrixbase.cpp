@@ -140,24 +140,6 @@ namespace BlackMisc
         }
 
         /*
-         * metaTypeId
-         */
-        template <class ImplMatrix, int Rows, int Columns> int CMatrixBase<ImplMatrix, Rows, Columns>::getMetaTypeId() const
-        {
-            return qMetaTypeId<ImplMatrix>();
-        }
-
-        /*
-         * is a
-         */
-        template <class ImplMatrix, int Rows, int Columns> bool CMatrixBase<ImplMatrix, Rows, Columns>::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<ImplMatrix>()) { return true; }
-
-            return this->CValueObject::isA(metaTypeId);
-        }
-
-        /*
          * Compare
          */
         template <class ImplMatrix, int Rows, int Columns> int CMatrixBase<ImplMatrix, Rows, Columns>::compareImpl(const CValueObject &otherBase) const
@@ -220,15 +202,6 @@ namespace BlackMisc
                 list.append(v);
             }
             this->fromList(list);
-        }
-
-        /*
-         * Register metadata
-         */
-        template <class ImplMatrix, int Rows, int Columns> void CMatrixBase<ImplMatrix, Rows, Columns>::registerMetadata()
-        {
-            qRegisterMetaType<ImplMatrix>();
-            qDBusRegisterMetaType<ImplMatrix>();
         }
 
         /*

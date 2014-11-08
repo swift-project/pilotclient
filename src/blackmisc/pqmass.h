@@ -22,17 +22,17 @@ namespace BlackMisc
         /*!
          * Mass
          */
-        class CMass : public CPhysicalQuantity<CMassUnit, CMass>
+        class CMass : public CValueObjectStdTuple<CMass, CPhysicalQuantity<CMassUnit, CMass>>
         {
         public:
             //! Default constructor
-            CMass() : CPhysicalQuantity(0, CMassUnit::defaultUnit()) {}
+            CMass() : CValueObjectStdTuple(0, CMassUnit::defaultUnit()) {}
 
             //! Init by double value
-            CMass(double value, const CMassUnit &unit) : CPhysicalQuantity(value, unit) {}
+            CMass(double value, const CMassUnit &unit) : CValueObjectStdTuple(value, unit) {}
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CMass(const QString &unitString) : CPhysicalQuantity(unitString) {}
+            CMass(const QString &unitString) : CValueObjectStdTuple(unitString) {}
         };
 
     }

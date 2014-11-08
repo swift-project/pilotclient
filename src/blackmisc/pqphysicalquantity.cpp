@@ -123,19 +123,6 @@ namespace BlackMisc
         }
 
         /*
-         * Register metatype
-         */
-        template <class MU, class PQ>void CPhysicalQuantity<MU, PQ>::registerMetadata()
-        {
-            qRegisterMetaType<MU>();
-            qDBusRegisterMetaType<MU>();
-            qDBusRegisterMetaType<QList<MU> >();
-            qRegisterMetaType<PQ>();
-            qDBusRegisterMetaType<PQ>();
-            qDBusRegisterMetaType<QList<PQ> >();
-        }
-
-        /*
          * Multiply operator
          */
         template <class MU, class PQ> CPhysicalQuantity<MU, PQ> &CPhysicalQuantity<MU, PQ>::operator *=(double factor)
@@ -358,23 +345,6 @@ namespace BlackMisc
                 CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
-        }
-
-        /*
-         * metaTypeId
-         */
-        template <class MU, class PQ> int CPhysicalQuantity<MU, PQ>::getMetaTypeId() const
-        {
-            return qMetaTypeId<PQ>();
-        }
-
-        /*
-         * is a
-         */
-        template <class MU, class PQ> bool CPhysicalQuantity<MU, PQ>::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<PQ>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
         }
 
         /*

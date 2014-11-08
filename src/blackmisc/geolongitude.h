@@ -20,7 +20,7 @@ namespace BlackMisc
     {
 
         //! Longitude
-        class CLongitude : public CEarthAngle<CLongitude>
+        class CLongitude : public CValueObjectStdTuple<CLongitude, CEarthAngle<CLongitude>>
         {
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -37,10 +37,10 @@ namespace BlackMisc
             CLongitude() = default;
 
             //! Constructor
-            explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CEarthAngle(angle) {}
+            explicit CLongitude(const BlackMisc::PhysicalQuantities::CAngle &angle) : CValueObjectStdTuple(angle) {}
 
             //! Init by double value
-            CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CEarthAngle(value, unit) {}
+            CLongitude(double value, const BlackMisc::PhysicalQuantities::CAngleUnit &unit) : CValueObjectStdTuple(value, unit) {}
         };
 
     }

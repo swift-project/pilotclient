@@ -19,11 +19,19 @@
 
 namespace BlackMisc
 {
+    namespace Event { class COriginator; }
+
+    //! \private
+    template <> struct CValueObjectStdTuplePolicy<Event::COriginator> : public CValueObjectStdTuplePolicy<>
+    {
+        using Json = Policy::Json::None;
+    };
+
     namespace Event
     {
 
         //! Value object encapsulating information about the originiator
-        class COriginator : public BlackMisc::CValueObject
+        class COriginator : public CValueObjectStdTuple<COriginator>
         {
         public:
             //! Default constructor.
@@ -38,18 +46,6 @@ namespace BlackMisc
             //! Get process name
             QString getProcessName() const {return m_processName;}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
-            //! \copydoc CValueObject::convertFromQVariant
-            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
-
-            //! \copydoc CValueObject::getValueHash
-            virtual uint getValueHash() const override;
-
-            //! \brief Register metadata
-            static void registerMetadata();
-
             //! Check if originating from the same local machine
             bool isFromLocalMachine() const;
 
@@ -62,21 +58,6 @@ namespace BlackMisc
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
-
-            //! \copydoc CValueObject::getMetaTypeId
-            virtual int getMetaTypeId() const override;
-
-            //! \copydoc CValueObject::isA
-            virtual bool isA(int metaTypeId) const override;
-
-            //! \copydoc CValueObject::compareImpl
-            virtual int compareImpl(const CValueObject &other) const override;
-
-            //! \copydoc CValueObject::marshallToDbus
-            virtual void marshallToDbus(QDBusArgument &argument) const override;
-
-            //! \copydoc CValueObject::unmarshallFromDbus
-            virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(COriginator)

@@ -22,7 +22,7 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CAltitude::CAltitude(const QString &altitudeAsString, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) : BlackMisc::PhysicalQuantities::CLength(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel)
+        CAltitude::CAltitude(const QString &altitudeAsString, BlackMisc::PhysicalQuantities::CPqString::SeparatorMode mode) : CValueObjectStdTuple(0, BlackMisc::PhysicalQuantities::CLengthUnit::m()), m_datum(MeanSeaLevel)
         {
             this->parseFromString(altitudeAsString, mode);
         }
@@ -49,42 +49,6 @@ namespace BlackMisc
         }
 
         /*
-         * Marshall to DBus
-         */
-        void CAltitude::marshallToDbus(QDBusArgument &argument) const
-        {
-            this->CLength::marshallToDbus(argument);
-            argument << qint32(this->m_datum);
-        }
-
-        /*
-         * Unmarshall from DBus
-         */
-        void CAltitude::unmarshallFromDbus(const QDBusArgument &argument)
-        {
-            this->CLength::unmarshallFromDbus(argument);
-            qint32 datum;
-            argument >> datum;
-            this->m_datum = static_cast<ReferenceDatum>(datum);
-        }
-
-        /*
-         * Equal?
-         */
-        bool CAltitude::operator ==(const CAltitude &other) const
-        {
-            return other.m_datum == this->m_datum && this->CLength::operator ==(other);
-        }
-
-        /*
-         * Unequal?
-         */
-        bool CAltitude::operator !=(const CAltitude &other) const
-        {
-            return !((*this) == other);
-        }
-
-        /*
          * To FL
          */
         void CAltitude::toFlightLevel()
@@ -100,65 +64,6 @@ namespace BlackMisc
         {
             Q_ASSERT(this->m_datum == MeanSeaLevel || this->m_datum == FlightLevel);
             this->m_datum = MeanSeaLevel;
-        }
-
-        /*
-         * metaTypeId
-         */
-        int CAltitude::getMetaTypeId() const
-        {
-            return qMetaTypeId<CAltitude>();
-        }
-
-        /*
-         * is a
-         */
-        bool CAltitude::isA(int metaTypeId) const
-        {
-            if (metaTypeId == qMetaTypeId<CAltitude>()) { return true; }
-
-            return this->CLength::isA(metaTypeId);
-        }
-
-        /*
-         * Compare
-         */
-        int CAltitude::compareImpl(const CValueObject &otherBase) const
-        {
-            const auto &other = static_cast<const CAltitude &>(otherBase);
-
-            if (this->isMeanSeaLevel() && other.isAboveGroundLevel()) { return 1; }
-            if (this->isAboveGroundLevel() && other.isMeanSeaLevel()) { return -1; }
-            if (*this < other) { return -1; }
-            if (*this > other) { return 1; }
-            return 0;
-        }
-
-        /*
-         * Register metadata
-         */
-        void CAltitude::registerMetadata()
-        {
-            qRegisterMetaType<CAltitude>();
-            qDBusRegisterMetaType<CAltitude>();
-        }
-
-        /*
-         * To JSON
-         */
-        QJsonObject CAltitude::toJson() const
-        {
-            QJsonObject json = BlackMisc::serializeJson(CAltitude::jsonMembers(), TupleConverter<CAltitude>::toTuple(*this));
-            return BlackMisc::Json::appendJsonObject(json, CLength::toJson());
-        }
-
-        /*
-         * From JSON
-         */
-        void CAltitude::convertFromJson(const QJsonObject &json)
-        {
-            CLength::convertFromJson(json);
-            BlackMisc::deserializeJson(json, CAltitude::jsonMembers(), TupleConverter<CAltitude>::toTuple(*this));
         }
 
         /*
@@ -211,14 +116,6 @@ namespace BlackMisc
         CIcon CAltitude::toIcon() const
         {
             return BlackMisc::CIconList::iconForIndex(CIcons::GeoPosition);
-        }
-
-        /*
-         * Members
-         */
-        const QStringList &CAltitude::jsonMembers()
-        {
-            return TupleConverter<CAltitude>::jsonMembers();
         }
 
     } // namespace

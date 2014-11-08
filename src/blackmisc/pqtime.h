@@ -22,7 +22,7 @@ namespace BlackMisc
         /*!
          * Time class, e.g. "ms", "hour", "s", "day"
          */
-        class CTime : public CPhysicalQuantity<CTimeUnit, CTime>
+        class CTime : public CValueObjectStdTuple<CTime, CPhysicalQuantity<CTimeUnit, CTime>>
         {
         public:
             //! Parts
@@ -34,10 +34,10 @@ namespace BlackMisc
             };
 
             //! Default constructor
-            CTime() : CPhysicalQuantity(0, CTimeUnit::defaultUnit()) {}
+            CTime() : CValueObjectStdTuple(0, CTimeUnit::defaultUnit()) {}
 
             //! Init by double value
-            CTime(double value, const CTimeUnit &unit) : CPhysicalQuantity(value, unit) {}
+            CTime(double value, const CTimeUnit &unit) : CValueObjectStdTuple(value, unit) {}
 
             //! By hours, minutes, seconds
             CTime(int hours, int minutes, int seconds = 0);
@@ -46,7 +46,7 @@ namespace BlackMisc
             CTime(const QTime &time, bool negative = false);
 
             //! \copydoc CPhysicalQuantity(const QString &unitString)
-            CTime(const QString &unitString) : CPhysicalQuantity(0, CTimeUnit::nullUnit()) { this->parseFromString(unitString); }
+            CTime(const QString &unitString) : CValueObjectStdTuple(0, CTimeUnit::nullUnit()) { this->parseFromString(unitString); }
 
             //! From string hh:mm, or hh:mm:ss, or time units such as s, min
             virtual void parseFromString(const QString &time) override;
