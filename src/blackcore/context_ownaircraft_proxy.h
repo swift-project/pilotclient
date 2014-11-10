@@ -19,7 +19,7 @@
 namespace BlackCore
 {
 
-    //! \brief Network context proxy
+    //! \brief Own aircraft context proxy
     //! \ingroup dbus
     class CContextOwnAircraftProxy : public IContextOwnAircraft
     {
@@ -52,20 +52,26 @@ namespace BlackCore
         //! \copydoc IContextOwnAircraft::setOwnAircraft()
         virtual void updateOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnPosition()
+        //! \copydoc IContextOwnAircraft::updateOwnPosition
         virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnSituation()
+        //! \copydoc IContextOwnAircraft::updateOwnSituation
         virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updateOwnCockpit()
+        //! \copydoc IContextOwnAircraft::updateOwnCockpit
         virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) override;
 
-        //! \copydoc IContextOwnAircraft::updatePilot()
+        //! \copydoc IContextOwnAircraft::updatePilot
         virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateSelcal
         virtual bool updateSelcal(const Aviation::CSelcal &selcal, const QString &originator) override;
+
+        //! \copydoc IContextOwnAircraft::updateCallsign
+        virtual bool updateCallsign(const BlackMisc::Aviation::CCallsign &callsign, const QString &originator) override;
+
+        //! \copydoc IContextOwnAircraft::updateIcaoData
+        virtual bool updateIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::setAudioOutputVolumes
         virtual void setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2) override;

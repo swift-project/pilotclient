@@ -90,19 +90,29 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAircraft getOwnAircraft() const = 0;
 
         //! Own aircraft
+        //! \todo remove "own", left over from past
         virtual void updateOwnAircraft(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator) = 0;
 
         //! Own position, be aware height is terrain height
+        //! \todo remove "own", left over from past
         virtual bool updateOwnPosition(const BlackMisc::Geo::CCoordinateGeodetic &position, const BlackMisc::Aviation::CAltitude &altitude, const QString &originator) = 0;
 
         //! Complete situation update
+        //! \todo remove "own", left over from past
         virtual bool updateOwnSituation(const BlackMisc::Aviation::CAircraftSituation &situation, const QString &originator) = 0;
 
         //! Update own cockpit
+        //! \todo remove "own", left over from past
         virtual bool updateOwnCockpit(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2, const BlackMisc::Aviation::CTransponder &transponder, const QString &originator) = 0;
 
         //! Set current pilot
         virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) = 0;
+
+        //! Set ICAO data
+        virtual bool updateIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData, const QString &originator) = 0;
+
+        //! Set callsign
+        virtual bool updateCallsign(const BlackMisc::Aviation::CCallsign &callsign, const QString &originator) = 0;
 
         //! Own SELCAL code
         virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) = 0;
@@ -112,6 +122,7 @@ namespace BlackCore
 
         //! Set individual voice rooms (overrides voice rooms)
         //! \remarks Empty string "" disables voice room override
+        //! \sa enableAutomaticVoiceRoomResolution
         virtual void setAudioVoiceRoomOverrideUrls(const QString &voiceRoom1Url, const QString &voiceRoom2Url) = 0;
 
         //! Automatic voice room resolution for frequencies

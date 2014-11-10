@@ -187,6 +187,22 @@ namespace BlackCore
         return true;
     }
 
+    bool CContextOwnAircraft::updateCallsign(const CCallsign &callsign, const QString &originator)
+    {
+        if (this->m_ownAircraft.getCallsign() == callsign) { return false; }
+        this->m_ownAircraft.setCallsign(callsign);
+        emit this->changedAircraft(this->m_ownAircraft, originator);
+        return true;
+    }
+
+    bool CContextOwnAircraft::updateIcaoData(const CAircraftIcao &icaoData, const QString &originator)
+    {
+        if (this->m_ownAircraft.getIcaoInfo() == icaoData) { return false; }
+        this->m_ownAircraft.setIcaoInfo(icaoData);
+        emit this->changedAircraft(this->m_ownAircraft, originator);
+        return true;
+    }
+
     bool CContextOwnAircraft::updateSelcal(const CSelcal &selcal, const QString &originator)
     {
         if (this->m_ownAircraft.getSelcal() == selcal) { return false; }
