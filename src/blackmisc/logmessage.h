@@ -111,6 +111,9 @@ namespace BlackMisc
         //! Set the severity to error, providing a format string.
         CLogMessage &error(QString format);
 
+        //! Log message by status message
+        CLogMessage &statusMessage(const CStatusMessage &statusMessage);
+
         //! Set the severity to info, providing a format string, and adding the validation category.
         CLogMessage &validationInfo(QString format);
 

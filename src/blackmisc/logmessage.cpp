@@ -40,6 +40,24 @@ namespace BlackMisc
         return *this;
     }
 
+    CLogMessage &CLogMessage::statusMessage(const CStatusMessage &statusMessage)
+    {
+        switch (statusMessage.getSeverity())
+        {
+        case CStatusMessage::SeverityDebug:
+            this->m_message = statusMessage.getMessage();
+            return debug();
+        case CStatusMessage::SeverityInfo:
+            return info(statusMessage.getMessage());
+        case CStatusMessage::SeverityWarning:
+            return warning(statusMessage.getMessage());
+        case CStatusMessage::SeverityError:
+            return error(statusMessage.getMessage());
+        default:
+            return info(statusMessage.getMessage());
+        }
+    }
+
     CLogMessage &CLogMessage::validationInfo(QString format)
     {
         m_categories.remove(CLogCategory::uncategorized());
@@ -69,9 +87,9 @@ namespace BlackMisc
         case CStatusMessage::SeverityInfo:
             return validationInfo(statusMessage.getMessage());
         case CStatusMessage::SeverityWarning:
-            return validation(statusMessage.getMessage());
+            return validationWarning(statusMessage.getMessage());
         case CStatusMessage::SeverityError:
-            return error(statusMessage.getMessage());
+            return validationError(statusMessage.getMessage());
         default:
             return validationInfo(statusMessage.getMessage());
         }
@@ -179,6 +197,7 @@ namespace BlackMisc
     {
         return category.section("/", 1, -1).split("/").contains(flag);
     }
+
     QString addFlag(QString category, const QString &flag)
     {
         if (category.isEmpty() || hasFlag(category, flag)) return category;
