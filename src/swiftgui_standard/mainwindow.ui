@@ -125,27 +125,8 @@
           <enum>QFrame::NoFrame</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
-         <widget class="QWidget" name="pg_LoginConfirmation">
-          <layout class="QVBoxLayout" name="vl_CockpitPage">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-          </layout>
-         </widget>
          <widget class="QWidget" name="pg_MainInfoArea">
           <layout class="QVBoxLayout" name="vl_MainInfoArea">
            <property name="spacing">
@@ -165,6 +146,28 @@
            </property>
            <item>
             <widget class="BlackGui::Components::CMainInfoAreaComponent" name="comp_MainInfoArea" native="true"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="pg_LoginConfirmation">
+          <layout class="QVBoxLayout" name="vl_LoginConfirmation">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="BlackGui::Components::CLoginComponent" name="comp_Login" native="true"/>
            </item>
           </layout>
          </widget>
@@ -373,6 +376,12 @@
    <class>BlackGui::Components::CMainKeypadAreaComponent</class>
    <extends>QFrame</extends>
    <header>blackgui/components/mainkeypadareacomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CLoginComponent</class>
+   <extends>QWidget</extends>
+   <header>blackgui/components/logincomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -198,6 +198,11 @@ void MainWindow::ps_toggleNetworkConnection()
     }
 }
 
+void MainWindow::ps_loginRequested()
+{
+    this->ps_setMainPage(MainPageLogin);
+}
+
 /*
  * Is the network context available?
  */

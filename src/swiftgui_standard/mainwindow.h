@@ -76,8 +76,8 @@ protected:
     //! \remarks keep the values in sync with the real tab indexes
     enum MainPageIndex
     {
-        MainPageLogin  = 0,
-        MainPageInfoArea = 1
+        MainPageInfoArea = 0,
+        MainPageLogin  = 1
     };
 
 private:
@@ -202,6 +202,9 @@ private slots:
 
     //! Connect to network
     void ps_toggleNetworkConnection();
+
+    //! Login requested
+    void ps_loginRequested();
 
     //! Menu item clicked
     void ps_onMenuClicked();
