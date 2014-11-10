@@ -23,6 +23,7 @@ namespace BlackGui
         this->ui->setupUi(this);
         this->resetSelcalCodes(true);
         this->setValidityHint();
+        this->ui->lblp_ValidCodeIcon->setToolTips("valid SELCAL", "invalid SELCAL");
 
         bool c;
         c = connect(this->ui->cb_SelcalPairs1, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_selcalIndexChanged()));
@@ -103,15 +104,6 @@ namespace BlackGui
 
     void CSelcalCodeSelector::setValidityHint()
     {
-        if (this->hasValidCode())
-        {
-            this->ui->lbl_ValidCodeIcon->setPixmap(CIcons::tick16());
-            this->ui->lbl_ValidCodeIcon->setToolTip("valid SELCAL");
-        }
-        else
-        {
-            this->ui->lbl_ValidCodeIcon->setPixmap(CIcons::cross16());
-            this->ui->lbl_ValidCodeIcon->setToolTip("invalid SELCAL");
-        }
+        this->ui->lblp_ValidCodeIcon->setTicked(this->hasValidCode());
     }
 }  // namespace

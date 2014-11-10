@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>143</width>
+    <width>151</width>
     <height>22</height>
    </rect>
   </property>
@@ -42,7 +42,7 @@
     <widget class="QComboBox" name="cb_SelcalPairs2"/>
    </item>
    <item>
-    <widget class="QLabel" name="lbl_ValidCodeIcon">
+    <widget class="BlackGui::CTickLabel" name="lblp_ValidCodeIcon">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -59,6 +59,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BlackGui::CTickLabel</class>
+   <extends>QLabel</extends>
+   <header>blackgui/ticklabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../blackmisc/blackmisc.qrc"/>
  </resources>
