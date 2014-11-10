@@ -57,8 +57,8 @@ namespace BlackGui
             void toggleShowHideDetails(bool show, bool considerCurrentSize);
 
             QScopedPointer<Ui::CCockpitComponent> ui;
-            QSize m_sizeFloatingShown;  //! size when info area is shown
-            QSize m_sizeFloatingHidden; //! size when info area is hidden
+            QSize m_sizeFloatingShown;    //! size when info area is shown
+            QSize m_sizeFloatingHidden;   //! size when info area is hidden
             int m_minHeightInfoArea = -1; //! minimum height of the info area
         };
 

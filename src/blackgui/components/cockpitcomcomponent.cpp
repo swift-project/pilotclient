@@ -99,14 +99,6 @@ namespace BlackGui
                 this->ui->ds_ComPanelCom2Active->setValue(this->ui->ds_ComPanelCom2Standby->value());
                 this->ui->ds_ComPanelCom2Standby->setValue(f);
             }
-            else if (sender == this->ui->cbp_ComPanelTransponderMode)
-            {
-                // toggle the external button
-                if (this->ui->cbp_ComPanelTransponderMode->isIdentSelected())
-                {
-                    // todo
-                }
-            }
 
             const CAircraft ownAircraft = this->cockpitValuesToAircraftObject();
             this->updateOwnCockpitInContext(ownAircraft);

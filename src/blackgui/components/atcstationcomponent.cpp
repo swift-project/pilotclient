@@ -7,8 +7,6 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #include "atcstationcomponent.h"
 #include "../views/atcstationview.h"
 #include "../guiutility.h"
@@ -29,8 +27,6 @@ namespace BlackGui
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
             QTabWidget(parent),
-            CEnableForDockWidgetInfoArea(),
-            CEnableForRuntime(nullptr, false),
             ui(new Ui::CAtcStationComponent), m_updateTimer(nullptr)
         {
             ui->setupUi(this);
