@@ -258,4 +258,12 @@ namespace BlackMisc
         argument.endStructure();
         return argument;
     }
+
+    /*
+     * Implementations of pure virtual functions
+     */
+    uint CValueObject::getValueHash() const { return 0; }
+    int CValueObject::compareImpl(const CValueObject &) const { return 0; }
+    void CValueObject::marshallToDbus(QDBusArgument &) const {}
+    void CValueObject::unmarshallFromDbus(const QDBusArgument &) {}
 }

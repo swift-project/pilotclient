@@ -158,6 +158,9 @@ namespace BlackMisc
         friend int compare(const CValueObject &v1, const CValueObject &v2);
 
     public:
+        //! Root
+        using base_type = CValueObject;
+
         //! Base class enums
         enum ColumnIndex
         {
@@ -275,9 +278,13 @@ namespace BlackMisc
      * Standard implementation of CValueObject using meta tuple system.
      *
      * \tparam Derived  The class which is inheriting from this one (CRTP).
+     * \tparam Base     The class which this one shall inherit from (default is CValueObject,
+     *                  but this can be changed to create a deeper inheritance hierarchy).
      */
-    template <class Derived> class CValueObjectStdTuple : public CValueObject
+    template <class Derived, class Base = CValueObject> class CValueObjectStdTuple : public Base
     {
+        static_assert(std::is_base_of<CValueObject, Base>::value, "Base must be derived from CValueObject");
+
         friend bool operator ==(const Derived &a, const Derived &b)
         {
             return equals(a, b);
@@ -289,34 +296,39 @@ namespace BlackMisc
         }
 
     public:
+        //! Base class
+        using base_type = Base;
+
         //! \copydoc CValueObject::getValueHash()
         virtual uint getValueHash() const override
         {
-            return qHash(TupleConverter<Derived>::toMetaTuple(*derived()));
+            return qHash(TupleConverter<Derived>::toMetaTuple(*derived())) ^ Base::getValueHash();
         }
 
         //! \copydoc CValueObject::toJson
         virtual QJsonObject toJson() const override
         {
-            return BlackMisc::serializeJson(TupleConverter<Derived>::toMetaTuple(*derived()));
+            QJsonObject json = BlackMisc::serializeJson(TupleConverter<Derived>::toMetaTuple(*derived()));
+            return Json::appendJsonObject(json, Base::toJson());
         }
 
         //! \copydoc CValueObject::convertFromJson
         virtual void convertFromJson(const QJsonObject &json) override
         {
+            Base::convertFromJson(json);
             BlackMisc::deserializeJson(json, TupleConverter<Derived>::toMetaTuple(*derived()));
         }
 
         //! \copydoc CValueObject::toQVariant()
         virtual QVariant toQVariant() const override
         {
-            return QVariant::fromValue(*derived());
+            return maybeToQVariant(IsRegisteredQMetaType<Derived>());
         }
 
         //! \copydoc CValueObject::convertFromQVariant
         virtual void convertFromQVariant(const QVariant &variant) override
         {
-            BlackMisc::setFromQVariant(derived(), variant);
+            return maybeConvertFromQVariant(variant, IsRegisteredQMetaType<Derived>());
         }
 
         //! Register metadata
@@ -330,6 +342,11 @@ namespace BlackMisc
         //! Default constructor.
         CValueObjectStdTuple() = default;
 
+        //! Template constructor, forwards all arguments to base class constructor.
+        //! \todo When our compilers support C++11 inheriting constructors, use those instead.
+        template <typename T, typename... Ts, typename = typename std::enable_if<! std::is_same<CValueObjectStdTuple, typename std::decay<T>::type>::value>::type>
+        CValueObjectStdTuple(T &&first, Ts &&... args) : Base(std::forward<T>(first), std::forward<Ts>(args)...) {}
+
         //! Copy constructor.
         CValueObjectStdTuple(const CValueObjectStdTuple &) = default;
 
@@ -339,32 +356,37 @@ namespace BlackMisc
         //! \copydoc CValueObject::getMetaTypeId
         virtual int getMetaTypeId() const override
         {
-            return qMetaTypeId<Derived>();
+            return maybeGetMetaTypeId(IsRegisteredQMetaType<Derived>());
         }
 
         //! \copydoc CValueObject::isA
         virtual bool isA(int metaTypeId) const override
         {
-            if (metaTypeId == qMetaTypeId<Derived>()) { return true; }
-            return this->CValueObject::isA(metaTypeId);
+            if (metaTypeId == QMetaType::UnknownType) { return false; }
+            if (metaTypeId == maybeGetMetaTypeId(IsRegisteredQMetaType<Derived>())) { return true; }
+            return Base::isA(metaTypeId);
         }
 
         //! \copydoc CValueObject::compareImpl
         virtual int compareImpl(const CValueObject &other) const override
         {
             const auto &otherDerived = static_cast<const Derived &>(other);
-            return compare(TupleConverter<Derived>::toMetaTuple(*derived()), TupleConverter<Derived>::toMetaTuple(otherDerived));
+            int result = compare(TupleConverter<Derived>::toMetaTuple(*derived()), TupleConverter<Derived>::toMetaTuple(otherDerived));
+            if (result) return result;
+            return Base::compareImpl(other);
         }
 
         //! \copydoc CValueObject::marshallToDbus()
         virtual void marshallToDbus(QDBusArgument &argument) const override
         {
+            Base::marshallToDbus(argument);
             argument << TupleConverter<Derived>::toMetaTuple(*derived());
         }
 
         //! \copydoc CValueObject::unmarshallFromDbus()
         virtual void unmarshallFromDbus(const QDBusArgument &argument) override
         {
+            Base::unmarshallFromDbus(argument);
             argument >> TupleConverter<Derived>::toMetaTuple(*derived());
         }
 
@@ -379,6 +401,15 @@ namespace BlackMisc
             if (&a == &b) { return true; }
             return TupleConverter<Derived>::toMetaTuple(a) == TupleConverter<Derived>::toMetaTuple(b);
         }
+
+        // fallbacks in case Derived is not a registered meta type
+        template <class T> using IsRegisteredQMetaType = std::integral_constant<bool, QMetaTypeId<T>::Defined>;
+        static int maybeGetMetaTypeId(std::true_type) { return qMetaTypeId<Derived>(); }
+        static int maybeGetMetaTypeId(std::false_type) { return QMetaType::UnknownType; }
+        QVariant maybeToQVariant(std::true_type) const { return QVariant::fromValue(*derived()); }
+        QVariant maybeToQVariant(std::false_type) const { return {}; }
+        void maybeConvertFromQVariant(const QVariant &variant, std::true_type) { BlackMisc::setFromQVariant(derived(), variant); }
+        void maybeConvertFromQVariant(const QVariant &variant, std::false_type) { Q_UNUSED(variant); }
     };
 
     /*!
