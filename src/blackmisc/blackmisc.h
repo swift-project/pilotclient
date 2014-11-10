@@ -68,4 +68,49 @@
  * \brief Iterator classes for the containers.
  */
 
+/*!
+ * \namespace BlackMisc::Policy
+ * \brief Policy classes for CValueObjectStdTuple.
+ */
+
+/*!
+ * \namespace BlackMisc::Policy::MetaType
+ * \copydoc BlackMisc::Policy
+ */
+
+/*!
+ * \namespace BlackMisc::Policy::Equals
+ * \copydoc BlackMisc::Policy
+ */
+
+/*!
+ * \namespace BlackMisc::Policy::LessThan
+ * \copydoc BlackMisc::Policy
+ */
+
+/*!
+ * \namespace BlackMisc::Policy::Compare
+ * \copydoc BlackMisc::Policy
+ */
+
+/*!
+ * \namespace BlackMisc::Policy::Hash
+ * \copydoc BlackMisc::Policy
+ */
+
+/*!
+ * \namespace BlackMisc::Policy::DBus
+ * \copydoc BlackMisc::Policy
+ */
+
+/*!
+ * \namespace BlackMisc::Policy::Json
+ * \copydoc BlackMisc::Policy
+ */
+
+/*!
+ * \namespace BlackMisc::Policy::Private
+ * \private
+ */
+
 #endif

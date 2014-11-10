@@ -17,6 +17,7 @@
 #include "json.h"
 #include "variant.h"
 #include "blackmiscfreefunctions.h"
+#include "valueobject_policy.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>
 #include <QtGlobal>
@@ -271,29 +272,68 @@ namespace BlackMisc
 
         //! Parse from string, e.g. 100km/h
         virtual void parseFromString(const QString &) { qFatal("Not implemented"); }
+    };
 
+    /*!
+     * Default policy classes for use by CValueObjectStdTuple.
+     *
+     * The default policies are inherited from the policies of the base class. There is a specialization
+     * for the terminating case in which the base class is CValueObject.
+     *
+     * Specialize this template to use non-default policies for a particular derived class.
+     * Due to the void default template parameter, specializations can inherit from CValueObjectStdTuplePolicy<>
+     * so that only the policies which differ from the default need be specified.
+     * Policy classes which can be used are defined in namespace BlackMisc::Policy.
+     */
+    template <class Derived = void> struct CValueObjectStdTuplePolicy
+    {
+        using MetaType = Policy::MetaType::Inherit; //!< Metatype policy
+        using Equals = Policy::Equals::Inherit;     //!< Equals policy
+        using LessThan = Policy::LessThan::Inherit; //!< LessThan policy
+        using Compare = Policy::Compare::Inherit;   //!< Compare policy
+        using Hash = Policy::Hash::Inherit;         //!< Hash policy
+        using DBus = Policy::DBus::Inherit;         //!< DBus policy
+        using Json = Policy::Json::Inherit;         //!< JSON policy
+    };
+
+    /*!
+     * Default policy classes for use by CValueObjectStdTuple.
+     *
+     * Specialization for the terminating case in which the base class is CValueObject.
+     */
+    template <> struct CValueObjectStdTuplePolicy<CValueObject>
+    {
+        using MetaType = Policy::MetaType::Default;     //!< Metatype policy
+        using Equals = Policy::Equals::MetaTuple;       //!< Equals policy
+        using LessThan = Policy::LessThan::MetaTuple;   //!< Less than policy
+        using Compare = Policy::Compare::MetaTuple;     //!< Compare policy
+        using Hash = Policy::Hash::MetaTuple;           //!< Hash policy
+        using DBus = Policy::DBus::MetaTuple;           //!< DBus policy
+        using Json = Policy::Json::MetaTuple;           //!< JSon policy
     };
 
     /*!
      * Standard implementation of CValueObject using meta tuple system.
      *
+     * This uses policy-based design. Specialize the class template CValueObjectStdTuplePolicy
+     * to specify different policy classes.
+     *
      * \tparam Derived  The class which is inheriting from this one (CRTP).
      * \tparam Base     The class which this one shall inherit from (default is CValueObject,
      *                  but this can be changed to create a deeper inheritance hierarchy).
      */
-    template <class Derived, class Base = CValueObject> class CValueObjectStdTuple : public Base
+    template <class Derived, class Base = CValueObject> class CValueObjectStdTuple :
+        public Base,
+        private CValueObjectStdTuplePolicy<Derived>::Equals::template Ops<Derived, Base>,
+        private CValueObjectStdTuplePolicy<Derived>::LessThan::template Ops<Derived, Base>
     {
         static_assert(std::is_base_of<CValueObject, Base>::value, "Base must be derived from CValueObject");
 
-        friend bool operator ==(const Derived &a, const Derived &b)
-        {
-            return equals(a, b);
-        }
-
-        friend bool operator !=(const Derived &a, const Derived &b)
-        {
-            return !(a == b);
-        }
+        using MetaTypePolicy = typename CValueObjectStdTuplePolicy<Derived>::MetaType;
+        using ComparePolicy = typename CValueObjectStdTuplePolicy<Derived>::Compare;
+        using HashPolicy = typename CValueObjectStdTuplePolicy<Derived>::Hash;
+        using DBusPolicy = typename CValueObjectStdTuplePolicy<Derived>::DBus;
+        using JsonPolicy = typename CValueObjectStdTuplePolicy<Derived>::Json;
 
     public:
         //! Base class
@@ -302,13 +342,13 @@ namespace BlackMisc
         //! \copydoc CValueObject::getValueHash()
         virtual uint getValueHash() const override
         {
-            return qHash(TupleConverter<Derived>::toMetaTuple(*derived())) ^ Base::getValueHash();
+            return HashPolicy::hashImpl(*derived()) ^ Base::getValueHash();
         }
 
         //! \copydoc CValueObject::toJson
         virtual QJsonObject toJson() const override
         {
-            QJsonObject json = BlackMisc::serializeJson(TupleConverter<Derived>::toMetaTuple(*derived()));
+            QJsonObject json = JsonPolicy::serializeImpl(*derived());
             return Json::appendJsonObject(json, Base::toJson());
         }
 
@@ -316,7 +356,7 @@ namespace BlackMisc
         virtual void convertFromJson(const QJsonObject &json) override
         {
             Base::convertFromJson(json);
-            BlackMisc::deserializeJson(json, TupleConverter<Derived>::toMetaTuple(*derived()));
+            JsonPolicy::deserializeImpl(json, *derived());
         }
 
         //! \copydoc CValueObject::toQVariant()
@@ -334,8 +374,7 @@ namespace BlackMisc
         //! Register metadata
         static void registerMetadata()
         {
-            qRegisterMetaType<Derived>();
-            qDBusRegisterMetaType<Derived>();
+            MetaTypePolicy::template registerImpl<Derived>();
         }
 
     protected:
@@ -371,7 +410,7 @@ namespace BlackMisc
         virtual int compareImpl(const CValueObject &other) const override
         {
             const auto &otherDerived = static_cast<const Derived &>(other);
-            int result = compare(TupleConverter<Derived>::toMetaTuple(*derived()), TupleConverter<Derived>::toMetaTuple(otherDerived));
+            int result = ComparePolicy::compareImpl(*derived(), otherDerived);
             if (result) return result;
             return Base::compareImpl(other);
         }
@@ -380,27 +419,19 @@ namespace BlackMisc
         virtual void marshallToDbus(QDBusArgument &argument) const override
         {
             Base::marshallToDbus(argument);
-            argument << TupleConverter<Derived>::toMetaTuple(*derived());
+            DBusPolicy::marshallImpl(argument, *derived());
         }
 
         //! \copydoc CValueObject::unmarshallFromDbus()
         virtual void unmarshallFromDbus(const QDBusArgument &argument) override
         {
             Base::unmarshallFromDbus(argument);
-            argument >> TupleConverter<Derived>::toMetaTuple(*derived());
+            DBusPolicy::unmarshallImpl(argument, *derived());
         }
 
     private:
         const Derived *derived() const { return static_cast<const Derived *>(this); }
         Derived *derived() { return static_cast<Derived *>(this); }
-
-        // Friend functions are implemented in terms of private static member functions, because
-        // friendship is not transitive: friends of CValueObjectStdTuple are not friends of TupleConverter.
-        static bool equals(const Derived &a, const Derived &b)
-        {
-            if (&a == &b) { return true; }
-            return TupleConverter<Derived>::toMetaTuple(a) == TupleConverter<Derived>::toMetaTuple(b);
-        }
 
         // fallbacks in case Derived is not a registered meta type
         template <class T> using IsRegisteredQMetaType = std::integral_constant<bool, QMetaTypeId<T>::Defined>;

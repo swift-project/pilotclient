@@ -26,12 +26,24 @@
 namespace BlackMisc
 {
     class CValueObject;
+    template <class> class TupleConverter;
 
     namespace Private
     {
 
         // Inhibit doxygen warnings about missing documentation
         //! \cond PRIVATE
+
+        // To allow CValueObjectStdTuple policy classes to use the tuple system
+        class EncapsulationBreaker
+        {
+        protected:
+            template <class T>
+            static auto toMetaTuple(T &o) -> decltype(TupleConverter<typename std::decay<T>::type>::toMetaTuple(o))
+            {
+                return TupleConverter<typename std::decay<T>::type>::toMetaTuple(o);
+            }
+        };
 
         // Using SFINAE to help detect missing BLACK_ENABLE_TUPLE_CONVERSION macro in static_assert
         std::false_type hasEnabledTupleConversionHelper(...);
