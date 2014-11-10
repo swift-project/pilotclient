@@ -41,7 +41,7 @@ namespace BlackMisc
             //! Default value?
             virtual bool isDefaultValue() const
             {
-                return this->m_frequencyActive == CModulator::FrequencyNotSet();
+                return (this->m_frequencyActive == FrequencyNotSet());
             }
 
             //! Toggle active and standby frequencies
@@ -60,13 +60,13 @@ namespace BlackMisc
             }
 
             //! Set active frequency
-            void setFrequencyActive(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
+            virtual void setFrequencyActive(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
             {
                 this->m_frequencyActive = frequency;
             }
 
             //! Set standby frequency
-            void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
+            virtual void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency)
             {
                 this->m_frequencyStandby = frequency;
             }
@@ -126,14 +126,14 @@ namespace BlackMisc
             }
 
             //! Set active frequency
-            void setFrequencyActiveMHz(double frequencyMHz)
+            virtual void setFrequencyActiveMHz(double frequencyMHz)
             {
                 frequencyMHz = Math::CMath::round(frequencyMHz, 3);
                 this->m_frequencyActive = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());
             }
 
             //! Set standby frequency
-            void setFrequencyStandbyMHz(double frequencyMHz)
+            virtual void setFrequencyStandbyMHz(double frequencyMHz)
             {
                 frequencyMHz = Math::CMath::round(frequencyMHz, 3);
                 this->m_frequencyStandby = BlackMisc::PhysicalQuantities::CFrequency(frequencyMHz, BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz());

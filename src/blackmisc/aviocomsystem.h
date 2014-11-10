@@ -54,11 +54,19 @@ namespace BlackMisc
 
             //! Set active frequency
             //! \remarks will be rounded to channel spacing
-            void setFrequencyActiveMHz(double frequencyMHz);
+            virtual void setFrequencyActiveMHz(double frequencyMHz) override;
 
             //! Set standby frequency
             //! \remarks will be rounded to channel spacing
-            void setFrequencyStandbyMHz(double frequencyMHz);
+            virtual void setFrequencyStandbyMHz(double frequencyMHz) override;
+
+            //! Set active frequency
+            //! \remarks will be rounded to channel spacing
+            virtual void setFrequencyActive(const BlackMisc::PhysicalQuantities::CFrequency &frequency) override;
+
+            //! Set active frequency
+            //! \remarks will be rounded to channel spacing
+            virtual void setFrequencyStandby(const BlackMisc::PhysicalQuantities::CFrequency &frequency) override;
 
             //! Is active frequency within 8.3383kHz channel?
             bool isActiveFrequencyWithin8_33kHzChannel(const BlackMisc::PhysicalQuantities::CFrequency &comFrequency) const

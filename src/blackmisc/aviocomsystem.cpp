@@ -30,20 +30,44 @@ namespace BlackMisc
                  CComSystem::isValidMilitaryFrequency(this->getFrequencyStandby()));
         }
 
+        /*
+         * COM frequency
+         */
         void CComSystem::setFrequencyActiveMHz(double frequencyMHz)
         {
             CFrequency f(frequencyMHz, CFrequencyUnit::MHz());
-            if (f == this->getFrequencyActive()) return; // save all the comparisons / rounding
-            CComSystem::roundToChannelSpacing(f, this->m_channelSpacing);
-            this->CModulator::setFrequencyActive(f);
+            this->setFrequencyActive(f);
         }
 
+        /*
+         * COM frequency
+         */
         void CComSystem::setFrequencyStandbyMHz(double frequencyMHz)
         {
             CFrequency f(frequencyMHz, CFrequencyUnit::MHz());
-            if (f == this->getFrequencyStandby()) return; // save all the comparisons / rounding
-            CComSystem::roundToChannelSpacing(f, this->m_channelSpacing);
-            CModulator::setFrequencyStandby(f);
+            this->setFrequencyStandby(f);
+        }
+
+        /*
+         * COM frequency
+         */
+        void CComSystem::setFrequencyActive(const CFrequency &frequency)
+        {
+            if (frequency == this->getFrequencyActive()) { return; } // save all the comparisons / rounding
+            CFrequency fRounded(frequency);
+            roundToChannelSpacing(fRounded, this->m_channelSpacing);
+            this->CModulator::setFrequencyActive(fRounded);
+        }
+
+        /*
+         * COM frequency
+         */
+        void CComSystem::setFrequencyStandby(const CFrequency &frequency)
+        {
+            if (frequency == this->getFrequencyStandby()) { return; } // save all the comparisons / rounding
+            CFrequency fRounded(frequency);
+            roundToChannelSpacing(fRounded, this->m_channelSpacing);
+            this->CModulator::setFrequencyStandby(fRounded);
         }
 
         /*
