@@ -66,89 +66,78 @@ namespace BlackMisc
     uint CVariant::getValueHash() const
     {
         uint h = 0;
-        if (!this->isValid() || this->isNull())
+        QVariant qv = this->toQVariant();
+        switch (qv.type())
         {
-            QString hs;
-            hs.sprintf("%p", this);
-            h = ::qHash(hs);
-        }
-        else
-        {
-            QVariant qv = this->toQVariant();
-            switch (qv.type())
+        case QVariant::Int:
+            h = ::qHash(qv.toInt());
+            break;
+        case QVariant::UInt:
+            h = ::qHash(qv.toUInt());
+            break;
+        case QVariant::Bool:
+            h = ::qHash(qv.toUInt());
+            break;
+        case QVariant::Double:
+            h = ::qHash(qv.toUInt());
+            break;
+        case QVariant::LongLong:
+            h = ::qHash(qv.toLongLong());
+            break;
+        case QVariant::ULongLong:
+            h = ::qHash(qv.toULongLong());
+            break;
+        case QVariant::String:
+            h = ::qHash(qv.toString());
+            break;
+        case QVariant::Char:
+            h = ::qHash(qv.toChar());
+            break;
+        case QVariant::StringList:
+            h = ::qHash(qv.toString());
+            break;
+        case QVariant::ByteArray:
+            h = ::qHash(qv.toByteArray());
+            break;
+        case QVariant::Date:
+        case QVariant::Time:
+        case QVariant::DateTime:
+        case QVariant::Url:
+        case QVariant::Locale:
+        case QVariant::RegExp:
+            h = ::qHash(qv.toString());
+            break;
+        case QVariant::Map:
+        case QVariant::List:
+        case QVariant::BitArray:
+        case QVariant::Size:
+        case QVariant::SizeF:
+        case QVariant::Rect:
+        case QVariant::LineF:
+        case QVariant::Line:
+        case QVariant::RectF:
+        case QVariant::Point:
+        case QVariant::PointF:
+        case QVariant::UserType:
+        case QVariant::Invalid:
+            h = 2; // known, but not supported
+            break;
+        default:
             {
-            case QVariant::Int:
-                h = ::qHash(qv.toInt());
-                break;
-            case QVariant::UInt:
-                h = ::qHash(qv.toUInt());
-                break;
-            case QVariant::Bool:
-                h = ::qHash(qv.toUInt());
-                break;
-            case QVariant::Double:
-                h = ::qHash(qv.toUInt());
-                break;
-            case QVariant::LongLong:
-                h = ::qHash(qv.toLongLong());
-                break;
-            case QVariant::ULongLong:
-                h = ::qHash(qv.toULongLong());
-                break;
-            case QVariant::String:
-                h = ::qHash(qv.toString());
-                break;
-            case QVariant::Char:
-                h = ::qHash(qv.toChar());
-                break;
-            case QVariant::StringList:
-                h = ::qHash(qv.toString());
-                break;
-            case QVariant::ByteArray:
-                h = ::qHash(qv.toByteArray());
-                break;
-            case QVariant::Date:
-            case QVariant::Time:
-            case QVariant::DateTime:
-            case QVariant::Url:
-            case QVariant::Locale:
-            case QVariant::RegExp:
-                h = ::qHash(qv.toString());
-                break;
-            case QVariant::Map:
-            case QVariant::List:
-            case QVariant::BitArray:
-            case QVariant::Size:
-            case QVariant::SizeF:
-            case QVariant::Rect:
-            case QVariant::LineF:
-            case QVariant::Line:
-            case QVariant::RectF:
-            case QVariant::Point:
-            case QVariant::PointF:
-            case QVariant::UserType:
-            case QVariant::Invalid:
-                h = 2; // known, but not supported
-                break;
-            default:
+                // value object?
+                const QVariant qv = this->toQVariant();
+                const CValueObject *cv = CValueObject::fromQVariant(qv);
+                if (cv)
                 {
-                    // value object?
-                    const QVariant qv = this->toQVariant();
-                    const CValueObject *cv = CValueObject::fromQVariant(qv);
-                    if (cv)
-                    {
-                        h = cv->getValueHash();
-                    }
-                    else
-                    {
-                        // no value object
-                        QString hs;
-                        hs.sprintf("%p", this);
-                        h = ::qHash(hs);
-                    }
+                    h = cv->getValueHash();
                 }
-                break;
+                else
+                {
+                    // no value object
+                    Q_ASSERT(false);
+                }
             }
+            break;
         }
         return h;
     }
