@@ -55,6 +55,7 @@ namespace BlackMisc
             qDBusRegisterMetaType<BlackMisc::CCollection<CSettingKeyboardHotkey>>();
             qRegisterMetaType<CSettingKeyboardHotkeyList>();
             qDBusRegisterMetaType<CSettingKeyboardHotkeyList>();
+            registerMetaValueType<CSettingKeyboardHotkeyList>();
         }
 
         /*

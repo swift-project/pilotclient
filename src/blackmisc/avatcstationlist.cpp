@@ -36,6 +36,7 @@ namespace BlackMisc
             qDBusRegisterMetaType<BlackMisc::CCollection<CAtcStation>>();
             qRegisterMetaType<CAtcStationList>();
             qDBusRegisterMetaType<CAtcStationList>();
+            registerMetaValueType<CAtcStationList>();
         }
 
         /*

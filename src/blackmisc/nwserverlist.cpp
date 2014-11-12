@@ -36,6 +36,7 @@ namespace BlackMisc
             qDBusRegisterMetaType<BlackMisc::CCollection<CServer>>();
             qRegisterMetaType<CServerList>();
             qDBusRegisterMetaType<CServerList>();
+            registerMetaValueType<CServerList>();
         }
 
     } // namespace

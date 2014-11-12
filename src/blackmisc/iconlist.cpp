@@ -28,6 +28,7 @@ namespace BlackMisc
         qDBusRegisterMetaType<BlackMisc::CCollection<CIcon>>();
         qRegisterMetaType<CIconList>();
         qDBusRegisterMetaType<CIconList>();
+        registerMetaValueType<CIconList>();
     }
 
     const CIconList &CIconList::allIcons()

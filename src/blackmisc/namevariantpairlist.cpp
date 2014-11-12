@@ -58,5 +58,6 @@ namespace BlackMisc
         qDBusRegisterMetaType<BlackMisc::CCollection<CNameVariantPair>>();
         qRegisterMetaType<CNameVariantPairList>();
         qDBusRegisterMetaType<CNameVariantPairList>();
+        registerMetaValueType<CNameVariantPairList>();
     }
 } // namespace

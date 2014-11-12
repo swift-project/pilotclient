@@ -33,6 +33,7 @@ namespace BlackMisc
         {
             qRegisterMetaType<CVoiceRoomList>();
             qDBusRegisterMetaType<CVoiceRoomList>();
+            registerMetaValueType<CVoiceRoomList>();
         }
 
         /*

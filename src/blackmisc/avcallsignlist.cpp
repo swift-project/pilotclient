@@ -37,6 +37,7 @@ namespace BlackMisc
             qDBusRegisterMetaType<BlackMisc::CCollection<CCallsign>>();
             qRegisterMetaType<CCallsignList>();
             qDBusRegisterMetaType<CCallsignList>();
+            registerMetaValueType<CCallsignList>();
         }
     } // namespace
 } // namespace

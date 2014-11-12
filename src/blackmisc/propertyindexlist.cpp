@@ -34,6 +34,7 @@ namespace BlackMisc
         qDBusRegisterMetaType<BlackMisc::CCollection<CPropertyIndex>>();
         qRegisterMetaType<CPropertyIndexList>();
         qDBusRegisterMetaType<CPropertyIndexList>();
+        registerMetaValueType<CPropertyIndexList>();
     }
 
 } // namespace

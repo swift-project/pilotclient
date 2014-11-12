@@ -46,5 +46,6 @@ namespace BlackMisc
         qDBusRegisterMetaType<BlackMisc::CCollection<CStatusMessage>>();
         qRegisterMetaType<CStatusMessageList>();
         qDBusRegisterMetaType<CStatusMessageList>();
+        registerMetaValueType<CStatusMessageList>();
     }
 }

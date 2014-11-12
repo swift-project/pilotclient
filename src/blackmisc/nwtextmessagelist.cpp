@@ -120,6 +120,7 @@ namespace BlackMisc
             qDBusRegisterMetaType<BlackMisc::CCollection<CTextMessage>>();
             qRegisterMetaType<CTextMessageList>();
             qDBusRegisterMetaType<CTextMessageList>();
+            registerMetaValueType<CTextMessageList>();
         }
 
         /*

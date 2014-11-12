@@ -33,6 +33,7 @@ namespace BlackMisc
             qDBusRegisterMetaType<BlackMisc::CCollection<CKeyboardKey>>();
             qRegisterMetaType<CKeyboardKeyList>();
             qDBusRegisterMetaType<CKeyboardKeyList>();
+            registerMetaValueType<CKeyboardKeyList>();
         }
 
     } // namespace

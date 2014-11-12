@@ -35,6 +35,7 @@ namespace BlackMisc
             qDBusRegisterMetaType<BlackMisc::CCollection<CAirport>>();
             qRegisterMetaType<CAirportList>();
             qDBusRegisterMetaType<CAirportList>();
+            registerMetaValueType<CAirportList>();
         }
 
         /*

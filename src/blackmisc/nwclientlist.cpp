@@ -36,6 +36,7 @@ namespace BlackMisc
             qDBusRegisterMetaType<BlackMisc::CCollection<CClient>>();
             qRegisterMetaType<CClientList>();
             qDBusRegisterMetaType<CClientList>();
+            registerMetaValueType<CClientList>();
         }
 
     } // namespace

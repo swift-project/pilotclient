@@ -54,5 +54,6 @@ namespace BlackMisc
     {
         qRegisterMetaType<CLogCategoryList>();
         qDBusRegisterMetaType<CLogCategoryList>();
+        registerMetaValueType<CLogCategoryList>();
     }
 }

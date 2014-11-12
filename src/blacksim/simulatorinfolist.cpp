@@ -28,6 +28,7 @@ namespace BlackSim
         qDBusRegisterMetaType<BlackMisc::CCollection<CSimulatorInfo>>();
         qRegisterMetaType<CSimulatorInfoList>();
         qDBusRegisterMetaType<CSimulatorInfoList>();
+        BlackMisc::registerMetaValueType<CSimulatorInfoList>();
     }
 
 } // namespace BlackSim

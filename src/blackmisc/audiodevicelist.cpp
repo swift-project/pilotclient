@@ -60,6 +60,7 @@ namespace BlackMisc
         {
             qRegisterMetaType<CAudioDeviceList>();
             qDBusRegisterMetaType<CAudioDeviceList>();
+            registerMetaValueType<CAudioDeviceList>();
         }
 
     } // namespace

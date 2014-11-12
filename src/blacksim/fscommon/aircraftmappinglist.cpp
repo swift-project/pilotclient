@@ -15,6 +15,7 @@ namespace BlackSim
             qDBusRegisterMetaType<BlackMisc::CCollection<CAircraftMapping>>();
             qRegisterMetaType<CAircraftMappingList>();
             qDBusRegisterMetaType<CAircraftMappingList>();
+            BlackMisc::registerMetaValueType<CAircraftMappingList>();
         }
     }
 } // namespace

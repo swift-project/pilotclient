@@ -28,6 +28,7 @@ namespace BlackMisc
         {
             qRegisterMetaType<CUserList>();
             qDBusRegisterMetaType<CUserList>();
+            registerMetaValueType<CUserList>();
         }
 
     } // namespace

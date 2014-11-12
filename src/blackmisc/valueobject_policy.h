@@ -21,6 +21,9 @@ namespace BlackMisc
     template <class>
     struct CValueObjectStdTuplePolicy;
 
+    template <typename T>
+    void registerMetaValueType();
+
     namespace Policy
     {
         namespace Private
@@ -40,7 +43,15 @@ namespace BlackMisc
             {
                 //! Register with QMetaType
                 template <class T, class...>
-                static void registerImpl() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); }
+                static void registerImpl() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); maybeRegisterMetaValueType<T>(); }
+
+            private:
+                template <class T>
+                static void maybeRegisterMetaValueType() { maybeRegisterMetaValueType<T>(std::is_base_of<CValueObject, T>()); }
+                template <class T>
+                static void maybeRegisterMetaValueType(std::true_type) { BlackMisc::registerMetaValueType<T>(); }
+                template <class T>
+                static void maybeRegisterMetaValueType(std::false_type) {}
             };
 
             //! CValueObjectStdTuple registerMetadata policy which inherits the policy of the base class
