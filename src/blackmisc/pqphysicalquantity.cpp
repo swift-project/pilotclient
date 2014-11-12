@@ -332,7 +332,7 @@ namespace BlackMisc
                 this->m_value = variant.toDouble();
                 break;
             case IndexUnit:
-                this->m_unit.fromQVariant(variant);
+                this->m_unit.convertFromQVariant(variant);
                 break;
             case IndexValueRounded0DigitsWithUnit:
             case IndexValueRounded1DigitsWithUnit:

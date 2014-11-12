@@ -103,8 +103,8 @@ namespace BlackSim
             qDBusRegisterMetaType<BlackMisc::CSequence<CAircraftCfgEntries>>();
             qRegisterMetaType<BlackMisc::CCollection<CAircraftCfgEntries>>();
             qDBusRegisterMetaType<BlackMisc::CCollection<CAircraftCfgEntries>>();
-            qRegisterMetaType<CAircraftCfgEntries>();
-            qDBusRegisterMetaType<CAircraftCfgEntries>();
+            qRegisterMetaType<CAircraftCfgEntriesList>();
+            qDBusRegisterMetaType<CAircraftCfgEntriesList>();
         }
 
     } // namespace

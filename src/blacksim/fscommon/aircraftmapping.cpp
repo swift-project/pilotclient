@@ -142,7 +142,7 @@ namespace BlackSim
         {
             if (index.isMyself())
             {
-                this->setPropertyByIndex(variant, index);
+                this->convertFromQVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

@@ -204,6 +204,12 @@ namespace BlackMisc
                 return this->getElement(row, column);
             }
 
+            //! \copydoc CValueObject::toJson
+            virtual QJsonObject toJson() const override;
+
+            //! \copydoc CValueObject::convertFromJson
+            virtual void convertFromJson(const QJsonObject &json) override;
+
         protected:
             // no bug, Qt expects columns rows
             QGenericMatrix<Columns, Rows, double> m_matrix; //!< backing data
@@ -216,12 +222,6 @@ namespace BlackMisc
 
             //! \copydoc CValueObject::unmarshallFromDbus
             virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
-
-            //! \copydoc CValueObject::toJson
-            virtual QJsonObject toJson() const override;
-
-            //! \copydoc CValueObject::convertFromJson
-            virtual void convertFromJson(const QJsonObject &json) override;
 
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
