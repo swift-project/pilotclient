@@ -23,7 +23,6 @@ class QDBusArgument;
 
 namespace BlackMisc
 {
-    // KB: Would it make sense to turn CVariant into an CValueObject? #307
 
     /*!
      * Wrapper class for QVariant, for more natural and transparent DBus integration.

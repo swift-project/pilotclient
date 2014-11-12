@@ -16,6 +16,15 @@
 
 namespace BlackMisc
 {
+    Private::IValueObjectMetaInfo *Private::getValueObjectMetaInfo(int typeId)
+    {
+        return getValueObjectMetaInfo(QVariant(typeId, nullptr));
+    }
+
+    Private::IValueObjectMetaInfo *Private::getValueObjectMetaInfo(const QVariant &v)
+    {
+        return v.value<IValueObjectMetaInfo *>();
+    }
 
     void CVariant::registerMetadata()
     {

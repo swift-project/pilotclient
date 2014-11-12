@@ -17,6 +17,7 @@
 #include "json.h"
 #include "variant.h"
 #include "blackmiscfreefunctions.h"
+#include "valueobject_private.h"
 #include "valueobject_policy.h"
 #include <QtDBus/QDBusMetaType>
 #include <QString>
@@ -54,6 +55,24 @@ namespace BlackMisc
             //! True if and only if T is derived from CPhysicalQuantity.
             static const bool value = sizeof(test(*(T *)0)) == sizeof(yes);
         };
+    }
+
+    /*!
+     * This registers the value type T with the BlackMisc meta type system,
+     * making it available for use with the extended feature set of BlackMisc::CVariant.
+     *
+     * The implementation (ab)uses the QMetaType converter function registration mechanism
+     * to store a type-erased representation of the set of operations supported by T.
+     * Unlike the singleton pattern, this approach means that CVariant can be used in plugins.
+     */
+    template <typename T>
+    void registerMetaValueType()
+    {
+        if (QMetaType::hasRegisteredConverterFunction<T, Private::IValueObjectMetaInfo *>()) { return; }
+        auto converter = [](const T &) { static Private::CValueObjectMetaInfo<T> info; return &info; };
+        bool ok = QMetaType::registerConverter<T, Private::IValueObjectMetaInfo *>(converter);
+        Q_ASSERT(ok);
+        Q_UNUSED(ok);
     }
 
     /*!
@@ -194,6 +213,9 @@ namespace BlackMisc
         static const CValueObject *fromQVariant(const QVariant &variant);
 
     protected:
+        template <typename T>
+        friend struct Private::CValueObjectMetaInfo;
+
         //! Default constructor.
         CValueObject() = default;
 
@@ -237,6 +259,15 @@ namespace BlackMisc
         //! Parse from string, e.g. 100km/h
         virtual void parseFromString(const QString &) { qFatal("Not implemented"); }
     };
+
+    //! \private FIXME defined out-of-line because it depends on CValueObject
+    template <typename T>
+    int Private::CValueObjectMetaInfo<T>::compare(const void *lhs, const void *rhs) const
+    {
+        // Casting to CValueObject here only because compareImpl is protected and CValueObjectMetaInfo is a friend of CValueObject.
+        // TODO: make compareImpl public (and typesafe), then this doesn't need to be defined out-of-line.
+        return static_cast<const CValueObject *>(lhs)->compareImpl(*static_cast<const CValueObject *>(rhs));
+    }
 
     /*!
      * Default policy classes for use by CValueObjectStdTuple.
