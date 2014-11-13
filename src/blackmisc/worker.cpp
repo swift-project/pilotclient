@@ -32,10 +32,7 @@ namespace BlackMisc
     {
         m_task();
 
-        QMutexLocker lock(&m_finishedMutex);
-        m_finished = true;
-        emit finished();
-        lock.unlock();
+        setFinished();
 
         auto *ownThread = thread();
         moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion

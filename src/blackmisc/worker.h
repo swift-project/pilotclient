@@ -89,24 +89,13 @@ namespace BlackMisc
     };
 
     /*!
-     * Class for doing some arbitrary task in its own thread.
-     *
-     * The task is exposed as a function object, so could be a lambda or a hand-written closure.
-     * CWorker can not be subclassed, instead it can be extended with rich callable task objects.
+     * Base class for CWorker and CContinuousWorker.
      */
-    class CWorker final : public QObject
+    class CWorkerBase : public QObject
     {
         Q_OBJECT
 
     public:
-        /*!
-         * Returns a new worker object which lives in a new thread.
-         * \param owner Will be the parent of the new thread (the worker has no parent).
-         * \param name A name for the task, which will be used to create a name for the thread.
-         * \param task A function object which will be run by the worker in its thread.
-         */
-        static CWorker *fromTask(QObject *owner, const QString &name, std::function<void()> task);
-
         //! Connects to a slot which will be called when the task is finished.
         //! \threadsafe
         template <typename T, typename F>
@@ -114,7 +103,7 @@ namespace BlackMisc
         {
             Q_ASSERT(receiver->thread() == QThread::currentThread());
             QMutexLocker lock(&m_finishedMutex);
-            connect(this, &CWorker::finished, receiver, slot);
+            connect(this, &CWorkerBase::finished, receiver, slot);
             if (m_finished) { (receiver->*slot)(); }
         }
 
@@ -125,7 +114,7 @@ namespace BlackMisc
         {
             Q_ASSERT(context->thread() == QThread::currentThread());
             QMutexLocker lock(&m_finishedMutex);
-            connect(this, &CWorker::finished, context, functor);
+            connect(this, &CWorkerBase::finished, context, functor);
             if (m_finished) { functor(); }
         }
 
@@ -135,7 +124,7 @@ namespace BlackMisc
         void then(F functor)
         {
             QMutexLocker lock(&m_finishedMutex);
-            connect(this, &CWorker::finished, functor);
+            connect(this, &CWorkerBase::finished, functor);
             if (m_finished) { functor(); }
         }
 
@@ -178,6 +167,39 @@ namespace BlackMisc
         //! Emitted when the task is finished.
         void finished();
 
+    protected:
+        //! Mark the task as finished.
+        void setFinished()
+        {
+            QMutexLocker lock(&m_finishedMutex);
+            m_finished = true;
+            emit finished();
+        }
+
+    private:
+        bool m_finished = false;
+        mutable QMutex m_finishedMutex { QMutex::Recursive };
+    };
+
+    /*!
+     * Class for doing some arbitrary parcel of work in its own thread.
+     *
+     * The task is exposed as a function object, so could be a lambda or a hand-written closure.
+     * CWorker can not be subclassed, instead it can be extended with rich callable task objects.
+     */
+    class CWorker final : public CWorkerBase
+    {
+        Q_OBJECT
+
+    public:
+        /*!
+         * Returns a new worker object which lives in a new thread.
+         * \param owner Will be the parent of the new thread (the worker has no parent).
+         * \param name A name for the task, which will be used to create a name for the thread.
+         * \param task A function object which will be run by the worker in its thread.
+         */
+        static CWorker *fromTask(QObject *owner, const QString &name, std::function<void()> task);
+
     private slots:
         //! Called when the worker has been moved into its new thread.
         void ps_runTask();
@@ -185,8 +207,6 @@ namespace BlackMisc
     private:
         CWorker(std::function<void()> task) : m_task(task) {}
 
-        bool m_finished = false;
-        mutable QMutex m_finishedMutex { QMutex::Recursive };
         std::function<void()> m_task;
     };
 
