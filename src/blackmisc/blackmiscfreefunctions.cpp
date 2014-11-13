@@ -337,27 +337,25 @@ QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int loc
         // complex, user type
         // it has to be made sure, that the cast works
         const QDBusArgument arg = variant.value<QDBusArgument>();
-        QVariant fixedVariant;
         if (localUserType < static_cast<int>(QVariant::UserType))
         {
             // complex Qt type, e.g. QDateTime
-            fixedVariant = BlackMisc::complexQtTypeFromDbusArgument(arg, localUserType);
+            return BlackMisc::complexQtTypeFromDbusArgument(arg, localUserType);
         }
         else
         {
-            // http://qt-project.org/doc/qt-5.0/qtcore/qmetatype.html#create
-            void *obByMetaId = QMetaType::create(localUserType);
-
-            // own types, send as QDBusArgument
-            CValueObject *streamable = static_cast<CValueObject *>(obByMetaId);
-            arg >> (*streamable);
-            fixedVariant = streamable->toQVariant();
-            QMetaType::destroy(localUserType, obByMetaId);
+            QVariant valueVariant(localUserType, nullptr);
+            auto *meta = Private::getValueObjectMetaInfo(valueVariant);
+            if (meta)
+            {
+                meta->unmarshall(arg, valueVariant.data());
+                return valueVariant;
+            }
         }
-        return fixedVariant;
     }
     else
     {
+        qWarning() << "fixQVariantFromDbusArgument called with unsupported type";
         return variant;
     }
 }

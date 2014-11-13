@@ -34,42 +34,116 @@ namespace BlackMisc
 
     QString CVariant::toString(bool i18n) const
     {
-        if (type() == QVariant::UserType)
+        auto *meta = getValueObjectMetaInfo();
+        if (meta)
         {
-            const CValueObject *s = CValueObject::fromQVariant(m_v); // FIXME this will return garbage if value is not a CValueObject
-            Q_ASSERT(s);
-            if (s)
+            return meta->toQString(data(), i18n);
+        }
+        return m_v.toString();
+    }
+
+    int BlackMisc::compare(const CVariant &a, const CVariant &b)
+    {
+        if (a.userType() < b.userType()) { return -1; }
+        if (a.userType() > b.userType()) { return 1; }
+        auto *metaA = a.getValueObjectMetaInfo();
+        auto *metaB = b.getValueObjectMetaInfo();
+        if (metaA && metaB)
+        {
+            const void *casted = nullptr;
+            if ((casted = metaA->upCastTo(a.data(), metaB->getMetaTypeId())))
             {
-                return s->toQString(i18n);
+                return metaB->compare(casted, b.data());
+            }
+            else if ((casted = metaB->upCastTo(b.data(), metaA->getMetaTypeId())))
+            {
+                return metaA->compare(a.data(), casted);
             }
             else
             {
-                return "No CValueObject, no string conversion";
+                qWarning() << "Comparing two CVariants containing unrelated value objects";
+                return 0;
             }
         }
-        return m_v.toString();
+        if (a.m_v < b.m_v) { return -1; }
+        if (a.m_v > b.m_v) { return 1; }
+        return 0;
     }
 
     QJsonObject CVariant::toJson() const
     {
         QJsonObject json;
-        json.insert("type", static_cast<int>(this->type())); // type
-        json.insert("usertype", this->userType()); // user type
-        json.insert("typename", this->typeName()); // as tring, mainly for debugging, readablity
-        json.insert("value", this->toString(false));
+        json.insert("type", this->typeName());
+
+        switch (m_v.type())
+        {
+        case QVariant::Int:         json.insert("value", m_v.toInt());
+        case QVariant::UInt:        json.insert("value", m_v.toInt());
+        case QVariant::Bool:        json.insert("value", m_v.toBool());
+        case QVariant::Double:      json.insert("value", m_v.toDouble());
+        case QVariant::LongLong:    json.insert("value", m_v.toLongLong());
+        case QVariant::ULongLong:   json.insert("value", m_v.toLongLong());
+        case QVariant::String:      json.insert("value", m_v.toString());
+        case QVariant::Char:        json.insert("value", m_v.toString());
+        case QVariant::ByteArray:   json.insert("value", m_v.toString());
+        default:
+            {
+                auto *meta = getValueObjectMetaInfo();
+                if (meta)
+                {
+                    json.insert("value", meta->toJson(data()));
+                }
+                else if (m_v.canConvert<QString>())
+                {
+                    json.insert("value", m_v.toString());
+                }
+                else
+                {
+                    qWarning() << "Unsupported CVariant type for toJson";
+                }
+            }
+        }
         return json;
     }
 
     void CVariant::fromJson(const QJsonObject &json)
     {
-        int type = json.value("type").toInt(-1);
-        int userType = json.value("usertype").toInt(-1);
-        QString typeName = json.value("typename").toString();
-        QString value = json.value("value").toString();
+        QString typeName = json.value("type").toString();
+        int typeId = QMetaType::type(qPrintable(typeName));
 
-        // KB: Not yet implemented, but would be possible IMHO
-        Q_ASSERT(false);
-        qDebug() << type << userType << typeName << value;
+        switch (typeId)
+        {
+        case QVariant::Int:         m_v.setValue(json.value("value").toInt());
+        case QVariant::UInt:        m_v.setValue<uint>(json.value("value").toInt());
+        case QVariant::Bool:        m_v.setValue(json.value("value").toBool());
+        case QVariant::Double:      m_v.setValue(json.value("value").toDouble());
+        case QVariant::LongLong:    m_v.setValue<qlonglong>(json.value("value").toInt()); // QJsonValue has no toLongLong() method???
+        case QVariant::ULongLong:   m_v.setValue<qulonglong>(json.value("value").toInt());
+        case QVariant::String:      m_v.setValue(json.value("value").toString());
+        case QVariant::Char:        m_v.setValue(json.value("value").toString().size() > 0 ? json.value("value").toString().at(0) : '\0');
+        case QVariant::ByteArray:   m_v.setValue(json.value("value").toString().toLatin1());
+        default:
+            {
+                auto *meta = Private::getValueObjectMetaInfo(typeId);
+                if (meta)
+                {
+                    m_v = QVariant(typeId, nullptr);
+                    meta->convertFromJson(json.value("value").toObject(), data());
+                }
+                else if (QMetaType::hasRegisteredConverterFunction(qMetaTypeId<QString>(), typeId))
+                {
+                    m_v.setValue(json.value("value").toString());
+                    if (! m_v.convert(typeId))
+                    {
+                        qWarning() << "Failed to convert from JSON string";
+                    }
+                }
+                else
+                {
+                    qWarning() << "Unsupported CVariant type for fromJson";
+                }
+            }
+        }
     }
 
     uint CVariant::getValueHash() const
@@ -87,10 +161,10 @@ namespace BlackMisc
         case QVariant::ByteArray:   return qHash(m_v.toByteArray());
         default:
             {
-                const CValueObject *cv = CValueObject::fromQVariant(m_v);
-                if (cv)
+                auto *meta = getValueObjectMetaInfo();
+                if (meta)
                 {
-                    return cv->getValueHash();
+                    return meta->getValueHash(data());
                 }
                 else if (m_v.canConvert<QString>())
                 {

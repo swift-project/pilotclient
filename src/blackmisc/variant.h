@@ -25,7 +25,8 @@ namespace BlackMisc
 {
 
     /*!
-     * Wrapper class for QVariant, for more natural and transparent DBus integration.
+     * Wrapper around QVariant which provides transparent access to CValueObject methods
+     * of the contained object if it is registered with BlackMisc::registerMetaValueType.
      */
     class CVariant
     {
@@ -133,8 +134,7 @@ namespace BlackMisc
         bool isValid() const { return m_v.isValid(); }
 
         //! Return the metatype ID of the value in this variant, or QMetaType::User if it is a user type.
-        // KB we should think about returning QMetaType::Type directly, as QVariant::Type is deprecated
-        QVariant::Type type() const { return m_v.type(); }
+        QMetaType::Type type() const { return static_cast<QMetaType::Type>(m_v.type()); }
 
         //! Return the typename of the value in this variant.
         const char *typeName() const { return m_v.typeName(); }
@@ -149,28 +149,35 @@ namespace BlackMisc
         void fromJson(const QJsonObject &json);
 
         //! Equal operator.
-        bool operator ==(const CVariant &other) const { return m_v == other.m_v; }
+        friend bool operator ==(const CVariant &a, const CVariant &b) { return compare(a, b) == 0; }
 
         //! Not equal operator.
-        bool operator !=(const CVariant &other) const { return m_v != other.m_v; }
+        friend bool operator !=(const CVariant &a, const CVariant &b) { return !(a == b); }
 
         //! Less than operator.
-        bool operator <(const CVariant &other) const { return m_v < other.m_v; }
+        friend bool operator <(const CVariant &a, const CVariant &b) { return compare(a, b) < 0; }
 
         //! Less than or equal operator.
-        bool operator <=(const CVariant &other) const { return m_v <= other.m_v; }
+        friend bool operator <=(const CVariant &a, const CVariant &b) { return !(b < a); }
 
         //! Greater than operator.
-        bool operator >(const CVariant &other) const { return m_v > other.m_v; }
+        friend bool operator >(const CVariant &a, const CVariant &b) { return b < a; }
 
         //! Greater than or equal operator.
-        bool operator >=(const CVariant &other) const { return m_v >= other.m_v; }
+        friend bool operator >=(const CVariant &a, const CVariant &b) { return !(a < b); }
+
+        //! Arbitrary comparison
+        friend int compare(const CVariant &a, const CVariant &b);
 
         //! Register metadata.
         static void registerMetadata();
 
     private:
         QVariant m_v;
+
+        Private::IValueObjectMetaInfo *getValueObjectMetaInfo() const { return Private::getValueObjectMetaInfo(m_v); }
+        void *data() { return m_v.data(); }
+        const void *data() const { return m_v.data(); }
     };
 
     //! Marshall a variant to DBus.
@@ -234,4 +241,4 @@ namespace BlackMisc
 
 Q_DECLARE_METATYPE(BlackMisc::CVariant)
 
-#endif // guard
+#endif
