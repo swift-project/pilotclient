@@ -168,7 +168,7 @@ namespace BlackMisc
 
         // A tuple element with attached metadata.
         template <class T, qint64 Flags = 0>
-        struct Attribute : public AttributeComparable<Attribute<T, Flags>, Flags & DisabledForComparison, Flags & CaseInsensitiveComparison>
+        struct Attribute : public AttributeComparable<Attribute<T, Flags>, bool(Flags & DisabledForComparison), bool(Flags & CaseInsensitiveComparison)>
         {
             typedef T type;
             static const qint64 flags = Flags;
