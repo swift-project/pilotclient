@@ -11,6 +11,7 @@
 #include "blackmisc/nwuser.h"
 #include "blackmisc/notificationsounds.h"
 #include "blackmisc/logmessage.h"
+#include "blackcore/context_audio.h"
 #include "ui_textmessagecomponent.h"
 
 #include <QPushButton>

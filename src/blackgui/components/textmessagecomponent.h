@@ -16,7 +16,9 @@
 #include "blackgui/components/timerbasedcomponent.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/avaircraft.h"
-
+#include "blackmisc/nwtextmessagelist.h"
+#include "blackcore/context_network.h"
+#include "blackcore/context_ownaircraft.h"
 #include <QTabWidget>
 #include <QLineEdit>
 #include <QTextEdit>

@@ -11,6 +11,7 @@
 #include "ui_usercomponent.h"
 #include "../guiutility.h"
 #include "blackmisc/nwuserlist.h"
+#include "blackcore/context_network.h"
 
 using namespace BlackGui;
 using namespace BlackGui::Views;

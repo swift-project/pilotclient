@@ -13,6 +13,8 @@
 #define BLACKGUI_SETTINGSCOMPONENT_H
 
 #include "blackgui/components/runtimebasedcomponent.h"
+#include "blackmisc/nwserver.h"
+#include "blackmisc/avaircrafticao.h"
 #include <QTabWidget>
 #include <QModelIndex>
 #include <QTimer>

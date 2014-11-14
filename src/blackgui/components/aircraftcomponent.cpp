@@ -11,6 +11,8 @@
 #include "ui_aircraftcomponent.h"
 #include "dockwidgetinfoareacomponent.h"
 #include "../guiutility.h"
+#include "blackcore/context_network.h"
+#include "blackcore/context_simulator.h"
 
 using namespace BlackGui;
 using namespace BlackGui::Views;

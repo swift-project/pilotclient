@@ -13,9 +13,12 @@
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
+#include "blackcore/context_settings.h"
+#include "blackcore/context_audio.h"
 #include "blackmisc/hwkeyboardkeylist.h"
 #include "blackmisc/setaudio.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/settingsblackmiscclasses.h"
 #include <QColorDialog>
 
 using namespace BlackCore;

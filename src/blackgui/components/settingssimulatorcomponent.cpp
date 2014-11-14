@@ -2,6 +2,7 @@
 #include "ui_settingssimulatorcomponent.h"
 
 #include "blackcore/context_settings.h"
+#include "blackcore/context_simulator.h"
 #include "blacksim/simulatorinfolist.h"
 #include "blacksim/setsimulator.h"
 #include "blackmisc/settingutilities.h"

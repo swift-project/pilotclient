@@ -13,7 +13,8 @@
 #define BLACKCORE_CONTEXTNETWORK_H
 
 #include "blackcore/context.h"
-#include "blackmisc/avallclasses.h"
+#include "blackmisc/avatcstationlist.h"
+#include "blackmisc/avaircraftlist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/nwtextmessagelist.h"

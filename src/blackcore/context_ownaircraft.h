@@ -9,7 +9,8 @@
 #define BLACKCORE_CONTEXTOWNAIRCRAFT_H
 
 #include "blackcore/context.h"
-#include "blackmisc/avallclasses.h"
+#include "blackmisc/avaircraft.h"
+#include "blackmisc/avatcstation.h"
 #include "blackmisc/voiceroomlist.h"
 
 //! \addtogroup dbus

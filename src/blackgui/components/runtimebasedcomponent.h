@@ -13,9 +13,20 @@
 #define BLACKGUI_RUNTIMEBASEDCOMPONENT_H
 
 #include "blackcore/context_runtime.h"
-#include "blackcore/context_all_interfaces.h"
 #include "blackmisc/notificationsounds.h"
 #include <QTimer>
+
+namespace BlackCore
+{
+    class CRuntime;
+    class CRuntimeConfig;
+    class IContextApplication;
+    class IContextAudio;
+    class IContextNetwork;
+    class IContextOwnAircraft;
+    class IContextSettings;
+    class IContextSimulator;
+}
 
 namespace BlackGui
 {

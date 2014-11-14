@@ -15,6 +15,7 @@
 #include "ui_atcstationcomponent.h"
 #include "blackmisc/avinformationmessage.h"
 #include "blackmisc/logmessage.h"
+#include "blackcore/context_network.h"
 
 using namespace BlackGui;
 using namespace BlackGui::Models;

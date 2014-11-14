@@ -10,6 +10,9 @@
 #include "infobarstatuscomponent.h"
 #include "ui_infobarstatuscomponent.h"
 #include "blackmisc/icons.h"
+#include "blackcore/context_simulator.h"
+#include "blackcore/context_network.h"
+#include "blackcore/context_application.h"
 
 #include <QPoint>
 #include <QMenu>

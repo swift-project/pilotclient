@@ -9,16 +9,17 @@
 
 #include "settingsfsxcomponent.h"
 #include "ui_settingsfsxcomponent.h"
-#include <QDesktopServices>
-#include <QFile>
-#include <QDir>
-#include <QFileInfo>
-
+#include "blackcore/context_simulator.h"
+#include "blackcore/context_application.h"
 #include "blackmisc/networkutils.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/logmessage.h"
 #include "blacksim/fsx/fsxsimulatorsetup.h"
 #include "blacksim/fsx/simconnectutilities.h"
+#include <QDesktopServices>
+#include <QFile>
+#include <QDir>
+#include <QFileInfo>
 
 using namespace BlackMisc;
 using namespace BlackSim::Fsx;

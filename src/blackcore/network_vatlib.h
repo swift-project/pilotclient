@@ -9,7 +9,6 @@
 #define BLACKCORE_NETWORK_VATLIB_H
 
 #include "network.h"
-#include "blackmisc/avallclasses.h"
 #include <vatlib/vatlib.h>
 #include <QScopedPointer>
 #include <QTimer>

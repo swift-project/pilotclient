@@ -15,6 +15,7 @@
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_application.h"
+#include "blackcore/context_ownaircraft.h"
 #include "blackcore/network.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/logmessage.h"

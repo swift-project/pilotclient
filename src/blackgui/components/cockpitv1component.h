@@ -13,6 +13,10 @@
 #define BLACKGUI_COCKPITV1COMPONENT_H
 
 #include "blackgui/components/runtimebasedcomponent.h"
+#include "blackmisc/avaircraft.h"
+#include "blackmisc/aviocomsystem.h"
+#include "blackmisc/voiceroomlist.h"
+#include "blackcore/context_audio.h"
 #include <QWidget>
 #include <QPushButton>
 

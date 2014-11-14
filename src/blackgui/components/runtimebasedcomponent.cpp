@@ -8,6 +8,7 @@
  */
 
 #include "runtimebasedcomponent.h"
+#include "blackcore/context_all_interfaces.h"
 #include <QWidget>
 
 namespace BlackGui

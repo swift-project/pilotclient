@@ -2,6 +2,7 @@
 #define BLACKGUI_SETTINGSSIMULATORCOMPONENT_H
 
 #include "runtimebasedcomponent.h"
+#include "blacksim/setsimulator.h"
 #include <QFrame>
 
 namespace Ui { class CSettingsSimulatorComponent; }
