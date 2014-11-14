@@ -8,7 +8,6 @@
  */
 
 #include "variant.h"
-#include "valueobject.h"
 #include "blackmiscfreefunctions.h"
 #include <QDBusArgument>
 #include <QDBusMetaType>
@@ -26,13 +25,7 @@ namespace BlackMisc
         return v.value<IValueObjectMetaInfo *>();
     }
 
-    void CVariant::registerMetadata()
-    {
-        qRegisterMetaType<CVariant>();
-        qDBusRegisterMetaType<CVariant>();
-    }
-
-    QString CVariant::toString(bool i18n) const
+    QString CVariant::convertToQString(bool i18n) const
     {
         auto *meta = getValueObjectMetaInfo();
         if (meta)
@@ -42,22 +35,24 @@ namespace BlackMisc
         return m_v.toString();
     }
 
-    int BlackMisc::compare(const CVariant &a, const CVariant &b)
+    int CVariant::compareImpl(const CValueObject &otherBase) const
     {
-        if (a.userType() < b.userType()) { return -1; }
-        if (a.userType() > b.userType()) { return 1; }
-        auto *metaA = a.getValueObjectMetaInfo();
-        auto *metaB = b.getValueObjectMetaInfo();
-        if (metaA && metaB)
+        const auto &other = static_cast<const CVariant &>(otherBase);
+
+        if (userType() < other.userType()) { return -1; }
+        if (userType() > other.userType()) { return 1; }
+        auto *meta = getValueObjectMetaInfo();
+        auto *otherMeta = other.getValueObjectMetaInfo();
+        if (meta && otherMeta)
         {
             const void *casted = nullptr;
-            if ((casted = metaA->upCastTo(a.data(), metaB->getMetaTypeId())))
+            if ((casted = meta->upCastTo(data(), otherMeta->getMetaTypeId())))
             {
-                return metaB->compare(casted, b.data());
+                return otherMeta->compare(casted, other.data());
             }
-            else if ((casted = metaB->upCastTo(b.data(), metaA->getMetaTypeId())))
+            else if ((casted = otherMeta->upCastTo(other.data(), meta->getMetaTypeId())))
             {
-                return metaA->compare(a.data(), casted);
+                return meta->compare(data(), casted);
             }
             else
             {
@@ -65,8 +60,8 @@ namespace BlackMisc
                 return 0;
             }
         }
-        if (a.m_v < b.m_v) { return -1; }
-        if (a.m_v > b.m_v) { return 1; }
+        if (m_v < other.m_v) { return -1; }
+        if (m_v > other.m_v) { return 1; }
         return 0;
     }
 
@@ -106,7 +101,7 @@ namespace BlackMisc
         return json;
     }
 
-    void CVariant::fromJson(const QJsonObject &json)
+    void CVariant::convertFromJson(const QJsonObject &json)
     {
         QString typeName = json.value("type").toString();
         int typeId = QMetaType::type(qPrintable(typeName));
@@ -179,23 +174,17 @@ namespace BlackMisc
         }
     }
 
-    QDBusArgument &operator <<(QDBusArgument &arg, const CVariant &var)
+    void CVariant::marshallToDbus(QDBusArgument &arg) const
     {
-        arg.beginStructure();
-        arg << QString(var.typeName()) << QDBusVariant(var.toQVariant());
-        arg.endStructure();
-        return arg;
+        arg << QString(typeName()) << QDBusVariant(getQVariant());
     }
 
-    const QDBusArgument &operator >>(const QDBusArgument &arg, CVariant &var)
+    void CVariant::unmarshallFromDbus(const QDBusArgument &arg)
     {
         QString typeName;
         QDBusVariant dbusVar;
-        arg.beginStructure();
         arg >> typeName >> dbusVar;
-        arg.endStructure();
 
-        var = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::type(qPrintable(typeName)));
-        return arg;
+        *this = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::type(qPrintable(typeName)));
     }
 } // namespace

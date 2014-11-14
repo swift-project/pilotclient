@@ -60,7 +60,7 @@ namespace BlackMisc
 
             s.append('{').append(index.toQString(i18n)).append(": ");
             s.append("(").append(QString::number(v.userType())).append(") ");
-            QString vs = v.toString(i18n);
+            QString vs = v.toQString(i18n);
             s.append(vs);
             s.append('}');
         }

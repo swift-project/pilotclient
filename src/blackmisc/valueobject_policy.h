@@ -38,12 +38,20 @@ namespace BlackMisc
 
         namespace MetaType
         {
+            //! CValueObjectStdTuple registerMetadata policy which only registers with QMetaType and QtDBus
+            struct QMetaTypeAndDBusOnly
+            {
+                //! Register with QMetaType
+                template <class T, class...>
+                static void registerImpl() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); }
+            };
+
             //! CValueObjectStdTuple default registerMetadata policy
             struct Default
             {
                 //! Register with QMetaType
                 template <class T, class...>
-                static void registerImpl() { qRegisterMetaType<T>(); qDBusRegisterMetaType<T>(); maybeRegisterMetaValueType<T>(); }
+                static void registerImpl() { QMetaTypeAndDBusOnly::registerImpl<T>(); maybeRegisterMetaValueType<T>(); }
 
             private:
                 template <class T>

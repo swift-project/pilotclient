@@ -260,6 +260,14 @@ namespace BlackMisc
     }
 
     /*
+     * to CVariant
+     */
+    CVariant CValueObject::toCVariant() const
+    {
+        return CVariant(this->toQVariant());
+    }
+
+    /*
      * Implementations of pure virtual functions
      */
     uint CValueObject::getValueHash() const { return 0; }

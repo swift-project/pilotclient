@@ -43,7 +43,7 @@ namespace BlackMisc
     QString CNameVariantPair::convertToQString(bool i18n) const
     {
         QString s(this->m_name);
-        s.append(" ").append(this->m_variant.toString(i18n));
+        s.append(" ").append(this->m_variant.toQString(i18n));
         return s;
     }
 

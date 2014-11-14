@@ -15,7 +15,6 @@
 #include "dbus.h"
 #include "tuple.h"
 #include "json.h"
-#include "variant.h"
 #include "blackmiscfreefunctions.h"
 #include "valueobject_private.h"
 #include "valueobject_policy.h"
@@ -37,6 +36,7 @@ namespace BlackMisc
     class CPropertyIndexList;
     class CPropertyIndexVariantMap;
     class CIcon;
+    class CVariant;
 
     namespace PhysicalQuantities
     {
@@ -175,8 +175,8 @@ namespace BlackMisc
         //! Virtual method to return QVariant, used with DBus QVariant lists
         virtual QVariant toQVariant() const = 0;
 
-        //! Virtual method to return CVariant
-        virtual CVariant toCVariant() const { return CVariant(this->toQVariant()); }
+        //! Method to return CVariant
+        CVariant toCVariant() const;
 
         //! Equals another CValueObject in QVariant?
         virtual bool equalsQVariant(const QVariant &qVariant) const;

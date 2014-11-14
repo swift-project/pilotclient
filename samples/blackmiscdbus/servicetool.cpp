@@ -374,9 +374,9 @@ namespace BlackMiscTest
             qDebug() << "Pinged client list via interface" << clients.size() << clients;
 
             CVariant cv = CVariant::fromValue(clients);
-            qDebug() << "cv" << cv.toString();
+            qDebug() << "cv" << cv.toQString();
             cv = testserviceInterface.pingCVariant(client);
-            qDebug() << "Pinged CVariant via interface" << cv.toString();
+            qDebug() << "Pinged CVariant via interface" << cv.toQString();
 
             // test variant lists with different types wrapped in QVariant
             qDebug() << "----------------- variant tests ----------------";

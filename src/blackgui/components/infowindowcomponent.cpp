@@ -115,7 +115,7 @@ namespace BlackGui
             else if (variant.canConvert<CStatusMessage>())
                 this->displayStatusMessage(variant.value<CStatusMessage>(), displayTimeMs);
             else
-                this->displayStringMessage(variant.toString(), displayTimeMs);
+                this->displayStringMessage(variant.toQString(), displayTimeMs);
         }
 
         /*

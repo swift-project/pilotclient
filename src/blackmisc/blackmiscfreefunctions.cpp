@@ -353,11 +353,8 @@ QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int loc
             }
         }
     }
-    else
-    {
-        qWarning() << "fixQVariantFromDbusArgument called with unsupported type";
-        return variant;
-    }
+    qWarning() << "fixQVariantFromDbusArgument called with unsupported type";
+    return variant;
 }
 
 /*

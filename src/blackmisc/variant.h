@@ -12,6 +12,7 @@
 #ifndef BLACKMISC_VARIANT_H
 #define BLACKMISC_VARIANT_H
 
+#include "valueobject.h"
 #include <QVariant>
 #include <QDateTime>
 #include <QJsonValueRef>
@@ -23,22 +24,35 @@ class QDBusArgument;
 
 namespace BlackMisc
 {
+    class CVariant;
+
+    //! \private
+    template <> struct CValueObjectStdTuplePolicy<CVariant> : public CValueObjectStdTuplePolicy<>
+    {
+        using MetaType = Policy::MetaType::QMetaTypeAndDBusOnly;
+        using Equals = Policy::Equals::OwnEquals;
+        using LessThan = Policy::LessThan::OwnLessThan;
+        using Compare = Policy::Compare::Own;
+        using Hash = Policy::Hash::Own;
+        using DBus = Policy::DBus::Own;
+        using Json = Policy::Json::Own;
+    };
 
     /*!
      * Wrapper around QVariant which provides transparent access to CValueObject methods
      * of the contained object if it is registered with BlackMisc::registerMetaValueType.
      */
-    class CVariant
+    class CVariant : public CValueObjectStdTuple<CVariant>
     {
     public:
         //! Default constructor.
         CVariant() {}
 
         //! Copy constructor.
-        CVariant(const CVariant &other) : m_v(other.m_v) {}
+        CVariant(const CVariant &other) : CValueObjectStdTuple(other), m_v(other.m_v) {}
 
         //! Move constructor.
-        CVariant(CVariant &&other) : m_v(std::move(other.m_v)) {}
+        CVariant(CVariant &&other) : CValueObjectStdTuple(std::move(other)), m_v(std::move(other.m_v)) {}
 
         //! Construct from a QVariant.
         CVariant(const QVariant &var) : m_v(var) {}
@@ -52,8 +66,8 @@ namespace BlackMisc
         //! Construct a variant from the given type and opaque pointer.
         CVariant(int typeId, const void *copy) : m_v(typeId, copy) {}
 
-        //! Value hash
-        uint getValueHash() const;
+        //! \copydoc CValueObject::getValueHash
+        virtual uint getValueHash() const override;
 
         //! Change the internal QVariant.
         void reset(const QVariant &var) { m_v = var; }
@@ -98,7 +112,13 @@ namespace BlackMisc
         template <typename T> T to() const { return m_v.value<T>(); }
 
         //! Return the internal QVariant.
-        const QVariant &toQVariant() const { return m_v; }
+        const QVariant &getQVariant() const { return m_v; }
+
+        //! \copydoc CValueObject::toQVariant
+        virtual QVariant toQVariant() const override { return getQVariant(); }
+
+        //! \copydoc CValueObject::convertFromQVariant
+        virtual void convertFromQVariant(const QVariant &v) override { m_v = v; }
 
         //! True if this variant can be converted to the type with the given metatype ID.
         bool canConvert(int typeId) const { return m_v.canConvert(typeId); }
@@ -109,8 +129,8 @@ namespace BlackMisc
         //! Convert this variant to the type with the given metatype ID and return true if successful.
         bool convert(int typeId) { return m_v.convert(typeId); }
 
-        //! Convert this variant to a QString.
-        QString toString(bool i18n = false) const;
+        //! \copydoc CValueObject::convertToQString
+        virtual QString convertToQString(bool i18n = false) const override;
 
         //! Convert this variant to a bool.
         bool toBool() const { return m_v.toBool(); }
@@ -142,35 +162,26 @@ namespace BlackMisc
         //! Return the metatype ID of the value in this variant.
         int userType() const { return m_v.userType(); }
 
-        //! To JSON
-        QJsonObject toJson() const;
+        //! \copydoc CValueObject::toJson
+        virtual QJsonObject toJson() const override;
 
-        //! From JSON
-        void fromJson(const QJsonObject &json);
+        //! \copydoc CValueObject::convertFromJson
+        virtual void convertFromJson(const QJsonObject &json) override;
+
+        //! \copydoc CValueObject::marshallToDbus
+        virtual void marshallToDbus(QDBusArgument &argument) const override;
+
+        //! \copydoc CValueObject::unmarshallFromDbus
+        virtual void unmarshallFromDbus(const QDBusArgument &argument) override;
 
         //! Equal operator.
         friend bool operator ==(const CVariant &a, const CVariant &b) { return compare(a, b) == 0; }
 
-        //! Not equal operator.
-        friend bool operator !=(const CVariant &a, const CVariant &b) { return !(a == b); }
-
         //! Less than operator.
         friend bool operator <(const CVariant &a, const CVariant &b) { return compare(a, b) < 0; }
 
-        //! Less than or equal operator.
-        friend bool operator <=(const CVariant &a, const CVariant &b) { return !(b < a); }
-
-        //! Greater than operator.
-        friend bool operator >(const CVariant &a, const CVariant &b) { return b < a; }
-
-        //! Greater than or equal operator.
-        friend bool operator >=(const CVariant &a, const CVariant &b) { return !(a < b); }
-
-        //! Arbitrary comparison
-        friend int compare(const CVariant &a, const CVariant &b);
-
-        //! Register metadata.
-        static void registerMetadata();
+        //! \copydoc CValueObject::compareImpl
+        virtual int compareImpl(const CValueObject &other) const override;
 
     private:
         QVariant m_v;
@@ -179,63 +190,6 @@ namespace BlackMisc
         void *data() { return m_v.data(); }
         const void *data() const { return m_v.data(); }
     };
-
-    //! Marshall a variant to DBus.
-    QDBusArgument &operator <<(QDBusArgument &arg, const CVariant &var);
-
-    //! Unmarshall a variant from DBus.
-    const QDBusArgument &operator >>(const QDBusArgument &arg, CVariant &var);
-
-    //! Non member, non friend operator >> for JSON
-    inline QJsonArray &operator<<(QJsonArray &json, const BlackMisc::CVariant &variant)
-    {
-        json.append(variant.toJson());
-        return json;
-    }
-
-    /*!
-     * \brief Non member, non friend operator << for JSON
-     * \param json
-     * \param value as pair name/value
-     * \return
-     */
-    inline QJsonObject &operator<<(QJsonObject &json, const std::pair<QString, BlackMisc::CVariant> &value)
-    {
-        json.insert(value.first, QJsonValue(value.second.toJson()));
-        return json;
-    }
-
-    //! Non member, non friend operator >> for JSON
-    inline const QJsonObject &operator>>(const QJsonObject &json, BlackMisc::CVariant &variant)
-    {
-        variant.fromJson(json);
-        return json;
-    }
-
-    //! Non member, non friend operator >> for JSON
-    inline const QJsonValue &operator>>(const QJsonValue &json, BlackMisc::CVariant &variant)
-    {
-        variant.fromJson(json.toObject());
-        return json;
-    }
-
-    //! Non member, non friend operator >> for JSON
-    inline const QJsonValueRef &operator>>(const QJsonValueRef &json, BlackMisc::CVariant &variant)
-    {
-        variant.fromJson(json.toObject());
-        return json;
-    }
-
-    //! qHash overload, needed for storing CVariant with tupel system
-    inline uint qHash(const BlackMisc::CVariant &value, uint seed = 0)
-    {
-        return ::qHash(value.getValueHash(), seed);
-    }
-
-    // Needed so that our qHash overload doesn't hide the qHash overloads in the global namespace.
-    // This will be safe as long as no global qHash has the same signature as ours.
-    // Alternative would be to qualify all our invokations of the global qHash as ::qHash.
-    using ::qHash;
 
 } // namespace
 

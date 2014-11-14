@@ -92,7 +92,7 @@ namespace BlackMisc
             {
                 if (command == CSettingUtilities::CmdUpdate())
                 {
-                    QString v = value.toString();
+                    QString v = value.toQString();
                     changedFlag = (v != this->m_bookingServiceUrl);
                     this->m_bookingServiceUrl = v;
                     return CLogMessage(CLogCategory::settingsUpdate()).info("booking URL%1 changed") << (changedFlag ? "" : " not");
