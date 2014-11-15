@@ -171,7 +171,7 @@ namespace BlackMisc
         //! Returns the element at the beginning of the range, or a default value if the range is empty.
         const_reference frontOrDefault() const
         {
-            static const value_type def;
+            static const value_type def{};
             return empty() ? def : *begin();
         }
 
