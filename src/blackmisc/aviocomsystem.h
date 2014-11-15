@@ -20,8 +20,6 @@ namespace BlackMisc
     //! \private
     template <> struct CValueObjectStdTuplePolicy<Aviation::CComSystem> : public CValueObjectStdTuplePolicy<>
     {
-        using MetaType = Policy::MetaType::Default;
-        using Equals = Policy::Equals::None;
         using LessThan = Policy::LessThan::None;
         using Compare = Policy::Compare::Own;
         using Hash = Policy::Hash::Own;

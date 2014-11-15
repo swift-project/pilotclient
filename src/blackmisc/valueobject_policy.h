@@ -86,10 +86,14 @@ namespace BlackMisc
                 struct Ops : private Private::EncapsulationBreaker
                 {
                     //! Equals operator
-                    friend bool operator ==(const T &a, const T &b) { return Private::EncapsulationBreaker::toMetaTuple(a) == Private::EncapsulationBreaker::toMetaTuple(b); }
+                    friend bool operator ==(const T &a, const T &b) { return Private::EncapsulationBreaker::toMetaTuple(a) == Private::EncapsulationBreaker::toMetaTuple(b) && baseEquals<typename T::base_type>(a, b); }
 
                     //! Not equals operator
                     friend bool operator !=(const T &a, const T &b) { return !(a == b); }
+
+                private:
+                    template <class U> static bool baseEquals(const U &a, const U &b) { return a == b; }
+                    template <class U> static bool baseEquals(const CValueObject &, const CValueObject &) { return true; }
                 };
             };
 

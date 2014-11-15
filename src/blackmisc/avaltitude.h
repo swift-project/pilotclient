@@ -21,6 +21,7 @@ namespace BlackMisc
     //! \private
     template <> struct CValueObjectStdTuplePolicy<Aviation::CAltitude> : public CValueObjectStdTuplePolicy<>
     {
+        using Equals = Policy::Equals::MetaTuple;
         using Compare = Policy::Compare::MetaTuple;
         using Hash = Policy::Hash::MetaTuple;
         using DBus = Policy::DBus::MetaTuple;
