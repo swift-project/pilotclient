@@ -184,6 +184,9 @@ namespace BlackMisc
         //! Set from QVariant
         virtual void convertFromQVariant(const QVariant &variant) = 0;
 
+        //! Set from CVariant
+        void convertFromCVariant(const CVariant &variant);
+
         //! Contribute to JSON object
         virtual QJsonObject toJson() const { QJsonObject json; return json;}
 
