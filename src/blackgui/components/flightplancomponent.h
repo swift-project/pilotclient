@@ -39,6 +39,9 @@ namespace BlackGui
             ~CFlightPlanComponent();
 
         public slots:
+            //! Login data were set
+            void loginDataSet();
+
             //! Prefill with aircraft data
             void prefillWithAircraftData(const BlackMisc::Aviation::CAircraft &ownAircraft);
 

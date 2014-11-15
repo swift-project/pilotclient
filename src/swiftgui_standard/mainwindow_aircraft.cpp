@@ -27,7 +27,6 @@ bool MainWindow::ps_reloadOwnAircraft()
     if (loadedAircraft != this->m_ownAircraft)
     {
         this->m_ownAircraft = loadedAircraft;
-        this->ui->comp_MainInfoArea->getFlightPlanComponent()->prefillWithAircraftData(this->m_ownAircraft);
         changed = true;
     }
     return changed;

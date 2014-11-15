@@ -66,11 +66,27 @@ namespace BlackGui
         CFlightPlanComponent::~CFlightPlanComponent()
         { }
 
+        void CFlightPlanComponent::loginDataSet()
+        {
+            if (!this->getIContextOwnAircraft()) { return; }
+            this->prefillWithAircraftData(this->getIContextOwnAircraft()->getOwnAircraft());
+        }
+
         void CFlightPlanComponent::prefillWithAircraftData(const BlackMisc::Aviation::CAircraft &ownAircraft)
         {
-            this->ui->le_Callsign->setText(ownAircraft.getCallsign().asString());
-            this->ui->le_AircraftType->setText(ownAircraft.getIcaoInfo().getAircraftDesignator());
-            this->ui->le_PilotsName->setText(ownAircraft.getPilot().getRealName());
+            // only override with valid values
+            if (CCallsign::isValidCallsign(ownAircraft.getCallsignAsString()))
+            {
+                this->ui->le_Callsign->setText(ownAircraft.getCallsign().asString());
+            }
+            if (CAircraftIcao::isValidDesignator(ownAircraft.getIcaoInfo().getAircraftDesignator()))
+            {
+                this->ui->le_AircraftType->setText(ownAircraft.getIcaoInfo().getAircraftDesignator());
+            }
+            if (ownAircraft.hasValidRealName())
+            {
+                this->ui->le_PilotsName->setText(ownAircraft.getPilot().getRealName());
+            }
         }
 
         void CFlightPlanComponent::fillWithFlightPlanData(const BlackMisc::Aviation::CFlightPlan &flightPlan)
@@ -281,6 +297,8 @@ namespace BlackGui
 
         void CFlightPlanComponent::ps_resetFlightPlan()
         {
+            Q_ASSERT(this->getIContextNetwork());
+            Q_ASSERT(this->getIContextOwnAircraft());
             if (this->getIContextNetwork())
             {
                 this->prefillWithAircraftData(this->getIContextOwnAircraft()->getOwnAircraft());
@@ -336,12 +354,9 @@ namespace BlackGui
         {
             QString rem;
             QString v = this->ui->cb_VoiceCapabilities->currentText().toUpper();
-            if (v.contains("TEXT"))
-                rem.append("/T/ ");
-            else if (v.contains("VOICE"))
-                rem.append("/V/ ");
-            else if (v.contains("RECEIVE"))
-                rem.append("/R/ ");
+            if (v.contains("TEXT"))         { rem.append("/T/ "); }
+            else if (v.contains("VOICE"))   { rem.append("/V/ "); }
+            else if (v.contains("RECEIVE")) { rem.append("/R/ "); }
 
             v = this->ui->le_AirlineOperator->text().trimmed();
             if (!v.isEmpty()) rem.append("OPR/").append(v).append(" ");
@@ -350,44 +365,28 @@ namespace BlackGui
             if (!v.isEmpty()) rem.append("REG/").append(v).append(" ");
 
             v = this->ui->cb_PilotRating->currentText().toUpper();
-            if (v.contains("P1"))
-                rem.append("PR/P1 ");
-            else if (v.contains("P2"))
-                rem.append("PR/P2 ");
-            else if (v.contains("P3"))
-                rem.append("PR/P3 ");
-            else if (v.contains("P4"))
-                rem.append("PR/P4 ");
-            else if (v.contains("P5"))
-                rem.append("PR/P5 ");
+            if (v.contains("P1"))      { rem.append("PR/P1 "); }
+            else if (v.contains("P2")) { rem.append("PR/P2 "); }
+            else if (v.contains("P3")) { rem.append("PR/P3 "); }
+            else if (v.contains("P4")) { rem.append("PR/P4 "); }
+            else if (v.contains("P5")) { rem.append("PR/P5 "); }
 
             v = this->ui->cb_RequiredNavigationPerformance->currentText().toUpper();
-            if (v.contains("10"))
-                rem.append("RNP10 ");
-            else if (v.contains("4"))
-                rem.append("RNP4 ");
+            if (v.contains("10"))     { rem.append("RNP10 "); }
+            else if (v.contains("4")) { rem.append("RNP4 "); }
 
             v = this->ui->cb_NavigationEquipment->currentText().toUpper();
-            if (v.contains("VORS"))
-                rem.append("NAV/VORNDB ");
-            else if (v.contains("SIDS"))
-                rem.append("NAV/GPSRNAV ");
-            if (v.contains("DEFAULT"))
-                rem.append("NAV/GPS ");
-            else if (v.contains("OCEANIC"))
-                rem.append("NAV/GPSOCEANIC ");
+            if (v.contains("VORS"))         { rem.append("NAV/VORNDB "); }
+            else if (v.contains("SIDS"))    { rem.append("NAV/GPSRNAV "); }
+            if (v.contains("DEFAULT"))      { rem.append("NAV/GPS "); }
+            else if (v.contains("OCEANIC")) { rem.append("NAV/GPSOCEANIC "); }
 
             v = this->ui->cb_PerformanceCategory->currentText().toUpper();
-            if (v.startsWith("A"))
-                rem.append("PER/A ");
-            else if (v.startsWith("B"))
-                rem.append("PER/B ");
-            else if (v.startsWith("C"))
-                rem.append("PER/C ");
-            else if (v.startsWith("D"))
-                rem.append("PER/D ");
-            else if (v.startsWith("E"))
-                rem.append("PER/E ");
+            if (v.startsWith("A"))      { rem.append("PER/A "); }
+            else if (v.startsWith("B")) { rem.append("PER/B "); }
+            else if (v.startsWith("C")) { rem.append("PER/C "); }
+            else if (v.startsWith("D")) { rem.append("PER/D "); }
+            else if (v.startsWith("E")) { rem.append("PER/E "); }
 
             if (this->ui->frp_SelcalCode->hasValidCode())
             {
@@ -395,11 +394,10 @@ namespace BlackGui
                 rem.append(" ");
             }
 
-            if (this->ui->cb_NoSidsStarts->isChecked())
-                rem.append("NO SID/STAR ");
+            if (this->ui->cb_NoSidsStarts->isChecked()) { rem.append("NO SID/STAR "); }
 
             v = this->ui->pte_AdditionalRemarks->toPlainText().trimmed();
-            if (!v.isEmpty()) rem.append(v);
+            if (!v.isEmpty()) { rem.append(v); }
 
             rem = rem.simplified().trimmed();
             this->ui->pte_RemarksGenerated->setPlainText(rem);
