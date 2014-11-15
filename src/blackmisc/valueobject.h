@@ -114,42 +114,6 @@ namespace BlackMisc
         //! Operator != with value map
         friend bool operator!=(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap);
 
-        //! Comparison operator to allow valueobjects be used as keys in QMap and std::set.
-        template <class T> friend typename std::enable_if < std::is_base_of<CValueObject, T>::value  &&! PhysicalQuantities::IsQuantity<T>::value, bool >::type
-        operator<(const T &lhs, const T &rhs)
-        {
-            const auto &lhsBase = static_cast<const CValueObject &>(lhs);
-            const auto &rhsBase = static_cast<const CValueObject &>(rhs);
-            return lhsBase.compareImpl(rhsBase) < 0;
-        }
-
-        //! Comparison for symmetry with operator<.
-        template <class T> friend typename std::enable_if < std::is_base_of<CValueObject, T>::value  &&! PhysicalQuantities::IsQuantity<T>::value, bool >::type
-        operator>(const T &lhs, const T &rhs)
-        {
-            const auto &lhsBase = static_cast<const CValueObject &>(lhs);
-            const auto &rhsBase = static_cast<const CValueObject &>(rhs);
-            return lhsBase.compareImpl(rhsBase) > 0;
-        }
-
-        //! Comparison for symmetry with operator<.
-        template <class T> friend typename std::enable_if < std::is_base_of<CValueObject, T>::value  &&! PhysicalQuantities::IsQuantity<T>::value, bool >::type
-        operator<=(const T &lhs, const T &rhs)
-        {
-            const auto &lhsBase = static_cast<const CValueObject &>(lhs);
-            const auto &rhsBase = static_cast<const CValueObject &>(rhs);
-            return lhsBase.compareImpl(rhsBase) <= 0;
-        }
-
-        //! Comparison for symmetry with operator<.
-        template <class T> friend typename std::enable_if < std::is_base_of<CValueObject, T>::value  &&! PhysicalQuantities::IsQuantity<T>::value, bool >::type
-        operator>=(const T &lhs, const T &rhs)
-        {
-            const auto &lhsBase = static_cast<const CValueObject &>(lhs);
-            const auto &rhsBase = static_cast<const CValueObject &>(rhs);
-            return lhsBase.compareImpl(rhsBase) >= 0;
-        }
-
         /*!
          * Compares two instances of related classes
          * and returns an integer less than, equal to, or greater than zero

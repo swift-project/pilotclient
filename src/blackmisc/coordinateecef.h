@@ -47,9 +47,6 @@ namespace BlackMisc
              */
             explicit CCoordinateEcef(const BlackMisc::Math::CVector3D vector) : CValueObjectStdTuple(vector.i(), vector.j(), vector.k()) {}
 
-            //! \copydoc CValueObject::toQVariant
-            virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
-
             //! \brief x
             double x() const
             {
