@@ -27,9 +27,6 @@ namespace BlackGui
 
             //! Constructor
             explicit CServerView(QWidget *parent = nullptr);
-
-            //! \copydoc CServerListModel::setSelectedServer
-            void setSelectedServer(const BlackMisc::Network::CServer &selectedServer);
         };
     }
 }

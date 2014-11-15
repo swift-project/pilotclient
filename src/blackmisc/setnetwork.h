@@ -32,7 +32,11 @@ namespace BlackMisc
             //! Default constructor.
             CSettingsNetwork();
 
-            //! Update
+            //! Destructor.
+            virtual ~CSettingsNetwork() {}
+
+            //! Current server
+            //! \deprecated shall not be used anymore
             static const QString &CmdSetCurrentServer()
             {
                 static const QString cmd("currenttrafficserver");
@@ -64,6 +68,7 @@ namespace BlackMisc
             BlackMisc::Network::CServerList getTrafficNetworkServers() const { return m_trafficNetworkServers; }
 
             //! Selected traffic network server
+            //! \deprecated Shall not be used anymore
             BlackMisc::Network::CServer getCurrentTrafficNetworkServer() const { return m_trafficNetworkServerCurrent; }
 
             //! URL of booking service

@@ -21,11 +21,5 @@ namespace BlackGui
         {
             this->standardInit(new CServerListModel(this));
         }
-
-        void CServerView::setSelectedServer(const Network::CServer &selectedServer)
-        {
-            Q_ASSERT(this->m_model);
-            this->m_model->setSelectedServer(selectedServer);
-        }
     }
-}
+} // namespace

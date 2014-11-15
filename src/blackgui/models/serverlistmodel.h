@@ -24,9 +24,6 @@ namespace BlackGui
         class CServerListModel : public CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>
         {
 
-        private:
-            BlackMisc::Network::CServer m_selectedServer;
-
         public:
 
             //! Constructor
@@ -34,27 +31,6 @@ namespace BlackGui
 
             //! Destructor
             virtual ~CServerListModel() {}
-
-            //! Has selected server?
-            bool hasSelectedServer() const
-            {
-                return this->m_selectedServer.isValidForLogin();
-            }
-
-            //! Get selected server
-            const BlackMisc::Network::CServer &getSelectedServer() const
-            {
-                return this->m_selectedServer;
-            }
-
-            //! Set selected server
-            void setSelectedServer(const BlackMisc::Network::CServer &selectedServer)
-            {
-                this->m_selectedServer = selectedServer;
-            }
-
-            //! \copydoc CListModelBase::data
-            virtual QVariant data(const QModelIndex &index, int role) const override;
         };
     }
 }

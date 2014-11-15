@@ -56,17 +56,8 @@ namespace BlackGui
             //! \copydoc CAudioSetupComponent::playNotificationSounds
             bool playNotificationSounds() const;
 
-            //! ICAO data from GUI
-            void setOwnAircraftIcaoDataFromGui(BlackMisc::Aviation::CAircraftIcao &icao) const;
-
             //! GUI Opacity 0-100%
             void setGuiOpacity(double value);
-
-            //! Login as observer
-            bool loginAsObserver() const;
-
-            //! Login as observer
-            bool loginStealth() const;
 
             //! ATC refresh time
             int getAtcUpdateIntervalSeconds() const;
@@ -76,9 +67,6 @@ namespace BlackGui
 
             //! Aircraft refresh time
             int getUsersUpdateIntervalSeconds() const;
-
-            //! Own callsign
-            QString getOwnCallsignFromGui() const;
 
         signals:
             //! Change the windows opacity 0..100
@@ -111,15 +99,6 @@ namespace BlackGui
 
             //! Alter traffic server
             void ps_alterTrafficServer();
-
-            /*!
-             * \brief Update the selected server textboxes
-             * \param server to be displayed
-             */
-            void ps_updateGuiSelectedServerTextboxes(const BlackMisc::Network::CServer &server);
-
-            //! Selected server from textboxes
-            BlackMisc::Network::CServer ps_selectedServerFromTextboxes() const;
 
             //! Settings have been changed
             void ps_changedSettings(uint typeValue);

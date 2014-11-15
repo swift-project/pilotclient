@@ -37,29 +37,5 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ViewServerList", "userid");
         }
 
-        /*
-         * Special functions
-         */
-        QVariant CServerListModel::data(const QModelIndex &index, int role) const
-        {
-            if (role == Qt::BackgroundRole)
-            {
-                if (!this->hasSelectedServer()) return QVariant();
-                CServer currentRow = this->at(index);
-                if (currentRow == this->getSelectedServer())
-                {
-                    QBrush background(Qt::green);
-                    return background;
-                }
-                else
-                {
-                    return QVariant();
-                }
-            }
-            else
-            {
-                return CListModelBase::data(index, role);
-            }
-        }
     } // class
 } // namespace
