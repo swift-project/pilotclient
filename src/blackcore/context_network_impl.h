@@ -75,7 +75,7 @@ namespace BlackCore
         }
 
         //! \copydoc IContextNetwork::connectToNetwork()
-        virtual BlackMisc::CStatusMessage connectToNetwork(uint mode) override;
+        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override;
 
         //! \copydoc IContextNetwork::disconnectFromNetwork()
         virtual BlackMisc::CStatusMessage disconnectFromNetwork() override;

@@ -95,6 +95,12 @@ namespace BlackCore
         //! Terminated connection
         void connectionTerminated();
 
+        //! VATSIM data file was read
+        void vatsimDataFileRead();
+
+        //! Bookings read
+        void vatsimBookingsRead();
+
         /*!
          * Connection status changed
          * \param from  old status
@@ -151,7 +157,7 @@ namespace BlackCore
          * \return messages gererated during connecting
          * \see INetwork::LoginMode
          */
-        virtual BlackMisc::CStatusMessage connectToNetwork(uint loginMode) = 0;
+        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint loginMode) = 0;
 
         /*!
          * Disconnect from network

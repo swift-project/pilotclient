@@ -58,6 +58,12 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "textMessagesReceived", this, SIGNAL(textMessagesReceived(BlackMisc::Network::CTextMessageList)));
         Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "vatsimDataFileRead", this, SIGNAL(vatsimDataFileRead()));
+        Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
+                               "vatsimBookingsRead", this, SIGNAL(vatsimBookingsRead()));
+        Q_ASSERT(s);
         Q_UNUSED(s);
     }
 
@@ -141,9 +147,9 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("testCreateDummyOnlineAtcStations"), number);
     }
 
-    BlackMisc::CStatusMessage CContextNetworkProxy::connectToNetwork(uint loginMode)
+    BlackMisc::CStatusMessage CContextNetworkProxy::connectToNetwork(const Network::CServer &server, uint loginMode)
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("connectToNetwork"), loginMode);
+        return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("connectToNetwork"), server, loginMode);
     }
 
     BlackMisc::CStatusMessage CContextNetworkProxy::disconnectFromNetwork()

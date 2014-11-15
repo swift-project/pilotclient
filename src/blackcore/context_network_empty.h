@@ -60,10 +60,11 @@ namespace BlackCore
             return BlackMisc::Aviation::CAircraftList();
         }
 
-        //! \copydoc IContextNetwork::connectToNetwork()
-        virtual BlackMisc::CStatusMessage connectToNetwork(uint mode) override
+        //! \copydoc IContextNetwork::connectToNetwork
+        virtual BlackMisc::CStatusMessage connectToNetwork(const BlackMisc::Network::CServer &server, uint mode) override
         {
             Q_UNUSED(mode);
+            Q_UNUSED(server);
             logEmptyContextWarning(Q_FUNC_INFO);
             return statusMessageEmptyContext();
         }
