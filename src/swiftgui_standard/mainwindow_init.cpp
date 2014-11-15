@@ -90,11 +90,6 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::ps_handleTimerBasedUpdates);
     connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &MainWindow::ps_onChangedSetttings);
 
-    // sliders
-    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedUsersUpdateInterval, this->ui->comp_MainInfoArea->getUserComponent(), &CUserComponent::setUpdateIntervalSeconds);
-    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAircraftsUpdateInterval, this->ui->comp_MainInfoArea->getAircraftComponent(), &CAircraftComponent::setUpdateIntervalSeconds);
-    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAtcStationsUpdateInterval, this->ui->comp_MainInfoArea->getAtcStationComponent(), &::CAtcStationComponent::setUpdateIntervalSeconds);
-
     // log messages
     m_logSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
 
@@ -108,7 +103,7 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->initialDataReads();
 
     // start screen and complete menu
-    this->ps_setMainPage();
+    this->ps_setMainPageToInfoArea();
     this->initDynamicMenus();
 
     // starting
@@ -137,12 +132,14 @@ void MainWindow::initGuiSignals()
     // Remark: With new style, only methods of same signature can be connected
     // This is why we still have some "old" SIGNAL/SLOT connections here
 
+    // main window
+    connect(this->ui->sw_MainMiddle, &QStackedWidget::currentChanged, this, &MainWindow::ps_onCurrentMainWidgetChanged);
+
     // main keypad
-    connect(this->ui->comp_MainKeypadArea, SIGNAL(selectedMainInfoAreaDockWidget(CMainInfoAreaComponent::InfoArea)), this, SLOT(ps_setMainPage()));
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &MainWindow::ps_toggleNetworkConnection);
+    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::selectedMainInfoAreaDockWidget, this, &MainWindow::ps_setMainPageInfoArea);
+    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &MainWindow::ps_loginRequested);
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &MainWindow::ps_changeWindowOpacity);
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, this->ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::selectedMainInfoAreaDockWidget, this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::selectArea);
     connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
 
     // command line
@@ -166,6 +163,23 @@ void MainWindow::initGuiSignals()
     // settings (GUI component), styles
     connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &MainWindow::ps_changeWindowOpacity);
     connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &MainWindow::ps_onStyleSheetsChanged);
+
+    // sliders
+    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedUsersUpdateInterval, this->ui->comp_MainInfoArea->getUserComponent(), &CUserComponent::setUpdateIntervalSeconds);
+    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAircraftsUpdateInterval, this->ui->comp_MainInfoArea->getAircraftComponent(), &CAircraftComponent::setUpdateIntervalSeconds);
+    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAtcStationsUpdateInterval, this->ui->comp_MainInfoArea->getAtcStationComponent(), &::CAtcStationComponent::setUpdateIntervalSeconds);
+
+    // login
+    connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffCancelled, this, &MainWindow::ps_setMainPageToInfoArea);
+    connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this, &MainWindow::ps_setMainPageToInfoArea);
+    connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this->ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
+    connect(this, &MainWindow::currentMainInfoAreaChanged, this->ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
+    connect(this->ui->comp_Login, &CLoginComponent::requestNetworkSettings, this->ui->comp_MainInfoArea->getFlightPlanComponent(), [ = ]()
+    {
+        this->ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
+        this->ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabNetwork);
+    });
+
 }
 
 /*

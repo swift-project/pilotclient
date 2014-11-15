@@ -48,7 +48,7 @@ void MainWindow::ps_onMenuClicked()
     }
     else if (sender == this->ui->menu_FileFont)
     {
-        this->ps_setMainPage();
+        this->ps_setMainPageToInfoArea();
         this->ui->comp_MainInfoArea->selectSettingsTab(BlackGui::Components::CSettingsComponent::SettingTabGui);
     }
     else if (sender == this->ui->menu_FileClose)

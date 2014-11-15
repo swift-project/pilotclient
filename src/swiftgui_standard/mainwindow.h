@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef SAMPLE_MAINWINDOW_H
 #define SAMPLE_MAINWINDOW_H
 
@@ -19,6 +21,7 @@
 #include "blackcore/input_manager.h"
 #include "blackgui/components/enableforruntime.h"
 #include "blackgui/components/infowindowcomponent.h"
+#include "blackgui/components/maininfoareacomponent.h"
 #include "blackgui/transpondermodeselector.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackgui/models/serverlistmodel.h"
@@ -47,6 +50,15 @@ class MainWindow :
     Q_OBJECT
 
 public:
+
+    //! Main page indexes
+    //! \remarks keep the values in sync with the real tab indexes
+    enum MainPageIndex
+    {
+        MainPageInfoArea = 0,
+        MainPageLogin  = 1
+    };
+
     //! Constructor
     explicit MainWindow(GuiModes::WindowMode windowMode, QWidget *parent = nullptr);
 
@@ -56,11 +68,16 @@ public:
     //! Init data
     void init(const BlackCore::CRuntimeConfig &runtimeConfig);
 
-    //! Graceful shutdown
-    void gracefulShutdown();
-
     //! Log message category
     static QString getMessageCategory() { return "swift.gui.component.mainwindow"; }
+
+signals:
+    //! GUI is shutting down, request graceful shutdown
+    void requestGracefulShutdown();
+
+    //! Main info area changed
+    //! \remarks using widget pointer allows the component itself to identify if it is current
+    void currentMainInfoAreaChanged(const QWidget *currentWidget);
 
 protected:
     //! Close event, e.g. when window is closed
@@ -71,14 +88,6 @@ protected:
 
     //! Mouse press, required for frameless window
     void mousePressEvent(QMouseEvent *event);
-
-    //! Main page indexes
-    //! \remarks keep the values in sync with the real tab indexes
-    enum MainPageIndex
-    {
-        MainPageInfoArea = 0,
-        MainPageLogin  = 1
-    };
 
 private:
     QScopedPointer<Ui::MainWindow> ui;
@@ -117,6 +126,9 @@ private:
 
     //! Init dynamic menus
     void initDynamicMenus();
+
+    //! Graceful shutdown
+    void performGracefulShutdown();
 
     //! Context network availability check, otherwise status message
     bool isContextNetworkAvailableCheck();
@@ -195,13 +207,13 @@ private slots:
     //
 
     //! Set \sa MainPageInfoArea
-    void ps_setMainPage() { this->ps_setMainPage(MainPageInfoArea); }
+    void ps_setMainPageToInfoArea() { this->ps_setMainPage(MainPageInfoArea); }
 
     //! Set one of the main pages
     void ps_setMainPage(MainPageIndex mainPage);
 
-    //! Connect to network
-    void ps_toggleNetworkConnection();
+    //! Set the main info area
+    void ps_setMainPageInfoArea(BlackGui::Components::CMainInfoAreaComponent::InfoArea infoArea);
 
     //! Login requested
     void ps_loginRequested();
@@ -229,6 +241,10 @@ private slots:
 
     //! Style sheet has been changed
     void ps_onStyleSheetsChanged();
+
+    //! Main info area current widget changed
+    void ps_onCurrentMainWidgetChanged(int currentIndex);
+
 };
 
 #pragma pop_macro("interface")

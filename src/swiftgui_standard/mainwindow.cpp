@@ -19,9 +19,11 @@
 #include "blackcore/network.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/notificationsounds.h"
 #include <QMouseEvent>
 
 using namespace BlackCore;
+using namespace BlackSound;
 using namespace BlackMisc;
 using namespace BlackGui;
 using namespace BlackGui::Components;
@@ -65,11 +67,15 @@ MainWindow::~MainWindow()
 /*
  * Graceful shutdown
  */
-void MainWindow::gracefulShutdown()
+void MainWindow::performGracefulShutdown()
 {
     if (!this->m_init) { return; }
     this->m_init = false;
 
+    // tell GUI components to shut down
+    emit requestGracefulShutdown();
+
+    // tell context GUI is going down
     if (this->getIContextApplication())
     {
         this->getIContextApplication()->notifyAboutComponentChange(IContextApplication::ApplicationGui, IContextApplication::ApplicationStops);
@@ -107,7 +113,7 @@ void MainWindow::gracefulShutdown()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
-    this->gracefulShutdown();
+    this->performGracefulShutdown();
     // if (this->sender() != this) QMainWindow::closeEvent(event);
     QApplication::exit();
 }
@@ -143,6 +149,12 @@ void MainWindow::ps_setMainPage(MainWindow::MainPageIndex mainPage)
     this->ui->sw_MainMiddle->setCurrentIndex(mainPage);
 }
 
+void MainWindow::ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoArea)
+{
+    this->ps_setMainPageToInfoArea();
+    this->ui->comp_MainInfoArea->selectArea(infoArea);
+}
+
 /*
  * Given main page selected?
  */
@@ -151,56 +163,17 @@ bool MainWindow::isMainPageSelected(MainWindow::MainPageIndex mainPage) const
     return this->ui->sw_MainMiddle->currentIndex() == static_cast<int>(mainPage);
 }
 
-/*
- * Connect to Network
- */
-void MainWindow::ps_toggleNetworkConnection()
+void MainWindow::ps_loginRequested()
 {
-    if (!this->isContextNetworkAvailableCheck()) return;
-    if (!this->getIContextNetwork()->isConnected())
+    if (this->ui->sw_MainMiddle->currentIndex() == static_cast<int>(MainPageLogin))
     {
-        // validation of data here is not required, network context does this
-        // in prephase of login
-        this->m_ownAircraft.setCallsign(this->ui->comp_MainInfoArea->getSettingsComponent()->getOwnCallsignFromGui());
-        CAircraftIcao icao = this->m_ownAircraft.getIcaoInfo();
-        this->ui->comp_MainInfoArea->getSettingsComponent()->setOwnAircraftIcaoDataFromGui(icao);
-        this->m_ownAircraft.setIcaoInfo(icao);
-
-        // set latest aircraft
-        this->getIContextOwnAircraft()->updateOwnAircraft(this->m_ownAircraft, MainWindow::swiftGuiStandardOriginator());
-
-        // flight plan
-        this->ui->comp_MainInfoArea->getFlightPlanComponent()->prefillWithAircraftData(this->m_ownAircraft);
-
-        // Login is based on setting current server
-        INetwork::LoginMode mode = INetwork::LoginNormal;
-        if (this->ui->comp_MainInfoArea->getSettingsComponent()->loginStealth())
-        {
-            mode = INetwork::LoginStealth;
-            this->ps_displayStatusMessageInGui(CLogMessage(this).info("login in stealth mode"));
-        }
-        else if (this->ui->comp_MainInfoArea->getSettingsComponent()->loginAsObserver())
-        {
-            mode = INetwork::LoginAsObserver;
-            this->ps_displayStatusMessageInGui(CLogMessage(this).info("login in observer mode"));
-        }
-        CStatusMessage msg = this->getIContextNetwork()->connectToNetwork(static_cast<uint>(mode));
-        this->ps_displayStatusMessageInGui(msg);
-        this->startUpdateTimersWhenConnected();
+        // already main page, we fake a re-trigger here
+        emit this->currentMainInfoAreaChanged(this->ui->sw_MainMiddle->currentWidget());
     }
     else
     {
-        // disconnect from network
-        this->stopUpdateTimersWhenDisconnected(); // stop update timers, to avoid updates during disconnecting (a short time frame)
-        if (this->m_contextAudioAvailable) this->getIContextAudio()->leaveAllVoiceRooms();
-        CStatusMessage msg = this->getIContextNetwork()->disconnectFromNetwork();
-        this->ps_displayStatusMessageInGui(msg);
+        this->ps_setMainPage(MainPageLogin);
     }
-}
-
-void MainWindow::ps_loginRequested()
-{
-    this->ps_setMainPage(MainPageLogin);
 }
 
 /*
@@ -399,4 +372,20 @@ void MainWindow::ps_onStyleSheetsChanged()
     }
     );
     this->setStyleSheet(s);
+}
+
+void MainWindow::ps_onCurrentMainWidgetChanged(int currentIndex)
+{
+    emit currentMainInfoAreaChanged(this->ui->sw_MainMiddle->currentWidget());
+    Q_UNUSED(currentIndex);
+}
+
+/*
+ * Notification
+ */
+void MainWindow::playNotifcationSound(CNotificationSounds::Notification notification) const
+{
+    if (!this->m_contextAudioAvailable) return;
+    if (!this->ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) return;
+    this->getIContextAudio()->playNotification(static_cast<uint>(notification), true);
 }
