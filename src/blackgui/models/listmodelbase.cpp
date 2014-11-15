@@ -305,10 +305,8 @@ namespace BlackGui
             {
                 QVariant aQv = a.propertyByIndex(propertyIndex);
                 QVariant bQv = b.propertyByIndex(propertyIndex);
-                int compare = (order == Qt::AscendingOrder) ?
-                BlackMisc::compareQVariants(aQv, bQv) :
-                BlackMisc::compareQVariants(bQv, aQv);
-                return compare < 0;
+                int compare = BlackMisc::compareQVariants(aQv, bQv);
+                return (order == Qt::AscendingOrder) ? (compare < 0) : (compare > 0);
             };
 
             // KWB: qDebug() will be removed soon

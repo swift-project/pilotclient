@@ -65,81 +65,35 @@ namespace BlackMisc
 
     uint CVariant::getValueHash() const
     {
-        uint h = 0;
-        QVariant qv = this->toQVariant();
-        switch (qv.type())
+        switch (m_v.type())
         {
-        case QVariant::Int:
-            h = ::qHash(qv.toInt());
-            break;
-        case QVariant::UInt:
-            h = ::qHash(qv.toUInt());
-            break;
-        case QVariant::Bool:
-            h = ::qHash(qv.toUInt());
-            break;
-        case QVariant::Double:
-            h = ::qHash(qv.toUInt());
-            break;
-        case QVariant::LongLong:
-            h = ::qHash(qv.toLongLong());
-            break;
-        case QVariant::ULongLong:
-            h = ::qHash(qv.toULongLong());
-            break;
-        case QVariant::String:
-            h = ::qHash(qv.toString());
-            break;
-        case QVariant::Char:
-            h = ::qHash(qv.toChar());
-            break;
-        case QVariant::StringList:
-            h = ::qHash(qv.toString());
-            break;
-        case QVariant::ByteArray:
-            h = ::qHash(qv.toByteArray());
-            break;
-        case QVariant::Date:
-        case QVariant::Time:
-        case QVariant::DateTime:
-        case QVariant::Url:
-        case QVariant::Locale:
-        case QVariant::RegExp:
-            h = ::qHash(qv.toString());
-            break;
-        case QVariant::Map:
-        case QVariant::List:
-        case QVariant::BitArray:
-        case QVariant::Size:
-        case QVariant::SizeF:
-        case QVariant::Rect:
-        case QVariant::LineF:
-        case QVariant::Line:
-        case QVariant::RectF:
-        case QVariant::Point:
-        case QVariant::PointF:
-        case QVariant::UserType:
-        case QVariant::Invalid:
-            h = 2; // known, but not supported
-            break;
+        case QVariant::Int:         return qHash(m_v.toInt());
+        case QVariant::UInt:        return qHash(m_v.toUInt());
+        case QVariant::Bool:        return qHash(m_v.toUInt());
+        case QVariant::Double:      return qHash(m_v.toUInt());
+        case QVariant::LongLong:    return qHash(m_v.toLongLong());
+        case QVariant::ULongLong:   return qHash(m_v.toULongLong());
+        case QVariant::String:      return qHash(m_v.toString());
+        case QVariant::Char:        return qHash(m_v.toChar());
+        case QVariant::ByteArray:   return qHash(m_v.toByteArray());
         default:
             {
-                // value object?
-                const QVariant qv = this->toQVariant();
-                const CValueObject *cv = CValueObject::fromQVariant(qv);
+                const CValueObject *cv = CValueObject::fromQVariant(m_v);
                 if (cv)
                 {
-                    h = cv->getValueHash();
+                    return cv->getValueHash();
+                }
+                else if (m_v.canConvert<QString>())
+                {
+                    return qHash(m_v.toString());
                 }
                 else
                 {
-                    // no value object
-                    Q_ASSERT(false);
+                    qWarning() << "Unsupported CVariant type for getValueHash";
+                    return 0;
                 }
             }
-            break;
         }
-        return h;
     }
 
     QDBusArgument &operator <<(QDBusArgument &arg, const CVariant &var)

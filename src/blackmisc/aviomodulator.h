@@ -92,7 +92,7 @@ namespace BlackMisc
             //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
-            //! \copydoc CValueObject::setPropertyByIndex(variant, index)
+            //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         protected:

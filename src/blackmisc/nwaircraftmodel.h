@@ -38,10 +38,10 @@ namespace BlackMisc
             //! Constructor.
             CAircraftModel(const QString &model, bool isQueriedString) : m_modelString(model), m_queriedModelStringFlag(isQueriedString) {}
 
-            //! \copydoc CValueObject::propertyByIndex(int)
+            //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
-            //! \copydoc CValueObject::setPropertyByIndex(const QVariant, int)
+            //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Queried model string

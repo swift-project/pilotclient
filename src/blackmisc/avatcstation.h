@@ -254,10 +254,10 @@ namespace BlackMisc
                 return this->getPosition().longitude();
             }
 
-            //! \copydoc CValueObject::propertyByIndex()
+            //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
-            //! \copydoc CValueObject::setPropertyByIndex(variant, index)
+            //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index) override;
 
         protected:

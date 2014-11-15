@@ -57,10 +57,10 @@ namespace BlackMisc
         //! Has icon
         bool hasIcon() const;
 
-        //! \copydoc CValueObject::propertyByIndex()
+        //! \copydoc CValueObject::propertyByIndex
         virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
-        //! \copydoc CValueObject::setPropertyByIndex(variant, index)
+        //! \copydoc CValueObject::setPropertyByIndex
         virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
     protected:

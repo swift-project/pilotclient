@@ -120,10 +120,10 @@ namespace BlackMisc
         //! Severities as strings
         static const QStringList &allSeverityStrings();
 
-        //! \copydoc CValueObject::propertyByIndex(int)
+        //! \copydoc CValueObject::propertyByIndex
         virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
-        //! \copydoc CValueObject::propertyByIndex(const QVariant, int)
+        //! \copydoc CValueObject::setPropertyByIndex
         virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         //! To HTML

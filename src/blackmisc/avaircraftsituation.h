@@ -56,10 +56,10 @@ namespace BlackMisc
                 : m_position(position), m_altitude(altitude), m_heading(heading), m_pitch(pitch),
                   m_bank(bank), m_groundspeed(gs), m_timestamp(QDateTime::currentDateTimeUtc()) {}
 
-            //! \copydoc CValueObject::propertyByIndex(index)
+            //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
-            //! \copydoc CValueObject::setPropertyByIndex(variant,index)
+            //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Get position

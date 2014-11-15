@@ -111,10 +111,10 @@ namespace BlackMisc
             //! \copydoc CValueObject::toIcon()
             virtual CIcon toIcon() const override { return this->m_user.toIcon(); }
 
-            //! \copydoc CValueObject::propertyByIndex(int)
+            //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
-            //! \copydoc CValueObject::setPropertyByIndex(const QVariant, int)
+            //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         protected:

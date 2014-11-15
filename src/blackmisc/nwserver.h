@@ -86,10 +86,10 @@ namespace BlackMisc
             //! Validate, provide details about issues
             BlackMisc::CStatusMessageList validate() const;
 
-            //! \copydoc CValueObject::propertyByIndex(int)
+            //! \copydoc CValueObject::propertyByIndex
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
-            //! \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
+            //! \copydoc CValueObject::setPropertyByIndex
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         protected:
