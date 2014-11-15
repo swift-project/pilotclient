@@ -17,9 +17,6 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*
-         * Convert to string
-         */
         QString CUser::convertToQString(bool /** i18n **/) const
         {
             if (this->m_realname.isEmpty()) return "<no realname>";
@@ -33,6 +30,16 @@ namespace BlackMisc
                 s.append(' ').append(this->getCallsign().getStringAsSet());
             }
             return s;
+        }
+
+        CStatusMessageList CUser::validate() const
+        {
+            CStatusMessageList msgs;
+            // callsign optional
+            if (!this->hasValidId()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid id"));}
+            if (!this->hasValidRealName()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid real name"));}
+            if (!this->hasValidCredentials()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Invalid credentials"));}
+            return msgs;
         }
 
         /*
@@ -61,6 +68,15 @@ namespace BlackMisc
                 otherUser.setCallsign(this->getCallsign());
             else if (otherUser.hasValidCallsign())
                 this->setCallsign(otherUser.getCallsign());
+        }
+
+        bool CUser::isValidVatsimId(const QString &id)
+        {
+            if (id.isEmpty()) { return false; }
+            bool ok;
+            int i = id.toInt(&ok);
+            if (!ok) { return false; }
+            return i >= 100000 && i <= 9999999;
         }
 
         /*

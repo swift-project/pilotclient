@@ -38,6 +38,17 @@ namespace BlackMisc
             return this->m_user.hasValidCredentials() && this->m_port > 0 && !this->m_address.isEmpty() && this->isAcceptingConnections();
         }
 
+        CStatusMessageList CServer::validate() const
+        {
+            CStatusMessageList msgs;
+            if (this->getName().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Missing name")); }
+            if (this->getAddress().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Missing address")); }
+            if (this->getDescription().isEmpty()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Missing description")); }
+            if (this->getPort() < 1 || this->getPort() > 65535) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, "Wrong port")); }
+            msgs.push_back(this->getUser().validate());
+            return msgs;
+        }
+
         /*
          * Property by index
          */

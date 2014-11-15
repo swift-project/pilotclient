@@ -75,6 +75,9 @@ namespace BlackMisc
             //! \copydoc CValueObject::setPropertyByIndex(variant, index)
             virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
+            //! Valid callsign?
+            static bool isValidCallsign(const QString &callsign);
+
         protected:
             //! \copydoc CValueObject::convertToQString()
             virtual QString convertToQString(bool i18n = false) const override;

@@ -15,6 +15,7 @@
 #include "avcallsign.h"
 #include "avairporticao.h"
 #include "propertyindex.h"
+#include "statusmessagelist.h"
 
 namespace BlackMisc
 {
@@ -60,7 +61,7 @@ namespace BlackMisc
             QString getRealName() const { return m_realname; }
 
             //! setRealName
-            void setRealName(const QString &realname) { m_realname = realname.trimmed(); }
+            void setRealName(const QString &realname) { m_realname = realname.trimmed().simplified(); }
 
             //! Get password
             QString getPassword() const { return m_password; }
@@ -82,6 +83,9 @@ namespace BlackMisc
 
             //! Has associated callsign?
             bool hasValidCallsign() const { return !m_callsign.isEmpty(); }
+
+            //! Validate, provide details about issues
+            BlackMisc::CStatusMessageList validate() const;
 
             //! Get email.
             QString getEmail() const { return m_email; }
@@ -124,6 +128,9 @@ namespace BlackMisc
              * This user has priority and overrides first.
              */
             void syncronizeData(CUser &otherUser);
+
+            //! Valid VATSIM id
+            static bool isValidVatsimId(const QString &id);
 
         protected:
             //! \copydoc CValueObject::convertToQString

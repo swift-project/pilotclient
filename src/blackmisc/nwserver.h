@@ -11,7 +11,9 @@
 
 #ifndef BLACKMISC_SERVER_H
 #define BLACKMISC_SERVER_H
+
 #include "nwuser.h"
+#include "statusmessagelist.h"
 #include "valueobject.h"
 
 namespace BlackMisc
@@ -46,7 +48,7 @@ namespace BlackMisc
             const QString &getAddress() const { return m_address; }
 
             //! Set address (e.g. myserver.foo.com)
-            void setAddress(const QString &address) { m_address = address; }
+            void setAddress(const QString &address) { m_address = address.trimmed(); }
 
             //! Get user
             const CUser &getUser() const { return m_user; }
@@ -58,13 +60,13 @@ namespace BlackMisc
             const QString &getName() const { return m_name; }
 
             //! Set name
-            void setName(const QString &name) { m_name = name; }
+            void setName(const QString &name) { m_name = name.trimmed(); }
 
             //! Get description
             const QString &getDescription() const { return m_description; }
 
             //! Set description
-            void setDescription(const QString &description) { m_description = description; }
+            void setDescription(const QString &description) { m_description = description.trimmed().simplified(); }
 
             //! Get port
             qint32 getPort() const { return m_port; }
@@ -80,6 +82,9 @@ namespace BlackMisc
 
             //! Is valid for login?
             bool isValidForLogin() const;
+
+            //! Validate, provide details about issues
+            BlackMisc::CStatusMessageList validate() const;
 
             //! \copydoc CValueObject::propertyByIndex(int)
             virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;

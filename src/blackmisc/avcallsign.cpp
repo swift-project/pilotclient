@@ -126,5 +126,15 @@ namespace BlackMisc
             }
         }
 
+        /*
+         * Valid callsign?
+         */
+        bool CCallsign::isValidCallsign(const QString &callsign)
+        {
+            static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
+            if (callsign.length() < 2 || callsign.length() > 10) return false;
+            return (regexp.match(callsign).hasMatch());
+        }
+
     } // namespace
 } // namespace

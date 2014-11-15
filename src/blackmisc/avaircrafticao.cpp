@@ -128,5 +128,25 @@ namespace BlackMisc
             return (regexp.match(designator).hasMatch());
         }
 
+        /*
+         * Valid combined type
+         */
+        bool CAircraftIcao::isValidCombinedType(const QString &combinedType)
+        {
+            static QRegularExpression regexp("^[A-Z][0-9][A-Z]$");
+            if (combinedType.length() != 3) return false;
+            return (regexp.match(combinedType).hasMatch());
+        }
+
+        /*
+         *  Valid airline designator
+         */
+        bool CAircraftIcao::isValidAirlineDesignator(const QString &airline)
+        {
+            static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
+            if (airline.length() < 2 || airline.length() > 5) return false;
+            return (regexp.match(airline).hasMatch());
+        }
+
     } // namespace
 } // namespace

@@ -138,6 +138,12 @@ namespace BlackMisc
             //! Valid designator?
             static bool isValidDesignator(const QString &designator);
 
+            //! Valid combined type
+            static bool isValidCombinedType(const QString &combinedType);
+
+            //! Valid designator?
+            static bool isValidAirlineDesignator(const QString &airline);
+
         protected:
             //! \copydoc CValueObject::convertToQString
             virtual QString convertToQString(bool i18n = false) const override;
