@@ -52,7 +52,7 @@ namespace BlackMiscTest
         QVERIFY2(!(l1 > l4), "Null length and non-null length should not be comparable");
         QVERIFY2(compare(l1, l4) < 0, "Null length and non-null length should be sortable");
 
-        QVariant station1qv = QVariant::fromValue(station1);
+        CVariant station1qv = CVariant::fromValue(station1);
         QVERIFY2(station1 == station1, "Station should be equal");
 
         QVERIFY(station1.getController() == station2.getController());
@@ -60,10 +60,10 @@ namespace BlackMiscTest
 
         QVERIFY2(station1 == station2, "Station should be equal");
         QVERIFY2(station1 != station3, "Station should not be equal");
-        QVERIFY2(station1qv == station1, "Station should be equal (QVariant)");
-        QVERIFY2(station1 == station1qv, "Station should be equal (QVariant)");
-        QVERIFY2(station2 == station1qv, "Station should be equal (QVariant)");
-        QVERIFY2(station3 != station1qv, "Station should be equal (QVariant)");
+        QVERIFY2(station1qv == station1, "Station should be equal (CVariant)");
+        QVERIFY2(station1 == station1qv, "Station should be equal (CVariant)");
+        QVERIFY2(station2 == station1qv, "Station should be equal (CVariant)");
+        QVERIFY2(station3 != station1qv, "Station should be equal (CVariant)");
 
         QVERIFY2(compare(station1, station1) == 0, "Station should be equal");
         QVERIFY2(compare(station1, station2) == 0, "Station should be equal");

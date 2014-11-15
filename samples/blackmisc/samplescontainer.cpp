@@ -71,7 +71,7 @@ namespace BlackMiscTest
         atcList.push_back(station1);
         CAtcStation station1Cpy(station1);
         CFrequency changedFrequency(118.25, CFrequencyUnit::MHz());
-        CPropertyIndexVariantMap vm(CAtcStation::IndexFrequency, changedFrequency.toQVariant());
+        CPropertyIndexVariantMap vm(CAtcStation::IndexFrequency, changedFrequency.toCVariant());
 
 
         // demonstration apply

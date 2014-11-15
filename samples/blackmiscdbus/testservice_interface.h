@@ -206,14 +206,14 @@ namespace BlackMiscTest
             return asyncCallWithArgumentList(QLatin1String("receiveLength"), argumentList);
         }
 
-        inline QDBusPendingReply<> receiveLengthsQl(const QVariantList &lengthsList)
+        inline QDBusPendingReply<> receiveLengthsQl(const BlackMisc::CVariantList &lengthsList)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(lengthsList);
             return asyncCallWithArgumentList(QLatin1String("receiveLengthsQl"), argumentList);
         }
 
-        inline QDBusPendingReply<> receiveLengthsQvl(const QVariantList &lengthsVariantList)
+        inline QDBusPendingReply<> receiveLengthsQvl(const BlackMisc::CVariantList &lengthsVariantList)
         {
             QList<QVariant> argumentList;
             argumentList << QVariant::fromValue(lengthsVariantList);

@@ -60,7 +60,7 @@ namespace BlackMiscTest
 
         // put Jane in the tower
         CPropertyIndexVariantMap newController;
-        newController.addValue(CAtcStation::IndexController, QVariant::fromValue(CUser("112233", "Jane Doe")));
+        newController.addValue(CAtcStation::IndexController, CVariant::fromValue(CUser("112233", "Jane Doe")));
         atcList.applyIf(
             BlackMisc::Predicates::MemberEqual(&CAtcStation::getCallsign, CCallsign("eddm_twr")),
             newController);
@@ -69,7 +69,7 @@ namespace BlackMiscTest
 
         // now Jane's time is over
         CPropertyIndexVariantMap anotherController;
-        anotherController.addValue(CAtcStation::IndexController, QVariant::fromValue(CUser("445566", "Fuzzy")));
+        anotherController.addValue(CAtcStation::IndexController, CVariant::fromValue(CUser("445566", "Fuzzy")));
         atcList.applyIf(newController, anotherController);
 
         qDebug() << "-- after update via value map";

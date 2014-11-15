@@ -57,6 +57,9 @@ namespace BlackMisc
         //! Unequal operator !=
         bool operator !=(const CTestValueObject &other) const;
 
+        //! Less than operator <
+        bool operator <(const CTestValueObject &other) const;
+
         //! \copydoc CValueObject::getValueHash()
         virtual uint getValueHash() const override;
 
@@ -72,11 +75,11 @@ namespace BlackMisc
         //! \copydoc TupleConverter<>::jsonMembers()
         static const QStringList &jsonMembers();
 
-        //! \copydoc CValueObject::propertyByIndex(int)
-        virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+        //! \copydoc CValueObject::propertyByIndex
+        virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
-        //! \copydoc CValueObject::setPropertyByIndex(const QVariant &, int index)
-        void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+        //! \copydoc CValueObject::setPropertyByIndex
+        void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         //! \copydoc CValueObject::toQVariant
         virtual QVariant toQVariant() const override

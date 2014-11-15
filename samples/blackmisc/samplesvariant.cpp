@@ -8,12 +8,14 @@
  */
 
 #include "samplesvariant.h"
+#include "blackmisc/variant.h"
 #include "blackmisc/pqallquantities.h"
 #include "blackmisc/avallclasses.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include <QDebug>
 #include <QMetaType>
 
+using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 
@@ -25,36 +27,38 @@ namespace BlackMiscTest
         BlackMisc::registerMetadata();
 
         CAngle a1(30.0, CAngleUnit::deg());
-        QVariant qva = a1.toQVariant();
-        qDebug() << a1 << qva.userType();
+        CVariant cva = a1.toCVariant();
+        qDebug() << a1 << cva.userType();
 
         CHeading h1(45, CHeading::True, CAngleUnit::deg());
         CHeading h2(60, CHeading::True, CAngleUnit::deg());
 
-        QVariant qvh = h1.toQVariant();
-        qDebug() << h1 << qvh.userType();
+        CVariant cvh = h1.toCVariant();
+        qDebug() << h1 << cvh.userType();
+
+        qDebug() << cva << cvh; // CVariant knows how to stringify the contained value object
 
         CAngle *ap_heading = &h1; // angle actually heading
         CAngle *ap_angle = &a1;   // angle really heading
-        qDebug() << (*ap_heading) << ap_heading->toQVariant().userType();
-        qDebug() << (*ap_angle) << ap_angle->toQVariant().userType();
+        qDebug() << (*ap_heading) << ap_heading->toCVariant().userType();
+        qDebug() << (*ap_angle) << ap_angle->toCVariant().userType();
 
         // This works, because ap is actually heading
-        ap_heading->convertFromQVariant(h2.toQVariant());
-        qDebug() << (*ap_heading) << ap_heading->toQVariant().userType();
+        ap_heading->convertFromCVariant(h2.toCVariant());
+        qDebug() << (*ap_heading) << ap_heading->toCVariant().userType();
 
         // This works, angle from variant angle
-        ap_angle->convertFromQVariant(a1.toQVariant());
-        qDebug() << (*ap_angle) << ap_angle->toQVariant().userType();
+        ap_angle->convertFromCVariant(a1.toCVariant());
+        qDebug() << (*ap_angle) << ap_angle->toCVariant().userType();
 
         // This gives me an unwanted(!) assert, canConvert is not smart enough to detect upcasting
         // because CValueObjects are not QObjects
-        ap_angle->convertFromQVariant(h2.toQVariant());
-        qDebug() << (*ap_angle) << ap_angle->toQVariant().userType();
+        ap_angle->convertFromCVariant(h2.toCVariant());
+        qDebug() << (*ap_angle) << ap_angle->toCVariant().userType();
 
         // This gives me the intended assert, because I assign angle to heading
-        ap_heading->convertFromQVariant(a1.toQVariant());
-        qDebug() << (*ap_heading) << ap_heading->toQVariant().userType();
+        ap_heading->convertFromCVariant(a1.toCVariant());
+        qDebug() << (*ap_heading) << ap_heading->toCVariant().userType();
 
         return 0;
     }

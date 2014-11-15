@@ -378,21 +378,21 @@ namespace BlackMiscTest
             cv = testserviceInterface.pingCVariant(client);
             qDebug() << "Pinged CVariant via interface" << cv.toQString();
 
-            // test variant lists with different types wrapped in QVariant
+            // test variant lists with different types wrapped in CVariant
             qDebug() << "----------------- variant tests ----------------";
-            QVariantList qvList;
-            qvList << QVariant::fromValue(len);
-            qvList << QVariant::fromValue(alt);
-            QList<QVariant> lengthsV;
-            lengthsV.append(QVariant::fromValue(len));
-            lengthsV.append(QVariant::fromValue(alt));
-            testserviceInterface.receiveLengthsQvl(qvList);
-            qDebug() << "Send lengths via interface as QListVariant:";
+            CVariantList cvList;
+            cvList.push_back(CVariant::fromValue(len));
+            cvList.push_back(CVariant::fromValue(alt));
+            CVariantList lengthsV;
+            lengthsV.push_back(CVariant::fromValue(len));
+            lengthsV.push_back(CVariant::fromValue(alt));
+            testserviceInterface.receiveLengthsQvl(cvList);
+            qDebug() << "Send lengths via interface as CVariantList:";
             testserviceInterface.receiveLengthsQl(lengthsV);
-            qDebug() << "Send lengths via interface as QList<QVariant>:";
-            foreach(QVariant lv, qvList)
+            qDebug() << "Send lengths via interface as QList<CVariant>:";
+            foreach(CVariant lv, cvList)
             {
-                qDebug() << "   " << "Send length in list:" << BlackMisc::qVariantToString(lv);
+                qDebug() << "   " << "Send length in list:" << lv;
             }
             QThread::msleep(2500);
 

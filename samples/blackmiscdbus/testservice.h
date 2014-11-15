@@ -54,7 +54,7 @@ namespace BlackMiscTest
         void receiveStringMessage(const QString &message);
 
         //! Receive a QVariant
-        void receiveVariant(const QDBusVariant &variant, int localMetaType);
+        void receiveVariant(const BlackMisc::CVariant &variant);
 
         //! Receive speed
         void receiveSpeed(const BlackMisc::PhysicalQuantities::CSpeed &speed);

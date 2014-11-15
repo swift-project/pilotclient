@@ -85,6 +85,15 @@ namespace BlackMisc
     }
 
     /*
+     * Less than?
+     */
+    bool CTestValueObject::operator <(const CTestValueObject &other) const
+    {
+        if (this == &other) return false;
+        return TupleConverter<CTestValueObject>::toTuple(*this) < TupleConverter<CTestValueObject>::toTuple(other);
+    }
+
+    /*
      * Hash
      */
     uint CTestValueObject::getValueHash() const
@@ -95,16 +104,16 @@ namespace BlackMisc
     /*
      * Property by index
      */
-    QVariant CTestValueObject::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    CVariant CTestValueObject::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
-        if (index.isMyself()) { return this->toQVariant(); }
+        if (index.isMyself()) { return this->toCVariant(); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexDescription:
-            return QVariant::fromValue(this->m_description);
+            return CVariant::fromValue(this->m_description);
         case IndexName:
-            return QVariant::fromValue(this->m_name);
+            return CVariant::fromValue(this->m_name);
         default:
             return CValueObject::propertyByIndex(index);
         }
@@ -113,11 +122,11 @@ namespace BlackMisc
     /*
      * Property by index (setter)
      */
-    void CTestValueObject::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+    void CTestValueObject::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
         if (index.isMyself())
         {
-            this->convertFromQVariant(variant);
+            this->convertFromCVariant(variant);
             return;
         }
         ColumnIndex i = index.frontCasted<ColumnIndex>();

@@ -4,7 +4,9 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "samplesphysicalquantities.h"
+#include "blackmisc/variant.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMiscTest
@@ -18,7 +20,7 @@ namespace BlackMiscTest
         // parsing
         CSpeed parsedPq1 = CPqString::parseToVariant("100.123 km/h").value<CSpeed>();
         CLength parsedPq2 = CPqString::parseToVariant("-33.123ft").value<CLength>();
-        QVariant parsedPq3 = CPqString::parseToVariant("666");
+        CVariant parsedPq3 = CPqString::parseToVariant("666");
         qDebug() << "parsed" << parsedPq1 << parsedPq2 << parsedPq3;
 
         CSpeed speedParsed = CPqString::parse<CSpeed>("111.33ft/s");
