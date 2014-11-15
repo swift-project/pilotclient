@@ -119,6 +119,7 @@ namespace BlackCore
 
     signals:
         //! Settings have been changed
+        //! \sa IContextSettings::SettingsType
         void changedSettings(uint type);
 
     public slots:

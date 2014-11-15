@@ -230,7 +230,7 @@ namespace BlackCore
                     {
                         QMap<QString, QString> clientPartsMap = clientPartsToMap(currentLine, clientSectionAttributes);
                         CCallsign callsign = CCallsign(clientPartsMap["callsign"]);
-                        if (callsign.isEmpty()) continue;
+                        if (callsign.isEmpty()) break;
                         BlackMisc::Network::CUser user(clientPartsMap["cid"], clientPartsMap["realname"], callsign);
                         const QString clientType = clientPartsMap["clienttype"].toLower();
                         if (clientType.isEmpty()) break; // sometimes type is empty
@@ -300,7 +300,7 @@ namespace BlackCore
                         if (currentLine.contains("UPDATE"))
                         {
                             QStringList updateParts = currentLine.replace(" ", "").split('=');
-                            if (updateParts.length() < 2) continue;
+                            if (updateParts.length() < 2) break;
                             QString dts = updateParts.at(1).trimmed();
                             updateTimestampFromFile = QDateTime::fromString(dts, "yyyyMMddHHmmss");
                             updateTimestampFromFile.setOffsetFromUtc(0);
@@ -313,9 +313,10 @@ namespace BlackCore
                     {
                         // ident:hostname_or_IP:location:name:clients_connection_allowed:
                         QStringList fsdServerParts = currentLine.split(':');
-                        if (fsdServerParts.size() < 4) continue;
-                        if (!fsdServerParts.at(3).trimmed().contains('1')) continue; // allowed?
-                        BlackMisc::Network::CServer fsdServer(fsdServerParts.at(0), fsdServerParts.at(2), fsdServerParts.at(1), 6809, CUser("id", "real name", "email", "password"));
+                        if (fsdServerParts.size() < 5) break;
+                        if (!fsdServerParts.at(4).trimmed().contains('1')) break; // allowed?
+                        QString description(fsdServerParts.at(2)); // part(3) could be added
+                        BlackMisc::Network::CServer fsdServer(fsdServerParts.at(0), description, fsdServerParts.at(1), 6809, CUser("id", "real name", "email", "password"));
                         fsdServers.push_back(fsdServer);
                     }
                     break;
@@ -323,8 +324,8 @@ namespace BlackCore
                     {
                         // hostname_or_IP:location:name:clients_connection_allowed:type_of_voice_server:
                         QStringList voiceServerParts = currentLine.split(':');
-                        if (voiceServerParts.size() < 3) continue;
-                        if (!voiceServerParts.at(3).trimmed().contains('1')) continue; // allowed?
+                        if (voiceServerParts.size() < 3) break;
+                        if (!voiceServerParts.at(3).trimmed().contains('1')) break; // allowed?
                         BlackMisc::Network::CServer voiceServer(voiceServerParts.at(1), voiceServerParts.at(2), voiceServerParts.at(0), -1, CUser());
                         voiceServers.push_back(voiceServer);
                     }

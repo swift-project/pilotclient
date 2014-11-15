@@ -427,6 +427,26 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>le_CommandLineInput</tabstop>
+  <tabstop>pb_Connect</tabstop>
+  <tabstop>pb_MainAircrafts</tabstop>
+  <tabstop>pb_MainAtc</tabstop>
+  <tabstop>pb_MainUsers</tabstop>
+  <tabstop>pb_MainTextMessages</tabstop>
+  <tabstop>pb_MainSimulator</tabstop>
+  <tabstop>pb_MainFlightplan</tabstop>
+  <tabstop>pb_MainWeather</tabstop>
+  <tabstop>pb_MainMappings</tabstop>
+  <tabstop>pb_MainLog</tabstop>
+  <tabstop>pb_MainSettings</tabstop>
+  <tabstop>pb_MainCockpit</tabstop>
+  <tabstop>pb_CockpitIdent</tabstop>
+  <tabstop>pb_Opacity100</tabstop>
+  <tabstop>pb_Opacity050</tabstop>
+  <tabstop>pb_SoundMute</tabstop>
+  <tabstop>pb_SoundMaxVolume</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

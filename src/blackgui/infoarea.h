@@ -94,10 +94,10 @@ namespace BlackGui
         //! Select next right tab
         void selectRightTab();
 
-        //! Display status message
+        //! Display status message in all info areas (according their state)
         void displayStatusMessage(const BlackMisc::CStatusMessage &statusMessage);
 
-        //! Display status messages
+        //! Display status messages in all info areas (according their state)
         void displayStatusMessages(const BlackMisc::CStatusMessageList &statusMessages);
 
     protected:

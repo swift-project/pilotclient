@@ -81,6 +81,9 @@ namespace BlackMisc
         //! Message may already have been handled directly
         bool isRedundant() const { return this->m_redundant; }
 
+        //! Info or debug, no warning or error
+        bool isSeverityInfoOrLess() const { return this->m_severity == SeverityInfo || this->m_severity == SeverityDebug; }
+
         //! Mark the message as having been handled by the given object
         void markAsHandledBy(const QObject *object) const;
 

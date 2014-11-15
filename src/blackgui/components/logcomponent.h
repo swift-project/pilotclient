@@ -49,7 +49,6 @@ namespace BlackGui
             //! Append status message to list
             void appendStatusMessageToList(const BlackMisc::CStatusMessage &statusMessage);
 
-
         private:
             QScopedPointer<Ui::CLogComponent> ui;
         };
