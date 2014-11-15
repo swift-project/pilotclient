@@ -15,6 +15,7 @@
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/statusmessage.h"
 #include "blackmisc/audioallclasses.h"
+#include "blackmisc/variantlist.h"
 #include "hotkeyfunction.h"
 
 #endif // guard
