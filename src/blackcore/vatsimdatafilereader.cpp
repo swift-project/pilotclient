@@ -25,8 +25,8 @@ using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
 {
-    CVatsimDataFileReader::CVatsimDataFileReader(const QStringList &urls, QObject *parent) :
-        QObject(parent), CThreadedReader(),
+    CVatsimDataFileReader::CVatsimDataFileReader(QObject *owner, const QStringList &urls) :
+        CThreadedReader(owner),
         m_serviceUrls(urls), m_currentUrlIndex(0), m_networkManager(nullptr)
     {
         this->m_networkManager = new QNetworkAccessManager(this);
@@ -149,7 +149,7 @@ namespace BlackCore
     void CVatsimDataFileReader::ps_loadFinished(QNetworkReply *nwReply)
     {
         this->setPendingNetworkReply(nullptr);
-        if (!this->isStopped())
+        if (!this->isFinished())
         {
             QFuture<void> f = QtConcurrent::run(this, &CVatsimDataFileReader::parseVatsimFileInBackground, nwReply);
             this->setPendingFuture(f);
@@ -167,7 +167,7 @@ namespace BlackCore
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
 
         // Worker thread, make sure to write only synced here!
-        if (this->isStopped())
+        if (this->isFinished())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("terminated VATSIM file parsing process"); // for users
@@ -196,7 +196,7 @@ namespace BlackCore
             Section section = SectionNone;
             foreach(QString currentLine, lines)
             {
-                if (this->isStopped())
+                if (this->isFinished())
                 {
                     CLogMessage(this).debug() << Q_FUNC_INFO;
                     CLogMessage(this).info("terminated booking parsing process"); // for users

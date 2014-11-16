@@ -12,6 +12,7 @@
 
 //! \file
 
+#include "worker.h"
 #include <QReadWriteLock>
 #include <QDateTime>
 #include <QTimer>
@@ -27,17 +28,9 @@ namespace BlackMisc
      *
      * \remarks Header only class to avoid forward instantiations across subprojects
      */
-    template <class FutureRet = void> class CThreadedReader
+    template <class FutureRet = void> class CThreadedReader : public CContinuousWorker
     {
-
     public:
-        //! Destructor
-        virtual ~CThreadedReader()
-        {
-            this->stop();
-            delete m_updateTimer;
-        }
-
         //! Thread safe, set update timestamp
         //! \threadsafe
         QDateTime getUpdateTimestamp() const
@@ -54,16 +47,9 @@ namespace BlackMisc
             this->m_updateTimestamp = updateTimestamp;
         }
 
-        //! Thread safe, mark as stopped
-        //! \threadsafe
-        virtual void stop()
+        //! \copydoc CContinuousWorker::cleanup
+        virtual void cleanup() override
         {
-            if (this->isStopped()) return;
-
-            // thread safe stopping timer and mark as stopped
-            this->setStopFlag();
-            this->setInterval(0);
-
             // shutdown pending
             QWriteLocker(&this->m_lock);
             if (this->m_pendingFuture.isRunning())
@@ -76,19 +62,10 @@ namespace BlackMisc
             if (this->m_pendingNetworkReply && this->m_pendingNetworkReply->isRunning())
             {
                 this->m_pendingNetworkReply->abort();
-                QCoreApplication::processEvents(QEventLoop::AllEvents, 250); // allow the abort to be called
             }
 
             // cancel or stop flag above should terminate QFuture
             this->m_pendingFuture.waitForFinished();
-        }
-
-        //! Thread safe, is in state stopped?
-        //! \threadsafe
-        bool isStopped() const
-        {
-            QReadLocker rl(&this->m_lock);
-            return this->m_stopped;
         }
 
         /*!
@@ -116,9 +93,9 @@ namespace BlackMisc
 
     protected:
         //! Constructor
-        CThreadedReader() : m_lock(QReadWriteLock::Recursive)
+        CThreadedReader(QObject *owner) : CContinuousWorker(owner),
+            m_updateTimer(new QTimer(this)), m_lock(QReadWriteLock::Recursive)
         {
-            this->m_updateTimer = new QTimer();
         }
 
         //! Has pending network replay
@@ -137,20 +114,12 @@ namespace BlackMisc
             this->m_pendingFuture = future;
         }
 
-        //! Thread safe, mark as to be stopped
-        //! \threadsafe
-        void setStopFlag()
-        {
-            QWriteLocker wl(&this->m_lock);
-            this->m_stopped = true;
-        }
-
         QTimer *m_updateTimer = nullptr;                //!< update timer
         mutable QReadWriteLock m_lock;                  //!< lock
 
     private:
         QDateTime m_updateTimestamp;                    //!< when was file / resource read
-        bool m_stopped = false;                         //!< mark as stopped, threads should terminate
+
         QFuture<FutureRet> m_pendingFuture;             //!< optional future to be stopped
         QNetworkReply *m_pendingNetworkReply = nullptr; //!< optional network reply to be stopped
     };

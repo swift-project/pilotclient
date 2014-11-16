@@ -30,13 +30,13 @@ namespace BlackCore
     /*!
      * Read bookings from VATSIM
      */
-    class CVatsimDataFileReader : public QObject, public BlackMisc::CThreadedReader<void>
+    class CVatsimDataFileReader : public BlackMisc::CThreadedReader<void>
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        explicit CVatsimDataFileReader(const QStringList &urls, QObject *parent = nullptr);
+        explicit CVatsimDataFileReader(QObject *owner, const QStringList &urls);
 
         //! Read / re-read data file
         void read();

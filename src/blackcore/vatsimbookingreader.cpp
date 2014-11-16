@@ -22,8 +22,8 @@ using namespace BlackMisc::Network;
 
 namespace BlackCore
 {
-    CVatsimBookingReader::CVatsimBookingReader(const QString &url, QObject *parent) :
-        QObject(parent), CThreadedReader(),
+    CVatsimBookingReader::CVatsimBookingReader(QObject *owner, const QString &url) :
+        CThreadedReader(owner),
         m_serviceUrl(url), m_networkManager(nullptr)
     {
         this->m_networkManager = new QNetworkAccessManager(this);
@@ -47,7 +47,7 @@ namespace BlackCore
     void CVatsimBookingReader::ps_loadFinished(QNetworkReply *nwReply)
     {
         this->setPendingNetworkReply(nullptr);
-        if (!this->isStopped())
+        if (!this->isFinished())
         {
             QFuture<void> f = QtConcurrent::run(this, &CVatsimBookingReader::parseBookings, nwReply);
             this->setPendingFuture(f);
@@ -64,7 +64,7 @@ namespace BlackCore
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
 
         // Worker thread, make sure to write no members here!
-        if (this->isStopped())
+        if (this->isFinished())
         {
             CLogMessage(this).debug() << Q_FUNC_INFO;
             CLogMessage(this).info("terminated booking parsing process"); // for users
@@ -100,7 +100,7 @@ namespace BlackCore
                 CAtcStationList bookedStations;
                 for (int i = 0; i < size; i++)
                 {
-                    if (this->isStopped())
+                    if (this->isFinished())
                     {
                         CLogMessage(this).debug() << Q_FUNC_INFO;
                         CLogMessage(this).info("terminated booking parsing process"); // for users

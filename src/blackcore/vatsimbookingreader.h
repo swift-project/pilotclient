@@ -25,13 +25,13 @@ namespace BlackCore
     /*!
      * Read bookings from VATSIM
      */
-    class CVatsimBookingReader : public QObject, public BlackMisc::CThreadedReader<void>
+    class CVatsimBookingReader : public BlackMisc::CThreadedReader<void>
     {
         Q_OBJECT
 
     public:
         //! Constructor
-        explicit CVatsimBookingReader(const QString &url, QObject *parent = nullptr);
+        explicit CVatsimBookingReader(QObject *owner, const QString &url);
 
         //! Read / re-read bookings
         void read();
