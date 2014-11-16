@@ -202,7 +202,7 @@ namespace BlackGui
         {
             if (index.row() < 0 || index.row() >= this->m_container.size())
             {
-                const static ObjectType def; // default object
+                static const ObjectType def{}; // default object
                 return def;
             }
             else
