@@ -34,12 +34,12 @@
 inline void BMP_EndianFlipInt(int * x) { int t = Endian32_Swap(*x); *x = t; }
 inline void BMP_EndianFlipShort(short * x) { short t = Endian16_Swap(*x); *x = t; }
 #else
-#define BMP_EndianFlipInt(x) 	(x)
-#define BMP_EndianFlipShort(x) (x)
+#define BMP_EndianFlipInt(x)
+#define BMP_EndianFlipShort(x)
 #endif
 #else
-	#define BMP_EndianFlipInt(x) 	(x)
-	#define BMP_EndianFlipShort(x) (x)
+	#define BMP_EndianFlipInt(x)
+	#define BMP_EndianFlipShort(x)
 #endif
 
 #if BITMAP_USE_JPEG

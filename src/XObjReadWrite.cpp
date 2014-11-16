@@ -48,8 +48,8 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 	vec_tex			vst;
 	vec_rgb			vrgb;
 	
-	float scanned_st_rgb[4][3]={0,0,0 , 0,0,0,// [corner][color or st]
-                               0,0,0 , 0,0,0};	
+    float scanned_st_rgb[4][3]={{0,0,0} , {0,0,0},// [corner][color or st]
+                                {0,0,0} , {0,0,0}};
 	
 	outObj.cmds.clear();
 
