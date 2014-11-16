@@ -151,6 +151,7 @@ bool	OGL_UtilsInit()
 		firstTime = false;
 	}
 
+#if IBM
 	// Make sure everything got initialized
 	if(glBindBufferARB &&
 	   glActiveTextureARB &&
@@ -162,5 +163,8 @@ bool	OGL_UtilsInit()
 	}
 	else
 		return false;
+#else
+    return true;
+#endif
 
 }

@@ -551,7 +551,9 @@ void	OBJ_PlotModel(int model, int texID, int litTexID, float inDistance, double 
 		GLint xpBuffer;
 		// See if the card even has VBO. If it does, save xplane's pointer
 		// and bind to 0 for us.
+#if IBM
 		if(glBindBufferARB)
+#endif
 		{
 			glGetIntegerv(GL_ARRAY_BUFFER_BINDING_ARB, &xpBuffer); 
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
@@ -595,7 +597,9 @@ void	OBJ_PlotModel(int model, int texID, int litTexID, float inDistance, double 
 		glPopClientAttrib();
 
 		// If we bound before, we need to put xplane back where it was
+#if IBM
 		if(glBindBufferARB)
+#endif
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, xpBuffer);
 
 		sObjects[model].lods[lodIdx].triangleList.clear();

@@ -182,6 +182,7 @@ char * fgets_multiplatform(char * s, int n, FILE * file)
 	
 	// Only bother to read if we have enough space in the char buf.
 	if (n)
+    {
 		do
 		{
 			c = getc(file);
@@ -204,19 +205,20 @@ char * fgets_multiplatform(char * s, int n, FILE * file)
 		// Note that the \r\n IS written to the line.
 		while (c != '\n' && c != '\r' && --n);
 
-	// Ben's special code: eat a \n if it follows a \r, etc.  Mac stdio
-	// swizzles these guys a bit, so we will consolidate BOTH \r\n and \n\r into
-	// just the first.  
-	if (c == '\r')
-	{
-		c1 = getc(file);
-		if (c1 != '\n') ungetc(c1, file);
-	}
-	if (c == '\n')
-	{
-		c1 = getc(file);
-		if (c1 != '\r') ungetc(c1, file);
-	}
+	    // Ben's special code: eat a \n if it follows a \r, etc.  Mac stdio
+	    // swizzles these guys a bit, so we will consolidate BOTH \r\n and \n\r into
+	    // just the first.
+	    if (c == '\r')
+	    {
+		    c1 = getc(file);
+		    if (c1 != '\n') ungetc(c1, file);
+	    }
+	    if (c == '\n')
+	    {
+		    c1 = getc(file);
+		    if (c1 != '\r') ungetc(c1, file);
+	    }
+    }
 
 	// Unless we're bailing with NULL, we MUST null terminate.	
 	*p = 0;
