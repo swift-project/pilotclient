@@ -109,7 +109,7 @@ public:
 			XPointPool();
 			~XPointPool();
 	void	clear();
-	int		accumulate(const float xyz[3], const float st[2]);
+	//int	accumulate(const float xyz[3], const float st[2]);
 	int		count(void);
 	void	get(int index, float xyz[3], float st[2]);
 

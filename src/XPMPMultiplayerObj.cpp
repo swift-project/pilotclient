@@ -700,7 +700,6 @@ void	OBJ_DrawLights(int model, float inDistance, double inX, double inY,
 		return;
 
 	GLfloat size;
-    double distance;
 	// Where are we looking?
 	XPLMCameraPosition_t cameraPos;
 	XPLMReadCameraPosition(&cameraPos);
@@ -734,7 +733,7 @@ void	OBJ_DrawLights(int model, float inDistance, double inX, double inY,
 		float dx = cameraPos.x - static_cast<float>(inX);
 		float dy = cameraPos.y - static_cast<float>(inY);
 		float dz = cameraPos.z - static_cast<float>(inZ);
-		distance = sqrt((dx * dx) + (dy * dy) + (dz * dz));
+		double distance = sqrt((dx * dx) + (dy * dy) + (dz * dz));
 
 		// Convert to NM
 		distance *= kMetersToNM;

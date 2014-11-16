@@ -470,7 +470,7 @@ XPMPPlaneCallbackResult			XPMPGetPlaneData(
 
 XPMPPlanePtr	XPMPPlaneIsValid(XPMPPlaneID inID, XPMPPlaneVector::iterator * outIter)
 {
-	XPMPPlanePtr 	ptr = (XPMPPlanePtr) inID;
+	XPMPPlanePtr 	ptr = static_cast<XPMPPlanePtr>(inID);
 	XPMPPlaneVector::iterator iter = std::find(gPlanes.begin(), gPlanes.end(), ptr);
 	if (iter == gPlanes.end())
 		return NULL;

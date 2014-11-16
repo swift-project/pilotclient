@@ -392,7 +392,7 @@ void			XPMPDefaultPlaneRenderer(int is_blend)
 				renderRecord.pitch = pos.pitch;
 				renderRecord.heading = pos.heading;
 				renderRecord.roll = pos.roll;
-				renderRecord.model=((XPMPPlanePtr)id)->model;
+				renderRecord.model = static_cast<XPMPPlanePtr>(id)->model;
 				renderRecord.cull = cull;						// NO other planes.  Doing so causes a lot of things to go nuts!
 				renderRecord.tcas = tcas;	
 

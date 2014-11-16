@@ -42,12 +42,13 @@
 static char * my_fgets(char * s, int n, FILE * file)
 {
 	char *	p = s;
-	int			c;
 	
 	if (--n < 0)
 		return(NULL);
 	
 	if (n)
+    {
+        int c;
 		do
 		{
 			c = fgetc(file);
@@ -65,6 +66,7 @@ static char * my_fgets(char * s, int n, FILE * file)
 			*p++ = c;
 		}
 		while (c != '\n' && c != '\r' && --n);
+    }
 	
 	*p = 0;
 	
@@ -413,6 +415,7 @@ struct	XPointPool::XPointPoolImp {
 		return static_cast<int>(pts.size());
 	}
 	
+#if 0
 	int		accumulate(const float xyz[3], const float st[2])
 	{
 		static	char	buf[256];
@@ -433,6 +436,7 @@ struct	XPointPool::XPointPoolImp {
 		pts.push_back(p);
 		return static_cast<int>(pts.size())-1;
 	}
+#endif
 	
 	void	get(int i, float xyz[3], float st[2])
 	{
@@ -457,10 +461,12 @@ void	XPointPool::clear()
 	mImp->clear();
 }
 
+#if 0
 int		XPointPool::accumulate(const float xyz[3], const float st[2])
 {
 	return mImp->accumulate(xyz, st);
 }
+#endif
 
 void	XPointPool::get(int index, float xyz[3], float st[2])
 {

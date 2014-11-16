@@ -296,7 +296,6 @@ bool	LoadOnePackage(const string& inPath, int pass)
 	FILE * fi = fopen(path.c_str(), "r");
 
 	XPLMGetVersions(&sim, &xplm, &host);
-	int lineNum = 0;
 
 	if (fi != NULL)
 	{
@@ -320,6 +319,7 @@ bool	LoadOnePackage(const string& inPath, int pass)
 //		tokens.push_back("");
 
 		// Go through the file and handle each token.
+        int lineNum = 0;
 		while(!feof(fi))
 		{
 			if (!fgets_multiplatform(line, sizeof(line), fi))

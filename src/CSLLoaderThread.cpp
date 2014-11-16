@@ -35,21 +35,21 @@ void loadjobthread::execute()
             {
             case MSG_LOADJOB_OBJ:
                 {
-                    CSLPlane_t* toload = ((loadjob*)msg)->toload;
+                    CSLPlane_t* toload = static_cast<loadjob*>(msg)->toload;
 					toload->obj_idx = OBJ_LoadModel(toload->file_path.c_str());
                 }
                 break;
 
             case MSG_LOADJOB_TEX:
                 {
-                    CSLPlane_t* toload = ((loadjob*)msg)->toload;
+                    CSLPlane_t* toload = static_cast<loadjob*>(msg)->toload;
 					toload->texID = OBJ_LoadTexture(toload->tex_path.c_str(), false);
                 }
                 break;
 
             case MSG_LOADJOB_TEX_LIT:
                 {
-                    CSLPlane_t* toload = ((loadjob*)msg)->toload;
+                    CSLPlane_t* toload = static_cast<loadjob*>(msg)->toload;
 					toload->texLitID = OBJ_LoadTexture(toload->texLit_path.c_str(), false);
                 }
                 break;
