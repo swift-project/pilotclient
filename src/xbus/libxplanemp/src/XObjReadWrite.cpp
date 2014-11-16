@@ -42,7 +42,7 @@
 bool	XObjRead(const char * inFile, XObj& outObj)
 {
 	vector<string>	tokens;
-	string			ascii, vers, tag, line;
+	string			/*ascii,*/ vers, /*tag,*/ line;
 	int				cmd_id, count, obj2_op;
 	int				version = 1;
 	vec_tex			vst;
@@ -65,7 +65,7 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 	line = f.get();
 	BreakString(line, tokens);
 	if (tokens.empty()) return false;
-	ascii = tokens[0];
+	//ascii = tokens[0];
 	f.next();
 	if (f.done()) return false;
 	
@@ -89,7 +89,7 @@ bool	XObjRead(const char * inFile, XObj& outObj)
 		line = f.get();
 		BreakString(line, tokens);
 		if (tokens.empty()) return false;
-		tag = tokens[0];
+		//tag = tokens[0];
 		f.next();
 		if (f.done()) return false;
 	}

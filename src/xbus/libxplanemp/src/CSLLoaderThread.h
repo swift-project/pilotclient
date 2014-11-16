@@ -34,6 +34,8 @@ protected:
 public:
     CSLLoaderType()  { jq=new pt::jobqueue(); }
     ~CSLLoaderType()  {}
+    CSLLoaderType(const CSLLoaderType &) = delete;
+    CSLLoaderType &operator =(const CSLLoaderType &) = delete;
 	void startthreads();
 	void load(CSLPlane_t* toload);
 	void loadTex(CSLPlane_t* toload);

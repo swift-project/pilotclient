@@ -54,7 +54,6 @@ static void HalfBitmap(ImageInfo& ioImage)
 	ioImage.height /= 2;
 	ioImage.width /= 2;
 	int yr = ioImage.height;
-	int t1, t2, t3, t4;
 
 	if (ioImage.channels == 3)
 	{
@@ -63,9 +62,9 @@ static void HalfBitmap(ImageInfo& ioImage)
 			int xr = ioImage.width;
 			while (xr--)
 			{
-				t1  = *srcp1++;
-				t2  = *srcp1++;
-				t3  = *srcp1++;
+				int t1  = *srcp1++;
+				int t2  = *srcp1++;
+				int t3  = *srcp1++;
 
 				t1 += *srcp1++;
 				t2 += *srcp1++;
@@ -100,10 +99,10 @@ static void HalfBitmap(ImageInfo& ioImage)
 			int xr = ioImage.width;
 			while (xr--)
 			{
-				t1  = *srcp1++;
-				t2  = *srcp1++;
-				t3  = *srcp1++;
-				t4  = *srcp1++;
+				int t1  = *srcp1++;
+				int t2  = *srcp1++;
+				int t3  = *srcp1++;
+				int t4  = *srcp1++;
 
 				t1 += *srcp1++;
 				t2 += *srcp1++;
@@ -145,7 +144,6 @@ bool LoadTextureFromFile(const char * inFileName, int inTexNum, bool magentaAlph
 {
 	bool	ok = false;
 	struct ImageInfo	im;
-	long	count = 0;
 #if 1
 	unsigned char * p;
 #endif	
@@ -168,7 +166,7 @@ bool LoadTextureFromFile(const char * inFileName, int inTexNum, bool magentaAlph
 				{
 #if 1
 					p = im.data;
-					count = im.width * im.height;
+					long count = im.width * im.height;
 					while (count--)
 					{
 						std::swap(p[0], p[2]);
@@ -185,7 +183,7 @@ bool LoadTextureFromFile(const char * inFileName, int inTexNum, bool magentaAlph
 				} else {
 #if 1
 					p = im.data;
-					count = im.width * im.height;
+					long count = im.width * im.height;
 					while (count--)
 					{
 						std::swap(p[0], p[2]);
