@@ -210,6 +210,49 @@ namespace BlackMisc
         std::function<void()> m_task;
     };
 
+    /*!
+     * Base class for a long-lived worker object which lives in its own thread.
+     */
+    class CContinuousWorker : public CWorkerBase
+    {
+        Q_OBJECT
+
+    public:
+        /*!
+         * Constructor.
+         * \param owner Will be the parent of the new thread (the worker has no parent).
+         * \param name A name for the worker, which will be used to create a name for the thread.
+         */
+        CContinuousWorker(QObject *owner, const QString &name = "") : m_owner(owner), m_name(name) {}
+
+        //! Starts a thread and moves the worker into it.
+        void start(QThread::Priority priority = QThread::InheritPriority);
+
+        //! Stops the thread the next time around its event loop.
+        //! The thread and the worker will then be deleted.
+        //! \threadsafe
+        void quit();
+
+        //! Calls quit() and blocks until the thread is finished.
+        //! \threadsafe Will deadlock if called by the worker thread.
+        void quitAndWait();
+
+    protected slots:
+        //! Called when the thread is started.
+        virtual void initialize() {}
+
+        //! Called when the thread is finished.
+        virtual void cleanup() {}
+
+    private slots:
+        //! Called after cleanup().
+        void ps_finish();
+
+    private:
+        QObject *m_owner;
+        QString m_name;
+    };
+
 }
 
 #endif

@@ -40,4 +40,43 @@ namespace BlackMisc
         QMetaObject::invokeMethod(this, "deleteLater");
     }
 
+    void CContinuousWorker::start(QThread::Priority priority)
+    {
+        if (m_name.isEmpty()) { m_name = metaObject()->className(); }
+
+        auto *thread = new CRegularThread(m_owner);
+
+        QString ownerName = m_owner->objectName().isEmpty() ? m_owner->metaObject()->className() : m_owner->objectName();
+        thread->setObjectName(ownerName + ":" + m_name);
+        setObjectName(m_name);
+
+        moveToThread(thread);
+        connect(thread, &QThread::started, this, &CContinuousWorker::initialize);
+        connect(thread, &QThread::finished, this, &CContinuousWorker::cleanup);
+        connect(thread, &QThread::finished, this, &CContinuousWorker::ps_finish);
+        thread->start(priority);
+    }
+
+    void CContinuousWorker::quit()
+    {
+        thread()->quit();
+    }
+
+    void CContinuousWorker::quitAndWait()
+    {
+        auto *ownThread = thread();
+        quit();
+        ownThread->wait();
+    }
+
+    void CContinuousWorker::ps_finish()
+    {
+        setFinished();
+
+        auto *ownThread = thread();
+        moveToThread(ownThread->thread()); // move worker back to the thread which constructed it, so there is no race on deletion
+        QMetaObject::invokeMethod(ownThread, "deleteLater");
+        QMetaObject::invokeMethod(this, "deleteLater");
+    }
+
 }
