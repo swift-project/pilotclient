@@ -13,6 +13,7 @@
 #include "fs9.h"
 #include "host_node.h"
 #include "callback_wrapper.h"
+#include "blackmisc/worker.h"
 #include <QObject>
 #include <QList>
 #include <QMutex>
@@ -26,14 +27,13 @@ namespace BlackSimPlugin
     namespace Fs9
     {
         //! DirectPlay peer implementation
-        class CDirectPlayPeer : public QObject
+        class CDirectPlayPeer : public BlackMisc::CContinuousWorker
         {
             Q_OBJECT
 
         public:
-
             //! Constructor
-            CDirectPlayPeer(const QString &callsign, QObject *parent = nullptr);
+            CDirectPlayPeer(QObject *owner, const QString &callsign);
 
             //! Destructor
             virtual ~CDirectPlayPeer();
@@ -45,20 +45,14 @@ namespace BlackSimPlugin
             void setPlayerUserId(DPNID id) { m_playerUser = id; }
 
         public slots:
-
-            //! Initialize DirectPlay host
-            virtual void        init() = 0;
-
             //! Send a custom DirectPlay message
             HRESULT sendMessage(const QByteArray &data);
 
         signals:
-
             //! Received custom FS9 packet
             void customPacketReceived(const QByteArray &data);
 
         protected:
-
             //! DirectPlay message handler
             HRESULT directPlayMessageHandler(DWORD messageId, void *msgBuffer);
 

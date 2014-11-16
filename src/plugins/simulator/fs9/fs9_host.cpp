@@ -23,8 +23,8 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        CFs9Host::CFs9Host(QObject *parent) :
-            CDirectPlayPeer(CProject::systemNameAndVersion(), parent)
+        CFs9Host::CFs9Host(QObject *owner) :
+            CDirectPlayPeer(owner, CProject::systemNameAndVersion())
         {
         }
 
@@ -63,39 +63,6 @@ namespace BlackSimPlugin
             return address;
         }
 
-        void CFs9Host::init()
-        {
-            initDirectPlay();
-            createHostAddress();
-            startHosting(CProject::systemNameAndVersion(), m_callsign);
-        }
-
-        HRESULT CFs9Host::stopHosting()
-        {
-            HRESULT hr = S_OK;
-
-            if (m_hostStatus == Terminated) return hr;
-
-            qDebug() << "Terminating host";
-
-            if (FAILED(hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0)))
-            {
-                qWarning() << "Failed to terminate session!";
-                return hr;
-            }
-
-            if (FAILED(hr = m_directPlayPeer->Close(0)))
-            {
-                qWarning() << "Failed to close peer!";
-                return hr;
-            }
-
-            m_hostStatus = Terminated;
-
-            emit statusChanged(m_hostStatus);
-            return hr;
-        }
-
         void CFs9Host::sendTextMessage(const QString &textMessage)
         {
             MPChatText mpChatText;
@@ -106,6 +73,19 @@ namespace BlackSimPlugin
             message = MultiPlayerPacketParser::writeMessage(message, mpChatText);
             sendMessage(message);
         }
+
+        void CFs9Host::initialize()
+        {
+            initDirectPlay();
+            createHostAddress();
+            startHosting(CProject::systemNameAndVersion(), m_callsign);
+        }
+
+        void CFs9Host::cleanup()
+        {
+            stopHosting();
+        }
+
 
         HRESULT CFs9Host::startHosting(const QString &session, const QString &callsign)
         {
@@ -166,6 +146,21 @@ namespace BlackSimPlugin
                 qDebug() << "Host successfully started";
                 m_hostStatus = Hosting;
             }
+
+            emit statusChanged(m_hostStatus);
+            return hr;
+        }
+
+        HRESULT CFs9Host::stopHosting()
+        {
+            HRESULT hr = S_OK;
+
+            if (m_hostStatus == Terminated) return hr;
+
+            qDebug() << "Terminating host";
+            hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0);
+            hr = m_directPlayPeer->Close(0);
+            m_hostStatus = Terminated;
 
             emit statusChanged(m_hostStatus);
             return hr;

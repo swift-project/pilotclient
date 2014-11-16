@@ -17,6 +17,7 @@
 #include "blackmisc/coordinategeodetic.h"
 #include <QScopedArrayPointer>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 
@@ -24,8 +25,8 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        CFs9Client::CFs9Client(const QString &callsign, const CTime &updateInterval, QObject *parent) :
-            CDirectPlayPeer(callsign, parent),
+        CFs9Client::CFs9Client(QObject *owner, const QString &callsign, const CTime &updateInterval) :
+            CDirectPlayPeer(owner, callsign),
             m_updateInterval(updateInterval)
         {
         }
@@ -34,14 +35,6 @@ namespace BlackSimPlugin
         {
              if(m_hostAddress) m_hostAddress->Release();
              m_hostAddress = nullptr;
-        }
-
-        void CFs9Client::init()
-        {
-            initDirectPlay();
-            createDeviceAddress();
-            //enumDirectPlayHosts();
-            connectToSession(m_callsign);
         }
 
         void CFs9Client::sendTextMessage(const QString &textMessage)
@@ -53,11 +46,6 @@ namespace BlackSimPlugin
             MultiPlayerPacketParser::writeSize(message, mpChatText.size());
             message = MultiPlayerPacketParser::writeMessage(message, mpChatText);
             sendMessage(message);
-        }
-
-        void CFs9Client::disconnectFrom()
-        {
-            closeConnection();
         }
 
         void CFs9Client::setHostAddress(const QString &hostAddress)
@@ -118,6 +106,19 @@ namespace BlackSimPlugin
 
                 m_lastAircraftSituation = situation;
             }
+        }
+
+        void CFs9Client::initialize()
+        {
+            initDirectPlay();
+            createDeviceAddress();
+            //enumDirectPlayHosts();
+            connectToSession(m_callsign);
+        }
+
+        void CFs9Client::cleanup()
+        {
+            closeConnection();
         }
 
         HRESULT CFs9Client::enumDirectPlayHosts()
@@ -251,6 +252,7 @@ namespace BlackSimPlugin
             MultiPlayerPacketParser::writeType(message, CFs9Sdk::MULTIPLAYER_PACKET_ID_CHANGE_PLAYER_PLANE);
             MultiPlayerPacketParser::writeSize(message, mpChangePlayerPlane.size());
             message = MultiPlayerPacketParser::writeMessage(message, mpChangePlayerPlane);
+            CLogMessage(this).debug() << m_callsign << " connected to session.";
             sendMessage(message);
 
             m_timerId = startTimer(m_updateInterval.value(CTimeUnit::ms()));

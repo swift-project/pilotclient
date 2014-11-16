@@ -19,6 +19,7 @@
 #include <QTimer>
 #include <algorithm>
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
@@ -42,30 +43,19 @@ namespace BlackSimPlugin
 
         CSimulatorFs9::CSimulatorFs9(QObject *parent) :
             ISimulator(parent),
-            m_fs9Host(new CFs9Host),
-            m_hostThread(this),
+            m_fs9Host(new CFs9Host(this)),
             m_lobbyClient(new CLobbyClient(this)),
             m_simulatorInfo(CSimulatorInfo::FS9()),
             m_fsuipc(new FsCommon::CFsuipc())
         {
-            // We move the host thread already in the constructor
-            m_fs9Host->moveToThread(&m_hostThread);
-            connect(&m_hostThread, &QThread::started, m_fs9Host, &CFs9Host::init);
-            connect(m_fs9Host, &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
-            connect(m_fs9Host, &CFs9Host::statusChanged, this, &CSimulatorFs9::ps_changeHostStatus);
-            connect(&m_hostThread, &QThread::finished, m_fs9Host, &CFs9Host::deleteLater);
-            connect(&m_hostThread, &QThread::finished, &m_hostThread, &QThread::deleteLater);
-            m_hostThread.start();
+            connect(m_fs9Host.data(), &CFs9Host::customPacketReceived, this, &CSimulatorFs9::ps_processFs9Message);
+            connect(m_fs9Host.data(), &CFs9Host::statusChanged, this, &CSimulatorFs9::ps_changeHostStatus);
+            m_fs9Host->start();
         }
 
         CSimulatorFs9::~CSimulatorFs9()
         {
-            disconnectFrom();
-            m_hostThread.quit();
-            m_hostThread.wait(1000);
-
-            QList<QThread *> clientThreads = m_fs9ClientThreads.values();
-            for (QThread *clientThread : clientThreads) clientThread->wait();
+            Q_ASSERT(!m_isHosting);
         }
 
         bool CSimulatorFs9::isConnected() const
@@ -95,29 +85,23 @@ namespace BlackSimPlugin
         {
             disconnectAllClients();
 
-            // We tell the host to terminate and stop the thread afterwards
-            QMetaObject::invokeMethod(m_fs9Host, "stopHosting");
             emit connectionStatusChanged(ISimulator::Disconnected);
+            if (m_fs9Host) { m_fs9Host->quit(); }
             m_fsuipc->disconnect();
 
-            return false;
+            m_isHosting = false;
+
+            return true;
         }
 
         void CSimulatorFs9::addRemoteAircraft(const CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation)
         {
-
-            // Create a new client thread, set update frequency to 25 ms and start it
-            QThread *clientThread = new QThread(this);
-            CFs9Client *client = new CFs9Client(callsign.toQString(), CTime(25, CTimeUnit::ms()));
+            CFs9Client *client = new CFs9Client(this, callsign.toQString(), CTime(25, CTimeUnit::ms()));
             client->setHostAddress(m_fs9Host->getHostAddress());
             client->setPlayerUserId(m_fs9Host->getPlayerUserId());
-            client->moveToThread(clientThread);
 
-            connect(clientThread, &QThread::started, client, &CFs9Client::init);
-            connect(client, &CFs9Client::statusChanged, this, &CSimulatorFs9::ps_changeClientStatus);
-            m_fs9ClientThreads.insert(client, clientThread);
+            client->start();
             m_hashFs9Clients.insert(callsign, client);
-            clientThread->start();
 
             addAircraftSituation(callsign, initialSituation);
         }
@@ -137,10 +121,11 @@ namespace BlackSimPlugin
         {
             if(!m_hashFs9Clients.contains(callsign)) return;
 
-            CFs9Client *fs9Client = m_hashFs9Clients.value(callsign);
+            auto fs9Client = m_hashFs9Clients.value(callsign);
 
-            // Send an async disconnect signal. When finished we will clean up
-            QMetaObject::invokeMethod(fs9Client, "disconnectFrom");
+            fs9Client->quit();
+
+            m_hashFs9Clients.remove(callsign);
         }
 
         bool CSimulatorFs9::updateOwnSimulatorCockpit(const CAircraft &ownAircraft)
@@ -294,40 +279,12 @@ namespace BlackSimPlugin
                 }
                 case CFs9Host::Terminated:
                 {
-                    m_fs9Host->deleteLater();
-                    qDebug() << "Quitting thread";
-                    connect(&m_hostThread, &QThread::finished, &m_hostThread, &QThread::deleteLater);
-                    m_hostThread.quit();
                     m_isHosting = false;
                     emit connectionStatusChanged(Disconnected);
                     break;
                 }
                 default:
                     break;
-            }
-        }
-
-        void CSimulatorFs9::ps_changeClientStatus(const QString &callsign, CFs9Client::ClientStatus status)
-        {
-            switch (status)
-            {
-                case CFs9Client::Disconnected:
-                {
-                    CFs9Client *client = m_hashFs9Clients.value(callsign);
-                    Q_ASSERT(m_fs9ClientThreads.contains(client));
-                    QThread *clientThread = m_fs9ClientThreads.value(client);
-
-                    // Cleanup
-                    client->deleteLater();
-                    connect(clientThread, &QThread::finished, clientThread, &QThread::deleteLater);
-                    clientThread->quit();
-
-                    m_fs9ClientThreads.remove(client);
-                    m_hashFs9Clients.remove(callsign);
-                    break;
-                }
-            default:
-                break;
             }
         }
 
@@ -340,7 +297,7 @@ namespace BlackSimPlugin
 
         void CSimulatorFs9::disconnectAllClients()
         {
-            // Stop all FS9 client threads
+            // Stop all FS9 client tasks
             for (auto fs9Client : m_hashFs9Clients.keys())
             {
                 removeRemoteAircraft(fs9Client);

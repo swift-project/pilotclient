@@ -21,8 +21,8 @@ namespace BlackSimPlugin
 {
     namespace Fs9
     {
-        CDirectPlayPeer::CDirectPlayPeer(const QString &callsign, QObject *parent)
-            : QObject(parent),
+        CDirectPlayPeer::CDirectPlayPeer(QObject *owner, const QString &callsign)
+            : CContinuousWorker(owner, "peer_" + callsign),
               m_callsign(callsign),
               m_mutexHostList(QMutex::Recursive),
               m_callbackWrapper(this, &CDirectPlayPeer::directPlayMessageHandler)

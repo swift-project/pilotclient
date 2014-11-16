@@ -142,9 +142,6 @@ namespace BlackSimPlugin
             //! Change DirectPlay host status
             void ps_changeHostStatus(BlackSimPlugin::Fs9::CFs9Host::HostStatus status);
 
-            //! Change client status for callsign
-            void ps_changeClientStatus(const QString &callsign, BlackSimPlugin::Fs9::CFs9Client::ClientStatus status);
-
         private:
 
             //! Called when data about our own aircraft are received
@@ -153,16 +150,14 @@ namespace BlackSimPlugin
             void disconnectAllClients();
 
             // DirectPlay object handling
-            CFs9Host *m_fs9Host = nullptr;
-            QThread m_hostThread;
+            QPointer<CFs9Host> m_fs9Host;
             bool    m_isHosting = false;        //!< Is sim connected
             bool    m_startedLobbyConnection = false;
             bool    m_syncTime = false;         //!< Time synchronized?
             int     m_syncDeferredCounter = 0;  //!< Set when synchronized, used to wait some time
             bool    m_simPaused = false;        //!< Simulator paused?
 
-            QHash<BlackMisc::Aviation::CCallsign, CFs9Client *> m_hashFs9Clients;
-            QHash<CFs9Client *, QThread *> m_fs9ClientThreads;
+            QHash<BlackMisc::Aviation::CCallsign, QPointer<CFs9Client>> m_hashFs9Clients;
 
             CLobbyClient *m_lobbyClient;
 

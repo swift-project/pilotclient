@@ -30,7 +30,6 @@ namespace BlackSimPlugin
             Q_OBJECT
 
         public:
-
             //! Connection status
             enum ClientStatus
             {
@@ -38,10 +37,8 @@ namespace BlackSimPlugin
                 Disconnected
             };
 
-
             //! Constructor
-            CFs9Client(const QString &callsign, const BlackMisc::PhysicalQuantities::CTime &updateInterval,
-                       QObject *parent = nullptr);
+            CFs9Client(QObject *owner, const QString &callsign, const BlackMisc::PhysicalQuantities::CTime &updateInterval);
 
             //! Destructor
             virtual ~CFs9Client();
@@ -53,28 +50,25 @@ namespace BlackSimPlugin
             void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation);
 
         public slots:
-
-            //! \copydoc CDirectPlayPeer::init
-            virtual void init() override;
-
             //! Send new text message
             void sendTextMessage(const QString &textMessage);
 
-            //! Disconnect client from session
-            void disconnectFrom();
-
         signals:
-
             //! Client status changed
             void statusChanged(const QString &callsign, BlackSimPlugin::Fs9::CFs9Client::ClientStatus);
 
         protected slots:
-
             //! Timer event slot
             virtual void timerEvent(QTimerEvent *event) override;
 
-        private:
+        protected:
+            //! \copydoc CContinuousWorker::initialize
+            virtual void initialize() override;
 
+            //! \copydoc CContinuousWorker::cleanup
+            virtual void cleanup() override;
+
+        private:
             /*!
              * Enumerate all FS9 session hosts
              * \todo Ideally host enumeration is required only once (if ever).

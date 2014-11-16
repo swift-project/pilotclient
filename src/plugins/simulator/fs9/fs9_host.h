@@ -24,7 +24,6 @@ namespace BlackSimPlugin
             Q_OBJECT
 
         public:
-
             //! Connection status
             enum HostStatus
             {
@@ -33,7 +32,10 @@ namespace BlackSimPlugin
             };
 
             //! Constructor
-            CFs9Host(QObject *parent = nullptr);
+            CFs9Host(QObject *owner);
+
+            //! Destructor
+            virtual ~CFs9Host() {}
 
             //! Returns true if the users simulator is connected
             bool isConnected() const { return m_playerUser != 0; }
@@ -42,28 +44,28 @@ namespace BlackSimPlugin
             QString getHostAddress();
 
         public slots:
-
-            //! \copydoc CDirectPlayPeer::init
-            virtual void init() override;
-
-            //! Terminate a current active hosting session
-            HRESULT stopHosting();
-
             //! Send new text message
             void sendTextMessage(const QString &textMessage);
 
         signals:
-
             //! Hosting status changed
             void statusChanged(BlackSimPlugin::Fs9::CFs9Host::HostStatus);
 
-        private:
+        protected:
+            //! \copydoc CContinuousWorker::initialize
+            virtual void initialize() override;
 
+            //! \copydoc CContinuousWorker::cleanup
+            virtual void cleanup() override;
+
+        private:
             //! Start host session
             HRESULT startHosting(const QString &session, const QString &callsign);
 
-            HostStatus m_hostStatus = Terminated;
+            //! Terminate a current active hosting session
+            HRESULT stopHosting();
 
+            HostStatus m_hostStatus = Terminated;
         };
     }
 }
