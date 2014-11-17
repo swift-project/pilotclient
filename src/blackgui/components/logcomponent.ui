@@ -42,24 +42,13 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QToolBox" name="tb_StatusPage">
+    <widget class="QTabWidget" name="tw_StatusPage">
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <property name="tabSpacing">
-      <number>3</number>
-     </property>
-     <widget class="QWidget" name="pg_StatusPageMessages">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>398</width>
-        <height>250</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string>Messages</string>
+     <widget class="QWidget" name="pg_LogPage" native="true">
+      <attribute name="title">
+       <string>Log</string>
       </attribute>
       <layout class="QVBoxLayout" name="vl_StatusPageMessages">
        <property name="spacing">
@@ -92,16 +81,8 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="pg_StatusPageConsole">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>398</width>
-        <height>250</height>
-       </rect>
-      </property>
-      <attribute name="label">
+     <widget class="QWidget" name="pg_LogConsole" native="true">
+      <attribute name="title">
        <string>Console</string>
       </attribute>
       <layout class="QVBoxLayout" name="vl_StatusPageConsole">

@@ -42,11 +42,11 @@ namespace BlackGui
 
             // non info areas
             connect(this->ui->pb_Connect, &QPushButton::pressed, this, &CMainKeypadAreaComponent::ps_buttonSelected);
-            connect(this->ui->pb_CockpitIdent, &QPushButton::pressed, this, &CMainKeypadAreaComponent::ps_buttonSelected);
+            connect(this->ui->pb_CockpitIdent, &QPushButton::released, this, &CMainKeypadAreaComponent::ps_buttonSelected);
             connect(this->ui->pb_Opacity050, &QPushButton::pressed, this, &CMainKeypadAreaComponent::ps_buttonSelected);
             connect(this->ui->pb_Opacity100, &QPushButton::pressed, this, &CMainKeypadAreaComponent::ps_buttonSelected);
             connect(this->ui->pb_SoundMaxVolume, &QPushButton::pressed, this, &CMainKeypadAreaComponent::ps_buttonSelected);
-            connect(this->ui->pb_SoundMute, &QPushButton::pressed, this, &CMainKeypadAreaComponent::ps_buttonSelected);
+            connect(this->ui->pb_SoundMute, &QPushButton::released, this, &CMainKeypadAreaComponent::ps_buttonSelected);
 
             // command line
             this->connect(this->ui->le_CommandLineInput, &QLineEdit::returnPressed, this, &CMainKeypadAreaComponent::ps_commandEntered);
@@ -85,6 +85,7 @@ namespace BlackGui
 
             connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::ps_connectionStatusChanged);
             connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged);
+            connect(this->getIContextAudio(), &IContextAudio::changedMute, this, &CMainKeypadAreaComponent::ps_muteChanged);
 
             connect(this, &CMainKeypadAreaComponent::commandEntered, this->getIContextOwnAircraft(), &IContextOwnAircraft::parseCommandLine);
             connect(this, &CMainKeypadAreaComponent::commandEntered, this->getIContextNetwork(), &IContextNetwork::parseCommandLine);
@@ -163,13 +164,21 @@ namespace BlackGui
         void CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged(const CAircraft &aircraft, const QString &originator)
         {
             Q_UNUSED(originator);
-            if (aircraft.getTransponder().getTransponderMode() == CTransponder::StateIdent)
+            bool ident = aircraft.getTransponder().getTransponderMode() == CTransponder::StateIdent;
+
+            //check state to avoid undelibarate signals
+            if (ident != this->ui->pb_CockpitIdent->isChecked())
             {
-                this->ui->pb_CockpitIdent->setStyleSheet("background-color: yellow");
+                this->ui->pb_CockpitIdent->setChecked(ident);
             }
-            else
+        }
+
+        void CMainKeypadAreaComponent::ps_muteChanged(bool muted)
+        {
+            //check state to avoid undelibarate signals
+            if (muted != this->ui->pb_SoundMute->isChecked())
             {
-                this->ui->pb_CockpitIdent->setStyleSheet("");
+                this->ui->pb_SoundMute->setChecked(muted);
             }
         }
 
@@ -208,7 +217,6 @@ namespace BlackGui
             }
             return nullptr;
         }
-
 
         Aviation::CAircraft CMainKeypadAreaComponent::getOwnAircraft() const
         {
