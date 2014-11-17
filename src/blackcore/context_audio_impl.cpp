@@ -193,7 +193,7 @@ namespace BlackCore
         this->setVolumes(vol1, vol2);
     }
 
-    void CContextAudio::setVolumes(qint32 com1Volume, qint32 com2Volume)
+    void CContextAudio::setVolumes(int com1Volume, int com2Volume)
     {
         if (m_channelCom1->getVolume() == com1Volume && m_channelCom2->getVolume() == com2Volume) { return; }
 
@@ -224,8 +224,11 @@ namespace BlackCore
             bool adjusted = false;
             qint32 v1 = this->m_channelCom1->getVolume();
             qint32 v2 = this->m_channelCom2->getVolume();
-            if (this->m_channelCom1->getVolume() < MinUnmuteVolume) { v1 = MinUnmuteVolume; adjusted = true; }
-            if (this->m_channelCom2->getVolume() < MinUnmuteVolume) { v2 = MinUnmuteVolume; adjusted = true; }
+            //! \todo rectify int/qint/quint mess
+            int channelV1 = static_cast<int>(this->m_channelCom1->getVolume());
+            int channelV2 = static_cast<int>(this->m_channelCom2->getVolume());
+            if (channelV1 < MinUnmuteVolume) { v1 = MinUnmuteVolume; adjusted = true; }
+            if (channelV2 < MinUnmuteVolume) { v2 = MinUnmuteVolume; adjusted = true; }
             if (adjusted) { this->setVolumes(v1, v2); }
         }
 

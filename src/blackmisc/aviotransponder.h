@@ -85,7 +85,7 @@ namespace BlackMisc
             //! Transponder mode as string
             QString getModeAsString() const
             {
-                return CTransponder::modeAsString(this->getTransponderMode());
+                return modeAsString(this->getTransponderMode());
             }
 
             //! Transponder mode as string
@@ -104,7 +104,7 @@ namespace BlackMisc
             static const QString &modeAsString(TransponderMode mode);
 
             //! Transponder code
-            qint32 getTransponderCode() const
+            int getTransponderCode() const
             {
                 return this->m_transponderCode;
             }
@@ -163,7 +163,7 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CTransponder)
-            qint32 m_transponderCode;          //!< Transponder code
+            int m_transponderCode;             //!< Transponder code
             TransponderMode m_transponderMode; //!< Transponder mode
         };
 

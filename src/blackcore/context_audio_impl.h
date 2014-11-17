@@ -89,7 +89,7 @@ namespace BlackCore
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2) override;
 
         //!\copydoc IContext::setVolumes
-        virtual void setVolumes(qint32 com1Volume, qint32 com2Volume) override;
+        virtual void setVolumes(int com1Volume, int com2Volume) override;
 
         //! \copydoc ICOntext::setMute
         virtual void setMute(bool muted) override;
@@ -157,8 +157,8 @@ namespace BlackCore
         void ps_initNotificationSounds();
 
     private:
-        const qint32 MinUnmuteVolume = 20; //!< minimum volume when unmuted
-        const qint32 VoiceRoomEnabledVolume = 95; //!< voice room volume when enabled
+        const int MinUnmuteVolume = 20; //!< minimum volume when unmuted
+        const int VoiceRoomEnabledVolume = 95; //!< voice room volume when enabled
 
         //! Connection in transition
         bool inTransitionState() const;

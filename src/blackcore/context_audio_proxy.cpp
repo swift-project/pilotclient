@@ -216,7 +216,7 @@ namespace BlackCore
     /*
      * Volumes
      */
-    void CContextAudioProxy::setVolumes(qint32 com1Volume, qint32 com2Volume)
+    void CContextAudioProxy::setVolumes(int com1Volume, int com2Volume)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("setVolumes"), com1Volume, com2Volume);
     }

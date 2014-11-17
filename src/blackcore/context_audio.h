@@ -83,7 +83,7 @@ namespace BlackCore
         // KB: Is see some potential changes here, which we should do when we have the new 2.0 vatlib
         // 1. volume integrated in voice room?
         // 2. Value object for volumes CVolume / CVolumeList?
-        void changedAudioVolumes(qint32 com1Volume, qint32 com2Volume);
+        void changedAudioVolumes(int com1Volume, int com2Volume);
 
         //! Mute changed
         void changedMute(bool muted);
@@ -156,7 +156,7 @@ namespace BlackCore
         virtual void setVolumes(const BlackMisc::Aviation::CComSystem &com1, const BlackMisc::Aviation::CComSystem &com2) = 0;
 
         //! Set the volumes (0..100)
-        virtual void setVolumes(qint32 volumeCom1, qint32 volumeCom2) = 0;
+        virtual void setVolumes(int volumeCom1, int volumeCom2) = 0;
 
         //! Set mute state
         virtual void setMute(bool mute) = 0;
