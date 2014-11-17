@@ -63,13 +63,16 @@ namespace BlackMisc
                 PQ invalid;
                 invalid.setNull();
                 if (value.isEmpty()) return invalid;
-                QVariant qv = CPqString::parseToVariant(value, mode);
+                QVariant qv = parseToVariant(value, mode);
                 if (!qv.isNull() && qv.canConvert<PQ>())
                 {
                     return qv.value<PQ>();
                 }
                 return invalid;
             }
+
+            //! Locale aware parsing
+            static double parseNumber(const QString &number, bool &success, SeparatorMode mode = SeparatorsCLocale);
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CPqString)

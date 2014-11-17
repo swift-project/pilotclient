@@ -44,23 +44,7 @@ namespace BlackMisc
 
             if (unit.isEmpty() || number.isEmpty()) return v;
             bool success;
-            double numberD;
-            switch (mode)
-            {
-            case SeparatorsLocale:
-                numberD = QLocale::system().toDouble(number, &success);
-                break;
-            case SeparatorsCLocale:
-                numberD = number.toDouble(&success);
-                break;
-            case SeparatorsBestGuess:
-                numberD = number.toDouble(&success);
-                if (!success) numberD = QLocale::system().toDouble(number, &success);
-                break;
-            default:
-                qFatal("Wrong mode");
-                break;
-            }
+            double numberD = parseNumber(number, success, mode);
             if (!success) return v;
 
             if (CMeasurementUnit::isValidUnitSymbol<CAccelerationUnit>(unit))
@@ -117,6 +101,28 @@ namespace BlackMisc
                 return pq.toQVariant();
             }
             return v;
+        }
+
+        double CPqString::parseNumber(const QString &number, bool &success, CPqString::SeparatorMode mode)
+        {
+            double numberD = -1;
+            switch (mode)
+            {
+            case SeparatorsLocale:
+                numberD = QLocale::system().toDouble(number, &success);
+                break;
+            case SeparatorsCLocale:
+                numberD = number.toDouble(&success);
+                break;
+            case SeparatorsBestGuess:
+                numberD = number.toDouble(&success);
+                if (!success) numberD = QLocale::system().toDouble(number, &success);
+                break;
+            default:
+                qFatal("Wrong mode");
+                break;
+            }
+            return numberD;
         }
 
     } // namespace

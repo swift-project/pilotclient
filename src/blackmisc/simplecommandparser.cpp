@@ -8,6 +8,9 @@
  */
 
 #include "simplecommandparser.h"
+#include "pqstring.h"
+
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
 {
@@ -78,7 +81,7 @@ namespace BlackMisc
         const QString p = this->part(index);
         if (p.isEmpty()) return false;
         bool ok;
-        p.toDouble(&ok);
+        CPqString::parseNumber(p, ok, CPqString::SeparatorsBestGuess);
         return ok;
     }
 
@@ -96,7 +99,7 @@ namespace BlackMisc
         const QString p = this->part(index);
         if (p.isEmpty()) return def;
         bool ok;
-        double d = p.toDouble(&ok);
+        double d = CPqString::parseNumber(p, ok, CPqString::SeparatorsBestGuess);
         return ok ? d : def;
     }
 
