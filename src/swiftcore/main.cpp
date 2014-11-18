@@ -33,20 +33,23 @@ int main(int argc, char *argv[])
     // metadata are registered in runtime
     QApplication a(argc, argv); // not QCoreApplication because of icon, http://qt-project.org/forums/viewthread/15412
     CLogHandler::instance()->install();
+    CLogHandler::instance()->enableConsoleOutput(false); //! \todo How can I change the level only and display info and above?
     QIcon icon(BlackMisc::CIcons::swiftNova24());
     QApplication::setWindowIcon(icon);
     QTextStream cin(stdin);
+    QTextStream cout(stdout);
 
-    qDebug() << BlackMisc::CProject::version();
-    qDebug() << BlackMisc::CProject::compiledInfo();
-    qDebug();
+    cout << BlackMisc::CProject::version();
+    cout << BlackMisc::CProject::compiledInfo();
+    cout << endl;
 
-    qDebug() << "1 + la/ra .. session DBus server (default)";
-    qDebug() << "2 + la/ra .. system DBus server";
-    qDebug() << "3 + la/ra .. P2P DBus server";
-    qDebug() << "la .. local audio, audio runs in this core here (default)";
-    qDebug() << "ra .. remote audio, audio runs in the GUI or elsewhere";
-    qDebug() << "x  .. exit";
+    cout << "1 + la/ra .. session DBus server (default)" << endl;
+    cout << "2 + la/ra .. system DBus server" << endl;
+    cout << "3 + la/ra .. P2P DBus server" << endl;
+    cout << "la .. local audio, audio runs in this core here (default)" << endl;
+    cout << "ra .. remote audio, audio runs in the GUI or elsewhere" << endl;
+    cout << "x  .. exit" << endl;
+
     QString input = cin.readLine().toLower().trimmed();
 
     // configure DBus server
@@ -57,8 +60,8 @@ int main(int argc, char *argv[])
     }
     else if (input.startsWith("3"))
     {
-        qDebug() << "found: " << BlackMisc::CNetworkUtils::getKnownIpAddresses();
-        qDebug() << "enter ip/port, e.g. 127.0.0.1:45000 (default)";
+        cout << "found: " << BlackMisc::CNetworkUtils::getKnownIpAddresses().join(' ') << endl;
+        cout << "enter ip/port, e.g. 127.0.0.1:45000 (default)" << endl;
         dBusAddress = cin.readLine().toLower();
         dBusAddress = BlackCore::CDBusServer::p2pAddress(dBusAddress);
     }
@@ -75,7 +78,7 @@ int main(int argc, char *argv[])
 
     // tool to allow input indepent from event loop
     QtConcurrent::run(BlackMiscTest::Tool::serverLoop, core); // QFuture<void> future
-    qDebug() << "Server event loop, pid:" << BlackMiscTest::Tool::getPid() << "Thread id:" << QThread::currentThreadId();
+    cout << "Server event loop, pid:" << BlackMiscTest::Tool::getPid() << "Thread id:" << QThread::currentThreadId();
 
     // end
     return a.exec();
