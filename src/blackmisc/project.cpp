@@ -160,7 +160,7 @@ namespace BlackMisc
 #ifdef Q_OS_WIN
         // QSysInfo::WindowsVersion only available on Win platforms
         return (QSysInfo::WindowsVersion & QSysInfo::WV_NT_based) ? true : false;
-#elif
+#else
         return false;
 #endif
     }

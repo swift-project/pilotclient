@@ -19,7 +19,7 @@ namespace BlackGui
     { }
 
     CUpperCaseValidator::CUpperCaseValidator(bool optionalValue, int minLength, int maxLength, QObject *parent) : QValidator(parent),
-        m_minLength(minLength), m_maxLength(maxLength), m_optionalValue(optionalValue)
+        m_optionalValue(optionalValue), m_minLength(minLength), m_maxLength(maxLength)
     { }
 
     QValidator::State CUpperCaseValidator::validate(QString &input, int &pos) const

@@ -145,7 +145,7 @@ namespace BlackCore
         BlackCore::ISimulator *m_simulator = nullptr;
 
         QTimer *m_updateTimer = nullptr;
-        QDir m_pluginsDir     = nullptr;
+        QDir m_pluginsDir;
         QSet<ISimulatorFactory *> m_simulatorFactories;
         QFuture<bool> m_canConnectResult;
     };

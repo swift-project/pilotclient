@@ -21,7 +21,7 @@ namespace Ui { class CLoginModeButtons; }
 
 namespace BlackGui
 {
-
+    //! Display login modes (normal, stealth, ...)
     class CLoginModeButtons : public QGroupBox
     {
         Q_OBJECT

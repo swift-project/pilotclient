@@ -195,7 +195,10 @@ namespace BlackCore
 
     void CContextAudio::setVolumes(int com1Volume, int com2Volume)
     {
-        if (m_channelCom1->getVolume() == com1Volume && m_channelCom2->getVolume() == com2Volume) { return; }
+        //! \todo Fix when VATLIB 2.0 is available
+        int channelV1 = static_cast<int>(m_channelCom1->getVolume());
+        int channelV2 = static_cast<int>(m_channelCom2->getVolume());
+        if (channelV1 == com1Volume && channelV2 == com2Volume) { return; }
 
         bool enable1 = com1Volume > 0;
         bool enable2 = com2Volume > 0;

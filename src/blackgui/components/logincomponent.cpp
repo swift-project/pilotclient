@@ -183,6 +183,9 @@ namespace BlackGui
                 case INetwork::LoginAsObserver:
                     CLogMessage(this).info("login in observer mode");
                     break;
+                case INetwork::LoginNormal:
+                default:
+                    break;
                 }
 
                 // Server
