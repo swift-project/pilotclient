@@ -32,11 +32,15 @@ namespace BlackGui
     {
 
         CTextMessageComponent::CTextMessageComponent(QWidget *parent) :
-            QTabWidget(parent),
+            QFrame(parent),
             CEnableForRuntime(nullptr, false),
             ui(new Ui::CTextMessageComponent)
         {
             ui->setupUi(this);
+
+            this->ui->le_textMessages->setVisible(false);
+            connect(this->ui->le_textMessages, &QLineEdit::returnPressed, this, &CTextMessageComponent::ps_commandEntered);
+
             this->m_clearTextEditAction = new QAction("Clear", this);
             connect(this->m_clearTextEditAction, &QAction::triggered, this, &CTextMessageComponent::ps_clearTextEdit);
 
@@ -153,7 +157,16 @@ namespace BlackGui
 
         void CTextMessageComponent::runtimeHasBeenSet()
         {
+            Q_ASSERT(this->getIContextOwnAircraft());
+            Q_ASSERT(this->getIContextNetwork());
+            Q_ASSERT(this->getIContextAudio());
+
             connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CTextMessageComponent::ps_onChangedAircraftCockpit);
+            connect(this->getDockWidgetInfoArea(), &CDockWidgetInfoArea::widgetTopLevelChanged, this, &CTextMessageComponent::ps_topLevelChanged);
+
+            connect(this, &CTextMessageComponent::commandEntered, this->getIContextOwnAircraft(), &IContextOwnAircraft::parseCommandLine);
+            connect(this, &CTextMessageComponent::commandEntered, this->getIContextNetwork(), &IContextNetwork::parseCommandLine);
+            connect(this, &CTextMessageComponent::commandEntered, this->getIContextAudio(), &IContextAudio::parseCommandLine);
         }
 
         /*
@@ -171,17 +184,21 @@ namespace BlackGui
                 if (cs.isEmpty()) return false;
                 QWidget *tab = this->findTextMessageTabByName(cs.getStringAsSet());
                 if (!tab) return false;
-                return this->currentWidget() == tab;
+                return this->ui->tw_TextMessages->currentWidget() == tab;
             }
             else
             {
                 // frequency message
                 const CAircraft ownAircraft = this->getOwnAircraft();
-                if (this->currentWidget() == this->ui->tb_TextMessagesAll) return true;
+                if (this->ui->tw_TextMessages->currentWidget() == this->ui->tb_TextMessagesAll) { return true; }
                 if (textMessage.isSendToFrequency(ownAircraft.getCom1System().getFrequencyActive()))
-                    return this->currentWidget() == this->ui->tb_TextMessagesCOM1;
+                {
+                    return this->ui->tw_TextMessages->currentWidget() == this->ui->tb_TextMessagesCOM1;
+                }
                 if (textMessage.isSendToFrequency(ownAircraft.getCom2System().getFrequencyActive()))
-                    return this->currentWidget() == this->ui->tb_TextMessagesCOM2;
+                {
+                    return this->ui->tw_TextMessages->currentWidget() == this->ui->tb_TextMessagesCOM2;
+                }
                 return false;
             }
         }
@@ -196,8 +213,8 @@ namespace BlackGui
             const QString f2 = QString("COM2: %1").arg(f2n);
             this->ui->tb_TextMessagesCOM1->setToolTip(f1);
             this->ui->tb_TextMessagesCOM1->setToolTip(f2);
-            this->setTabText(this->indexOf(this->ui->tb_TextMessagesCOM1), f1);
-            this->setTabText(this->indexOf(this->ui->tb_TextMessagesCOM2), f2);
+            this->ui->tw_TextMessages->setTabText(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM1), f1);
+            this->ui->tw_TextMessages->setTabText(this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM2), f2);
         }
 
         /*
@@ -219,14 +236,14 @@ namespace BlackGui
             newTab->setLayout(layout);
             textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
             connect(textEdit, &QTextEdit::customContextMenuRequested, this, &CTextMessageComponent::ps_showContextMenuForTextEdit);
-            int index = this->addTab(newTab, tabName);
+            int index = this->ui->tw_TextMessages->addTab(newTab, tabName);
             this->connect(closeButton, &QPushButton::released, this, &CTextMessageComponent::ps_closeTextMessageTab);
-            this->setCurrentIndex(index);
+            this->ui->tw_TextMessages->setCurrentIndex(index);
 
             if (this->getIContextNetwork())
             {
                 QString realName = this->getIContextNetwork()->getUserForCallsign(CCallsign(tabName)).getRealName();
-                if (!realName.isEmpty()) this->setTabToolTip(index, realName);
+                if (!realName.isEmpty()) this->ui->tw_TextMessages->setTabToolTip(index, realName);
             }
             return newTab;
         }
@@ -260,11 +277,11 @@ namespace BlackGui
         {
             if (name.isEmpty()) return nullptr;
             QString n = name.trimmed();
-            for (int index = 0; index < this->count(); index++)
+            for (int index = 0; index < this->ui->tw_TextMessages->count(); index++)
             {
-                QString tabName = this->tabText(index);
+                QString tabName = this->ui->tw_TextMessages->tabText(index);
                 if (tabName.indexOf(n, 0, Qt::CaseInsensitive) < 0) continue;
-                QWidget *tab = this->widget(index);
+                QWidget *tab = this->ui->tw_TextMessages->widget(index);
                 return tab;
             }
             return nullptr;
@@ -276,29 +293,29 @@ namespace BlackGui
         CTextMessage CTextMessageComponent::getTextMessageStubForChannel()
         {
             CTextMessage tm;
-            int index = this->currentIndex();
-            if (index < 0 || index == this->indexOf(this->ui->tb_TextMessagesAll)) { return tm; }
+            int index = this->ui->tw_TextMessages->currentIndex();
+            if (index < 0 || index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesAll)) { return tm; }
 
             // from
             tm.setSenderCallsign(this->getOwnAircraft().getCallsign());
 
             // frequency text message?
-            if (index == this->indexOf(this->ui->tb_TextMessagesCOM1))
+            if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM1))
             {
                 tm.setFrequency(this->getOwnAircraft().getCom1System().getFrequencyActive());
             }
-            else if (index == this->indexOf(this->ui->tb_TextMessagesCOM2))
+            else if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesCOM2))
             {
                 tm.setFrequency(this->getOwnAircraft().getCom2System().getFrequencyActive());
             }
-            else if (index == this->indexOf(this->ui->tb_TextMessagesUnicom))
+            else if (index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesUnicom))
             {
                 tm.setFrequency(CPhysicalQuantitiesConstants::FrequencyUnicom());
             }
             else
             {
                 // not a standard channel
-                QString selectedTabText = this->tabText(index);
+                QString selectedTabText = this->ui->tw_TextMessages->tabText(index);
                 bool isNumber;
                 double frequency = selectedTabText.toDouble(&isNumber);
                 if (isNumber)
@@ -335,12 +352,15 @@ namespace BlackGui
 
             while (index < 0 && parentWidget)
             {
-                index =  this->indexOf(parentWidget);
+                index =  this->ui->tw_TextMessages->indexOf(parentWidget);
                 parentWidget = parentWidget->parentWidget();
             }
-            if (index >= 0) this->removeTab(index);
+            if (index >= 0) { this->ui->tw_TextMessages->removeTab(index); }
         }
 
+        /*
+         * Show the context menu for text edit area
+         */
         void CTextMessageComponent::ps_showContextMenuForTextEdit(const QPoint &pt)
         {
             QObject *sender = QObject::sender();
@@ -356,11 +376,40 @@ namespace BlackGui
             delete menu;
         }
 
+        /*
+         * Clear a text edit area
+         */
         void CTextMessageComponent::ps_clearTextEdit()
         {
             if (!this->m_currentTextEdit) return;
             this->m_currentTextEdit->clear();
             this->m_currentTextEdit = nullptr;
+        }
+
+        /*
+         * Top level was changed
+         */
+        void CTextMessageComponent::ps_topLevelChanged(QWidget *widget, bool topLevel)
+        {
+            Q_UNUSED(widget);
+            this->ui->le_textMessages->setVisible(topLevel);
+        }
+
+        /*
+         * Command line entered
+         */
+        void CTextMessageComponent::ps_commandEntered()
+        {
+            if (!this->ui->le_textMessages->isVisible()) { return; }
+            const QString cl(this->ui->le_textMessages->text().trimmed().simplified());
+            if (cl.isEmpty()) { return; }
+            this->ui->le_textMessages->clear();
+
+            bool handledMyself = this->parseCommandLine(cl);
+            if (handledMyself) { return; }
+
+            // not my business, relay
+            emit commandEntered(cl);
         }
 
         /*
@@ -394,21 +443,21 @@ namespace BlackGui
                     this->setVisible(true);
                     if (receiver == "c1" || receiver == "com1")
                     {
-                        this->setCurrentWidget(this->ui->tb_TextMessagesCOM1);
+                        this->ui->tw_TextMessages->setCurrentWidget(this->ui->tb_TextMessagesCOM1);
                     }
                     else if (receiver == "c2" || receiver == "com2")
                     {
-                        this->setCurrentWidget(this->ui->tb_TextMessagesCOM2);
+                        this->ui->tw_TextMessages->setCurrentWidget(this->ui->tb_TextMessagesCOM2);
                     }
                     else if (receiver == "u" || receiver == "unicom" || receiver == "uni")
                     {
-                        this->setCurrentWidget(this->ui->tb_TextMessagesUnicom);
+                        this->ui->tw_TextMessages->setCurrentWidget(this->ui->tb_TextMessagesUnicom);
                     }
                     else
                     {
                         QWidget *tab = this->findTextMessageTabByName(receiver.trimmed());
                         if (tab == nullptr) tab = this->addNewTextMessageTab(receiver.trimmed().toUpper());
-                        this->setCurrentWidget(tab);
+                        this->ui->tw_TextMessages->setCurrentWidget(tab);
                     }
                     CTextMessage tm = this->getTextMessageStubForChannel();
                     QString msg(parser.remainingStringAfter(2));
@@ -438,8 +487,8 @@ namespace BlackGui
                     return false;
                 }
 
-                int index = this->currentIndex();
-                if (index < 0 || index == this->indexOf(this->ui->tb_TextMessagesAll))
+                int index = this->ui->tw_TextMessages->currentIndex();
+                if (index < 0 || index == this->ui->tw_TextMessages->indexOf(this->ui->tb_TextMessagesAll))
                 {
                     CLogMessage(this).error("incorrect channel");
                 }

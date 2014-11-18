@@ -70,8 +70,11 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="toolTip">
+         <string>command line (e.g. &quot;.com1&quot;, &quot;.x&quot;, &quot;.msg com1&quot;)</string>
+        </property>
         <property name="text">
-         <string>&lt;commands go here&gt;</string>
+         <string/>
         </property>
        </widget>
       </item>

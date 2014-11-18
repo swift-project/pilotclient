@@ -281,11 +281,11 @@
      </property>
      <item>
       <widget class="BlackGui::Components::CTextMessageComponent" name="comp_TextMessages">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
        </property>
       </widget>
      </item>
@@ -604,12 +604,6 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>BlackGui::Components::CTextMessageComponent</class>
-   <extends>QTabWidget</extends>
-   <header>blackgui/components/textmessagecomponent.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>BlackGui::Components::CSettingsComponent</class>
    <extends>QTabWidget</extends>
    <header>blackgui/components/settingscomponent.h</header>
@@ -631,6 +625,12 @@
    <class>BlackGui::Components::CCockpitComponent</class>
    <extends>QWidget</extends>
    <header>blackgui/components/cockpitcomponent.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BlackGui::Components::CTextMessageComponent</class>
+   <extends>QFrame</extends>
+   <header>blackgui/components/textmessagecomponent.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

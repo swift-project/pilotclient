@@ -155,8 +155,8 @@ namespace BlackGui
 
         void CMainKeypadAreaComponent::ps_commandEntered()
         {
-            QString c = this->ui->le_CommandLineInput->text().trimmed();
-            if (c.isEmpty()) return;
+            QString c(this->ui->le_CommandLineInput->text().trimmed().simplified());
+            if (c.isEmpty()) { return; }
             emit this->commandEntered(c);
             this->ui->le_CommandLineInput->clear();
         }

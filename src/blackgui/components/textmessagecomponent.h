@@ -13,12 +13,13 @@
 #define BLACKGUI_TEXTMESSAGECOMPONENT_H
 
 #include "blackgui/components/enableforruntime.h"
+#include "blackgui/components/enablefordockwidgetinfoarea.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackcore/context_network.h"
 #include "blackcore/context_ownaircraft.h"
-#include <QTabWidget>
+#include <QFrame>
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QScopedPointer>
@@ -30,8 +31,9 @@ namespace BlackGui
     {
         //! Text message widget
         class CTextMessageComponent :
-            public QTabWidget,
-            public CEnableForRuntime
+            public QFrame,
+            public CEnableForRuntime,
+            public CEnableForDockWidgetInfoArea
         {
             Q_OBJECT
 
@@ -55,6 +57,9 @@ namespace BlackGui
             //! Message to be displayed in info window
             void displayInInfoWindow(const BlackMisc::CVariant &message, int displayDurationMs) const;
 
+            //! Command line was entered
+            void commandEntered(const QString commandLine);
+
         public slots:
             //! \addtogroup commandline
             //! @{
@@ -76,7 +81,7 @@ namespace BlackGui
             QScopedPointer<Ui::CTextMessageComponent> ui;
             QWidget   *getTabWidget(Tab tab); //!< enum to widget
             QAction   *m_clearTextEditAction = nullptr;
-            QTextEdit *m_currentTextEdit     = nullptr;
+            QTextEdit *m_currentTextEdit     = nullptr; //!< text edit currently visible
 
             /*!
              * \brief Add new text message tab
@@ -133,6 +138,12 @@ namespace BlackGui
 
             //! Clear text edit
             void ps_clearTextEdit();
+
+            //! Top level was changed
+            void ps_topLevelChanged(QWidget *widget, bool topLevel);
+
+            //! Command line entered
+            void ps_commandEntered();
         };
     }
 }
