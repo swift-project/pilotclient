@@ -172,8 +172,6 @@ bool			DoPackageSub(std::string& ioPath)
 char * fgets_multiplatform(char * s, int n, FILE * file)
 {
 	char *	p = s;
-	int			c;
-	int			c1;
 
 	// Save one slot for the null.  If we do not have enough memory
 	// to do this, bail.	
@@ -183,6 +181,7 @@ char * fgets_multiplatform(char * s, int n, FILE * file)
 	// Only bother to read if we have enough space in the char buf.
 	if (n)
     {
+        int c;
 		do
 		{
 			c = getc(file);
@@ -210,12 +209,12 @@ char * fgets_multiplatform(char * s, int n, FILE * file)
 	    // just the first.
 	    if (c == '\r')
 	    {
-		    c1 = getc(file);
+		    int c1 = getc(file);
 		    if (c1 != '\n') ungetc(c1, file);
 	    }
 	    if (c == '\n')
 	    {
-		    c1 = getc(file);
+		    int c1 = getc(file);
 		    if (c1 != '\r') ungetc(c1, file);
 	    }
     }
