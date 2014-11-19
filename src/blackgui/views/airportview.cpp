@@ -1,5 +1,5 @@
 /* Copyright (C) 2013
- * Swift Project Community / Contributors
+ * swift Project Community / Contributors
  *
  * This file is part of swift Project. It is subject to the license terms in the LICENSE file found in the top-level
  * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
@@ -22,4 +22,4 @@ namespace BlackGui
             this->standardInit(new CAirportListModel(this));
         }
     }
-}
+} // namespace

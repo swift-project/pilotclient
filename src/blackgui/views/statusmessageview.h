@@ -24,7 +24,6 @@ namespace BlackGui
         {
 
         public:
-
             //! Constructor
             explicit CStatusMessageView(QWidget *parent = nullptr);
         };

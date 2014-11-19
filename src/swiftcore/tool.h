@@ -10,16 +10,16 @@ namespace BlackMiscTest
 {
 
     /*!
-     * \brief Supporting functions for running the tests
+     * Supporting functions for running the tests
      */
     class Tool
     {
     private:
-        //! \brief Constructor
+        //! Constructor
         Tool() {}
 
     public:
-        //! \brief Get process id
+        //! Get process id
         static qint64 getPid()
         {
             return QCoreApplication::applicationPid();
@@ -28,7 +28,7 @@ namespace BlackMiscTest
         //! Start a new process
         static QProcess *startNewProcess(const QString &executable, const QStringList &arguments = QStringList(), QObject *parent = 0);
 
-        //! \brief Server loop
+        //! Server loop
         static void serverLoop(BlackCore::CRuntime *runtime);
 
     };
