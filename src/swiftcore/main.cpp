@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     // metadata are registered in runtime
     QApplication a(argc, argv); // not QCoreApplication because of icon, http://qt-project.org/forums/viewthread/15412
     CLogHandler::instance()->install();
-    CLogHandler::instance()->enableConsoleOutput(false); //! \todo How can I change the level only and display info and above?
+    CLogHandler::instance()->enableConsoleOutput(false); // default disable
     QIcon icon(BlackMisc::CIcons::swiftNova24());
     QApplication::setWindowIcon(icon);
     QTextStream cin(stdin);
