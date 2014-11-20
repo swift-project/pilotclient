@@ -56,6 +56,12 @@ namespace BlackGui
 
         void CCockpitComComponent::runtimeHasBeenSet()
         {
+            Q_ASSERT(this->getIContextOwnAircraft());
+            Q_ASSERT(this->getIContextAudio());
+
+            // init from aircraft
+            CAircraft ownAircraft = this->getOwnAircraft();
+            this->ps_updateCockpitFromContext(ownAircraft, "dummyInitialValues");
 
             // SELCAL pairs in cockpit
             this->ui->frp_ComPanelSelcalBottom->clear();
@@ -73,12 +79,10 @@ namespace BlackGui
             connect(this->ui->frp_ComPanelSelcalBottom, &CSelcalCodeSelector::valueChanged, this, &CCockpitComComponent::ps_guiChangedSelcal);
 
             // hook up with changes from own aircraft context
-            Q_ASSERT(this->getIContextOwnAircraft());
             this->connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitComComponent::ps_updateCockpitFromContext);
             this->connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal, this, &CCockpitComComponent::ps_onChangedSelcal);
 
             // hook up with audio context
-            Q_ASSERT(this->getIContextAudio());
             this->connect(this->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CCockpitComComponent::ps_onChangedVoiceRoomStatus);
         }
 

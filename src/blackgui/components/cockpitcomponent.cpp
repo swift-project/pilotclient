@@ -87,7 +87,6 @@ namespace BlackGui
                     // manually setting size, all other approaches failed
                     this->window()->resize(defaultSizeShown);
                     this->m_sizeFloatingShown = this->window()->size();
-
                 }
             }
             else
