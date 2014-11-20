@@ -45,10 +45,7 @@ namespace BlackMisc
         {
         default:
         case QtDebugMsg:
-            if (debug)
-                this->m_severity = SeverityDebug;
-            else
-                this->m_severity = SeverityInfo;
+            this->m_severity = debug ? SeverityDebug : SeverityInfo;
             break;
         case QtWarningMsg:
             this->m_severity = SeverityWarning;
@@ -92,6 +89,31 @@ namespace BlackMisc
             *o_type = QtCriticalMsg;
             break;
         }
+    }
+
+    QString CStatusMessage::getHumanReadableCategory() const
+    {
+        if (this->m_humanReadableCategory.isEmpty())
+        {
+            const QString cat(this->m_categories.toQString());
+            // could als be subject of i18n
+            // from sepcific to unspecific
+            if (cat.isEmpty()) { this->m_humanReadableCategory = "None"; }
+            else if (cat.contains(CLogCategory::validation().toQString())) { this->m_humanReadableCategory = "Validation"; }
+            else if (cat.contains("ContextAudio")) { this->m_humanReadableCategory = "Audio"; }
+            else if (cat.contains("ContextSimulator")) { this->m_humanReadableCategory = "Simulator"; }
+            else if (cat.contains("ContextNetwork")) { this->m_humanReadableCategory = "Network"; }
+            else if (cat.contains("Vatlib")) { this->m_humanReadableCategory = "VATSIM library"; }
+            else if (cat.contains("BlackMisc")) { this->m_humanReadableCategory = "Library"; }
+            else if (cat.contains("BlackCore")) { this->m_humanReadableCategory = "Core"; }
+            else if (cat.contains("BlackGui")) { this->m_humanReadableCategory = "GUI"; }
+            else if (cat.contains("BlackSound")) { this->m_humanReadableCategory = "GUI"; }
+            else if (cat.contains("XPlane")) { this->m_humanReadableCategory = "XPlane"; }
+            else if (cat.contains("FSX")) { this->m_humanReadableCategory = "FSX"; }
+            else if (cat.contains("FS9")) { this->m_humanReadableCategory = "FS9"; }
+            else this->m_humanReadableCategory = "Misc.";
+        }
+        return this->m_humanReadableCategory;
     }
 
     /*
@@ -238,15 +260,13 @@ namespace BlackMisc
                 if (this->m_timestamp.isNull() || !this->m_timestamp.isValid()) return "";
                 return this->m_timestamp.toString("HH:mm::ss.zzz");
             }
-        case IndexCategory:
+        case IndexCategories:
             return QVariant(this->m_categories.toQString());
+        case IndexCategoryHumanReadable:
+            return QVariant(this->getHumanReadableCategory());
         default:
-            break;
+            return CValueObject::propertyByIndex(index);
         }
-
-        Q_ASSERT_X(false, "CStatusMessage", "index unknown");
-        QString m = QString("no property, index ").append(index.toQString());
-        return QVariant::fromValue(m);
     }
 
     /*
@@ -271,7 +291,7 @@ namespace BlackMisc
         case IndexSeverity:
             this->m_severity = static_cast<StatusSeverity>(variant.value<uint>());
             break;
-        case IndexCategory:
+        case IndexCategories:
             this->m_categories = variant.value<CLogCategoryList>();
             break;
         default:

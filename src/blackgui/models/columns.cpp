@@ -21,11 +21,11 @@ namespace BlackGui
         {}
 
         CColumn::CColumn(const BlackMisc::CPropertyIndex &propertyIndex) :
-            m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex), m_editable(false)
+            m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
         {}
 
         CColumn::CColumn(const QString &toolTip, const BlackMisc::CPropertyIndex &propertyIndex) :
-            m_columnToolTip(toolTip), m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex), m_editable(false)
+            m_columnToolTip(toolTip), m_formatter(new CPixmapFormatter()), m_propertyIndex(propertyIndex)
         {}
 
         const char *CColumn::getTranslationContextChar() const

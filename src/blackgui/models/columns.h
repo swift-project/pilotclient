@@ -88,7 +88,7 @@ namespace BlackGui
             QString m_columnToolTip;
             QSharedPointer<CDefaultFormatter> m_formatter;
             BlackMisc::CPropertyIndex m_propertyIndex;
-            bool m_editable;
+            bool m_editable = false;
             const char *getTranslationContextChar() const;
             const char *getColumnNameChar() const;
             const char *getColumnToolTipChar() const;

@@ -27,9 +27,10 @@ namespace BlackGui
             CListModelBase<BlackMisc::CStatusMessage, BlackMisc::CStatusMessageList>("ViewStatusMessageList", parent)
         {
             this->m_columns.addColumn(CColumn("time", CStatusMessage::IndexTimestamp, new CDateTimeFormatter(CDateTimeFormatter::formatHms())));
-            this->m_columns.addColumn(CColumn("severity", CStatusMessage::IndexSeverity));
+            this->m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategoryHumanReadable));
+            this->m_columns.addColumn(CColumn("severity", CStatusMessage::IndexIcon));
             this->m_columns.addColumn(CColumn::standardString("message", CStatusMessage::IndexMessage));
-            this->m_columns.addColumn(CColumn::standardString("category", CStatusMessage::IndexCategory));
+            this->m_columns.addColumn(CColumn::standardString("all categories", CStatusMessage::IndexCategories));
 
             this->m_sortedColumn = CStatusMessage::IndexTimestamp;
             this->m_sortOrder = Qt::DescendingOrder;
@@ -39,34 +40,8 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "severity");
             (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "type");
             (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "message");
+            (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "all categories");
         }
 
-        /*
-         * Display icons
-         */
-        QVariant CStatusMessageListModel::data(const QModelIndex &modelIndex, int role) const
-        {
-            // shortcut, fast check
-            if (role != Qt::DisplayRole && role != Qt::DecorationRole) return CListModelBase::data(modelIndex, role);
-            if (this->columnToPropertyIndex(modelIndex.column()) == CStatusMessage::IndexSeverity)
-            {
-                if (role == Qt::DecorationRole)
-                {
-                    CStatusMessage msg = this->at(modelIndex);
-                    return QVariant(msg.toPixmap());
-                }
-                else if (role == Qt::DisplayRole)
-                {
-                    // the text itself should be empty
-                    return QVariant("");
-                }
-                else if (role == Qt::ToolTipRole)
-                {
-                    CStatusMessage msg = this->at(modelIndex);
-                    return QVariant(msg.getSeverityAsString());
-                }
-            }
-            return CListModelBase::data(modelIndex, role);
-        }
-    }
-}
+    } // namespace
+} // namespace

@@ -18,6 +18,7 @@
 #include <QObject>
 #include <QThreadStorage>
 #include <type_traits>
+#include <typeinfo>
 
 namespace BlackMisc
 {

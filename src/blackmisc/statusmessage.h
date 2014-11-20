@@ -38,7 +38,8 @@ namespace BlackMisc
         //! Properties by index
         enum ColumnIndex
         {
-            IndexCategory = BlackMisc::CPropertyIndex::GlobalIndexCStatusMessage,
+            IndexCategories = BlackMisc::CPropertyIndex::GlobalIndexCStatusMessage,
+            IndexCategoryHumanReadable,
             IndexSeverity,
             IndexSeverityAsString,
             IndexMessage,
@@ -68,6 +69,9 @@ namespace BlackMisc
 
         //! Message category
         const CLogCategoryList &getCategories() const { return this->m_categories; }
+
+        //! Human readable category
+        QString getHumanReadableCategory() const;
 
         //! Message severity
         StatusSeverity getSeverity() const { return this->m_severity; }
@@ -127,11 +131,13 @@ namespace BlackMisc
     private:
         BLACK_ENABLE_TUPLE_CONVERSION(CStatusMessage)
         CLogCategoryList m_categories;
-        StatusSeverity m_severity = SeverityDebug;
-        QString m_message;
-        QDateTime m_timestamp = QDateTime::currentDateTimeUtc();
-        bool m_redundant = false;
+        StatusSeverity   m_severity = SeverityDebug;
+        QString          m_message;
+        QDateTime        m_timestamp = QDateTime::currentDateTimeUtc();
+        bool             m_redundant = false;
         mutable QVector<quintptr> m_handledByObjects;
+        mutable QString           m_humanReadableCategory; //!< human readable category cache
+
     };
 } // namespace
 
