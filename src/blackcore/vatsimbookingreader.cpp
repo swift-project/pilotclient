@@ -156,8 +156,11 @@ namespace BlackCore
                 this->setUpdateTimestamp(updateTimestamp); // thread safe update
                 emit this->dataRead(bookedStations);
             } // node
-        } else {
-            // with errors
+        }
+        else
+        {
+            // network error
+            CLogMessage(this).warning("Reading bookings failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
             nwReply->abort();
         }
     } // method

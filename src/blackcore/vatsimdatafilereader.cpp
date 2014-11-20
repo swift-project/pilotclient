@@ -360,9 +360,9 @@ namespace BlackCore
         else
         {
             // network error
+            CLogMessage(this).warning("Reading VATSIM data file failed %1 %2") << nwReply->errorString() << nwReply->url().toString();
             nwReply->abort();
         }
-
     }
 
     const QMap<QString, QString> CVatsimDataFileReader::clientPartsToMap(const QString &currentLine, const QStringList &clientSectionAttributes)
