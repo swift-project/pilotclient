@@ -871,7 +871,7 @@ int		CreateBitmapFromPNG(const char * inFilePath, struct ImageInfo * outImageInf
 
 	png_structp		pngPtr = NULL;
 	png_infop		infoPtr = NULL;
-	unsigned char *	buffer = NULL;
+	unsigned char *	volatile buffer = NULL;
 	FILE *			file = NULL;
 	size_t			fileLength = 0;
 	outImageInfo->data = NULL;
