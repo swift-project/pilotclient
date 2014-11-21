@@ -73,6 +73,11 @@ contains(BLACK_CONFIG, ProfileRelease) {
 }
 
 ###########################
+# No gigantic MinGW obj files
+###########################
+win32-g++: QMAKE_CXXFLAGS_DEBUG += -Og
+
+###########################
 # No FSX or FS9 for 64 bits
 ###########################
 
