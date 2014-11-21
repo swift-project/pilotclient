@@ -148,6 +148,7 @@ namespace BlackGui
         CManagedStatusBar m_statusBar;               //!< Status bar when floating
         QString  m_windowTitleBackup;                //!< original title, even if the widget title is deleted for layout purposes
         QSize m_preferredSizeWhenFloating;           //!< preferred size when floating 1st time
+        QSize m_initialDockedMinimumSize;            //!< minimum size before first floating
         QPoint m_offsetWhenFloating;                 //!< initial offset to main window when floating first time
         bool m_allowStatusBar        = true;
         bool m_windowTitleWhenDocked = true;

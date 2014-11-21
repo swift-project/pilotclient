@@ -117,6 +117,8 @@ namespace BlackGui
             int m_skipResizeThreshold = 40;           //!< when to skip resize (rows count)
             int m_resizeAutoNthTime   = 1;            //!< with ResizeAuto, resize every n-th time
             bool m_forceStretchLastColumnWhenResized  = false; //!< a small table might (few columns) might to fail stretching, force again
+            bool m_withMenuItemClear    = false;
+            bool m_withMenuItemRefresh  = false;
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker

@@ -142,6 +142,7 @@ namespace BlackGui
         // for the first time resize
         if (!this->m_preferredSizeWhenFloating.isNull())
         {
+            this->m_initialDockedMinimumSize = this->minimumSize();
             this->resize(this->m_preferredSizeWhenFloating);
         }
 
@@ -165,23 +166,22 @@ namespace BlackGui
             }
             this->setNullTitleBar();
             this->setContentsMargins(this->m_marginsWhenFloating);
-            if (!this->m_wasAlreadyFloating)
-            {
-                this->initialFloating();
-            }
+            if (!this->m_wasAlreadyFloating) { this->initialFloating(); }
             this->m_statusBar.show();
             this->m_wasAlreadyFloating = true;
         }
         else
         {
-            if (!this->m_windowTitleWhenDocked)
-            {
-                QDockWidget::setWindowTitle("");
-            }
-
+            if (!this->m_windowTitleWhenDocked) { QDockWidget::setWindowTitle(""); }
             this->m_statusBar.hide();
             this->setEmptyTitleBar();
             this->setContentsMargins(this->m_marginsWhenDocked);
+
+            // sometimes floating sets a new minimum size, here we reset it
+            if (this->minimumHeight() > this->m_initialDockedMinimumSize.height())
+            {
+                this->setMinimumSize(this->m_initialDockedMinimumSize);
+            }
         }
         emit this->widgetTopLevelChanged(this, topLevel);
     }

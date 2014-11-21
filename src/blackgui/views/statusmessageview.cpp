@@ -23,6 +23,7 @@ namespace BlackGui
          */
         CStatusMessageView::CStatusMessageView(QWidget *parent) : CViewBase(parent)
         {
+            m_withMenuItemClear = true;
             this->standardInit(new CStatusMessageListModel(this));
         }
 

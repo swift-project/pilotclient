@@ -49,9 +49,9 @@ namespace BlackGui
 
         void CViewBaseNonTemplate::customMenu(QMenu &menu) const
         {
-            menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, SIGNAL(requestUpdate()));
-            menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, SLOT(ps_clear()));
-            menu.addSeparator();
+            if (this->m_withMenuItemRefresh) { menu.addAction(BlackMisc::CIcons::refresh16(), "Update", this, SIGNAL(requestUpdate())); }
+            if (this->m_withMenuItemClear) { menu.addAction(BlackMisc::CIcons::delete16(), "Clear", this, SLOT(ps_clear())); }
+            if (!menu.isEmpty()) { menu.addSeparator(); }
             menu.addAction(BlackMisc::CIcons::resize16(), "Full resize", this, SLOT(fullResizeToContents()));
 
             // resize to content might decrease performance,

@@ -96,8 +96,10 @@ namespace BlackGui
         QList<CEnableForDockWidgetInfoArea *> infoAreaDockWidgets = this->findEmbeddedDockWidgetInfoAreaComponents();
         foreach(CEnableForDockWidgetInfoArea * dwia, infoAreaDockWidgets)
         {
+            Q_ASSERT(dwia);
+
             // KWB: potentially a risk when this object is deleted
-            //      put under normal situations the child object will be deleted as well, and we have
+            //      but under normal situations the child object will be deleted as well, and we have
             //      no multi-threaded GUI
             dwia->setParentDockWidgetInfoArea(this);
         }
@@ -109,6 +111,7 @@ namespace BlackGui
         QList<CEnableForDockWidgetInfoArea *> widgetsWithDockWidgetInfoAreaComponent;
         foreach(QWidget * w, widgets)
         {
+            Q_ASSERT(w);
             CEnableForDockWidgetInfoArea *dwc = dynamic_cast<Components::CEnableForDockWidgetInfoArea *>(w);
             if (dwc)
             {

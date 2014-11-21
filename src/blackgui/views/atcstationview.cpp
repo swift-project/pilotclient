@@ -27,6 +27,8 @@ namespace BlackGui
         {
             Q_ASSERT(this->m_model);
             this->m_model->setStationMode(stationMode);
+            this->m_withMenuItemClear = true;
+            this->m_withMenuItemRefresh = true;
 
             switch (stationMode)
             {

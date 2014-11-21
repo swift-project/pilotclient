@@ -90,7 +90,7 @@
       <property name="styleSheet">
        <string notr="true"/>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="gl_CentralFrameInside">
        <property name="leftMargin">
         <number>0</number>
        </property>
