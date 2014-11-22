@@ -126,7 +126,6 @@ namespace BlackGui
                 // re-stretch
                 this->horizontalHeader()->setStretchLastSection(true);
             }
-            qDebug() << this->objectName() << "resize ms:" << t.elapsed() << QThread::currentThreadId();
         }
 
         void CViewBaseNonTemplate::ps_customMenuRequested(QPoint pos)
