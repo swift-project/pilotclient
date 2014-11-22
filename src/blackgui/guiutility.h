@@ -13,7 +13,7 @@
 #define BLACKGUI_GUIUTILITY_H
 
 #include <QWidgetList>
-#include <QMainWindow>
+#include "enableforframelesswindow.h"
 
 namespace BlackGui
 {
@@ -24,7 +24,7 @@ namespace BlackGui
     public:
 
         //! Main application window
-        static QMainWindow *mainWindow();
+        static CEnableForFramelessWindow *mainApplicationWindow();
 
         //! Is main window frameless?
         static bool isMainWindowFrameless();

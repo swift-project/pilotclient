@@ -14,25 +14,23 @@
 namespace BlackGui
 {
 
-    QMainWindow *CGuiUtility::mainWindow()
+    CEnableForFramelessWindow *CGuiUtility::mainApplicationWindow()
     {
         QWidgetList tlw = topLevelApplicationWidgetsWithName();
         foreach(QWidget * w, tlw)
         {
-            QMainWindow *mw = qobject_cast<QMainWindow *>(w);
+            CEnableForFramelessWindow *mw = dynamic_cast<CEnableForFramelessWindow *>(w);
             if (!mw) { continue; }
-            QString n = mw->objectName().toLower();
-            if (n.contains("main") && n.contains("window")) return mw;
+            if (mw->isMainApplicationWindow()) return mw;
         }
         return nullptr;
     }
 
     bool CGuiUtility::isMainWindowFrameless()
     {
-        QMainWindow *mw = mainWindow();
+        CEnableForFramelessWindow *mw = mainApplicationWindow();
         Q_ASSERT(mw); // there should be a main window
-        if (!mw) return false;
-        return (mw->windowFlags() & Qt::FramelessWindowHint);
+        return (mw && mw->isFrameless());
     }
 
     QWidgetList CGuiUtility::topLevelApplicationWidgetsWithName()
@@ -41,7 +39,7 @@ namespace BlackGui
         QWidgetList rl;
         foreach(QWidget * w, tlw)
         {
-            if (w->objectName().isEmpty()) continue;
+            if (w->objectName().isEmpty()) { continue; }
             rl.append(w);
         }
         return rl;
@@ -49,8 +47,8 @@ namespace BlackGui
 
     QPoint CGuiUtility::mainWindowPosition()
     {
-        QMainWindow *mw = mainWindow();
-        return (mw) ? mw->pos() : QPoint();
+        CEnableForFramelessWindow *mw = mainApplicationWindow();
+        return (mw) ? mw->getWidget()->pos() : QPoint();
     }
 
     QPoint CGuiUtility::introWindowPosition()
@@ -59,7 +57,7 @@ namespace BlackGui
         foreach(QWidget * w, tlw)
         {
             QString n = w->objectName().toLower();
-            if (n.contains("intro")) return w->pos();
+            if (n.contains("intro")) { return w->pos(); }
         }
         return QPoint(0, 0);
     }
@@ -73,7 +71,7 @@ namespace BlackGui
     QString CGuiUtility::replaceTabCountValue(const QString &oldName, int count)
     {
         const QString v = QString("(").append(QString::number(count)).append(")");
-        if (oldName.isEmpty()) {return v; }
+        if (oldName.isEmpty()) { return v; }
         int index = oldName.lastIndexOf('(');
         if (index == 0) { return v; }
         if (index < 0) { return QString(oldName).append(" ").append(v); }

@@ -48,25 +48,17 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // with frameless window, we shift menu and statusbar into central widget
     // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
-    if (this->m_windowMode == GuiModes::WindowFrameless)
+    if (this->isFrameless())
     {
-        this->ui->wi_CentralWidgetOutside->setStyleSheet("#wi_CentralWidgetOutside {border: 2px solid green; border-radius: 20px; }");
-        this->ui->vl_CentralWidgetOutside->setContentsMargins(8, 8, 8, 8);
-
-        QHBoxLayout *menuBarLayout = new QHBoxLayout();
-        QPushButton *closeIcon = new QPushButton(this);
-        closeIcon->setStyleSheet("margin: 0; padding: 0; background: transparent;");
-        closeIcon->setIcon(CIcons::close16());
-        QObject::connect(closeIcon, &QPushButton::clicked, this, &QMainWindow::close);
-        menuBarLayout->addWidget(this->ui->mb_MainMenuBar, 0, Qt::AlignTop | Qt::AlignLeft);
-        menuBarLayout->addWidget(closeIcon, 0, Qt::AlignTop | Qt::AlignRight);
+        QHBoxLayout *menuBarLayout = this->addFramelessCloseButton(this->ui->mb_MainMenuBar);
         this->ui->vl_CentralWidgetOutside->insertLayout(0, menuBarLayout, 0);
 
-        QSizeGrip *grip = new QSizeGrip(this);
-        grip->setStyleSheet("margin-right: 25px; background-color: transparent;");
+        // move the status bar intothe frame (otherwise it is dangling outside)
         this->ui->sb_MainStatusBar->setParent(this->ui->wi_CentralWidgetOutside);
         this->ui->vl_CentralWidgetOutside->addWidget(this->ui->sb_MainStatusBar, 0);
-        this->ui->sb_MainStatusBar->addPermanentWidget(grip);
+
+        // grip
+        this->addFramelessSizeGrip(this->ui->sb_MainStatusBar);
     }
 
     // timers

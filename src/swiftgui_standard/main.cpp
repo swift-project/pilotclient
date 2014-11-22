@@ -15,6 +15,7 @@
 #include "blackcore/context_runtime_config.h"
 #include "blacksim/blacksimfreefunctions.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/logmessage.h"
 #include "blackmisc/icons.h"
 #include "blackmisc/loghandler.h"
 
@@ -24,6 +25,8 @@
 #include <QPushButton>
 
 using namespace BlackGui;
+using namespace BlackMisc;
+using namespace BlackCore;
 
 /*!
  * \brief Main
@@ -42,11 +45,11 @@ int main(int argc, char *argv[])
 
     // Translations
     QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
-    qDebug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
+    CLogMessage("swift.standardgui.main").debug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
     QTranslator translator;
     if (translator.load("blackmisc_i18n_de", ":blackmisc/translations/"))
     {
-        qDebug() << "Translator loaded";
+        CLogMessage("swift.standardgui.main").debug() << "Translator loaded";
     }
 
     // application
@@ -66,7 +69,7 @@ int main(int argc, char *argv[])
     a.setStyleSheet(s);
 
     // modes
-    GuiModes::WindowMode windowMode;
+    BlackGui::CMainWindow::WindowMode windowMode;
 
     // Dialog to decide external or internal core
     CIntroWindow intro;

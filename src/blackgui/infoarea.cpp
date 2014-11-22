@@ -25,7 +25,8 @@ using namespace BlackMisc;
 
 namespace BlackGui
 {
-    CInfoArea::CInfoArea(QWidget *parent) : QMainWindow(parent)
+    CInfoArea::CInfoArea(QWidget *parent) :
+        QMainWindow(parent), CEnableForFramelessWindow(CEnableForFramelessWindow::WindowNormal, false, this)
     {
         this->ps_setInfoAreaFloating(this->m_infoAreaFloating);
         this->setWindowIcon(CIcons::swift24());
@@ -39,7 +40,7 @@ namespace BlackGui
         // after(!) GUI is setup
         if (this->m_dockWidgetInfoAreas.isEmpty())
         {
-            this->m_dockWidgetInfoAreas = this->initOwnDockWidgetInfoAreas();
+            this->m_dockWidgetInfoAreas = this->findOwnDockWidgetInfoAreas();
             Q_ASSERT(!this->m_dockWidgetInfoAreas.isEmpty());
         }
 
@@ -401,13 +402,19 @@ namespace BlackGui
             // this completely initializes the tab bar and all docked widgets
             if (init)
             {
+                // float
                 QPoint offset(i * 25, i * 20);
                 after->setVisible(false);
                 after->setFloating(true);
                 after->setOffsetWhenFloating(offset);
-                after->setPreferredSizeWhenFloating(this->getPreferredSizeWhenFloating(i));
+                QSize floatingSize = this->getPreferredSizeWhenFloating(i);
+                after->setPreferredSizeWhenFloating(floatingSize);
+
+                // dock again
                 after->setFloating(false);
                 after->setVisible(true);
+
+                // reset floating flag
                 after->resetWasAlreadyFLoating();
             }
             else
@@ -497,7 +504,7 @@ namespace BlackGui
         }
     }
 
-    QList<CDockWidgetInfoArea *> CInfoArea::initOwnDockWidgetInfoAreas()
+    QList<CDockWidgetInfoArea *> CInfoArea::findOwnDockWidgetInfoAreas() const
     {
         QList<CDockWidgetInfoArea *> infoAreas = this->findChildren<CDockWidgetInfoArea *>();
         if (infoAreas.isEmpty()) { return infoAreas; }

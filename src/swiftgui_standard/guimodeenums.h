@@ -7,21 +7,17 @@
  * contained in the LICENSE file.
  */
 
-#ifndef SAMPLE_GUIMODEENUMS_H
-#define SAMPLE_GUIMODEENUMS_H
+#ifndef STDGUI_GUIMODEENUMS_H
+#define STDGUI_GUIMODEENUMS_H
+
 
 //! Modes, how GUI can be started (core/GUI)
-struct GuiModes {
-
+struct GuiModes
+{
 public:
-    //! Window modes
-    enum WindowMode {
-        WindowFrameless,
-        WindowNormal
-    };
-
     //! Core runs how and where?
-    enum CoreMode {
+    enum CoreMode
+    {
         CoreInGuiProcess,
         CoreExternal,
         CoreExternalAudioLocal

@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef SAMPLE_MAINWINDOW_H
-#define SAMPLE_MAINWINDOW_H
+#ifndef STDGUI_SWIFTGUI_H
+#define STDGUI_SWIFTGUI_H
 
 // clash with struct interface in objbase.h used to happen
 #pragma push_macro("interface")
@@ -29,6 +29,7 @@
 #include "blackgui/models/userlistmodel.h"
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"
+#include "blackgui/mainwindow.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/loghandler.h"
@@ -44,7 +45,7 @@ namespace Ui { class MainWindow; }
 
 //! swift GUI
 class MainWindow :
-    public QMainWindow,
+    public BlackGui::CMainWindow,
     public BlackGui::Components::CEnableForRuntime
 {
     Q_OBJECT
@@ -60,7 +61,7 @@ public:
     };
 
     //! Constructor
-    explicit MainWindow(GuiModes::WindowMode windowMode, QWidget *parent = nullptr);
+    explicit MainWindow(BlackGui::CMainWindow::WindowMode windowMode, QWidget *parent = nullptr);
 
     //! Destructor
     ~MainWindow();
@@ -83,18 +84,11 @@ protected:
     //! Close event, e.g. when window is closed
     void closeEvent(QCloseEvent *event);
 
-    //! Mouse moving, required for frameless window
-    void mouseMoveEvent(QMouseEvent *event);
-
-    //! Mouse press, required for frameless window
-    void mousePressEvent(QMouseEvent *event);
-
 private:
     QScopedPointer<Ui::MainWindow> ui;
     bool m_init = false;
     BlackGui::Components::CInfoWindowComponent *m_compInfoWindow = nullptr; //!< the info window (popup
     BlackGui::CManagedStatusBar m_statusBar;
-    GuiModes::WindowMode        m_windowMode = GuiModes::WindowNormal;
     BlackInput::IKeyboard      *m_keyboard = nullptr; //!< hotkeys
     BlackMisc::CLogSubscriber   m_logSubscriber { this, &MainWindow::ps_displayStatusMessageInGui };
 
@@ -104,12 +98,6 @@ private:
     bool m_contextAudioAvailable   = false;
     QTimer *m_timerContextWatchdog = nullptr;     //!< core available?
     BlackMisc::Aviation::CAircraft m_ownAircraft; //!< own aircraft's state
-
-    // frameless window
-    QPoint m_dragPosition; /*!< position, if moving is handled with frameless window */
-
-    // context menus
-    QMenu *m_contextMenuStatusMessageList = nullptr; /*!< context menu for status message list */
 
     // cockpit
     QString m_transponderResetValue;         //!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas

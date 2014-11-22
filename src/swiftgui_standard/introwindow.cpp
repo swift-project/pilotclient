@@ -33,12 +33,12 @@ CIntroWindow::~CIntroWindow() { }
 /*
  * Window mode
  */
-GuiModes::WindowMode CIntroWindow::getWindowMode() const
+BlackGui::CEnableForFramelessWindow::WindowMode CIntroWindow::getWindowMode() const
 {
     if (this->ui->rb_WindowFrameless->isChecked())
-        return GuiModes::WindowFrameless;
+        return BlackGui::CEnableForFramelessWindow::WindowFrameless;
     else
-        return GuiModes::WindowNormal;
+        return BlackGui::CEnableForFramelessWindow::WindowNormal;
 }
 
 /*

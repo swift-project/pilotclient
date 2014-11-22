@@ -38,23 +38,13 @@ using namespace BlackMisc::Hardware;
 /*
  * Constructor
  */
-MainWindow::MainWindow(GuiModes::WindowMode windowMode, QWidget *parent) :
-    QMainWindow(parent, windowMode == GuiModes::WindowFrameless ?
-                (Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint) :
-                (Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint)),
-    ui(new Ui::MainWindow),
-    m_windowMode(windowMode)
+MainWindow::MainWindow(BlackGui::CMainWindow::WindowMode windowMode, QWidget *parent) :
+    BlackGui::CMainWindow(windowMode, parent),
+    ui(new Ui::MainWindow)
 {
-    if (windowMode == GuiModes::WindowFrameless)
-    {
-        // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
-        this->setAttribute(Qt::WA_NoSystemBackground, true);
-        this->setAttribute(Qt::WA_TranslucentBackground, true);
-        // this->setAttribute(Qt::WA_PaintOnScreen);
-    }
-
     // GUI
     ui->setupUi(this);
+    this->ui->wi_CentralWidgetOutside->setProperty("mainframeless", this->isFrameless());
     this->m_compInfoWindow = new CInfoWindowComponent(this); // setupUi has to be first!
 }
 
@@ -116,29 +106,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     this->performGracefulShutdown();
     // if (this->sender() != this) QMainWindow::closeEvent(event);
     QApplication::exit();
-}
-
-void MainWindow::mouseMoveEvent(QMouseEvent *event)
-{
-    // this->ui->fr_PseudoWindowBar->geometry().contains(event->pos())
-    if (this->m_windowMode == GuiModes::WindowFrameless && event->buttons() & Qt::LeftButton)
-    {
-        move(event->globalPos() - this->m_dragPosition);
-        event->accept();
-        return;
-    }
-    QWidget::mouseMoveEvent(event);
-}
-
-void MainWindow::mousePressEvent(QMouseEvent *event)
-{
-    if (this->m_windowMode == GuiModes::WindowFrameless && event->button() == Qt::LeftButton)
-    {
-        this->m_dragPosition = event->globalPos() - this->frameGeometry().topLeft();
-        event->accept();
-        return;
-    }
-    QWidget::mousePressEvent(event);
 }
 
 /*

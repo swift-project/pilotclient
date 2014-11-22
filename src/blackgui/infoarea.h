@@ -13,6 +13,7 @@
 #define BLACKGUI_INFOAREA_H
 
 #include "dockwidgetinfoarea.h"
+#include "enableforframelesswindow.h"
 #include <QMainWindow>
 #include <QTabBar>
 #include <QPixmap>
@@ -22,7 +23,7 @@ namespace BlackGui
 {
     //! Info area, hosting dockable widgets
     //! \sa CDockWidgetInfoArea
-    class CInfoArea : public QMainWindow
+    class CInfoArea : public QMainWindow, CEnableForFramelessWindow
     {
         Q_OBJECT
 
@@ -182,11 +183,11 @@ namespace BlackGui
         void setMarginsWhenDocked(int left, int top, int right, int bottom);
 
         //! Nested info areas
-        QList<CInfoArea *> getChildInfoAreas() { return this->findChildren<CInfoArea *>(); }
+        QList<CInfoArea *> getChildInfoAreas() const { return this->findChildren<CInfoArea *>(); }
 
         //! Direct dock widget areas, not the nested dock widget areas
         //! \remarks result stored in m_dockableWidgets
-        QList<CDockWidgetInfoArea *> initOwnDockWidgetInfoAreas();
+        QList<CDockWidgetInfoArea *> findOwnDockWidgetInfoAreas() const;
 
     private slots:
         //! Tab bar has been double clicked

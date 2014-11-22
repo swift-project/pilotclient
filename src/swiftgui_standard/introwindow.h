@@ -9,10 +9,11 @@
 
 //! \file
 
-#ifndef SAMPLE_INTROWINDOW_H
-#define SAMPLE_INTROWINDOW_H
+#ifndef STDGUI_INTROWINDOW_H
+#define STDGUI_INTROWINDOW_H
 
 #include "guimodeenums.h"
+#include "blackgui/enableforframelesswindow.h"
 #include <QDialog>
 #include <QScopedPointer>
 
@@ -31,7 +32,7 @@ public:
     ~CIntroWindow();
 
     //! Selected window mode
-    GuiModes::WindowMode getWindowMode() const;
+    BlackGui::CEnableForFramelessWindow::WindowMode getWindowMode() const;
 
     //! Get core mode
     GuiModes::CoreMode getCoreMode() const;

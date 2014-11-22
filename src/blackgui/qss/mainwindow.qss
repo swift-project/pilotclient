@@ -11,8 +11,8 @@ Used dynamic properties
 mainframeless (infobar.qss)
 **/
 
-/** putting background here works for framed, but not for frameless window **/
-#MainWindow {
+/** Main window **/
+QMainWindow {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
 }
