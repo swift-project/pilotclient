@@ -1,5 +1,13 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+#include "swiftguistd.h"
 #include "blackgui/models/atcstationlistmodel.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_network.h"
@@ -17,7 +25,7 @@ using namespace BlackMisc::Audio;
 /*
  * Load own aircraft
  */
-bool MainWindow::ps_reloadOwnAircraft()
+bool SwiftGuiStd::ps_reloadOwnAircraft()
 {
     if (!this->isContextNetworkAvailableCheck()) return false;
 
@@ -35,7 +43,7 @@ bool MainWindow::ps_reloadOwnAircraft()
 /*
 * Position
 */
-void MainWindow::setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude)
+void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude)
 {
     CCoordinateGeodetic coordinate(
         CLatitude::fromWgs84(wgsLatitude),
@@ -44,5 +52,5 @@ void MainWindow::setTestPosition(const QString &wgsLatitude, const QString &wgsL
 
     this->m_ownAircraft.setPosition(coordinate);
     this->m_ownAircraft.setAltitude(altitude);
-    this->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude, MainWindow::swiftGuiStandardOriginator());
+    this->getIContextOwnAircraft()->updateOwnPosition(coordinate, altitude, SwiftGuiStd::swiftGuiStandardOriginator());
 }

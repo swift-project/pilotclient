@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "swiftguistd.h"
+#include "ui_swiftguistd.h"
 #include "blackmisc/icon.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackgui/models/atcstationlistmodel.h"
@@ -21,6 +21,7 @@
 #include "blackmisc/logmessage.h"
 #include "blackmisc/notificationsounds.h"
 #include <QMouseEvent>
+#include <QMainWindow>
 
 using namespace BlackCore;
 using namespace BlackSound;
@@ -38,9 +39,10 @@ using namespace BlackMisc::Hardware;
 /*
  * Constructor
  */
-MainWindow::MainWindow(BlackGui::CMainWindow::WindowMode windowMode, QWidget *parent) :
-    BlackGui::CMainWindow(windowMode, parent),
-    ui(new Ui::MainWindow)
+SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent) :
+    QMainWindow(parent, CEnableForFramelessWindow::modeToWindowFlags(windowMode)),
+    CEnableForFramelessWindow(windowMode, true, this),
+    ui(new Ui::SwiftGuiStd)
 {
     // GUI
     ui->setupUi(this);
@@ -51,13 +53,13 @@ MainWindow::MainWindow(BlackGui::CMainWindow::WindowMode windowMode, QWidget *pa
 /*
  * Destructor
  */
-MainWindow::~MainWindow()
+SwiftGuiStd::~SwiftGuiStd()
 { }
 
 /*
  * Graceful shutdown
  */
-void MainWindow::performGracefulShutdown()
+void SwiftGuiStd::performGracefulShutdown()
 {
     if (!this->m_init) { return; }
     this->m_init = false;
@@ -100,7 +102,7 @@ void MainWindow::performGracefulShutdown()
 /*
  * Close event, window closes
  */
-void MainWindow::closeEvent(QCloseEvent *event)
+void SwiftGuiStd::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
     this->performGracefulShutdown();
@@ -111,12 +113,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 /*
  * Set main page
  */
-void MainWindow::ps_setMainPage(MainWindow::MainPageIndex mainPage)
+void SwiftGuiStd::ps_setMainPage(SwiftGuiStd::MainPageIndex mainPage)
 {
     this->ui->sw_MainMiddle->setCurrentIndex(mainPage);
 }
 
-void MainWindow::ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoArea)
+void SwiftGuiStd::ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoArea)
 {
     this->ps_setMainPageToInfoArea();
     this->ui->comp_MainInfoArea->selectArea(infoArea);
@@ -125,12 +127,12 @@ void MainWindow::ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoAre
 /*
  * Given main page selected?
  */
-bool MainWindow::isMainPageSelected(MainWindow::MainPageIndex mainPage) const
+bool SwiftGuiStd::isMainPageSelected(SwiftGuiStd::MainPageIndex mainPage) const
 {
     return this->ui->sw_MainMiddle->currentIndex() == static_cast<int>(mainPage);
 }
 
-void MainWindow::ps_loginRequested()
+void SwiftGuiStd::ps_loginRequested()
 {
     if (this->ui->sw_MainMiddle->currentIndex() == static_cast<int>(MainPageLogin))
     {
@@ -146,7 +148,7 @@ void MainWindow::ps_loginRequested()
 /*
  * Is the network context available?
  */
-bool MainWindow::isContextNetworkAvailableCheck()
+bool SwiftGuiStd::isContextNetworkAvailableCheck()
 {
     if (this->m_contextNetworkAvailable) return true;
     this->ps_displayStatusMessageInGui(CLogMessage(this).error("Network context not available, no updates this time"));
@@ -156,7 +158,7 @@ bool MainWindow::isContextNetworkAvailableCheck()
 /*
  * Is the audio context available?
  */
-bool MainWindow::isContextAudioAvailableCheck()
+bool SwiftGuiStd::isContextAudioAvailableCheck()
 {
     if (this->m_contextAudioAvailable) return true;
     this->ps_displayStatusMessageInGui(CLogMessage(this).error("Voice context not available"));
@@ -166,7 +168,7 @@ bool MainWindow::isContextAudioAvailableCheck()
 /*
  * Display a status message
  */
-void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
+void SwiftGuiStd::ps_displayStatusMessageInGui(const CStatusMessage &statusMessage)
 {
     if (!this->m_init) return;
     if (statusMessage.isRedundant()) return;
@@ -185,7 +187,7 @@ void MainWindow::ps_displayStatusMessageInGui(const CStatusMessage &statusMessag
     }
 }
 
-void MainWindow::ps_onChangedSetttings(uint typeValue)
+void SwiftGuiStd::ps_onChangedSetttings(uint typeValue)
 {
     IContextSettings::SettingsType type = static_cast<IContextSettings::SettingsType>(typeValue);
     if (type == IContextSettings::SettingsHotKeys) this->ps_registerHotkeyFunctions();
@@ -194,7 +196,7 @@ void MainWindow::ps_onChangedSetttings(uint typeValue)
 /*
 * Connection terminated
 */
-void MainWindow::ps_onConnectionTerminated()
+void SwiftGuiStd::ps_onConnectionTerminated()
 {
     this->updateGuiStatusInformation();
 }
@@ -202,7 +204,7 @@ void MainWindow::ps_onConnectionTerminated()
 /*
 * Connection status changed
 */
-void MainWindow::ps_onConnectionStatusChanged(uint /** from **/, uint to, const QString & /* message */)
+void SwiftGuiStd::ps_onConnectionStatusChanged(uint /** from **/, uint to, const QString & /* message */)
 {
     this->updateGuiStatusInformation();
     INetwork::ConnectionStatus newStatus = static_cast<INetwork::ConnectionStatus>(to);
@@ -227,7 +229,7 @@ void MainWindow::ps_onConnectionStatusChanged(uint /** from **/, uint to, const 
 /*
 * Timer event
 */
-void MainWindow::ps_handleTimerBasedUpdates()
+void SwiftGuiStd::ps_handleTimerBasedUpdates()
 {
     QObject *sender = QObject::sender();
     if (sender == this->m_timerContextWatchdog)
@@ -243,7 +245,7 @@ void MainWindow::ps_handleTimerBasedUpdates()
 /*
 * Context availability
 */
-void MainWindow::setContextAvailability()
+void SwiftGuiStd::setContextAvailability()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
     this->m_coreAvailable = this->getIContextApplication()->ping(t) == t;
@@ -254,7 +256,7 @@ void MainWindow::setContextAvailability()
 /*
 * Update GUI
 */
-void MainWindow::updateGuiStatusInformation()
+void SwiftGuiStd::updateGuiStatusInformation()
 {
     const QString now = QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss");
     QString network("unavailable");
@@ -273,7 +275,7 @@ void MainWindow::updateGuiStatusInformation()
 /*
  * Opacity 0-100
  */
-void MainWindow::ps_changeWindowOpacity(int opacity)
+void SwiftGuiStd::ps_changeWindowOpacity(int opacity)
 {
     qreal o = opacity / 100.0;
     o = o < 0.3 ? 0.3 : o;
@@ -285,7 +287,7 @@ void MainWindow::ps_changeWindowOpacity(int opacity)
 /*
  * Stay on top
  */
-void MainWindow::ps_toogleWindowStayOnTop()
+void SwiftGuiStd::ps_toogleWindowStayOnTop()
 {
     Qt::WindowFlags flags = this->windowFlags();
     if (Qt::WindowStaysOnTopHint & flags)
@@ -307,7 +309,7 @@ void MainWindow::ps_toogleWindowStayOnTop()
 /*
  * Hotkey functions
  */
-void MainWindow::ps_registerHotkeyFunctions()
+void SwiftGuiStd::ps_registerHotkeyFunctions()
 {
     CInputManager *m_inputManager = BlackCore::CInputManager::getInstance();
 
@@ -330,7 +332,7 @@ void MainWindow::ps_registerHotkeyFunctions()
 /*
  * Styles
  */
-void MainWindow::ps_onStyleSheetsChanged()
+void SwiftGuiStd::ps_onStyleSheetsChanged()
 {
     const QString s = CStyleSheetUtility::instance().styles(
     {
@@ -341,7 +343,7 @@ void MainWindow::ps_onStyleSheetsChanged()
     this->setStyleSheet(s);
 }
 
-void MainWindow::ps_onCurrentMainWidgetChanged(int currentIndex)
+void SwiftGuiStd::ps_onCurrentMainWidgetChanged(int currentIndex)
 {
     emit currentMainInfoAreaChanged(this->ui->sw_MainMiddle->currentWidget());
     Q_UNUSED(currentIndex);
@@ -350,7 +352,7 @@ void MainWindow::ps_onCurrentMainWidgetChanged(int currentIndex)
 /*
  * Notification
  */
-void MainWindow::playNotifcationSound(CNotificationSounds::Notification notification) const
+void SwiftGuiStd::playNotifcationSound(CNotificationSounds::Notification notification) const
 {
     if (!this->m_contextAudioAvailable) return;
     if (!this->ui->comp_MainInfoArea->getSettingsComponent()->playNotificationSounds()) return;

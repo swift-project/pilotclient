@@ -9,8 +9,8 @@
 
 //! \file
 
-#ifndef STDGUI_SWIFTGUI_H
-#define STDGUI_SWIFTGUI_H
+#ifndef STDGUI_SWIFTGUISTD_H
+#define STDGUI_SWIFTGUISTD_H
 
 // clash with struct interface in objbase.h used to happen
 #pragma push_macro("interface")
@@ -29,7 +29,7 @@
 #include "blackgui/models/userlistmodel.h"
 #include "blackgui/models/statusmessagelistmodel.h"
 #include "blackgui/models/keyboardkeylistmodel.h"
-#include "blackgui/mainwindow.h"
+#include "blackgui/enableforframelesswindow.h"
 #include "blackgui/managedstatusbar.h"
 #include "blackmisc/nwtextmessage.h"
 #include "blackmisc/loghandler.h"
@@ -41,11 +41,12 @@
 #include <QLabel>
 #include <QTimer>
 
-namespace Ui { class MainWindow; }
+namespace Ui { class SwiftGuiStd; }
 
 //! swift GUI
-class MainWindow :
-    public BlackGui::CMainWindow,
+class SwiftGuiStd :
+    public QMainWindow,
+    public BlackGui::CEnableForFramelessWindow,
     public BlackGui::Components::CEnableForRuntime
 {
     Q_OBJECT
@@ -61,16 +62,16 @@ public:
     };
 
     //! Constructor
-    explicit MainWindow(BlackGui::CMainWindow::WindowMode windowMode, QWidget *parent = nullptr);
+    explicit SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent = nullptr);
 
     //! Destructor
-    ~MainWindow();
+    ~SwiftGuiStd();
 
     //! Init data
     void init(const BlackCore::CRuntimeConfig &runtimeConfig);
 
     //! Log message category
-    static QString getMessageCategory() { return "swift.gui.component.mainwindow"; }
+    static QString getMessageCategory() { return "swift.gui.stdgui"; }
 
 signals:
     //! GUI is shutting down, request graceful shutdown
@@ -81,16 +82,22 @@ signals:
     void currentMainInfoAreaChanged(const QWidget *currentWidget);
 
 protected:
-    //! Close event, e.g. when window is closed
-    void closeEvent(QCloseEvent *event);
+    //! \copy QMainWindow::mouseMoveEvent
+    void mouseMoveEvent(QMouseEvent *event) override { if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); } ; }
+
+    //! \copy QMainWindow::mousePressEvent
+    void mousePressEvent(QMouseEvent *event) override { if (!handleMousePressEvent(event)) { QMainWindow::mousePressEvent(event); } }
+
+    //! \copydoc QMainWindow::closeEvent
+    void closeEvent(QCloseEvent *event) override;
 
 private:
-    QScopedPointer<Ui::MainWindow> ui;
+    QScopedPointer<Ui::SwiftGuiStd> ui;
     bool m_init = false;
     BlackGui::Components::CInfoWindowComponent *m_compInfoWindow = nullptr; //!< the info window (popup
     BlackGui::CManagedStatusBar m_statusBar;
     BlackInput::IKeyboard      *m_keyboard = nullptr; //!< hotkeys
-    BlackMisc::CLogSubscriber   m_logSubscriber { this, &MainWindow::ps_displayStatusMessageInGui };
+    BlackMisc::CLogSubscriber   m_logSubscriber { this, &SwiftGuiStd::ps_displayStatusMessageInGui };
 
     // contexts
     bool m_coreAvailable           = false;

@@ -7,8 +7,8 @@
  * contained in the LICENSE file.
  */
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "swiftguistd.h"
+#include "ui_swiftguistd.h"
 #include "blackcore/dbus_server.h"
 #include "blackcore/context_all_interfaces.h"
 #include "blackgui/stylesheetutility.h"
@@ -36,9 +36,11 @@ using namespace BlackGui::Components;
 /*
  * Init data
  */
-void MainWindow::init(const CRuntimeConfig &runtimeConfig)
+void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
 {
     if (this->m_init) return;
+
+    this->setVisible(false);
 
     // icon, initial position where intro was before
     this->setWindowIcon(CIcons::swift24());
@@ -76,11 +78,11 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
     this->m_statusBar.initStatusBar(this->ui->sb_MainStatusBar);
 
     // signal / slots contexts / timers
-    connect(this->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &MainWindow::ps_onConnectionTerminated);
-    connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &MainWindow::ps_onConnectionStatusChanged);
+    connect(this->getIContextNetwork(), &IContextNetwork::connectionTerminated, this, &SwiftGuiStd::ps_onConnectionTerminated);
+    connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &SwiftGuiStd::ps_onConnectionStatusChanged);
     connect(this->getIContextNetwork(), &IContextNetwork::textMessagesReceived, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::onTextMessageReceived);
-    connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &MainWindow::ps_handleTimerBasedUpdates);
-    connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &MainWindow::ps_onChangedSetttings);
+    connect(this->m_timerContextWatchdog, &QTimer::timeout, this, &SwiftGuiStd::ps_handleTimerBasedUpdates);
+    connect(this->getIContextSettings(), &IContextSettings::changedSettings, this, &SwiftGuiStd::ps_onChangedSetttings);
 
     // log messages
     m_logSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
@@ -113,24 +115,26 @@ void MainWindow::init(const CRuntimeConfig &runtimeConfig)
 
     // do this as last statement, so it can be used as flag
     // whether init has been completed
+    this->setVisible(true);
+
     this->m_init = true;
 }
 
 //
 // GUI signals
 //
-void MainWindow::initGuiSignals()
+void SwiftGuiStd::initGuiSignals()
 {
     // Remark: With new style, only methods of same signature can be connected
     // This is why we still have some "old" SIGNAL/SLOT connections here
 
     // main window
-    connect(this->ui->sw_MainMiddle, &QStackedWidget::currentChanged, this, &MainWindow::ps_onCurrentMainWidgetChanged);
+    connect(this->ui->sw_MainMiddle, &QStackedWidget::currentChanged, this, &SwiftGuiStd::ps_onCurrentMainWidgetChanged);
 
     // main keypad
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::selectedMainInfoAreaDockWidget, this, &MainWindow::ps_setMainPageInfoArea);
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &MainWindow::ps_loginRequested);
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &MainWindow::ps_changeWindowOpacity);
+    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::selectedMainInfoAreaDockWidget, this, &SwiftGuiStd::ps_setMainPageInfoArea);
+    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &SwiftGuiStd::ps_loginRequested);
+    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &SwiftGuiStd::ps_changeWindowOpacity);
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, this->ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
     connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
 
@@ -138,23 +142,23 @@ void MainWindow::initGuiSignals()
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::commandEntered, this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::parseCommandLine);
 
     // menu
-    connect(this->ui->menu_ReloadSettings, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
-    connect(this->ui->menu_TestLocationsEDDF, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
-    connect(this->ui->menu_TestLocationsEDDM, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
-    connect(this->ui->menu_TestLocationsEDNX, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
-    connect(this->ui->menu_TestLocationsEDRY, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
-    connect(this->ui->menu_FileClose, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
-    connect(this->ui->menu_FileSettingsDirectory, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
-    connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
-    connect(this->ui->menu_FileReloadStyleSheets, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
-    connect(this->ui->menu_FileFont, &QAction::triggered, this, &MainWindow::ps_onMenuClicked);
+    connect(this->ui->menu_ReloadSettings, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_TestLocationsEDDF, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_TestLocationsEDDM, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_TestLocationsEDNX, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_TestLocationsEDRY, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_FileClose, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_FileSettingsDirectory, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_FileResetSettings, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_FileReloadStyleSheets, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
+    connect(this->ui->menu_FileFont, &QAction::triggered, this, &SwiftGuiStd::ps_onMenuClicked);
 
     // command line / text messages
     connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->m_compInfoWindow, &CInfoWindowComponent::display);
 
     // settings (GUI component), styles
-    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &MainWindow::ps_changeWindowOpacity);
-    connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &MainWindow::ps_onStyleSheetsChanged);
+    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::ps_changeWindowOpacity);
+    connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &SwiftGuiStd::ps_onStyleSheetsChanged);
 
     // sliders
     connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedUsersUpdateInterval, this->ui->comp_MainInfoArea->getUserComponent(), &CUserComponent::setUpdateIntervalSeconds);
@@ -162,10 +166,10 @@ void MainWindow::initGuiSignals()
     connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedAtcStationsUpdateInterval, this->ui->comp_MainInfoArea->getAtcStationComponent(), &::CAtcStationComponent::setUpdateIntervalSeconds);
 
     // login
-    connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffCancelled, this, &MainWindow::ps_setMainPageToInfoArea);
-    connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this, &MainWindow::ps_setMainPageToInfoArea);
+    connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffCancelled, this, &SwiftGuiStd::ps_setMainPageToInfoArea);
+    connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this, &SwiftGuiStd::ps_setMainPageToInfoArea);
     connect(this->ui->comp_Login, &CLoginComponent::loginOrLogoffSuccessful, this->ui->comp_MainInfoArea->getFlightPlanComponent(), &CFlightPlanComponent::loginDataSet);
-    connect(this, &MainWindow::currentMainInfoAreaChanged, this->ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
+    connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, this->ui->comp_Login, &CLoginComponent::mainInfoAreaChanged);
     connect(this->ui->comp_Login, &CLoginComponent::requestNetworkSettings, this->ui->comp_MainInfoArea->getFlightPlanComponent(), [ = ]()
     {
         this->ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
@@ -177,7 +181,7 @@ void MainWindow::initGuiSignals()
 /*
  * Init data when started
  */
-void MainWindow::initialDataReads()
+void SwiftGuiStd::initialDataReads()
 {
     qint64 t = QDateTime::currentMSecsSinceEpoch();
     this->m_coreAvailable = (this->getIContextNetwork()->isUsingImplementingObject() || (this->getIContextApplication()->ping(t) == t));
@@ -195,7 +199,7 @@ void MainWindow::initialDataReads()
 /*
  * Start update timers
  */
-void MainWindow::startUpdateTimersWhenConnected()
+void SwiftGuiStd::startUpdateTimersWhenConnected()
 {
     this->ui->comp_MainInfoArea->getAtcStationComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getAtcUpdateIntervalSeconds());
     this->ui->comp_MainInfoArea->getAircraftComponent()->setUpdateIntervalSeconds(this->ui->comp_MainInfoArea->getSettingsComponent()->getAircraftUpdateIntervalSeconds());
@@ -205,7 +209,7 @@ void MainWindow::startUpdateTimersWhenConnected()
 /*
  * Stop udate timers
  */
-void MainWindow::stopUpdateTimersWhenDisconnected()
+void SwiftGuiStd::stopUpdateTimersWhenDisconnected()
 {
     this->ui->comp_MainInfoArea->getAtcStationComponent()->stopTimer();
     this->ui->comp_MainInfoArea->getAircraftComponent()->stopTimer();
@@ -215,7 +219,7 @@ void MainWindow::stopUpdateTimersWhenDisconnected()
 /*
  * Stop all timers
  */
-void MainWindow::stopAllTimers(bool disconnect)
+void SwiftGuiStd::stopAllTimers(bool disconnect)
 {
     this->m_timerContextWatchdog->stop();
     this->stopUpdateTimersWhenDisconnected();

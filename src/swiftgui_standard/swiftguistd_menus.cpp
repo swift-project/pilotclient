@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "swiftguistd.h"
+#include "ui_swiftguistd.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackmisc/statusmessagelist.h"
 #include "blackmisc/avaltitude.h"
@@ -18,7 +18,7 @@ using namespace BlackMisc::Aviation;
 /*
  * Menu clicked
  */
-void MainWindow::ps_onMenuClicked()
+void SwiftGuiStd::ps_onMenuClicked()
 {
     QObject *sender = QObject::sender();
     if (sender == this->ui->menu_TestLocationsEDRY)
@@ -68,8 +68,7 @@ void MainWindow::ps_onMenuClicked()
     }
 }
 
-
-void MainWindow::initDynamicMenus()
+void SwiftGuiStd::initDynamicMenus()
 {
     Q_ASSERT(this->ui->menu_InfoAreas);
     Q_ASSERT(this->ui->comp_MainInfoArea);

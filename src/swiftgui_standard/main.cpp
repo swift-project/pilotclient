@@ -8,7 +8,7 @@
  */
 
 #include "introwindow.h"
-#include "mainwindow.h"
+#include "swiftguistd.h"
 #include "guimodeenums.h"
 #include "blackgui/stylesheetutility.h"
 #include "blackcore/blackcorefreefunctions.h"
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     a.setStyleSheet(s);
 
     // modes
-    BlackGui::CMainWindow::WindowMode windowMode;
+    BlackGui::CEnableForFramelessWindow::WindowMode windowMode;
 
     // Dialog to decide external or internal core
     CIntroWindow intro;
@@ -100,9 +100,10 @@ int main(int argc, char *argv[])
     intro.close();
 
     // show window
-    MainWindow w(windowMode);
-    w.show();
+    SwiftGuiStd w(windowMode);
     w.init(runtimeConfig); // object is complete by now
+    w.show();
+
     int r = a.exec();
     return r;
 }
