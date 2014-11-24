@@ -222,7 +222,7 @@ namespace BlackGui
         return dirPath;
     }
 
-    void CStyleSheetUtility::useStyleSheetInDerivedWidget(QWidget *usedWidget)
+    void CStyleSheetUtility::useStyleSheetInDerivedWidget(QWidget *usedWidget, QStyle::PrimitiveElement element)
     {
         Q_ASSERT(usedWidget);
         if (!usedWidget) { return; }
@@ -231,6 +231,6 @@ namespace BlackGui
         QStyleOption opt;
         opt.initFrom(usedWidget);
         QPainter p(usedWidget);
-        usedWidget->style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, usedWidget);
+        usedWidget->style()->drawPrimitive(element, &opt, &p, usedWidget);
     }
 }

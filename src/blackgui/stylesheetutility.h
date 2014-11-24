@@ -16,6 +16,7 @@
 #include <QObject>
 #include <QFont>
 #include <QStringList>
+#include <QStyle>
 
 namespace BlackGui
 {
@@ -130,7 +131,7 @@ namespace BlackGui
 
         //! Use style sheets in derived widgets
         //! \sa QWidget::paintEvent
-        static void useStyleSheetInDerivedWidget(QWidget *derivedWidget);
+        static void useStyleSheetInDerivedWidget(QWidget *derivedWidget, QStyle::PrimitiveElement element = QStyle::PE_Widget);
 
     signals:
         //! Sheets have been changed
