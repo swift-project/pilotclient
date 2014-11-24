@@ -22,7 +22,7 @@ namespace BlackGui
 {
     CDockWidgetInfoBar::CDockWidgetInfoBar(QWidget *parent) : CDockWidget(parent)
     {
-        this->setProperty("mainframeless", CGuiUtility::isMainWindowFrameless());
+        this->setProperty("frameless", CGuiUtility::isMainWindowFrameless());
         this->setMarginsWhenDocked(0, 0, 0, -1);
         this->setWindowTitle("Info bar");
         this->setWindowIcon(CIcons::swift24());

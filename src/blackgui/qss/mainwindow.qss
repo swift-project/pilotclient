@@ -8,7 +8,7 @@ there is no opacity with background image, so we need semitransparent images
 use -- instead of :: for namespaces
 
 Used dynamic properties
-mainframeless (infobar.qss)
+frameless (infobar.qss)
 **/
 
 /** Main window **/
@@ -53,7 +53,7 @@ QAbstractScrollArea #pg_StatusPageConsole { background-color: black; }
   border: 0px;
 }
 
-#wi_CentralWidgetOutside[mainframeless="true"] {
+#wi_CentralWidgetOutside[frameless="true"] {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
   margin: 0px;
