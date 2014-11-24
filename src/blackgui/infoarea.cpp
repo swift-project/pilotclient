@@ -28,7 +28,7 @@ namespace BlackGui
     CInfoArea::CInfoArea(QWidget *parent) :
         QMainWindow(parent), CEnableForFramelessWindow(CEnableForFramelessWindow::WindowNormal, false, this)
     {
-        this->ps_setInfoAreaFloating(this->m_infoAreaFloating);
+        this->ps_setWholeInfoAreaFloating(this->m_infoAreaFloating);
         this->setWindowIcon(CIcons::swift24());
     }
 
@@ -75,7 +75,7 @@ namespace BlackGui
         {
             menu->addAction(CIcons::dockTop16(), "Dock all", this, SLOT(dockAllWidgets()));
             menu->addAction(CIcons::floatAll16(), "Float all", this, SLOT(floatAllWidgets()));
-            menu->addAction(CIcons::floatOne16(), QString("Dock / float '%1'").arg(this->windowTitle()), this, SLOT(toggleFloating()));
+            menu->addAction(CIcons::floatOne16(), QString("Dock / float '%1'").arg(this->windowTitle()), this, SLOT(toggleFloatingWholeInfoArea()));
             QAction *lockTabBarMenuAction = new QAction(menu);
             lockTabBarMenuAction->setObjectName(this->objectName().append("LockTabBar"));
             lockTabBarMenuAction->setIconText("Lock tab bar");
@@ -257,12 +257,12 @@ namespace BlackGui
         }
     }
 
-    void CInfoArea::toggleFloating()
+    void CInfoArea::toggleFloatingWholeInfoArea()
     {
-        this->ps_setInfoAreaFloating(!this->m_infoAreaFloating);
+        this->ps_setWholeInfoAreaFloating(!this->m_infoAreaFloating);
     }
 
-    void CInfoArea::toggleFloating(int areaIndex)
+    void CInfoArea::toggleFloatingByIndex(int areaIndex)
     {
         if (!this->isValidAreaIndex(areaIndex)) { return; }
         CDockWidgetInfoArea *dw = this->m_dockWidgetInfoAreas.at(areaIndex);
@@ -363,7 +363,7 @@ namespace BlackGui
         }
     }
 
-    void CInfoArea::ps_setInfoAreaFloating(bool floating)
+    void CInfoArea::ps_setWholeInfoAreaFloating(bool floating)
     {
         // float whole info area
         this->m_infoAreaFloating = floating;
@@ -384,6 +384,8 @@ namespace BlackGui
             this->setWindowFlags(this->windowFlags() & ~Qt::Window);
             this->setVisible(true); // after redocking this is required
         }
+
+        emit changedWholeInfoAreaFloating(floating);
     }
 
     void CInfoArea::tabifyAllWidgets()
@@ -414,8 +416,8 @@ namespace BlackGui
                 after->setFloating(false);
                 after->setVisible(true);
 
-                // reset floating flag
-                after->resetWasAlreadyFLoating();
+                // reset floating flag, we want new resizing and position for first real floating
+                after->resetWasAlreadyFloating();
             }
             else
             {
@@ -714,7 +716,7 @@ namespace BlackGui
     {
         if (this->isFloating())
         {
-            this->toggleFloating();
+            this->toggleFloatingWholeInfoArea();
             event->setAccepted(false); // refuse -> do not close
         }
         else

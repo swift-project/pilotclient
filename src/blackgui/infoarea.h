@@ -64,6 +64,9 @@ namespace BlackGui
         //! Status of info area changed
         void changedInfoAreaStatus(int currentTabIndex, QList<int> dockedAreas, QList<int> floatingAreas);
 
+        //! Whole info area floating
+        void changedWholeInfoAreaFloating(bool floating);
+
     public slots:
         //! Dock all widgets
         void dockAllWidgets();
@@ -75,10 +78,10 @@ namespace BlackGui
         void floatAllWidgets();
 
         //! Toggle dock / floating of the whole info area
-        virtual void toggleFloating();
+        virtual void toggleFloatingWholeInfoArea();
 
         //! Toggle floating of index
-        void toggleFloating(int areaIndex);
+        void toggleFloatingByIndex(int areaIndex);
 
         //! Toggle visibilty
         void toggleVisibility(int areaIndex);
@@ -218,7 +221,7 @@ namespace BlackGui
         void ps_setDockArea(Qt::DockWidgetArea area);
 
         //! Dock / floating of the whole info area
-        void ps_setInfoAreaFloating(bool floating);
+        void ps_setWholeInfoAreaFloating(bool floating);
 
         //! Emit current status, \sa changedInfoAreaStatus
         void ps_emitInfoAreaStatus();

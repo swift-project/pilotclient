@@ -18,7 +18,9 @@
 
 namespace BlackGui
 {
-    CDockWidget::CDockWidget(QWidget *parent) : QDockWidget(parent)
+    CDockWidget::CDockWidget(QWidget *parent) :
+        QDockWidget(parent),
+        CEnableForFramelessWindow(CEnableForFramelessWindow::WindowNormal, false, this)
     {
 
         this->ps_onStyleSheetsChanged();
@@ -117,8 +119,8 @@ namespace BlackGui
 
     void CDockWidget::paintEvent(QPaintEvent *event)
     {
-        Q_UNUSED(event);
-        CStyleSheetUtility::useStyleSheetInDerivedWidget(this);
+        CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_FrameDockWidget);
+        QDockWidget::paintEvent(event);
     }
 
     void CDockWidget::addToContextMenu(QMenu *contextMenu) const
@@ -168,6 +170,13 @@ namespace BlackGui
             this->setContentsMargins(this->m_marginsWhenFloating);
             if (!this->m_wasAlreadyFloating) { this->initialFloating(); }
             this->m_statusBar.show();
+
+            if (this->m_wasAlreadyFloating || this->m_resetedFloating)
+            {
+                //! \todo dock widget frameless
+                // this->setFrameless(topLevel);
+            }
+
             this->m_wasAlreadyFloating = true;
         }
         else
@@ -182,7 +191,12 @@ namespace BlackGui
             {
                 this->setMinimumSize(this->m_initialDockedMinimumSize);
             }
+
+            // frameless
+            this->setFrameless(topLevel);
         }
+
+        // relay
         emit this->widgetTopLevelChanged(this, topLevel);
     }
 

@@ -82,7 +82,7 @@ namespace BlackGui
 
         public slots:
             //! Toggle floating of given area
-            void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloating(static_cast<int>(infoArea)); }
+            void toggleFloating(InfoArea infoArea) { CInfoArea::toggleFloatingByIndex(static_cast<int>(infoArea)); }
 
             //! Select area
             void selectArea(InfoArea infoArea) { CInfoArea::selectArea(static_cast<int>(infoArea)); }

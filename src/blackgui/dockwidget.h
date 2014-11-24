@@ -13,6 +13,7 @@
 #define BLACKGUI_DOCKWIDGET_H
 
 #include "managedstatusbar.h"
+#include "enableforframelesswindow.h"
 
 #include <QDockWidget>
 #include <QTabWidget>
@@ -31,7 +32,9 @@ namespace BlackGui
     //! \sa CInfoArea
     //! \sa CDockWidgetInfoArea
     //! \sa CDockWidgetInfoBar
-    class CDockWidget : public QDockWidget
+    class CDockWidget :
+        public QDockWidget,
+        public CEnableForFramelessWindow
     {
         Q_OBJECT
 
@@ -77,7 +80,7 @@ namespace BlackGui
         void showTitleWhenDocked(bool show);
 
         //! Reset first time floating, marked as never floated before
-        void resetWasAlreadyFLoating() { this->m_wasAlreadyFloating = false; }
+        void resetWasAlreadyFloating() { this->m_wasAlreadyFloating = false; this->m_resetedFloating = true; }
 
         //! Was widget already floating?
         bool wasAlreadyFloating() const { return this->m_wasAlreadyFloating; }
@@ -118,6 +121,12 @@ namespace BlackGui
         //! \copydoc QWidget::paintEvent
         virtual void paintEvent(QPaintEvent *event) override;
 
+        //! \copy QMainWindow::mouseMoveEvent
+        virtual void mouseMoveEvent(QMouseEvent *event) override { if (!handleMouseMoveEvent(event)) { QDockWidget::mouseMoveEvent(event); } ; }
+
+        //! \copy QMainWindow::mousePressEvent
+        virtual void mousePressEvent(QMouseEvent *event) override { if (!handleMousePressEvent(event)) { QDockWidget::mousePressEvent(event); } }
+
         //! Contribute to menu
         virtual void addToContextMenu(QMenu *contextMenu) const;
 
@@ -153,6 +162,7 @@ namespace BlackGui
         bool m_allowStatusBar        = true;
         bool m_windowTitleWhenDocked = true;
         bool m_wasAlreadyFloating    = false;
+        bool m_resetedFloating       = false;
         bool m_selected              = false;        //!< selected when tabbed
         bool m_dockWidgetVisible     = false;        //!< logical visible, not to be confused with QDockWidget::isVisible()
 
