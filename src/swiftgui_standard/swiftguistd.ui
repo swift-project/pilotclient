@@ -90,7 +90,7 @@
       <property name="styleSheet">
        <string notr="true"/>
       </property>
-      <layout class="QGridLayout" name="gl_CentralFrameInside">
+      <layout class="QVBoxLayout" name="vl_CentralFrameInside">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -103,7 +103,7 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="0" column="0">
+       <item>
         <widget class="QStackedWidget" name="sw_MainMiddle">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -173,10 +173,10 @@
          </widget>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item>
         <widget class="BlackGui::Components::CMainKeypadAreaComponent" name="comp_MainKeypadArea">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>

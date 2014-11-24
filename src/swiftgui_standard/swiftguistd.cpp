@@ -46,7 +46,7 @@ SwiftGuiStd::SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowM
 {
     // GUI
     ui->setupUi(this);
-    this->ui->wi_CentralWidgetOutside->setProperty("mainframeless", this->isFrameless());
+    this->ui->wi_CentralWidgetOutside->setProperty("frameless", this->isFrameless());
     this->m_compInfoWindow = new CInfoWindowComponent(this); // setupUi has to be first!
 }
 
@@ -106,7 +106,6 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event);
     this->performGracefulShutdown();
-    // if (this->sender() != this) QMainWindow::closeEvent(event);
     QApplication::exit();
 }
 
@@ -130,6 +129,19 @@ void SwiftGuiStd::ps_setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoAr
 bool SwiftGuiStd::isMainPageSelected(SwiftGuiStd::MainPageIndex mainPage) const
 {
     return this->ui->sw_MainMiddle->currentIndex() == static_cast<int>(mainPage);
+}
+
+void SwiftGuiStd::hideMainPage(bool hide)
+{
+    //! \todo further implement hide main page
+    if (hide)
+    {
+
+    }
+    else
+    {
+
+    }
 }
 
 void SwiftGuiStd::ps_loginRequested()
@@ -275,7 +287,7 @@ void SwiftGuiStd::updateGuiStatusInformation()
 /*
  * Opacity 0-100
  */
-void SwiftGuiStd::ps_changeWindowOpacity(int opacity)
+void SwiftGuiStd::ps_onChangedWindowOpacity(int opacity)
 {
     qreal o = opacity / 100.0;
     o = o < 0.3 ? 0.3 : o;
@@ -315,12 +327,12 @@ void SwiftGuiStd::ps_registerHotkeyFunctions()
 
     m_inputManager->registerHotkeyFunc(CHotkeyFunction::Opacity50(), this, [ this ](bool isPressed)
     {
-        if (isPressed) this->ps_changeWindowOpacity(50);
+        if (isPressed) this->ps_onChangedWindowOpacity(50);
     });
 
     m_inputManager->registerHotkeyFunc(CHotkeyFunction::Opacity100(), this, [ this ](bool isPressed)
     {
-        if (isPressed) this->ps_changeWindowOpacity(100);
+        if (isPressed) this->ps_onChangedWindowOpacity(100);
     });
 
     m_inputManager->registerHotkeyFunc(CHotkeyFunction::ToogleWindowsStayOnTop(), this, [ this ](bool isPressed)
@@ -343,10 +355,22 @@ void SwiftGuiStd::ps_onStyleSheetsChanged()
     this->setStyleSheet(s);
 }
 
+
+/*
+ * Main widget (login, main info area...)
+ */
 void SwiftGuiStd::ps_onCurrentMainWidgetChanged(int currentIndex)
 {
     emit currentMainInfoAreaChanged(this->ui->sw_MainMiddle->currentWidget());
     Q_UNUSED(currentIndex);
+}
+
+/*
+ * Main info area floating?
+ */
+void SwiftGuiStd::ps_onChangedMainInfoAreaFloating(bool floating)
+{
+    this->hideMainPage(floating);
 }
 
 /*

@@ -52,10 +52,15 @@ void SwiftGuiStd::init(const CRuntimeConfig &runtimeConfig)
     // http://stackoverflow.com/questions/18316710/frameless-and-transparent-window-qt5
     if (this->isFrameless())
     {
+        // wrap menu in layout, add button to menu bar and insert on top
         QHBoxLayout *menuBarLayout = this->addFramelessCloseButton(this->ui->mb_MainMenuBar);
         this->ui->vl_CentralWidgetOutside->insertLayout(0, menuBarLayout, 0);
 
-        // move the status bar intothe frame (otherwise it is dangling outside)
+        // now insert the dock widget info bar into the widget
+        this->ui->vl_CentralWidgetOutside->insertWidget(1, this->ui->dw_InfoBarStatus);
+
+        // move the status bar into the frame
+        // (otherwise it is dangling outside the frame as it belongs to the window)
         this->ui->sb_MainStatusBar->setParent(this->ui->wi_CentralWidgetOutside);
         this->ui->vl_CentralWidgetOutside->addWidget(this->ui->sb_MainStatusBar, 0);
 
@@ -134,7 +139,7 @@ void SwiftGuiStd::initGuiSignals()
     // main keypad
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::selectedMainInfoAreaDockWidget, this, &SwiftGuiStd::ps_setMainPageInfoArea);
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::connectPressed, this, &SwiftGuiStd::ps_loginRequested);
-    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &SwiftGuiStd::ps_changeWindowOpacity);
+    connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::changedOpacity, this , &SwiftGuiStd::ps_onChangedWindowOpacity);
     connect(this->ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::identPressed, this->ui->comp_MainInfoArea->getCockpitComponent(), &CCockpitComponent::setSelectedTransponderModeStateIdent);
     connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedInfoAreaStatus, ui->comp_MainKeypadArea, &CMainKeypadAreaComponent::onMainInfoAreaChanged);
 
@@ -157,7 +162,7 @@ void SwiftGuiStd::initGuiSignals()
     connect(this->ui->comp_MainInfoArea->getTextMessageComponent(), &CTextMessageComponent::displayInInfoWindow, this->m_compInfoWindow, &CInfoWindowComponent::display);
 
     // settings (GUI component), styles
-    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::ps_changeWindowOpacity);
+    connect(this->ui->comp_MainInfoArea->getSettingsComponent(), &CSettingsComponent::changedWindowsOpacity, this, &SwiftGuiStd::ps_onChangedWindowOpacity);
     connect(&CStyleSheetUtility::instance(), &CStyleSheetUtility::styleSheetsChanged, this, &SwiftGuiStd::ps_onStyleSheetsChanged);
 
     // sliders
@@ -176,6 +181,8 @@ void SwiftGuiStd::initGuiSignals()
         this->ui->comp_MainInfoArea->getSettingsComponent()->setSettingsTab(CSettingsComponent::SettingTabNetwork);
     });
 
+    // main info area
+    connect(this->ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedWholeInfoAreaFloating, this, &SwiftGuiStd::ps_onChangedMainInfoAreaFloating);
 }
 
 /*

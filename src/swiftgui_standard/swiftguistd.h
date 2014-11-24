@@ -62,7 +62,7 @@ public:
     };
 
     //! Constructor
-    explicit SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent = nullptr);
+    SwiftGuiStd(BlackGui::CEnableForFramelessWindow::WindowMode windowMode, QWidget *parent = nullptr);
 
     //! Destructor
     ~SwiftGuiStd();
@@ -83,13 +83,13 @@ signals:
 
 protected:
     //! \copy QMainWindow::mouseMoveEvent
-    void mouseMoveEvent(QMouseEvent *event) override { if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); } ; }
+    virtual void mouseMoveEvent(QMouseEvent *event) override { if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); } ; }
 
     //! \copy QMainWindow::mousePressEvent
-    void mousePressEvent(QMouseEvent *event) override { if (!handleMousePressEvent(event)) { QMainWindow::mousePressEvent(event); } }
+    virtual void mousePressEvent(QMouseEvent *event) override { if (!handleMousePressEvent(event)) { QMainWindow::mousePressEvent(event); } }
 
     //! \copydoc QMainWindow::closeEvent
-    void closeEvent(QCloseEvent *event) override;
+    virtual void closeEvent(QCloseEvent *event) override;
 
 private:
     QScopedPointer<Ui::SwiftGuiStd> ui;
@@ -105,6 +105,8 @@ private:
     bool m_contextAudioAvailable   = false;
     QTimer *m_timerContextWatchdog = nullptr;     //!< core available?
     BlackMisc::Aviation::CAircraft m_ownAircraft; //!< own aircraft's state
+    QSize m_windowMinSizeWithMainPageShown;
+    QSize m_windowMinSizeWithMainPageHidden;
 
     // cockpit
     QString m_transponderResetValue;         //!< Temp. storage of XPdr mode to reset, req. until timer allows singleShoot with Lambdas
@@ -151,6 +153,9 @@ private:
      * \return
      */
     bool isMainPageSelected(MainPageIndex mainPage) const;
+
+    //! Show or hide the main Page
+    void hideMainPage(bool hide);
 
     //! Start all update timers
     void startUpdateTimersWhenConnected();
@@ -226,7 +231,7 @@ private slots:
      * \brief changeOpacity
      * \param opacity 0-100
      */
-    void ps_changeWindowOpacity(int opacity = -1);
+    void ps_onChangedWindowOpacity(int opacity = -1);
 
     //! Toogle Windows stay on top
     void ps_toogleWindowStayOnTop();
@@ -240,6 +245,8 @@ private slots:
     //! Main info area current widget changed
     void ps_onCurrentMainWidgetChanged(int currentIndex);
 
+    //! Whole main info area floating
+    void ps_onChangedMainInfoAreaFloating(bool floating);
 };
 
 #pragma pop_macro("interface")
