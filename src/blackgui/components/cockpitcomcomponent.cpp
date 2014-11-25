@@ -58,26 +58,24 @@ namespace BlackGui
         {
 
             // SELCAL pairs in cockpit
-            this->ui->cb_ComPanelSelcalSelector1->clear();
-            this->ui->cb_ComPanelSelcalSelector2->clear();
-            this->ui->cb_ComPanelSelcalSelector1->addItems(BlackMisc::Aviation::CSelcal::codePairs());
-            this->ui->cb_ComPanelSelcalSelector2->addItems(BlackMisc::Aviation::CSelcal::codePairs());
+            this->ui->frp_ComPanelSelcalBottom->clear();
             connect(this->ui->pb_ComPanelSelcalTest, &QPushButton::clicked, this, &CCockpitComComponent::ps_testSelcal);
 
             // COM GUI events
             connect(this->ui->pb_ComPanelCom1Toggle, &QPushButton::clicked, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->pb_ComPanelCom2Toggle, &QPushButton::clicked, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
-
             connect(this->ui->ds_ComPanelCom1Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->ds_ComPanelCom2Active, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->ds_ComPanelCom1Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->ds_ComPanelCom2Standby, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->sbp_ComPanelTransponder, &QDoubleSpinBox::editingFinished, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
             connect(this->ui->cbp_ComPanelTransponderMode, &CTransponderModeSelector::transponderModeChanged, this, &CCockpitComComponent::ps_guiChangedCockpitValues);
+            connect(this->ui->frp_ComPanelSelcalBottom, &CSelcalCodeSelector::valueChanged, this, &CCockpitComComponent::ps_guiChangedSelcal);
 
             // hook up with changes from own aircraft context
             Q_ASSERT(this->getIContextOwnAircraft());
             this->connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CCockpitComComponent::ps_updateCockpitFromContext);
+            this->connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedSelcal, this, &CCockpitComComponent::ps_onChangedSelcal);
 
             // hook up with audio context
             Q_ASSERT(this->getIContextAudio());
@@ -112,6 +110,11 @@ namespace BlackGui
 
             const CAircraft ownAircraft = this->cockpitValuesToAircraftObject();
             this->updateOwnCockpitInContext(ownAircraft);
+        }
+
+        void CCockpitComComponent::ps_guiChangedSelcal()
+        {
+            this->getIContextOwnAircraft()->updateSelcal(this->getSelcal(), cockpitOriginator());
         }
 
         void CCockpitComComponent::ps_updateCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
@@ -165,14 +168,14 @@ namespace BlackGui
 
         void CCockpitComComponent::ps_testSelcal()
         {
-            QString selcalCode = this->getSelcalCode();
-            if (!CSelcal::isValidCode(selcalCode))
+            CSelcal selcal = this->getSelcal();
+            if (!selcal.isValid())
             {
                 CLogMessage().validationWarning("Invalid SELCAL codde");
             }
             else if (this->getIContextAudio())
             {
-                CSelcal selcal(selcalCode);
+                CSelcal selcal(selcal);
                 this->getIContextAudio()->playSelcalTone(selcal);
             }
             else
@@ -181,10 +184,15 @@ namespace BlackGui
             }
         }
 
-        QString CCockpitComComponent::getSelcalCode() const
+        void CCockpitComComponent::ps_onChangedSelcal(const CSelcal &selcal, const QString &originator)
         {
-            QString selcal = this->ui->cb_ComPanelSelcalSelector1->currentText().append(this->ui->cb_ComPanelSelcalSelector2->currentText());
-            return selcal;
+            if (originator == CCockpitComComponent::cockpitOriginator()) return; // comes from myself
+            this->ui->frp_ComPanelSelcalBottom->setSelcalCode(selcal);
+        }
+
+        CSelcal CCockpitComComponent::getSelcal() const
+        {
+            return ui->frp_ComPanelSelcalBottom->getSelcal();
         }
 
         void CCockpitComComponent::initLeds()

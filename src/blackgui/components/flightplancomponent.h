@@ -63,7 +63,13 @@ namespace BlackGui
             //! Default value for time
             static const QString &defaultTime() { static QString t("00:00"); return t; }
 
+            //! Originator
+            static const QString &flightPlanOriginator();
+
         private slots:
+            //! Call \sa ps_buildRemarksString from combo box signal
+            void ps_currentTextChangedToBuildRemarks(const QString &text) { this->ps_buildRemarksString(); Q_UNUSED(text); }
+
             //! Send flightplan
             void ps_sendFlightPlan();
 

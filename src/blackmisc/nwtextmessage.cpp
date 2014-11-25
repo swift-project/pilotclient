@@ -186,7 +186,7 @@ namespace BlackMisc
             QString candidate = this->m_message.toUpper().remove(QRegExp("[^A-Z]")); // SELCALABCD
             if (candidate.length() != 10) return invalid;
             if (!candidate.startsWith("SELCAL")) return invalid;
-            return candidate.right(4);
+            return candidate.right(4).toUpper();
         }
 
     } // namespace

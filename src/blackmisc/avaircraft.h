@@ -16,6 +16,7 @@
 #include "avaircraftsituation.h"
 #include "avaircrafticao.h"
 #include "avcallsign.h"
+#include "avselcal.h"
 #include "aviotransponder.h"
 #include "aviocomsystem.h"
 #include "valueobject.h"
@@ -149,10 +150,10 @@ namespace BlackMisc
             const BlackMisc::PhysicalQuantities::CAngle &getBank() const { return this->m_situation.getBank(); }
 
             //! Get COM1 system
-            const BlackMisc::Aviation::CComSystem &getCom1System() const { return this->m_com1system; }
+            const CComSystem &getCom1System() const { return this->m_com1system; }
 
             //! Get COM2 system
-            const BlackMisc::Aviation::CComSystem &getCom2System() const { return this->m_com2system; }
+            const CComSystem &getCom2System() const { return this->m_com2system; }
 
             //! Set COM1 system
             void setCom1System(const CComSystem &comSystem) { this->m_com1system = comSystem; }
@@ -160,11 +161,23 @@ namespace BlackMisc
             //! Set COM2 system
             void setCom2System(const CComSystem &comSystem) { this->m_com2system = comSystem; }
 
+            //! Given SELCAL selected?
+            bool isSelcalSelected(const BlackMisc::Aviation::CSelcal &selcal) const { return this->m_selcal == selcal; }
+
+            //! Valid SELCAL?
+            bool hasValidSelcal() const { return this->m_selcal.isValid(); }
+
+            //! SELCAL
+            const CSelcal getSelcal() const { return m_selcal; }
+
             //! Cockpit data
             void setCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder);
 
             //! Cockpit data
             void setCockpit(const CComSystem &com1, const CComSystem &com2, qint32 transponderCode);
+
+            //! Own SELCAL code
+            void setSelcal(const BlackMisc::Aviation::CSelcal &selcal) { this->m_selcal = selcal; }
 
             //! Changed cockpit data?
             bool hasChangedCockpitData(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder) const;
@@ -228,6 +241,7 @@ namespace BlackMisc
             BlackMisc::Aviation::CComSystem m_com1system;
             BlackMisc::Aviation::CComSystem m_com2system;
             BlackMisc::Aviation::CTransponder m_transponder;
+            BlackMisc::Aviation::CSelcal m_selcal;
             CAircraftIcao m_icao;
             BlackMisc::PhysicalQuantities::CLength m_distanceToPlane;
         };

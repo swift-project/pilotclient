@@ -11,13 +11,15 @@
 #include "ui_selcalcodeselector.h"
 #include "blackmisc/avselcal.h"
 
+using namespace BlackMisc::Aviation;
+
 namespace BlackGui
 {
     CSelcalCodeSelector::CSelcalCodeSelector(QWidget *parent) :
         QFrame(parent), ui(new Ui::CSelcalCodeSelector)
     {
         this->ui->setupUi(this);
-        this->resetSelcalCodes(false);
+        this->resetSelcalCodes(true);
 
         bool c;
         c = connect(this->ui->cb_SelcalPairs1, SIGNAL(currentIndexChanged(int)), this, SIGNAL(valueChanged()));
@@ -27,14 +29,18 @@ namespace BlackGui
     }
 
     CSelcalCodeSelector::~CSelcalCodeSelector()
-    {
-        delete ui;
-    }
+    { }
 
     QString CSelcalCodeSelector::getSelcalCode() const
     {
         QString selcal = this->ui->cb_SelcalPairs1->currentText();
         selcal.append(this->ui->cb_SelcalPairs2->currentText());
+        return selcal;
+    }
+
+    BlackMisc::Aviation::CSelcal CSelcalCodeSelector::getSelcal() const
+    {
+        CSelcal selcal(getSelcalCode());
         return selcal;
     }
 
@@ -50,15 +56,25 @@ namespace BlackGui
 
     void CSelcalCodeSelector::setSelcalCode(const QString &selcal)
     {
+        if (selcal.length() == 4 && this->getSelcalCode() == selcal) return; // avoid unintended signals
         QString s = selcal.isEmpty() ? "    " : selcal.toUpper().trimmed();
         Q_ASSERT(s.length() == 4);
         if (s.length() != 4) return;
         QString s1 = s.left(2);
         QString s2 = s.right(2);
         if (BlackMisc::Aviation::CSelcal::codePairs().contains(s1))
+        {
             this->ui->cb_SelcalPairs1->setCurrentText(s1);
+        }
         if (BlackMisc::Aviation::CSelcal::codePairs().contains(s2))
-            this->ui->cb_SelcalPairs1->setCurrentText(s2);
+        {
+            this->ui->cb_SelcalPairs2->setCurrentText(s2);
+        }
+    }
+
+    void CSelcalCodeSelector::setSelcalCode(const BlackMisc::Aviation::CSelcal &selcal)
+    {
+        this->setSelcalCode(selcal.getCode());
     }
 
     bool CSelcalCodeSelector::hasValidCode() const
@@ -66,5 +82,12 @@ namespace BlackGui
         QString s = this->getSelcalCode();
         if (s.length() != 4) return false;
         return BlackMisc::Aviation::CSelcal::isValidCode(s);
+    }
+
+    void CSelcalCodeSelector::clear()
+    {
+        if (this->ui->cb_SelcalPairs1->count() < 1) { this->resetSelcalCodes(true); }
+        this->ui->cb_SelcalPairs1->setCurrentIndex(0);
+        this->ui->cb_SelcalPairs2->setCurrentIndex(0);
     }
 }

@@ -12,7 +12,9 @@
 #ifndef BLACKGUI_SELCALCODESELECTOR_H
 #define BLACKGUI_SELCALCODESELECTOR_H
 
+#include "blackmisc/avselcal.h"
 #include <QFrame>
+#include <QScopedPointer>
 
 namespace Ui { class CSelcalCodeSelector; }
 namespace BlackGui
@@ -33,21 +35,30 @@ namespace BlackGui
         //! SELCAL code
         QString getSelcalCode() const;
 
+        //! SELCAL
+        BlackMisc::Aviation::CSelcal getSelcal() const;
+
         //! Reset the SELCAL code
         void resetSelcalCodes(bool allowEmptyValue = false);
 
         //! Set the SELCAL code
         void setSelcalCode(const QString &selcal);
 
+        //! Set the SELCAL code
+        void setSelcalCode(const BlackMisc::Aviation::CSelcal &selcal);
+
         //! Valid code?
         bool hasValidCode() const;
+
+        //! Clear
+        void clear();
 
     signals:
         //! Value has been changed
         void valueChanged();
 
     private:
-        Ui::CSelcalCodeSelector *ui;
+        QScopedPointer<Ui::CSelcalCodeSelector> ui;
     };
 }
 

@@ -30,6 +30,9 @@ namespace BlackCore
         bool s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
                                     "changedAircraftCockpit", this, SIGNAL(changedAircraftCockpit(BlackMisc::Aviation::CAircraft, QString)));
         Q_ASSERT(s);
+        s = connection.connect(serviceName, IContextOwnAircraft::ObjectPath(), IContextOwnAircraft::InterfaceName(),
+                               "changedSelcal", this, SIGNAL(changedSelcal(BlackMisc::Aviation::CSelcal, QString)));
+        Q_ASSERT(s);
         Q_UNUSED(s);
     }
 
@@ -61,6 +64,11 @@ namespace BlackCore
     bool CContextOwnAircraftProxy::updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updatePilot"), pilot, originator);
+    }
+
+    bool CContextOwnAircraftProxy::updateSelcal(const Aviation::CSelcal &selcal, const QString &originator)
+    {
+        return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateSelcal"), selcal, originator);
     }
 
     void CContextOwnAircraftProxy::setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2)

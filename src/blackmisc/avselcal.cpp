@@ -63,7 +63,7 @@ namespace BlackMisc
          */
         bool CSelcal::isValidCharacter(QChar c)
         {
-            return CSelcal::validCharacters().contains(c);
+            return CSelcal::validCharacters().contains(c.toUpper());
         }
 
         /*
@@ -73,10 +73,11 @@ namespace BlackMisc
         {
             if (code.length() != 4) return false;
             int p1, p2, p3, p4;
-            if ((p1 = CSelcal::validCharacters().indexOf(code.at(0))) < 0) return false;
-            if ((p2 = CSelcal::validCharacters().indexOf(code.at(1))) < 0) return false;
-            if ((p3 = CSelcal::validCharacters().indexOf(code.at(2))) < 0) return false;
-            if ((p4 = CSelcal::validCharacters().indexOf(code.at(3))) < 0) return false;
+            QString codeUpper = code.toUpper();
+            if ((p1 = CSelcal::validCharacters().indexOf(codeUpper.at(0))) < 0) return false;
+            if ((p2 = CSelcal::validCharacters().indexOf(codeUpper.at(1))) < 0) return false;
+            if ((p3 = CSelcal::validCharacters().indexOf(codeUpper.at(2))) < 0) return false;
+            if ((p4 = CSelcal::validCharacters().indexOf(codeUpper.at(3))) < 0) return false;
             if (p1 >= p2 || p3 >= p4) return false; // pair in alphabetical order
             if (p1 == p3 || p2 == p3 || p2 == p4 || p3 == p4) return false; // given letter can be used only once in a SELCAL code
             return true;

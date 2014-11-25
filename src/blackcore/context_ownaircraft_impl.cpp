@@ -176,9 +176,17 @@ namespace BlackCore
 
     bool CContextOwnAircraft::updatePilot(const CUser &pilot, const QString &originator)
     {
-        if (this->m_ownAircraft.getPilot() == pilot) return false;
+        if (this->m_ownAircraft.getPilot() == pilot) { return false; }
         this->m_ownAircraft.setPilot(pilot);
         emit this->changedAircraft(this->m_ownAircraft, originator);
+        return true;
+    }
+
+    bool CContextOwnAircraft::updateSelcal(const CSelcal &selcal, const QString &originator)
+    {
+        if (this->m_ownAircraft.getSelcal() == selcal) { return false; }
+        this->m_ownAircraft.setSelcal(selcal);
+        emit this->changedSelcal(selcal, originator);
         return true;
     }
 

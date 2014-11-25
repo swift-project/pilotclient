@@ -31,13 +31,13 @@ namespace BlackMisc
             CSelcal() = default;
 
             //! Constructor.
-            CSelcal(const QString &code) : m_code(code.trimmed()) {}
+            CSelcal(const QString &code) : m_code(code.trimmed().toUpper()) {}
 
             /*!
              * Constructor.
              * Needed to disambiguate implicit conversion from string literal.
              */
-            CSelcal(const char *code) : m_code(code) {}
+            CSelcal(const char *code) : m_code(QString(code).trimmed().toUpper()) {}
 
             //! Is valid?
             bool isValid() const { return isValidCode(this->m_code); }

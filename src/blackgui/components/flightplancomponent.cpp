@@ -34,38 +34,33 @@ namespace BlackGui
             this->tabBar()->setExpanding(false);
 
             // connect
-            connect(this->ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::sendFlightPlan);
-            connect(this->ui->pb_Load, &QPushButton::pressed, this, &CFlightPlanComponent::loadFlightPlanFromNetwork);
-            connect(this->ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::resetFlightPlan);
-            connect(this->ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::validateFlightPlan);
+            connect(this->ui->pb_Send, &QPushButton::pressed, this, &CFlightPlanComponent::ps_sendFlightPlan);
+            connect(this->ui->pb_Load, &QPushButton::pressed, this, &CFlightPlanComponent::ps_loadFlightPlanFromNetwork);
+            connect(this->ui->pb_Reset, &QPushButton::pressed, this, &CFlightPlanComponent::ps_resetFlightPlan);
+            connect(this->ui->pb_ValidateFlightPlan, &QPushButton::pressed, this, &CFlightPlanComponent::ps_validateFlightPlan);
 
-            bool c;
-            c = connect(this->ui->cb_VoiceCapabilities, SIGNAL(currentIndexChanged(int)), this, SLOT(buildRemarkString()));
+            connect(this->ui->cb_VoiceCapabilities, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
+            connect(this->ui->cb_NavigationEquipment, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
+            connect(this->ui->cb_PerformanceCategory, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
+            connect(this->ui->cb_PilotRating, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
+            connect(this->ui->cb_RequiredNavigationPerformance, &QComboBox::currentTextChanged, this, &CFlightPlanComponent::ps_currentTextChangedToBuildRemarks);
+
+            bool c = connect(this->ui->le_AircraftRegistration, SIGNAL(textChanged(QString)), this, SLOT(ps_buildRemarksString()));
             Q_ASSERT(c);
-            c = connect(this->ui->cb_NavigationEquipment, SIGNAL(currentIndexChanged(int)), this, SLOT(buildRemarkString()));
+            c = connect(this->ui->cb_NoSidsStarts, SIGNAL(toggled(bool)), this, SLOT(ps_buildRemarksString()));
             Q_ASSERT(c);
-            c = connect(this->ui->cb_PerformanceCategory, SIGNAL(currentIndexChanged(int)), this, SLOT(buildRemarkString()));
-            Q_ASSERT(c);
-            c = connect(this->ui->cb_PilotRating, SIGNAL(currentIndexChanged(int)), this, SLOT(buildRemarkString()));
-            Q_ASSERT(c);
-            c = connect(this->ui->cb_RequiredNavigationPerformance, SIGNAL(currentIndexChanged(int)), this, SLOT(buildRemarkString()));
-            Q_ASSERT(c);
-            c = connect(this->ui->cb_NoSidsStarts, SIGNAL(toggled(bool)), this, SLOT(buildRemarkString()));
-            Q_ASSERT(c);
-            c = connect(this->ui->le_AircraftRegistration, SIGNAL(textChanged(QString)), this, SLOT(buildRemarkString()));
-            Q_ASSERT(c);
-            c = connect(this->ui->le_AirlineOperator, SIGNAL(textChanged(QString)), this, SLOT(buildRemarkString()));
+            c = connect(this->ui->le_AirlineOperator, SIGNAL(textChanged(QString)), this, SLOT(ps_buildRemarksString()));
             Q_ASSERT(c);
             Q_UNUSED(c);
 
-            connect(this->ui->pte_AdditionalRemarks, &QPlainTextEdit::textChanged, this, &CFlightPlanComponent::buildRemarkString);
-            connect(this->ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::buildRemarkString);
-            connect(this->ui->pb_CopyOver, &QPushButton::pressed, this, &CFlightPlanComponent::copyRemarks);
-            connect(this->ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::currentTabGenerator);
+            connect(this->ui->pte_AdditionalRemarks, &QPlainTextEdit::textChanged, this, &CFlightPlanComponent::ps_buildRemarksString);
+            connect(this->ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::ps_buildRemarksString);
+            connect(this->ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::ps_setSelcalInOwnAircraft);
+            connect(this->ui->pb_CopyOver, &QPushButton::pressed, this, &CFlightPlanComponent::ps_copyRemarks);
+            connect(this->ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::ps_currentTabGenerator);
 
-            this->ui->frp_SelcalCode->resetSelcalCodes(true);
-            this->resetFlightPlan();
-            this->buildRemarkString();
+            this->ps_resetFlightPlan();
+            this->ps_buildRemarksString();
         }
 
         CFlightPlanComponent::~CFlightPlanComponent()
@@ -92,9 +87,13 @@ namespace BlackGui
 
             CAltitude cruiseAlt = flightPlan.getCruiseAltitude();
             if (cruiseAlt.isFlightLevel())
+            {
                 this->ui->le_CrusingAltitude->setText(cruiseAlt.toQString());
+            }
             else
+            {
                 this->ui->le_CrusingAltitude->setText(cruiseAlt.valueRoundedWithUnit(BlackMisc::PhysicalQuantities::CLengthUnit::ft(), 0));
+            }
         }
 
         CFlightPlan CFlightPlanComponent::getFlightPlan() const
@@ -277,6 +276,11 @@ namespace BlackGui
 
         void CFlightPlanComponent::ps_setSelcalInOwnAircraft()
         {
+            if (!this->getIContextOwnAircraft()) return;
+            if (!this->ui->frp_SelcalCode->hasValidCode()) return;
+            this->getIContextOwnAircraft()->updateSelcal(this->ui->frp_SelcalCode->getSelcal(), flightPlanOriginator());
+        }
+
         void CFlightPlanComponent::ps_loadFlightPlanFromNetwork()
         {
             if (!this->getIContextNetwork())
@@ -386,5 +390,14 @@ namespace BlackGui
         {
             this->setCurrentWidget(this->ui->tb_RemarksGenerator);
         }
-    }
-}
+
+        const QString &CFlightPlanComponent::flightPlanOriginator()
+        {
+            // string is generated once, the timestamp allows to use multiple
+            // components (as long as they are not generated at the same ms)
+            static const QString o = QString("FLIGHTPLANCOMPONENT:").append(QString::number(QDateTime::currentMSecsSinceEpoch()));
+            return o;
+        }
+
+    } // namespace
+} // namespace

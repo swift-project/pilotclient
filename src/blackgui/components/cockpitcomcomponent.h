@@ -87,7 +87,7 @@ namespace BlackGui
             BlackMisc::Aviation::CAircraft getOwnAircraft() const;
 
             //! Current SELCAL code
-            QString getSelcalCode() const;
+            BlackMisc::Aviation::CSelcal getSelcal() const;
 
             //! Cockpit updates
             bool updateOwnCockpitInContext(const BlackMisc::Aviation::CAircraft &ownAircraft);

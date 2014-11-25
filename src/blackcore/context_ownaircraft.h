@@ -16,6 +16,7 @@
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/avatcstation.h"
 #include "blackmisc/voiceroomlist.h"
+#include "blackmisc/avselcal.h"
 
 //! \addtogroup dbus
 //! @{
@@ -79,6 +80,10 @@ namespace BlackCore
         //! \remarks DBus and local
         void changedAircraftCockpit(const BlackMisc::Aviation::CAircraft &aircraft, const QString &originator);
 
+        //! Changed SELCAL code
+        //! \remarks DBus and local
+        void changedSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator);
+
     public slots:
 
         //! Get own aircraft
@@ -98,6 +103,9 @@ namespace BlackCore
 
         //! Set current pilot
         virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) = 0;
+
+        //! Own SELCAL code
+        virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) = 0;
 
         //! Output volumes,  volumes 0..100
         virtual void setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2) = 0;
