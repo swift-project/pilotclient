@@ -47,12 +47,6 @@ QAbstractScrollArea #pg_StatusPageConsole { background-color: black; }
 
 /** main GUI parts **/
 
-#dw_InfoBarStatus {
-  background-image: url(:/textures/icons/textures/texture-outer.jpg);
-  background-color: darkslategray;
-  border: 0px;
-}
-
 #wi_CentralWidgetOutside[frameless="true"] {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;
@@ -60,6 +54,8 @@ QAbstractScrollArea #pg_StatusPageConsole { background-color: black; }
   border: 2px solid green;
   border-radius: 20px;
 }
+
+/** dw_InfoBarStatus has its own style sheet **/
 
 #fr_CentralFrameInside {
   margin: 5px;
@@ -444,4 +440,5 @@ QStatusBar::item {
 
 QStatusBar QLabel {
   border: none;
+  padding-left: 5px;
 }

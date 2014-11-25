@@ -1,11 +1,15 @@
 QFrame {
-    margin: 0px;
-    padding-left: 6px;
-    padding-right: 6px;
-    padding-bottom: 0px;
+  margin: 0px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-bottom: 0px;
 }
 
 /** frameless is dynamic property**/
-QDockWidget[frameless="true"] QFrame {
-    background-color: darkslategray;
+/** for frameless only use QDockWidget[frameless="true"] QFrame **/
+QDockWidget QFrame
+ {
+  background-color: darkslategray;
+  background-image: url(:/textures/icons/textures/texture-outer.jpg);
+  border: 0px;
 }
