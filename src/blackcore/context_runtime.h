@@ -157,24 +157,6 @@ namespace BlackCore
         QDBusConnection m_dbusConnection = QDBusConnection("default");
         bool m_initDBusConnection   = false;
 
-        // logging on signals / slots
-        bool m_signalLogApplication = false;
-        bool m_signalLogAudio       = false;
-        bool m_signalLogNetwork     = false;
-        bool m_signalLogOwnAircraft = false;
-        bool m_signalLogSettings    = false;
-        bool m_signalLogSimulator   = false;
-        bool m_slotLogApplication   = false;
-        bool m_slotLogAudio         = false;
-        bool m_slotLogNetwork       = false;
-        bool m_slotLogOwnAircraft   = false;
-        bool m_slotLogSettings      = false;
-        bool m_slotLogSimulator     = false;
-        QMultiMap<QString, QMetaObject::Connection> m_logSignalConnections;
-
-        // thread safety for logging
-        mutable QReadWriteLock m_lock;
-
         // contexts:
         // There is a reason why we do not use smart pointers here. When the context is deleted
         // we need to use deleteLater to gracefully shut the context
