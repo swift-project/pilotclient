@@ -9,6 +9,7 @@
 
 #include "loghandler.h"
 #include "algorithm.h"
+#include "worker.h"
 #include <QCoreApplication>
 #include <QMetaMethod>
 
@@ -139,7 +140,13 @@ namespace BlackMisc
 
     void CLogSubscriber::changeSubscription(const CLogPattern &pattern)
     {
-        Q_ASSERT(CLogHandler::instance()->thread() == QThread::currentThread());
+        if (CLogHandler::instance()->thread() != QThread::currentThread())
+        {
+            Q_ASSERT(thread() == QThread::currentThread());
+            singleShot(0, CLogHandler::instance()->thread(), this, [ = ]() { changeSubscription(pattern); });
+            return;
+        }
+
         unsubscribe();
         m_handler = CLogHandler::instance()->handlerForPattern(pattern);
 
@@ -147,12 +154,18 @@ namespace BlackMisc
         {
             m_handler->enableConsoleOutput(m_enableFallThrough);
         }
-        connect(m_handler.data(), &CLogPatternHandler::messageLogged, this, &CLogSubscriber::ps_logMessage);
+        connect(m_handler.data(), &CLogPatternHandler::messageLogged, this, &CLogSubscriber::ps_logMessage, Qt::DirectConnection);
     }
 
     void CLogSubscriber::unsubscribe()
     {
-        Q_ASSERT(CLogHandler::instance()->thread() == QThread::currentThread());
+        if (CLogHandler::instance()->thread() != QThread::currentThread())
+        {
+            Q_ASSERT(thread() == QThread::currentThread());
+            singleShot(0, CLogHandler::instance()->thread(), this, [ = ]() { unsubscribe(); });
+            return;
+        }
+
         if (m_handler)
         {
             m_handler->disconnect(this);
@@ -161,7 +174,13 @@ namespace BlackMisc
 
     void CLogSubscriber::inheritConsoleOutput()
     {
-        Q_ASSERT(CLogHandler::instance()->thread() == QThread::currentThread());
+        if (CLogHandler::instance()->thread() != QThread::currentThread())
+        {
+            Q_ASSERT(thread() == QThread::currentThread());
+            singleShot(0, CLogHandler::instance()->thread(), this, [ = ]() { inheritConsoleOutput(); });
+            return;
+        }
+
         m_inheritFallThrough = true;
         if (m_handler)
         {
@@ -171,7 +190,13 @@ namespace BlackMisc
 
     void CLogSubscriber::enableConsoleOutput(bool enable)
     {
-        Q_ASSERT(CLogHandler::instance()->thread() == QThread::currentThread());
+        if (CLogHandler::instance()->thread() != QThread::currentThread())
+        {
+            Q_ASSERT(thread() == QThread::currentThread());
+            singleShot(0, CLogHandler::instance()->thread(), this, [ = ]() { enableConsoleOutput(enable); });
+            return;
+        }
+
         m_inheritFallThrough = false;
         m_enableFallThrough = enable;
         if (m_handler)

@@ -175,30 +175,38 @@ namespace BlackMisc
     /*!
      * A helper class for subscribing to log messages matching a particular pattern, with the ability to
      * change the pattern at runtime.
+     *
+     * Also provides a thread-safe API for interacting with the CLogHandler.
      */
     class CLogSubscriber : public QObject
     {
         Q_OBJECT
 
     public:
+        //! Default constructor, for when you're not interested in messages and just want to control the console output.
+        CLogSubscriber(QObject *parent = nullptr) : QObject(parent) {}
+
         //! Construct a subscriber which forwards messages to the given slot of parent.
         template <typename T, typename F>
         CLogSubscriber(T *parent, F slot) : QObject(parent)
         {
-            Q_ASSERT(CLogHandler::instance()->thread() == QThread::currentThread());
             QObject::connect(this, &CLogSubscriber::ps_messageLogged, parent, slot);
         }
 
         //! Change the pattern which you want to subscribe to.
+        //! \threadsafe If not called from the main thread, it will run asynchronously.
         void changeSubscription(const CLogPattern &pattern);
 
         //! Unsubscribe from all messages.
+        //! \threadsafe If not called from the main thread, it will run asynchronously.
         void unsubscribe();
 
         //! \copydoc CLogPatternHandler::enableConsoleOutput
+        //! \threadsafe If not called from the main thread, it will run asynchronously.
         void enableConsoleOutput(bool enable);
 
         //! \copydoc CLogPatternHandler::inheritConsoleOutput
+        //! \threadsafe If not called from the main thread, it will run asynchronously.
         void inheritConsoleOutput();
 
     signals:

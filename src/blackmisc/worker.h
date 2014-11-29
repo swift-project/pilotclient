@@ -15,18 +15,36 @@
 #include <QThread>
 #include <QMutex>
 #include <QTimer>
+#include <QSharedPointer>
+#include <QWeakPointer>
 #include <functional>
 #include <atomic>
 
 namespace BlackMisc
 {
 
+    //! \private Class for synchronizing singleShot() task with its owner.
+    class CSingleShotController : public QObject
+    {
+        Q_OBJECT
+    public:
+        CSingleShotController(QObject *parent) : QObject(parent), m_strongRef(QSharedPointer<int>::create(0)) {}
+        ~CSingleShotController() { auto wr = weakRef(); m_strongRef.clear(); waitForNull(wr); }
+        QWeakPointer<int> weakRef() const { return m_strongRef.toWeakRef(); }
+    private:
+        static void waitForNull(QWeakPointer<int> wp) { while (wp) { QThread::msleep(10); } }
+        QSharedPointer<int> m_strongRef; // pointee type doesn't matter, we only care about the reference count
+    };
+
     /*!
      * Starts a single-shot timer which will run in an existing thread and call a task when it times out.
      *
      * Useful when a worker thread wants to push small sub-tasks back to the thread which spawned it.
-     * \see QTimer::singleShot()
+     *
+     * If an owner pointer is specified, then the task may be cancelled if the owner is deleted, but the
+     * owner will not be deleted while the task is running (its destructor will wait for the task to end).
      */
+    //! @{
     template <typename F>
     void singleShot(int msec, QThread *target, F task)
     {
@@ -40,6 +58,18 @@ namespace BlackMisc
         });
         QMetaObject::invokeMethod(timer, "start", Q_ARG(int, msec));
     }
+    template <typename F>
+    void singleShot(int msec, QThread *target, QObject *owner, F task)
+    {
+        Q_ASSERT(QThread::currentThread() == owner->thread());
+        auto weakRef = (new CSingleShotController(owner))->weakRef();
+        singleShot(msec, target, [ = ]()
+        {
+            auto strongRef = weakRef.toStrongRef();
+            if (strongRef) { task(); }
+        });
+    }
+    //! @}
 
     /*!
      * Just a subclass of QThread whose destructor waits for the thread to finish.
