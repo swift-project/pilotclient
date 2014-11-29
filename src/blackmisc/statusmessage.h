@@ -88,6 +88,14 @@ namespace BlackMisc
         //! Info or debug, no warning or error
         bool isSeverityInfoOrLess() const { return this->m_severity == SeverityInfo || this->m_severity == SeverityDebug; }
 
+        //! Returns true if this message was sent by an instance of class T.
+        template <class T>
+        bool isFromClass(const T *pointer = nullptr) const
+        {
+            CLogCategoryList classCategories(pointer);
+            return std::all_of(classCategories.begin(), classCategories.end(), [this](const CLogCategory & cat) { return m_categories.contains(cat); });
+        }
+
         //! Mark the message as having been handled by the given object
         void markAsHandledBy(const QObject *object) const;
 
