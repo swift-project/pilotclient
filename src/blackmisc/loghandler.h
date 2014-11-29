@@ -138,7 +138,7 @@ namespace BlackMisc
          * multiple handlings of the same message. Caveat: for this to work, the slot must take its argument by non-const
          * reference, and be connected by Qt::DirectConnection (i.e. the receiver is in the same thread as the CLogHandler).
          */
-        void messageLogged(const CStatusMessage &message);
+        void messageLogged(const BlackMisc::CStatusMessage &message);
 
     public:
         /*!
@@ -211,10 +211,10 @@ namespace BlackMisc
 
     signals:
         //! \private
-        void ps_messageLogged(const CStatusMessage &message);
+        void ps_messageLogged(const BlackMisc::CStatusMessage &message);
 
     private slots:
-        void ps_logMessage(const CStatusMessage &message) { emit ps_messageLogged(message); }
+        void ps_logMessage(const BlackMisc::CStatusMessage &message) { emit ps_messageLogged(message); }
 
     private:
         QPointer<CLogPatternHandler> m_handler;
