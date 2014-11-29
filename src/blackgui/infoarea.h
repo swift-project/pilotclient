@@ -29,7 +29,7 @@ namespace BlackGui
 
     public:
         //! Destructor
-        virtual ~CInfoArea() {}
+        virtual ~CInfoArea();
 
         //! Add items to context menu
         void addToContextMenu(QMenu *menu) const;
@@ -37,12 +37,14 @@ namespace BlackGui
         //! Is the area floating?
         bool isFloating() const { return this->m_infoAreaFloating; }
 
-        //! Selected area of non floating areas
-        //! \remarks -1 for no area
-        int getSelectedTabBarIndex() const;
-
         //! Is given widget selected. Means it is not floating, and the one selected
-        bool isSelectedInfoArea(const CDockWidgetInfoArea *infoArea) const;
+        bool isSelectedDockWidgetInfoArea(const CDockWidgetInfoArea *infoArea) const;
+
+        //! Get the selected info area (non floating, selected in tabbar)
+        const CDockWidgetInfoArea *getSelectedDockInfoArea() const;
+
+        //! Own dockable widgets
+        QList<const CDockWidgetInfoArea *> getDockWidgetInfoAreas() const;
 
     signals:
         //! Tab bar changed
@@ -63,6 +65,9 @@ namespace BlackGui
 
         //! Toggle floating of index
         void toggleFloating(int areaIndex);
+
+        //! Toggle visibilty
+        void toggleVisibility(int areaIndex);
 
         //! Select area
         void selectArea(int areaIndex);
@@ -86,9 +91,14 @@ namespace BlackGui
         //! Init area after(!) GUI is initialized
         void initInfoArea();
 
+    protected:
+        //! Tab position for docked widgets tab
+        //! \remarks North or South working, East / West not
+        void ps_setTabBarPosition(QTabWidget::TabPosition position);
+
     private:
         Ui::CInfoArea *ui = nullptr;
-        QList<CDockWidgetInfoArea *> m_dockableWidgets ;
+        QList<CDockWidgetInfoArea *> m_dockWidgetInfoAreas ;
         QTabBar *m_tabBar = nullptr;
         bool m_showTabTexts     = true;   //!< texts for tabs
         bool m_infoAreaFloating = false;  //!< whole info area floating?
@@ -101,23 +111,32 @@ namespace BlackGui
         //! Untabify
         void unTabifyAllWidgets();
 
-        //! The tab bar of the docked widgets
-        QTabBar *tabBarDockedWidgets() const;
-
-        //! Corresponding dockable widgets
-        QList<CDockWidgetInfoArea *> dockableWidgets() const;
+        //! Valid area index?
+        bool isValidAreaIndex(int areaIndex) const;
 
         //! Corresponding dockable widget for given tab index
-        CDockWidgetInfoArea *getDockableWidgetByTabBarIndex(int tabBarIndex) const;
+        CDockWidgetInfoArea *getDockWidgetInfoAreaByTabBarIndex(int tabBarIndex);
+
+        //! Corresponding dockable widget for given window title
+        CDockWidgetInfoArea *getDockWidgetInfoAreaByWindowTitle(const QString &title);
+
+        //! Corresponding dockable widget for given window title
+        int getAreaIndexByWindowTitle(const QString &title);
+
+        //! Tab bar index by title
+        int getTabBarIndexByTitle(const QString &title) const;
+
+        //! Widget to tab bar index
+        int dockWidgetInfoAreaToTabBarIndex(const CDockWidgetInfoArea *dockWidgetInfoArea) const;
+
+        //! Set current tab bar index by given widget
+        void setCurrentTabIndex(const CDockWidgetInfoArea *dockWidgetInfoArea);
 
         //! Features of the dockable widgets
         void setFeaturesForDockableWidgets(QDockWidget::DockWidgetFeatures features);
 
         //! Number of tabbed widgets
-        int countDockedWidgets() const;
-
-        //! Widget to tab bar index
-        int widgetToTabBarIndex(const CDockWidgetInfoArea *dockWidget);
+        int countDockedWidgetInfoAreas() const;
 
         //! Set the tab's icons
         void setTabPixmaps();
@@ -135,14 +154,15 @@ namespace BlackGui
         QList<CInfoArea *> getChildInfoAreas() { return this->findChildren<CInfoArea *>(); }
 
         //! Direct dock widget areas, not the nested dock widget areas
-        QList<CDockWidgetInfoArea *> getOwnDockWidgetAreas();
+        //! \remarks result stored in m_dockableWidgets
+        QList<CDockWidgetInfoArea *> initOwnDockWidgetInfoAreas();
 
     private slots:
         //! Tab bar has been double clicked
         void ps_tabBarDoubleClicked(int tabBarIndex);
 
         //! A widget has changed its top level
-        void ps_onWidgetTopLevelChanged(CDockWidget *widget, bool topLevel);
+        void ps_onWidgetTopLevelChanged(CDockWidget *dockWidget, bool topLevel);
 
         //! Style sheet has been changed
         void ps_onStyleSheetChanged();
@@ -158,10 +178,6 @@ namespace BlackGui
 
         //! Toogle lock tabbar
         void ps_toggleTabBarLocked(bool locked);
-
-        //! Tab position for docked widgets tab
-        //! \remarks North or South working, East / West not
-        void ps_setTabBarPosition(QTabWidget::TabPosition position);
 
         //! Toggle tab position North - South
         void ps_toggleTabBarPosition();
