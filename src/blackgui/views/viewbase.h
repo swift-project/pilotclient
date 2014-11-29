@@ -110,7 +110,7 @@ namespace BlackGui
             virtual bool performResizing() const;
 
             //! Init default values
-            virtual void standardInit();
+            void init();
 
             ResizeMode m_resizeMode   = ResizingAuto; //!< mode
             int        m_resizeCount  = 0;            //!< flag / counter, how many resize activities

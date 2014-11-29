@@ -75,7 +75,7 @@ namespace BlackGui
             return h;
         }
 
-        void CViewBaseNonTemplate::standardInit()
+        void CViewBaseNonTemplate::init()
         {
             int fh = qRound(1.5 * this->getHorizontalHeaderFontHeight());
             this->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive); // faster mode
@@ -234,7 +234,7 @@ namespace BlackGui
                 connect(this->m_model, &ModelClass::rowCountChanged, this, &CViewBase::countChanged);
             }
             this->setModel(this->m_model); // via QTableView
-            CViewBaseNonTemplate::standardInit();
+            CViewBaseNonTemplate::init();
             this->setSortIndicator();
         }
 
