@@ -45,7 +45,7 @@ namespace BlackGui
         CLedWidget(QWidget *parent = nullptr);
 
         //! Constructor
-        CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName = "on", const QString &offName = "off", QWidget *parent = nullptr);
+        CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName = "on", const QString &offName = "off", int targetWidth = -1, QWidget *parent = nullptr);
 
         //! Destructor
         virtual ~CLedWidget();
@@ -87,7 +87,7 @@ namespace BlackGui
         void setShape(LedShape);
 
         //! Target width
-        void setTargetWidth(int width) { this->m_widthTarget = width; }
+        void setTargetWidth(int width) { this->m_widthTarget = width; this->setLed(); }
 
         //! Tool tip
         QString getOnToolTip() const { return m_tooltipOn; }
@@ -119,6 +119,10 @@ namespace BlackGui
         //! Render as pixmap, so it can be used with TableViews
         QPixmap asPixmap() const;
 
+    signals:
+        //! LED clicked
+        void clicked();
+
     protected:
         State m_value = Off;         //!< current value
         LedColor m_colorOn = Yellow; //!< On color
@@ -138,6 +142,9 @@ namespace BlackGui
         //! Paint event
         virtual void paintEvent(QPaintEvent *event) override;
 
+        //! Mouse pressed
+        virtual void mousePressEvent(QMouseEvent *event) override;
+
         //! Set / init LED
         void setLed(LedColor ledColor = NoColor);
 
@@ -155,10 +162,6 @@ namespace BlackGui
 
         //! Color string
         static const QString &colorString(LedColor color); //!<Color string
-
-    private:
-        //! Fix widget after widths calculated
-        void firstTimeReInit();
 
     };
 }

@@ -26,9 +26,9 @@ namespace BlackGui
         this->setLed();
     }
 
-    CLedWidget::CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName, const QString &offName, QWidget *parent) :
+    CLedWidget::CLedWidget(bool on, LedColor onColor, LedColor offColor, LedShape shape, const QString &onName, const QString &offName, int targetWidth, QWidget *parent) :
         m_value(on ? On : Off), m_colorOn(onColor), m_colorOff(offColor),
-        m_shape(shape), m_tooltipOn(onName), m_tooltipOff(offName),
+        m_shape(shape), m_widthTarget(targetWidth), m_tooltipOn(onName), m_tooltipOff(offName),
         m_renderer(new QSvgRenderer(parent))
     {
         this->setLed();
@@ -62,7 +62,6 @@ namespace BlackGui
                 ledShapeAndColor.append(CLedWidget::colorString(this->m_colorOff));
                 break;
             }
-
         }
         else
         {
@@ -92,10 +91,7 @@ namespace BlackGui
         this->m_whRatio = s.width() / s.height();
 
         // size
-        if (this->m_widthTarget < 0)
-        {
-            this->m_widthTarget = widths().at(static_cast<int>(m_shape));
-        }
+        if (this->m_widthTarget < 0) { this->m_widthTarget = widths().at(static_cast<int>(m_shape)); }
         double h = this->m_widthTarget / this->m_whRatio;
         this->m_heightCalculated = qRound(h);
 
@@ -241,6 +237,19 @@ namespace BlackGui
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setBackgroundMode(Qt::TransparentMode);
         m_renderer->render(&painter);
+    }
+
+    void CLedWidget::mousePressEvent(QMouseEvent *event)
+    {
+        if (event->button() == Qt::LeftButton)
+        {
+            emit clicked();
+            event->accept();
+        }
+        else
+        {
+            QWidget::mousePressEvent(event);
+        }
     }
 
     const QStringList &CLedWidget::shapes()
