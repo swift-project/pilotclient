@@ -86,10 +86,7 @@ namespace BlackGui
             connect(this->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this, &CMainKeypadAreaComponent::ps_connectionStatusChanged);
             connect(this->getIContextOwnAircraft(), &IContextOwnAircraft::changedAircraftCockpit, this, &CMainKeypadAreaComponent::ps_ownAircraftCockpitChanged);
             connect(this->getIContextAudio(), &IContextAudio::changedMute, this, &CMainKeypadAreaComponent::ps_muteChanged);
-
-            connect(this, &CMainKeypadAreaComponent::commandEntered, this->getIContextOwnAircraft(), &IContextOwnAircraft::parseCommandLine);
-            connect(this, &CMainKeypadAreaComponent::commandEntered, this->getIContextNetwork(), &IContextNetwork::parseCommandLine);
-            connect(this, &CMainKeypadAreaComponent::commandEntered, this->getIContextAudio(), &IContextAudio::parseCommandLine);
+            connect(this, &CMainKeypadAreaComponent::commandEntered, this->getRuntime(), &CRuntime::parseCommandLine);
         }
 
         void CMainKeypadAreaComponent::ps_buttonSelected()

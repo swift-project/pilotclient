@@ -126,6 +126,15 @@ namespace BlackCore
         return (token == this->m_contextApplication->ping(token));
     }
 
+    bool CRuntime::parseCommandLine(const QString commandLine)
+    {
+        bool handled = false;
+        if (this->getIContextAudio()) { handled = handled || this->getIContextAudio()->parseCommandLine(commandLine); }
+        if (this->getIContextNetwork()) { handled = handled || this->getIContextNetwork()->parseCommandLine(commandLine); }
+        if (this->getIContextOwnAircraft()) { handled = handled || this->getIContextOwnAircraft()->parseCommandLine(commandLine); }
+        return handled;
+    }
+
     void CRuntime::initDBusServer(const QString &dBusAddress)
     {
         if (this->m_dbusServer) return;

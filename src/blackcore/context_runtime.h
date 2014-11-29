@@ -149,6 +149,10 @@ namespace BlackCore
         //! Is application context available?
         bool canPingApplicationContext() const;
 
+    public slots:
+        //! Parse command line in all contexts
+        bool parseCommandLine(const QString commandLine);
+
     private:
         bool m_init = false; /*!< flag */
 
