@@ -47,6 +47,10 @@ namespace BlackMisc
         //! \warning This must only be called from the main thread.
         CLogPatternHandler *handlerForPattern(const CLogPattern &pattern);
 
+        //! Return a pattern handler for subscribing to all messages which contain the given category.
+        //! \warning This must only be called from the main thread.
+        CLogPatternHandler *handlerForCategory(const CLogCategory &category);
+
         //! Return a pattern handler for subscribing to all validation warnings and errors.
         //! \warning This must only be called from the main thread.
         CLogPatternHandler *handlerForValidation()

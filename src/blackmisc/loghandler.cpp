@@ -64,6 +64,11 @@ namespace BlackMisc
         }
     }
 
+    CLogPatternHandler *CLogHandler::handlerForCategory(const CLogCategory &category)
+    {
+        return handlerForPattern(CLogPattern::exactMatch(category));
+    }
+
     QList<CLogPatternHandler *> CLogHandler::handlersForMessage(const CStatusMessage &message) const
     {
         QList<CLogPatternHandler *> m_handlers;

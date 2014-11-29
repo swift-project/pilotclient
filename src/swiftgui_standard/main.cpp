@@ -43,6 +43,8 @@ int main(int argc, char *argv[])
     // application
     QApplication a(argc, argv);
     CLogHandler::instance()->install();
+    BlackMisc::CLogHandler::instance()->handlerForCategory(CLogCategory::context())->enableConsoleOutput(false);
+
     QIcon icon(BlackMisc::CIcons::swift24());
     QApplication::setWindowIcon(icon);
     const QString s = CStyleSheetUtility::instance().styles(
