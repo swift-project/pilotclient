@@ -45,9 +45,9 @@ namespace BlackMiscTest
 
         // log
         //! \todo make thread safe or ..?
-//        CLogSubscriber messageSubscriber;
-//        messageSubscriber.enableConsoleOutput(true);
-//        messageSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
+        CLogSubscriber messageSubscriber;
+        messageSubscriber.enableConsoleOutput(true);
+        messageSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
 
         QTextStream qtout(stdout);
         qtout << "Running on server here " << Tool::getPid() << " thread: " << QThread::currentThreadId() << endl;
@@ -104,8 +104,8 @@ namespace BlackMiscTest
             {
                 line = line.replace("level", "").trimmed();
                 CStatusMessage::StatusSeverity severity = CStatusMessage::stringToSeverity(line);
-                // messageSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(severity));
-                qtout << "Changed level to" << CStatusMessage::severityToString(severity);
+                messageSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(severity));
+                qtout << "Changed level to " << CStatusMessage::severityToString(severity) << endl;
             }
             else if (line.startsWith("log"))
             {
@@ -146,6 +146,7 @@ namespace BlackMiscTest
             }
             else if (line.startsWith("."))
             {
+                // handle dot commands
                 bool c = runtime->parseCommandLine(line);
                 if (c) { qtout << "Handled command " << line; }
                 else   { qtout << "Not handled " <<  line; }
