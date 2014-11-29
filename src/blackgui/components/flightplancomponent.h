@@ -51,6 +51,10 @@ namespace BlackGui
             //! Get this flight plan
             BlackMisc::Aviation::CFlightPlan getFlightPlan() const;
 
+        protected:
+            //! \copydoc CEnableForRuntime::runtimeHasBeenSet
+            void runtimeHasBeenSet() override;
+
         private:
             QScopedPointer<Ui::CFlightPlanComponent> ui;
 

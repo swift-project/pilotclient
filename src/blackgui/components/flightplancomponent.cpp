@@ -25,7 +25,6 @@ namespace BlackGui
     {
         CFlightPlanComponent::CFlightPlanComponent(QWidget *parent) :
             QTabWidget(parent),
-            CEnableForRuntime(nullptr, false),
             ui(new Ui::CFlightPlanComponent)
         {
             ui->setupUi(this);
@@ -58,9 +57,6 @@ namespace BlackGui
             connect(this->ui->frp_SelcalCode, &CSelcalCodeSelector::valueChanged, this, &CFlightPlanComponent::ps_setSelcalInOwnAircraft);
             connect(this->ui->pb_CopyOver, &QPushButton::pressed, this, &CFlightPlanComponent::ps_copyRemarks);
             connect(this->ui->pb_RemarksGenerator, &QPushButton::clicked, this, &CFlightPlanComponent::ps_currentTabGenerator);
-
-            this->ps_resetFlightPlan();
-            this->ps_buildRemarksString();
         }
 
         CFlightPlanComponent::~CFlightPlanComponent()
@@ -68,6 +64,7 @@ namespace BlackGui
 
         void CFlightPlanComponent::loginDataSet()
         {
+            if (this->m_flightPlan.wasSentOrLoaded()) { return; } // when loaded or sent do not override
             if (!this->getIContextOwnAircraft()) { return; }
             this->prefillWithAircraftData(this->getIContextOwnAircraft()->getOwnAircraft());
         }
@@ -115,6 +112,13 @@ namespace BlackGui
         CFlightPlan CFlightPlanComponent::getFlightPlan() const
         {
             return this->m_flightPlan;
+        }
+
+        void CFlightPlanComponent::runtimeHasBeenSet()
+        {
+            // context dependent calls
+            this->ps_resetFlightPlan();
+            this->ps_buildRemarksString();
         }
 
         BlackMisc::CStatusMessageList CFlightPlanComponent::validateAndInitializeFlightPlan(BlackMisc::Aviation::CFlightPlan &flightPlan)
@@ -299,10 +303,7 @@ namespace BlackGui
         {
             Q_ASSERT(this->getIContextNetwork());
             Q_ASSERT(this->getIContextOwnAircraft());
-            if (this->getIContextNetwork())
-            {
-                this->prefillWithAircraftData(this->getIContextOwnAircraft()->getOwnAircraft());
-            }
+            if (this->getIContextOwnAircraft()) { this->prefillWithAircraftData(this->getIContextOwnAircraft()->getOwnAircraft()); }
             this->ui->le_AircraftRegistration->clear();
             this->ui->le_AirlineOperator->clear();
             this->ui->le_CrusingAltitude->setText("FL70");
@@ -355,8 +356,8 @@ namespace BlackGui
             QString rem;
             QString v = this->ui->cb_VoiceCapabilities->currentText().toUpper();
             if (v.contains("TEXT"))         { rem.append("/T/ "); }
-            else if (v.contains("VOICE"))   { rem.append("/V/ "); }
             else if (v.contains("RECEIVE")) { rem.append("/R/ "); }
+            else if (v.contains("VOICE"))   { rem.append("/V/ "); }
 
             v = this->ui->le_AirlineOperator->text().trimmed();
             if (!v.isEmpty()) rem.append("OPR/").append(v).append(" ");
