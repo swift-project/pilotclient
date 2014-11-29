@@ -1,7 +1,13 @@
-/* Copyright (C) 2013 VATSIM Community / contributors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKSIMPLUGIN_SIMCONNECT_OBJECT_H
 #define BLACKSIMPLUGIN_SIMCONNECT_OBJECT_H
@@ -50,10 +56,10 @@ namespace BlackSimPlugin
 
             BlackMisc::Aviation::CCallsign m_callsign;
             QSharedPointer<BlackCore::IInterpolator> m_interpolator;
-            int m_requestId;
-            int m_objectId;
+            int m_requestId = -1;
+            int m_objectId  = -1;
         };
-    }
-}
+    } // namespace
+} // namespace
 
 #endif // guard

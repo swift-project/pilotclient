@@ -1,7 +1,13 @@
-/* Copyright (C) 2013 VATSIM Community / contributors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
 
 #ifndef BLACKSIMPLUGIN_FSX_SIMCONNECT_DATADEFINITION_H
 #define BLACKSIMPLUGIN_FSX_SIMCONNECT_DATADEFINITION_H
@@ -13,6 +19,8 @@
 #endif
 #include <simconnect/SimConnect.h>
 #include <windows.h>
+#include <algorithm>
+#include <QString>
 
 namespace BlackSimPlugin
 {
@@ -57,13 +65,46 @@ namespace BlackSimPlugin
         };
 
         //! Data struct simulator environment
-        struct DataDefinitionSimEnvironment {
+        struct DataDefinitionSimEnvironment
+        {
             qint32 zuluTimeSeconds;  //!< Simulator zulu (GMT) ime in secs.
             qint32 localTimeSeconds; //!< Simulator local time in secs.
         };
 
+        //! The whole SB data area
+        struct DataDefinitionClientAreaSb
+        {
+            byte data[128] {}; //!< 128 bytes of data, offsets http://www.squawkbox.ca/doc/sdk/fsuipc.php
+
+            //! Standby = 1, else 0
+            byte getTransponderMode() const { return data[17]; }
+
+            //! Ident = 1, else 0
+            byte getIdent() const { return data[19]; }
+
+            //! Ident?
+            bool isIdent() const { return getIdent() != 0; }
+
+            //! Standby
+            bool isStandby() const { return getTransponderMode() != 0; }
+
+            //! Set default values
+            void setDefaultValues()
+            {
+                std::fill(data, data + 128, 0);
+                data[17] = 1; // standby
+                data[19] = 0; // no ident
+            }
+        };
+
+        //! Client areas
+        enum ClientAreaId
+        {
+            ClientAreaSquawkBox
+        };
+
         //! Handles SimConnect data definitions
-        class CSimConnectDataDefinition
+        class CSimConnectDefinitions
         {
         public:
 
@@ -74,23 +115,30 @@ namespace BlackSimPlugin
                 DataOwnAircraftTitle,
                 DataRemoteAircraftSituation,
                 DataGearHandlePosition,
-                DataSimEnvironment
+                DataSimEnvironment,
+                DataClientAreaSb,       //!< whole SB area
+                DataClientAreaSbIdent,  //!< ident single value
+                DataClientAreaSbStandby //!< standby
             };
 
             //! SimConnect request IDs
-            enum Requests
+            enum Request
             {
                 RequestOwnAircraft,
                 RequestRemoveAircraft,
                 RequestOwnAircraftTitle,
-                RequestSimEnvironment
+                RequestSimEnvironment,
+                RequestSbData,  // SB client area / XPDR mode ..
             };
 
             //! Constructor
-            CSimConnectDataDefinition();
+            CSimConnectDefinitions();
 
             //! Initialize all data definitions
-            static HRESULT initDataDefinitions(const HANDLE hSimConnect);
+            static HRESULT initDataDefinitionsWhenConnected(const HANDLE hSimConnect);
+
+            //! Log message category
+            static QString getMessageCategory() { return "swift.fsx.simconnect"; }
 
         private:
 
@@ -105,8 +153,11 @@ namespace BlackSimPlugin
 
             //! Initialize data definition for Simulator environment
             static HRESULT initSimulatorEnvironment(const HANDLE hSimConnect);
+
+            //! Initialize the SB data are
+            static HRESULT initSbDataArea(const HANDLE hSimConnect);
         };
-    }
-}
+    } // namespace
+} // namespace
 
 #endif // guard

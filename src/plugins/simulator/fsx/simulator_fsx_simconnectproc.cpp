@@ -42,7 +42,7 @@ namespace BlackSimPlugin
                                                      .arg(event->szApplicationName)
                                                      .arg(event->dwApplicationVersionMajor).arg(event->dwApplicationVersionMinor).arg(event->dwApplicationBuildMajor).arg(event->dwApplicationBuildMinor)
                                                      .arg(event->dwSimConnectVersionMajor).arg(event->dwSimConnectVersionMinor).arg(event->dwSimConnectBuildMajor).arg(event->dwSimConnectBuildMinor);
-                    CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).info(CProject::systemNameAndVersion());
+                    CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).info("Connect to FSX: %1") << CProject::systemNameAndVersion();
                     break;
                 }
             case SIMCONNECT_RECV_ID_EXCEPTION:
@@ -52,7 +52,7 @@ namespace BlackSimPlugin
                     ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d",
                                static_cast<int>(exception->dwException), static_cast<int>(exception->dwSendID),
                                static_cast<int>(exception->dwIndex), static_cast<int>(cbData));
-                    CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).error("Caught simConnect exception: %1 %2")
+                    CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).error("Caught FSX simConnect exception: %1 %2")
                             << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException)
                             << ex;
                     break;
@@ -93,9 +93,11 @@ namespace BlackSimPlugin
                     SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *event = static_cast<SIMCONNECT_RECV_EVENT_OBJECT_ADDREMOVE *>(pData);
                     if (event->uEventID == SystemEventObjectAdded)
                     {
+                        //
                     }
                     else if (event->uEventID == SystemEventObjectRemoved)
                     {
+                        //
                     }
                     break;
                 }
@@ -115,7 +117,7 @@ namespace BlackSimPlugin
             case SIMCONNECT_RECV_ID_ASSIGNED_OBJECT_ID:
                 {
                     SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *event = static_cast<SIMCONNECT_RECV_ASSIGNED_OBJECT_ID *>(pData);
-                    simulatorFsx->setSimconnectObjectID(event->dwRequestID, event->dwObjectID);
+                    simulatorFsx->setSimConnectObjectID(event->dwRequestID, event->dwObjectID);
                     break;
                 }
             case SIMCONNECT_RECV_ID_SIMOBJECT_DATA:
@@ -123,14 +125,14 @@ namespace BlackSimPlugin
                     SIMCONNECT_RECV_SIMOBJECT_DATA *pObjData = (SIMCONNECT_RECV_SIMOBJECT_DATA *) pData;
                     switch (pObjData->dwRequestID)
                     {
-                    case CSimConnectDataDefinition::RequestOwnAircraft:
+                    case CSimConnectDefinitions::RequestOwnAircraft:
                         {
                             DataDefinitionOwnAircraft *ownAircaft;
                             ownAircaft = (DataDefinitionOwnAircraft *)&pObjData->dwData;
                             simulatorFsx->updateOwnAircraftFromSim(*ownAircaft);
                             break;
                         }
-                    case CSimConnectDataDefinition::RequestOwnAircraftTitle:
+                    case CSimConnectDefinitions::RequestOwnAircraftTitle:
                         {
                             DataDefinitionOwnAircraftModel *dataDefinitionModel = (DataDefinitionOwnAircraftModel *) &pObjData->dwData;
                             CAircraftModel model;
@@ -138,7 +140,7 @@ namespace BlackSimPlugin
                             simulatorFsx->setAircraftModel(model);
                             break;
                         }
-                    case CSimConnectDataDefinition::RequestSimEnvironment:
+                    case CSimConnectDefinitions::RequestSimEnvironment:
                         {
                             DataDefinitionSimEnvironment *simEnv = (DataDefinitionSimEnvironment *) &pObjData->dwData;
                             qint32 zh = simEnv->zuluTimeSeconds / 3600;
@@ -179,12 +181,24 @@ namespace BlackSimPlugin
                     }
                     break;
                 }
+            case SIMCONNECT_RECV_ID_CLIENT_DATA:
+                {
+                    if (!simulatorFsx->m_useSbOffsets) { break; }
+                    SIMCONNECT_RECV_CLIENT_DATA *clientData = (SIMCONNECT_RECV_CLIENT_DATA *)pData;
+                    if (simulatorFsx->m_useSbOffsets && clientData->dwRequestID == CSimConnectDefinitions::RequestSbData)
+                    {
+                        //! \todo why is offset 19 ident 2/0 ?
+                        //! In FSUIPC it is 0/1, according to documentation it is 0/1 but I receive 2/0 here
+                        DataDefinitionClientAreaSb *sbData = (DataDefinitionClientAreaSb *) &clientData->dwData;
+                        simulatorFsx->updateOwnAircraftFromSim(*sbData);
+                    }
+                    break;
+                }
             default:
                 break;
+
             } // main switch
         } // method
 
     } // namespace
 } // namespace
-    }
-}

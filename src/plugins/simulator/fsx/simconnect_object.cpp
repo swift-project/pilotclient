@@ -17,10 +17,7 @@ namespace BlackSimPlugin
     namespace Fsx
     {
         CSimConnectObject::CSimConnectObject() :
-            m_interpolator(new CInterpolatorLinear()),
-            m_requestId(-1),
-            m_objectId(-1)
-        {
-        }
-    }
-}
+            m_interpolator(new CInterpolatorLinear())
+        { }
+    } // namespace
+} // namespace
