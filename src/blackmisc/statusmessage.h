@@ -102,8 +102,8 @@ namespace BlackMisc
         //! Severity as string
         static const QString &severityToString(StatusSeverity severity);
 
-        //! Severity as string
-        static StatusSeverity stringToSeverity(const QString &severityString);
+        //! Severity as string, if not possible to convert \sa CSeverityInfo
+        static StatusSeverity stringToSeverity(const QString &severity);
 
         //! Severities as strings
         static const QStringList &allSeverityStrings();

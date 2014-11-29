@@ -41,7 +41,7 @@ namespace BlackMisc
         auto categories = CLogMessageHelper::stripFlags(context.category);
         m_categories = CLogCategoryList::fromQString(categories);
 
-        switch(type)
+        switch (type)
         {
         default:
         case QtDebugMsg:
@@ -145,27 +145,24 @@ namespace BlackMisc
      */
     CStatusMessage::StatusSeverity CStatusMessage::stringToSeverity(const QString &severity)
     {
-        if (severity.compare(severityToString(SeverityDebug), Qt::CaseInsensitive) == 0)
-        {
-            return SeverityDebug;
-        }
-        else if (severity.compare(severityToString(SeverityInfo), Qt::CaseInsensitive) == 0)
-        {
-            return SeverityInfo;
-        }
-        else if (severity.compare(severityToString(SeverityWarning), Qt::CaseInsensitive) == 0)
-        {
-            return SeverityWarning;
-        }
-        else if (severity.compare(severityToString(SeverityError), Qt::CaseInsensitive) == 0)
-        {
-            return SeverityError;
-        }
-        else
-        {
-            qFatal("Unknown severity string");
-            return SeverityError;
-        }
+        // pre-check
+        QString severityString(severity.trimmed().toLower());
+        if (severityString.isEmpty()) { return SeverityInfo; }
+
+        // hard check
+        if (severityString.compare(severityToString(SeverityDebug), Qt::CaseInsensitive) == 0) { return SeverityDebug; }
+        if (severityString.compare(severityToString(SeverityInfo), Qt::CaseInsensitive) == 0) { return SeverityInfo; }
+        if (severityString.compare(severityToString(SeverityWarning), Qt::CaseInsensitive) == 0) { return SeverityWarning; }
+        if (severityString.compare(severityToString(SeverityError), Qt::CaseInsensitive) == 0) { return SeverityError; }
+
+        // not found yet, lenient checks
+        QChar s = severityString.at(0);
+        if (s == 'd') { return SeverityDebug; }
+        if (s == 'i') { return SeverityInfo; }
+        if (s == 'w') { return SeverityWarning; }
+        if (s == 'e') { return SeverityError; }
+
+        return SeverityInfo;
     }
 
     /*
