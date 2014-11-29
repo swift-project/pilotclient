@@ -83,13 +83,14 @@ namespace BlackGui
             lockTabBarMenuAction->setChecked(this->m_lockTabBar);
             menu->addAction(lockTabBarMenuAction);
             connect(lockTabBarMenuAction, &QAction::toggled, this, &CInfoArea::ps_toggleTabBarLocked);
+
             menu->addSeparator();
             QMenu *subMenuToggleFloat = new QMenu("Toggle Float/Dock", menu);
             QMenu *subMenuDisplay = new QMenu("Display", menu);
             subMenuDisplay->addActions(this->getInfoAreaSelectActions(subMenuDisplay));
 
             QSignalMapper *signalMapperToggleFloating = new QSignalMapper(menu);
-            bool c = false;
+            bool c = false; // check connections
 
             for (int i = 0; i < this->m_dockWidgetInfoAreas.size(); i++)
             {
@@ -137,6 +138,7 @@ namespace BlackGui
 
             // tab bar position
             menu->addAction(CIcons::dockBottom16(), "Toogle tabbar position", this, SLOT(ps_toggleTabBarPosition()));
+            Q_UNUSED(c);
         }
     }
 
