@@ -62,8 +62,8 @@ namespace BlackGui
             static const QString &ledsOriginator();
 
             QScopedPointer<BlackGui::CLedWidget> m_ledStandby;
-            QScopedPointer<BlackGui::CLedWidget> m_ledIdent;
             QScopedPointer<BlackGui::CLedWidget> m_ledModes;
+            QScopedPointer<BlackGui::CLedWidget> m_ledIdent;
 
         };
 

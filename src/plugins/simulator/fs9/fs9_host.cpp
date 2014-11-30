@@ -159,8 +159,16 @@ namespace BlackSimPlugin
             if (m_hostStatus == Terminated) return hr;
 
             BlackMisc::CLogMessage(this).info("Hosting terminated!");
-            hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0);
-            hr = m_directPlayPeer->Close(0);
+            if (FAILED(hr = m_directPlayPeer->TerminateSession(nullptr, 0, 0)))
+            {
+                return printDirectPlayError(hr);
+            }
+
+            if (FAILED(hr = m_directPlayPeer->Close(0)))
+            {
+                return printDirectPlayError(hr);
+            }
+
             m_hostStatus = Terminated;
 
             emit statusChanged(m_hostStatus);

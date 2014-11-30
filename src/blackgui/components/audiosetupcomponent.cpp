@@ -59,6 +59,7 @@ namespace BlackGui
                 Q_ASSERT(connected);
                 connected = this->connect(this->ui->cb_SetupAudioOutputDevice, SIGNAL(currentIndexChanged(int)), this, SLOT(ps_audioDeviceSelected(int)));
                 Q_ASSERT(connected);
+                Q_UNUSED(connected);
 
                 this->connect(this->ui->pb_SetupAudioMicrophoneTest, &QPushButton::clicked, this, &CAudioSetupComponent::ps_startAudioTest);
                 this->connect(this->ui->pb_SetupAudioSquelchTest, &QPushButton::clicked, this, &CAudioSetupComponent::ps_startAudioTest);

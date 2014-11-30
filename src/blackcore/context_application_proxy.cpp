@@ -48,7 +48,7 @@ namespace BlackCore
         s = connection.connect(serviceName, IContextApplication::ObjectPath(), IContextApplication::InterfaceName(),
                                "componentChanged", this, SIGNAL(componentChanged(uint, uint)));
         Q_ASSERT(s);
-
+        Q_UNUSED(s);
     }
 
     /*

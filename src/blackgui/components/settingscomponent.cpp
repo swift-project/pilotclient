@@ -133,6 +133,7 @@ namespace BlackGui
             connected = this->connect(this->ui->cb_SettingsGuiFontStyle, SIGNAL(currentIndexChanged(QString)), this, SLOT(ps_fontChanged()));
             Q_ASSERT(connected);
             this->connect(this->ui->tb_SettingsGuiFontColor, &QToolButton::clicked, this, &CSettingsComponent::ps_fontColorDialog);
+            Q_UNUSED(connected);
         }
 
         /*

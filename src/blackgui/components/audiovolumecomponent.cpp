@@ -49,6 +49,7 @@ namespace BlackGui
             // to audio audio context
             c = connect(this->ui->pb_Mute, &QPushButton::toggled, this->getIContextAudio(), &IContextAudio::setMute);
             Q_ASSERT(c);
+            Q_UNUSED(c);
         }
 
         void CAudioVolumeComponent::ps_onMuteChanged(bool muted)

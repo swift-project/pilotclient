@@ -64,7 +64,7 @@ namespace BlackMisc
 
         // not all classes have implemented nesting
         const QString m = QString("Property by index not found (setter), index: ").append(index.toQString());
-        qFatal(m.toLatin1().constData());
+        qFatal("%s", qPrintable(m));
     }
 
     /*
@@ -88,7 +88,7 @@ namespace BlackMisc
 
         // not all classes have implemented nesting
         const QString m = QString("Property by index not found, index: ").append(index.toQString());
-        qFatal(m.toLatin1().constData());
+        qFatal("%s", qPrintable(m));
         return QVariant(m); // avoid compiler warning
     }
 

@@ -171,7 +171,6 @@ namespace BlackGui
             }
             else if (this->getIContextAudio())
             {
-                CSelcal selcal(selcal);
                 this->getIContextAudio()->playSelcalTone(selcal);
             }
             else
