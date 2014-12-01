@@ -110,7 +110,9 @@ namespace BlackGui
                 Q_ASSERT(c);
                 signalMapperToggleFloating->setMapping(toggleFloatingMenuAction, i);
             }
-            c = connect(signalMapperToggleFloating, SIGNAL(mapped(int)), this, SLOT(toggleFloating(int)));
+
+            // new syntax not yet possible because of overloaded signal
+            c = connect(signalMapperToggleFloating, SIGNAL(mapped(int)), this, SLOT(toggleFloatingByIndex(int)));
             Q_ASSERT(c);
 
             menu->addMenu(subMenuDisplay);
