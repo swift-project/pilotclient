@@ -88,6 +88,15 @@ namespace BlackMisc
                 return modeAsString(this->getTransponderMode());
             }
 
+            //! In any sending mode such as MIL1 oder ModeS
+            bool isInNormalSendingMode() const;
+
+            //! Standby?
+            bool isInStandby() const { return StateStandby == m_transponderMode; }
+
+            //! Standby?
+            bool isIdentifying() const { return StateIdent == m_transponderMode; }
+
             //! Transponder mode as string
             void setModeAsString(const QString &mode)
             {

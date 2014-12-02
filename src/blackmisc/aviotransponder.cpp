@@ -26,6 +26,25 @@ namespace BlackMisc
             return CTransponder::isValidTransponderCode(this->m_transponderCode);
         }
 
+        bool CTransponder::isInNormalSendingMode() const
+        {
+            switch (this->m_transponderMode)
+            {
+            case ModeA:
+            case ModeC:
+            case ModeMil1:
+            case ModeMil2:
+            case ModeMil3:
+            case ModeMil4:
+            case ModeMil5:
+                return true;
+            case StateIdent:
+            case StateStandby:
+            default:
+                return false;
+            }
+        }
+
         /*
          * String representation
          */

@@ -63,13 +63,13 @@ namespace BlackMisc
         /*
          * Set cockpit data
          */
-        void CAircraft::setCockpit(const CComSystem &com1, const CComSystem &com2, qint32 transponderCode)
+        void CAircraft::setCockpit(const CComSystem &com1, const CComSystem &com2, int transponderCode, CTransponder::TransponderMode transponderMode)
         {
             this->setCom1System(com1);
             this->setCom2System(com2);
             this->m_transponder.setTransponderCode(transponderCode);
+            this->m_transponder.setTransponderMode(transponderMode);
         }
-
 
         /*
          * Changed data

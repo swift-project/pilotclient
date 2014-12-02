@@ -174,7 +174,7 @@ namespace BlackMisc
             void setCockpit(const CComSystem &com1, const CComSystem &com2, const CTransponder &transponder);
 
             //! Cockpit data
-            void setCockpit(const CComSystem &com1, const CComSystem &com2, qint32 transponderCode);
+            void setCockpit(const CComSystem &com1, const CComSystem &com2, int transponderCode, CTransponder::TransponderMode mode);
 
             //! Own SELCAL code
             void setSelcal(const BlackMisc::Aviation::CSelcal &selcal) { this->m_selcal = selcal; }
@@ -204,6 +204,12 @@ namespace BlackMisc
 
             //! Set transponder
             void setTransponder(const CTransponder &transponder) { this->m_transponder = transponder; }
+
+            //! Set transponder mode
+            void setTransponderMode(CTransponder::TransponderMode mode) { this->m_transponder.setTransponderMode(mode); }
+
+            //! Set transponder code
+            void setTransponderCode(int code) { this->m_transponder.setTransponderCode(code); }
 
             //! Get transponder code
             QString getTransponderCodeFormatted() const { return this->m_transponder.getTransponderCodeFormatted(); }
