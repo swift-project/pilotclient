@@ -116,7 +116,7 @@ namespace BlackMisc
             QString getTransponderCodeAndModeFormatted() const;
 
             //! Set transponder code
-            void setTransponderCode(qint32 transponderCode) { this->m_transponderCode = transponderCode; }
+            void setTransponderCode(int transponderCode) { this->m_transponderCode = transponderCode; }
 
             //! Set transponder code
             void setTransponderCode(const QString &transponderCode);

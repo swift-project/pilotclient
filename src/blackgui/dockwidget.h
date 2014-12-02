@@ -121,10 +121,10 @@ namespace BlackGui
         //! \copydoc QWidget::paintEvent
         virtual void paintEvent(QPaintEvent *event) override;
 
-        //! \copy QMainWindow::mouseMoveEvent
+        //! \copydoc QMainWindow::mouseMoveEvent
         virtual void mouseMoveEvent(QMouseEvent *event) override { if (!handleMouseMoveEvent(event)) { QDockWidget::mouseMoveEvent(event); } ; }
 
-        //! \copy QMainWindow::mousePressEvent
+        //! \copydoc QMainWindow::mousePressEvent
         virtual void mousePressEvent(QMouseEvent *event) override { if (!handleMousePressEvent(event)) { QDockWidget::mousePressEvent(event); } }
 
         //! Contribute to menu

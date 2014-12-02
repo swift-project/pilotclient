@@ -82,10 +82,10 @@ signals:
     void currentMainInfoAreaChanged(const QWidget *currentWidget);
 
 protected:
-    //! \copy QMainWindow::mouseMoveEvent
+    //! \copydoc QMainWindow::mouseMoveEvent
     virtual void mouseMoveEvent(QMouseEvent *event) override { if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); } ; }
 
-    //! \copy QMainWindow::mousePressEvent
+    //! \copydoc QMainWindow::mousePressEvent
     virtual void mousePressEvent(QMouseEvent *event) override { if (!handleMousePressEvent(event)) { QMainWindow::mousePressEvent(event); } }
 
     //! \copydoc QMainWindow::closeEvent

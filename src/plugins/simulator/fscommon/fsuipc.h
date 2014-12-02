@@ -83,6 +83,9 @@ namespace BlackSimPlugin
                 return sims;
             }
 
+            //! Log message category
+            static QString getMessageCategory() { return "swift.fscommon.fsuipc"; }
+
         private:
             bool m_connected;
             bool m_validReadValues;

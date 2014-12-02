@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKSIMPLUGIN_FREEFUNCTIONS_H
 #define BLACKSIMPLUGIN_FREEFUNCTIONS_H
 
@@ -51,18 +53,17 @@ namespace BlackSimPlugin
         BlackMisc::Aviation::CAircraftSituation aircraftSituationfromFS9(const MPPositionVelocity &positionVelocity);
 
         //! Convert an aircraft situation to a FS9 struct
-        MPPositionVelocity aircraftSituationtoFS9(const BlackMisc::Aviation::CAircraftSituation &oldSituation,
+        MPPositionVelocity aircraftSituationToFS9(const BlackMisc::Aviation::CAircraftSituation &oldSituation,
                                  const BlackMisc::Aviation::CAircraftSituation &newSituation,
                                  double updateInterval);
 
         //! Convert an aircraft situation to a FS9 struct
-        MPPositionSlewMode aircraftSituationtoFS9(const BlackMisc::Aviation::CAircraftSituation &situation);
+        MPPositionSlewMode aircraftSituationToFS9(const BlackMisc::Aviation::CAircraftSituation &situation);
 
-
+        //! Print the direct play error
         HRESULT printDirectPlayError(HRESULT error);
-
 
     }
 }
 
-#endif //BLACKSIMPLUGIN_FREEFUNCTIONS_H
+#endif // guard

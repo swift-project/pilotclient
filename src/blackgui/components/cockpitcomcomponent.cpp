@@ -127,9 +127,11 @@ namespace BlackGui
             this->updateFrequencyDisplaysFromComSystems(com1, com2);
 
             // update transponder
-            qint32 tc = transponder.getTransponderCode();
-            if (tc != static_cast<qint32>(this->ui->sbp_ComPanelTransponder->value()))
+            int tc = transponder.getTransponderCode();
+            if (tc != this->ui->sbp_ComPanelTransponder->value())
+            {
                 this->ui->sbp_ComPanelTransponder->setValue(tc);
+            }
 
             this->ui->cbp_ComPanelTransponderMode->setSelectedTransponderMode(transponder.getTransponderMode());
 

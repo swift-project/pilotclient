@@ -85,7 +85,7 @@ namespace BlackSimPlugin
             if (m_interpolator.hasEnoughAircraftSituations())
             {
                 CAircraftSituation situation = m_interpolator.getCurrentSituation();
-                MPPositionSlewMode positionSlewMode = aircraftSituationtoFS9(situation);
+                MPPositionSlewMode positionSlewMode = aircraftSituationToFS9(situation);
 
                 QByteArray positionMessage;
                 MultiPlayerPacketParser::writeType(positionMessage, CFs9Sdk::MULTIPLAYER_PACKET_ID_POSITION_SLEWMODE);

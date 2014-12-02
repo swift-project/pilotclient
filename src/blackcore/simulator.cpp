@@ -18,4 +18,4 @@ namespace BlackCore
     {
         emit simulatorStatusChanged(isConnected(), isRunning(), isPaused());
     }
-}
+} // namespace

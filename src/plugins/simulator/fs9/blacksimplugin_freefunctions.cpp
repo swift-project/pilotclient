@@ -81,7 +81,7 @@ namespace BlackSimPlugin
             return situation;
         }
 
-        MPPositionVelocity aircraftSituationtoFS9(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double updateInterval)
+        MPPositionVelocity aircraftSituationToFS9(const CAircraftSituation &oldSituation, const CAircraftSituation &newSituation, double updateInterval)
         {
             MPPositionVelocity positionVelocity;
 
@@ -137,7 +137,7 @@ namespace BlackSimPlugin
             return positionVelocity;
         }
 
-        MPPositionSlewMode aircraftSituationtoFS9(const CAircraftSituation &situation)
+        MPPositionSlewMode aircraftSituationToFS9(const CAircraftSituation &situation)
         {
             MPPositionSlewMode positionSlewMode;
 
@@ -208,7 +208,8 @@ namespace BlackSimPlugin
                 break;
             }
 
-            BlackMisc::CLogMessage().error(errorMessage);
+            errorMessage = "DirectPlay: " + errorMessage;
+            BlackMisc::CLogMessage("swift.fs9.freefunctions").error(errorMessage);
 
             return error;
         }

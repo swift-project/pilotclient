@@ -64,7 +64,7 @@ namespace BlackCore
 
         // TODO: This would need to come from somewhere (mappings)
         // Own callsign, plane ICAO status, model used
-        this->m_ownAircraft.setCallsign(CCallsign("BLACK"));
+        this->m_ownAircraft.setCallsign(CCallsign("SWIFT"));
         this->m_ownAircraft.setIcaoInfo(CAircraftIcao("C172", "L1P", "GA", "GA", "0000ff"));
 
         // voice rooms

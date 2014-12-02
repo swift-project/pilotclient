@@ -1,7 +1,11 @@
-/* Copyright (C) 2013 VATSIM Community / contributors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "simulator_fsx.h"
 #include "simconnect_datadefinition.h"
@@ -48,8 +52,9 @@ namespace BlackSimPlugin
                     ex.sprintf("Exception=%d  SendID=%d  Index=%d  cbData=%d",
                                static_cast<int>(exception->dwException), static_cast<int>(exception->dwSendID),
                                static_cast<int>(exception->dwIndex), static_cast<int>(cbData));
-                    qDebug() << "Caught simConnect exception: " << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException);
-                    qDebug() << ex;
+                    CLogMessage(static_cast<CSimulatorFsx *>(nullptr)).error("Caught simConnect exception: %1 %2")
+                            << CSimConnectUtilities::simConnectExceptionToString((SIMCONNECT_EXCEPTION)exception->dwException)
+                            << ex;
                     break;
                 }
             case SIMCONNECT_RECV_ID_QUIT:
@@ -178,5 +183,8 @@ namespace BlackSimPlugin
                 break;
             } // main switch
         } // method
+
+    } // namespace
+} // namespace
     }
 }

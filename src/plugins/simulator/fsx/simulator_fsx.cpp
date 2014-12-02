@@ -514,12 +514,13 @@ namespace BlackSimPlugin
                     position.Heading = situation.getHeading().value(CAngleUnit::deg());
                     position.Airspeed = situation.getGroundSpeed().value(CSpeedUnit::kts());
 
-                    // TODO: epic fail for helicopters and VTOPs!
+                    //! \todo : epic fail for helicopters and VTOPs!
                     position.OnGround = position.Airspeed < 30 ? 1 : 0;
 
                     DataDefinitionRemoteAircraftSituation ddAircraftSituation;
                     ddAircraftSituation.position = position;
 
+                    //! \todo Gear handling with new protocol extension
                     DataDefinitionGearHandlePosition gearHandle;
                     gearHandle.gearHandlePosition = position.Altitude < 1000 ? 1 : 0;
 
@@ -563,11 +564,11 @@ namespace BlackSimPlugin
 
             if (hr != S_OK)
             {
-                qWarning() << "Sending time sync failed!";
+                CLogMessage(this).warning("Sending time sync failed!");
             }
 
             m_syncDeferredCounter = 5; // allow some time to sync
             CLogMessage(this).info("Synchronized time to UTC: %1") << myTime.toString();
         }
-    }
-}
+    } // namespace
+} // namespace

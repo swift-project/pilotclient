@@ -14,12 +14,14 @@
 #include "FSUIPC/FSUIPC_User.h"
 
 #include "blacksim/fscommon/bcdconversions.h"
+#include "blackmisc/logmessage.h"
 #include <QDebug>
 #include <QLatin1Char>
 #include <QDateTime>
 
 using namespace BlackSim::FsCommon;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc;
 using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
@@ -58,16 +60,14 @@ namespace BlackSimPlugin
                       .arg(QLatin1Char(48 + (0x0f & (FSUIPC_Version >> 16))))
                       .arg((FSUIPC_Version & 0xffff) ? "a" + (FSUIPC_Version & 0xff) - 1 : "");
                 this->m_fsuipcVersion = QString("FSUIPC %1 (%2)").arg(ver).arg(sim);
-                // KB_REMOVE: Remove this later
-                qDebug() << "FSUIPC connected" << this->m_fsuipcVersion;
+                CLogMessage(this).info("FSUIPC connected: %1") << this->m_fsuipcVersion;
             }
             else
             {
                 this->m_connected = false;
                 int index = static_cast<int>(result);
                 this->m_lastErrorMessage = CFsuipc::errorMessages().at(index);
-                // KB_REMOVE: Remove this later
-                qDebug() << "FSUIPC" << this->m_lastErrorMessage;
+                CLogMessage(this).info("FSUIPC not connected: %1") << this->m_lastErrorMessage;
             }
             return this->m_connected;
         }
@@ -174,16 +174,18 @@ namespace BlackSimPlugin
                 transponderCodeRaw = CBcdConversions::bcd2Dec(transponderCodeRaw);
                 xpdr.setTransponderCode(transponderCodeRaw);
                 // Mode by SB3
-                if (xpdrIdentSb3Raw > 0)
+                if (xpdrIdentSb3Raw != 0)
                 {
-                    // TODO: Reset value
+                    //! \todo Reset value for FSUIPC
                     xpdr.setTransponderMode(CTransponder::StateIdent);
+                    // qDebug() << "xpdr ident" << xpdrIdentSb3Raw;
                 }
                 else
                 {
                     xpdr.setTransponderMode(
                         xpdrModeSb3Raw == 0 ? CTransponder::ModeC : CTransponder::StateStandby
                     );
+                    // qDebug() << "xpdr mode" << xpdrModeSb3Raw;
                 }
                 this->m_aircraft.setCockpit(com1, com2, xpdr);
 
@@ -213,8 +215,6 @@ namespace BlackSimPlugin
                 situation.setGroundspeed(groundspeed);
                 situation.setAltitude(altitude);
                 this->m_aircraft.setSituation(situation);
-
-                // qDebug() << m_aircraft;
             }
             else
             {

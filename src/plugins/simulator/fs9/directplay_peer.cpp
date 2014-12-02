@@ -10,12 +10,15 @@
 #include "directplay_peer.h"
 #include "multiplayer_packet_parser.h"
 #include "blacksimplugin_freefunctions.h"
+#include "blackmisc/logmessage.h"
 #include <QDebug>
 #include <QTimer>
 #include <QFile>
 #include <QStringList>
 #include <QScopedPointer>
 #include <QMutexLocker>
+
+using namespace BlackMisc;
 
 namespace BlackSimPlugin
 {
@@ -48,36 +51,36 @@ namespace BlackSimPlugin
 
             switch (messageId)
             {
-                case DPN_MSGID_CREATE_PLAYER:
+            case DPN_MSGID_CREATE_PLAYER:
                 {
-                    DPNMSG_CREATE_PLAYER* pCreatePlayerMsg = static_cast<DPNMSG_CREATE_PLAYER*>(msgBuffer);
+                    DPNMSG_CREATE_PLAYER *pCreatePlayerMsg = static_cast<DPNMSG_CREATE_PLAYER *>(msgBuffer);
 
                     HRESULT hr;
 
                     // Get the peer info and extract its name
                     DWORD dwSize = 0;
-                    DPN_PLAYER_INFO* pdpPlayerInfo = nullptr;
+                    DPN_PLAYER_INFO *pdpPlayerInfo = nullptr;
                     hr = DPNERR_CONNECTING;
 
                     // GetPeerInfo might return DPNERR_CONNECTING when connecting,
                     // so just keep calling it if it does
-                    while( hr == DPNERR_CONNECTING )
-                        hr = m_directPlayPeer->GetPeerInfo( pCreatePlayerMsg->dpnidPlayer, pdpPlayerInfo, &dwSize, 0 );
+                    while (hr == DPNERR_CONNECTING)
+                        hr = m_directPlayPeer->GetPeerInfo(pCreatePlayerMsg->dpnidPlayer, pdpPlayerInfo, &dwSize, 0);
 
-                    if( hr == DPNERR_BUFFERTOOSMALL )
+                    if (hr == DPNERR_BUFFERTOOSMALL)
                     {
                         QScopedArrayPointer<unsigned char> memPtr(new unsigned char[dwSize]);
-                        pdpPlayerInfo = reinterpret_cast<DPN_PLAYER_INFO*>(memPtr.data());
-                        if( pdpPlayerInfo == nullptr)
+                        pdpPlayerInfo = reinterpret_cast<DPN_PLAYER_INFO *>(memPtr.data());
+                        if (pdpPlayerInfo == nullptr)
                         {
                             break;
                         }
 
-                        ZeroMemory( pdpPlayerInfo, dwSize );
+                        ZeroMemory(pdpPlayerInfo, dwSize);
                         pdpPlayerInfo->dwSize = sizeof(DPN_PLAYER_INFO);
 
-                        hr = m_directPlayPeer->GetPeerInfo( pCreatePlayerMsg->dpnidPlayer, pdpPlayerInfo, &dwSize, 0 );
-                        if( SUCCEEDED(hr))
+                        hr = m_directPlayPeer->GetPeerInfo(pCreatePlayerMsg->dpnidPlayer, pdpPlayerInfo, &dwSize, 0);
+                        if (SUCCEEDED(hr))
                         {
                             if (pdpPlayerInfo->dwPlayerFlags & DPNPLAYER_LOCAL)
                                 m_playerLocal = pCreatePlayerMsg->dpnidPlayer;
@@ -96,33 +99,33 @@ namespace BlackSimPlugin
                     break;
                 }
 
-                case DPN_MSGID_RECEIVE:
+            case DPN_MSGID_RECEIVE:
                 {
                     PDPNMSG_RECEIVE pReceiveMsg = static_cast<PDPNMSG_RECEIVE>(msgBuffer);
 
                     // Proceeed only, if the sender is our local player
                     if (pReceiveMsg->dpnidSender == m_playerUser)
                     {
-                        QByteArray messageData = QByteArray((char*)pReceiveMsg->pReceiveData, pReceiveMsg->dwReceiveDataSize);
+                        QByteArray messageData = QByteArray((char *)pReceiveMsg->pReceiveData, pReceiveMsg->dwReceiveDataSize);
 
                         emit customPacketReceived(messageData);
                     }
                     break;
                 }
 
-                case DPN_MSGID_ENUM_HOSTS_RESPONSE:
+            case DPN_MSGID_ENUM_HOSTS_RESPONSE:
                 {
                     PDPNMSG_ENUM_HOSTS_RESPONSE enumHostsResponseMsg = static_cast<PDPNMSG_ENUM_HOSTS_RESPONSE>(msgBuffer);
                     const DPN_APPLICATION_DESC *applicationDescription = enumHostsResponseMsg->pApplicationDescription;
 
                     QMutexLocker locker(&m_mutexHostList);
 
-                    auto iterator = std::find_if(m_hostNodeList.begin(), m_hostNodeList.end(), [&] (const CHostNode &hostNode)
+                    auto iterator = std::find_if(m_hostNodeList.begin(), m_hostNodeList.end(), [&](const CHostNode & hostNode)
                     {
                         return applicationDescription->guidInstance == hostNode.getApplicationDesc().guidInstance;
                     });
 
-                    if(iterator == m_hostNodeList.end())
+                    if (iterator == m_hostNodeList.end())
                     {
 
                         // This host session is not in the list then so insert it.
@@ -130,7 +133,7 @@ namespace BlackSimPlugin
                         HRESULT hr;
 
                         // Copy the Host Address
-                        if( FAILED( hr = enumHostsResponseMsg->pAddressSender->Duplicate( hostNode.getHostAddressPtr() ) ) )
+                        if (FAILED(hr = enumHostsResponseMsg->pAddressSender->Duplicate(hostNode.getHostAddressPtr())))
                         {
                             qWarning() << "Failed to duplicate host address!";
                             return hr;
@@ -169,25 +172,25 @@ namespace BlackSimPlugin
             CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
             // Create the IDirectPlay8Peer Object
-            if( FAILED( hr = CoCreateInstance(CLSID_DirectPlay8Peer,
-                                              nullptr,
-                                              CLSCTX_INPROC_SERVER,
-                                              IID_IDirectPlay8Peer,
-                                              reinterpret_cast<void **>(&m_directPlayPeer) ) ) )
+            if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Peer,
+                                             nullptr,
+                                             CLSCTX_INPROC_SERVER,
+                                             IID_IDirectPlay8Peer,
+                                             reinterpret_cast<void **>(&m_directPlayPeer))))
             {
                 qWarning() << "Failed to create DirectPlay8Peer object!";
                 return hr;
             }
 
             // Init DirectPlay
-            if( FAILED( hr = m_directPlayPeer->Initialize(&m_callbackWrapper, m_callbackWrapper.messageHandler, 0 ) ) )
+            if (FAILED(hr = m_directPlayPeer->Initialize(&m_callbackWrapper, m_callbackWrapper.messageHandler, 0)))
             {
                 qWarning() << "Failed to initialize directplay peer!";
                 return hr;
             }
 
             // Ensure that TCP/IP is a valid Service Provider
-            if( !isServiceProviderValid( &CLSID_DP8SP_TCPIP ) )
+            if (!isServiceProviderValid(&CLSID_DP8SP_TCPIP))
             {
                 hr = E_FAIL;
                 qWarning() << "Service provider is invalid!";
@@ -197,7 +200,7 @@ namespace BlackSimPlugin
             return hr;
         }
 
-        bool CDirectPlayPeer::isServiceProviderValid(const GUID* /*pGuidSP*/)
+        bool CDirectPlayPeer::isServiceProviderValid(const GUID * /*pGuidSP*/)
         {
             DWORD dwItems = 0;
             DWORD dwSize = 0;
@@ -205,7 +208,7 @@ namespace BlackSimPlugin
             // The first call is to retrieve the size of the DPN_SERVICE_PROVIDER_INFO array
             HRESULT hr = m_directPlayPeer->EnumServiceProviders(&CLSID_DP8SP_TCPIP, nullptr, nullptr, &dwSize, &dwItems, 0);
 
-            if( hr != DPNERR_BUFFERTOOSMALL)
+            if (hr != DPNERR_BUFFERTOOSMALL)
             {
                 qWarning() << "Failed to enumerate service providers!";
                 return false;
@@ -214,18 +217,18 @@ namespace BlackSimPlugin
             // Allocating an array with new DPN_SERVICE_PROVIDER_INFO[items] does not work, because the struct has
             // several pointers in it. Hence EnumServiceProviders tells us how much memory it exactly needs.
             QScopedArrayPointer<unsigned char> memPtr(new unsigned char[dwSize]);
-            DPN_SERVICE_PROVIDER_INFO* dpnSPInfo = reinterpret_cast<DPN_SERVICE_PROVIDER_INFO*>(memPtr.data());
+            DPN_SERVICE_PROVIDER_INFO *dpnSPInfo = reinterpret_cast<DPN_SERVICE_PROVIDER_INFO *>(memPtr.data());
 
-            if( FAILED( hr = m_directPlayPeer->EnumServiceProviders(&CLSID_DP8SP_TCPIP, nullptr, dpnSPInfo, &dwSize, &dwItems, 0 ) ) )
+            if (FAILED(hr = m_directPlayPeer->EnumServiceProviders(&CLSID_DP8SP_TCPIP, nullptr, dpnSPInfo, &dwSize, &dwItems, 0)))
             {
                 qWarning() << "Failed to enumerate service providers!";
                 return false;
             }
 
             // There are no items returned so the requested SP is not available
-            if( dwItems == 0) hr = E_FAIL;
+            if (dwItems == 0) hr = E_FAIL;
 
-            if( SUCCEEDED(hr) ) return true;
+            if (SUCCEEDED(hr)) return true;
             else return false;
         }
 
@@ -234,17 +237,17 @@ namespace BlackSimPlugin
             HRESULT hr = S_OK;
 
             // Create our IDirectPlay8Address Device Address
-            if( FAILED( hr = CoCreateInstance( CLSID_DirectPlay8Address, nullptr,
-                                               CLSCTX_INPROC_SERVER,
-                                               IID_IDirectPlay8Address,
-                                               reinterpret_cast<void**>(&m_deviceAddress) ) ) )
+            if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
+                                             CLSCTX_INPROC_SERVER,
+                                             IID_IDirectPlay8Address,
+                                             reinterpret_cast<void **>(&m_deviceAddress))))
             {
                 qWarning() << "Failed to create DirectPlay8Address instance!";
                 return hr;
             }
 
             // Set the SP for our Device Address
-            if( FAILED( hr = m_deviceAddress->SetSP( &CLSID_DP8SP_TCPIP ) ) )
+            if (FAILED(hr = m_deviceAddress->SetSP(&CLSID_DP8SP_TCPIP)))
             {
                 qWarning() << "Failed to set SP!";
                 return hr;
@@ -258,38 +261,37 @@ namespace BlackSimPlugin
             HRESULT hr = S_OK;
 
             // Create our IDirectPlay8Address Device Address
-            if( FAILED( hr = CoCreateInstance( CLSID_DirectPlay8Address, nullptr,
-                                               CLSCTX_INPROC_SERVER,
-                                               IID_IDirectPlay8Address,
-                                               reinterpret_cast<void**>(&m_deviceAddress) ) ) )
+            if (FAILED(hr = CoCreateInstance(CLSID_DirectPlay8Address, nullptr,
+                                             CLSCTX_INPROC_SERVER,
+                                             IID_IDirectPlay8Address,
+                                             reinterpret_cast<void **>(&m_deviceAddress))))
                 return printDirectPlayError(hr);
 
             // Set the SP for our Device Address
-            if( FAILED( hr = m_deviceAddress->SetSP( &CLSID_DP8SP_TCPIP ) ) )
+            if (FAILED(hr = m_deviceAddress->SetSP(&CLSID_DP8SP_TCPIP)))
                 return printDirectPlayError(hr);
 
             return S_OK;
         }
 
-        HRESULT CDirectPlayPeer::sendMessage( const QByteArray &message)
+        HRESULT CDirectPlayPeer::sendMessage(const QByteArray &message)
         {
             HRESULT hr = S_OK;
             DPN_BUFFER_DESC dpBufferDesc;
 
-            if( ( dpBufferDesc.dwBufferSize = message.size() ) == 0 ) return S_FALSE;
+            if ((dpBufferDesc.dwBufferSize = message.size()) == 0) return S_FALSE;
 
-            dpBufferDesc.pBufferData = (BYTE*)message.data();
+            dpBufferDesc.pBufferData = (BYTE *)message.data();
 
             // If m_playerUser is non zero, send it only to him
-            if( FAILED( hr = m_directPlayPeer->SendTo( m_playerUser,
-                                                    &dpBufferDesc,
-                                                    1, 0,
-                                                    nullptr, nullptr,
-                                                    DPNSEND_SYNC | DPNSEND_NOLOOPBACK ) ) )
+            if (FAILED(hr = m_directPlayPeer->SendTo(m_playerUser,
+                            &dpBufferDesc,
+                            1, 0,
+                            nullptr, nullptr,
+                            DPNSEND_SYNC | DPNSEND_NOLOOPBACK)))
             {
-                qWarning() << "Failed to send message!";
+                CLogMessage(this).warning("DirectPlay: Failed to send message!");
             }
-
             return hr;
         }
     }
