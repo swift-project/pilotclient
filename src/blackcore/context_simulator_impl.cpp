@@ -32,7 +32,7 @@ namespace BlackCore
     {
         m_updateTimer = new QTimer(this);
         findSimulatorPlugins();
-        connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::ps_updateOwnAircraft);
+        connect(m_updateTimer, &QTimer::timeout, this, &CContextSimulator::ps_updateOwnAircraftContext);
 
         // do not load plugin here, as it depends on settings
         // it has to be guaranteed the settings are alredy loaded
@@ -243,22 +243,25 @@ namespace BlackCore
         m_simulator = nullptr;
     }
 
-    void CContextSimulator::ps_updateOwnAircraft()
+    void CContextSimulator::ps_updateOwnAircraftContext()
     {
         Q_ASSERT(this->getIContextOwnAircraft());
+        Q_ASSERT(this->m_simulator);
 
         // we make sure not to override values we do not have
-        CAircraft aircraft = this->getIContextOwnAircraft()->getOwnAircraft();
-        CAircraft simulatorAircraft = this->m_simulator->getOwnAircraft();
-        aircraft.setSituation(simulatorAircraft.getSituation());
-        aircraft.setCockpit(simulatorAircraft.getCom1System(), simulatorAircraft.getCom2System(), simulatorAircraft.getTransponderCode());
+        CAircraft contextAircraft = this->getIContextOwnAircraft()->getOwnAircraft(); // own aircraft from context
+        CAircraft simulatorAircraft = this->m_simulator->getOwnAircraft();            // own aircraft from simulator
+
+        // update from simulator to context
+        contextAircraft.setSituation(simulatorAircraft.getSituation());
+        contextAircraft.setCockpit(simulatorAircraft.getCom1System(), simulatorAircraft.getCom2System(), simulatorAircraft.getTransponderCode(), simulatorAircraft.getTransponderMode());
 
         Q_ASSERT(this->getIContextOwnAircraft()); // paranoia against context having been deleted from another thread - redmine issue #270
         if (this->getIContextOwnAircraft())
         {
             // the method will check, if an update is really required
             // these are local (non DBus) calls
-            this->getIContextOwnAircraft()->updateOwnAircraft(aircraft, this->getPathAndContextId());
+            this->getIContextOwnAircraft()->updateOwnAircraft(contextAircraft, this->getPathAndContextId());
         }
     }
 
@@ -283,10 +286,10 @@ namespace BlackCore
         this->m_simulator->removeRemoteAircraft(callsign);
     }
 
-    void CContextSimulator::ps_updateCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
+    void CContextSimulator::ps_updateSimulatorCockpitFromContext(const CAircraft &ownAircraft, const QString &originator)
     {
         Q_ASSERT(this->m_simulator);
-        if (!this->m_simulator) return;
+        if (!this->m_simulator) { return; }
 
         // avoid loops
         if (originator.isEmpty() || originator == IContextSimulator::InterfaceName()) return;
@@ -309,25 +312,6 @@ namespace BlackCore
             m_updateTimer->stop();
         }
         emit connectionChanged(connected);
-    }
-
-    void CContextSimulator::ps_statusMessageReceived(const CStatusMessage &statusMessage)
-    {
-        if (!this->m_simulator) return;
-        if (statusMessage.getSeverity() != CStatusMessage::SeverityError) return;
-
-        if (statusMessage.wasHandledBy(this)) return;
-        statusMessage.markAsHandledBy(this);
-
-        this->m_simulator->displayStatusMessage(statusMessage);
-    }
-
-    void CContextSimulator::ps_statusMessagesReceived(const CStatusMessageList &statusMessages)
-    {
-        for (const CStatusMessage &m : statusMessages)
-        {
-            this->ps_statusMessageReceived(m);
-        }
     }
 
     void CContextSimulator::ps_textMessagesReceived(const Network::CTextMessageList &textMessages)

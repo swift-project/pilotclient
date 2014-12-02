@@ -169,7 +169,7 @@ namespace BlackCore
             if (this->m_contextOwnAircraft && this->m_contextOwnAircraft->isUsingImplementingObject())
             {
                 c = connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraftCockpit,
-                            this->getCContextSimulator(), &CContextSimulator::ps_updateCockpitFromContext);
+                            this->getCContextSimulator(), &CContextSimulator::ps_updateSimulatorCockpitFromContext);
                 Q_ASSERT(c);
             }
 
