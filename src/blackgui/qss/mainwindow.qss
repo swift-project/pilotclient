@@ -8,7 +8,7 @@ there is no opacity with background image, so we need semitransparent images
 use -- instead of :: for namespaces
 
 Used dynamic properties
-frameless (infobar.qss)
+frameless (infobar.qss , here)
 **/
 
 /** Main window **/
@@ -18,15 +18,20 @@ QMainWindow {
 }
 
 /** required when dock widget is floating **/
+/** background-image not working on QDockWidget, so I use direct children **/
 #sw_MainMiddle QDockWidget {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
   background-color: black;
 }
 
-/** required when info area is floating **/
-BlackGui--CInfoArea {
-  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+#sw_MainMiddle QDockWidget > QWidget {
   background-color: black;
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
+}
+
+/** required when info area is not floating **/
+BlackGui--CInfoArea {
+  background: black; /** background is background color here **/
+  background-image: url(:/textures/icons/textures/texture-inner.jpg);
 }
 
 /** fix scroll areas **/
@@ -43,10 +48,11 @@ QAbstractScrollArea #qw_RemarksGenerator {
 
 /** in log component **/
 QAbstractScrollArea #pg_StatusPageMessages { background-color: black; }
-QAbstractScrollArea #pg_StatusPageConsole { background-color: black; }
+QAbstractScrollArea #pg_StatusPageConsole  { background-color: black; }
 
 /** main GUI parts **/
 
+/** style when main window is frameless **/
 #wi_CentralWidgetOutside[frameless="true"] {
   background-image: url(:/textures/icons/textures/texture-outer.jpg);
   background-color: darkslategray;

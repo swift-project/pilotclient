@@ -217,8 +217,8 @@ namespace BlackGui
 
     void CInfoArea::paintEvent(QPaintEvent *event)
     {
-        Q_UNUSED(event);
-        CStyleSheetUtility::useStyleSheetInDerivedWidget(this);
+        CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_FrameWindow);
+        QMainWindow::paintEvent(event);
     }
 
     void CInfoArea::keyPressEvent(QKeyEvent *event)
