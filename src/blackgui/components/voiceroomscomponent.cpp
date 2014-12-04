@@ -10,12 +10,12 @@
 #include "voiceroomscomponent.h"
 #include "ui_voiceroomscomponent.h"
 #include "blackcore/context_audio.h"
+#include "blackcore/context_ownaircraft.h"
 #include "blackmisc/notificationsounds.h"
 
 using namespace BlackCore;
 using namespace BlackSound;
 using namespace BlackMisc::Audio;
-
 
 namespace BlackGui
 {
@@ -27,9 +27,11 @@ namespace BlackGui
             ui(new Ui::CVoiceRoomsComponent)
         {
             ui->setupUi(this);
-            this->setVoiceRoomUrlFields();
-            connect(ui->cb_CockpitVoiceRoom1Override, &QCheckBox::toggled, this, &CVoiceRoomsComponent::ps_voiceRoomOverrideChanged);
-            connect(ui->le_CockpitVoiceRoomCom1, &QLineEdit::returnPressed, this, &CVoiceRoomsComponent::ps_voiceRoomUrlsReturnPressed);
+            this->setVoiceRoomUrlFieldsReadOnlyState();
+            connect(ui->cb_CockpitVoiceRoom1Override, &QCheckBox::toggled, this, &CVoiceRoomsComponent::ps_onVoiceRoomOverrideChanged);
+            connect(ui->cb_CockpitVoiceRoom2Override, &QCheckBox::toggled, this, &CVoiceRoomsComponent::ps_onVoiceRoomOverrideChanged);
+            connect(ui->le_CockpitVoiceRoomCom1, &QLineEdit::returnPressed, this, &CVoiceRoomsComponent::ps_onVoiceRoomUrlsReturnPressed);
+            connect(ui->le_CockpitVoiceRoomCom2, &QLineEdit::returnPressed, this, &CVoiceRoomsComponent::ps_onVoiceRoomUrlsReturnPressed);
         }
 
         CVoiceRoomsComponent::~CVoiceRoomsComponent()
@@ -40,18 +42,24 @@ namespace BlackGui
             this->connect(this->getIContextAudio(), &IContextAudio::changedVoiceRooms, this, &CVoiceRoomsComponent::ps_updateAudioVoiceRoomsFromContext);
         }
 
-        void CVoiceRoomsComponent::ps_voiceRoomOverrideChanged(bool checked)
+        void CVoiceRoomsComponent::ps_onVoiceRoomOverrideChanged(bool checked)
         {
             Q_UNUSED(checked);
-            this->setVoiceRoomUrlFields();
+            this->setVoiceRoomUrlFieldsReadOnlyState();
+            this->ps_onVoiceRoomUrlsReturnPressed(); // use this function to update voicerooms
         }
 
-        void CVoiceRoomsComponent::ps_voiceRoomUrlsReturnPressed()
+        void CVoiceRoomsComponent::ps_onVoiceRoomUrlsReturnPressed()
         {
-
+            Q_ASSERT(this->getIContextOwnAircraft()); // voice room resolution is part of own aircraft
+            QString url1;
+            QString url2;
+            if (this->ui->cb_CockpitVoiceRoom1Override->isChecked()) { url1 = this->ui->le_CockpitVoiceRoomCom1->text().trimmed(); }
+            if (this->ui->cb_CockpitVoiceRoom2Override->isChecked()) { url2 = this->ui->le_CockpitVoiceRoomCom2->text().trimmed(); }
+            this->getIContextOwnAircraft()->setAudioVoiceRoomOverrideUrls(url1, url2);
         }
 
-        void CVoiceRoomsComponent::setVoiceRoomUrlFields()
+        void CVoiceRoomsComponent::setVoiceRoomUrlFieldsReadOnlyState()
         {
             bool c1 = ui->cb_CockpitVoiceRoom1Override->isChecked();
             bool c2 = ui->cb_CockpitVoiceRoom2Override->isChecked();
@@ -109,7 +117,7 @@ namespace BlackGui
 
         void CVoiceRoomsComponent::updateVoiceRoomMembers()
         {
-            if (!this->getIContextAudio()) return;
+            if (!this->getIContextAudio()) { return; }
             if (!this->ui->le_CockpitVoiceRoomCom1->text().trimmed().isEmpty())
             {
                 this->ui->tvp_CockpitVoiceRoom1->updateContainer(this->getIContextAudio()->getCom1RoomUsers());

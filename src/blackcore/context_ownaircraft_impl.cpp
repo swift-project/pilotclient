@@ -77,10 +77,10 @@ namespace BlackCore
     void CContextOwnAircraft::resolveVoiceRooms()
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
-        if (this->m_voiceRoom1UrlOverride.isEmpty() && this->m_voiceRoom2UrlOverride.isEmpty() && !this->m_automaticVoiceRoomResolution) return;
-        if (!this->getIContextNetwork()) return; // no chance to resolve rooms
-        if (!this->getIContextAudio()) return; // no place to set rooms
-        if (!this->m_automaticVoiceRoomResolution) return; // not responsible
+        if (this->m_voiceRoom1UrlOverride.isEmpty() && this->m_voiceRoom2UrlOverride.isEmpty() && !this->m_automaticVoiceRoomResolution) { return; }
+        if (!this->getIContextNetwork()) { return; } // no chance to resolve rooms
+        if (!this->getIContextAudio())   { return; } // no place to set rooms
+        if (!this->m_automaticVoiceRoomResolution) { return; } // not responsible
 
         // requires correct frequencies set
         // but local network uses exactly this object here, so if frequencies are set here,

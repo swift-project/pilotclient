@@ -43,17 +43,17 @@ namespace BlackGui
 
         private slots:
             //! Override for voice was changed
-            void ps_voiceRoomOverrideChanged(bool checked);
+            void ps_onVoiceRoomOverrideChanged(bool checked);
 
             //! Return pressed
-            void ps_voiceRoomUrlsReturnPressed();
+            void ps_onVoiceRoomUrlsReturnPressed();
 
             //! Set the voice room url fields (checkboxes, line edits)
             void ps_updateAudioVoiceRoomsFromContext(const BlackMisc::Audio::CVoiceRoomList &selectedVoiceRooms, bool connected);
 
         private:
             //! Set the URL fields
-            void setVoiceRoomUrlFields();
+            void setVoiceRoomUrlFieldsReadOnlyState();
 
             //! Update voice room views
             void updateVoiceRoomMembers();
