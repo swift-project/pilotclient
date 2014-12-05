@@ -49,7 +49,7 @@ namespace BlackSim
              * \param atcModel
              * \param atcParkingCode
              */
-            CAircraftCfgEntries(const QString &filePath, qint32 index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode);
+            CAircraftCfgEntries(const QString &filePath, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode);
 
             //! Filepath
             QString getFilePath() const { return this->m_filePath; }
@@ -58,7 +58,7 @@ namespace BlackSim
             QString getTitle() const { return this->m_title; }
 
             //! Index
-            qint32 getIndex() const { return this->m_index; }
+            int getIndex() const { return this->m_index; }
 
             //! ATC model
             QString getAtcModel() const { return this->m_atcModel; }
@@ -76,7 +76,7 @@ namespace BlackSim
             void setTitle(const QString &title) { this->m_title = title; }
 
             //! Index
-            void setIndex(const qint32 index) { this->m_index = index; }
+            void setIndex(int index) { this->m_index = index; }
 
             //! ATC model
             void setAtcModel(const QString &atcModel) { this->m_atcModel = atcModel; }
@@ -99,7 +99,7 @@ namespace BlackSim
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftCfgEntries)
-            qint32 m_index;     //!< current index in given config
+            int m_index;        //!< current index in given config
             QString m_filePath; //!< file path of aircraft.cfg
             QString m_title;    //!< Title in aircraft.cfg
             QString m_atcType;  //!< ATC type

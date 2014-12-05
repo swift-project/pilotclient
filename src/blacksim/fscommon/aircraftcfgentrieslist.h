@@ -28,12 +28,6 @@ namespace BlackSim
         //! Utility, providing FSX aircraft.cfg entries
         class CAircraftCfgEntriesList : public BlackMisc::CSequence<CAircraftCfgEntries>
         {
-        private:
-            QString m_rootDirectory; //!< root directory reading aircraft.cfg files
-            bool m_readForDirectory; //!< valid read for given directory
-
-            //! Read all entries in one directory
-            qint32 read(const QString &directory);
 
         public:
 
@@ -41,7 +35,7 @@ namespace BlackSim
             CAircraftCfgEntriesList(const QString &rootDirectory = "") : m_rootDirectory(rootDirectory), m_readForDirectory(false) {}
 
             //! Read all aircraft.cfg files starting from root directory
-            qint32 read()
+            int read()
             {
                 if (this->m_readForDirectory) return this->size();
 
@@ -75,7 +69,10 @@ namespace BlackSim
             QString getRootDirectory() const {  return this->m_rootDirectory; }
 
             //! Contains model with title?
-            bool containsModeWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
+            bool containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
+
+            //! Find by title
+            CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity);
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -92,9 +89,17 @@ namespace BlackSim
 
             //! Register metadata
             static void registerMetadata();
+
+        private:
+            QString m_rootDirectory; //!< root directory reading aircraft.cfg files
+            bool m_readForDirectory; //!< valid read for given directory
+
+            //! Read all entries in one directory
+            int read(const QString &directory);
+
         };
-    }
-}
+    } // namespace
+} // namespace
 
 Q_DECLARE_METATYPE(BlackSim::FsCommon::CAircraftCfgEntriesList)
 Q_DECLARE_METATYPE(BlackMisc::CCollection<BlackSim::FsCommon::CAircraftCfgEntries>)

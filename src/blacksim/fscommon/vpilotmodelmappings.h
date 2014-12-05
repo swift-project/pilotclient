@@ -19,9 +19,7 @@ namespace BlackSim
 {
     namespace FsCommon
     {
-        /*!
-         * Model mappings
-         */
+        //! Model mappings
         class CVPilotModelMappings : public ISimulatorModelMappings
         {
         public:

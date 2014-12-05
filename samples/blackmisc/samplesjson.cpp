@@ -84,9 +84,18 @@ namespace BlackMiscTest
         stations.clear();
         stations.convertFromJson(json);
         qDebug() << stations;
-
+        qDebug() << "------- Enter -----";
         cin.readLine();
+
+        // testing escaping special characters
+        CUser specialCharacters("123456", "With quote \"", "With double quote\"\"", "foobar");
+        json = specialCharacters.toJson();
+        doc.setObject(json);
+        qDebug() << doc.toJson(QJsonDocument::Indented);
+
         qDebug() << "------- Enter ---------------------------------";
+        cin.readLine();
+
         return 0;
     }
 

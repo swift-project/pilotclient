@@ -28,22 +28,31 @@ namespace BlackSim
         /*
          * Model for title
          */
-        bool CAircraftCfgEntriesList::containsModeWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
+        bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
         {
             return this->containsBy([ = ](const CAircraftCfgEntries & entries) -> bool
             { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
         }
 
         /*
+         * Models for title
+         */
+        CAircraftCfgEntriesList CAircraftCfgEntriesList::findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
+        {
+            return this->findBy([ = ](const CAircraftCfgEntries & entries) -> bool
+            { return title.compare(entries.getTitle(), caseSensitivity) == 0; });
+        }
+
+        /*
          * Read all entrities in given directory
          */
-        qint32 CAircraftCfgEntriesList::read(const QString &directory)
+        int CAircraftCfgEntriesList::read(const QString &directory)
         {
             // set directory with name filters, get aircraft.cfg and sub directories
             QDir dir(directory, "aircraft.cfg", QDir::Name, QDir::Files | QDir::AllDirs);
             if (!dir.exists()) return 0; // can happen if there are shortcuts or linked dirs not available
 
-            qint32 counter = 0;
+            int counter = 0;
             QString currentDir = dir.absolutePath();
 
             // Dirs last is crucial,since I will break recursion on "aircraft.cfg" level

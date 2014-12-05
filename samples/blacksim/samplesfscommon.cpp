@@ -1,7 +1,11 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2014
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "samplesfscommon.h"
 #include "blacksim/fscommon/aircraftcfgentrieslist.h"
@@ -9,7 +13,11 @@
 
 #include <QDebug>
 #include <QFuture>
+#include <QTime>
 #include <QTextStream>
+#include <QTemporaryFile>
+
+using namespace BlackSim::FsCommon;
 
 namespace BlackSimTest
 {
@@ -17,11 +25,10 @@ namespace BlackSimTest
     /*
      * Samples
      */
-    int CSamplesFsCommon::samples()
+    int CSamplesFsCommon::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
-        QTextStream streamIn(stdin);
-        QTextStream streamOut(stdout);
-        QString fsxDir = "P:/FlightSimulatorX (MSI)/SimObjects";
+        // QString fsxDir = "P:/FlightSimulatorX (MSI)/SimObjects";
+        QString fsxDir = "P:/Temp/SimObjects";
         streamOut << "Enter FSX directory:" << endl;
         streamOut << fsxDir << '\r';
         streamOut.flush();
@@ -31,25 +38,49 @@ namespace BlackSimTest
         input = streamIn.readLine();
         if (!input.startsWith("b"))
         {
-            qDebug() << "reading directly";
-            BlackSim::FsCommon::CAircraftCfgEntriesList entriesList(fsxDir);
+            streamOut << "reading directly" << endl;
+            CAircraftCfgEntriesList entriesList(fsxDir);
             if (entriesList.existsDir())
             {
+                QTime time;
+                time.start();
                 streamOut << "reading " << entriesList.getRootDirectory() << endl;
                 entriesList.read();
-                streamOut << "read entries: " << entriesList.size() << endl;
-                // streamOut << entriesList << endl;
+                streamOut << "read entries: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
+
+                QJsonDocument doc(entriesList.toJson());
+                QByteArray jsonArray(doc.toJson());
+                streamOut << "write JSON array with size " << jsonArray.size() << endl;
+                QTemporaryFile tempFile;
+                tempFile.open();
+                tempFile.write(jsonArray);
+                tempFile.close();
+                streamOut << "written to " << tempFile.fileName() << " in " << time.restart() << "ms" <<  endl;
+
+                // re-read
+                tempFile.open();
+                jsonArray = tempFile.readAll();
+                doc = QJsonDocument::fromJson(jsonArray);
+                entriesList.clear();
+                entriesList.convertFromJson(doc.object());
+                streamOut << "read JSON array with size " << jsonArray.size() << endl;
+                streamOut << "read entries from disk: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
+                tempFile.close();
             }
         }
         else
         {
-            qDebug() << "reading in background";
+            streamOut << "reading in background" << endl;
             QFuture<int> f = BlackSim::FsCommon::CAircraftIndexer::readInBackground(fsxDir);
+            int i = 0;
             do
             {
-                streamOut << ".";
-                streamOut.flush();
-                QCoreApplication::processEvents(QEventLoop::AllEvents, 1000 * 3);
+                if (i % 20 == 0)
+                {
+                    streamOut << ".";
+                    streamOut.flush();
+                }
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 1000 * 5);
             }
             while (!f.isFinished());
             streamOut << endl << f.result() << " entries" << endl;

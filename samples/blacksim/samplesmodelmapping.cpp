@@ -1,7 +1,11 @@
-/*  Copyright (C) 2013 VATSIM Community / contributors
- *  This Source Code Form is subject to the terms of the Mozilla Public
- *  License, v. 2.0. If a copy of the MPL was not distributed with this
- *  file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2014
+ * swift project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "samplesmodelmapping.h"
 #include "blackmisc/blackmiscfreefunctions.h"
@@ -18,7 +22,7 @@ namespace BlackSimTest
     /*
      * Samples
      */
-    int CSamplesModelMapping::samples()
+    int CSamplesModelMapping::samples(QTextStream &streamOut)
     {
         BlackMisc::registerMetadata();
         BlackSim::registerMetadata();
@@ -26,10 +30,10 @@ namespace BlackSimTest
         CVPilotModelMappings cvm;
         cvm.addDirectory(CVPilotModelMappings::standardMappingsDirectory());
         bool s = cvm.load();
-        qDebug() << "loaded:" << s << "size:" << cvm.size();
+        streamOut << "loaded:" << s << "size:" << cvm.size() << endl;
 
         BlackMisc::Aviation::CAircraftIcao icao("C172");
-        qDebug() << cvm.findByIcaoWildcard(icao);
+        streamOut << cvm.findByIcaoWildcard(icao) << endl;
 
         return 0;
     }

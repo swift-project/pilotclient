@@ -98,5 +98,5 @@ namespace BlackSim
             }
         }
 
-    }
+    } // namespace
 } // namespace
