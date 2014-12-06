@@ -63,6 +63,15 @@ namespace BlackMisc
         //! Construct a null variant of the given type.
         CVariant(QVariant::Type type) : m_v(type) {}
 
+        //! Avoid unexpected implicit cast to QVariant::Type. (Use CVariant::from() instead.)
+        CVariant(int) = delete;
+
+        //! Implicit conversion from QString.
+        CVariant(const QString &string) : m_v(string) {}
+
+        //! Implicit conversion from C string.
+        CVariant(const char *string) : m_v(string) {}
+
         //! Construct a variant from the given type and opaque pointer.
         CVariant(int typeId, const void *copy) : m_v(typeId, copy) {}
 
