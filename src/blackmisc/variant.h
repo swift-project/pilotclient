@@ -205,6 +205,35 @@ namespace BlackMisc
         const void *data() const { return m_v.data(); }
     };
 
+    //! Compare stored value of CVariant with any CValueObject derived class.
+    template <class T, class = typename std::enable_if<std::is_base_of<CValueObject, T>::value>::type>
+    bool operator ==(const T &value, const CVariant &variant)
+    {
+        if (variant.canConvert<T>()) { return variant.value<T>() == value; }
+        return false;
+    }
+
+    //! Compare stored value of CVariant with any CValueObject derived class.
+    template <class T, class = typename std::enable_if<std::is_base_of<CValueObject, T>::value>::type>
+    bool operator !=(const T &value, const CVariant &variant)
+    {
+        return !(value == variant);
+    }
+
+    //! Compare stored value of CVariant with any CValueObject derived class.
+    template <class T, class = typename std::enable_if<std::is_base_of<CValueObject, T>::value>::type>
+    bool operator ==(const CVariant &variant, const T &value)
+    {
+        return value == variant;
+    }
+
+    //! Compare stored value of CVariant with any CValueObject derived class.
+    template <class T, class = typename std::enable_if<std::is_base_of<CValueObject, T>::value>::type>
+    bool operator !=(const CVariant &variant, const T &value)
+    {
+        return !(value == variant);
+    }
+
 } // namespace
 
 Q_DECLARE_METATYPE(BlackMisc::CVariant)
