@@ -26,7 +26,7 @@ namespace BlackSim
                     QSettings fsxRegistry("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0", QSettings::NativeFormat);
                     fsxPath = fsxRegistry.value("SetupPath").toString();
                 }
-                if (!fsxPath.isEmpty()) this->m_setup.value(CSimulatorSetup::SetupSimPath, QVariant(fsxPath));
+                if (!fsxPath.isEmpty()) this->m_setup.value(CSimulatorSetup::SetupSimPath, CVariant(fsxPath));
             }
         }
     } // namespace

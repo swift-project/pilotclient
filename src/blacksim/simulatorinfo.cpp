@@ -22,16 +22,16 @@ namespace BlackSim
     CSimulatorInfo::CSimulatorInfo() :  m_fullName("Unknown"), m_shortName("Unknown")
     {}
 
-    QVariant CSimulatorInfo::getSimulatorSetupValue(int index) const
+    CVariant CSimulatorInfo::getSimulatorSetupValue(int index) const
     {
         return this->m_simsetup.value(index);
     }
 
     QString CSimulatorInfo::getSimulatorSetupValueAsString(int index) const
     {
-        QVariant qv = getSimulatorSetupValue(index);
+        CVariant qv = getSimulatorSetupValue(index);
         Q_ASSERT(qv.canConvert<QString>());
-        return qv.toString();
+        return qv.toQString();
     }
 
     void CSimulatorInfo::setSimulatorSetup(const BlackMisc::CPropertyIndexVariantMap &setup)

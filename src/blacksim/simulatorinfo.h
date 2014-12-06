@@ -29,7 +29,7 @@ namespace BlackSim
         bool isUnspecified() const { return this->m_shortName.isEmpty() || this->m_shortName.startsWith("Unspecified", Qt::CaseInsensitive); }
 
         //! Single setting value
-        QVariant getSimulatorSetupValue(int index) const;
+        BlackMisc::CVariant getSimulatorSetupValue(int index) const;
 
         //! Single setting value
         QString getSimulatorSetupValueAsString(int index) const;
@@ -86,7 +86,11 @@ namespace BlackSim
     };
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::CSimulatorInfo, (o.m_fullName, o.m_shortName, o.m_simsetup))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::CSimulatorInfo, (
+    o.m_fullName,
+    o.m_shortName,
+    attr(o.m_simsetup, flags<DisabledForComparison>())
+))
 Q_DECLARE_METATYPE(BlackSim::CSimulatorInfo)
 
 #endif // guard
