@@ -120,6 +120,11 @@ namespace BlackMisc
         //! Synonym for value().
         template <typename T> T to() const { return m_v.value<T>(); }
 
+        //! Returns the value converted to the type T, or a default if it can not be converted.
+        //! \details Parameter is passed by value to avoid odr-using the argument in case it is
+        //!          an inline-initialized static const integral data member without a definition (§9.4.2/3).
+        template <typename T> T valueOrDefault(T def) const { return canConvert<T>() ? value<T>() : def; }
+
         //! Return the internal QVariant.
         const QVariant &getQVariant() const { return m_v; }
 
