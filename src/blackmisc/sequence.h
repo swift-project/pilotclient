@@ -519,17 +519,33 @@ namespace BlackMisc
             return sorted(BlackMisc::Predicates::MemberLess(key1, keys...));
         }
 
-        /*!
-         * \brief Test for equality.
-         * \todo Improve inefficient implementation.
-         */
-        bool operator ==(const CSequence &other) const { return (empty() && other.empty()) ? true : (size() != other.size() ? false : *pimpl() == *other.pimpl()); }
+        //! Equals operator.
+        friend bool operator ==(const CSequence &a, const CSequence &b)
+        {
+            if (a.size() != b.size()) { return false; }
+            return std::equal(a.begin(), a.end(), b.begin());
+        }
 
-        /*!
-         * \brief Test for inequality.
-         * \todo Improve inefficient implementation.
-         */
-        bool operator !=(const CSequence &other) const { return !(*this == other); }
+        //! Not equals operator.
+        friend bool operator !=(const CSequence &a, const CSequence &b) { return !(a == b); }
+
+        //! Less than operator.
+        friend bool operator <(const CSequence &a, const CSequence &b)
+        {
+            auto mm = std::mismatch(a.begin(), a.begin() + std::max(a.size(), b.size()), b.begin());
+            if (mm.first == a.end()) { return mm.second != b.end(); }
+            if (mm.second == b.end()) { return false; }
+            return *mm.first < *mm.second;
+        }
+
+        //! Greater than operator.
+        friend bool operator >(const CSequence &a, const CSequence &b) { return b < a; }
+
+        //! Less or equal than operator.
+        friend bool operator <=(const CSequence &a, const CSequence &b) { return !(b < a); }
+
+        //! Greater or equal operator.
+        friend bool operator >=(const CSequence &a, const CSequence &b) { return !(a < b); }
 
         /*!
          * \brief Return an opaque pointer to the implementation container.
@@ -566,7 +582,6 @@ namespace BlackMisc
             virtual void pop_back() = 0;
             virtual iterator erase(iterator pos) = 0;
             virtual iterator erase(iterator it1, iterator it2) = 0;
-            virtual bool operator ==(const PimplBase &other) const = 0;
             virtual void *impl() = 0;
         };
 
@@ -598,7 +613,6 @@ namespace BlackMisc
             void pop_back() override { m_impl.pop_back(); }
             iterator erase(iterator pos) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(pos.getImpl()))); }
             iterator erase(iterator it1, iterator it2) override { return iterator::fromImpl(m_impl.erase(*static_cast<const typename C::iterator *>(it1.getImpl()), *static_cast<const typename C::iterator *>(it2.getImpl()))); }
-            bool operator ==(const PimplBase &other) const override { Pimpl copy = C(); for (auto i = other.cbegin(); i != other.cend(); ++i) copy.push_back(*i); return m_impl == copy.m_impl; }
             void *impl() override { return &m_impl; }
         private:
             C m_impl;

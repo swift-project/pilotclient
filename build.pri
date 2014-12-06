@@ -83,6 +83,11 @@ win32-g++: QMAKE_CXXFLAGS_DEBUG += -Og
 
 equals(WORD_SIZE,64): BLACK_CONFIG -= FSX FS9
 
+###########################
+# Suppress stupid warnings
+###########################
+win32-msvc*:DEFINES *= _SCL_SECURE_NO_WARNINGS
+
 ################################
 # Defines for conditional compilation
 ################################

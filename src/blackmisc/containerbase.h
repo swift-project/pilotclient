@@ -20,8 +20,6 @@
 #include "json.h"
 #include <algorithm>
 
-#define _SCL_SECURE_NO_WARNINGS // suppress MSVC unchecked iterator warning for std::transform
-
 namespace BlackMisc
 {
 
