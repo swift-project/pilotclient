@@ -178,9 +178,6 @@ namespace BlackMisc
         //! Method to return CVariant
         CVariant toCVariant() const;
 
-        //! Equals another CValueObject in QVariant?
-        virtual bool equalsQVariant(const QVariant &qVariant) const;
-
         //! Set from QVariant
         virtual void convertFromQVariant(const QVariant &variant) = 0;
 
@@ -211,9 +208,6 @@ namespace BlackMisc
 
         //! Is given variant equal to value of property index?
         virtual bool equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const;
-
-        //! The stored object as CValueObject
-        static const CValueObject *fromQVariant(const QVariant &variant);
 
     protected:
         template <typename T>
@@ -504,36 +498,6 @@ namespace BlackMisc
     {
         json.insert(value.first, QJsonValue(value.second.toJson()));
         return json;
-    }
-
-    //! Allow comparison with QVariant, e.g. QVariant == CFrequency ?
-    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
-    operator==(const QVariant &variant, const T &valueObject)
-    {
-        if (!variant.canConvert<T>()) return false;
-        T vuc = variant.value<T>();
-        return vuc == valueObject;
-    }
-
-    //! Allow comparison with QVariant, e.g. QVariant != CFrequency ?
-    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
-    operator!=(const QVariant &variant, const T &valueObject)
-    {
-        return !(variant == valueObject);
-    }
-
-    //! Allow comparison with QVariant, e.g. QVariant == CFrequency ?
-    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
-    operator==(const T &valueObject, const QVariant &variant)
-    {
-        return variant == valueObject;
-    }
-
-    //! Allow comparison with QVariant, e.g. QVariant != CFrequency ?
-    template <class T> typename std::enable_if<std::is_base_of<CValueObject, T>::value, bool>::type
-    operator!=(const T &valueObject, const QVariant &variant)
-    {
-        return variant != valueObject;
     }
 
     //! qHash overload, needed for storing CValueObject in a QSet.

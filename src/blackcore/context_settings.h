@@ -17,7 +17,6 @@
 #include "blackmisc/variant.h"
 #include "blackcore/settingsallclasses.h"
 #include <QObject>
-#include <QVariant>
 
 //! \addtogroup dbus
 //! @{

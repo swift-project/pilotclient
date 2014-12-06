@@ -101,20 +101,6 @@ namespace BlackMisc
     //! Init resources
     void initResources();
 
-    //! Compare 2 QVariants
-    bool equalQVariants(const QVariant &v1, const QVariant &v2);
-
-    //! Compare QVariants
-    int compareQVariants(const QVariant &v1, const QVariant &v2);
-
-    /*!
-     * \brief QVariant to QString, allows to stringify CValueObject
-     * \param qv    QVariant containing any CValueObject
-     * \param i18n
-     * \return
-     */
-    QString qVariantToString(const QVariant &qv, bool i18n = false);
-
     /*!
      * Checked version from QVariant
      */

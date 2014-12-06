@@ -14,8 +14,6 @@
 #include "blackmisc/setnetwork.h"
 #include "blackmisc/hwkeyboardkeylist.h"
 
-#include <QVariant>
-
 namespace BlackCore
 {
 
