@@ -33,6 +33,7 @@ namespace BlackMisc
             NotFound operator <(const FromAny &, const FromAny &);
             NotFound operator ==(const FromAny &, const FromAny &);
             NotFound qHash(...);
+            using ::BlackMisc::qHash; // bring hidden name into scope
 
             template <class Key>
             struct SupportsQHash : std::integral_constant<bool,
@@ -61,7 +62,7 @@ namespace BlackMisc
         struct AssociativityTraits<false, false>
         {
             template <class Key, class>
-            struct DefaultType { static_assert((std::is_void<Key>::value, false), "Key does not support either QHash or QMap"); };
+            struct DefaultType { static_assert(std::is_void<Key>::value, "Key does not support either QHash or QMap"); };
         };
 
         //! \endcond
