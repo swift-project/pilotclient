@@ -46,10 +46,10 @@ namespace BlackGui
             bool containsName(const QString &name) const;
 
             //! Contains name / value?
-            bool containsNameValue(const QString &name, const QVariant &value) const;
+            bool containsNameValue(const QString &name, const BlackMisc::CVariant &value) const;
 
             //! Add our update a value
-            bool addOrUpdateByName(const QString &name, const QVariant &value, const BlackMisc::CIcon &icon, bool skipEqualValues);
+            bool addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const BlackMisc::CIcon &icon, bool skipEqualValues);
 
             //! Current row index of given name
             int getRowIndexForName(const QString &name) const;

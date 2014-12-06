@@ -55,8 +55,8 @@ namespace BlackGui
             //! Formatter
             const CDefaultFormatter *getFormatter() const { return this->m_formatter.data(); }
 
-            //! Aligment as QVariant
-            QVariant getAlignment() const;
+            //! Aligment as CVariant
+            BlackMisc::CVariant getAlignment() const;
 
             //! Column name
             QString getColumnName(bool i18n = false) const;
@@ -149,8 +149,8 @@ namespace BlackGui
                 return column >= 0 && column < this->m_columns.size();
             }
 
-            //! Aligment as QVariant
-            QVariant getAlignment(const QModelIndex &index) const;
+            //! Aligment as CVariant
+            BlackMisc::CVariant getAlignment(const QModelIndex &index) const;
 
             //! Translation context
             const QString &getTranslationContext() const { return m_translationContext; }

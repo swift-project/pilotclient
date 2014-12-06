@@ -118,7 +118,7 @@ namespace BlackGui
             //! Formatted data
             ObjectType obj = this->m_container[index.row()];
             BlackMisc::CPropertyIndex propertyIndex = this->columnToPropertyIndex(index.column());
-            return formatter->data(role, obj.propertyByIndex(propertyIndex));
+            return formatter->data(role, obj.propertyByIndex(propertyIndex)).toQVariant();
         }
 
         /*
@@ -171,7 +171,7 @@ namespace BlackGui
             {
                 ContainerType sortedContainer = this->sortContainerByColumn(container, sortColumn, sortOrder);
                 QMetaObject::invokeMethod(this, "updateContainer",
-                    Q_ARG(QVariant, sortedContainer.toQVariant()), Q_ARG(bool, false));
+                    Q_ARG(BlackMisc::CVariant, sortedContainer.toCVariant()), Q_ARG(bool, false));
             });
             worker->then(this, &CListModelBase::asyncUpdateFinished);
             return worker;
@@ -265,10 +265,10 @@ namespace BlackGui
         /*
          * Update on container
          */
-        template <typename ObjectType, typename ContainerType> int CListModelBase<ObjectType, ContainerType>::performUpdateContainer(const QVariant &variant, bool sort)
+        template <typename ObjectType, typename ContainerType> int CListModelBase<ObjectType, ContainerType>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort)
         {
             ContainerType c;
-            c.convertFromQVariant(variant);
+            c.convertFromCVariant(variant);
             return this->update(c, sort);
         }
 
@@ -303,10 +303,9 @@ namespace BlackGui
             // sort the values
             const auto p = [ = ](const ObjectType & a, const ObjectType & b) -> bool
             {
-                QVariant aQv = a.propertyByIndex(propertyIndex);
-                QVariant bQv = b.propertyByIndex(propertyIndex);
-                int compare = BlackMisc::compareQVariants(aQv, bQv);
-                return (order == Qt::AscendingOrder) ? (compare < 0) : (compare > 0);
+                BlackMisc::CVariant aQv = a.propertyByIndex(propertyIndex);
+                BlackMisc::CVariant bQv = b.propertyByIndex(propertyIndex);
+                return (order == Qt::AscendingOrder) ? (aQv < bQv) : (bQv < aQv);
             };
 
             // KWB: qDebug() will be removed soon

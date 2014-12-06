@@ -40,7 +40,7 @@ namespace BlackGui
             this->m_sortOrder = Qt::AscendingOrder;
         }
 
-        bool CNameVariantPairModel::addOrUpdateByName(const QString &name, const QVariant &value, const CIcon &icon, bool skipEqualValues)
+        bool CNameVariantPairModel::addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const CIcon &icon, bool skipEqualValues)
         {
             int index = this->getRowIndexForName(name);
             CNameVariantPair pair(name, value, icon);
@@ -79,13 +79,13 @@ namespace BlackGui
             return this->m_container.containsName(name);
         }
 
-        bool CNameVariantPairModel::containsNameValue(const QString &name, const QVariant &value) const
+        bool CNameVariantPairModel::containsNameValue(const QString &name, const BlackMisc::CVariant &value) const
         {
             int rowIndex = this->getRowIndexForName(name);
             if (rowIndex < 0) return false;
             QModelIndex i = this->index(rowIndex, 0);
             const CNameVariantPair cv = this->at(i);
-            return BlackMisc::equalQVariants(value, cv.toQVariant());
+            return value == cv.toCVariant();
         }
     } // namespace
 } // namespace

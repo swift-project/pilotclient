@@ -29,7 +29,7 @@ namespace BlackGui
             this->m_model->setIconMode(withIcon);
         }
 
-        bool CNameVariantPairView::addOrUpdateByName(const QString &name, const QVariant &value, const CIcon &icon, bool resize, bool skipEqualValues)
+        bool CNameVariantPairView::addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const CIcon &icon, bool resize, bool skipEqualValues)
         {
             Q_ASSERT(this->m_model);
             bool changed = this->m_model->addOrUpdateByName(name, value, icon, skipEqualValues);

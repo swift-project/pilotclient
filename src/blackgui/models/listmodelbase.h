@@ -90,7 +90,7 @@ namespace BlackGui
             //! Helper method with template free signature
             //! \param variant container is transferred in variant
             //! \param sort
-            int updateContainer(const QVariant &variant, bool sort)
+            int updateContainer(const BlackMisc::CVariant &variant, bool sort)
             {
                 return this->performUpdateContainer(variant, sort);
             }
@@ -109,7 +109,7 @@ namespace BlackGui
             }
 
             //! Helper method with template free signature
-            virtual int performUpdateContainer(const QVariant &variant, bool sort) = 0;
+            virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) = 0;
 
             CColumns m_columns;        //!< columns metadata
             int m_sortedColumn;        //!< current sort column
@@ -208,7 +208,7 @@ namespace BlackGui
             { }
 
             //! \copydoc CModelBaseNonTemplate::performUpdateContainer
-            virtual int performUpdateContainer(const QVariant &variant, bool sort) override;
+            virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort) override;
         };
 
     } // namespace

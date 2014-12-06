@@ -20,57 +20,57 @@ namespace BlackGui
     namespace Models
     {
 
-        QVariant CDefaultFormatter::displayRole(const QVariant &dataQVariant) const
+        CVariant CDefaultFormatter::displayRole(const CVariant &dataCVariant) const
         {
             // seems to be absurd, but calls the correct methods on CValueObjects
-            // so QVariant -> QString -> QVariant is correct
-            if (static_cast<QMetaType::Type>(dataQVariant.type()) == QMetaType::QString) return dataQVariant; // shortcut
-            return BlackMisc::qVariantToString(dataQVariant, m_useI18n);
+            // so QVariant -> QString -> CVariant is correct
+            if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QString) return dataCVariant; // shortcut
+            return dataCVariant.toQString(m_useI18n);
         }
 
-        QVariant CDefaultFormatter::decorationRole(const QVariant &dataQVariant) const
+        CVariant CDefaultFormatter::decorationRole(const CVariant &dataCVariant) const
         {
             // direct return if type is already correct
-            if (static_cast<QMetaType::Type>(dataQVariant.type()) == QMetaType::QPixmap)
+            if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QPixmap)
             {
-                return dataQVariant;
+                return dataCVariant;
             }
-            else if (static_cast<QMetaType::Type>(dataQVariant.type()) == QMetaType::QIcon)
+            else if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QIcon)
             {
-                return dataQVariant;
+                return dataCVariant;
             }
 
             // convert to pixmap
-            if (static_cast<QMetaType::Type>(dataQVariant.type()) == QMetaType::QImage)
+            if (static_cast<QMetaType::Type>(dataCVariant.type()) == QMetaType::QImage)
             {
-                QImage img = dataQVariant.value<QImage>();
-                return QPixmap::fromImage(img);
+                QImage img = dataCVariant.value<QImage>();
+                return CVariant::from(QPixmap::fromImage(img));
             }
 
             // Our CIcon class
-            if (dataQVariant.canConvert<BlackMisc::CIcon>())
+            if (dataCVariant.canConvert<BlackMisc::CIcon>())
             {
-                BlackMisc::CIcon i = dataQVariant.value<BlackMisc::CIcon>();
-                return i.toPixmap();
+                BlackMisc::CIcon i = dataCVariant.value<BlackMisc::CIcon>();
+                return CVariant::from(i.toPixmap());
             }
 
             // nope
-            return QPixmap();
+            return CVariant::from(QPixmap());
         }
 
-        QVariant CDefaultFormatter::alignmentRole() const
+        CVariant CDefaultFormatter::alignmentRole() const
         {
             if (!this->hasAlignment())
             {
-                return QVariant(alignDefault()); // default
+                return CVariant::from(alignDefault()); // default
             }
             else
             {
-                return QVariant(m_alignment);
+                return CVariant::from(m_alignment);
             }
         }
 
-        QVariant CDefaultFormatter::data(int role, const QVariant &inputData) const
+        CVariant CDefaultFormatter::data(int role, const CVariant &inputData) const
         {
             Qt::ItemDataRole roleEnum = static_cast<Qt::ItemDataRole>(role);
 
@@ -78,8 +78,8 @@ namespace BlackGui
             if (roleEnum == Qt::TextAlignmentRole) return { alignmentRole() };
 
             // checked
-            if (this->m_supportedRoles.isEmpty()) return QVariant();
-            if (!this->m_supportedRoles.contains(role)) return QVariant();
+            if (this->m_supportedRoles.isEmpty()) return CVariant();
+            if (!this->m_supportedRoles.contains(role)) return CVariant();
             switch (roleEnum)
             {
             case Qt::DisplayRole:
@@ -94,52 +94,44 @@ namespace BlackGui
             default:
                 break;
             }
-            return QVariant();
+            return CVariant();
         }
 
-        QVariant CPixmapFormatter::displayRole(const QVariant &dataQVariant) const
+        CVariant CPixmapFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            Q_UNUSED(dataQVariant);
+            Q_UNUSED(dataCVariant);
             Q_ASSERT_X(false, "CPixmapFormatter", "this role should be disabled with pixmaps");
-            return QVariant();
+            return CVariant();
         }
 
-        QVariant CPixmapFormatter::tooltipRole(const QVariant &dataQVariant) const
+        CVariant CPixmapFormatter::tooltipRole(const CVariant &dataCVariant) const
         {
-            if (dataQVariant.isNull()) return "";
-            if (dataQVariant.canConvert<BlackMisc::CIcon>())
+            if (dataCVariant.isNull()) return "";
+            if (dataCVariant.canConvert<BlackMisc::CIcon>())
             {
-                BlackMisc::CIcon icon = dataQVariant.value<BlackMisc::CIcon>();
+                BlackMisc::CIcon icon = dataCVariant.value<BlackMisc::CIcon>();
                 return icon.getDescriptiveText();
             }
             return "";
         }
 
-        QVariant CValueObjectFormatter::displayRole(const QVariant &valueObject) const
+        CVariant CValueObjectFormatter::displayRole(const CVariant &valueObject) const
         {
-            if (valueObject.isNull()) return QVariant();
-            const BlackMisc::CValueObject *cvo = BlackMisc::CValueObject::fromQVariant(valueObject);
-            Q_ASSERT(cvo);
-            if (!cvo) return QVariant();
-            return QVariant(cvo->toQString(m_useI18n));
+            return CVariant(valueObject.toQString(m_useI18n));
         }
 
-        QVariant CValueObjectFormatter::decorationRole(const QVariant &valueObject) const
+        CVariant CValueObjectFormatter::decorationRole(const CVariant &valueObject) const
         {
-            if (valueObject.isNull()) return "";
-            const BlackMisc::CValueObject *cvo = BlackMisc::CValueObject::fromQVariant(valueObject);
-            Q_ASSERT(cvo);
-            if (!cvo) return QPixmap();
-            return QVariant(cvo->toPixmap());
+            return CVariant(valueObject.toPixmap());
         }
 
-        CDateTimeFormatter::CDateTimeFormatter(const QString formatString, int alignment, bool i18n) :
+        CDateTimeFormatter::CDateTimeFormatter(const QString &formatString, int alignment, bool i18n) :
             CDefaultFormatter(alignment, i18n, { Qt::DisplayRole }), m_formatString(formatString)
         {
             // void
         }
 
-        QVariant CDateTimeFormatter::displayRole(const QVariant &dateTime) const
+        CVariant CDateTimeFormatter::displayRole(const CVariant &dateTime) const
         {
             if (dateTime.isNull()) return "";
             if (static_cast<QMetaType::Type>(dateTime.type()) == QMetaType::QDateTime)
@@ -164,15 +156,15 @@ namespace BlackGui
             }
         }
 
-        QVariant CAirspaceDistanceFormatter::displayRole(const QVariant &dataQVariant) const
+        CVariant CAirspaceDistanceFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            if (dataQVariant.canConvert<BlackMisc::PhysicalQuantities::CLength>())
+            if (dataCVariant.canConvert<BlackMisc::PhysicalQuantities::CLength>())
             {
                 // special treatment for some cases
-                BlackMisc::PhysicalQuantities::CLength l = dataQVariant.value<BlackMisc::PhysicalQuantities::CLength>();
+                BlackMisc::PhysicalQuantities::CLength l = dataCVariant.value<BlackMisc::PhysicalQuantities::CLength>();
                 if (!l.isNull() && (l.isPositiveWithEpsilonConsidered() || l.isZeroEpsilonConsidered()))
                 {
-                    return CPhysiqalQuantiyFormatter::displayRole(dataQVariant);
+                    return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
                 }
                 else
                 {
@@ -186,15 +178,15 @@ namespace BlackGui
             }
         }
 
-        QVariant CComFrequencyFormatter::displayRole(const QVariant &dataQVariant) const
+        CVariant CComFrequencyFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            if (dataQVariant.canConvert<BlackMisc::PhysicalQuantities::CFrequency>())
+            if (dataCVariant.canConvert<BlackMisc::PhysicalQuantities::CFrequency>())
             {
                 // speical treatment for some cases
-                BlackMisc::PhysicalQuantities::CFrequency f = dataQVariant.value<BlackMisc::PhysicalQuantities::CFrequency>();
+                BlackMisc::PhysicalQuantities::CFrequency f = dataCVariant.value<BlackMisc::PhysicalQuantities::CFrequency>();
                 if (BlackMisc::Aviation::CComSystem::isValidComFrequency(f))
                 {
-                    return CPhysiqalQuantiyFormatter::displayRole(dataQVariant);
+                    return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
                 }
                 else
                 {
@@ -208,13 +200,13 @@ namespace BlackGui
             }
         }
 
-        QVariant CAircraftSpeedFormatter::displayRole(const QVariant &dataQVariant) const
+        CVariant CAircraftSpeedFormatter::displayRole(const CVariant &dataCVariant) const
         {
             // special treatment for some cases
-            BlackMisc::PhysicalQuantities::CSpeed s = dataQVariant.value<BlackMisc::PhysicalQuantities::CSpeed>();
+            BlackMisc::PhysicalQuantities::CSpeed s = dataCVariant.value<BlackMisc::PhysicalQuantities::CSpeed>();
             if (!s.isNull() && (s.isPositiveWithEpsilonConsidered() || s.isZeroEpsilonConsidered()))
             {
-                return CPhysiqalQuantiyFormatter::displayRole(dataQVariant);
+                return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
             }
             else
             {
@@ -222,22 +214,22 @@ namespace BlackGui
             }
         }
 
-        QVariant CStringFormatter::displayRole(const QVariant &dataQVariant) const
+        CVariant CStringFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            if (dataQVariant.canConvert<QString>()) { return dataQVariant; }
+            if (dataCVariant.canConvert<QString>()) { return dataCVariant; }
             Q_ASSERT_X(false, "CStringFormatter", "no string value");
-            return QVariant();
+            return CVariant();
         }
 
-        QVariant CBoolTextFormatter::displayRole(const QVariant &dataQVariant) const
+        CVariant CBoolTextFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            if (dataQVariant.canConvert<bool>())
+            if (dataCVariant.canConvert<bool>())
             {
-                bool v = dataQVariant.toBool();
-                return v ? QVariant(m_trueName) : QVariant(m_falseName);
+                bool v = dataCVariant.toBool();
+                return v ? CVariant(m_trueName) : CVariant(m_falseName);
             }
             Q_ASSERT_X(false, "CBoolTextFormatter", "no boolean value");
-            return QVariant();
+            return CVariant();
         }
 
         CBoolLedFormatter::CBoolLedFormatter(int alignment) : CBoolLedFormatter("on", "off", alignment)
@@ -254,22 +246,22 @@ namespace BlackGui
             delete led;
         }
 
-        QVariant CBoolLedFormatter::displayRole(const QVariant &dataQVariant) const
+        CVariant CBoolLedFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            Q_UNUSED(dataQVariant);
+            Q_UNUSED(dataCVariant);
             Q_ASSERT_X(false, "CBoolLedFormatter", "this role should be disabled with led boolean");
-            return QVariant();
+            return CVariant();
         }
 
-        QVariant CBoolLedFormatter::decorationRole(const QVariant &dataQVariant) const
+        CVariant CBoolLedFormatter::decorationRole(const CVariant &dataCVariant) const
         {
-            if (dataQVariant.canConvert<bool>())
+            if (dataCVariant.canConvert<bool>())
             {
-                bool v = dataQVariant.toBool();
-                return v ? m_pixmapOnLed : m_pixmapOffLed;
+                bool v = dataCVariant.toBool();
+                return CVariant::from(v ? m_pixmapOnLed : m_pixmapOffLed);
             }
             Q_ASSERT_X(false, "CBoolLedFormatter", "no boolean value");
-            return QVariant();
+            return CVariant();
         }
 
         CBoolIconFormatter::CBoolIconFormatter(int alignment) :
@@ -287,22 +279,22 @@ namespace BlackGui
             this->m_iconOff.setDescriptiveText(offName);
         }
 
-        QVariant CBoolIconFormatter::displayRole(const QVariant &dataQVariant) const
+        CVariant CBoolIconFormatter::displayRole(const CVariant &dataCVariant) const
         {
-            Q_UNUSED(dataQVariant);
+            Q_UNUSED(dataCVariant);
             Q_ASSERT_X(false, "CBoolIconFormatter", "this role should be disabled with icon boolean");
-            return QVariant();
+            return CVariant();
         }
 
-        QVariant CBoolIconFormatter::decorationRole(const QVariant &dataQVariant) const
+        CVariant CBoolIconFormatter::decorationRole(const CVariant &dataCVariant) const
         {
-            if (dataQVariant.canConvert<bool>())
+            if (dataCVariant.canConvert<bool>())
             {
-                bool v = dataQVariant.toBool();
-                return v ? m_iconOn.toPixmap() : m_iconOff.toPixmap();
+                bool v = dataCVariant.toBool();
+                return CVariant::from(v ? m_iconOn.toPixmap() : m_iconOff.toPixmap());
             }
             Q_ASSERT_X(false, "CBoolIconFormatter", "no boolean value");
-            return QVariant();
+            return CVariant();
         }
     }
 }

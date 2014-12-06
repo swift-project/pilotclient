@@ -162,11 +162,11 @@ namespace BlackGui
             QObject *sender = QObject::sender();
             if (sender == this->ui->pb_SettingsTnRemoveServer)
             {
-                this->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), server.toQVariant());
+                this->getIContextSettings()->value(path, CSettingUtilities::CmdRemove(), server.toCVariant());
             }
             else if (sender == this->ui->pb_SettingsTnSaveServer)
             {
-                this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), server.toQVariant());
+                this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), server.toCVariant());
             }
         }
 
@@ -186,7 +186,7 @@ namespace BlackGui
         void CSettingsComponent::ps_saveHotkeys()
         {
             const QString path = CSettingUtilities::appendPaths(IContextSettings::PathRoot(), IContextSettings::PathHotkeys());
-            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer().toQVariant());
+            this->getIContextSettings()->value(path, CSettingUtilities::CmdUpdate(), this->ui->tvp_SettingsMiscHotkeys->derivedModel()->getContainer().toCVariant());
         }
 
         /*

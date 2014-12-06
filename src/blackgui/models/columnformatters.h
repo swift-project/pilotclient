@@ -36,29 +36,29 @@ namespace BlackGui
             //! Virtual destructor
             virtual ~CDefaultFormatter() {}
 
-            //! Value provided as QVariant, formatter converts to QString.
+            //! Value provided as CVariant, formatter converts to QString.
             //! Used with Qt::DisplayRole displaying a text.
-            virtual QVariant displayRole(const QVariant &dataQVariant) const;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const;
 
-            //! Value provided as QVariant, formatter converts to QString.
+            //! Value provided as CVariant, formatter converts to QString.
             //! Used with Qt::ToolTipRole displaying a text.
-            virtual QVariant tooltipRole(const QVariant &value) const
+            virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &value) const
             {
                 return displayRole(value);
             }
 
-            //! Value provided as QVariant, formatted as icon (Qt docu: "The data to be rendered as a decoration in the form of an icon").
+            //! Value provided as CVariant, formatted as icon (Qt docu: "The data to be rendered as a decoration in the form of an icon").
             //! Used with Qt::DecorationRole displaying an icon, method returns pixmap, icon, or color (see docu)
-            virtual QVariant decorationRole(const QVariant &dataQVariant) const;
+            virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const;
 
-            //! Qt::Alignment (as QVariant)
-            virtual QVariant alignmentRole() const;
+            //! Qt::Alignment (as CVariant)
+            virtual BlackMisc::CVariant alignmentRole() const;
 
             //! Alignment available?
             virtual bool hasAlignment() const { return m_alignment >= 0; }
 
-            //! Receives QVariant of column data, and returns QVariant wrapping string, pixmap, or other values depending on role
-            virtual QVariant data(int role, const QVariant &inputData) const;
+            //! Receives CVariant of column data, and returns CVariant wrapping string, pixmap, or other values depending on role
+            virtual BlackMisc::CVariant data(int role, const BlackMisc::CVariant &inputData) const;
 
             //! Default value
             static int alignDefault() { return alignLeftVCenter(); }
@@ -92,10 +92,10 @@ namespace BlackGui
             CPixmapFormatter(int alignment = alignDefault(), const QList<int> &supportedRoles = roleDecorationAndToolTip()) : CDefaultFormatter(alignment, false, supportedRoles) {}
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
 
             //! \copydoc CDefaultFormatter::tooltipRole
-            virtual QVariant tooltipRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
 
         //! String formatter, if known the variant already contains the appropriate string
@@ -106,7 +106,7 @@ namespace BlackGui
             CStringFormatter(int alignment = alignDefault()) : CDefaultFormatter(alignment, false, roleDisplay()) {}
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
 
         //! Bool value, format as text
@@ -118,7 +118,7 @@ namespace BlackGui
                 CDefaultFormatter(alignment, false, supportedRoles), m_trueName(trueName), m_falseName(falseName) {}
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
 
         protected:
             QString m_trueName = "true";   //!< displayed when true
@@ -137,15 +137,15 @@ namespace BlackGui
             CBoolLedFormatter(const QString &onName, const QString &offName, int alignment = alignDefault());
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
 
             //! Display the LED
-            virtual QVariant decorationRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
 
             //! \copydoc CDefaultFormatter::tooltipRole
-            virtual QVariant tooltipRole(const QVariant &dataQVariant) const override
+            virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override
             {
-                return CBoolTextFormatter::displayRole(dataQVariant);
+                return CBoolTextFormatter::displayRole(dataCVariant);
             }
 
             //! Default LED
@@ -174,15 +174,15 @@ namespace BlackGui
             CBoolIconFormatter(BlackMisc::CIcons::IconIndex onIcon, BlackMisc::CIcons::IconIndex offIcon, const QString &onName, const QString &offName, int alignment = alignDefault());
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
 
             //! Display the icon
-            virtual QVariant decorationRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &dataCVariant) const override;
 
             //! \copydoc CDefaultFormatter::tooltipRole
-            virtual QVariant tooltipRole(const QVariant &dataQVariant) const override
+            virtual BlackMisc::CVariant tooltipRole(const BlackMisc::CVariant &dataCVariant) const override
             {
-                return CBoolTextFormatter::displayRole(dataQVariant);
+                return CBoolTextFormatter::displayRole(dataCVariant);
             }
 
         protected:
@@ -198,10 +198,10 @@ namespace BlackGui
             CValueObjectFormatter(int alignment = alignDefault(), bool i18n = true, QList<int> supportedRoles = {Qt::DisplayRole}) : CDefaultFormatter(alignment, i18n, supportedRoles) {}
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &valueObject) const override;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &valueObject) const override;
 
             //! \copydoc CDefaultFormatter::asPixmap
-            virtual QVariant decorationRole(const QVariant &valueObject) const;
+            virtual BlackMisc::CVariant decorationRole(const BlackMisc::CVariant &valueObject) const;
         };
 
         //! Formatter when column contains QDateTime, QDate or QTime
@@ -209,10 +209,10 @@ namespace BlackGui
         {
         public:
             //! Constructor
-            CDateTimeFormatter(const QString formatString = formatYmd(), int alignment = alignDefault(), bool i18n = true);
+            CDateTimeFormatter(const QString &formatString = formatYmd(), int alignment = alignDefault(), bool i18n = true);
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &dateTime) const override;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dateTime) const override;
 
             //! Year month day
             static const QString &formatYmd() { static const QString f = "yyyy-MM-dd"; return f; }
@@ -238,7 +238,7 @@ namespace BlackGui
             CPhysiqalQuantiyFormatter(MU unit = MU::defaultUnit(), int digits = 2, int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true, QList<int> supportedRoles = { Qt::DisplayRole }) : CValueObjectFormatter(alignment, i18n, supportedRoles), m_unit(unit), m_digits(digits), m_withUnit(withUnit) {}
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &physicalQuantity) const override
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &physicalQuantity) const override
             {
                 if (physicalQuantity.canConvert<PQ>())
                 {
@@ -279,7 +279,7 @@ namespace BlackGui
             CComFrequencyFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(BlackMisc::PhysicalQuantities::CFrequencyUnit::MHz(), 3, alignment, withUnit, i18n) {}
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
 
         //! Angle in degrees
@@ -306,7 +306,7 @@ namespace BlackGui
             CAirspaceDistanceFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(BlackMisc::PhysicalQuantities::CLengthUnit::NM(), 1, alignment, withUnit, i18n) {}
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
 
         //! Airspace distance
@@ -317,7 +317,7 @@ namespace BlackGui
             CAircraftSpeedFormatter(int alignment = alignRightVCenter(), bool withUnit = true, bool i18n = true) : CPhysiqalQuantiyFormatter(BlackMisc::PhysicalQuantities::CSpeedUnit::kts(), 0, alignment, withUnit, i18n) {}
 
             //! \copydoc CDefaultFormatter::displayRole
-            virtual QVariant displayRole(const QVariant &dataQVariant) const override;
+            virtual BlackMisc::CVariant displayRole(const BlackMisc::CVariant &dataCVariant) const override;
         };
 
     } // namespace

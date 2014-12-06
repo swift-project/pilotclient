@@ -167,7 +167,7 @@ namespace BlackGui
             {
                 ContainerType sortedContainer = model->sortContainerByColumn(container, sortColumn, sortOrder);
                 QMetaObject::invokeMethod(this, "updateContainer",
-                                          Q_ARG(QVariant, sortedContainer.toQVariant()), Q_ARG(bool, false), Q_ARG(bool, resize));
+                                          Q_ARG(BlackMisc::CVariant, sortedContainer.toCVariant()), Q_ARG(bool, false), Q_ARG(bool, resize));
             });
             worker->then(this, &CViewBase::asyncUpdateFinished);
             return worker;
@@ -250,10 +250,10 @@ namespace BlackGui
             }
         }
 
-        template <class ModelClass, class ContainerType> int CViewBase<ModelClass, ContainerType>::performUpdateContainer(const QVariant &variant, bool sort, bool resize)
+        template <class ModelClass, class ContainerType> int CViewBase<ModelClass, ContainerType>::performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
         {
             ContainerType c;
-            c.convertFromQVariant(variant);
+            c.convertFromCVariant(variant);
             return this->updateContainer(c, sort, resize);
         }
 

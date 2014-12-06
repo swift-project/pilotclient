@@ -31,7 +31,7 @@ namespace BlackGui
             void setIconMode(bool withIcon);
 
             //! Update or add value, QVariant version
-            bool addOrUpdateByName(const QString &name, const QVariant &value, const BlackMisc::CIcon &icon = BlackMisc::CIcon(), bool performResizing = true, bool skipEqualValues = true);
+            bool addOrUpdateByName(const QString &name, const BlackMisc::CVariant &value, const BlackMisc::CIcon &icon = BlackMisc::CIcon(), bool performResizing = true, bool skipEqualValues = true);
 
             //! Remove by name
             void removeByName(const QString &name, bool performResizing = true);

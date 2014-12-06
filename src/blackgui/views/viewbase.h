@@ -14,6 +14,7 @@
 
 #include "blackmisc/icons.h"
 #include "blackmisc/worker.h"
+#include "blackmisc/variant.h"
 #include <QTableView>
 #include <QHeaderView>
 #include <QMenu>
@@ -101,7 +102,7 @@ namespace BlackGui
             //! \param variant contains the container
             //! \param sort
             //! \param performResizing
-            virtual int performUpdateContainer(const QVariant &variant, bool sort, bool performResizing) = 0;
+            virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool performResizing) = 0;
 
             //! Skip resizing because of size?
             virtual bool reachedResizeThreshold() const = 0;
@@ -122,7 +123,7 @@ namespace BlackGui
 
         protected slots:
             //! Helper method with template free signature serving as callback from threaded worker
-            int updateContainer(const QVariant &variant, bool sort, bool resize)
+            int updateContainer(const BlackMisc::CVariant &variant, bool sort, bool resize)
             {
                 return this->performUpdateContainer(variant, sort, resize);
             }
@@ -214,7 +215,7 @@ namespace BlackGui
             virtual void performResizeToContents() override;
 
             //! \copydoc CViewBaseNonTemplate::performUpdateContainer
-            virtual int performUpdateContainer(const QVariant &variant, bool sort, bool performResizing) override;
+            virtual int performUpdateContainer(const BlackMisc::CVariant &variant, bool sort, bool performResizing) override;
 
         };
     } // namespace

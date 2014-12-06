@@ -7,6 +7,7 @@
 #include "blacksim/setsimulator.h"
 #include "blackmisc/settingutilities.h"
 #include "blackmisc/logmessage.h"
+#include "blackmisc/variant.h"
 
 #include <QComboBox>
 
@@ -135,7 +136,7 @@ namespace BlackGui
             if (sender == this->ui->cb_TimeSync)
             {
                 bool timeSync = this->ui->cb_TimeSync->isChecked();
-                this->getIContextSettings()->value(CSettingUtilities::appendPaths(ps, CSettingsSimulator::ValueSyncTime()), CSettingUtilities::CmdUpdate(), QVariant(timeSync));
+                this->getIContextSettings()->value(CSettingUtilities::appendPaths(ps, CSettingsSimulator::ValueSyncTime()), CSettingUtilities::CmdUpdate(), CVariant::from(timeSync));
             }
             else if (sender == this->ui->le_TimeSyncOffset)
             {
@@ -151,7 +152,7 @@ namespace BlackGui
                 }
                 else
                 {
-                    this->getIContextSettings()->value(CSettingUtilities::appendPaths(ps, CSettingsSimulator::ValueSyncTimeOffset()), CSettingUtilities::CmdUpdate(), ost.toQVariant());
+                    this->getIContextSettings()->value(CSettingUtilities::appendPaths(ps, CSettingsSimulator::ValueSyncTimeOffset()), CSettingUtilities::CmdUpdate(), ost.toCVariant());
                 }
             }
         }
