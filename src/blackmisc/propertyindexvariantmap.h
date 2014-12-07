@@ -52,6 +52,9 @@ namespace BlackMisc
         //! Add a value
         void addValue(const CPropertyIndex &index, const QVariant &value);
 
+        //! Add a value
+        void addValue(const CPropertyIndex &index, const QVariant &value) { this->addValue(index, CVariant(value)); }
+
         //! Add QString as literal, disambiguate as I want to add QString
         void addValue(const CPropertyIndex &index, const char *str);
 
