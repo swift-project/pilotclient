@@ -14,7 +14,7 @@
 
 #include "blackmisc/valueobject.h"
 #include "blackmisc/blackmiscfreefunctions.h"
-#include <QVariant>
+#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {
@@ -55,7 +55,7 @@ namespace BlackMisc
             CPqString(const QString &value) : m_string(value) {}
 
             //! Parse a string value like "100m", "10.3Mhz"
-            static QVariant parseToVariant(const QString &value, SeparatorMode mode = SeparatorsCLocale);
+            static CVariant parseToVariant(const QString &value, SeparatorMode mode = SeparatorsCLocale);
 
             //! Parse into concrete type
             template <class PQ> static PQ parse(const QString &value, SeparatorMode mode = SeparatorsCLocale)
@@ -63,7 +63,7 @@ namespace BlackMisc
                 PQ invalid;
                 invalid.setNull();
                 if (value.isEmpty()) return invalid;
-                QVariant qv = parseToVariant(value, mode);
+                CVariant qv = parseToVariant(value, mode);
                 if (!qv.isNull() && qv.canConvert<PQ>())
                 {
                     return qv.value<PQ>();
