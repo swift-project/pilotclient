@@ -9,6 +9,7 @@
 
 #include "hwjoystickbutton.h"
 #include "blackmiscfreefunctions.h"
+#include "variant.h"
 #include <QCoreApplication>
 
 namespace BlackMisc
@@ -29,11 +30,11 @@ namespace BlackMisc
             this->m_buttonIndex = button.m_buttonIndex;
         }
 
-        void CJoystickButton::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+        void CJoystickButton::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -53,23 +54,23 @@ namespace BlackMisc
             }
         }
 
-        QVariant CJoystickButton::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CJoystickButton::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexButton:
-                return QVariant(this->getButtonIndex());
+                return CVariant::from(this->getButtonIndex());
             case IndexButtonAsString:
-                return QVariant(this->getButtonAsString());
+                return CVariant::from(this->getButtonAsString());
             default:
                 break;
             }
 
             Q_ASSERT_X(false, "CJoystickButton", "index unknown");
             QString m = QString("no property, index ").append(index.toQString());
-            return QVariant::fromValue(m);
+            return CVariant::fromValue(m);
         }
 
         QString CJoystickButton::buttonIndexToString(qint32 buttonIndex)

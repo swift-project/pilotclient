@@ -290,26 +290,26 @@ namespace BlackMisc
         /*
          * Property
          */
-        template <class MU, class PQ>  QVariant CPhysicalQuantity<MU, PQ>::propertyByIndex(const CPropertyIndex &index) const
+        template <class MU, class PQ> CVariant CPhysicalQuantity<MU, PQ>::propertyByIndex(const CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexValue:
-                return QVariant(this->m_value);
+                return CVariant::from(this->m_value);
             case IndexUnit:
-                return this->m_unit.toQVariant();
+                return this->m_unit.toCVariant();
             case IndexValueRounded0DigitsWithUnit:
-                return QVariant(this->valueRoundedWithUnit(0));
+                return CVariant::from(this->valueRoundedWithUnit(0));
             case IndexValueRounded1DigitsWithUnit:
-                return QVariant(this->valueRoundedWithUnit(1));
+                return CVariant::from(this->valueRoundedWithUnit(1));
             case IndexValueRounded2DigitsWithUnit:
-                return QVariant(this->valueRoundedWithUnit(2));
+                return CVariant::from(this->valueRoundedWithUnit(2));
             case IndexValueRounded3DigitsWithUnit:
-                return QVariant(this->valueRoundedWithUnit(3));
+                return CVariant::from(this->valueRoundedWithUnit(3));
             case IndexValueRounded6DigitsWithUnit:
-                return QVariant(this->valueRoundedWithUnit(6));
+                return CVariant::from(this->valueRoundedWithUnit(6));
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -318,11 +318,11 @@ namespace BlackMisc
         /*
          * Property
          */
-        template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+        template <class MU, class PQ> void CPhysicalQuantity<MU, PQ>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -332,14 +332,14 @@ namespace BlackMisc
                 this->m_value = variant.toDouble();
                 break;
             case IndexUnit:
-                this->m_unit.convertFromQVariant(variant);
+                this->m_unit.convertFromCVariant(variant);
                 break;
             case IndexValueRounded0DigitsWithUnit:
             case IndexValueRounded1DigitsWithUnit:
             case IndexValueRounded2DigitsWithUnit:
             case IndexValueRounded3DigitsWithUnit:
             case IndexValueRounded6DigitsWithUnit:
-                this->parseFromString(variant.toString());
+                this->parseFromString(variant.toQString());
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);

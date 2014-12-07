@@ -9,6 +9,7 @@
 
 #include "setkeyboardhotkey.h"
 #include "blackmiscfreefunctions.h"
+#include "variant.h"
 #include <QCoreApplication>
 
 namespace BlackMisc
@@ -39,40 +40,40 @@ namespace BlackMisc
             m_key = obj.m_key;
         }
 
-        QVariant CSettingKeyboardHotkey::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CSettingKeyboardHotkey::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexFunction:
-                return QVariant(m_hotkeyFunction.getFunction());
+                return CVariant::from(static_cast<uint>(m_hotkeyFunction.getFunction()));
             case IndexFunctionAsString:
-                return QVariant(m_hotkeyFunction.getFunctionAsString());
+                return CVariant::from(m_hotkeyFunction.getFunctionAsString());
             case IndexModifier1:
-                return QVariant(static_cast<uint>(m_key.getModifier1()));
+                return CVariant::from(static_cast<uint>(m_key.getModifier1()));
             case IndexModifier2:
-                return QVariant(static_cast<uint>(m_key.getModifier2()));
+                return CVariant::from(static_cast<uint>(m_key.getModifier2()));
             case IndexModifier1AsString:
-                return QVariant(m_key.getModifier1AsString());
+                return CVariant::from(m_key.getModifier1AsString());
             case IndexModifier2AsString:
-                return QVariant(m_key.getModifier2AsString());
+                return CVariant::from(m_key.getModifier2AsString());
             case IndexKey:
-                return QVariant(m_key.getKeyAsQtKey());
+                return CVariant::from(static_cast<int>(m_key.getKeyAsQtKey()));
             case IndexKeyAsString:
-                return QVariant(QString(QChar(m_key.getKeyAsQtKey())));
+                return CVariant::from(QString(QChar(m_key.getKeyAsQtKey())));
             case IndexKeyAsStringRepresentation:
-                return QVariant(m_key.getKeyAsStringRepresentation());
+                return CVariant::from(m_key.getKeyAsStringRepresentation());
             default:
                 return CValueObject::propertyByIndex(index);
             }
         }
 
-        void CSettingKeyboardHotkey::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CSettingKeyboardHotkey::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

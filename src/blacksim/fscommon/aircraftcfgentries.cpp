@@ -9,6 +9,7 @@
 
 #include "aircraftcfgentries.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/variant.h"
 
 using namespace BlackMisc;
 
@@ -41,24 +42,24 @@ namespace BlackSim
         /*
          * Get particular column
          */
-        QVariant CAircraftCfgEntries::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAircraftCfgEntries::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexFilePath:
-                return QVariant(this->m_filePath);
+                return CVariant::from(this->m_filePath);
             case IndexTitle:
-                return QVariant(this->m_title);
+                return CVariant::from(this->m_title);
             case IndexAtcType:
-                return QVariant(this->m_atcType);
+                return CVariant::from(this->m_atcType);
             case IndexAtcModel:
-                return QVariant(this->m_atcModel);
+                return CVariant::from(this->m_atcModel);
             case IndexParkingCode:
-                return QVariant(this->m_atcParkingCode);
+                return CVariant::from(this->m_atcParkingCode);
             case IndexEntryIndex:
-                return QVariant(this->m_index);
+                return CVariant::from(this->m_index);
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -67,29 +68,29 @@ namespace BlackSim
         /*
          * Set property as index
          */
-        void CAircraftCfgEntries::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftCfgEntries::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index.isMyself()) { this->convertFromQVariant(variant); return; }
+            if (index.isMyself()) { this->convertFromCVariant(variant); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAtcModel:
-                this->setAtcModel(variant.toString());
+                this->setAtcModel(variant.toQString());
                 break;
             case IndexAtcType:
-                this->setAtcType(variant.toString());
+                this->setAtcType(variant.toQString());
                 break;
             case IndexEntryIndex:
                 this->setIndex(variant.toInt());
                 break;
             case IndexFilePath:
-                this->setFilePath(variant.toString());
+                this->setFilePath(variant.toQString());
                 break;
             case IndexParkingCode:
-                this->setAtcParkingCode(variant.toString());
+                this->setAtcParkingCode(variant.toQString());
                 break;
             case IndexTitle:
-                this->setTitle(variant.toString());
+                this->setTitle(variant.toQString());
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);

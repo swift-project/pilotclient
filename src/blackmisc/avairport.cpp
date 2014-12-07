@@ -10,6 +10,7 @@
 #include "avairport.h"
 #include "blackmiscfreefunctions.h"
 #include "propertyindex.h"
+#include "variant.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
@@ -79,16 +80,16 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAirport::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAirport::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexIcao:
                 return this->m_icao.propertyByIndex(index.copyFrontRemoved());
             case IndexDescriptiveName:
-                return QVariant(this->m_descriptiveName);
+                return CVariant(this->m_descriptiveName);
             case IndexPosition:
                 return this->m_position.propertyByIndex(index.copyFrontRemoved());
             case IndexElevation:
@@ -105,17 +106,17 @@ namespace BlackMisc
 
             Q_ASSERT_X(false, "CAirport", "index unknown");
             QString m = QString("no property, index ").append(index.toQString());
-            return QVariant::fromValue(m);
+            return CVariant::fromValue(m);
         }
 
         /*
          * Set property as index
          */
-        void CAirport::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAirport::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -125,7 +126,7 @@ namespace BlackMisc
                 this->m_icao.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
             case IndexDescriptiveName:
-                this->setDescriptiveName(variant.toString());
+                this->setDescriptiveName(variant.toQString());
                 break;
             case IndexPosition:
                 this->m_position.setPropertyByIndex(variant, index.copyFrontRemoved());

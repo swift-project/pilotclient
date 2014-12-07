@@ -8,6 +8,7 @@
  */
 
 #include "nwaircraftmodel.h"
+#include "variant.h"
 #include <QString>
 
 namespace BlackMisc
@@ -28,17 +29,17 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAircraftModel::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAircraftModel::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexModelString:
-                return QVariant(this->m_modelString);
+                return CVariant::from(this->m_modelString);
                 break;
             case IndexIsQueriedModelString:
-                return QVariant(this->m_queriedModelStringFlag);
+                return CVariant::from(this->m_queriedModelStringFlag);
                 break;
             default:
                 return CValueObject::propertyByIndex(index);
@@ -49,18 +50,18 @@ namespace BlackMisc
         /*
          * Set property as index
          */
-        void CAircraftModel::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftModel::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexModelString:
-                this->m_modelString = variant.toString();
+                this->m_modelString = variant.toQString();
                 break;
             case IndexIsQueriedModelString:
                 this->m_queriedModelStringFlag = variant.toBool();

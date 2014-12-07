@@ -10,6 +10,7 @@
 #include "avaircrafticao.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/variant.h"
 
 #include <tuple>
 #include <QRegularExpression>
@@ -65,22 +66,22 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAircraftIcao::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAircraftIcao::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAircraftDesignator:
-                return QVariant::fromValue(this->m_aircraftDesignator);
+                return CVariant::fromValue(this->m_aircraftDesignator);
             case IndexAirlineDesignator:
-                return QVariant::fromValue(this->m_airlineDesignator);
+                return CVariant::fromValue(this->m_airlineDesignator);
             case IndexCombinedAircraftType:
-                return QVariant::fromValue(this->m_aircraftCombinedType);
+                return CVariant::fromValue(this->m_aircraftCombinedType);
             case IndexAircraftColor:
-                return QVariant::fromValue(this->m_aircraftColor);
+                return CVariant::fromValue(this->m_aircraftColor);
             case IndexAsString:
-                return QVariant::fromValue(this->asString());
+                return CVariant::fromValue(this->asString());
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -89,11 +90,11 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        void CAircraftIcao::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftIcao::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
 

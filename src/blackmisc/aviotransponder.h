@@ -143,10 +143,10 @@ namespace BlackMisc
             }
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Is valid transponder code?
             static bool isValidTransponderCode(const QString &transponderCode);

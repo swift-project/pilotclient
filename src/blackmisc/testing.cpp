@@ -47,15 +47,15 @@ namespace BlackMisc
             if (byPropertyIndex)
             {
                 CAtcStation station;
-                station.setPropertyByIndex(CCallsign(cs).toQVariant(), CAtcStation::IndexCallsign);
-                station.setPropertyByIndex(user.toQVariant(), CAtcStation::IndexController);
-                station.setPropertyByIndex(CFrequency(f, CFrequencyUnit::MHz()).toQVariant(), CAtcStation::IndexFrequency);
-                station.setPropertyByIndex(CLength(50, CLengthUnit::km()).toQVariant(), CAtcStation::IndexRange);
-                station.setPropertyByIndex(geoPos.toQVariant(), CAtcStation::IndexPosition);
-                station.setPropertyByIndex(false, CAtcStation::IndexIsOnline);
-                station.setPropertyByIndex(dtFrom, CAtcStation::IndexBookedFrom);
-                station.setPropertyByIndex(dtUntil, CAtcStation::IndexBookedUntil);
-                station.setPropertyByIndex(CLength(index + 1, CLengthUnit::NM()).toQVariant(), CAtcStation::IndexDistance);
+                station.setPropertyByIndex(CCallsign(cs).toCVariant(), CAtcStation::IndexCallsign);
+                station.setPropertyByIndex(user.toCVariant(), CAtcStation::IndexController);
+                station.setPropertyByIndex(CFrequency(f, CFrequencyUnit::MHz()).toCVariant(), CAtcStation::IndexFrequency);
+                station.setPropertyByIndex(CLength(50, CLengthUnit::km()).toCVariant(), CAtcStation::IndexRange);
+                station.setPropertyByIndex(geoPos.toCVariant(), CAtcStation::IndexPosition);
+                station.setPropertyByIndex(CVariant::from(false), CAtcStation::IndexIsOnline);
+                station.setPropertyByIndex(CVariant::from(dtFrom), CAtcStation::IndexBookedFrom);
+                station.setPropertyByIndex(CVariant::from(dtUntil), CAtcStation::IndexBookedUntil);
+                station.setPropertyByIndex(CLength(index + 1, CLengthUnit::NM()).toCVariant(), CAtcStation::IndexDistance);
                 return station;
             }
             else
@@ -81,11 +81,11 @@ namespace BlackMisc
             QString r;
             if (byPropertyIndex)
             {
-                r.append(station.propertyByIndex({ CAtcStation::IndexCallsign, CCallsign::IndexString}).toString());
-                r.append(station.propertyByIndex({ CAtcStation::IndexController, CUser::IndexRealName}).toString());
-                r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString}).toString());
-                r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString}).toString());
-                r.append(station.propertyByIndex({ CAtcStation::IndexDistance, CLength::IndexValueRounded2DigitsWithUnit}).toString());
+                r.append(station.propertyByIndex({ CAtcStation::IndexCallsign, CCallsign::IndexString}).toQString());
+                r.append(station.propertyByIndex({ CAtcStation::IndexController, CUser::IndexRealName}).toQString());
+                r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLatitudeAsString}).toQString());
+                r.append(station.propertyByIndex({ CAtcStation::IndexPosition, CCoordinateGeodetic::IndexLongitudeAsString}).toQString());
+                r.append(station.propertyByIndex({ CAtcStation::IndexDistance, CLength::IndexValueRounded2DigitsWithUnit}).toQString());
                 r.append(station.propertyByIndex({ CAtcStation::IndexBookedFrom}).toDateTime().toString("YYYY-mm-dd hh:mm"));
                 r.append(station.propertyByIndex({ CAtcStation::IndexBookedUntil}).toDateTime().toString("YYYY-mm-dd hh:mm"));
             }

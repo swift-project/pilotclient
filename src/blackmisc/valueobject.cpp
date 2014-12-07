@@ -54,11 +54,11 @@ namespace BlackMisc
     /*
      * Setter for property by index
      */
-    void CValueObject::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+    void CValueObject::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
     {
         if (index.isMyself())
         {
-            this->convertFromQVariant(variant);
+            this->convertFromCVariant(variant);
             return;
         }
 
@@ -70,18 +70,18 @@ namespace BlackMisc
     /*
      * By index
      */
-    QVariant CValueObject::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    CVariant CValueObject::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
-        if (index.isMyself()) { return this->toQVariant(); }
+        if (index.isMyself()) { return this->toCVariant(); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexIcon:
-            return this->toIcon().toQVariant();
+            return this->toIcon().toCVariant();
         case IndexPixmap:
-            return QVariant(this->toPixmap());
+            return CVariant::from(this->toPixmap());
         case IndexString:
-            return QVariant(this->toQString());
+            return CVariant(this->toQString());
         default:
             break;
         }
@@ -89,7 +89,7 @@ namespace BlackMisc
         // not all classes have implemented nesting
         const QString m = QString("Property by index not found, index: ").append(index.toQString());
         qFatal("%s", qPrintable(m));
-        return QVariant(m); // avoid compiler warning
+        return CVariant(m); // avoid compiler warning
     }
 
     /*
@@ -98,17 +98,15 @@ namespace BlackMisc
     QString CValueObject::propertyByIndexAsString(const CPropertyIndex &index, bool i18n) const
     {
         // default implementation, requires propertyByIndex
-        QVariant qv = this->propertyByIndex(index);
-        return BlackMisc::qVariantToString(qv, i18n);
+        return this->propertyByIndex(index).toQString(i18n);
     }
 
     /*
      * Variant equal property index?
      */
-    bool CValueObject::equalsPropertyByIndex(const QVariant &compareValue, const CPropertyIndex &index) const
+    bool CValueObject::equalsPropertyByIndex(const CVariant &compareValue, const CPropertyIndex &index) const
     {
-        const QVariant myValue = this->propertyByIndex(index);
-        return BlackMisc::equalQVariants(myValue, compareValue);
+        return this->propertyByIndex(index) == compareValue;
     }
 
     /*
@@ -159,7 +157,7 @@ namespace BlackMisc
         const auto &map = indexMap.map();
         for (auto it = map.begin(); it != map.end(); ++it)
         {
-            const QVariant value = it.value().toQVariant();
+            const CVariant value = it.value().toCVariant();
             const CPropertyIndex index = it.key();
             if (skipEqualValues)
             {
@@ -206,9 +204,9 @@ namespace BlackMisc
         for (auto it = map.begin(); it != map.end(); ++it)
         {
             // QVariant cannot be compared directly
-            QVariant p = valueObject.propertyByIndex(it.key()); // from value object
-            QVariant v = it.value().toQVariant(); // from map
-            if (!BlackMisc::equalQVariants(p, v)) return false;
+            CVariant p = valueObject.propertyByIndex(it.key()); // from value object
+            CVariant v = it.value().toCVariant(); // from map
+            if (p != v) return false;
         }
         return true;
     }

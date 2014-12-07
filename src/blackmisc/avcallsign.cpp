@@ -82,18 +82,18 @@ namespace BlackMisc
         /*
          * Index
          */
-        QVariant CCallsign::propertyByIndex(const CPropertyIndex &index) const
+        CVariant CCallsign::propertyByIndex(const CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCallsignString:
-                return QVariant(this->asString());
+                return CVariant(this->asString());
             case IndexCallsignStringAsSet:
-                return QVariant(this->getStringAsSet());
+                return CVariant(this->getStringAsSet());
             case IndexTelephonyDesignator:
-                return QVariant(this->getTelephonyDesignator());
+                return CVariant(this->getTelephonyDesignator());
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -102,24 +102,24 @@ namespace BlackMisc
         /*
          * Index
          */
-        void CCallsign::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+        void CCallsign::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexCallsignString:
-                this->m_callsign = variant.toString();
+                this->m_callsign = variant.toQString();
                 break;
             case IndexCallsignStringAsSet:
-                this->m_callsignAsSet = variant.toString();
+                this->m_callsignAsSet = variant.toQString();
                 break;
             case IndexTelephonyDesignator:
-                this->m_telephonyDesignator = variant.toString();
+                this->m_telephonyDesignator = variant.toQString();
                 break;
             default:
                 return CValueObject::setPropertyByIndex(variant, index);

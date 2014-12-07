@@ -9,6 +9,7 @@
 
 #include "nwaircraftmapping.h"
 #include "propertyindex.h"
+#include "variant.h"
 
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Network;
@@ -45,9 +46,9 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAircraftMapping::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAircraftMapping::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -62,17 +63,17 @@ namespace BlackMisc
             }
             Q_ASSERT_X(false, "CAircraftMapping", "index unknown");
             QString m = QString("no property, index ").append(index.toQString());
-            return QVariant::fromValue(m);
+            return CVariant::fromValue(m);
         }
 
         /*
          * Set property as index
          */
-        void CAircraftMapping::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftMapping::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

@@ -10,6 +10,7 @@
 #include "nwserver.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/variant.h"
 #include <tuple>
 
 namespace BlackMisc
@@ -52,41 +53,41 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CServer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CServer::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAddress:
-                return QVariant::fromValue(this->m_address);
+                return CVariant::fromValue(this->m_address);
             case IndexDescription:
-                return QVariant::fromValue(this->m_description);
+                return CVariant::fromValue(this->m_description);
             case IndexName:
-                return QVariant::fromValue(this->m_name);
+                return CVariant::fromValue(this->m_name);
             case IndexPort:
-                return QVariant::fromValue(this->m_port);
+                return CVariant::fromValue(this->m_port);
             case IndexUser:
                 return this->m_user.propertyByIndex(index.copyFrontRemoved());
             case IndexIsAcceptingConnections:
-                return QVariant::fromValue(this->m_isAcceptingConnections);
+                return CVariant::fromValue(this->m_isAcceptingConnections);
             default:
                 break;
             }
 
             Q_ASSERT_X(false, "CServer", "index unknown");
             QString m = QString("no property, index ").append(index.toQString());
-            return QVariant::fromValue(m);
+            return CVariant::fromValue(m);
         }
 
         /*
          * Property by index (setter)
          */
-        void CServer::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CServer::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
 

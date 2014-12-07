@@ -180,10 +180,10 @@ namespace BlackMisc
             bool equalsWithRelaxedModifiers(const CKeyboardKey &key) const;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! Modifier to string
             static QString modifierToString(Modifier modifier);

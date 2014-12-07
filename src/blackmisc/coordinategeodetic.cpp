@@ -11,6 +11,7 @@
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
 #include "mathematics.h"
+#include "variant.h"
 #include <QtCore/qmath.h>
 
 using namespace BlackMisc::PhysicalQuantities;
@@ -111,7 +112,7 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant ICoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant ICoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
             if (!index.isMyself())
             {
@@ -123,9 +124,9 @@ namespace BlackMisc
                 case IndexLongitude:
                     return this->longitude().propertyByIndex(index.copyFrontRemoved());
                 case IndexLatitudeAsString:
-                    return QVariant(this->latitudeAsString());
+                    return CVariant(this->latitudeAsString());
                 case IndexLongitudeAsString:
-                    return QVariant(this->longitudeAsString());
+                    return CVariant(this->longitudeAsString());
                 default:
                     break;
                 }
@@ -133,30 +134,30 @@ namespace BlackMisc
 
             Q_ASSERT_X(false, "ICoordinateGeodetic", "index unknown");
             QString m = QString("no property, index ").append(index.toQString());
-            return QVariant::fromValue(m);
+            return CVariant::fromValue(m);
         }
 
         /*
          * Property by index
          */
-        QVariant CCoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CCoordinateGeodetic::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexLatitude:
                 return this->m_latitude.propertyByIndex(index.copyFrontRemoved());
             case IndexLatitudeAsString:
-                return QVariant(this->m_latitude.toQString());
+                return CVariant(this->m_latitude.toQString());
             case IndexLongitude:
                 return this->m_longitude.propertyByIndex(index.copyFrontRemoved());
             case IndexLongitudeAsString:
-                return QVariant(this->m_longitude.toQString());
+                return CVariant(this->m_longitude.toQString());
             case IndexGeodeticHeight:
                 return this->m_geodeticHeight.propertyByIndex(index.copyFrontRemoved());
             case IndexGeodeticHeightAsString:
-                return QVariant(this->m_geodeticHeight.toQString());
+                return CVariant(this->m_geodeticHeight.toQString());
             default:
                 if (ICoordinateGeodetic::canHandleIndex(index))
                 {
@@ -169,11 +170,11 @@ namespace BlackMisc
         /*
          * Set property as index
          */
-        void CCoordinateGeodetic::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CCoordinateGeodetic::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -189,13 +190,13 @@ namespace BlackMisc
                 this->setLongitude(variant.value<CLongitude>());
                 break;
             case IndexLatitudeAsString:
-                this->setLatitude(CLatitude::fromWgs84(variant.toString()));
+                this->setLatitude(CLatitude::fromWgs84(variant.toQString()));
                 break;
             case IndexLongitudeAsString:
-                this->setLongitude(CLongitude::fromWgs84(variant.toString()));
+                this->setLongitude(CLongitude::fromWgs84(variant.toQString()));
                 break;
             case IndexGeodeticHeightAsString:
-                this->m_geodeticHeight.parseFromString(variant.toString());
+                this->m_geodeticHeight.parseFromString(variant.toQString());
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);

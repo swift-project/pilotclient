@@ -10,6 +10,7 @@
 #include "blackmisc/aviotransponder.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/variant.h"
 
 namespace BlackMisc
 {
@@ -156,36 +157,36 @@ namespace BlackMisc
         /*
          * Property
          */
-        QVariant CTransponder::propertyByIndex(const CPropertyIndex &index) const
+        CVariant CTransponder::propertyByIndex(const CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexMode:
-                return QVariant(this->getTransponderMode());
+                return CVariant::from(static_cast<int>(this->getTransponderMode()));
             case IndexModeAsString:
-                return QVariant(this->getModeAsString());
+                return CVariant::from(this->getModeAsString());
             case IndexTransponderCode:
-                return QVariant(this->getTransponderCode());
+                return CVariant::from(this->getTransponderCode());
             case IndexTransponderCodeFormatted:
-                return QVariant(this->getTransponderCodeFormatted());
+                return CVariant::from(this->getTransponderCodeFormatted());
             case IndexTransponderCodeAndModeFormatted:
-                return QVariant(this->getTransponderCodeAndModeFormatted());
+                return CVariant::from(this->getTransponderCodeAndModeFormatted());
             default:
                 break;
             }
 
             Q_ASSERT_X(false, "CTransponder", "index unknown");
             QString m = QString("no property, index ").append(index.toQString());
-            return QVariant::fromValue(m);
+            return CVariant::fromValue(m);
         }
 
-        void CTransponder::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+        void CTransponder::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
@@ -195,7 +196,7 @@ namespace BlackMisc
                 this->setTransponderMode(static_cast<TransponderMode>(variant.toInt()));
                 break;
             case IndexModeAsString:
-                this->setTransponderMode(modeFromString(variant.toString()));
+                this->setTransponderMode(modeFromString(variant.toQString()));
                 break;
             case IndexTransponderCode:
             case IndexTransponderCodeFormatted:
@@ -205,7 +206,7 @@ namespace BlackMisc
                 }
                 else
                 {
-                    this->setTransponderCode(variant.toString());
+                    this->setTransponderCode(variant.toQString());
                 }
                 break;
             case IndexTransponderCodeAndModeFormatted:

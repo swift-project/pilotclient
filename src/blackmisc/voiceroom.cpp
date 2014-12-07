@@ -10,6 +10,7 @@
 #include "voiceroom.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/variant.h"
 #include <QChar>
 #include <QStringList>
 #include <tuple>
@@ -30,22 +31,22 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CVoiceRoom::propertyByIndex(const CPropertyIndex &index) const
+        CVariant CVoiceRoom::propertyByIndex(const CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexAudioPlaying:
-                return QVariant(this->isAudioPlaying());
+                return CVariant::from(this->isAudioPlaying());
             case IndexConnected:
-                return QVariant(this->isConnected());
+                return CVariant::from(this->isConnected());
             case IndexChannel:
-                return QVariant(this->getChannel());
+                return CVariant::from(this->getChannel());
             case IndexHostname:
-                return QVariant(this->getHostname());
+                return CVariant::from(this->getHostname());
             case IndexUrl:
-                return QVariant(this->getVoiceRoomUrl());
+                return CVariant::from(this->getVoiceRoomUrl());
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -54,11 +55,11 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        void CVoiceRoom::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+        void CVoiceRoom::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
 

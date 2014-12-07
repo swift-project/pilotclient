@@ -11,6 +11,7 @@
 #include "blackmisc/icon.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/variant.h"
 #include <tuple>
 
 namespace BlackMisc
@@ -82,20 +83,20 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CUser::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CUser::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexEmail:
-                return QVariant(this->m_email);
+                return CVariant(this->m_email);
             case IndexId:
-                return QVariant(this->m_id);
+                return CVariant(this->m_id);
             case IndexPassword:
-                return QVariant(this->m_password);
+                return CVariant(this->m_password);
             case IndexRealName:
-                return QVariant(this->m_realname);
+                return CVariant(this->m_realname);
             case IndexCallsign:
                 return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
             default:
@@ -106,11 +107,11 @@ namespace BlackMisc
         /*
          * Set property as index
          */
-        void CUser::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CUser::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

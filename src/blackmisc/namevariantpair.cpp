@@ -50,20 +50,20 @@ namespace BlackMisc
     /*
      * Property by index
      */
-    QVariant CNameVariantPair::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    CVariant CNameVariantPair::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
-        if (index.isMyself()) { return this->toQVariant(); }
+        if (index.isMyself()) { return this->toCVariant(); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexName:
-            return QVariant(this->m_name);
+            return CVariant(this->m_name);
         case IndexVariant:
-            return this->m_variant.toQVariant();
+            return this->m_variant;
         case IndexIcon:
-            return this->m_icon.toQVariant();
+            return this->m_icon.toCVariant();
         case IndexPixmap:
-            return this->m_icon.toPixmap();
+            return CVariant(this->m_icon.toPixmap());
         default:
             return CValueObject::propertyByIndex(index);
         }
@@ -72,11 +72,11 @@ namespace BlackMisc
     /*
      * Property by index (setter)
      */
-    void CNameVariantPair::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+    void CNameVariantPair::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
         if (index.isMyself())
         {
-            this->convertFromQVariant(variant);
+            this->convertFromCVariant(variant);
             return;
         }
         ColumnIndex i = index.frontCasted<ColumnIndex>();

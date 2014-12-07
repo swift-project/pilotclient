@@ -54,10 +54,10 @@ namespace BlackMisc
             void setButtonObject(const BlackMisc::Hardware::CJoystickButton &button);
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index);
+            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index);
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(const CPropertyIndex &index) const;
+            virtual CVariant propertyByIndex(const CPropertyIndex &index) const;
 
             //! Button index to string
             static QString buttonIndexToString(qint32 buttonIndex);

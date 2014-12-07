@@ -21,7 +21,7 @@ namespace BlackMisc
     /*
      * Constructor single value
      */
-    CPropertyIndexVariantMap::CPropertyIndexVariantMap(const CPropertyIndex &index, const QVariant &value)
+    CPropertyIndexVariantMap::CPropertyIndexVariantMap(const CPropertyIndex &index, const CVariant &value)
         : m_wildcard(false)
     {
         this->addValue(index, value);
@@ -125,7 +125,7 @@ namespace BlackMisc
     /*
      * Add value
      */
-    void CPropertyIndexVariantMap::addValue(const CPropertyIndex &index, const QVariant &value)
+    void CPropertyIndexVariantMap::addValue(const CPropertyIndex &index, const CVariant &value)
     {
         this->m_values.insert(index, value);
     }

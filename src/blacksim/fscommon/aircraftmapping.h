@@ -15,7 +15,6 @@
 #include "aircraftcfgentries.h"
 #include "blacksim/simulatorinfo.h"
 #include "blackmisc/valueobject.h"
-#include <QVariant>
 #include <QDateTime>
 
 namespace BlackSim
@@ -141,10 +140,10 @@ namespace BlackSim
             void setSimulatorText(const QString &simulator);
 
             //! \copydoc CValueObject::propertyByIndex
-            QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex()
-            void setPropertyByIndex(const QVariant &value, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const BlackMisc::CVariant &value, const BlackMisc::CPropertyIndex &index) override;
 
             //! \copydoc CValueObject::getValueHash()
             virtual uint getValueHash() const override;

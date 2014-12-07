@@ -112,10 +112,10 @@ namespace BlackMisc
             virtual CIcon toIcon() const override { return this->m_user.toIcon(); }
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -133,7 +133,13 @@ namespace BlackMisc
     } // namespace
 } // namespace
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CClient, (o.m_user, o.m_model, o.m_capabilities, o.m_server, o.m_voiceCapabilities))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CClient, (
+    o.m_user,
+    o.m_model,
+    attr(o.m_capabilities, flags<DisabledForComparison>()),
+    o.m_server,
+    o.m_voiceCapabilities
+))
 Q_DECLARE_METATYPE(BlackMisc::Network::CClient)
 
 #endif // guard

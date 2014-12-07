@@ -129,9 +129,9 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAircraft::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -161,11 +161,11 @@ namespace BlackMisc
         /*
          * Property by index (setter)
          */
-        void CAircraft::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraft::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

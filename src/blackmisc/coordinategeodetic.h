@@ -49,7 +49,7 @@ namespace BlackMisc
             virtual const CLongitude &longitude() const = 0;
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
+            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const;
 
             //! Latitude as string
             QString latitudeAsString() const { return this->latitude().toQString(true); }
@@ -124,10 +124,10 @@ namespace BlackMisc
             const BlackMisc::PhysicalQuantities::CLength &geodeticHeight() const { return this->m_geodeticHeight; }
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            virtual CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            virtual void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! Switch unit of latitude / longitude
             CCoordinateGeodetic &switchUnit(const BlackMisc::PhysicalQuantities::CAngleUnit &unit)

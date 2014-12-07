@@ -13,6 +13,7 @@
 #include "blackmisc/avioadfsystem.h"
 #include "blackmisc/propertyindex.h"
 #include "blackmisc/blackmiscfreefunctions.h"
+#include "blackmisc/variant.h"
 
 using BlackMisc::PhysicalQuantities::CFrequency;
 using BlackMisc::PhysicalQuantities::CFrequencyUnit;
@@ -34,9 +35,9 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        template <class AVIO> QVariant CModulator<AVIO>::propertyByIndex(const CPropertyIndex &index) const
+        template <class AVIO> CVariant CModulator<AVIO>::propertyByIndex(const CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -45,11 +46,11 @@ namespace BlackMisc
             case IndexStandbyFrequency:
                 return this->getFrequencyStandby().propertyByIndex(index.copyFrontRemoved());
             case IndexEnabled:
-                return QVariant(this->isEnabled());
+                return CVariant::from(this->isEnabled());
             case IndexInputVolume:
-                return QVariant(this->getVolumeInput());
+                return CVariant::from(this->getVolumeInput());
             case IndexOutputVolume:
-                return QVariant(this->getVolumeOutput());
+                return CVariant::from(this->getVolumeOutput());
             default:
                 return CValueObject::propertyByIndex(index);
             }
@@ -58,11 +59,11 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        template <class AVIO> void CModulator<AVIO>::setPropertyByIndex(const QVariant &variant, const CPropertyIndex &index)
+        template <class AVIO> void CModulator<AVIO>::setPropertyByIndex(const CVariant &variant, const CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();

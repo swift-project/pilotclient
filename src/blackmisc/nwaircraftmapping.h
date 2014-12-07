@@ -49,10 +49,10 @@ namespace BlackMisc
             CAircraftMapping(const QString &aircraftDesignator, const QString &airlineDesignator, const QString &model);
 
             //! \copydoc CValueObject::propertyByIndex
-            QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            void setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
             //! ICAO
             void setIcao(const BlackMisc::Aviation::CAircraftIcao &icao) { this->m_icao = icao; }

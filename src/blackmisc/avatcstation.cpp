@@ -13,6 +13,7 @@
 #include "icon.h"
 #include "propertyindex.h"
 #include "blackmiscfreefunctions.h"
+#include "variant.h"
 
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Geo;
@@ -233,16 +234,16 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAtcStation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAtcStation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexBookedFrom:
-                return QVariant(this->m_bookedFromUtc);
+                return CVariant::from(this->m_bookedFromUtc);
             case IndexBookedUntil:
-                return QVariant(this->m_bookedUntilUtc);
+                return CVariant::from(this->m_bookedUntilUtc);
             case IndexCallsign:
                 return this->m_callsign.propertyByIndex(index.copyFrontRemoved());
             case IndexController:
@@ -250,7 +251,7 @@ namespace BlackMisc
             case IndexFrequency:
                 return this->m_frequency.propertyByIndex(index.copyFrontRemoved());
             case IndexIsOnline:
-                return QVariant(this->m_isOnline);
+                return CVariant::from(this->m_isOnline);
             case IndexLatitude:
                 return this->latitude().propertyByIndex(index.copyFrontRemoved());
             case IndexDistance:
@@ -266,7 +267,7 @@ namespace BlackMisc
             case IndexMetar:
                 return this->m_metar.propertyByIndex(index.copyFrontRemoved());
             case IndexVoiceRoom:
-                return QVariant(this->m_voiceRoom.propertyByIndex(index.copyFrontRemoved()));
+                return this->m_voiceRoom.propertyByIndex(index.copyFrontRemoved());
             default:
                 if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
                 return CValueObject::propertyByIndex(index);
@@ -276,9 +277,9 @@ namespace BlackMisc
         /*
          * Set property as index
          */
-        void CAtcStation::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAtcStation::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
-            if (index.isMyself()) { this->convertFromQVariant(variant); return; }
+            if (index.isMyself()) { this->convertFromCVariant(variant); return; }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {

@@ -104,30 +104,30 @@ namespace BlackSim
         /*
          * Get column
          */
-        QVariant CAircraftMapping::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAircraftMapping::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexMappingId:
-                return QVariant(this->m_mappingId);
+                return CVariant::from(this->m_mappingId);
             case IndexProposalId:
-                return QVariant(m_proposalId);
+                return CVariant::from(m_proposalId);
             case IndexAircraftKey:
-                return QVariant(m_fsAircraftKey);
+                return CVariant::from(m_fsAircraftKey);
             case IndexAircraftDesignator:
-                return QVariant(m_aircraftDesignator);
+                return CVariant::from(m_aircraftDesignator);
             case IndexAirlineDesignator:
-                return QVariant(m_airlineDesignator);
+                return CVariant::from(m_airlineDesignator);
             case IndexAircraftCombinedType:
-                return QVariant(m_aircraftCombinedType);
+                return CVariant::from(m_aircraftCombinedType);
             case IndexWakeTurbulenceCategory:
-                return QVariant(m_wakeTurbulenceCategory);
+                return CVariant::from(m_wakeTurbulenceCategory);
             case IndexAirlineColor:
-                return QVariant(this->m_aircraftColor);
+                return CVariant::from(this->m_aircraftColor);
             case IndexLastChanged:
-                return QVariant(this->getLastChangedFormatted());
+                return CVariant::from(this->getLastChangedFormatted());
             case IndexSimulatorInfo:
                 return this->m_simulatorInfo.propertyByIndex(index.copyFrontRemoved());
             default:
@@ -138,47 +138,39 @@ namespace BlackSim
         /*
          * Set column's value
          */
-        void CAircraftMapping::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftMapping::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
             case IndexMappingId:
-                {
-                    bool ok = false;
-                    qint32 id = variant.toInt(&ok);
-                    this->m_mappingId = ok ? id : CAircraftMapping::InvalidId;
-                }
+                this->m_mappingId = variant.valueOrDefault<qint32>(CAircraftMapping::InvalidId);
                 break;
             case IndexProposalId:
-                {
-                    bool ok = false;
-                    qint32 id = variant.toInt(&ok);
-                    this->m_proposalId = ok ? id : CAircraftMapping::InvalidId;
-                }
+                this->m_proposalId = variant.valueOrDefault<qint32>(CAircraftMapping::InvalidId);
                 break;
             case IndexAircraftKey:
-                m_fsAircraftKey = variant.toString();
+                m_fsAircraftKey = variant.toQString();
                 break;
             case IndexAircraftDesignator:
-                this->setAircraftDesignator(variant.toString());
+                this->setAircraftDesignator(variant.toQString());
                 break;
             case IndexAirlineDesignator:
-                this->setAirlineDesignator(variant.toString());
+                this->setAirlineDesignator(variant.toQString());
                 break;
             case IndexAircraftCombinedType:
-                this->setAircraftCombinedType(variant.toString());
+                this->setAircraftCombinedType(variant.toQString());
                 break;
             case IndexWakeTurbulenceCategory:
-                this->setWakeTurbulenceCategory(variant.toString());
+                this->setWakeTurbulenceCategory(variant.toQString());
                 break;
             case IndexAirlineColor:
-                this->m_aircraftColor = variant.toString();
+                this->m_aircraftColor = variant.toQString();
                 break;
             default:
                 CValueObject::setPropertyByIndex(variant, index);

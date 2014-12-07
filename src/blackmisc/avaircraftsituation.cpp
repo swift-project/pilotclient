@@ -10,6 +10,7 @@
 #include "avaircraftsituation.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/variant.h"
 
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
@@ -37,9 +38,9 @@ namespace BlackMisc
         /*
          * Property by index
          */
-        QVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+        CVariant CAircraftSituation::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return this->toQVariant(); }
+            if (index.isMyself()) { return this->toCVariant(); }
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
@@ -60,26 +61,26 @@ namespace BlackMisc
             case IndexGroundspeed:
                 return this->m_groundspeed.propertyByIndex(index.copyFrontRemoved());
             case IndexTimeStamp:
-                return QVariant::fromValue(this->m_timestamp);
+                return CVariant::fromValue(this->m_timestamp);
             case IndexTimeStampFormatted:
-                return QVariant::fromValue(this->m_groundspeed.toQString("dd hh:mm:ss"));
+                return CVariant::fromValue(this->m_groundspeed.toQString("dd hh:mm:ss"));
             default:
                 break;
             }
 
             Q_ASSERT_X(false, "CAircraftSituation", "index unknown");
             QString m = QString("no property, index ").append(index.toQString());
-            return QVariant::fromValue(m);
+            return CVariant::fromValue(m);
         }
 
         /*
          * Property by index
          */
-        void CAircraftSituation::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+        void CAircraftSituation::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
         {
             if (index.isMyself())
             {
-                this->convertFromQVariant(variant);
+                this->convertFromCVariant(variant);
                 return;
             }
 

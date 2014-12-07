@@ -241,29 +241,29 @@ namespace BlackMisc
     /*
      * Property by index
      */
-    QVariant CStatusMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
+    CVariant CStatusMessage::propertyByIndex(const BlackMisc::CPropertyIndex &index) const
     {
-        if (index.isMyself()) { return this->toQVariant(); }
+        if (index.isMyself()) { return this->toCVariant(); }
         ColumnIndex i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
         case IndexMessage:
-            return QVariant(this->m_message);
+            return CVariant::from(this->m_message);
         case IndexSeverity:
-            return QVariant(static_cast<uint>(this->m_severity));
+            return CVariant::from(static_cast<uint>(this->m_severity));
         case IndexSeverityAsString:
-            return QVariant(this->getSeverityAsString());
+            return CVariant::from(this->getSeverityAsString());
         case IndexTimestamp:
-            return QVariant(this->m_timestamp);
+            return CVariant::from(this->m_timestamp);
         case IndexTimestampFormatted:
             {
                 if (this->m_timestamp.isNull() || !this->m_timestamp.isValid()) return "";
                 return this->m_timestamp.toString("HH:mm::ss.zzz");
             }
         case IndexCategories:
-            return QVariant(this->m_categories.toQString());
+            return CVariant::from(this->m_categories.toQString());
         case IndexCategoryHumanReadable:
-            return QVariant(this->getHumanReadableCategory());
+            return CVariant::from(this->getHumanReadableCategory());
         default:
             return CValueObject::propertyByIndex(index);
         }
@@ -272,11 +272,11 @@ namespace BlackMisc
     /*
      * Set property as index
      */
-    void CStatusMessage::setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index)
+    void CStatusMessage::setPropertyByIndex(const CVariant &variant, const BlackMisc::CPropertyIndex &index)
     {
         if (index.isMyself())
         {
-            this->convertFromQVariant(variant);
+            this->convertFromCVariant(variant);
             return;
         }
         ColumnIndex i = index.frontCasted<ColumnIndex>();

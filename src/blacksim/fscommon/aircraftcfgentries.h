@@ -13,7 +13,6 @@
 #define BLACKSIM_FSCOMMON_AIRCRAFTCFGENTRY_H
 
 #include "blackmisc/propertyindex.h"
-#include <QVariant>
 
 namespace BlackSim
 {
@@ -89,10 +88,10 @@ namespace BlackSim
             void setAtcParkingCode(const QString &parkingCode) { this->m_atcParkingCode = parkingCode; }
 
             //! \copydoc CValueObject::propertyByIndex
-            virtual QVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
+            virtual BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
 
             //! \copydoc CValueObject::setPropertyByIndex
-            virtual void setPropertyByIndex(const QVariant &variant, const BlackMisc::CPropertyIndex &index) override;
+            virtual void setPropertyByIndex(const BlackMisc::CVariant &variant, const BlackMisc::CPropertyIndex &index) override;
 
         protected:
             //! \copydoc CValueObject::convertToQString

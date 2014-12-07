@@ -44,13 +44,13 @@ namespace BlackMisc
         CPropertyIndexVariantMap(bool wildcard = false);
 
         //! Single value constructor
-        CPropertyIndexVariantMap(const CPropertyIndex &index, const QVariant &value);
+        CPropertyIndexVariantMap(const CPropertyIndex &index, const CVariant &value);
 
         //! Destructor
         virtual ~CPropertyIndexVariantMap() {}
 
         //! Add a value
-        void addValue(const CPropertyIndex &index, const QVariant &value);
+        void addValue(const CPropertyIndex &index, const CVariant &value);
 
         //! Add a value
         void addValue(const CPropertyIndex &index, const QVariant &value) { this->addValue(index, CVariant(value)); }
@@ -58,17 +58,17 @@ namespace BlackMisc
         //! Add QString as literal, disambiguate as I want to add QString
         void addValue(const CPropertyIndex &index, const char *str);
 
-        //! Add a value as non QVariant
+        //! Add a value as non CVariant
         template<class T> void addValue(const CPropertyIndex &index, const T &value) { this->m_values.insert(index, CVariant::fromValue(value)); }
 
         //! Is empty?
         bool isEmpty() const { return this->m_values.isEmpty(); }
 
         //! Value
-        QVariant value(const CPropertyIndex &index) const { return this->m_values.value(index).toQVariant(); }
+        CVariant value(const CPropertyIndex &index) const { return this->m_values.value(index).toCVariant(); }
 
         //! Set value
-        void value(const CPropertyIndex &index, const QVariant &value) { this->m_values.value(index, value); }
+        void value(const CPropertyIndex &index, const CVariant &value) { this->m_values.value(index, value); }
 
         //! Indexes
         CPropertyIndexList indexes() const;
