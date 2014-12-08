@@ -44,10 +44,18 @@ namespace BlackMiscTest
         QThread::sleep(3); // let the DBus server startup
 
         // log
-        //! \todo make thread safe or ..?
-        CLogSubscriber messageSubscriber;
-        messageSubscriber.enableConsoleOutput(true);
-        messageSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo));
+        CLogSubscriber applicationMessageSubscriber, audioMessageSubscriber, networkMessageSubscriber, ownAircraftMessageSubscriber, settingsMessageSubscriber, simulatorMessageSubscriber;
+        CStatusMessage::StatusSeverity messageSeverity = CStatusMessage::SeverityInfo;
+        auto refreshSubscriptionSeverities = [ & ]()
+        {
+            applicationMessageSubscriber.changeSubscription(CLogPattern::allOf(runtime->getIContextApplication()).withSeverityAtOrAbove(messageSeverity));
+            audioMessageSubscriber.changeSubscription(CLogPattern::allOf(runtime->getIContextAudio()).withSeverityAtOrAbove(messageSeverity));
+            networkMessageSubscriber.changeSubscription(CLogPattern::allOf(runtime->getIContextNetwork()).withSeverityAtOrAbove(messageSeverity));
+            ownAircraftMessageSubscriber.changeSubscription(CLogPattern::allOf(runtime->getIContextOwnAircraft()).withSeverityAtOrAbove(messageSeverity));
+            settingsMessageSubscriber.changeSubscription(CLogPattern::allOf(runtime->getIContextSettings()).withSeverityAtOrAbove(messageSeverity));
+            simulatorMessageSubscriber.changeSubscription(CLogPattern::allOf(runtime->getIContextSimulator()).withSeverityAtOrAbove(messageSeverity));
+        };
+        refreshSubscriptionSeverities();
 
         QTextStream qtout(stdout);
         qtout << "Running on server here " << Tool::getPid() << " thread: " << QThread::currentThreadId() << endl;
@@ -103,40 +111,25 @@ namespace BlackMiscTest
             else if (line.startsWith("level"))
             {
                 line = line.replace("level", "").trimmed();
-                CStatusMessage::StatusSeverity severity = CStatusMessage::stringToSeverity(line);
-                messageSubscriber.changeSubscription(CLogPattern().withSeverityAtOrAbove(severity));
-                qtout << "Changed level to " << CStatusMessage::severityToString(severity) << endl;
+                messageSeverity = CStatusMessage::stringToSeverity(line);
+                refreshSubscriptionSeverities();
+                qtout << "Changed level to " << CStatusMessage::severityToString(messageSeverity) << endl;
             }
             else if (line.startsWith("log"))
             {
                 line.replace("log", "");
                 bool enable = line.endsWith("e");
-                if (line.startsWith("all"))
-                {
-                    QMetaObject::invokeMethod(CLogHandler::instance(), "enableConsoleOutput", Q_ARG(bool, enable));
-                }
-                else
-                {
-                    CLogCategoryList categories;
-                    if (line.startsWith("app"))      { categories = runtime->getIContextApplication(); }
-                    else if (line.startsWith("aud")) { categories = runtime->getIContextAudio(); }
-                    else if (line.startsWith("net")) { categories = runtime->getIContextNetwork(); }
-                    else if (line.startsWith("own")) { categories = runtime->getIContextOwnAircraft(); }
-                    else if (line.startsWith("set")) { categories = runtime->getIContextSettings(); }
-                    else if (line.startsWith("sim")) { categories = runtime->getIContextSimulator(); }
-                    if (! categories.isEmpty())
-                    {
-                        BlackMisc::singleShot(0, BlackMisc::CLogHandler::instance()->thread(), [ = ]()
-                        {
-                            BlackMisc::CLogHandler::instance()->handlerForPattern(CLogPattern::allOf(categories))->enableConsoleOutput(enable);
-                        });
-                    }
-                }
+                if (line.startsWith("app") || line.startsWith("all")) { applicationMessageSubscriber.enableConsoleOutput(enable); }
+                if (line.startsWith("aud") || line.startsWith("all")) { audioMessageSubscriber.enableConsoleOutput(enable); }
+                if (line.startsWith("net") || line.startsWith("all")) { networkMessageSubscriber.enableConsoleOutput(enable); }
+                if (line.startsWith("own") || line.startsWith("all")) { ownAircraftMessageSubscriber.enableConsoleOutput(enable); }
+                if (line.startsWith("set") || line.startsWith("all")) { settingsMessageSubscriber.enableConsoleOutput(enable); }
+                if (line.startsWith("sim") || line.startsWith("all")) { simulatorMessageSubscriber.enableConsoleOutput(enable); }
             }
             else if (line.startsWith("h"))
             {
-                qtout << "1) global logging:" << endl;
-                qtout << "   levels: d, i, w, e  example: level d for debug level" << endl;
+                qtout << "1) logging severity levels:" << endl;
+                qtout << "   d, i, w, e  example: level d for debug level" << endl;
                 qtout << "2) logging for contexts:" << endl;
                 qtout << "   log + context + [e]nabled / [d]isabled" << endl;
                 qtout << "   contexts: app / aud / net / own (aircraft) / set / sim / all" << endl;
