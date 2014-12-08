@@ -38,6 +38,12 @@ namespace BlackMisc
         //! Find by severity
         CStatusMessageList findBySeverity(CStatusMessage::StatusSeverity severity) const;
 
+        //! Add a category to all messages in the list
+        void addCategory(const CLogCategory &category);
+
+        //! Add some categories to all messages in the list
+        void addCategories(const CLogCategoryList &categories);
+
         //! \copydoc CValueObject::toQVariant
         virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
 

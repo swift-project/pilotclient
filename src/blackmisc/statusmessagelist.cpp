@@ -36,6 +36,28 @@ namespace BlackMisc
     }
 
     /*
+     * Add category
+     */
+    void CStatusMessageList::addCategory(const CLogCategory &category)
+    {
+        for (auto &msg : *this)
+        {
+            msg.addCategory(category);
+        }
+    }
+
+    /*
+     * Add categories
+     */
+    void CStatusMessageList::addCategories(const CLogCategoryList &categories)
+    {
+        for (auto &msg : *this)
+        {
+            msg.addCategories(categories);
+        }
+    }
+
+    /*
      * Metadata
      */
     void CStatusMessageList::registerMetadata()

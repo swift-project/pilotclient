@@ -105,6 +105,12 @@ namespace BlackMisc
         //! Severity
         void setSeverity(StatusSeverity severity) { this->m_severity = severity; }
 
+        //! Add category
+        void addCategory(const CLogCategory &category) { this->m_categories.push_back(category); }
+
+        //! Add categories
+        void addCategories(const CLogCategoryList &categories) { this->m_categories.push_back(categories); }
+
         //! Representing icon
         virtual CIcon toIcon() const override { return convertToIcon(*this); }
 
