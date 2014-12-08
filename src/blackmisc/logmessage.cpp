@@ -40,24 +40,6 @@ namespace BlackMisc
         return *this;
     }
 
-    CLogMessage &CLogMessage::statusMessage(const CStatusMessage &statusMessage)
-    {
-        switch (statusMessage.getSeverity())
-        {
-        case CStatusMessage::SeverityDebug:
-            this->m_message = statusMessage.getMessage();
-            return debug();
-        case CStatusMessage::SeverityInfo:
-            return info(statusMessage.getMessage());
-        case CStatusMessage::SeverityWarning:
-            return warning(statusMessage.getMessage());
-        case CStatusMessage::SeverityError:
-            return error(statusMessage.getMessage());
-        default:
-            return info(statusMessage.getMessage());
-        }
-    }
-
     CLogMessage &CLogMessage::validationInfo(QString format)
     {
         m_categories.remove(CLogCategory::uncategorized());
@@ -77,30 +59,6 @@ namespace BlackMisc
         m_categories.remove(CLogCategory::uncategorized());
         m_categories.push_back(CLogCategory::validation());
         return error(format);
-    }
-
-    CLogMessage &CLogMessage::validation(const CStatusMessage &statusMessage)
-    {
-        switch (statusMessage.getSeverity())
-        {
-        case CStatusMessage::SeverityDebug:
-        case CStatusMessage::SeverityInfo:
-            return validationInfo(statusMessage.getMessage());
-        case CStatusMessage::SeverityWarning:
-            return validationWarning(statusMessage.getMessage());
-        case CStatusMessage::SeverityError:
-            return validationError(statusMessage.getMessage());
-        default:
-            return validationInfo(statusMessage.getMessage());
-        }
-    }
-
-    void CLogMessage::validations(const CStatusMessageList &statusMessages)
-    {
-        foreach(CStatusMessage msg, statusMessages)
-        {
-            validation(msg);
-        }
     }
 
     CLogMessage::operator CStatusMessage()
@@ -211,6 +169,21 @@ namespace BlackMisc
     {
         return hasFlag(category, "debug") || category.isEmpty()
                || (QLoggingCategory::defaultCategory() && category == QLoggingCategory::defaultCategory()->categoryName());
+    }
+
+    void CLogMessage::preformatted(const CStatusMessage &statusMessage)
+    {
+        CLogMessage msg(statusMessage.getCategories());
+        msg.m_severity = statusMessage.getSeverity();
+        msg.m_message = statusMessage.getMessage();
+    }
+
+    void CLogMessage::preformatted(const CStatusMessageList &statusMessages)
+    {
+        for(const auto &msg : statusMessages)
+        {
+            preformatted(msg);
+        }
     }
 
 }

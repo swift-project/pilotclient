@@ -154,7 +154,9 @@ namespace BlackGui
             CStatusMessageList  msgs = server.validate();
             if (!msgs.isEmpty())
             {
-                CLogMessage(this).validations(msgs);
+                msgs.addCategories(this);
+                msgs.addCategory(CLogCategory::validation());
+                CLogMessage::preformatted(msgs);
                 return;
             }
 

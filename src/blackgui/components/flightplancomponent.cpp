@@ -296,7 +296,9 @@ namespace BlackGui
         {
             CFlightPlan flightPlan;
             CStatusMessageList messages = this->validateAndInitializeFlightPlan(flightPlan);
-            CLogMessage(this).validations(messages);
+            messages.addCategories(this);
+            messages.addCategory(CLogCategory::validation());
+            CLogMessage::preformatted(messages);
         }
 
         void CFlightPlanComponent::ps_resetFlightPlan()

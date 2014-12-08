@@ -213,7 +213,8 @@ namespace BlackGui
             }
 
             // log message and trigger events
-            CLogMessage(this).statusMessage(msg);
+            msg.addCategories(this);
+            CLogMessage::preformatted(msg);
             if (msg.isSeverityInfoOrLess())
             {
                 emit loginOrLogoffSuccessful();

@@ -111,9 +111,6 @@ namespace BlackMisc
         //! Set the severity to error, providing a format string.
         CLogMessage &error(QString format);
 
-        //! Log message by status message
-        CLogMessage &statusMessage(const CStatusMessage &statusMessage);
-
         //! Set the severity to info, providing a format string, and adding the validation category.
         CLogMessage &validationInfo(QString format);
 
@@ -122,13 +119,6 @@ namespace BlackMisc
 
         //! Set the severity to error, providing a format string, and adding the validation category.
         CLogMessage &validationError(QString format);
-
-        //! Set the severity as in \sa CStatusMessage::StatusSeverity , and adding the validation category.
-        CLogMessage &validation(const CStatusMessage &statusMessage);
-
-        //! Set the severity as in \sa CStatusMessage::StatusSeverity , and adding the validation category.
-        //! \todo how to handle return value here, CLogMessageList?
-        void validations(const CStatusMessageList &statusMessages);
 
         //! Streaming operators.
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
@@ -149,6 +139,12 @@ namespace BlackMisc
         CLogMessage &operator <<(double v) { return arg(QString::number(v)); }
         CLogMessage &operator <<(const CValueObject &v) { return arg(v.toQString()); }
         //! @}
+
+        //! Sends a verbatim, preformatted message to the log.
+        static void preformatted(const CStatusMessage &statusMessage);
+
+        //! Sends a list of verbatim, preformatted messages to the log.
+        static void preformatted(const CStatusMessageList &statusMessages);
 
     private:
         QMessageLogger m_logger;
