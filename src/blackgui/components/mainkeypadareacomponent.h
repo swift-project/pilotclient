@@ -72,7 +72,7 @@ namespace BlackGui
             void ps_buttonSelected();
 
             //! \copydoc BlackCore::IContextNetwork::connectionStatusChanged
-            void ps_connectionStatusChanged(uint from, uint to, const QString &message);
+            void ps_connectionStatusChanged(uint from, uint to);
 
             //! Command line entered
             void ps_commandEntered();

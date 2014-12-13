@@ -61,8 +61,6 @@ Client::Client(QObject *parent)
     m_commands["help"]              = std::bind(&Client::help, this, _1);
     m_commands["echo"]              = std::bind(&Client::echo, this, _1);
     m_commands["exit"]              = std::bind(&Client::exit, this, _1);
-    m_commands["getstatusurls"]     = std::bind(&Client::getStatusUrlsCmd, this, _1);
-    m_commands["getservers"]        = std::bind(&Client::getKnownServersCmd, this, _1);
     m_commands["setserver"]         = std::bind(&Client::presetServerCmd, this, _1);
     m_commands["setcallsign"]       = std::bind(&Client::presetCallsignCmd, this, _1);
     m_commands["icaocodes"]         = std::bind(&Client::presetIcaoCodesCmd, this, _1);
@@ -131,24 +129,6 @@ void Client::echo(QTextStream &line)
 void Client::exit(QTextStream &)
 {
     emit quit();
-}
-
-void Client::getStatusUrlsCmd(QTextStream &)
-{
-    auto urls = m_net->getStatusUrls();
-    for (auto i = urls.begin(); i != urls.end(); ++i)
-    {
-        std::cout << i->toString().toStdString() << std::endl;
-    }
-}
-
-void Client::getKnownServersCmd(QTextStream &)
-{
-    auto servers = m_net->getKnownServers();
-    for (auto i = servers.begin(); i != servers.end(); ++i)
-    {
-        std::cout << i->toFormattedQString().toStdString() << std::endl;
-    }
 }
 
 void Client::presetServerCmd(QTextStream &args)
@@ -441,8 +421,7 @@ void Client::atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign)
     std::cout << "ATC_DISCONNECTED " << callsign << std::endl;
 }
 
-void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus,
-                                     const QString &errorMessage)
+void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus)
 {
     switch (newStatus)
     {
@@ -463,10 +442,6 @@ void Client::connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldSt
     case BlackCore::INetwork::DisconnectedLost:     std::cout << " (was CONN_STATUS_DISCONNECTED_LOST)\n"; break;
     case BlackCore::INetwork::Connecting:           std::cout << " (was CONN_STATUS_CONNECTING)\n"; break;
     case BlackCore::INetwork::Connected:            std::cout << " (was CONN_STATUS_CONNECTED)\n"; break;
-    }
-    if (!errorMessage.isEmpty())
-    {
-        std::cout << "REASON " << errorMessage.toStdString() << std::endl;
     }
 }
 

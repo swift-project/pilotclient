@@ -129,13 +129,12 @@ namespace BlackGui
             }
         }
 
-        void CMainKeypadAreaComponent::ps_connectionStatusChanged(uint from, uint to, const QString &message)
+        void CMainKeypadAreaComponent::ps_connectionStatusChanged(uint from, uint to)
         {
             INetwork::ConnectionStatus statusFrom = static_cast<INetwork::ConnectionStatus>(from);
             INetwork::ConnectionStatus statusTo = static_cast<INetwork::ConnectionStatus>(to);
 
             Q_UNUSED(statusFrom);
-            Q_UNUSED(message);
 
             // Connected button
             if (statusTo == INetwork::Connected)

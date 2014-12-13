@@ -29,8 +29,6 @@ private: //commands
     void help(QTextStream &args);
     void echo(QTextStream &args);
     void exit(QTextStream &args);
-    void getStatusUrlsCmd(QTextStream &args);
-    void getKnownServersCmd(QTextStream &args);
     void presetServerCmd(QTextStream &args);
     void presetCallsignCmd(QTextStream &args);
     void presetIcaoCodesCmd(QTextStream &args);
@@ -92,8 +90,7 @@ public slots: //to receive from INetwork
     void atcPositionUpdate(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq,
                            const BlackMisc::Geo::CCoordinateGeodetic &pos, const BlackMisc::PhysicalQuantities::CLength &range);
     void atcDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
-    void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus,
-                                 const QString &errorMessage);
+    void connectionStatusChanged(BlackCore::INetwork::ConnectionStatus oldStatus, BlackCore::INetwork::ConnectionStatus newStatus);
     void ipReplyReceived(const QString &ip);
     void freqReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &freq);
     void serverReplyReceived(const BlackMisc::Aviation::CCallsign &callsign, const QString &server);

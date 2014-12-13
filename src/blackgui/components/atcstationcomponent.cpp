@@ -191,12 +191,11 @@ namespace BlackGui
             this->m_timestampBookedStationsChanged = QDateTime::currentDateTimeUtc();
         }
 
-        void CAtcStationComponent::ps_connectionStatusChanged(uint from, uint to, const QString &message)
+        void CAtcStationComponent::ps_connectionStatusChanged(uint from, uint to)
         {
             INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
             INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
             Q_UNUSED(fromStatus);
-            Q_UNUSED(message);
             if (INetwork::isDisconnectedStatus(toStatus))
             {
                 this->ui->tvp_AtcStationsOnline->clear();

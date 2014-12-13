@@ -97,7 +97,7 @@ namespace BlackGui
             void ps_changedAtcStationsOnline();
 
             //! Connection status has been changed
-            void ps_connectionStatusChanged(uint from, uint to, const QString &message);
+            void ps_connectionStatusChanged(uint from, uint to);
 
             //! Request dummy ATC online stations
             void ps_testCreateDummyOnlineAtcStations(int number);

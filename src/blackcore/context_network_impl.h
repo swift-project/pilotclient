@@ -196,7 +196,7 @@ namespace BlackCore
          * \param from  old status
          * \param to    new status
          */
-        void ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message);
+        void ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to);
 
         //! Radio text messages received
         void ps_fsdTextMessageReceived(const BlackMisc::Network::CTextMessageList &messages);

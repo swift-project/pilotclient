@@ -36,7 +36,8 @@ namespace BlackMisc
             {
                 VFR = 0,    //!< Visual flight rules
                 IFR,        //!< Instrument flight rules
-                SVFR        //!< Special VFR (reserved for ATC use)
+                SVFR,       //!< Special VFR (reserved for ATC use),
+                DVFR        //!< Defense VFR
             };
 
             static const int MaxRemarksLength = 150; //!< Max remarks length

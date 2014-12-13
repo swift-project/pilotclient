@@ -113,12 +113,11 @@ namespace BlackGui
             Q_UNUSED(paused);
         }
 
-        void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(uint from, uint to, const QString &message)
+        void CInfoBarStatusComponent::ps_onNetworkConnectionChanged(uint from, uint to)
         {
             INetwork::ConnectionStatus fromStatus = static_cast<INetwork::ConnectionStatus>(from);
             INetwork::ConnectionStatus toStatus = static_cast<INetwork::ConnectionStatus>(to);
             Q_UNUSED(fromStatus);
-            Q_UNUSED(message);
 
             switch (toStatus)
             {

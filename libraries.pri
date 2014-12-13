@@ -7,7 +7,7 @@ blackgui {
 }
 
 blackcore {
-    LIBS += -lblackcore -lvatlib
+    LIBS += -lblackcore -lvatlib2
 
     win32 {
         contains(BLACK_CONFIG, FSX) {

@@ -57,7 +57,7 @@ namespace BlackGui
             void ps_onSimulatorStatusChanged(bool connected, bool running, bool paused);
 
             //! Network connection has been changed
-            void ps_onNetworkConnectionChanged(uint from, uint to, const QString &message);
+            void ps_onNetworkConnectionChanged(uint from, uint to);
 
             //! Context menu requested
             void ps_customAudioContextMenuRequested(const QPoint &position);

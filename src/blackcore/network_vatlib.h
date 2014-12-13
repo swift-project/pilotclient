@@ -9,7 +9,7 @@
 #define BLACKCORE_NETWORK_VATLIB_H
 
 #include "network.h"
-#include <vatlib/vatlib.h>
+#include <vatlib/vatlib2.h>
 #include <QScopedPointer>
 #include <QTimer>
 #include <QTextCodec>
@@ -33,16 +33,10 @@ namespace BlackCore
         virtual ~CNetworkVatlib();
 
         //! \copydoc INetwork::isConnected()
-        virtual bool isConnected() const override { return m_status == Cvatlib_Network::connStatus_Connected; }
+        virtual bool isConnected() const override { return m_status == vatStatusConnected; }
 
         //! \copydoc INetwork::pendingConnection()
-        virtual bool isPendingConnection() const override { return m_status == Cvatlib_Network::connStatus_Connecting; }
-
-        //! \copydoc INetwork::getStatusUrls()
-        virtual QList<QUrl> getStatusUrls() const override;
-
-        //! \copydoc INetwork::getKnownServers()
-        virtual BlackMisc::Network::CServerList getKnownServers() const override;
+        virtual bool isPendingConnection() const override { return m_status == vatStatusConnecting; }
 
         // Network slots
         //! \copydoc INetwork::presetLoginMode
@@ -93,29 +87,31 @@ namespace BlackCore
         void sendAircraftInfo(const BlackMisc::Aviation::CCallsign &callsign);
 
     private: //shimlib callbacks
-        static void onConnectionStatusChanged(Cvatlib_Network *, Cvatlib_Network::connStatus oldStatus, Cvatlib_Network::connStatus newStatus, void *cbvar);
-        static void onTextMessageReceived(Cvatlib_Network *, const char *from, const char *to, const char *msg, void *cbvar);
-        static void onRadioMessageReceived(Cvatlib_Network *, const char *from, INT numFreq, INT *freqList, const char *msg, void *cbvar);
-        static void onControllerDisconnected(Cvatlib_Network *, const char *callsign, void *cbvar);
-        static void onInterimPilotPositionUpdate(Cvatlib_Network *, const char *callsign, Cvatlib_Network::PilotPosUpdate pos, void *cbvar);
-        static void onAtcPositionUpdate(Cvatlib_Network *, const char *callsign, Cvatlib_Network::ATCPosUpdate pos, void *cbvar);
-        static void onKicked(Cvatlib_Network *, const char *reason, void *cbvar);
-        static void onPong(Cvatlib_Network *, const char *callsign, INT elapsedTime, void *cbvar);
-        static void onMetarReceived(Cvatlib_Network *, const char *data, void *cbvar);
-        static void onInfoQueryRequestReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::infoQuery type, const char *data, void *cbvar);
-        static void onInfoQueryReplyReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::infoQuery type, const char *data, const char *data2, void *cbvar);
-        static void onCapabilitiesReplyReceived(Cvatlib_Network *, const char *callsign, const char **keysValues, void *cbvar);
-        static void onAtisReplyReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::atisLineType type, const char *data, void *cbvar);
-        static void onFlightPlanReceived(Cvatlib_Network *, const char *callsign, Cvatlib_Network::FlightPlan fp, void *cbvar);
-        static void onTemperatureDataReceived(Cvatlib_Network *, Cvatlib_Network::TempLayer layers[4], INT pressure, void *cbvar);
-        static void onErrorReceived(Cvatlib_Network *, Cvatlib_Network::error type, const char *msg, const char *data, void *cbvar);
-        static void onWindDataReceived(Cvatlib_Network *, Cvatlib_Network::WindLayer layers[4], void *cbvar);
-        static void onCloudDataReceived(Cvatlib_Network *, Cvatlib_Network::CloudLayer layers[2], Cvatlib_Network::StormLayer storm, float vis, void *cbvar);
-        static void onPilotDisconnected(Cvatlib_Network *, const char *callsign, void *cbvar);
-        static void onPilotInfoRequestReceived(Cvatlib_Network *, const char *callsign, void *cbvar);
-        static void onPilotInfoReceived(Cvatlib_Network *, const char *callsign, const char **keysValues, void *cbvar);
-        static void onPilotPositionUpdate(Cvatlib_Network *, const char *callsign, Cvatlib_Network::PilotPosUpdate pos, void *cbvar);
-        static void onCustomPacketReceived(Cvatlib_Network *, const char *callsign, const char *packetId, const char **data, INT dataSize, void *cbvar);
+        static void onConnectionStatusChanged(VatSessionID, VatConnectionStatus oldStatus, VatConnectionStatus newStatus, void *cbvar);
+        static void onTextMessageReceived(VatSessionID, const char *from, const char *to, const char *msg, void *cbvar);
+
+        static void onRadioMessageReceived(VatSessionID, const char *from, int freqCount, int *freqList, const char *message, void *cbvar);
+
+        static void onControllerDisconnected(VatSessionID, const char *callsign, void *cbvar);
+        static void onInterimPilotPositionUpdate(VatSessionID, const char *callsign, const VatPilotPosition *position, void *cbvar);
+        static void onAtcPositionUpdate(VatSessionID, const char *callsign, const VatAtcPosition *pos, void *cbvar);
+        static void onKicked(VatSessionID, const char *reason, void *cbvar);
+        static void onPong(VatSessionID, const char *sender, double elapsedTime, void *cbvar);
+        static void onMetarReceived(VatSessionID, const char *data, void *cbvar);
+        static void onInfoQueryRequestReceived(VatSessionID, const char *callsign, VatInfoQueryType type, const char *data, void *cbvar);
+        static void onInfoQueryReplyReceived(VatSessionID, const char *callsign, VatInfoQueryType type, const char *data, const char *data2, void *cbvar);
+        static void onCapabilitiesReplyReceived(VatSessionID, const char *callsign, int capabilityFlags, void *cbvar);
+        static void onAtisReplyReceived(VatSessionID, const char *callsign, const VatControllerAtis *atis, void *cbvar);
+        static void onFlightPlanReceived(VatSessionID, const char *callsign, const VatFlightPlan *fp, void *cbvar);
+        static void onTemperatureDataReceived(VatSessionID, const VatTempLayer layer[4], int pressure, void *cbvar);
+        static void onWindDataReceived(VatSessionID, const VatWindLayer layer[4], void *cbvar);
+        static void onCloudDataReceived(VatSessionID, const VatCloudLayer cloudLayer[2], VatThunderStormLayer thunderStormLayer, float visibility, void *cbvar);
+        static void onErrorReceived(VatSessionID, VatServerError error, const char *msg, const char *data, void *cbvar);
+        static void onPilotDisconnected(VatSessionID, const char *callsign, void *cbvar);
+        static void onPilotInfoRequestReceived(VatSessionID, const char *callsign, void *cbvar);
+        static void onPilotInfoReceived(VatSessionID, const char *callsign, const VatAircraftInfo *aircraftInfo, void *cbvar);
+        static void onPilotPositionUpdate(VatSessionID, const char *callsign, const VatPilotPosition *position, void *cbvar);
+        static void onCustomPacketReceived(VatSessionID, const char *callsign, const char *packetId, const char **data, int dataSize, void *cbvar);
 
     private:
         QByteArray toFSD(QString qstr) const;
@@ -125,9 +121,9 @@ namespace BlackCore
         QStringList fromFSD(const char **cstrArray, int size) const;
 
         void initializeSession();
-        void changeConnectionStatus(Cvatlib_Network::connStatus newStatus, QString errorMessage = "");
-        bool isDisconnected() const { return m_status != Cvatlib_Network::connStatus_Connecting && m_status != Cvatlib_Network::connStatus_Connected; }
-        QString getSocketError() const;
+        void changeConnectionStatus(VatConnectionStatus newStatus);
+        bool isDisconnected() const { return m_status != vatStatusConnecting && m_status != vatStatusConnected; }
+        static void networkErrorHandler(const char *message);
 
     private slots:
         void process();
@@ -142,18 +138,17 @@ namespace BlackCore
         struct VatlibQScopedPointerDeleter
         {
             //! Called by QScopedPointer destructor
-            static void cleanup(Cvatlib_Network *net) { if (net) net->Destroy(); }
+            static void cleanup(VatSessionID session) { if (session) Vat_DestroyNetworkSession(session); }
         };
 
     private:
-        QScopedPointer<Cvatlib_Network, VatlibQScopedPointerDeleter> m_net;
+        QScopedPointer<PCSBClient, VatlibQScopedPointerDeleter> m_net;
         LoginMode m_loginMode;
-        Cvatlib_Network::connStatus m_status;
+        VatConnectionStatus m_status;
         BlackMisc::Network::CServer m_server;
         BlackMisc::Aviation::CCallsign m_callsign;
         BlackMisc::Aviation::CAircraftIcao m_icaoCode;
         BlackMisc::Aviation::CAircraft m_ownAircraft; // not using callsign, user, or icao parts of this member because they can't be changed when connected
-        QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CInformationMessage> m_atisParts;
 
         QTimer m_processingTimer;
         QTimer m_updateTimer;

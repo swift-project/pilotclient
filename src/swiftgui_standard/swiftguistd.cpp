@@ -216,7 +216,7 @@ void SwiftGuiStd::ps_onConnectionTerminated()
 /*
 * Connection status changed
 */
-void SwiftGuiStd::ps_onConnectionStatusChanged(uint /** from **/, uint to, const QString & /* message */)
+void SwiftGuiStd::ps_onConnectionStatusChanged(uint /** from **/, uint to)
 {
     this->updateGuiStatusInformation();
     INetwork::ConnectionStatus newStatus = static_cast<INetwork::ConnectionStatus>(to);

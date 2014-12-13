@@ -288,7 +288,7 @@ namespace BlackCore
     /*
      * Connection status changed
      */
-    void CContextNetwork::ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to, const QString &message)
+    void CContextNetwork::ps_fsdConnectionStatusChanged(INetwork::ConnectionStatus from, INetwork::ConnectionStatus to)
     {
         CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO << from << to;
         auto fromOld = this->m_currentStatus;
@@ -310,15 +310,15 @@ namespace BlackCore
         // send as message
         if (to == INetwork::DisconnectedError)
         {
-            CLogMessage(this).error("Connection status changed from %1 to %2 %3") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to) << message;
+            CLogMessage(this).error("Connection status changed from %1 to %2") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to);
         }
         else
         {
-            CLogMessage(this).info("Connection status changed from %1 to %2 %3") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to) << message;
+            CLogMessage(this).info("Connection status changed from %1 to %2") << INetwork::connectionStatusToString(from) << INetwork::connectionStatusToString(to);
         }
 
         // send as own signal
-        emit this->connectionStatusChanged(from, to, message);
+        emit this->connectionStatusChanged(from, to);
     }
 
     /*

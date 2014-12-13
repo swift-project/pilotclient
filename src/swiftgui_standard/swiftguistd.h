@@ -200,7 +200,7 @@ private slots:
      * \param from  old status, as uint so it is compliant with DBus
      * \param to    new status, as uint so it is compliant with DBus
      */
-    void ps_onConnectionStatusChanged(uint from, uint to, const QString &message);
+    void ps_onConnectionStatusChanged(uint from, uint to);
 
     //
     // GUI related slots
