@@ -8,7 +8,7 @@ qrc_*.cpp
 ui_*.h
 
 # QtCreator project files
-*.pro.user
+*.pro.user*
 
 # Debug and Release directories (created under Windows, not Linux)
 # Additional the CMake build folder
@@ -86,11 +86,3 @@ ipch
 # Windows-specific files
 Thumbs.db
 desktop.ini
-
-# Editors temporary files 
-*~
-/client.pro.user.2.7pre1
-/client.pro.user.3.0-pre1
-/client.pro.user.15
-/client.pro.user.3.2-pre1
-/client.pro.user.16
