@@ -43,8 +43,8 @@ HEADERS -= libxplanemp/src/PlatformUtils.h
 # Externals required by libxplanemp
 CONFIG += opengl
 win32-msvc* {
-    CONFIG(debug, debug|release): LIBS += -lpngd -lzd
-    CONFIG(release, debug|release): LIBS += -lpng -lz
+    CONFIG(debug, debug|release): LIBS += -lpngd -lzd -lopengl32 -lglu32
+    CONFIG(release, debug|release): LIBS += -lpng -lz -lopengl32 -lglu32
 }
 else: LIBS += -lpng -lz
 
