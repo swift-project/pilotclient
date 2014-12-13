@@ -23,22 +23,17 @@
 
 namespace BlackCore
 {
-    /*!
-     * Vatlib implementation of the IVoice interface.
-     */
+    //! Vatlib implementation of the IVoice interface.
     class CVoiceVatlib : public IVoice
     {
         Q_OBJECT
 
     public:
 
-        /*!
-         * \brief Constructor
-         * \param parent
-         */
+        //! Default constructor
         CVoiceVatlib(QObject *parent = nullptr);
 
-        //! \brief Destructor
+        //! Destructor
         virtual ~CVoiceVatlib();
 
         //! \copydoc IVoice::createVoiceChannel()
@@ -61,9 +56,7 @@ namespace BlackCore
 
     protected: // QObject overrides
 
-        /*!
-         * \brief Process voice lib
-         */
+        //! Process voice lib
         virtual void timerEvent(QTimerEvent *);
 
     private:
