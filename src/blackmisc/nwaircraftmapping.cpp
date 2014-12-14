@@ -22,8 +22,8 @@ namespace BlackMisc
         /*
          * Constructor
          */
-        CAircraftMapping::CAircraftMapping(const QString &aircraftDesignator, const QString &airlineDesignator, const QString &model) :
-            m_icao(CAircraftIcao(aircraftDesignator, airlineDesignator)), m_model(CAircraftModel(model, false))
+        CAircraftMapping::CAircraftMapping(const QString &source, const QString &packageName, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &model) :
+            m_source(source.trimmed()), m_packageName(packageName.trimmed()), m_icao(CAircraftIcao(aircraftDesignator, airlineDesignator)), m_model(CAircraftModel(model, CAircraftModel::TypeModelMapping))
         { }
 
         /*
@@ -54,16 +54,15 @@ namespace BlackMisc
             {
             case IndexModel:
                 return this->m_model.propertyByIndex(index.copyFrontRemoved());
-                break;
-            case IndexIcaoCode:
+            case IndexIcao:
                 return this->m_model.propertyByIndex(index.copyFrontRemoved());
-                break;
+            case IndexPackageName:
+                return QVariant::fromValue(this->m_packageName);
+            case IndexSource:
+                return QVariant::fromValue(this->m_source);
             default:
-                break;
+                return CValueObject::propertyByIndex(index);
             }
-            Q_ASSERT_X(false, "CAircraftMapping", "index unknown");
-            QString m = QString("no property, index ").append(index.toQString());
-            return CVariant::fromValue(m);
         }
 
         /*
@@ -82,11 +81,17 @@ namespace BlackMisc
             case IndexModel:
                 this->m_model.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
-            case IndexIcaoCode:
+            case IndexIcao:
                 this->m_icao.setPropertyByIndex(variant, index.copyFrontRemoved());
                 break;
+            case IndexPackageName:
+                this->m_packageName = variant.toQString();
+                break;
+            case IndexSource:
+                this->m_source = variant.toQString();
+                break;
             default:
-                Q_ASSERT_X(false, "CAircraftMapping", "index unknown");
+                CValueObject::setPropertyByIndex(variant, index);
                 break;
             }
         }

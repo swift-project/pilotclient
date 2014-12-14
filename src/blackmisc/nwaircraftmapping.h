@@ -20,15 +20,9 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*!
-         * Mapping
-         */
+        //! Mapping
         class CAircraftMapping : public CValueObjectStdTuple<CAircraftMapping>
         {
-        private:
-            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftMapping)
-            BlackMisc::Aviation::CAircraftIcao m_icao; //!< ICAO code
-            BlackMisc::Network::CAircraftModel m_model; //!< aircraft model
 
         protected:
             //! \copydoc CValueObject::convertToQString
@@ -39,14 +33,16 @@ namespace BlackMisc
             enum ColumnIndex
             {
                 IndexModel,
-                IndexIcaoCode
+                IndexIcao,
+                IndexPackageName,
+                IndexSource
             };
 
             //! Default constructor
             CAircraftMapping() = default;
 
             //! Constructor
-            CAircraftMapping(const QString &aircraftDesignator, const QString &airlineDesignator, const QString &model);
+            CAircraftMapping(const QString &source, const QString &packageName, const QString &aircraftDesignator, const QString &airlineDesignator, const QString &model);
 
             //! \copydoc CValueObject::propertyByIndex
             CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -71,6 +67,16 @@ namespace BlackMisc
 
             //! Matches wildcard icao object
             bool matchesWildcardIcao(const BlackMisc::Aviation::CAircraftIcao &otherIcao) const { return m_icao.matchesWildcardIcao(otherIcao); }
+
+        private:
+            BLACK_ENABLE_TUPLE_CONVERSION(CAircraftMapping)
+
+            QString                            m_source;         //!< source, e.g. database, vPilot
+            QString                            m_packageName;    //!< something like WoA, ..
+            BlackMisc::Aviation::CAircraftIcao m_icao;           //!< ICAO code
+            BlackMisc::Network::CAircraftModel m_model;          //!< aircraft model
+
+            // BlackSim::CSimulatorInfo m_simulatorInfo; //!< Mapping is for simulator
         };
     }
 }

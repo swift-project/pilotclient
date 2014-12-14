@@ -126,6 +126,9 @@ namespace BlackMisc
             //! Set type
             void setAircraftCombinedType(const QString &type) { this->m_aircraftCombinedType = type.trimmed().toUpper(); }
 
+            //! Missing parts from another ICAO object
+            void updateMissingParts(const CAircraftIcao &icao);
+
             //! Matches wildcard icao object
             bool matchesWildcardIcao(const CAircraftIcao &otherIcao) const;
 

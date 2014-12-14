@@ -27,6 +27,7 @@ void BlackMisc::Network::registerMetadata()
     CClient::registerMetadata();
     CClientList::registerMetadata();
     CAircraftModel::registerMetadata();
+    CAircraftModelList::registerMetadata();
     CVoiceCapabilities::registerMetadata();
     CAircraftMapping::registerMetadata();
     CAircraftMappingList::registerMetadata();

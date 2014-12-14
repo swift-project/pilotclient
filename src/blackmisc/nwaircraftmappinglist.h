@@ -23,9 +23,7 @@ namespace BlackMisc
 {
     namespace Network
     {
-        /*!
-         * Value object encapsulating a list of aircraft mappings
-         */
+        //! Value object encapsulating a list of aircraft mappings
         class CAircraftMappingList : public CSequence<CAircraftMapping>
         {
         public:
@@ -37,6 +35,15 @@ namespace BlackMisc
 
             //! Find by ICAO code, empty fields treated as wildcards
             CAircraftMappingList findByIcaoCodeWildcard(const BlackMisc::Aviation::CAircraftIcao &searchIcao) const;
+
+            //! Find by ICAO aircraft designator
+            CAircraftMappingList findByIcaoAircraftDesignator(const BlackMisc::Aviation::CAircraftIcao &searchIcao) const;
+
+            //! Find by ICAO airline designator
+            CAircraftMappingList findByIcaoAirlineDesignator(const BlackMisc::Aviation::CAircraftIcao &searchIcao) const;
+
+            //! Find by ICAO aircraft and airline designator
+            CAircraftMappingList findByIcaoAircraftAndAirlineDesignator(const BlackMisc::Aviation::CAircraftIcao &searchIcao, bool allowRelaxedAirline) const;
 
             //! Find by ICAO code, empty fields treated literally
             CAircraftMappingList findByIcaoCodeExact(const BlackMisc::Aviation::CAircraftIcao &searchIcao) const;

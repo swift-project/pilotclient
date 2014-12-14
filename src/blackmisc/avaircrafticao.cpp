@@ -52,6 +52,15 @@ namespace BlackMisc
             return s;
         }
 
+        void CAircraftIcao::updateMissingParts(const CAircraftIcao &icao)
+        {
+            if (this->m_aircraftDesignator.isEmpty()) { this->setAircraftDesignator(icao.getAircraftDesignator()); }
+            if (this->m_airlineDesignator.isEmpty()) { this->setAirlineDesignator(icao.getAirlineDesignator()); }
+            if (this->m_aircraftCombinedType.isEmpty()) { this->setAircraftCombinedType(icao.getAircraftCombinedType()); }
+            if (this->m_aircraftColor.isEmpty()) { this->setAircraftColor(icao.getAircraftColor()); }
+            if (this->m_livery.isEmpty()) { this->setLivery(icao.getLivery()); }
+        }
+
         bool CAircraftIcao::matchesWildcardIcao(const CAircraftIcao &otherIcao) const
         {
             if ((*this) == otherIcao) return true;

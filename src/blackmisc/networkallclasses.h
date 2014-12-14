@@ -12,8 +12,9 @@
 #include "blackmisc/nwtextmessagelist.h"
 #include "blackmisc/nwclient.h"
 #include "blackmisc/nwclientlist.h"
-#include "blackmisc/nwaircraftmodel.h"
 #include "blackmisc/nwvoicecapabilities.h"
+#include "blackmisc/nwaircraftmodel.h"
+#include "blackmisc/nwaircraftmodellist.h"
 #include "blackmisc/nwaircraftmapping.h"
 #include "blackmisc/nwaircraftmappinglist.h"
 

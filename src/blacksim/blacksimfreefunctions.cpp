@@ -1,12 +1,17 @@
-#include "blacksimfreefunctions.h"
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
+#include "blacksimfreefunctions.h"
 #include "blacksim/simulatorinfolist.h"
 #include "blacksim/setsimulator.h"
-
 #include "fsx/simconnectutilities.h"
 #include "fscommon/aircraftcfgentrieslist.h"
-#include "fscommon/aircraftmappinglist.h"
-
 
 namespace BlackSim
 {
@@ -17,9 +22,7 @@ namespace BlackSim
         BlackSim::CSimulatorInfoList::registerMetadata();
         BlackSim::Settings::CSettingsSimulator::registerMetadata();
         BlackSim::FsCommon::CAircraftCfgEntries::registerMetadata();
-        BlackSim::FsCommon::CAircraftMapping::registerMetadata();
         BlackSim::FsCommon::CAircraftCfgEntriesList::registerMetadata();
-        BlackSim::FsCommon::CAircraftMappingList::registerMetadata();
         BlackSim::Fsx::CSimConnectUtilities::registerMetadata();
     }
 

@@ -31,10 +31,40 @@ namespace BlackMisc
 
         CAircraftMappingList CAircraftMappingList::findByIcaoCodeWildcard(const CAircraftIcao &searchIcao) const
         {
-            return this->findBy([ = ](const CAircraftMapping &mapping)
+            return this->findBy([ = ](const CAircraftMapping & mapping)
             {
                 return mapping.matchesWildcardIcao(searchIcao);
             });
+        }
+
+        CAircraftMappingList CAircraftMappingList::findByIcaoAircraftDesignator(const CAircraftIcao &searchIcao) const
+        {
+            const QString aircraftIcao = searchIcao.getAircraftDesignator();
+            if (aircraftIcao.isEmpty()) { return CAircraftMappingList(); }
+            return this->findBy([ = ](const CAircraftMapping & mapping)
+            {
+                return mapping.getIcao().getAircraftDesignator() == aircraftIcao;
+            });
+        }
+
+        CAircraftMappingList CAircraftMappingList::findByIcaoAirlineDesignator(const CAircraftIcao &searchIcao) const
+        {
+            const QString airlineIcao = searchIcao.getAircraftDesignator();
+            if (airlineIcao.isEmpty()) { return CAircraftMappingList(); }
+            return this->findBy([ = ](const CAircraftMapping & mapping)
+            {
+                return mapping.getIcao().getAirlineDesignator() == airlineIcao;
+            });
+        }
+
+        CAircraftMappingList CAircraftMappingList::findByIcaoAircraftAndAirlineDesignator(const CAircraftIcao &searchIcao, bool allowRelaxedAirline) const
+        {
+            CAircraftMappingList aircraftSearch = findByIcaoAircraftDesignator(searchIcao);
+            if (aircraftSearch.isEmpty()) { return aircraftSearch; }
+
+            CAircraftMappingList aircraftAndAirlineSearch = aircraftSearch.findByIcaoAirlineDesignator(searchIcao);
+            if (!aircraftAndAirlineSearch.isEmpty()) { return aircraftAndAirlineSearch; }
+            return allowRelaxedAirline ? aircraftSearch : aircraftAndAirlineSearch;
         }
 
         CAircraftMappingList CAircraftMappingList::findByIcaoCodeExact(const CAircraftIcao &searchIcao) const
@@ -44,7 +74,7 @@ namespace BlackMisc
 
         CAircraftMappingList CAircraftMappingList::findByModelString(const QString modelString, Qt::CaseSensitivity sensitivity) const
         {
-            return this->findBy([ = ](const CAircraftMapping &mapping)
+            return this->findBy([ = ](const CAircraftMapping & mapping)
             {
                 return mapping.matchesModelString(modelString, sensitivity);
             });
