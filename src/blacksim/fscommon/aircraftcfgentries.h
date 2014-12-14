@@ -13,6 +13,8 @@
 #define BLACKSIM_FSCOMMON_AIRCRAFTCFGENTRY_H
 
 #include "blackmisc/propertyindex.h"
+#include "blackmisc/nwaircraftmodel.h"
+#include "blackmisc/variant.h"
 
 namespace BlackSim
 {
@@ -30,29 +32,22 @@ namespace BlackSim
             enum ColumnIndex
             {
                 IndexEntryIndex = BlackMisc::CPropertyIndex::GlobalIndexCAircraftCfgEntries,
-                IndexFilePath,
+                IndexFileName,
                 IndexTitle,
                 IndexAtcType,
                 IndexAtcModel,
-                IndexParkingCode
+                IndexParkingCode,
+                IndexDescription
             };
 
             //! Default constructor
             CAircraftCfgEntries() = default;
 
-            /*!
-             * Entries representing an aircraft
-             * \param filePath
-             * \param index
-             * \param title
-             * \param atcType
-             * \param atcModel
-             * \param atcParkingCode
-             */
-            CAircraftCfgEntries(const QString &filePath, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode);
+            //! Entries representing an aircraft
+            CAircraftCfgEntries(const QString &filePath, int index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description);
 
-            //! Filepath
-            QString getFilePath() const { return this->m_filePath; }
+            //! File name
+            QString getFileName() const { return this->m_fileName; }
 
             //! Title
             QString getTitle() const { return this->m_title; }
@@ -66,11 +61,23 @@ namespace BlackSim
             //! ATC type
             QString getAtcType() const { return this->m_atcType; }
 
+            //! Description
+            QString getDescription() const { return this->m_description; }
+
             //! ATC parking code
             QString getAtcParkingCode() const { return this->m_atcParkingCode; }
 
+            //! UI type (e.g. A321-231 IAE)
+            QString getUiType() const { return this->m_uiType; }
+
+            //! UI manufacturer (e.g. Airbus)
+            QString getUiManufacturer() const { return this->m_uiManufacturer; }
+
+            //! Manufacturer + type
+            QString getUiCombinedDescription() const;
+
             //! Filepath
-            void setFilePath(const QString &filePath) { this->m_filePath = filePath; }
+            void setFileName(const QString &filePath) { this->m_fileName = filePath; }
 
             //! Title
             void setTitle(const QString &title) { this->m_title = title; }
@@ -79,13 +86,25 @@ namespace BlackSim
             void setIndex(int index) { this->m_index = index; }
 
             //! ATC model
-            void setAtcModel(const QString &atcModel) { this->m_atcModel = atcModel; }
+            void setAtcModel(const QString &atcModel) { this->m_atcModel = atcModel.trimmed(); }
 
             //! ATC type
-            void setAtcType(const QString &atcType) { this->m_atcType = atcType; }
+            void setAtcType(const QString &atcType) { this->m_atcType = atcType.trimmed(); }
 
             //! Parking code
-            void setAtcParkingCode(const QString &parkingCode) { this->m_atcParkingCode = parkingCode; }
+            void setAtcParkingCode(const QString &parkingCode) { this->m_atcParkingCode = parkingCode.trimmed(); }
+
+            //! Description
+            void setDescription(const QString &description) { this->m_description = description.trimmed(); }
+
+            //! UI type (e.g. A321-231 IAE)
+            void setUiType(const QString &type) { this->m_uiType = type.trimmed(); }
+
+            //! UI manufacturer (e.g. Airbus)
+            void setUiManufacturer(const QString &manufacturer) { this->m_uiManufacturer = manufacturer.trimmed(); }
+
+            //! To aircraft model
+            BlackMisc::Network::CAircraftModel toAircraftModel() const;
 
             //! \copydoc CValueObject::propertyByIndex
             virtual BlackMisc::CVariant propertyByIndex(const BlackMisc::CPropertyIndex &index) const override;
@@ -99,18 +118,20 @@ namespace BlackSim
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CAircraftCfgEntries)
-            int m_index;        //!< current index in given config
-            QString m_filePath; //!< file path of aircraft.cfg
-            QString m_title;    //!< Title in aircraft.cfg
-            QString m_atcType;  //!< ATC type
-            QString m_atcModel; //!< ATC model
+            int m_index;           //!< current index in given config
+            QString m_fileName;    //!< file name of aircraft.cfg
+            QString m_title;       //!< Title in aircraft.cfg
+            QString m_atcType;     //!< ATC type
+            QString m_atcModel;    //!< ATC model
             QString m_atcParkingCode; //!< ATC parking code
-
+            QString m_description; //!< descriptive text
+            QString m_uiType;      //!< e.g. A321-231 IAE
+            QString m_uiManufacturer; //!< e.g. Airbus
         };
     }
 }
 
-BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::FsCommon::CAircraftCfgEntries, (o.m_index, o.m_filePath, o.m_title, o.m_atcType, o.m_atcModel, o.m_atcParkingCode))
+BLACK_DECLARE_TUPLE_CONVERSION(BlackSim::FsCommon::CAircraftCfgEntries, (o.m_index, o.m_fileName, o.m_title, o.m_atcType, o.m_atcModel, o.m_atcParkingCode))
 Q_DECLARE_METATYPE(BlackSim::FsCommon::CAircraftCfgEntries)
 
 #endif // guard

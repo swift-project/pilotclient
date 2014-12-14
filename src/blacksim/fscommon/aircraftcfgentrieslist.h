@@ -9,12 +9,14 @@
 
 //! \file
 
-#ifndef BLACKSIM_FSCOMMON_AIRCRAFTCFG_H
-#define BLACKSIM_FSCOMMON_AIRCRAFTCFG_H
+#ifndef BLACKSIM_FSCOMMON_AIRCRAFTCFGLIST_H
+#define BLACKSIM_FSCOMMON_AIRCRAFTCFGLIST_H
 
 #include "aircraftcfgentries.h"
 #include "blackmisc/sequence.h"
 #include "blackmisc/collection.h"
+#include "blackmisc/nwaircraftmodellist.h"
+
 #include <QDir>
 #include <QVector>
 #include <QDebug>
@@ -32,12 +34,12 @@ namespace BlackSim
         public:
 
             //! Constructor
-            CAircraftCfgEntriesList(const QString &rootDirectory = "") : m_rootDirectory(rootDirectory), m_readForDirectory(false) {}
+            CAircraftCfgEntriesList(const QString &rootDirectory = "") : m_rootDirectory(rootDirectory) {}
 
             //! Read all aircraft.cfg files starting from root directory
             int read()
             {
-                if (this->m_readForDirectory) return this->size();
+                if (this->m_readForDirectory) { return this->size(); }
 
                 // not read so far, read it
                 this->clear();
@@ -53,7 +55,7 @@ namespace BlackSim
                     this->m_rootDirectory = directory;
                     this->m_readForDirectory = false;
                 }
-                return !directory.isEmpty() && this->existsDir(directory);
+                return (!directory.isEmpty() && this->existsDir(directory));
             }
 
             //! Virtual destructor
@@ -65,14 +67,26 @@ namespace BlackSim
             //! Has current directory been read?
             bool hasReadDirectory() const {  return this->m_readForDirectory; }
 
+            //! Cancel read
+            void cancelRead() { m_cancelRead = true; }
+
             //! Current root directory
             QString getRootDirectory() const {  return this->m_rootDirectory; }
 
             //! Contains model with title?
             bool containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive);
 
+            //! All titles (aka model names)
+            QStringList getTitles(bool sorted = false) const;
+
+            //! As aircraft models
+            BlackMisc::Network::CAircraftModelList toAircraftModelList() const;
+
+            //! Ambiguous titles
+            QStringList detectAmbiguousTitles() const;
+
             //! Find by title
-            CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity);
+            CAircraftCfgEntriesList findByTitle(const QString &title, Qt::CaseSensitivity caseSensitivity) const;
 
             //! \copydoc CValueObject::toQVariant
             virtual QVariant toQVariant() const override { return QVariant::fromValue(*this); }
@@ -91,12 +105,18 @@ namespace BlackSim
             static void registerMetadata();
 
         private:
-            QString m_rootDirectory; //!< root directory reading aircraft.cfg files
-            bool m_readForDirectory; //!< valid read for given directory
+            QString m_rootDirectory;         //!< root directory reading aircraft.cfg files
+            bool m_readForDirectory = false; //!< valid read for given directory
+            bool m_cancelRead = false;
 
             //! Read all entries in one directory
             int read(const QString &directory);
 
+            //! Fix the content read
+            static QString fixedStringContent(const QVariant &qv);
+
+            //! Value from settings, fixed string
+            static QString fixedStringContent(const QSettings &settings, const QString &key);
         };
     } // namespace
 } // namespace

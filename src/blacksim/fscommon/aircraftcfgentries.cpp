@@ -12,6 +12,7 @@
 #include "blackmisc/variant.h"
 
 using namespace BlackMisc;
+using namespace BlackMisc::Network;
 
 namespace BlackSim
 {
@@ -21,9 +22,9 @@ namespace BlackSim
         /*
          * Constructor
          */
-        CAircraftCfgEntries::CAircraftCfgEntries(const QString &filePath, qint32 index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode) :
-            m_index(index), m_filePath(filePath), m_title(title), m_atcType(atcType),
-            m_atcModel(atcModel), m_atcParkingCode(atcParkingCode)
+        CAircraftCfgEntries::CAircraftCfgEntries(const QString &filePath, qint32 index, const QString &title, const QString &atcType, const QString &atcModel, const QString &atcParkingCode, const QString &description) :
+            m_index(index), m_fileName(filePath), m_title(title.trimmed()), m_atcType(atcType.trimmed()),
+            m_atcModel(atcModel.trimmed()), m_atcParkingCode(atcParkingCode.trimmed()), m_description(description.trimmed())
         {
             // void
         }
@@ -34,9 +35,33 @@ namespace BlackSim
         QString CAircraftCfgEntries::convertToQString(bool) const
         {
             QString s = "{%1, %2, %3, %4, %5, %6}";
-            s = s.arg(this->m_filePath).arg(this->m_index).arg(this->m_title)
+            s = s.arg(this->m_fileName).arg(this->m_index).arg(this->m_title)
                 .arg(this->m_atcModel).arg(this->m_atcType).arg(this->m_atcParkingCode);
             return s;
+        }
+
+        /*
+         * Aircraft model
+         */
+        QString CAircraftCfgEntries::getUiCombinedDescription() const
+        {
+            QString d(this->m_uiManufacturer);
+            if (m_uiType.isEmpty()) { return d; }
+            if (d.isEmpty()) { return m_uiType; }
+            d += " ";
+            d += m_uiType;
+            return d;
+        }
+
+        /*
+         * Convert
+         */
+        CAircraftModel CAircraftCfgEntries::toAircraftModel() const
+        {
+            CAircraftModel model(this->getTitle(), CAircraftModel::TypeModelMapping);
+            model.setDescription(this->getUiCombinedDescription());
+            model.setFileName(this->getFileName());
+            return model;
         }
 
         /*
@@ -48,8 +73,8 @@ namespace BlackSim
             ColumnIndex i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
-            case IndexFilePath:
-                return CVariant::from(this->m_filePath);
+            case IndexFileName:
+                return CVariant::from(this->m_fileName);
             case IndexTitle:
                 return CVariant::from(this->m_title);
             case IndexAtcType:
@@ -83,8 +108,8 @@ namespace BlackSim
             case IndexEntryIndex:
                 this->setIndex(variant.toInt());
                 break;
-            case IndexFilePath:
-                this->setFilePath(variant.toQString());
+            case IndexFileName:
+                this->setFileName(variant.toQString());
                 break;
             case IndexParkingCode:
                 this->setAtcParkingCode(variant.toQString());
