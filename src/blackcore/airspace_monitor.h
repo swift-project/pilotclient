@@ -62,7 +62,7 @@ namespace BlackCore
         BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const { return m_atcStationsBooked; }
 
         //! Returns the current aircraft in range
-        BlackMisc::Aviation::CAircraftList getAircraftInRange() const { return m_aircraftsInRange; }
+        BlackMisc::Aviation::CAircraftList getAircraftInRange() const { return m_aircraftInRange; }
 
         //! Returns the closest ATC station operating on the given frequency, if any
         BlackMisc::Aviation::CAtcStation getAtcStationForComUnit(const BlackMisc::Aviation::CComSystem &comSystem);
@@ -86,8 +86,8 @@ namespace BlackCore
         //! Connection status of an ATC station was changed
         void changedAtcStationOnlineConnectionStatus(const BlackMisc::Aviation::CAtcStation &station, bool isConnected);
 
-        //! Aircrafts were changed
-        void changedAircraftsInRange();
+        //! Aircraft were changed
+        void changedAircraftInRange();
 
         //! A new aircraft appeared
         void addedAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
@@ -98,8 +98,6 @@ namespace BlackCore
         //! An aircraft disappeared
         void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
-        //! Sent a status message
-        void statusMessage(const BlackMisc::CStatusMessage &msg);
 
     public slots:
         //! Own aircraft updated
@@ -113,7 +111,7 @@ namespace BlackCore
         void clear()
         {
             removeAllAtcStations();
-            removeAllAircrafts();
+            removeAllAircraft();
             removeAllOtherClients();
             m_metarCache.clear();
             m_flightPlanCache.clear();
@@ -122,7 +120,7 @@ namespace BlackCore
     private:
         BlackMisc::Aviation::CAtcStationList m_atcStationsOnline;
         BlackMisc::Aviation::CAtcStationList m_atcStationsBooked;
-        BlackMisc::Aviation::CAircraftList   m_aircraftsInRange;
+        BlackMisc::Aviation::CAircraftList   m_aircraftInRange;
         BlackMisc::Network::CClientList      m_otherClients;
         QMap<BlackMisc::Aviation::CAirportIcao, BlackMisc::Aviation::CInformationMessage> m_metarCache;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Aviation::CFlightPlan> m_flightPlanCache;
@@ -145,7 +143,7 @@ namespace BlackCore
         void addVoiceCapabilitiesFromDataFile(BlackMisc::CPropertyIndexVariantMap &vm, const BlackMisc::Aviation::CCallsign &callsign);
 
         void removeAllAtcStations();
-        void removeAllAircrafts();
+        void removeAllAircraft();
         void removeAllOtherClients();
 
     private slots:

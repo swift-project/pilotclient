@@ -81,10 +81,10 @@ namespace BlackCore
         void changedAtcStationsBookedDigest();
 
         //! Aircraft list has been changed
-        void changedAircraftsInRange();
+        void changedAircraftInRange();
 
-        //! Digest signal changedAircraftsInRange()
-        void changedAircraftsInRangeDigest();
+        //! Digest signal changedAircraftInRange()
+        void changedAircraftInRangeDigest();
 
         //! Aircraft situation update
         void changedAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation);
@@ -128,7 +128,7 @@ namespace BlackCore
         virtual const BlackMisc::Aviation::CAtcStationList getAtcStationsBooked() const = 0 ;
 
         //! Aircraft list
-        virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const = 0;
+        virtual const BlackMisc::Aviation::CAircraftList getAircraftInRange() const = 0;
 
         //! Get all users
         virtual BlackMisc::Network::CUserList getUsers() const = 0;

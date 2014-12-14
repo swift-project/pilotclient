@@ -113,7 +113,7 @@ namespace BlackGui
 
         private:
             QScopedPointer<Ui::CAtcStationComponent> ui;
-            CUpdateTimer *m_updateTimer;
+            CUpdateTimer *m_updateTimer = nullptr;
             QDateTime m_timestampLastReadOnlineStations = CUpdateTimer::epoch();  //!< stations read
             QDateTime m_timestampOnlineStationsChanged  = CUpdateTimer::epoch();  //!< stations marked as changed
             QDateTime m_timestampLastReadBookedStations = CUpdateTimer::epoch();  //!< stations read

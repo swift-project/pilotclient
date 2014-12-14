@@ -17,9 +17,7 @@
 
 namespace BlackSim
 {
-    /*!
-     * \brief Model mappings
-     */
+    //! Model mappings
     class ISimulatorModelMappings : public QObject
     {
         Q_OBJECT

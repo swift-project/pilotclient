@@ -43,7 +43,7 @@ namespace BlackCore
 
         //! Get aircrafts
         //! \threadsafe
-        BlackMisc::Aviation::CAircraftList getAircrafts() const;
+        BlackMisc::Aviation::CAircraftList getAircraft() const;
 
         //! Get aircrafts
         //! \threadsafe
@@ -104,7 +104,7 @@ namespace BlackCore
         BlackMisc::Network::CServerList      m_voiceServers;
         BlackMisc::Network::CServerList      m_fsdServers;
         BlackMisc::Aviation::CAtcStationList m_atcStations;
-        BlackMisc::Aviation::CAircraftList   m_aircrafts;
+        BlackMisc::Aviation::CAircraftList   m_aircraft;
         QMap<BlackMisc::Aviation::CCallsign, BlackMisc::Network::CVoiceCapabilities> m_voiceCapabilities;
 
         //! Split line and assign values to their corresponding attribute names

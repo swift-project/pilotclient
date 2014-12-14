@@ -46,14 +46,16 @@ namespace BlackSimPlugin
             virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
         };
 
-        //! \brief FSX Simulator Implementation
+        //! FSX Simulator Implementation
         class CSimulatorFs9 : public BlackCore::ISimulator
         {
             Q_OBJECT
+
         public:
-            //! \brief Constructor
+            //! Constructor
             CSimulatorFs9(QObject *parent = nullptr);
 
+            //! Destructor
             virtual ~CSimulatorFs9();
 
             //! \copydoc ISimulator::isConnected()

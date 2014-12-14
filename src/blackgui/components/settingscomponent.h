@@ -76,7 +76,7 @@ namespace BlackGui
             void changedAtcStationsUpdateInterval(int seconds);
 
             //! Update interval changed (aircrafts)
-            void changedAircraftsUpdateInterval(int seconds);
+            void changedAircraftUpdateInterval(int seconds);
 
             //! Update interval changed (users)
             void changedUsersUpdateInterval(int seconds);

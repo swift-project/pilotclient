@@ -22,9 +22,7 @@ namespace BlackGui
     namespace Models
     {
 
-        /*!
-         * Aircraft list model
-         */
+        //! Aircraft list model
         class CAircraftListModel : public CListModelBase<BlackMisc::Aviation::CAircraft, BlackMisc::Aviation::CAircraftList>
         {
 

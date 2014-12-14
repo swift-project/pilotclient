@@ -22,5 +22,5 @@ namespace BlackGui
         {
             this->standardInit(new CClientListModel(this));
         }
-    }
-}
+    } // namespace
+} // namespace

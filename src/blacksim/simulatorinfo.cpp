@@ -7,8 +7,6 @@
  * contained in the LICENSE file.
  */
 
-//! \file
-
 #include "simulatorinfo.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 

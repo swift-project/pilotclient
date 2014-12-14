@@ -90,7 +90,7 @@ namespace BlackCore
             CUser user = station.getController();
             users.push_back(user);
         }
-        foreach(CAircraft aircraft, this->m_aircraftsInRange)
+        foreach(CAircraft aircraft, this->m_aircraftInRange)
         {
             CUser user = aircraft.getPilot();
             users.push_back(user);
@@ -112,8 +112,8 @@ namespace BlackCore
             users.push_back(ownAircraft.getPilot());
         }
 
-        // do aircrafts first, this will handle most callsigns
-        foreach(CAircraft aircraft, this->m_aircraftsInRange)
+        // do aircraft first, this will handle most callsigns
+        foreach(CAircraft aircraft, this->m_aircraftInRange)
         {
             if (searchList.isEmpty()) break;
             CCallsign callsign = aircraft.getCallsign();
@@ -210,7 +210,7 @@ namespace BlackCore
     {
         if (!this->m_network->isConnected()) return;
 
-        foreach(CAircraft aircraft, this->m_aircraftsInRange)
+        foreach(CAircraft aircraft, this->m_aircraftInRange)
         {
             this->m_network->sendFrequencyQuery(aircraft.getCallsign());
             this->m_network->sendIcaoCodesQuery(aircraft.getCallsign());
@@ -244,7 +244,7 @@ namespace BlackCore
         this->m_atcStationsBooked.applyIf(&CAtcStation::getCallsign, callsign, vm);
 
         vm = CPropertyIndexVariantMap({CAircraft::IndexPilot, CUser::IndexRealName}, realname);
-        this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
+        this->m_aircraftInRange.applyIf(&CAircraft::getCallsign, callsign, vm);
 
         // Client
         vm = CPropertyIndexVariantMap({CClient::IndexUser, CUser::IndexRealName}, realname);
@@ -347,13 +347,14 @@ namespace BlackCore
         m_atcStationsOnline.clear();
     }
 
-    void CAirspaceMonitor::removeAllAircrafts()
+    void CAirspaceMonitor::removeAllAircraft()
     {
         m_aircraftWatchdog.removeAll();
-        for(CAircraft aircraft : m_aircraftsInRange)
+        for (CAircraft aircraft : m_aircraftInRange)
+        {
             emit removedAircraft(aircraft.getCallsign());
-
-        m_aircraftsInRange.clear();
+        }
+        m_aircraftInRange.clear();
     }
 
     void CAirspaceMonitor::removeAllOtherClients()
@@ -521,20 +522,20 @@ namespace BlackCore
         if (!icaoData.hasAircraftDesignator())
         {
             // empty so far, try to fetch from data file
-            qDebug() << "Empty ICAO info for " << callsign << icaoData;
+            CLogMessage(this).debug() << "Empty ICAO info for %1 %2" << callsign << icaoData;
             CAircraftIcao icaoDataDataFile = this->m_vatsimDataFileReader->getIcaoInfo(callsign);
             if (!icaoDataDataFile.hasAircraftDesignator()) return; // give up!
             vm = CPropertyIndexVariantMap(CAircraft::IndexIcao, icaoData.toCVariant());
         }
-        int changed = this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm, true);
-        if (changed > 0) {emit this->changedAircraftsInRange();}
+        int changed = this->m_aircraftInRange.applyIf(&CAircraft::getCallsign, callsign, vm, true);
+        if (changed > 0) { emit this->changedAircraftInRange(); }
     }
 
     void CAirspaceMonitor::ps_aircraftUpdateReceived(const CCallsign &callsign, const CAircraftSituation &situation, const CTransponder &transponder)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
 
-        CAircraftList list = this->m_aircraftsInRange.findByCallsign(callsign);
+        CAircraftList list = this->m_aircraftInRange.findByCallsign(callsign);
         if (list.isEmpty())
         {
             // new aircraft
@@ -544,7 +545,7 @@ namespace BlackCore
             aircraft.setTransponder(transponder);
             aircraft.setCalculcatedDistanceToPosition(this->m_ownAircraft.getPosition()); // distance from myself
             this->m_vatsimDataFileReader->updateWithVatsimDataFileData(aircraft);
-            this->m_aircraftsInRange.push_back(aircraft);
+            this->m_aircraftInRange.push_back(aircraft);
 
             // and new client, there is a chance it has been created by
             // custom packet first
@@ -579,22 +580,22 @@ namespace BlackCore
             vm.addValue(CAircraft::IndexDistance, distance);
 
             // here I expect always a changed value
-            this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm, false);
+            this->m_aircraftInRange.applyIf(&CAircraft::getCallsign, callsign, vm, false);
             this->m_aircraftWatchdog.resetCallsign(callsign);
             emit this->changedAircraftSituation(callsign, situation);
         }
 
-        emit this->changedAircraftsInRange();
+        emit this->changedAircraftInRange();
     }
 
     void CAirspaceMonitor::ps_pilotDisconnected(const CCallsign &callsign)
     {
         Q_ASSERT(BlackCore::isCurrentThreadCreatingThread(this));
-        bool contains = this->m_aircraftsInRange.contains(&CAircraft::getCallsign, callsign);
+        bool contains = this->m_aircraftInRange.contains(&CAircraft::getCallsign, callsign);
         this->m_aircraftWatchdog.removeCallsign(callsign);
         if (contains)
         {
-            this->m_aircraftsInRange.removeIf(&CAircraft::getCallsign, callsign);
+            this->m_aircraftInRange.removeIf(&CAircraft::getCallsign, callsign);
             this->m_otherClients.removeIf(&CClient::getCallsign, callsign);
             emit this->removedAircraft(callsign);
         }
@@ -606,8 +607,8 @@ namespace BlackCore
 
         // update
         CPropertyIndexVariantMap vm({CAircraft::IndexCom1System, CComSystem::IndexActiveFrequency}, frequency.toCVariant());
-        int changed = this->m_aircraftsInRange.applyIf(&CAircraft::getCallsign, callsign, vm, true);
-        if (changed > 0) { emit this->changedAircraftsInRange(); }
+        int changed = this->m_aircraftInRange.applyIf(&CAircraft::getCallsign, callsign, vm, true);
+        if (changed > 0) { emit this->changedAircraftInRange(); }
     }
 
 } // namespace

@@ -25,9 +25,7 @@ namespace BlackMisc
 {
     namespace Aviation
     {
-        /*!
-         * Value object encapsulating a list of aircrafts.
-         */
+        //! Value object encapsulating a list of aircrafts.
         class CAircraftList : public CSequence<CAircraft>
         {
         public:

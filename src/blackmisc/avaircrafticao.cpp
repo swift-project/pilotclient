@@ -64,11 +64,11 @@ namespace BlackMisc
         bool CAircraftIcao::matchesWildcardIcao(const CAircraftIcao &otherIcao) const
         {
             if ((*this) == otherIcao) return true;
-            if (otherIcao.hasAircraftDesignator() && otherIcao.getAircraftDesignator() != this->getAircraftDesignator()) return false;
-            if (otherIcao.hasAirlineDesignator() && otherIcao.getAirlineDesignator() != this->getAirlineDesignator()) return false;
-            if (otherIcao.hasAircraftCombinedType() && otherIcao.getAircraftCombinedType() != this->getAircraftCombinedType()) return false;
-            if (otherIcao.hasLivery() && otherIcao.getLivery() != this->getLivery()) return false;
-            if (otherIcao.hasAircraftColor() && otherIcao.getAircraftColor() != this->getAircraftColor()) return false;
+            if (otherIcao.hasAircraftDesignator() && otherIcao.getAircraftDesignator() != this->getAircraftDesignator()) { return false; }
+            if (otherIcao.hasAirlineDesignator() && otherIcao.getAirlineDesignator() != this->getAirlineDesignator()) { return false; }
+            if (otherIcao.hasAircraftCombinedType() && otherIcao.getAircraftCombinedType() != this->getAircraftCombinedType()) { return false; }
+            if (otherIcao.hasLivery() && otherIcao.getLivery() != this->getLivery()) { return false; }
+            if (otherIcao.hasAircraftColor() && otherIcao.getAircraftColor() != this->getAircraftColor()) { return false; }
             return true;
         }
 

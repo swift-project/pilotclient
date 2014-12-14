@@ -61,12 +61,7 @@ namespace BlackGui
                 bool visible = (this->isVisibleWidget() && this->currentWidget() == this->ui->tb_AircraftsInRange);
                 if (this->countAircrafts() < 1 || visible)
                 {
-                    this->ui->tvp_AircraftsInRange->updateContainer(this->getIContextNetwork()->getAircraftsInRange());
-                }
-                else
-                {
-                    // KWB remove: qDebug() will be removed soon
-                    qDebug() << this->objectName() << "Skipping update (aircrafts)";
+                    this->ui->tvp_AircraftsInRange->updateContainer(this->getIContextNetwork()->getAircraftInRange());
                 }
             }
             if (this->getIContextSimulator()->isConnected())
@@ -75,10 +70,6 @@ namespace BlackGui
                 if (this->countAirportsInRange() < 1 || visible)
                 {
                     this->ui->tvp_AirportsInRange->updateContainer(this->getIContextSimulator()->getAirportsInRange());
-                }
-                else
-                {
-                    qDebug() << this->objectName() << "Skipping update (airports)";
                 }
             }
         }

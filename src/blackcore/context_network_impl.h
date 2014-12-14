@@ -67,8 +67,8 @@ namespace BlackCore
             return this->m_airspace->getAtcStationsBooked();
         }
 
-        //! \copydoc IContextNetwork::getAircraftsInRange()
-        virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const override
+        //! \copydoc IContextNetwork::getAircraftInRange()
+        virtual const BlackMisc::Aviation::CAircraftList getAircraftInRange() const override
         {
             BlackMisc::CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
             return this->m_airspace->getAircraftInRange();
@@ -163,7 +163,7 @@ namespace BlackCore
 
         BlackMisc::CDigestSignal m_dsAtcStationsBookedChanged { this, &IContextNetwork::changedAtcStationsBooked, &IContextNetwork::changedAtcStationsBookedDigest, 750, 2 };
         BlackMisc::CDigestSignal m_dsAtcStationsOnlineChanged { this, &IContextNetwork::changedAtcStationsOnline, &IContextNetwork::changedAtcStationsOnlineDigest, 750, 4 };
-        BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftsInRange, &IContextNetwork::changedAircraftsInRangeDigest, 750, 4 };
+        BlackMisc::CDigestSignal m_dsAircraftsInRangeChanged  { this, &IContextNetwork::changedAircraftInRange, &IContextNetwork::changedAircraftInRangeDigest, 750, 4 };
 
         // for reading XML and VATSIM data files
         CVatsimBookingReader  *m_vatsimBookingReader  = nullptr;

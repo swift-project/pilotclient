@@ -14,11 +14,6 @@
 namespace BlackMisc
 {
     /*
-     * Constructor
-     */
-    CPropertyIndex::CPropertyIndex() = default;
-
-    /*
      * Non nested index
      */
     CPropertyIndex::CPropertyIndex(int singleProperty)

@@ -116,8 +116,6 @@ namespace BlackCore
         //! Change settings
         void changeSettings(uint typeValue);
 
-    private:
-        mutable QReadWriteLock m_lock; //!< thread safety
     };
 }
 

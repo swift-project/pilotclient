@@ -44,13 +44,13 @@ namespace BlackCore
                                "changedAtcStationsOnlineDigest", this, SIGNAL(changedAtcStationsOnlineDigest()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedAircraftsInRange", this, SIGNAL(changedAircraftsInRange()));
+                               "changedAircraftInRange", this, SIGNAL(changedAircraftInRange()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "changedAtcStationOnlineConnectionStatus", this, SIGNAL(changedAtcStationOnlineConnectionStatus(BlackMisc::Aviation::CAtcStation, bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
-                               "changedAircraftsInRangeDigest", this, SIGNAL(changedAircraftsInRangeDigest()));
+                               "changedAircraftInRangeDigest", this, SIGNAL(changedAircraftInRangeDigest()));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextNetwork::ObjectPath(), IContextNetwork::InterfaceName(),
                                "connectionTerminated", this, SIGNAL(connectionTerminated()));
@@ -82,9 +82,9 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAtcStationList>(QLatin1Literal("getAtcStationsBooked"));
     }
 
-    const BlackMisc::Aviation::CAircraftList CContextNetworkProxy::getAircraftsInRange() const
+    const BlackMisc::Aviation::CAircraftList CContextNetworkProxy::getAircraftInRange() const
     {
-        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraftList>(QLatin1Literal("getAircraftsInRange"));
+        return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAircraftList>(QLatin1Literal("getAircraftInRange"));
     }
 
     BlackMisc::Network::CUserList CContextNetworkProxy::getUsers() const

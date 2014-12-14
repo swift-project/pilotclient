@@ -103,10 +103,6 @@ namespace BlackMisc
                        ICoordinateGeodetic::propertyByIndex(index) :
                        CValueObject::propertyByIndex(index);
             }
-
-            Q_ASSERT_X(false, "CAirport", "index unknown");
-            QString m = QString("no property, index ").append(index.toQString());
-            return CVariant::fromValue(m);
         }
 
         /*

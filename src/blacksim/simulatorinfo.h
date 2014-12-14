@@ -7,6 +7,8 @@
  * contained in the LICENSE file.
  */
 
+//! \file
+
 #ifndef BLACKSIM_SIMULATORINFO_H
 #define BLACKSIM_SIMULATORINFO_H
 

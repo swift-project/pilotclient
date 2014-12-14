@@ -6,6 +6,7 @@
  * including this file, may be copied, modified, propagated, or distributed except according to the terms
  * contained in the LICENSE file.
  */
+
 #ifndef BLACKSIMPLUGIN_FS9_HOST_NODE_H
 #define BLACKSIMPLUGIN_FS9_HOST_NODE_H
 

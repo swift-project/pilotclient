@@ -52,10 +52,10 @@ namespace BlackCore
         this->setPendingNetworkReply(r);
     }
 
-    CAircraftList CVatsimDataFileReader::getAircrafts() const
+    CAircraftList CVatsimDataFileReader::getAircraft() const
     {
         QReadLocker rl(&this->m_lock);
-        return this->m_aircrafts;
+        return this->m_aircraft;
     }
 
     CAtcStationList CVatsimDataFileReader::getAtcStations() const
@@ -78,7 +78,7 @@ namespace BlackCore
 
     CUserList CVatsimDataFileReader::getPilotsForCallsigns(const CCallsignList &callsigns)
     {
-        return this->getAircrafts().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAircraft::getPilot));
+        return this->getAircraft().findByCallsigns(callsigns).transform(Predicates::MemberTransform(&CAircraft::getPilot));
     }
 
     CUserList CVatsimDataFileReader::getPilotsForCallsign(const CCallsign &callsign)
@@ -90,7 +90,7 @@ namespace BlackCore
 
     CAircraftIcao CVatsimDataFileReader::getIcaoInfo(const CCallsign &callsign)
     {
-        CAircraft aircraft = this->getAircrafts().findFirstByCallsign(callsign);
+        CAircraft aircraft = this->getAircraft().findFirstByCallsign(callsign);
         return aircraft.getIcaoInfo();
     }
 
@@ -109,7 +109,7 @@ namespace BlackCore
 
     void CVatsimDataFileReader::updateWithVatsimDataFileData(CAircraft &aircraftToBeUdpated) const
     {
-        this->getAircrafts().updateWithVatsimDataFileData(aircraftToBeUdpated);
+        this->getAircraft().updateWithVatsimDataFileData(aircraftToBeUdpated);
     }
 
     CUserList CVatsimDataFileReader::getControllersForCallsign(const CCallsign &callsign)
@@ -188,7 +188,7 @@ namespace BlackCore
             CServerList     voiceServers;
             CServerList     fsdServers;
             CAtcStationList atcStations;
-            CAircraftList   aircrafts;
+            CAircraftList   aircraft;
             QMap<CCallsign, CVoiceCapabilities> voiceCapabilities;
             QDateTime updateTimestampFromFile;
 
@@ -259,7 +259,7 @@ namespace BlackCore
                             double groundspeed = clientPartsMap["groundspeed"].toDouble();
                             CAircraftSituation situation(position, altitude);
                             situation.setGroundspeed(CSpeed(groundspeed, CSpeedUnit::kts()));
-                            CAircraft aircraft(user.getCallsign().getStringAsSet(), user, situation);
+                            CAircraft currentAircraft(user.getCallsign().getStringAsSet(), user, situation);
 
                             QString icaoCode = clientPartsMap["planned_aircraft"];
                             if (!icaoCode.isEmpty())
@@ -270,7 +270,7 @@ namespace BlackCore
                                 icaoCode = icaoCode.replace(reg, "").trimmed().toUpper();
                                 if (CAircraftIcao::isValidDesignator(icaoCode))
                                 {
-                                    aircraft.setIcaoInfo(CAircraftIcao(icaoCode));
+                                    currentAircraft.setIcaoInfo(CAircraftIcao(icaoCode));
                                 }
                                 else
                                 {
@@ -278,7 +278,7 @@ namespace BlackCore
                                 }
                             }
 
-                            aircrafts.push_back(aircraft);
+                            aircraft.push_back(currentAircraft);
                         }
                         else if (clientType.startsWith('a'))
                         {
@@ -340,7 +340,7 @@ namespace BlackCore
                 {
                     QWriteLocker wl(&this->m_lock);
                     this->setUpdateTimestamp(updateTimestampFromFile);
-                    this->m_aircrafts = aircrafts;
+                    this->m_aircraft = aircraft;
                     this->m_atcStations = atcStations;
                     this->m_voiceServers = voiceServers;
                     this->m_fsdServers = fsdServers;

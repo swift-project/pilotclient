@@ -30,9 +30,7 @@ inline void initBlackMiscResources()
     Q_INIT_RESOURCE(blackmisc);
 }
 
-/*!
- * Free functions in BlackMisc
- */
+//! Free functions in BlackMisc
 namespace BlackMisc
 {
     namespace PhysicalQuantities
@@ -103,9 +101,7 @@ namespace BlackMisc
     //! Init resources
     void initResources();
 
-    /*!
-     * Checked version from QVariant
-     */
+    //! Checked version from QVariant
     template <class T> void setFromQVariant(T *value, const QVariant &variant)
     {
         Q_ASSERT(variant.canConvert<T>());
@@ -135,10 +131,8 @@ namespace BlackMisc
      */
     QVariant complexQtTypeFromDbusArgument(const QDBusArgument &argument, int type);
 
-    /*!
-     * \brief Display all user metatypes
-     * \remarks Used in order to debug code, do not remove
-     */
+    //! brief Display all user metatypes
+    //! \remarks Used in order to debug code, do not remove
     void displayAllUserMetatypesTypes();
 
     /*!

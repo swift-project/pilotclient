@@ -27,7 +27,7 @@ namespace BlackGui
     {
         CAtcStationComponent::CAtcStationComponent(QWidget *parent) :
             QTabWidget(parent),
-            ui(new Ui::CAtcStationComponent), m_updateTimer(nullptr)
+            ui(new Ui::CAtcStationComponent)
         {
             ui->setupUi(this);
             this->tabBar()->setExpanding(false);

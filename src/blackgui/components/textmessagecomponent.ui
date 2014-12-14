@@ -103,6 +103,9 @@
          <property name="documentTitle">
           <string>UNICOM</string>
          </property>
+         <property name="lineWrapMode">
+          <enum>QTextEdit::NoWrap</enum>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>

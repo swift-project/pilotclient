@@ -53,8 +53,8 @@ namespace BlackCore
             return BlackMisc::Aviation::CAtcStationList();
         }
 
-        //! \copydoc IContextNetwork::getAircraftsInRange()
-        virtual const BlackMisc::Aviation::CAircraftList getAircraftsInRange() const override
+        //! \copydoc IContextNetwork::getAircraftInRange()
+        virtual const BlackMisc::Aviation::CAircraftList getAircraftInRange() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
             return BlackMisc::Aviation::CAircraftList();

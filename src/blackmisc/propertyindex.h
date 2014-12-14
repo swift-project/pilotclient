@@ -59,7 +59,7 @@ namespace BlackMisc
         };
 
         //! Default constructor.
-        CPropertyIndex();
+        CPropertyIndex() = default;
 
         //! Non nested index
         CPropertyIndex(int singleProperty);

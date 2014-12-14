@@ -49,7 +49,6 @@ namespace BlackCore
         virtual bool isConnected() const = 0;
 
         //! Can we connect?
-        //! \todo currently some code in XPlane implementation prevents to make the function const, can we fix this
         virtual bool canConnect() const = 0;
 
         //! Is time synchronization on?

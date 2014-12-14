@@ -11,41 +11,29 @@
 
 namespace BlackCore
 {
-    //! \brief Interpolator, calculation inbetween positions
+    //! Interpolator, calculation inbetween positions
     class IInterpolator
     {
     public:
-        //! \brief Default constructor
+        //! Default constructor
         IInterpolator() {}
 
-        //! \brief Virtual destructor
+        //! Virtual destructor
         virtual ~IInterpolator() {}
 
-        //! \brief Init object
+        //! Init object
         virtual void initialize() = 0;
 
-        /*!
-         * \brief Add new aircraft situation
-         * \param situation
-         */
+        //! Add new aircraft situation
         virtual void addAircraftSituation(const BlackMisc::Aviation::CAircraftSituation &situation) = 0;
 
-        /*!
-         * \brief Do we have enough situations to start calculating?
-         * \return
-         */
+        //! Do we have enough situations to start calculating?
         virtual bool hasEnoughAircraftSituations() const = 0;
 
-        /*!
-         * \brief Get current aircraft situation
-         * \return
-         */
+        //! Get current aircraft situation
         virtual BlackMisc::Aviation::CAircraftSituation getCurrentSituation() = 0;
 
-        /*!
-         * \brief Get timestamp of the last received aircraft situation
-         * \return
-         */
+        //! Get timestamp of the last received aircraft situation
         virtual const QDateTime &getTimeOfLastReceivedSituation() const = 0;
     };
 
