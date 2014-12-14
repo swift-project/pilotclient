@@ -273,8 +273,8 @@ namespace BlackGui
             CVatsimValues values;
             values.vatsimHomeAirport = this->ui->le_VatsimHomeAirport->text().trimmed().toUpper();
             values.vatsimId = this->ui->le_VatsimId->text().trimmed();
-            values.vatsimPassword = this->ui->le_VatsimPassword->text().trimmed().toUpper();
-            values.vatsimRealName = this->ui->le_VatsimRealName->text().simplified().trimmed().toUpper();
+            values.vatsimPassword = this->ui->le_VatsimPassword->text().trimmed();
+            values.vatsimRealName = this->ui->le_VatsimRealName->text().simplified().trimmed();
             return values;
         }
 
