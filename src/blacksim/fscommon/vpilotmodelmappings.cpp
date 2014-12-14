@@ -1,3 +1,12 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
 #include "vpilotmodelmappings.h"
 #include "blackmisc/nwaircraftmapping.h"
 
@@ -12,6 +21,12 @@ namespace BlackSim
 {
     namespace FsCommon
     {
+
+        CVPilotModelMappings::CVPilotModelMappings(bool standardDirectory, QObject *parent) :
+            ISimulatorModelMappings(parent)
+        {
+            if (standardDirectory) { this->addDirectory(CVPilotModelMappings::standardMappingsDirectory()); }
+        }
 
         void CVPilotModelMappings::addFilename(const QString &fileName)
         {
@@ -43,12 +58,16 @@ namespace BlackSim
             return directory;
         }
 
-        bool CVPilotModelMappings::load()
+        bool CVPilotModelMappings::read()
         {
             bool success = true;
+            this->m_loadedFiles = 0;
+            this->m_fileListWithProblems.clear();
             foreach(QString fn, this->m_fileList)
             {
+                this->m_loadedFiles++;
                 bool s = this->loadFile(fn);
+                if (!s) { this->m_fileListWithProblems.append(fn); }
                 success = s && success;
             }
             return success;
@@ -57,38 +76,50 @@ namespace BlackSim
         bool CVPilotModelMappings::loadFile(const QString &fileName)
         {
             QFile f(fileName);
-            if (!f.exists()) return false;
-            if (!f.open(QFile::ReadOnly | QFile::Text)) return false;
+            if (!f.exists()) { return  false; }
+            if (!f.open(QFile::ReadOnly | QFile::Text)) { return false; }
             QByteArray fc = f.readAll();
-            if (fc.isEmpty()) return false;
+            if (fc.isEmpty()) { return false; }
             QDomDocument doc;
-            if (!doc.setContent(fc)) return false;
+            if (!doc.setContent(fc)) { return false; }
             QDomNodeList rules = doc.elementsByTagName("ModelMatchRule");
-            if (rules.isEmpty()) return false;
-            int size = rules.size();
-            for (int i = 0; i < size; i++)
+            if (rules.isEmpty()) { return false; }
+
+            QString folder;
+            QString updated;
+            QDomNodeList mmRuleSet = doc.elementsByTagName("ModelMatchRuleSet");
+            if (mmRuleSet.size() > 0)
+            {
+                QDomNamedNodeMap attributes = mmRuleSet.at(0).attributes();
+                folder = attributes.namedItem("Folder").nodeValue();
+                updated = attributes.namedItem("UpdatedOn").nodeValue();
+            }
+            int rulesSize = rules.size();
+            for (int i = 0; i < rulesSize; i++)
             {
                 QDomNamedNodeMap attributes = rules.at(i).attributes();
                 const QString typeCode = attributes.namedItem("TypeCode").nodeValue();
                 const QString modelName = attributes.namedItem("ModelName").nodeValue();
-                const QString callsignPrefix = attributes.namedItem("CallsignPrefix").nodeValue();
-                if (modelName.isEmpty()) continue;
+                // remark, callsign prefix is airline ICAO code
+                const QString airlineCode = attributes.namedItem("CallsignPrefix").nodeValue();
+                if (modelName.isEmpty()) { continue; }
 
+                // split if we have multiple models
                 if (modelName.contains("//"))
                 {
                     // multiple models
                     QStringList models = modelName.split("//");
                     foreach(QString model, models)
                     {
-                        if (model.isEmpty()) continue;
-                        CAircraftMapping mapping(typeCode, callsignPrefix, model);
+                        if (model.isEmpty()) { continue; }
+                        CAircraftMapping mapping("vpilot", folder, typeCode, airlineCode, model);
                         this->m_mappings.push_back(mapping);
                     }
                 }
                 else
                 {
                     // single model
-                    CAircraftMapping mapping(typeCode, callsignPrefix, modelName);
+                    CAircraftMapping mapping("vpilot", folder, typeCode, airlineCode, modelName);
                     this->m_mappings.push_back(mapping);
                 }
             }

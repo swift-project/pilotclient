@@ -24,7 +24,7 @@ namespace BlackSim
         {
         public:
             //! Constructor
-            CVPilotModelMappings(QObject *parent = nullptr) : ISimulatorModelMappings(parent) {}
+            CVPilotModelMappings(bool standardDirectory, QObject *parent = nullptr);
 
             //! Destructor
             virtual ~CVPilotModelMappings() {}
@@ -35,15 +35,20 @@ namespace BlackSim
             //! Directory with .vmr files
             void addDirectory(const QString &directory);
 
+            //! Loaded files (number)
+            int countFilesLoaded() const { return m_loadedFiles; }
+
             //! The standard directory for vPilot mappings
             static const QString &standardMappingsDirectory();
 
         public slots:
             //! Load data
-            virtual bool load() override;
+            virtual bool read() override;
 
         private:
-            QStringList m_fileList; //!< list of file names
+            QStringList m_fileList;             //!< list of file names
+            QStringList m_fileListWithProblems; //!< problems during parsing
+            int m_loadedFiles = 0;              //!< loaded files
 
             //! Single file read and parsing
             bool loadFile(const QString &fileName);
