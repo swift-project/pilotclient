@@ -102,18 +102,6 @@ namespace BlackMisc
         //! Marshalling operator <<, object to DBus
         friend QDBusArgument &operator<<(QDBusArgument &argument, const CValueObject &valueObject);
 
-        //! Operator == with value map
-        friend bool operator==(const CPropertyIndexVariantMap &valueMap, const CValueObject &valueObject);
-
-        //! Operator != with value map
-        friend bool operator!=(const CPropertyIndexVariantMap &valueMap, const CValueObject &valueObject);
-
-        //! Operator == with value map
-        friend bool operator==(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap);
-
-        //! Operator != with value map
-        friend bool operator!=(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap);
-
         /*!
          * Compares two instances of related classes
          * and returns an integer less than, equal to, or greater than zero

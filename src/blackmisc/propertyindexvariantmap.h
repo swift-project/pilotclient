@@ -97,6 +97,18 @@ namespace BlackMisc
         //! Equal operator, required if maps are directly compared, not with CValueObject
         friend bool operator !=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
 
+        //! Operator == with CValueObject
+        friend bool operator ==(const CPropertyIndexVariantMap &valueMap, const CValueObject &valueObject);
+
+        //! Operator != with CValueObject
+        friend bool operator !=(const CPropertyIndexVariantMap &valueMap, const CValueObject &valueObject);
+
+        //! Operator == with CValueObject
+        friend bool operator ==(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap);
+
+        //! Operator != with CValueObject
+        friend bool operator !=(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap);
+
         //! Map
         const QMap<CPropertyIndex, CVariant> &map() const { return this->m_values; }
 

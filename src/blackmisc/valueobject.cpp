@@ -170,47 +170,6 @@ namespace BlackMisc
     }
 
     /*
-     * Compare with value map
-     */
-    bool operator==(const CPropertyIndexVariantMap &indexMap, const CValueObject &valueObject)
-    {
-        if (indexMap.isEmpty()) return indexMap.isWildcard();
-        const auto &map = indexMap.map();
-        for (auto it = map.begin(); it != map.end(); ++it)
-        {
-            // QVariant cannot be compared directly
-            CVariant p = valueObject.propertyByIndex(it.key()); // from value object
-            CVariant v = it.value().toCVariant(); // from map
-            if (p != v) return false;
-        }
-        return true;
-    }
-
-    /*
-     * Compare with map
-     */
-    bool operator!=(const CPropertyIndexVariantMap &indexMap, const CValueObject &valueObject)
-    {
-        return !(indexMap == valueObject);
-    }
-
-    /*
-     * Compare with map
-     */
-    bool operator==(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap)
-    {
-        return valueMap == valueObject;
-    }
-
-    /*
-     * Compare with map
-     */
-    bool operator!=(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap)
-    {
-        return !(valueMap == valueObject);
-    }
-
-    /*
      * from DBus
      */
     const QDBusArgument &operator>>(const QDBusArgument &argument, CValueObject &valueObject)

@@ -44,6 +44,47 @@ namespace BlackMisc
     }
 
     /*
+     * Compare with CValueObject
+     */
+    bool operator==(const CPropertyIndexVariantMap &indexMap, const CValueObject &valueObject)
+    {
+        if (indexMap.isEmpty()) return indexMap.isWildcard();
+        const auto &map = indexMap.map();
+        for (auto it = map.begin(); it != map.end(); ++it)
+        {
+            // QVariant cannot be compared directly
+            CVariant p = valueObject.propertyByIndex(it.key()); // from value object
+            CVariant v = it.value().toCVariant(); // from map
+            if (p != v) return false;
+        }
+        return true;
+    }
+
+    /*
+     * Compare with CValueObject
+     */
+    bool operator!=(const CPropertyIndexVariantMap &indexMap, const CValueObject &valueObject)
+    {
+        return !(indexMap == valueObject);
+    }
+
+    /*
+     * Compare with CValueObject
+     */
+    bool operator==(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap)
+    {
+        return valueMap == valueObject;
+    }
+
+    /*
+     * Compare with CValueObject
+     */
+    bool operator!=(const CValueObject &valueObject, const CPropertyIndexVariantMap &valueMap)
+    {
+        return !(valueMap == valueObject);
+    }
+
+    /*
      * Convert to string
      */
     QString CPropertyIndexVariantMap::convertToQString(bool i18n) const
