@@ -1,4 +1,4 @@
-/* Copyright (C) 2014
+/* Copyright (C) 2013
  * swift project Community / Contributors
  *
  * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
@@ -9,20 +9,25 @@
 
 //! \file
 
-#ifndef BLACKSIMTEST_SAMPLESMODELMAPPING_H
-#define BLACKSIMTEST_SAMPLESMODELMAPPING_H
+#ifndef BLACKMISC_SAMPLEUTILS_H
+#define BLACKMISC_SAMPLEUTILS_H
 
+#include <QStringList>
 #include <QTextStream>
 
-namespace BlackSimTest
+namespace BlackMisc
 {
-    //! Samples for model mapping classes
-    class CSamplesModelMapping
+    //! Utils for sample programms
+    class CSampleUtils
     {
-    public:
-        //! Run the samples
-        static int samples(QTextStream &streamOut, QTextStream &streamIn);
-    };
-} // namespace
 
-#endif
+    public:
+        //! Select directory among given ones
+        static QString selectDirectory(const QStringList &directoryOptions, QTextStream &streamOut, QTextStream &streamIn);
+
+    private:
+        CSampleUtils() = delete;
+    };
+}
+
+#endif // guard

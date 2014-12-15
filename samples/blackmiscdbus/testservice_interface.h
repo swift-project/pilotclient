@@ -14,6 +14,7 @@
 
 #include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/blackmiscallvalueclasses.h"
+#include "blacksim/fscommon/aircraftcfgentrieslist.h"
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
@@ -51,6 +52,13 @@ namespace BlackMiscTest
         {
             QList<QVariant> argumentList;
             return asyncCallWithArgumentList(QLatin1String("getAtcStation"), argumentList);
+        }
+
+        inline QDBusPendingReply<BlackSim::FsCommon::CAircraftCfgEntriesList> getAircraftCfgEntriesList(int number)
+        {
+            QList<QVariant> argumentList;
+            argumentList << QVariant::fromValue(number);
+            return asyncCallWithArgumentList(QLatin1String("getAircraftCfgEntriesList"), argumentList);
         }
 
         inline QDBusPendingReply<BlackMisc::Aviation::CAtcStationList> getAtcStationList(int number)

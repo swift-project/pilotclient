@@ -15,6 +15,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Network;
+using namespace BlackSim::FsCommon;
 
 namespace BlackMiscTest
 {
@@ -209,7 +210,7 @@ namespace BlackMiscTest
     /*
      * Object paths
      */
-    const QList<QDBusObjectPath> Testservice::getObjectPaths(const qint32 number) const
+    QList<QDBusObjectPath> Testservice::getObjectPaths(int number) const
     {
         QList<QDBusObjectPath> paths;
         for (int i = 0; i < number; i++)
@@ -220,11 +221,19 @@ namespace BlackMiscTest
     }
 
     /*
-     * Ping ATC station list
+     * Get ATC station list
      */
-    const BlackMisc::Aviation::CAtcStationList Testservice::getAtcStationList(const qint32 number) const
+    CAtcStationList Testservice::getAtcStationList(int number) const
     {
-        return BlackMisc::Aviation::CAtcStationList(ServiceTool::getStations(number));
+        return CAtcStationList(ServiceTool::getStations(number));
+    }
+
+    /*
+     * Get aircraft entries
+     */
+    CAircraftCfgEntriesList Testservice::getAircraftCfgEntriesList(int number) const
+    {
+        return CAircraftCfgEntriesList(ServiceTool::getAircraftCfgEntries(number));
     }
 
     /*
@@ -326,6 +335,5 @@ namespace BlackMiscTest
         qDebug() << "Pid:" << ServiceTool::getPid() << "client sent back as CVariant:" << client.toQString();
         return BlackMisc::CVariant::fromValue(client);
     }
-
 
 } // namespace

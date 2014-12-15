@@ -8,14 +8,16 @@ TEMPLATE = app
 
 CONFIG   += console
 CONFIG   -= app_bundle
-CONFIG   += blackmisc blackcore
+CONFIG   += blackmisc blackcore blacksim
 
-DEPENDPATH += . ../../src/blackmisc ../../src/blackcore
+DEPENDPATH += . ../../src/blackmisc ../../src/blackcore  ../../src/blacksim
 INCLUDEPATH += . ../../src
 
 win32:!win32-g++*: PRE_TARGETDEPS += ../../lib/blackmisc.lib \
+                                     ../../lib/blacksim.lib \
                                      ../../lib/blackcore.lib
 else:              PRE_TARGETDEPS += ../../lib/libblackmisc.a \
+                                     ../../lib/libblacksim.a \
                                      ../../lib/libblackcore.a
 
 DESTDIR = ../../bin

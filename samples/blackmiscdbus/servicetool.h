@@ -1,3 +1,14 @@
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of Swift Project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
+
+//! \file
+
 #ifndef BLACKMISCTEST_SERVICETOOL_H
 #define BLACKMISCTEST_SERVICETOOL_H
 
@@ -5,6 +16,7 @@
 #include "blackmisc/avatcstationlist.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/nwclientlist.h"
+#include "blacksim/fscommon/aircraftcfgentrieslist.h"
 #include <QCoreApplication>
 #include <QProcess>
 #include <QDBusConnection>
@@ -82,21 +94,28 @@ namespace BlackMiscTest
          * \param number
          * \return
          */
-        static BlackMisc::Aviation::CAtcStationList getStations(qint32 number);
+        static BlackMisc::Aviation::CAtcStationList getStations(int number);
+
+        /*!
+         * \brief Get aircraft cfg entries
+         * \param number
+         * \return
+         */
+        static BlackSim::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntries(int number);
 
         /*!
          * \brief Get airports
          * \param number
          * \return
          */
-        static BlackMisc::Aviation::CAirportList getAirports(qint32 number);
+        static BlackMisc::Aviation::CAirportList getAirports(int number);
 
         /*!
          * \brief Get clients
          * \param number
          * \return
          */
-        static BlackMisc::Network::CClientList getClients(qint32 number);
+        static BlackMisc::Network::CClientList getClients(int number);
 
     };
 

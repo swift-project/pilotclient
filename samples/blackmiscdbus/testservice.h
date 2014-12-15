@@ -20,6 +20,7 @@
 #include "blackmisc/networkallclasses.h"
 #include "blackmisc/pqallquantities.h"
 #include "blackmisc/mathallclasses.h"
+#include "blacksim/fscommon/aircraftcfgentrieslist.h"
 #include "servicetool.h"
 #include <QObject>
 #include <QDebug>
@@ -147,10 +148,13 @@ namespace BlackMiscTest
         BlackMisc::Aviation::CAtcStation getAtcStation() const;
 
         //! return n ATC stations
-        const BlackMisc::Aviation::CAtcStationList getAtcStationList(const qint32 number) const;
+        BlackMisc::Aviation::CAtcStationList getAtcStationList(int number) const;
+
+        //! return n aircraft cfg entries
+        BlackSim::FsCommon::CAircraftCfgEntriesList getAircraftCfgEntriesList(int number) const;
 
         //! Get object paths
-        const QList<QDBusObjectPath> getObjectPaths(const qint32 number) const;
+        QList<QDBusObjectPath> getObjectPaths(int number) const;
 
     public:
         static const QString ServiceName;

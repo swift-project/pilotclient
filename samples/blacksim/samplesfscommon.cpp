@@ -8,8 +8,9 @@
  */
 
 #include "samplesfscommon.h"
+#include "blackmisc/sampleutils.h"
 #include "blacksim/fscommon/aircraftcfgentrieslist.h"
-#include "blacksim/fscommon/aircraftindexer.h"
+#include "blacksim/fscommon/aircraftmapper.h"
 
 #include <QDebug>
 #include <QFuture>
@@ -17,6 +18,7 @@
 #include <QTextStream>
 #include <QTemporaryFile>
 
+using namespace BlackMisc;
 using namespace BlackSim::FsCommon;
 
 namespace BlackSimTest
@@ -27,51 +29,50 @@ namespace BlackSimTest
      */
     int CSamplesFsCommon::samples(QTextStream &streamOut, QTextStream &streamIn)
     {
-        // QString fsxDir = "P:/FlightSimulatorX (MSI)/SimObjects";
-        QString fsxDir = "P:/Temp/SimObjects";
-        streamOut << "Enter FSX directory:" << endl;
-        streamOut << fsxDir << '\r';
-        streamOut.flush();
-        QString input = streamIn.readLine();
-        if (!input.isEmpty()) fsxDir = input;
+        QString fsxDir = CSampleUtils::selectDirectory({"P:/FlightSimulatorX (MSI)/SimObjects", "P:/Temp/SimObjects"}, streamOut, streamIn);
+        CAircraftMapper mapper;
+        if (!mapper.changeCAircraftCfgEntriesDirectory(fsxDir))
+        {
+            streamOut << "Wrong or empty directoy " << fsxDir << endl;
+            return 0;
+        }
+
         streamOut << "d .. direct, b .. background" << endl;
-        input = streamIn.readLine();
+        QString input = streamIn.readLine();
+
         if (!input.startsWith("b"))
         {
             streamOut << "reading directly" << endl;
-            CAircraftCfgEntriesList entriesList(fsxDir);
-            if (entriesList.existsDir())
-            {
-                QTime time;
-                time.start();
-                streamOut << "reading " << entriesList.getRootDirectory() << endl;
-                entriesList.read();
-                streamOut << "read entries: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
+            QTime time;
+            time.start();
+            streamOut << "reading " << mapper.getAircraftCfgEntriesList().getRootDirectory() << endl;
+            mapper.readSimObjects();
+            streamOut << "read entries: " << mapper.getAircraftCfgEntriesList().size() << " in " << time.restart() << "ms" << endl;
 
-                QJsonDocument doc(entriesList.toJson());
-                QByteArray jsonArray(doc.toJson());
-                streamOut << "write JSON array with size " << jsonArray.size() << endl;
-                QTemporaryFile tempFile;
-                tempFile.open();
-                tempFile.write(jsonArray);
-                tempFile.close();
-                streamOut << "written to " << tempFile.fileName() << " in " << time.restart() << "ms" <<  endl;
+            CAircraftCfgEntriesList entriesList = mapper.getAircraftCfgEntriesList();
+            QJsonDocument doc(entriesList.toJson());
+            QByteArray jsonArray(doc.toJson());
+            streamOut << "write JSON array with size " << jsonArray.size() << endl;
+            QTemporaryFile tempFile;
+            tempFile.open();
+            tempFile.write(jsonArray);
+            tempFile.close();
+            streamOut << "written to " << tempFile.fileName() << " in " << time.restart() << "ms" <<  endl;
 
-                // re-read
-                tempFile.open();
-                jsonArray = tempFile.readAll();
-                doc = QJsonDocument::fromJson(jsonArray);
-                entriesList.clear();
-                entriesList.convertFromJson(doc.object());
-                streamOut << "read JSON array with size " << jsonArray.size() << endl;
-                streamOut << "read entries from disk: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
-                tempFile.close();
-            }
+            // re-read
+            tempFile.open();
+            jsonArray = tempFile.readAll();
+            doc = QJsonDocument::fromJson(jsonArray);
+            entriesList.clear();
+            entriesList.convertFromJson(doc.object());
+            streamOut << "read JSON array with size " << jsonArray.size() << endl;
+            streamOut << "read entries from disk: " << entriesList.size() << " in " << time.restart() << "ms" << endl;
+            tempFile.close();
         }
         else
         {
             streamOut << "reading in background" << endl;
-            QFuture<int> f = BlackSim::FsCommon::CAircraftIndexer::readInBackground(fsxDir);
+            QFuture<int> f = mapper.readInBackground();
             int i = 0;
             do
             {

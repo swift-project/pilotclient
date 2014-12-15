@@ -50,13 +50,14 @@ int main(int argc, char *argv[])
     }
     else if (i.startsWith("3"))
     {
-        BlackSimTest::CSamplesModelMapping::samples(streamOut);
+        BlackSimTest::CSamplesModelMapping::samples(streamOut, streamIn);
     }
     else if (i.startsWith("x"))
     {
         return 0;
     }
 
+    streamOut << endl;
     streamOut << "time elapsed: " << t.elapsed() << "ms" << endl;
     streamOut << "press key to exit" << endl;
     streamIn.readLine();

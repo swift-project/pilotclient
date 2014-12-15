@@ -24,6 +24,7 @@ using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Math;
 using namespace BlackMisc::Geo;
 using namespace BlackMisc::Network;
+using namespace BlackSim::FsCommon;
 using namespace BlackMiscTest;
 
 namespace BlackMiscTest
@@ -125,7 +126,7 @@ namespace BlackMiscTest
     /*
      * Stations
      */
-    CAtcStationList ServiceTool::getStations(qint32 number)
+    CAtcStationList ServiceTool::getStations(int number)
     {
         QElapsedTimer timer;
         timer.start();
@@ -147,9 +148,34 @@ namespace BlackMiscTest
     }
 
     /*
+     * Aircraft cfg entries
+     */
+    CAircraftCfgEntriesList ServiceTool::getAircraftCfgEntries(int number)
+    {
+        QElapsedTimer timer;
+        timer.start();
+
+        CAircraftCfgEntriesList list;
+        for (int i = 0; i < number; i++)
+        {
+            CAircraftCfgEntries e;
+            e.setAtcModel("atc model");
+            e.setAtcParkingCode(QString::number(i));
+            e.setIndex(i);
+            e.setFileName("this will be the file path and pretty long");
+            e.setTitle("i am the aircraft title foobar");
+            e.setAtcType("B737");
+            list.push_back(e);
+        }
+
+        qDebug() << number << "aircraft entries in" << timer.nsecsElapsed() / 1000000; // ms
+        return list;
+    }
+
+    /*
      * Airports
      */
-    CAirportList ServiceTool::getAirports(qint32 number)
+    CAirportList ServiceTool::getAirports(int number)
     {
         BlackMisc::Aviation::CAirportList list;
         for (int i = 0; i < number; i++)
@@ -163,7 +189,7 @@ namespace BlackMiscTest
         return list;
     }
 
-    CClientList ServiceTool::getClients(qint32 number)
+    CClientList ServiceTool::getClients(int number)
     {
         BlackMisc::Network::CClientList list;
         for (int i = 0; i < number; i++)
@@ -176,7 +202,7 @@ namespace BlackMiscTest
             client.setCapability(true, CClient::FsdWithInterimPositions);
             client.setCapability(true, CClient::FsdWithModelDescription);
             QString myFooModel = QString("fooModel %1").arg(i);
-            client.setAircraftModel(CAircraftModel(myFooModel, "nope"));
+            client.setAircraftModel(CAircraftModel(myFooModel, CAircraftModel::TypeQueriedFromNetwork));
             list.push_back(client);
         }
         return list;
@@ -246,10 +272,7 @@ namespace BlackMiscTest
 
             // We send this as a non-replying message. This is used for sending errors, replys, signals,
             // and method calls (slots) that don't return
-            if (connection.send(m))
-            {
-                qDebug() << "Send via low level method" << m;
-            }
+            if (connection.send(m)) { qDebug() << "Send via low level method" << m; }
 
             // same as interface message
             // but call the slot
@@ -334,14 +357,14 @@ namespace BlackMiscTest
             qDebug() << "Send geo position" << geoPos;
 
             qDebug() << "----------------- pings ----------------";
-            CPropertyIndex pi({ 1, 2, 3, 4, 5});
+            CPropertyIndex pi({ 1000, 2000, 3000, 4000, 5000}); // numbers >= global index
             pi = testserviceInterface.pingPropertyIndex(pi);
-            qDebug() << "Pinged properties via interface" << pi;
+            qDebug() << "Pinged property index via interface" << pi;
 
             CPropertyIndexVariantMap ivm;
-            ivm.addValue(1, "one");
-            ivm.addValue(2, "two");
-            ivm.addValue(3, "three");
+            ivm.addValue(1000, "one");
+            ivm.addValue(2000, "two");
+            ivm.addValue(3000, "three");
             ivm = testserviceInterface.pingIndexVariantMap(ivm);
             qDebug() << "Pinged variant map via interface" << ivm;
 
@@ -400,14 +423,14 @@ namespace BlackMiscTest
             qDebug() << "----------------- index variant map ----------------";
 
             CPropertyIndexVariantMap valueMap;
-            valueMap.addValue(1, 111.222);
-            valueMap.addValue(2, callsign);
-            valueMap.addValue(3, alt);
-            valueMap.addValue(4, track);
-            valueMap.addValue(5, QDateTime::currentDateTime().addDays(1));
-            valueMap.addValue(6, QString("foobar"));
+            valueMap.addValue(1000, 111.222);
+            valueMap.addValue(2000, callsign);
+            valueMap.addValue(3000, alt);
+            valueMap.addValue(4000, track);
+            valueMap.addValue(5000, QDateTime::currentDateTime().addDays(1));
+            valueMap.addValue(6000, QString("foobar"));
             testserviceInterface.receiveValueMap(valueMap);
-            qDebug() << "Send value map" << valueMap;
+            qDebug() << "Send index variant map" << valueMap;
 
             // Performance tools
             QThread::msleep(2500);
@@ -477,10 +500,16 @@ namespace BlackMiscTest
             atcStationList = testserviceInterface.getAtcStationList(1000);
             if (atcStationList.size() != 1000) qDebug() << "wrong list size" << atcStationList.size();
             t1000 = timer.nsecsElapsed() / 1000000; // ms
-
             qDebug() << "Reading station list 10/100/1000 in ms:" << t10 << t100 << t1000;
-            timer.invalidate();
 
+            // test reading model entries with a realistic size
+            timer.restart();
+            CAircraftCfgEntriesList entriesList = testserviceInterface.getAircraftCfgEntriesList(5000);
+            if (entriesList.size() != 5000) qDebug() << "wrong list size" << entriesList.size();
+            int t5000 = timer.nsecsElapsed() / 1000000; // ms
+            qDebug() << "Reading aircraft cfg entries in ms:" << t5000;
+
+            // object paths
             timer.restart();
             QList<QDBusObjectPath> objectPaths = testserviceInterface.getObjectPaths(10);
             if (objectPaths.size() != 10) qDebug() << "wrong list size" << objectPaths.size();
