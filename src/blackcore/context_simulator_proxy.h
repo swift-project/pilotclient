@@ -73,6 +73,12 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getAirportsInRange()
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
+        //! \copydoc IContextSimulator::getInstalledModels()
+        virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const override;
+
+        //! \copydoc IContextSimulator::getCurrentlyMatchedModels()
+        virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const override;
+
         //! \copydoc IContextSimulator::getSimulatorInfo
         virtual BlackSim::CSimulatorInfo getSimulatorInfo() const override;
 

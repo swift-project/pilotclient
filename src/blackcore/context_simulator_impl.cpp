@@ -99,34 +99,57 @@ namespace BlackCore
 
     Network::CAircraftModel CContextSimulator::getOwnAircraftModel() const
     {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         // If no ISimulator object is available, return a dummy.
         if (!m_simulator) { return Network::CAircraftModel(); }
 
-        return this->m_simulator->getAircraftModel();
+        return this->m_simulator->getOwnAircraftModel();
     }
 
     CAirportList CContextSimulator::getAirportsInRange() const
     {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         // If no ISimulator object is available, return a dummy.
         if (!m_simulator) { return CAirportList(); }
 
         return this->m_simulator->getAirportsInRange();
     }
 
+    CAircraftModelList CContextSimulator::getInstalledModels() const
+    {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        // If no ISimulator object is available, return a dummy.
+        if (!m_simulator) { return CAircraftModelList(); }
+
+        return this->m_simulator->getInstalledModels();
+    }
+
+    CAircraftModelList CContextSimulator::getCurrentlyMatchedModels() const
+    {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
+        // If no ISimulator object is available, return a dummy.
+        if (!m_simulator) { return CAircraftModelList(); }
+
+        return this->m_simulator->getCurrentlyMatchedModels();
+    }
+
     void CContextSimulator::setTimeSynchronization(bool enable, CTime offset)
     {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return;
         this->m_simulator->setTimeSynchronization(enable, offset);
     }
 
     bool CContextSimulator::isTimeSynchronized() const
     {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return false;
         return this->m_simulator->isTimeSynchronized();
     }
 
     CTime CContextSimulator::getTimeSynchronizationOffset() const
     {
+        CLogMessage(this, CLogCategory::contextSlot()).debug() << Q_FUNC_INFO;
         if (!m_simulator) return CTime(0, CTimeUnit::hrmin());
         return this->m_simulator->getTimeSynchronizationOffset();
     }
@@ -169,7 +192,8 @@ namespace BlackCore
 
         connect(m_simulator, &ISimulator::connectionStatusChanged, this, &CContextSimulator::ps_onConnectionStatusChanged);
         connect(m_simulator, &ISimulator::simulatorStatusChanged, this, &CContextSimulator::simulatorStatusChanged);
-        connect(m_simulator, &ISimulator::aircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
+        connect(m_simulator, &ISimulator::ownAircraftModelChanged, this, &IContextSimulator::ownAircraftModelChanged);
+        connect(m_simulator, &ISimulator::modelMatchingCompleted, this, &IContextSimulator::modelMatchingCompleted);
 
         // log
         connect(CLogHandler::instance(), &CLogHandler::localMessageLogged, m_simulator, &ISimulator::displayStatusMessage);
@@ -177,12 +201,15 @@ namespace BlackCore
 
         // connect with network
         CAirspaceMonitor *airspace = this->getRuntime()->getCContextNetwork()->getAirspaceMonitor();
-        connect(airspace, &CAirspaceMonitor::addedAircraft, this, &CContextSimulator::ps_addRemoteAircraft);
+        // connect(airspace, &CAirspaceMonitor::addedAircraft, this, &CContextSimulator::ps_addRemoteAircraft);
+        connect(airspace, &CAirspaceMonitor::readyForModelMatching, this, &CContextSimulator::ps_addRemoteAircraft);
         connect(airspace, &CAirspaceMonitor::changedAircraftSituation, this, &CContextSimulator::ps_addAircraftSituation);
         connect(airspace, &CAirspaceMonitor::removedAircraft, this, &CContextSimulator::ps_removeRemoteAircraft);
         for (const auto &aircraft : airspace->getAircraftInRange())
         {
-            m_simulator->addRemoteAircraft(aircraft.getCallsign(), aircraft.getSituation());
+            // m_simulator->addRemoteAircraft(aircraft.getCallsign(), aircraft.getSituation());
+            CClient client = airspace->getOtherClients().findFirstByCallsign(aircraft.getCallsign());
+            m_simulator->addRemoteAircraft(aircraft, client);
         }
 
         // apply latest settings
@@ -265,12 +292,19 @@ namespace BlackCore
         }
     }
 
-    void CContextSimulator::ps_addRemoteAircraft(const CCallsign &callsign, const CAircraftSituation &initialSituation)
+    void CContextSimulator::ps_addRemoteAircraft(const CAircraft &remoteAircraft, const CClient &remoteClient)
     {
         Q_ASSERT(this->m_simulator);
         if (!this->m_simulator) return;
-        this->m_simulator->addRemoteAircraft(callsign, initialSituation);
+        this->m_simulator->addRemoteAircraft(remoteAircraft, remoteClient);
     }
+
+//    void CContextSimulator::ps_addRemoteAircraft(const CCallsign &callsign, const CAircraftSituation &initialSituation)
+//    {
+//        Q_ASSERT(this->m_simulator);
+//        if (!this->m_simulator) return;
+//        this->m_simulator->addRemoteAircraft(callsign, initialSituation);
+//    }
 
     void CContextSimulator::ps_addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
     {
@@ -361,7 +395,7 @@ namespace BlackCore
     bool CContextSimulator::isRunning() const
     {
         if (!this->m_simulator) return false;
-        return this->m_simulator->isRunning();
+        return this->m_simulator->isSimulating();
     }
 
     void CContextSimulator::findSimulatorPlugins()

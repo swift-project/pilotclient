@@ -98,6 +98,8 @@ namespace BlackCore
         //! An aircraft disappeared
         void removedAircraft(const BlackMisc::Aviation::CCallsign &callsign);
 
+        //! Read for model matching
+        void readyForModelMatching(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient);
 
     public slots:
         //! Own aircraft updated
@@ -128,7 +130,7 @@ namespace BlackCore
         BlackMisc::Aviation::CAircraft     m_ownAircraft;
         BlackMisc::Network::CAircraftModel m_ownAircraftModel;
 
-        INetwork *m_network;
+        INetwork *m_network = nullptr;
         CVatsimBookingReader  *m_vatsimBookingReader;
         CVatsimDataFileReader *m_vatsimDataFileReader;
         CAirspaceWatchdog m_atcWatchdog;
@@ -162,10 +164,11 @@ namespace BlackCore
         void ps_aircraftUpdateReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation, const BlackMisc::Aviation::CTransponder &transponder);
         void ps_pilotDisconnected(const BlackMisc::Aviation::CCallsign &callsign);
         void ps_frequencyReceived(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency);
-
         void ps_receivedBookings(const BlackMisc::Aviation::CAtcStationList &bookedStations);
         void ps_receivedDataFile();
 
+        // non network related slots
+        void ps_sendReadyForModelMatching(const BlackMisc::Aviation::CCallsign &callsign);
     };
 
 } // namespace

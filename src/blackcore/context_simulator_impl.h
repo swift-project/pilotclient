@@ -74,6 +74,12 @@ namespace BlackCore
         //! \copydoc IContextSimulator::getAirportsInRange()
         virtual BlackMisc::Aviation::CAirportList getAirportsInRange() const override;
 
+        //! \copydoc IContextSimulator::getInstalledModels()
+        virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const override;
+
+        //! \copydoc IContextSimulator::getCurrentlyMatchedModels()
+        virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const override;
+
         //! \copydoc IContextSimulator::setTimeSynchronization
         virtual void setTimeSynchronization(bool enable, BlackMisc::PhysicalQuantities::CTime offset) override;
 
@@ -112,7 +118,8 @@ namespace BlackCore
         void ps_updateOwnAircraftContext();
 
         //! \copydoc ISimulator::addRemoteAircraft
-        void ps_addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
+        // void ps_addRemoteAircraft(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &initialSituation);
+        void ps_addRemoteAircraft(const BlackMisc::Aviation::CAircraft &remoteAircraft, const BlackMisc::Network::CClient &remoteClient);
 
         //! \copydoc ISimulator::addAircraftSituation
         void ps_addAircraftSituation(const BlackMisc::Aviation::CCallsign &callsign, const BlackMisc::Aviation::CAircraftSituation &situation);

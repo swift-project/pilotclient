@@ -11,17 +11,19 @@
 #include "blackcore/blackcorefreefunctions.h"
 #include "blackmisc/project.h"
 #include "blackmisc/testing.h"
+#include "blackmisc/logmessage.h"
+#include "blackmisc/blackmiscfreefunctions.h"
 #include "blackmisc/propertyindexallclasses.h"
+
+using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Audio;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::Geo;
+using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackCore
 {
-
-    using namespace BlackMisc;
-    using namespace BlackMisc::Aviation;
-    using namespace BlackMisc::Audio;
-    using namespace BlackMisc::Network;
-    using namespace BlackMisc::Geo;
-    using namespace BlackMisc::PhysicalQuantities;
 
     CAirspaceMonitor::CAirspaceMonitor(QObject *parent, INetwork *network, CVatsimBookingReader *bookings, CVatsimDataFileReader *dataFile)
         : QObject(parent), m_network(network), m_vatsimBookingReader(bookings), m_vatsimDataFileReader(dataFile),
@@ -270,7 +272,7 @@ namespace BlackCore
 
         // Request of other client, I can get the other's model from that
         CPropertyIndexVariantMap vm({ CClient::IndexModel, CAircraftModel::IndexModelString }, model);
-        vm.addValue({ CClient::IndexModel, CAircraftModel::IndexIsQueriedModelString }, true);
+        vm.addValue({ CClient::IndexModel, CAircraftModel::IndexModelType }, static_cast<int>(CAircraftModel::TypeQueriedFromNetwork));
         if (!this->m_otherClients.contains(&CClient::getCallsign, callsign))
         {
             // with custom packets it can happen,
@@ -390,6 +392,13 @@ namespace BlackCore
             client.setVoiceCapabilities(vc);
             (*i) = client;
         }
+    }
+
+    void CAirspaceMonitor::ps_sendReadyForModelMatching(const CCallsign &callsign)
+    {
+        CAircraft remoteAircraft = this->m_aircraftInRange.findFirstByCallsign(callsign);
+        CClient remoteClient = this->m_otherClients.findFirstByCallsign(callsign);
+        emit readyForModelMatching(remoteAircraft, remoteClient);
     }
 
     void CAirspaceMonitor::ps_atcPositionUpdate(const CCallsign &callsign, const BlackMisc::PhysicalQuantities::CFrequency &frequency, const CCoordinateGeodetic &position, const BlackMisc::PhysicalQuantities::CLength &range)
@@ -529,6 +538,22 @@ namespace BlackCore
         }
         int changed = this->m_aircraftInRange.applyIf(&CAircraft::getCallsign, callsign, vm, true);
         if (changed > 0) { emit this->changedAircraftInRange(); }
+
+        // we have most important data for model matching
+        // but do we already have the client
+        if (this->m_otherClients.contains(&CClient::getCallsign, callsign))
+        {
+            // yes, client with possible model string is there
+            ps_sendReadyForModelMatching(callsign);
+        }
+        else
+        {
+            // allow another period for the client data to arrive, otherwise go ahead
+            BlackMisc::singleShot(5000, QThread::currentThread(), [ = ]()
+            {
+                ps_sendReadyForModelMatching(callsign);
+            });
+        }
     }
 
     void CAirspaceMonitor::ps_aircraftUpdateReceived(const CCallsign &callsign, const CAircraftSituation &situation, const CTransponder &transponder)

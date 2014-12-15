@@ -11,6 +11,7 @@
 using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
+using namespace BlackMisc::Network;
 using namespace BlackMisc::Geo;
 using namespace BlackSim;
 
@@ -32,13 +33,16 @@ namespace BlackCore
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "startedChanged", this, SIGNAL(startedChanged(bool)));
-
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
-                               "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(bool,bool,bool)));
+                               "simulatorStatusChanged", this, SIGNAL(simulatorStatusChanged(bool, bool, bool)));
         Q_ASSERT(s);
         s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
                                "ownAircraftModelChanged", this, SIGNAL(ownAircraftModelChanged(BlackMisc::Network::CAircraftModel)));
+        Q_ASSERT(s);
+
+        s = connection.connect(serviceName, IContextSimulator::ObjectPath(), IContextSimulator::InterfaceName(),
+                               "modelMatchingCompleted", this, SIGNAL(modelMatchingCompleted(BlackMisc::Network::CAircraftModel)));
         Q_ASSERT(s);
         Q_UNUSED(s);
     }
@@ -81,6 +85,16 @@ namespace BlackCore
     CAirportList CContextSimulatorProxy::getAirportsInRange() const
     {
         return m_dBusInterface->callDBusRet<BlackMisc::Aviation::CAirportList>(QLatin1Literal("getAirportsInRange"));
+    }
+
+    CAircraftModelList CContextSimulatorProxy::getInstalledModels() const
+    {
+        return m_dBusInterface->callDBusRet<BlackMisc::Network::CAircraftModelList>(QLatin1Literal("getInstalledModels"));
+    }
+
+    CAircraftModelList CContextSimulatorProxy::getCurrentlyMatchedModels() const
+    {
+        return m_dBusInterface->callDBusRet<BlackMisc::Network::CAircraftModelList>(QLatin1Literal("getCurrentlyMatchedModels"));
     }
 
     BlackSim::CSimulatorInfo CContextSimulatorProxy::getSimulatorInfo() const

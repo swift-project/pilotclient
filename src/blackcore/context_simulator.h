@@ -28,7 +28,7 @@
 #include "blackcore/context_runtime.h"
 #include "blacksim/simulatorinfo.h"
 #include "blacksim/simulatorinfolist.h"
-#include "blackmisc/nwaircraftmodel.h"
+#include "blackmisc/nwaircraftmodellist.h"
 #include "blackmisc/avaircraft.h"
 #include "blackmisc/avairportlist.h"
 #include "blackmisc/project.h"
@@ -76,6 +76,12 @@ namespace BlackCore
         //! Simulator combined status
         void simulatorStatusChanged(bool connected, bool running, bool paused);
 
+        //! Installed aircraft models ready or changed
+        void installedAircraftModelsChanged();
+
+        //! A single model has been matched
+        void modelMatchingCompleted(BlackMisc::Network::CAircraftModel model);
+
         //! Emitted when own aircraft model changes
         //! \todo move to own aircraft context?
         void ownAircraftModelChanged(BlackMisc::Network::CAircraftModel model);
@@ -111,6 +117,12 @@ namespace BlackCore
 
         //! Aircraft model
         virtual BlackMisc::Network::CAircraftModel getOwnAircraftModel() const = 0;
+
+        //! Installed models in simulator eco system
+        virtual BlackMisc::Network::CAircraftModelList getInstalledModels() const = 0;
+
+        //! Remote aircraft in range having a valid model matching (which should be all aircraft in range)
+        virtual BlackMisc::Network::CAircraftModelList getCurrentlyMatchedModels() const = 0;
 
         //! Set time synchronization between simulator and user's computer time
         //! \remarks not all drivers implement this, e.g. if it is an intrinsic simulator feature
