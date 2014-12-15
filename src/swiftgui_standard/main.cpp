@@ -43,6 +43,18 @@ int main(int argc, char *argv[])
     BlackCore::registerMetadata();
     // BlackMisc::displayAllUserMetatypesTypes();
 
+    // application
+    QApplication a(argc, argv);
+    CLogHandler::instance()->install();
+    CLogHandler::instance()->enableConsoleOutput(false);
+
+//    CLogHandler::instance()->handlerForPattern(
+//        CLogPattern::anyOf({ CLogCategory::contextSlot(), CLogCategory::context() })
+//    )->enableConsoleOutput(false);
+//    CLogHandler::instance()->handlerForPattern(
+//        CLogPattern::anyOf({ CLogCategory::contextSlot(), CLogCategory::context() }).withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
+//    )->enableConsoleOutput(true);
+
     // Translations
     QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");
     CLogMessage("swift.standardgui.main").debug() << (file.exists() ? "Found translations in resources" : "No translations in resources");
@@ -51,11 +63,6 @@ int main(int argc, char *argv[])
     {
         CLogMessage("swift.standardgui.main").debug() << "Translator loaded";
     }
-
-    // application
-    QApplication a(argc, argv);
-    CLogHandler::instance()->install();
-    BlackMisc::CLogHandler::instance()->handlerForCategory(CLogCategory::context())->enableConsoleOutput(false);
 
     QIcon icon(BlackMisc::CIcons::swift24());
     QApplication::setWindowIcon(icon);

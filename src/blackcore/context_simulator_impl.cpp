@@ -413,7 +413,7 @@ namespace BlackCore
         foreach(QString fileName, fileNames)
         {
             if (!QLibrary::isLibrary(fileName)) { continue; }
-            CLogMessage(this).info("Try to load plugin: ") << fileName;
+            CLogMessage(this).info("Try to load plugin: %1") << fileName;
             QString pluginPath = m_pluginsDir.absoluteFilePath(fileName);
             QPluginLoader loader(pluginPath);
             QObject *plugin = loader.instance();
@@ -424,7 +424,7 @@ namespace BlackCore
                 {
                     CSimulatorInfo simulatorInfo = factory->getSimulatorInfo();
                     m_simulatorFactories.insert(factory);
-                    CLogMessage(this).info("Loaded plugin: ") << simulatorInfo.toQString();
+                    CLogMessage(this).info("Loaded plugin: %1") << simulatorInfo.toQString();
                 }
             }
             else
