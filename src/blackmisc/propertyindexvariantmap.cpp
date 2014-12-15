@@ -30,17 +30,17 @@ namespace BlackMisc
     /*
      * ==
      */
-    bool CPropertyIndexVariantMap::operator ==(const CPropertyIndexVariantMap &other) const
+    bool operator ==(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b)
     {
-        return this->m_wildcard == other.m_wildcard && this->m_values == other.m_values;
+        return a.m_wildcard == b.m_wildcard && a.m_values == b.m_values;
     }
 
     /*
      * !=
      */
-    bool CPropertyIndexVariantMap::operator !=(const CPropertyIndexVariantMap &other) const
+    bool operator !=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b)
     {
-        return !(*this == other);
+        return !(b == a);
     }
 
     /*

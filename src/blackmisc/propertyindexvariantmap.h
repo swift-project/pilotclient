@@ -92,10 +92,10 @@ namespace BlackMisc
         void clear() { this->m_values.clear(); }
 
         //! Equal operator, required if maps are directly compared, not with CValueObject
-        bool operator ==(const CPropertyIndexVariantMap &other) const;
+        friend bool operator ==(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
 
         //! Equal operator, required if maps are directly compared, not with CValueObject
-        bool operator !=(const CPropertyIndexVariantMap &other) const;
+        friend bool operator !=(const CPropertyIndexVariantMap &a, const CPropertyIndexVariantMap &b);
 
         //! Map
         const QMap<CPropertyIndex, CVariant> &map() const { return this->m_values; }
