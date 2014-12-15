@@ -100,8 +100,7 @@ namespace BlackGui
             bool hasData = this->countBookedStations() > 0 || this->countOnlineStations() > 0;
             if (hasData && !this->isVisibleWidget())
             {
-                // KWB remove: qDebug() will be removed soon
-                qDebug() << this->objectName() << "Skipping update, not visible";
+                // Update skipped, as not visible
                 return;
             }
 

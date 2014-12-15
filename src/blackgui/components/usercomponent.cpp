@@ -60,8 +60,7 @@ namespace BlackGui
                 bool withData = countUsers() > 0 || countClients() > 0;
                 if (withData && !isVisibleWidget())
                 {
-                    // KWB remove: qDebug() will be removed soo
-                    qDebug() << this->objectName() << "Skipping update";
+                    // Skip update, invisible
                     return;
                 }
 

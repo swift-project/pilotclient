@@ -167,6 +167,7 @@ namespace BlackMisc
 
         bool canBeDeleted()
         {
+            if (! m_inheritFallThrough) { return false; }
             static const auto signal = QMetaMethod::fromSignal(&CLogPatternHandler::messageLogged);
             return ! isSignalConnected(signal);
         }

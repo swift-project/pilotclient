@@ -46,14 +46,13 @@ int main(int argc, char *argv[])
     // application
     QApplication a(argc, argv);
     CLogHandler::instance()->install();
-    CLogHandler::instance()->enableConsoleOutput(false);
-
-//    CLogHandler::instance()->handlerForPattern(
-//        CLogPattern::anyOf({ CLogCategory::contextSlot(), CLogCategory::context() })
-//    )->enableConsoleOutput(false);
-//    CLogHandler::instance()->handlerForPattern(
-//        CLogPattern::anyOf({ CLogCategory::contextSlot(), CLogCategory::context() }).withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
-//    )->enableConsoleOutput(true);
+    CLogHandler::instance()->enableConsoleOutput(true);
+    CLogHandler::instance()->handlerForPattern(
+        CLogPattern::anyOf({ CLogCategory::contextSlot(), CLogCategory::context() })
+    )->enableConsoleOutput(false);
+    CLogHandler::instance()->handlerForPattern(
+        CLogPattern::anyOf({ CLogCategory::contextSlot(), CLogCategory::context() }).withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
+    )->enableConsoleOutput(true);
 
     // Translations
     QFile file(":blackmisc/translations/blackmisc_i18n_de.qm");

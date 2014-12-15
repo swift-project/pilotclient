@@ -39,9 +39,7 @@ int main(int argc, char *argv[])
     QTextStream cin(stdin);
     QTextStream cout(stdout);
 
-    cout << BlackMisc::CProject::version();
-    cout << BlackMisc::CProject::compiledInfo();
-    cout << endl;
+    cout << BlackMisc::CProject::version() << " " << BlackMisc::CProject::compiledInfo() << endl;
 
     cout << "1 + la/ra .. session DBus server (default)" << endl;
     cout << "2 + la/ra .. system DBus server" << endl;
@@ -78,7 +76,7 @@ int main(int argc, char *argv[])
 
     // tool to allow input indepent from event loop
     QtConcurrent::run(BlackMiscTest::Tool::serverLoop, core); // QFuture<void> future
-    cout << "Server event loop, pid:" << BlackMiscTest::Tool::getPid() << "Thread id:" << QThread::currentThreadId();
+    cout << "Server event loop, pid: " << BlackMiscTest::Tool::getPid() << " Thread id: " << QThread::currentThreadId() << endl;
 
     // end
     return a.exec();

@@ -168,6 +168,7 @@ namespace BlackMisc
 
         if (m_handler)
         {
+            if (! m_inheritFallThrough) { m_handler->inheritConsoleOutput(); }
             m_handler->disconnect(this);
         }
     }
