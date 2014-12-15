@@ -17,7 +17,8 @@
 
 namespace BlackSim
 {
-    //! Model mappings
+    //! Model mappings interface, different mapping readers (e.g. from database, from vPilot data files)
+    //! can implement this, but provide the same mapping list.
     class ISimulatorModelMappings : public QObject
     {
         Q_OBJECT
@@ -30,7 +31,7 @@ namespace BlackSim
         virtual ~ISimulatorModelMappings() {}
 
         //! Load data
-        virtual bool load() = 0;
+        virtual bool read() = 0;
 
         //! Empty
         bool isEmpty() const;
@@ -41,11 +42,8 @@ namespace BlackSim
         //! Get list
         const BlackMisc::Network::CAircraftMappingList &getMappingList() const;
 
-        //! Find by ICAO code, empty fields are treated as wildcards
-        BlackMisc::Network::CAircraftMappingList findByIcaoWildcard(const BlackMisc::Aviation::CAircraftIcao &icao) const;
-
-        //! Find by ICAO code, empty fields are treated literally
-        BlackMisc::Network::CAircraftMappingList findByIcaoExact(const BlackMisc::Aviation::CAircraftIcao &icao) const;
+        //! Synchronize with existing model names, remove unneeded models
+        int synchronizeWithExistingModels(const QStringList &modelNames, Qt::CaseSensitivity cs = Qt::CaseInsensitive);
 
     protected:
         BlackMisc::Network::CAircraftMappingList m_mappings; //!< Mappings

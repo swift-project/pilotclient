@@ -9,6 +9,9 @@
 
 #include "simulatormodelmappings.h"
 
+using namespace BlackMisc;
+using namespace BlackMisc::Network;
+
 namespace BlackSim
 {
 
@@ -24,19 +27,26 @@ namespace BlackSim
         return this->m_mappings.isEmpty();
     }
 
-    const BlackMisc::Network::CAircraftMappingList &ISimulatorModelMappings::getMappingList() const
+    const CAircraftMappingList &ISimulatorModelMappings::getMappingList() const
     {
         return this->m_mappings;
     }
 
-    BlackMisc::Network::CAircraftMappingList ISimulatorModelMappings::findByIcaoWildcard(const BlackMisc::Aviation::CAircraftIcao &icao) const
+    int ISimulatorModelMappings::synchronizeWithExistingModels(const QStringList &modelNames, Qt::CaseSensitivity cs)
     {
-        return this->m_mappings.findByIcaoCodeWildcard(icao);
-    }
-
-    BlackMisc::Network::CAircraftMappingList ISimulatorModelMappings::findByIcaoExact(const BlackMisc::Aviation::CAircraftIcao &icao) const
-    {
-        return this->m_mappings.findByIcaoCodeExact(icao);
+        if (modelNames.isEmpty() || this->m_mappings.isEmpty()) { return this->m_mappings.size(); }
+        CAircraftMappingList newList;
+        foreach(CAircraftMapping mapping, this->m_mappings)
+        {
+            QString modelString = mapping.getModel().getModelString();
+            if (modelString.isEmpty()) { continue; }
+            if (modelNames.contains(modelString, cs))
+            {
+                newList.push_back(mapping);
+            }
+        }
+        this->m_mappings = newList;
+        return this->m_mappings.size();
     }
 
 } // namespace
