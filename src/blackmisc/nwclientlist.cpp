@@ -10,6 +10,8 @@
 #include "nwclientlist.h"
 #include "predicates.h"
 
+using namespace BlackMisc::Aviation;
+
 namespace BlackMisc
 {
     namespace Network
@@ -37,6 +39,22 @@ namespace BlackMisc
             qRegisterMetaType<CClientList>();
             qDBusRegisterMetaType<CClientList>();
             registerMetaValueType<CClientList>();
+        }
+
+        /*
+         * Find by callsign
+         */
+        CClientList CClientList::findByCallsign(const CCallsign &callsign) const
+        {
+            return findBy(&CClient::getCallsign, callsign);
+        }
+
+        /*
+         * Find by callsign
+         */
+        CClient CClientList::findFirstByCallsign(const CCallsign &callsign, const CClient &ifNotFound) const
+        {
+            return this->findByCallsign(callsign).frontOrDefault(ifNotFound);
         }
 
     } // namespace

@@ -15,6 +15,7 @@
 #include "nwclient.h"
 #include "sequence.h"
 #include "collection.h"
+#include "blackmisc/avcallsign.h"
 #include <QObject>
 #include <QString>
 #include <QList>
@@ -39,6 +40,11 @@ namespace BlackMisc
             //! Register metadata
             static void registerMetadata();
 
+            //! Find by callsign
+            CClientList findByCallsign(const BlackMisc::Aviation::CCallsign &callsign) const;
+
+            //! First by callsign
+            CClient findFirstByCallsign(const BlackMisc::Aviation::CCallsign &callsign, const CClient &ifNotFound = CClient()) const;
         };
 
     } //namespace
