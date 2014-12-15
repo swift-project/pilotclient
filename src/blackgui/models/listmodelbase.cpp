@@ -16,6 +16,8 @@
 #include "blackmisc/nwserverlist.h"
 #include "blackmisc/nwuserlist.h"
 #include "blackmisc/nwclientlist.h"
+#include "blackmisc/nwaircraftmodellist.h"
+#include "blackmisc/nwaircraftmappinglist.h"
 #include "blackmisc/setkeyboardhotkeylist.h"
 #include "blackmisc/blackmiscfreefunctions.h"
 
@@ -202,7 +204,7 @@ namespace BlackGui
         {
             if (index.row() < 0 || index.row() >= this->m_container.size())
             {
-                static const ObjectType def{}; // default object
+                static const ObjectType def {}; // default object
                 return def;
             }
             else
@@ -326,6 +328,8 @@ namespace BlackGui
         template class CListModelBase<BlackMisc::Network::CServer, BlackMisc::Network::CServerList>;
         template class CListModelBase<BlackMisc::Network::CUser, BlackMisc::Network::CUserList>;
         template class CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>;
+        template class CListModelBase<BlackMisc::Network::CAircraftModel, BlackMisc::Network::CAircraftModelList>;
+        template class CListModelBase<BlackMisc::Network::CAircraftMapping, BlackMisc::Network::CAircraftMappingList>;
         template class CListModelBase<BlackMisc::Settings::CSettingKeyboardHotkey, BlackMisc::Settings::CSettingKeyboardHotkeyList>;
 
     } // namespace

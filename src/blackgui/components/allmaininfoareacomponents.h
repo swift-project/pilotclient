@@ -14,6 +14,7 @@
 #include "aircraftcomponent.h"
 #include "cockpitcomponent.h"
 #include "usercomponent.h"
+#include "mappingcomponent.h"
 #include "textmessagecomponent.h"
 #include "simulatorcomponent.h"
 #include "flightplancomponent.h"

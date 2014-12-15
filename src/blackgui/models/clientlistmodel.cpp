@@ -32,7 +32,7 @@ namespace BlackGui
             this->m_columns.addColumn(CColumn("capabilities", CClient::IndexVoiceCapabilitiesIcon));
             this->m_columns.addColumn(CColumn::standardString("capabilities", CClient::IndexCapabilitiesString));
             this->m_columns.addColumn(CColumn::standardString("model", {CClient::IndexModel, CAircraftModel::IndexModelString}));
-            this->m_columns.addColumn(CColumn("q.?", "queried", {CClient::IndexModel, CAircraftModel::IndexIsQueriedModelString},
+            this->m_columns.addColumn(CColumn("q.?", "queried", {CClient::IndexModel, CAircraftModel::IndexHasQueriedModelString},
                                               new CBoolIconFormatter(CIcons::StandardIconTick16, CIcons::StandardIconCross16, "queried", "not queried")));
             this->m_columns.addColumn(CColumn::standardString("server", CClient::IndexServer));
 

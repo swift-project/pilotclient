@@ -12,6 +12,8 @@
 #include "../models/namevariantpairlistmodel.h"
 #include "../models/atcstationlistmodel.h"
 #include "../models/aircraftlistmodel.h"
+#include "../models/aircraftmodellistmodel.h"
+#include "../models/airportlistmodel.h"
 #include "../models/airportlistmodel.h"
 #include "../models/serverlistmodel.h"
 #include "../models/userlistmodel.h"
@@ -267,6 +269,7 @@ namespace BlackGui
         template class CViewBase<BlackGui::Models::CServerListModel, BlackMisc::Network::CServerList>;
         template class CViewBase<BlackGui::Models::CUserListModel, BlackMisc::Network::CUserList>;
         template class CViewBase<BlackGui::Models::CClientListModel, BlackMisc::Network::CClientList>;
+        template class CViewBase<BlackGui::Models::CAircraftModelListModel, BlackMisc::Network::CAircraftModelList>;
         template class CViewBase<BlackGui::Models::CKeyboardKeyListModel, BlackMisc::Settings::CSettingKeyboardHotkeyList>;
 
     } // namespace
