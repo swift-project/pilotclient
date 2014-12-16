@@ -11,6 +11,7 @@
 #include "ui_mainkeypadareacomponent.h"
 #include "blackcore/context_audio.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackCore;
 
@@ -214,7 +215,7 @@ namespace BlackGui
             return nullptr;
         }
 
-        Aviation::CAircraft CMainKeypadAreaComponent::getOwnAircraft() const
+        CAircraft CMainKeypadAreaComponent::getOwnAircraft() const
         {
             if (!this->getIContextOwnAircraft()) { return CAircraft(); }
             return this->getIContextOwnAircraft()->getOwnAircraft();

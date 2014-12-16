@@ -22,6 +22,7 @@
 
 using namespace BlackGui;
 using namespace BlackCore;
+using namespace BlackMisc;
 using namespace BlackMisc::Audio;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::PhysicalQuantities;

@@ -49,9 +49,9 @@ namespace BlackGui
             static void setRuntimeForComponents(BlackCore::CRuntime *runtime, QWidget *parent);
 
             //! Log message category
-            static const CLogCategoryList &getLogCategories()
+            static const BlackMisc::CLogCategoryList &getLogCategories()
             {
-                static const CLogCategoryList cats { CLogCategory::guiComponent() };
+                static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::guiComponent() };
                 return cats;
             }
 

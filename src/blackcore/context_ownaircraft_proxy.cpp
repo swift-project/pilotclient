@@ -8,6 +8,9 @@
 #include <QMetaEnum>
 #include <QDBusConnection>
 
+using namespace BlackMisc;
+using namespace BlackMisc::Aviation;
+
 namespace BlackCore
 {
 
@@ -66,17 +69,17 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updatePilot"), pilot, originator);
     }
 
-    bool CContextOwnAircraftProxy::updateSelcal(const Aviation::CSelcal &selcal, const QString &originator)
+    bool CContextOwnAircraftProxy::updateSelcal(const CSelcal &selcal, const QString &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateSelcal"), selcal, originator);
     }
 
-    bool CContextOwnAircraftProxy::updateCallsign(const Aviation::CCallsign &callsign, const QString &originator)
+    bool CContextOwnAircraftProxy::updateCallsign(const CCallsign &callsign, const QString &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateCallsign"), callsign, originator);
     }
 
-    bool CContextOwnAircraftProxy::updateIcaoData(const Aviation::CAircraftIcao &icaoData, const QString &originator)
+    bool CContextOwnAircraftProxy::updateIcaoData(const CAircraftIcao &icaoData, const QString &originator)
     {
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("updateIcaoData"), icaoData, originator);
     }

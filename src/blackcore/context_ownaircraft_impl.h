@@ -65,7 +65,7 @@ namespace BlackCore
         virtual bool updateIcaoData(const BlackMisc::Aviation::CAircraftIcao &icaoData, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateSelcal
-        virtual bool updateSelcal(const Aviation::CSelcal &selcal, const QString &originator) override;
+        virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::setAudioOutputVolumes
         virtual void setAudioOutputVolumes(int outputVolumeCom1, int outputVolumeCom2) override;

@@ -26,9 +26,9 @@ namespace BlackCore
         ~CContext() {}
 
         //! Log category
-        static const CLogCategoryList &getLogCategories()
+        static const BlackMisc::CLogCategoryList &getLogCategories()
         {
-            static const CLogCategoryList cats { CLogCategory::context() };
+            static const BlackMisc::CLogCategoryList cats { BlackMisc::CLogCategory::context() };
             return cats;
         }
 
@@ -131,7 +131,7 @@ namespace BlackCore
         //! Empty context called
         void logEmptyContextWarning(const QString &functionName) const
         {
-            CLogMessage(this, CLogCategory::contextSlot()).warning("Empty context called, details: %1") << functionName;
+            BlackMisc::CLogMessage(this, BlackMisc::CLogCategory::contextSlot()).warning("Empty context called, details: %1") << functionName;
         }
 
         //! Standard message when status message is returned in empty context

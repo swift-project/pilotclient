@@ -65,7 +65,7 @@ namespace BlackCore
         virtual bool updatePilot(const BlackMisc::Network::CUser &pilot, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateSelcal
-        virtual bool updateSelcal(const Aviation::CSelcal &selcal, const QString &originator) override;
+        virtual bool updateSelcal(const BlackMisc::Aviation::CSelcal &selcal, const QString &originator) override;
 
         //! \copydoc IContextOwnAircraft::updateCallsign
         virtual bool updateCallsign(const BlackMisc::Aviation::CCallsign &callsign, const QString &originator) override;

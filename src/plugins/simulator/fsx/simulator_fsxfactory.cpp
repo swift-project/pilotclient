@@ -23,7 +23,7 @@ namespace BlackSimPlugin
     {
         BlackCore::ISimulator *CSimulatorFsxFactory::create(QObject *parent)
         {
-            return new Fsx::CSimulatorFsx(parent);
+            return new CSimulatorFsx(parent);
         }
 
         CSimulatorInfo CSimulatorFsxFactory::getSimulatorInfo() const

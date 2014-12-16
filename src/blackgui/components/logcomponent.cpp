@@ -11,6 +11,7 @@
 #include "ui_logcomponent.h"
 #include "../stylesheetutility.h"
 
+using namespace BlackMisc;
 using namespace BlackGui;
 
 namespace BlackGui

@@ -15,6 +15,7 @@
 #include "blackmisc/iconlist.h"
 #include "blackmisc/avaircraft.h"
 
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackCore;
 

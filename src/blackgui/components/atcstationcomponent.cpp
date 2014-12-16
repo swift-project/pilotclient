@@ -18,6 +18,7 @@
 using namespace BlackGui;
 using namespace BlackGui::Models;
 using namespace BlackGui::Views;
+using namespace BlackMisc;
 using namespace BlackMisc::Aviation;
 using namespace BlackCore;
 

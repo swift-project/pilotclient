@@ -53,7 +53,7 @@ namespace BlackCore
         virtual BlackSim::Settings::CSettingsSimulator getSimulatorSettings() const override;
 
         //! \copydoc IContextSettings::getHotkeys()
-        virtual Settings::CSettingKeyboardHotkeyList getHotkeys() const override;
+        virtual BlackMisc::Settings::CSettingKeyboardHotkeyList getHotkeys() const override;
 
         //! \copydoc IContextSettings::value
         virtual BlackMisc::CStatusMessageList value(const QString &path, const QString &command, const BlackMisc::CVariant &value) override;

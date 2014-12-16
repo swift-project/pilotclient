@@ -19,8 +19,6 @@
 #include <QMultiMap>
 #include <QReadWriteLock>
 
-using namespace BlackMisc;
-
 namespace BlackCore
 {
     // forward declaration, see review
@@ -177,8 +175,8 @@ namespace BlackCore
         //! initialization of DBus connection (where applicable)
         void initDBusServer(const QString &dBusAddress);
 
-        //! post init tasks, mainly connecting context signal slots
-        void initPostSetup();
+        //! post init tasks, load simulator and connecting context signal slots
+        void initPostSetup(QMap<QString, int> &times);
     };
 } // namespace
 #endif // guard

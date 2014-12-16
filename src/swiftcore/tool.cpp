@@ -16,6 +16,7 @@
 #include <QtConcurrent/QtConcurrent>
 
 using namespace BlackCore;
+using namespace BlackMisc;
 using namespace BlackMisc::PhysicalQuantities;
 using namespace BlackMisc::Aviation;
 using namespace BlackMisc::Audio;
@@ -36,7 +37,7 @@ namespace BlackMiscTest
     /*
      * Send data to testservice, this sends data to the slots on the server
      */
-    void Tool::serverLoop(BlackCore::CRuntime *runtime)
+    void Tool::serverLoop(CRuntime *runtime)
     {
         QMetaObject::invokeMethod(CLogHandler::instance(), "enableConsoleOutput", Q_ARG(bool, false));
 

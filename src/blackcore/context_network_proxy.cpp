@@ -1,13 +1,21 @@
-/* Copyright (C) 2013 VATSIM Community / authors
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/* Copyright (C) 2013
+ * swift Project Community / Contributors
+ *
+ * This file is part of swift project. It is subject to the license terms in the LICENSE file found in the top-level
+ * directory of this distribution and at http://www.swift-project.org/license.html. No part of swift project,
+ * including this file, may be copied, modified, propagated, or distributed except according to the terms
+ * contained in the LICENSE file.
+ */
 
 #include "blackcore/context_network_proxy.h"
 #include "blackmisc/voiceroomlist.h"
 #include <QObject>
 #include <QMetaEnum>
 #include <QDBusConnection>
+
+using namespace BlackMisc;
+using namespace BlackMisc::Network;
+using namespace BlackMisc::Aviation;
 
 namespace BlackCore
 {
@@ -147,12 +155,12 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("testCreateDummyOnlineAtcStations"), number);
     }
 
-    BlackMisc::CStatusMessage CContextNetworkProxy::connectToNetwork(const Network::CServer &server, uint loginMode)
+    CStatusMessage CContextNetworkProxy::connectToNetwork(const CServer &server, uint loginMode)
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("connectToNetwork"), server, loginMode);
     }
 
-    BlackMisc::CStatusMessage CContextNetworkProxy::disconnectFromNetwork()
+    CStatusMessage CContextNetworkProxy::disconnectFromNetwork()
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::CStatusMessage>(QLatin1Literal("disconnectFromNetwork"));
     }
@@ -167,7 +175,7 @@ namespace BlackCore
         return this->m_dBusInterface->callDBusRet<bool>(QLatin1Literal("commandLineEntered"), commandLine);
     }
 
-    void CContextNetworkProxy::sendTextMessages(const BlackMisc::Network::CTextMessageList &textMessages)
+    void CContextNetworkProxy::sendTextMessages(const CTextMessageList &textMessages)
     {
         this->m_dBusInterface->callDBus(QLatin1Literal("sendTextMessages"), textMessages);
     }
@@ -177,12 +185,12 @@ namespace BlackCore
         this->m_dBusInterface->callDBus(QLatin1Literal("sendFlightPlan"), flightPlan);
     }
 
-    BlackMisc::Aviation::CFlightPlan CContextNetworkProxy::loadFlightPlanFromNetwork(const BlackMisc::Aviation::CCallsign &callsign) const
+    CFlightPlan CContextNetworkProxy::loadFlightPlanFromNetwork(const CCallsign &callsign) const
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CFlightPlan>(QLatin1Literal("loadFlightPlanFromNetwork"), callsign);
     }
 
-    BlackMisc::Aviation::CInformationMessage CContextNetworkProxy::getMetar(const BlackMisc::Aviation::CAirportIcao &airportIcaoCode)
+    CInformationMessage CContextNetworkProxy::getMetar(const CAirportIcao &airportIcaoCode)
     {
         return this->m_dBusInterface->callDBusRet<BlackMisc::Aviation::CInformationMessage>(QLatin1Literal("getMetar"), airportIcaoCode);
     }

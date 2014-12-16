@@ -24,6 +24,9 @@
 #include <QIcon>
 #include <QTextStream>
 
+using namespace BlackMisc;
+using namespace BlackCore;
+
 /*!
  * DBus tests, tests marshalling / unmarshalling of many value classes.
  * Forks two processes and sends data via DBus among them.
@@ -51,17 +54,17 @@ int main(int argc, char *argv[])
     QString input = cin.readLine().toLower().trimmed();
 
     // configure DBus server
-    QString dBusAddress = BlackCore::CDBusServer::sessionDBusServer();
+    QString dBusAddress = CDBusServer::sessionDBusServer();
     if (input.startsWith("2"))
     {
-        dBusAddress = BlackCore::CDBusServer::systemDBusServer();
+        dBusAddress = CDBusServer::systemDBusServer();
     }
     else if (input.startsWith("3"))
     {
         cout << "found: " << BlackMisc::CNetworkUtils::getKnownIpAddresses().join(' ') << endl;
         cout << "enter ip/port, e.g. 127.0.0.1:45000 (default)" << endl;
         dBusAddress = cin.readLine().toLower();
-        dBusAddress = BlackCore::CDBusServer::p2pAddress(dBusAddress);
+        dBusAddress = CDBusServer::p2pAddress(dBusAddress);
     }
     else if (input.startsWith("x"))
     {
@@ -70,9 +73,9 @@ int main(int argc, char *argv[])
 
     // with remote audio
     bool remoteAudio = input.contains("ra");
-    BlackCore::CRuntime *core = remoteAudio ?
-                                new BlackCore::CRuntime(BlackCore::CRuntimeConfig::forCoreAllLocalInDBusNoAudio(dBusAddress), &a) :
-                                new BlackCore::CRuntime(BlackCore::CRuntimeConfig::forCoreAllLocalInDBus(dBusAddress), &a);
+    CRuntime *core = remoteAudio ?
+                                new CRuntime(CRuntimeConfig::forCoreAllLocalInDBusNoAudio(dBusAddress), &a) :
+                                new CRuntime(CRuntimeConfig::forCoreAllLocalInDBus(dBusAddress), &a);
 
     // tool to allow input indepent from event loop
     QtConcurrent::run(BlackMiscTest::Tool::serverLoop, core); // QFuture<void> future
