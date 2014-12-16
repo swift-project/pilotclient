@@ -14,6 +14,7 @@
 
 #include <QDir> // for Q_INIT_RESOURCE
 #include <QList>
+#include <QMap>
 #include <QVariant>
 #include <QDBusArgument>
 
@@ -151,6 +152,9 @@ namespace BlackMisc
 
     //! Real heap size of an object
     size_t heapSizeOf(const QMetaObject &objectType);
+
+    //! A map converted to string
+    template<class K, class V> QString qmapToString(const QMap<K, V> &map);
 
     //! Get local host name
     const QString &localHostName();

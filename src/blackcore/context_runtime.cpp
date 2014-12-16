@@ -19,7 +19,10 @@
 #include "blackmisc/logmessage.h"
 #include "blackcore/context_runtime.h"
 
+#include <QMap>
 #include <QDebug>
+
+using namespace BlackMisc;
 
 namespace BlackCore
 {
@@ -36,23 +39,25 @@ namespace BlackCore
      */
     void CRuntime::init(const CRuntimeConfig &config)
     {
-        if (m_init) return;
-        BlackMisc::registerMetadata();
-        BlackMisc::initResources();
-        BlackSim::registerMetadata();
-        BlackCore::registerMetadata();
+        if (m_init) { return; }
 
-        this->connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CRuntime::gracefulShutdown);
-
-        // upfront reading of settings, as DBus server already relies on settings
-        QString dbusAddress;
         QMap<QString, int> times;
         QTime time;
         time.start();
 
+        BlackMisc::registerMetadata();
+        BlackMisc::initResources();
+        BlackSim::registerMetadata();
+        BlackCore::registerMetadata();
+        times.insert("Register metadata", time.restart());
+        this->connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CRuntime::gracefulShutdown);
+
+        // upfront reading of settings, as DBus server already relies on settings
+        QString dbusAddress;
+
         // FIXME RW: We are allocating a full settings context in order to get the DBus address.
         // I wonder if this can be done cleaner.
-        if (config.hasDBusAddress()) dbusAddress = config.getDBusAddress(); // bootstrap / explicit
+        if (config.hasDBusAddress()) { dbusAddress = config.getDBusAddress(); } // bootstrap / explicit
         if (config.hasLocalSettings())
         {
             auto *settings = new CContextSettings(config.getModeSettings(), this);
@@ -73,7 +78,7 @@ namespace BlackCore
                 QString e = this->m_dbusConnection.lastError().message();
                 if (!e.isEmpty()) notConnected.append(" ").append(e);
                 Q_ASSERT_X(false, "CRuntime::init", notConnected.toUtf8().constData());
-                qCritical() << notConnected;
+                CLogMessage(this).error(notConnected);
             }
         }
         times.insert("DBus", time.restart());
@@ -105,8 +110,10 @@ namespace BlackCore
         Q_ASSERT(!this->m_contextNetwork || (this->m_contextOwnAircraft->isUsingImplementingObject() == this->m_contextNetwork->isUsingImplementingObject()));
 
         // post inits, wiring things among context (e.g. signal slots)
-        this->initPostSetup();
-        qDebug() << "Init times:" << times;
+        time.restart();
+        this->initPostSetup(times);
+        times.insert("Post setup", time.restart());
+        CLogMessage(this).info("Init times: %1") << qmapToString(times);
 
         // flag
         m_init = true;
@@ -142,10 +149,12 @@ namespace BlackCore
         this->m_dbusServer = new CDBusServer(dBusAddress, this);
     }
 
-    void CRuntime::initPostSetup()
+    void CRuntime::initPostSetup(QMap<QString, int> &times)
     {
         bool c = false;
         Q_UNUSED(c); // for release version
+        QTime time;
+        time.start();
 
         if (this->m_contextSettings && this->m_contextApplication)
         {
@@ -153,6 +162,7 @@ namespace BlackCore
                         this->getIContextApplication(), &IContextApplication::changeSettings);
             Q_ASSERT(c);
         }
+        times.insert("Post setup, connects first", time.restart());
 
         // local simulator?
         if (this->m_contextSimulator && this->m_contextSimulator->isUsingImplementingObject())
@@ -172,6 +182,7 @@ namespace BlackCore
                             this->getCContextSimulator(), &CContextSimulator::ps_updateSimulatorCockpitFromContext);
                 Q_ASSERT(c);
             }
+            times.insert("Post setup, sim.connects", time.restart());
 
             // connect local simulator and settings and load plugin
             if (this->m_contextSettings)
@@ -181,10 +192,12 @@ namespace BlackCore
                 {
                     CLogMessage(this).warning("No simulator plugin loaded");
                 }
+                times.insert("Post setup, load sim. plugin", time.restart());
             }
         }
 
         // only where network and(!) own aircraft run locally
+        // -> in the core or an all local implementation
         if (this->m_contextNetwork && this->m_contextOwnAircraft && this->m_contextNetwork->isUsingImplementingObject() && this->m_contextOwnAircraft->isUsingImplementingObject())
         {
             c = this->connect(this->m_contextNetwork, &IContextNetwork::changedAtcStationOnlineConnectionStatus,
@@ -195,6 +208,7 @@ namespace BlackCore
             c = this->connect(this->m_contextOwnAircraft, &IContextOwnAircraft::changedAircraft,
                               this->getCContextNetwork(),  &CContextNetwork::ps_changedOwnAircraft);
             Q_ASSERT(c);
+            times.insert("Post setup, connects network", time.restart());
         }
     }
 
