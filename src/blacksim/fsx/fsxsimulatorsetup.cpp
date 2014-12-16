@@ -10,10 +10,13 @@
 #include "fsxsimulatorsetup.h"
 
 #include "../../blackmisc/project.h"
+#include "../fscommon/fscommonutil.h"
 #include "../fsx/simconnectutilities.h"
+
 #include <QSettings>
 
 using namespace BlackMisc;
+using namespace BlackSim::FsCommon;
 
 namespace BlackSim
 {
@@ -27,14 +30,7 @@ namespace BlackSim
             if (CProject::isCompiledWithFsxSupport())
             {
                 // set FSX path
-                QSettings fsxRegistry("HKEY_CURRENT_USER\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0", QSettings::NativeFormat);
-                QString fsxPath = fsxRegistry.value("AppPath").toString();
-                if (fsxPath.isEmpty())
-                {
-                    // another trial
-                    QSettings fsxRegistry("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Flight Simulator\\10.0", QSettings::NativeFormat);
-                    fsxPath = fsxRegistry.value("SetupPath").toString();
-                }
+                QString fsxPath = CFsCommonUtil::fsxDirFromRegistry();
                 if (!fsxPath.isEmpty()) this->m_setup.value(CSimulatorSetup::SetupSimPath, CVariant(fsxPath));
             }
         }
