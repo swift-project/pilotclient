@@ -187,29 +187,30 @@ uint BlackMisc::calculateHash(const QList<int> &values, const char *className)
  */
 QVariant BlackMisc::fixQVariantFromDbusArgument(const QVariant &variant, int localUserType)
 {
-    if (variant.canConvert<QDBusArgument>())
+    // my business?
+    if (!variant.canConvert<QDBusArgument>()) { return variant; }
+
+    // complex, user type
+    // it has to be made sure, that the cast works
+    const QDBusArgument arg = variant.value<QDBusArgument>();
+    const int userType = static_cast<int>(QVariant::UserType);
+    if (localUserType < userType)
     {
-        // complex, user type
-        // it has to be made sure, that the cast works
-        const QDBusArgument arg = variant.value<QDBusArgument>();
-        if (localUserType < static_cast<int>(QVariant::UserType))
-        {
-            // complex Qt type, e.g. QDateTime
-            return BlackMisc::complexQtTypeFromDbusArgument(arg, localUserType);
-        }
-        else
-        {
-            QVariant valueVariant(localUserType, nullptr);
-            auto *meta = Private::getValueObjectMetaInfo(valueVariant);
-            if (meta)
-            {
-                meta->unmarshall(arg, valueVariant.data());
-                return valueVariant;
-            }
-        }
+        // complex Qt type, e.g. QDateTime
+        return BlackMisc::complexQtTypeFromDbusArgument(arg, localUserType);
     }
-    qWarning() << "fixQVariantFromDbusArgument called with unsupported type";
-    return variant;
+    else
+    {
+        QVariant valueVariant(localUserType, nullptr);
+        auto *meta = Private::getValueObjectMetaInfo(valueVariant);
+        if (meta)
+        {
+            meta->unmarshall(arg, valueVariant.data());
+            return valueVariant;
+        }
+        Q_ASSERT_X(false, "fixQVariantFromDbusArgument", "no meta");
+        return valueVariant;
+    }
 }
 
 /*
