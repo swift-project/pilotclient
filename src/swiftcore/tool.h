@@ -25,9 +25,6 @@ namespace BlackMiscTest
             return QCoreApplication::applicationPid();
         }
 
-        //! Start a new process
-        static QProcess *startNewProcess(const QString &executable, const QStringList &arguments = QStringList(), QObject *parent = 0);
-
         //! Server loop
         static void serverLoop(BlackCore::CRuntime *runtime);
 

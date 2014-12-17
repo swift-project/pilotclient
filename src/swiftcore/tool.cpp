@@ -25,26 +25,17 @@ namespace BlackMiscTest
 {
 
     /*
-     * Start a new process
-     */
-    QProcess *Tool::startNewProcess(const QString &executable, const QStringList &arguments, QObject *parent)
-    {
-        QProcess *process = new QProcess(parent);
-        process->startDetached(executable, arguments);
-        return process;
-    }
-
-    /*
      * Send data to testservice, this sends data to the slots on the server
      */
     void Tool::serverLoop(CRuntime *runtime)
     {
-        QMetaObject::invokeMethod(CLogHandler::instance(), "enableConsoleOutput", Q_ARG(bool, false));
+        QTextStream qtout(stdout);
+        qtout << "Running on server here " << Tool::getPid() << " thread: " << QThread::currentThreadId() << endl;
 
         Q_ASSERT(runtime);
-        QThread::sleep(3); // let the DBus server startup
+        QThread::sleep(3); // time in secs, let the DBus server startup
 
-        // log
+        // log initial severity
         CLogSubscriber applicationMessageSubscriber, audioMessageSubscriber, networkMessageSubscriber, ownAircraftMessageSubscriber, settingsMessageSubscriber, simulatorMessageSubscriber;
         CStatusMessage::StatusSeverity messageSeverity = CStatusMessage::SeverityInfo;
         auto refreshSubscriptionSeverities = [ & ]()
@@ -56,10 +47,8 @@ namespace BlackMiscTest
             settingsMessageSubscriber.changeSubscription(CLogPattern::allOf(runtime->getIContextSettings()).withSeverityAtOrAbove(messageSeverity));
             simulatorMessageSubscriber.changeSubscription(CLogPattern::allOf(runtime->getIContextSimulator()).withSeverityAtOrAbove(messageSeverity));
         };
-        refreshSubscriptionSeverities();
 
-        QTextStream qtout(stdout);
-        qtout << "Running on server here " << Tool::getPid() << " thread: " << QThread::currentThreadId() << endl;
+        refreshSubscriptionSeverities();
 
         //
         // Server loop

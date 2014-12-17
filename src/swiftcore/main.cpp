@@ -33,16 +33,19 @@ using namespace BlackCore;
  */
 int main(int argc, char *argv[])
 {
-    // metadata are registered in runtime
-    QApplication a(argc, argv); // not QCoreApplication because of icon, http://qt-project.org/forums/viewthread/15412
-    CLogHandler::instance()->install();
-    CLogHandler::instance()->enableConsoleOutput(false); // default disable
-    QIcon icon(BlackMisc::CIcons::swiftNova24());
-    QApplication::setWindowIcon(icon);
+    CRuntime::registerMetadata(); // register metadata
+    QApplication a(argc, argv);   // not QCoreApplication because of icon, http://qt-project.org/forums/viewthread/15412
     QTextStream cin(stdin);
     QTextStream cout(stdout);
-
     cout << BlackMisc::CProject::version() << " " << BlackMisc::CProject::compiledInfo() << endl;
+    QIcon icon(BlackMisc::CIcons::swiftNova24());
+    QApplication::setWindowIcon(icon);
+
+    CLogHandler::instance()->install();
+    CLogHandler::instance()->enableConsoleOutput(false); // default disable
+    CLogHandler::instance()->handlerForPattern(
+        CLogPattern().withSeverityAtOrAbove(CStatusMessage::SeverityInfo)
+    )->enableConsoleOutput(true); // enable for info
 
     cout << "1 + la/ra .. session DBus server (default)" << endl;
     cout << "2 + la/ra .. system DBus server" << endl;
@@ -50,7 +53,6 @@ int main(int argc, char *argv[])
     cout << "la .. local audio, audio runs in this core here (default)" << endl;
     cout << "ra .. remote audio, audio runs in the GUI or elsewhere" << endl;
     cout << "x  .. exit" << endl;
-
     QString input = cin.readLine().toLower().trimmed();
 
     // configure DBus server
@@ -73,12 +75,14 @@ int main(int argc, char *argv[])
 
     // with remote audio
     bool remoteAudio = input.contains("ra");
-    CRuntime *core = remoteAudio ?
-                                new CRuntime(CRuntimeConfig::forCoreAllLocalInDBusNoAudio(dBusAddress), &a) :
-                                new CRuntime(CRuntimeConfig::forCoreAllLocalInDBus(dBusAddress), &a);
+    CRuntime *coreRuntime = remoteAudio ?
+                            new CRuntime(CRuntimeConfig::forCoreAllLocalInDBusNoAudio(dBusAddress), &a) :
+                            new CRuntime(CRuntimeConfig::forCoreAllLocalInDBus(dBusAddress), &a);
 
     // tool to allow input indepent from event loop
-    QtConcurrent::run(BlackMiscTest::Tool::serverLoop, core); // QFuture<void> future
+    cout << "Will start server loop ... " << endl;
+    QFuture<void> future = QtConcurrent::run(BlackMiscTest::Tool::serverLoop, coreRuntime);
+    Q_UNUSED(future);
     cout << "Server event loop, pid: " << BlackMiscTest::Tool::getPid() << " Thread id: " << QThread::currentThreadId() << endl;
 
     // end
