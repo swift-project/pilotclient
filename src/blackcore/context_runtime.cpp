@@ -43,13 +43,8 @@ namespace BlackCore
 
         QMap<QString, int> times;
         QTime time;
-        time.start();
+        registerMetadata();
 
-        BlackMisc::registerMetadata();
-        BlackMisc::initResources();
-        BlackSim::registerMetadata();
-        BlackCore::registerMetadata();
-        times.insert("Register metadata", time.restart());
         this->connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, &CRuntime::gracefulShutdown);
 
         // upfront reading of settings, as DBus server already relies on settings
@@ -131,6 +126,14 @@ namespace BlackCore
         if (this->m_contextApplication->isUsingImplementingObject()) return true;
         qint64 token = QDateTime::currentMSecsSinceEpoch();
         return (token == this->m_contextApplication->ping(token));
+    }
+
+    void CRuntime::registerMetadata()
+    {
+        BlackMisc::registerMetadata();
+        BlackMisc::initResources();
+        BlackSim::registerMetadata();
+        BlackCore::registerMetadata();
     }
 
     bool CRuntime::parseCommandLine(const QString commandLine)

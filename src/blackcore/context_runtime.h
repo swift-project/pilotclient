@@ -147,6 +147,9 @@ namespace BlackCore
         //! Is application context available?
         bool canPingApplicationContext() const;
 
+        //! Register metadata
+        static void registerMetadata();
+
     public slots:
         //! Parse command line in all contexts
         bool parseCommandLine(const QString commandLine);
