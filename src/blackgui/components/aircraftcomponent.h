@@ -43,8 +43,8 @@ namespace BlackGui
             //! Timer for updating
             CUpdateTimer *getTimerComponent() { return this->m_updateTimer; }
 
-            //! Aircrafts in range
-            int countAircrafts() const;
+            //! Aircraft in range
+            int countAircraft() const;
 
             //! Airports in range
             int countAirportsInRange() const;

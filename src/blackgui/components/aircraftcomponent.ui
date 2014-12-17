@@ -22,9 +22,9 @@
   <property name="currentIndex">
    <number>0</number>
   </property>
-  <widget class="QWidget" name="tb_AircraftsInRange">
+  <widget class="QWidget" name="tb_AircraftInRange">
    <attribute name="title">
-    <string>Aircrafts in range</string>
+    <string>Aircraft in range</string>
    </attribute>
    <layout class="QVBoxLayout" name="vl_AircraftsInRange">
     <property name="spacing">
@@ -43,7 +43,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="BlackGui::Views::CAircraftView" name="tvp_AircraftsInRange">
+     <widget class="BlackGui::Views::CAircraftView" name="tvp_AircraftInRange">
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>

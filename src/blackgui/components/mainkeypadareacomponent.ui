@@ -194,7 +194,7 @@
          </size>
         </property>
         <property name="text">
-         <string>Aircrafts</string>
+         <string>Aircraft</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
