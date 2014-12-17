@@ -210,6 +210,7 @@ namespace BlackSimPlugin
 
         bool CSimulatorFsx::updateOwnSimulatorCockpit(const CAircraft &ownAircraft)
         {
+            if (!this->isSimulating()) { return false; }
             CComSystem newCom1 = ownAircraft.getCom1System();
             CComSystem newCom2 = ownAircraft.getCom2System();
             CTransponder newTransponder = ownAircraft.getTransponder();
