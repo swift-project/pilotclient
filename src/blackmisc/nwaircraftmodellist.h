@@ -34,6 +34,9 @@ namespace BlackMisc
             //! Find by model string
             CAircraftModelList findByModelString(const QString modelString, Qt::CaseSensitivity sensitivity) const;
 
+            //! \copydoc CValueObject::convertFromQVariant
+            virtual void convertFromQVariant(const QVariant &variant) override { BlackMisc::setFromQVariant(this, variant); }
+
             //! Register metadata
             static void registerMetadata();
 
