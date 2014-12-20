@@ -44,6 +44,12 @@
     </property>
     <item>
      <widget class="BlackGui::Views::CAircraftView" name="tvp_AircraftInRange">
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>
@@ -73,6 +79,12 @@
     </property>
     <item>
      <widget class="BlackGui::Views::CAirportView" name="tvp_AirportsInRange">
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>
