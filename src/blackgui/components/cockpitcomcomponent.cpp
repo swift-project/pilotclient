@@ -139,8 +139,8 @@ namespace BlackGui
             if (this->getIContextNetwork())
             {
                 CAtcStationList selectedStations = this->getIContextNetwork()->getSelectedAtcStations();
-                CAtcStation com1Station = selectedStations[0];
-                CAtcStation com2Station = selectedStations[1];
+                CAtcStation com1Station = selectedStations.size() > 0 ? selectedStations[0] : CAtcStation();
+                CAtcStation com2Station = selectedStations.size() > 1 ? selectedStations[1] : CAtcStation();
                 if (com1Station.getCallsign().isEmpty())
                 {
                     this->ui->lbl_ComPanelCom1Active->setToolTip("");
