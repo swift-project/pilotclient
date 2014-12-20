@@ -93,6 +93,13 @@ namespace BlackMisc
             return static_cast<CastType>(f);
         }
 
+        //! Compare with index given by enum
+        template<class EnumType> bool equalsPropertyIndexEnum(EnumType ev)
+        {
+            if (this->m_indexes.size() != 1) { return false; }
+            return static_cast<int>(ev) == m_indexes.first();
+        }
+
     protected:
         //! \copydoc CValueObject::convertToQString
         virtual QString convertToQString(bool i18n = false) const override;
