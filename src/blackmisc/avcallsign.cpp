@@ -59,6 +59,22 @@ namespace BlackMisc
         }
 
         /*
+         * ATC callsign?
+         */
+        bool CCallsign::isAtcCallsign() const
+        {
+            if (this->m_callsignAsSet.contains('_'))
+            {
+                if (this->m_callsignAsSet.size() >= 3)
+                {
+                    QString app = this->m_callsignAsSet.right(3);
+                    return atcCallsignAppendixes().contains(app, Qt::CaseInsensitive);
+                }
+            }
+            return false;
+        }
+
+        /*
          * Callsign as Observer
          */
         QString CCallsign::getAsObserverCallsignString() const
@@ -134,6 +150,15 @@ namespace BlackMisc
             static QRegularExpression regexp("^[A-Z]+[A-Z0-9]*$");
             if (callsign.length() < 2 || callsign.length() > 10) return false;
             return (regexp.match(callsign).hasMatch());
+        }
+
+        /*
+         * Appendixes
+         */
+        const QStringList &CCallsign::atcCallsignAppendixes()
+        {
+            static const QStringList a( { "APP", "GND", "TWR", "DEL", "CTR", "SUP", "FSS" });
+            return a;
         }
 
     } // namespace

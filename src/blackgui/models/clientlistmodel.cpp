@@ -43,5 +43,23 @@ namespace BlackGui
             (void)QT_TRANSLATE_NOOP("ViewClientList", "model");
             (void)QT_TRANSLATE_NOOP("ViewClientList", "server");
         }
-    }
-}
+
+        QVariant CClientListModel::data(const QModelIndex &index, int role) const
+        {
+            static const CPropertyIndex ms( {CClient::IndexModel, CAircraftModel::IndexModelString});
+            if (role != Qt::DisplayRole) { return CListModelBase::data(index, role); }
+            CPropertyIndex pi = modelIndexToPropertyIndex(index);
+            if (pi == ms)
+            {
+                // no model string for ATC
+                CClient client = this->at(index);
+                bool atc = client.isAtc();
+                if (atc)
+                {
+                    return QVariant("ATC");
+                }
+            }
+            return CListModelBase::data(index, role);
+        }
+    } // namespace
+} // namespace

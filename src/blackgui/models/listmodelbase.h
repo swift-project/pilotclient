@@ -116,9 +116,7 @@ namespace BlackGui
             Qt::SortOrder m_sortOrder; //!< sort order (asc/desc)
         };
 
-        /*!
-         * List model
-         */
+        //! List model
         template <typename ObjectType, typename ContainerType> class CListModelBase :
             public CListModelBaseNonTemplate
         {

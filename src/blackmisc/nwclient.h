@@ -63,6 +63,9 @@ namespace BlackMisc
             //! Callsign used with other client
             const BlackMisc::Aviation::CCallsign &getCallsign() const { return this->m_user.getCallsign(); }
 
+            //! ATC client
+            bool isAtc() const { return getCallsign().isAtcCallsign(); }
+
             //! Get capabilities
             CPropertyIndexVariantMap getCapabilities() const { return this->m_capabilities; }
 
@@ -123,23 +126,23 @@ namespace BlackMisc
 
         private:
             BLACK_ENABLE_TUPLE_CONVERSION(CClient)
-            CUser m_user;
+            CUser          m_user;
             CAircraftModel m_model;
             CPropertyIndexVariantMap m_capabilities;
-            QString m_server;
-            CVoiceCapabilities m_voiceCapabilities;
+            QString                  m_server;
+            CVoiceCapabilities       m_voiceCapabilities;
 
         };
     } // namespace
 } // namespace
 
 BLACK_DECLARE_TUPLE_CONVERSION(BlackMisc::Network::CClient, (
-    o.m_user,
-    o.m_model,
-    attr(o.m_capabilities, flags<DisabledForComparison>()),
-    o.m_server,
-    o.m_voiceCapabilities
-))
+                                   o.m_user,
+                                   o.m_model,
+                                   attr(o.m_capabilities, flags<DisabledForComparison>()),
+                                   o.m_server,
+                                   o.m_voiceCapabilities
+                               ))
 Q_DECLARE_METATYPE(BlackMisc::Network::CClient)
 
 #endif // guard

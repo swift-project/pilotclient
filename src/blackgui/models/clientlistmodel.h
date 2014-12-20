@@ -20,9 +20,7 @@ namespace BlackGui
 {
     namespace Models
     {
-        /*!
-         * Server list model
-         */
+        //! Client list model
         class CClientListModel : public CListModelBase<BlackMisc::Network::CClient, BlackMisc::Network::CClientList>
         {
 
@@ -32,7 +30,11 @@ namespace BlackGui
 
             //! Destructor
             virtual ~CClientListModel() {}
+
+            //! \copydoc QAbstractListModel::data()
+            virtual QVariant data(const QModelIndex &index, int role) const override;
+
         };
-    }
-}
+    } // namespace
+} // namespace
 #endif // guard

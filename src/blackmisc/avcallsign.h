@@ -48,6 +48,9 @@ namespace BlackMisc
             //! Is empty?
             bool isEmpty() const { return this->m_callsignAsSet.isEmpty(); }
 
+            //! ATC callsign
+            bool isAtcCallsign() const;
+
             //! Get callsign.
             const QString &asString() const { return this->m_callsign; }
 
@@ -77,6 +80,9 @@ namespace BlackMisc
 
             //! Valid callsign?
             static bool isValidCallsign(const QString &callsign);
+
+            //! List of ATC appendixes (e.g. TWR);
+            static const QStringList &atcCallsignAppendixes();
 
         protected:
             //! \copydoc CValueObject::convertToQString()
