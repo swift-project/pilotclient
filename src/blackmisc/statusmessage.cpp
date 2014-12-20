@@ -95,22 +95,24 @@ namespace BlackMisc
     {
         if (this->m_humanReadableCategory.isEmpty())
         {
-            const QString cat(this->m_categories.toQString());
+            const QString cat(this->m_categories.toQString().toLower());
             // could als be subject of i18n
             // from sepcific to unspecific
             if (cat.isEmpty()) { this->m_humanReadableCategory = "None"; }
             else if (cat.contains(CLogCategory::validation().toQString())) { this->m_humanReadableCategory = "Validation"; }
-            else if (cat.contains("ContextAudio")) { this->m_humanReadableCategory = "Audio"; }
-            else if (cat.contains("ContextSimulator")) { this->m_humanReadableCategory = "Simulator"; }
-            else if (cat.contains("ContextNetwork")) { this->m_humanReadableCategory = "Network"; }
-            else if (cat.contains("Vatlib")) { this->m_humanReadableCategory = "VATSIM library"; }
-            else if (cat.contains("BlackMisc")) { this->m_humanReadableCategory = "Library"; }
-            else if (cat.contains("BlackCore")) { this->m_humanReadableCategory = "Core"; }
-            else if (cat.contains("BlackGui")) { this->m_humanReadableCategory = "GUI"; }
-            else if (cat.contains("BlackSound")) { this->m_humanReadableCategory = "GUI"; }
-            else if (cat.contains("XPlane")) { this->m_humanReadableCategory = "XPlane"; }
-            else if (cat.contains("FSX")) { this->m_humanReadableCategory = "FSX"; }
-            else if (cat.contains("FS9")) { this->m_humanReadableCategory = "FS9"; }
+            else if (cat.contains("contextaudio")) { this->m_humanReadableCategory = "Audio"; }
+            else if (cat.contains("contextsimulator")) { this->m_humanReadableCategory = "Simulator"; }
+            else if (cat.contains("contextnetwork")) { this->m_humanReadableCategory = "Network"; }
+            else if (cat.contains("vatlib")) { this->m_humanReadableCategory = "VATSIM library"; }
+            else if (cat.contains("blackmisc")) { this->m_humanReadableCategory = "Library"; }
+            else if (cat.contains("blackcore")) { this->m_humanReadableCategory = "Core"; }
+            else if (cat.contains("blackgui")) { this->m_humanReadableCategory = "GUI"; }
+            else if (cat.contains("blacksound")) { this->m_humanReadableCategory = "GUI"; }
+            else if (cat.contains("xplane")) { this->m_humanReadableCategory = "XPlane"; }
+            else if (cat.contains("fsx")) { this->m_humanReadableCategory = "FSX"; }
+            else if (cat.contains("fs9")) { this->m_humanReadableCategory = "FS9"; }
+            else if (cat.contains("mapping") || cat.contains("matching")) { this->m_humanReadableCategory = "Model matching"; }
+
             else this->m_humanReadableCategory = "Misc.";
         }
         return this->m_humanReadableCategory;
