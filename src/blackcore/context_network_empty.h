@@ -124,7 +124,8 @@ namespace BlackCore
         virtual BlackMisc::Aviation::CAtcStationList getSelectedAtcStations() const override
         {
             logEmptyContextWarning(Q_FUNC_INFO);
-            return BlackMisc::Aviation::CAtcStationList();
+            // normally 2 entries
+            return BlackMisc::Aviation::CAtcStationList({ BlackMisc::Aviation::CAtcStation(), BlackMisc::Aviation::CAtcStation()});
         }
 
         //! \copydoc IContextNetwork::getUsers()

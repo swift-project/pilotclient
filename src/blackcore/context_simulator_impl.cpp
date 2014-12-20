@@ -207,7 +207,7 @@ namespace BlackCore
         connect(airspace, &CAirspaceMonitor::removedAircraft, this, &CContextSimulator::ps_removeRemoteAircraft);
         for (const auto &aircraft : airspace->getAircraftInRange())
         {
-            // m_simulator->addRemoteAircraft(aircraft.getCallsign(), aircraft.getSituation());
+            Q_ASSERT(!aircraft.getCallsign().isEmpty());
             CClient client = airspace->getOtherClients().findFirstByCallsign(aircraft.getCallsign());
             m_simulator->addRemoteAircraft(aircraft, client);
         }
@@ -295,21 +295,15 @@ namespace BlackCore
     void CContextSimulator::ps_addRemoteAircraft(const CAircraft &remoteAircraft, const CClient &remoteClient)
     {
         Q_ASSERT(this->m_simulator);
-        if (!this->m_simulator) return;
+        Q_ASSERT(!remoteAircraft.getCallsign().isEmpty());
+        if (!this->m_simulator) { return; }
         this->m_simulator->addRemoteAircraft(remoteAircraft, remoteClient);
     }
-
-//    void CContextSimulator::ps_addRemoteAircraft(const CCallsign &callsign, const CAircraftSituation &initialSituation)
-//    {
-//        Q_ASSERT(this->m_simulator);
-//        if (!this->m_simulator) return;
-//        this->m_simulator->addRemoteAircraft(callsign, initialSituation);
-//    }
 
     void CContextSimulator::ps_addAircraftSituation(const CCallsign &callsign, const CAircraftSituation &situation)
     {
         Q_ASSERT(this->m_simulator);
-        if (!this->m_simulator) return;
+        if (!this->m_simulator) { return; }
         this->m_simulator->addAircraftSituation(callsign, situation);
     }
 
