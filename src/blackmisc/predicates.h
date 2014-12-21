@@ -94,7 +94,7 @@ namespace BlackMisc
             template <class T> struct Equals
             {
                 const T m_value;
-                template <class U> Equals(U &&value) : m_value(std::forward<U>(value)) {}
+                template <class U> Equals(U &&value, int dummy) : m_value(std::forward<U>(value)) { Q_UNUSED(dummy); }
                 template <class U> bool operator ()(const U &other) const { return other == m_value; }
             };
 
@@ -170,7 +170,7 @@ namespace BlackMisc
         template <class T>
         auto Equals(T &&value) -> Private::Equals<typename std::decay<T>::type>
         {
-            return { std::forward<T>(value) };
+            return { std::forward<T>(value), 0 };
         }
 
     } //namespace Predicates
