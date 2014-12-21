@@ -138,8 +138,7 @@ namespace BlackSimPlugin
         {
             if (m_simConnected) { return true; }
             HANDLE hSimConnect; // temporary handle
-            bool connect = false;
-            connect = SUCCEEDED(SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0));
+            bool connect = SUCCEEDED(SimConnect_Open(&hSimConnect, BlackMisc::CProject::systemNameAndVersionChar(), nullptr, 0, 0, 0));
             SimConnect_Close(hSimConnect);
             return connect;
         }
