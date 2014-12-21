@@ -96,7 +96,7 @@ namespace BlackMisc
          * \brief Like changeImpl, but uses the implementation type of another sequence.
          * \pre The other sequence must be initialized.
          */
-        void useImplOf(const CSequence &other) { PimplPtr p = other.pimpl()->cloneEmpty(); std::move(begin(), end(), std::inserter(*p, p->begin())); m_pimpl.reset(p.take()); }
+        void useImplOf(const CSequence &other) { CSequence c(other.pimpl()->cloneEmpty()); std::move(begin(), end(), std::inserter(c, c.begin())); *this = std::move(c); }
 
         /*!
          * \brief Returns iterator at the beginning of the sequence.
